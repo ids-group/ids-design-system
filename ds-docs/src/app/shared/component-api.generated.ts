@@ -360,6 +360,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -416,11 +425,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "maxVisibleChips",
         "kind": "input",
-        "type": "number | 'fit' | null",
+        "type": "number | 'fit' | 'all' | null",
         "union": null,
-        "default": "'fit'",
+        "default": "null",
         "required": false,
-        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER caps at exactly that many, which is what you want when the trigger's height must be predictable whatever the width. `null` shows every chip and lets the trigger grow a line per selection."
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER is a CEILING, not a promise: the row still measures, so you get at most that many and fewer when the trigger is narrow. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) means \"not deciding\", as it does on every other input in the library — it resolves to `\"fit\"`. It does NOT mean \"show all\": that is `\"all\"`, which is the loudest of the three modes and has to be asked for."
       },
       {
         "name": "size",
@@ -545,7 +554,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "The person or thing this avatar stands for. One binding covers both jobs the caller used to wire by hand: the initials, and the seed the tint hashes. The tint keys on the NAME, never on the initials — two letters collide wholesale, so every Alice Brown and Adam Bell would share one colour."
+        "description": "The person or thing this avatar stands for — one binding drives both the initials and the seed the tint hashes. The tint keys on the NAME, never on the initials — two letters collide wholesale, so every Alice Brown and Adam Bell would share one colour."
       },
       {
         "name": "initialsRule",
@@ -684,7 +693,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Leading status dot. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`."
+        "description": "Leading status dot, rendered only while `count` is unset — a count replaces the badge's whole content. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`."
       },
       {
         "name": "solid",
@@ -1121,128 +1130,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "calendar-day": {
-    "key": "calendar-day",
-    "selector": "ds-calendar-day",
-    "isElement": true,
-    "className": "CalendarDayComponent",
-    "status": "stable",
-    "importName": "CalendarDayComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "selected",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "The chosen day in single mode, or an end of the range in range mode. Drives `aria-selected`."
-      },
-      {
-        "name": "inRange",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "A day BETWEEN the two ends of a range — tinted, but not itself selected."
-      },
-      {
-        "name": "rangeStart",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "First day of a range: rounds the leading corners and counts as selected."
-      },
-      {
-        "name": "rangeEnd",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Last day of a range: rounds the trailing corners and counts as selected."
-      },
-      {
-        "name": "today",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Marks the current date. Independent of selection — today can be unselected."
-      },
-      {
-        "name": "muted",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Day from an adjacent month — dimmed."
-      },
-      {
-        "name": "disabled",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Outside `minDate`/`maxDate` or rejected by `disabledDate` — dimmed and not clickable."
-      },
-      {
-        "name": "dataDay",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Stable key the date-picker uses to focus a specific day (roving tabindex)."
-      },
-      {
-        "name": "tabIndex",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "-1",
-        "required": false,
-        "description": "Roving tabindex: exactly one day in the grid carries 0, the rest -1, so Tab enters the grid once and arrows move within it."
-      },
-      {
-        "name": "ariaLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Full spoken date (\"12 March 2026\"), since the cell text is only the day number."
-      }
-    ],
-    "outputs": [
-      {
-        "name": "daySelected",
-        "kind": "output",
-        "type": "MouseEvent",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Click on an enabled day. Carries the event so the host can read modifier keys."
-      },
-      {
-        "name": "dayKeydown",
-        "kind": "output",
-        "type": "KeyboardEvent",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Key press on the focused day — the grid owns arrow/Home/End navigation, not the cell."
-      }
-    ]
-  },
   "card": {
     "key": "card",
     "selector": "ds-card",
@@ -1366,6 +1253,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -1529,6 +1425,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -1657,6 +1562,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -2225,69 +2139,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "field-message": {
-    "key": "field-message",
-    "selector": "ds-field-message",
-    "isElement": true,
-    "className": "FieldMessageComponent",
-    "status": "stable",
-    "importName": "FieldMessageComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "text",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "The one line under a field. Empty renders nothing (or reserved space, if the field asks)."
-      },
-      {
-        "name": "state",
-        "kind": "input",
-        "type": "FieldMessageState",
-        "union": [
-          "default",
-          "error",
-          "warning",
-          "success"
-        ],
-        "default": "'default'",
-        "required": false,
-        "description": "Which role the line is playing — hint, error, warning or success. Decides the colour."
-      },
-      {
-        "name": "messageId",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Id the field points `aria-describedby` at, so the message is announced with the control."
-      },
-      {
-        "name": "icon",
-        "kind": "input",
-        "type": "IconName | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Leading glyph. There is no per-state default: `state` sets the colour only, so a field that wants an icon passes one."
-      },
-      {
-        "name": "reserve",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Reserve one line of height even when there's no `text`, so a field that gains/loses a message doesn't shift the layout below it."
-      }
-    ],
-    "outputs": []
-  },
   "filter-bar": {
     "key": "filter-bar",
     "selector": "ds-filter-bar",
@@ -2538,6 +2389,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -3202,6 +3062,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Renders the item muted — a secondary row like \"Sign out\" under a divider, still actionable but not competing with the items above it."
       },
       {
+        "name": "description",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "A standing second line under the label — a limitation the action carries (\"will not be saved\", \"read-only in this workspace\"). Visible without hover or focus, which is what separates it from a `[dsTooltip]`. Reaches assistive tech as `aria-describedby`, NOT as part of the item's name: the projected label names the action, and a caveat is a description of it. That is why the line is `aria-hidden` in the DOM and referenced by id — inside the button and visible, it would otherwise be concatenated into the name."
+      },
+      {
         "name": "submenu",
         "kind": "input",
         "type": "TemplateRef<unknown> | null",
@@ -3447,18 +3316,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "modal:ModalConfirmComponent": {
-    "key": "modal",
-    "selector": "ds-modal-confirm",
-    "isElement": true,
-    "className": "ModalConfirmComponent",
-    "status": "stable",
-    "importName": "ModalConfirmComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [],
-    "outputs": []
-  },
   "multi-select": {
     "key": "multi-select",
     "selector": "ds-multi-select",
@@ -3533,6 +3390,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -3580,11 +3446,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "maxVisibleChips",
         "kind": "input",
-        "type": "number | 'fit' | null",
+        "type": "number | 'fit' | 'all' | null",
         "union": null,
-        "default": "'fit'",
+        "default": "null",
         "required": false,
-        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER caps at exactly that many, which is what you want when the trigger's height must be predictable whatever the width. `null` shows every chip and lets the trigger grow a line per selection."
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER is a CEILING, not a promise: the row still measures, so you get at most that many and fewer when the trigger is narrow. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) means \"not deciding\", as it does on every other input in the library — it resolves to `\"fit\"`. It does NOT mean \"show all\": that is `\"all\"`, which is the loudest of the three modes and has to be asked for."
       },
       {
         "name": "disabled",
@@ -3777,6 +3643,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -4278,13 +4153,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "checked",
         "kind": "model",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Standalone two-way binding. When inside ds-radio-group, isChecked() is derived from the group value instead."
+        "description": "Standalone two-way binding, and the ONLY way to drive a lone radio: this component is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form control — a radio is one option of a choice, not a value of its own — and a second accessor on the option would fight it. A lone radio in a form binds through `[(checked)]`, or becomes a one-option `ds-radio-group`. When inside `ds-radio-group`, `isChecked()` derives from the group value and this input is not read."
       },
       {
         "name": "disabled",
@@ -4430,6 +4314,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -4497,6 +4390,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control, as every other DS control does. Inline `display`, not the attribute: the host sets its own, which the weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -4549,6 +4451,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Accessible name for the input (placeholder is not a reliable label)."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Disables the input and the clear button."
       },
       {
         "name": "size",
@@ -4657,6 +4568,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -4787,6 +4707,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -4950,6 +4879,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Collapses the rail to icon-only width; read by nested `ds-sidenav-item`/`ds-sidenav-group`."
       },
       {
+        "name": "rail",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether the ACTIVE item draws its edge marker, for the whole sidenav. Off leaves the active state on the fill and the label alone — check that is still distinguishable before turning it off. An individual `ds-sidenav-item` can override this with its own `rail`."
+      },
+      {
         "name": "brand",
         "kind": "input",
         "type": "string | null",
@@ -5100,6 +5038,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables the item — non-navigable and styled as inactive."
+      },
+      {
+        "name": "rail",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether THIS item draws its edge marker when active. Unset follows the parent `ds-sidenav`, then on — the same \"null means not deciding\" reading as the rest of the library, so a sidenav-wide `[rail]=\"false\"` is not fought per item."
       }
     ],
     "outputs": [
@@ -5341,6 +5288,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -5552,11 +5508,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "value",
         "kind": "input",
-        "type": "string | number",
+        "type": "string | number | null",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Headline metric; `unit` is appended directly after it. Optional because the value can be PROJECTED instead — `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. The input is the fallback, the same shape `[delta]` already has. Namespaced, unlike `[delta]`: twenty components in this library have a `value` input, so a bare `value` attribute used to slot one of them in would also set that input to the empty string."
+        "description": "Headline metric; `unit` is appended directly after it. Optional because the value can be PROJECTED instead — `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. The input is the fallback, the same shape `[delta]` already has. Namespaced, unlike `[delta]`: twenty components in this library have a `value` input, so a bare `value` attribute used to slot one of them in would also set that input to the empty string. Takes `null` so `[value]=\"count | number\"` typechecks: Angular's own `number`/`date`/`percent` pipes are typed `string | null`, and without the null the idiomatic form fails `strictTemplates` and pushes consumers to `toLocaleString()` in the template — which hardcodes a locale instead of reading LOCALE_ID. Renders as nothing, like the empty default."
       },
       {
         "name": "delta",
@@ -5820,6 +5776,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -6815,6 +6780,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -7015,99 +6989,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "time-columns": {
-    "key": "time-columns",
-    "selector": "ds-time-columns",
-    "isElement": true,
-    "className": "TimeColumnsComponent",
-    "status": "stable",
-    "importName": "TimeColumnsComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "value",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Current time as `HH:mm` (24h, always — `format` changes only what is DISPLAYED)."
-      },
-      {
-        "name": "format",
-        "kind": "input",
-        "type": "TimeFormat",
-        "union": [
-          "24h",
-          "12h"
-        ],
-        "default": "'24h'",
-        "required": false,
-        "description": "Display clock. `12h` adds an AM/PM column; the emitted value stays 24h either way."
-      },
-      {
-        "name": "minuteStep",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "1",
-        "required": false,
-        "description": "Minute granularity — 15 gives four rows an hour instead of sixty."
-      },
-      {
-        "name": "minTime",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Earliest selectable time, `HH:mm`. Earlier rows render disabled rather than being removed, so the columns do not reflow as the bound changes."
-      },
-      {
-        "name": "maxTime",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Latest selectable time, `HH:mm`."
-      },
-      {
-        "name": "disabledTime",
-        "kind": "input",
-        "type": "((time: string) => boolean) | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Per-time predicate for what a range cannot express — booked slots, a lunch break. Receives `HH:mm`; return true to disable."
-      }
-    ],
-    "outputs": [
-      {
-        "name": "timeChange",
-        "kind": "output",
-        "type": "string",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "A complete time was picked, as `HH:mm`. Not emitted while only one column has moved."
-      },
-      {
-        "name": "partPicked",
-        "kind": "output",
-        "type": "TimeColumnId",
-        "union": [
-          "hours",
-          "minutes",
-          "period"
-        ],
-        "default": null,
-        "required": false,
-        "description": "Which column the pick came from. `timeChange` alone cannot say: it carries a whole time, and a host that wants to close once the user has been through both columns cannot infer the difference between \"chose the same hour again\" and \"did not touch hours\". Emitted immediately after `timeChange`."
-      }
-    ]
-  },
   "time-picker": {
     "key": "time-picker",
     "selector": "ds-time-picker",
@@ -7180,6 +7061,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",

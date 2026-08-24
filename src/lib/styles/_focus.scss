@@ -18,6 +18,12 @@
 // Base indicator for anything focusable that styles none itself, so it cannot fall
 // through to the browser default. `:where()` keeps it at ZERO specificity, so every
 // component and app rule still wins.
+//
+// CONSEQUENCE for a control the user focuses INSIDE a ringed shell: the shell must
+// silence the inner element, because a shadow is what this rule sets and `outline: 0`
+// cannot cancel a shadow — leave it and the field paints two rings, one round the inner
+// control and one round the box. The shells that do it: autocomplete, date-picker,
+// field-group, number-stepper, search.
 :where(:focus-visible) {
   outline: none;
   box-shadow: var(--ds-control-focus-shadow);
@@ -41,6 +47,16 @@
   --ds-control-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
   --ds-control-focus-shadow-error: 0 0 0 var(--border-width-default)
     var(--error);
+}
+
+// The one style NOT pinned to :root: a clipping ancestor is a local problem, so this
+// attribute works wherever it is set and inherits into the subtree. Put it on the
+// clipping element and everything inside keeps an indicator instead of losing it.
+[data-focus='inset'] {
+  --ds-field-focus-shadow: var(--focus-ring-inset);
+  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
+  --ds-control-focus-shadow: var(--focus-ring-inset);
+  --ds-control-focus-shadow-error: var(--focus-ring-inset-error);
 }
 
 :root[data-focus='outline'] {

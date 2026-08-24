@@ -443,6 +443,68 @@
     />
   </div>
 
+  <h3 class="block-title t-h4">
+    The glyph on the message line
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      error
+    </code>,
+    <code class="t-mono-inline">
+      warning
+    </code> and
+    <code class="t-mono-inline">
+      success
+    </code> each bring a glyph;
+    <code class="t-mono-inline">
+      hint
+    </code> does not, because it is the resting text rather
+    than a state and a form where every field carries an info circle reads as noise.
+    Colour alone was the whole signal before — and in the light theme warning
+    (#8A7400) against success (#156822) is a hue apart and nothing else, which is the
+    case WCAG 1.4.1 is about.
+  </p>
+
+  <p class="block-desc t-s">
+    Per state, app-wide:
+    <code class="t-mono-inline">
+      DS_CONFIG.field.stateIcons
+    </code>
+    — each key independent, a name replaces the glyph,
+    <code class="t-mono-inline">
+      false
+    </code> removes it, and
+    <code class="t-mono-inline">
+      stateIcons: false
+    </code> removes all four. On one field,
+    <code class="t-mono-inline">
+      messageIcon
+    </code> wins over both:
+  </p>
+
+  <div class="grid-3">
+    <ds-input
+      label="Default"
+      error="Uppercase letters are not allowed"
+      placeholder="My-Workspace"
+    />
+
+    <ds-input
+      label="[messageIcon]=&quot;false&quot;"
+      error="Uppercase letters are not allowed"
+      placeholder="My-Workspace"
+      [messageIcon]="false"
+    />
+
+    <ds-input
+      label="messageIcon=&quot;info&quot;"
+      error="Uppercase letters are not allowed"
+      placeholder="My-Workspace"
+      messageIcon="info"
+    />
+  </div>
+
   <p class="block-desc t-s">
     Bind
     <code class="t-mono-inline">

@@ -1,3 +1,4 @@
+@use 'styles/text-clip' as text-clip;
 
     .link { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
 
@@ -43,9 +44,9 @@
     .sample-cell__name {
       font-size: var(--font-size-xs);
       color: var(--text-secondary);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+
+      @include text-clip.single-line-ellipsis;
+
       min-width: 0;
     }
 

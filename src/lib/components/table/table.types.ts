@@ -69,6 +69,12 @@ export interface TableColumn<T = unknown> {
   /** Let the user toggle the column in the header column picker — the picker
    *  button appears once at least one column is hideable. */
   hideable?: boolean;
+  /** Marks the cell whose TEXT tells the reader what the row opens, so it takes a link
+   *  colour and underline while the row is hovered. Only has an effect on a
+   *  `rowInteractive` table: on a passive one every hover treatment is suppressed on
+   *  purpose, so a tint cannot promise a click that does not happen. Style it with
+   *  `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`. */
+  interactive?: boolean;
   /** Initial visibility: start hidden. The column picker (or a bound
    *  `hiddenKeys` set) owns the state from then on; a hidden column stays
    *  available to `filterable` matching and sorting. */
@@ -91,6 +97,17 @@ export interface TableRowAction<T = unknown> {
   error?: boolean;
   /** Per-row predicate — return true to disable the item for that row. */
   disabled?: (row: T) => boolean;
+  /** Per-row predicate — return true to leave the item OUT for that row. Use it
+   *  where the action does not apply rather than `disabled`, which greys an item
+   *  that is always there: a draft offers Edit + Launch and a live one Revert +
+   *  Delete, so greying leaves every row with a permanently dead half. When every
+   *  item of a row is hidden the kebab is not rendered at all, rather than opening
+   *  an empty menu. */
+  hidden?: (row: T) => boolean;
+  /** Why the item is disabled, shown as the item's second line. Only read when
+   *  `disabled` returns true for the row — a greyed item that does not say why is
+   *  the same dead control as a greyed button. */
+  disabledReason?: string | ((row: T) => string);
 }
 
 export interface TableRowActionEvent<T = unknown> {

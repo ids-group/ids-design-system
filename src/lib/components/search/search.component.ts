@@ -3,7 +3,9 @@ import {
   ElementRef,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
   effect,
+  forwardRef,
   input,
   model,
   numberAttribute,
@@ -11,8 +13,13 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  type ControlValueAccessor,
+} from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
+import { valueControlBridge } from '../control-value-accessor';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
@@ -22,15 +29,40 @@ import { resolveWithConfig } from '../../core/config-defaults';
   selector: 'ds-search',
   standalone: true,
   imports: [FormsModule, IconComponent, FieldClickFocusDirective],
-  host: { '[class.in-group]': 'inGroup' },
+  host: {
+    '[class.in-group]': 'inGroup',
+    '[style.display]': 'hidden() ? "none" : null',
+  },
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SearchComponent),
+      multi: true,
+    },
+  ],
 })
-export class SearchComponent {
+/**
+ * Takes the CVA bridge rather than `DsControlValueAccessor`, which also carries
+ * `DsFieldBase`: a search box is a toolbar filter, not a validated field, so it has
+ * no message row and no message API. Where a search needs a label or an error line,
+ * that is what `ds-input` is for.
+ */
+export class SearchComponent implements ControlValueAccessor {
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
+
+  private readonly bridge = valueControlBridge<string>(() => this.value);
+
+  /** Hides the control, as every other DS control does. Inline `display`, not the
+   *  attribute: the host sets its own, which the weaker UA rule would lose to. */
+  readonly hidden = input(false, { transform: booleanAttribute });
+
+  /** Driven by the forms API — OR'd into `isDisabled` like every other control. */
+  protected readonly formDisabled = this.bridge.formDisabled;
 
   /** Search text, two-way bound. */
   readonly value = model<string>('');
@@ -44,11 +76,15 @@ export class SearchComponent {
   readonly clearable = input(false, { transform: booleanAttribute });
   /** Accessible name for the input (placeholder is not a reliable label). */
   readonly ariaLabel = input<string>('');
+  /** Disables the input and the clear button. */
+  readonly disabled = input(false, { transform: booleanAttribute });
+
+  readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   /** Control height. `md` (default) keeps the 36px search-row height; `sm` (32px)
    *  aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
@@ -115,7 +151,13 @@ export class SearchComponent {
     this.submitted.emit(this.value());
   }
 
-  protected clear(): void {
+  /** Empties the field, DROPS any armed keystroke, and publishes '' immediately.
+   *  Public for the same reason `focus()` is: a host-owned Clear button outside the
+   *  control needs it. Writing `''` into `value` is not equivalent — the effect
+   *  that watches `value` only cancels the timer when the incoming text DIFFERS
+   *  from what this control last pushed, so clearing an already-empty-looking field
+   *  mid-debounce left the keystroke armed. */
+  clear(): void {
     this.text.set('');
     this.cancel();
     this.push('');
@@ -135,6 +177,27 @@ export class SearchComponent {
   private push(next: string): void {
     this.pushed = next;
     this.value.set(next);
+  }
+
+  writeValue(next: string): void {
+    this.bridge.writeValue(next);
+  }
+
+  registerOnChange(fn: (next: string) => void): void {
+    this.bridge.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.bridge.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.bridge.setDisabledState(isDisabled);
+  }
+
+  /** Reported to the forms API on blur, so a search inside a form goes `ng-touched`. */
+  protected markTouched(): void {
+    this.bridge.markTouched();
   }
 
   private cancel(): void {

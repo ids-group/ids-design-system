@@ -13,9 +13,7 @@ import { DsFieldBase } from '../field-base';
 import { nextControlId } from '../field-ids';
 import { RADIO_GROUP } from '../radio-group/radio-group.token';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage } from '../field-errors';
 import type { DsSize } from '../../core/size';
 import { resolveWithConfig } from '../../core/config-defaults';
 
@@ -28,8 +26,16 @@ import { resolveWithConfig } from '../../core/config-defaults';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class RadioComponent extends DsFieldBase {
-  /** Standalone two-way binding. When inside ds-radio-group, isChecked() is
-   *  derived from the group value instead. */
+
+  /** Standalone two-way binding, and the ONLY way to drive a lone radio: this
+   *  component is deliberately not a `ControlValueAccessor`, so `[formControl]` and
+   *  `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form
+   *  control — a radio is one option of a choice, not a value of its own — and a
+   *  second accessor on the option would fight it. A lone radio in a form binds
+   *  through `[(checked)]`, or becomes a one-option `ds-radio-group`.
+   *
+   *  When inside `ds-radio-group`, `isChecked()` derives from the group value and
+   *  this input is not read. */
   readonly checked = model<boolean>(false);
   /** Disables the radio; a disabled parent `ds-radio-group` also disables it. */
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -42,7 +48,7 @@ export class RadioComponent extends DsFieldBase {
   /** Control size — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,

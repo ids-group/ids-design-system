@@ -120,13 +120,29 @@ Every entry below names its exported class (`ButtonComponent`, `TableComponent<T
 
 **The `--ds-*` token contract, once for every component below.** Every public `--ds-<component>-*` token is READ WITH A FALLBACK and never declared by the component, so a consumer's value always wins and always inherits: set it on the host (`ds-button { --ds-button-bg-color: teal }`), on any ancestor, at `:root`, or inline. Unset tokens fall through to the component's own default, so there is nothing to opt into and nothing to reset. Two consequences worth stating: a token set at `:root` reaches EVERY instance — scope per instance or per section and keep theme-wide re-skins at role level (`--primary`, `--ds-radius-control`) — and where a component derives one value from another (a hover fill mixed from the resolved background), overriding the source retunes the derived states with it. Individual entries below therefore note only what DEVIATES from this: a derived state, a variant-specific default, a token that beats a size class.
 
-> **Token and API lists below are hand-maintained and have drifted.** `ds-button` in particular is documented here with its pre-`color`×`variant` API and the pre-rename token names (`--ds-button-bg-color`, `-fg`), neither of which is current. The authoritative, auto-generated surfaces are the **Component API tables** and the **token reference** in `ds-docs` (extracted from source on every build, so they cannot go stale) — trust those first, and treat this file as prose about intent. Re-verified 2026-08-05; the sweep to reconcile it is tracked in `docs/todo.md`.
+> **Token and API lists below are hand-maintained, so treat this file as prose about intent.** The authoritative surfaces are the **Component API tables** and the **token reference** in `ds-docs`, both extracted from source on every build, so they cannot go stale — trust those first, and read this file for the reasoning a generated table cannot carry. Where the two disagree, the generated one is right. Reconciled 2026-08-21 (the `ds-button` section named here as drifted had already been rewritten; that note was itself out of date).
 
 ### Form & input
 
+**Shared by every field** (input, textarea, select, multi-select, autocomplete, date/time/colour picker,
+checkbox, radio, radio-group, switch, slider, segmented, OTP): `label`, `hint`, `error`, `warning`,
+`errors`, `invalid`, `touched`, `reserveMessage` — and one message line under the control that renders
+whichever of them wins. The ladder is error → errors → warning → advisory errors → success → hint.
+
+`error`, `warning` and `success` lead that line with a glyph; `hint` does not, because it is the resting
+text rather than a state. Retune app-wide with `DS_CONFIG.field.stateIcons` (per state, independent —
+`false` removes one, an `IconName` replaces it, `stateIcons: false` removes all four), or per field with
+`messageIcon: IconName | false | null`, which wins over the config. Spacing hooks:
+`--ds-field-message-icon-gap`, `--ds-field-message-icon-offset`.
+
+**`ds-search` is deliberately NOT on that list.** It binds to a form like the others — `[formControl]`,
+`formControlName`, `[(ngModel)]`, signal forms, plus its own `[(value)]` — and it takes `disabled` and
+`hidden`, but it renders no message row and therefore takes none of the message inputs. A toolbar filter
+is not a validated field; where a search needs a label or an error line, use `ds-input`.
+
 #### `<ds-button>` — `ButtonComponent`
 Inputs: **two orthogonal axes** — `color: ButtonColor = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'neutral' | 'error' | 'success' | 'warning'`) and `variant: ButtonVariant = 'solid'` (`'solid' | 'tonal' | 'outline' | 'ghost' | 'text'`). Plus `size: DsSize | null = null` (unset resolves `DS_CONFIG.control.size`, then `md`), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled`, `loading`, `fullWidth`, `icon: IconName | null`.
-Axis meaning: **variant is loudness** (solid > tonal > outline/ghost/text), **color is hue** — every pair renders, and the UX-discouraged ones dev-warn (see `DISCOURAGED_COMBOS`). Only solid and tonal paint a fill: outline, ghost and text are TRANSPARENT, so they adopt the surface they sit on. Disabled uses one label recipe for every variant, `oklch(from accent 70% 0.035 h)`. (History: the single `variant` axis was split into color × variant in 2026-06; `danger`→`error`, `link`→`text`, the old `ghost`→`outline`.)
+Axis meaning: **variant is loudness** (solid > tonal > outline/ghost/text), **color is hue** — every pair renders, and the UX-discouraged ones dev-warn (see `DISCOURAGED_COMBOS`). Only solid and tonal paint a fill: outline, ghost and text are TRANSPARENT, so they adopt the surface they sit on. Disabled splits by whether the fill can carry the state: `solid` and `tonal` keep `oklch(from accent 70% 0.035 h)`, while `outline`, `ghost` and `text` — the three with no fill of their own — mix the label toward the surface, `color-mix(in srgb, <label> 40%, var(--surface-default))`, because a fixed lightness cannot serve both themes. (History: the single `variant` axis was split into color × variant in 2026-06; `danger`→`error`, `link`→`text`, the old `ghost`→`outline`.)
 Output: `(pressed): MouseEvent` — only fires when not disabled and not loading
 Content slots: default (label / leading or trailing icon). For icon-only actions use `<ds-icon-button>`.
 Tokens: `--ds-button-bg-color`, `--ds-button-bg-color-hover`, `--ds-button-bg-color-active`, `--ds-button-bg-color-disabled`, `--ds-button-label-color`, `--ds-button-label-color-disabled`, `--ds-button-border`, `--ds-button-radius`, `--ds-button-focus-shadow`, `--ds-button-pressed-shadow`. For `variant="solid"`, `-bg-color-hover` / `-bg-color-active` / `-pressed-shadow` default to a `color-mix()` derivation of the resolved fill (88 % / 76 % + black — the theme's hover/pressed recipe), so overriding the fill alone retints the whole state set; tonal, outline, ghost and text keep explicit ramp defaults, so a full retint there means setting the state tokens too. 
@@ -187,9 +203,11 @@ Inputs: `options: readonly ComboboxOption<T>[]` (`{ value: T, label: string }`),
 In multi mode, selected values render as `<ds-tag closable>` chips above the trigger.
 
 #### `<ds-search>` — `SearchComponent`
-Pre-styled search input with built-in icon.
-Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`
+Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.
+Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `hidden: boolean = false`, `size: DsSize | null = null`, `debounce: number = 0` (ms held before `value` updates; clearing, Enter and `clear()` all skip the timer)
 Output: `(submitted): string` — emits the current value on Enter / form submit
+Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`.
+Binds through `NG_VALUE_ACCESSOR`, taking the CVA plumbing without `DsFieldBase` — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
 
 #### `<ds-date-picker>` — `DatePickerComponent`
 Inputs: `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `value: model<Date | RangeValue | null>` (`RangeValue = [Date | null, Date | null]`), `placeholder: string = 'Select date'`, `label: string = ''`, `hint: string = ''`, `required: boolean = false`, `optional: boolean = false`
@@ -259,7 +277,7 @@ The companion `<ds-toast-region>` lives inside the `ToastService` (see Services)
 ### Layout & navigation
 
 #### `<ds-sidenav>` — `SidenavComponent`
-Inputs: `collapsed: boolean = false`, `brand: string = ''` (renders a letter mark + name; omit to project custom content)
+Inputs: `collapsed: boolean = false`, `brand: string | null = null` (renders a letter mark + name; omit to project custom content, or set `DS_CONFIG.brand.name`), `logoLetter: string | null = null` (the mark's glyph; derived from `brand` when unset), `rail: boolean = true` (whether an active item draws its edge marker — turn it off here rather than painting `--ds-sidenav-item-rail` transparent)
 Content: default slot for groups/items + custom brand/footer rows
 Tokens: `--ds-sidenav-bg-color`, `--ds-sidenav-border`, `--ds-sidenav-width`, `--ds-sidenav-width-collapsed`, `--ds-sidenav-mark-bg-color`, `--ds-sidenav-mark-label-color`
 
@@ -269,14 +287,27 @@ Content slots: default (items); `[ds-group-icon]` (custom group icon when not us
 When `expandable=true` renders header button with toggle + caret; collapses body when not expanded.
 
 #### `<ds-sidenav-item>` — `SidenavItemComponent`
-Inputs: `icon: IconName | null = null` (optional — falls back to `[icon]` slot), `label: required string`, `href: string = ''`, `routerLink: string | readonly unknown[] | null = null`, `active: boolean = false`, `badge: number | null = null`, `hasAlert: boolean = false`
+Inputs: `icon: IconName | null = null` (optional — falls back to `[icon]` slot), `label: required string`, `href: string = ''`, `routerLink: string | readonly unknown[] | null = null`, `active: boolean = false`, `badge: number | null = null`, `hasAlert: boolean = false`, `rail: boolean | null = null` (draws the active item's edge marker; unset follows the parent `ds-sidenav`)
 Content slots: `[icon]` (custom icon when not using a DS IconName), `[trailing]` (right-aligned chrome — badges, indicators, kbd shortcuts)
-Tokens (on `:host`): `--ds-sidenav-item-label-color`, `--ds-sidenav-item-label-color-hover`, `--ds-sidenav-item-bg-color-hover`, `--ds-sidenav-item-bg-color-active` (default: `--primary`), `--ds-sidenav-item-label-color-active` (default: `--text-on-primary`), `--ds-sidenav-item-rail` (left rail, default: `--secondary`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
+Tokens (on `:host`): `--ds-sidenav-item-label-color`, `--ds-sidenav-item-label-color-hover`, `--ds-sidenav-item-bg-color-hover`, `--ds-sidenav-item-bg-color-active` (default: `--accent-subtitle` — a wash, not a solid pill), `--ds-sidenav-item-label-color-active` (default: `--accent-strong`), `--ds-sidenav-item-bg-color-active-hover` (default: `--accent-muted`, deepening toward the accent), `--ds-sidenav-item-rail` (left rail, default: `--accent-strong`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
 
 #### `<ds-topbar>` — `TopBarComponent`
 No inputs.
 Content slots: `[title]`, `[breadcrumbs]`, `[search]`, `[actions]`. Sits at `--topbar-h` height.
 Tokens (on `:host`): `--ds-topbar-height`, `--ds-topbar-bg-color`, `--ds-topbar-border`, `--ds-topbar-title-text-color`, plus the `--ds-topbar-crumb-*` set for the breadcrumb row. **The topbar owns no bottom gap** — it has no margin token and sets no margin; spacing to the next block belongs to the page or to `ds-app-layout`'s content padding. (This paragraph previously documented a `--ds-topbar-margin-b` that has never existed in the shipped component.)
+
+#### `<ds-app-layout>` — `AppLayoutComponent`
+Inputs: `topbarSpan: 'content' | 'full' = 'content'`, `railOpen: model<boolean> = false` (the overlay rail below `--bp-lg`), `railLabel: string = 'Navigation'`, `restoreScroll: boolean = false`, `restoreScrollTimeout: number = 2000` (ms), `scrollReset: 'path' | 'always' | 'never' = 'path'`
+Content slots: `[sidenav]`, `[topbar]`, default (the page)
+Reads: `railId` and the read-only `railOverlay` signal, for a consumer-built burger; `dsRailTrigger` wires one for you.
+Tokens: `--ds-app-layout-pad-x`, `--ds-app-layout-pad-y`, `--ds-app-layout-content-max-width`, `--ds-app-layout-height`, `--ds-app-layout-rail-bg-color`, `--ds-app-layout-rail-shadow`, `--ds-app-layout-scrim-color`
+It owns the app's scroll CONTAINER, so a screen that needs to move the scroll calls `LayoutScrollService` rather than touching `window`.
+
+#### `<ds-auth-layout>` — `AuthLayoutComponent`
+Inputs: `brand: string | null = null`, `logoLetter: string | null = null`, `tagline: string | null = null` (all three fall back to `DS_CONFIG.brand`), `cardElevation: CardElevation = 'raised'`, `cardPadding: CardPadding = 'lg'`, `landmark: 'main' | 'none' = 'none'`
+Content slots: `[brand]` (replaces the whole mark row), `[dsBrandName]` (the name beside the generated mark), default (the card body), `[dsAuthSupport]` (the line under the card)
+Tokens: `--ds-auth-layout-min-height`, `--ds-auth-layout-bg-color`, `--ds-auth-layout-gap`, `--ds-auth-layout-pad-block`, `--ds-auth-layout-card-max-width`, `--ds-auth-layout-mark-size`, `--ds-auth-layout-mark-radius`, `--ds-auth-layout-mark-bg-color`, `--ds-auth-layout-mark-label-color`
+`landmark="main"` only when the page has no other `<main>`; the sign-in card is not automatically the document's main landmark.
 
 #### `<ds-page-header>` — `PageHeaderComponent`
 Inputs: `eyebrow: string = ''`, `title: required string`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
@@ -436,19 +467,43 @@ bootstrapApplication(AppComponent, {
 
 `DsConfig` shape (see `src/lib/config/ds-config.ts`):
 
+Twelve sections. `src/lib/config/ds-config.ts` is the source of truth — each key carries its own
+doc comment there, including why it is an app-level decision at all.
+
 ```ts
 interface DsConfig {
-  breadcrumbs?: {
-    separator?: IconName;
-    clickable?: boolean;
+  field?: {
+    reserveMessage?: boolean;              // keep a message line of space when empty
+    errorMessages?: Record<string, string>; // fallback text per validation-error kind
+    stateIcons?: false | {                 // the message line's leading glyph, per state
+      error?: IconName | false;            // default: `error`
+      warning?: IconName | false;          // default: `warn`
+      success?: IconName | false;          // default: `success`
+      hint?: IconName | false;             // default: NONE — hint is not a state
+    };
   };
+  control?: { size?: DsSize };             // every control on the field-height contract
+  card?: { elevation?: CardElevation; padding?: CardPadding };
+  table?: { stickyScrollbar?: boolean; bordered?: boolean };
+  modal?: { dividers?: boolean };          // reaches a ModalService confirm, which has no host to bind
+  icon?: { size?: number };
+  badge?: { withDot?: boolean };
+  breadcrumbs?: { separator?: IconName; clickable?: boolean };
+  datePicker?: { locale?: string; dateFormat?: string; firstDayOfWeek?: number };
+  timePicker?: { format?: '24h' | '12h' };
+  avatar?: { initials?: (name: string) => string };
+  brand?: { name?: string; logoLetter?: string; tagline?: string };
 }
 ```
 
-Currently consumed by:
-- `<ds-breadcrumbs>` — `[separator]` / `[clickable]` inputs fall back to `breadcrumbs.separator` / `breadcrumbs.clickable` from config, then to `'chevronRight'` / `true`.
+Precedence is always: **explicit input → config → component default.** A component publishes what it
+resolved as a public readback (`sizeResolved()`, `dividersResolved()`, …) so a host can read the
+effective value rather than re-deriving the chain.
 
-Add more sections to `DsConfig` as we extract reusable defaults; the precedence chain is always: explicit input → config → component default.
+**Call `provideDsConfig` once per injector.** Two calls in the same `providers` array do NOT merge —
+both resolve their parent with `skipSelf`, so the later wins and the earlier is silently lost. Merging
+happens across injector LEVELS: a route or component inherits the app's config and overrides only the
+keys it names.
 
 ---
 

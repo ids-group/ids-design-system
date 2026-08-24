@@ -25,12 +25,12 @@ export class CardComponent {
   /** Fires the click event when `elevation` is `interactive`. */
   readonly pressed = output<MouseEvent>();
 
-  protected readonly elevationResolved = resolveWithConfig(
+  readonly elevationResolved = resolveWithConfig(
     this.elevation,
     (config) => config.card?.elevation,
     'flat' as CardElevation,
   );
-  protected readonly paddingResolved = resolveWithConfig(
+  readonly paddingResolved = resolveWithConfig(
     this.padding,
     (config) => config.card?.padding,
     null as CardPadding | null,

@@ -380,12 +380,12 @@ export class TableComponent<T extends object> {
   protected readonly sortModeResolved = computed<TableSortMode>(
     () => this.sortMode() ?? 'server',
   );
-  protected readonly borderedResolved = resolveWithConfig(
+  readonly borderedResolved = resolveWithConfig(
     this.bordered,
     (config) => config.table?.bordered,
     false,
   );
-  protected readonly stickyScrollbarResolved = resolveWithConfig(
+  readonly stickyScrollbarResolved = resolveWithConfig(
     this.stickyScrollbar,
     (config) => config.table?.stickyScrollbar,
     false,
@@ -515,9 +515,9 @@ export class TableComponent<T extends object> {
     () => this.loadingMode() === 'overlay',
   );
   /** The empty row is a CLAIM about the data — "there are none" — so it must not
-   *  appear while the table is still asking. Only `skeleton` used to suppress it,
-   *  and `overlay` is the mode a list uses on every read after the first, so a
-   *  zero-row reload painted "No rows yet" under the spinner. */
+   *  appear while the table is still asking, in EITHER loading mode. `overlay` is
+   *  what a list uses on every read after the first, so suppressing only under
+   *  `skeleton` paints "No rows yet" under the spinner on a zero-row reload. */
   protected readonly showsEmptyRow = computed(
     () => this.loadingMode() === false && !this.filteredData().length,
   );
@@ -1634,6 +1634,36 @@ export class TableComponent<T extends object> {
     const row = this.menuRow();
 
     return row !== null && !!action.disabled?.(row);
+  }
+
+  /** Items that apply to `row`. Called from the trigger's own gate as well as the
+   *  menu, so a row with nothing applicable shows no kebab instead of an empty one. */
+  protected actionsFor(row: T): readonly TableRowAction<T>[] {
+    return this.rowActions().filter((action) => !action.hidden?.(row));
+  }
+
+  protected hasActionsFor(row: T): boolean {
+    return this.actionsFor(row).length > 0;
+  }
+
+  protected readonly visibleRowActions = computed<readonly TableRowAction<T>[]>(
+    () => {
+      const row = this.menuRow();
+
+      return row === null ? [] : this.actionsFor(row);
+    },
+  );
+
+  /** Empty unless the item is actually disabled for this row: a reason on a live
+   *  item would read as a caveat on something that works. */
+  protected actionReason(action: TableRowAction<T>): string {
+    const row = this.menuRow();
+    if (row === null || !action.disabled?.(row)) {
+      return '';
+    }
+    const reason = action.disabledReason;
+
+    return typeof reason === 'function' ? reason(row) : (reason ?? '');
   }
 
   protected onRowAction(action: TableRowAction<T>): void {

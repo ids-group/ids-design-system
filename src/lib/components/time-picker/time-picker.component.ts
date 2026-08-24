@@ -81,6 +81,7 @@ export class TimePickerComponent
   extends DsControlValueAccessor<string | TimeRangeValue | null>
   implements OnDestroy
 {
+
   constructor() {
     super();
   }
@@ -114,7 +115,7 @@ export class TimePickerComponent
   /** Trigger height — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
@@ -166,6 +167,15 @@ export class TimePickerComponent
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly columns = viewChild(TimeColumnsComponent);
 
+  /** Any of the three trigger boxes, not the host: a range renders two and a single
+   *  one renders one, while the host also carries the label and the message row —
+   *  clicking those has to dismiss the panel (MBP-225). */
+  private insideATrigger(target: Node): boolean {
+    return [this.singleTrigger(), this.startTrigger(), this.endTrigger()].some(
+      (trigger) => trigger?.nativeElement.contains(target) ?? false,
+    );
+  }
+
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
   );
@@ -185,7 +195,7 @@ export class TimePickerComponent
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
-  protected readonly resolvedFormat = computed<TimeFormat>(
+  readonly resolvedFormat = computed<TimeFormat>(
     () => this.format() ?? this.config.timePicker?.format ?? '24h',
   );
 
@@ -291,7 +301,7 @@ export class TimePickerComponent
     );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
+      (target) => this.insideATrigger(target),
       () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain

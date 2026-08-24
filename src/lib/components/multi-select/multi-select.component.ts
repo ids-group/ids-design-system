@@ -59,6 +59,7 @@ export class MultiSelectComponent
   extends DsControlValueAccessor<string[]>
   implements OnDestroy
 {
+
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
@@ -80,12 +81,21 @@ export class MultiSelectComponent
   readonly searchPlaceholder = input<string>('Filter…');
   /** How the chips collapse when they outgrow one line. `"fit"` (the default)
    *  measures and shows as many as the trigger is wide, the rest behind "+N more".
-   *  A NUMBER caps at exactly that many, which is what you want when the trigger's
-   *  height must be predictable whatever the width. `null` shows every chip and
-   *  lets the trigger grow a line per selection. */
-  readonly maxVisibleChips = input<number | 'fit' | null>('fit', {
-    transform: (raw: unknown) =>
-      raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
+   *  A NUMBER is a CEILING, not a promise: the row still measures, so you get at
+   *  most that many and fewer when the trigger is narrow. `"all"` shows every chip and
+   *  lets the trigger grow a line per selection.
+   *
+   *  Unset (`null`) means "not deciding", as it does on every other input in the
+   *  library — it resolves to `"fit"`. It does NOT mean "show all": that is
+   *  `"all"`, which is the loudest of the three modes and has to be asked for. */
+  readonly maxVisibleChips = input<number | 'fit' | 'all' | null>(null, {
+    transform: (raw: unknown) => {
+      if (raw === 'fit' || raw === 'all') {
+        return raw;
+      }
+
+      return raw == null ? null : numberAttribute(raw);
+    },
   });
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -139,21 +149,21 @@ export class MultiSelectComponent
     return this.options().filter((option) => selected.includes(option.value));
   });
 
+  private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
+  private readonly showsEveryChip = computed(() => this.chipsMode() === 'all');
   /** True for BOTH `'fit'` and a number: a number is a ceiling, not a promise —
    *  "at most N" — so the row still measures and shows only what the trigger is
    *  wide enough for. Without that, a phone-width trigger honoured the count and
    *  wrapped the text input onto a second line, which is the one thing the cap
-   *  exists to prevent. `null` opts out of measuring and grows, as documented. */
-  protected readonly fitsChipsToWidth = computed(
-    () => this.maxVisibleChips() !== null,
-  );
+   *  exists to prevent. */
+  protected readonly fitsChipsToWidth = computed(() => !this.showsEveryChip());
   /** How many chips the row is ASKED to render before measuring: everything for
    *  `'fit'`, the ceiling for a number. It has to be the ceiling and not the
    *  selection, because the measurement caches chip widths from a render that
    *  holds them all — with a numeric cap that render never happens, the cache
    *  never fills, and the fit fell back to "show them all" without a word. */
   private readonly chipBudget = computed(() => {
-    const max = this.maxVisibleChips();
+    const max = this.chipsMode();
     const total = this.selectedOptions().length;
 
     return typeof max === 'number' ? Math.min(Math.max(max, 0), total) : total;
@@ -168,7 +178,7 @@ export class MultiSelectComponent
   protected readonly visibleChips = computed<MultiSelectOption[]>(() => {
     const selected = this.selectedOptions();
 
-    return this.maxVisibleChips() === null
+    return this.showsEveryChip()
       ? selected
       : selected.slice(0, this.chipsThatFit());
   });
@@ -348,7 +358,7 @@ export class MultiSelectComponent
     );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
+      (target) => this.trigger().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain

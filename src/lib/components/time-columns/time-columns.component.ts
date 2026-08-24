@@ -153,7 +153,11 @@ export class TimeColumnsComponent {
     }
     const hour24 = this.toH24(cell.value);
     const parsed = this.parsedValue();
-    this.emit(hour24, parsed ? parsed.m : this.firstEnabledMinute(hour24), 'hours');
+    this.emit(
+      hour24,
+      parsed ? parsed.m : this.firstEnabledMinute(hour24),
+      'hours',
+    );
   }
 
   protected selectMinute(cell: Cell<number>): void {
@@ -172,10 +176,18 @@ export class TimeColumnsComponent {
       ? to12h(parsed.h).h
       : this.firstEnabledHour12(cell.value);
     const hour24 = from12h(hour12, cell.value);
-    this.emit(hour24, parsed ? parsed.m : this.firstEnabledMinute(hour24), 'period');
+    this.emit(
+      hour24,
+      parsed ? parsed.m : this.firstEnabledMinute(hour24),
+      'period',
+    );
   }
 
-  protected onKey(event: KeyboardEvent, column: TimeColumnId, index: number): void {
+  protected onKey(
+    event: KeyboardEvent,
+    column: TimeColumnId,
+    index: number,
+  ): void {
     const cells = this.cellsFor(column);
     let target = -1;
     switch (event.key) {

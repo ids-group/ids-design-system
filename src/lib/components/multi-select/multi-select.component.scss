@@ -1,6 +1,7 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/text-clip' as text-clip;
 
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
@@ -105,7 +106,11 @@
   width: 100%;
   background-color: var(--_panel-bg-color);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-md);
+
+  // Same chain the shared dropdown overlay resolves. This panel is `.panel`, not
+  // `.dropdown-panel`, so the shared rule does not reach it and the chain is
+  // re-declared here.
+  border-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
   box-shadow: var(--shadow-popover);
   overflow: hidden;
 }
@@ -228,9 +233,8 @@
 .option-label {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
+  @include text-clip.single-line-ellipsis;
 }
 
 .empty {

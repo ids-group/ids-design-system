@@ -201,6 +201,12 @@
     --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--c-muted-strong) 90%, black));
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
+
+    /* Toward the SURFACE, not toward this variant's own fill, even though the label
+       sits on the fill: mixing into the fill measures 2.56:1 of state change in dark
+       against 2.90:1 for the surface, because the disabled fill has already moved
+       toward the label. The shared oklch recipe cannot serve here at all — see ghost. */
+    --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
   &.v-ghost {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);

@@ -203,9 +203,14 @@
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
      so re-skinning --primary-h propagates into focus state.
-     The inner halo reads --surface-canvas so the ring stays visible
-     in both light and dark themes (canvas flips, ring adapts). */
-  --focus-ring-inner:        var(--surface-canvas);
+
+     The inner halo is TRANSPARENT, not a colour: its job is to separate the ring
+     from the element, so it has to match whatever is actually behind — which a
+     named surface only is when nothing intervenes. Painting --surface-canvas here
+     drew a dark rim around a white card in a dark app, reading as a rendering
+     artifact rather than a focus state. Transparent costs nothing on a canvas
+     ground (the same pixels show through) and is correct on every other. */
+  --focus-ring-inner:        transparent;
   --focus-ring-outer-h:      var(--primary-h);
   --focus-ring-outer-s:      var(--primary-s);
   --focus-ring-outer-l:      var(--primary-l);
@@ -220,6 +225,18 @@
   --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
+
+  /* Same ring drawn INSIDE the border box, for a subtree under a clipping
+     ancestor. An outset shadow is outside the box, so any `overflow: hidden`
+     ancestor eats it and leaves the element focusable with no indicator at all —
+     and clipping is the normal way to hold a full-bleed child inside a rounded
+     card. Reached through `[data-focus="inset"]`, not by re-declaring the role. */
+  --focus-ring-inset:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
+  --focus-ring-inset-error:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
 
   /* Field focus — coloured halo only (no double-ring). Derived from
      brand HSL so it tracks rebrand. Alpha is a token so dark themes

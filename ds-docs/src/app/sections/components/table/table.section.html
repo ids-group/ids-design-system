@@ -248,6 +248,50 @@
   </div>
 
   <h3 class="block-title t-h4">
+    The cell that names what the row opens
+  </h3>
+
+  <p class="block-desc t-s">
+    On a
+    <code class="t-mono-inline">
+      [rowInteractive]
+    </code> table the whole row is the control, so the
+    tint says <em>clickable</em> and nothing says WHICH text is the target. Mark that
+    column
+    <code class="t-mono-inline">
+      interactive: true
+    </code> and its cell takes a link colour and an
+    underline while the row is hovered — colour plus a decoration, never hue alone.
+    Retune with
+    <code class="t-mono-inline">
+      --ds-table-cell-link-color
+    </code> and
+    <code class="t-mono-inline">
+      --ds-table-cell-link-decoration
+    </code>. Off unless a column asks for it,
+    and inert on a passive table for the same reason the tint is: nothing should promise a
+    click that does not happen.
+  </p>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage state-cell__stage--tbl pin-cell-link">
+        <ds-table
+          caption="Interactive cell"
+          [data]="stateRow"
+          [columns]="linkCellColumns"
+          [rowInteractive]="true"
+          [stickyHeader]="false"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Hovered · Record is the target
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Row selection · bulk-action bar
   </h3>
 
@@ -917,7 +961,25 @@
     <code class="t-mono-inline">
       disabled
     </code> predicate greys items out
-    (here Delete is blocked for completed records). The kebab stops propagation,
+    (here Delete is blocked for completed records), and
+    <code class="t-mono-inline">
+      disabledReason
+    </code> puts the WHY on the item's
+    second line — a greyed item that does not say why is the same dead control as a
+    greyed button.
+    <br />
+    Where an action does not APPLY to a row, use
+    <code class="t-mono-inline">
+      hidden
+    </code> rather than
+    <code class="t-mono-inline">
+      disabled
+    </code>: greying leaves every row with a
+    permanently dead half, which is what happens when one status offers Edit +
+    Launch and another Revert + Delete. Relaunch below is hidden except on
+    completed records. <b>If every item of a row is hidden the kebab is not
+    rendered at all</b>, so a row with nothing applicable does not open an empty
+    menu. The kebab stops propagation,
     so on a <code class="t-mono-inline"> [rowInteractive] </code> table a menu
     click never fires <code class="t-mono-inline"> (rowClicked) </code>. A
     hand-built action column with no visible header should give its
@@ -1282,6 +1344,62 @@
     [sortKey]="serverSortKey()"
     [sortDir]="serverSortDir()"
     (sortChange)="onServerSort($event)"
+  />
+
+  <h3 class="block-title t-h4">
+    The same thing two-way, when the host has no opinion to defend
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      sortKey
+    </code> and
+    <code class="t-mono-inline">
+      sortDir
+    </code> each have a matching
+    <code class="t-mono-inline">
+      Change
+    </code> output, so
+    <code class="t-mono-inline">
+      [(sortKey)]
+    </code> and
+    <code class="t-mono-inline">
+      [(sortDir)]
+    </code> work: the table writes the
+    host's state and the host reads it back, with no handler to write. Below is the
+    demo above with the handler deleted and nothing else changed.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      What you give up is the third click.
+    </strong>
+    Clearing a sort sets
+    <code class="t-mono-inline">
+      sortDir
+    </code> to
+    <code class="t-mono-inline">
+      null
+    </code> and the rows come back
+    unsorted, because there is nowhere left to say "then fall back to Owner
+    descending". Prefer two-way where any sort state is equally valid — a saved view,
+    a URL you round-trip — and the one-way pair plus
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> where the host owns a default
+    it has to be able to restore. Host state:
+    <code class="t-mono-inline">
+      {{ twoWaySortKey() }} · {{ twoWaySortDir() ?? 'null' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Projects, two-way sort"
+    sortMode="server"
+    [data]="twoWaySortedRows()"
+    [columns]="serverSortColumns"
+    [(sortKey)]="twoWaySortKey"
+    [(sortDir)]="twoWaySortDir"
   />
 
   <h3 class="block-title t-h4">

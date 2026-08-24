@@ -1,3 +1,5 @@
+@use '../../styles/text-clip' as text-clip;
+
 :host {
   /* Public --ds-breadcrumbs-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_breadcrumbs-label-color:           var(--ds-breadcrumbs-label-color,           var(--text-tertiary));
@@ -64,9 +66,8 @@
   }
 
   .label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @include text-clip.single-line-ellipsis;
+
     max-width: 16ch;
   }
 

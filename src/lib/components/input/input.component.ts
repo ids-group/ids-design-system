@@ -50,6 +50,7 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
+
   private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
@@ -62,7 +63,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Field height — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,

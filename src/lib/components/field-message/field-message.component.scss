@@ -7,12 +7,27 @@
 .field-message {
   --_field-message-color:     var(--ds-field-message-color,     var(--text-tertiary));
   --_field-message-font-size: var(--ds-field-message-font-size, var(--font-size-xs));
+  --_field-message-icon-gap: var(--ds-field-message-icon-gap, var(--space-1));
 
   display: flex;
-  align-items: center;
-  gap: var(--space-1);
+
+  /* Top, not centre: a message that wraps to two lines would otherwise put the
+     glyph in the middle of the block instead of beside the first line. */
+  align-items: flex-start;
+  gap: var(--_field-message-icon-gap);
   font: var(--font-weight-regular) var(--_field-message-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_field-message-color);
+
+  /* The glyph is 14px in a line box of font-size x 1.4 (16.8px at the default),
+     so top-aligning it alone leaves it sitting high. Centre it against the FIRST
+     line rather than the block, computed from the two tokens that decide that line
+     so it still holds if a consumer retunes the message type. */
+  .message-icon {
+    margin-top: var(
+      --ds-field-message-icon-offset,
+      calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2)
+    );
+  }
 
   &.error   { color: var(--error-text); }
   &.warning { color: var(--warning-text); }

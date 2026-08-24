@@ -11,9 +11,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { RadioComponent } from '../radio/radio.component';
 import {
@@ -53,6 +51,7 @@ export class RadioGroupComponent
   extends DsControlValueAccessor<unknown>
   implements RadioGroupContract
 {
+
   /** Selected radio value; two-way bound. */
   readonly value = model<unknown>(null);
   /** Native `name` shared by every radio in the group. */

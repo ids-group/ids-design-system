@@ -25,5 +25,14 @@
       box-shadow: none;
       outline: 0;
     }
+
+    /* The GROUP owns the ring for the whole row, so nothing inside a segment may
+       draw one: styles/_focus.scss gives every focusable a box-shadow at zero
+       specificity, and the block above only clears it from the segment BOX — the
+       native input inside it kept its own, so a field group painted two rings, a
+       tight one around the control and the halo around the row. */
+    :where(:focus-visible) {
+      box-shadow: none;
+    }
   }
 }

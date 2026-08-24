@@ -13,9 +13,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage } from '../field-errors';
 import { nextControlId } from '../field-ids';
 
 type SliderValue = number | readonly [number, number];
@@ -41,6 +39,7 @@ type SliderValue = number | readonly [number, number];
   },
 })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
+
   /** Current value, or `[low, high]` when `range`. Two-way bound. */
   readonly value = model<SliderValue>(0);
   /** Minimum selectable value. */

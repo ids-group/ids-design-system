@@ -112,6 +112,11 @@ export class TableSection {
     { key: 'project', label: 'Record' },
   ];
 
+  protected readonly linkCellColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', interactive: true },
+    { key: 'venue', label: 'Venue' },
+  ];
+
   protected readonly sortStateColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record', sortable: true },
   ];
@@ -406,6 +411,27 @@ export class TableSection {
     );
   });
 
+  /** The same server shape with NO handler: the table writes these directly, so
+   *  the host reads its sort state back rather than deciding it. `dir` reaching
+   *  null is the trade — see the demo above, which keeps a handler for exactly
+   *  that case. */
+  protected readonly twoWaySortKey = signal<string>('project');
+  protected readonly twoWaySortDir = signal<'asc' | 'desc' | null>('asc');
+  protected readonly twoWaySortedRows = computed<readonly ProjectRow[]>(() => {
+    const key = this.twoWaySortKey() as keyof ProjectRow;
+    const dir = this.twoWaySortDir();
+    const rows = this.projectRows.slice(0, 6);
+    if (!dir) {
+      return rows;
+    }
+
+    return rows.slice().sort(
+      (left, right) =>
+        String(left[key]).localeCompare(String(right[key])) *
+        (dir === 'asc' ? 1 : -1),
+    );
+  });
+
   protected onServerSort(event: {
     key: string;
     dir: 'asc' | 'desc' | null;
@@ -462,6 +488,13 @@ export class TableSection {
       icon: 'trash',
       error: true,
       disabled: (row) => row.status === 'completed',
+      disabledReason: 'A completed run is kept for the audit trail',
+    },
+    {
+      id: 'relaunch',
+      label: 'Relaunch',
+      icon: 'refresh',
+      hidden: (row) => row.status !== 'completed',
     },
   ];
 

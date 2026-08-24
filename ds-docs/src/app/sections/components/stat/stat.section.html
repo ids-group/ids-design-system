@@ -163,4 +163,69 @@
     straight past the tile's edge. That is the behaviour every existing tile keeps,
     since the defaults did not move.
   </p>
+
+  <h3 class="block-title t-h4">
+    A formatted number, through Angular's own pipe
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      value
+    </code> takes
+    <code class="t-mono-inline">
+      string | number | null
+    </code>, so the
+    <code class="t-mono-inline">
+      number
+    </code>,
+    <code class="t-mono-inline">
+      percent
+    </code> and
+    <code class="t-mono-inline">
+      date
+    </code> pipes bind
+    directly — they are typed
+    <code class="t-mono-inline">
+      string | null
+    </code>, and before the null
+    they failed
+    <code class="t-mono-inline">
+      strictTemplates
+    </code> with TS2322. Prefer this to
+    <code class="t-mono-inline">
+      toLocaleString('en-US')
+    </code> in the template, which pins a
+    locale instead of reading
+    <code class="t-mono-inline">
+      LOCALE_ID
+    </code> and re-runs on every
+    change-detection pass where a pure pipe is cached. These four tiles are the proof:
+    the section compiles under
+    <code class="t-mono-inline">
+      strictTemplates
+    </code>.
+  </p>
+
+  <div class="grid-4">
+    <ds-stat
+      label="Records this cycle"
+      [value]="records | number"
+    />
+
+    <ds-stat
+      label="Gross written premium"
+      [value]="premium | currency: 'GBP' : 'symbol' : '1.0-0'"
+    />
+
+    <ds-stat
+      label="Renewal rate"
+      [value]="renewalRate | percent"
+    />
+
+    <ds-stat
+      label="Next recompute"
+      [value]="nextRecompute | date: 'MMM d, y'"
+    />
+  </div>
+
 </docs-section>

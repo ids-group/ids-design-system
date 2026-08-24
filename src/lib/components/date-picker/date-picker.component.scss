@@ -101,6 +101,11 @@
   }
 
   &:focus-visible,
+  /* The shell owns the ring; the inner control must not draw the universal one too.
+     See styles/_focus.scss for why `outline: 0` cannot cancel it. */
+  :where(:focus-visible) {
+    box-shadow: none;
+  }
   &:focus-within,
   &.open {
     outline: none;

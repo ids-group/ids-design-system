@@ -1,4 +1,5 @@
 @use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/text-clip' as text-clip;
 
 /* `.table.skeleton-mode` is the row-level loading flag — named distinctly so it
    does not shadow the global `.skeleton` cell-shimmer class. */
@@ -126,6 +127,8 @@
   --_table-row-pressed-bg-color: var(--ds-table-row-pressed-bg-color, var(--surface-muted));
   --_table-row-active-bg-color: var(--ds-table-row-active-bg-color, var(--accent-subtitle));
   --_table-row-stripe-bg-color: var(--ds-table-row-stripe-bg-color, var(--surface-secondary));
+  --_table-cell-link-color: var(--ds-table-cell-link-color, var(--accent));
+  --_table-cell-link-decoration: var(--ds-table-cell-link-decoration, underline);
   --_table-head-text-color:         var(--ds-table-head-text-color,         var(--text-secondary));
   --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
   --_table-head-fs:         var(--ds-table-head-fs,         var(--font-size-xs));
@@ -306,6 +309,14 @@
         background-color: var(--_table-row-hover-bg-color);
       }
 
+      /* The cell that NAMES what the row opens, opted into per column. The row tint says
+         "clickable" and this says WHICH text is the target — colour plus a decoration, so it
+         does not rest on hue alone. Scoped to .clickable for the same reason the tint is. */
+      &.clickable:hover td.interactive-cell {
+        color: var(--_table-cell-link-color);
+        text-decoration: var(--_table-cell-link-decoration);
+      }
+
       &.selected td {
         background-color: var(--_table-row-selected-bg-color);
       }
@@ -355,9 +366,10 @@
        layout can't stretch the column to fit the full text. */
     .cell-clip {
       display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+
+      /* `scrollWidth > clientWidth` still reports true under `clip`, checked in
+         Chromium — which is how a clipped cell earns its full-text popover. */
+      @include text-clip.single-line-ellipsis;
     }
   }
 

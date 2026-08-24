@@ -469,7 +469,7 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   },
   {
     "name": "--focus-ring-inner",
-    "value": "var(--surface-canvas)",
+    "value": "transparent",
     "notes": "Inner ring band (reads canvas — flips with theme)."
   },
   {
@@ -492,6 +492,16 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
     "name": "--focus-ring-error",
     "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
     "notes": "Focus ring shadow for invalid/error controls."
+  },
+  {
+    "name": "--focus-ring-inset",
+    "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
+    "notes": "The focus ring drawn INSIDE the border box, for a subtree under data-focus=\"inset\". Same two rings and colours as --focus-ring; only the direction differs, so an overflow:hidden ancestor cannot clip it away."
+  },
+  {
+    "name": "--focus-ring-inset-error",
+    "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
+    "notes": "The inset ring in the error colour, for a field that is invalid while focused under data-focus=\"inset\"."
   },
   {
     "name": "--focus-field-alpha",
@@ -3120,11 +3130,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-option-check-color",
         "value": "var(--primary)",
         "notes": "The check glyph on a selected row (default --primary)."
-      },
-      {
-        "name": "--ds-dropdown-panel-radius",
-        "value": "var(--ds-radius-panel)",
-        "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
       }
     ]
   },
@@ -3345,6 +3350,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-message-font-size",
         "value": "var(--font-size-xs)",
         "notes": "Helper-text size."
+      },
+      {
+        "name": "--ds-field-message-icon-gap",
+        "value": "var(--space-1)",
+        "notes": "Space between the state glyph and the message text (default --space-1). Also the row gap when there is no glyph, since the row holds nothing else."
       }
     ]
   },
@@ -3731,6 +3741,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Menu item label size."
       },
       {
+        "name": "--ds-menu-item-description-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary, quieter than the label so the action still reads first)."
+      },
+      {
+        "name": "--ds-menu-item-description-font-size",
+        "value": "var(--font-size-2xs)",
+        "notes": "Type size of that second line (default --font-size-xs)."
+      },
+      {
+        "name": "--ds-menu-item-description-max-width",
+        "value": "14rem",
+        "notes": "Where the description wraps (default 14rem). It exists because the line is prose, and an unbounded one would stretch the menu to the width of its longest sentence."
+      },
+      {
         "name": "--ds-menu-item-radius",
         "value": "0",
         "notes": "Corner radius of a menu row (default 0). Square by design: rows sit flush inside the panel, whose own radius is --ds-menu-radius."
@@ -3759,6 +3784,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-gap",
         "value": "var(--space-0-5)",
         "notes": "Gap between menu items."
+      },
+      {
+        "name": "--ds-menu-radius",
+        "value": "var(--radius-md)",
+        "notes": "Corner of a bare ds-menu (default --radius-md, which is what the component hardcoded before). Inside a ds-popover the menu clips to --ds-menu-clip-radius instead, published by the popover."
       },
       {
         "name": "--ds-menu-clip-radius",
@@ -4063,6 +4093,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-multi-select-check-bg-color",
         "value": "var(--accent)",
         "notes": "Multi-select option checkmark fill (defaults to --accent)."
+      },
+      {
+        "name": "--ds-dropdown-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
       }
     ]
   },
@@ -4754,23 +4789,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-item-bg-color-active",
-        "value": "var(--accent)",
+        "value": "var(--accent-subtitle)",
         "notes": "Active item fill."
       },
       {
         "name": "--ds-sidenav-item-label-color-active",
-        "value": "var(--text-on-primary)",
+        "value": "var(--accent-strong)",
         "notes": "Active item label."
       },
       {
         "name": "--ds-sidenav-item-bg-color-active-hover",
-        "value": "color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, white)",
+        "value": "var(--accent-muted)",
         "notes": "Active item hover fill."
       },
       {
         "name": "--ds-sidenav-item-rail",
-        "value": "var(--secondary)",
-        "notes": "Active item rail accent."
+        "value": "var(--accent-strong)",
+        "notes": "Edge marker on the active item (defaults to --accent-strong, the same colour as the active label). It is the second signal beside the wash, so the state does not rest on colour alone — turn it off with [rail] on ds-sidenav or ds-sidenav-item rather than painting it transparent."
       },
       {
         "name": "--ds-sidenav-item-radius",
@@ -5092,7 +5127,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-stat-value-white-space",
         "value": "nowrap",
-        "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around; without it the text is clipped."
+        "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around. Without it the line does not wrap and, since `.stat` sets no `overflow`, the text runs OUT of the tile rather than being clipped inside it."
       },
       {
         "name": "--ds-stat-up-color",
@@ -5788,6 +5823,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-table-row-stripe-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "Zebra odd-row stripe fill."
+      },
+      {
+        "name": "--ds-table-cell-link-color",
+        "value": "var(--accent)",
+        "notes": "Colour a cell marked `interactive: true` takes while its row is hovered on a `rowInteractive` table (default --accent). It names WHICH text opens the record, where the row tint only says the row is clickable."
+      },
+      {
+        "name": "--ds-table-cell-link-decoration",
+        "value": "underline",
+        "notes": "Decoration on that same cell (default `underline`), so the target is not signalled by hue alone. Set `none` only if something else in the row carries the signal."
       },
       {
         "name": "--ds-table-head-text-color",

@@ -9,7 +9,8 @@
       "note": "The per-component size scale is now the shared `DsSize` ('sm'|'md'|'lg'), exported from the package root. Rename this type BEFORE `ButtonSize` — this identifier contains it, so an unordered replace would corrupt it. Collapse any duplicate `DsSize` imports that result.",
       "searchHints": [
         "IconButtonSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-button-to-dssize",
@@ -19,7 +20,8 @@
       "note": "Removed — use the shared `DsSize` from the package root. Rename `IconButtonSize` FIRST (it contains `ButtonSize`). Collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "ButtonSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-input-to-dssize",
@@ -29,7 +31,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports if you import several of these together.",
       "searchHints": [
         "InputSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-select-to-dssize",
@@ -39,7 +42,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "SelectSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-search-to-dssize",
@@ -49,7 +53,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "SearchSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-checkbox-to-dssize",
@@ -59,7 +64,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "CheckboxSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-radio-to-dssize",
@@ -69,7 +75,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "RadioSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-switch-to-dssize",
@@ -79,7 +86,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "SwitchSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-spinner-to-dssize",
@@ -89,7 +97,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "SpinnerSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-textarea-to-dssize",
@@ -99,7 +108,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "TextareaSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-number-stepper-to-dssize",
@@ -109,7 +119,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "NumberStepperSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-date-picker-to-dssize",
@@ -119,7 +130,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "DatePickerSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-time-picker-to-dssize",
@@ -129,7 +141,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "TimePickerSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-drawer-to-dssize",
@@ -139,7 +152,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "DrawerSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "size-type-autocomplete-to-dssize",
@@ -149,7 +163,8 @@
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
       "searchHints": [
         "AutocompleteSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "pagination-page-change-to-current-page-change",
@@ -160,7 +175,8 @@
       "searchHints": [
         "(pageChange)",
         "pageChange"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "input-with-addon-removed",
@@ -170,7 +186,9 @@
       "note": "Removed (distinct from withAddonRight below — match the exact attribute; withAddon is a substring of withAddonRight). The flush-addon layout is now derived from the DOM: a boxed .addon projected into [dsInputPrefix] (<span dsInputPrefix class=\"addon\">…</span>) sits flush automatically via :has(), and a bare <ds-icon dsInputPrefix> keeps its inset. Delete the [withAddon] attribute — a boxed addon renders identically; a bare icon that used the flag regains its proper left inset (bugfix).",
       "searchHints": [
         "[withAddon]"
-      ]
+      ],
+      "surface": "template",
+      "verify": "No ds-input carries `withAddon`; a boxed addon projected into [dsInputPrefix] sits flush on its own."
     },
     {
       "id": "input-with-addon-right-removed",
@@ -180,7 +198,9 @@
       "note": "Removed — the trailing counterpart of withAddon. A boxed .addon.right projected into [dsInputSuffix] now sits flush automatically via :has(). Delete the [withAddonRight] attribute.",
       "searchHints": [
         "[withAddonRight]"
-      ]
+      ],
+      "surface": "template",
+      "verify": "No ds-input carries `withAddonRight`."
     },
     {
       "id": "app-shell-selector-to-app-layout",
@@ -190,7 +210,8 @@
       "note": "Component renamed (shipped as ds-app-shell in the tagged 0.6.3 source). Behaviour unchanged — rename the element and its closing tag. Also rename the class, service and tokens (separate entries below).",
       "searchHints": [
         "ds-app-shell"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "app-shell-class-to-app-layout",
@@ -200,7 +221,8 @@
       "note": "The exported component class renamed alongside the ds-app-shell → ds-app-layout selector. Update imports / type references.",
       "searchHints": [
         "AppShellComponent"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "shell-scroll-service-to-layout-scroll-service",
@@ -210,7 +232,8 @@
       "note": "The exported scroll-to-top-on-navigation service renamed with the app-shell → app-layout rename. Update inject()/import references; the scrollToTop() API is unchanged.",
       "searchHints": [
         "ShellScrollService"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "app-shell-tokens-to-app-layout",
@@ -220,7 +243,8 @@
       "note": "Prefix rename for the four layout tokens: --ds-app-shell-pad-x / -pad-y / -content-max-width / -height → --ds-app-layout-*. DS-owned tokens only (no others ship under this prefix); a consumer's own --ds-app-shell-* variable is out of scope. Confirm the new name exists in the installed package.",
       "searchHints": [
         "--ds-app-shell-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "select-clear-button-dom-change",
@@ -232,7 +256,18 @@
         "ds-select",
         "role=\"combobox\"",
         "Clear selection"
-      ]
+      ],
+      "surface": [
+        "style",
+        "typescript"
+      ],
+      "detect": [
+        "role=\"combobox\"",
+        "[role=combobox]",
+        "aria-hidden",
+        "querySelector"
+      ],
+      "verify": "No CSS selector or test targets the old <button role=\"combobox\"> trigger or the <span> clear affordance - both are a div and a real button now."
     },
     {
       "id": "field-reserve-message-default-on",
@@ -245,7 +280,17 @@
         "<ds-textarea",
         "<ds-select",
         "reserveMessage"
-      ]
+      ],
+      "surface": [
+        "template",
+        "config"
+      ],
+      "detect": [
+        "[reserveMessage]",
+        "reserveMessage"
+      ],
+      "restore": "[reserveMessage]=\"false\" per field",
+      "verify": "Form vertical rhythm was re-read with the reserved row present: a tightly stacked pair does not read as a gap."
     },
     {
       "id": "table-component-subclass-member-collisions",
@@ -256,7 +301,14 @@
       "searchHints": [
         "extends TableComponent",
         "extends "
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends TableComponent",
+        "extends ",
+        "zebra"
+      ],
+      "verify": "A typecheck reports no TS4114 / TS2416 on a TableComponent subclass; a kept `zebra` override adopts the base booleanAttribute transform."
     }
   ],
   "informational": [

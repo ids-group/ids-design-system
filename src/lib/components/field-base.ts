@@ -1,5 +1,6 @@
 import { Directive, booleanAttribute, input } from '@angular/core';
 import { resolveReserveMessage } from './field-defaults';
+import type { IconName } from '../icons/icons.data';
 import {
   normalizeFieldErrors,
   trimmedText,
@@ -54,7 +55,10 @@ export abstract class DsFieldBase {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
 
-  protected readonly reserveMessageResolved = resolveReserveMessage(
-    this.reserveMessage,
-  );
+  /** Glyph on the message line, overriding what the state resolves to. Unset
+   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
+   *  alone. */
+  readonly messageIcon = input<IconName | false | null>(null);
+
+  readonly reserveMessageResolved = resolveReserveMessage(this.reserveMessage);
 }

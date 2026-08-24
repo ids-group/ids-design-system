@@ -71,12 +71,9 @@ export class AuthLayoutComponent {
 
   /** The template must read THIS, never the input beside it — that one is null
    *  until bound, and the config default lives here. */
-  protected readonly brandName = resolveBrandValue(this.brand, 'name');
-  protected readonly letterGlyph = resolveBrandValue(
-    this.logoLetter,
-    'logoLetter',
-  );
-  protected readonly taglineText = resolveBrandValue(this.tagline, 'tagline');
+  readonly brandName = resolveBrandValue(this.brand, 'name');
+  readonly letterGlyph = resolveBrandValue(this.logoLetter, 'logoLetter');
+  readonly taglineText = resolveBrandValue(this.tagline, 'tagline');
   /** Card treatment. `flat` suits a screen that already sits on a tinted canvas. */
   readonly cardElevation = input<CardElevation>('raised');
   /** Card padding, passed through to `ds-card`. `md` tightens a short form. */

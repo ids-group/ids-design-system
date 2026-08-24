@@ -11,7 +11,8 @@
         "<ds-modal",
         "[danger]",
         "danger="
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "modal-card-danger-input-rename",
@@ -23,7 +24,8 @@
         "<ds-modal-card",
         "[danger]",
         "danger="
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "menu-item-danger-input-rename",
@@ -35,7 +37,8 @@
         "<ds-menu-item",
         "[danger]",
         "danger="
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "stat-variant-danger-remap",
@@ -50,7 +53,8 @@
       ],
       "map": {
         "danger": "variant=\"error\""
-      }
+      },
+      "surface": "template"
     },
     {
       "id": "progress-variant-remap",
@@ -67,7 +71,8 @@
       "map": {
         "warn": "variant=\"warning\"",
         "indeterminate": "indeterminate"
-      }
+      },
+      "surface": "template"
     },
     {
       "id": "modal-confirm-tone-danger-remap",
@@ -79,7 +84,13 @@
         "ModalConfirmTone",
         "tone:",
         "tone="
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "tone: 'danger'",
+        "ModalConfirmTone"
+      ],
+      "verify": "No ModalService.confirm call passes `tone: 'danger'`, and nothing is typed with the removed union member."
     },
     {
       "id": "split-button-item-danger-property",
@@ -90,7 +101,13 @@
       "searchHints": [
         "SplitButtonItem",
         "danger:"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "danger: true",
+        "SplitButtonItem"
+      ],
+      "verify": "No SplitButtonItem literal carries `danger`; every one uses `error`."
     },
     {
       "id": "menu-item-danger-label-token-rename",
@@ -100,7 +117,8 @@
       "note": "Public token renamed in lockstep with [danger] -> [error]. CSS property and default unchanged.",
       "searchHints": [
         "--ds-menu-item-danger-label-color"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "modal-card-danger-class-rename",
@@ -113,7 +131,8 @@
         "ds-modal-card",
         ".modal.danger",
         "&.danger"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "menu-item-danger-class-rename",
@@ -124,7 +143,8 @@
       "searchHints": [
         "ds-menu-item",
         ".danger"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "stat-danger-class-rename",
@@ -135,7 +155,8 @@
       "searchHints": [
         "ds-stat",
         ".danger"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "progress-danger-class-rename",
@@ -146,7 +167,8 @@
       "searchHints": [
         "ds-progress",
         ".danger"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "progress-bar-warn-token-rename",
@@ -156,7 +178,8 @@
       "note": "Public token renamed in lockstep with the 'warn' -> 'warning' value. CSS property and default unchanged.",
       "searchHints": [
         "--ds-progress-bar-color-warn"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "alert-dismissed-output-rename",
@@ -167,7 +190,8 @@
       "searchHints": [
         "<ds-alert",
         "(dismissed)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "banner-dismissed-output-rename",
@@ -178,7 +202,8 @@
       "searchHints": [
         "<ds-banner",
         "(dismissed)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "toast-dismissed-output-rename",
@@ -189,7 +214,8 @@
       "searchHints": [
         "<ds-toast",
         "(dismissed)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "table-rowclick-output-rename",
@@ -200,7 +226,8 @@
       "searchHints": [
         "<ds-table",
         "(rowClick)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "stepper-stepclick-output-rename",
@@ -211,7 +238,8 @@
       "searchHints": [
         "<ds-stepper",
         "(stepClick)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "calendar-day-dayselect-output-rename",
@@ -222,7 +250,8 @@
       "searchHints": [
         "<ds-calendar-day",
         "(daySelect)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "tabs-tabclose-output-rename",
@@ -233,7 +262,8 @@
       "searchHints": [
         "<ds-tabs",
         "(tabClose)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "tree-nodeselect-output-rename",
@@ -244,7 +274,8 @@
       "searchHints": [
         "<ds-tree",
         "(nodeSelect)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "split-button-itemselect-output-rename",
@@ -255,7 +286,8 @@
       "searchHints": [
         "<ds-split-button",
         "(itemSelect)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "title-required-name-bearing",
@@ -267,7 +299,14 @@
         "<ds-drawer",
         "<ds-bottom-sheet",
         "<ds-accordion-item"
-      ]
+      ],
+      "surface": "template",
+      "detect": [
+        "ds-drawer",
+        "ds-bottom-sheet",
+        "ds-accordion-item"
+      ],
+      "verify": "Every ds-drawer, ds-bottom-sheet and ds-accordion-item carries a title - it is the component's accessible name, and a missing one leaves the disclosure button unlabelled."
     },
     {
       "id": "badge-variant-to-status-rename",
@@ -279,7 +318,8 @@
         "<ds-badge",
         "variant=\"",
         "[variant]="
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "status-dot-status-retype",
@@ -290,7 +330,20 @@
       "searchHints": [
         "<ds-status-dot",
         ".status-dot"
-      ]
+      ],
+      "surface": [
+        "template",
+        "style",
+        "typescript"
+      ],
+      "detect": [
+        ".status-dot",
+        "StatusValue",
+        "data-status",
+        "status-dot."
+      ],
+      "verify": "No CSS targets `.status-dot.<value>` (the value is a data-status attribute now) and nothing types a status with StatusValue instead of DsStatusKey.",
+      "restore": "status=\"planning\" stated explicitly, where a dot relied on the old default"
     },
     {
       "id": "badge-status-dot-types-removed",
@@ -303,7 +356,15 @@
         "BadgeLifecycle",
         "BadgeSemantic",
         "StatusValue"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "BadgeVariant",
+        "BadgeLifecycle",
+        "BadgeSemantic",
+        "StatusValue"
+      ],
+      "verify": "None of the four removed type names is imported; badge and status-dot statuses are typed DsStatusKey or a registry-augmented union."
     },
     {
       "id": "status-lifecycle-tokens-removed",
@@ -316,7 +377,15 @@
         "--status-confirmed",
         "--status-active",
         "--status-completed"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "--status-planning",
+        "--status-confirmed",
+        "--status-active",
+        "--status-completed"
+      ],
+      "verify": "No stylesheet declares a --status-<lifecycle>-* token; a themed lifecycle status is declared through the styles/status Sass API instead."
     },
     {
       "id": "default-secondary-tertiary-hues",
@@ -329,7 +398,10 @@
         "--tertiary-h",
         "--secondary",
         "--tertiary"
-      ]
+      ],
+      "surface": "style",
+      "restore": "--secondary-h/s/l and --tertiary-h/s/l pointed back at the --primary channels",
+      "verify": "An app that never set those channels has looked at every secondary and tertiary surface (they are orange and violet now, not blue), or pins them back."
     },
     {
       "id": "static-white-token-removed",
@@ -340,7 +412,12 @@
       "searchHints": [
         "--static-white",
         "var(--static-white)"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "--static-white"
+      ],
+      "verify": "No stylesheet reads var(--static-white); the literal `white` stands in its place."
     }
   ],
   "informational": [

@@ -114,6 +114,7 @@ export class DatePickerComponent
   extends DsControlValueAccessor<Date | RangeValue | null>
   implements OnDestroy
 {
+
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
@@ -198,7 +199,7 @@ export class DatePickerComponent
   /** Trigger height — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
@@ -292,7 +293,7 @@ export class DatePickerComponent
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
-  protected readonly resolvedLocale = computed(
+  readonly resolvedLocale = computed(
     () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',
   );
   protected readonly resolvedFirstDay = computed(
@@ -749,9 +750,10 @@ export class DatePickerComponent
       this.host.nativeElement,
       this.panelTokens,
     );
+    // The anchor, not the host: a stretched host's empty width must dismiss (MBP-225).
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
+      (target) => this.anchor().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll, and CDK's scroll strategies don't see a

@@ -22,12 +22,12 @@ import { resolveWithConfig } from '../../core/config-defaults';
 export class BadgeComponent {
   /** Consumer-defined status key; colours are wired via styles/status. Unset → neutral. */
   readonly status = input<DsStatusKey>();
-  /** Shows a status dot; only rendered when `count` is unset. */
-  /** Leading status dot. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`. */
+  /** Leading status dot, rendered only while `count` is unset — a count replaces the
+   *  badge's whole content. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`. */
   readonly withDot = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
-  protected readonly withDotResolved = resolveWithConfig(
+  readonly withDotResolved = resolveWithConfig(
     this.withDot,
     (config) => config.badge?.withDot,
     false,

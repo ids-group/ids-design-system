@@ -9,8 +9,28 @@
   --_menu-item-pad-y: var(--ds-menu-item-pad-y, var(--space-2));
   --_menu-item-label-weight: var(--ds-menu-item-label-weight, var(--font-weight-medium));
   --_menu-item-label-font-size: var(--ds-menu-item-label-font-size, var(--font-size-s));
+  --_menu-item-description-color: var(--ds-menu-item-description-color, var(--text-tertiary));
+  --_menu-item-description-font-size: var(--ds-menu-item-description-font-size, var(--font-size-2xs));
+  --_menu-item-description-max-width: var(--ds-menu-item-description-max-width, 14rem);
 
   display: block;
+}
+
+.menu-item-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.menu-item-description {
+  display: block;
+  max-width: var(--_menu-item-description-max-width);
+  color: var(--_menu-item-description-color);
+  font-size: var(--_menu-item-description-font-size);
+  line-height: var(--line-height-snug);
+  font-weight: var(--font-weight-regular);
+  text-wrap: pretty;
 }
 
 .menu-item {

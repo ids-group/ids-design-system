@@ -44,10 +44,30 @@
     border-color: var(--_search-border-hover);
   }
 
+  /* The shell owns the ring; the inner control must not draw the universal one too.
+     See styles/_focus.scss for why `outline: 0` cannot cancel it. */
+  :where(:focus-visible) {
+    box-shadow: none;
+  }
   &:focus-within {
     background-color: var(--_search-bg-color-focus);
     border-color: var(--_search-border-focus);
     box-shadow: var(--_search-focus-shadow);
+  }
+
+  // `:has(:disabled)` rather than a host class: the disabled state arrives on the
+  // inner <input> (from the input, or from a form calling setDisabledState), and
+  // the shell is what carries the border and fill. Placed after :hover so a
+  // pointer over a dead field does not light the border.
+  &:has(.search-input:disabled) {
+    background-color: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    cursor: not-allowed;
+
+    .search-input,
+    .icon {
+      color: var(--text-disabled);
+    }
   }
 
   .icon {

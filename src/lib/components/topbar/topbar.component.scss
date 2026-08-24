@@ -1,3 +1,5 @@
+@use '../../styles/text-clip' as text-clip;
+
 :host {
   /* Public --ds-topbar-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
@@ -57,9 +59,9 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+
+    @include text-clip.single-line-ellipsis;
+
     max-width: 24ch;
     transition: color var(--duration-fast) var(--ease-standard);
 

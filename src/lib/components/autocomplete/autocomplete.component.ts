@@ -69,6 +69,7 @@ export class AutocompleteComponent<T = unknown>
   extends DsControlValueAccessor<T | readonly T[] | null>
   implements OnDestroy
 {
+
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
@@ -98,17 +99,26 @@ export class AutocompleteComponent<T = unknown>
   readonly showChevron = input(true, { transform: booleanAttribute });
   /** How the chips collapse when they outgrow one line. `"fit"` (the default)
    *  measures and shows as many as the trigger is wide, the rest behind "+N more".
-   *  A NUMBER caps at exactly that many, which is what you want when the trigger's
-   *  height must be predictable whatever the width. `null` shows every chip and
-   *  lets the trigger grow a line per selection. */
-  readonly maxVisibleChips = input<number | 'fit' | null>('fit', {
-    transform: (raw: unknown) =>
-      raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
+   *  A NUMBER is a CEILING, not a promise: the row still measures, so you get at
+   *  most that many and fewer when the trigger is narrow. `"all"` shows every chip and
+   *  lets the trigger grow a line per selection.
+   *
+   *  Unset (`null`) means "not deciding", as it does on every other input in the
+   *  library — it resolves to `"fit"`. It does NOT mean "show all": that is
+   *  `"all"`, which is the loudest of the three modes and has to be asked for. */
+  readonly maxVisibleChips = input<number | 'fit' | 'all' | null>(null, {
+    transform: (raw: unknown) => {
+      if (raw === 'fit' || raw === 'all') {
+        return raw;
+      }
+
+      return raw == null ? null : numberAttribute(raw);
+    },
   });
   /** Trigger height — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
@@ -252,19 +262,18 @@ export class AutocompleteComponent<T = unknown>
     return this.allOptions().filter((option) => selectedSet.has(option.value));
   });
 
+  private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
+  private readonly showsEveryChip = computed(() => this.chipsMode() === 'all');
   /** True for BOTH `'fit'` and a number: a number is a ceiling ("at most N"), not a
-   *  promise, so the row still measures and shows only what the width allows. Only
-   *  `null` opts out of measuring. */
-  protected readonly fitsChipsToWidth = computed(
-    () => this.maxVisibleChips() !== null,
-  );
+   *  promise, so the row still measures and shows only what the width allows. */
+  protected readonly fitsChipsToWidth = computed(() => !this.showsEveryChip());
   /** How many chips the row is ASKED to render before measuring: everything for
    *  `'fit'`, the ceiling for a number. It has to be the ceiling and not the
    *  selection, because the measurement caches chip widths from a render that
    *  holds them all — with a numeric cap that render never happens, the cache
    *  never fills, and the fit fell back to "show them all" without a word. */
   private readonly chipBudget = computed(() => {
-    const max = this.maxVisibleChips();
+    const max = this.chipsMode();
     const total = this.selectedTags().length;
 
     return typeof max === 'number' ? Math.min(Math.max(max, 0), total) : total;
@@ -282,9 +291,7 @@ export class AutocompleteComponent<T = unknown>
   protected readonly visibleTags = computed(() => {
     const tags = this.selectedTags();
 
-    return this.maxVisibleChips() === null
-      ? tags
-      : tags.slice(0, this.chipsThatFit());
+    return this.showsEveryChip() ? tags : tags.slice(0, this.chipsThatFit());
   });
 
   protected readonly overflowCount = computed<number>(
@@ -493,7 +500,7 @@ export class AutocompleteComponent<T = unknown>
     );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
+      (target) => this.trigger().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain

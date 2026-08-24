@@ -39,6 +39,7 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class TextareaComponent extends DsControlValueAccessor<string> {
+
   private readonly control =
     viewChild<ElementRef<HTMLTextAreaElement>>('control');
 
@@ -47,7 +48,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   /** Field height — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,

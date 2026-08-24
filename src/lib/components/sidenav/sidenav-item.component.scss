@@ -8,10 +8,18 @@
   --_sidenav-item-label-color-hover:        var(--ds-sidenav-item-label-color-hover,        var(--text-primary));
   --_sidenav-item-label-weight: var(--ds-sidenav-item-label-weight, var(--font-weight-semibold));
   --_sidenav-item-bg-color-hover:        var(--ds-sidenav-item-bg-color-hover,        var(--surface-secondary));
-  --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--accent));
-  --_sidenav-item-label-color-active:       var(--ds-sidenav-item-label-color-active,       var(--text-on-primary));
-  --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, white));
-  --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--secondary));
+
+  /* A tinted wash with a coloured label, not a solid brand pill: Material's
+     navigation drawer fills its active item with `secondary-container` and labels
+     it `on-secondary-container`, and Carbon uses `$background-selected` with a
+     border and a weight bump. Neither fills with the brand accent. */
+  --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--accent-subtitle));
+  --_sidenav-item-label-color-active:       var(--ds-sidenav-item-label-color-active,       var(--accent-strong));
+
+  /* Toward the accent, not toward white: hovering a pale wash has to deepen it,
+     and the old mix lightened whatever it was given — invisible on a wash. */
+  --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, var(--accent-muted));
+  --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--accent-strong));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--ds-radius-control));
   --_sidenav-alert-color:          var(--ds-sidenav-alert-color,          var(--error));
   --_sidenav-item-focus-shadow:    var(--ds-sidenav-item-focus-shadow,    var(--ds-control-focus-shadow));
@@ -53,6 +61,10 @@
 
     /* inset box-shadow follows the item's rounded corners */
     box-shadow: inset var(--sidenav-item-rail-width) 0 0 var(--_sidenav-item-rail);
+  }
+
+  &.active.no-rail {
+    box-shadow: none;
   }
 
   &.active:hover {

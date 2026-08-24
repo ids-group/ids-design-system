@@ -5,7 +5,13 @@
 // component-api.generated.ts. Sibling of tools/extract-tokens.mjs — same
 // source→generated→docs pattern.
 import ts from 'typescript';
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import {
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  statSync,
+  existsSync,
+} from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -223,6 +229,31 @@ function collectProps(classInfo, classIndex, aliases, seen = new Map()) {
   return seen;
 }
 
+// Class names the package actually exports. The reference listed ds-modal-confirm
+// and ds-time-columns with full input tables while neither is importable, because
+// this file collected every @Component under src/lib/components. Reading
+// public-api.ts and the barrels it names keeps an internal component out instead
+// of presenting it as usable API.
+function exportedClassNames() {
+  const publicApi = join(ROOT, 'src/public-api.ts');
+  const barrels = [...readFileSync(publicApi, 'utf8').matchAll(/from '\.\/(lib\/[^']+)'/g)]
+    .map(([, relative]) => join(ROOT, `src/${relative}`))
+    .map((base) => (base.endsWith('.ts') ? base : join(base, 'index.ts')))
+    .filter((candidate) => existsSync(candidate));
+  const names = new Set();
+  for (const barrel of barrels) {
+    const source = readFileSync(barrel, 'utf8');
+    for (const [, group] of source.matchAll(/export\s*(?:type\s*)?\{([^}]*)\}/g)) {
+      for (const piece of group.split(',')) {
+        const name = piece.trim().split(/\s+as\s+/).pop()?.trim();
+        if (name) names.add(name);
+      }
+    }
+  }
+
+  return names;
+}
+
 // ---- run --------------------------------------------------------------------
 const files = walkFiles(COMPONENTS, '.component.ts');
 // Base classes (e.g. control-value-accessor.ts's DsBooleanControlValueAccessor)
@@ -233,6 +264,17 @@ const { map: classIndex } = indexClasses(allTsFiles);
 const editorial = JSON.parse(readFileSync(EDITORIAL, 'utf8'));
 const importPathDefault = editorial.$importPathDefault;
 
+const exported = exportedClassNames();
+// A guard, not politeness: if the barrels ever stop parsing, dropping every
+// component would look like a clean run. 40 is far below the real count (~90).
+if (exported.size < 40) {
+  console.error(
+    `extract-component-api: only ${exported.size} exported names parsed from public-api.ts — refusing to filter.`,
+  );
+  process.exit(1);
+}
+
+const internal = [];
 const components = [];
 for (const file of files) {
   const sf = parse(file);
@@ -240,6 +282,11 @@ for (const file of files) {
     if (!ts.isClassDeclaration(node) || !node.name) return;
     const selector = decoratorSelector(node, sf);
     if (!selector) return; // not an Angular component
+    if (!exported.has(node.name.text)) {
+      internal.push(`${node.name.text} (${selector})`);
+
+      return;
+    }
     const key = basename(dirname(file));
     const props = [...collectProps({ node, sf }, classIndex, aliases).values()];
     const ed = editorial[key] ?? {};
@@ -305,4 +352,5 @@ const body =
 
 writeFileSync(OUT, banner + body);
 console.log(`wrote component-api.generated.ts — ${components.length} components, ${undescribed.length} undescribed props`);
+if (internal.length) console.log(`  left out, not exported: ${internal.join(', ')}`);
 if (undescribed.length) console.warn('undescribed:\n  ' + undescribed.join('\n  '));

@@ -82,6 +82,7 @@ export class ColorPickerComponent
   extends DsControlValueAccessor<string>
   implements DsOverlayCloseRef, OnDestroy
 {
+
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -321,7 +322,7 @@ export class ColorPickerComponent
     );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
+      (target) => this.trigger().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain

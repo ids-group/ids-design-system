@@ -276,6 +276,14 @@ function watchNgControl(): Signal<ControlState> {
         touched: control.touched || submitted(),
       });
 
+    // Signal forms bridges an NgControl whose `control` has no `events` stream, so
+    // there is nothing to subscribe to. Staying at NO_CONTROL is deliberate: on that
+    // path the component's own inputs carry errors and touched, and a snapshot that
+    // froze at first render would keep serving a stale error after the field went valid.
+    if (typeof control.events?.pipe !== 'function') {
+      return;
+    }
+
     sync();
     control.events.pipe(takeUntilDestroyed(destroyRef)).subscribe(sync);
     const parentSubmit = parentFormGroup?.ngSubmit ?? parentForm?.ngSubmit;

@@ -43,8 +43,8 @@ export class AvatarComponent {
   /** Fallback text shown when there's no `imageUrl`. Wins over anything derived
    *  from `name`, so a caller that already has the letters keeps passing them. */
   readonly initials = input<string>('');
-  /** The person or thing this avatar stands for. One binding covers both jobs the
-   *  caller used to wire by hand: the initials, and the seed the tint hashes.
+  /** The person or thing this avatar stands for — one binding drives both the
+   *  initials and the seed the tint hashes.
    *
    *  The tint keys on the NAME, never on the initials — two letters collide
    *  wholesale, so every Alice Brown and Adam Bell would share one colour. */

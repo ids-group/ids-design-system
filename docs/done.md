@@ -4,6 +4,608 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-08-21 evening (session — the manifests said what changed, not where to look)
+
+Opened and closed in one sitting, because the item measured itself: the lint that found the gap counted
+258 of them, and the count is the to-do list.
+
+- [x] **DONE 2026-08-21 — every published manifest carries the detectability fields, and there is no
+  warning level left to hide behind.** 167 items across 19 releases got a `surface`; every behavioural
+  one a `verify`; every changed default a `restore`; and the 32 prose `DELETE-LIST:` lines became
+  `deleteList` arrays with a greppable `find` each. **Why the fields exist at all:** mm-broker walked
+  0.6.0 → 0.10.1 with the plugin and a review afterwards found two entries the whole find/apply/recheck
+  loop had passed over in silence. `0.7.1#table-sortkey-non-null-when-unsorted` named
+  `ds-table[sortKey]`, which no consumer binds, while the code that breaks was their own store —
+  `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` — so the finder returned zero
+  hits, the item was recorded not-applicable, and the re-check's clean grep CONFIRMED it. Three
+  server-paged screens kept ordering by a column whose header showed no sort.
+  **Three things the sweep turned up that were not in the plan.** (1) Four of the "24 DELETE-LIST lines"
+  in 0.10.0 were the words *the DELETE-LIST* inside ordinary prose — trimming on the bare marker would
+  have cut four informational lines in half, so the marker is `DELETE-LIST:` with the colon. (2) Two
+  default flips reverse each other and said so nowhere: 0.7.0 turned `reserveMessage` on and 0.7.1 turned
+  it back off; 0.8.0 told consumers to declare `sortMode="server"` and 0.9.0 made that the default again.
+  Both pairs now link `supersedes` / `supersededBy`, which the lint resolves. (3) The CHANGELOG carried
+  a "What you can now DELETE" table for exactly two versions while the manifests held delete entries for
+  five — 0.10.0's nineteen rows, 0.10.1's and 0.6.2's were generated from the arrays so the two copies
+  cannot drift, and Unreleased's table was five rows against eleven entries.
+  **What holds it:** `npm run migration-lint` (34 rules, no warning tier), run by the release preflight
+  AND as a hard gate in `ci-pr.sh`. The rule that nearly went wrong is worth keeping in mind — M023
+  fired on a stylesheet item whose only locators were `--ds-*` tokens, which is exactly how a consumer
+  writes them there, so it is scoped to a `typescript` or `config` surface now.
+  ORIGINAL: [P3] 20 published manifests predate `surface` / `detect` / `verify`, and
+  `npm run migration-lint` reports 258 warnings across them (2026-08-21).
+
+- [x] **DONE 2026-08-24 — C shipped as the DEFAULT, configurable per state, which is neither of the four options the deck listed.** Stas read the deck and picked C, then improved it: instead of D's switch-off-by-default, C IS the default and every state is switchable on its own. `DS_CONFIG.field.stateIcons` takes `{ error, warning, success, hint }` where each key is independent — a name replaces the glyph, `false` removes it — plus `stateIcons: false` as the one line back to the old look. `messageIcon` on all fifteen field components wins over both. 
+  **His correction that saved a bad API:** I had proposed `stateIconSize?: number` in the config, and he asked why, since there is a token scale. He was right that the scale exists — `--icon-xs/sm/md/lg` = 12/14/16/20 — and I was wrong to invent a second vocabulary for it. What the check turned up: `ds-icon` does not READ that scale, it takes a number and writes `width`/`height` attributes while publishing `--ds-icon-size` outward. So the knob is gone: the glyph is 14px = `--icon-sm`, and "size icons from CSS" is a separate change to `ds-icon` (only set the inline var when `size` is actually bound), filed rather than smuggled in here.
+  **Two hooks that were needed, and one that was not.** `--ds-field-message-icon-gap`, and `--ds-field-message-icon-offset` — the row is `align-items: flex-start` now, and the offset centres the glyph on the FIRST line rather than the block, computed from the two tokens that set that line so it survives a retuned message type. Measured on a forced wrap: two lines, glyph centre 0px from the first line, −8px from the block centre, which is the old behaviour it replaces.
+  **Verified live through CDP, not by reasoning:** all four states on `/components/input` — error #BA1717, warning #8A7400, success #156822 glyphs present, 25 hint rows with none — the same four in dark (#F58484 / #F5CA47 / #69D37E), both instance overrides, and a scoped `provideDsConfig` where error was off and hint on. **That last one cost me a wrong probe first:** two `provideDsConfig` calls in one `providers` array do NOT merge — both resolve their parent with `skipSelf`, so the later wins and the earlier vanishes. Real trap, now documented on the function and in the manifest.
+  ORIGINAL: [P2] Should `state` DEFAULT a per-state glyph? (narrowed 2026-08-20 — the false docblocks are fixed, the design question is not.)** The two lies are gone: `state` now says it decides the colour, and `icon` says there is no per-state default. What remains is the call the original item wrapped around them. **The case for defaulting a glyph:** four of the six systems audited for the fill question carry a per-state icon in the field — Spectrum, Bootstrap, Carbon and Ant — NN/g requires it as its own guideline, WCAG 1.4.1 forbids resting a state on colour, and the ui-ux-pro-max base says it twice (`color-not-only`, `color-not-decorative-only`). It is also what would give `warning` and `success` real distinctness without the fill we declined to add. **The cost:** breaking by appearance on every field at once, and a glyph choice per state. ORIGINAL: [P2] `ds-field-message` claims `state` picks an icon, and it never does — two false doc
+  **DECK 2026-08-21 — `presentations/field-message-glyph.html`, and Stas asked for exactly this before deciding.**
+  Four sections: the four states with and without a glyph in LIGHT, the same in DARK (where the ramp is
+  lighter and hue does more of the work), a five-field settings form to show the cost, and a third option
+  the item did not carry. Every colour in it is the measured token value, and the glyphs are the real
+  `error` / `warn` / `success` / `info` paths from `icons.data.ts`, not stand-ins.
+  **The deck adds option C — glyphs on error/warning/success, nothing on `hint` — and recommends it.**
+  The busy column in the deck's section 3 is entirely hint, and hint is the resting text rather than a
+  state, so C buys the distinctness where warning and success are confusable and leaves an ordinary form
+  untouched. Option D (a `DS_CONFIG` switch, off by default) is written up as the postpone-it choice.
+  Still needs the verdict; still a visual breaking change wherever a state IS set, so it rides the batch.
+  comments over a real gap.** `state`'s docblock says "Decides colour and icon" and `icon`'s says
+  "Overrides the glyph the `state` would pick" (`field-message.component.ts:26,31`). Neither is true:
+  the template renders `@if (icon())` against an input defaulting to `null`, and there is no computed
+  anywhere in the component, so **`state` decides colour only** and a glyph has to be passed by hand
+  on every field. Found while closing the fill question above.
+  **Why it matters beyond the wrong comment:** a per-state icon is what four of the six systems use to
+  separate the states — Spectrum, Bootstrap, Carbon and Ant all carry one in the field. NN/g requires
+  it as its own guideline, WCAG 1.4.1 (Use of Color) forbids resting a state on colour, and the
+  ui-ux-pro-max base says it twice: `color-not-only` ("Don't convey info by color alone (add
+  icon/text)") and `color-not-decorative-only` ("Functional color (error red, success green) must
+  include icon/text"). It is also the treatment that would give `warning` and `success` real
+  distinctness without any fill, which is exactly what the decision above declines to add.
+  **Decide two things:** whether `state` should default a glyph per state (breaking — every field
+  gains an icon it does not have today), and if so which glyphs. Fix the two comments either way,
+  since they are wrong right now.
+
+- [x] **DONE 2026-08-24 — fix (c), and the four unmeasured siblings turned out to be two.** `overflow: clip` with a `var(--space-1)` clip margin on the label, so the glyph box gets its room without moving any geometry: option rows stay **30px**, the multi-select row 36px, the table row 38px. The report offered three fixes and named (c) unless the row height was meant to move anyway — it was not, so (c) it is. 
+  **Both risks in (c) were measured rather than reasoned about.** The ellipsis still truncates under `clip` (squeezed a label to 40px: `scrollWidth` 45 > `clientWidth` 40, still one line) — `text-overflow` reads any non-`visible` overflow. And `ds-table`'s clipped-cell popover, which fires on `scrollWidth > clientWidth`, still detects a clipped cell: 546 against 220 before and after the switch, checked by flipping the property live before shipping it. 
+  **The siblings: two measured, two by shape.** `.cell-clip` (ds-table) and `.label` (ds-breadcrumbs) clip the same 2.13px above and 1.47px below — same numbers as the option label, so they were fixed on evidence. The two `.crumb` rules (ds-topbar, ds-page-header) share the shape but are unreachable in our own docs, which project `ds-breadcrumbs` into those slots rather than bare crumbs; they got the same one-line fix, which is inert where nothing overhangs. 
+  ORIGINAL: [P2] Every option list shaves the descenders off its own labels — `line-height: 1` inside a box that clips (from mm-broker MBP-245, 2026-08-20).** `.option` sets `font: … / var(--line-height-flat) …` (`_dropdown-overlay.scss:89`, and `--line-height-flat: 1`) while `.option-label` adds the `overflow: hidden` its ellipsis needs and carries no padding of its own (`:101-107`), so the label box is exactly the font size tall and the glyph box is taller. Measured live in Chromium at `--font-size-s: 14px`: box **14.00px**, glyph box **18.86px**, clipped **2.86px above the cap line and 2.00px below the baseline** — the tail of the `g` in "Agent" reads as a broken glyph, and every option in the list is clipped, not only the ones with a descender. **The contrast that isolates it is our own:** the closed trigger resolves `--line-height-base` (`select.component.scss:54`) and paints the same word intact, which is why the defect only shows while the panel is open.
+  **Two copies of the same shape.** The shared rule covers `ds-select` and `ds-autocomplete`; `ds-multi-select` carries its own `.option` / `.option-label` pair with the same values (`multi-select.component.scss:167` and `:232`), so a fix in `_dropdown-overlay.scss` alone leaves it clipping. `.optgroup-label` is safe — `padding: var(--space-2) var(--space-3) var(--space-1)` gives the glyph room, and it is uppercase anyway.
+  **Found by the same structural test and NOT measured:** `.cell-clip` in `ds-table` (a padding-less block inside `td { line-height: var(--line-height-flat) }` — `table.component.scss:280,369`), `.crumb` in `ds-topbar` (`:47,61`) and in `ds-page-header` (`:90,104`), `.label` in `ds-breadcrumbs` (`:18,68`). Each is an `overflow: hidden` box with no padding-block inside a flat line box. Checked and NOT affected: the autocomplete panel row (`:179`), `ds-sidenav-item` and `ds-tree` all resolve `--line-height-base`; `ds-sidenav-footer`'s three truncating labels declare only a font size and inherit their line-height, so they follow the host and were not judged.
+  **Three fixes, and the geometry decides.** The option row is `8px + 14px + 8px = 30px` today. (a) `line-height: var(--line-height-base)` on `.option-label` → 19.6px, row **35.6px (+5.6)** — correct, and a visual change on every dropdown in the library, after which `--ds-dropdown-panel-maxh` shows fewer rows. (b) the same, with `.option` padding-block cut to `var(--space-1)` → **27.6px (−2.4)** or `var(--space-1-5)` → **31.6px (+1.6)**; no token lands on 30px (5.2px would). (c) `overflow: clip` + `overflow-clip-margin: var(--space-1)` on `.option-label` — **geometry untouched and the ellipsis still applies**, since `text-overflow` reads any non-`visible` overflow, and 4px covers the measured 2.86/2.00. It needs a support call: `overflow-clip-margin` is Chrome/Edge 90+, Firefox 102+, Safari 16+, and where it is absent `clip` degrades to exactly today's shave rather than to anything worse. **(c) unless the row height is meant to move anyway** — then (a) is the honest one.
+  Invisible to the DOM and to the accessibility tree: `textContent` is complete and only the painted glyph is clipped, so a regression check has to compare the label element's height against `Range.getBoundingClientRect().height`, never the text. Reproduce on `/components/select`; the consumer's screen was Platform Admin → Users → Invite New User → Select user role, where "Agent" is one of two options and the shaved tail is unmissable.
+
+- [x] **DONE 2026-08-24 — Stas picked the split, so the plumbing became a function.** `valueControlBridge()` holds the `ControlValueAccessor` half — the sync effect, `writeValue`, the two `registerOn*`, `setDisabledState`, `formDisabled`, `touchedSelf` — and `DsControlValueAccessor` is that function plus `DsFieldBase`, delegating to it so the logic exists once instead of twice. `ds-search` takes the bridge alone. 
+  **What a consumer loses: eight inputs, not the five the item counted** — `hint`, `error`, `warning`, `errors`, `invalid`, `touched`, `reserveMessage`, `messageIcon`, plus the `reserveMessageResolved` readback. The API reference now lists the ten `ds-search` actually implements. Binding one used to compile and do nothing; it is a template type error now, which is the point. 
+  **Two things the split nearly broke, caught before shipping.** `hidden` came from the same base and belongs to the FORMS contract — signal forms reaches every control through it — so it was re-declared on `ds-search` rather than dropped with the message API. And the model arrives at the bridge as a THUNK, not a signal: on a base class `value` is abstract and on a component it is a field initialiser, so an eager read is `undefined` — the first draft of this did exactly that. 
+  **Invisible to `class-surface`, recorded by hand:** it reads per-file declarations, and these eight were never declared in `search.component.ts`. The tool's own note names this blind spot — a member that moves across a base-class boundary. 
+  ORIGINAL: [P2] `ds-search` extends the field base for the form binding and inherits a message API it has
+  no row for.** Since `e7cf9a50` it extends `DsControlValueAccessor` → `DsFieldBase`, so the generated
+  API reference lists `hint`, `error`, `warning`, `reserveMessage` and now `messageIcon` on it. Its
+  template renders no `ds-field-message` and its class reads none of them — `grep` for `hint()`,
+  `error()`, `warning()` or `resolveFieldMessage` in `search.component.*` returns nothing. A consumer
+  binding `error="Too short"` on a `ds-search` gets silence, and the reference told them it would work.
+  **Two ways out, and it is a product call:** (a) give `ds-search` the message row every other field
+  has — it is a form control now, so validation text is the consistent answer; or (b) split the base so
+  a control can take the CVA plumbing without the message inputs, which is the honest shape if search
+  is meant to stay chrome-free. Not urgent, but it grows: the fifth dead input arrived with the
+  messageIcon move, and every future universal field input will land on it too.
+
+## Shipped 2026-08-21 (session — the assigned batch of eight)
+
+Moved out of `todo.md` on 2026-08-21. Both P1s on the board were in this batch, and both were the
+same class of defect: **guidance that could not be followed** — a focus ring the DS itself lost inside
+a clipping ancestor, and a migration path that did not compile. The other pattern worth keeping: two
+of these eight were found by the CHANGELOG re-review rather than by using the library.
+
+- [x] **DONE 2026-08-21 — a 105-page sweep of the docs, and the one thing it found was real: signal-forms fields threw, then lied.** Loaded every route in `NAV` headless in a visible iframe and recorded, per page: mounted sections, empty specimens, leftover `{{ }}`, text length, and any runtime error after mount. **101 of 105 pages were clean.** The four `/practice/*` routes each logged `TypeError: Cannot read properties of undefined (reading 'pipe')`, once per DS field on the page.
+  **What it was.** `resolveFieldMessage` subscribes to `NgControl.events` to follow reactive and template-driven forms. The `NgControl` signal forms bridges has no `events` stream, so the subscription threw — and because the throw landed right after the first `sync()`, the snapshot froze at first render. The resolver falls back to that snapshot whenever the live errors go empty (`own.length ? own : controlState().errors`), so a field that had become VALID kept showing its FIRST failure with `aria-invalid="true"`.
+  **How it was validated, because the first version of this note called it a bug too early.** (1) The throw site was proven ours by a control: guarding that one line took the console from four errors to zero. (2) The stale message was re-measured with REAL input through CDP, not synthetic events — it reproduces. (3) A prediction only the frozen-snapshot mechanism makes: after `nope` (email error) the stale text should be the FIRST error (required), not the previous one — confirmed. (4) The same probe technique on the reactive-forms demo at `/components/input` behaves CORRECTLY at every step, which both scopes the defect to signal forms and retires the worry that the probe was at fault.
+  **One piece of my own evidence was wrong and is withdrawn:** I read "the form reports valid while the field paints invalid" off a button that turned out to be the docs' own `⚙ Tweaks`, not the demo's `Send invite` — that one is correctly `disabled`. The defect stands on the field's own display, not on any claim about form validity.
+  **The fix** is that the `NgControl` path bows out entirely when it has no live stream, leaving the component inputs as the single source on that path. Re-measured after: empty → required, `nope` → email, valid → message cleared and `aria-invalid` gone; reactive forms unchanged; zero console errors on both pages.
+
+- [x] **DONE 2026-08-21 — option (a), and it found two more internals than the item named.** `tools/extract-component-api.mjs` reads `public-api.ts` and the barrels it names, so a `@Component` the package does not export stays out of the reference: **84 entries became 80**. The item named `ds-modal-confirm` and `ds-time-columns`; the filter also caught `ds-calendar-day` (internal to the date picker) and `ds-field-message`, which has no `index.ts` at all and is imported by relative path inside the fourteen fields — so four components were being advertised, not two. **Option (a) was the risky one for a reason, so it is guarded twice:** the barrels are explicit named exports (not `export *`), which is what makes parsing them safe, and under 40 parsed names the extractor EXITS rather than emptying the reference. It also prints what it left out — a component missing from the docs has to be traceable to that line rather than to a guess. Nothing in ds-docs looked up those four keys, so no page lost content.
+  ORIGINAL: [P3] Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs audit).** `ds-modal-confirm` (ModalConfirmComponent) and `ds-time-columns` (TimeColumnsComponent) are listed in `component-api.generated.ts` with a full input table, so the reference presents them as usable API. Verified against the published types: both appear as internal `declare` blocks but neither is in the package export list, so `import { ModalConfirmComponent }` does not resolve. `tools/extract-component-api.mjs` collects every `@Component` under `src/lib/components` without consulting the export surface.
+  **Two fixes, pick one:** (a) teach the extractor to skip a class absent from the public export list — accurate, but it must follow the component barrels or it will drop legitimately-exported components; (b) add an `internal` value to `ComponentStatus` (today `'stable' | 'new' | 'deprecated'`) and mark these two in `component-api-descriptions.json`, which also gives a home for the next internal. Neither is urgent: nothing is wrong, the reference is just wider than the API.
+
+- [x] **DONE 2026-08-21 — a second demo rather than a rewrite of the first, because the two forms teach different things.** The existing server-sort demo keeps its one-way pair plus `(sortChange)`, since its whole point is a host that answers a CLEARED sort with its own default. The new one below it is that demo with the handler deleted and nothing else changed: `[(sortKey)]` / `[(sortDir)]`, no handler. **Driven headless to check the writing-back is real, not just that it compiles:** clicking Owner moved the host state `project · asc` → `owner · asc` → `owner · desc` → `owner · null`, with the rows re-sorting each time and returning unsorted on the clear. So the trade the prose claims is the measured behaviour: two-way costs you the third click, because there is nowhere left to say "then fall back to Owner descending". That is now written beside both demos.
+  ORIGINAL: [P3] `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same audit).** `sortKey`/`sortDir` are inputs and `sortKeyChange`/`sortDirChange` are hand-declared outputs, so Angular's banana-in-a-box works — which is the natural shape for server-side sorting where the host owns the state, exactly what the 0.10.0 server-sort demo is about. The demo binds `[sortKey]` one-way and observes `(sortChange)` instead, so the two-way form is invisible. One line of prose or switching that demo would cover it.
+
+- [x] **DONE 2026-08-21 — the parent moves out, its two declined halves stay open as their own P3.** It was kept in `todo.md` while the children were nested inside it; they are a separate item now, so the ticked parent has nothing left to hold.
+  `TableRowAction` now carries `hidden?: (row) => boolean` and
+  `disabledReason?: string | ((row) => string)`, and a row whose every item is hidden renders no
+  kebab instead of an empty menu. The reason line is read only where `disabled` returns true for
+  that row. `label`-as-a-function and the divider are the two the item itself called cheapest to
+  decline — they are split out as their own P3 below, not silently dropped.
+  ORIGINAL: [P2] `ds-table`'s row-action column has shipped since 0.6.3 and mm-broker uses it in ZERO of its
+  eleven row menus.** Not from ignorance — every one of those menus varies its ITEMS by row, and the item
+  contract is `{ id, label, icon?, error?, disabled?(row) }`, which can only grey an item that is always
+  there. Counted against the eleven menus, four things are missing and two of them are blocking:
+  - [x] **SHIPPED 2026-08-21 — `hidden?: (row) => boolean` — blocked 8.** Items are swapped, not greyed: a draft campaign offers
+    Edit + Launch, a live one offers Revert + Delete; a partner offers Deactivate **or** Reactivate,
+    never both. Expressed with `disabled` alone, every screen grows a permanently grey half — which is
+    the dead control their ARCHITECTURE §7 forbids outright, so this is not a style preference. Two
+    screens additionally render no trigger at all for a row with no applicable actions, so "every item
+    hidden" has to collapse the kebab rather than open an empty menu.
+  - [x] **SHIPPED 2026-08-21 — `disabledReason?: string | ((row) => string)` — blocked 4.** Where an item IS greyed they say why
+    (`viewBlockedReason`, `resendBlockedReason`, `deactivateBlockedReason`, "this licence is
+    registry-verified"). Today each screen renders that sentence itself inside its own menu. A greyed
+    item with no reason is the same §7 failure as a dead button, so shipping `hidden` without this just
+    moves the problem.
+  - **`label: string | (row) => string` — blocks 4.** One action, two wordings: Deactivate/Reactivate,
+    Activate/Deactivate, Add fee/Edit fee. Workable as two ids each with its own `hidden`, so this is
+    the cheapest of the four to decline.
+  - **a divider or `group` — blocks 2.** Two menus separate the destructive tail with `ds-menu-divider`.
+    Droppable by ordering if the DS would rather not take it.
+
+- [x] **CLOSED 2026-08-21 — every member of the batch is resolved, so the wrapper item has nothing left to sequence.** Walked each one against the code rather than the note: **(a)** `ds-modal` `error: boolean` → `status: DsStatus` shipped 08-12 (verified — `modal.component.ts:42` declares `status` and no `error`); **(b)** the chip-overflow default flipped 08-12 and moved again on 08-21 (`maxVisibleChips` now defaults to `null`, resolving to `"fit"`); **(c)** the four consumer defaults were CLOSED by Stas on 08-20 — "if they did it through tokens and it all worked, that is fine" — with the deck at `presentations/consumer-default-overrides.html`; **(d)** left the batch when packaging turned out to be option B, which is additive. **What the item was right about, and worth keeping:** the reason to group them was that all three were "what does a component do out of the box", and a consumer taking them one release at a time is surprised three times by the same class of change. That argument now applies to the SIX unreleased visual changes sitting in `migrations/unreleased.json`, which is where the release-cut decision lives.
+  ORIGINAL: [P2] The breaking batch after 0.9.0 — decide it as ONE story, because it is four surprises otherwise (filed as an item 2026-08-10; it was prose in three places).** Each member is recorded in its own item; what is missing is the decision to ship them together. **Members:** (a) `ds-modal` `error: boolean` → `status: DsStatus`, so a warning or info dialog becomes expressible at all; (b) the width-based overflow DEFAULT flip for chip rows; (c) the four DEFAULT changes below that two consumers reached for independently; (d) packaging option D, if that is the packaging answer, since it moves every consumer's imports.
+  **DECIDED 2026-08-12 in a deck (`presentations/breaking-batch.html`, built against real tokens): the batch is THREE members, and two of them are settled.**
+  **(d) packaging leaves the batch entirely.** The member was conditional — "option D, IF that is the packaging answer" — and it is not: option **B** was decided 2026-08-05 (one services entry point, root `public-api.ts` as a facade), and B is ADDITIVE. Nothing a consumer imports today stops working, so it is not a breaking change and does not belong here.
+  **(a) `ds-modal` — SHIPPED 2026-08-12. `error: boolean` → `status: DsStatus`, and the treatment came out richer than the deck proposed.** Stas picked the tint over an accent stripe for the reason the deck put beside it: the DS has no stripe idiom anywhere, while `ds-alert` already expresses status as a tinted surface, so a status dialog and a status alert on one screen paint from the same family and cannot disagree. Both boolean forms have an exact replacement — `[error]="true"` → `status="error"`, `[error]="isDangerous"` → `[status]="isDangerous ? 'error' : null"` — and unset stays neutral, so a screen that never used `error` sees nothing. `ds-modal-card` takes the same input, since a `ModalService` confirm renders one directly.
+  **(b) chip overflow — SHIPPED 2026-08-12, the default is now `"fit"`.** All three modes stay: `null` shows every chip uncut, a NUMBER caps at exactly that many, `"fit"` measures. Only the default moves, and the escape is one word.
+  **What (a) actually shipped, because the UX research moved it.** The deck offered "a tinted header"; the skill's own rule — do not convey information by colour alone, severity High — plus `ds-alert`'s JSDoc ("severity drives colour, the DEFAULT ICON and the ARIA role") said a tint alone is half a treatment. So `status` drives four things, matching the alert: icon-badge tint, title colour, a default icon (`error`/`warn`/`success`/`info`, overridable by `icon`), and the ARIA role — `error`/`warning` make the dialog an `alertdialog`, an explicit `dialogRole` still winning. The deck was also wrong about the starting point: the DS already tinted the icon BADGE for `error`, not merely "one word of colour" — that pair is now generalised to all four statuses from the same families the alert reads. Caught one self-inflicted regression on the way: dropping the confirm dialog's explicit `dialogRole="alertdialog"` would have demoted a non-error confirm to a plain `dialog`, and every confirm is an interruption.
+  **(c) the four defaults — NOT DECIDED, and deliberately so (Stas 2026-08-12): "изучи ещё раз все проекты которые использовали ds, подумай над архитектурными и дизайн правилами — можем ли мы сделать то или иное действие, будет ли это правильно для дизайн-системы".** The evidence so far is "two teams did the same thing", which is a signal but not an argument: it says our default lost twice, not that the proposed value is right for a LIBRARY. The research owed before this can be answered is in its own item below.
+  **Why together:** (a), (b) and (c) are all "what does a component do out of the box", and a consumer who takes them one release at a time is surprised three times by the same class of change. One migration guide can carry the lot with one decision rule per member.
+
+- [x] **CLOSED 2026-08-21 — both forks shipped, and the scope question answered itself.** Fork 1 (the flash) was resolved 08-11 by the finding that a `nowrap` row CLIPS rather than reflows, so rendered chips can simply be measured; Fork 2 (the default) shipped 08-12, and `maxVisibleChips` has since moved to `null` → `"fit"`, so width-based capping IS the default on both chip pickers. **The generalisation is answered too, and negatively for most of the row:** breadcrumbs took count-based `maxItems` (their conventional idiom), `ds-tabs` scrolls, and `ds-button-group` / `ds-segmented` hold small fixed sets by design — measured, not assumed. The rule the work produced is the part worth re-reading: **a measurement must not read anything the cut itself changes** — two self-referential loops came out of ignoring it, one of which froze a renderer.
+  ORIGINAL: [P2] Width-based overflow as the DEFAULT for anything that lists items in a row (Stas 2026-08-07).** `maxVisibleChips` (shipped 08-07 on autocomplete, older on multi-select) is a guess about width expressed as a count: pick 3 and it still overflows on a narrow column, or wastes room on a wide one. The proposal is to cap by MEASURED width instead, on by default, with an explicit input to opt back into unbounded growth.
+  **THE OPT-IN SHIPPED 2026-08-11 as `maxVisibleChips="fit"`** on both chip pickers, so only Fork 2 — the default — is still open, and it stays in the breaking batch. Shared primitive: `src/lib/components/chip-overflow.ts`.
+  **Fork 1 RESOLVED — the flash was a property of the ROW, not of the timing.** Filter-bar reads each item's DECLARED width off `dsFilterItem` and its comment says measuring rendered items would make anything that did not fit FLASH first. That is true while the row WRAPS, because a wrapped row changes height; a `nowrap` row with `overflow: hidden` CLIPS instead, and clipping moves nothing, so the chips can simply be rendered and measured. None of the three options considered (render hidden, accept a frame, measure a text metric) was needed.
+  **What actually cost the time, and the rule that came out of it — a measurement must not read anything the cut itself changes.** Two self-referential loops, both found by a real browser rather than by reading: (a) sizing "available" from the chip row's own width, which is content-sized, so every dropped chip shrank the budget and dropped the next one, down to one chip — the space is now taken from the TRIGGER minus its other children, where a child that can grow owes only its floor; (b) measuring the rendered "+N more", whose text IS the count, so "+2 more" and "+3 more" alternated forever — a fixed `5em` reserve replaced it. The second froze a page hard enough to kill the renderer.
+  **Cost is gated on the mode.** Measuring forces layout, and an ungated version ran **214 times on one docs page load** across seven pickers that were all on the wrapping default. `enabled` plus a same-geometry guard took that to **1**. A picker that does not ask for `"fit"` does no work.
+  **Fork 2 — the default, which is the actual decision and is unchanged by the above.** On-by-default is a visual change for every consumer relying on today's growth, so by the opt-in rule and the RELEASE GATE it belongs in the breaking batch queued after 0.9.0. It should be decided alongside the modal status widening and the four candidate default changes — all of them are "what does a component do out of the box", and they should ship as one story rather than three surprises.
+  **Not verified here: the resize path in a visible window.** The `ResizeObserver` could not be exercised through the automated browser — its window stayed `visibilityState: "hidden"`, where Chrome runs no rendering steps and a plain hand-attached observer did not fire either, so this is environmental rather than a defect. The selection-change path (which goes through Angular's scheduler) was verified end to end, as was the arithmetic against real measured chip widths. Drag the handle on either docs demo to confirm.
+  **Scope, measured 2026-08-07 rather than assumed.** Chips: `ds-autocomplete` and `ds-multi-select` (both wrap and grow today). **Values, not chips: `ds-breadcrumbs` — COUNT-BASED COLLAPSING SHIPPED 2026-08-07 as `maxItems`** (opt-in; the width-based mode still waits on Fork 1, and the docs had been FAKING this collapse with a hardcoded `{ label: "…" }` item, now deleted). It was the real gap: `flex-wrap: nowrap` with `overflow: hidden` and no collapsing at all, so a long trail was simply clipped where the conventional answer is `Home / … / Current` — and having an established idiom is why it could ship first and on its own. NOT in scope: `ds-tabs` already scrolls (`overflow-x: auto`), which is the right answer for a tab strip, and `ds-button-group` / `ds-segmented` hold small fixed sets by design.
+
+**P2 — build work, nothing left to decide:** _(none — the last one here, shared picker internals, was surveyed 08-05 and its own conclusion is NOT to build it yet; it is listed under "parked" below and kept open only so the survey is not repeated.)_
+
+_Archived to `done.md` on 08-06: the whole mm-broker `ids-data-table` section (nine criteria + the date-picker defect) and five closures from other sections — the ai-sdlc starter's two asks, autocomplete single-select, the rounded `:active` review and the `ds-tabs`↔URL input._
+
+_**P2 — from the mm-ecm agent-portal audit (08-06): ALL FOUR SHIPPED that same day and are archived** — table head padding per-side, `showPageSize`/`showLabel` forwarded through the table's pager, the four `ds-autocomplete` search gaps (prefix/suffix slots, `[showChevron]`, `clear()`, panel max-height), and the autocomplete panel joining the radius role layer. The `fullWidth` one turned out to be MOSTLY FALSE — it already existed on both pickers; the real defect underneath was hard-coded trigger padding that drifted 8px under `[data-density]`, and that is fixed too. (This block listed them as open until 2026-08-10.)_
+
+_mm-broker's whole-consumer sweep (08-06) is CLEARED: `--ds-badge-white-space`, `ds-card`'s box filling a stretched host, and `ds-search` on the field-height contract all shipped the same day. Their last two reaches into DS internals are gone._
+
+**P3 — from the agent-portal audit (08-06):** FOUR of the five SHIPPED 2026-08-06 — eyebrow tokens on `ds-description-item`, the shorthand sweep across `segmented`/`tabs`/`menu`/`checkbox` (21 hooks), the radius **and elevation** roles now reaching portaled panes, and `[quiet]` on `ds-menu-item`. The fifth — selected-option hooks instead of theme-role hijacking — is deliberately left, sequenced after the colour engine since it is the same principle one layer down.
+
+**P2 — genuinely waiting on Stas:**
+
+- **Packaging / secondary entry points** — options A / C / D described in the item 08-05; option B was proven unbuildable.
+- _(`design-system.md` RESOLVED 2026-08-07 — split into `components.md` (catalogue) + `design-system.md` (rules), both shipped in the package. What remains is filling the rules out: see the composition-rules item.)_
+
+**P2 — token architecture (interlocked, spec together):**
+
+- Single-source colour engine · `.ds-interactive` contract · theme-recipe-vs-hand-tuned. (**Rounded `:active`** no longer belongs here — 11 of 13 controls shipped it on 2026-07-02; the two pickers left are a P3.) The radius, elevation and `--ds-motion-*` role layers shipped 08-04 and are the pattern the rest should follow.
+
+**P3 — parked, each with its scope written down:**
+
+- **Asked and answered 2026-08-05, keep in the backlog:** inspect-mode pilot · splitter · CascadeSelect · primary-CTA token · MED cluster.
+- **Build on the first consumer ask:** `ds-select` native `multi` · `ds-table` row-expansion deltas · `ds-number-stepper` numeric formatting · image/lightbox · CDK Menu.
+- **Decision records, deliberately kept and NOT to be "simplified":** topbar `role="banner"` · `compact` re-evaluated in TS.
+- **Surveyed and deliberately not built:** shared picker internals — three components share ~25 lines each, against a ~30-line helper. Revisit when a fourth list picker appears.
+
+- [x] **DONE 2026-08-21 — `npm run check-docs-links`, inside `extract-docs`, so the build fails instead of the click.**
+  Walks every `routerLink="/…"` in `ds-docs/src/**/*.html` and resolves it against NAV, read out of
+  `nav.config.ts` as text (it runs BEFORE the build it guards, so importing the TS is not an option).
+  Catches all three shapes and says which is which: a group path where an anchor belongs, an anchor that
+  is not in NAV, and a `fragment` that an area redirect drops. **Proved by injecting one of each and
+  watching it exit 1** — which also caught a bug in the checker itself: the fragment scan crossed into
+  the next element and blamed the wrong link, so it is now bounded by `[^<>]`. Passes clean at 13 groups
+  / 105 anchors. The dev-time `console.warn` on a null `def()` was NOT added: the build gate covers our
+  own links, and a warning would only fire for whoever already clicked.
+  ORIGINAL: [P3] Nothing catches a docs link that points at no section, and the failure looks like a dead click.**
+  `:area/:anchor` matches ANY pair, so `/components/actions` — a group PATH rather than an item anchor —
+  is a route hit with nothing to render; `SectionGroupPage` then does
+  `navigateByUrl("/", { replaceUrl: true })`, so the reader lands back on Start here and the address bar
+  keeps no trace. That redirect is deliberate (better than a blank page) and it is also what hides the
+  defect: no 404, no console warning, nothing in a build or a grep. **Eight links shipped wrong for
+  exactly that reason** and were fixed on 2026-08-21 — one bounced home, seven named a `fragment` that an
+  area redirect silently drops, landing on the group's first section instead of the named one.
+  **Ask:** a prebuild check beside the extractors — walk every `routerLink="/…"` literal in
+  `ds-docs/src/**/*.html`, resolve it against `NAV`, and fail the build on a miss. It would have caught
+  all eight, it is the same shape as the dead-token and class-surface audits this repo already runs, and
+  the alternative is that the next wrong link waits for someone to click it. Also worth deciding: log a
+  `console.warn` in dev when `def()` is null, so a bad URL says so instead of quietly going home.
+
+Highest: each one is wrong in code a consumer already has.
+
+- [x] **DONE 2026-08-21 — the column carries the intent, not the row: `TableColumn.interactive`.** The ask offered two shapes and this is the one it recommended, for the reason it gave: only ONE cell is the target, so a row-level `--ds-table-row-hover-text-color` would paint every cell to signal one. `interactive: true` marks the column; its cell takes `--ds-table-cell-link-color` (default `--accent`) plus `--ds-table-cell-link-decoration` (default `underline`) while the row is hovered. **Both signals, deliberately** — `color-not-only` and WCAG 1.4.1 both forbid resting it on hue, and the four screens that hand-rolled this had already written the underline themselves. **Scoped to `.clickable`**, so a column marked `interactive` on a passive table does nothing: that is the same rule the row tint follows, and it exists so a tint cannot promise a click that never happens. Off by default. Specimen on `/components/table` uses a pinned hover so the state is visible without a pointer, measured accent #2E54FF + underline on the marked cell against the default text on its neighbour. This was the consumer's LAST table `::ng-deep`; the other two they had (`width: 'content'`, the toolbar slot) shipped earlier.
+  ORIGINAL: [P3] A table row publishes only its background on hover, so a cell that must react in TEXT reaches
+  past the API (mm-broker, 2026-08-19).** `--ds-table-row-hover-bg-color` and its `-active`/`-pressed`/
+  `-selected`/`-stripe` siblings are the whole hover surface: there is no hook for a cell's own colour, so
+  four list screens whose row opens a record write `:host ::ng-deep ds-table tr:hover .cell-name { color:
+  var(--accent); text-decoration: underline }`. The pattern is not decorative — with `rowInteractive` the
+  whole row is the control, and the name is what tells the reader *what* will open; leaving it inert makes
+  the row look unclickable, and a `cursor: pointer` alone does not say which text is the target. Four
+  screens do it identically (brokers, campaigns, carriers, employer-groups), which is the usual sign it
+  belongs upstream. **Ask:** either `--ds-table-row-hover-text-color` applied to the row (the cheap half),
+  or — better, since only one cell is the target — let `TableColumn` carry the intent, e.g. `interactive?:
+  boolean`, and give that cell `--ds-table-cell-link-color` / `-decoration` on row hover. Their
+  `::ng-deep` is the last table reach that no token can replace; the other two are already filed
+  (`width: 'content'`, the toolbar slot) and shipped.
+
+- [x] **DONE 2026-08-21 — `string | number | null`, and the docs page is the test.** One character of type, and the four pipes now bind: `number`, `currency`, `percent` and `date` are each declared `string | null`, which is why the idiomatic form failed and the workaround spread. A demo of all four sits on `/components/stat` and renders `147,238 · £4,830,000 · 87% · Sep 1, 2026` — worth having as a demo rather than a line of prose because **that section compiles under `strictTemplates`, so the demo IS the regression test** for the thing that was broken. The widening is in the manifest as `stat-value-type-widened`: writers are unaffected, a reader or a subclass override with the old annotation is not, and the DELETE-LIST names the `toLocaleString('en-US')` it replaces.
+  ORIGINAL: [P3] `ds-stat`'s `value` cannot take Angular's own `number` pipe.** `StatComponent.value` is
+  `InputSignal<string | number>`, while `DecimalPipe.transform` returns `string | null`, so
+  `[value]="count | number"` fails typecheck under `strictTemplates` with
+  `TS2322: Type 'string | null' is not assignable to type 'string | number'`. Consumers fall back to
+  `count.toLocaleString('en-US')` inside the template, which hardcodes the locale instead of reading
+  `LOCALE_ID` and re-evaluates on every change-detection pass where a pure pipe would be cached.
+  Widening the input to `string | number | null` (an absent value rendering as nothing, which is what
+  an empty string already does) would let the idiomatic form work. Found in mm-broker-platform's
+  platform-admin, where both idioms now sit on the same KPI row for exactly this reason.
+
+- [x] **DONE 2026-08-21 — both surfaces, and `components.md` gained the two layouts it never had.** `ds-app-layout` and `ds-auth-layout` now have entries (inputs, slots, tokens, plus the one trap each: the app layout owns the scroll CONTAINER, and `landmark="main"` is only for a page with no other `<main>`), which matters because that file ships in the package and is what a consumer's agent reads. Two stale claims went with it: the `ds-sidenav-item` token line still named `--primary` / `--text-on-primary` / `--secondary` as the active defaults, which **today's wash and rail change had just falsified again** — it now names `--accent-subtitle` / `--accent-strong` and the new `-active-hover` — and `ds-sidenav` was missing `rail` and `logoLetter` entirely. In `done.md`, "the same letter-mark tile" now says what is actually shared: the COLOUR. The rail mark is 28px/weight 800 against 24–32px/weight 700, on two separate token pairs, so retinting means setting both.
+  ORIGINAL: [P3] Two documentation surfaces still carry claims corrected elsewhere.** `docs/done.md:191`
+  repeats "the same letter-mark tile" (the tile is 28px/weight 800 in the rail versus 24-32px/weight 700
+  in the auth layout, with separate token hooks, so retinting the mark means setting both). And
+  `components.md` — which ships inside the npm package and is what a consumer's agent reads — has **no
+  `ds-auth-layout` or `ds-app-layout` entry at all**, while its `ds-sidenav*` block still names the
+  pre-rename `--ds-sidenav-mark-bg` / `-fg` tokens.
+
+- [x] **DONE 2026-08-21 — three of them, and each was a different way for prose to outlive its code.** `badge.component.ts` carried two consecutive docblocks on `withDot` (the older one held the fact the newer had dropped — the dot renders only while `count` is unset — so they merged rather than one being deleted), and it feeds the generated API table, which is now regenerated. The search page said **two** things skip the debounce where there are three; the third is the `clear()` this session made public, so the paragraph now names it and says why writing `''` into `value` is not the same. And `--ds-stat-value-white-space` claimed an unwrapped phrase is "clipped" when `.stat` sets no `overflow` at all — it ESCAPES the tile, which is the opposite failure and the one worth warning about.
+  ORIGINAL: [P3] Cosmetic, in passing.** `badge.component.ts:25-26` carries two consecutive JSDoc blocks
+  on `withDot`, the first being the pre-change text, and it feeds the generated API table. The
+  ds-docs search section says "Two things skip the timer" where code and changelog say three, and
+  the generated stat token description says an unwrapped phrase value is "clipped" when `.stat` sets
+  no `overflow` and it actually escapes the tile.
+
+- [x] **DONE 2026-08-21 — all five follow `ds-date-picker`: the guard tests the trigger, not the host.** The open question the item held — "is label-click-keeps-the-panel-open something anyone relies on" — was already answered by shipping that fix on the date picker in 0.10.1, so the siblings follow rather than diverge. `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-color-picker` each own a single `#trigger` viewChild and now test it; `ds-time-picker` has THREE trigger boxes (single, range start, range end) and tests whichever are present, so a range picker keeps both of its own boxes exempt. **Verified end to end on 2026-08-21, all five, with a control experiment** — `presentations/overlay-guard-check.html`, driven headless. **Why a harness rather than the open docs tab:** the tab was a BACKGROUND tab, and Chrome clamps timers and runs no animations there, so both "is the pane still in the DOM" and "did the timer fire" read wrong — which is exactly what made the first attempt look flaky. The harness iframes each component page (same origin, so it can drive and read it), presses the trigger, then presses the one place inside the host that is NOT the trigger, and records two independent signals: the trigger's `aria-expanded` and the pane count in the overlay container. **Result: 10 opens, 10 dismissals, both signals agreeing every time.** **Finding along the way:** only `ds-select` and `ds-time-picker` have a `label` input at all, so for the other three the reachable outside-the-trigger area is the message row — the harness looks for a label, then a rendered message row, then any strip the layout leaves beside the trigger, which is the consumer geometry MBP-225 described. **The control run is what makes the pass mean anything:** reverting `ds-select` alone to `host.contains` took it to **0 of 3** dismissals while the other four stayed at 2/2, then restoring it went back to 2/2. So the harness detects the defect, and the predicate change is what fixes it. Worst case if one is wrong is a dismiss that used to be swallowed — the direction the fix wants. 
+  ORIGINAL: [P3] Five more overlays treat the whole host as "the trigger" in their outside-click guard.**
+  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all
+  pass `(target) => this.host.nativeElement.contains(target)` to `closeOnOutsidePointer`, the same
+  predicate the date picker had when MBP-225 was filed: a click on host area that is not the trigger
+  box — the label, the message row, any empty width a consumer's layout gives the host — is swallowed
+  instead of dismissing the panel. The date picker was the one with a *wide* dead zone (its trigger
+  hugs the mask while the host stretches), and only it got the fix — its guard now tests the
+  `anchor`. The other five keep the host predicate; their triggers normally fill the host, so the
+  dead area is just the label/message strip, which is why nobody has filed it. `ds-popover` already
+  does it right (`trigger.contains`). **Ask:** decide whether label-click-keeps-panel-open is a
+  behaviour anyone relies on; if not, move each to its trigger/anchor element like the date picker
+  and popover. NOT applied with the MBP-225 fix on purpose — that change was scoped to the reported
+  component.
+
+- [x] **DONE 2026-08-21 — tonal takes the 40% mix, and the claim that excluded it is corrected in the released notes.** The recipe is the one already shipping on ghost / text / outline — `color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))` — and it moves the dark state gap from **1.11:1 to 2.90:1**, the light one from 2.55:1 to **3.39:1**, keeping the hue instead of going grey. **Measured, not assumed, on the mixing target:** toward `--surface-default` rather than toward tonal's own disabled fill, even though the label sits on that fill — the disabled fill has already moved toward the label, so mixing into it yields only 2.56:1 in dark against 2.90:1 for the surface. The fill still moves just 1.09:1 / 1.20:1 and does not need to, for the same reason the transparent variants ship that way: the label carries the state. **The 0.10.1 entry that said tonal was excluded because "its disabled fill already carries the state" now carries the correction inline** — that figure was a light-theme 4.32:1 read into dark unchecked, which is the third time this session that a one-theme measurement travelled. `solid` is still genuinely excluded: a white label mixed into a white surface does not move.
+  ORIGINAL: [P2] [P2] `variant="tonal"` disabled rests on DESATURATION alone in the dark theme — no luminance change on either axis (browser-measured 2026-08-20).** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**.
+  **Checked against the screen before writing this, and the first draft said "no signal at all" — that was too strong.** Side-by-side with the Disabled toggle off, the state DOES read: the enabled labels are vivid (blue / orange / violet) and the disabled ones wash out to grey. The difference is almost entirely chroma, which the eye picks up at equal luminance. So this is not invisible — it is the "colour alone" case, weaker than the ghost/outline treatment now beside it.
+  **What IS wrong is the reason tonal was excluded, and that was mine.** Tonal stayed on the shared fixed-lightness recipe because "its disabled fill already carries the state on its own" — a claim resting on a 4.32:1 fill movement measured in the LIGHT theme and carried into dark unchecked. In dark the fill moves 1.20:1. The CHANGELOG entry repeats that claim and needs correcting whichever way this goes.
+  **`solid` is NOT affected:** its disabled fill measures `#2E54FF` → `#DBE5F9`, a 4.33:1 move, because the recipe's L 92% is near-white in any theme. Its own oddity, worth a separate look: a disabled solid is a bright pale-blue pill on a dark page, identical in both themes.
+  **If it should change, the fix is the one already shipped elsewhere:** `color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))` on `.v-tonal`. Needs Stas — he chose the grey-vs-mix question once already, on the light theme, and preferred the tinted mix.
+
+- [x] **DONE 2026-08-21 — public, across fourteen classes, and the four a host can derive stay closed.** Every readback that resolves through `DS_CONFIG` is public now: `sizeResolved` on the fourteen controls, `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge), `borderedResolved` / `stickyScrollbarResolved` (table), `dividersResolved` (both modals), `reserveMessageResolved` (every field, through `DsFieldBase`), the picker locale/format resolvers, and `brandName` / `letterGlyph` / `taglineText`. **The line is `DS_CONFIG`, and it is the whole argument:** a host cannot recompute an app-level default, so that readback has to be public; a host CAN derive `invalidResolved`, `railResolved`, `sortModeResolved` and `filterModeResolved` from its own bindings, so those stayed `protected`. Subclass collisions are carried in the manifest as `resolved-readbacks-are-public`, written from `npm run class-surface`. Commit `812e41d0`.
+  ORIGINAL: [P1] The resolved-size signals are `protected`, so the documented migration path does not
+  compile.** `size()` now returns `null` when unbound, and the replacement a host is told to read —
+  `sizeResolved()` — is `protected` on 13 of the 14 controls (public only on `FieldGroupComponent`),
+  as are `elevationResolved` / `paddingResolved` (card), `sizeResolved` (icon), `withDotResolved`
+  (badge), `borderedResolved` / `stickyScrollbarResolved` (table), `dividersResolved` (both modals)
+  and `brandName` / `letterGlyph` / `taglineText` (sidenav, auth-layout). Reading any of them from a
+  host, a test or a `viewChild` is TS2445. Either make them public — which is what the release notes
+  wanted to say — or keep them closed and accept that the readback has no answer. The CHANGELOG now
+  states the second, honestly; the first is the better product.
+
+- [x] **DONE 2026-08-21 — the ring survives a clipping ancestor, via `data-focus="inset"`.** Shipped as the fifth member of the existing switch, in `src/lib/styles/_focus.scss`, with two new roles (`--focus-ring-inset`, `--focus-ring-inset-error`). **Deliberately NOT pinned to `:root` like the other four:** a clip is a local problem, so the attribute works wherever it is set and the declarations inherit into the subtree — put it on the clipping element. Documented on the focus page as the trap it is, not as an option. Commit `7c37a8f9`.
+  ORIGINAL: [P1] A `overflow: hidden` ancestor clips the ring away completely, and the element is then
+  focusable with NO indicator at all.** The ring is a box-shadow outside the border box, so any
+  clipping ancestor eats it — and clipping a card is the normal way to keep a full-bleed child inside a
+  rounded corner, which `ds-card` itself invites (`ds-card` + `padding: none` + a child that fills it).
+  Measured in four places in one consumer: three rows filling a `ds-card .card { overflow: hidden }`,
+  and a gradient CTA pill (`overflow: hidden` for its own animation) wrapping a full-width `ds-button`
+  — that last one is a DS component losing its own ring, not a consumer's hand-rolled control.
+  The workaround is to re-declare the token with `inset` shadows per scope, which every consumer will
+  have to rediscover:
+  `--ds-control-focus-shadow: inset 0 0 0 2px transparent, inset 0 0 0 4px <ring colour>`.
+  **Ask:** ship it as a family on the existing switch — `data-focus="inset"` beside `ring` / `field` /
+  `edge` / `outline` — so a subtree can opt in with one attribute, and/or publish an `--ds-*-focus-shadow-inset`
+  role that resolves the same colours. Either way the trap belongs in the docs page for the switch.
+
+- [x] **DONE 2026-08-21 — `--focus-ring-inner: transparent`, exactly as asked.** The gap now shows whatever is actually behind the element. Nothing changes on a canvas-coloured ground (the same pixels resolve), and the dark-app/white-card case stops painting a dark rim that read as a rendering artifact. The change is in the manifest as `focus-ring-inner-transparent` with the restore for anyone who wanted an opaque gap over a busy background. Commit `7c37a8f9`.
+  ORIGINAL: [P2] `--focus-ring-inner: var(--surface-canvas)` assumes the focused element sits ON the
+  canvas.** The 2px gap is there to separate the ring from the element, so it has to match what is
+  BEHIND the element, and `--surface-canvas` is only that when nothing else intervenes. In a dark app
+  with white cards the gap paints the dark canvas colour as a rim around a white card, which reads as a
+  rendering artifact rather than a focus state — measured on a dark portal, and the fix that made it
+  correct everywhere was `--focus-ring-inner: transparent`, which takes whatever is actually behind.
+  **Ask:** default the inner ring to `transparent`. Nothing is lost on a canvas-coloured ground (the
+  gap resolves to the same pixels) and every other ground stops being wrong. If the current default is
+  deliberate — e.g. a guard against a busy photo background — say so where the token is documented.
+
+- [x] **DONE 2026-08-21 — the outline-only case is now in the 0.10.0 entry, prose and manifest both.** Added to the released 0.10.0 block ("the case that actually bites") and appended to `universal-focus-ring-base-rule` in `migrations/0.10.0.json`, with the way to FIND it — grep `:focus-visible`, and any rule that sets `outline` and no `box-shadow` is a hit — since neither a build nor a plain grep sees it. Amending a released manifest is the established practice here; `0.10.0.json` already carries two retroactive entries. `:focus-visible`, `outline-color` and `outline-offset` joined its `searchHints`.
+  ORIGINAL: [P2] The 0.10.0 entry names two consumer cases and misses the common one.** It covers "you
+  relied on the element having NO indicator" and "you relied on the BROWSER's outline", but not the
+  case that actually bites: **an app rule that styles `:focus-visible` with an `outline` only**. That
+  rule keeps winning on `outline`, the base rule still supplies `box-shadow`, and the element renders
+  BOTH — a second ring in the app's colour around the DS ring. Fourteen sites in one consumer, all
+  invisible to the build and to grep.
+  **Ask:** add it to the entry with the one-line fix (`box-shadow: none` in that rule, or delete the
+  rule and retint the DS ring instead), since "delete your own ring" is the outcome the release wants.
+
+- [x] **DONE 2026-08-21 — `clear()` is public, which was the ask.** It does the three things the item named (`text.set('')`, `cancel()`, `push('')`) and returns focus to the input, since the × disappears with the last character. Writing `''` into `value` is still not equivalent, and the docstring now says why: the effect that watches `value` cancels the timer only when the incoming text DIFFERS from what the control last pushed. mm-broker can drop `TODO(ds-search-clear-cancel)`. Commit `5e452878`.
+  ORIGINAL: [P2] `[debounce]` cancels an armed keystroke only when the host writes a DIFFERENT value, so
+  a Clear button outside the control cannot always drop one.** The cancel path is
+  `effect(() => { if (this.value() !== this.pushed) { this.cancel(); … } })`. That covers the case the
+  0.10.0 note describes — "a host resetting the field mid-typing has to win" — but only when the reset
+  changes the bound value. A list screen whose search term is not committed yet holds `''`: the user
+  types `abc` (timer armed, `value` still `''`), presses the page's own Clear, the host writes `''`
+  again, the signal does not change, no effect runs, and the keystroke lands ~300ms later on a screen
+  that was just cleared. Consumer-side there is nothing left to try: `''` is the only empty value, two
+  synchronous writes collapse, and a one-shot "swallow the next emit" flag mis-fires on the next real
+  search.
+  **Ask:** make the existing `clear()` public — it already does exactly the right three things
+  (`text.set('')`, `cancel()`, `push('')`) — or add a public `cancel()`. `focus()` was made public for
+  this same host-owned Clear button, and its docstring names the case: "a Clear button that disables
+  itself on activation". The same button needs to be able to drop the timer it is clearing.
+  mm-broker carries `TODO(ds-search-clear-cancel)` in `list-search.component.ts` until this lands.
+
+- [x] **DONE 2026-08-21 — the panel resolves the same chain as the other two.** `--ds-dropdown-panel-radius` now reaches `ds-multi-select`; it was the one panel of the three sitting at a hardcoded `--radius-md`, because its element is `class="panel"` and never picked up the shared overlay rule. Commit `cd4a14ce`.
+  ORIGINAL: [P2] `--ds-dropdown-panel-radius` does not reach `ds-multi-select`.** Its panel element is
+  `class="panel"`, not `.dropdown-panel`, and `multi-select.component.scss:108` hardcodes
+  `border-radius: var(--radius-md)`. So that panel is the one place neither the new token nor
+  `--ds-radius-panel` has ever reached, and it stays at 8px while the other two move.
+
+- [x] **DONE 2026-08-21 — the header no longer contradicts its own body.** The blockquote stopped warning that the `ds-button` section documents a pre-`color`×`variant` API that `b69a83d2` had already rewritten, the dead `-fg` name is gone, and the disabled-recipe sentence now describes the split that actually shipped. The file goes into `dist/ds/` through `tools/build-schematics.mjs`, so a consumer's agent reads it — which is why a stale warning there is worse than none. Commit `cd4a14ce`.
+  ORIGINAL: [P2] `components.md`'s header contradicts its own body, and the file ships.** Line 123 still
+  warns that the `ds-button` section documents the pre-`color`×`variant` API and the pre-rename
+  token names — which is exactly what `b69a83d2` rewrote — and still names the dead `-fg`. The
+  "Re-verified 2026-08-05" stamp was not moved either. `tools/build-schematics.mjs` copies this file
+  into `dist/ds/`, so consumers' agents read it.
+
+- [x] **DONE 2026-08-21 — `hidden` and `disabledReason` shipped; the two cheap halves stay declined, split out as a P3.** `TableRowAction` takes `hidden?: (row) => boolean` and `disabledReason?: string | ((row) => string)`, and **a row whose every item is hidden renders no kebab** rather than opening an empty menu — the two that blocked 8 and 4 of the eleven menus. The reason line is read only where `disabled` returns true for that row: a reason on a live item would read as a caveat on something that works. `label`-as-a-function and the divider are the two the original called cheapest to decline, and they stay open as their own P3 in `todo.md` rather than being dropped — the next word on them should come from a migrated screen, now that migration is possible at all. Commit `5e452878`. The parent item stays in `todo.md` too, ticked, since those children are still open.
+
+## Shipped 2026-08-19/20 (session — field states, the disabled recipe, and six assigned items)
+
+Moved out of `todo.md` on 2026-08-20. Two things repeat across this batch: **a claim measured in
+one theme was carried into the other unchecked** (the tonal fill, the neutral label), and **a
+comment or docblock outlived the code it described** (four separate cases, all caught by screening
+rather than reading).
+
+- [x] **DONE 2026-08-20 — the wash SHIPPED, and the research is why.** Read from the systems' own sources: Material's navigation drawer fills its active item with `secondary-container` and labels it `on-secondary-container`, naming the token `active-indicator-color`; Carbon uses `$background-selected` plus a 3px `$border-interactive` left border plus font-weight 600. **Neither fills with the brand accent**, so our solid pill was the outlier and the two apps that replaced it landed on the norm. Now `--accent-subtitle` #F0F3FF with an `--accent-strong` #1D43ED label, measured live at 6.16:1.
+  **The rail stays ON, which is where both apps went wrong:** they set it transparent, leaving the state on colour alone — against `nav-state-active`, which lists colour, weight AND indicator. Kept, and `[rail]` is now an INPUT on `ds-sidenav` (whole rail) and `ds-sidenav-item` (per item, `null` follows the parent) so turning it off is API rather than hiding it with a token.
+  **Also fixed in passing:** the active hover was `color-mix(active-bg 88%, white)`, which LIGHTENS — fine under a solid pill, invisible under a wash. Now `--accent-muted`, so hover deepens.
+  **The rail followed on 2026-08-21, on Stas's verdict:** it is `--accent-strong` now, the active label's own colour, instead of `--secondary` #FF7B2E. The orange measured 2.33:1 on the light wash — under the 3:1 floor a non-text indicator needs — against 6.16:1 light and 5.28:1 dark for the accent. Worth stating both ways: in DARK the orange was fine on contrast (6.06:1); the light theme and the monochrome row are what decided it. Carbon's indicator is the interactive colour, Material's IS the wash, and neither introduces a second hue. `--ds-sidenav-item-rail: var(--secondary)` restores the bar. ORIGINAL: [P2] `ds-sidenav-item` active state — solid accent pill → quiet wash + coloured label? (split out of the four-override item above on 2026-08-12, at Stas's request: "оставь но не удаляй пункт, ещё раз надо будет обсудить потом".)** Both mm-broker portals undo our active treatment the same way, and there are FIVE declarations, not the four the parent item counted: `--ds-sidenav-item-rail: transparent` plus `--ds-sidenav-item-label-weight: var(--font-weight-bold)` on top of the wash and the label colour.
+  **What they agree on is a SHAPE, not a value.** broker-portal uses its own `--nav-active-bg`/`--nav-active-fg`; platform-admin uses `--primary-subtitle` + `--primary`. So the shared conclusion is "a quiet wash, a coloured label, no rail" — the DS could adopt that by deriving the wash from the accent family it already owns, and must not adopt either app's palette.
+  **Why this one survived the cull while C1–C3 closed:** the others were a brand rung, a contrast floor and a shared token. This one is a genuine question about how loud a default should be, and emphasis is cheaper to add than to take away — a solid accent pill on every rail item is a strong opinion that both portals removed. But the same correction applies: the two portals are one workspace, so this is one opinion, and it is not a mandate.
+  **Visual breaking change if it moves**, so it belongs in a batch, not a drive-by. **Needs a second conversation with Stas.**
+
+- [x] **DONE 2026-08-20 — three named modes, and `null` now means unset like everywhere else.** `maxVisibleChips` accepts `number | 'fit' | 'all' | null`: `'fit'` measures, a number is a ceiling, `'all'` shows everything, and unset resolves to `'fit'` with room left for a `DS_CONFIG` slot. **Stas overrode the ask on one point** — it asked to keep `null` working as a legacy alias and remap only in a major; he said drop the compatibility now, so `null` is unset immediately. BREAKING for anyone who set `[maxVisibleChips]="null"` to mean "show all"; mm-broker has one such call site carrying `TODO(ds-chips-all)`. Docs demos moved to `maxVisibleChips="all"`. ORIGINAL: [P3] The same literal now reads two opposite ways across the library.** 0.10.0 deliberately gave
+  `null` a service meaning on **22 inputs** — `ds-table` `bordered` / `stickyScrollbar` / `sortMode` /
+  `filterMode`, `ds-badge withDot`, `ds-card` `elevation` / `padding`, `ds-icon size`, `size` on the
+  eleven controls that resolve `config.control?.size`, and `ds-modal-card dialogRole`, whose own entry
+  says the point was "so 'unset' is distinguishable from a deliberate 'dialog'". On every one of those
+  `null` means *I am not deciding — read the config, then your built-in*. On `maxVisibleChips` it means
+  the opposite: *show every chip and let the trigger grow*, which is the most opinionated of its three
+  modes. A consumer who has just learned the new convention reads `[maxVisibleChips]="null"` as "use
+  the default" and gets the one behaviour the default is not.
+  **It also blocks the config section this input is a candidate for.** Chip collapse is a whole-app
+  opinion in the same way `table.bordered` is; the moment `DS_CONFIG.autocomplete.maxVisibleChips`
+  exists, `null` cannot mean both "use the config" and "show all".
+  **Ask:** accept a named mode — `number | 'fit' | 'all' | null` — so the three modes all have names
+  (`'fit'` measures, a number caps, `'all'` shows everything) and `null` is free to mean unset like
+  everywhere else. Please do NOT silently remap `null` to unset in the same release: it is a behaviour
+  flip for anyone who set it (mm-broker has one). Ship `'all'`, keep `null` working as its alias, note
+  it as legacy, and remap only in a major. mm-broker carries `TODO(ds-chips-all)` on its one call site.
+
+- [x] **CLOSED 2026-08-20 — the button half got its verdict, and `--opacity-muted` no longer exists.**
+  **The remaining open question was "do ghost/text lose the underline or gain a faint fill", and the answer is neither.** Stas rejected a border outright; the fix is on the LABEL, and the label moved to `color-mix(in srgb, <label> 40%, var(--surface-default))` on `.v-ghost`, `.v-text` and `.v-outline`, plus the same on `ds-icon-button`'s `&.standard`. Measured live in the browser: light 2.54 → **3.4:1**, dark 1.11 → **2.9:1**, matching the computed 3.41 / 2.91 to within a unit.
+  **Why the mix and not a fixed lightness** — the direction has to flip per theme and only the surface knows it: in dark the accent is already OKLCH L 67.9%, so the shared L-70% recipe landed two points from the enabled label. A fixed number cannot serve both themes.
+  **`--opacity-muted` is gone from the token scale entirely** (this release), so half (1) and half (2) of the original report are moot: nothing reads it, and the five places that double-dimmed were fixed in 0.10.0.
+  **One thing came OUT of this and is filed on its own:** `variant="tonal"` in the dark theme rests on desaturation alone (label 1.11:1, fill 1.20:1) — and the reason tonal was excluded from the mix was my claim, measured in light and carried into dark unchecked. See its own P2 item.
+  ORIGINAL: [P2] `:disabled` dims to `--opacity-muted` (0.6), which is not a disabled level — on a
+  low-emphasis button it reads as "enabled, just quieter".**
+  **MEASURED 2026-08-13, and the item names the wrong mechanism twice. Half is FIXED; the button half needs a verdict (prototype: `presentations/disabled-recipe.html`).**
+  **(1) `ds-button` and `ds-icon-button` never read `--opacity-muted` at all.** Their disabled state is three `oklch(from accent …)` colours (bg / label / border). So the consumer override that retunes `--opacity-muted` on those two selectors is a **no-op** — the same class of finding as their table-head background. It should be deleted whatever we decide, because it never did anything.
+  **(2) Where `--opacity-muted` IS used for disabled, the problem is the OPPOSITE of the ask.** Five places — `ds-select`, `ds-date-picker` and `ds-time-picker` triggers, `ds-menu-item`, the shared dropdown row — set `--text-disabled` AND 0.6 opacity on top. Light theme, measured: **1.68:1** against the surface; colour alone **2.53:1**; an enabled row **17.32:1**. Nobody could confuse that state with enabled — the text had almost vanished. Dropping to `--opacity-disabled` (0.5) would have made it **1.53:1**, and `--opacity-text-disabled` **1.37:1**. **FIXED by removing the second dimming** in those five; the two places where opacity is the only signal (a disabled calendar day, `ds-toggle-button`) moved to `--opacity-disabled`, which is the token named for the job.
+  **(3) The real defect behind the report, with numbers.** The recipe pins a disabled label at **58% lightness**, which is about where a saturated accent already sits — so on a fill-less button the two states differ in chroma alone. Enabled ↔ disabled: `color="primary"` **1.60:1**, `color="error"` **1.50:1**, `color="neutral"` 4.03:1. So it fails exactly when the accent is coloured, and is fine on neutral.
+  **THE MATRIX, built 2026-08-13 over every variant x colour x state (`presentations/disabled-recipe.html`) — and it corrected me again: FOUR of the five variants fail, not one.** I had assumed a fill meant the box carried the state. Measured `bg moved` (disabled fill against rest fill) on `primary`: solid **4.32:1** — unmistakable; tonal **1.09:1**; outline **1.07:1** — nothing. So the box only speaks on solid, and the label has to do the work everywhere else. Label against rest, `primary` / `error`: tonal **1.24 / 1.16**, outline **1.24 / 1.16**, ghost **1.60 / 1.50**, text **1.60 / 1.50**. `color="neutral"` is healthy throughout (3.13–4.30), which is why the bug only shows on a coloured button.
+  **The real case, read out of the consumer:** `common/components/.../list-search.component.html` renders `<ds-button variant="ghost" size="sm" icon="x" [disabled]="!canClear()">Clear</ds-button>` — ghost with NO `color`, so the default `primary`. Their `_ds-overrides.scss` comment says the DS "dims a disabled control to `--opacity-muted` (0.6)", which is why they retuned that token; it is inert, so the button they were fixing is unchanged to this day.
+  **Four candidates, gap-vs-rest on `primary`** (solid / tonal / outline / ghost / text): **A** today 4.29 / 1.24 / 1.24 / 1.60 / 1.60. **B** neutral label where there is no fill 4.29 / 1.24 / 1.24 / 2.70 / 2.70 — fixes the Clear button and leaves tonal and outline broken. **C** 70% lightness everywhere 2.68 / 2.56 / 2.56 / 2.56 / 2.56 — fixes all four, but the solid label drops from 3.38:1 to 2.11:1 on its own fill. **D** = C except solid keeps 58%: 4.29 / 2.56 / 2.56 / 2.56 / 2.56 — every broken case fixed, nothing given up. **D is the recommendation**, stated as a rule the components already imply: the lighter label is for buttons whose fill cannot carry the state.
+  **THE DARK THEME KILLED THE FRONT-RUNNER (2026-08-13, after asking the UX skill).** Every number above was light-theme only. The skill's `state-clarity` / "state contrast parity" rule says a disabled state must be equally distinguishable in both themes, so I measured dark: the enabled label there is a LIGHT blue (`hsl(229 90% 72%)`) while `--text-disabled` is a dim grey, so the neutral-label candidates collapse to **1.59:1** — worse than what they fix in light. The recipe candidates are no better (1.45–1.86).
+  **Opacity was what survived both themes** — and it is what the skill and Material say outright (`disabled-states`: *reduced opacity 0.38–0.5 + cursor + semantic attribute*, anti-pattern "controls that look tappable but do nothing", the report verbatim). **Stas ruled it out** (2026-08-13), so the surviving idea had to be expressed without transparency.
+  **SHIPPED 2026-08-13 as candidate C, at Stas's call: ONE label recipe for every variant, `oklch(from accent 70% 0.035 h)`** — replacing the 58% base and the 52% overrides tonal and outline carried. He picked it over the scoped variants for the reason the deck could not measure: at 70% the label simply *looks* switched off, including on solid. Result across the matrix: **1.16–1.60 → 2.40–2.71:1** on `primary`/`error`, and 3.13–4.03 → 6.46 on `neutral`. Verified in the compiled CSS that one recipe reaches every variant and no 52% survives. **The trade, accepted rather than hidden:** the disabled label is fainter against its own ground (2.11–2.71:1, was 3.38–5.23) and solid gives up the most (4.29 → 2.68 gap, 3.38 → 2.11 legibility). Not verified in a browser — the Chrome extension was down all session.
+  **What was rejected, and why it is worth remembering:** opacity (Material's and the skill's own answer) was the only candidate with light/dark parity, and Stas ruled it out; the neutral-label family (B/D/E) read best in light and collapsed to 1.59:1 in dark; the surface-mixed label (G) matched opacity's parity as a colour but cannot work on solid, whose enabled label is white.
+  **PREVIOUS RECOMMENDATION, kept for the record: `color-mix(in srgb, var(--_button-label-color) 50%, var(--surface-default))`, on every variant EXCEPT solid.** The label walks half-way to whatever the theme's ground is, which is the one thing opacity got right — and because `--surface-default` already differs per theme, it needs no per-theme value. Measured, `primary`: light ghost/tonal **2.79:1** (today 1.60 / 1.24), dark ghost/tonal **2.39:1** (today 1.45 / 1.86, neutral-label candidates 1.59). Solid is excluded for the same reason D excludes it from C: its enabled label is WHITE, so mixing white into a white surface changes nothing (1.00:1) and the label's legibility on its own pale fill falls to 1.27:1 — and solid is the one variant whose box already carries the state (4.32:1).
+  **It must REPLACE the three `oklch(from accent …)` resolvers, not stack with them** — stacking is precisely the bug fixed this week (a row wearing `--text-disabled` AND 0.6 opacity measured 1.68:1). **The cost, stated plainly:** the disabled label is fainter than today, 2.16–2.45:1 in light where the 58% recipe gave 3.38–5.23, and 1.75:1 for dark tonal. Disabled text is WCAG-exempt and "faint" is the message, but that is the trade.
+  **Still open whichever wins:** disabled would rest on colour alone for a sighted user (`cursor: not-allowed` and the attribute cover pointer and screen reader). Decide whether ghost/text also lose the underline or gain a faint fill. **Needs Stas.**
+  **Also measured, and it is why this is a labelling decision rather than a fill one:** raising the disabled FILL cannot rescue tonal — its rest fill is already a 94%-lightness tint and every neutral surface we own is near-white, so even `neutral-200` moves the box less than 1.3:1. `ds-icon-button` has the same three resolvers with no per-variant override at all, so it inherits the same verdict. Found on a list toolbar's ghost `Clear`:
+  the head could not tell the enabled state from the disabled one at a glance, and neither could I
+  from the screenshot — the label stays fully legible and only the tint moves. The token scale
+  already carries the right value twice: `--opacity-disabled: .5` and `--opacity-text-disabled: .38`,
+  and Material's own disabled guidance is 0.38–0.5. `--opacity-muted` is the wrong token for this
+  job by name as well as by value: "muted" is a de-emphasis level (secondary text, hints), while
+  disabled is a state that must be unmistakable — the two should not share one number.
+  **Ask:** dim `:disabled` to `--opacity-disabled` (or `--opacity-text-disabled` for the label),
+  keeping `cursor: not-allowed` and the semantic attribute as they are. Applies to every control that
+  reuses the shared disabled rule, not just buttons — the ghost/text variants are simply where the
+  0.6 is least survivable, because they have no fill to carry the state.
+  **Consumer workaround GONE, and the token with it (2026-08-19).** The paragraph that stood here
+  said the override "works because the DS reads that token at use-time" — it does not, and point (1)
+  above had already measured that. The override was deleted from `platform-admin/_ds-overrides.scss`
+  during the consumer's 0.10.0 upgrade, and `--opacity-muted` is now deleted from the token scale
+  too (see `## Unreleased`), so the hijack is no longer expressible. What remains open here is only
+  the question below.
+  **ASKED AGAIN 2026-08-19, and parked here rather than shipped.** The head asked to put 0.38 on
+  `--ds-button-label-color-disabled` directly. Measured on the consumer's real ground
+  (`--accent-deep: #00414b` on `#fcf8f9`), ghost `Clear`: enabled 10.73:1; the 58% recipe 4.01:1 —
+  the state that produced the original report; the shipped 70% recipe **2.50:1**; a 0.38 alpha
+  **2.10:1**. So the defect the ask names is already closed by 0.10.0, and 0.38 buys 0.4 of ratio.
+  Two things make it a real question anyway rather than a no: alpha is the ONE candidate this file
+  measured as having light/dark parity, and it is what Material and the UX skill say outright.
+  Against it: it was ruled out on 2026-08-13 by the same head, and expressed as a consumer pin it
+  would flatten the per-colour accent the recipe derives from `--_button-accent` — a disabled error
+  button would go teal. **If it is ever taken, it belongs here as one recipe for every variant
+  except solid, not as a pin in `platform-admin/_ds-overrides.scss`.** Rendered comparison of the
+  three states was built for the decision and is not committed anywhere.
+
+- [x] **DONE 2026-08-20 — the MENU clips to the panel's corners, and the real cause was a clip of the wrong SHAPE, not a missing one.** ds-menu already has `overflow: hidden` (that is what rounds the edge rows for a bare menu), but its `:host-context(.popover)` block flattened `border-radius` to 0 while leaving `overflow` in force — so inside a popover it clipped rows SQUARE. The popover now publishes `--ds-menu-clip-radius` = its radius less the border, and the menu clips to that (11px inside a 12px panel); a brand overriding `--ds-popover-radius` is followed automatically. NEITHER candidate fix was needed: not per-item radii (the item stays square, the menu owns the edge corners) and not panel `overflow: hidden`. Also CORRECTED a false comment in menu-item.component.scss that claimed 'The panel clips the fill instead' — the panel is `overflow: visible`, which is why the bug existed. And the todo's own reason for rejecting the clip was wrong: a submenu is a CDK overlay portaled to body, so a panel clip would not have cut it — but it WOULD have cut an edge row's focus ring. ORIGINAL: A menu item's hover / error fill has square corners over the popover's rounded ones (Stas 2026-08-18, mm-broker MBP-134 — reproduced live).** Measured in a running app on 0.9.1, and the same on `dev`: the panel computes `border-radius: 12px` with **`overflow: visible`**, `.panel:has(ds-menu)` sets `padding: 0`, and `menu-item`'s own `border-radius: var(--ds-menu-item-radius, 0)` defaults to **0**. Item width 274px against a 275.42px panel, so the first and last item's fill lands exactly on the panel's corners and paints through them — a destructive item at the bottom shows two square pink corners under a rounded panel. Nothing on the consumer side can fix it: the radius token is per-item, so a consumer would have to know which item is first or last. **Two candidate fixes, pick one:** (a) `ds-menu` gives its edge items the panel's corners — `ds-menu-item:first-child button { border-start-start-radius: inherit; border-start-end-radius: inherit }` and the mirror on `:last-child`; (b) keep a small padding when the popover hosts a menu, which is what `padding: 0` removed — 4px is enough to keep any fill off the corner. **NOT `overflow: hidden` on the panel:** `ds-menu-item` supports submenus that render outside the panel, so clipping would cut them.
+
+- [x] **DONE 2026-08-20 — the `value -> text` effect now clears both flags.** Placed there because every typing path holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the keyboard. Verified first that neither typing path writes `value` on its invalid branch, so blur validation is untouched. Checked the siblings: no other field carries its own internal invalid flag, so there was nothing adjacent to sweep. ORIGINAL:
+  `typedInvalid` / `rangeInvalid` are set from the typing paths (`applyEditedText`, `onFieldBlur`,
+  `applyRangeText`) and cleared only by those and `applyPreset`. The constructor's `value → text` effect
+  re-renders the field but touches neither, so `value.set(null)` leaves **"Enter a valid date
+  (MM/DD/YYYY)" standing over an empty field**. Read in the 0.9.1 bundle, not inferred.
+  `error` outranks the message but is no help here: a consumer that has just cleared the field has no
+  error of its own to bind, and binding an empty string falls straight back to the picker's.
+
+  **The only consumer workaround is destroying the control.** mm-broker's Create Campaign modal now tears
+  its whole body down on `ds-modal`'s `closed` purely to get a fresh picker on the next opening — and
+  that has a hole: reopening inside the 300 ms leave animation makes the modal cancel the close, `closed`
+  never fires, and the stale error survives. Their Add Employee dialog is a second call site with no
+  workaround at all, so a mistyped date of birth still reads "Enter a valid date" over an empty field the
+  next time it opens.
+
+  **Ask:** clear both flags when `value` changes from outside the control (the same effect that
+  re-renders the text). Two consumer workarounds come out the day it lands.
+
+- [x] **CLOSED 2026-08-20 — no DS work needed: the guard SHIPPED in `v0.10.0`.** Verified against both tags: `v0.10.0`'s `table.component.ts` contains `event.target !== event.currentTarget`, `v0.9.1` does not. The ask was "cut a release that carries the guard" and that release is cut. mm-broker is on 0.9.1, so this is an upgrade for them, and they can delete their `onRowKey` override plus `TODO(ds-row-key-guard)`. ORIGINAL: The guard is already on `dev` and missing from published 0.9.1.** `dev`'s
+  `table.component.ts:1708` reads:
+
+  ```ts
+  protected onRowKey(row: T, event: Event): void {
+    // Only the row's own key opens the row: a key pressed on a control inside a
+    // cell belongs to that control (Space on the select box, Enter on a button).
+    if (!this.rowInteractive() || event.target !== event.currentTarget) {
+      return;
+    }
+    event.preventDefault();
+    this.rowClicked.emit(row);
+  }
+  ```
+
+  The 0.9.1 bundle has the same method **without** the `event.target !== event.currentTarget` half, so
+  on the published version Enter or Space on a row-action kebab both opens the menu and emits
+  `rowClicked`. Consumers hit this on ten interactive tables; mm-broker now overrides `onRowKey` in its
+  `ids-data-table` fork and carries `TODO(ds-row-key-guard)` to remove the override at the next bump.
+
+  **The ask: cut a release that carries the guard**, and treat it as a fix rather than a change — the
+  behaviour it removes is a bug, not an API. Nothing else is needed from the DS side.
+
+  Worth knowing while you are in there: **the click path must not get the same treatment.** A row click
+  legitimately lands on a cell's own text, so `event.target !== event.currentTarget` there would kill
+  row clicking outright. `onRowClick`'s existing guards (`closest('input')` plus a live text selection)
+  are the right shape, and consumers keep `$event.stopPropagation()` on each in-row control's own
+  handler for that path.
+
+- [x] **DONE 2026-08-20 — one was still false, the other had already been fixed.** The `maxVisibleChips` JSDoc in both pickers said "A NUMBER caps at exactly that many", which overstates it — the row measures for a number too, so it is a CEILING. Corrected in both, and the docs site re-rendered. The `ds-config.ts` `control.size` claim about `multi-select` is already gone. ORIGINAL: [P3] Two stale strings that outlived the code.** The `maxVisibleChips` JSDoc in BOTH pickers
+  still says "A NUMBER caps at exactly that many", which `7ceed418` made false; it feeds
+  `component-api.generated.ts`, so the docs site renders it too. And `ds-config.ts`'s `control.size`
+  JSDoc lists `multi-select` among the honouring controls — `ds-multi-select` has no `size` input.
+
+- [x] **CLOSED 2026-08-20 by Stas: the tokens did their job, so three of the four need nothing — and one CANNOT be changed alone.** His call, verbatim in effect: "if they did it through tokens and it all worked, that is fine". Deck with all four measured side by side: `presentations/consumer-default-overrides.html`.
+  **(a) `ds-table` head — NO CHANGE.** Measured: the background already matches (both apps set `--surface-secondary`, which IS the default); only the text differs, `--text-secondary` #353B4D → `--text-tertiary` #6B7388. A one-token brand preference, expressed through the token.
+  **(b) `ds-stat` padding — CANNOT change alone, and that is the answer.** Measured 24px, and it comes from `--ds-container-pad`, a META token shared with the containers. Moving stat to `--space-5` (20px) alone would desync it from every container that reads the same token; the radius (12px) already matches what they wanted.
+  **(c) `ds-sidenav-item` active — REOPENED as its own decision after Stas asked for research (2026-08-20), and the evidence says our default is the outlier.** Read from the systems own sources: **Material Design 3** fills the active drawer item with `secondary-container` — a tinted WASH — and labels it `on-secondary-container`, and names the token `active-indicator-color`; **IBM Carbon** uses `$background-selected` plus a **3px left border** (`$border-interactive`) plus **font-weight 600**. Neither fills the active item with the brand accent. We ship a solid `--accent` #2E54FF pill with a white label, which is why two teams independently replaced it.
+  **But the apps got the second half wrong.** Both set `--ds-sidenav-item-rail: transparent`, so their active state is carried by COLOUR ALONE. Carbon keeps a bar and a weight bump; Material calls its wash an indicator. The ui-ux-pro-max rule `nav-state-active` lists "color, weight, indicator" — plural, citing HIG and MD.
+  **Recommendation: adopt the wash + coloured label AND keep the rail on.** That matches the industry on the fill, beats both overrides on the signal, and lets both apps DELETE their override rather than extend it. Low risk in practice: every known consumer already overrides away from the pill, so the change affects only apps still on the default. Side by side in `presentations/consumer-default-overrides.html`. **Needs Stas** — it is a default change, breaking by appearance.
+  **(d) `ds-page-header` title — NO CHANGE, and the research says our default is the correct one.** Ours is `--font-size-h3` = **28px** against a 14px body — exactly the "a page title is at least twice the body text" rule the guidance states. The apps moved it to `--font-size-h2` = 36px, i.e. 2.6x. Dashboard-specific guidance puts headers at 18–24px, so 28px is already at the top of that band and 36px is above it. Their change is brand voice, not a correctness fix. Sources: NN/g-adjacent type-scale guidance, CFPB and HPE design systems, and the dashboard typography note that headers sit at 18–24px.
+  ORIGINAL: Four overrides came out IDENTICAL in two independently-built apps — that is evidence about our defaults, not about a missing hook (filed as an item 2026-08-10; it had been prose since 08-07).** From reading `_ds-overrides.scss` across mm-broker's portals: `ds-page-header` title bumped to `--font-size-h2` (the DS defaults to h3); `ds-table` head set to tertiary text on `--surface-secondary` with a matching row hover; `ds-stat` given a tile radius and `--space-5` padding; `ds-sidenav-item` given a wash and a coloured label with `--ds-sidenav-item-rail: transparent`.
+  **RESEARCHED then DECIDED 2026-08-12, against the consumer's live stylesheets and the type/spacing scales the DS already keeps. Three of the four close with NO default change; C4 is its own item below. The summary this item opened with was wrong in four places.**
+  **What I read:** `mm-broker-platform/src/frontend/projects/{broker-portal,platform-admin}/src/styles/_ds-overrides.scss` — the live files, not the worktree copies.
+  **The premise does not hold: these are not two independently-built apps.** Both projects sit in ONE Angular workspace in ONE repository — two portals of one product — and both page-header comments say the same thing, "H2 to match the design". The four "convergences" trace to a single design spec, not to two teams arriving separately. That was the whole force of the item; what is left is one consumer's brand preference, which is exactly what the hooks are for.
+  **C1 (page-header 28px → 36px) — CLOSED, no change.** The heading LEVEL was never wrong: the component already renders `<h1 class="title">`, so "h3" here names a type RUNG, and the "nothing larger sits above it, so it is under-sized by construction" argument dissolves. On the rung: 28px is Material 3's Headline Medium and Apple's Title 1 — the canonical app-page-title size — while 36px is M3's Display Small, the expressive rung for one-off hero moments, not for a header that repeats on every page. Shopify Polaris, the closest analogue (a dense admin), sets its page title lower still. A DS default belongs on the productive rung; `--ds-page-header-title-fs` is the lever, both apps already use it, and its token description now names the rung and the reason.
+  **C2 (table head) — CLOSED, and both halves were already answered.** `--text-tertiary` on `--surface-secondary` measures **4.30:1** at **12px bold**, which is NORMAL text by WCAG (the 3.0 exemption starts at 18.66px bold), so the floor is 4.5 and a DS cannot default below it. Their second declaration, `--ds-table-head-bg-color: var(--surface-secondary)`, is a **no-op** re-declaring our default. The "matching row hover" this item claimed appears in NEITHER file — and the DS already does the thing that was asked for: the row tint is `tr.clickable:not(.active):hover`, gated by `rowInteractive`, which is off by default, so a passive table stays static and the tint honestly signals clickability.
+  **C3 (ds-stat padding 24px → 20px) — CLOSED on the value, and it exposed a real gap that IS now fixed.** The padding was never `ds-stat`'s to move: it resolves from `--ds-container-pad`, which `ds-card` shares, so either both move or neither does. On the value, 24px is where the field sits (Ant Design card body 24, shadcn/ui Card `p-6` 24) and 20px is not a canonical rung anywhere — so the base stays 24 and a consumer who wants 20 sets that one token, which is what it exists for. The gap underneath: the density tiers compress field and table padding at `ultra-compact` but left surface padding at 24px, so a card kept its full frame while its own cells halved. **`ultra-compact` now drops `--ds-container-pad` to 16px** — one rung, not two, because a frame reads as padding lost long before cells do.
+  **C4 (sidenav item active) is now its own item below**, at Stas's request: it needs a second conversation, and unlike the other three it is a shape the DS could plausibly adopt.
+  **Also spotted while reading, and it is theirs not ours:** platform-admin still carries a `.kpi` class "for a tile whose value is not text — a badge, say — which `ds-stat` has no slot for". It does: `[dsStatValue]` shipped in 0.9.0 and they are on 0.9.1. A DELETE-LIST candidate for their next sweep, not a DS gap.
+  **The rule the group leaves behind, worth more than the four verdicts:** consumer overrides are evidence about a default only when they are genuinely independent — check the repository before counting them, because four identical declarations in one workspace are one opinion written twice.
+
+- [x] **[P2] SHIPPED 2026-08-19 (see `## Unreleased`). `DS_CONFIG.modal.dividers` landed and still could not retire the consumer's padding
+  override, because the shape it needs is not expressible.** The modal regions resolve
+  `padding: var(--_modal-header-pad-y) var(--_modal-pad-x)` and the same for `.body` / `.actions` —
+  ONE vertical value per region, applied to both edges. mm-broker's design wants
+  `header: space-6 space-6 0`, `body: space-4 space-6`, `actions: 0 space-6 space-6`: the header
+  pads only at the top and the actions row only at the bottom, so the body's own padding carries
+  the whole gap between them. Only `body` is symmetric, so only `body` can use
+  `--ds-modal-body-pad-y`; the other two stay as three `!important` rules on `.modal > .header` /
+  `> .actions`, reaching past the component into its internal class names — which is the thing the
+  token API exists to make unnecessary.
+  **Not a `no-dividers` gap:** turning dividers off already zeroes `--_modal-body-pad-y` and both
+  border widths, and that part works. This is purely that a single `pad-y` cannot express an
+  asymmetric region.
+  **Ask:** per-side tokens on the three regions — `--ds-modal-header-pad-top` /
+  `-pad-bottom`, and the same for `body` and `actions`, each defaulting to the existing `pad-y` so
+  nothing moves for anyone who does not set them. That retires the last `!important` block a
+  consumer holds against `ds-modal`, and it is the same shape the `[actions]` slot already invites.
+  **DONE the same day it was asked:** six tokens, `--ds-modal-<region>-pad-top` / `-pad-bottom` for
+  `header`, `body` and `actions`, each defaulting to that region's `pad-y`. Purely additive —
+  the shorthand still works and nothing moves unless a token is set. The consumer's three
+  `!important` rules can go on the release; until then their `TODO(ds-modal-pad-per-side)` stands.
+
+- [x] **[P2] DONE 2026-08-20, both halves of the ask: `AUTHORING.md` now carries the widening rule
+  (widening → its own `behavior` entry naming who breaks — readers and overriders, not writers —
+  plus a kind-table row and a checklist line), and `tools/class-surface-diff.mjs` diffs member
+  TYPES, not just names: annotated fields, `input`/`model`/`output` initializers, exported
+  interface members, type aliases and `extends` clauses, with an optional `[head]` ref. Verified
+  retroactively on v0.9.1..v0.10.0: both widenings named below surface (`TableColumn.width`,
+  `bordered`), plus ones nobody had listed (`sortDir`/`sortKey` model→input, `loading` union,
+  `runExport` protected→public). Original finding: 0.10.0 widened two public types, neither
+  carried as something a consumer could act on, and both stopped a consumer's build.** Found while
+  running the auto-update workflow: the plan came
+  from `migrations/0.10.0.json` plus an LLM re-read of the whole prose block. Both changes ARE in the
+  manifest — `width` as informational #43 ("now accepts the literal 'content'"), `bordered` inside the
+  `nullable-boolean-inputs-treat-null-as-unset` item — but each is described as a new capability or a
+  changed null meaning, so neither reads as "your code may stop compiling", and the apply pipeline had
+  nothing to do for either.
+  **(1) `TableColumn.width` went `number` → `number | 'content'`.** This is the general case, not a
+  subclassing one: the field is written by consumers *and read back*, so any arithmetic or numeric
+  assignment on it stops compiling (`fixed[col.key] = col.width` → TS2322, `sum += col.width` →
+  TS2365). Widening is source-compatible for whoever SETS the field and breaking for whoever READS
+  it, which is exactly why it reads as non-breaking when the release notes are written.
+  **(2) `TableComponent.bordered` went `boolean` → `boolean | null`.** An `override` of it in a
+  subclass is no longer assignable — `InputSignalWithTransform<boolean, unknown>` against
+  `<boolean | null, unknown>` fails on the `equal` position, which is invariant, so the values being
+  compatible does not save it (TS2416). This half is subclass-only, and subclassing is documented as
+  unsupported — it is corroboration, not the ask.
+  **Why it matters beyond one consumer:** `migrations/AUTHORING.md` states the rule this misses —
+  *"a reader must be able to act on an entry without seeing the prose changelog"*. For these two
+  there was nothing to act on in either place, so the type-checker was the only finder, and it only
+  fires after the bump is already installed and the apply pass has run.
+  **Ask:** treat a widening of an exported type — an interface field, an input's accepted union, a
+  returned union — as a documented change with a manifest entry, the same as a rename. It does not
+  need a new `kind`; `behavior` carries it, with the note naming who breaks (readers, implementers)
+  rather than who does not (writers). A cheap generator-side check would catch the whole class:
+  `class-surface` already diffs member names between versions, and diffing member TYPES would have
+  surfaced both of these without anyone remembering to.
+
+- [x] **DONE 2026-08-20 — `description` input, reaching AT as a DESCRIPTION not a name.** Renders under the label, styled once here (block, 2xs, tertiary) with the 14rem cap now `--ds-menu-item-description-max-width` instead of each consumer's literal. The ARIA half was the real decision: the line is `aria-hidden` and referenced by `aria-describedby`, so the projected label alone names the action — the ask's own complaint was that the reason landed INSIDE the accessible name. Verified in the browser: describedby matches the id, the line is aria-hidden, colour/size/width measured. Demo added to the Menu section. ORIGINAL: [P3] `ds-menu-item` — a native secondary line, so an action can state a limitation without hover or focus (Stas 2026-08-17, mm-broker MBP-134).** Measured in broker-portal: **7** menu items across 4 files project a `<span class="item-reason">` as a second line inside the item, and the same five-line rule — `display: block; max-width: 14rem; color: var(--text-tertiary); font-size: var(--font-size-2xs)` — is copy-pasted in **4** component stylesheets. It works only because the default `<ng-content>` sits inside the item's own label `<span>` (`menu-item.component.html`), which is also the flaw: the reason lands **inside the accessible name** rather than as a description, and each consumer picks its own width cap. **What exists today, and is NOT the gap:** `disabled`'s own doc comment says the item stays keyboard-focusable "so a `[dsTooltip]` explaining why can be reached and shown" — and that is true, `TooltipDirective` binds `focusin` and writes `aria-describedby`, so the tooltip IS reachable by keyboard. What it cannot be is *visible without hover or focus*, which is exactly what a standing "this will not be saved" notice needs; that is the whole ask. **Ask:** a `description` (or `reason`) input rendered under the label and styled once here — block, 2xs, tertiary, with the width cap as a token instead of a consumer's `14rem` — plus a decision on whether it joins the accessible name or becomes `aria-describedby`. **The workaround is fine meanwhile**, so build this only if a second consumer repeats the pattern, or if the accessible-name relationship above is judged wrong.
+
+- [x] **DONE 2026-08-19 — [P3] `ds-list-item` could not express a row with its own control AND a
+  row-level action.** `[leading]` / `[trailing]` now render OUTSIDE the button; the row is the flex
+  container. Researched before building: W3C ARIA APG rules out the obvious-looking alternative —
+  a `listbox` option **cannot** hold interactive content, and the spec points at the grid pattern
+  instead — so `role="list"`/`listitem` was already the right semantics and only our structure was
+  in the way. Also fixed: `selected` put `aria-current` on the inner button, so it was inert
+  without `clickable`; it is on the host now. Docs demo added in the master-detail shape.
+  Breaking for `::ng-deep .activator` overrides only — migration entry written.
+  NOT verified in a browser: chrome-devtools was disconnected. ORIGINAL NOTE: (Stas 2026-08-18, mm-broker Set Up Carriers).** Read from the template, not guessed: `#content` holds `[leading]`, the title/subtitle body and `[trailing]`, and BOTH branches render it — so with `clickable` every projected node lands inside `<button class="activator">`. A row that carries a checkbox plus a row-level "choose this one" action therefore has no shape here: nesting the checkbox in the button is invalid and its click also fires `activated`, while dropping `clickable` loses `cursor`, `:hover` and `:focus-visible` (all scoped to `button.activator`) and `aria-current` (only on the button — `selected` alone just sets the host class). The consumer keeps a hand-rolled `<ul>` for exactly this reason, so the component is skipped where it would otherwise fit. **Ask:** render `[leading]` (and ideally `[trailing]`) OUTSIDE the activator, so the row can be a control and still hold controls — that is the master/detail selector shape: a checkbox on the left, the row selecting what the right pane shows. A `ds-list-item` in that shape would replace the consumer's list wholesale.
+
+- [x] **DONE 2026-08-20 — the parked fill question is closed, and the answer is "keep the ladder".**
+  Stas chose **border only** for both on 2026-08-13 but parked the fill: "может быть я передумаю про
+  заливку потом когда посмотрю". Re-decided on evidence, not on another look: **six design systems
+  read from their own sources**, recorded in `presentations/field-validation-states.html`.
+  **Five of six put NO fill on error** — Material 3 (21 error tokens in
+  `_md-comp-filled-text-field.scss` and not one touches the container; the token does not exist),
+  Carbon (`fill: $support-error` on the icon, background stays `$field`), Spectrum
+  (`border-color-invalid` + alert icon), Bootstrap (`border-color` + the icon as a
+  `background-image`, no `background-color` in either invalid or valid), Ant (`borderColor:
+  colorError`, background stays `colorBgContainer`). **Only Polaris fills**
+  (`background-color: --p-color-bg-surface-critical`).
+  **Not one of the six fills warning or success.** Where warning exists it differs from error by hue
+  (Ant) or by icon colour alone (Carbon); where success exists it is QUIETER than error — Spectrum's
+  is a checkmark with no border change at all.
+  **Why the ladder is right rather than merely traditional:** NN/g recommends the tinted fill and
+  names its purpose — "to make it stand out on a long page with many form fields". That is
+  findability, which describes `error` only: the one state the user must locate and repair. And the
+  measurement kills it independently — #FFFBEA is **1.05:1** against a white field, #ECFAEE
+  **1.06:1**, below anything that could do the findability job. Adding them would flatten the
+  severity ladder and buy nothing.
+  **What the research turned up instead — see the new item below.** The one thing all four
+  icon-carrying systems have and we do not is a per-state ICON.
+
+- [x] **DONE 2026-08-20 — both wired.** `ds-segmented` extends `DsControlValueAccessor<string>` with `NG_VALUE_ACCESSOR` and `resolveFieldMessage`, mirroring `ds-radio-group`; its pill moved from `:host` to an inner `.track` so the host can stack label / pill / message. `ds-search` got the accessor, a `disabled` input folded with `formDisabled()`, and `markTouched()` on blur — but deliberately NO label or message row: a toolbar filter is not a validated field and the row would restyle every toolbar. **A defect turned up while wiring it:** `ds-search` had no disabled styling at all, so a disabled search looked live; added via `:has(.search-input:disabled)` on the shell, since the attribute lands on the inner input. ORIGINAL: [P3] `ds-search` and `ds-segmented` hold a value but cannot join a form (audited 2026-08-20).** Both declare `readonly value = model<string>('')`, so `[(value)]` works — but neither provides `NG_VALUE_ACCESSOR`, neither extends a `ControlValueAccessor` base, and neither calls `resolveFieldMessage`. So `[formControl]` / `formControlName` / `ngModel` do not bind, and signal forms has nothing to bind to either. **`ds-segmented` is the more surprising one:** it is a value-bearing choice control, the same shape as `ds-radio-group`, which IS wired.
+  **The other thirteen are complete on both systems** — verified per component: NG_VALUE_ACCESSOR, a CVA base, `resolveFieldMessage`, `markTouched()` on blur, `disabled`, and the `readonly` alias wherever `readOnly` exists (3 of 3).
+  **Cheap now:** `extends DsControlValueAccessor<string>` + the NG_VALUE_ACCESSOR provider + `resolveFieldMessage` + a `ds-field-message` in the template. Same shape all thirteen already share. Not built — no consumer has asked, and `ds-search` in particular may be intended as a toolbar control rather than a form field.
+
+- [x] **CLOSED 2026-08-20 — documented rather than given an accessor, which was the right of the two options.** Inside `ds-radio-group` the GROUP is the form control; a second accessor on the option would fight it. Said so on `checked`, where a consumer looking for `formControl` support lands, and it reaches the docs API table. ORIGINAL: [P3] `ds-radio` standalone cannot bind to a form, by design — recorded so nobody "fixes" it blindly.** It participates in the field-message system but has no `NG_VALUE_ACCESSOR` and no CVA base: inside `ds-radio-group` the GROUP is the form control, which is correct. But `ds-radio` also exposes `checked = model()` for standalone use, and in that mode `[formControl]` does not bind. Either document that a standalone radio is `[(checked)]`-only, or give it its own accessor. Not a defect today — a gap between two supported usages.
+
 ## Shipped 2026-08-11/12 (session — the consumer sweep, the breaking batch, and two commands)
 
 The pattern this session: **the filed item was a hypothesis, and reading the code or
@@ -323,7 +925,7 @@ Migration notes for whoever picks these up, not asks: `hideable` inverts (the fo
 
 - [x] **RENAMED right after the release: it shipped in 0.8.0 as `ds-auth-shell` and became `ds-auth-layout` the same day (Stas).** "Shell" is not this library's word for a layout — `ds-app-shell` became `ds-app-layout` back in 0.7.0, so shipping an auth counterpart called a shell put the split vocabulary straight back. Breaking against 0.8.0, so it carries a migration item rather than a silent edit; the released 0.8.0 changelog and manifest keep the old name, because that is what 0.8.0 actually shipped. The same pass took the word out of the library's prose too: `#shell` template refs became `#layout`, and "the shell's rail" became "the layout's rail". **The entry below keeps the name it shipped under.**
 
-- [x] **[P2] `ds-auth-shell` — the scaffold for the screens in front of the login.** Ported from mm-broker's `app-auth-card` (broker-portal and platform-admin ship the same file), which is itself a port of the `mm-auth-layout` prototype. Structure kept: a centred column of masthead (letter-mark tile + wordmark + optional tagline) → `ds-card` → support line. Three things were app-specific and did NOT come across: the hard-coded `mailto:support@managemy.com` (now the `[dsAuthSupport]` slot), the `::ng-deep` block styling projected `.title`/`.subtitle`/`.form` (a DS must not dictate the card's inner typography — the docs demo styles its own, which is what a screen would write), and `brandAccent`, the string-splitting input that tinted a slice of the wordmark. That last one was already decided against for the app shell: a split has to guess where the accent belongs, so `[dsBrandName]` projection carries it, reusing `BrandNameDirective` and the sidenav's `brand`/`logoLetter` contract unchanged — the letter-mark tile is deliberately the same `--accent` tile, so the mark on the login screen is the mark in the rail afterwards.
+- [x] **[P2] `ds-auth-shell` — the scaffold for the screens in front of the login.** Ported from mm-broker's `app-auth-card` (broker-portal and platform-admin ship the same file), which is itself a port of the `mm-auth-layout` prototype. Structure kept: a centred column of masthead (letter-mark tile + wordmark + optional tagline) → `ds-card` → support line. Three things were app-specific and did NOT come across: the hard-coded `mailto:support@managemy.com` (now the `[dsAuthSupport]` slot), the `::ng-deep` block styling projected `.title`/`.subtitle`/`.form` (a DS must not dictate the card's inner typography — the docs demo styles its own, which is what a screen would write), and `brandAccent`, the string-splitting input that tinted a slice of the wordmark. That last one was already decided against for the app shell: a split has to guess where the accent belongs, so `[dsBrandName]` projection carries it, reusing `BrandNameDirective` and the sidenav's `brand`/`logoLetter` contract unchanged — the letter-mark tile is deliberately the same `--accent` tile, so the mark on the login screen is the mark in the rail afterwards. _(Corrected 2026-08-21: "the same tile" holds for the COLOUR and nothing else. The rail mark is 28px at weight 800 and the auth one 24-32px at weight 700, and each reads its own token pair — `--ds-sidenav-mark-bg-color` / `-label-color` against `--ds-auth-layout-mark-bg-color` / `-label-color` — so retinting the mark means setting BOTH.)_
   **The item's premise was half right, and measurement is what separated the halves.** It said the mm-admin port "double-stacks `100vh` + `100dvh` → page scroll — a DS shell must not", and that part is real: the host is now the only full-height box. It also implied the centring itself was the bug. It is not, under the shipped code: `min-height: 100dvh` lets the box GROW, so free space never goes negative and `justify-content: center` behaves identically to auto margins. Verified in Chrome — the first version of this component's own comment and docs claimed the stronger thing, and the claim was rewritten after it failed to reproduce. The failure mode is real but conditional on the host NOT being able to grow, which `--ds-auth-shell-min-height: 100%` inside a fixed-height parent is exactly: measured `-115px` offset with centre alignment, the top unreachable at `scrollTop = 0`, versus `+40px` (the padding edge) with auto margins. Auto margins ship because they cover both. A second thing the item did not ask for and the ports lack: `env(safe-area-inset-*)` on all four sides, inert on desktop, keeping the card clear of a landscape notch and the gesture bar.
   **Collapse without phantom gaps.** An absent tagline, support line or brand row must not leave an empty flex child, which would still take the column's `gap` and push the card off centre — the same trap that made the `ds-checkbox` caption attempt regress. `.brand:empty` and `.support:empty` collapse themselves (the sidenav's proven idiom, and it works because Angular strips whitespace-only text nodes); the masthead needs `:has(> .brand:empty):not(:has(> .tagline))` because it wraps an element that is always present. Verified in the browser: `display: none` on both when emptied, and the column stays centred with no support line.
   **Not built:** a `[dsAuthTagline]` slot. The item listed one, but the sidenav precedent for this exact pair is a string input plus optional projection, and a second directive for one line of text adds a concept without adding reach. Token named `--ds-auth-shell-card-max-width`, not the item's `--ds-auth-card-max-width`, to match every other component's prefix.
@@ -1240,4 +1842,5 @@ Completed items are archived in `done.md` (last archive pass **2026-08-10**; bef
   That confirms this item's own arithmetic — a single content height cannot give 10/7/13 — and also
   corrects the one number the entry had kept: `md` is **9px**, not 10. The CHANGELOG now carries all
   three plus the content height they were taken against, as this item asked.
+
 

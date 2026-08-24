@@ -4,6 +4,8 @@
 // `panelClass: 'ds-dropdown-panel'` on the overlay config; this partial
 // declares the matching rules so the portaled panel renders styled.
 
+@use 'text-clip' as text-clip;
+
 .ds-dropdown-panel {
   /* The selected row used to paint straight from the theme roles, so a brand that
      wanted a different selected treatment had to RETARGET --primary-* inside this
@@ -101,9 +103,8 @@
     .option-label {
       flex: 1;
       min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+
+      @include text-clip.single-line-ellipsis;
     }
 
     .option-check {
