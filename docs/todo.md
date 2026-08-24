@@ -45,17 +45,9 @@
 - P2 · A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The
 
-
-
-
-
-
-
-
-
 ## Priority board (2026-08-21, second cut — the file was restructured with it)
 
-**28 open: 1 P1, 8 P2, 19 P3** (recount 2026-08-24 — includes what the parallel migration-manifest work filed, and the ds-icon sizing idea this session parked). Eight are *Parked* awaiting a first consumer ask and one is a Record, so
+**28 open: 1 P1, 8 P2, 19 P3** (recount 2026-08-24 — includes what the parallel migration-manifest work filed, and the ds-icon sizing idea this session parked). Nine are *Parked* awaiting a first consumer ask and two are Records, so
 the live board is **15 items — and 9 of those are Decisions**. The queue of things to BUILD unbidden is
 **one bug and five asks**, and of those five two are waiting on a verdict with a deck attached while three
 are gated on a first consumer ask. So: nothing is left to build without a decision.
@@ -198,7 +190,6 @@ Requests, not defects. Ordered by who is blocked.
   visible regression rather than a refactor, so none will move.
 
 ## Validation on the control: warning got a border, but the FILL was never judged (2026-08-13)
-
 
 # Decisions — waiting on Stas, not on work
 
@@ -424,10 +415,6 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
 
-
-
-
-
 - [ ] **[P2] A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.**
   `rowInteractive` gives the `<tr>` a tabindex, Enter/Space and an accessible name, which is the
   keyboard half — but nothing on screen says the row leads anywhere, and a screen reader still
@@ -442,6 +429,4 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
   as a link, and openable in a new tab with Ctrl/Cmd-click — which a row click cannot offer. Then
   `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
   consumers can drop the duplicated menu item.
-
-
 
