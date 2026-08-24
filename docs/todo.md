@@ -4,24 +4,22 @@
 
 **Bugs — something shipped misbehaves**
 
-- P3 · Every presentation deck renders in a substitute font, so a deck that judges type is lying (found
-- P3 · Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs
-- P3 · `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same
-- P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
+- P2 · Every presentation deck renders in a substitute font, so a deck that judges type is lying (found
 
 **Asks — a consumer or Stas asked for it**
 
-- P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle
-- P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion). Base
+- P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
+- P2 · A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.
+- P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
 
 **Decisions — waiting on Stas, not on work**
 
 - P1 · Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking
-- P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or
-- P2 · Four controls compute no `controlState`, so a validation state cannot reach the control itself — only
-- P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest
+- P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
+- P2 · Five controls compute no `controlState`, so a validation state cannot reach the control itself —
+- P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the
 - P2 · `.ds-interactive` — global state-interaction contract (agreed; prototype before spec —
 - P2 · Theme recipe vs hand-tuned picks — alignment decision. Button/icon-button state derivation uses the
 - P3 · Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on
@@ -32,32 +30,54 @@
 
 - P3 · `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them. It takes
 - P3 · Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below). A
-- P3 · Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck
-- P3 · Image / lightbox. No demand stated; overlay/motion infra (`modal`/`drawer`/`overlay-motion.ts`) exists
-- P3 · Splitter — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed). Resizable split
+- P3 · Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the
+- P3 · Image / lightbox. No demand stated; overlay/motion infra (`modal`/`drawer`/`overlay-motion.ts`)
+- P3 · Splitter — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed). Resizable
 - P3 · CascadeSelect — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed).
 - P3 · Primary-button CTA token layer — ASKED 2026-08-05, Stas: keep in the backlog. Add opt-in
-- P3 · MED cluster — ASKED 2026-08-05, Stas: keep in the backlog. Density beyond hit-targets (fonts/icons/pad
+- P3 · MED cluster — ASKED 2026-08-05, Stas: keep in the backlog. Density beyond hit-targets
 - P3 · CDK Menu adoption (option B) — parked. ONLY if/when nested submenus, a menubar, or context menus are
 
 **Records — kept so they are not "simplified" away**
 
-- P2 · A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.
-- P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The
+- P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing
+- P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй").
 
 
+## Priority board (2026-08-24, recut after 0.10.2)
 
-## Priority board (2026-08-21, second cut — the file was restructured with it)
+**26 open: 1 P1, 8 P2, 17 P3.** Nine are *Parked* awaiting a first consumer ask and two are Records, so
+the live board is **15 items — and 9 of those are Decisions**. What is left to BUILD is **one bug and
+five asks**; of the five, one has a deck waiting on a verdict, three are gated on a first consumer ask,
+and exactly one is buildable today with nothing pending on it.
 
-**27 open: 1 P1, 7 P2, 19 P3** (recount 2026-08-24, after the two consumer asks that arrived and closed the same day — the clipped descenders and the ds-search message API). Nine are *Parked* awaiting a first consumer ask and two are Records, so
-the live board is **15 items — and 9 of those are Decisions**. The queue of things to BUILD unbidden is
-**one bug and five asks**, and of those five two are waiting on a verdict with a deck attached while three
-are gated on a first consumer ask. So: nothing is left to build without a decision.
+**The one buildable item, and it spent three days filed as "not work".** A `ds-table` row can be opened
+only by clicking the row, and nothing on screen says so — six lists in mm-broker's broker portal
+compensate by repeating the destination as a `View Details` entry in the overflow menu. The literature
+agrees on the shape of the fix (Roselli, oidaisdes.org): put the control **in a cell**, as a real link,
+so the record's name becomes the way in — visible, in the tab order, and Ctrl-clickable, which a row
+click cannot offer. It sat under `# Records`, whose own header reads "Not work", and the index therefore
+listed it as a record. Moved to `# Asks` today; the work is a `link` column kind, unblocked.
 
-**Closed after the cut above, the same day:** both docs-surface items. `ds-table` gained a demo of the
-two-way `[(sortKey)]` / `[(sortDir)]` form with the cost of the third click measured, and the API reference
-stopped listing components nobody can import — the extractor reads the export surface now, which took it
-from 84 entries to 80 and turned up FOUR internals where the item had named two.
+**Raised to P2 today: the decks are lying about type.** `build:deck-css` compiles `ds.scss` into
+`presentations/ds.css`, which carries eight `@font-face` rules resolving `./fonts/*.woff2`, and
+`presentations/fonts/` does not exist — so every deck renders in a substitute face. Four decks are
+attached to decisions still open (packaging, the colour engine, the interaction contract,
+`ds-select` native multi). A deck that judges TYPE is then corrupted evidence outright, and the rest
+shift metrically under the wrong face. This repo settles visual questions from decks, which is what
+makes it more than a papercut; the fix is one copy step in the build script.
+
+**Two items left the board without being worked, and that is the finding.** Both were closed and
+archived on 08-21 — the docs API reference listing components nobody can import, and the missing
+two-way `[(sortKey)]` demo — and neither was ever deleted here, so both read as open for three days.
+The 08-21 note claimed the index "is generated from the items rather than hand-kept, so it cannot
+drift again". **There is no generator** — nothing under `tools/` writes this file — and it drifted.
+Rebuilt from the items today and priority-sorted inside each section; until something generates it,
+closing an item means deleting the item AND its index line.
+
+**`compact` moved to Records by its own words.** Its last sentence reads "Not a bug — a knowingly
+duplicated decision over a single source of truth", and it sat under `# Bugs`. Nothing about it
+changed; it is now filed where it says it belongs.
 
 **The P1 — `Upgrade to Angular 22` — was PROBED after the promotion, and the library compiles clean on
 22.1.3** (worktree `probe/angular-22`, `ngc` partial + strictTemplates, 0 errors). What the probe added is
@@ -73,37 +93,21 @@ board is about how well the library behaves, not whether it can be installed. It
 too (when to move, and re-verifying the signal-forms work against a release whose breaking changes land
 exactly there), but the blocking half is not a preference.
 
-**Two decisions have a deck waiting and nothing else blocking them:** the per-state glyph in
-`ds-field-message` (`presentations/field-message-glyph.html` — four states with and without, both themes,
-plus a five-field form for the cost, and a third option the item did not have) and packaging MBP-133
+**One decision still has a deck waiting and nothing else blocking it:** packaging MBP-133
 (`presentations/packaging-entry-points.html` — deferred by decision on 08-21, deck for when it is picked
-up). Both are visual-or-structural calls that a paragraph cannot settle, which is why they are decks.
+up). The per-state glyph in `ds-field-message` was the other, and it is decided: Stas read the deck,
+picked C, and improved it into a default where every state switches on its own.
 
 **The three token items are ONE story and should not be taken separately.** The single-source colour
 engine is the spec; "theme recipe vs hand-tuned picks" is question (b) INSIDE that spec, by its own
 wording; `.ds-interactive` sits on top of whatever the engine decides. Opening any of them alone means
 deciding the other two by accident.
 
-**What changed today, and it is most of the board.** Fourteen items closed: the assigned batch of eight,
-the five overlay guards, `ds-stat`'s pipe binding, `TableColumn.interactive`, four documentation claims
-that had outlived their code, the docs-link guard (now `npm run check-docs-links`, run inside
-`extract-docs`), and three wrapper items whose members had all resolved — the breaking batch, the
-width-based overflow default, and the row-action parent. **No P1 was left by the end of that, so the one
-above is a promotion rather than a survivor.**
-
-**The file itself was restructured, because it had stopped being navigable.** Four items were orphaned
-under a superseded board, two record sections sat under `# Bugs` and `# Asks` with no items in them, and
-six headings were duplicated across sections. Items now sit under a heading that names what they are
-about; the two long records (mm-broker read as a record, the 08-10 board reasoning) moved to `# Records`,
-which is what that section is for; and the index at the top is generated from the items rather than
-hand-kept, so it cannot drift again.
-
-**Where the release risk is.** `migrations/unreleased.json` carries **11 actionable items, 11
-`deleteList` entries and 9 informational lines** on top of 0.10.1, six of them changes a consumer
-discovers by LOOKING rather than by building. (Recounted 2026-08-21 evening: the 11 prose
-`DELETE-LIST:` lines became the structured array, which is where the informational count went.) Stas
-held the cut on 08-21 to add more to the batch first, so the manifest is the thing that has to stay
-complete — mm-broker was last recorded on 0.9.1 and will swallow three releases at once.
+**Where the release risk is.** 0.10.2 was cut on 2026-08-24, so the pressure is off this manifest:
+`migrations/unreleased.json` carries **3 actionable items, 1 `deleteList` entry and 3 informational
+lines**, covering two focus-ring fixes, a portaled-token fix and a tooling fix. The risk moved to the
+three manifests behind it — mm-broker was last recorded on **0.9.1** and will swallow 0.10.0, 0.10.1 and
+0.10.2 in one pass, so those three are what has to be complete, not this one.
 
 **Two habits this session kept catching, worth reading before opening anything new.** A number measured
 in ONE theme carried into the other unchecked (three times, all wrong — the latest being the claim that
@@ -116,19 +120,8 @@ rather than re-reading our own API.
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
 
 
-- [ ] **[P3] Every presentation deck renders in a substitute font, so a deck that judges type is lying (found 2026-08-24 while building the glyph-clip deck).** `presentations/ds.css` is compiled from `src/lib/styles/ds.scss`, so it carries the library's eight `@font-face` rules with their source-relative `url('./fonts/*.woff2')` — but `build:deck-css` copies the CSS alone and there is no `presentations/fonts/`. Measured in Chrome: all eight faces report `status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and every deck falls back to `sans-serif`. The README's claim that the decks are honest consumers of the DS holds for tokens and fails for type — and it also poisons `document.fonts.check()` for any deck that tries to verify its own font.
+- [ ] **[P2] Every presentation deck renders in a substitute font, so a deck that judges type is lying (found 2026-08-24 while building the glyph-clip deck).** `presentations/ds.css` is compiled from `src/lib/styles/ds.scss`, so it carries the library's eight `@font-face` rules with their source-relative `url('./fonts/*.woff2')` — but `build:deck-css` copies the CSS alone and there is no `presentations/fonts/`. Measured in Chrome: all eight faces report `status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and every deck falls back to `sans-serif`. The README's claim that the decks are honest consumers of the DS holds for tokens and fails for type — and it also poisons `document.fonts.check()` for any deck that tries to verify its own font.
   **Fix:** have `build:deck-css` copy `src/lib/styles/fonts/` next to the CSS (five Mulish weights + three JetBrains Mono), or rewrite the `url()`s to a path the docs server answers. `ellipsis-glyph-clip.html` works around it locally by re-declaring the three faces it needs and showing a banner when they fail — a per-deck patch, not the fix.
-
-- [ ] **[P3] Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs audit).** `ds-modal-confirm` (ModalConfirmComponent) and `ds-time-columns` (TimeColumnsComponent) are listed in `component-api.generated.ts` with a full input table, so the reference presents them as usable API. Verified against the published types: both appear as internal `declare` blocks but neither is in the package export list, so `import { ModalConfirmComponent }` does not resolve. `tools/extract-component-api.mjs` collects every `@Component` under `src/lib/components` without consulting the export surface.
-  **Two fixes, pick one:** (a) teach the extractor to skip a class absent from the public export list — accurate, but it must follow the component barrels or it will drop legitimately-exported components; (b) add an `internal` value to `ComponentStatus` (today `'stable' | 'new' | 'deprecated'`) and mark these two in `component-api-descriptions.json`, which also gives a home for the next internal. Neither is urgent: nothing is wrong, the reference is just wider than the API.
-
-- [ ] **[P3] `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same audit).** `sortKey`/`sortDir` are inputs and `sortKeyChange`/`sortDirChange` are hand-declared outputs, so Angular's banana-in-a-box works — which is the natural shape for server-side sorting where the host owns the state, exactly what the 0.10.0 server-sort demo is about. The demo binds `[sortKey]` one-way and observes `(sortChange)` instead, so the two-way form is invisible. One line of prose or switching that demo would cover it.
-
-## ds-app-layout — the one knowingly duplicated decision
-
-> The parent shipped 2026-07-24 (as `ds-app-shell`, renamed in 0.7.0) with `ds-sidenav-footer` and the brand row; spec at `.claude/superpowers/specs/2026-07-24-ds-app-shell-design.md`. Only the record below is left.
-
-- [ ] **[P3] `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my own `118a539`).** The rail's layout switch lives in `app-layout.component.scss` as `bp.down(lg)`, and `watchDesktopBreakpoint()` runs `matchMedia` over the same `--bp-lg`. The VALUE cannot drift — both read one custom property, and a missing one now errors in dev instead of falling back to a literal — but the CONDITION is decided twice, in two languages, and changing one does not force the other. The JS copy is not removable today: `compact` gates `cdkTrapFocus` and the `role="dialog"`/`aria-modal` pair, and no CSS feature (container queries, `:has`) can drive a focus trap. **Recorded so nobody "simplifies" it blindly, and to revisit if** CSS gains a way to gate focus trapping, or Angular ships a breakpoint primitive. Not a bug — a knowingly duplicated decision over a single source of truth.
 
 # Asks — a consumer or Stas asked for it
 
@@ -157,6 +150,23 @@ Requests, not defects. Ordered by who is blocked.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form.
 
+## `ds-table` — the row is the only way in, and it is not a link (from mm-broker, recorded 2026-08-21)
+
+- [ ] **[P2] A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.**
+  `rowInteractive` gives the `<tr>` a tabindex, Enter/Space and an accessible name, which is the
+  keyboard half — but nothing on screen says the row leads anywhere, and a screen reader still
+  announces a table row, not a link. Consumers compensate by repeating the destination as a
+  `View Details` item in the row's overflow menu (six lists in mm-broker's broker portal do this),
+  which is a menu entry that performs navigation rather than an action. The accessibility literature
+  is against the row-as-control shape itself: Adrian Roselli's "Don't Turn a Table into an ARIA Grid
+  Just for a Clickable Row" and oidaisdes.org's "How to Create an Accessible Table with Clickable
+  Rows" both land on the same answer — put the control **in a cell**, as a real link. What the table
+  is missing is a way to render one cell's value as a link (a `link` column kind, or a documented
+  cell-template contract for it) so the record's name becomes the way in: visible, in the tab order
+  as a link, and openable in a new tab with Ctrl/Cmd-click — which a row click cannot offer. Then
+  `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
+  consumers can drop the duplicated menu item.
+
 ## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
 
 - [ ] **[P3] The two row-action halves left open on purpose: a per-row `label`, and a divider or
@@ -181,15 +191,6 @@ Requests, not defects. Ordered by who is blocked.
     supported way back short of repainting `--icon-default` globally. Either expose the property or
     tell consumers the kebab is not themeable, so they can settle the question before migrating —
     right now "adopt rowActions" and "keep the design's teal" are simply incompatible.
-
-  **What it buys, and why it is worth a P2 rather than a papercut:** eleven hand-rolled
-  `button` + `ds-popover` + `ds-menu` blocks disappear, and with them seven bespoke triggers that
-  re-implement `ds-icon-button` under three different class names (`action-button`, `action-btn`,
-  `row-actions`) plus their per-page CSS. The feature already exists; only the item contract keeps every
-  consumer writing the menu by hand. Until `hidden` and `disabledReason` land, migrating any screen is a
-  visible regression rather than a refactor, so none will move.
-
-## Validation on the control: warning got a border, but the FILL was never judged (2026-08-13)
 
 # Decisions — waiting on Stas, not on work
 
@@ -246,7 +247,7 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
   **The case against:** neither has been asked for by a consumer, and `ds-number-stepper` may be intended as a bare control composed inside something else — though its own `ariaLabel` and `size` inputs suggest standalone use.
   **Cheap now that the base exists:** `extends DsFieldBase` plus a `resolveFieldMessage` call, a `ds-field-message` in the template, and the label block — the same shape all fourteen already share.
 
-- [ ] **[P2] Four controls compute no `controlState`, so a validation state cannot reach the control itself — only its message.** `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-slider` and `ds-switch` are the five of fourteen that do not bind `[attr.data-field-state]`, and they do not read `controlState` at all (grep: zero occurrences in each). The other nine do, and the shared `field-state` mixin paints them.
+- [ ] **[P2] Five controls compute no `controlState`, so a validation state cannot reach the control itself — only its message.** `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-slider` and `ds-switch` are the five of fourteen that do not bind `[attr.data-field-state]`, and they do not read `controlState` at all (grep: zero occurrences in each). The other nine do, and the shared `field-state` mixin paints them.
   **P3 → P2, 2026-08-21:** raised because the session that shipped the field-state work made the gap concrete: on a checkbox the ONLY sign of an invalid state is the red line underneath, and the same holds for radio, radio-group, slider and switch. Five of fourteen controls cannot show a validation state on the control itself, which is the inconsistency this board exists to remove, and `color-not-only` says a message alone is not enough. Still a decision rather than work — the question is whether a box-less control paints its own indicator — but it is the same class of question as the glyph one and should be answered beside it.
   **Partly correct by design** — they have no bordered box for a border to appear on, which is also why they deliberately did not get `[success]`. **But they are not shapeless:** a checkbox has a square with a border, a switch has a track, a radio has a ring. Today none of those can carry error, warning or success, so on a checkbox the only sign of an invalid state is the red line underneath.
   **Decide whether the box-less controls should paint their own indicator** for error/warning (and then whether `[success]` follows). If yes, it is a `field-state`-style mixin per control shape rather than a reuse of the bordered-box one, since the target is a 16px square rather than a 39px field.
@@ -407,28 +408,14 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 
 _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so a multi-select trigger grew a line per selection. `maxVisibleChips` ported from `ds-multi-select` under the same name. Checked the rest of the library — only those two components render a chip list, so nothing else needed it; the pinkmoon prototype the reporter half-remembered is the filter-bar "+N more", which is already `ds-filter-bar`._
 
-**P1 — real defects:**
-
 ---
+
+## ds-app-layout — the one knowingly duplicated decision
+
+> The parent shipped 2026-07-24 (as `ds-app-shell`, renamed in 0.7.0) with `ds-sidenav-footer` and the brand row; spec at `.claude/superpowers/specs/2026-07-24-ds-app-shell-design.md`. Only the record below is left.
+
+- [ ] **[P3] `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my own `118a539`).** The rail's layout switch lives in `app-layout.component.scss` as `bp.down(lg)`, and `watchDesktopBreakpoint()` runs `matchMedia` over the same `--bp-lg`. The VALUE cannot drift — both read one custom property, and a missing one now errors in dev instead of falling back to a literal — but the CONDITION is decided twice, in two languages, and changing one does not force the other. The JS copy is not removable today: `compact` gates `cdkTrapFocus` and the `role="dialog"`/`aria-modal` pair, and no CSS feature (container queries, `:has`) can drive a focus trap. **Recorded so nobody "simplifies" it blindly, and to revisit if** CSS gains a way to gate focus trapping, or Angular ships a breakpoint primitive. Not a bug — a knowingly duplicated decision over a single source of truth.
 
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
-
-- [ ] **[P2] A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.**
-  `rowInteractive` gives the `<tr>` a tabindex, Enter/Space and an accessible name, which is the
-  keyboard half — but nothing on screen says the row leads anywhere, and a screen reader still
-  announces a table row, not a link. Consumers compensate by repeating the destination as a
-  `View Details` item in the row's overflow menu (six lists in mm-broker's broker portal do this),
-  which is a menu entry that performs navigation rather than an action. The accessibility literature
-  is against the row-as-control shape itself: Adrian Roselli's "Don't Turn a Table into an ARIA Grid
-  Just for a Clickable Row" and oidaisdes.org's "How to Create an Accessible Table with Clickable
-  Rows" both land on the same answer — put the control **in a cell**, as a real link. What the table
-  is missing is a way to render one cell's value as a link (a `link` column kind, or a documented
-  cell-template contract for it) so the record's name becomes the way in: visible, in the tab order
-  as a link, and openable in a new tab with Ctrl/Cmd-click — which a row click cannot offer. Then
-  `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
-  consumers can drop the duplicated menu item.
-
-
-
