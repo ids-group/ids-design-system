@@ -1,4 +1,3 @@
-// tools/check-docs-links.mjs
 //
 // Every internal link in ds-docs, resolved against NAV. It exists because a wrong
 // one is INVISIBLE: `:area/:anchor` matches any pair, so a link to a group path or

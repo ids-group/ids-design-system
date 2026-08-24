@@ -43,11 +43,9 @@
     var(--error);
 }
 
-// The one style NOT pinned to :root — a clipping ancestor is a local problem, so
-// this attribute works wherever it is set and the declarations inherit into the
-// subtree. Put it on the clipping element (a `ds-card` holding a full-bleed child,
-// a pill with `overflow: hidden` for its own animation) and everything inside
-// keeps an indicator instead of losing it to the clip.
+// The one style NOT pinned to :root: a clipping ancestor is a local problem, so this
+// attribute works wherever it is set and inherits into the subtree. Put it on the
+// clipping element and everything inside keeps an indicator instead of losing it.
 [data-focus='inset'] {
   --ds-field-focus-shadow: var(--focus-ring-inset);
   --ds-field-focus-shadow-error: var(--focus-ring-inset-error);

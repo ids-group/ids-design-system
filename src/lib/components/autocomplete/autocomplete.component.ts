@@ -267,7 +267,6 @@ export class AutocompleteComponent<T = unknown>
     return this.allOptions().filter((option) => selectedSet.has(option.value));
   });
 
-  /** Unset resolves here, and a `DS_CONFIG` slot for chip collapse would too. */
   private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
   private readonly showsEveryChip = computed(() => this.chipsMode() === 'all');
   /** True for BOTH `'fit'` and a number: a number is a ceiling ("at most N"), not a
