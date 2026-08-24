@@ -17,6 +17,14 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 
+  /* The VALUE input only, not the step buttons: the shell rings on :focus-within,
+     so the input drawing the universal ring from styles/_focus.scss on top of it
+     painted two. The buttons keep theirs — they are `tabindex="0"`, so a keyboard
+     user tabbing input → minus → plus needs each stop to say where focus went, and
+     the shell halo cannot: it is already on. */
+  .qty:where(:focus-visible) {
+    box-shadow: none;
+  }
   &:focus-within {
     border-color: var(--accent);
     box-shadow: var(--_number-stepper-focus-shadow);

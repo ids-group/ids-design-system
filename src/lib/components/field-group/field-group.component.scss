@@ -46,6 +46,16 @@
 
 /* ONE ring for the whole group: each segment suppresses its own, so focusing
    any of them lights the shared chrome instead of drawing a box mid-row. */
+
+/* The shell above owns the focus ring, so nothing inside it may draw the
+   universal one too: styles/_focus.scss gives every focusable a box-shadow at
+   zero specificity, and the `outline: 0` these controls already had cannot
+   cancel a shadow. Without this the field painted TWO rings, one around the
+   inner control and one around the box. `:where()` keeps the reset at the
+   shell's own specificity rather than raising it. */
+:where(:focus-visible) {
+  box-shadow: none;
+}
 :host(:focus-within:not(.disabled)) {
   border-color: var(--_field-group-border-color-focus);
   box-shadow: var(--_field-group-focus-shadow);
