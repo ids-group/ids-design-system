@@ -539,8 +539,8 @@
     "ds-modal and ds-bottom-sheet no longer dismiss when the mouse is RELEASED on the backdrop after a press that started inside the dialog (selecting text and letting go past the edge, or overshooting a slider). Their backdrop wraps the dialog, so the browser fires click at the nearest common ancestor - the backdrop itself - which the target===currentTarget guard could not tell apart. Dismissal now requires the press AND the release to land on the backdrop. Nothing to do on adoption. ONE EXCEPTION: a test that dismisses a dialog with backdropElement.click() must now dispatch pointerdown + pointerup on the backdrop; a real mouse or touch always sends both. ds-drawer and the ModalService confirm were never affected - their scrim is a sibling of the panel - and are unchanged.",
     "ds-table gained one projection slot, [toolbar], for controls that act on THAT table (a search box, a status filter, a refresh) — the row the export button already lived in, which until now existed only while exportButton was on. Project several controls and the row lays them out (flex, wrap, 8px gap); project a single element of your own and it takes the full row width, so your own layout is the only one in play. Visually additive: the row COLLAPSES when nothing filled it and exportButton is off, so a table that uses neither is pixel-identical. It is not DOM-identical - <div class=\"table-toolbar\"><div class=\"toolbar-slot\"> is now rendered unconditionally and hidden with display:none, so a ds-table > :first-child selector or a DOM snapshot sees it. Page-level filters still belong in a ds-filter-bar above the table.",
     "ds-table now exposes runExport(), exporting() and exportStatus() publicly, so an Export button placed anywhere (page header, filter bar, the new toolbar slot) runs the same path as the built-in one: the exportFetcher call, the download, the in-flight state and the live-region announcement.",
-    "ds-table no longer renders its empty row while loading is anything but false. Previously only loading=\"skeleton\" suppressed it, so an overlay reload with zero rows painted the empty state under the spinner. Nothing to do on adoption, and you can delete the @if(!loading) guard around your own empty template — worth checking whether you have one at all: of one consumer 14 overlay-loading tables, 9 shipped \"no rows\" copy during a load.",
-    "ds-table no longer loses its sort indicator when a host answers a cleared sort with its own default. Angular writes an input only when the bound expression changed (it diffs against the last value it wrote, which an internal .set() never updates), so whichever half of the host default equalled the last bound value was skipped: a host defaulting to desc had its desc dropped and the header marked nothing over sorted rows, while a host defaulting to asc was restored — the reason the same three clicks worked on one screen and not another. The marked state is now a linkedSignal over BOTH inputs. Nothing to do on adoption; you can delete any workaround that re-bound the sort after a clear.",
+    "ds-table no longer renders its empty row while loading is anything but false. Previously only loading=\"skeleton\" suppressed it, so an overlay reload with zero rows painted the empty state under the spinner. Nothing to do on adoption, and you can delete the @if(!loading) guard around your own empty template — worth checking whether you have one at all: of one consumer 14 overlay-loading tables, 9 shipped \"no rows\" copy during a load. (delete list: table-empty-template-loading-guard)",
+    "ds-table no longer loses its sort indicator when a host answers a cleared sort with its own default. Angular writes an input only when the bound expression changed (it diffs against the last value it wrote, which an internal .set() never updates), so whichever half of the host default equalled the last bound value was skipped: a host defaulting to desc had its desc dropped and the header marked nothing over sorted rows, while a host defaulting to asc was restored — the reason the same three clicks worked on one screen and not another. The marked state is now a linkedSignal over BOTH inputs. Nothing to do on adoption; you can delete any workaround that re-bound the sort after a clear. (delete list: table-sort-rebind-after-clear)",
     "ds-table accepts [loading]=\"true\" and resolves the treatment itself: skeleton rows while filteredData is empty, overlay once rows are on screen. The existing values are untouched — false, 'skeleton' and 'overlay' behave exactly as before, so nothing changes on adoption.",
     "Disabled rows and triggers are no longer dimmed twice. ds-select, ds-date-picker, ds-time-picker, ds-menu-item and the shared dropdown row each applied --text-disabled AND opacity 0.6 on top of it, which measured 1.68:1 against the surface where the colour alone gives 2.53:1 (an enabled control is 17.32:1). The opacity is gone from those five and the colour carries the state. A disabled calendar day and ds-toggle-button, where opacity is the ONLY signal, moved from --opacity-muted (0.6) to --opacity-disabled (0.5).",
     "ds-button and ds-icon-button use ONE disabled-label recipe for every variant now: oklch(from accent 70% 0.035 h), replacing the 58% base plus the 52% overrides that tonal and outline carried. Reason, measured across the full variant x colour x state matrix: the old lightness sat where a saturated accent already is, so on primary and error the disabled label differed from the live one by 1.16-1.60:1 on four of the five variants (neutral was fine because its enabled label is nearly black). It is now 2.40-2.71:1 on the coloured variants, and up to 6.46:1 on neutral. The disabled label is FAINTER against its own background than before (2.1-2.7:1 where it was 3.4-5.2) - that is the intended trade, and disabled text is exempt from the WCAG contrast floor. Nothing to do on adoption; --ds-button-label-color-disabled and --ds-icon-button-icon-color-disabled still override per component.",
@@ -778,6 +778,30 @@
       ],
       "why": "A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays.",
       "replaceWith": "nothing on the key path - `onRowKey` now requires `target === currentTarget`"
+    },
+    {
+      "id": "table-empty-template-loading-guard",
+      "surface": "template",
+      "find": [
+        "@if(!loading)",
+        "*ngIf=\"!loading\"",
+        "ds-table",
+        "empty"
+      ],
+      "why": "A guard wrapped around your own empty-state template so it would not show during a load. It existed because only loading=\"skeleton\" suppressed the empty row, so an overlay reload with zero rows painted \"no rows\" under the spinner. ds-table suppresses it for every loading value now.",
+      "replaceWith": "nothing - project the empty template unguarded"
+    },
+    {
+      "id": "table-sort-rebind-after-clear",
+      "surface": "typescript",
+      "find": [
+        "sortChange",
+        "sortKey",
+        "sortDir",
+        "setTimeout"
+      ],
+      "why": "Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now.",
+      "replaceWith": "nothing - answer the cleared sort with your default and stop there"
     }
   ]
 }

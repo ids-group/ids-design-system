@@ -215,11 +215,17 @@ measurement, and a grep of `ds.scss` against a sentence that claimed the opposit
   one unrelated entry — which is why the `link` column slipped past with `card-overflow` sitting right
   there. **M034** requires such a sentence to name its row as `(delete list: <id>)` and checks the id
   exists in that file. Proved by removing one citation: the lint fails, restores clean.
-  **Back-filled: six new rows** — `date-picker-touch-bypass-workaround` (0.6.1),
+  **The first pattern was precise but not complete, and the completeness check is what found the rest.**
+  It was measured for false positives (none) and not for false NEGATIVES; widening it to `you can
+  delete/remove/drop/unset` and `you no longer need` turned up two more, both in `0.10.0` and both
+  uncovered — a `@if(!loading)` guard around a consumer empty template, and host code re-binding the
+  sort after a clear. **Back-filled: eight new rows** — `date-picker-touch-bypass-workaround` (0.6.1),
   `table-sticky-corner-zindex-workaround` (0.8.0), `dropdown-option-active-override`,
   `table-export-failure-wrapper`, `date-picker-trigger-focus-within-override` and
-  `autocomplete-input-minw-override` (0.9.0), plus `row-menu-view-details-duplicate` for the link
-  column. **One row was NOT written:** the fourteen-token line promised a deletion nothing can locate —
+  `autocomplete-input-minw-override` (0.9.0), `table-empty-template-loading-guard` and
+  `table-sort-rebind-after-clear` (0.10.0), plus `row-menu-view-details-duplicate` for the link column.
+  Ten sentences across 22 manifests now cite a row; the lint was proved to fail on both spellings by
+  removing a citation and restoring it. **One row was NOT written:** the fourteen-token line promised a deletion nothing can locate —
   a hand-rolled value contains no DS symbol, so a `find` on our token name is the sortKey trap again.
   It says what is supported instead. **And one I had to take back:** `table-compact-padding-important`
   duplicated `compact-cell-padding-important`, already in 0.9.0 — I back-filled without reading the 21
