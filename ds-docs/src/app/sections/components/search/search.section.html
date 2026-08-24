@@ -202,4 +202,61 @@
       </code>: {{ debounced() || '(empty)' }}
     </p>
   </div>
+
+  <h3 class="block-title t-h4">
+    In a form, and disabled
+  </h3>
+
+  <p class="block-desc t-s">
+    A search box holds a value, so it binds like any other control now:
+    <code class="t-mono-inline">
+      [formControl]
+    </code>,
+    <code class="t-mono-inline">
+      formControlName
+    </code>,
+    <code class="t-mono-inline">
+      [(ngModel)]
+    </code> and a signal form all reach it, and its own
+    <code class="t-mono-inline">
+      [(value)]
+    </code> keeps working. A
+    <code class="t-mono-inline">
+      disabled
+    </code> input folds together with the form's own disabled state, and the shell
+    paints the disabled surface — it used to look live and still take a click.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Deliberately no label and no message row.
+    </strong>
+    A toolbar filter is not a validated field, and giving it the field chrome would
+    restyle every toolbar it sits in. Where a search needs a label or an error line,
+    that is what
+    <code class="t-mono-inline">
+      ds-input
+    </code> is for.
+  </p>
+
+  <div class="demo-stack">
+    <ds-search
+      clearable
+      placeholder="Bound to a FormControl"
+      [formControl]="queryControl"
+    />
+
+    <p class="t-s">
+      <code class="t-mono-inline">
+        queryControl.valueChanges
+      </code>: {{ queryValue() || '(empty)' }}
+    </p>
+
+    <ds-search
+      disabled
+      placeholder="Disabled"
+      value="Cannot type here"
+    />
+  </div>
+
 </docs-section>
