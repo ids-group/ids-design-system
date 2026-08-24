@@ -270,12 +270,15 @@ for (const [name, manifest] of manifests) {
   // to name its row is what makes the pair machine-checkable — a shape test alone passes as soon
   // as the file holds any unrelated `deleteList` entry.
   const DELETE_SHAPE =
-    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround|it) can go\b|\byou (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b|\bcan now be removed\b|\bno longer needed\b/i;
+    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround|it) can go\b|\byou (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b|\bdelete that\b|\bremove it\b|\bcan now be removed\b|\bno longer needed\b/i;
+  const DELETE_MARKER = /\(DELETE-LIST\)|DELETE-LIST MATERIAL/;
   const knownDeleteIds = new Set((manifest.deleteList ?? []).map((entry) => entry.id));
   for (const line of manifest.informational ?? []) {
     const sentences = String(line).split(/(?<=\.)\s+/);
     const guilty = sentences.find(
-      (one) => DELETE_SHAPE.test(one) && /\byou(?:r|rs)?\b/i.test(one),
+      (one) =>
+        DELETE_MARKER.test(one) ||
+        (DELETE_SHAPE.test(one) && /\byou(?:r|rs)?\b/i.test(one)),
     );
     if (!guilty) continue;
     const cited = String(line).match(/\(delete list: ([a-z0-9-]+)\)/);

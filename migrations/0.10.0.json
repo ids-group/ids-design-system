@@ -553,7 +553,7 @@
     "An `error` string now marks the field invalid on its own, across all 14 field components that route through resolveFieldMessage (ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-date-picker, ds-time-picker, ds-color-picker, ds-otp-input, ds-slider, ds-checkbox, ds-radio, ds-radio-group, ds-switch). Before, error=\"...\" coloured only the message and left the control neutral; it now drives the error border, fill, focus ring and aria-invalid, which is what the input always documented. Nothing to do if you bound [invalid] alongside it. ACTION only if you bound `error` on its own and WANTED a neutral box: move that text to `warning` (advisory) or to `hint`.",
     "A `warning` string now paints the control, not only the message line: a --warning-text border (#8A7400, 4.59:1 on a white field) on all nine bordered fields -- ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-date-picker, ds-time-picker, ds-color-picker, ds-otp-input. Success keeps its border-only treatment and error keeps border + tinted fill, so the three states stay ranked. Two visual corrections ride along and need no action: an invalid ds-autocomplete drew a near-black border because it read a --border-error token that has never existed, and ds-multi-select / ds-color-picker / ds-otp-input had the error border but not the fill their siblings had. Every per-component override token (--ds-input-bg-color-error, --ds-select-focus-shadow-error, and the rest) still applies.",
     "ds-otp-input no longer leaves two characters in one cell when a second character is typed into an already-filled cell. The value the component reported was always correct -- only the rendered cell was stale -- so nothing to change on adoption. ACTION only if you worked around it by reading the cell inputs from the DOM instead of the component's value.",
-    "ds-password-rules: its screen-reader-only per-row text ('- not met') was rendering VISIBLY, because the .visually-hidden class it used was defined by no stylesheet -- ds-table, ds-date-picker and ds-stepper each declared their own private copy. One shared mixin now backs all four. The leaked text is also what wrapped every label in the two-column layout. Separately, the pending glyph changed from `minus` to a new `circle` icon and the row now transitions its colour over --duration-base. Nothing to change on adoption. ACTION only if you targeted the pending row's glyph by name, or added your own .visually-hidden definition to work around the leak -- that override is now redundant (DELETE-LIST).",
+    "ds-password-rules: its screen-reader-only per-row text ('- not met') was rendering VISIBLY, because the .visually-hidden class it used was defined by no stylesheet -- ds-table, ds-date-picker and ds-stepper each declared their own private copy. One shared mixin now backs all four. The leaked text is also what wrapped every label in the two-column layout. Separately, the pending glyph changed from `minus` to a new `circle` icon and the row now transitions its colour over --duration-base. Nothing to change on adoption. ACTION only if you targeted the pending row's glyph by name, or added your own .visually-hidden definition to work around the leak -- that override is now redundant (DELETE-LIST). (delete list: private-visually-hidden-definition)",
     "The migration manifests themselves changed: 0.9.0.json gained a class-member-collision item it never had (fifteen classes plus four newly exported symbols), 0.8.0.json now names the private saveLayout/restoreLayout that actually stopped a consumer build, and 0.6.1 / 0.6.2 / 0.9.1 were written for the first time. Every released version now ships a manifest, so the auto-update planner no longer falls back to re-deriving a plan from changelog prose on those three. 0.6.2 turned out to carry something actionable nobody had in machine-readable form: a ds-bottom-sheet with nothing focusable inside it stopped closing on Escape.",
     "ds-modal gained three public title tokens for the new statuses - --ds-modal-title-text-color-warning, -success and -info, defaulting to --warning-text / --success-text / --info-text - joining the -error that already existed. Additive: nothing moves until you set one.",
     "The [empty] slot is now unreachable during ANY load, not just a skeleton one: the empty row is withheld whenever loading is not false, and the projection lives inside that branch. Copy you want a reader to see WHILE a load runs has to come from your own page, above or around the table.",
@@ -562,9 +562,9 @@
     "ds-search's Clear button now follows the text ON SCREEN rather than the debounced value, so at a non-zero [debounce] it appears on the first keystroke instead of after the delay.",
     "On a resizableColumns ds-table the first drag OR resize keystroke anywhere locks a measured pixel width onto every column that has none, TableColumn width:'content' included. Home on a column's own handle hands that one back; the column panel's Reset to default button and clearing the public two-way columnWidths hand back all of them.",
     "ds-time-picker in mode=\"single\" no longer renders a Done button: the panel closes itself once the user has picked BOTH an hour and a minute during that opening, and Now spans the full width of the footer beneath the columns. mode=\"range\" is unchanged -- it keeps Done and does not auto-close. Separately, hovering an already-selected hour or minute no longer paints it with the neutral hover fill (a specificity defect that left selected white text on pale grey, most visible on touch where the last-tapped cell keeps :hover). ACTION only if you scripted the panel closing via the Done button in single mode -- there is no such button now -- or overrode `.time-footer .time-action` widths, which now stretch when Done is absent.",
-    "The collapsed ds-sidenav no longer sets align-items: center on itself, which had stopped its projected children from stretching: every ds-sidenav-item shrank to its 20px icon inside a 40px rail, so the active tile rendered 20x40 (a lozenge, with the orange active rail down one side) and the alert dot sat above the glyph's middle. Items now fill the rail column, and the dot is anchored to the glyph's top-right corner through a new --sidenav-collapsed-glyph token rather than to the tile's corner. Nothing to change on adoption. ACTION only if you projected your own element into a collapsed ds-sidenav and relied on it sizing to its content -- it now stretches to the full column width -- or if you added a ::ng-deep width override to work around the squashed items, which is now double-applied (DELETE-LIST).",
-    "ds-timeline-item now pulls its node column up by half the difference between the heading's line box and the node size, so the marker's centre lands on the heading's rather than 4.2px below it. Each item is that much shorter at the top. Nothing to change on adoption. ACTION only if you compensated for the old offset with your own margin on ds-timeline-item or its node -- that override now double-applies (DELETE-LIST).",
-    "Two follow-ups to the shared field-state work, both fixed before release. (1) A field carrying its own error/warning/success state inside a ds-field-group repainted its background, tinting one segment mid-row; the three state rules now carry :not(.in-group), so the group keeps drawing the row's single treatment. (2) ds-field-group's own [invalid] read var(--border-error), a token that has never been declared, so it fell through to currentColor and drew a near-black border; it now resolves through a new public --ds-field-group-border-color-error (default --error). Nothing to change on adoption. ACTION only if you had a ::ng-deep override forcing the group's invalid border back to red, or suppressing a segment's fill inside a group -- both are now redundant (DELETE-LIST).",
+    "The collapsed ds-sidenav no longer sets align-items: center on itself, which had stopped its projected children from stretching: every ds-sidenav-item shrank to its 20px icon inside a 40px rail, so the active tile rendered 20x40 (a lozenge, with the orange active rail down one side) and the alert dot sat above the glyph's middle. Items now fill the rail column, and the dot is anchored to the glyph's top-right corner through a new --sidenav-collapsed-glyph token rather than to the tile's corner. Nothing to change on adoption. ACTION only if you projected your own element into a collapsed ds-sidenav and relied on it sizing to its content -- it now stretches to the full column width -- or if you added a ::ng-deep width override to work around the squashed items, which is now double-applied (DELETE-LIST). (delete list: collapsed-sidenav-item-width-override)",
+    "ds-timeline-item now pulls its node column up by half the difference between the heading's line box and the node size, so the marker's centre lands on the heading's rather than 4.2px below it. Each item is that much shorter at the top. Nothing to change on adoption. ACTION only if you compensated for the old offset with your own margin on ds-timeline-item or its node -- that override now double-applies (DELETE-LIST). (delete list: timeline-item-offset-margin)",
+    "Two follow-ups to the shared field-state work, both fixed before release. (1) A field carrying its own error/warning/success state inside a ds-field-group repainted its background, tinting one segment mid-row; the three state rules now carry :not(.in-group), so the group keeps drawing the row's single treatment. (2) ds-field-group's own [invalid] read var(--border-error), a token that has never been declared, so it fell through to currentColor and drew a near-black border; it now resolves through a new public --ds-field-group-border-color-error (default --error). Nothing to change on adoption. ACTION only if you had a ::ng-deep override forcing the group's invalid border back to red, or suppressing a segment's fill inside a group -- both are now redundant (DELETE-LIST). (delete list: field-group-invalid-border-override)",
     "ds-card no longer cancels Enter and Space for everything inside it. The card bound (keydown.enter)/(keydown.space) with an unconditional preventDefault() on its <article>, and keydown bubbles, so EVERY card - not just elevation=\"interactive\" ones - killed both keys for its whole subtree: Enter in a password field submitted nothing, Space did not toggle a checkbox, Enter on a link did not follow it, and a space could not be typed into a text field. Both handlers now run only on an interactive card and only when the key landed on the card itself. Nothing to do; screens built inside a ds-card simply start working.",
     "ds-table's onRowKey no longer consumes Enter and Space for every target inside an interactive row, so a row's own select checkbox toggles with Space and a cell's button activates with Enter.",
     "ds-menu's type-ahead no longer swallows printable characters coming from a text-entry control, so a search or filter input projected into a menu can be typed into. Keys from ordinary menu items still drive the type-ahead. Nothing to do."
@@ -802,6 +802,52 @@
       ],
       "why": "Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now.",
       "replaceWith": "nothing - answer the cleared sort with your default and stop there"
+    },
+    {
+      "id": "private-visually-hidden-definition",
+      "surface": "style",
+      "find": [
+        ".visually-hidden",
+        "clip: rect",
+        "clip-path: inset(50%)"
+      ],
+      "why": "Your own .visually-hidden definition, or a rule targeting the pending row glyph by name, written because the class ds-password-rules used was declared by no stylesheet and its screen-reader text rendered visibly. One shared mixin backs all four components now.",
+      "replaceWith": "nothing - the components carry the class themselves"
+    },
+    {
+      "id": "collapsed-sidenav-item-width-override",
+      "surface": "style",
+      "find": [
+        "ds-sidenav",
+        "::ng-deep",
+        "width",
+        "align-items: center"
+      ],
+      "why": "A ::ng-deep width override on a collapsed ds-sidenav, written because the rail set align-items: center and every item shrank to its 20px icon inside the 40px rail. Items fill the rail column now, so the override double-applies.",
+      "replaceWith": "nothing - remove the override"
+    },
+    {
+      "id": "timeline-item-offset-margin",
+      "surface": "style",
+      "find": [
+        "ds-timeline-item",
+        "margin-top",
+        "margin: -"
+      ],
+      "why": "A margin you added on ds-timeline-item or its node to pull the marker onto the heading centre. The component pulls the node column up itself now, so your compensation double-applies.",
+      "replaceWith": "nothing - remove the margin"
+    },
+    {
+      "id": "field-group-invalid-border-override",
+      "surface": "style",
+      "find": [
+        "ds-field-group",
+        "::ng-deep",
+        "border-error",
+        "invalid"
+      ],
+      "why": "A ::ng-deep override forcing the group invalid border back to red, or suppressing a segment fill inside a group. Both existed because the group read an undeclared token and a segment repainted its own state mid-row; both are fixed in the component.",
+      "replaceWith": "nothing - both overrides are redundant"
     }
   ]
 }

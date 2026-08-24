@@ -201,9 +201,12 @@ measurement, and a grep of `ds.scss` against a sentence that claimed the opposit
 
 - [x] **DONE 2026-08-24 — the delete contract now has a rule that can actually fire, and eight prose
   instructions got the rows they were promising.** The ask named M033 as narrow; it is worse than
-  narrow. M033 triggers only on an `informational` line that STARTS with `DELETE-LIST`, and the 08-21
-  back-fill converted every one of those into a structured array — so **zero lines across 22 manifests
-  could reach it. The rule was inert.** Its second guard was wrong too: `&& !deleteList.length`
+  narrow, and the reason is not the one the first pass reported. M033 triggers only on an
+  `informational` line that STARTS with `DELETE-LIST` — but the marker never went away, it is written
+  **mid-line**: `(DELETE-LIST)` as a trailing tag on four 0.10.0 entries, `DELETE-LIST MATERIAL` inside
+  two 0.9.0 sentences. **Seven lines carry the marker and not one of them starts with it, so M033 could
+  not match a single line from the day the convention settled. The rule was inert against the very
+  marker it is named for.** Its second guard was wrong too: `&& !deleteList.length`
   silenced it whenever the file held any structured row at all, which is exactly the state every
   manifest is in.
   **What the measurement found.** A pattern of second person plus a delete verb ("if you … it can go",
@@ -224,8 +227,15 @@ measurement, and a grep of `ds.scss` against a sentence that claimed the opposit
   `table-export-failure-wrapper`, `date-picker-trigger-focus-within-override` and
   `autocomplete-input-minw-override` (0.9.0), `table-empty-template-loading-guard` and
   `table-sort-rebind-after-clear` (0.10.0), plus `row-menu-view-details-duplicate` for the link column.
-  Ten sentences across 22 manifests now cite a row; the lint was proved to fail on both spellings by
-  removing a citation and restoring it. **One row was NOT written:** the fourteen-token line promised a deletion nothing can locate —
+  Ten sentences across 22 manifests now cite a row.
+  **Completeness took three passes and that is the lesson.** The first pattern was measured for false
+  positives and declared done; a wider net then found two more spellings (`you can delete`), and a wider
+  one still found the seven marker lines. Precision was proved each time; completeness never was, and
+  saying "all of them" after measuring only precision is what made two of the three passes necessary.
+  Final sweep: the only sentences left are one that says to ADD a value (`pass one explicitly`, matched
+  on the word "unset") and one already covered by its line's citation. **Thirteen rows written across
+  0.6.1, 0.8.0, 0.9.0, 0.10.0 and unreleased; 18 informational lines now cite a row; 76 rows total.**
+  Both branches of the rule proved by removing a citation and restoring it. **One row was NOT written:** the fourteen-token line promised a deletion nothing can locate —
   a hand-rolled value contains no DS symbol, so a `find` on our token name is the sortKey trap again.
   It says what is supported instead. **And one I had to take back:** `table-compact-padding-important`
   duplicated `compact-cell-padding-important`, already in 0.9.0 — I back-filled without reading the 21
