@@ -54,6 +54,14 @@
   .option--b { border-color: #B26A00; background-image: linear-gradient(#FFF6E8, #FFF6E8); }
   .option--b .option__tag { background-image: linear-gradient(#B26A00, #B26A00); }
 
+  .code {
+    margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--ds-radius-inner);
+    font: var(--font-weight-regular) var(--font-size-2xs) / 1.6 var(--font-mono);
+    white-space: pre; overflow-x: auto;
+  }
+  .code.bad { background-image: linear-gradient(#FDECEA, #FDECEA); color: #7A1A12; }
+  .code.good { background-image: linear-gradient(#ECFAEE, #ECFAEE); color: #156822; }
+
   table { border-collapse: collapse; width: 100%; margin-top: var(--space-2); }
   th, td { border: 1px solid var(--border-default); padding: var(--space-2) var(--space-3); vertical-align: top; text-align: left; }
   thead th { background-image: linear-gradient(#F2F4F8, #F2F4F8); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
@@ -123,32 +131,79 @@
 
 <div class="decision">
   <span class="decision__flag">Нужно твоё решение</span>
-  <h2 style="margin-top: 0">Что делаем с устойчивым отказом</h2>
-  <p style="margin: 0">
-    По временному отказу вопроса нет: кнопку не гасим, пишем под формой — это уже наше
-    правило про формы. Выбрать надо только форму для устойчивого.
+  <h2 style="margin-top: 0">Один вход на <code>ds-button</code>: <code>disabledReason</code></h2>
+  <p style="margin: 0 0 var(--space-3)">
+    Имя не новое — так уже называется поле у <code>TableRowAction</code>: «почему пункт выключен,
+    показывается второй строкой, читается только когда <code>disabled</code>». Тот же смысл, то же имя.
   </p>
+
+  <table>
+    <thead>
+      <tr><th>Флоу</th><th>Как сейчас</th><th>Как предлагаю</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Устойчивый<br><span style="font-weight: 400; color: var(--text-tertiary)">нет прав, нет бэкенда</span></th>
+        <td>
+          <pre class="code bad">&lt;ds-button
+  [disabled]="true"
+  [dsTooltip]="reason"&gt;   ← только по ховеру
+  Отправить заново
+&lt;/ds-button&gt;</pre>
+        </td>
+        <td>
+          <pre class="code good">&lt;ds-button
+  [disabled]="true"
+  disabledReason="Нет прав"&gt;
+  Отправить заново
+&lt;/ds-button&gt;</pre>
+          <p style="margin: var(--space-2) 0 0; font-size: var(--font-size-2xs)">
+            DS сам рисует вторую строку, ставит <code>aria-disabled</code> вместо
+            <code>disabled</code> и глушит клик.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <th>Временный<br><span style="font-weight: 400; color: var(--text-tertiary)">форма не заполнена</span></th>
+        <td>
+          <pre class="code bad">&lt;ds-button
+  [disabled]="form.invalid"&gt;   ← мёртвая,
+  Сохранить                      причины нет
+&lt;/ds-button&gt;</pre>
+        </td>
+        <td>
+          <pre class="code good">&lt;ds-button (clicked)="save()"&gt;
+  Сохранить
+&lt;/ds-button&gt;
+&lt;ds-field-message [error]="formError()" /&gt;</pre>
+          <p style="margin: var(--space-2) 0 0; font-size: var(--font-size-2xs)">
+            Ничего нового в API — рецепт в доках. Кнопка живая, отказ судится в
+            <code>save()</code>.
+          </p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="options">
     <div class="option option--a">
       <span class="option__tag">A — рекомендую</span>
-      <h3>Вход <code>description</code> + режим <code>aria-disabled</code></h3>
+      <h3>Оба флоу: вход <code>disabledReason</code> + рецепт</h3>
       <p>
-        Причина видна сразу, кнопка достижима с клавиатуры, клик глохнет в обработчике.
-        Механика уже работает в <code>ds-menu-item</code>.
+        Один новый вход на <code>ds-button</code> и <code>ds-icon-button</code>. Механика
+        <code>aria-disabled</code> + глушение клика уже работает в <code>ds-menu-item</code>.
         <br><br>
-        <b>Цена:</b> кнопка выше на строку; нужен новый вход в API.
+        <b>Цена:</b> кнопка выше на строку, когда причина задана. Без входа — ничего не меняется.
       </p>
     </div>
     <div class="option option--b">
       <span class="option__tag">B — только рецепт</span>
-      <h3>Ничего не добавлять в API</h3>
+      <h3>Ничего не добавлять, оба флоу в доках</h3>
       <p>
-        Задокументировать «причина рядом с контролом, кнопку не гасить» и для устойчивого
-        случая тоже.
+        И для устойчивого отказа тоже: текст рядом с кнопкой рисует приложение.
         <br><br>
-        <b>Цена:</b> консьюмер переписывает три экрана сам, DS не отвечает на вопрос,
-        который ему задали дважды.
+        <b>Цена:</b> у консьюмера три экрана переписываются вручную, и на устойчивый отказ
+        DS так и не отвечает.
       </p>
     </div>
   </div>
