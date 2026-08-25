@@ -4,6 +4,18 @@
 
 **Asks — a consumer or Stas asked for it**
 
+- P2 · `ds-banner` centres its `title` while the body stays at `start`, so every banner reads as two
+  alignments (from mm-broker, 2026-08-26). Measured, not guessed: `div.title` computes
+  `text-align: center` at full body width (490px) while `div.body` is `start`. No token exposes it and
+  the consumer sets nothing, so the only fix on their side is a global
+  `ds-banner .title { text-align: start }` — carried there as `TODO(ds-banner-title-align)`. A
+  left-aligned title is almost certainly what was intended; if the centring IS deliberate for some
+  variant, it needs to apply to the body too, or be a documented input.
+- P3 · `ds-menu-divider` leaves uneven space around itself (from mm-broker, 2026-08-26). Reported from
+  the account menu in `ds-sidenav-footer`, where the markup is a bare `<ds-menu-divider />` between
+  `ds-menu-item`s and the consumer adds no menu styling anywhere in its workspace — verified by grep
+  over all three apps. The gap above the divider reads larger than the gap below it, so "Sign out"
+  looks detached from the group rather than separated from it.
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
