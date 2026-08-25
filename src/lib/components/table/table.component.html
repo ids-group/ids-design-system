@@ -341,10 +341,9 @@
                             class="cell-link"
                             [routerLink]="target"
                             (click)="$event.stopPropagation()"
-                            >
-                            {{ cellValue(row, col) }}
-                          </a
                           >
+                            {{ cellValue(row, col) }}
+                          </a>
                         } @else {
                           {{ cellValue(row, col) }}
                         }
@@ -354,10 +353,9 @@
                         class="cell-link"
                         [routerLink]="target"
                         (click)="$event.stopPropagation()"
-                        >
-                        {{ cellValue(row, col) }}
-                      </a
                       >
+                        {{ cellValue(row, col) }}
+                      </a>
                     } @else {
                       {{ cellValue(row, col) }}
                     }
