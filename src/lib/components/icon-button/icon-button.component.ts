@@ -32,6 +32,11 @@ export class IconButtonComponent {
   readonly icon = input.required<IconName>();
   /** Accessible name — required since the button has no visible text. */
   readonly ariaLabel = input.required<string>();
+  /** ARIA `aria-describedby` — the id of text the app renders beside the button,
+   *  such as why the action is refused. Icon-only leaves no room for a second
+   *  line, so unlike `ds-button` there is no `disabledReason` here: the text has
+   *  to exist on screen already for this to point at it. */
+  readonly ariaDescribedBy = input<string | null>(null);
   /** Fill style — standard (chromeless), filled, tonal, or outlined. */
   readonly variant = input<IconButtonVariant>('standard');
   /** Brand/status hue family (shared with ds-button). `variant` is the fill

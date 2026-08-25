@@ -7,7 +7,9 @@
   [attr.aria-expanded]="ariaExpanded()"
   [attr.aria-controls]="ariaControls()"
   [attr.aria-busy]="loading() ? 'true' : null"
-  [disabled]="disabled() || loading()"
+  [attr.aria-disabled]="softDisabled() ? 'true' : null"
+  [attr.aria-describedby]="describedBy()"
+  [disabled]="(disabled() || loading()) && !softDisabled()"
   (click)="onClick($event)"
 >
   <span class="button-main">
@@ -25,4 +27,21 @@
   <span class="subtext-slot">
     <ng-content select="[dsButtonSubtext]"></ng-content>
   </span>
+
+  @if (softDisabled()) {
+    <!-- aria-hidden keeps the reason out of the button's accessible NAME; the
+         aria-describedby above still reaches it, because a node referenced
+         directly is read even when hidden. -->
+    <span class="reason" aria-hidden="true" [id]="reasonId">
+      {{ disabledReason() }}
+    </span>
+  }
 </button>
+
+<ds-field-message
+  [icon]="messageIcon()"
+  [text]="message().text"
+  [state]="message().state"
+  [messageId]="hintId()"
+  [reserve]="reserveMessageResolved()"
+/>

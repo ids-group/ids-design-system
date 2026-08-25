@@ -6,7 +6,6 @@
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
-- P3 · A refusal reason on `ds-button` reaches a mouse only — `ds-menu-item` got `[description]`, buttons
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
 
@@ -42,17 +41,18 @@
 
 ## Priority board (2026-08-24, recut after 0.10.2)
 
-**25 open: 1 P1, 6 P2, 18 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **16 items — and 9 of those are
+**24 open: 1 P1, 6 P2, 17 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **15 items — and 9 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave. What is left to BUILD is
-**seven asks**; of them, one has a deck waiting on a
-verdict, three are gated on a first consumer ask, and three arrived on 08-24 evening from mm-broker on
-0.10.3 — a card that cannot clip its own box, a refusal reason with nowhere to go on a button, and a
-missing resting shadow hook. **All three were found as `::ng-deep` residue rather than reported, which
-is the transferable part: a deep selector a consumer still carries IS an unfiled ask.** The card one was
-built the same evening and is archived; **the one that arrived after it is about this file's siblings** —
-a release that makes consumer code redundant said so in `informational` prose, where nothing executes it,
-and the manifest lint does not catch that spelling.
+**four asks**; of them, one has a deck waiting on a verdict and three are gated on a first consumer ask.
+All three that arrived on 08-24 evening from mm-broker on 0.10.3 are now built and archived — a card
+that cannot clip its own box, a missing resting shadow hook, and (2026-08-25) a refusal reason with
+nowhere to go on a button. **All three were found as `::ng-deep` residue rather than reported, which
+is the transferable part: a deep selector a consumer still carries IS an unfiled ask** — and the button
+one is the strongest case for that rule, since it sat three days as a `[dsTooltip]` a consumer could
+not delete. **What remains from that batch is about this file's siblings** — a release that makes
+consumer code redundant said so in `informational` prose, where nothing executes it, and the manifest
+lint does not catch that spelling.
 
 **The one buildable item spent three days filed as "not work" — and was built the same day it was
 reclassified.** A `ds-table` row could be opened only by clicking the row, and nothing on screen said
@@ -142,59 +142,6 @@ Requests, not defects. Ordered by who is blocked.
 - [ ] **[P3] `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).** Base row expansion ALREADY SHIPS — `expandableRows` + two-way `expandedIds` `model<Set<string>>` (multiple + programmatic), `rowExpandTemplate`, expander button/chevron/`expandedColspan`, docs demo (`table.section.html:574-600`). So this is **deltas only, not a build**: (a) optional **single-expand mode** (only one row open at a time — today it's always multi via the Set); (b) **expand-all / collapse-all** header toggle (the header expand-col is currently just a spacer); (c) optional dedicated `(rowExpand)`/`(rowCollapse)` outputs (the `expandedIds` model already covers change-tracking, so this is sugar). All small; do only on a consumer ask — the core feature is at parity.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form.
-
-
-## A refusal reason on `ds-button` reaches a mouse only (from mm-broker, 2026-08-24)
-
-- [ ] **[P3] `ds-menu-item` got `[description]` in 0.10.2 and it closed this for menus; a disabled
-  BUTTON still has nowhere to say why.** The pattern is a control the server refuses — "the invitation
-  has not been accepted yet", "this is the last active admin" — where the app disables it and has to
-  say why. On a menu item the new input does it properly: visible without hover, and reaching assistive
-  tech as `aria-describedby` rather than as part of the name. mm-broker adopted it the day 0.10.2
-  landed and deleted two `[dsTooltip]`-based workarounds with their `TODO(disabled-reason)` markers.
-  **The third site is a `ds-button` and could not be fixed**: `[dsTooltip]` needs hover, and a disabled
-  button cannot be focused to announce itself, so the reason reaches a mouse and nothing else. That
-  consumer also carries a `blocked-action` mixin whose whole comment is "`ds-button` has no caption
-  slot — only `ds-menu-item` holds a second line — so the reason is a sibling". **Ask:** the same
-  `description` shape on `ds-button` (and `ds-icon-button`, where the label is already invisible), with
-  the same `aria-describedby` wiring.
-
-  **DECIDED 2026-08-25 (Stas), and the axis moved.** The question is not where the text goes, it is
-  WHAT KIND of refusal it is — and the two kinds want different components:
-
-  · **Standing refusal** — will not change while the user is on this screen (the backend capability is
-    absent, the role is missing, the record is in a state the action cannot touch). The reason belongs
-    INSIDE the button as a second line, because it is as permanent as the unavailability itself.
-    Needs `description` + an `aria-disabled` mode: a natively `disabled` button cannot be focused at
-    all (measured — `document.activeElement` never becomes it, Tab skips it), and a keyboard user
-    without a screen reader then gets nothing whatsoever.
-  · **Transient refusal** — clears as soon as the user does something (form incomplete, nothing
-    selected, terms not accepted). **Do not disable the button.** The reason is a statement about the
-    FORM, not about the button, so it belongs under the control as a `ds-field-message` alongside the
-    other form messages. No new API — a documented recipe, because consumers reach for `disabled`
-    instead today.
-
-  **Long text has a measured rule, not a guess.** In the deck at a default button: an 8-character and
-  a 26-character reason each fit one line (168px / 190px wide); an 82-character one wraps to two lines
-  and pushes the button to 348px. So: one line fits inside the button, anything longer goes under the
-  control where it can wrap. Truncating a refusal reason is not an option — it is the whole payload.
-
-  **The tooltip is out of both branches** (Stas, and the literature agrees): it needs hover, so it does
-  not exist for keyboard or touch. Carbon states the general rule — information without which the task
-  cannot be completed belongs in always-visible helper text, not a tooltip — and its "tooltip on a
-  disabled button" request has stayed open with near-weekly duplicates. Adrian Roselli goes further and
-  argues against disabling at all: prevent the submit and answer with a message, since "disabling
-  fields is no replacement for good instructions and error messages". React Spectrum's own answer to
-  the same request is `aria-disabled` + swallowing the event + a data attribute for styling, which is
-  exactly the standing-refusal mechanics above.
-  **This repo already agrees with the transient branch**: the house forms rule gates submit on presence
-  and not-in-flight only, judges validity inside the handler and shows errors inline.
-
-  Deck: `presentations/button-refusal-reason.html` (each specimen measures its own focus behaviour).
-  Variant "reason as a sibling element referenced by `aria-describedby`, button left natively disabled"
-  was REJECTED: measured, focus never lands, so the reference is never announced — it only works
-  together with the same `aria-disabled` switch, which makes it the standing-refusal branch with the
-  text moved outside.
 
 
 ## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)

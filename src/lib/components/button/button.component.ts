@@ -6,6 +6,7 @@ import {
   computed,
   input,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
 import { devWarn } from '../../core/dev-warning';
@@ -15,6 +16,19 @@ import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveWithConfig } from '../../core/config-defaults';
+import { DsMessageBase } from '../message-base';
+import {
+  resolveFieldMessage,
+  trimmedText,
+  type DsFieldError,
+} from '../field-errors';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
+
+// `resolveFieldMessage` reads a form control's validation state; a button has
+// none, so these stand in for the two sources a field feeds in from its control.
+const NO_ERRORS = signal<readonly DsFieldError[]>([]).asReadonly();
+const NEVER_INVALID = signal(false).asReadonly();
 
 // color×variant pairs that RENDER but read poorly — surfaced as a dev-mode
 // console.warn (two inputs can't be narrowed against each other at compile
@@ -45,7 +59,7 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
 @Component({
   selector: 'ds-button',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, FieldMessageComponent],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -58,9 +72,10 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
     // host-scoped rule. Styling only — nothing reads these back.
     '[attr.data-variant]': 'variant()',
     '[attr.data-color]': 'color()',
+    '[class.with-message]': 'hasMessageRow()',
   },
 })
-export class ButtonComponent {
+export class ButtonComponent extends DsMessageBase {
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
@@ -109,6 +124,23 @@ export class ButtonComponent {
   /** ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel
    *  this button opens, e.g. `ds-app-layout`'s `railId`. */
   readonly ariaControls = input<string | null>(null);
+  /** Why the button is refused, shown as its second line. Read only while
+   *  `disabled` — a greyed control that does not say why is a dead end.
+   *
+   *  Setting it also changes HOW the button is disabled: it takes `aria-disabled`
+   *  instead of the native attribute, because a natively disabled button cannot be
+   *  focused and the reason would never be announced. The click is swallowed in
+   *  `onClick` instead. Leave it unset and nothing changes.
+   *
+   *  Length is deliberately not capped: the text wraps and the button grows. Same
+   *  name and meaning as `TableRowAction.disabledReason`. */
+  readonly disabledReason = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
+  /** ARIA `aria-describedby` — point the button at a description the app renders
+   *  itself, such as a `ds-field-message` under a form. Merged with the id of
+   *  `disabledReason` when both are present. */
+  readonly ariaDescribedBy = input<string | null>(null);
   /** Fires on click, unless `disabled` or `loading`. */
   readonly pressed = output<MouseEvent>();
 
@@ -131,7 +163,40 @@ export class ButtonComponent {
     return parts.filter(Boolean).join(' ');
   });
 
+  protected readonly softDisabled = computed(
+    () => this.disabled() && this.disabledReason().length > 0,
+  );
+
+  private readonly uid = nextControlId('ds-button');
+  protected readonly reasonId = `${this.uid}-reason`;
+  protected readonly hintId = computed(() =>
+    this.message().text ? `${this.uid}-hint` : null,
+  );
+  protected readonly describedBy = computed(() => {
+    const ids = [
+      this.softDisabled() ? this.reasonId : null,
+      this.hintId(),
+      this.ariaDescribedBy(),
+    ].filter(Boolean);
+
+    return ids.length ? ids.join(' ') : null;
+  });
+
+  protected readonly hasMessageRow = computed(
+    () => this.message().text.length > 0 || this.reserveMessageResolved(),
+  );
+
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: NO_ERRORS,
+    invalid: NEVER_INVALID,
+  });
+  protected readonly message = this.fieldMessage.message;
+
   constructor() {
+    super();
     devWarn(() => {
       const variant = this.variant();
       if (variant === 'text') {
@@ -146,6 +211,8 @@ export class ButtonComponent {
   }
 
   protected onClick(event: MouseEvent): void {
+    // A soft-disabled button is only `aria-disabled`, so the browser still
+    // dispatches the click — this is what stops it.
     if (this.disabled() || this.loading()) {
       return;
     }

@@ -4,6 +4,95 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+- [x] **DONE 2026-08-25 — a refused button says why, and the two kinds of refusal took different answers.**
+  `ds-button` gained `disabledReason` plus the field message inputs `hint` / `warning` / `error` /
+  `messageIcon` / `reserveMessage`, and both buttons gained `ariaDescribedBy`. Nothing changes for a
+  button that sets none of them.
+  **Standing refusal — `disabledReason`, inside the button.** Setting it flips the disable mechanism:
+  `aria-disabled="true"` instead of the native attribute, so the button stays focusable and the reason
+  becomes its accessible DESCRIPTION rather than part of its name. **Verified in Chrome's own a11y
+  tree**: `button "Approve invoice" description="Needs the Finance role" disableable disabled`. Focus
+  lands (`document.activeElement === button`), `(pressed)` fires 0 times — against a live control on
+  the same page that fires 1 — and a plain `[disabled]="true"` button is still natively disabled with
+  focus still skipping it, so the default is provably intact.
+  **Transient refusal — the message line, under the button.** `hint`/`warning`/`error` resolve through
+  the same `resolveFieldMessage` and render the same `ds-field-message` as the fields, with the same
+  `reserveMessage` height reservation (measured: reserved-and-empty and reserved-with-text hosts are
+  both 63px, while a plain button stays 40px and takes no `with-message` class).
+  **Reused by inheritance, not copied.** `hint`, `error`, `warning`, `messageIcon`, `reserveMessage`
+  and `reserveMessageResolved` moved out of `DsFieldBase` into a new `DsMessageBase`; `DsFieldBase`
+  extends it and keeps `errors`/`invalid`/`touched`, which a button has no use for. `DsFieldBase`'s own
+  surface is unchanged (`npm run class-surface` clean) — and this is exactly the case that tool warns it
+  cannot see, so the CHANGELOG says it in prose.
+  **`ds-icon-button` deliberately got only `ariaDescribedBy`.** An icon button has no room for a second
+  line, and a reason living only in the accessibility tree reproduces exactly the invisibility this ask
+  was filed about. The consumer renders the text and points at it.
+  **Two things in the ask above are superseded, both by Stas, and both worth keeping straight.**
+  (1) The measured "one line fits inside, anything longer goes under the control" rule became **no cap
+  at all** — the reason stays inside the button, the text wraps, the button grows. Measured at a 501px
+  viewport: the 96-character reason wraps to two lines, the button is 421px, the row is 421px, and the
+  page does not scroll horizontally. (2) The transient branch was filed as "no new API, a documented
+  recipe"; it shipped as the three field inputs instead, because mirroring the field API was the point.
+  **One thing that looked like a fix was a no-op, and its comment claimed otherwise.**
+  A `ds-field-message { width: 0; min-width: 100% }` rule was meant to keep the message out of the
+  host's intrinsic width so the BUTTON would decide how wide the pair is. Measured with and without it:
+  identical widths, and two same-label buttons differing only in message length come out 127px vs 176px
+  — the message decides. Deleted, along with the comment. The behaviour is now documented as what it is:
+  a message longer than the label widens the pair, button included, exactly as a field's control spans
+  its own message.
+  Docs: `/components/button` § "Refused, and why" (standing, transient, long reason, `reserveMessage`),
+  `components.md` § `ds-button`, and a `deleteList` entry retiring the `[dsTooltip]`-on-a-disabled-button
+  workaround.
+  ORIGINAL: - [ ] **[P3] `ds-menu-item` got `[description]` in 0.10.2 and it closed this for menus; a disabled
+  BUTTON still has nowhere to say why.** The pattern is a control the server refuses — "the invitation
+  has not been accepted yet", "this is the last active admin" — where the app disables it and has to
+  say why. On a menu item the new input does it properly: visible without hover, and reaching assistive
+  tech as `aria-describedby` rather than as part of the name. mm-broker adopted it the day 0.10.2
+  landed and deleted two `[dsTooltip]`-based workarounds with their `TODO(disabled-reason)` markers.
+  **The third site is a `ds-button` and could not be fixed**: `[dsTooltip]` needs hover, and a disabled
+  button cannot be focused to announce itself, so the reason reaches a mouse and nothing else. That
+  consumer also carries a `blocked-action` mixin whose whole comment is "`ds-button` has no caption
+  slot — only `ds-menu-item` holds a second line — so the reason is a sibling". **Ask:** the same
+  `description` shape on `ds-button` (and `ds-icon-button`, where the label is already invisible), with
+  the same `aria-describedby` wiring.
+
+  **DECIDED 2026-08-25 (Stas), and the axis moved.** The question is not where the text goes, it is
+  WHAT KIND of refusal it is — and the two kinds want different components:
+
+  · **Standing refusal** — will not change while the user is on this screen (the backend capability is
+    absent, the role is missing, the record is in a state the action cannot touch). The reason belongs
+    INSIDE the button as a second line, because it is as permanent as the unavailability itself.
+    Needs `description` + an `aria-disabled` mode: a natively `disabled` button cannot be focused at
+    all (measured — `document.activeElement` never becomes it, Tab skips it), and a keyboard user
+    without a screen reader then gets nothing whatsoever.
+  · **Transient refusal** — clears as soon as the user does something (form incomplete, nothing
+    selected, terms not accepted). **Do not disable the button.** The reason is a statement about the
+    FORM, not about the button, so it belongs under the control as a `ds-field-message` alongside the
+    other form messages. No new API — a documented recipe, because consumers reach for `disabled`
+    instead today.
+
+  **Long text has a measured rule, not a guess.** In the deck at a default button: an 8-character and
+  a 26-character reason each fit one line (168px / 190px wide); an 82-character one wraps to two lines
+  and pushes the button to 348px. So: one line fits inside the button, anything longer goes under the
+  control where it can wrap. Truncating a refusal reason is not an option — it is the whole payload.
+
+  **The tooltip is out of both branches** (Stas, and the literature agrees): it needs hover, so it does
+  not exist for keyboard or touch. Carbon states the general rule — information without which the task
+  cannot be completed belongs in always-visible helper text, not a tooltip — and its "tooltip on a
+  disabled button" request has stayed open with near-weekly duplicates. Adrian Roselli goes further and
+  argues against disabling at all: prevent the submit and answer with a message, since "disabling
+  fields is no replacement for good instructions and error messages". React Spectrum's own answer to
+  the same request is `aria-disabled` + swallowing the event + a data attribute for styling, which is
+  exactly the standing-refusal mechanics above.
+  **This repo already agrees with the transient branch**: the house forms rule gates submit on presence
+  and not-in-flight only, judges validity inside the handler and shows errors inline.
+
+  Deck: `presentations/button-refusal-reason.html` (each specimen measures its own focus behaviour).
+  Variant "reason as a sibling element referenced by `aria-describedby`, button left natively disabled"
+  was REJECTED: measured, focus never lands, so the reference is never announced — it only works
+  together with the same `aria-disabled` switch, which makes it the standing-refusal branch with the
+  text moved outside.
+
 - [x] **DONE 2026-08-24 — the decks stopped lying about type, and the step now fails instead of falling back.**
   `build:deck-css` became `tools/build-deck-css.mjs`: it compiles `ds.scss` through the sass JS API, copies
   `src/lib/styles/fonts/` next to the CSS, and **exits non-zero if any `url()` in the output has no file beside it**.

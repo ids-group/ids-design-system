@@ -13,6 +13,22 @@
   width: 100%;
 }
 
+/* Conditional on purpose: a button with no message keeps the inline-flex box
+   every existing layout was built against. The host shrinks to fit, so a message
+   longer than the label widens the pair — `width: 0; min-width: 100%` on the
+   message does NOT escape that (measured: identical widths), because there is no
+   definite width for the percentage to resolve against. */
+:host(.with-message) {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--field-label-gap);
+}
+
+:host(.with-message.full-width) {
+  display: flex;
+}
+
 .button {
   /* Colour-family slots default to --accent-* (primary unless a ds-color zone/attr
      flips it); .c-* overrides them. .v-* variant classes below remap these slots
@@ -102,32 +118,42 @@
     transform var(--duration-instant) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 
-  &:hover  { background-color: var(--_button-bg-color-hover); box-shadow: var(--_button-shadow-hover); }
-  &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
+  &:hover:not([aria-disabled='true'])  { background-color: var(--_button-bg-color-hover); box-shadow: var(--_button-shadow-hover); }
+  &:active:not([aria-disabled='true']) { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
   &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
 
-  &[disabled] {
+  &[disabled],
+  &[aria-disabled='true'] {
     background-color: var(--_button-bg-color-disabled);
     color: var(--_button-label-color-disabled);
     border-color: var(--_button-border-disabled);
     cursor: not-allowed;
-    pointer-events: none;
   }
+
+  /* Only the native form swallows the pointer — an aria-disabled button has to
+     receive the click for `onClick` to be the thing that refuses it. */
+  &[disabled] { pointer-events: none; }
 
   .icon { width: var(--icon-md); height: var(--icon-md); flex-shrink: 0; }
 
-  /* Optional secondary line projected via [dsButtonSubtext]. Wrapper is
-     display:contents when absent, so iconless/subtext-free buttons are
-     unchanged; presence flips the button to a stacked label+subtext column. */
+  /* Optional secondary line: projected via [dsButtonSubtext], or the refusal
+     reason. Wrapper is display:contents when absent, so iconless/subtext-free
+     buttons are unchanged; presence flips the button to a stacked column. */
   .button-main { display: contents; }
   .subtext-slot:empty { display: none; }
-  .subtext-slot {
+  .subtext-slot,
+  .reason {
     font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
     letter-spacing: var(--letter-spacing-normal);
     text-align: center;
   }
 
-  &:has(.subtext-slot:not(:empty)) {
+  /* Deliberately uncapped: a long reason wraps and the button grows, rather
+     than truncating the one thing that explains the refusal. */
+  .reason { max-width: 100%; text-wrap: pretty; }
+
+  &:has(.subtext-slot:not(:empty)),
+  &:has(.reason) {
     flex-direction: column;
     gap: var(--space-1);
     height: auto;
@@ -138,6 +164,7 @@
     .button-main { display: inline-flex; align-items: center; gap: var(--space-2); }
     &.lg { height: auto; min-height: var(--field-h-lg); }
   }
+
 
   /* Sizes — sm/md/lg (32/40/48), default md. Each re-resolves the locals with
      the public hook still first, so a consumer override is not undone by the

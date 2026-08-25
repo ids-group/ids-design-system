@@ -10,6 +10,37 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-button` can say WHY it is refused, without a tooltip.** A greyed button that does not explain
+  itself is a dead end, and the only way to explain one was `[dsTooltip]` — reachable by mouse alone.
+  One consumer carried that workaround on three buttons; two sibling cases on `ds-menu-item` already
+  went away in 0.10.2 when it gained `[description]`. Which input to reach for depends on whether the
+  user can lift the refusal on this screen:
+  - **Standing refusal** — no permission, no integration, nothing here will change it. Set
+    **`disabledReason`** beside `disabled` and the reason renders as a second line INSIDE the button.
+    Setting it also flips HOW the button is disabled: **`aria-disabled="true"` instead of the native
+    attribute**, because a natively disabled button never takes focus and its description is therefore
+    never announced (measured: `document.activeElement` never becomes it, Tab skips it). The click is
+    swallowed in the handler instead, so **`(pressed)` still never fires** — verified against a live
+    control that does fire. Chrome's own accessibility tree reads name `"Approve invoice"`, description
+    `"Needs the Finance role"`, state disabled: the reason is the DESCRIPTION, not part of the name.
+    **Length is deliberately uncapped** — the text wraps and the button grows rather than truncating the
+    one thing that explains the refusal.
+  - **Temporary refusal** — the form simply is not filled in yet. Do NOT disable the button: leave it
+    live, judge validity in the submit handler, and carry the text UNDER it with **`hint` / `warning` /
+    `error`** — the same three inputs the fields take, resolved by the same `resolveFieldMessage` and
+    rendered by the same `ds-field-message`, with **`messageIcon`**, **`reserveMessage`** and the same
+    `DS_CONFIG.field.*` fallbacks. `reserveMessage` holds the line's height while it is empty, so a
+    button that gains an error mid-form does not shove the layout below it.
+  Also new: **`ariaDescribedBy`** on both `ds-button` and `ds-icon-button`, for pointing at a
+  description the app renders itself. On `ds-button` it is merged with the reason's own id.
+  **`ds-icon-button` gets no `disabledReason`** — icon-only leaves no room for a second line, and a
+  reason living only in the accessibility tree reproduces exactly the invisibility this closes.
+  **Nothing changes for a button that sets none of these.** Without `disabledReason` the native
+  `disabled` attribute stays and focus still skips it; without a message the host keeps the
+  `inline-flex` box every existing layout was built against. A message-bearing button becomes a column,
+  and since the host shrinks to fit, a message longer than the label widens the pair — button included,
+  exactly as a field's control spans its own message.
+
 - **`--ds-button-shadow` and `--ds-button-shadow-hover` — the rest state finally has a hook.** Focus and
   pressed already had one (`--ds-button-focus-shadow`, `--ds-button-pressed-shadow`); the resting shadow
   did not, which is the only reason a consumer styling its option buttons as a screen's primary surface
@@ -51,6 +82,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   top of a control that already works.
 
 ### Changed
+
+- **If you EXTEND a DS field, its message inputs now live one class further up.** `hint`, `error`,
+  `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved` moved out of `DsFieldBase`
+  into a new `DsMessageBase`, which `DsFieldBase` extends — so `ds-button` can take the message half
+  without also inheriting `errors`, `invalid` and `touched`, which describe a form control's validation
+  state and mean nothing on a button. **`DsFieldBase`'s own surface is unchanged**: every one of those
+  members still resolves through it, with the same names, types and defaults. Called out only because
+  `npm run class-surface` cannot see a member that moved to a base class — it reports members per class
+  and this is the case it warns about. A subclass redeclaring one of these collides exactly as it did
+  before; subclassing a DS component stays unsupported (`components.md` § Components).
 
 - **If you EXTEND a DS component, `TableComponent` grew one member: `cellLink`.** `npm run
   class-surface` against 0.10.3. It backs the new `link` column, resolving a column’s `link(row)` to
