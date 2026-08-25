@@ -25,6 +25,10 @@
 
   display: flex;
   gap: var(--space-3);
+
+  /* Owned, not inherited: a banner is two text blocks that have to read as one
+     alignment, and a centred ancestor otherwise drags both of them with it. */
+  text-align: start;
   padding: var(--_banner-pad-y) var(--_banner-pad-x);
   border-radius: var(--_banner-radius);
   background-color: var(--_banner-bg-color);

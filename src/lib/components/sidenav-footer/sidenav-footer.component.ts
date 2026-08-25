@@ -13,6 +13,7 @@ import { IconComponent } from '../../icons/icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuItemComponent } from '../menu/menu-item.component';
+import { MenuDividerComponent } from '../menu/menu-divider.component';
 import { PopoverComponent } from '../popover/popover.component';
 import type {
   SidenavAlertItem,
@@ -41,6 +42,7 @@ interface SearchGroup {
     PopoverComponent,
     MenuComponent,
     MenuItemComponent,
+    MenuDividerComponent,
   ],
   templateUrl: './sidenav-footer.component.html',
   styleUrl: './sidenav-footer.component.scss',
