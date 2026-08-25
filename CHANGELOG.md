@@ -118,6 +118,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-banner` no longer inherits its alignment from whatever it is dropped into.** Reported as "the
+  title is centred while the body stays at start" (mm-broker). The DS does not centre the title — measured
+  across all twelve banners in the docs, in both layouts, title and body both compute `start` and there
+  is no `text-align` anywhere in the component. What IS true is the underlying defect: the banner owned
+  no alignment at all, so a centred ancestor dragged **both** of its text blocks along (measured: both
+  flip to `center` under a centred parent). It now sets `text-align: start` on its own box, so a banner
+  reads as one alignment wherever it sits. If you were centring a banner deliberately by centring its
+  container, that stops working — say so and it becomes an input.
+
+- **`ds-sidenav-footer`'s account menu now uses `ds-menu-divider`, so the divider tokens reach it.** It
+  hand-rolled a `div` with local styles instead, which meant `--ds-menu-divider-color` and
+  `--ds-menu-divider-spacing` did nothing there — an override written against the documented tokens
+  silently skipped the one menu the DS ships itself. **Spacing is unchanged**, pinned deliberately:
+  6px above and below the line, measured before and after, because the divider's own default is 0 and
+  the rhythm in that menu was already settled. Reported as uneven spacing around the divider; that part
+  did not reproduce — the gaps are symmetric in `ds-menu` (2px/2px) and in the account menu (6px/6px).
+
 - **`ds-w3w` rendered a space its own format does not have.** The pill showed
   `/// daring.lion.race`; a what3words identifier is `///daring.lion.race`, flush, which is what the
   component's own `aria-label` has said all along — so the screen and the accessible name disagreed.

@@ -4,18 +4,6 @@
 
 **Asks — a consumer or Stas asked for it**
 
-- P2 · `ds-banner` centres its `title` while the body stays at `start`, so every banner reads as two
-  alignments (from mm-broker, 2026-08-26). Measured, not guessed: `div.title` computes
-  `text-align: center` at full body width (490px) while `div.body` is `start`. No token exposes it and
-  the consumer sets nothing, so the only fix on their side is a global
-  `ds-banner .title { text-align: start }` — carried there as `TODO(ds-banner-title-align)`. A
-  left-aligned title is almost certainly what was intended; if the centring IS deliberate for some
-  variant, it needs to apply to the body too, or be a documented input.
-- P3 · `ds-menu-divider` leaves uneven space around itself (from mm-broker, 2026-08-26). Reported from
-  the account menu in `ds-sidenav-footer`, where the markup is a bare `<ds-menu-divider />` between
-  `ds-menu-item`s and the consumer adds no menu styling anywhere in its workspace — verified by grep
-  over all three apps. The gap above the divider reads larger than the gap below it, so "Sign out"
-  looks detached from the group rather than separated from it.
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
@@ -55,10 +43,18 @@
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
 **25 open: 1 P1, 7 P2, 17 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **17 items — and 11 of those are
+first consumer ask and two are Records, so the live board is **14 items — and 11 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
 
-**Both new items came out of running the tooling rather than reading it, and both were invisible to a
+**Two asks arrived and closed the same day (2026-08-26), and NEITHER symptom reproduced here** — the
+banner does not centre its title, and the menu divider is symmetric in both places it was measured.
+Each still found a real defect one level down: the banner owned no alignment, and the DS's own sidenav
+footer hand-rolled a divider instead of using `ds-menu-divider`, so the divider tokens reached every
+menu except that one. **The rule they leave behind: an ask arriving with a measurement is a measurement
+of the CONSUMER's screen. Reproduce it here before fixing it here** — taking either at its word would
+have shipped a `text-align` on `.title` and a spacing tweak, and neither was the problem.
+
+**The tooling items came out of running the tools rather than reading them, and both were invisible to a
 code read.** The formatter conflict surfaced when the three formatters were actually run end to end;
 the delete-table gate's blind spot surfaced when a control that was supposed to fail did not. The
 transferable rule is the same one the focus-ring checker was born from: **a gate proves nothing until

@@ -4,6 +4,50 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+- [x] **DONE 2026-08-26 — two asks from mm-broker, and NEITHER symptom reproduced in the DS. Both still
+  found a real defect underneath.** Worth reading as a pair, because the pattern repeated: the reported
+  symptom was measured on the consumer's screen and is real THERE, but the cause named in the ask was
+  not the DS's, and taking the ask at its word would have shipped the wrong fix twice.
+  **`ds-banner` — "centres the title while the body stays at start".** Measured across all twelve
+  banners in the docs, in both layouts (`layout-stacked`, `layout-row`): title and body both compute
+  `start`, zero mismatches, and there is no `text-align` declaration anywhere in the component. So the
+  DS does not centre the title. It also CANNOT produce the reported split by inheritance — probed it
+  directly: under a centred ancestor **both** blocks flip to `center` together. Something on the
+  consumer's side reaches `.title` or `.body` (both very generic class names) directly.
+  **The real defect, which the ask found without naming:** the banner owned no alignment at all, so a
+  centred ancestor dragged the whole thing. It now declares `text-align: start` on its own box —
+  re-measured: all twelve stay `start`, and the centred-ancestor probe that used to return `center` now
+  returns `start`. Same class as [[feedback-components-resist-external-layout]]: the component owns it,
+  the page does not get to decide.
+  **`ds-menu-divider` — "uneven space around itself".** Measured in `ds-menu`: gap above = gap below =
+  2px, host padding 0, margin 0, on every divider on the page. Then measured the exact place the ask
+  named — the account menu in `ds-sidenav-footer`, between "Help & support" and "Sign out": **6px above
+  the line and 6px below.** Symmetric both times. The `.error` item below it was the obvious suspect for
+  a perceptual asymmetry, but it tints only on hover, so there is no resting box edge either.
+  **The real defect, again underneath:** that menu was not using `ds-menu-divider` at all. It hand-rolled
+  `<div class="separator">` with local styles, so `--ds-menu-divider-color` and
+  `--ds-menu-divider-spacing` reached every menu EXCEPT the one the DS ships itself — a consumer
+  retuning the documented token would have watched that menu ignore it. Swapped to the real component,
+  with `--ds-menu-divider-spacing: var(--space-1)` pinned locally so the rhythm does not move: measured
+  6px/6px before and 6px/6px after, and the colour token now reaches it (tinted it red, watched the line
+  change, restored).
+  **The transferable part:** an ask that arrives with a measurement is still a measurement of the
+  CONSUMER's screen. Reproduce it here before fixing it here — both of these would otherwise have become
+  a `text-align: start` on `.title` and a spacing tweak on the divider, neither of which was the problem.
+  ORIGINAL:
+- P2 · `ds-banner` centres its `title` while the body stays at `start`, so every banner reads as two
+  alignments (from mm-broker, 2026-08-26). Measured, not guessed: `div.title` computes
+  `text-align: center` at full body width (490px) while `div.body` is `start`. No token exposes it and
+  the consumer sets nothing, so the only fix on their side is a global
+  `ds-banner .title { text-align: start }` — carried there as `TODO(ds-banner-title-align)`. A
+  left-aligned title is almost certainly what was intended; if the centring IS deliberate for some
+  variant, it needs to apply to the body too, or be a documented input.
+- P3 · `ds-menu-divider` leaves uneven space around itself (from mm-broker, 2026-08-26). Reported from
+  the account menu in `ds-sidenav-footer`, where the markup is a bare `<ds-menu-divider />` between
+  `ds-menu-item`s and the consumer adds no menu styling anywhere in its workspace — verified by grep
+  over all three apps. The gap above the divider reads larger than the gap below it, so "Sign out"
+  looks detached from the group rather than separated from it.
+
 - [x] **DONE 2026-08-25 — `ds-w3w` rendered a space its own format forbids, and it took a measurement
   to see it.** The pill showed `/// daring.lion.race`; the format is `///daring.lion.race`, flush, which
   is what its own `aria-label` had said all along — screen and accessible name disagreed on a shipped
