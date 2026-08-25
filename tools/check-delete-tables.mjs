@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-// Every `deleteList` row must be reachable from the CHANGELOG too. `migrations/README.md` asks for
-// two copies — the array a tool runs, the table a person reads — and two copies drift: four
-// versions had no table at all, and three more had entries the table never mentioned.
+// `migrations/README.md` asks for two copies of every delete row — the array a tool runs, the
+// table a person reads — and nothing held them together.
 //
 // The test is not row COUNT. A hand-written table legitimately merges related entries into one
 // row, so parity by count reports phantom gaps. What has to hold is that each entry is findable:
