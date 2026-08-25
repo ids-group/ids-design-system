@@ -244,6 +244,24 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ## Shipped 2026-08-21 evening (session — the manifests said what changed, not where to look)
 
+
+- [x] **DONE 2026-08-26 — the gate I shipped yesterday was accepting rows that prove nothing, and
+  four of the entries it waved through were my own.** Both blind spots were real, and the second was
+  worse than filed. **(1) It scanned the whole markdown line**, so a shape found in the "Delete it,
+  because" column counted — three 0.9.0 entries passed on a word that appeared in the explanation
+  rather than in the locator a reader greps with. **(2) It matched on shapes several entries share**,
+  so `ds-table` alone let four 0.9.0 entries pass on one unrelated row.
+  **The part the filing did not have:** three of those four had NO row at all. They were entries I
+  added during the parity back-fill, and they passed only because a generic shape matched somebody
+  else's row — so the back-fill that was supposed to close the gap left three holes and the gate
+  reported them closed.
+  **Fixed both ways.** The gate reads the FIRST column only, and it now requires a shape no sibling
+  entry shares. Four rows written (`exportFetcher`, the table live region, the ds-field-group invalid
+  border, and `--ds-table-cell-pad` added to the compact entry so it can be told apart), three
+  rewritten to carry their shape in the locator column. 80 entries pass; both rules were watched
+  FAILING on the exact controls before being believed.
+  ORIGINAL: [P2] `check-delete-tables` passes entries it should fail — measured with a control that
+  was supposed to fail and did not (2026-08-26).
 Opened and closed in one sitting, because the item measured itself: the lint that found the gap counted
 258 of them, and the count is the to-do list.
 
