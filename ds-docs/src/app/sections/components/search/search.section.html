@@ -146,13 +146,13 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [debounce]="200"
-    </code> holds each keystroke back
-    before <code class="t-mono-inline">value</code> updates, so a list screen stops
-    firing a request per character. Default is
+    </code> holds each keystroke
+    back before <code class="t-mono-inline">value</code> updates, so a list
+    screen stops firing a request per character. Default is
     <code class="t-mono-inline">
       0
-    </code> — every keystroke writes through, exactly
-    as this control always has.
+    </code> — every keystroke writes through,
+    exactly as this control always has.
   </p>
 
   <p class="block-desc t-s">
@@ -162,18 +162,19 @@
     </code> usually feels wrong.
     <strong>
       Clearing the field
-    </strong> — emptying a search is a deliberate act, and
-    waiting 200ms to see the whole list back reads as a hang;
+    </strong> — emptying a search is a deliberate
+    act, and waiting 200ms to see the whole list back reads as a hang;
     <strong>
       Enter
-    </strong>, which flushes whatever is still in flight so you search
-    what you can see; and
+    </strong>, which flushes whatever is still in flight so you
+    search what you can see; and
     <strong>
       the public
       <code class="t-mono-inline">
         clear()
       </code>
-    </strong>, for a Clear button that lives outside the control — it empties the field,
+    </strong
+    >, for a Clear button that lives outside the control — it empties the field,
     drops an armed keystroke and publishes
     <code class="t-mono-inline">
       ''
@@ -183,9 +184,10 @@
     </code> into
     <code class="t-mono-inline">
       value
-    </code> is NOT the same: the timer is cancelled only when the incoming text differs
-    from what the control last pushed, so clearing an already-empty-looking field left the
-    keystroke armed. What the input SHOWS is never delayed by any of the three.
+    </code> is NOT the same: the timer is
+    cancelled only when the incoming text differs from what the control last
+    pushed, so clearing an already-empty-looking field left the keystroke armed.
+    What the input SHOWS is never delayed by any of the three.
   </p>
 
   <div class="demo-stack">
@@ -217,23 +219,20 @@
     </code>,
     <code class="t-mono-inline">
       [(ngModel)]
-    </code> and a signal form all reach it, and its own
-    <code class="t-mono-inline">
-      [(value)]
-    </code> keeps working. A
-    <code class="t-mono-inline">
-      disabled
-    </code> input folds together with the form's own disabled state, and the shell
-    paints the disabled surface — it used to look live and still take a click.
+    </code> and a signal form all reach
+    it, and its own <code class="t-mono-inline"> [(value)] </code> keeps
+    working. A <code class="t-mono-inline"> disabled </code> input folds
+    together with the form's own disabled state, and the shell paints the
+    disabled surface — it used to look live and still take a click.
   </p>
 
   <p class="block-desc t-s">
     <strong>
       Deliberately no label and no message row.
     </strong>
-    A toolbar filter is not a validated field, and giving it the field chrome would
-    restyle every toolbar it sits in. Where a search needs a label or an error line,
-    that is what
+    A toolbar filter is not a validated field, and giving it the field chrome
+    would restyle every toolbar it sits in. Where a search needs a label or an
+    error line, that is what
     <code class="t-mono-inline">
       ds-input
     </code> is for.
@@ -249,7 +248,8 @@
     <p class="t-s">
       <code class="t-mono-inline">
         queryControl.valueChanges
-      </code>: {{ queryValue() || '(empty)' }}
+      </code>:
+      {{ queryValue() || '(empty)' }}
     </p>
 
     <ds-search
@@ -258,5 +258,4 @@
       value="Cannot type here"
     />
   </div>
-
 </docs-section>

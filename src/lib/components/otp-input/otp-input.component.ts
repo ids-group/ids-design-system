@@ -40,7 +40,6 @@ export type OtpMode = 'numeric' | 'alphanumeric';
   },
 })
 export class OtpInputComponent extends DsControlValueAccessor<string> {
-
   /** Entered code, two-way bound. */
   readonly value = model<string>('');
   /** Number of character cells. */

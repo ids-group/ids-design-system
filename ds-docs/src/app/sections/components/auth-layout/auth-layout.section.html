@@ -25,9 +25,10 @@
       [dsBrandName]
     </code> contract, and an accent
     letter-mark tile of its own — close enough that the mark a user meets on the
-    login screen reads as the mark that greets them in the rail, but not identical:
-    the rail's is a fixed 28px at weight 800, this one 24-32px at 700, and the two
-    carry separate token hooks, so retinting the mark means setting both.
+    login screen reads as the mark that greets them in the rail, but not
+    identical: the rail's is a fixed 28px at weight 800, this one 24-32px at
+    700, and the two carry separate token hooks, so retinting the mark means
+    setting both.
   </p>
 
   <p class="block-desc t-s">
@@ -36,7 +37,8 @@
     </strong>
 
     <code class="t-mono-inline">
-      provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)
+      provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125;
+      &#125;)
     </code>
     answers all three for this layout AND for
     <code class="t-mono-inline">
@@ -50,21 +52,22 @@
     </code> drops the wordmark while a
     <code class="t-mono-inline">
       logoLetter
-    </code> in the config still paints its
-    tile. Clear both to give a screen no brand row at all.
+    </code> in the config still paints
+    its tile. Clear both to give a screen no brand row at all.
   </p>
 
   <p class="block-desc t-s">
     <strong>
       The two-tone wordmark stays projected
-    </strong> — there is deliberately no
-    accent in the config. A config can only carry a string, so an accent would have
-    to be found by splitting that string back apart, which is exactly the guessing
+    </strong> — there is
+    deliberately no accent in the config. A config can only carry a string, so
+    an accent would have to be found by splitting that string back apart, which
+    is exactly the guessing
     <code class="t-mono-inline">
       [dsBrandName]
-    </code> exists to avoid. Provide the
-    plain name in the config and project the accented version on the screens that
-    want one; the projection wins over both.
+    </code> exists to avoid. Provide
+    the plain name in the config and project the accented version on the screens
+    that want one; the projection wins over both.
   </p>
 
   <p class="block-desc t-s">
@@ -73,19 +76,16 @@
     type scale never fights your screen's. The support line goes into
     <code class="t-mono-inline">
       [dsAuthSupport]
-    </code> and renders as the page's
-    contentinfo landmark when this layout IS the page — nested inside another
-    layout's
-    <code class="t-mono-inline">
-      main
-    </code> (as on this docs site) it is a plain footer. Leave it out and the footer
-    collapses. The card itself is an
-    <code class="t-mono-inline">
-      article
-    </code>, which is not a landmark: on a standalone auth page set
+    </code> and renders as the
+    page's contentinfo landmark when this layout IS the page — nested inside
+    another layout's <code class="t-mono-inline"> main </code> (as on this docs
+    site) it is a plain footer. Leave it out and the footer collapses. The card
+    itself is an <code class="t-mono-inline"> article </code>, which is not a
+    landmark: on a standalone auth page set
     <code class="t-mono-inline">
       landmark="main"
-    </code> so a screen-reader user can jump to the form.
+    </code> so a screen-reader user
+    can jump to the form.
   </p>
 
   <div class="auth-demo">
@@ -127,10 +127,9 @@
         <a
           class="link"
           href="#section-auth-layout"
-          >
-          Contact support
-        </a
         >
+          Contact support
+        </a>
       </p>
     </ds-auth-layout>
   </div>
@@ -183,25 +182,27 @@
 
   <p class="block-desc t-s">
     A landscape phone leaves about 330px of viewport, and the furniture this
-    layout puts around your card — block padding, the column gap, the letter-mark
-    tile, the wordmark, the masthead's inner gap — used to cost ~219px of that
-    before your form got a single pixel. All of it now clamps against
+    layout puts around your card — block padding, the column gap, the
+    letter-mark tile, the wordmark, the masthead's inner gap — used to cost
+    ~219px of that before your form got a single pixel. All of it now clamps
+    against
     <code class="t-mono-inline">
       svh
     </code>, so at ~330px the same chrome costs
-    ~131px. Every multiplier reaches its maximum at a viewport 800px tall or more —
-    which is a viewport height, not a screen size: a 1366x768 laptop lands near
-    630px after browser and OS chrome, and a 1080p screen at 150% display scaling
-    near 585px, so plenty of desktops render the compressed furniture too. Type is
-    deliberately not part of it: the wordmark and the tile's glyph stay fixed,
-    because in a row whose height the tile already sets they cost nothing to shrink
-    and only flatten the brand against the tagline.
+    ~131px. Every multiplier reaches its maximum at a viewport 800px tall or
+    more — which is a viewport height, not a screen size: a 1366x768 laptop
+    lands near 630px after browser and OS chrome, and a 1080p screen at 150%
+    display scaling near 585px, so plenty of desktops render the compressed
+    furniture too. Type is deliberately not part of it: the wordmark and the
+    tile's glyph stay fixed, because in a row whose height the tile already sets
+    they cost nothing to shrink and only flatten the brand against the tagline.
   </p>
 
   <p class="block-desc t-s">
-    The demos above cannot show it: the clamps read the real VIEWPORT, and a framed
-    demo only shrinks its own box. Make the browser window short — or rotate a
-    phone — and watch the padding, the gap and the wordmark come down together.
+    The demos above cannot show it: the clamps read the real VIEWPORT, and a
+    framed demo only shrinks its own box. Make the browser window short — or
+    rotate a phone — and watch the padding, the gap and the wordmark come down
+    together.
   </p>
 
   <p class="block-desc t-s">
@@ -210,9 +211,9 @@
     </code> and not
     <code class="t-mono-inline">
       dvh
-    </code>: the dynamic unit changes as a mobile
-    URL bar hides, which would resize the wordmark and re-space the column while
-    the reader scrolls. Setting any of
+    </code>: the dynamic unit changes as a
+    mobile URL bar hides, which would resize the wordmark and re-space the
+    column while the reader scrolls. Setting any of
     <code class="t-mono-inline">
       --ds-auth-layout-pad-block
     </code>,
@@ -228,15 +229,16 @@
   <p class="block-desc t-s">
     <strong>
       What this does not promise.
-    </strong> A card taller than the space left
-    still scrolls, and should — the fix is for the LAYOUT never to be the reason.
-    Compressing rather than pinning is deliberate: the same exercise elsewhere
-    takes the masthead and footer out of the flow with
+    </strong> A card taller than the space
+    left still scrolls, and should — the fix is for the LAYOUT never to be the
+    reason. Compressing rather than pinning is deliberate: the same exercise
+    elsewhere takes the masthead and footer out of the flow with
     <code class="t-mono-inline">
       position: absolute
-    </code>, which frees more room
-    but lets that chrome overlap a tall form instead of scrolling past it. A card
-    here holds whatever you project into it, so overlap is the worse failure.
+    </code>, which frees more
+    room but lets that chrome overlap a tall form instead of scrolling past it.
+    A card here holds whatever you project into it, so overlap is the worse
+    failure.
   </p>
 
   <h3 class="block-title t-h4">
@@ -246,15 +248,16 @@
   <p class="block-desc t-s">
     The full-height box is the layout's own host, and there is only one of it —
     the hand-rolled version this replaces nested a 100vh wrapper inside a 100dvh
-    one, which scrolls a page whose content fits. Inside it the column is centred
-    with auto margins rather than centre alignment. On a normal page the two are
-    the same, because the host is free to grow and a tall form simply lengthens
-    it. They differ once the host cannot grow — when you embed the layout by
-    setting its min-height token to 100% in a fixed-height parent. There, centre
-    alignment puts a form taller than the box above the scroll origin, out of
-    reach of any scrolling; auto margins collapse to zero instead, so the form
-    pins to the top padding edge and scrolls from there. Both demos above are the
-    real component with that token lowered to fit this page.
+    one, which scrolls a page whose content fits. Inside it the column is
+    centred with auto margins rather than centre alignment. On a normal page the
+    two are the same, because the host is free to grow and a tall form simply
+    lengthens it. They differ once the host cannot grow — when you embed the
+    layout by setting its min-height token to 100% in a fixed-height parent.
+    There, centre alignment puts a form taller than the box above the scroll
+    origin, out of reach of any scrolling; auto margins collapse to zero
+    instead, so the form pins to the top padding edge and scrolls from there.
+    Both demos above are the real component with that token lowered to fit this
+    page.
   </p>
 
   <h3 class="block-title t-h4">
@@ -265,14 +268,19 @@
     This layout pads itself by
     <code class="t-mono-inline">
       env(safe-area-inset-*)
-    </code>, so a
-    notched phone in landscape does not put the card under the cutout — and
+    </code>, so a notched
+    phone in landscape does not put the card under the cutout — and
     <code class="t-mono-inline">
       ds-bottom-sheet
-    </code> does the same for the home
-    indicator. Those insets are <strong>0 until the host document opts in</strong>,
-    and a library cannot do it for you: it lives in the viewport meta tag, which
-    belongs to your <code class="t-mono-inline">index.html</code>.
+    </code> does the same for the
+    home indicator. Those insets are
+    <strong>
+      0 until the host document opts in
+    </strong>, and a library cannot do
+    it for you: it lives in the viewport meta tag, which belongs to your
+    <code class="t-mono-inline">
+      index.html
+    </code>.
   </p>
 
   <pre class="t-mono-block"><code>&lt;!-- your index.html --&gt;

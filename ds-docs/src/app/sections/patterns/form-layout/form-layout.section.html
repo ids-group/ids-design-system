@@ -252,13 +252,13 @@
       reserveMessage
     </code> on. The left one stacks
     them at <code class="t-mono-inline">gap="md"</code> and the rhythm goes
-    slack, because the reserved row ALREADY carries the trailing space the gap is
-    adding again. The right one is
+    slack, because the reserved row ALREADY carries the trailing space the gap
+    is adding again. The right one is
     <code class="t-mono-inline">
       gap="none"
-    </code> and reads correctly. Turn on the
-    error to watch neither column shift: that is what reserving buys, and why it
-    is worth the row.
+    </code> and reads correctly. Turn on
+    the error to watch neither column shift: that is what reserving buys, and
+    why it is worth the row.
   </p>
 
   <div class="gap-demo">
@@ -334,16 +334,15 @@
     The awkward case is a MIXED stack. A
     <code class="t-mono-inline">
       gap="none"
-    </code> column works because every child
-    carries its own trailing space — so the moment one does not, the rhythm goes
-    ragged. A field with
+    </code> column works because every
+    child carries its own trailing space — so the moment one does not, the
+    rhythm goes ragged. A field with
     <code class="t-mono-inline">
       [reserveMessage]="false"
-    </code>, a button
-    row, a switch or a divider in that same column sits flush against its
-    neighbour while the reserved fields around it look correctly spaced. Below,
-    the switch and the button row are the children with no message row of their
-    own.
+    </code>, a button row,
+    a switch or a divider in that same column sits flush against its neighbour
+    while the reserved fields around it look correctly spaced. Below, the switch
+    and the button row are the children with no message row of their own.
   </p>
 
   <div class="gap-demo">
@@ -410,8 +409,8 @@
     stack at <code class="t-mono-inline">gap="none"</code>. Reaching for
     <code class="t-mono-inline">
       gap="md"
-    </code> to rescue the odd child re-adds
-    the doubled rhythm to every field.
+    </code> to rescue the odd child
+    re-adds the doubled rhythm to every field.
   </p>
 
   <h3 class="block-title t-h4">

@@ -26,7 +26,6 @@ import { resolveWithConfig } from '../../core/config-defaults';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class RadioComponent extends DsFieldBase {
-
   /** Standalone two-way binding, and the ONLY way to drive a lone radio: this
    *  component is deliberately not a `ControlValueAccessor`, so `[formControl]` and
    *  `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form

@@ -5,9 +5,7 @@ import {
   PercentPipe,
 } from '@angular/common';
 import { Component, ViewEncapsulation } from '@angular/core';
-import { StatComponent,
-  BadgeComponent,
-} from 'ds';
+import { StatComponent, BadgeComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

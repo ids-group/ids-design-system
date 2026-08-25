@@ -67,7 +67,6 @@ export class SelectComponent
   extends DsControlValueAccessor<string>
   implements OnDestroy
 {
-
   private readonly overlay = inject(Overlay);
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */

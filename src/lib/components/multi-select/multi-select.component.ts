@@ -59,7 +59,6 @@ export class MultiSelectComponent
   extends DsControlValueAccessor<string[]>
   implements OnDestroy
 {
-
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);

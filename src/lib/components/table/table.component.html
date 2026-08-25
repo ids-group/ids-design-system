@@ -311,14 +311,20 @@
                         >
                           <ng-container
                             [ngTemplateOutlet]="tpl"
-                            [ngTemplateOutletContext]="{ $implicit: row, row: row }"
+                            [ngTemplateOutletContext]="{
+                              $implicit: row,
+                              row: row,
+                            }"
                           >
                           </ng-container>
                         </span>
                       } @else {
                         <ng-container
                           [ngTemplateOutlet]="tpl"
-                          [ngTemplateOutletContext]="{ $implicit: row, row: row }"
+                          [ngTemplateOutletContext]="{
+                            $implicit: row,
+                            row: row,
+                          }"
                         >
                         </ng-container>
                       }
@@ -335,7 +341,9 @@
                             class="cell-link"
                             [routerLink]="target"
                             (click)="$event.stopPropagation()"
-                            >{{ cellValue(row, col) }}</a
+                            >
+                            {{ cellValue(row, col) }}
+                          </a
                           >
                         } @else {
                           {{ cellValue(row, col) }}
@@ -346,7 +354,9 @@
                         class="cell-link"
                         [routerLink]="target"
                         (click)="$event.stopPropagation()"
-                        >{{ cellValue(row, col) }}</a
+                        >
+                        {{ cellValue(row, col) }}
+                      </a
                       >
                     } @else {
                       {{ cellValue(row, col) }}
@@ -396,7 +406,6 @@
                   </td>
                 </tr>
               }
-            
             } @else {
               <ng-container
                 [ngTemplateOutlet]="skeletonRow"
@@ -472,48 +481,48 @@
         />
       </div>
     } @else {
-    <div class="col-filter">
-      <input
-        type="text"
-        class="col-filter-search"
-        placeholder="Search…"
-        [value]="filterSearch()"
-        (input)="onFilterSearch($event)"
-        (click)="$event.stopPropagation()"
-      />
+      <div class="col-filter">
+        <input
+          type="text"
+          class="col-filter-search"
+          placeholder="Search…"
+          [value]="filterSearch()"
+          (input)="onFilterSearch($event)"
+          (click)="$event.stopPropagation()"
+        />
 
-      <div class="col-filter-list">
-        @for (value of filterValues(); track value) {
-          <label class="col-filter-option">
-            <input
-              type="checkbox"
-              class="check"
-              [checked]="isFilterValueChecked(value)"
-              (change)="toggleFilterValue(value)"
-            />
-            {{ value || '(empty)' }}
-          </label>
-        } @empty {
-          <div class="col-filter-empty">
-            No matches
-          </div>
-        }
+        <div class="col-filter-list">
+          @for (value of filterValues(); track value) {
+            <label class="col-filter-option">
+              <input
+                type="checkbox"
+                class="check"
+                [checked]="isFilterValueChecked(value)"
+                (change)="toggleFilterValue(value)"
+              />
+              {{ value || '(empty)' }}
+            </label>
+          } @empty {
+            <div class="col-filter-empty">
+              No matches
+            </div>
+          }
+        </div>
+
+        <div class="col-filter-footer">
+          <span class="col-filter-count">
+            {{ filterSelectedCount() }} selected
+          </span>
+
+          <button
+            type="button"
+            class="col-reset"
+            (click)="clearColumnFilter()"
+          >
+            Clear
+          </button>
+        </div>
       </div>
-
-      <div class="col-filter-footer">
-        <span class="col-filter-count">
-          {{ filterSelectedCount() }} selected
-        </span>
-
-        <button
-          type="button"
-          class="col-reset"
-          (click)="clearColumnFilter()"
-        >
-          Clear
-        </button>
-      </div>
-    </div>
     }
   </ds-popover>
 }
@@ -667,11 +676,7 @@
       </td>
     }
 
-    @for (
-      col of visibleColumns();
-      track col.key;
-      let first = $first
-    ) {
+    @for (col of visibleColumns(); track col.key; let first = $first) {
       <td
         [class.numeric]="col.align === 'right'"
         [class.pin-first]="first && stickyFirstColumn()"

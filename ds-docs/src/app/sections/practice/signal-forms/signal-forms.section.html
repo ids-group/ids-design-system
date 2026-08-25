@@ -12,18 +12,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Describe the shape and the rules in the component, then point each control at
-    a field. The DS side is <strong>one attribute</strong> —
+    Describe the shape and the rules in the component, then point each control
+    at a field. The DS side is <strong>one attribute</strong> —
     <code class="t-mono-inline">
       [formField]
     </code> — and it comes from
     <code class="t-mono-inline">
       &#64;angular/forms/signals
-    </code>, not from this
-    library. That is the point: a DS control participates because it exposes
-    <code class="t-mono-inline">
-      value
-    </code> as a
+    </code>, not from
+    this library. That is the point: a DS control participates because it
+    exposes <code class="t-mono-inline"> value </code> as a
     <code class="t-mono-inline">
       model()
     </code>, which is the entire
@@ -80,21 +78,21 @@
 
   <p class="block-desc t-s">
     A field knows it is invalid, but only your validator knows what to say.
-    Without a message the field turns red with no words — deliberately, since the
-    alternative is the library inventing copy for your domain. Two ways to
+    Without a message the field turns red with no words — deliberately, since
+    the alternative is the library inventing copy for your domain. Two ways to
     supply it: per rule, as
     <code class="t-mono-inline">
       required(path.email, &#123; message: '…' &#125;)
-    </code>, or once per
-    app for the built-in kinds:
+    </code
+    >, or once per app for the built-in kinds:
   </p>
 
   <pre class="t-mono-block">{{ messagesSnippet }}</pre>
 
   <p class="block-desc t-s">
     In dev, a field that is invalid with no resolvable message logs a warning
-    naming the error kinds it could not resolve, so this fails loudly rather than
-    silently.
+    naming the error kinds it could not resolve, so this fails loudly rather
+    than silently.
   </p>
 
   <h3 class="block-title t-h4">
@@ -142,8 +140,8 @@
     </code> and
     <code class="t-mono-inline">
       ngModel
-    </code> bind exactly as before, and the same
-    message row serves both. A given field is driven by one form system at a
-    time, so the two cannot disagree.
+    </code> bind exactly as before, and the
+    same message row serves both. A given field is driven by one form system at
+    a time, so the two cannot disagree.
   </p>
 </docs-section>

@@ -38,8 +38,9 @@
     </code> with
     <code class="t-mono-inline">
       overflow: hidden
-    </code>, so an uncapped overlong trail is
-    clipped from the END — the current page, the one crumb the reader needs most.
+    </code>, so an uncapped
+    overlong trail is clipped from the END — the current page, the one crumb the
+    reader needs most.
   </p>
 
   <div class="stage">
@@ -124,7 +125,9 @@
     crumbs from route data or an effect when the page model resolves.
   </p>
 
-  <pre class="snippet t-mono"><code>{{ '// in a page component or route effect' }}
+  <pre
+    class="snippet t-mono"
+  ><code>{{ '// in a page component or route effect' }}
 import {{ '{' }} BreadcrumbsService {{ '}' }} from 'ds';
 private readonly crumbs = inject(BreadcrumbsService);
 this.crumbs.set([

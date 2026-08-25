@@ -136,8 +136,7 @@
     Pass <code class="t-mono-inline">seed</code> (an email or name) for a
     deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> colour — the
     same person always gets the same tint across apps — with WHITE initials on
-    every one. The
-    helpers <code class="t-mono-inline">avatarTint</code> and
+    every one. The helpers <code class="t-mono-inline">avatarTint</code> and
     <code class="t-mono-inline">
       initialsFrom
     </code> (which also accepts a
@@ -169,19 +168,21 @@
 
     <code class="t-mono-inline">
       name
-    </code> replaces the two bindings this demo
-    wires by hand: it derives the initials AND seeds the tint. <strong>The tint
-    hashes the NAME, never the initials</strong> — two letters collide wholesale,
-    so Alice Brown and Adam Bell would otherwise share one colour. Measured: same
-    "AB", hues 198° and 356°.
+    </code> replaces the two bindings this
+    demo wires by hand: it derives the initials AND seeds the tint.
+    <strong>
+      The tint hashes the NAME, never the initials
+    </strong> — two letters
+    collide wholesale, so Alice Brown and Adam Bell would otherwise share one
+    colour. Measured: same "AB", hues 198° and 356°.
   </p>
 
   <p class="block-desc t-s">
-    The built-in rule takes the first two words, and that is all it claims to be —
-    a Latin-script guess. Reading a name is a cultural convention rather than a UI
-    decision: a Spanish reader wants MG from "María José García López", an insurer
-    wants BC from "Blue Cross Blue Shield". So the rule is replaceable, not
-    configurable-by-mode —
+    The built-in rule takes the first two words, and that is all it claims to be
+    — a Latin-script guess. Reading a name is a cultural convention rather than
+    a UI decision: a Spanish reader wants MG from "María José García López", an
+    insurer wants BC from "Blue Cross Blue Shield". So the rule is replaceable,
+    not configurable-by-mode —
     <code class="t-mono-inline">
       [initialsRule]
     </code> for one table,
@@ -223,5 +224,4 @@
       />
     }
   </div>
-
 </docs-section>

@@ -51,7 +51,6 @@ export class RadioGroupComponent
   extends DsControlValueAccessor<unknown>
   implements RadioGroupContract
 {
-
   /** Selected radio value; two-way bound. */
   readonly value = model<unknown>(null);
   /** Native `name` shared by every radio in the group. */

@@ -31,7 +31,6 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class CheckboxComponent extends DsBooleanControlValueAccessor {
-
   /** Checked state, two-way bound. */
   readonly checked = model<boolean>(false);
   /** Shows the partial/mixed visual state — independent of `checked`. */

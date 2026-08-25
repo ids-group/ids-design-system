@@ -7,7 +7,12 @@ import {
   readonly,
   required,
 } from '@angular/forms/signals';
-import { ButtonComponent, CheckboxComponent, InputComponent, SelectComponent } from 'ds';
+import {
+  ButtonComponent,
+  CheckboxComponent,
+  InputComponent,
+  SelectComponent,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface ContractRow {

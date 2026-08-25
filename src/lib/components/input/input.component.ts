@@ -50,7 +50,6 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
-
   private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */

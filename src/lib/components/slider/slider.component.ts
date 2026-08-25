@@ -39,7 +39,6 @@ type SliderValue = number | readonly [number, number];
   },
 })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
-
   /** Current value, or `[low, high]` when `range`. Two-way bound. */
   readonly value = model<SliderValue>(0);
   /** Minimum selectable value. */

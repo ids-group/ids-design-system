@@ -20,11 +20,11 @@
   <p class="block-desc t-s">
     <strong>
       Which one, when.
-    </strong> The two overlap on multi-value picking and
-    the boundary is about the LIST, not the count. Reach for autocomplete when the
-    set is too big to scan and typing is how you narrow it — a member, a venue, a
-    product out of thousands; its value is the filter, and the chips are how it
-    reports what typing found. Reach for
+    </strong> The two overlap on multi-value picking
+    and the boundary is about the LIST, not the count. Reach for autocomplete
+    when the set is too big to scan and typing is how you narrow it — a member,
+    a venue, a product out of thousands; its value is the filter, and the chips
+    are how it reports what typing found. Reach for
     <code class="t-mono-inline">
       ds-multi-select
     </code> when the options are
@@ -94,27 +94,25 @@
     </code> defaults to
     <code class="t-mono-inline">
       "fit"
-    </code> — it measures and keeps as many chips
-    as the trigger is wide, with the rest behind "+N more", re-split whenever the
-    trigger resizes. Left to grow, a multi-value trigger gains a line per selection
-    and pushes the rest of the form down the page. Same input and same default on
-    <code class="t-mono-inline">
-      ds-multi-select
-    </code>, so the two multi-value
-    pickers do not diverge. Backspace still removes the last SELECTED chip, not the
-    last visible one.
+    </code> — it measures and keeps as many
+    chips as the trigger is wide, with the rest behind "+N more", re-split
+    whenever the trigger resizes. Left to grow, a multi-value trigger gains a
+    line per selection and pushes the rest of the form down the page. Same input
+    and same default on <code class="t-mono-inline"> ds-multi-select </code>, so
+    the two multi-value pickers do not diverge. Backspace still removes the last
+    SELECTED chip, not the last visible one.
   </p>
 
   <p class="block-desc t-s">
     The other two modes are one binding away. A <strong>number</strong> is a
-    CEILING — at most that many, and fewer when the trigger is too narrow to hold
-    them beside the count and the typing area. It measures for the same reason the
-    default does: honouring the count on a phone pushed the text input onto a
-    second line, which is the growth the cap exists to prevent.
+    CEILING — at most that many, and fewer when the trigger is too narrow to
+    hold them beside the count and the typing area. It measures for the same
+    reason the default does: honouring the count on a phone pushed the text
+    input onto a second line, which is the growth the cap exists to prevent.
     <code class="t-mono-inline">
       maxVisibleChips="all"
-    </code> is the one mode that
-    does not measure — it shows every chip and lets the trigger grow.
+    </code> is the one mode
+    that does not measure — it shows every chip and lets the trigger grow.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -298,8 +296,8 @@
     An option carries an optional
     <code class="t-mono-inline">
       icon
-    </code>, rendered before its label at
-    16px in the panel rows. Same field and same markup as
+    </code>, rendered before its label at 16px
+    in the panel rows. Same field and same markup as
     <code class="t-mono-inline">
       ds-select
     </code> and
@@ -308,9 +306,9 @@
     </code>: all three read one
     <code class="t-mono-inline">
       DsOption
-    </code> shape. Use it for a set the reader
-    recognises by glyph, like a channel or a priority scale; an icon per row costs
-    scanning speed everywhere else.
+    </code> shape. Use it for a set the
+    reader recognises by glyph, like a channel or a priority scale; an icon per
+    row costs scanning speed everywhere else.
   </p>
 
   <p class="block-desc t-s">
@@ -320,9 +318,9 @@
     </code> — the row greys out, says
     <code class="t-mono-inline">
       aria-disabled
-    </code>, refuses the click, and the arrow
-    keys step OVER it rather than parking on a row that Enter would ignore. Same
-    field and same behaviour as
+    </code>, refuses the click, and
+    the arrow keys step OVER it rather than parking on a row that Enter would
+    ignore. Same field and same behaviour as
     <code class="t-mono-inline">
       ds-select
     </code> and
@@ -335,13 +333,14 @@
     Only
     <code class="t-mono-inline">
       ds-select
-    </code> repeats the icon in its trigger, because
-    its trigger is a button showing one label and has room for it. Here the trigger
-    is the text input the reader types into, and its leading slot belongs to
+    </code> repeats the icon in its
+    trigger, because its trigger is a button showing one label and has room for
+    it. Here the trigger is the text input the reader types into, and its
+    leading slot belongs to
     <code class="t-mono-inline">
       [dsAutocompletePrefix]
-    </code> — the DS will not put a
-    glyph in it uninvited.
+    </code> — the DS will
+    not put a glyph in it uninvited.
   </p>
 
   <div class="autocomplete-field-wrap">

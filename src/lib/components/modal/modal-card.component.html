@@ -6,9 +6,7 @@
 >
   <div class="header">
     @if (resolvedIcon(); as iconName) {
-      <span
-        [class]="status() ? 'icon-badge ' + status() : 'icon-badge'"
-      >
+      <span [class]="status() ? 'icon-badge ' + status() : 'icon-badge'">
         <ds-icon
           [name]="iconName"
           [size]="20"

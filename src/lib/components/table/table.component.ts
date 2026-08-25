@@ -1836,7 +1836,10 @@ export class TableComponent<T extends object> {
   }
 
   /** The route this cell links to, or null to render it as plain text. */
-  protected cellLink(row: T, col: TableColumn<T>): string | readonly unknown[] | null {
+  protected cellLink(
+    row: T,
+    col: TableColumn<T>,
+  ): string | readonly unknown[] | null {
     return col.link?.(row) ?? null;
   }
 
