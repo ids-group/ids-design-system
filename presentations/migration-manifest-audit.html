@@ -599,7 +599,7 @@
           22 rows across 8 of the 10 versions that have a <code>deleteList</code> have no
           “What you can now DELETE” table in the CHANGELOG.
         </div>
-        <div class="fix"><b>Fix</b>Generate the tables from the arrays. <code>docs/done.md</code> already claims this is how it works.</div>
+        <div class="fix"><b>Fix</b>Not by generating — a hand-written table legitimately merges related entries, so parity by row COUNT reports phantom gaps. <code>tools/check-delete-tables.mjs</code> asserts each entry has a row carrying one of its <code>find</code> shapes verbatim, and runs in the PR gate and the preflight. Seven entries had no row; four were mine, from this back-fill.</div>
               <span class="done-tag">Fixed — 29325882</span>
       </li>
 
@@ -666,18 +666,18 @@
   <section>
     <h2>What to do next</h2>
     <ol class="actions">
-      <li>Fix the six instructions that damage code.<span class="kind">Data · 4 manifests</span> Nothing else matters while an applier is being told to rewrite <code>.title</code> and insert an unresolvable <code>@use</code>. <strong>Two of six done.</strong></li>
-      <li>Back-fill the four missing or wrong items.<span class="kind">Data · 4 manifests</span> The 0.9.0 signal widening, the 0.10.0 <code>ModalService.confirm</code> badge, the eight <code>SearchComponent</code> names, the class count.</li>
+      <li>Fix the six instructions that damage code.<span class="kind">Data · 4 manifests</span> <strong>Done</strong> — all six.</li>
+      <li>Back-fill the four missing or wrong items.<span class="kind">Data · 4 manifests</span> <strong>Done.</strong> The 0.9.0 signal widening, the 0.10.0 <code>ModalService.confirm</code> badge, the eight <code>SearchComponent</code> names, the class count.</li>
       <li>Un-break the authoring contract and the plugin’s supersession path.<span class="kind">Contract · 4 files</span> <strong>Done.</strong></li>
-      <li>Generate the CHANGELOG delete tables from the arrays.<span class="kind">Tooling · 8 blocks</span> <code>docs/done.md</code> already claims this is how it works; making the claim true is smaller than any parity check.</li>
-      <li>Ship the four lint rules that are green on main today.<span class="kind">Lint · 11 manifests</span> <code>deleteList</code> required, <code>replaceWith</code> non-empty, delete-row id kebab and unique.</li>
-      <li>Rebuild M034 properly — back-fill first.<span class="kind">Data then lint · 6 manifests</span> Scan <code>item.note</code>, lift the second-person test out of the verb conjunction.</li>
-      <li>Replace the two heuristics that cannot fire.<span class="kind">Contract + lint · 3 items</span> M023’s every-locator test, and <code>DEFAULT_CHANGE</code> against the phrasing the contract itself prescribes.</li>
+      <li>Delete-table parity is a gate.<span class="kind">Tooling · 9 blocks</span> <strong>Done</strong> — 76 entries, all reachable; an absent <code>deleteList</code> key is now M037 rather than an ambiguity.</li>
+      <li>Ship the four lint rules that are green on main today.<span class="kind">Lint · 11 manifests</span> <strong>Done</strong> — M035, M036, M037. <code>deleteList</code> required, <code>replaceWith</code> non-empty, delete-row id kebab and unique.</li>
+      <li>Rebuild M034 properly — back-fill first.<span class="kind">Data then lint · 6 manifests</span> <strong>Done.</strong> Scan <code>item.note</code>, lift the second-person test out of the verb conjunction.</li>
+      <li>Replace the two heuristics that cannot fire.<span class="kind">Contract + lint · 3 items</span> <strong>Done.</strong> M023’s every-locator test, and <code>DEFAULT_CHANGE</code> against the phrasing the contract itself prescribes.</li>
     </ol>
   </section>
 
   <footer>
-    40 agents · 0 errors · 0 empty returns · 118 findings reported · 24 survived adversarial refutation<br>
+    40 agents · 0 errors · 0 empty returns · 118 findings reported · 24 survived adversarial refutation · 23 fixed · 30 lint rules mutation-tested<br>
     Web research covered ng-update schematics, jscodeshift and Next.js codemods, Keep a Changelog and SemVer, and agent-readable repository conventions.<br>
     Every finding was re-verified by hand before it was taken on. Corrected during validation: #03 (two locators, not one), #08 (ModalService is mentioned, just not for this), #11 (the tokens are not in the public reference), #21 (5 rows across 4 versions, not 22 across 8), #22 (misfiled, not duplicated — the prescribed delete would have lost both entries).
   </footer>
