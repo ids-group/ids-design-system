@@ -65,13 +65,29 @@ for (const { file, label, needle } of manifests) {
     .filter((line) => /^\| (?!---|If you have)/.test(line))
     .map((line) => line.split('|')[1] ?? '');
 
+  // A shape several entries share cannot identify a row: matching on `ds-table` alone let four
+  // 0.9.0 entries pass on one unrelated row. Only a shape unique to this entry counts as finding it.
+  const shapeUses = new Map();
+  for (const entry of entries) {
+    for (const shape of [entry.find ?? []].flat()) {
+      shapeUses.set(shape, (shapeUses.get(shape) ?? 0) + 1);
+    }
+  }
+
   for (const entry of entries) {
     checked++;
-    const shapes = [entry.find ?? []].flat();
-    if (!rows.some((cell) => shapes.some((shape) => cell.includes(shape)))) {
+    const distinctive = [entry.find ?? []].flat().filter((shape) => shapeUses.get(shape) === 1);
+    if (!distinctive.length) {
       problems.push(
-        `${label}#${entry.id}: no table row carries any of its find shapes ` +
-          `(${shapes.slice(0, 3).join(', ')})`,
+        `${label}#${entry.id}: every find shape is shared with a sibling entry, so no row can ` +
+          `identify it — give it one shape of its own`,
+      );
+      continue;
+    }
+    if (!rows.some((cell) => distinctive.some((shape) => cell.includes(shape)))) {
+      problems.push(
+        `${label}#${entry.id}: no table row names a shape unique to it ` +
+          `(${distinctive.slice(0, 3).join(', ')})`,
       );
     }
   }
