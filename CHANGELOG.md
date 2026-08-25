@@ -83,6 +83,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **Every migration item now carries `action`, and the reasoning has moved out of its way.** The
+  manifests in `dist/ds/migrations/` — the ones your own upgrade tooling reads — gained three prose
+  fields per item: `action` is the imperative alone and the only field to execute, `appliesWhen` is
+  the boundary (which components, which bindings, and what is explicitly NOT affected), and
+  `pitfall` is the way to apply the item mechanically correctly and still ship a broken app. `note`
+  keeps what is left, the WHY. All **189 items across 22 published manifests** were rewritten by
+  hand for this: note prose fell from 12,547 words to 4,263, the **103 ALL-CAPS markers** that had
+  been standing in for the missing fields are gone, and no note runs past 120 words. Four new lint
+  rules hold it — `action` required (M039), no marker in a note (M040), the 120-word ceiling (M041)
+  and a key allowlist so a typo cannot sit unread (M042) — and `tools/migration-lint-selftest.mjs`
+  mutation-tests all 34 rules to prove none of them is dead. **If you read these files with your own
+  tooling, read `action` first and `pitfall` before you report an item done.** Nothing was removed:
+  every field that was there is still there, with the same name and meaning.
 - **If you EXTEND a DS field, its message inputs now live one class further up.** `hint`, `error`,
   `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved` moved out of `DsFieldBase`
   into a new `DsMessageBase`, which `DsFieldBase` extends — so `ds-button` can take the message half
