@@ -11,7 +11,7 @@
 
 **Decisions — waiting on Stas, not on work**
 
-- P1 · Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking
+- P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
 - P2 · Five controls compute no `controlState`, so a validation state cannot reach the control itself —
 - P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the
@@ -41,7 +41,11 @@
 
 ## Priority board (2026-08-24, recut after 0.10.2)
 
-**24 open: 1 P1, 6 P2, 17 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+**24 open: 1 P1, 6 P2, 17 P3** (counted from the index, not by hand). **Nothing on this board is
+buildable right now, and that was checked rather than assumed (2026-08-25).** All three remaining asks
+gate themselves on a first consumer request, and Stas held all three gates when asked directly; the P1
+is decided as not-now with the peers left at `^21.2.0`. So the next work here starts from a consumer
+report, not from this file. Nine are *Parked* awaiting a
 first consumer ask and two are Records, so the live board is **15 items — and 9 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave. What is left to BUILD is
 **four asks**; of them, one has a deck waiting on a verdict and three are gated on a first consumer ask.
@@ -139,9 +143,9 @@ Requests, not defects. Ordered by who is blocked.
 
 **Two traps recorded while deciding, so they are not re-derived:** (1) the secondary entry must OWN its source and the root must re-export FROM it — if both export the same source a consumer importing from both gets two class identities and DI silently resolves two different services; (2) the audit's fixtures were synthetic, which is exactly how it concluded B was viable, so validate any future claim against the real import graph.
 
-- [ ] **[P3] `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).** Base row expansion ALREADY SHIPS — `expandableRows` + two-way `expandedIds` `model<Set<string>>` (multiple + programmatic), `rowExpandTemplate`, expander button/chevron/`expandedColspan`, docs demo (`table.section.html:574-600`). So this is **deltas only, not a build**: (a) optional **single-expand mode** (only one row open at a time — today it's always multi via the Set); (b) **expand-all / collapse-all** header toggle (the header expand-col is currently just a spacer); (c) optional dedicated `(rowExpand)`/`(rowCollapse)` outputs (the `expandedIds` model already covers change-tracking, so this is sugar). All small; do only on a consumer ask — the core feature is at parity.
+- [ ] **[P3] `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).** Base row expansion ALREADY SHIPS — `expandableRows` + two-way `expandedIds` `model<Set<string>>` (multiple + programmatic), `rowExpandTemplate`, expander button/chevron/`expandedColspan`, docs demo (`table.section.html:574-600`). So this is **deltas only, not a build**: (a) optional **single-expand mode** (only one row open at a time — today it's always multi via the Set); (b) **expand-all / collapse-all** header toggle (the header expand-col is currently just a spacer); (c) optional dedicated `(rowExpand)`/`(rowCollapse)` outputs (the `expandedIds` model already covers change-tracking, so this is sugar). All small; do only on a consumer ask — the core feature is at parity. **GATE HELD 2026-08-25 (Stas), asked explicitly:** none of the three remaining asks blocks anyone, so all three stay behind their own gate rather than being built speculatively.
 
-- [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form.
+- [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form. **GATE HELD 2026-08-25 (Stas), asked explicitly.**
 
 
 ## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
@@ -154,7 +158,8 @@ Requests, not defects. Ordered by who is blocked.
   blocked 2, where the destructive tail is separated by a `ds-menu-divider`, and ordering the items
   destructive-last covers it without new API. **Both are P3 until a consumer says the workaround is
   the thing stopping them** — the two that actually blocked adoption have shipped, so the next word
-  on these should come from a migrated screen, not from the original count.
+  on these should come from a migrated screen, not from the original count. **GATE HELD 2026-08-25
+  (Stas), asked explicitly.**
 
   - [x] **DONE 2026-08-18 — a token on the kebab itself.** Three resolvers, covering the column
     picker too since it shares the rule: `--ds-table-icon-btn-color`,
@@ -212,7 +217,15 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
   than the item assumed: Angular 22 + TS 6 + Node — three majors in one pass. The cheap-and-honest middle
   is to widen the peers, keep building on 21, and say in the release notes that 22 is compiled-but-not-
   runtime-verified until the Node bump lands.
-  **The decision is the peer range, and it should be made BEFORE 0.9.0 is cut**, since that is what the release publishes: widen to `^21.2.0 || ^22.0.0` (cheap, but claims a compatibility nobody has tested) or move the repo to 22 (honest, costs a real upgrade pass). **Context for the call:** Angular Material has NOT shipped signal-forms support (`angular/components#32072` still open), PrimeNG deliberately waited for stable and is repairing `[formField]` typing in 22.0.1, and Spartan has shipped it — so on this axis the DS is currently ahead of both libraries its consumers compare it to, and that lead is worth keeping installable.
+  **The decision is the peer range**, since that is what the release publishes: widen to `^21.2.0 || ^22.0.0` (cheap, but claims a compatibility nobody has tested) or move the repo to 22 (honest, costs a real upgrade pass). **Context for the call:** Angular Material has NOT shipped signal-forms support (`angular/components#32072` still open), PrimeNG deliberately waited for stable and is repairing `[formField]` typing in 22.0.1, and Spartan has shipped it — so on this axis the DS is currently ahead of both libraries its consumers compare it to, and that lead is worth keeping installable.
+
+  **DECIDED 2026-08-25 (Stas): NOT NOW — leave the peers at `^21.2.0`.** Neither widening nor moving.
+  **This item is no longer waiting on a call**; it stays P1 because the fact that raised it is unchanged:
+  a consumer on Angular 22 installs this package only with `--legacy-peer-deps`. Everything above stays
+  as the prepared answer for when it is picked up — the 22.1.3 compile, the three costs (TS 6.0, Node
+  ≥24.15.0, three tsconfig edits), and the three findings that are NOT blockers (`ngNoCva`, `touch`,
+  the `min`/`max` assertion). **What would overturn it:** a consumer reporting that
+  `--legacy-peer-deps` is not acceptable in their install, or an app that has to start on 22.
 
 - [ ] **[P3] Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wiring.** `pending` — what does a field with an async validator in flight look like? `ds-input` has a spinner; nothing else does. `dirty` — the library renders "edited" nowhere today, so there is no treatment to bind to. `disabledReasons` — a tooltip on a disabled control, or ignored? Each is one input once the appearance is decided, so decide the appearance first. _(`focus()` was the fourth and SHIPPED 2026-08-10: a resolver on both control-value-accessor bases, verified on all twelve controls that lacked one.)_
 
