@@ -4,20 +4,34 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "class MyTable extends TableComponent (or any DS component you subclass)",
+      "old": "class MyTable extends TableComponent, class MyButton extends ButtonComponent, class MyField extends DsFieldBase (or any DS component/base you subclass)",
       "new": null,
       "surface": "typescript",
-      "note": "TableComponent gained one member: `cellLink`. Subclassing a DS component is unsupported, but consumers do it, and a subclass declaring the same name now fails to build - TS4114 (\"must have an 'override' modifier\"), or TS2415 if the signature differs. `protected` is no protection: a redeclared protected member collides exactly as a public one does. ACTION only if you extend TableComponent and already declare `cellLink`: rename yours, or add `override` if you meant to replace ours.",
-      "verify": "Build your app: no TS4114 or TS2415 is raised against a class that extends a DS component.",
+      "note": "Measured with `npm run class-surface` against 0.10.3. GAINED: TableComponent `cellLink`; ButtonComponent `disabledReason`, `ariaDescribedBy`, `softDisabled`, `message`, `fieldMessage`, `hasMessageRow`, `describedBy`, `hintId`, `reasonId`, `uid`; IconButtonComponent `ariaDescribedBy`. Subclassing a DS component is unsupported, but consumers do it, and a subclass declaring the same name now fails to build - TS4114 (\"must have an 'override' modifier\"), or TS2415 if the signature differs. `protected` is no protection: a redeclared protected member collides exactly as a public one does. MOVED, not removed: `hint`, `error`, `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved` left DsFieldBase for a new DsMessageBase that DsFieldBase extends, so class-surface reports them as LOST from DsFieldBase and GAINED on DsMessageBase. They still resolve through DsFieldBase with the same names, types and defaults, and `override` still works because it accepts a member from any ancestor - nothing to do. ACTION only if you extend one of these and already declare one of the GAINED names: rename yours, or add `override` if you meant to replace ours.",
+      "verify": "Build your app: no TS4114 or TS2415 is raised against a class that extends a DS component or DsFieldBase.",
       "searchHints": [
         "extends TableComponent",
+        "extends ButtonComponent",
+        "extends IconButtonComponent",
+        "extends DsFieldBase",
         "cellLink",
+        "disabledReason",
+        "ariaDescribedBy",
+        "softDisabled",
+        "hasMessageRow",
         "TS4114",
         "TS2415"
       ],
       "detect": [
         "extends TableComponent",
+        "extends ButtonComponent",
+        "extends IconButtonComponent",
+        "extends DsFieldBase",
         "cellLink",
+        "disabledReason",
+        "ariaDescribedBy",
+        "softDisabled",
+        "hasMessageRow",
         "TS4114",
         "TS2415"
       ]

@@ -93,9 +93,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   and this is the case it warns about. A subclass redeclaring one of these collides exactly as it did
   before; subclassing a DS component stays unsupported (`components.md` § Components).
 
-- **If you EXTEND a DS component, `TableComponent` grew one member: `cellLink`.** `npm run
-  class-surface` against 0.10.3. It backs the new `link` column, resolving a column’s `link(row)` to
-  the value the template binds. A subclass that happens to declare the same name now fails with
+- **If you EXTEND a DS component, three of them grew members.** `npm run class-surface` against
+  0.10.3: `ButtonComponent` gained `disabledReason`, `ariaDescribedBy`, `softDisabled`, `message`,
+  `fieldMessage`, `hasMessageRow`, `describedBy`, `hintId`, `reasonId` and `uid`;
+  `IconButtonComponent` gained `ariaDescribedBy`; `TableComponent` grew one member, `cellLink`, which
+  backs the new `link` column by resolving a column’s `link(row)` to the value the template binds.
+  A subclass that happens to declare the same name now fails with
   TS4114 (“must have an ‘override’ modifier”), or TS2415 if the signature differs — and `protected` is
   no protection, since a redeclared protected member collides exactly as a public one does.
   Subclassing a DS component stays unsupported (`components.md` § Components); compose instead.
