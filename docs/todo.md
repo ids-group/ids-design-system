@@ -11,6 +11,7 @@
 
 **Decisions — waiting on Stas, not on work**
 
+- P2 · `check-delete-tables` passes entries it should fail — it scans both table columns and does not tie
 - P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
@@ -40,11 +41,17 @@
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй").
 
 
-## Priority board (2026-08-25, recut after the 0.11.0 work)
+## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**25 open: 1 P1, 7 P2, 17 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **16 items — and 10 of those are
+**26 open: 1 P1, 8 P2, 17 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **17 items — and 11 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
+
+**Both new items came out of running the tooling rather than reading it, and both were invisible to a
+code read.** The formatter conflict surfaced when the three formatters were actually run end to end;
+the delete-table gate's blind spot surfaced when a control that was supposed to fail did not. The
+transferable rule is the same one the focus-ring checker was born from: **a gate proves nothing until
+you have watched it fail.**
 
 **What is actually buildable, checked rather than assumed.** All four remaining asks are gated: three
 gate themselves on a first consumer request and Stas held all three when asked directly (2026-08-25),
@@ -189,6 +196,12 @@ Requests, not defects. Ordered by who is blocked.
 # Decisions — waiting on Stas, not on work
 
 ## Tooling
+
+- [ ] **[P2] `check-delete-tables` passes entries it should fail — measured with a control that was supposed to fail and did not (2026-08-26).** The gate now covers the draft manifest (fixed same day), and a control proves that half: strip the `## Unreleased` delete table and it reports `unreleased: 4 delete entr(ies) and no "### What you can now DELETE" table` and exits 1. **The second control did NOT fail, and should have.** Paraphrasing a row so it carries none of its entry's `find` shapes verbatim — exactly the case the tool's own header says fails on purpose — still passed. Two distinct causes, both traced by dumping which row satisfied which entry:
+  1. **It scans the whole markdown line, so a shape found in the SECOND column counts.** That column is the "Delete it, because" replacement prose, not something a consumer greps their own code for. The paraphrased row was satisfied by the word `disabled` appearing in its own explanation.
+  2. **It does not tie a row to its entry.** `button-disabled-reason-tooltip` was also satisfied by an unrelated row — the `::ng-deep ds-button button` shadow row — because its short shape `ds-button` is a substring of it. `card-overflow-ng-deep-workaround` matches that same unrelated row on `::ng-deep`. So a generic shape can be signed off by a row about a different workaround entirely.
+  **The tightening is small, and here is the number rather than a guess:** requiring the shape to appear in the row's FIRST column (the *If you have* side) flags **3 of 80 entries**, all in `0.9.0` — `pagination-label-type-overrides`, `dropdown-selected-row-hover-guard`, `hand-built-kpi-tile`. So this is a handful of table rows to reword, not a rewrite.
+  **Why it is a decision and not just work:** the fix means editing three PUBLISHED release blocks, and it makes the parity contract stricter for every future entry — a short generic shape like `ds-button` would stop counting, which is arguably the point but does push authors toward longer `find` strings. Decide whether the gate should be that strict before anyone reworks the three rows. **Not urgent:** nothing ships wrong today, and the draft blind spot — the one that actually bit — is closed.
 
 - [ ] **[P2] prettier and eslint want opposite things about HTML, so `lint:all` can never be green (measured 2026-08-25).** Ran the three formatters over the whole project on Stas's instruction — prettier, then stylelint, then eslint. Prettier reformatted **140 files** (115 html + 25 ts) and needed a second pass on three before reaching a fixed point. Eslint then pulled **77 of them back**, leaving 63 actually changed. Afterwards prettier reports **~112 html files as unformatted, permanently**: its line-breaking fights `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order`, and each tool undoes the other on the same files every time either runs. **This is not formatting debt — it is a config conflict, and no number of `fix:all` runs converges.** It is why the `format` step of `lint:all` has been red for so long that the PR gate was set to report-only, which then hid every real lint finding behind a known-red step.
   **Three ways out, and it is a taste call, not a technical one:** (a) **stop prettier at the html door** — add `*.html` to `.prettierignore` and let the two `ds/template/*` rules own template formatting alone (smallest diff, and eslint already wins today in practice); (b) **drop the two ds rules** and let prettier own html (bigger one-off diff, loses the attribute-order convention the repo chose deliberately); (c) keep both and accept a permanently red step (status quo — but then say so in the script, so nobody re-runs `fix:all` hoping it converges). **Recommendation: (a).** Eslint is already the de-facto winner, prettier still owns ts/json/md where nothing contests it, and it makes `lint:all` green so the PR gate can stop being report-only.
