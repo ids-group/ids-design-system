@@ -16,7 +16,8 @@
   },
   "exports": {
     "./styles/*": "./styles/*",
-    "./themes/*": "./themes/*"
+    "./themes/*": "./themes/*",
+    "./migrations/*": "./migrations/*"
   },
   "scripts": {
     "ng": "ng",
