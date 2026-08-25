@@ -273,8 +273,9 @@
     <h1>Migration manifest audit</h1>
     <p class="standfirst">
       Forty agents read every published manifest, the lint that guards them and the plugin that
-      executes them, then tried to refute their own findings. Twenty-four survived. The format is
-      ahead of the field; the data inside it is not.
+      executes them, then tried to refute their own findings. Twenty-four survived. Every one was re-verified
+      against the shipped code before it was touched — five had wrong evidence and one would have
+      destroyed two legitimate entries. All twenty-three are now fixed.
     </p>
   </header>
 
@@ -283,7 +284,7 @@
     <div class="is-open"><dt>Damage code</dt><dd>6</dd></div>
     <div><dt>Silent breaks</dt><dd>6</dd></div>
     <div><dt>Gate defects</dt><dd>11</dd></div>
-    <div class="is-fixed"><dt>Fixed</dt><dd>3</dd></div>
+    <div class="is-fixed"><dt>Fixed</dt><dd>23</dd></div>
   </dl>
 
   <section>
@@ -342,6 +343,7 @@
           item is dropped as not-applicable — or <code>new</code> is inserted and Sass fails.
         </div>
         <div class="fix"><b>Fix</b>Package-qualify both, reclassify to <code>code-add</code> with <code>old: null</code>, copying its twin <code>0.4.0#styles-tokens-a-la-carte-needs-breakpoints</code>.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
 
       <li class="finding">
@@ -354,6 +356,7 @@
           <code>0.10.0#universal-focus-ring-base-rule</code> explicitly told consumers to write.
         </div>
         <div class="fix"><b>Fix</b>Put the exclusion in <code>why</code>. No forward reference to 0.10.3 — a manifest cannot know its own future.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
 
       <li class="finding">
@@ -382,6 +385,7 @@
           intent.
         </div>
         <div class="fix"><b>Fix</b>Add that one id to both <code>supersedes</code> arrays — not <code>max-visible-chips-number-is-a-ceiling</code>, whose guidance is unchanged.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
 
       <li class="finding">
@@ -395,6 +399,7 @@
           silent grey chips.
         </div>
         <div class="fix"><b>Fix</b><code>surface: ["template","style","typescript"]</code> — its own neighbour <code>status-dot-status-retype</code> already does this. Same shape on <code>0.5.1#progress-variant-remap</code> and <code>0.4.0#ds-button-variant-axis-split</code>.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
     </ol>
   </section>
@@ -414,6 +419,7 @@
           items, so a consumer walking forward never meets it.
         </div>
         <div class="fix"><b>Fix</b>One <code>behavior</code> item, <code>surface: "typescript"</code>. The break is TS2322 on explicit annotations and TS2416 on overrides — <em>not</em> readers.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
 
       <li class="finding">
@@ -425,6 +431,7 @@
           <code>ModalService</code>.
         </div>
         <div class="fix"><b>Fix</b><code>behavior</code> item, <code>surface: "typescript"</code>, <code>detect: ["confirm({", "tone: 'error'", "ModalService"]</code>, <code>restore: null</code>.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
 
       <li class="finding">
@@ -440,6 +447,7 @@
           <code>override</code> and no base class.
         </div>
         <div class="fix"><b>Fix</b>Both, and put the names in <code>searchHints</code> as <code>messageIcon</code> already is.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
 
       <li class="finding">
@@ -453,6 +461,7 @@
           class. The count is wrong in five places and neither “fifteen” nor “sixteen” is right.
         </div>
         <div class="fix"><b>Fix</b>Recount from the tool, then correct the manifest, both CHANGELOG copies and AUTHORING.md together.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
 
       <li class="finding">
@@ -465,6 +474,7 @@
           the note ends “<code>; DELETE-LIST.</code>” naming no row among the 25 in that file.
         </div>
         <div class="fix"><b>Fix</b><code>surface: ["template","style"]</code>, extend the verify, add the row with all five names.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
 
       <li class="finding">
@@ -476,6 +486,7 @@
           file says the default is <code>"client"</code> and there is no action.
         </div>
         <div class="fix"><b>Fix</b>Delete the stale informational clause.</div>
+              <span class="done-tag">Fixed — 257a271c</span>
       </li>
     </ol>
   </section>
@@ -494,6 +505,7 @@
           uncited.
         </div>
         <div class="fix"><b>Fix</b>Scan <code>item.note</code> as well. Back-fill the rows first, or the lint fails on main.</div>
+              <span class="done-tag">Fixed — e1edfd74</span>
       </li>
 
       <li class="finding">
@@ -504,6 +516,7 @@
           escape: “Consumers can drop …” in 0.7.1 is a delete instruction the rule cannot see.
         </div>
         <div class="fix"><b>Fix</b>Lift the second-person test out of the conjunction and widen the subject.</div>
+              <span class="done-tag">Fixed — e1edfd74</span>
       </li>
 
       <li class="finding">
@@ -515,6 +528,7 @@
           shipped leaves M023 silent on the very case it was written for.
         </div>
         <div class="fix"><b>Fix</b>Swap the heuristic for a requirement: behavioural item + typescript/config surface ⇒ non-empty <code>detect</code>.</div>
+              <span class="done-tag">Fixed — e1edfd74</span>
       </li>
 
       <li class="finding">
@@ -525,6 +539,7 @@
           <code>restore</code> the rule cannot see.
         </div>
         <div class="fix"><b>Fix</b>Add the prescribed phrasing to the pattern; it is already the house style.</div>
+              <span class="done-tag">Fixed — e1edfd74</span>
       </li>
 
       <li class="finding">
@@ -536,6 +551,7 @@
           break reaches “any expression, field or constant”.
         </div>
         <div class="fix"><b>Fix</b>Add <code>value-remap</code> to the set, back-filling the two verifies first.</div>
+              <span class="done-tag">Fixed — e1edfd74</span>
       </li>
 
       <li class="finding">
@@ -547,6 +563,7 @@
           citation half only, and M001 has no mutation at all.
         </div>
         <div class="fix"><b>Fix</b>Mutate toward realistic authoring mistakes, not toward whatever makes the regex match.</div>
+              <span class="done-tag">Fixed — e1edfd74</span>
       </li>
 
       <li class="finding">
@@ -558,6 +575,7 @@
           citations resolve against, is built from those unvalidated ids.
         </div>
         <div class="fix"><b>Fix</b>Three one-line rules, all green on main today.</div>
+              <span class="done-tag">Fixed — e1edfd74</span>
       </li>
 
       <li class="finding">
@@ -582,6 +600,7 @@
           “What you can now DELETE” table in the CHANGELOG.
         </div>
         <div class="fix"><b>Fix</b>Generate the tables from the arrays. <code>docs/done.md</code> already claims this is how it works.</div>
+              <span class="done-tag">Fixed — 29325882</span>
       </li>
 
       <li class="finding">
@@ -592,6 +611,7 @@
           further up, and one of them contradicts a third entry.
         </div>
         <div class="fix"><b>Fix</b>Delete the duplicates; keep the canonical pair.</div>
+              <span class="done-tag">Fixed — 29325882</span>
       </li>
 
       <li class="finding">
@@ -603,6 +623,7 @@
           <code>AUTHORING.md</code>, which a consumer cannot act on.
         </div>
         <div class="fix"><b>Fix</b>Filter the copy to published <code>&lt;version&gt;.json</code> files.</div>
+              <span class="done-tag">Fixed — 29325882</span>
       </li>
     </ol>
   </section>
@@ -658,7 +679,7 @@
   <footer>
     40 agents · 0 errors · 0 empty returns · 118 findings reported · 24 survived adversarial refutation<br>
     Web research covered ng-update schematics, jscodeshift and Next.js codemods, Keep a Changelog and SemVer, and agent-readable repository conventions.<br>
-    Findings 01, 04 and 20 were re-verified by hand against the shipped code before they were fixed.
+    Every finding was re-verified by hand before it was taken on. Corrected during validation: #03 (two locators, not one), #08 (ModalService is mentioned, just not for this), #11 (the tokens are not in the public reference), #21 (5 rows across 4 versions, not 22 across 8), #22 (misfiled, not duplicated — the prescribed delete would have lost both entries).
   </footer>
 
 </main>
