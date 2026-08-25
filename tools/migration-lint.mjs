@@ -54,6 +54,10 @@ const SURFACES = new Set(['template', 'typescript', 'style', 'config', 'none']);
 
 const BEHAVIOURAL = new Set(['behavior', 'removed-api']);
 
+// A value-remap changes what a binding MEANS with no symbol removed, so a re-check has nothing
+// to grep either — it needs the same positive assertion a behavioural item does.
+const NEEDS_VERIFY = new Set([...BEHAVIOURAL, 'value-remap']);
+
 // A rename says everything in `old` -> `new`; the prose requirement applies to
 // the kinds where the STEPS are the content.
 const RENAMES = new Set([
@@ -78,7 +82,7 @@ const isDsSymbol = (hint) =>
 const FORWARD_PROSE =
   /next release|later release|a later version|the release after|read the next|reversed later|in a future (release|version)/i;
 
-const DEFAULT_CHANGE = /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults/i;
+const DEFAULT_CHANGE = /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults|\bwas [^,.]{1,40}, now\b/i;
 
 const everyManifest = () =>
   readdirSync(MIGRATIONS)
@@ -177,7 +181,7 @@ for (const [name, manifest] of manifests) {
       at('M021', `unknown surface ${JSON.stringify(item.surface)}`);
     }
 
-    if (BEHAVIOURAL.has(item.kind) && item.verify === undefined) {
+    if (NEEDS_VERIFY.has(item.kind) && item.verify === undefined) {
       at(
         'M022',
         'no `verify` — a behavioural item has no old symbol to grep, so the recheck ' +
@@ -185,21 +189,21 @@ for (const [name, manifest] of manifests) {
       );
     }
 
-    // The sortKey trap: the item is about the consumer's own LOGIC, and every
-    // string that could find it names the DS instead. Scoped to the surfaces
-    // where that is a real gap — in a stylesheet the consumer writes our token
-    // names verbatim, so `--ds-search-height` IS the locator there.
+    // The sortKey trap: the item is about the consumer's own LOGIC, and every string that could
+    // find it names the DS instead. `searchHints` is where OUR name appears; `detect` is what the
+    // consumer's own expression looks like, and on these surfaces only the second can find the
+    // break. One bare identifier among the hints used to be enough to silence this — which is
+    // exactly the shape the rule is named after, so absence of `detect` is the error now.
     const locators = [...hints, ...detect, ...(item.old ? [item.old] : [])];
     if (
       BEHAVIOURAL.has(item.kind) &&
       surfaces.some((one) => one === 'typescript' || one === 'config') &&
-      locators.length &&
-      locators.every(isDsSymbol)
+      (!detect.length || (locators.length && locators.every(isDsSymbol)))
     ) {
       at(
         'M023',
-        `every locator names the DS (${locators.slice(0, 3).join(', ')}) while surface is ` +
-          `"${item.surface}" — add \`detect\` shapes written the way the CONSUMER writes them`,
+        `surface is "${item.surface}" but nothing here is written the way the CONSUMER writes it — ` +
+          'add `detect` shapes (their expression, their build error), not more of our own names',
       );
     }
 
@@ -250,6 +254,7 @@ for (const [name, manifest] of manifests) {
   // Prose delete-list entries are the older form and stay readable; the array
   // is what a tool can act on, which is why 24 of them in 0.10.0 were found by
   // a human reading all 63 informational strings and not by the loop.
+  const seenDeleteIds = new Set();
   for (const entry of manifest.deleteList ?? []) {
     const id = entry.id ?? '<no id>';
     const finds = [entry.find ?? []].flat();
@@ -263,6 +268,16 @@ for (const [name, manifest] of manifests) {
     if (entry.surface !== undefined && entrySurfaces.some((one) => !SURFACES.has(one))) {
       report(errors, file, 'M032', `${id}: unknown surface ${JSON.stringify(entry.surface)}`);
     }
+    if (typeof entry.replaceWith !== 'string' || !entry.replaceWith.trim()) {
+      report(errors, file, 'M035', `${id}: delete entry without a \`replaceWith\` — say the API that replaces it, or the literal word "nothing"`);
+    }
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(String(entry.id ?? ''))) {
+      report(errors, file, 'M036', `${id}: delete entry id is not a stable kebab slug — M034 citations resolve against it`);
+    }
+    if (seenDeleteIds.has(entry.id)) {
+      report(errors, file, 'M036', `${id}: duplicate delete entry id`);
+    }
+    seenDeleteIds.add(entry.id);
   }
 
   // Second person plus one of these verbs is an instruction to delete consumer code, and prose
@@ -270,15 +285,19 @@ for (const [name, manifest] of manifests) {
   // to name its row is what makes the pair machine-checkable — a shape test alone passes as soon
   // as the file holds any unrelated `deleteList` entry.
   const DELETE_SHAPE =
-    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround|it) can go\b|\byou (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b|\bdelete that\b|\bremove it\b|\bcan now be removed\b|\bno longer needed\b/i;
+    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround|it) can go\b|\b(?:you|consumers?|apps?|callers?) (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b|\bdelete that\b|\bremove it\b|\bcan now be removed\b|\bno longer needed\b/i;
   const DELETE_MARKER = /\(DELETE-LIST\)|DELETE-LIST MATERIAL|^DELETE-LIST/;
   const knownDeleteIds = new Set((manifest.deleteList ?? []).map((entry) => entry.id));
-  for (const line of manifest.informational ?? []) {
+  const deleteProse = [
+    ...(manifest.informational ?? []).map((line) => ['informational', line]),
+    ...(manifest.items ?? []).map((item) => [`item ${item.id}`, item.note ?? '']),
+  ];
+  for (const [where, line] of deleteProse) {
     const sentences = String(line).split(/(?<=\.)\s+/);
     const guilty = sentences.find(
       (one) =>
         DELETE_MARKER.test(one) ||
-        (DELETE_SHAPE.test(one) && /\byou(?:r|rs)?\b/i.test(one)),
+        (DELETE_SHAPE.test(one) && /\b(?:you(?:r|rs)?|consumers?|apps?|callers?)\b/i.test(one)),
     );
     if (!guilty) continue;
     const cited = String(line).match(/\(delete list: ([a-z0-9-]+)\)/);
@@ -287,11 +306,11 @@ for (const [name, manifest] of manifests) {
         errors,
         file,
         'M034',
-        'informational tells the consumer to delete something but names no row — add a `deleteList` entry and cite it as "(delete list: <id>)": ' +
+        where + ' tells the consumer to delete something but names no row — add a `deleteList` entry and cite it as "(delete list: <id>)": ' +
           JSON.stringify(guilty.trim().slice(0, 70)),
       );
     } else if (!knownDeleteIds.has(cited[1])) {
-      report(errors, file, 'M034', 'informational cites "' + cited[1] + '", which is no `deleteList` id in this file');
+      report(errors, file, 'M034', where + ' cites "' + cited[1] + '", which is no `deleteList` id in this file');
     }
   }
 }

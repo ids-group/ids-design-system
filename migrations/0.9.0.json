@@ -210,6 +210,14 @@
         "extends TextareaComponent",
         "TS2322",
         "TS2416"
+      ],
+      "detect": [
+        "InputSignal<",
+        "extends InputComponent",
+        "extends NumberStepperComponent",
+        "extends TextareaComponent",
+        "TS2322",
+        "TS2416"
       ]
     }
   ],

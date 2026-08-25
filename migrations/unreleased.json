@@ -14,6 +14,12 @@
         "cellLink",
         "TS4114",
         "TS2415"
+      ],
+      "detect": [
+        "extends TableComponent",
+        "cellLink",
+        "TS4114",
+        "TS2415"
       ]
     }
   ],

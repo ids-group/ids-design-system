@@ -22,7 +22,8 @@
         "warning": "color=\"warning\"",
         "text": "variant=\"text\""
       },
-      "surface": "template"
+      "surface": "template",
+      "verify": "No ds-button carries a variant value outside the shipped set, and every button that used to name a colour through `variant` now names it through the colour input. Buttons render in the colour they did before the upgrade, not all in the default."
     },
     {
       "id": "ds-button-size-legacy-tier",
@@ -41,7 +42,8 @@
         "l": "size=\"md\""
       },
       "surface": "template",
-      "restore": "nothing to restore - the 24px tier is gone; its callers take sm (32px), and an attribute-less button keeps the same 40px it had as `l`"
+      "restore": "nothing to restore - the 24px tier is gone; its callers take sm (32px), and an attribute-less button keeps the same 40px it had as `l`",
+      "verify": "No ds-button binds size=\"s\", \"m\" or \"l\". A button left without size renders at the md height (40px), and every button that previously said \"l\" now says \"md\" and is unchanged on screen."
     },
     {
       "id": "ds-button-ts-types-retyped",

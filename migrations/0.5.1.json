@@ -54,7 +54,8 @@
       "map": {
         "danger": "variant=\"error\""
       },
-      "surface": "template"
+      "surface": "template",
+      "verify": "No ds-stat binds variant=\"danger\". Every stat that used to be danger renders in the error colour, and stats on other variant values are untouched."
     },
     {
       "id": "progress-variant-remap",

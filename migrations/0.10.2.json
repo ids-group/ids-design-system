@@ -23,6 +23,12 @@
       "verify": "No consumer subclass redeclares a `*Resolved` readback as protected, and a host that reads `sizeResolved()` off a DS component compiles.",
       "supersedes": [
         "0.10.0#control-size-input-becomes-nullable"
+      ],
+      "detect": [
+        "this.sizeResolved",
+        ".sizeResolved()",
+        "extends ButtonComponent",
+        "TS2415"
       ]
     },
     {
@@ -70,7 +76,8 @@
       "supersedes": [
         "0.10.0#chips-cap-by-width-by-default",
         "0.10.0#max-visible-chips-zero-inverted"
-      ]
+      ],
+      "verify": "A ds-multi-select left without maxVisibleChips caps its chips to the trigger width and shows \"+N more\"; one bound to \"all\" shows every chip and wraps; a numeric cap shows at most that many. No trigger renders an empty chip row."
     },
     {
       "id": "max-visible-chips-null-is-unset-autocomplete",
@@ -99,7 +106,8 @@
       "supersedes": [
         "0.10.0#chips-cap-by-width-by-default",
         "0.10.0#max-visible-chips-zero-inverted"
-      ]
+      ],
+      "verify": "A ds-autocomplete left without maxVisibleChips caps its chips to the trigger width and shows \"+N more\"; one bound to \"all\" shows every chip and wraps; a numeric cap shows at most that many. No trigger renders an empty chip row."
     },
     {
       "id": "max-visible-chips-type-widened",
@@ -292,6 +300,12 @@
         "hint=",
         "reserveMessage",
         "messageIcon"
+      ],
+      "detect": [
+        "<ds-search",
+        "error=",
+        "hint=",
+        "[errors]"
       ]
     },
     {

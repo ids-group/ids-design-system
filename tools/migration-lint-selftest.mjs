@@ -52,7 +52,9 @@ const mutations = {
   M030: (m) => delete m.deleteList[0].find,
   M031: (m) => (m.deleteList[0].why = 'short'),
   M032: (m) => (m.deleteList[0].surface = 'nope'),
-  M023: (m) => { const i = m.items.find((x) => x.kind === 'behavior'); i.surface = 'typescript'; i.searchHints = ['--ds-token']; delete i.detect; delete i.old; },
+  M023: (m) => { const i = m.items.find((x) => x.kind === 'behavior'); i.surface = 'typescript'; delete i.detect; },
+  M035: (m) => delete m.deleteList[0].replaceWith,
+  M036: (m) => (m.deleteList[0].id = 'Not_Kebab'),
   M034: (m) => { const i = m.informational.findIndex((s) => s.includes('(delete list:')); m.informational[i] = m.informational[i].replace(/ \(delete list: [a-z0-9-]+\)/, ''); },
 };
 

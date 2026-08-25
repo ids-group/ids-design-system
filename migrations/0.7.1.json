@@ -200,7 +200,7 @@
     "`ds-checkbox`, `ds-switch` and `ds-radio` log a dev-mode warning when a caption is projected (`<ds-checkbox>text</ds-checkbox>`) instead of passed via [label]; the text never rendered and failed silently. All three share the [label]-only contract. Dev only - the detection node is gated on isDevMode(), so production is unchanged. Projection itself is still unsupported. The directive doing the detection is internal (not exported from public-api).",
     "Known gap, not a regression: `--ds-overlay-enter-scale` is the one entrance token NOT forwarded onto a portaled overlay pane, so setting it per instance (`ds-select { --ds-overlay-enter-scale: 0.9 }`) has no effect on select / autocomplete / multi-select / date / time / colour picker / popover / tooltip / menu submenu panels. Scope it globally until it is forwarded; the other four (-enter-keyframes / -duration / -easing / -offset) do forward.",
     "Bugfix, no action: `dsTooltip` now puts `aria-describedby` on the element that actually took focus (recorded from the bubbling `focusin`) rather than unconditionally on its host, so a tooltip on a host that is not itself focusable — `ds-menu-item` carries `role=\"none\"` and holds the real button inside — finally reaches a screen reader. A pointer-only open still describes the host.",
-    "Visual-only fixes: `ds-pagination` pins its internal rows-per-page select to `reserveMessage: false` (it inherited the app default and pushed the pager off the page buttons' baseline), and `ds-stat`'s card fills a stretched host so a KPI row with mixed captions paints equal-height tiles. Consumers can drop the global workarounds for both (`ds-pagination ds-field-message { display: none }` and `ds-stat { height: 100% }`)."
+    "Visual-only fixes: `ds-pagination` pins its internal rows-per-page select to `reserveMessage: false` (it inherited the app default and pushed the pager off the page buttons' baseline), and `ds-stat`'s card fills a stretched host so a KPI row with mixed captions paints equal-height tiles. Consumers can drop the global workarounds for both (`ds-pagination ds-field-message { display: none }` and `ds-stat { height: 100% }`). (delete list: pagination-inner-select-hidden)"
   ],
   "deleteList": [
     {
@@ -221,6 +221,17 @@
       ],
       "why": "A tighter sub-stack or a negative margin added to swallow the reserved message row is now over-tightening a form that no longer reserves it.",
       "replaceWith": "the normal 16px field stack"
+    },
+    {
+      "id": "pagination-inner-select-hidden",
+      "surface": "style",
+      "find": [
+        "ds-pagination",
+        "ds-field-message",
+        "display: none"
+      ],
+      "why": "A rule hiding the empty message row inside the pagination rows-per-page select. The component pins that select to its own compact shape now, so the row is gone at the source.",
+      "replaceWith": "nothing - delete the rule"
     }
   ]
 }
