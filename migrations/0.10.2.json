@@ -127,7 +127,7 @@
       "action": "Retype to `number | 'fit' | 'all' | null`, or drop the annotation and let inference carry it.",
       "appliesWhen": "A binding compiles as before. The VALUE change is the separate `max-visible-chips-null-is-unset-*` pair; this entry is only the declaration.",
       "pitfall": "Breaking for READERS and OVERRIDERS and invisible to writers — the same asymmetry as 0.10.0's two widenings, where the consumer's type-checker was the only finder. A subclass override fails with TS2416 because the `equal` type-parameter position of InputSignalWithTransform is invariant.",
-      "note": "TYPE WIDENING on ds-autocomplete and ds-multi-select, breaking for READERS and OVERRIDERS, not for writers - the same asymmetry 0.10.0's two widenings had, where the consumer's type-checker was the only finder. A binding compiles as before; what stops compiling is an explicitly typed declaration that has to accept the value (`const cap: number | 'fit' | null = ...`, a helper parameter, a viewChild target) and a subclass override, because the `equal` type-parameter position of InputSignalWithTransform is invariant (TS2416). ACTION: retype to `number | 'fit' | 'all' | null`, or drop the annotation and let inference carry it. The VALUE change that comes with it is the separate max-visible-chips-null-is-unset-* pair; this entry is only the declaration.",
+      "note": "The declared type gained the `all` member on ds-autocomplete and ds-multi-select.",
       "searchHints": [
         "maxVisibleChips",
         "InputSignalWithTransform",
