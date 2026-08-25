@@ -118,9 +118,14 @@
     transform var(--duration-instant) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 
-  &:hover:not([aria-disabled='true'])  { background-color: var(--_button-bg-color-hover); box-shadow: var(--_button-shadow-hover); }
-  &:active:not([aria-disabled='true']) { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
-  &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
+  /* These four are all one class deep, so SOURCE ORDER decides them and the order
+     below is the intent: disabled beats hover/active, and the focus ring beats
+     disabled — a soft-disabled button is still focusable, and the ring is the only
+     indicator a keyboard user gets. Adding a `:not()` to hover to exclude the
+     disabled case would raise its specificity above the ring and silently delete it
+     (measured: `box-shadow: none` on every hovered focused button). */
+  &:hover  { background-color: var(--_button-bg-color-hover); box-shadow: var(--_button-shadow-hover); }
+  &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
 
   &[disabled],
   &[aria-disabled='true'] {
@@ -128,11 +133,18 @@
     color: var(--_button-label-color-disabled);
     border-color: var(--_button-border-disabled);
     cursor: not-allowed;
+
+    /* An aria-disabled button DOES receive the pointer, so without these it would
+       still lift on hover and dip on press — feedback for an action that refuses. */
+    box-shadow: none;
+    transform: none;
   }
 
   /* Only the native form swallows the pointer — an aria-disabled button has to
      receive the click for `onClick` to be the thing that refuses it. */
   &[disabled] { pointer-events: none; }
+
+  &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
 
   .icon { width: var(--icon-md); height: var(--icon-md); flex-shrink: 0; }
 
