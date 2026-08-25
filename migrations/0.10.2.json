@@ -68,7 +68,8 @@
         "'fit'"
       ],
       "supersedes": [
-        "0.10.0#chips-cap-by-width-by-default"
+        "0.10.0#chips-cap-by-width-by-default",
+        "0.10.0#max-visible-chips-zero-inverted"
       ]
     },
     {
@@ -96,7 +97,8 @@
         "'fit'"
       ],
       "supersedes": [
-        "0.10.0#chips-cap-by-width-by-default"
+        "0.10.0#chips-cap-by-width-by-default",
+        "0.10.0#max-visible-chips-zero-inverted"
       ]
     },
     {
@@ -141,7 +143,7 @@
       "kind": "behavior",
       "old": "extends TableComponent",
       "new": null,
-      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's, 0.9.0's and 0.10.0's: subclassing a DS component is unsupported (design-system.md), but where it happens a new base member with the same name stops the build - TS4114 demands `override`, TS2415 fires on a redeclared private. GAINED MEMBERS, per `npm run class-surface` against v0.10.1: AutocompleteComponent and MultiSelectComponent (chipsMode, showsEveryChip); MenuItemComponent (description, descriptionId); SearchComponent (disabled, isDisabled); SidenavComponent (rail); SidenavItemComponent (rail, railResolved); TableComponent (actionReason, actionsFor, hasActionsFor, visibleRowActions). NO members were lost. CHANGED SIGNATURES, which collide differently: SearchComponent.clear() went protected to public and SearchComponent.focus() now carries `override` (it overrides the CVA base) - a subclass that redeclared either needs `override` and a compatible signature. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match. The separate resolved-readbacks-are-public entry covers the protected-to-public sweep across fourteen classes, which collides the same way. Consumers who only use the <ds-...> elements in templates need no change. LATER THE SAME DAY, from a second `npm run class-surface` run after the overlay-guard fix: TimeColumnsComponent is unchanged but TimePickerComponent also gained the private `insideATrigger` - a redeclared private fails with TS2415 exactly like a public collision, which is why a private counts here at all. AND, from the state-glyph work: `messageIcon` on all FIFTEEN field components (AutocompleteComponent, CheckboxComponent, ColorPickerComponent, DatePickerComponent, InputComponent, MultiSelectComponent, OtpInputComponent, RadioComponent, RadioGroupComponent, SegmentedComponent, SelectComponent, SliderComponent, SwitchComponent, TextareaComponent, TimePickerComponent), plus `iconResolved` and `config` on FieldMessageComponent - which is internal and not exported, so it only matters to a fork.",
+      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's, 0.9.0's and 0.10.0's: subclassing a DS component is unsupported (design-system. GAINED MEMBERS, per `npm run class-surface` against v0.10.1: AutocompleteComponent and MultiSelectComponent (chipsMode, showsEveryChip); MenuItemComponent (description, descriptionId); SearchComponent (bridge, disabled, formDisabled, hidden, isDisabled, markTouched, registerOnChange, registerOnTouched, setDisabledState, writeValue - it declares the control-value-accessor surface itself now); SidenavComponent (rail); SidenavItemComponent (rail, railResolved); TableComponent (actionReason, actionsFor, hasActionsFor, visibleRowActions). NO members were lost. CHANGED SIGNATURES, which collide differently: SearchComponent.clear() went protected to public and SearchComponent. The separate resolved-readbacks-are-public entry covers the protected-to-public sweep across fourteen classes, which collides the same way. Consumers who only use the <ds-...> elements in templates need no change. LATER THE SAME DAY, from a second `npm run class-surface` run after the overlay-guard fix: TimeColumnsComponent is unchanged but TimePickerComponent also gained the private `insideATrigger` - a redeclared private fails with TS2415 exactly like a public collision, which is why a private counts here at all. AND, from the state-glyph work: `messageIcon` on all FIFTEEN field components (AutocompleteComponent, CheckboxComponent, ColorPickerComponent, DatePickerComponent, InputComponent, MultiSelectComponent, OtpInputComponent, RadioComponent, RadioGroupComponent, SegmentedComponent, SelectComponent, SliderComponent, SwitchComponent, TextareaComponent, TimePickerComponent), plus `iconResolved` and `config` on FieldMessageComponent - which is internal and not exported, so it only matters to a fork.",
       "searchHints": [
         "extends TableComponent",
         "extends SearchComponent",
@@ -153,7 +155,14 @@
         "TS4114",
         "extends TimePickerComponent",
         "messageIcon",
-        "extends InputComponent"
+        "extends InputComponent",
+        "writeValue",
+        "registerOnChange",
+        "registerOnTouched",
+        "setDisabledState",
+        "markTouched",
+        "formDisabled",
+        "bridge"
       ],
       "surface": "typescript",
       "detect": [
@@ -467,7 +476,7 @@
         "box-shadow: none",
         "--ds-field-focus-shadow"
       ],
-      "why": "A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow.",
+      "why": "A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow. SCOPE, and it matters: this release suppresses the inner ring on ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper and ds-field-group ONLY. A workaround on ds-input or ds-textarea is still load-bearing here - deleting it brings the double ring back. Leave those two until you are on the release that names them. Also leave any rule you wrote against the universal :where(:focus-visible) base indicator itself: that rule is still the one this library ships.",
       "replaceWith": "nothing: the field paints one ring now"
     },
     {

@@ -235,8 +235,11 @@
         "--field-floating-label-top",
         "--field-floating-pad-t"
       ],
-      "surface": "template",
-      "verify": "No ds-input carries a `floating` attribute or binding."
+      "surface": [
+        "template",
+        "style"
+      ],
+      "verify": "No ds-input carries a `floating` attribute or binding. No stylesheet still sets --field-h-floating, --field-floating-label-fs, --field-floating-label-lh, --field-floating-label-top or --field-floating-pad-t: those five were declared at :root and are gone, so an override of any of them now resolves to nothing."
     },
     {
       "id": "field-invalid-class-to-data-field-state",
@@ -512,6 +515,26 @@
         "viewChild"
       ],
       "verify": "No explicit declaration types a DS input signal with the old non-nullable parameters."
+    },
+    {
+      "id": "modal-confirm-error-tone-paints-a-badge",
+      "kind": "behavior",
+      "old": "ModalService.confirm({ tone: 'error' })",
+      "new": null,
+      "surface": "typescript",
+      "note": "A confirm dialog opened with `tone: 'error'` now carries the modal's error status treatment - a red badge in the header - because ds-modal-confirm binds `[status]=\"tone === 'error' ? 'error' : null\"`. Before this release `tone` only coloured the confirm button. NO ACTION unless the badge is wrong for you: there is no input that suppresses it, so a destructive confirm that should not shout uses `tone: 'default'` (or omits `tone`) and styles its own button instead. Other tones are unaffected.",
+      "verify": "Open a confirm built with tone: 'error'. The header shows the error badge and the confirm button is destructive; a confirm with no tone shows neither.",
+      "restore": null,
+      "searchHints": [
+        "ModalService",
+        ".confirm(",
+        "tone: 'error'",
+        "tone: \"error\""
+      ],
+      "detect": [
+        "confirm({",
+        "tone:"
+      ]
     }
   ],
   "informational": [
@@ -848,6 +871,19 @@
       ],
       "why": "A ::ng-deep override forcing the group invalid border back to red, or suppressing a segment fill inside a group. Both existed because the group read an undeclared token and a segment repainted its own state mid-row; both are fixed in the component.",
       "replaceWith": "nothing - both overrides are redundant"
+    },
+    {
+      "id": "floating-label-token-overrides",
+      "surface": "style",
+      "find": [
+        "--field-h-floating",
+        "--field-floating-label-fs",
+        "--field-floating-label-lh",
+        "--field-floating-label-top",
+        "--field-floating-pad-t"
+      ],
+      "why": "An override of one of the five floating-label tokens. They were :root declarations backing the floating variant, which this release removed, so the declaration now sets a custom property nothing reads.",
+      "replaceWith": "nothing - delete the declaration"
     }
   ]
 }

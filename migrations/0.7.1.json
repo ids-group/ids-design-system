@@ -4,9 +4,9 @@
     {
       "id": "surface-motion-partial-a-la-carte",
       "kind": "scss-api",
-      "old": "@use 'styles/overlay-motion';",
-      "new": "@use 'styles/surface-motion';\n@use 'styles/overlay-motion';",
-      "note": "New GLOBAL partial `styles/_surface-motion.scss` holds the shared entrance keyframes (ds-fade-in, ds-scale-in, ds-slide-in, ds-slide-edge-in) that every DS surface now names through --ds-<surface>-enter-keyframes. Consumers of the bundled entry (`@use 'styles/ds';`) need NO change — ds.scss forwards it. Only à-la-carte consumers that @use DS partials individually must add it, next to `styles/overlay-motion`: without it the keyframes do not exist and modal / drawer / bottom-sheet / toast / banner / alert / loading-overlay / overlay panels render with no entrance (silently — no error). Order does not matter; @use anywhere in the styles entry is enough. If a consumer's styles.scss has no `styles/overlay-motion` line, add `@use 'styles/surface-motion';` beside whatever DS partials it does @use.",
+      "old": "@use '@ids-group-ltd/ids-design-system/styles/overlay-motion';",
+      "new": "@use '@ids-group-ltd/ids-design-system/styles/surface-motion';\n@use '@ids-group-ltd/ids-design-system/styles/overlay-motion';",
+      "note": "New GLOBAL partial `styles/_surface-motion.scss` holds the shared entrance keyframes (ds-fade-in, ds-scale-in, ds-slide-in, ds-slide-edge-in) that every DS surface now names through --ds-<surface>-enter-keyframes. Consumers of the bundled entry (`@use 'styles/ds';`) need NO change — ds.scss forwards it. Only à-la-carte consumers that @use DS partials individually must add it, next to `styles/overlay-motion`: without it the keyframes do not exist and modal / drawer / bottom-sheet / toast / banner / alert / loading-overlay / overlay panels render with no entrance (silently — no error). Order does not matter; @use anywhere in the styles entry is enough. If a consumer's styles.scss has no `styles/overlay-motion` line, add `@use 'styles/surface-motion';` beside whatever DS partials it does @use. PATH NOTE: write the package-qualified specifier, as `@use '@ids-group-ltd/ids-design-system/styles/surface-motion';`. A bare `styles/…` resolves only inside the DS repo, which puts `includePaths: [\"src/lib\"]` on its own docs build; from your app it fails to resolve. If you load the `styles/ds` aggregate you already have this partial and need no line at all.",
       "searchHints": [
         "styles/overlay-motion",
         "styles/ds",

@@ -72,7 +72,12 @@
         "warn": "variant=\"warning\"",
         "indeterminate": "indeterminate"
       },
-      "surface": "template"
+      "surface": [
+        "template",
+        "style",
+        "typescript"
+      ],
+      "verify": "No `variant` remains on the component. The chips render in their status colours, not grey: the `styles/status` partial is included and any custom status is registered through DsStatusRegistry, or the colour resolves to the neutral default and you meant that."
     },
     {
       "id": "modal-confirm-tone-danger-remap",
@@ -319,7 +324,12 @@
         "variant=\"",
         "[variant]="
       ],
-      "surface": "template"
+      "surface": [
+        "template",
+        "style",
+        "typescript"
+      ],
+      "verify": "No `variant` remains on the component. The chips render in their status colours, not grey: the `styles/status` partial is included and any custom status is registered through DsStatusRegistry, or the colour resolves to the neutral default and you meant that."
     },
     {
       "id": "status-dot-status-retype",
