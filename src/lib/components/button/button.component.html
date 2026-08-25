@@ -32,7 +32,11 @@
     <!-- aria-hidden keeps the reason out of the button's accessible NAME; the
          aria-describedby above still reaches it, because a node referenced
          directly is read even when hidden. -->
-    <span class="reason" aria-hidden="true" [id]="reasonId">
+    <span
+      class="reason"
+      aria-hidden="true"
+      [id]="reasonId"
+    >
       {{ disabledReason() }}
     </span>
   }
