@@ -6,7 +6,10 @@
       "kind": "token-rename",
       "old": "modal-out / ds-sheet-down / ds-sheet-fade-out / drawer-panel-close-right|left|top|bottom / drawer-scrim-out",
       "new": "ds-fade-out / ds-scale-out / ds-slide-out / ds-slide-edge-out",
-      "note": "REMOVED: seven exit @keyframes local to modal, drawer and bottom-sheet are gone, replaced by four GLOBAL presets mirroring the entrance vocabulary. ACTION: nothing, unless you referenced one of the old names - only possible from a global stylesheet, since they were view-encapsulated. If you did, the mapping is: modal-out, ds-sheet-fade-out and drawer-scrim-out -> ds-fade-out; ds-sheet-down and all four drawer-panel-close-* -> ds-slide-edge-out. WHY: teardown matched the animation NAME on animationend, so the exit could not be swapped without breaking close entirely; the guard now checks the event came from the animated element rather than a child, which frees the name. WHAT YOU GAIN: --ds-modal-leave-keyframes, --ds-drawer-leave-keyframes and --ds-bottom-sheet-leave-keyframes, the exit counterparts of the --ds-*-enter-keyframes you already have. Point one at your own GLOBAL @keyframes - a component-scoped name is renamed by Angular and will not resolve. An exit preset reads --_ds-exit-x/y/scale and falls back to the matching --_ds-enter-*, so a surface that leaves the way it arrived declares nothing. VERIFY AFTER UPGRADING: open and close a modal, a drawer and a bottom sheet and confirm the page scrolls again afterwards - a teardown that does not fire leaks the body-scroll lock, which is the failure this change could cause and the one we tested for.",
+      "action": "Only if you referenced an old name from a GLOBAL stylesheet: `modal-out`, `ds-sheet-fade-out` and `drawer-scrim-out` map to `ds-fade-out`; `ds-sheet-down` and all four `drawer-panel-close-*` map to `ds-slide-edge-out`. After upgrading, open and close a modal, a drawer and a bottom sheet and confirm the page scrolls again afterwards.",
+      "appliesWhen": "The old names were view-encapsulated, so only a global stylesheet could ever have referenced them. You also gain `--ds-modal-leave-keyframes`, `--ds-drawer-leave-keyframes` and `--ds-bottom-sheet-leave-keyframes`, the exit counterparts of the enter hooks.",
+      "pitfall": "Point a leave hook at your own GLOBAL `@keyframes` only — Angular renames a component-scoped animation name, so a scoped one never resolves. And check the scroll after closing: teardown used to match the animation NAME on animationend, and a teardown that does not fire leaks the body-scroll lock. That is the failure this change could cause and the one it was tested for.",
+      "note": "Seven exit keyframes local to modal, drawer and bottom-sheet became four global presets mirroring the entrance vocabulary. The animationend guard checks the event came from the animated element rather than a child now, which is what freed the name. An exit preset reads `--_ds-exit-x/y/scale` and falls back to the matching enter values, so a surface that leaves the way it arrived declares nothing.",
       "searchHints": [
         "modal-out",
         "ds-sheet-down",
@@ -22,7 +25,10 @@
       "kind": "behavior",
       "old": "ds-select",
       "new": null,
-      "note": "CHANGED DEFAULT, visual: the dropdown panel behind ds-select has a 12px corner (--ds-radius-panel), was 8px. It was the one panel outside the radius role layer - modal, popover, date-picker, time-picker, autocomplete, bottom-sheet, card, stat and page-footer all resolve --ds-radius-panel - so it both disagreed with its siblings and could not be retuned through the role a consumer is told to use. ACTION: none unless you want the old corner, in which case set --ds-radius-panel: 8px, which moves EVERY panel together and is the only lever there is: there is no per-panel token for the select, and --ds-select-panel-radius does not exist. ds-autocomplete does carry a per-panel --ds-autocomplete-panel-radius. NOT AFFECTED: ds-multi-select, whose panel is its own element with a hardcoded border-radius: var(--radius-md) that the shared rule does not reach - it stays at 8px in this version. CHECK: a screen where a dropdown opens beside a popover or a date picker - that is where the 4px difference was visible and is now gone.",
+      "action": "None unless you want the old corner: `--ds-radius-panel: 8px`.",
+      "appliesWhen": "ds-multi-select is NOT affected — its panel is its own element with a hardcoded `border-radius: var(--radius-md)` the shared rule does not reach, so it stays at 8px in this version.",
+      "pitfall": "That restore is the only lever there is, and it moves EVERY panel together — modal, popover, date-picker, time-picker, autocomplete, bottom-sheet, card, stat and page-footer all resolve the same role. There is no per-panel token for the select; `--ds-select-panel-radius` does not exist. ds-autocomplete does carry its own.",
+      "note": "The ds-select dropdown panel drew 8px and draws the 12px panel role now. It was the one panel outside the radius role layer, so it disagreed with its siblings and could not be retuned through the role a consumer is told to use.",
       "searchHints": [
         "--radius-md",
         "dropdown-panel",
@@ -38,7 +44,9 @@
       "kind": "selector-rename",
       "old": "ds-auth-shell",
       "new": "ds-auth-layout",
-      "note": "Component renamed (shipped as ds-auth-shell in the tagged 0.8.0 source, its only release under that name). \"Shell\" is not this library's word for a layout: the app-level one was renamed ds-app-shell -> ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. ACTION: rename the element and its closing tag. Behaviour, inputs and slots are unchanged - brand, logoLetter, tagline, cardElevation, cardPadding, [brand], [dsBrandName] and dsAuthSupport all keep their names. Also rename the class and the tokens (separate entries below).",
+      "action": "Rename the element and its closing tag from `ds-auth-shell` to `ds-auth-layout`, then apply the class and token items below.",
+      "appliesWhen": "Behaviour, inputs and slots are unchanged — `brand`, `logoLetter`, `tagline`, `cardElevation`, `cardPadding`, `[brand]`, `[dsBrandName]` and `dsAuthSupport` all keep their names.",
+      "note": "\"Shell\" is not this library's word for a layout: the app-level one became ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. It shipped as ds-auth-shell in exactly one release.",
       "searchHints": [
         "ds-auth-shell"
       ],
@@ -49,7 +57,8 @@
       "kind": "type-rename",
       "old": "AuthShellComponent",
       "new": "AuthLayoutComponent",
-      "note": "The exported component class renamed alongside the ds-auth-shell -> ds-auth-layout selector. Update imports and any type references. No members changed.",
+      "action": "Replace `AuthShellComponent` with `AuthLayoutComponent` in imports and type references.",
+      "note": "The exported class follows the selector rename. No members changed.",
       "searchHints": [
         "AuthShellComponent"
       ],
@@ -60,7 +69,10 @@
       "kind": "token-rename",
       "old": "--ds-auth-shell-",
       "new": "--ds-auth-layout-",
-      "note": "Prefix rename for the six component tokens: --ds-auth-shell-min-height / -card-max-width / -gap / -bg-color / -mark-bg-color / -mark-label-color -> --ds-auth-layout-*. Values and defaults are unchanged. DS-owned tokens only (no others ship under this prefix); a consumer's own --ds-auth-shell-* variable is out of scope. EXCLUDED, do not rename: the global scale token --auth-card-w, the fallback behind -card-max-width, which carries no --ds-auth-shell- prefix and keeps its name. Confirm the new name exists in the installed package.",
+      "action": "Replace the prefix `--ds-auth-shell-` with `--ds-auth-layout-` on the six component tokens: `-min-height`, `-card-max-width`, `-gap`, `-bg-color`, `-mark-bg-color`, `-mark-label-color`.",
+      "appliesWhen": "DS-owned tokens only — no others ship under this prefix, and a variable of your own is out of scope.",
+      "pitfall": "Do NOT rename `--auth-card-w`. It is the global scale token behind `-card-max-width`, it carries no `--ds-auth-shell-` prefix, and it keeps its name — a prefix-blind sweep that catches it breaks the fallback.",
+      "note": "Values and defaults are unchanged.",
       "searchHints": [
         "--ds-auth-shell-"
       ],
@@ -71,7 +83,9 @@
       "kind": "behavior",
       "old": "ds-search",
       "new": null,
-      "note": "CHANGED DEFAULT: ds-search is 40px tall at the default size, was 36px. Every size moved onto the field scale - sm var(--field-h-sm) 32px (was --hit-min 32px, unchanged), md var(--field-h-md) 40px (was --search-h 36px, CHANGED), lg var(--field-h-lg) 48px (unchanged). The old 36px was a lone tier: nothing else in the library used it, while ds-button, ds-input, ds-select and both pickers all resolve --field-h-md, so a search box in a toolbar sat 4px short of every neighbour. RESTORE the old height with `ds-search { --ds-search-height: 36px; }` - that token still wins over everything. ALSO NEW: the height now falls through --ds-field-height, so `--ds-field-height: 44px` on a toolbar levels search along with the fields, which was the point of the change.",
+      "action": "None unless you want the old height: `ds-search { --ds-search-height: 36px; }` — that token still wins over everything.",
+      "appliesWhen": "sm (32px) and lg (48px) are unchanged; only the md default moved. The height also falls through `--ds-field-height` now, so `--ds-field-height: 44px` on a toolbar levels search along with the fields.",
+      "note": "ds-search is 40px at the default size, was 36px. The old 36px was a lone tier nothing else used, while ds-button, ds-input, ds-select and both pickers all resolve `--field-h-md`, so a search box in a toolbar sat 4px short of every neighbour.",
       "searchHints": [
         "ds-search",
         "--ds-search-height",
@@ -86,7 +100,10 @@
       "kind": "removed-api",
       "old": "--search-h",
       "new": null,
-      "note": "The global --search-h token is gone; it existed only to hold ds-search's 36px and nothing reads it any more. Its replacements, in precedence order: --ds-search-height (retunes search alone) and --ds-field-height (levels the whole field family). If you declared --search-h to resize search, that declaration is now inert - swap it for --ds-search-height with the same value. Reading it in your own CSS resolves to nothing. The --hit-md scale token it pointed at (36px) is untouched and still available.",
+      "action": "If you declared `--search-h` to resize search, swap it for `--ds-search-height` with the same value.",
+      "appliesWhen": "The `--hit-md` scale token it pointed at (36px) is untouched and still available. `--ds-field-height` is the other replacement, levelling the whole field family.",
+      "pitfall": "A leftover `--search-h` declaration is now INERT — it sets a custom property nothing reads, so it neither errors nor warns, and reading it in your own CSS resolves to nothing.",
+      "note": "The global token existed only to hold ds-search's 36px and nothing reads it any more.",
       "searchHints": [
         "--search-h"
       ],
@@ -101,7 +118,10 @@
       "kind": "behavior",
       "old": "ds-table",
       "new": null,
-      "note": "CHANGED DEFAULT: ds-table sortMode and filterMode resolve to 'server' when unset, were 'client'. An undeclared table now emits (sortChange) / updates columnFilters and reorders or filters NOTHING itself. ACTION, and it is per-table: if the table receives ALL its rows - the giveaway is that it does NOT bind `total` - add sortMode=\"client\" and, where any column has filter: 'set', filterMode=\"client\", or its headers will look live and do nothing. If it binds `total` it is server-paged and the new default is what you already wanted: the old 'client' sorted only the page in hand, so the rows looked sorted and were not, and a dev warning said exactly that. Tables that already declare a mode are untouched. A reversed dev warning now fires on the client case (no `total` + sortable/filterable columns + no declared mode), so run the app and let the console list them.",
+      "action": "Per table. If it receives ALL its rows — the giveaway is that it does NOT bind `total` — add `sortMode=\"client\"`, and `filterMode=\"client\"` where any column has `filter: 'set'`. Run the app afterwards: a dev warning now fires on exactly that case (no `total`, sortable or filterable columns, no declared mode) and the console lists them.",
+      "appliesWhen": "Tables that already declare a mode are untouched. A table that binds `total` is server-paged and the new default is what it wanted.",
+      "pitfall": "Skip it and the headers look live and do nothing — the table emits `(sortChange)` and updates `columnFilters` while reordering and filtering NOTHING itself. It is the mirror of the 0.8.0 default, which sorted only the page in hand.",
+      "note": "`sortMode` and `filterMode` resolve to `server` when unset, where they resolved to `client` before.",
       "searchHints": [
         "ds-table",
         "sortMode",
@@ -121,7 +141,9 @@
       "kind": "behavior",
       "old": "ds-number-stepper",
       "new": null,
-      "note": "CHANGED DEFAULT, one size only: ds-number-stepper with size=\"lg\" is 48px tall, was 44px. It resolved --hit-comfy while the field family's large size is --field-h-lg (--hit-touch, 48px), so a large stepper was a step short of a large input beside it. The +/- buttons and the quantity box derive their widths from that height, so they widen with it. size=\"sm\" (32px) and the size=\"md\" default (40px) are unchanged. RESTORE with `ds-number-stepper { --ds-field-height: 44px; }` scoped to the instance, or set the size back to md.",
+      "action": "None unless you want the old height: `ds-number-stepper { --ds-field-height: 44px; }` scoped to the instance, or set the size back to md.",
+      "appliesWhen": "One size only — sm (32px) and the md default (40px) are unchanged.",
+      "note": "`size=\"lg\"` is 48px, was 44px: it resolved `--hit-comfy` while the family's large size is `--field-h-lg`, so a large stepper was a step short of a large input beside it. The +/- buttons and the quantity box derive their widths from that height, so they widen with it.",
       "searchHints": [
         "ds-number-stepper",
         "size=\"lg\"",
@@ -143,7 +165,10 @@
       "kind": "code-add",
       "old": "ds-tabs",
       "new": "urlParam=\"tab\"",
-      "note": "ds-tabs can now keep the active tab in the URL: set urlParam (e.g. urlParam=\"tab\") and the strip writes ?tab=<name>, so the tab survives F5, a shared link and the Back button. Nothing changes until you set it, but this is worth a deliberate pass rather than a skim. ACTION, per strip: (1) GIVE EACH ds-tab A `value` if it has none - the URL is written from value, falling back to label, so without one a link carries the visible label and breaks the moment the label is translated or reworded. (2) ONE STRIP PER PARAMETER NAME. Two ds-tabs sharing a name on the same screen erase each other: both write the same query parameter, and a reload restores whichever wrote last. A dev-mode warning now names the clash. Nested or sibling strips need distinct names (tab, subtab). (3) DELETE any hand-rolled wiring - a queryParamMap subscription plus a navigate() on tabChanged is exactly what this replaces, and running both fights. Behaviour to expect: NAMES not indices (an index would silently repoint every old link as soon as a tab is inserted), the FIRST tab writes no parameter, every write uses replaceUrl so flipping tabs does not fill the Back button, and an unknown or missing name lands on the first tab instead of throwing. Inert outside a routed context, and being query-only it does not trip ds-app-layout's scroll reset.",
+      "action": "Per strip, and worth a deliberate pass. (1) Give each `ds-tab` a `value` if it has none. (2) Use one strip per parameter name — nested or sibling strips need distinct names, such as `tab` and `subtab`. (3) Delete any hand-rolled wiring: a queryParamMap subscription plus a `navigate()` on `tabChanged` is exactly what this replaces.",
+      "appliesWhen": "Nothing changes until you set `urlParam`.",
+      "pitfall": "Two traps, both silent until someone shares a link. Without a `value` the URL is written from the LABEL, so the link breaks the moment the label is translated or reworded. And two strips sharing a parameter name erase each other — both write the same query parameter and a reload restores whichever wrote last. A dev-mode warning names that clash.",
+      "note": "Setting `urlParam=\"tab\"` makes the strip write `?tab=<name>`, so the active tab survives F5, a shared link and the Back button.",
       "searchHints": [
         "<ds-tabs",
         "ds-tabs",
@@ -166,7 +191,10 @@
       "kind": "behavior",
       "old": "extends TableComponent",
       "new": null,
-      "note": "This release's single class-member-collision entry (run `npm run class-surface v0.8.0 v0.9.0` for the authoritative list - the prose below is a reading aid, not the count), the counterpart of 0.8.0's: it covers EVERY exported class whose member surface changed, so a consumer who EXTENDS a DS component resolves them in one pass. Subclassing a DS component is unsupported (design-system.md), but where it happens the names collide and the build stops: TS4114 demands `override`, TS2415 fires on a redeclared private, TS2416 on a differing signature. This is not hypothetical - migrating to 0.8.0, one consumer's ids-data-table (which extends TableComponent) failed on exactly three of them. WHAT GAINED MEMBERS: (1) TableComponent, by far the largest - lazy, lazyLoad, showLabel, showPageSize, filterMode, columnFilterOptions, sortAnnouncement, rangeAnnouncement and exportFailed as inputs/outputs, plus protected filterModeResolved, headerFilters, headerFilterByKey, headerFilterFor(), headerFilterContext(), statusMessage, sortMessage, rangeMessage, virtualCount, rowSlots, exportStatus, resolvedColumnWidth(), onResizeKey() and onHeaderEnter(). Note isStriped() now takes an ABSOLUTE row index rather than a window-relative one, so a subclass that overrode it computes the wrong row. (2) Both CVA bases (DsControlValueAccessor, DsBooleanControlValueAccessor) gained the `hidden` input and a `focus()` method - inherited by every field control, so a subclass with its own focus() needs `override`. (3) InputComponent and TextareaComponent gained readonlyBinding, isReadOnly, minLength, pattern and patternAttribute; SelectComponent gained readonlyBinding and isReadOnly. (4) ModalComponent and ModalCardComponent each gained `subtitle` and `dividers`. (5) AutocompleteComponent gained maxVisibleChips, showChevron, clear(), visibleTags and overflowCount. (6) BreadcrumbsComponent gained maxItems and allItems; MenuItemComponent gained `quiet`; AppLayoutComponent gained scrollReset; AuthLayoutComponent gained `landmark`; TabsComponent gained urlParam and urlParams; LayoutScrollService gained configureReset(). (7) NEW exported symbols that can shadow a local name: FieldGroupComponent, DS_FIELD_GROUP, HeaderFilterDirective and HeaderFilterContext. WHAT WAS REMOVED: TableComponent's private `distinctValuesOf()` is gone, replaced by `optionsFor()`, which prefers the new `columnFilterOptions` input and falls back to the rows in hand — a subclass that called or redeclared the old name loses it silently at the call site and noisily at the declaration. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match - and re-read isStriped() if you overrode it. Consumers who only use the <ds-...> elements in templates need no change.",
+      "action": "Run `npm run class-surface v0.8.0 v0.9.0` for the authoritative list, then per member: rename your own, or add `override` where the base semantics genuinely match. Build after upgrading — the compiler enumerates every collision.",
+      "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md § Components); template users need nothing. This is not hypothetical: migrating to 0.8.0, one consumer's ids-data-table failed on exactly three.",
+      "pitfall": "Two things the compiler will NOT tell you. `isStriped()` keeps its signature but now takes an ABSOLUTE row index rather than a window-relative one, so a subclass that overrode it silently computes the wrong row. And `distinctValuesOf()` was replaced by `optionsFor()` — a subclass that CALLED the old name loses it silently at the call site while only the declaration errors. Also note both CVA bases gained a `focus()` inherited by every field control, so a subclass with its own needs `override`, and four new exported symbols can shadow a local name: FieldGroupComponent, DS_FIELD_GROUP, HeaderFilterDirective, HeaderFilterContext.",
+      "note": "TableComponent changed by far the most; ModalComponent, ModalCardComponent, InputComponent, TextareaComponent, SelectComponent, AutocompleteComponent, BreadcrumbsComponent, MenuItemComponent, AppLayoutComponent, AuthLayoutComponent, TabsComponent, LayoutScrollService and both CVA bases also moved. TS4114 demands `override`, TS2415 fires on a redeclared private, TS2416 on a differing signature.",
       "searchHints": [
         "extends TableComponent",
         "extends InputComponent",
@@ -199,8 +227,10 @@
       "kind": "behavior",
       "old": "class MyInput extends InputComponent (or NumberStepperComponent / TextareaComponent)",
       "new": null,
+      "action": "Drop the annotation, or widen it to `InputSignalWithTransform`. `ds-input.focus()` and `ds-textarea.focus()` also gained `override`, for the same subclass-only reason.",
+      "appliesWhen": "NO ACTION for a caller: the WRITE type widened, so every binding that compiled still compiles, and the READ type is unchanged. Two shapes only are affected — an explicit annotation naming the old type, and a subclass that re-declares one of these.",
+      "note": "Six inputs gained a transform, so their declared type went from `InputSignal<T>` to `InputSignalWithTransform<T, W>`: `min`, `max` and `maxLength` on ds-input, `min` and `max` on ds-number-stepper, `maxLength` on ds-textarea. The failures are TS2322 on the annotation and TS2416 on the subclass.",
       "surface": "typescript",
-      "note": "Six inputs gained a `transform`, so their declared type went from `InputSignal<T>` to `InputSignalWithTransform<T, W>`: `min`, `max` and `maxLength` on ds-input, `min` and `max` on ds-number-stepper, `maxLength` on ds-textarea. NO ACTION for a caller - the WRITE type widened (they now accept `undefined` as well), so every binding that compiled still compiles, and the READ type is unchanged. ACTION for two shapes only: an explicit annotation that names the old type (`readonly min: InputSignal<number | null>`) stops compiling with TS2322, and a subclass that re-declares one of these fails with TS2416 because the signatures no longer match. Both are fixed by dropping the annotation, or by widening it to `InputSignalWithTransform`. `ds-input.focus()` and `ds-textarea.focus()` also gained `override`, for the same subclass-only reason.",
       "verify": "Build your app: no TS2322 naming `InputSignal` and no TS2416 on a class that extends a DS field. A template binding `[min]=\"expr\"` compiles unchanged.",
       "searchHints": [
         "InputSignal",
