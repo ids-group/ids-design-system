@@ -6,7 +6,9 @@
       "kind": "input-rename",
       "old": "ds-date-picker[defaultMonth]",
       "new": "defaultDate",
-      "note": "Pure rename, behavior unchanged: the input always took a full Date and the calendar opens on its month with grid focus on its exact day (only when the value is empty; never written to the value). [defaultMonth] -> [defaultDate]. No other component has a defaultMonth input.",
+      "action": "Rename `[defaultMonth]` to `[defaultDate]` on ds-date-picker.",
+      "appliesWhen": "No other component has a defaultMonth input, so the rename is unambiguous.",
+      "note": "Behaviour is unchanged: the input always took a full Date, and the calendar still opens on its month with grid focus on its exact day — only while the value is empty, and never written into the value.",
       "searchHints": [
         "[defaultMonth]",
         "defaultMonth"
@@ -18,7 +20,10 @@
       "kind": "behavior",
       "old": null,
       "new": null,
-      "note": "ds-table row hover tint is now rendered ONLY when rowInteractive is set (clickable rows also gain a pressed :active fill via --ds-table-row-pressed-bg-color). Was: every table tinted rows on hover. No code compiles differently — visual/behavior only. If a passive table must keep the old always-on hover, add consumer CSS: ds-table tbody tr:hover td { background-color: var(--surface-secondary); }. Tables that already set rowInteractive need no action.",
+      "action": "None, unless a passive table must keep its hover tint. To keep it: `ds-table tbody tr:hover td { background-color: var(--surface-secondary); }`.",
+      "appliesWhen": "Tables that already set `rowInteractive` need nothing — they keep the tint and gain a pressed fill.",
+      "pitfall": "Nothing compiles differently, so this only shows on screen. A table that reads as clickable because of the hover tint, without ever having been clickable, quietly loses the affordance it should not have had.",
+      "note": "The row hover tint is rendered only when `rowInteractive` is set; clickable rows also gain a pressed `:active` fill through `--ds-table-row-pressed-bg-color`.",
       "searchHints": [
         "<ds-table",
         "rowInteractive"
@@ -36,7 +41,10 @@
       "kind": "behavior",
       "old": null,
       "new": null,
-      "note": "Only affects a consumer that EXTENDS the DS TableComponent class. Subclassing a DS component is unsupported (design-system.md - Components), but where it happens this release breaks the build: the new column API added ~76 members to TableComponent, so a subclass that already used one of those names no longer compiles — TS4114 requires an 'override' modifier, TS2416 fires where the signature differs. Collisions observed: zebra, columnOrder, orderedColumns, visibleColumns, toggleColumn, onColumnDrop, moveColumn, resetColumns, columnFilters, exportCsv, onResizeMove, onResizeEnd. Resolution per member: where the base member means the same thing, keep the name and add `override` with a base-compatible signature (zebra must adopt the base's booleanAttribute transform); otherwise RENAME the subclass's own member — the private/protected ones are internal to the component and its own template, so renaming is behaviour-preserving, but check the new name against the base's member list so it does not collide again. Build the consumer right after the bump: the compiler enumerates every collision. A consumer that only uses the <ds-table> element needs no action.",
+      "action": "Build the consumer immediately after the bump — the compiler enumerates every collision. Per member: where the base means the same thing, keep the name and add `override` with a base-compatible signature; otherwise rename your own member. Observed collisions: zebra, columnOrder, orderedColumns, visibleColumns, toggleColumn, onColumnDrop, moveColumn, resetColumns, columnFilters, exportCsv, onResizeMove, onResizeEnd.",
+      "appliesWhen": "Only a consumer that EXTENDS TableComponent. Subclassing a DS component is unsupported (design-system.md § Components); anyone using the `<ds-table>` element is unaffected.",
+      "pitfall": "Two ways to fix it wrongly. Adding `override` to `zebra` without adopting the base booleanAttribute transform changes what the input accepts. And renaming your member to something else can collide again — check the new name against the base member list, because the private and protected ones are internal and give no warning.",
+      "note": "The new column API added about 76 members to TableComponent, so a subclass that already used one of those names stops compiling: TS4114 wants an `override` modifier, TS2416 fires where the signature differs.",
       "searchHints": [
         "extends TableComponent",
         "extends "

@@ -6,7 +6,9 @@
       "kind": "behavior",
       "old": "ds-bottom-sheet",
       "new": null,
-      "note": "ds-bottom-sheet's Escape handler moved from the DOCUMENT to its own panel, matching ds-modal and ds-drawer. Why it changed: with stacked overlays a background sheet was swallowing the Escape meant for whatever sat on top. ACTION, and it is a real one: Escape now has to land on the panel, which the focus trap arranges by auto-capturing focus inside it - so a sheet whose body contains NOTHING FOCUSABLE can no longer be closed with Escape. If you have such a sheet (a purely informational one, say), give it a focusable element: the close button in its header is enough. CHECK: open each sheet, press Escape without clicking anything first.",
+      "action": "Open each sheet and press Escape without clicking anything first. If one does not close, give its body something focusable — the close button in its header is enough.",
+      "pitfall": "A sheet whose body contains NOTHING focusable can no longer be dismissed with Escape at all: the key has to land on the panel, and the focus trap only gets it there by capturing focus inside. A purely informational sheet is exactly the shape that has nothing to focus, and a keyboard user is then stuck in it.",
+      "note": "The Escape handler moved from the document to the panel, matching ds-modal and ds-drawer, because with stacked overlays a background sheet was swallowing the Escape meant for whatever sat on top.",
       "searchHints": [
         "ds-bottom-sheet",
         "bottom-sheet",
