@@ -70,7 +70,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the row was hovered — invisible to a keyboard or touch user. Six lists in one consumer's portal
   compensated by repeating the destination as a `View Details` item in the row's overflow menu, which
   is a menu entry performing navigation rather than an action.
-  `link: (row) => string | readonly unknown[] | null` returns an Angular route target and the column's
+  `link?: (row) => string | readonly unknown[] | null | undefined` returns an Angular route target and the column's
   value renders as a real `<a>`. **`null` for a row leaves that cell plain text**, so a list where only
   some records are reachable needs no second column. External URLs go through a `[dsCellTemplate]` —
   `link` takes route targets only, and `RouterLink` is instantiated only once a column sets `link`, so
