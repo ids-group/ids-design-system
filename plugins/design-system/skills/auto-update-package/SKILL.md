@@ -79,6 +79,7 @@ an item that fires and one that is silently dropped.** `surface` names which of 
 artifacts changes; `detect` carries the shapes as the consumer writes them, for the common case where
 the affected code names no DS symbol at all; `verify` is the positive assertion a re-check can test
 when there is no old identifier to miss; `restore` is the way back from a changed default;
+Read `action` FIRST — it is the imperative and the only field to execute; `appliesWhen` says where it does NOT apply, and `pitfall` is the way to apply it correctly and still break the app, so read it before reporting an item done. `note` is the reasoning and is not an instruction.
 `supersedes` on a LATER item names the earlier one it reverses — one direction only, since a
 published manifest cannot know its own future. `deleteList` is what the
 release made UNNECESSARY, with a greppable `find` — a separate pass, not an item.

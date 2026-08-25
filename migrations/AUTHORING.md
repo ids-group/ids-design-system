@@ -13,6 +13,32 @@ mirror; if they disagree, fix the manifest.
 **A reader (machine or agent) must be able to act on an entry without seeing the prose changelog,
 and know exactly where it does and does NOT apply.** Every rule below is in service of that.
 
+## One item, four prose fields: `action`, `appliesWhen`, `pitfall`, `note`
+
+An item is read by an agent working in somebody else's repository, field by field. Anything typed
+into a paragraph as an ALL-CAPS marker is structure it cannot reach — before these fields existed
+the notes carried **103** such markers across 189 items, and 64 notes ran past 120 words.
+
+- **`action`** — the imperative alone, and the only field an applier executes. Required on every
+  item (lint, M039). "None, unless …" is a legitimate action; write the condition that changes it.
+- **`appliesWhen`** — the boundary. Which components, which bindings, and above all what is NOT
+  affected. Half the mis-applications this format has seen were an instruction run somewhere it did
+  not belong.
+- **`pitfall`** — the way to do it mechanically right and still ship a broken app. This is the
+  highest-value field in the file: a build error announces itself, a pitfall does not. If applying
+  the item cannot go quietly wrong, leave it out rather than inventing one.
+- **`note`** — what is LEFT once those three are gone: the WHY. Capped at 120 words (lint, M041),
+  and no ALL-CAPS structural markers (lint, M040) — a marker means a field was not filled.
+
+`note` stays required on non-rename kinds (M013) even though `action` is now mandatory too. The
+two were checked against each other over a full pass of all 189 items: every time M013 forced a note
+onto an item whose instruction already lived in `action`, the note that resulted was a real fact —
+why the docs anchor moved, why three components need a title, why colour and progress state were
+split apart. The overlap earns its keep.
+
+Every key is on an allowlist (lint, M042). An unlisted key is a typo that nothing reads and nothing
+reports, which is how a `pitfal` would sit in a published manifest forever.
+
 ## Granularity & ordering
 
 - **One entry per mechanical unit, not per changelog bullet.** A bullet that renames a component AND
@@ -295,4 +321,8 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] A behavioural item on a `typescript` or `config` surface carries `detect` — the shape of the
       CONSUMER's own expression, or the build error they will see. `searchHints` is where OUR name
       appears and cannot find a break that names none of it. (lint, M023)
+- [ ] Every item carries an `action` — the imperative alone, separate from the reasoning. (lint, M039)
+- [ ] The boundary is in `appliesWhen` and the silent-failure mode in `pitfall`, not buried in the note.
+- [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
+- [ ] No key outside the allowlist. (lint, M042)
 - [ ] Nothing documented in the block is silently dropped (actionable → item; else → `informational`).

@@ -84,6 +84,19 @@ const FORWARD_PROSE =
 
 const DEFAULT_CHANGE = /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults|\bwas [^,.]{1,40}, now\b/i;
 
+// A field's worth of structure typed into prose. Every one of these was in the notes 103 times
+// before the split, which is what a missing field looks like from the outside.
+const STRUCTURAL_MARKER =
+  /\b(ACTION|NO ACTION|TRAP|GOTCHA|DECISION RULE|SCOPE|ALSO SCOPED HERE|INVERTED VALUE|CHANGED DEFAULT|CHANGED SEMANTICS|CHANGED MEANING|WHO IS AFFECTED|WHAT BREAKS|WHERE TO LOOK)\b/;
+
+// Nothing outside these reads a key, so an unlisted one is a typo that fails silently.
+const ITEM_KEYS = new Set([
+  'id', 'kind', 'old', 'new', 'action', 'appliesWhen', 'pitfall', 'note',
+  'surface', 'searchHints', 'detect', 'verify', 'restore', 'map', 'supersedes',
+]);
+const DELETE_KEYS = new Set(['id', 'surface', 'find', 'why', 'replaceWith']);
+const TOP_KEYS = new Set(['version', 'items', 'informational', 'deleteList']);
+
 const everyManifest = () =>
   readdirSync(MIGRATIONS)
     .filter((name) => name.endsWith('.json'))
@@ -136,6 +149,9 @@ for (const [name, manifest] of manifests) {
   }
   if (!Array.isArray(manifest.deleteList)) {
     report(errors, file, 'M037', 'no `deleteList` array (use [] when this release made nothing redundant) — an absent key reads as "nobody looked"');
+  }
+  for (const key of Object.keys(manifest)) {
+    if (!TOP_KEYS.has(key)) report(errors, file, 'M042', `unknown top-level key \`${key}\``);
   }
 
   const seen = new Set();
@@ -238,6 +254,26 @@ for (const [name, manifest] of manifests) {
       );
     }
 
+    // `action` is the one field an applier executes, so it cannot be optional. `note` is the WHY
+    // that survives once the instruction, the scope and the trap have their own homes.
+    if (typeof item.action !== 'string' || item.action.trim().length < 10) {
+      at('M039', 'no `action` — say the imperative on its own, separate from the reasoning in `note`');
+    }
+    if (STRUCTURAL_MARKER.test(item.note ?? '')) {
+      at(
+        'M040',
+        'the note carries an ALL-CAPS structural marker, which means a field was not filled — ' +
+          'the instruction belongs in `action`, the scope in `appliesWhen`, the trap in `pitfall`',
+      );
+    }
+    const noteWords = String(item.note ?? '').split(/\s+/).filter(Boolean).length;
+    if (noteWords > 120) {
+      at('M041', `note is ${noteWords} words — over the 120-word ceiling; the instruction, the scope and the trap have their own fields`);
+    }
+    for (const key of Object.keys(item)) {
+      if (!ITEM_KEYS.has(key)) at('M042', `unknown key \`${key}\` — nothing validates or reads it, so a typo here is silent`);
+    }
+
     for (const field of ['supersedes']) {
       for (const reference of item[field] ?? []) {
         const [otherVersion, otherId] = String(reference).split('#');
@@ -271,6 +307,9 @@ for (const [name, manifest] of manifests) {
     if (entry.surface !== undefined && entrySurfaces.some((one) => !SURFACES.has(one))) {
       report(errors, file, 'M032', `${id}: unknown surface ${JSON.stringify(entry.surface)}`);
     }
+    for (const key of Object.keys(entry)) {
+      if (!DELETE_KEYS.has(key)) report(errors, file, 'M042', `${id}: unknown key \`${key}\` on a delete entry`);
+    }
     if (typeof entry.replaceWith !== 'string' || !entry.replaceWith.trim()) {
       report(errors, file, 'M035', `${id}: delete entry without a \`replaceWith\` — say the API that replaces it, or the literal word "nothing"`);
     }
@@ -293,7 +332,9 @@ for (const [name, manifest] of manifests) {
   const knownDeleteIds = new Set((manifest.deleteList ?? []).map((entry) => entry.id));
   const deleteProse = [
     ...(manifest.informational ?? []).map((line) => ['informational', line]),
-    ...(manifest.items ?? []).map((item) => [`item ${item.id}`, item.note ?? '']),
+    ...(manifest.items ?? []).flatMap((item) =>
+      ['note', 'action', 'pitfall'].map((field) => [`item ${item.id} ${field}`, item[field] ?? '']),
+    ),
   ];
   for (const [where, line] of deleteProse) {
     const sentences = String(line).split(/(?<=\.)\s+/);
