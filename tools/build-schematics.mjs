@@ -3,13 +3,7 @@
 // the published package.json. Runs as the second half of `build:lib` (after
 // `ng build ds` regenerates dist/ds), so the collection ships with the package.
 import { execSync } from 'node:child_process';
-import {
-  cpSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-  existsSync,
-} from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 
 const distPkgPath = 'dist/ds/package.json';
 if (!existsSync(distPkgPath)) {
@@ -97,7 +91,14 @@ for (const doc of ['design-system.md', 'components.md']) {
 // mirrors of the changelog, consumed by the auto-update plugin) alongside the changelog.
 if (existsSync('migrations')) {
   console.log('▶ Copying migrations/ into dist/ds/migrations…');
-  cpSync('migrations', 'dist/ds/migrations', { recursive: true });
+  // Published manifests and the format note only. `unreleased.json` describes changes that are
+  // NOT in this tarball, and an upgrade tool reading it would apply a version the consumer does
+  // not have; AUTHORING.md is written for whoever edits these files, not for whoever runs them.
+  mkdirSync('dist/ds/migrations', { recursive: true });
+  for (const entry of readdirSync('migrations')) {
+    if (entry === 'unreleased.json' || entry === 'AUTHORING.md') continue;
+    cpSync(`migrations/${entry}`, `dist/ds/migrations/${entry}`, { recursive: true });
+  }
 }
 
 console.log(

@@ -118,6 +118,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   ring on `:focus-within` without silencing the base rule; it replaces the hand-kept shell list in
   `styles/_focus.scss` that had been wrong for two releases.
 
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `ds-input input`, `ds-textarea textarea`, `--ds-input-focus-shadow`, `box-shadow: none` | A rule killing one of the two focus rings a ds-input or ds-textarea used to paint - typically box-shadow: none on the inner input, or --ds-input-focus-shadow re-declared as none to hide the doubling. Replace with: nothing - the component now paints one ring on its own. |
+| `.search-clear`, `ds-search`, `:focus-visible`, `box-shadow` | A focus rule you added to the ds-search clear button because it showed no indicator at all - the shell-wide reset 0.10.2 used silenced that tab stop too. Every shell names the one control it silences now, so the button keeps its own ring. Replace with: nothing - the component paints it. |
+
 ## 0.10.2 — 2026-08-24
 
 ### Added
@@ -436,6 +446,35 @@ workaround written against a hook that only landed in this release.
 ## 0.10.1 — 2026-08-20
 
 ### Removed
+
+- **The seven inputs every field shares are declared once, in `DsFieldBase`.** `hint`, `error`,
+  `warning`, `errors`, `invalid`, `touched` and `reserveMessage` — plus the `reserveMessageResolved`
+  helper — were hand-copied into all fourteen fields, 98 declarations. **Nothing about the public API
+  changed:** every input keeps its name, type, default and documentation, and the docs API tables are
+  byte-identical apart from the eight new `success` rows (verified by diffing the generated
+  reference: 0 lost, 8 gained).
+  **Why it is worth knowing anyway:** the duplication had already drifted twice — `success` was
+  missing from eight fields, and `ds-date-picker` had quietly moved to a different `invalid` source.
+  A new state added to the base now reaches every field at once.
+  `DsControlValueAccessor` and `DsBooleanControlValueAccessor` extend the base (so single inheritance
+  still holds for the thirteen fields that already extended one of them) and `ds-radio` extends it
+  directly. Only the UNIVERSAL inputs moved: `success`, `label`, `required` and `optional` stay on the
+  components, because they exist on 9, 9, 7 and 5 fields respectively and lifting them would hand a
+  checkbox a `success` or a slider a `label` it never had.
+
+- **`ds-icon-button` with `variant="standard"` mixes its disabled glyph toward the surface too.**
+  New default on that variant only: `color-mix(in srgb, <icon colour> 40%, var(--surface-default))`.
+  Same defect as ghost, and it matters more here — there is no word to read, just a 16px glyph.
+  Measured: light **4.17 → 5.19:1**, dark **1.46 → 3.58:1**. Light was already healthy, because the
+  enabled glyph is `--text-secondary` at OKLCH L 35% and the old recipe moved it to L 70%; **dark was
+  the break**, where the enabled glyph is L 80% and a disabled one pinned at L 70% left ten points
+  and a 1.46:1 gap.
+  **Scoped to `standard` deliberately, and this is the trap worth knowing:** the resolver is declared
+  once on the base and no variant overrode it, so touching the base would have hit `filled` too —
+  whose glyph is `--c-on`, i.e. white, and white mixed into a white surface does not move at all,
+  which would have put an invisible white glyph on a pale disabled fill. `filled`, `tonal` and
+  `outlined` keep the base recipe unchanged. Consumers who set
+  `--ds-icon-button-icon-color-disabled` are unaffected.
 
 - **`--opacity-muted` is gone from the token scale.** It was the last token in the file that no
   component read: the disabled states moved onto `--text-disabled` + `--opacity-disabled` in
@@ -1214,35 +1253,6 @@ None of this is required — skipping it leaves working code that is merely redu
   component using these insets — already did on all four of its.
 
 ### Changed
-
-- **The seven inputs every field shares are declared once, in `DsFieldBase`.** `hint`, `error`,
-  `warning`, `errors`, `invalid`, `touched` and `reserveMessage` — plus the `reserveMessageResolved`
-  helper — were hand-copied into all fourteen fields, 98 declarations. **Nothing about the public API
-  changed:** every input keeps its name, type, default and documentation, and the docs API tables are
-  byte-identical apart from the eight new `success` rows (verified by diffing the generated
-  reference: 0 lost, 8 gained).
-  **Why it is worth knowing anyway:** the duplication had already drifted twice — `success` was
-  missing from eight fields, and `ds-date-picker` had quietly moved to a different `invalid` source.
-  A new state added to the base now reaches every field at once.
-  `DsControlValueAccessor` and `DsBooleanControlValueAccessor` extend the base (so single inheritance
-  still holds for the thirteen fields that already extended one of them) and `ds-radio` extends it
-  directly. Only the UNIVERSAL inputs moved: `success`, `label`, `required` and `optional` stay on the
-  components, because they exist on 9, 9, 7 and 5 fields respectively and lifting them would hand a
-  checkbox a `success` or a slider a `label` it never had.
-
-- **`ds-icon-button` with `variant="standard"` mixes its disabled glyph toward the surface too.**
-  New default on that variant only: `color-mix(in srgb, <icon colour> 40%, var(--surface-default))`.
-  Same defect as ghost, and it matters more here — there is no word to read, just a 16px glyph.
-  Measured: light **4.17 → 5.19:1**, dark **1.46 → 3.58:1**. Light was already healthy, because the
-  enabled glyph is `--text-secondary` at OKLCH L 35% and the old recipe moved it to L 70%; **dark was
-  the break**, where the enabled glyph is L 80% and a disabled one pinned at L 70% left ten points
-  and a 1.46:1 gap.
-  **Scoped to `standard` deliberately, and this is the trap worth knowing:** the resolver is declared
-  once on the base and no variant overrode it, so touching the base would have hit `filled` too —
-  whose glyph is `--c-on`, i.e. white, and white mixed into a white surface does not move at all,
-  which would have put an invisible white glyph on a pale disabled fill. `filled`, `tonal` and
-  `outlined` keep the base recipe unchanged. Consumers who set
-  `--ds-icon-button-icon-color-disabled` are unaffected.
 
 - **`avatarTint` switches from OKLCH to `hsl(H 50% 62%)` with white initials, always.** The seeded
   tints read as dull, and every set of initials came out black. The auto-contrast was not the fault:
@@ -2206,6 +2216,15 @@ genuine gap worth reporting.
   (select, multi-select, autocomplete, date / time / colour picker, popover, tooltip, menu submenus). A
   global override always worked and is unaffected.
 
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `ds-table`, `z-index`, `--table-sticky-corner-z`, `sticky` | A consumer z-index on DS table cells, raised to stop the first body row painting over the header when stickyHeader and stickyFirstColumn were both on. The sticky-header rule out-specified --table-sticky-corner-z and both landed on the same z-index; that is fixed in the component. Replace with: nothing - the component orders the layers itself. |
+
 ## 0.7.1 — 2026-08-04
 
 ### Added
@@ -2478,6 +2497,17 @@ genuine gap worth reporting.
   which layered the shared overlay-panel entrance onto the modal on top of its own card/backdrop
   animation; the class is dropped, so `styles/overlay-motion` no longer applies to the pane and the modal
   plays only its own `--ds-modal-*` entrance.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `[reserveMessage]="false"` | The default is FALSE again, so an opt-out binding only restates it - unless the field sits under a `dsReserveMessages` host or an app config that turns it on, where the binding is still the way back out. mm-broker carried six, three of them dead (2026-08-21). Replace with: nothing - delete the binding where no host reserves. |
+| `gap: var(--space-1)`, `margin-top: -` | A tighter sub-stack or a negative margin added to swallow the reserved message row is now over-tightening a form that no longer reserves it. Replace with: the normal 16px field stack. |
+| `ds-pagination`, `ds-field-message`, `display: none` | A rule hiding the empty message row inside the pagination rows-per-page select. The component pins that select to its own compact shape now, so the row is gone at the source. Replace with: nothing - delete the rule. |
 
 ## 0.7.0 — 2026-07-30
 
@@ -2860,6 +2890,15 @@ None of this is required — skipping it leaves working code that is merely redu
   non-modal (no backdrop, the rest of the page stays interactive) but still advertised
   `aria-modal="true"`, telling assistive technology the page behind it was inert. Removed so the
   announced ARIA state matches the panel's actual non-blocking behaviour.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `ds-date-picker`, `pointer: coarse`, `ontouchstart`, `matchMedia`, `type="date"` | A branch that swapped ds-date-picker for a native input, or disabled its masked typing, on touch devices. It existed because segment-aware editing was wired to keydown, which soft keyboards do not report faithfully; the mobile path goes through beforeinput now, so the masked field works there. Replace with: nothing - render ds-date-picker on touch as well. |
 
 ## 0.6.0 — 2026-07-16
 

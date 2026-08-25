@@ -279,6 +279,15 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
       (run `npm run class-surface` — do not assemble the list by eye).
 - [ ] `deleteList` holds every "you can now delete X" — with a greppable `find`, not our token name,
       and a word on when the workaround is still legitimate. (lint, for the shape)
-- [ ] Every delete instruction written in `informational` prose cites its row as
-      `(delete list: <id>)`, or does not promise a deletion at all. (lint, M034)
+- [ ] Every delete instruction cites its row as `(delete list: <id>)`, or does not promise a
+      deletion at all — in an item `note` as well as in `informational`, and whether it is addressed
+      to "you" or to "consumers". (lint, M034)
+- [ ] Every `deleteList` row has a `replaceWith` — the API that replaces it, or the literal word
+      "nothing" — and a kebab id unique in the file, because M034 citations resolve against it.
+      (lint, M035 / M036)
+- [ ] A `value-remap` carries a `verify` like a behavioural item: it changes what a binding MEANS
+      with no symbol removed, so a re-check has nothing to grep either. (lint, M022)
+- [ ] A behavioural item on a `typescript` or `config` surface carries `detect` — the shape of the
+      CONSUMER's own expression, or the build error they will see. `searchHints` is where OUR name
+      appears and cannot find a break that names none of it. (lint, M023)
 - [ ] Nothing documented in the block is silently dropped (actionable → item; else → `informational`).
