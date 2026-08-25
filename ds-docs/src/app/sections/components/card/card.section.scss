@@ -55,6 +55,7 @@
       border-top: var(--border-width-default) solid var(--border-divider);
     }
     .card-foot a { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; }
+
     // A child whose background reaches the card edge — the shape --ds-card-overflow
     // exists for. The strip carries the radius of nothing, on purpose.
     .bleed-demo { display: flex; flex-direction: column; height: 100%; }
