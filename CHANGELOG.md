@@ -486,6 +486,9 @@ workaround written against a hook that only landed in this release.
 | `--ds-button-label-color-disabled` pinned on a tonal button to make its disabled state visible, most likely only in the dark theme | The default disabled-label recipe carries it |
 | `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a `ds-stat` binding, because `[value]="count \| number"` would not typecheck | The pipe binds now, and it reads `LOCALE_ID` instead of a pinned locale |
 | A `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target | `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration` |
+| `ds-icon`, `field-message`, `align-items: center` | A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row. Replace with: the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing. |
+| `box-shadow: none`, `--ds-field-focus-shadow` | A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow. SCOPE, and it matters: this release suppresses the inner ring on ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper and ds-field-group ONLY. A workaround on ds-input or ds-textarea is still load-bearing here - deleting it brings the double ring back. Leave those two until you are on the release that names them. Also leave any rule you wrote against the universal :where(:focus-visible) base indicator itself: that rule is still the one this library ships. Replace with: nothing: the field paints one ring now. |
+| `padding-block`, `line-height`, `option-label` | A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved. Replace with: nothing: the clip carries a --space-1 margin now, at the same row height. |
 
 ## 0.10.1 — 2026-08-20
 
@@ -1472,6 +1475,11 @@ None of this is required — skipping it leaves working code that is merely redu
 | An override retuning `--opacity-muted` to compensate for a washed-out disabled state. That token is a de-emphasis level for hints and secondary text and carries no disabled state at all - and on `ds-button` / `ds-icon-button` it was always inert, because neither ever read it. | `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled` |
 | A `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` override - the shrink-to-content idiom. | `TableColumn.width: 'content'` |
 | A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays. | nothing on the key path - `onRowKey` now requires `target === currentTarget` |
+| `sortChange`, `sortKey`, `sortDir`, `setTimeout` | Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now. Replace with: nothing - answer the cleared sort with your default and stop there. |
+| `.visually-hidden`, `clip: rect`, `clip-path: inset(50%)` | Your own .visually-hidden definition, or a rule targeting the pending row glyph by name, written because the class ds-password-rules used was declared by no stylesheet and its screen-reader text rendered visibly. One shared mixin backs all four components now. Replace with: nothing - the components carry the class themselves. |
+| `ds-timeline-item`, `margin-top`, `margin: -` | A margin you added on ds-timeline-item or its node to pull the marker onto the heading centre. The component pulls the node column up itself now, so your compensation double-applies. Replace with: nothing - remove the margin. |
+| `--field-h-floating`, `--field-floating-label-fs`, `--field-floating-label-lh`, `--field-floating-label-top`, `--field-floating-pad-t` | An override of one of the five floating-label tokens. They were :root declarations backing the floating variant, which this release removed, so the declaration now sets a custom property nothing reads. Replace with: nothing - delete the declaration. |
+| `new Event('input'`, `dispatchEvent`, `querySelector` | A query for `ds-autocomplete`'s inner `<input>` plus a synthetic `input` event, clearing leftover filter text after a pick. Replace with: `clear()` - and the component clears that text itself now. |
 
 ## 0.9.1 — 2026-08-10
 
@@ -1543,6 +1551,9 @@ redundant.
 | `::ng-deep .card { height: 100% }` for equal-height cards | The card's box fills a stretched host on its own |
 | `!important` on `ds-table` cell padding under `density="compact"` | Compact no longer out-specifies the padding hooks |
 | A wrapper around `ds-table` for sort/range announcements, keyboard column resize, or a header filter the checklist cannot express | All three ship: the live region, the `role="separator"` handle, and `dsHeaderFilter` |
+| `new Event('input'`, `dispatchEvent`, `querySelector` | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it Replace with: `clear()`. |
+| `--ds-autocomplete-input-minw` | A --ds-autocomplete-input-minw override, written to hide the empty filter box that sat beside a chosen value in single mode. The input collapses on its own once a value is picked and the panel closes. Replace with: nothing - unless you genuinely want a wider typing area. |
+| `.trigger`, `:focus-within`, `ds-date-picker` | A :focus-within rule on the date-picker trigger, written because the trigger went dark while its panel was open. The component keeps an "open" class alongside the focus rules now. Replace with: nothing - the component holds the indicator itself. |
 
 **To sweep for the rest:** grep your styles for `::ng-deep`, `!important` and any selector naming a
 DS internal class (`.button`, `.trigger`, `.option`, `.modal`). Each hit is either a row above or a
@@ -2912,7 +2923,7 @@ None of this is required — skipping it leaves working code that is merely redu
 
 | If you have | Delete it, because |
 | --- | --- |
-| A logo overlaid or absolutely positioned on top of ds-sidenav's brand row, written when there was no slot for one. | project it into `[brand]` |
+| A logo overlaid on ds-sidenav’s brand row — `position: absolute` against `ds-sidenav`'s brand row, written when there was no slot for one. | project it into `[brand]` |
 | A scrollTop pin or a scroll-lock hack written against the content jolt an opening sheet used to cause in a shell that is a containing block for fixed descendants. | nothing - the entering panel no longer contributes that overflow |
 
 ## 0.6.1 — 2026-07-16

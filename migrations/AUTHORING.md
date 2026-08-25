@@ -285,6 +285,11 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] Every `deleteList` row has a `replaceWith` — the API that replaces it, or the literal word
       "nothing" — and a kebab id unique in the file, because M034 citations resolve against it.
       (lint, M035 / M036)
+- [ ] The `deleteList` key is PRESENT, `[]` when the release made nothing redundant. An absent key
+      reads as "nobody looked", which is a different statement. (lint, M037)
+- [ ] Every row is reachable from the CHANGELOG: one "What you can now DELETE" row carries one of
+      the entry's `find` shapes VERBATIM. A row that only paraphrases the shape cannot be searched
+      for, so it does not count. (`npm run check-delete-tables`, in the PR gate and the preflight)
 - [ ] A `value-remap` carries a `verify` like a behavioural item: it changes what a binding MEANS
       with no symbol removed, so a re-check has nothing to grep either. (lint, M022)
 - [ ] A behavioural item on a `typescript` or `config` surface carries `detect` — the shape of the

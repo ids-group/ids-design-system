@@ -437,5 +437,6 @@
     "Visual/behavioral only, no code change: press-feedback reworked (no button-style press on non-buttons; list/menu rows and color-picker trigger get a flat :active tint; small icon action buttons — close/dismiss/clear/remove x and the ds-tag chip close — get the button press-scale); booleanAttribute coercion on ~54 boolean inputs; ds-button tonal :active now darkens past hover.",
     "Fixes, no action required: overlay panel --ds-* overrides now reach the portaled pane (ds-autocomplete/ds-multi-select/ds-date-picker/ds-color-picker/ds-popover/ds-time-picker); ds-autocomplete/ds-multi-select panels no longer render transparent; ds-tabs secondary variant now applies; ds-date-picker range mask no longer clips the second date + tighter value-to-icon gap; the ultra-compact density tier now scales avatar/sidenav/badge/status-dot/switch geometry.",
     "Visual/behavioral only, no code change: ds-date-picker keeps the format mask visible while typing — the unfilled tail of the mask stays on-screen as a muted ghost (e.g. \"12/DD/YYYY\") and the typed value renders in the monospace font for exact glyph alignment."
-  ]
+  ],
+  "deleteList": []
 }

@@ -134,6 +134,9 @@ for (const [name, manifest] of manifests) {
   if (!Array.isArray(manifest.informational)) {
     report(errors, file, 'M005', 'no `informational` array (use [] when there is nothing)');
   }
+  if (!Array.isArray(manifest.deleteList)) {
+    report(errors, file, 'M037', 'no `deleteList` array (use [] when this release made nothing redundant) — an absent key reads as "nobody looked"');
+  }
 
   const seen = new Set();
   for (const item of manifest.items ?? []) {

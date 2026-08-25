@@ -43,6 +43,7 @@ if (!hasEntry) fail("'## Unreleased' is empty — add release notes before relea
 // passes the whole find/apply/recheck loop in silence. Lint before the cut.
 try {
   execSync('node tools/migration-lint.mjs', { stdio: 'inherit' });
+  execSync('node tools/check-delete-tables.mjs', { stdio: 'inherit' });
 } catch {
   fail('migrations/ failed the manifest lint (errors above).');
 }

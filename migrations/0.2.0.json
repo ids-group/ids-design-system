@@ -93,5 +93,6 @@
   "informational": [
     "Theme re-skin guidance clarified in the shipped themes/README (brand roles retint from the --blue ramp; a fully calibrated brand may set --primary-* roles directly).",
     "Relicensed from proprietary (UNLICENSED) to MIT."
-  ]
+  ],
+  "deleteList": []
 }
