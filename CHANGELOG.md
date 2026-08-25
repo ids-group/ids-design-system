@@ -102,6 +102,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   TS4114 (“must have an ‘override’ modifier”), or TS2415 if the signature differs — and `protected` is
   no protection, since a redeclared protected member collides exactly as a public one does.
   Subclassing a DS component stays unsupported (`components.md` § Components); compose instead.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround written against a hook that only landed in this release.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `dsTooltip` on a `ds-button` that is `disabled`, carrying the reason it is refused | `disabledReason` puts the reason inside the button AND makes it focusable, so a keyboard and a screen reader reach it too — which a tooltip never did. Scope it: a tooltip that merely NAMES the action stays. For a refusal the user can lift by filling the form in, drop `disabled` entirely and use `error`/`warning`/`hint`. |
+| `::ng-deep ds-card .card` with `overflow: hidden`, to clip a full-bleed child inside the card radius | `--ds-card-overflow: clip` — and pair it with `data-focus="inset"` where the clipped card holds focusable content |
+| `::ng-deep ds-button button` kept alive only by a resting `box-shadow` | `--ds-button-shadow` (and `--ds-button-shadow-hover`) on the host |
+| A `View Details` `ds-menu-item` in `rowActions` that only repeats where the row already leads | `link` on the column that names the record — a real `<a>`, tabbable and Ctrl/Cmd-clickable, announced as a link rather than as a table row |
+
+
 ## 0.10.3 — 2026-08-24
 
 ### Added
