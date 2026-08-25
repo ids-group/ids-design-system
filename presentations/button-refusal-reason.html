@@ -26,6 +26,13 @@
   }
   .problem b { color: #7A1A12; }
 
+  .settled {
+    border-left: 4px solid #156822; background-image: linear-gradient(#ECFAEE, #ECFAEE);
+    color: #145A22; padding: var(--space-3) var(--space-4); border-radius: var(--ds-radius-inner);
+    margin: var(--space-4) 0; max-width: 78ch;
+  }
+  .settled b { color: #145A22; }
+
   .decision {
     border: 2px solid #2E54FF; border-radius: var(--ds-radius-panel);
     background-image: linear-gradient(#F4F6FF, #F4F6FF);
@@ -96,7 +103,12 @@
   .button[disabled], .button[aria-disabled='true'] {
     background-color: var(--surface-disabled); color: var(--text-disabled); cursor: not-allowed;
   }
-  .button.two-line { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .button.two-line {
+    flex-direction: column; align-items: center; gap: 2px;
+    /* No cap on the reason: it wraps and the button grows. Both lines centre on each
+       other, so a two-line button still reads as one control. */
+    text-align: center; white-space: normal; max-width: 22rem;
+  }
   .button .reason {
     font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
     letter-spacing: normal; color: var(--text-disabled);
@@ -129,89 +141,63 @@
   С клавиатуры и с тача — никак. На экране не написано ничего.
 </div>
 
+<div class="settled">
+  <b>Решено — причина ВНУТРИ кнопки:</b> новый вход <code>disabledReason</code>. Длина не
+  ограничена, текст переносится, обе строки по центру. DS ставит <code>aria-disabled</code>
+  вместо <code>disabled</code> и глушит клик. Имя уже занято тем же смыслом у
+  <code>TableRowAction</code>.
+  <pre class="code good" style="margin-top: var(--space-2)">&lt;ds-button [disabled]="true" disabledReason="Нет прав"&gt;Отправить заново&lt;/ds-button&gt;</pre>
+</div>
+
 <div class="decision">
   <span class="decision__flag">Нужно твоё решение</span>
-  <h2 style="margin-top: 0">Один вход на <code>ds-button</code>: <code>disabledReason</code></h2>
+  <h2 style="margin-top: 0">Строка ПОД кнопкой — кто её рисует</h2>
   <p style="margin: 0 0 var(--space-3)">
-    Имя не новое — так уже называется поле у <code>TableRowAction</code>: «почему пункт выключен,
-    показывается второй строкой, читается только когда <code>disabled</code>». Тот же смысл, то же имя.
+    Это второй, временный флоу: форма не заполнена, кнопку не гасим, причина живёт под ней.
+    Вопрос только в том, чей это код.
   </p>
-
-  <table>
-    <thead>
-      <tr><th>Флоу</th><th>Как сейчас</th><th>Как предлагаю</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>Устойчивый<br><span style="font-weight: 400; color: var(--text-tertiary)">нет прав, нет бэкенда</span></th>
-        <td>
-          <pre class="code bad">&lt;ds-button
-  [disabled]="true"
-  [dsTooltip]="reason"&gt;   ← только по ховеру
-  Отправить заново
-&lt;/ds-button&gt;</pre>
-        </td>
-        <td>
-          <pre class="code good">&lt;ds-button
-  [disabled]="true"
-  disabledReason="Нет прав"&gt;
-  Отправить заново
-&lt;/ds-button&gt;</pre>
-          <p style="margin: var(--space-2) 0 0; font-size: var(--font-size-2xs)">
-            DS сам рисует вторую строку, ставит <code>aria-disabled</code> вместо
-            <code>disabled</code> и глушит клик.
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <th>Временный<br><span style="font-weight: 400; color: var(--text-tertiary)">форма не заполнена</span></th>
-        <td>
-          <pre class="code bad">&lt;ds-button
-  [disabled]="form.invalid"&gt;   ← мёртвая,
-  Сохранить                      причины нет
-&lt;/ds-button&gt;</pre>
-        </td>
-        <td>
-          <pre class="code good">&lt;ds-button (clicked)="save()"&gt;
-  Сохранить
-&lt;/ds-button&gt;
-&lt;ds-field-message [error]="formError()" /&gt;</pre>
-          <p style="margin: var(--space-2) 0 0; font-size: var(--font-size-2xs)">
-            Ничего нового в API — рецепт в доках. Кнопка живая, отказ судится в
-            <code>save()</code>.
-          </p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
   <div class="options">
     <div class="option option--a">
-      <span class="option__tag">A — рекомендую</span>
-      <h3>Оба флоу: вход <code>disabledReason</code> + рецепт</h3>
-      <p>
-        Один новый вход на <code>ds-button</code> и <code>ds-icon-button</code>. Механика
-        <code>aria-disabled</code> + глушение клика уже работает в <code>ds-menu-item</code>.
+      <span class="option__tag">1 — кнопка остаётся кнопкой</span>
+      <h3>Консьюмер сам ставит <code>ds-field-message</code></h3>
+      <pre class="code good">&lt;ds-button (clicked)="save()"
+  [ariaDescribedBy]="msgId"&gt;Сохранить&lt;/ds-button&gt;
+&lt;ds-field-message [text]="formError()"
+  [messageId]="msgId" [reserve]="true" /&gt;</pre>
+      <p style="margin-top: var(--space-2)">
+        Компонент уже умеет всё: <code>text</code>, <code>state</code>, <code>icon</code>,
+        <code>messageId</code>, <code>reserve</code>. Добавить надо только
+        <code>ariaDescribedBy</code> на кнопку — сегодня его нет.
         <br><br>
-        <b>Цена:</b> кнопка выше на строку, когда причина задана. Без входа — ничего не меняется.
+        <b>Плюс:</b> кнопка остаётся <code>inline-flex</code>, тулбар и группа кнопок не меняются.
+        <br>
+        <b>Минус:</b> две строки вместо одной, связь через id — консьюмер может забыть.
       </p>
     </div>
     <div class="option option--b">
-      <span class="option__tag">B — только рецепт</span>
-      <h3>Ничего не добавлять, оба флоу в доках</h3>
-      <p>
-        И для устойчивого отказа тоже: текст рядом с кнопкой рисует приложение.
+      <span class="option__tag">2 — кнопка как поле</span>
+      <h3>Зеркалим API поля: <code>hint</code> / <code>error</code> / <code>warning</code></h3>
+      <pre class="code good">&lt;ds-button (clicked)="save()"
+  [error]="formError()"
+  [reserveMessage]="true"&gt;Сохранить&lt;/ds-button&gt;</pre>
+      <p style="margin-top: var(--space-2)">
+        Те же входы, что у полей, и тот же резолвер <code>resolveFieldMessage</code> — он уже
+        решает, какое сообщение победило, и отдаёт severity. Связь <code>aria-describedby</code>
+        кнопка проставляет сама.
         <br><br>
-        <b>Цена:</b> у консьюмера три экрана переписываются вручную, и на устойчивый отказ
-        DS так и не отвечает.
+        <b>Плюс:</b> одна строка в шаблоне, забыть связь невозможно.
+        <br>
+        <b>Минус:</b> кнопка становится «полем» — хост придётся делать блоком, когда сообщение
+        задано. И DS сознательно держал эти входы только у полей.
       </p>
     </div>
   </div>
 
   <p style="margin: var(--space-4) 0 0; font-size: var(--font-size-xs)">
-    Внешние источники за A: Carbon — то, без чего задачу не выполнить, живёт в постоянно
-    видимом тексте, не в тултипе. Roselli — не выключать контрол, а гасить отправку и
-    отвечать сообщением.
+    Замечание к варианту 2: <code>success</code> в базу полей намеренно не поднят («иначе
+    чекбокс получит success, а слайдер label»), так что зеркалить стоит ровно три —
+    <code>hint</code>, <code>warning</code>, <code>error</code>.
   </p>
 </div>
 
@@ -274,7 +260,11 @@
   </div>
 </div>
 
-<h2>3 · Длина решает, где текст</h2>
+<h2 style="font-size: var(--font-size-s); margin-top: var(--space-4)">3 · Во что обходится длинная причина</h2>
+<p style="margin-bottom: var(--space-3)">
+  Длина не ограничена: причина переносится, обе строки по центру, кнопка растёт.
+  Ниже — насколько, чтобы это было видно заранее.
+</p>
 <div class="cases" id="length"></div>
 
 </main>
@@ -345,9 +335,11 @@
     const lines = Math.round(line.getBoundingClientRect().height / parseFloat(getComputedStyle(line).lineHeight));
     const width = Math.round(button.getBoundingClientRect().width);
     const verdict = document.createElement('div');
-    verdict.className = lines === 1 ? 'verdict' : 'verdict bad';
+    // Cost, not a rule: the reason is never capped, so this reports what the button
+    // grows to rather than forbidding a length.
+    verdict.className = 'verdict';
     verdict.textContent =
-      lines === 1 ? `одна строка, кнопка ${width}px — можно внутри` : `${lines} строки, кнопка ${width}px — только под контрол`;
+      lines === 1 ? `одна строка · кнопка ${width}px` : `${lines} строки · кнопка ${width}px`;
     wrap.appendChild(verdict);
   }
 </script>
