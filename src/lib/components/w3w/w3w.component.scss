@@ -21,6 +21,12 @@
 
   &:hover { background: var(--_w3w-hover-bg-color); }
 
+  /* flex, not inline flow: a what3words address is `///word.word.word` with no
+     space, and in inline flow the template's line breaks render as one (measured:
+     7.8px wider). A flex container drops whitespace-only text nodes and blockifies
+     .mark, which trims its edge whitespace — so the template is free to format. */
+  .words { display: inline-flex; }
+
   .mark {
     color: var(--_w3w-mark-color);
     font-weight: var(--font-weight-bold);
