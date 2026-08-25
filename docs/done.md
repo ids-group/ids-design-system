@@ -4,6 +4,53 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+- [x] **DONE 2026-08-25 — `ds-w3w` rendered a space its own format forbids, and it took a measurement
+  to see it.** The pill showed `/// daring.lion.race`; the format is `///daring.lion.race`, flush, which
+  is what its own `aria-label` had said all along — screen and accessible name disagreed on a shipped
+  component. **Found sideways:** Stas asked why the template glued `</span>{{ address() }}` onto one
+  line, which reads badly. The answer turned out to be that the gluing was a half-fix — it removed the
+  whitespace BETWEEN the two elements while the prefix sitting on its own line INSIDE the mark element
+  kept leaking its own. **Measured, not argued:** an A/B clone with every whitespace text node trimmed
+  came out **202.18px against 209.98px** — 7.8px of rendered space.
+  **The fix removes the dependency instead of hiding it.** The mark row is `display: inline-flex`: a
+  flex container drops whitespace-only text nodes, and it blockifies the mark element so its own edge
+  whitespace is trimmed too. Re-measured on the built page: whitespace-trimmed and as-shipped are now
+  **identical to the pixel**, so the template is free to be formatted for reading — the address on its
+  own line, the prefix on its own line, no lone-bracket gymnastics, and eslint's
+  `element-content-newline` satisfied rather than fought.
+  **The transferable part:** a template that depends on source whitespace is a bug waiting for a
+  formatter. The fix is never a formatting trick — it is making the whitespace stop mattering.
+
+- [x] **DONE 2026-08-25 — a `:not()` added for readability deleted the focus ring on every button, and
+  only a real hover found it.** While building the refusal-reason work I wrote
+  `&:hover:not([aria-disabled='true'])` to keep the hover paint off a soft-disabled button. That is
+  specificity (0,3,0) against `:focus-visible`'s (0,2,0), so hover began winning the `box-shadow`
+  outright. **Measured with a real pointer over a focused button:** `:focus-visible` still matched,
+  `:hover` matched, and the computed `box-shadow` was `none`. Every `ds-button` in the library lost its
+  focus indicator under the cursor — not only ones with a custom shadow, because the hover shadow
+  defaults to `none` and `none` overwrites the ring just as well as a real shadow would.
+  **Fixed by cascade order rather than by more specificity:** hover → active → disabled →
+  `:focus-visible`, all four at one class deep, so source order decides and reads as the intent. The
+  disabled block also had to declare `box-shadow: none; transform: none`, because an `aria-disabled`
+  button DOES receive the pointer and was otherwise lifting on hover and dipping on press — feedback for
+  an action that refuses. Re-measured: ring survives hover, hover background still applies, the
+  soft-disabled button neither lightens nor dips, and its ring paints.
+  **Never shipped** — introduced and fixed inside the same unreleased window, so no CHANGELOG entry.
+  **The transferable part:** raising specificity to express "except in this case" silently reorders
+  every other rule that was relying on source order. In a state cascade, order is the mechanism; a
+  `:not()` is not a free clarification.
+
+- [x] **DONE 2026-08-25 — prettier, then stylelint, then eslint, over the whole project.** Run in that
+  order on Stas's instruction, with eslint knowingly rewriting part of prettier's output. Prettier
+  reformatted 140 files (115 html + 25 ts) and needed a **second pass** on three of them before it
+  reached a fixed point; stylelint had nothing left to change; eslint then pulled 77 of those files back
+  toward their original shape, leaving **63 files** actually changed (+903/−913). Builds, both docs
+  builds and all three checkers green afterwards. `lint` and `lint:styles` are now at **zero**.
+  **What it exposed, and what is now filed:** prettier still reports ~112 html files as unformatted and
+  always will — its line-breaking and the two `ds/template/*` eslint rules want opposite things, so each
+  tool undoes the other on the same files forever. That is a config conflict, not formatting debt, and
+  it is now a P2 on the board rather than a number everyone learns to ignore.
+
 - [x] **DONE 2026-08-25 — a refused button says why, and the two kinds of refusal took different answers.**
   `ds-button` gained `disabledReason` plus the field message inputs `hint` / `warning` / `error` /
   `messageIcon` / `reserveMessage`, and both buttons gained `ariaDescribedBy`. Nothing changes for a

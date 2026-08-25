@@ -11,6 +11,7 @@
 
 **Decisions — waiting on Stas, not on work**
 
+- P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
 - P2 · Five controls compute no `controlState`, so a validation state cannot reach the control itself —
@@ -39,24 +40,35 @@
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй").
 
 
-## Priority board (2026-08-24, recut after 0.10.2)
+## Priority board (2026-08-25, recut after the 0.11.0 work)
 
-**24 open: 1 P1, 6 P2, 17 P3** (counted from the index, not by hand). **Nothing on this board is
-buildable right now, and that was checked rather than assumed (2026-08-25).** All three remaining asks
-gate themselves on a first consumer request, and Stas held all three gates when asked directly; the P1
-is decided as not-now with the peers left at `^21.2.0`. So the next work here starts from a consumer
-report, not from this file. Nine are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **15 items — and 9 of those are
-Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave. What is left to BUILD is
-**four asks**; of them, one has a deck waiting on a verdict and three are gated on a first consumer ask.
-All three that arrived on 08-24 evening from mm-broker on 0.10.3 are now built and archived — a card
-that cannot clip its own box, a missing resting shadow hook, and (2026-08-25) a refusal reason with
-nowhere to go on a button. **All three were found as `::ng-deep` residue rather than reported, which
-is the transferable part: a deep selector a consumer still carries IS an unfiled ask** — and the button
-one is the strongest case for that rule, since it sat three days as a `[dsTooltip]` a consumer could
-not delete. **What remains from that batch is about this file's siblings** — a release that makes
-consumer code redundant said so in `informational` prose, where nothing executes it, and the manifest
-lint does not catch that spelling.
+**25 open: 1 P1, 7 P2, 17 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **16 items — and 10 of those are
+Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
+
+**What is actually buildable, checked rather than assumed.** All four remaining asks are gated: three
+gate themselves on a first consumer request and Stas held all three when asked directly (2026-08-25),
+and the fourth has a deck waiting on a verdict. The P1 is decided as not-now, with the peers left at
+`^21.2.0` — a consumer on Angular 22 still needs `--legacy-peer-deps`, and that is accepted, not
+forgotten. **So no ask is buildable without either a consumer report or a decision.** What IS
+actionable today is the Decisions column, and one of those is new and unusually cheap: the
+prettier-vs-eslint config conflict, which is a taste call with a recommendation attached and roughly a
+one-file change behind it.
+
+**The 08-24 batch from mm-broker is fully closed.** All three arrived as `::ng-deep` residue rather
+than as reports — a card that cannot clip its own box, a missing resting shadow hook, and a refusal
+reason with nowhere to go on a button (built 2026-08-25). **The transferable part is the detection
+rule: a deep selector a consumer still carries IS an unfiled ask** — and the button is its strongest
+case, since it sat three days as a `[dsTooltip]` the consumer could not delete. What remains from that
+batch is about this file's siblings: a release that makes consumer code redundant said so in
+`informational` prose, where nothing executes it, and the manifest lint does not catch that spelling.
+
+**Two findings from 08-25 that cost nothing to ship and would have cost a release to miss** (both in
+`done.md`, neither reachable by reading code): `ds-w3w` rendered a space its own format forbids — found
+only because Stas asked why a template line looked ugly, and confirmed by a 7.8px A/B measurement; and
+a `:not()` added for readability deleted the focus ring on **every** button, found only by putting a
+real pointer over a focused control. **Both say the same thing: the styles read correct and measured
+wrong.** That is the argument for the browser step in the release routine, not a preference for it.
 
 **The one buildable item spent three days filed as "not work" — and was built the same day it was
 reclassified.** A `ds-table` row could be opened only by clicking the row, and nothing on screen said
@@ -175,6 +187,12 @@ Requests, not defects. Ordered by who is blocked.
     right now "adopt rowActions" and "keep the design's teal" are simply incompatible.
 
 # Decisions — waiting on Stas, not on work
+
+## Tooling
+
+- [ ] **[P2] prettier and eslint want opposite things about HTML, so `lint:all` can never be green (measured 2026-08-25).** Ran the three formatters over the whole project on Stas's instruction — prettier, then stylelint, then eslint. Prettier reformatted **140 files** (115 html + 25 ts) and needed a second pass on three before reaching a fixed point. Eslint then pulled **77 of them back**, leaving 63 actually changed. Afterwards prettier reports **~112 html files as unformatted, permanently**: its line-breaking fights `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order`, and each tool undoes the other on the same files every time either runs. **This is not formatting debt — it is a config conflict, and no number of `fix:all` runs converges.** It is why the `format` step of `lint:all` has been red for so long that the PR gate was set to report-only, which then hid every real lint finding behind a known-red step.
+  **Three ways out, and it is a taste call, not a technical one:** (a) **stop prettier at the html door** — add `*.html` to `.prettierignore` and let the two `ds/template/*` rules own template formatting alone (smallest diff, and eslint already wins today in practice); (b) **drop the two ds rules** and let prettier own html (bigger one-off diff, loses the attribute-order convention the repo chose deliberately); (c) keep both and accept a permanently red step (status quo — but then say so in the script, so nobody re-runs `fix:all` hoping it converges). **Recommendation: (a).** Eslint is already the de-facto winner, prettier still owns ts/json/md where nothing contests it, and it makes `lint:all` green so the PR gate can stop being report-only.
+  **Not urgent, not cosmetic:** nothing ships wrong today, but a permanently red gate is how a real finding gets missed — which is the same failure mode as the report-only PR lint.
 
 ## Framework & forms
 

@@ -116,6 +116,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   no protection, since a redeclared protected member collides exactly as a public one does.
   Subclassing a DS component stays unsupported (`components.md` § Components); compose instead.
 
+### Fixed
+
+- **`ds-w3w` rendered a space its own format does not have.** The pill showed
+  `/// daring.lion.race`; a what3words identifier is `///daring.lion.race`, flush, which is what the
+  component's own `aria-label` has said all along — so the screen and the accessible name disagreed.
+  The cause was the template's line breaks: the prefix sat on its own line inside the mark element, and
+  in inline flow that leading/trailing whitespace collapses to a rendered space. Measured at the default
+  size, the pill was **7.8px wider** than the format allows. The mark row is a flex container now, which
+  drops whitespace-only text nodes outright, so the identifier renders flush and the template stays free
+  to be formatted for reading. No API change, and nothing to do on your side.
+
 ### What you can now DELETE
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
