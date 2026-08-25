@@ -17,7 +17,7 @@
         "ds-table"
       ],
       "surface": "template",
-      "verify": "Every `<ds-table>` that binds `total` either declares sortMode=\"server\" or leaves it unset (both resolve to server), and every table that holds all its rows AND has a sortable column declares sortMode=\"client\".",
+      "verify": "No `clientSort` is left anywhere. Every server-paged `<ds-table>` - one that binds `total` and reorders in its own (sortChange) - declares sortMode=\"server\" EXPLICITLY: at this version an unset sortMode resolves to \"client\", so leaving it off makes the table re-sort the page it is showing and the rows look sorted while the server order is unchanged. A table holding all its rows declares sortMode=\"client\" or leaves it unset; a table that sorts nothing declares sortMode=\"none\". Dev builds warn on total + client.",
       "restore": "sortMode=\"server\" on a table that should only emit (sortChange) and sort nothing itself"
     },
     {

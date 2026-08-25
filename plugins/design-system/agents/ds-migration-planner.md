@@ -147,14 +147,14 @@ Return ONLY a fenced ```json block:
                "map": { "<oldValue>": "<replacement token | null>" },
                "surface": "template | typescript | style | config | none",
                "detect": [], "verify": "<positive assertion>", "restore": "<snippet | null>",
-               "supersedes": ["<version>#<id>"], "supersededBy": ["<version>#<id>"] } ],
+               "supersedes": ["<version>#<id>"] } ],
   "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
   "informational": [ "<one-line summary of each Added/Fixed group>" ]
 }
 
 `map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `surface` is
 on every item; `detect` and `verify` on every behavioural one (see above); `restore` wherever a
-default moved; `supersedes` / `supersededBy` where a later release reverses an earlier item's
-guidance, as `<version>#<id>` both ways. `informational` is consumed directly by the orchestrator for
+default moved; `supersedes` on the LATER item where it reverses an earlier one's
+guidance, as `<version>#<id>`; there is no `supersededBy` — the link never points forward. `informational` is consumed directly by the orchestrator for
 the final report (no other subagent reads it), and `deleteList` drives its own pass. No preamble, no
 prose outside the JSON block.

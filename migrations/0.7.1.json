@@ -136,18 +136,23 @@
     },
     {
       "id": "modal-title-flex-moved-to-heading",
-      "kind": "class-rename",
-      "old": "ds-modal-card .title",
-      "new": ".heading",
-      "note": "STYLING ONLY, and only for a consumer who styles the modal's internal DOM. The `[eyebrow]` slot wrapped `<h2 class=\"title\">` together with the eyebrow in a new `<div class=\"heading\">`, and the `flex: 1` that used to sit on the `<h2>` moved to that wrapper. A consumer rule that targeted `.modal-card .title` for the flex slot must retarget `.heading`; rules that target `.title` for typography or colour are unaffected. Scope strictly to selectors under ds-modal / ds-modal-card.",
+      "kind": "behavior",
+      "old": "ds-modal-card ::ng-deep .title { flex: … }",
+      "new": null,
+      "note": "STYLING ONLY, and only for a consumer who styles the modal internal DOM. `.title` is NOT renamed - it is still emitted. What changed is the box that carries the row: the `[eyebrow]` slot wrapped `<h2 class=\"title\">` together with the eyebrow in a NEW `<div class=\"heading\">`, and the `flex: 1` that used to sit on `.title` moved to that wrapper. ACTION only if you set `flex`, `width` or `margin` on `.title` to control how the header row divides its space: move that declaration to `.heading`. A rule that only paints `.title` - colour, font, letter-spacing - is unaffected and must NOT be re-pointed.",
       "searchHints": [
-        "ds-modal",
-        "ds-modal-card",
-        ".modal-card .title",
         ".title",
-        "flex: 1"
+        ".heading",
+        "ds-modal-card",
+        "ds-modal"
       ],
-      "surface": "style"
+      "surface": "style",
+      "verify": "Open a ds-modal-card that has both a title and an [eyebrow]: the title and eyebrow share one block that takes the free width, and the close button stays hard right. Any `.title` rule you kept still paints the heading text.",
+      "detect": [
+        "ds-modal-card ::ng-deep .title",
+        ".title { flex",
+        ".title{flex"
+      ]
     },
     {
       "id": "table-client-sort-blanks-last-and-numeric-collation",

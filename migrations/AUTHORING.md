@@ -117,10 +117,12 @@ longer holds. `0.8.0#table-client-sort-replaced-by-sort-mode` told consumers uns
 `'client'` and that a server-paged table must declare `"server"`; `0.9.0#table-sort-filter-mode-default-server`
 made unset mean `'server'` again.
 
-So the later item carries `supersedes: ["0.8.0#table-client-sort-replaced-by-sort-mode"]` and the
-earlier one `supersededBy: ["0.9.0#table-sort-filter-mode-default-server"]`. Both directions, because
-both readers exist. `tools/migration-lint.mjs` resolves every reference, so a typo or a renamed id
-fails the release rather than pointing at nothing.
+So the LATER item carries `supersedes: ["0.8.0#table-client-sort-replaced-by-sort-mode"]`, and the
+earlier file is not touched. **The link only ever points back.** A published manifest is frozen when
+the next one is written and an upgrade applies it on its own, so a `supersededBy` would name a
+version that did not exist when the file was authored — `tools/migration-lint.mjs` rejects the field
+outright (M028). It resolves every `supersedes` reference, so a typo or a renamed id fails the
+release rather than pointing at nothing.
 
 ## `value-remap` map conventions
 
@@ -269,8 +271,8 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] Default-value / timing / event-payload changes are their own `behavior` entry, with `restore`
       (or an explicit `null`) AND a `deleteList` entry for whatever the flip made redundant. (lint,
       for the `restore` half)
-- [ ] An entry that reverses an earlier release's guidance links it both ways — `supersedes` here,
-      `supersededBy` there. (lint, for the references resolving)
+- [ ] An entry that reverses an earlier release's guidance carries `supersedes` naming it; the earlier
+      file stays untouched, and `supersededBy` is rejected. (lint, M028 + reference resolution)
 - [ ] Substring-colliding renames: longer has its own entry; shorter's `note` says "rename longer first".
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
 - [ ] Widened/changed exported types each have a `behavior` entry naming who breaks

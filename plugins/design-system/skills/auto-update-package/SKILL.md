@@ -63,7 +63,7 @@ behavioral fix, or the change is genuinely too convoluted to do safely.
                "map": { "<oldValue>": "<newValue|null|markup>" },
                "surface": "template|typescript|style|config|none", "detect": [],
                "verify": "...", "restore": "...|null",
-               "supersedes": ["<version>#<id>"], "supersededBy": ["<version>#<id>"] } ],
+               "supersedes": ["<version>#<id>"] } ],
   "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
   "informational": [ "..." ] }
 
@@ -79,7 +79,8 @@ an item that fires and one that is silently dropped.** `surface` names which of 
 artifacts changes; `detect` carries the shapes as the consumer writes them, for the common case where
 the affected code names no DS symbol at all; `verify` is the positive assertion a re-check can test
 when there is no old identifier to miss; `restore` is the way back from a changed default;
-`supersedes` / `supersededBy` link an item to the later one that reverses it. `deleteList` is what the
+`supersedes` on a LATER item names the earlier one it reverses — one direction only, since a
+published manifest cannot know its own future. `deleteList` is what the
 release made UNNECESSARY, with a greppable `find` — a separate pass, not an item.
 Every manifest in the DS repo carries these fields, but a consumer's `node_modules` copy can predate
 them (the fields shipped in the release after 0.10.1): when they are missing, the planner enriches
@@ -235,9 +236,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    means the shapes did not match THIS consumer's spelling, not that they are unaffected. Read the
    item's `verify` and go look yourself over the named surface (you are opus; this is a semantic
    pass, not a grep), and record not-applicable only with the reason you satisfied yourself of it.
-   Items the plan marks `supersededBy` a version **inside this chain** are skipped here with that
-   reason recorded — the later item is the one to act on, and doing both means doing work the next
-   version undoes.
+   An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here with
+   that reason recorded — the later item is the one to act on, and doing both means doing work the
+   next version undoes. The link only points back, so build the skip set by reading every
+   `supersedes` in the chain and skipping the ids it names; nothing marks an item from its own file.
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
