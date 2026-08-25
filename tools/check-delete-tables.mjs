@@ -56,15 +56,19 @@ for (const { file, label, needle } of manifests) {
     problems.push(`${label}: ${entries.length} delete entr(ies) and no "${HEADING}" table`);
     continue;
   }
+  // The FIRST column only. The second is the "Delete it, because" prose, which routinely names the
+  // replacement API — so scanning the whole line let three entries pass on a shape that appeared
+  // in the explanation rather than in the locator a reader actually greps with.
   const rows = block
     .slice(headingAt)
     .split('\n')
-    .filter((line) => /^\| (?!---|If you have)/.test(line));
+    .filter((line) => /^\| (?!---|If you have)/.test(line))
+    .map((line) => line.split('|')[1] ?? '');
 
   for (const entry of entries) {
     checked++;
     const shapes = [entry.find ?? []].flat();
-    if (!rows.some((row) => shapes.some((shape) => row.includes(shape)))) {
+    if (!rows.some((cell) => shapes.some((shape) => cell.includes(shape)))) {
       problems.push(
         `${label}#${entry.id}: no table row carries any of its find shapes ` +
           `(${shapes.slice(0, 3).join(', ')})`,

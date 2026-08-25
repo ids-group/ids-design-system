@@ -486,7 +486,8 @@
       "surface": "style",
       "find": [
         "!important",
-        "density="
+        "density=",
+        "--ds-table-cell-pad"
       ],
       "why": "`!important` on `ds-table` cell padding under `density=\"compact\"`",
       "replaceWith": "Compact no longer out-specifies the padding hooks"
