@@ -4,6 +4,53 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+- [x] **DONE 2026-08-26 — TWO of the five box-less controls needed a control state; three did not, and
+  the evidence said so before I wrote a line.** Stas pushed back on the item's premise — do a slider and
+  a switch really have errors to show? — so this was researched instead of implemented wholesale.
+  **What each control can even BE invalid about:**
+  - **`ds-checkbox`** — a single required checkbox is the classic validated boolean ("accept the terms").
+    Real state. **Wired.**
+  - **`ds-radio-group`** — "choose one" unanswered. Real state, and the ONLY one with proven demand in a
+    live consumer. **Wired.**
+  - **`ds-radio` alone** — a lone radio is meaningless; the choice belongs to the group, so an error on
+    one radio inside a set is wrong by construction. **Not wired.**
+  - **`ds-switch`** — a switch applies on flip, not on submit, so validating it is usually a design smell.
+    **Not wired.**
+  - **`ds-slider`** — always holds a value inside min/max, and the control enforces the bounds itself.
+    "Required" is not expressible and out-of-range cannot happen. **Not wired.**
+  **Counted in mm-broker, 39 usages** — the evidence, not the theory: `ds-checkbox` 24 usages with **0**
+  error bindings (4 hints); `ds-radio` 1 with 0; `ds-radio-group` 2 with **1**; `ds-switch` 3 with 0 but
+  **3 of 3 carrying a hint**; `ds-slider` **0 usages at all**. The one `[invalid]` in the whole app is on
+  a radio GROUP. So the switch's real need is the hint it already has, and the slider has no evidence in
+  either direction.
+  **The gap was only ever the paint.** All five already render `ds-field-message` and already inherit
+  `hint`/`error`/`warning`; `resolveFieldMessage` was already being called and its third member,
+  `controlState`, simply went unread. Wiring it was one line of TS plus one host binding per component.
+  **Two different treatments, because the shapes differ.** The checkbox moves its BORDER only — at 16px a
+  tinted fill reads as "checked", which is why the shared `field-state` mixin (built for a 39px box with
+  a background) could not be reused. Measured: errored border `rgb(219, 31, 31)` against a plain
+  `rgb(194, 201, 214)`, background left white. The radio group colours its LABEL: when a required group
+  is unanswered no single radio is wrong, so reddening five rings would point five fingers at one
+  unanswered question. Measured: label `rgb(186, 23, 23)` against `rgb(53, 59, 77)`, rings unchanged,
+  and `aria-invalid` was already on the group.
+  **Open if you want it louder:** the rings could take the colour too, via the group handing a value down
+  a private channel that `ds-radio`'s existing border resolver already consults. Not built — that is a
+  visual call, and the label plus the message already locate the error.
+  **One API smell noted, not acted on:** `ds-radio` extends `DsFieldBase`, so a single radio *offers*
+  `error`/`invalid` inputs it should never be given. Removing them is breaking; the paint deliberately
+  does not honour them, so binding one now does nothing visible.
+  ORIGINAL:
+- [ ] **[P2] Five controls compute no `controlState`, so a validation state cannot reach the control itself — only its message.** `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-slider` and `ds-switch` are the five of fourteen that do not bind `[attr.data-field-state]`, and they do not read `controlState` at all (grep: zero occurrences in each). The other nine do, and the shared `field-state` mixin paints them.
+  **P3 → P2, 2026-08-21:** raised because the session that shipped the field-state work made the gap concrete: on a checkbox the ONLY sign of an invalid state is the red line underneath, and the same holds for radio, radio-group, slider and switch. Five of fourteen controls cannot show a validation state on the control itself, which is the inconsistency this board exists to remove, and `color-not-only` says a message alone is not enough. Still a decision rather than work — the question is whether a box-less control paints its own indicator — but it is the same class of question as the glyph one and should be answered beside it.
+  **Partly correct by design** — they have no bordered box for a border to appear on, which is also why they deliberately did not get `[success]`. **But they are not shapeless:** a checkbox has a square with a border, a switch has a track, a radio has a ring. Today none of those can carry error, warning or success, so on a checkbox the only sign of an invalid state is the red line underneath.
+  **Decide whether the box-less controls should paint their own indicator** for error/warning (and then whether `[success]` follows). If yes, it is a `field-state`-style mixin per control shape rather than a reuse of the bordered-box one, since the target is a 16px square rather than a 39px field.
+
+Nothing moves until a verdict; the work behind each is scoped.
+
+## Architecture / tokens
+
+> **Token-architecture pass (P2, interlocked).** The three items below + the semantic radius+elevation role layer (under "Missing tokens / foundations") share ONE principle — a **role layer between foundation and component**, single pointer, shades cascade. Spec them together; sequence the single-source colour model first and the rest fall out. Don't action piecemeal. _(The typography `.t-*` `--ds-t-*` hooks — the same consumer-first contract at the global utility layer — already SHIPPED 2026-07-24, see done.md.)_
+
 - [x] **DONE 2026-08-26 — `ds-table`'s pager took no inset, so it sat out of line with the columns and
   on the container's border.** The footer carried `padding-top` alone. Reproduced in our own docs before
   touching it: padding `12px 0 0 0`, footer content at **0** against the cells' **16**, and the summary

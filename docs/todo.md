@@ -35,7 +35,6 @@
 - P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
-- P2 · Five controls compute no `controlState`, so a validation state cannot reach the control itself —
 - P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the
 - P2 · `.ds-interactive` — global state-interaction contract (agreed; prototype before spec —
 - P2 · Theme recipe vs hand-tuned picks — alignment decision. Button/icon-button state derivation uses the
@@ -63,7 +62,7 @@
 
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**26 open: 1 P1, 7 P2, 18 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+**25 open: 1 P1, 6 P2, 18 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
 first consumer ask and two are Records, so the live board is **14 items — and 11 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
 
@@ -295,17 +294,6 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
   **The case against:** neither has been asked for by a consumer, and `ds-number-stepper` may be intended as a bare control composed inside something else — though its own `ariaLabel` and `size` inputs suggest standalone use.
   **Cheap now that the base exists:** `extends DsFieldBase` plus a `resolveFieldMessage` call, a `ds-field-message` in the template, and the label block — the same shape all fourteen already share.
   **Cheaper again since 2026-08-25:** the base was split into `DsMessageBase` (the message half) and `DsFieldBase` (that plus `errors`/`invalid`/`touched`) so `ds-button` could take the message line, and `ds-button` is now the worked example of wiring the message half into a component that was never a field. Both of these hold a value, so both want the full `DsFieldBase` — but the pattern, the resolver call and the template shape are all demonstrated now rather than described.
-
-- [ ] **[P2] Five controls compute no `controlState`, so a validation state cannot reach the control itself — only its message.** `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-slider` and `ds-switch` are the five of fourteen that do not bind `[attr.data-field-state]`, and they do not read `controlState` at all (grep: zero occurrences in each). The other nine do, and the shared `field-state` mixin paints them.
-  **P3 → P2, 2026-08-21:** raised because the session that shipped the field-state work made the gap concrete: on a checkbox the ONLY sign of an invalid state is the red line underneath, and the same holds for radio, radio-group, slider and switch. Five of fourteen controls cannot show a validation state on the control itself, which is the inconsistency this board exists to remove, and `color-not-only` says a message alone is not enough. Still a decision rather than work — the question is whether a box-less control paints its own indicator — but it is the same class of question as the glyph one and should be answered beside it.
-  **Partly correct by design** — they have no bordered box for a border to appear on, which is also why they deliberately did not get `[success]`. **But they are not shapeless:** a checkbox has a square with a border, a switch has a track, a radio has a ring. Today none of those can carry error, warning or success, so on a checkbox the only sign of an invalid state is the red line underneath.
-  **Decide whether the box-less controls should paint their own indicator** for error/warning (and then whether `[success]` follows). If yes, it is a `field-state`-style mixin per control shape rather than a reuse of the bordered-box one, since the target is a 16px square rather than a 39px field.
-
-Nothing moves until a verdict; the work behind each is scoped.
-
-## Architecture / tokens
-
-> **Token-architecture pass (P2, interlocked).** The three items below + the semantic radius+elevation role layer (under "Missing tokens / foundations") share ONE principle — a **role layer between foundation and component**, single pointer, shades cascade. Spec them together; sequence the single-source colour model first and the rest fall out. Don't action piecemeal. _(The typography `.t-*` `--ds-t-*` hooks — the same consumer-first contract at the global utility layer — already SHIPPED 2026-07-24, see done.md.)_
 
 - [ ] **[P2] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-07-24** (`_semantic.scss:91-93` channels; `:111-112` hover/pressed already `color-mix`; halos `:209-229`; gray tint `_base-palette.scss:41`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; **UNBLOCKS the `ds-color`/`--accent-*` indirection**. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: `presentations/color-engine-relative.html`.
 

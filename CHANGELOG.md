@@ -10,6 +10,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-checkbox` and `ds-radio-group` now show a validation state on the CONTROL, not only in the
+  message under it.** Both already rendered `ds-field-message` and already took `hint`/`error`/`warning`;
+  what was missing was the paint, so on a checkbox the only sign of an invalid state was the red line
+  underneath — which `color-not-only` says is not enough on its own.
+  **Two treatments, because the shapes differ.** The checkbox moves its **border** and nothing else: at
+  16px a tinted fill reads as "checked", so the shared field mixin — built for a 39px box with a
+  background — could not be reused. The radio group colours its **label**: when a required group is
+  unanswered no single radio is wrong, so reddening every ring would point five fingers at one
+  unanswered question. Both also carry `warning`.
+  **Deliberately NOT extended to `ds-radio`, `ds-switch` or `ds-slider`**, and the reasoning is on the
+  record rather than left to taste: a lone radio's choice belongs to its group, a switch applies on flip
+  rather than on submit, and a slider always holds a value inside bounds the control enforces itself —
+  "required" is not even expressible there. Counted across 39 usages in one consumer's three apps, the
+  only `[invalid]` binding in the whole codebase is on a radio group; every switch there carries a hint
+  and no error, and the slider is unused. Those three keep their message line, which is what they use.
+
 - **`ds-sidenav` `brandRoute` — the brand row can lead home.** Set it and the mark plus wordmark become
   one link; leave it unset and the row stays the plain block it was, because a logo that goes nowhere
   should not be a link and every app decides for itself whether its mark is a way home. The link
