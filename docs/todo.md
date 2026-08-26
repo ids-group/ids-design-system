@@ -25,11 +25,22 @@
 - **Correction to the two asks closed 2026-08-26 — the banner one was MINE, and your read was right.**
   The centring came from `auth-card.component.scss`, where a `:host ::ng-deep { .title { text-align:
   center } }` written for the page heading also matched the DS's internal `div.title` inside
-  `ds-banner`. Fixed at the source by qualifying the selector (`h1.title, h2.title`), not by the
-  `text-align: start` workaround, which is deleted. Verified after: banner title and body both `start`,
+  `ds-banner`. Fixed at the source by qualifying the selector (`h1.title, h2.title`). Verified after:
+  banner title and body both `start`,
   page `h1.title` still centred. The transferable rule for consumers is the mirror of yours — an
   unqualified class selector inside `::ng-deep` reaches component internals, so a "DS bug" that only
   appears in one context is probably the consumer's own cascade.
+
+  **The DS-side `text-align: start` STAYS, and that was checked rather than assumed (2026-08-26).**
+  This entry first said it was deleted as a workaround; it is not deleted, and it should not be.
+  Measured on the built docs with a centred ancestor: with the declaration the banner's title and body
+  both compute `start`; with it neutralised they both compute `center`. So it does real work that has
+  nothing to do with this incident — a banner is two text blocks that have to read as ONE alignment,
+  which is the same rule as [[feedback-components-resist-external-layout]]. Removing it would only make
+  the DS inherit whatever a page decides, which is how the consumer's bug became visible in the first
+  place. **Kept on its own merits, not as a patch over `auth-card`.** The cost is real and small: a
+  consumer who wants a centred banner can no longer get one by centring its container, and would need
+  an input — nobody has asked.
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
