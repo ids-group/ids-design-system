@@ -41,6 +41,15 @@ if (!hasEntry) fail("'## Unreleased' is empty — add release notes before relea
 
 // The manifest is what a consumer's upgrade actually runs, and an undetectable item
 // passes the whole find/apply/recheck loop in silence. Lint before the cut.
+// A green lint means the data satisfies the rules, not that the rules can still fire: seven of
+// them had stopped matching anything and went on reporting OK. The selftest mutates a manifest
+// per rule and fails if the rule stays silent, so run it BEFORE trusting the lint's verdict.
+try {
+  execSync('node tools/migration-lint-selftest.mjs', { stdio: 'inherit' });
+} catch {
+  fail('a migration-lint rule can no longer fire — the lint below would pass on data it should reject.');
+}
+
 try {
   execSync('node tools/migration-lint.mjs', { stdio: 'inherit' });
   execSync('node tools/check-delete-tables.mjs', { stdio: 'inherit' });
