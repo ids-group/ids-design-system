@@ -469,7 +469,7 @@
   "--ds-menu-border-color": "Menu panel border colour (defaults to --border-divider).",
   "--ds-menu-clip-radius": "Radius a ds-menu clips its rows to when it sits inside a rounded panel. Published by ds-popover as its own radius less the border it contains, so the rows stay concentric with the panel; a bare menu leaves it flat and rounds its edge rows from --ds-menu-radius instead.",
   "--ds-menu-divider-color": "Menu item group divider colour (defaults to --border-divider).",
-  "--ds-menu-divider-spacing": "Vertical padding around a ds-menu-divider (default 0). Already 0, so a consumer zeroing it is deleting a no-op — one did.",
+  "--ds-menu-divider-spacing": "Air above and below a ds-menu-divider. Default 0, and 0 means FLUSH: the divider cancels the menu's own row gap, so the items touch the line rather than sitting a row's width away from it. Set this only when you want the boundary to breathe more than the rows do — it is the one knob that can desync the divider from the row rhythm, which is exactly the defect 0.8.0 removed (a separated group read as a hole). For an airier menu overall, --ds-menu-gap is the better lever: it spaces every row evenly and cannot open a gap only at the boundary.",
   "--ds-menu-gap": "Gap between menu items.",
   "--ds-menu-item-description-color": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary, quieter than the label so the action still reads first).",
   "--ds-menu-item-description-font-size": "Type size of that second line (default --font-size-xs).",

@@ -38,6 +38,28 @@
         "TS4114",
         "TS2415"
       ]
+    },
+    {
+      "id": "menu-divider-now-flush",
+      "kind": "behavior",
+      "old": "ds-menu-divider",
+      "new": null,
+      "surface": "style",
+      "note": "A divider is a boundary, not a row, so it no longer takes space of its own: it cancels ds-menu's row gap and the items sit flush against the line. Measured 0px above and 0px below, where it was one row gap (2px at the default --ds-menu-gap) on each side. Its own padding already defaulted to 0 in 0.8.0; this removes the gap that was landing on top of it. The --ds-menu-divider-spacing token is unchanged and still gives the boundary air.",
+      "action": "Nothing unless you set --ds-menu-divider-spacing. If you do, your boundary now measures your value alone instead of your value plus the row gap, so add one --ds-menu-gap back into it to keep the previous measurement.",
+      "appliesWhen": "Only menus that use ds-menu-divider.",
+      "pitfall": "0.8.0's restore recipe (`ds-menu { --ds-menu-divider-spacing: var(--space-1) }`) counts as setting it, so a menu that followed that advice tightens without anyone editing it.",
+      "verify": "Open a menu with a divider: the items touch the line. If you set the spacing token, the air either side equals your value exactly.",
+      "searchHints": [
+        "ds-menu-divider",
+        "--ds-menu-divider-spacing",
+        "--ds-menu-gap",
+        "menu-divider"
+      ],
+      "detect": [
+        "ds-menu-divider",
+        "--ds-menu-divider-spacing"
+      ]
     }
   ],
   "informational": [
@@ -51,7 +73,7 @@
     "Every item in every published manifest now carries `action` (the imperative alone, the only field to execute), `appliesWhen` (the boundary, including what is NOT affected) and `pitfall` (the way to apply it correctly and still break the app); `note` keeps the reasoning. If you read these files with your own tooling, read `action` first and `pitfall` before reporting an item done. Nothing was removed - every field that was there is still there with the same name and meaning.",
     "ds-w3w renders `///word.word.word` flush now. It previously showed a space after the `///` prefix (7.8px wider than the format allows, measured), which also disagreed with its own aria-label. Purely a rendering fix - no API change and nothing to edit. Worth a look only if you compensated for the space: a negative margin or a letter-spacing tweak aimed at ds-w3w's mark, or a hand-built pill you wrote because the DS one looked wrong, would now over-correct.",
     "ds-banner now sets `text-align: start` on its own box instead of inheriting. Nothing to do unless you were centring a banner by centring its container - that no longer reaches the banner, and the fix is to say so rather than to work around it. The reported symptom (a centred title over a start-aligned body) does not come from the DS: measured across every banner and both layouts, title and body both compute `start`, and a centred ancestor moves BOTH - it cannot split them. If you still see the split, something on your side targets `.title` or `.body` directly; those are generic class names and a global rule reaches them.",
-    "ds-sidenav-footer's account menu uses ds-menu-divider now instead of a hand-rolled div, so --ds-menu-divider-color and --ds-menu-divider-spacing finally reach it. Its line also moves CLOSER: it sat 6px from its neighbours because the local rule added spacing on top of the menu's gap, and it is now 2px, the same as between any two ordinary items - a divider takes one row's place and adds nothing. If you want the old airier look in your own menus, set --ds-menu-divider-spacing yourself; it is the supported way and it now works everywhere."
+    "ds-sidenav-footer's account menu uses ds-menu-divider now instead of a hand-rolled div, so --ds-menu-divider-color and --ds-menu-divider-spacing finally reach it. Its line also moves CLOSER - it sat 6px from its neighbours and is flush now, along with every other divider; see the menu-divider-now-flush item for what that means if you set the spacing token."
   ],
   "deleteList": [
     {

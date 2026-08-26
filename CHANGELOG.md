@@ -138,6 +138,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   as UNEVEN spacing; that part did not reproduce — the gaps were symmetric both before and after. The
   defect was that there was extra spacing at all.
 
+- **`ds-menu-divider` sits FLUSH now — a boundary is not a row, so it takes no space of its own.** Its
+  own padding already defaulted to 0 (0.8.0), but `ds-menu` is a flex column and its row gap still
+  landed above AND below the line, so every divider sat one row's width away from the items it
+  separates. It now cancels that gap: **measured 0px above the line and 0px below**, while two ordinary
+  items keep their 2px. `--ds-menu-divider-spacing` is untouched and still the way to add air —
+  verified: `8px` gives exactly 8px each side, and clearing it returns to flush. A divider used outside
+  a `ds-menu` is unaffected (the cancel falls back to `0px`).
+  **If you set `--ds-menu-divider-spacing`** — including via 0.8.0's restore recipe — **your boundary
+  tightens by the menu's row gap**, because that gap no longer stacks on top of your value. Add it back
+  in your own value if you want the old measurement exactly.
+
 - **`ds-w3w` rendered a space its own format does not have.** The pill showed
   `/// daring.lion.race`; a what3words identifier is `///daring.lion.race`, flush, which is what the
   component's own `aria-label` has said all along — so the screen and the accessible name disagreed.

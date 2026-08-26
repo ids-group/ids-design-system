@@ -3717,8 +3717,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-menu-divider-spacing",
-        "value": "0",
-        "notes": "Vertical padding around a ds-menu-divider (default 0). Already 0, so a consumer zeroing it is deleting a no-op — one did."
+        "value": "0px",
+        "notes": "Air above and below a ds-menu-divider. Default 0, and 0 means FLUSH: the divider cancels the menu's own row gap, so the items touch the line rather than sitting a row's width away from it. Set this only when you want the boundary to breathe more than the rows do — it is the one knob that can desync the divider from the row rhythm, which is exactly the defect 0.8.0 removed (a separated group read as a hole). For an airier menu overall, --ds-menu-gap is the better lever: it spaces every row evenly and cannot open a gap only at the boundary."
       },
       {
         "name": "--ds-menu-item-label-color",
