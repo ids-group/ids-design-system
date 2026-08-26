@@ -37,6 +37,18 @@
 
   /* No brand text and no projected [brand] logo → collapse the row. */
   &:empty { display: none; }
+}
+
+/* Only when `brandRoute` makes the row a link — the plain row is not interactive. */
+.brand-link {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--ds-radius-control);
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ds-control-focus-shadow);
+  }
 
   /* Pierces encapsulation because projected nodes carry the CONSUMER's attribute,
      not this component's; anchored on `.brand` so it compiles scoped rather than

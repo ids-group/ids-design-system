@@ -8,22 +8,28 @@
            that used to wrap it is gone. Collapsing is desktop-only (the overlay
            is always full width), and closing is overlay-only. -->
   <div class="brand">
-    <span class="mark">
-      D
-    </span>
-
-    <!-- Always rendered, hidden by CSS when collapsed: mounting it on expand put
-         the full name into a rail still 48px wide, so it wrapped to two lines and
-         unwrapped again as the width animated. -->
-    <div class="brand-text">
-      <span class="brand-name">
-        Design System
+    <a
+      class="brand-home"
+      routerLink="/"
+      aria-label="Design System, home"
+    >
+      <span class="mark">
+        D
       </span>
 
-      <small>
-        Boilerplate v{{ version }}
-      </small>
-    </div>
+      <!-- Always rendered, hidden by CSS when collapsed: mounting it on expand put
+           the full name into a rail still 48px wide, so it wrapped to two lines and
+           unwrapped again as the width animated. -->
+      <div class="brand-text">
+        <span class="brand-name">
+          Design System
+        </span>
+
+        <small>
+          Boilerplate v{{ version }}
+        </small>
+      </div>
+    </a>
 
     @if (layout.railOverlay()) {
       <ds-icon-button

@@ -1,4 +1,18 @@
-<div class="brand">
+@if (brandRoute()) {
+  <a
+    class="brand brand-link"
+    [routerLink]="brandRoute()"
+    [attr.aria-label]="brandAriaLabel()"
+  >
+    <ng-container [ngTemplateOutlet]="brandContent" />
+  </a>
+} @else {
+  <div class="brand">
+    <ng-container [ngTemplateOutlet]="brandContent" />
+  </div>
+}
+
+<ng-template #brandContent>
   <ng-content select="[brand]"></ng-content>
 
   @if (letterGlyph() || brandName()) {
@@ -19,6 +33,6 @@
       }
     </span>
   }
-</div>
+</ng-template>
 
 <ng-content></ng-content>

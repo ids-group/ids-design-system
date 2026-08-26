@@ -27,6 +27,12 @@
 }
 
 .item {
+  /* The destination-less variant is a <button>, so the UA's chrome has to go for
+     it to sit level with the two <a> variants. Inert on an anchor. */
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
   display: flex;
   align-items: center;
   gap: var(--space-3);

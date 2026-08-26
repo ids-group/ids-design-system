@@ -6,6 +6,8 @@ import {
   contentChild,
   input,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { BrandNameDirective } from './brand-name.directive';
 import { resolveBrandValue } from '../brand-defaults';
 import { SIDENAV, type SidenavContract } from './sidenav.token';
@@ -13,6 +15,7 @@ import { SIDENAV, type SidenavContract } from './sidenav.token';
 @Component({
   selector: 'ds-sidenav',
   standalone: true,
+  imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -39,6 +42,16 @@ export class SidenavComponent implements SidenavContract {
    *  "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`;
    *  unset falls back to `DS_CONFIG.brand.logoLetter`. */
   readonly logoLetter = input<string | null>(null);
+  /** Route the brand row navigates to — typically the app's home. Unset leaves the
+   *  row a plain block, exactly as before: a logo that goes nowhere should not be a
+   *  link, and every app decides for itself whether its mark is a way home.
+   *  Router targets only; `RouterLink` is instantiated only once this is set, so an
+   *  app with no router provided still renders the sidenav. */
+  readonly brandRoute = input<string | readonly unknown[] | null>(null);
+  /** Accessible name for the brand link. Unset names it "<brand>, home" — the
+   *  destination is what a link has to announce, and a wordmark alone does not say
+   *  it. Ignored while `brandRoute` is unset. */
+  readonly brandLinkLabel = input<string | null>(null);
 
   /** The template must read THIS, never the input beside it — that one is null
    *  until bound, and the config default lives here. */
@@ -55,4 +68,14 @@ export class SidenavComponent implements SidenavContract {
   protected readonly markGlyph = computed(
     () => this.letterGlyph() || [...this.brandName()][0] || '',
   );
+
+  protected readonly brandAriaLabel = computed(() => {
+    const own = this.brandLinkLabel();
+    if (own) {
+      return own;
+    }
+    const name = this.brandName();
+
+    return name ? `${name}, home` : 'Home';
+  });
 }
