@@ -39,10 +39,26 @@ if (!unreleased) fail("no '## Unreleased' section in CHANGELOG.md.");
 const hasEntry = unreleased[1].split('\n').some((line) => line.trim().startsWith('-'));
 if (!hasEntry) fail("'## Unreleased' is empty — add release notes before releasing.");
 
+try {
+  execSync('node tools/check-class-surface-entry.mjs', { stdio: 'inherit' });
+} catch {
+  fail('the `## Unreleased` class-collision entry is behind the code (classes named above).');
+}
+
+// A green lint means the data satisfies the rules, not that the rules can still fire: seven of
+// them had stopped matching anything and went on reporting OK. The selftest mutates a manifest
+// per rule and fails if the rule stays silent, so run it BEFORE trusting the lint's verdict.
+try {
+  execSync('node tools/migration-lint-selftest.mjs', { stdio: 'inherit' });
+} catch {
+  fail('a migration-lint rule can no longer fire — the lint below would pass on data it should reject.');
+}
+
 // The manifest is what a consumer's upgrade actually runs, and an undetectable item
 // passes the whole find/apply/recheck loop in silence. Lint before the cut.
 try {
   execSync('node tools/migration-lint.mjs', { stdio: 'inherit' });
+  execSync('node tools/check-delete-tables.mjs', { stdio: 'inherit' });
 } catch {
   fail('migrations/ failed the manifest lint (errors above).');
 }

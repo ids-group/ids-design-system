@@ -113,13 +113,13 @@
       opacity: 0;
       transition: transform var(--demo-dur) var(--demo-ease), opacity var(--demo-dur) var(--demo-ease);
     }
-    .demo-toast__bar {
+    .demo-toast-bar {
       width: 3px;
       align-self: stretch;
       background: var(--success);
       border-radius: var(--radius-sm);
     }
-    .demo-toast__title {
+    .demo-toast-title {
       font: var(--font-weight-bold) var(--font-size-s) / 1 var(--font-sans);
       color: var(--text-primary);
     }

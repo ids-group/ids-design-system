@@ -69,7 +69,6 @@ export class AutocompleteComponent<T = unknown>
   extends DsControlValueAccessor<T | readonly T[] | null>
   implements OnDestroy
 {
-
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();

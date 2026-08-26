@@ -43,7 +43,10 @@ export class FieldMessageComponent {
 
   /** `hint` rather than `default` in the config: every field calls this line a hint,
    *  and `default` would read as "the default icon". */
-  private static readonly BUILT_IN: Record<FieldMessageState, IconName | false> = {
+  private static readonly BUILT_IN: Record<
+    FieldMessageState,
+    IconName | false
+  > = {
     error: 'error',
     warning: 'warn',
     success: 'success',

@@ -1,6 +1,5 @@
 @use '../../styles/field-state' as field-state;
 
-/* Public --ds-otp-* are read with fallbacks, never declared. */
 
 :host {
   --_otp-cell-w: var(--ds-otp-cell-w, var(--otp-cell-w));

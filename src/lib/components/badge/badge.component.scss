@@ -6,7 +6,6 @@
 }
 
 .badge {
-  /* Public --ds-badge-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_badge-bg-color:          var(--ds-badge-bg-color,          var(--surface-secondary));
   --_badge-label-color:          var(--ds-badge-label-color,          var(--text-secondary));
   --_badge-radius:      var(--ds-badge-radius,      var(--ds-radius-pill));

@@ -1,7 +1,6 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* Public --ds-modal-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_modal-bg-color:              var(--ds-modal-bg-color,              var(--surface-overlay));
   --_modal-radius:          var(--ds-modal-radius,          var(--ds-radius-panel));
   --_modal-shadow:          var(--ds-modal-shadow,          var(--ds-elevation-modal));
@@ -220,7 +219,6 @@
 }
 
 .modal-backdrop {
-  /* Public --ds-modal-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_modal-backdrop: var(--ds-modal-backdrop, var(--surface-scrim));
 
   position: fixed;

@@ -1,9 +1,7 @@
 import { Directive, booleanAttribute, input } from '@angular/core';
-import { resolveReserveMessage } from './field-defaults';
-import type { IconName } from '../icons/icons.data';
+import { DsMessageBase } from './message-base';
 import {
   normalizeFieldErrors,
-  trimmedText,
   type DsFieldError,
   type DsFieldErrorsInput,
 } from './field-errors';
@@ -16,24 +14,12 @@ import {
  * lifting them would hand a checkbox a `success` or a slider a `label` it never
  * had — a silent public-API addition.
  *
- * `@Directive()` is required, not decoration: Angular refuses to compile a base
- * class that declares inputs without it.
+ * The message half lives one level up in `DsMessageBase`, which anything with a
+ * message line can take. What stays here is the validation state a form control
+ * has and a plain control does not.
  */
 @Directive()
-export abstract class DsFieldBase {
-  /** Helper text shown below the field. */
-  readonly hint = input<string, string | null | undefined>('', {
-    transform: trimmedText,
-  });
-  /** Error text. Shown immediately — binding it says the consumer has already
-   *  decided this field is in error. Takes precedence over `errors`. */
-  readonly error = input<string, string | null | undefined>('', {
-    transform: trimmedText,
-  });
-  /** Advisory text, shown when there is no error. */
-  readonly warning = input<string, string | null | undefined>('', {
-    transform: trimmedText,
-  });
+export abstract class DsFieldBase extends DsMessageBase {
   /** Validation errors, shown once the user has interacted. Bound automatically
    *  by signal forms; reactive and template-driven forms are read through
    *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
@@ -47,18 +33,4 @@ export abstract class DsFieldBase {
   /** Whether the user has interacted with the field. Bound by signal forms; gates
    *  `errors`, so a `required` error does not greet an untouched form. */
   readonly touched = input(false, { transform: booleanAttribute });
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Falls back to
-   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
-   *  for a form that shows validation messages. */
-  readonly reserveMessage = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-
-  /** Glyph on the message line, overriding what the state resolves to. Unset
-   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
-   *  alone. */
-  readonly messageIcon = input<IconName | false | null>(null);
-
-  readonly reserveMessageResolved = resolveReserveMessage(this.reserveMessage);
 }

@@ -37,7 +37,7 @@
         border-bottom: var(--border-width-default) solid var(--border-divider);
       }
     }
-    .cell__tag {
+    .cell-tag {
       display: inline-flex;
       align-items: center;
       gap: var(--space-1);
@@ -48,8 +48,8 @@
       text-transform: uppercase;
       letter-spacing: var(--letter-spacing-wider);
     }
-    .cell__tag--do { background: var(--success-subtitle, #e4f5ec); color: var(--success-text, #0f5c2f); }
-    .cell__tag--dont { background: var(--error-subtitle, #fde7e6); color: var(--error-text, #7a1812); }
+    .cell-tag--do { background: var(--success-subtitle, #e4f5ec); color: var(--success-text, #0f5c2f); }
+    .cell-tag--dont { background: var(--error-subtitle, #fde7e6); color: var(--error-text, #7a1812); }
     .caption { color: var(--text-secondary); margin: 0; }
 
     .stage {
@@ -83,7 +83,7 @@
       color: var(--text-primary);
       font-size: var(--font-size-s);
     }
-    .mini__sub {
+    .mini-sub {
       display: block;
       color: var(--text-tertiary);
       font-size: var(--font-size-xs);

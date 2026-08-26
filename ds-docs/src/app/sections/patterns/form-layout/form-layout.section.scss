@@ -21,7 +21,7 @@
 
       @include bp.down(md) { grid-template-columns: 1fr; gap: var(--space-3); }
     }
-    .form-section__body {
+    .form-section-body {
       display: grid;
       gap: var(--space-4);
     }
@@ -78,11 +78,11 @@
 
       @include bp.down(md) { grid-template-columns: 1fr; }
     }
-    .inline-edit__label {
+    .inline-edit-label {
       color: var(--text-secondary);
       font-weight: var(--font-weight-bold);
     }
-    .inline-edit__actions {
+    .inline-edit-actions {
       display: inline-flex;
       gap: var(--space-2);
     }

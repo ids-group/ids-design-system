@@ -1,5 +1,3 @@
-/* Public --ds-tree-* are read with fallbacks, never declared. */
-
 :host {
   --_tree-indent: var(--ds-tree-indent, var(--tree-indent));
   --_tree-row-pad-y: var(--ds-tree-row-pad-y, var(--tree-row-pad-y));

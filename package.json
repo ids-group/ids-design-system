@@ -16,7 +16,8 @@
   },
   "exports": {
     "./styles/*": "./styles/*",
-    "./themes/*": "./themes/*"
+    "./themes/*": "./themes/*",
+    "./migrations/*": "./migrations/*"
   },
   "scripts": {
     "ng": "ng",
@@ -32,11 +33,14 @@
     "class-surface": "node tools/class-surface-diff.mjs",
     "check-docs-links": "node tools/check-docs-links.mjs",
     "migration-lint": "node tools/migration-lint.mjs",
+    "migration-lint:selftest": "node tools/migration-lint-selftest.mjs",
+    "check-delete-tables": "node tools/check-delete-tables.mjs",
+    "check-class-surface-entry": "node tools/check-class-surface-entry.mjs",
     "check-focus-rings": "node tools/check-focus-rings.mjs",
     "extract-docs": "npm run extract-tokens && npm run extract-component-api && npm run check-docs-links",
     "build:docs": "npm run extract-docs && ng build ds-docs",
     "build:docs:dev": "npm run extract-docs && ng build ds-docs --configuration development",
-    "build:deck-css": "sass src/lib/styles/ds.scss presentations/ds.css --no-source-map --style=expanded",
+    "build:deck-css": "node tools/build-deck-css.mjs",
     "format": "prettier --check \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
     "format:fix": "prettier --write \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
     "lint": "eslint \"{src,ds-docs/src}/**/*.{ts,html}\"",

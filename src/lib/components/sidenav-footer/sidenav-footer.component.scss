@@ -101,12 +101,6 @@
   text-transform: uppercase;
 }
 
-.separator {
-  height: var(--border-width-default);
-  margin: var(--space-1) 0;
-  background: var(--border-divider);
-}
-
 .search-panel,
 .alerts-panel {
   display: flex;

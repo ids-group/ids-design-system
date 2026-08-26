@@ -11,7 +11,7 @@
 .modal-grid--1 { grid-template-columns: 1fr; }
 .modal-grid--2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 
-.state-cell__stage {
+.state-cell-stage {
   min-height: 220px;
 
   /* Only the static ds-modal-card replicas (direct child) get the 100% escape

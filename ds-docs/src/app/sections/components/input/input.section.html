@@ -19,74 +19,74 @@
 
   <div class="states states--cols-3">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Project name"
           placeholder="Project Alpha"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Empty default
       </div>
     </div>
 
     <div class="state-cell">
       <!-- Force-focus pinned via ::ng-deep — ds-input has no static focus input. -->
-      <div class="state-cell__stage force-focus">
+      <div class="state-cell-stage force-focus">
         <ds-input
           label="Project name"
           placeholder="Project Alpha"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Empty · focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Project name"
           value="Project Alpha 2026"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         With value
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage force-focus">
+      <div class="state-cell-stage force-focus">
         <ds-input
           label="Project name"
           value="Project Alpha 2026"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         With value · focus
       </div>
     </div>
 
     <div class="state-cell">
       <!-- Force-hover pinned via ::ng-deep — ds-input has no static hover input. -->
-      <div class="state-cell__stage force-hover">
+      <div class="state-cell-stage force-hover">
         <ds-input
           label="Project name"
           placeholder="Project Alpha"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Project ID"
           value="ORD-2026-0142"
@@ -94,13 +94,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Project ID"
           value="ORD-2026-0142"
@@ -108,13 +108,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Read-only
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Start date"
           value="2026-04-30"
@@ -122,13 +122,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Error
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Slug"
           value="project-alpha-2026"
@@ -136,13 +136,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Success
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Slug"
           value="project-alpha-2026"
@@ -151,7 +151,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Loading
       </div>
     </div>
@@ -163,7 +163,7 @@
 
   <div class="states states--cols-2">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Site URL"
           value="member.example.com"
@@ -177,13 +177,13 @@
         </ds-input>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Prefix
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-input
           label="Capacity"
           value="250"
@@ -198,7 +198,7 @@
         </ds-input>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Suffix
       </div>
     </div>
@@ -410,14 +410,14 @@
   </p>
 
   <p class="block-desc t-s">
-    The control paints the state too, not only the line under it. An error takes a
-    red border AND a tinted fill because it blocks submission; a warning and a
-    success take the border alone, so an error still reads as the loudest thing in
-    a form holding all three. One rule drives all nine bordered fields, off a
+    The control paints the state too, not only the line under it. An error takes
+    a red border AND a tinted fill because it blocks submission; a warning and a
+    success take the border alone, so an error still reads as the loudest thing
+    in a form holding all three. One rule drives all nine bordered fields, off a
     <code class="t-mono-inline">
       data-field-state
-    </code> attribute on the host —
-    style against that attribute rather than a class if you need to extend it.
+    </code> attribute on the host
+    — style against that attribute rather than a class if you need to extend it.
   </p>
 
   <div class="grid-3">
@@ -459,11 +459,11 @@
     </code> each bring a glyph;
     <code class="t-mono-inline">
       hint
-    </code> does not, because it is the resting text rather
-    than a state and a form where every field carries an info circle reads as noise.
-    Colour alone was the whole signal before — and in the light theme warning
-    (#8A7400) against success (#156822) is a hue apart and nothing else, which is the
-    case WCAG 1.4.1 is about.
+    </code> does not, because it is the
+    resting text rather than a state and a form where every field carries an
+    info circle reads as noise. Colour alone was the whole signal before — and
+    in the light theme warning (#8A7400) against success (#156822) is a hue
+    apart and nothing else, which is the case WCAG 1.4.1 is about.
   </p>
 
   <p class="block-desc t-s">
@@ -477,10 +477,8 @@
     </code> removes it, and
     <code class="t-mono-inline">
       stateIcons: false
-    </code> removes all four. On one field,
-    <code class="t-mono-inline">
-      messageIcon
-    </code> wins over both:
+    </code> removes all four. On
+    one field, <code class="t-mono-inline"> messageIcon </code> wins over both:
   </p>
 
   <div class="grid-3">
@@ -491,14 +489,14 @@
     />
 
     <ds-input
-      label="[messageIcon]=&quot;false&quot;"
+      label='[messageIcon]="false"'
       error="Uppercase letters are not allowed"
       placeholder="My-Workspace"
       [messageIcon]="false"
     />
 
     <ds-input
-      label="messageIcon=&quot;info&quot;"
+      label='messageIcon="info"'
       error="Uppercase letters are not allowed"
       placeholder="My-Workspace"
       messageIcon="info"
@@ -563,16 +561,13 @@
     the warning state and shows the text, but stays VALID:
     <code class="t-mono-inline">
       aria-invalid
-    </code> is not set and a submit guard
-    reading validity is not blocked. Angular's
+    </code> is not set and a submit
+    guard reading validity is not blocked. Angular's
     <code class="t-mono-inline">
       AbstractControl
-    </code> has no channel for an advisory
-    remark — only
-    <code class="t-mono-inline">
-      errors
-    </code> and the validity derived from
-    it — so this rides in
+    </code> has no channel for an
+    advisory remark — only <code class="t-mono-inline"> errors </code> and the
+    validity derived from it — so this rides in
     <code class="t-mono-inline">
       errors
     </code> under a kind the DS treats as

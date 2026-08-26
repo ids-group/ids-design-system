@@ -2,23 +2,39 @@
 
 ## Open, in priority order
 
-**Bugs — something shipped misbehaves**
-
-- P2 · Every presentation deck renders in a substitute font, so a deck that judges type is lying (found
-
 **Asks — a consumer or Stas asked for it**
 
+- **Correction to the two asks closed 2026-08-26 — the banner one was MINE, and your read was right.**
+  The centring came from `auth-card.component.scss`, where a `:host ::ng-deep { .title { text-align:
+  center } }` written for the page heading also matched the DS's internal `div.title` inside
+  `ds-banner`. Fixed at the source by qualifying the selector (`h1.title, h2.title`). Verified after:
+  banner title and body both `start`,
+  page `h1.title` still centred. The transferable rule for consumers is the mirror of yours — an
+  unqualified class selector inside `::ng-deep` reaches component internals, so a "DS bug" that only
+  appears in one context is probably the consumer's own cascade.
+
+  **The DS-side `text-align: start` STAYS, and that was checked rather than assumed (2026-08-26).**
+  This entry first said it was deleted as a workaround; it is not deleted, and it should not be.
+  Measured on the built docs with a centred ancestor: with the declaration the banner's title and body
+  both compute `start`; with it neutralised they both compute `center`. So it does real work that has
+  nothing to do with this incident — a banner is two text blocks that have to read as ONE alignment,
+  which is the same rule as [[feedback-components-resist-external-layout]]. Removing it would only make
+  the DS inherit whatever a page decides, which is how the consumer's bug became visible in the first
+  place. **Kept on its own merits, not as a patch over `auth-card`.** The cost is real and small: a
+  consumer who wants a centred banner can no longer get one by centring its container, and would need
+  an input — nobody has asked.
+
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
-- P2 · A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
 
 **Decisions — waiting on Stas, not on work**
 
-- P1 · Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking
+- P3 · ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class — `is-*`
+- P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
+- P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
-- P2 · Five controls compute no `controlState`, so a validation state cannot reach the control itself —
 - P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the
 - P2 · `.ds-interactive` — global state-interaction contract (agreed; prototype before spec —
 - P2 · Theme recipe vs hand-tuned picks — alignment decision. Button/icon-button state derivation uses the
@@ -44,28 +60,59 @@
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй").
 
 
-## Priority board (2026-08-24, recut after 0.10.2)
+## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**26 open: 1 P1, 8 P2, 17 P3.** Nine are *Parked* awaiting a first consumer ask and two are Records, so
-the live board is **15 items — and 9 of those are Decisions**. What is left to BUILD is **one bug and
-five asks**; of the five, one has a deck waiting on a verdict, three are gated on a first consumer ask,
-and exactly one is buildable today with nothing pending on it.
+**25 open: 1 P1, 6 P2, 18 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **14 items — and 11 of those are
+Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
 
-**The one buildable item, and it spent three days filed as "not work".** A `ds-table` row can be opened
-only by clicking the row, and nothing on screen says so — six lists in mm-broker's broker portal
-compensate by repeating the destination as a `View Details` entry in the overflow menu. The literature
-agrees on the shape of the fix (Roselli, oidaisdes.org): put the control **in a cell**, as a real link,
-so the record's name becomes the way in — visible, in the tab order, and Ctrl-clickable, which a row
-click cannot offer. It sat under `# Records`, whose own header reads "Not work", and the index therefore
-listed it as a record. Moved to `# Asks` today; the work is a `link` column kind, unblocked.
+**Two asks arrived and closed the same day (2026-08-26), and NEITHER symptom reproduced here** — the
+banner does not centre its title, and the menu divider is symmetric in both places it was measured.
+Each still found a real defect one level down: the banner owned no alignment, and the DS's own sidenav
+footer hand-rolled a divider instead of using `ds-menu-divider`, so the divider tokens reached every
+menu except that one. **The rule they leave behind: an ask arriving with a measurement is a measurement
+of the CONSUMER's screen. Reproduce it here before fixing it here** — taking either at its word would
+have shipped a `text-align` on `.title` and a spacing tweak, and neither was the problem.
 
-**Raised to P2 today: the decks are lying about type.** `build:deck-css` compiles `ds.scss` into
-`presentations/ds.css`, which carries eight `@font-face` rules resolving `./fonts/*.woff2`, and
-`presentations/fonts/` does not exist — so every deck renders in a substitute face. Four decks are
-attached to decisions still open (packaging, the colour engine, the interaction contract,
-`ds-select` native multi). A deck that judges TYPE is then corrupted evidence outright, and the rest
-shift metrically under the wrong face. This repo settles visual questions from decks, which is what
-makes it more than a papercut; the fix is one copy step in the build script.
+**The tooling items came out of running the tools rather than reading them, and both were invisible to a
+code read.** The formatter conflict surfaced when the three formatters were actually run end to end;
+the delete-table gate's blind spot surfaced when a control that was supposed to fail did not. The
+transferable rule is the same one the focus-ring checker was born from: **a gate proves nothing until
+you have watched it fail.**
+
+**What is actually buildable, checked rather than assumed.** All four remaining asks are gated: three
+gate themselves on a first consumer request and Stas held all three when asked directly (2026-08-25),
+and the fourth has a deck waiting on a verdict. The P1 is decided as not-now, with the peers left at
+`^21.2.0` — a consumer on Angular 22 still needs `--legacy-peer-deps`, and that is accepted, not
+forgotten. **So no ask is buildable without either a consumer report or a decision.** What IS
+actionable today is the Decisions column, and one of those is new and unusually cheap: the
+prettier-vs-eslint config conflict, which is a taste call with a recommendation attached and roughly a
+one-file change behind it.
+
+**The 08-24 batch from mm-broker is fully closed.** All three arrived as `::ng-deep` residue rather
+than as reports — a card that cannot clip its own box, a missing resting shadow hook, and a refusal
+reason with nowhere to go on a button (built 2026-08-25). **The transferable part is the detection
+rule: a deep selector a consumer still carries IS an unfiled ask** — and the button is its strongest
+case, since it sat three days as a `[dsTooltip]` the consumer could not delete. What remains from that
+batch is about this file's siblings: a release that makes consumer code redundant said so in
+`informational` prose, where nothing executes it, and the manifest lint does not catch that spelling.
+
+**Two findings from 08-25 that cost nothing to ship and would have cost a release to miss** (both in
+`done.md`, neither reachable by reading code): `ds-w3w` rendered a space its own format forbids — found
+only because Stas asked why a template line looked ugly, and confirmed by a 7.8px A/B measurement; and
+a `:not()` added for readability deleted the focus ring on **every** button, found only by putting a
+real pointer over a focused control. **Both say the same thing: the styles read correct and measured
+wrong.** That is the argument for the browser step in the release routine, not a preference for it.
+
+**The one buildable item spent three days filed as "not work" — and was built the same day it was
+reclassified.** A `ds-table` row could be opened only by clicking the row, and nothing on screen said
+so — seven lists in mm-broker (six in the broker portal, one in the admin) compensate by repeating the
+destination as a `View Details` entry in the overflow menu. The literature agrees on the shape of the
+fix (Roselli, oidaisdes.org): put the control **in a cell**, as a real link, so the record's name
+becomes the way in — visible, in the tab order, and Ctrl-clickable, which a row click cannot offer. It
+sat under `# Records`, whose own header reads "Not work", so the index listed it as a record. Moved to
+`# Asks`, built as `TableColumn.link` and archived to [[done]] the same day; **it is unreleased**, and
+the consumer marks each of its seven sites with a `TODO(ds-table-link)` to delete at that bump.
 
 **Two items left the board without being worked, and that is the finding.** Both were closed and
 archived on 08-21 — the docs API reference listing components nobody can import, and the missing
@@ -119,15 +166,12 @@ rather than re-reading our own API.
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
 
-
-- [ ] **[P2] Every presentation deck renders in a substitute font, so a deck that judges type is lying (found 2026-08-24 while building the glyph-clip deck).** `presentations/ds.css` is compiled from `src/lib/styles/ds.scss`, so it carries the library's eight `@font-face` rules with their source-relative `url('./fonts/*.woff2')` — but `build:deck-css` copies the CSS alone and there is no `presentations/fonts/`. Measured in Chrome: all eight faces report `status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and every deck falls back to `sans-serif`. The README's claim that the decks are honest consumers of the DS holds for tokens and fails for type — and it also poisons `document.fonts.check()` for any deck that tries to verify its own font.
-  **Fix:** have `build:deck-css` copy `src/lib/styles/fonts/` next to the CSS (five Mulish weights + three JetBrains Mono), or rewrite the `url()`s to a path the docs server answers. `ellipsis-glyph-clip.html` works around it locally by re-declaring the three faces it needs and showing a banner when they fail — a per-deck patch, not the fix.
-
 # Asks — a consumer or Stas asked for it
 
 Requests, not defects. Ordered by who is blocked.
 
 ## Component feature gaps
+
 
 - [ ] **[P2] One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle (2026-08-03, Stas — mm-broker MBP-133 review).** _(Re-counted 2026-08-05: **85** exported `*Component` classes plus 9 directives (re-counted 2026-08-10; was 83 + 8 on 08-05), by `grep -rho 'export class .*Component' src/lib | sort -u`. The item said 73; the figure does not change the argument, but it is now stated with its method so nobody re-counts.)_ `ng-package.json` declares a single `entryFile`, so the package ships as one 1.25 MB `fesm2022` module behind a single `"."` export. `sideEffects: false` is set and tree-shaking works fine — unused components are dropped — but **chunking cannot happen**: esbuild splits by module, so it can never place two DS symbols in two different chunks. Measured in mm-broker: the app's eager composition root binds `NotificationService` to a toast implementation, that one runtime import of `ToastService` pins the whole retained DS graph into a chunk statically imported by `main`, and the result is **632 kB — about 88% of a 720 kB initial bundle** — even though every feature route is lazy and the only eagerly-needed symbol is one service. The consumer has no lever: the root is the only specifier, and moving the provider to a lazy route does not help because interceptors and the `ErrorHandler` resolve from the root injector. **Ask:** secondary entry points (ng-packagr supports a nested `ng-package.json` per folder). Even a coarse split would fix it — a services/overlay entry point carrying `ToastService`, `ModalService` and `BodyScrollLockService` separately from the component layer, so an eager root can import the service and leave 70-odd components lazy. Per-component entry points would be ideal but are a bigger change; the services split is the one that unblocks consumers. **Explicit non-goal:** nothing about the public API surface needs to change — same symbols, same names, just reachable through narrower specifiers. **RE-AUDITED 2026-08-03 → read `packaging-chunking-audit.md` before actioning this item; three claims above are wrong.** The mechanism is confirmed by controlled esbuild fixtures, but: this was never filed upstream (it is the consumer's own backlog item, with a consumer-side fix); "the consumer has no lever" is false (a dynamic `import()` keeps `main` clean — it just costs tree-shaking, measured +50%); and the 07-27 "tree-shaking already works" verdict is NOT overturned — placement and tree-shaking are orthogonal and both findings stand. The audit also merges this item with the "Packaging — secondary entry points" section below, which duplicates it with the opposite verdict.
   **DEFERRED by Stas 2026-08-21, with a deck instead of a build — `presentations/packaging-entry-points.html`.**
@@ -146,26 +190,10 @@ Requests, not defects. Ordered by who is blocked.
 
 **Two traps recorded while deciding, so they are not re-derived:** (1) the secondary entry must OWN its source and the root must re-export FROM it — if both export the same source a consumer importing from both gets two class identities and DI silently resolves two different services; (2) the audit's fixtures were synthetic, which is exactly how it concluded B was viable, so validate any future claim against the real import graph.
 
-- [ ] **[P3] `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).** Base row expansion ALREADY SHIPS — `expandableRows` + two-way `expandedIds` `model<Set<string>>` (multiple + programmatic), `rowExpandTemplate`, expander button/chevron/`expandedColspan`, docs demo (`table.section.html:574-600`). So this is **deltas only, not a build**: (a) optional **single-expand mode** (only one row open at a time — today it's always multi via the Set); (b) **expand-all / collapse-all** header toggle (the header expand-col is currently just a spacer); (c) optional dedicated `(rowExpand)`/`(rowCollapse)` outputs (the `expandedIds` model already covers change-tracking, so this is sugar). All small; do only on a consumer ask — the core feature is at parity.
+- [ ] **[P3] `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).** Base row expansion ALREADY SHIPS — `expandableRows` + two-way `expandedIds` `model<Set<string>>` (multiple + programmatic), `rowExpandTemplate`, expander button/chevron/`expandedColspan`, docs demo (`table.section.html:574-600`). So this is **deltas only, not a build**: (a) optional **single-expand mode** (only one row open at a time — today it's always multi via the Set); (b) **expand-all / collapse-all** header toggle (the header expand-col is currently just a spacer); (c) optional dedicated `(rowExpand)`/`(rowCollapse)` outputs (the `expandedIds` model already covers change-tracking, so this is sugar). All small; do only on a consumer ask — the core feature is at parity. **GATE HELD 2026-08-25 (Stas), asked explicitly:** none of the three remaining asks blocks anyone, so all three stay behind their own gate rather than being built speculatively.
 
-- [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form.
+- [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form. **GATE HELD 2026-08-25 (Stas), asked explicitly.**
 
-## `ds-table` — the row is the only way in, and it is not a link (from mm-broker, recorded 2026-08-21)
-
-- [ ] **[P2] A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.**
-  `rowInteractive` gives the `<tr>` a tabindex, Enter/Space and an accessible name, which is the
-  keyboard half — but nothing on screen says the row leads anywhere, and a screen reader still
-  announces a table row, not a link. Consumers compensate by repeating the destination as a
-  `View Details` item in the row's overflow menu (six lists in mm-broker's broker portal do this),
-  which is a menu entry that performs navigation rather than an action. The accessibility literature
-  is against the row-as-control shape itself: Adrian Roselli's "Don't Turn a Table into an ARIA Grid
-  Just for a Clickable Row" and oidaisdes.org's "How to Create an Accessible Table with Clickable
-  Rows" both land on the same answer — put the control **in a cell**, as a real link. What the table
-  is missing is a way to render one cell's value as a link (a `link` column kind, or a documented
-  cell-template contract for it) so the record's name becomes the way in: visible, in the tab order
-  as a link, and openable in a new tab with Ctrl/Cmd-click — which a row click cannot offer. Then
-  `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
-  consumers can drop the duplicated menu item.
 
 ## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
 
@@ -177,7 +205,8 @@ Requests, not defects. Ordered by who is blocked.
   blocked 2, where the destructive tail is separated by a `ds-menu-divider`, and ordering the items
   destructive-last covers it without new API. **Both are P3 until a consumer says the workaround is
   the thing stopping them** — the two that actually blocked adoption have shipped, so the next word
-  on these should come from a migrated screen, not from the original count.
+  on these should come from a migrated screen, not from the original count. **GATE HELD 2026-08-25
+  (Stas), asked explicitly.**
 
   - [x] **DONE 2026-08-18 — a token on the kebab itself.** Three resolvers, covering the column
     picker too since it shares the rule: `--ds-table-icon-btn-color`,
@@ -193,6 +222,16 @@ Requests, not defects. Ordered by who is blocked.
     right now "adopt rowActions" and "keep the design's teal" are simply incompatible.
 
 # Decisions — waiting on Stas, not on work
+
+## Tooling
+
+- [ ] **[P3] ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived).** `is-*` IS better here and that is the recorded preference: a modifier glued to the name with `--` reads as a different ELEMENT, while our convention says a variant of one thing is a STATE carried alongside it (`.stage.is-tbl`), which is also how a state reads in the DOM and how it composes with two states at once. Counted 2026-08-26: **11** element-plus-modifier forms flattened this pass and now spelled `state-cell-stage--tbl`, `cell-tag--do`, `cell-tag--dont`, `contract-row--no`, `demo-col--end`, `demo-group-btn--start/--mid/--end`, `halo-stage-well--inverted`, `state-stage--horiz`, `state-cell-stage--overflow`, plus a separate standalone set (`demo--centered`, `applied--stacked`, `demo-btn--ghost`, `demo-menu-item--error`, `btn--start/--mid/--end`, `cell--do/--dont`, `col--end`, …).
+  **Why it was split off rather than done in the same pass.** Removing `__` was a pure rename — 865 occurrences, zero semantic change, provable (589 classes used and 589 styled, identical before and after). Converting `--mod` to `is-mod` is NOT: it splits one class into two in the markup, which changes selector specificity from (0,1,0) to (0,2,0) wherever the SCSS is nested, and specificity is exactly what a docs section leans on when it pins a component's forced state. That wants its own pass with its own verification, not a rider on a mechanical one.
+  **Then extend the guard.** `selector-class-pattern` currently allows `-` freely, which is what lets `--` through; once the conversion lands, tighten it to reject a doubled hyphen in a class name so the notation cannot come back — the same shape as the two rules that now block `__` (`selector-class-pattern` plus `selector-nested-pattern`, because the first one alone does not see `&__x`).
+
+- [ ] **[P2] prettier and eslint want opposite things about HTML, so `lint:all` can never be green (measured 2026-08-25).** Ran the three formatters over the whole project on Stas's instruction — prettier, then stylelint, then eslint. Prettier reformatted **140 files** (115 html + 25 ts) and needed a second pass on three before reaching a fixed point. Eslint then pulled **77 of them back**, leaving 63 actually changed. Afterwards prettier reports **~112 html files as unformatted, permanently**: its line-breaking fights `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order`, and each tool undoes the other on the same files every time either runs. **This is not formatting debt — it is a config conflict, and no number of `fix:all` runs converges.** It is why the `format` step of `lint:all` has been red for so long that the PR gate was set to report-only, which then hid every real lint finding behind a known-red step.
+  **Three ways out, and it is a taste call, not a technical one:** (a) **stop prettier at the html door** — add `*.html` to `.prettierignore` and let the two `ds/template/*` rules own template formatting alone (smallest diff, and eslint already wins today in practice); (b) **drop the two ds rules** and let prettier own html (bigger one-off diff, loses the attribute-order convention the repo chose deliberately); (c) keep both and accept a permanently red step (status quo — but then say so in the script, so nobody re-runs `fix:all` hoping it converges). **Recommendation: (a).** Eslint is already the de-facto winner, prettier still owns ts/json/md where nothing contests it, and it makes `lint:all` green so the PR gate can stop being report-only.
+  **Not urgent, not cosmetic:** nothing ships wrong today, but a permanently red gate is how a real finding gets missed — which is the same failure mode as the report-only PR lint.
 
 ## Framework & forms
 
@@ -235,7 +274,15 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
   than the item assumed: Angular 22 + TS 6 + Node — three majors in one pass. The cheap-and-honest middle
   is to widen the peers, keep building on 21, and say in the release notes that 22 is compiled-but-not-
   runtime-verified until the Node bump lands.
-  **The decision is the peer range, and it should be made BEFORE 0.9.0 is cut**, since that is what the release publishes: widen to `^21.2.0 || ^22.0.0` (cheap, but claims a compatibility nobody has tested) or move the repo to 22 (honest, costs a real upgrade pass). **Context for the call:** Angular Material has NOT shipped signal-forms support (`angular/components#32072` still open), PrimeNG deliberately waited for stable and is repairing `[formField]` typing in 22.0.1, and Spartan has shipped it — so on this axis the DS is currently ahead of both libraries its consumers compare it to, and that lead is worth keeping installable.
+  **The decision is the peer range**, since that is what the release publishes: widen to `^21.2.0 || ^22.0.0` (cheap, but claims a compatibility nobody has tested) or move the repo to 22 (honest, costs a real upgrade pass). **Context for the call:** Angular Material has NOT shipped signal-forms support (`angular/components#32072` still open), PrimeNG deliberately waited for stable and is repairing `[formField]` typing in 22.0.1, and Spartan has shipped it — so on this axis the DS is currently ahead of both libraries its consumers compare it to, and that lead is worth keeping installable.
+
+  **DECIDED 2026-08-25 (Stas): NOT NOW — leave the peers at `^21.2.0`.** Neither widening nor moving.
+  **This item is no longer waiting on a call**; it stays P1 because the fact that raised it is unchanged:
+  a consumer on Angular 22 installs this package only with `--legacy-peer-deps`. Everything above stays
+  as the prepared answer for when it is picked up — the 22.1.3 compile, the three costs (TS 6.0, Node
+  ≥24.15.0, three tsconfig edits), and the three findings that are NOT blockers (`ngNoCva`, `touch`,
+  the `min`/`max` assertion). **What would overturn it:** a consumer reporting that
+  `--legacy-peer-deps` is not acceptable in their install, or an app that has to start on 22.
 
 - [ ] **[P3] Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wiring.** `pending` — what does a field with an async validator in flight look like? `ds-input` has a spinner; nothing else does. `dirty` — the library renders "edited" nowhere today, so there is no treatment to bind to. `disabledReasons` — a tooltip on a disabled control, or ignored? Each is one input once the appearance is decided, so decide the appearance first. _(`focus()` was the fourth and SHIPPED 2026-08-10: a resolver on both control-value-accessor bases, verified on all twelve controls that lacked one.)_
 
@@ -246,17 +293,7 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
   **The case for doing it:** in a real form both want it. A numeric stepper needs a label and a validation error like any input; a dropzone needs a hint ("up to 5 MB, PDF only") and an error ("that file was rejected"). A consumer today has to hand-roll a label and an error line beside them, which is exactly the inconsistency this board exists to remove.
   **The case against:** neither has been asked for by a consumer, and `ds-number-stepper` may be intended as a bare control composed inside something else — though its own `ariaLabel` and `size` inputs suggest standalone use.
   **Cheap now that the base exists:** `extends DsFieldBase` plus a `resolveFieldMessage` call, a `ds-field-message` in the template, and the label block — the same shape all fourteen already share.
-
-- [ ] **[P2] Five controls compute no `controlState`, so a validation state cannot reach the control itself — only its message.** `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-slider` and `ds-switch` are the five of fourteen that do not bind `[attr.data-field-state]`, and they do not read `controlState` at all (grep: zero occurrences in each). The other nine do, and the shared `field-state` mixin paints them.
-  **P3 → P2, 2026-08-21:** raised because the session that shipped the field-state work made the gap concrete: on a checkbox the ONLY sign of an invalid state is the red line underneath, and the same holds for radio, radio-group, slider and switch. Five of fourteen controls cannot show a validation state on the control itself, which is the inconsistency this board exists to remove, and `color-not-only` says a message alone is not enough. Still a decision rather than work — the question is whether a box-less control paints its own indicator — but it is the same class of question as the glyph one and should be answered beside it.
-  **Partly correct by design** — they have no bordered box for a border to appear on, which is also why they deliberately did not get `[success]`. **But they are not shapeless:** a checkbox has a square with a border, a switch has a track, a radio has a ring. Today none of those can carry error, warning or success, so on a checkbox the only sign of an invalid state is the red line underneath.
-  **Decide whether the box-less controls should paint their own indicator** for error/warning (and then whether `[success]` follows). If yes, it is a `field-state`-style mixin per control shape rather than a reuse of the bordered-box one, since the target is a 16px square rather than a 39px field.
-
-Nothing moves until a verdict; the work behind each is scoped.
-
-## Architecture / tokens
-
-> **Token-architecture pass (P2, interlocked).** The three items below + the semantic radius+elevation role layer (under "Missing tokens / foundations") share ONE principle — a **role layer between foundation and component**, single pointer, shades cascade. Spec them together; sequence the single-source colour model first and the rest fall out. Don't action piecemeal. _(The typography `.t-*` `--ds-t-*` hooks — the same consumer-first contract at the global utility layer — already SHIPPED 2026-07-24, see done.md.)_
+  **Cheaper again since 2026-08-25:** the base was split into `DsMessageBase` (the message half) and `DsFieldBase` (that plus `errors`/`invalid`/`touched`) so `ds-button` could take the message line, and `ds-button` is now the worked example of wiring the message half into a component that was never a field. Both of these hold a value, so both want the full `DsFieldBase` — but the pattern, the resolver call and the template shape are all demonstrated now rather than described.
 
 - [ ] **[P2] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-07-24** (`_semantic.scss:91-93` channels; `:111-112` hover/pressed already `color-mix`; halos `:209-229`; gray tint `_base-palette.scss:41`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; **UNBLOCKS the `ds-color`/`--accent-*` indirection**. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: `presentations/color-engine-relative.html`.
 

@@ -1,5 +1,4 @@
 :host {
-  /* Public --ds-empty-state-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_es-tile-bg-color:   var(--ds-empty-state-tile-bg-color,  var(--accent-surface-tint));
   --_es-tile-icon-color:   var(--ds-empty-state-tile-icon-color,  var(--text-secondary));
   --_es-title-text-color:  var(--ds-empty-state-title-text-color, var(--text-primary));

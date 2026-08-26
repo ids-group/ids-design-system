@@ -39,7 +39,6 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class TextareaComponent extends DsControlValueAccessor<string> {
-
   private readonly control =
     viewChild<ElementRef<HTMLTextAreaElement>>('control');
 

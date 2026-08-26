@@ -6,7 +6,10 @@
       "kind": "code-add",
       "old": null,
       "new": "@use '@ids-group-ltd/ids-design-system/styles/breakpoints' as bp;\n@include bp.emit-vars;",
-      "note": "styles/breakpoints stays side-effect-free on plain @use (map/$bp-*/up()/down() only, no CSS emitted) — the --bp-* runtime custom properties are now emitted only by its emit-vars mixin. Only consumers who followed the 0.4.0 guidance and `@use '@ids-group-ltd/ids-design-system/styles/breakpoints'` A LA CARTE (not via the styles/ds aggregate, which already includes emit-vars once) must additionally `@include bp.emit-vars;` to keep --bp-* defined. Consumers using styles/ds need no action. $bp-* Sass aliases and the up()/down() mixins are unaffected either way.",
+      "action": "Add `@include bp.emit-vars;` once, beside your a-la-carte `@use` of `styles/breakpoints`, in exactly one global stylesheet.",
+      "appliesWhen": "Only if you took the 0.4.0 advice and imported `styles/breakpoints` a la carte. The `styles/ds` aggregate already includes emit-vars once, so its users need nothing.",
+      "pitfall": "Sass still compiles clean, which is what makes this quiet: `$bp-*` and the `up()` / `down()` mixins come from the plain `@use` and keep working, so every media query is fine. What disappears is the runtime mirror — anything reading `var(--bp-md)` from CSS or through getComputedStyle now reads nothing.",
+      "note": "The partial is side-effect-free on a plain `@use` now: it carries the map, the `$bp-*` aliases and the mixins, and emits no CSS. The `--bp-*` custom properties come only from `emit-vars`, which is meant to run once per document.",
       "searchHints": [
         "styles/breakpoints",
         "@use '@ids-group-ltd/ids-design-system/styles/breakpoints'"
@@ -32,5 +35,6 @@
     "ds-date-picker paste is now slot-aware — pasted digits fill segments sequentially from the caret instead of flattening the field or clearing unrelated segments; behavior only, no code change.",
     "ds-date-picker range values can no longer be corrupted by clearing one segment (slot-based parsing replaced digit-count slicing; a date is parsed/validated only once all its slots are filled) — behavior only, no code change.",
     "ds-date-picker now exposes its MM/DD/YYYY format hint to screen readers via aria-placeholder after the native placeholder was removed for the overlay rework — a11y only, no code change."
-  ]
+  ],
+  "deleteList": []
 }

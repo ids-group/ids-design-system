@@ -2223,6 +2223,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Title colour."
       },
       {
+        "name": "--ds-banner-body-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the banner's projected body text (default --font-size-s, matching the title). Declared rather than inherited on purpose: the body used to take the page's size, so a 16px context rendered it LARGER than its own 14px title."
+      },
+      {
         "name": "--ds-banner-close-icon-color",
         "value": "var(--icon-default)",
         "notes": "Close icon."
@@ -2439,6 +2444,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Opt-in pressed halo (default off) — set to re-enable a ring on press."
       },
       {
+        "name": "--ds-button-shadow",
+        "value": "none",
+        "notes": "Resting shadow — `none` by default, so a button carries one only where an app asks. Focus and pressed keep their own hooks and still win while those states are on."
+      },
+      {
+        "name": "--ds-button-shadow-hover",
+        "value": "var(--_button-shadow)",
+        "notes": "Shadow on hover. Falls back to `--ds-button-shadow`, so setting the resting one alone keeps the button steady under the pointer."
+      },
+      {
         "name": "--ds-button-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
@@ -2621,6 +2636,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-card-hover-lift",
         "value": "var(--card-hover-lift)",
         "notes": "Translate-Y on hover."
+      },
+      {
+        "name": "--ds-card-overflow",
+        "value": "visible",
+        "notes": "Overflow of the card's own rounded box — `visible` by default. Set `clip` where a full-bleed child (an image, a footer strip) would otherwise paint its square corners over the card's radius; `clip` rather than `hidden` keeps it from becoming a scroll container. A clipped card also cuts the focus ring of any child at its edge, so pair it with `data-focus=\"inset\"` on the card."
       },
       {
         "name": "--card-hover-lift",
@@ -3702,8 +3722,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-menu-divider-spacing",
-        "value": "0",
-        "notes": "Vertical padding around a ds-menu-divider (default 0). Already 0, so a consumer zeroing it is deleting a no-op — one did."
+        "value": "0px",
+        "notes": "Air above and below a ds-menu-divider. Default 0, and 0 means FLUSH: the divider cancels the menu's own row gap, so the items touch the line rather than sitting a row's width away from it. Set this only when you want the boundary to breathe more than the rows do — it is the one knob that can desync the divider from the row rhythm, which is exactly the defect 0.8.0 removed (a separated group read as a hole). For an airier menu overall, --ds-menu-gap is the better lever: it spaces every row evenly and cannot open a gap only at the boundary."
       },
       {
         "name": "--ds-menu-item-label-color",
@@ -4886,6 +4906,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-sidenav-mark-label-color",
         "value": "var(--accent-on)",
         "notes": "Brand mark label."
+      },
+      {
+        "name": "--ds-radius-control",
+        "value": "—",
+        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
       },
       {
         "name": "--ds-sidenav-brand-max-height",
@@ -7075,11 +7100,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-motion-exit-large-easing",
     "value": "var(--ease-accelerate)",
     "kind": "other"
-  },
-  {
-    "name": "--ds-radius-control",
-    "value": "var(--radius-md)",
-    "kind": "length"
   },
   {
     "name": "--ds-radius-panel",

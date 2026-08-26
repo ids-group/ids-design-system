@@ -24,6 +24,12 @@ install_deps
 echo "===== migration-lint ====="
 node tools/migration-lint.mjs
 
+echo "===== migration-lint selftest ====="
+node tools/migration-lint-selftest.mjs
+
+echo "===== delete-table parity ====="
+node tools/check-delete-tables.mjs
+
 log_dir="$(mktemp -d)"
 
 echo "Building (lib -> docs) and linting in parallel..."

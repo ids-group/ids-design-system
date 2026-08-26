@@ -23,7 +23,7 @@
     .scroll-pane--horizontal {
       overflow-x: auto;
     }
-    .scroll-pane__row {
+    .scroll-pane-row {
       display: grid;
       grid-template-columns: 40px 1fr;
       gap: var(--space-3);
@@ -31,9 +31,9 @@
       border-bottom: var(--border-width-default) solid var(--border-divider);
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     }
-    .scroll-pane__row:last-child { border-bottom: 0; }
-    .scroll-pane__num { color: var(--text-tertiary); }
-    .scroll-pane__txt {
+    .scroll-pane-row:last-child { border-bottom: 0; }
+    .scroll-pane-num { color: var(--text-tertiary); }
+    .scroll-pane-txt {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

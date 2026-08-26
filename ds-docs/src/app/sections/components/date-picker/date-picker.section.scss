@@ -15,7 +15,7 @@
     .row { display: flex; gap: var(--space-6); align-items: center; flex-wrap: wrap; margin-top: var(--space-3); }
 
     /* ---------- Day-states showcase overrides ---------- */
-    .state-cell__stage {
+    .state-cell-stage {
       padding: var(--space-3);
       min-height: 64px;
     }

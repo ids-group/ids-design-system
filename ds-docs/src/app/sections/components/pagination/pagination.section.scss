@@ -8,7 +8,7 @@
 
     /* ---------- States showcase overrides ---------- */
     .states--cols-1 { grid-template-columns: 1fr; }
-    .state-cell__stage {
+    .state-cell-stage {
       justify-content: flex-start;
     }
 
@@ -21,7 +21,7 @@
       background: var(--surface-secondary);
       border-radius: var(--radius-lg);
     }
-    .ranges__row {
+    .ranges-row {
       display: flex; flex-direction: column;
       gap: var(--space-2);
       padding: var(--space-3);
@@ -29,7 +29,7 @@
       border: var(--border-width-default) solid var(--border-default);
       border-radius: var(--radius-md);
     }
-    .ranges__label { color: var(--text-tertiary); }
+    .ranges-label { color: var(--text-tertiary); }
 
     /* ---------- With page-size ---------- */
     .page-size-row {

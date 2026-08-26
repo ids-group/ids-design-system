@@ -170,9 +170,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Below the lg breakpoint the rail becomes an overlay, and the button that opens
-    it lives in YOUR topbar — so the layout cannot wire it up for you. Two routes,
-    and picking the wrong one is the easy mistake. On a native
+    Below the lg breakpoint the rail becomes an overlay, and the button that
+    opens it lives in YOUR topbar — so the layout cannot wire it up for you. Two
+    routes, and picking the wrong one is the easy mistake. On a native
     <code class="t-mono-inline">
       button
     </code> put
@@ -196,11 +196,10 @@
     Bind that component's forwarding inputs instead, off a template ref:
     <code class="t-mono-inline">
       [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"
-    </code> and
-    <code class="t-mono-inline">
-      [ariaControls]="layout.railId"
-    </code>. These docs use the second
-    route — the burger at the top of this page on a narrow screen is it.
+    </code>
+    and <code class="t-mono-inline"> [ariaControls]="layout.railId" </code>.
+    These docs use the second route — the burger at the top of this page on a
+    narrow screen is it.
   </p>
 
   <p class="block-desc t-s">
@@ -219,18 +218,19 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [restoreScroll]="true"
-    </code> remembers the scroll
-    position per route and restores it — but only on a BACK, which is the whole
-    design: returning to a list should return to the reader's row, while following
-    a link into a new screen should start at the top. A history traversal arms it
-    (back, forward, the mouse side button, Alt+← and an edge swipe all arrive as
-    popstate), as does a reload, and a host that pushes instead of traversing can
-    arm it explicitly with
+    </code> remembers the
+    scroll position per route and restores it — but only on a BACK, which is the
+    whole design: returning to a list should return to the reader's row, while
+    following a link into a new screen should start at the top. A history
+    traversal arms it (back, forward, the mouse side button, Alt+← and an edge
+    swipe all arrive as popstate), as does a reload, and a host that pushes
+    instead of traversing can arm it explicitly with
     <code class="t-mono-inline">
       state: {{ '{' }} dsRestoreScroll: true {{ '}' }}
-    </code>. Any wheel,
-    touch or key input cancels the pending restore, so it never fights a reader
-    who has already started scrolling. These docs run with it on.
+    </code
+    >. Any wheel, touch or key input cancels the pending restore, so it never
+    fights a reader who has already started scrolling. These docs run with it
+    on.
   </p>
 
   <p class="block-desc t-s">
@@ -245,52 +245,51 @@
     the same screen keeps the reader's place.
     <code class="t-mono-inline">
       'always'
-    </code> resets on those too, which is what a
-    server-paged list usually wants, and
+    </code> resets on those too, which is
+    what a server-paged list usually wants, and
     <code class="t-mono-inline">
       'never'
     </code> hands the decision back to the
     screen — which can still call
     <code class="t-mono-inline">
       scrollToTop()
-    </code> itself. The input exists because
-    owning the scroll CONTAINER had quietly meant owning the POLICY: a screen
-    could ADD a reset and had no way to suppress one.
+    </code> itself. The input exists
+    because owning the scroll CONTAINER had quietly meant owning the POLICY: a
+    screen could ADD a reset and had no way to suppress one.
   </p>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       LayoutNavigationService
-    </code> is public for the same
-    reason. Its
-    <code class="t-mono-inline">
-      pathChanged
-    </code> stream is the layout's own answer to
-    "did we go somewhere else?" — `NavigationEnd`, path only, de-duplicated, and
-    skipping any navigation that carries
+    </code> is public for
+    the same reason. Its <code class="t-mono-inline"> pathChanged </code> stream
+    is the layout's own answer to "did we go somewhere else?" — `NavigationEnd`,
+    path only, de-duplicated, and skipping any navigation that carries
     <code class="t-mono-inline">
       state: {{ '{' }} dsSamePage: true {{ '}' }}
-    </code>. Inject it instead of
-    deriving your own: one consumer ended up with three answers that disagreed,
-    because a `split('?')` keeps the fragment this one strips.
+    </code
+    >. Inject it instead of deriving your own: one consumer ended up with three
+    answers that disagreed, because a `split('?')` keeps the fragment this one
+    strips.
   </p>
 
   <p class="block-desc t-s">
-    The offset is applied once the content is tall enough to hold it, watched with
-    a
+    The offset is applied once the content is tall enough to hold it, watched
+    with a
     <code class="t-mono-inline">
       ResizeObserver
-    </code> rather than a fixed frame
-    count, and clamped at
+    </code> rather than a fixed
+    frame count, and clamped at
     <code class="t-mono-inline">
       restoreScrollTimeout
-    </code> so a list
-    that loaded 8 of 40 rows still lands near the right place instead of nowhere.
-    A page that renders its own scroll position — a virtualizer decides which rows
-    to build BEFORE it can be scrolled — should take the offset instead of letting
-    the service assign it:
+    </code> so a list that
+    loaded 8 of 40 rows still lands near the right place instead of nowhere. A
+    page that renders its own scroll position — a virtualizer decides which rows
+    to build BEFORE it can be scrolled — should take the offset instead of
+    letting the service assign it:
     <code class="t-mono-inline">
       inject(LayoutScrollService).consumePendingOffset()
-    </code>.
+    </code
+    >.
   </p>
 </docs-section>

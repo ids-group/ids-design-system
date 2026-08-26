@@ -44,21 +44,21 @@
   <div class="bp-list">
     @for (bp of breakpoints; track bp.token) {
       <div class="bp-row">
-        <code class="t-mono-inline bp-row__tok">
+        <code class="t-mono-inline bp-row-tok">
           {{ bp.token }}
         </code>
 
-        <div class="t-s-bold bp-row__px">
+        <div class="t-s-bold bp-row-px">
           {{ bp.px }} px
         </div>
 
-        <div class="t-s bp-row__desc">
+        <div class="t-s bp-row-desc">
           {{ bp.desc }}
         </div>
 
-        <div class="bp-row__bar">
+        <div class="bp-row-bar">
           <div
-            class="bp-row__fill"
+            class="bp-row-fill"
             [style.width.%]="(bp.px / 1536) * 100"
           >
           </div>
@@ -80,7 +80,7 @@
   <div class="grid-tiers">
     @for (t of tiers; track t.name) {
       <div class="grid-tier">
-        <div class="grid-tier__head">
+        <div class="grid-tier-head">
           <div class="t-overline">
             {{ t.name }}
           </div>
@@ -89,13 +89,13 @@
             {{ t.cols }} columns
           </div>
 
-          <div class="t-xs grid-tier__range">
+          <div class="t-xs grid-tier-range">
             {{ t.range }}
           </div>
         </div>
 
         <div
-          class="grid-tier__viz"
+          class="grid-tier-viz"
           [style.--cols]="t.cols"
         >
           @for (_ of cols(t.cols); track $index) {
@@ -103,7 +103,7 @@
           }
         </div>
 
-        <dl class="grid-tier__meta">
+        <dl class="grid-tier-meta">
           <dt>
             Gutter
           </dt>
@@ -145,15 +145,15 @@
   <div class="cap-list">
     @for (c of colCaps; track c.token) {
       <div class="cap-row">
-        <code class="t-mono-inline cap-row__tok">
+        <code class="t-mono-inline cap-row-tok">
           {{ c.token }}
         </code>
 
-        <div class="t-s-bold cap-row__val">
+        <div class="t-s-bold cap-row-val">
           {{ c.value }}
         </div>
 
-        <div class="t-s cap-row__use">
+        <div class="t-s cap-row-use">
           {{ c.use }}
         </div>
       </div>

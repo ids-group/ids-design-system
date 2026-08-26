@@ -17,6 +17,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { devWarn } from '../../core/dev-warning';
 import { resolveWithConfig } from '../../core/config-defaults';
 import { NgTemplateOutlet } from '@angular/common';
@@ -125,6 +126,9 @@ function compareSortValues(
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
+    // Only instantiated when a column sets `link`, so a consumer app with no router
+    // provided still renders the table — the directive is never constructed.
+    RouterLink,
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
@@ -1829,6 +1833,13 @@ export class TableComponent<T extends object> {
     }
 
     return String((row as Record<string, unknown>)[col.key] ?? '');
+  }
+
+  protected cellLink(
+    row: T,
+    col: TableColumn<T>,
+  ): string | readonly unknown[] | null {
+    return col.link?.(row) ?? null;
   }
 
   /** Serialises the visible columns of the rows the TABLE HOLDS as a CSV download.

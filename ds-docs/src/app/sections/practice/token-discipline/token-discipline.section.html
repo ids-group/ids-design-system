@@ -37,7 +37,7 @@
   <div class="pairs">
     @for (pair of pairs; track pair.title) {
       <div class="pair">
-        <div class="pair__head">
+        <div class="pair-head">
           <h4 class="t-h5">
             {{ pair.title }}
           </h4>
@@ -47,9 +47,9 @@
           </p>
         </div>
 
-        <div class="pair__body">
+        <div class="pair-body">
           <div class="tile tile--good">
-            <div class="tile__tag">
+            <div class="tile-tag">
               <ds-icon
                 name="check"
                 [size]="12"
@@ -57,11 +57,11 @@
               Good
             </div>
 
-            <pre class="tile__code t-mono">{{ pair.good }}</pre>
+            <pre class="tile-code t-mono">{{ pair.good }}</pre>
           </div>
 
           <div class="tile tile--bad">
-            <div class="tile__tag">
+            <div class="tile-tag">
               <ds-icon
                 name="x"
                 [size]="12"
@@ -69,7 +69,7 @@
               Bad
             </div>
 
-            <pre class="tile__code t-mono">{{ pair.bad }}</pre>
+            <pre class="tile-code t-mono">{{ pair.bad }}</pre>
           </div>
         </div>
       </div>

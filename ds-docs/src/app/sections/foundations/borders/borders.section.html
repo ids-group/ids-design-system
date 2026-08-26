@@ -17,20 +17,20 @@
     @for (width of widths; track width.token) {
       <div class="width-cell">
         <div
-          class="width-cell__stage"
+          class="width-cell-stage"
           [style.border-width]="'var(' + width.token + ')'"
         >
         </div>
 
-        <div class="width-cell__val t-s-bold">
+        <div class="width-cell-val t-s-bold">
           {{ width.value }}
         </div>
 
-        <code class="t-mono-inline width-cell__tok">
+        <code class="t-mono-inline width-cell-tok">
           {{ width.token }}
         </code>
 
-        <div class="t-xs width-cell__use">
+        <div class="t-xs width-cell-use">
           {{ width.use }}
         </div>
       </div>

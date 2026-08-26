@@ -117,6 +117,21 @@ export class TableSection {
     { key: 'venue', label: 'Venue' },
   ];
 
+  protected readonly linkColumns: TableColumn<EventRow>[] = [
+    {
+      key: 'project',
+      label: 'Record',
+      // A planning record has no page to open yet, and returning null leaves that
+      // cell as plain text — which is how a partly-reachable list stays one column.
+      link: (row) =>
+        row.status === 'planning'
+          ? null
+          : ['/components/table', { record: row.project }],
+    },
+    { key: 'venue', label: 'Venue' },
+    { key: 'status', label: 'Status' },
+  ];
+
   protected readonly sortStateColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record', sortable: true },
   ];
@@ -425,11 +440,13 @@ export class TableSection {
       return rows;
     }
 
-    return rows.slice().sort(
-      (left, right) =>
-        String(left[key]).localeCompare(String(right[key])) *
-        (dir === 'asc' ? 1 : -1),
-    );
+    return rows
+      .slice()
+      .sort(
+        (left, right) =>
+          String(left[key]).localeCompare(String(right[key])) *
+          (dir === 'asc' ? 1 : -1),
+      );
   });
 
   protected onServerSort(event: {

@@ -1,5 +1,3 @@
-/* Public --ds-timeline-* are read with fallbacks, never declared. */
-
 :host {
   --_timeline-node-size: var(--ds-timeline-node-size, var(--timeline-node-size));
   --_timeline-spine-w: var(--ds-timeline-spine-w, var(--timeline-spine-w));

@@ -19,7 +19,11 @@
       {{ placeholder() }}
     </span>
   } @else {
-    <span #chipRow class="chip-row" [class.fit]="fitsChipsToWidth()">
+    <span
+      #chipRow
+      class="chip-row"
+      [class.fit]="fitsChipsToWidth()"
+    >
       @for (option of visibleChips(); track option.value) {
         <ds-tag
           data-chip
@@ -33,7 +37,10 @@
       }
 
       @if (overflowCount() > 0) {
-        <span class="overflow" data-chip-overflow>
+        <span
+          class="overflow"
+          data-chip-overflow
+        >
           +{{ overflowCount() }} more
         </span>
       }

@@ -6,8 +6,10 @@
       "kind": "behavior",
       "old": "ds-input, ds-textarea",
       "new": null,
+      "action": "Only if you wrote a workaround: a rule that killed one of the two rings — `box-shadow: none` on an inner input, or a re-declared `--ds-input-focus-shadow` meant to hide the doubling — can go.",
+      "appliesWhen": "Deliberately NOT suppressed: the clear button and the password toggle inside the same box keep their own ring, because both are real tab stops the box halo cannot distinguish.",
+      "note": "The two shells 0.10.2's pass missed. A focused ds-input or ds-textarea drew the 4px control ring the universal `:where(:focus-visible)` rule puts on the inner element, plus the 3px field halo the box paints on `:focus-within`. The inner one is suppressed now.",
       "surface": "style",
-      "note": "APPEARANCE FIX, no action: the two shells 0.10.2's one-focus-ring-per-field pass missed. A focused ds-input or ds-textarea drew TWO rings - the 4px control ring the universal :where(:focus-visible) rule puts on the inner input/textarea, plus the 3px field halo the box paints on :focus-within. The inner one is now suppressed. ACTION only if you wrote a workaround: a rule that killed one of the two (box-shadow: none on an inner input, a re-declared --ds-input-focus-shadow meant to hide the doubling) can go. Deliberately NOT suppressed: the clear button and the password toggle inside the same box keep their own ring, because both are real tab stops the box halo cannot distinguish.",
       "verify": "Tab into a ds-input and a ds-textarea: each shows exactly one ring, the halo around the box. Tab on to the clear button or password toggle inside that field and a second, tighter ring appears on the button - that one is intended.",
       "searchHints": [
         "--ds-input-focus-shadow",
@@ -22,8 +24,9 @@
       "kind": "behavior",
       "old": "ds-search",
       "new": null,
+      "action": "Only if you re-added a ring to that button yourself — that rule can go. (delete list: search-clear-button-focus-rule)",
+      "note": "0.10.2's ring fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a `tabindex=0` tab stop: tabbing from the input to the clear button changed nothing on screen — box-shadow, outline, border, background and colour all identical — so a keyboard user could not tell it had focus. A WCAG 2.4.7 failure. Every shell names the single control it silences now.",
       "surface": "style",
-      "note": "ACCESSIBILITY FIX, no action: 0.10.2's ring fix silenced the base focus indicator with a shell-wide reset, which also hit .search-clear - a tabindex=0 tab stop. Tabbing from the input to the clear button changed nothing on screen (box-shadow, outline, border, background and colour all identical), so a keyboard user could not tell the button had focus: a WCAG 2.4.7 failure. Every shell now names the single control it silences, so tab stops inside a field box keep their own ring. ACTION only if you re-added a ring to that button yourself - that rule can go.",
       "verify": "Type into a ds-search so the clear button appears, then Tab: the × shows its own ring on top of the field halo. Same for a chip close button in ds-autocomplete or ds-multi-select, and for the arrows in ds-number-stepper.",
       "searchHints": [
         "search-clear",
@@ -37,8 +40,10 @@
       "kind": "behavior",
       "old": "ds-date-picker, ds-time-picker",
       "new": null,
+      "action": "Only if you worked around either: a rule adding a ring to `.period-trigger` or `.time-action`, or a `border-radius` forced onto `.time-panel`, can go.",
+      "pitfall": "The mechanism is worth knowing before you style a DS panel yourself: a private `--_*` token declared on `:host` does NOT reach a panel the CDK has portaled out of that host, and an unresolvable `var()` silently becomes the property's initial value — `none` for box-shadow, `0` for border-radius. Read the PUBLIC `--ds-*` token from outside instead.",
+      "note": "Two tabbable buttons inside the portaled panels had no focus indicator at all, and one panel had square corners: both read a private focus-shadow token declared on the host, and with `outline: none` beside it nothing was left.",
       "surface": "style",
-      "note": "ACCESSIBILITY FIX, no action: two tabbable buttons inside the portaled panels had no focus indicator at all, and one panel had square corners. Both read a private --_*-focus-shadow token declared on :host while the panel is portaled out of the host by the CDK, so the var() resolved to nothing and box-shadow fell back to its initial value none - with outline: none beside it, nothing was left. ds-time-picker's panel border-radius read the same way and fell back to 0. ACTION only if you worked around either: a rule adding a ring to .period-trigger or .time-action, or a border-radius forced onto .time-panel, can go.",
       "verify": "Open the ds-date-picker calendar and Tab to the month/year header: it shows a focus ring. Open the ds-time-picker panel and Tab to its action button: same. The time-picker panel has rounded corners.",
       "searchHints": [
         "period-trigger",
@@ -54,7 +59,7 @@
     "The shell list in styles/_focus.scss is now maintained from a measurement, not from a read of the code: it had been wrong for two releases. If you add a component that paints its own ring on :focus-within, suppress the base rule on the control it speaks for - `outline: 0` cannot do it, because the base indicator is a box-shadow.",
     "Two authoring mixins are now documented for consumers building their own composite controls: `focus.owns-the-focus-ring($control)` in styles/focus, and `text-clip.single-line-ellipsis` in styles/text-clip. Both are opt-in - no existing code changes.",
     "A private --_* token declared on :host does not reach a CDK-portaled panel, and an unresolvable var() silently becomes the property's initial value - none for box-shadow, 0 for border-radius. If you style a DS panel from your own CSS, read the PUBLIC --ds-* token there, not the private one.",
-    "Eleven public tokens were always overridable but never reached the token reference, because the extractor searched for the literal `var(--ds-` and a resolver wrapped across lines put a newline inside it: --ds-container-pad-x, --ds-multi-select-border-color (+-focus), --ds-segmented-selected-bg-color / -label-color / --ds-segmented-radius, --ds-time-picker-option-bg-color-selected / -text-color-selected / -bg-color-hover, --ds-time-picker-trigger-bg-color / -border / -color. Nothing changed in the components - if you hand-rolled around one of these because it looked unsupported, the override works and the workaround can go."
+    "Fourteen public tokens were always overridable but never reached the token reference, because the extractor searched for the literal `var(--ds-` and a resolver wrapped across lines put a newline inside it: --ds-container-pad-x, --ds-multi-select-border-color (+-focus), --ds-segmented-selected-bg-color / -label-color / --ds-segmented-radius, --ds-time-picker-option-bg-color-selected / -text-color-selected / -bg-color-hover, --ds-time-picker-trigger-bg-color / -border / -color, --ds-field-message-icon-offset, --ds-time-picker-focus-shadow. Nothing changed in the components - if you hand-rolled around one of these because it looked unsupported, the override is supported and is the way to do it."
   ],
   "deleteList": [
     {
@@ -68,6 +73,18 @@
       ],
       "why": "A rule killing one of the two focus rings a ds-input or ds-textarea used to paint - typically box-shadow: none on the inner input, or --ds-input-focus-shadow re-declared as none to hide the doubling.",
       "replaceWith": "nothing - the component now paints one ring on its own"
+    },
+    {
+      "id": "search-clear-button-focus-rule",
+      "surface": "style",
+      "find": [
+        ".search-clear",
+        "ds-search",
+        ":focus-visible",
+        "box-shadow"
+      ],
+      "why": "A focus rule you added to the ds-search clear button because it showed no indicator at all - the shell-wide reset 0.10.2 used silenced that tab stop too. Every shell names the one control it silences now, so the button keeps its own ring.",
+      "replaceWith": "nothing - the component paints it"
     }
   ]
 }

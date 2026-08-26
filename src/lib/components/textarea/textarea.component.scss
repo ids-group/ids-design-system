@@ -7,7 +7,6 @@
    element — vertical resize, min-height from --field-textarea-rows-min, and a
    height: auto control box so it grows with rows. */
 :host {
-  /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
   --_input-border:         var(--ds-input-border,         var(--border-default));
   --_input-radius:         var(--ds-input-radius,         var(--ds-radius-control));
@@ -139,17 +138,17 @@
 }
 
 /* Vertical padding lives on the textarea, not the box: `.sm`/`.lg` above zero the
-   control's own padding-block through the shorthand. One rule per size on purpose —
-   a single pin out-ranks the size variants and flattens all three to md. */
-:host .field .control textarea {
+   control's own padding-block through the shorthand. One rule per size, because a
+   single pin out-ranks the size variants and flattens all three to md. */
+.field .control textarea {
   padding-block: var(--_input-pad-y);
 }
 
-:host .field.sm .control textarea {
+.field.sm .control textarea {
   padding-block: var(--space-2);
 }
 
-:host .field.lg .control textarea {
+.field.lg .control textarea {
   padding-block: var(--space-4);
 }
 

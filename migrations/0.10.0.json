@@ -6,7 +6,10 @@
       "kind": "behavior",
       "old": "ds-autocomplete .autocomplete-trigger > ds-tag",
       "new": null,
-      "note": "The chips of ds-autocomplete and ds-multi-select now render inside a <span class=\"chip-row\"> instead of sitting directly in the trigger. LAYOUT IS UNCHANGED ONLY ON [maxVisibleChips]=\"null\": there the wrapper is display:contents, so it adds no box and the chips remain flex items of the trigger exactly as before — spacing, wrapping and height are identical. In the MEASURING modes, which now includes the DEFAULT \"fit\", the row becomes display:flex with flex-wrap:nowrap and overflow:hidden and the trigger itself flips to nowrap, so layout there is NOT unchanged (see chips-cap-by-width-by-default). WHAT BREAKS is a CSS override that walks the structure: any selector using the direct-child combinator from the trigger to a chip (`.autocomplete-trigger > ds-tag`, `ds-multi-select .field-trigger > ds-tag`, and `:first-child`/`:last-child`/`:nth-child` written against the trigger's children) now matches nothing or matches the wrapper. ACTION: drop the combinator (`.autocomplete-trigger ds-tag`) or insert `.chip-row`. Positional selectors should target `.chip-row > ds-tag:first-child` — note the chips are no longer siblings of the filter input, the addon slots or the chevron, so `ds-tag + .autocomplete-input` style adjacency is gone with no replacement. NAME THE RIGHT TRIGGER when you rewrite a multi-select selector: its trigger element is `.field-trigger`, NOT `.trigger` — a selector written against `ds-multi-select .trigger` matches nothing and always did. Chips also carry a `data-chip` attribute and the '+N more' marker a `data-chip-overflow` attribute; both are how the width measurement finds them, so do not strip them, but they are fine to select on.",
+      "action": "Drop the direct-child combinator (`.autocomplete-trigger ds-tag`) or insert the wrapper (`.chip-row > ds-tag`). Positional selectors become `.chip-row > ds-tag:first-child`.",
+      "appliesWhen": "Layout is unchanged ONLY on `[maxVisibleChips]=\"null\"`, where the wrapper is `display: contents` and the chips stay flex items of the trigger. In the measuring modes — which now includes the DEFAULT `fit` — the row becomes a nowrap flex box with `overflow: hidden` and the trigger flips to nowrap, so layout there is not unchanged either.",
+      "pitfall": "Three ways to get the rewrite wrong. The chips are no longer siblings of the filter input, the addon slots or the chevron, so a `ds-tag + .autocomplete-input` adjacency is gone with NO replacement. A multi-select trigger is `.field-trigger`, not `.trigger` — a selector written against `ds-multi-select .trigger` matches nothing and always did, so it looks like the wrapper broke it. And do not strip `data-chip` or `data-chip-overflow`: that is how the width measurement finds the chips, though selecting on them is fine.",
+      "note": "The chips of ds-autocomplete and ds-multi-select render inside a `<span class=\"chip-row\">` instead of sitting directly in the trigger, so a selector that walks the structure now matches the wrapper or nothing.",
       "searchHints": [
         "autocomplete-trigger > ds-tag",
         "autocomplete-trigger>ds-tag",
@@ -31,7 +34,10 @@
       "kind": "behavior",
       "old": "extends AutocompleteComponent",
       "new": null,
-      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's and 0.9.0's: it covers every exported class whose member surface changed, so a consumer who EXTENDS a DS component resolves them in one pass. Subclassing a DS component is unsupported (design-system.md), but where it happens the names collide and the build stops: TS4114 demands `override`, TS2415 fires on a redeclared private. GAINED MEMBERS — 30 classes, per `npm run class-surface` against v0.9.1: AuthLayoutComponent (brandName, letterGlyph, taglineText); AutocompleteComponent (chipBudget, chipRow, chipsThatFit, firstEnabledIndex, fitsChipsToWidth, nextEnabledIndex, sizeResolved); MultiSelectComponent (chipBudget, chipRow, chipsThatFit, fitsChipsToWidth); AvatarComponent (config, initialsRule, initialsText, name); BadgeComponent (withDotResolved); BottomSheetComponent (backdropPress, onBackdropRelease); CardComponent (elevationResolved, onActivationKey, paddingResolved); FilterBarComponent (triggerSize); ButtonComponent, CheckboxComponent, DatePickerComponent, FieldGroupComponent, IconButtonComponent, IconComponent, InputComponent, NumberStepperComponent, RadioComponent, SelectComponent, SwitchComponent, TextareaComponent, TimePickerComponent (sizeResolved); ModalComponent (backdropPress, dividersResolved, onBackdropRelease, status); ModalCardComponent (dividersResolved, resolvedIcon, resolvedRole, status); SearchComponent (cancel, debounce, flush, onText, push, sizeResolved, text); SidenavComponent (brandName, letterGlyph, markGlyph); TableComponent (activeSortDir, activeSortKey, borderedResolved, clipWidth, exportStatusState, exportingState, fitsContent, loadingMode, showsEmptyRow, sortDirChange, sortKeyChange, sortState, stickyScrollbarResolved); TabsComponent (memoryKey, remember, rememberLastTab, rememberedName). ALSO GAINED, from the shared field-state work: `controlState` on the nine bordered field components (AutocompleteComponent, ColorPickerComponent, DatePickerComponent, InputComponent, MultiSelectComponent, OtpInputComponent, SelectComponent, TextareaComponent, TimePickerComponent), plus TimeColumnsComponent.partPicked and TimePickerComponent.onPartPicked / .pickedParts from the single-mode time panel. These were invisible to class-surface until its field pattern was widened in this same release: it matched only `readonly x = call(...)`, and `controlState` is assigned from a property (`= this.fieldMessage.controlState`). ADD BY HAND, because the tool still cannot see them: SearchComponent also declares the plain private fields `pending` and `pushed` — class-surface matches `readonly` fields and methods, and a redeclared private still fails with TS2415. LOST MEMBERS — four classes, the case an `override` notices differently because it now overrides nothing: ModalComponent.error and .onBackdrop; ModalCardComponent.error; BottomSheetComponent.stop; InputComponent.floating (removed with the floating label). SEPARATELY, and invisible to the report because the NAME survives: TableComponent.exporting and .exportStatus are still there but are now PUBLIC readonly signals instead of the protected writable signals a subclass could set, so a subclass that assigned to them no longer compiles. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match; for the lost ones, drop the override and use the public API (runExport(), exporting(), exportStatus(), status). Consumers who only use the <ds-...> elements in templates need no change.",
+      "action": "Run `npm run class-surface v0.9.1 v0.10.0` for the authoritative list, then per member: rename your own, or add `override` where the base semantics genuinely match. For the lost ones, drop the override and use the public API — `runExport()`, `exporting()`, `exportStatus()`, `status`.",
+      "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md § Components); template users need nothing.",
+      "pitfall": "Three shapes the report cannot show you. (1) `TableComponent.exporting` and `.exportStatus` keep their NAMES but are public readonly signals now instead of the protected writable ones a subclass could set — assigning to them stops compiling and nothing in the diff says so. (2) SearchComponent also declares the plain private fields `pending` and `pushed`; class-surface matches `readonly` fields and methods, and a redeclared private still fails with TS2415. (3) Four classes LOST members — ModalComponent `error` and `onBackdrop`, ModalCardComponent `error`, BottomSheetComponent `stop`, InputComponent `floating` — so an `override` there now overrides nothing.",
+      "note": "Thirty classes gained members. The `controlState` additions on the nine bordered fields were invisible to class-surface until its field pattern was widened in this same release: it matched only `readonly x = call(…)`, and `controlState` is assigned from a property.",
       "searchHints": [
         "extends ButtonComponent",
         "extends TableComponent",
@@ -63,7 +69,10 @@
       "kind": "behavior",
       "old": "ds-auth-layout [brand]",
       "new": null,
-      "note": "The rule constraining ds-auth-layout's projected [brand] slot no longer declares `width: auto` — only the `max-height` it shipped with in 0.9.0. That declaration sat at specificity (0,2,0), so it out-ranked a width the consumer set on their own logo, and with the slot's default `max-height: none` it achieved nothing: an <img> with no CSS width already keeps its aspect ratio under a max-height. ACTION: none for almost everyone. You are affected ONLY if you both opted into `--ds-auth-layout-brand-max-height` AND set an explicit width on the element you project into [brand] — that logo scaled to keep its ratio before and will now honour your width, i.e. it can squash. Add `width: auto` to your own logo rule to restore the old result. ds-sidenav's identical slot gained the same max-height constraint in this release and deliberately does NOT carry width: auto either, so the two match.",
+      "action": "Add `width: auto` to your own logo rule to restore the old result.",
+      "appliesWhen": "None for almost everyone. You are affected only if you BOTH opted into `--ds-auth-layout-brand-max-height` AND set an explicit width on the element you project into `[brand]`.",
+      "pitfall": "That logo used to scale to keep its ratio and will now honour your width — it can squash. The old declaration sat at specificity (0,2,0) and out-ranked your own width, which is why removing it changes anything at all.",
+      "note": "The slot rule declares only the `max-height` it shipped with in 0.9.0. With the default `max-height: none` the `width: auto` achieved nothing anyway: an `<img>` with no CSS width already keeps its ratio. ds-sidenav's identical slot gained the same constraint here and deliberately does not carry `width: auto` either.",
       "searchHints": [
         "--ds-auth-layout-brand-max-height",
         "[brand]",
@@ -80,7 +89,10 @@
       "kind": "behavior",
       "old": "ds-tabs[urlParam]",
       "new": null,
-      "note": "ds-tabs' urlParam now SLUGS a tab's label for the query parameter instead of using it raw. A tab that declares no `value` used to put its display string into the address - ?tab=License%20Verification%20Status - and now yields ?tab=license-verification-status (kebab, lowercased, diacritics decomposed and dropped; a label with nothing sluggable in it, CJK or bare punctuation, keeps its raw text). WHO IS AFFECTED: only consumers who adopted urlParam in 0.9.0 AND left `value` off their ds-tab elements. Their existing links stop matching and land on the first tab, which is what a stale bookmark has always done - nothing throws. ACTION: either accept the new parameter values, or declare `value` on each ds-tab to pin the names permanently, which is the better fix regardless: a slug is still derived from display copy, so renaming a tab still moves the link. NOT CHANGED: tabClosed still emits the raw label, because a host matches it against its own list - the two identifiers are deliberately different now, and the docs said they were the same until this release.",
+      "action": "Either accept the new parameter values, or declare `value` on each `ds-tab` to pin the names permanently — the better fix regardless, since a slug is still derived from display copy and renaming a tab still moves the link.",
+      "appliesWhen": "Only consumers who adopted `urlParam` in 0.9.0 AND left `value` off their tabs. A label with nothing sluggable in it — CJK, bare punctuation — keeps its raw text.",
+      "pitfall": "Existing links stop matching and land on the first tab, and nothing throws: it is indistinguishable from a stale bookmark. Note too that `tabClosed` still emits the RAW label — the two identifiers are deliberately different now, and the docs said they were the same until this release.",
+      "note": "`?tab=License%20Verification%20Status` becomes `?tab=license-verification-status`: kebab, lowercased, diacritics decomposed and dropped.",
       "searchHints": [
         "urlParam",
         "ds-tabs",
@@ -104,7 +116,9 @@
       "kind": "input-rename",
       "old": "ds-modal[error]",
       "new": "ds-modal[status]",
-      "note": "ds-modal and ds-modal-card replace `error: boolean` with `status: DsStatus` ('info' | 'success' | 'warning' | 'error'), because a boolean cannot express a warning or an info dialog and the rest of the library settled on that vocabulary in 0.9.0. MECHANICAL MAPPING, no judgement needed: [error]=\"true\" becomes status=\"error\"; a bare `error` attribute becomes status=\"error\"; [error]=\"false\" and any unset case become nothing at all (unset is neutral and renders exactly as today); a COMPUTED [error]=\"expr\" becomes [status]=\"expr && 'error'\" - the input accepts false and undefined as \"no status\", so the shorter && form binds under strictTemplates; [status]=\"expr ? 'error' : null\" is equally correct. ALSO CHANGED, and worth knowing before you look at a screenshot: a status now drives four things rather than one - the icon-badge tint, the title colour, a DEFAULT icon (error/warn/success/info) and the ARIA role, where error and warning make the dialog an `alertdialog`. Both the icon and the role are overridable: `icon` beats the status's pick, an explicit `dialogRole` beats the status's role. The default icon is deliberate, not decoration - a tint on its own signals by colour alone.",
+      "action": "`[error]=\"true\"` and a bare `error` become `status=\"error\"`. `[error]=\"false\"` and any unset case become nothing at all. A computed `[error]=\"expr\"` becomes `[status]=\"expr && 'error'\"` — the input takes false and undefined as \"no status\", so the short form binds under strictTemplates; `[status]=\"expr ? 'error' : null\"` is equally correct.",
+      "pitfall": "The mapping is mechanical but the RESULT is not the same dialog. A status drives four things now rather than one: the icon-badge tint, the title colour, a default icon, and the ARIA role — error and warning make the dialog an `alertdialog`, which changes how assistive tech announces and traps it. Both are overridable (`icon` beats the status pick, an explicit `dialogRole` beats the status role), and the default icon is deliberate: a tint alone signals by colour only.",
+      "note": "`error: boolean` became `status: DsStatus` (`info | success | warning | error`), because a boolean cannot express a warning or an info dialog and the rest of the library settled on that vocabulary in 0.9.0.",
       "searchHints": [
         "[error]",
         "ds-modal",
@@ -120,7 +134,10 @@
       "kind": "behavior",
       "old": "ds-autocomplete[maxVisibleChips]",
       "new": null,
-      "note": "CHANGED DEFAULT, visual: maxVisibleChips on ds-autocomplete and ds-multi-select now defaults to \"fit\" instead of null. A multi-value trigger used to grow a line per selection and push the rest of the form down the page; it now keeps as many chips as it is wide and collapses the rest into '+N more', re-splitting on resize. ACTION: nothing, unless a screen relied on the growth - then bind [maxVisibleChips]=\"null\" to show every chip again. TWO THINGS RIDE ALONG with the default and are easy to miss. (1) A trigger in any measuring mode - \"fit\" or a number - is now flex-wrap: nowrap, and its chips are held to one line each and CLIPPED rather than wrapped, so a chip carrying more than a short label gets squeezed; only null still wraps the row. (2) A NUMBER is no longer an exact count: it is a ceiling that is then measured, so a narrow trigger shows FEWER than N (see the separate maxVisibleChips-number-is-a-ceiling item). CHECK: a form where a trigger sits above other fields, any layout whose height was measured or asserted with several chips selected, and any chip whose content is longer than a word. ALSO SCOPED HERE: Applies identically to ds-multi-select[maxVisibleChips]; the scope names one element only because the manifest format takes one.",
+      "action": "Nothing, unless a screen relied on the growth — then bind `[maxVisibleChips]=\"null\"` to show every chip again.",
+      "appliesWhen": "ds-autocomplete and ds-multi-select alike. Check a form where a trigger sits above other fields, any layout whose height was measured or asserted with several chips selected, and any chip whose content is longer than a word.",
+      "pitfall": "Two things ride along with the default and are easy to miss. A trigger in any measuring mode — `fit` or a number — is `flex-wrap: nowrap` now, so its chips are held to one line each and CLIPPED rather than wrapped; only `null` still wraps. And a NUMBER is no longer an exact count: it is a ceiling that is then measured, so a narrow trigger shows FEWER than N.",
+      "note": "`maxVisibleChips` defaults to `fit` instead of null. A multi-value trigger used to grow a line per selection and push the rest of the form down the page; it keeps as many chips as it is wide now and collapses the rest into \"+N more\", re-splitting on resize.",
       "searchHints": [
         "maxVisibleChips",
         "ds-multi-select",
@@ -136,7 +153,9 @@
       "kind": "behavior",
       "old": "[data-density=\"ultra-compact\"]",
       "new": null,
-      "note": "The ultra-compact density tier now also compresses --ds-container-pad, the inner padding ds-card and ds-stat share, from 24px (--space-6) to 16px (--space-4). WHO IS AFFECTED: only screens that set [data-density=\"ultra-compact\"] on a container that holds a ds-card or ds-stat. The default and the other three tiers (compact, cozy, comfy) are untouched and still resolve to 24px, so an app that never opts into ultra-compact sees no change. WHY: the tier already compressed field padding and table-cell padding, so a card kept its full 24px frame while its own cells halved - the surface padding was the one it missed. ACTION, if you want the old value inside an ultra-compact container: re-declare --ds-container-pad: var(--space-6) on it. If instead you have per-component pins (--ds-card-pad or --ds-stat-pad) set to work around the shared default, they still win and are unaffected - but consider collapsing them into one --ds-container-pad at :root, which is the lever both components default to.",
+      "action": "If you want the old value inside an ultra-compact container, re-declare `--ds-container-pad: var(--space-6)` on it.",
+      "appliesWhen": "Only screens that set `[data-density=\"ultra-compact\"]` on a container holding a ds-card or ds-stat. The default and the other three tiers still resolve to 24px. Per-component pins (`--ds-card-pad`, `--ds-stat-pad`) still win and are unaffected — though they are worth collapsing into one `--ds-container-pad`, which is the lever both components default to.",
+      "note": "The tier compresses `--ds-container-pad` from 24px to 16px. It already compressed field padding and table-cell padding, so a card kept its full 24px frame while its own cells halved — the surface padding was the one it missed.",
       "searchHints": [
         "data-density",
         "ultra-compact",
@@ -160,7 +179,10 @@
       "kind": "behavior",
       "old": "size()",
       "new": null,
-      "note": "The size input on fourteen controls (ds-button, ds-icon-button, ds-input, ds-textarea, ds-select, ds-autocomplete, ds-search, ds-date-picker, ds-time-picker, ds-number-stepper, ds-checkbox, ds-radio, ds-switch, ds-field-group) is now typed DsSize | null and defaults to null, so an unbound size can fall through to the new DS_CONFIG.control.size. NOTHING CHANGES IN A TEMPLATE: size=\"sm\" binds exactly as before, and a control with no size still renders md. WHAT CHANGES is reading the signal back - size() returns null when nothing was bound, where it returned 'md' before. THERE IS NO PUBLIC REPLACEMENT ACCESSOR, and this is the trap: each component holds a sizeResolved() but declares it `protected`, so `cmp.sizeResolved()` from a host, a viewChild or a test does NOT compile (TS2445). ds-field-group is the one exception, where sizeResolved is public. ACTION: keep the value you bound and read that, or resolve DS_CONFIG.control.size yourself; the built-in fallbacks are unchanged ('md' for size, 'flat' for card elevation, 16 for icon size, false for badge withDot and for table bordered / stickyScrollbar). The same nullable-plus-protected-resolver shape now applies to ds-card elevation and padding, ds-icon size, ds-badge withDot, ds-table bordered / stickyScrollbar, dividers on ds-modal and ds-modal-card, and brand / logoLetter / tagline on ds-sidenav and ds-auth-layout - all of those inputs now read back null when unbound, where they used to return the old default. SEPARATELY: if you implement DsFieldGroupContext yourself, its member is now sizeResolved rather than size.",
+      "action": "Keep the value you bound and read that, or resolve `DS_CONFIG.control.size` yourself. The built-in fallbacks are unchanged: `md` for size, `flat` for card elevation, 16 for icon size, false for badge withDot and for table bordered / stickyScrollbar.",
+      "appliesWhen": "NOTHING changes in a template — `size=\"sm\"` binds as before and an unsized control still renders md. Only reading the signal back changes. The same nullable-plus-protected-resolver shape now applies to ds-card elevation and padding, ds-icon size, ds-badge withDot, ds-table bordered / stickyScrollbar, dividers on ds-modal and ds-modal-card, and brand / logoLetter / tagline on ds-sidenav and ds-auth-layout.",
+      "pitfall": "There is NO public replacement accessor. Each component holds a `sizeResolved()` but declares it `protected`, so `cmp.sizeResolved()` from a host, a viewChild or a test does not compile (TS2445) — ds-field-group is the one exception, where it is public. So `size()` returning null where it used to return `md` has no one-line fix. Separately, if you implement DsFieldGroupContext yourself, its member is `sizeResolved` now rather than `size`.",
+      "note": "The size input on fourteen controls is typed `DsSize | null` and defaults to null, so an unbound size can fall through to the new `DS_CONFIG.control.size`.",
       "searchHints": [
         ".size()",
         "sizeResolved",
@@ -182,7 +204,10 @@
       "kind": "removed-api",
       "old": "TableComponent.sortKey.set()",
       "new": null,
-      "note": "ds-table's sortKey and sortDir changed from model() to an input() plus a matching output() (sortKeyChange / sortDirChange), so the component can tell a host's write apart from its own — the fix for the lost sort indicator. TEMPLATES ARE UNAFFECTED: [(sortKey)] and [(sortDir)] still work, one-way [sortKey] with (sortChange) still works, and a static sortKey=\"project\" still works. WHAT BREAKS is TypeScript access to the signal: table.sortKey.set(...) and table.sortDir.set(...) no longer exist, because an input is read-only. ACTION: keep the sort in your own state and bind it in — which every server-paged list already does — or listen to (sortChange) and write your own signal. Reading table.sortKey() still works and returns what the host bound.",
+      "action": "Keep the sort in your own state and bind it in — which every server-paged list already does — or listen to `(sortChange)` and write your own signal.",
+      "appliesWhen": "Templates are unaffected: `[(sortKey)]` and `[(sortDir)]` still work, one-way `[sortKey]` with `(sortChange)` still works, a static `sortKey=\"project\"` still works, and reading `table.sortKey()` still returns what the host bound.",
+      "pitfall": "`table.sortKey.set(…)` and `table.sortDir.set(…)` no longer exist, because an input is read-only.",
+      "note": "They changed from `model()` to an `input()` plus a matching output, so the component can tell a host write apart from its own — the fix for the lost sort indicator.",
       "searchHints": [
         "sortKey.set",
         "sortDir.set",
@@ -205,7 +230,10 @@
       "kind": "behavior",
       "old": "ds-button[variant=outline]",
       "new": null,
-      "note": "The outlined variants no longer paint an opaque surface: ds-button variant=\"outline\", ds-icon-button variant=\"outlined\" and the outlined half of ds-split-button now default their fill to `transparent` instead of `--surface-default`. WHY: an opaque white fill is invisible on a white page and wrong on every tinted one - on a --surface-secondary card, a table toolbar or an alert the button read as a sticker laid over the surface rather than a control drawn on it. Material 3 and Bootstrap both specify a transparent container for this variant. WHO IS AFFECTED: only buttons placed on a non-white ground; on the default page surface the rendering is identical. On ds-button and ds-icon-button the disabled state is transparent too (mixing a transparent fill toward --surface-disabled would yield a 72%-alpha box), so the border and label carry it; a DISABLED outlined ds-split-button is the exception and still paints --surface-muted, because its outline rules are gated on :not(:disabled) - unchanged by this release. Hover fills differ per component and all stay opaque: --c-subtitle on ds-button, --surface-secondary on ds-icon-button and ds-split-button. ACTION if a button sits on a photo, a gradient or any busy ground and needed the opaque fill: set --ds-button-bg-color: var(--surface-default) on that instance (or --ds-icon-button-bg-color / --ds-split-button-outline-bg-color). ALSO SCOPED HERE: The same default move applies to ds-icon-button[variant=\"outlined\"] and ds-split-button[variant=\"outline\"].",
+      "action": "Only if a button sits on a photo, a gradient or any busy ground and needed the opaque fill: set `--ds-button-bg-color: var(--surface-default)` on that instance, or the `--ds-icon-button-bg-color` / `--ds-split-button-outline-bg-color` equivalent.",
+      "appliesWhen": "Only buttons placed on a non-white ground; on the default page surface the rendering is identical. Hover fills are unchanged and all still opaque.",
+      "pitfall": "The disabled state is transparent too on ds-button and ds-icon-button — mixing a transparent fill toward `--surface-disabled` would give a 72%-alpha box — so the border and label carry it. A disabled outlined ds-split-button is the EXCEPTION and still paints `--surface-muted`, because its outline rules are gated on `:not(:disabled)`. Two components that look alike now disable differently.",
+      "note": "The outlined variants default their fill to `transparent` instead of `--surface-default`. An opaque white fill is invisible on a white page and wrong on every tinted one; Material 3 and Bootstrap both specify a transparent container for this variant.",
       "searchHints": [
         "variant=\"outline\"",
         "variant=\"outlined\"",
@@ -222,7 +250,10 @@
       "kind": "removed-api",
       "old": "ds-input[floating]",
       "new": null,
-      "note": "The `floating` input on ds-input is REMOVED, with no replacement. It was half-built: the label was drawn inside a taller control, but it never animated out of the field on focus, which is the whole point of a floating label -- so an empty field read as a permanently mislabelled one. REMOVE the attribute; the label then renders above the field like every other DS field, which is the format the rest of the library already uses. Note the height change that comes with it: a floating ds-input was --hit-touch (48px at default density) and it now takes the normal size scale (40px at `md`, --field-h-md -> --hit-cozy), so a row built around one may need its own height re-checked. Also gone with it: the five internal tokens that only this variant read -- --field-h-floating, --field-floating-label-fs, --field-floating-label-lh, --field-floating-label-top and --field-floating-pad-t. Overriding any of them is now inert; DELETE-LIST. Unrelated and UNTOUCHED: --ds-elevation-floating, which is the elevation role for toasts.",
+      "action": "Remove the `floating` attribute. The label then renders above the field like every other DS field.",
+      "appliesWhen": "`--ds-elevation-floating` is unrelated and UNTOUCHED — it is the elevation role for toasts, and a name-blind sweep will find it.",
+      "pitfall": "A height change rides along: a floating ds-input was 48px and now takes the normal size scale, 40px at `md`, so a row built around one needs its height re-checked. And the five internal tokens the variant read are gone — `--field-h-floating`, `--field-floating-label-fs`, `--field-floating-label-lh`, `--field-floating-label-top`, `--field-floating-pad-t` — so an override of any of them is now inert rather than wrong.",
+      "note": "It was half-built: the label was drawn inside a taller control but never animated out of the field on focus, which is the whole point — so an empty field read as a permanently mislabelled one.",
       "searchHints": [
         "floating",
         "[floating]",
@@ -235,15 +266,21 @@
         "--field-floating-label-top",
         "--field-floating-pad-t"
       ],
-      "surface": "template",
-      "verify": "No ds-input carries a `floating` attribute or binding."
+      "surface": [
+        "template",
+        "style"
+      ],
+      "verify": "No ds-input carries a `floating` attribute or binding. No stylesheet still sets --field-h-floating, --field-floating-label-fs, --field-floating-label-lh, --field-floating-label-top or --field-floating-pad-t: those five were declared at :root and are gone, so an override of any of them now resolves to nothing."
     },
     {
       "id": "field-invalid-class-to-data-field-state",
       "kind": "selector-rename",
       "old": "ds-color-picker.invalid",
       "new": "ds-color-picker[data-field-state='error']",
-      "note": "Validation state on a field's control is now one shared rule keyed off a `data-field-state` attribute on the host ('error' | 'warning' | 'success'), replacing three different spellings. The dead `.invalid` HOST CLASS is removed from ds-color-picker and ds-otp-input, and the `.invalid` class on ds-multi-select's .field-trigger with it -- nothing styled them any more. ACTION: a CSS override selecting `.invalid` on any of those three now matches nothing; rewrite it as [data-field-state='error']. The .error class is STILL EMITTED - on the wrapper by ds-input and ds-textarea, on the box by ds-select, ds-date-picker, ds-time-picker and ds-autocomplete - and .success by ds-input alone, the only control with a success state. Your selectors still match, but the library no longer PAINTS through them, so a rule written to stack on top of a DS rule now stands alone. NOT AFFECTED, and important because .invalid is one of this item's searchHints: ds-slider still binds [class.invalid] on its HOST and still paints through it (:host(.invalid) .fill / .thumb), and ds-field-group has its own [invalid] input and its own class. Leave both alone.",
+      "action": "Rewrite a CSS override selecting `.invalid` on ds-color-picker, ds-otp-input or ds-multi-select's `.field-trigger` as `[data-field-state='error']`.",
+      "appliesWhen": "Those three only. ds-slider still binds `[class.invalid]` on its HOST and still paints through it (`:host(.invalid) .fill / .thumb`), and ds-field-group has its own `[invalid]` input and its own class — leave both alone, even though `.invalid` is one of this item's search hints.",
+      "pitfall": "`.error` is STILL EMITTED — on the wrapper by ds-input and ds-textarea, on the box by ds-select, ds-date-picker, ds-time-picker and ds-autocomplete, and `.success` by ds-input alone. Your selectors keep matching, so nothing looks broken, but the library no longer PAINTS through them: a rule written to stack on top of a DS rule now stands alone and carries the whole state by itself.",
+      "note": "Validation state on a field's control is one shared rule keyed off a `data-field-state` attribute on the host (`error | warning | success`), replacing three different spellings.",
       "searchHints": [
         "ds-color-picker.invalid",
         "ds-otp-input.invalid",
@@ -260,7 +297,10 @@
       "kind": "behavior",
       "old": "ds-autocomplete[maxVisibleChips]",
       "new": null,
-      "note": "CHANGED SEMANTICS of an existing binding: a NUMBER passed to maxVisibleChips on ds-autocomplete or ds-multi-select is now a CEILING that is then measured, not an exact count. [maxVisibleChips]=\"2\" means 'at most two, and fewer when the trigger is too narrow to hold them beside the +N more marker and whatever follows'. It used to mean 'exactly two, whatever the width', which is what made a capped trigger on a phone run out of room and wrap the text input onto a second line - the growth the cap exists to prevent. ACTION: nothing for most, and a wide trigger still shows exactly N. You are affected if you relied on a numeric cap to guarantee a fixed chip COUNT regardless of width - that guarantee is deliberately gone, and the trigger's single-line HEIGHT is guaranteed instead. null remains the only mode that never measures. NOTE the stale wording still in the wild: the input's own JSDoc in both components, and the generated docs API table built from it, still say 'A NUMBER caps at exactly that many' - the manifest and CHANGELOG are correct, those are not. ALSO SCOPED HERE: Applies identically to ds-multi-select[maxVisibleChips].",
+      "action": "Nothing for most, and a wide trigger still shows exactly N. You are affected only if you relied on a numeric cap to guarantee a fixed chip COUNT regardless of width.",
+      "appliesWhen": "ds-autocomplete and ds-multi-select alike. `null` remains the only mode that never measures.",
+      "pitfall": "The stale wording is still in the wild and it contradicts this item: the input's own JSDoc in both components, and the generated docs API table built from it, still say \"A NUMBER caps at exactly that many\". The manifest and the CHANGELOG are correct; those are not.",
+      "note": "A number is a CEILING that is then measured. `[maxVisibleChips]=\"2\"` means at most two, and fewer when the trigger is too narrow to hold them beside the \"+N more\" marker. Exactly-N is what made a capped trigger on a phone run out of room and wrap the text input onto a second line — the growth the cap exists to prevent. The single-line height is guaranteed instead.",
       "searchHints": [
         "maxVisibleChips",
         "ds-autocomplete",
@@ -275,7 +315,10 @@
       "kind": "behavior",
       "old": "ds-autocomplete[maxVisibleChips]",
       "new": null,
-      "note": "INVERTED VALUE, silent: maxVisibleChips of 0 used to mean 'show every chip' (the old code read 'max && max > 0 ? slice(0, max) : all', and 0 is falsy) and now means 'show NO chips', putting the entire selection behind the '+N more' marker. Nothing throws; the trigger just empties. Applies to ds-autocomplete and ds-multi-select alike. DECISION RULE, not a find/replace: replace every 0 that can reach this input - a literal, or an expression that evaluates to 0 such as a count, a config value or a '?? 0' default - with the BINDING [maxVisibleChips]=\"null\". A grep for the literal misses the computed cases, so read the expression feeding the input, not just the template text. TRAP, verified in source: a STATIC maxVisibleChips=\"null\" is NOT equivalent and reintroduces the bug. The transform is 'raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw)', so the string 'null' is not == null, so it falls through to numberAttribute('null') -> NaN, and Math.min(Math.max(NaN, 0), total) -> NaN -> zero chips again. Only the property binding passes a real null. ALSO SCOPED HERE: Applies identically to ds-multi-select[maxVisibleChips].",
+      "action": "Replace every 0 that can reach this input — a literal, or an expression evaluating to 0 such as a count, a config value or a `?? 0` default — with the BINDING `[maxVisibleChips]=\"null\"`. Read the expression feeding the input, not just the template text: a grep for the literal misses the computed cases.",
+      "appliesWhen": "ds-autocomplete and ds-multi-select alike.",
+      "pitfall": "A STATIC `maxVisibleChips=\"null\"` is NOT equivalent and reintroduces the bug. The transform reads `raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw)`, so the string `'null'` is not `== null`, falls through to `numberAttribute('null')` → NaN, and `Math.min(Math.max(NaN, 0), total)` → NaN → zero chips again. Only the property binding passes a real null.",
+      "note": "0 used to mean \"show every chip\" — the old code read `max && max > 0 ? slice(0, max) : all`, and 0 is falsy. It means \"show NO chips\" now, putting the whole selection behind the \"+N more\" marker. Nothing throws; the trigger just empties.",
       "searchHints": [
         "maxVisibleChips",
         "maxVisibleChips]=\"0\"",
@@ -299,7 +342,10 @@
       "kind": "behavior",
       "old": "ds-table[stickyScrollbar]",
       "new": null,
-      "note": "CHANGED MEANING of a null/undefined BINDING on the inputs that swapped booleanAttribute for a nullable transform so they could fall through to DS_CONFIG: ds-table bordered and stickyScrollbar, ds-badge withDot, and dividers on ds-modal and ds-modal-card. booleanAttribute(null) is false, so [bordered]=\"maybeNull\" used to render as OFF; the same binding now reads as 'unset' and resolves config-then-built-in. For bordered / stickyScrollbar / withDot the built-in is false, so only an app that also sets the matching provideDsConfig section sees a change. For dividers the built-in is TRUE, so [dividers]=\"someNullable\" flips from no-rules to rules the moment the expression yields null or undefined. ACTION: audit bindings whose expression is optional - `obj?.flag`, `input()` with no default, a `| async` before it resolves - and coerce them yourself (`[dividers]=\"!!maybe\"`). A literal [bordered]=\"false\", a bare attribute and a static bordered=\"false\" are all unaffected. ALSO SCOPED HERE: The same swap applies to ds-table[bordered], ds-badge[withDot], ds-modal[dividers] and ds-modal-card[dividers] - check all five, not just the scoped one.",
+      "action": "Audit bindings whose expression is optional — `obj?.flag`, an `input()` with no default, an `| async` before it resolves — and coerce them yourself: `[dividers]=\"!!maybe\"`.",
+      "appliesWhen": "A literal `[bordered]=\"false\"`, a bare attribute and a static `bordered=\"false\"` are all unaffected. Check all five inputs, not just the scoped one: ds-table `bordered` and `stickyScrollbar`, ds-badge `withDot`, and `dividers` on ds-modal and ds-modal-card.",
+      "pitfall": "The five are not symmetric. For bordered, stickyScrollbar and withDot the built-in is false, so only an app that also sets the matching provideDsConfig section sees anything. For `dividers` the built-in is TRUE, so `[dividers]=\"someNullable\"` flips from no-rules to RULES the moment the expression yields null or undefined.",
+      "note": "`booleanAttribute(null)` is false, so these bindings used to render as OFF. Having swapped booleanAttribute for a nullable transform so they can fall through to DS_CONFIG, the same binding now reads as \"unset\" and resolves config-then-built-in.",
       "searchHints": [
         "[dividers]",
         "[bordered]",
@@ -326,7 +372,10 @@
       "kind": "behavior",
       "old": "ds-bottom-sheet",
       "new": null,
-      "note": "ds-bottom-sheet no longer stops click propagation out of the sheet. It used to carry (click)=\"stop($event)\" on the panel purely to keep an inside click from reaching the backdrop's own click listener; that listener is gone, replaced by the pointerdown+pointerup pair that fixes the mouse-up dismissal, so the guard went with it. The sheet renders INLINE rather than through an overlay portal, so its clicks now bubble to whatever ancestor of yours wraps it. ACTION: if you have a (click) handler on an element that contains a ds-bottom-sheet - a card, a row, a section that opens something - it will now fire for clicks made inside the sheet. Move the handler, or stop propagation on your own side. The `stop` member is also gone from the class, which matters only to a subclass that overrode it.",
+      "action": "If you have a `(click)` handler on an element that CONTAINS a ds-bottom-sheet — a card, a row, a section that opens something — it now fires for clicks made inside the sheet. Move the handler, or stop propagation on your own side.",
+      "appliesWhen": "The `stop` member is also gone from the class, which matters only to a subclass that overrode it.",
+      "pitfall": "The sheet renders INLINE rather than through an overlay portal, so its clicks bubble into YOUR tree, not out of a detached one. That is why an ancestor handler you never associated with the sheet starts firing.",
+      "note": "The panel carried `(click)=\"stop($event)\"` purely to keep an inside click from reaching the backdrop listener. That listener is gone, replaced by the pointerdown+pointerup pair that fixes mouse-up dismissal, so the guard went with it.",
       "searchHints": [
         "ds-bottom-sheet",
         "(click)",
@@ -346,7 +395,10 @@
       "kind": "behavior",
       "old": "ds-input[error]",
       "new": null,
-      "note": "An 'error' string now marks the field invalid on its own, across the fourteen field components that route through resolveFieldMessage. Before, error=\"...\" coloured only the message and left the control neutral; it now drives the error border, the tinted fill, the error focus ring and aria-invalid - border and fill on the nine BORDERED fields, aria-invalid and the message state on the other five. ACTION: nothing if you bound [invalid] alongside it. You are affected if you bound 'error' ALONE and relied on the box staying neutral: move that text to 'warning' for an advisory message, or to 'hint', and leave 'error' empty. ALSO CHANGED, same entry: the ladder is now error -> warning -> success, so a ds-input carrying both [success]=\"true\" and a warning string paints the WARNING, where it used to paint success and ignore the warning.",
+      "action": "Nothing if you bound `[invalid]` alongside it. If you bound `error` ALONE and relied on the box staying neutral, move that text to `warning` for an advisory message, or to `hint`, and leave `error` empty.",
+      "appliesWhen": "The fourteen field components that route through resolveFieldMessage — border and fill on the nine bordered ones, aria-invalid and the message state on the other five.",
+      "pitfall": "The precedence ladder is error → warning → success now, so a ds-input carrying both `[success]=\"true\"` and a warning string paints the WARNING, where it used to paint success and ignore the warning.",
+      "note": "An `error` string marks the field invalid on its own. It used to colour only the message and leave the control neutral; it drives the error border, the tinted fill, the error focus ring and aria-invalid now.",
       "searchHints": [
         "error=\"",
         "[error]",
@@ -368,7 +420,10 @@
       "kind": "behavior",
       "old": ":focus-visible",
       "new": null,
-      "note": "A single zero-specificity base rule - :where(:focus-visible) { outline: none; box-shadow: var(--ds-control-focus-shadow) } - now gives the DS focus ring to ANY focusable element that does not style focus itself, including an app's own bare <button>, a link in projected content, and the close buttons inside ds-alert / ds-banner / ds-drawer. Before, those fell through to the browser default. ACTION only if you deliberately relied on an element having NO focus indicator: give it box-shadow: none explicitly. Note the rule also sets outline: none, so an element that was relying on the BROWSER's outline loses it - declare your own outline if that is what you wanted. Written with :where() so every component rule and every app rule still out-ranks it, and the data-focus switch is unaffected. THE CASE THAT ACTUALLY BITES, added retroactively 2026-08-21 after a consumer hit it fourteen times and neither the build nor a grep saw it: an app rule that styles :focus-visible with an OUTLINE ONLY. It keeps winning on outline, but it says nothing about box-shadow, so the base rule still supplies one and the element renders BOTH - a second ring in the app's colour around the DS ring. The app rule looks untouched because it is. FIND IT by grepping your styles for ':focus-visible' and reading each rule's declarations: a rule that sets outline (or outline-color / outline-offset) and no box-shadow is a hit. ACTION: add `box-shadow: none` to that rule, or - better, and what this release is for - delete the rule and retint the DS ring through --ds-control-focus-shadow.",
+      "action": "Only if you deliberately relied on an element having NO focus indicator: give it `box-shadow: none` explicitly. The rule also sets `outline: none`, so an element relying on the BROWSER outline loses it — declare your own if that is what you wanted.",
+      "appliesWhen": "Written with `:where()`, so every component rule and every app rule still out-ranks it, and the `data-focus` switch is unaffected.",
+      "pitfall": "The case that actually bites: an app rule that styles `:focus-visible` with an OUTLINE ONLY. It keeps winning on outline, but it says nothing about box-shadow, so the base rule still supplies one and the element renders BOTH — a second ring in your colour around the DS ring. The app rule looks untouched because it is, so neither the build nor a grep for the change finds it; one consumer hit it fourteen times. FIND IT by grepping your styles for `:focus-visible` and reading each rule: one that sets outline (or outline-color / outline-offset) and no box-shadow is a hit. Add `box-shadow: none`, or better, delete the rule and retint the DS ring through `--ds-control-focus-shadow`.",
+      "note": "One zero-specificity base rule — `:where(:focus-visible) { outline: none; box-shadow: var(--ds-control-focus-shadow) }` — gives the DS ring to any focusable element that does not style focus itself, including your own bare `<button>`, a link in projected content, and the close buttons inside ds-alert, ds-banner and ds-drawer. They fell through to the browser default before.",
       "searchHints": [
         ":focus-visible",
         ":focus",
@@ -391,7 +446,10 @@
       "kind": "behavior",
       "old": "ds-modal",
       "new": null,
-      "note": "ds-modal and ds-bottom-sheet no longer dismiss on a mouse-UP that lands on the backdrop after a press that started INSIDE the dialog - selecting text and letting go past the edge, or overshooting a slider. Dismissal now requires the press AND the release to land on the backdrop itself, both with the primary button. Nothing to do in application code. THE ONE CONSUMER-CODE BREAK IS IN TESTS: a test that dismisses with backdropElement.click() must now dispatch pointerdown + pointerup on the backdrop, each with button: 0. A real mouse or touch has always sent both. ds-drawer and the ModalService confirm were never affected - their scrim is a SIBLING of the panel rather than a wrapper - and are unchanged.",
+      "action": "Nothing in application code. In TESTS, a dismissal written as `backdropElement.click()` must dispatch `pointerdown` + `pointerup` on the backdrop instead, each with `button: 0`.",
+      "appliesWhen": "ds-drawer and the ModalService confirm were never affected — their scrim is a SIBLING of the panel rather than a wrapper — and are unchanged.",
+      "pitfall": "The only consumer-code break is in tests, so the app looks fine and the suite goes red. A real mouse or touch has always sent both events; only a synthetic `click()` sent one.",
+      "note": "Dismissal requires the press AND the release to land on the backdrop, both with the primary button, so selecting text and letting go past the edge — or overshooting a slider — no longer closes the dialog.",
       "searchHints": [
         "backdrop",
         ".click()",
@@ -414,7 +472,10 @@
       "kind": "behavior",
       "old": "ds-modal-card[dialogRole]",
       "new": null,
-      "note": "CHANGED DEFAULT: dialogRole on ds-modal-card was input<'dialog'|'alertdialog'>('dialog') and is now input<'dialog'|'alertdialog'|null>(null), so 'unset' is distinguishable from a deliberate 'dialog'. What RENDERS is unchanged while no status is set - unset still resolves to role=\"dialog\". What changed is that a status of 'error' or 'warning' now resolves to 'alertdialog' unless you set dialogRole explicitly, and that reading dialogRole() back returns null rather than 'dialog' when nothing was bound. NOTE ds-modal has NO dialogRole input at all, so <ds-modal status=\"error\"> becomes an alertdialog with nothing to override it; use ds-modal-card directly if you need the role back.",
+      "action": "Set `dialogRole=\"dialog\"` explicitly wherever you want the role pinned regardless of status.",
+      "appliesWhen": "What RENDERS is unchanged while no status is set — unset still resolves to `role=\"dialog\"`. Only reading `dialogRole()` back differs: it returns null rather than `dialog` when nothing was bound.",
+      "pitfall": "`ds-modal` has NO `dialogRole` input at all, so `<ds-modal status=\"error\">` becomes an `alertdialog` with nothing to override it. Use ds-modal-card directly if you need the role back.",
+      "note": "The input became nullable so that \"unset\" is distinguishable from a deliberate `dialog`; a status of error or warning now resolves to `alertdialog` unless you say otherwise.",
       "searchHints": [
         "dialogRole",
         "ds-modal-card",
@@ -437,7 +498,9 @@
       "kind": "removed-api",
       "old": "avatarTint(seed, { chroma })",
       "new": "avatarTint(seed, { saturation })",
-      "note": "avatarTint now produces hsl(H 50% 62%) with a pinned white foreground, replacing oklch(62% 0.14 H) with an auto-chosen black/white foreground. THREE option changes: (1) `chroma` is REMOVED -- use `saturation`, an HSL percentage, default 50; a leftover `chroma` is now silently ignored, so this one does not fail the build. (2) `lightness` keeps its name AND its default of 62, but now means HSL lightness rather than OKLCH lightness -- the same number produces a different colour, so re-pick any override rather than assuming it carried across. (3) `foreground` now defaults to '#fff' instead of picking black-or-white by luminance; pass it explicitly for anything else. `avoidHues` and the seed hashing are unchanged, so a given seed keeps its hue. ACCESSIBILITY, deliberate and accepted: white initials on the lighter hues measure as little as 1.65:1, below the 4.5:1 WCAG AA asks of text -- all 29 sampled hues in the 20-300 range fall short. If your avatars carry initials as the ONLY identifier, override `lightness` (about 50) and keep white, which measures 5.3-6.6:1.",
+      "action": "Three option changes. `chroma` is REMOVED — use `saturation`, an HSL percentage, default 50. `lightness` keeps its name and its default of 62 but means HSL lightness now, so re-pick any override. `foreground` defaults to `#fff`; pass it explicitly for anything else. `avoidHues` and the seed hashing are unchanged, so a given seed keeps its hue.",
+      "pitfall": "A leftover `chroma` is silently IGNORED — this one does not fail the build. And `lightness` is worse: it keeps its name AND its default, so the same number you passed before now produces a different colour, with nothing to flag it. Accessibility is a deliberate, accepted regression: white initials on the lighter hues measure as little as 1.65:1, and all 29 sampled hues in the 20–300 range fall short of the 4.5:1 WCAG AA asks of text. If your avatars carry initials as the ONLY identifier, override `lightness` to about 50 and keep white, which measures 5.3–6.6:1.",
+      "note": "`avatarTint` produces `hsl(H 50% 62%)` with a pinned white foreground, replacing `oklch(62% 0.14 H)` with an auto-chosen black-or-white foreground.",
       "searchHints": [
         "avatarTint",
         "chroma",
@@ -460,7 +523,10 @@
       "kind": "behavior",
       "old": "ds-radio-group",
       "new": null,
-      "note": "REMOVED KEY HANDLING: ds-radio-group no longer handles Enter. It used to treat Enter as 'select the focused radio' and call preventDefault(), which is neither native radio behaviour nor what WAI-ARIA APG asks for, and inside a form it silently removed the keyboard's only way to submit. Space still selects, and the arrow keys still move the selection. ACTION: nothing for almost everyone, and forms get their Enter-to-submit back for free. You are affected only if you documented or tested Enter as the way to pick a radio in this group - retarget that to Space. A test driving Enter at a ds-radio-group now falls through to whatever the form does with it.",
+      "action": "Retarget any documentation or test that names Enter as the way to pick a radio in this group to Space.",
+      "appliesWhen": "Nothing for almost everyone, and forms get their Enter-to-submit back for free. Space still selects and the arrow keys still move the selection.",
+      "pitfall": "A test driving Enter at a ds-radio-group now falls through to whatever the form does with it, so it may submit rather than fail.",
+      "note": "Enter used to mean \"select the focused radio\" and called preventDefault(), which is neither native radio behaviour nor what the WAI-ARIA APG asks for — and inside a form it silently removed the keyboard's only way to submit.",
       "searchHints": [
         "ds-radio-group",
         "keydown.enter",
@@ -481,7 +547,10 @@
       "kind": "behavior",
       "old": "TableColumn",
       "new": null,
-      "note": "TYPE WIDENING, breaking for READERS of the field and invisible to writers: TableColumn.width went `width?: number` to `width?: number | 'content'`. Assigning a value INTO the column definition compiles exactly as before, but code that reads col.width back into a number position stops compiling: `sum += col.width` (TS2365), `fixed[col.key] = col.width` where the target is number (TS2322), a helper parameter typed `width: number`. ACTION: handle the new union member at the read site - `typeof col.width === 'number'` before arithmetic - or widen your own type to `number | 'content'`. Writers who never read the field back need no change; the capability itself is additive and described in this version's informational list. Added retroactively 2026-08-20 after a consumer's build was the first finder.",
+      "action": "Handle the new union member at the read site — `typeof col.width === 'number'` before arithmetic — or widen your own type to `number | 'content'`.",
+      "appliesWhen": "Writers who never read the field back need no change: assigning INTO the column definition compiles exactly as before, and the capability itself is additive.",
+      "pitfall": "Breaking for READERS and invisible to writers, which is why it was added retroactively after a consumer's build was the first finder. `sum += col.width` gives TS2365, `fixed[col.key] = col.width` into a number gives TS2322, and a helper parameter typed `width: number` stops accepting it.",
+      "note": "`TableColumn.width` went from `width?: number` to `width?: number | 'content'`.",
       "searchHints": [
         "TableColumn",
         ".width"
@@ -499,7 +568,10 @@
       "kind": "behavior",
       "old": "InputSignal",
       "new": null,
-      "note": "TYPE-LEVEL counterpart of control-size-input-becomes-nullable and nullable-boolean-inputs-treat-null-as-unset: those two carry the VALUE semantics (what null means, what reads back); this entry carries the declarations TYPED against the old signal types, which stop compiling even where the values are compatible, because the equal type-parameter position of InputSignal / InputSignalWithTransform is invariant - TS2416 on a subclass override, TS2322 on an assignment to an explicitly typed variable, viewChild target or helper parameter. WIDENED THIS RELEASE (per npm run class-surface v0.9.1..v0.10.0): size DsSize -> DsSize | null on ds-button, ds-icon-button, ds-input, ds-textarea, ds-select, ds-autocomplete, ds-search, ds-date-picker, ds-time-picker, ds-number-stepper, ds-checkbox, ds-radio, ds-switch, ds-field-group; ds-icon size number -> number | null; bordered and stickyScrollbar on ds-table, withDot on ds-badge, dividers on ds-modal and ds-modal-card: boolean -> boolean | null (transform now nullable); ds-table loading false | 'skeleton' | 'overlay' -> boolean | 'skeleton' | 'overlay'; ds-card elevation CardElevation -> CardElevation | null; ds-modal-card dialogRole 'dialog' | 'alertdialog' -> nullable; brand / logoLetter / tagline on ds-auth-layout and ds-sidenav string -> string | null; maxVisibleChips on ds-autocomplete and ds-multi-select number | null -> number | 'fit' | null. ACTION: retype the declaration to the widened union, or drop the explicit annotation and let inference carry it; a subclass override is the unsupported case - rename the member or retype it to match. Templates and plain bindings are unaffected. Added retroactively 2026-08-20.",
+      "action": "Retype the declaration to the widened union, or drop the explicit annotation and let inference carry it. A subclass override is the unsupported case — rename the member or retype it to match.",
+      "appliesWhen": "Templates and plain bindings are unaffected. This entry is the TYPE-LEVEL counterpart of `control-size-input-becomes-nullable` and `nullable-boolean-inputs-treat-null-as-unset`, which carry the value semantics.",
+      "pitfall": "These declarations stop compiling even where the VALUES are compatible, because the type-parameter position of InputSignal / InputSignalWithTransform is invariant: TS2416 on a subclass override, TS2322 on an assignment to an explicitly typed variable, viewChild target or helper parameter.",
+      "note": "Widened here, per `npm run class-surface v0.9.1 v0.10.0`: `size` to `DsSize | null` on fourteen controls; ds-icon `size` to `number | null`; ds-table `bordered` and `stickyScrollbar`, ds-badge `withDot` and `dividers` on both modals to `boolean | null`; ds-table `loading` to `boolean | 'skeleton' | 'overlay'`; ds-card `elevation` to `CardElevation | null`; ds-modal-card `dialogRole` nullable; `brand` / `logoLetter` / `tagline` on ds-auth-layout and ds-sidenav to `string | null`; `maxVisibleChips` to `number | 'fit' | null`.",
       "searchHints": [
         "InputSignal",
         "InputSignalWithTransform",
@@ -512,6 +584,28 @@
         "viewChild"
       ],
       "verify": "No explicit declaration types a DS input signal with the old non-nullable parameters."
+    },
+    {
+      "id": "modal-confirm-error-tone-paints-a-badge",
+      "kind": "behavior",
+      "old": "ModalService.confirm({ tone: 'error' })",
+      "new": null,
+      "action": "None unless the badge is wrong for you. There is no input that suppresses it, so a destructive confirm that should not shout uses `tone: 'default'` — or omits `tone` — and styles its own button instead.",
+      "appliesWhen": "Other tones are unaffected.",
+      "note": "A confirm opened with `tone: 'error'` carries the modal error status treatment now — a red badge in the header — because ds-modal-confirm binds `[status]=\"tone === 'error' ? 'error' : null\"`. Before this release `tone` only coloured the confirm button.",
+      "surface": "typescript",
+      "verify": "Open a confirm built with tone: 'error'. The header shows the error badge and the confirm button is destructive; a confirm with no tone shows neither.",
+      "restore": null,
+      "searchHints": [
+        "ModalService",
+        ".confirm(",
+        "tone: 'error'",
+        "tone: \"error\""
+      ],
+      "detect": [
+        "confirm({",
+        "tone:"
+      ]
     }
   ],
   "informational": [
@@ -539,8 +633,8 @@
     "ds-modal and ds-bottom-sheet no longer dismiss when the mouse is RELEASED on the backdrop after a press that started inside the dialog (selecting text and letting go past the edge, or overshooting a slider). Their backdrop wraps the dialog, so the browser fires click at the nearest common ancestor - the backdrop itself - which the target===currentTarget guard could not tell apart. Dismissal now requires the press AND the release to land on the backdrop. Nothing to do on adoption. ONE EXCEPTION: a test that dismisses a dialog with backdropElement.click() must now dispatch pointerdown + pointerup on the backdrop; a real mouse or touch always sends both. ds-drawer and the ModalService confirm were never affected - their scrim is a sibling of the panel - and are unchanged.",
     "ds-table gained one projection slot, [toolbar], for controls that act on THAT table (a search box, a status filter, a refresh) — the row the export button already lived in, which until now existed only while exportButton was on. Project several controls and the row lays them out (flex, wrap, 8px gap); project a single element of your own and it takes the full row width, so your own layout is the only one in play. Visually additive: the row COLLAPSES when nothing filled it and exportButton is off, so a table that uses neither is pixel-identical. It is not DOM-identical - <div class=\"table-toolbar\"><div class=\"toolbar-slot\"> is now rendered unconditionally and hidden with display:none, so a ds-table > :first-child selector or a DOM snapshot sees it. Page-level filters still belong in a ds-filter-bar above the table.",
     "ds-table now exposes runExport(), exporting() and exportStatus() publicly, so an Export button placed anywhere (page header, filter bar, the new toolbar slot) runs the same path as the built-in one: the exportFetcher call, the download, the in-flight state and the live-region announcement.",
-    "ds-table no longer renders its empty row while loading is anything but false. Previously only loading=\"skeleton\" suppressed it, so an overlay reload with zero rows painted the empty state under the spinner. Nothing to do on adoption, and you can delete the @if(!loading) guard around your own empty template — worth checking whether you have one at all: of one consumer 14 overlay-loading tables, 9 shipped \"no rows\" copy during a load.",
-    "ds-table no longer loses its sort indicator when a host answers a cleared sort with its own default. Angular writes an input only when the bound expression changed (it diffs against the last value it wrote, which an internal .set() never updates), so whichever half of the host default equalled the last bound value was skipped: a host defaulting to desc had its desc dropped and the header marked nothing over sorted rows, while a host defaulting to asc was restored — the reason the same three clicks worked on one screen and not another. The marked state is now a linkedSignal over BOTH inputs. Nothing to do on adoption; you can delete any workaround that re-bound the sort after a clear.",
+    "ds-table no longer renders its empty row while loading is anything but false. Previously only loading=\"skeleton\" suppressed it, so an overlay reload with zero rows painted the empty state under the spinner. Nothing to do on adoption, and you can delete the @if(!loading) guard around your own empty template — worth checking whether you have one at all: of one consumer 14 overlay-loading tables, 9 shipped \"no rows\" copy during a load. (delete list: table-empty-template-loading-guard)",
+    "ds-table no longer loses its sort indicator when a host answers a cleared sort with its own default. Angular writes an input only when the bound expression changed (it diffs against the last value it wrote, which an internal .set() never updates), so whichever half of the host default equalled the last bound value was skipped: a host defaulting to desc had its desc dropped and the header marked nothing over sorted rows, while a host defaulting to asc was restored — the reason the same three clicks worked on one screen and not another. The marked state is now a linkedSignal over BOTH inputs. Nothing to do on adoption; you can delete any workaround that re-bound the sort after a clear. (delete list: table-sort-rebind-after-clear)",
     "ds-table accepts [loading]=\"true\" and resolves the treatment itself: skeleton rows while filteredData is empty, overlay once rows are on screen. The existing values are untouched — false, 'skeleton' and 'overlay' behave exactly as before, so nothing changes on adoption.",
     "Disabled rows and triggers are no longer dimmed twice. ds-select, ds-date-picker, ds-time-picker, ds-menu-item and the shared dropdown row each applied --text-disabled AND opacity 0.6 on top of it, which measured 1.68:1 against the surface where the colour alone gives 2.53:1 (an enabled control is 17.32:1). The opacity is gone from those five and the colour carries the state. A disabled calendar day and ds-toggle-button, where opacity is the ONLY signal, moved from --opacity-muted (0.6) to --opacity-disabled (0.5).",
     "ds-button and ds-icon-button use ONE disabled-label recipe for every variant now: oklch(from accent 70% 0.035 h), replacing the 58% base plus the 52% overrides that tonal and outline carried. Reason, measured across the full variant x colour x state matrix: the old lightness sat where a saturated accent already is, so on primary and error the disabled label differed from the live one by 1.16-1.60:1 on four of the five variants (neutral was fine because its enabled label is nearly black). It is now 2.40-2.71:1 on the coloured variants, and up to 6.46:1 on neutral. The disabled label is FAINTER against its own background than before (2.1-2.7:1 where it was 3.4-5.2) - that is the intended trade, and disabled text is exempt from the WCAG contrast floor. Nothing to do on adoption; --ds-button-label-color-disabled and --ds-icon-button-icon-color-disabled still override per component.",
@@ -553,7 +647,7 @@
     "An `error` string now marks the field invalid on its own, across all 14 field components that route through resolveFieldMessage (ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-date-picker, ds-time-picker, ds-color-picker, ds-otp-input, ds-slider, ds-checkbox, ds-radio, ds-radio-group, ds-switch). Before, error=\"...\" coloured only the message and left the control neutral; it now drives the error border, fill, focus ring and aria-invalid, which is what the input always documented. Nothing to do if you bound [invalid] alongside it. ACTION only if you bound `error` on its own and WANTED a neutral box: move that text to `warning` (advisory) or to `hint`.",
     "A `warning` string now paints the control, not only the message line: a --warning-text border (#8A7400, 4.59:1 on a white field) on all nine bordered fields -- ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-date-picker, ds-time-picker, ds-color-picker, ds-otp-input. Success keeps its border-only treatment and error keeps border + tinted fill, so the three states stay ranked. Two visual corrections ride along and need no action: an invalid ds-autocomplete drew a near-black border because it read a --border-error token that has never existed, and ds-multi-select / ds-color-picker / ds-otp-input had the error border but not the fill their siblings had. Every per-component override token (--ds-input-bg-color-error, --ds-select-focus-shadow-error, and the rest) still applies.",
     "ds-otp-input no longer leaves two characters in one cell when a second character is typed into an already-filled cell. The value the component reported was always correct -- only the rendered cell was stale -- so nothing to change on adoption. ACTION only if you worked around it by reading the cell inputs from the DOM instead of the component's value.",
-    "ds-password-rules: its screen-reader-only per-row text ('- not met') was rendering VISIBLY, because the .visually-hidden class it used was defined by no stylesheet -- ds-table, ds-date-picker and ds-stepper each declared their own private copy. One shared mixin now backs all four. The leaked text is also what wrapped every label in the two-column layout. Separately, the pending glyph changed from `minus` to a new `circle` icon and the row now transitions its colour over --duration-base. Nothing to change on adoption. ACTION only if you targeted the pending row's glyph by name, or added your own .visually-hidden definition to work around the leak -- that override is now redundant (DELETE-LIST).",
+    "ds-password-rules: its screen-reader-only per-row text ('- not met') was rendering VISIBLY, because the .visually-hidden class it used was defined by no stylesheet -- ds-table, ds-date-picker and ds-stepper each declared their own private copy. One shared mixin now backs all four. The leaked text is also what wrapped every label in the two-column layout. Separately, the pending glyph changed from `minus` to a new `circle` icon and the row now transitions its colour over --duration-base. Nothing to change on adoption. ACTION only if you targeted the pending row's glyph by name, or added your own .visually-hidden definition to work around the leak -- that override is now redundant (DELETE-LIST). (delete list: private-visually-hidden-definition)",
     "The migration manifests themselves changed: 0.9.0.json gained a class-member-collision item it never had (fifteen classes plus four newly exported symbols), 0.8.0.json now names the private saveLayout/restoreLayout that actually stopped a consumer build, and 0.6.1 / 0.6.2 / 0.9.1 were written for the first time. Every released version now ships a manifest, so the auto-update planner no longer falls back to re-deriving a plan from changelog prose on those three. 0.6.2 turned out to carry something actionable nobody had in machine-readable form: a ds-bottom-sheet with nothing focusable inside it stopped closing on Escape.",
     "ds-modal gained three public title tokens for the new statuses - --ds-modal-title-text-color-warning, -success and -info, defaulting to --warning-text / --success-text / --info-text - joining the -error that already existed. Additive: nothing moves until you set one.",
     "The [empty] slot is now unreachable during ANY load, not just a skeleton one: the empty row is withheld whenever loading is not false, and the projection lives inside that branch. Copy you want a reader to see WHILE a load runs has to come from your own page, above or around the table.",
@@ -562,9 +656,9 @@
     "ds-search's Clear button now follows the text ON SCREEN rather than the debounced value, so at a non-zero [debounce] it appears on the first keystroke instead of after the delay.",
     "On a resizableColumns ds-table the first drag OR resize keystroke anywhere locks a measured pixel width onto every column that has none, TableColumn width:'content' included. Home on a column's own handle hands that one back; the column panel's Reset to default button and clearing the public two-way columnWidths hand back all of them.",
     "ds-time-picker in mode=\"single\" no longer renders a Done button: the panel closes itself once the user has picked BOTH an hour and a minute during that opening, and Now spans the full width of the footer beneath the columns. mode=\"range\" is unchanged -- it keeps Done and does not auto-close. Separately, hovering an already-selected hour or minute no longer paints it with the neutral hover fill (a specificity defect that left selected white text on pale grey, most visible on touch where the last-tapped cell keeps :hover). ACTION only if you scripted the panel closing via the Done button in single mode -- there is no such button now -- or overrode `.time-footer .time-action` widths, which now stretch when Done is absent.",
-    "The collapsed ds-sidenav no longer sets align-items: center on itself, which had stopped its projected children from stretching: every ds-sidenav-item shrank to its 20px icon inside a 40px rail, so the active tile rendered 20x40 (a lozenge, with the orange active rail down one side) and the alert dot sat above the glyph's middle. Items now fill the rail column, and the dot is anchored to the glyph's top-right corner through a new --sidenav-collapsed-glyph token rather than to the tile's corner. Nothing to change on adoption. ACTION only if you projected your own element into a collapsed ds-sidenav and relied on it sizing to its content -- it now stretches to the full column width -- or if you added a ::ng-deep width override to work around the squashed items, which is now double-applied (DELETE-LIST).",
-    "ds-timeline-item now pulls its node column up by half the difference between the heading's line box and the node size, so the marker's centre lands on the heading's rather than 4.2px below it. Each item is that much shorter at the top. Nothing to change on adoption. ACTION only if you compensated for the old offset with your own margin on ds-timeline-item or its node -- that override now double-applies (DELETE-LIST).",
-    "Two follow-ups to the shared field-state work, both fixed before release. (1) A field carrying its own error/warning/success state inside a ds-field-group repainted its background, tinting one segment mid-row; the three state rules now carry :not(.in-group), so the group keeps drawing the row's single treatment. (2) ds-field-group's own [invalid] read var(--border-error), a token that has never been declared, so it fell through to currentColor and drew a near-black border; it now resolves through a new public --ds-field-group-border-color-error (default --error). Nothing to change on adoption. ACTION only if you had a ::ng-deep override forcing the group's invalid border back to red, or suppressing a segment's fill inside a group -- both are now redundant (DELETE-LIST).",
+    "The collapsed ds-sidenav no longer sets align-items: center on itself, which had stopped its projected children from stretching: every ds-sidenav-item shrank to its 20px icon inside a 40px rail, so the active tile rendered 20x40 (a lozenge, with the orange active rail down one side) and the alert dot sat above the glyph's middle. Items now fill the rail column, and the dot is anchored to the glyph's top-right corner through a new --sidenav-collapsed-glyph token rather than to the tile's corner. Nothing to change on adoption. ACTION only if you projected your own element into a collapsed ds-sidenav and relied on it sizing to its content -- it now stretches to the full column width -- or if you added a ::ng-deep width override to work around the squashed items, which is now double-applied (DELETE-LIST). (delete list: collapsed-sidenav-item-width-override)",
+    "ds-timeline-item now pulls its node column up by half the difference between the heading's line box and the node size, so the marker's centre lands on the heading's rather than 4.2px below it. Each item is that much shorter at the top. Nothing to change on adoption. ACTION only if you compensated for the old offset with your own margin on ds-timeline-item or its node -- that override now double-applies (DELETE-LIST). (delete list: timeline-item-offset-margin)",
+    "Two follow-ups to the shared field-state work, both fixed before release. (1) A field carrying its own error/warning/success state inside a ds-field-group repainted its background, tinting one segment mid-row; the three state rules now carry :not(.in-group), so the group keeps drawing the row's single treatment. (2) ds-field-group's own [invalid] read var(--border-error), a token that has never been declared, so it fell through to currentColor and drew a near-black border; it now resolves through a new public --ds-field-group-border-color-error (default --error). Nothing to change on adoption. ACTION only if you had a ::ng-deep override forcing the group's invalid border back to red, or suppressing a segment's fill inside a group -- both are now redundant (DELETE-LIST). (delete list: field-group-invalid-border-override)",
     "ds-card no longer cancels Enter and Space for everything inside it. The card bound (keydown.enter)/(keydown.space) with an unconditional preventDefault() on its <article>, and keydown bubbles, so EVERY card - not just elevation=\"interactive\" ones - killed both keys for its whole subtree: Enter in a password field submitted nothing, Space did not toggle a checkbox, Enter on a link did not follow it, and a space could not be typed into a text field. Both handlers now run only on an interactive card and only when the key landed on the card itself. Nothing to do; screens built inside a ds-card simply start working.",
     "ds-table's onRowKey no longer consumes Enter and Space for every target inside an interactive row, so a row's own select checkbox toggles with Space and a cell's button activates with Enter.",
     "ds-menu's type-ahead no longer swallows printable characters coming from a text-entry control, so a search or filter input projected into a menu can be typed into. Keys from ordinary menu items still drive the type-ahead. Nothing to do."
@@ -778,6 +872,89 @@
       ],
       "why": "A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays.",
       "replaceWith": "nothing on the key path - `onRowKey` now requires `target === currentTarget`"
+    },
+    {
+      "id": "table-empty-template-loading-guard",
+      "surface": "template",
+      "find": [
+        "@if(!loading)",
+        "*ngIf=\"!loading\"",
+        "ds-table",
+        "empty"
+      ],
+      "why": "A guard wrapped around your own empty-state template so it would not show during a load. It existed because only loading=\"skeleton\" suppressed the empty row, so an overlay reload with zero rows painted \"no rows\" under the spinner. ds-table suppresses it for every loading value now.",
+      "replaceWith": "nothing - project the empty template unguarded"
+    },
+    {
+      "id": "table-sort-rebind-after-clear",
+      "surface": "typescript",
+      "find": [
+        "sortChange",
+        "sortKey",
+        "sortDir",
+        "setTimeout"
+      ],
+      "why": "Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now.",
+      "replaceWith": "nothing - answer the cleared sort with your default and stop there"
+    },
+    {
+      "id": "private-visually-hidden-definition",
+      "surface": "style",
+      "find": [
+        ".visually-hidden",
+        "clip: rect",
+        "clip-path: inset(50%)"
+      ],
+      "why": "Your own .visually-hidden definition, or a rule targeting the pending row glyph by name, written because the class ds-password-rules used was declared by no stylesheet and its screen-reader text rendered visibly. One shared mixin backs all four components now.",
+      "replaceWith": "nothing - the components carry the class themselves"
+    },
+    {
+      "id": "collapsed-sidenav-item-width-override",
+      "surface": "style",
+      "find": [
+        "ds-sidenav",
+        "::ng-deep",
+        "width",
+        "align-items: center"
+      ],
+      "why": "A ::ng-deep width override on a collapsed ds-sidenav, written because the rail set align-items: center and every item shrank to its 20px icon inside the 40px rail. Items fill the rail column now, so the override double-applies.",
+      "replaceWith": "nothing - remove the override"
+    },
+    {
+      "id": "timeline-item-offset-margin",
+      "surface": "style",
+      "find": [
+        "ds-timeline-item",
+        "margin-top",
+        "margin: -"
+      ],
+      "why": "A margin you added on ds-timeline-item or its node to pull the marker onto the heading centre. The component pulls the node column up itself now, so your compensation double-applies.",
+      "replaceWith": "nothing - remove the margin"
+    },
+    {
+      "id": "field-group-invalid-border-override",
+      "surface": "style",
+      "find": [
+        "ds-field-group",
+        "::ng-deep",
+        "border-error",
+        "invalid"
+      ],
+      "why": "A ::ng-deep override forcing the group invalid border back to red, or suppressing a segment fill inside a group. Both existed because the group read an undeclared token and a segment repainted its own state mid-row; both are fixed in the component.",
+      "replaceWith": "nothing - both overrides are redundant"
+    },
+    {
+      "id": "floating-label-token-overrides",
+      "surface": "style",
+      "find": [
+        "--field-h-floating",
+        "--field-floating-label-fs",
+        "--field-floating-label-lh",
+        "--field-floating-label-top",
+        "--field-floating-pad-t"
+      ],
+      "why": "An override of one of the five floating-label tokens. They were :root declarations backing the floating variant, which this release removed, so the declaration now sets a custom property nothing reads.",
+      "replaceWith": "nothing - delete the declaration"
     }
   ]
 }

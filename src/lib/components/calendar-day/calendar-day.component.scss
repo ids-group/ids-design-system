@@ -6,8 +6,8 @@
      a11y tree keeps grid → row → gridcell(host) → button. */
   display: contents;
 
-  /* Public --ds-date-picker-day-* are read with fallbacks, never declared —
-     consumer overrides on <ds-date-picker> inherit straight in. */
+  /* Reads the --ds-date-picker-day-* family, not one of its own: a consumer
+     overrides on <ds-date-picker> and the values inherit straight in. */
   --_date-picker-day-hover-bg-color:          var(--ds-date-picker-day-hover-bg-color,          var(--surface-secondary));
   --_date-picker-day-today-label-color:       var(--ds-date-picker-day-today-label-color,       var(--accent));
   --_date-picker-day-selected-bg-color:       var(--ds-date-picker-day-selected-bg-color,       var(--accent));

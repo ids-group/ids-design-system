@@ -81,7 +81,6 @@ export class TimePickerComponent
   extends DsControlValueAccessor<string | TimeRangeValue | null>
   implements OnDestroy
 {
-
   constructor() {
     super();
   }

@@ -6,7 +6,10 @@
       "kind": "value-remap",
       "old": "ds-button[variant]",
       "new": null,
-      "note": "The single conflated `variant` input split into two orthogonal axes: `color` (primary|secondary|tertiary|neutral|error|success|warning, default primary) x `variant` (solid|tonal|ghost|outline|text, default solid). Static values migrate per the map. DYNAMIC `[variant]=\"expr\"` bindings whose expression yields only hue values (primary/error/success/warning) rebind to `[color]=\"expr\"` verbatim; expressions/fields typed with a mixed-axis union must be retyped to the new fill vocabulary and split per axis. `variant=\"text\"` stays valid (its map entry is an identity — same token in, same out — so the applier leaves it untouched); it is discouraged at runtime (dev-mode console.warn — prefer the global `.link` class) but requires no code migration.",
+      "action": "Apply the map to every static `variant=\"…\"`. For a dynamic `[variant]=\"expr\"`: if the expression only ever yields hues (primary/error/success/warning), rebind it to `[color]=\"expr\"` verbatim; if it yields a mix of hues and fills, retype it and split it across the two inputs.",
+      "appliesWhen": "`variant=\"text\"` keeps working and its map entry is an identity, so leave it. It warns in dev builds (prefer the global `.link` class) but needs no migration.",
+      "pitfall": "A dynamic `[variant]` left bound to a hue does not fail — the value is simply not a variant any more, so it falls back to `solid` and the button quietly renders in the default colour. Nothing throws and nothing logs in production; only looking at the screen finds it.",
+      "note": "One conflated input became two orthogonal axes: `color` (primary|secondary|tertiary|neutral|error|success|warning, default primary) and `variant` (solid|tonal|ghost|outline|text, default solid).",
       "searchHints": [
         "<ds-button",
         "variant=\"",
@@ -22,14 +25,18 @@
         "warning": "color=\"warning\"",
         "text": "variant=\"text\""
       },
-      "surface": "template"
+      "surface": "template",
+      "verify": "No ds-button carries a variant value outside the shipped set, and every button that used to name a colour through `variant` now names it through the colour input. Buttons render in the colour they did before the upgrade, not all in the default."
     },
     {
       "id": "ds-button-size-legacy-tier",
       "kind": "value-remap",
       "old": "ds-button[size]",
       "new": null,
-      "note": "ButtonSize collapsed to sm|md|lg (32/40/48px); the duplicate legacy one-letter tier is dropped. sm/md/lg values are unchanged (absent from the map — leave them). Default is now md (was l — same 40px, no action for attribute-less buttons). The 24px `s` is removed — its callers move to sm (32px, the closest). The exported TS type `ButtonSize` narrowed in lockstep from the old `s|m|l|sm|md|lg` superset to `sm|md|lg`: a consumer who typed a field/variable/input with `ButtonSize` and assigned a legacy literal (`'s'`/`'m'`/`'l'`) now gets a compile error — remap those literals the same way (`s`/`m`->`sm`, `l`->`md`).",
+      "action": "Apply the map in templates, and remap the same literals in TypeScript: the exported `ButtonSize` narrowed from `s|m|l|sm|md|lg` to `sm|md|lg`, so a field or input typed with it and assigned `'s'`, `'m'` or `'l'` stops compiling.",
+      "appliesWhen": "`sm`, `md` and `lg` are unchanged and absent from the map — leave them. A button with no `size` keeps the 40px it had as the old default `l`.",
+      "pitfall": "`m`→`sm` and `l`→`md` are pure renames, but `s`→`sm` is not: the 24px tier is gone and `sm` is 32px, so those buttons get **8px taller** and the row around them reflows. It compiles, it looks deliberate, and only a screen shows it.",
+      "note": "ButtonSize collapsed to sm|md|lg (32/40/48px at default density) and the duplicate one-letter tier was dropped.",
       "searchHints": [
         "<ds-button",
         "size=\"",
@@ -41,14 +48,17 @@
         "l": "size=\"md\""
       },
       "surface": "template",
-      "restore": "nothing to restore - the 24px tier is gone; its callers take sm (32px), and an attribute-less button keeps the same 40px it had as `l`"
+      "restore": "nothing to restore - the 24px tier is gone; its callers take sm (32px), and an attribute-less button keeps the same 40px it had as `l`",
+      "verify": "No ds-button binds size=\"s\", \"m\" or \"l\". A button left without size renders at the md height (40px), and every button that previously said \"l\" now says \"md\" and is unchanged on screen."
     },
     {
       "id": "ds-button-ts-types-retyped",
       "kind": "behavior",
       "old": "ButtonVariant",
       "new": null,
-      "note": "The exported ButtonVariant union changed to the fill vocabulary (solid|tonal|ghost|outline|text); hue values moved to the NEW exported ButtonColor (primary|secondary|tertiary|neutral|error|success|warning). Consumer TS importing ButtonVariant, or typing its own fields/inputs with the old values: a purely-hue union retypes to ButtonColor (and its bindings move to [color]); a purely-fill union remaps values (secondary->tonal, tertiary->ghost, outline stays outline); a mixed-axis union must be split per axis.",
+      "action": "Retype per axis. A union of only hues becomes `ButtonColor` and its bindings move to `[color]`; a union of only fills keeps `ButtonVariant` and remaps its values (secondary→tonal, tertiary→ghost, outline stays); a union carrying both must be split into two.",
+      "pitfall": "A mixed union is the one that does not announce itself: it still satisfies neither type cleanly, and the tempting fix — widening it back to `string` — compiles everywhere and moves the failure to runtime, where an unknown value silently falls back to the default.",
+      "note": "`ButtonVariant` now holds the fill vocabulary (solid|tonal|ghost|outline|text); the hues moved to a new exported `ButtonColor` (primary|secondary|tertiary|neutral|error|success|warning).",
       "searchHints": [
         "ButtonVariant",
         "ButtonColor"
@@ -65,7 +75,9 @@
       "kind": "behavior",
       "old": "ds-radio",
       "new": null,
-      "note": "Reactive-forms radio now uses the new <ds-radio-group> as the group container and form control (ControlValueAccessor, roving tabindex, name, group label/invalid/hint). A group of <ds-radio value> bound into a reactive form (formControlName/[formControl]/[(ngModel)] on the group) must be wrapped in <ds-radio-group>. Standalone <ds-radio [(checked)]> is unaffected.",
+      "action": "Wrap every group of `<ds-radio value>` that is bound into a reactive or template-driven form in `<ds-radio-group>`, and move `formControlName` / `[formControl]` / `[(ngModel)]` onto the group.",
+      "appliesWhen": "A standalone `<ds-radio [(checked)]>` outside a form is unaffected.",
+      "note": "`ds-radio-group` is the container and the form control now: it owns the ControlValueAccessor, the roving tabindex, the `name`, and the group label, invalid and hint.",
       "searchHints": [
         "<ds-radio",
         "formControlName",
@@ -84,7 +96,8 @@
       "kind": "token-rename",
       "old": "--ds-input-hint-color",
       "new": "--ds-field-message-color",
-      "note": "Field helper/error text is now rendered by the shared ds-field-message; the new hook applies to EVERY field's helper/error line, not just input.",
+      "action": "Replace `--ds-input-hint-color` with `--ds-field-message-color`.",
+      "note": "Helper and error text is rendered by the shared `ds-field-message` now, so the hook reaches every field's message line rather than only the input's.",
       "searchHints": [
         "--ds-input-hint-color"
       ],
@@ -95,7 +108,7 @@
       "kind": "token-rename",
       "old": "--ds-input-hint-fs",
       "new": "--ds-field-message-font-size",
-      "note": "Same field-message consolidation as input-hint-color-token.",
+      "action": "Replace `--ds-input-hint-fs` with `--ds-field-message-font-size`.",
       "searchHints": [
         "--ds-input-hint-fs"
       ],
@@ -106,7 +119,9 @@
       "kind": "behavior",
       "old": "ds-bottom-sheet",
       "new": null,
-      "note": "ds-bottom-sheet now animates its close; the (closed) output emits at the END of the leave animation instead of on the click. Review (closed) handlers that assumed synchronous-on-click ordering (immediate re-open, focus timing); usually no change is needed.",
+      "action": "Read every `(closed)` handler and check it does not depend on running in the same tick as the click.",
+      "pitfall": "The handlers that break are the ones that look harmless: re-opening the sheet immediately now races the leave animation, and a focus move made in the handler lands while the panel is still on screen and gets taken back.",
+      "note": "The close animates, so `(closed)` emits at the END of the leave animation instead of on the click.",
       "searchHints": [
         "<ds-bottom-sheet",
         "(closed)"
@@ -123,7 +138,9 @@
       "kind": "behavior",
       "old": "--ds-button-pressed-shadow",
       "new": null,
-      "note": "The old faint pressed halo now defaults to `none` (press feedback became darken + micro scale-down). Only consumers who RELIED on the halo act: set --ds-button-pressed-shadow explicitly to re-enable. No usage -> no action.",
+      "action": "None, unless you relied on the pressed halo. To keep it, declare `--ds-button-pressed-shadow` explicitly.",
+      "appliesWhen": "Only where the token was being read. No usage, no action.",
+      "note": "The faint pressed halo now defaults to `none`; press feedback is a darken plus a micro scale-down.",
       "searchHints": [
         "--ds-button-pressed-shadow"
       ],
@@ -136,7 +153,9 @@
       "kind": "behavior",
       "old": "ds-button",
       "new": null,
-      "note": "Default DISABLED appearance changed: `[disabled]` is now a per-variant muted tint derived from each variant's own colour (solid + text use a flat pale oklch tint; tonal/ghost/outline and icon-button tonal/outlined use color-mix with --surface-disabled), not one flat grey. Visual-only, no API change. To restore the old flat grey, override the per-variant `--ds-button-*-disabled` / `--ds-icon-button-*-disabled` tokens. Most consumers take no action — eyeball the disabled states.",
+      "action": "Look at the disabled state of every button variant you actually use. To go back to the flat grey, pin the per-variant `--ds-button-*-disabled` / `--ds-icon-button-*-disabled` hooks.",
+      "pitfall": "The tint is derived from each variant's own colour, so a brand that recoloured one variant gets a disabled state it never chose — and because nothing in the API moved, no build or type check points at it.",
+      "note": "Disabled is a per-variant muted tint now rather than one flat grey: solid and text take a flat pale oklch tint, while tonal, ghost, outline and the icon-button tonal and outlined variants use `color-mix` with `--surface-disabled`.",
       "searchHints": [
         "<ds-button",
         "<ds-icon-button"
@@ -150,7 +169,9 @@
       "kind": "behavior",
       "old": "ds-modal",
       "new": null,
-      "note": "ds-modal and ds-drawer now animate their close (animate-then-remove, like ds-bottom-sheet) instead of vanishing instantly; honors prefers-reduced-motion. Any close-related output/teardown fires at the END of the leave animation, not synchronously on the dismiss click — review handlers that assumed synchronous-on-click ordering (immediate re-open, focus hand-off). Usually no change needed.",
+      "action": "Read every close-related handler on `ds-modal` and `ds-drawer` and check it does not depend on running in the same tick as the dismiss.",
+      "pitfall": "Same shape as the bottom sheet: an immediate re-open races the leave animation, and a focus hand-off made in the handler lands while the panel is still visible.",
+      "note": "Both animate their close now — animate-then-remove, like ds-bottom-sheet — and honour `prefers-reduced-motion`, so close-related outputs fire at the end of the leave animation.",
       "searchHints": [
         "<ds-modal",
         "<ds-drawer"
@@ -169,7 +190,9 @@
       "kind": "code-add",
       "old": null,
       "new": "@use '@ids-group-ltd/ids-design-system/styles/breakpoints';",
-      "note": "Only consumers who import `styles/tokens` A LA CARTE (not via the `styles/ds` entry, which forwards both): the `--bp-*` custom properties moved into the new `styles/breakpoints` partial, so an a-la-carte tokens importer must now also `@use` styles/breakpoints to keep `--bp-*` defined. Consumers using `styles/ds` need no action.",
+      "action": "Add the `@use` beside your existing `styles/tokens` import.",
+      "appliesWhen": "Only if you import `styles/tokens` a la carte. The `styles/ds` entry forwards both, so its users need nothing.",
+      "note": "The `--bp-*` custom properties moved into a new `styles/breakpoints` partial, so a tokens-only importer no longer gets them.",
       "searchHints": [
         "styles/tokens",
         "@use '@ids-group-ltd/ids-design-system/styles/tokens'"
@@ -184,5 +207,6 @@
     "ds-button overlay-trigger inputs (ariaHasPopup/ariaExpanded/buttonRef); date-picker month/year grid pickers; table pagination/clientSort/stickyFirstColumn; ModalService.confirm(); dropzone per-file message + queued state — additive.",
     "$bp-* Sass breakpoint aliases + up()/down() mixins; new disabled-state and press-scale override tokens — additive (a-la-carte styles/tokens importers also need styles/breakpoints now).",
     "Visual-only: button/icon-button press is darken + micro scale-down; [disabled] is a per-variant muted tint (override --ds-*-disabled tokens to restore flat grey); smooth motion pass across components; reduced-motion no longer freezes spinners; overlay scroll-lock release fix."
-  ]
+  ],
+  "deleteList": []
 }

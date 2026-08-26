@@ -22,6 +22,7 @@ import { resolveWithConfig } from '../../core/config-defaults';
   templateUrl: './checkbox.component.html',
   styleUrl: './checkbox.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: { '[attr.data-field-state]': 'controlState()' },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -31,7 +32,6 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class CheckboxComponent extends DsBooleanControlValueAccessor {
-
   /** Checked state, two-way bound. */
   readonly checked = model<boolean>(false);
   /** Shows the partial/mixed visual state — independent of `checked`. */
@@ -76,6 +76,7 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly controlState = this.fieldMessage.controlState;
 
   protected readonly fieldClass = computed(
     () => `checkbox-field size-${this.sizeResolved()}`,

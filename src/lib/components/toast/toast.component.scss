@@ -20,7 +20,6 @@
 }
 
 .toast {
-  /* Public --ds-toast-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_toast-bg-color:     var(--ds-toast-bg-color,     var(--surface-overlay));
   --_toast-border:        var(--ds-toast-border,        var(--border-default));
   --_toast-focus-shadow:  var(--ds-toast-focus-shadow,  var(--ds-control-focus-shadow));

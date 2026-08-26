@@ -42,11 +42,11 @@ import { groupForAnchor, urlForGroupPath } from '../core/nav.config';
 
       @if (nextLink(); as link) {
         <a class="next-group" [routerLink]="link">
-          <span class="next-group__label">
+          <span class="next-group-label">
             Next
           </span>
 
-          <span class="next-group__title">
+          <span class="next-group-title">
             {{ nextGroup()?.title }} →
           </span>
         </a>

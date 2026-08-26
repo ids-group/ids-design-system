@@ -4,8 +4,415 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+- [x] **DONE 2026-08-26 — TWO of the five box-less controls needed a control state; three did not, and
+  the evidence said so before I wrote a line.** Stas pushed back on the item's premise — do a slider and
+  a switch really have errors to show? — so this was researched instead of implemented wholesale.
+  **What each control can even BE invalid about:**
+  - **`ds-checkbox`** — a single required checkbox is the classic validated boolean ("accept the terms").
+    Real state. **Wired.**
+  - **`ds-radio-group`** — "choose one" unanswered. Real state, and the ONLY one with proven demand in a
+    live consumer. **Wired.**
+  - **`ds-radio` alone** — a lone radio is meaningless; the choice belongs to the group, so an error on
+    one radio inside a set is wrong by construction. **Not wired.**
+  - **`ds-switch`** — a switch applies on flip, not on submit, so validating it is usually a design smell.
+    **Not wired.**
+  - **`ds-slider`** — always holds a value inside min/max, and the control enforces the bounds itself.
+    "Required" is not expressible and out-of-range cannot happen. **Not wired.**
+  **Counted in mm-broker, 39 usages** — the evidence, not the theory: `ds-checkbox` 24 usages with **0**
+  error bindings (4 hints); `ds-radio` 1 with 0; `ds-radio-group` 2 with **1**; `ds-switch` 3 with 0 but
+  **3 of 3 carrying a hint**; `ds-slider` **0 usages at all**. The one `[invalid]` in the whole app is on
+  a radio GROUP. So the switch's real need is the hint it already has, and the slider has no evidence in
+  either direction.
+  **The gap was only ever the paint.** All five already render `ds-field-message` and already inherit
+  `hint`/`error`/`warning`; `resolveFieldMessage` was already being called and its third member,
+  `controlState`, simply went unread. Wiring it was one line of TS plus one host binding per component.
+  **Two different treatments, because the shapes differ.** The checkbox moves its BORDER only — at 16px a
+  tinted fill reads as "checked", which is why the shared `field-state` mixin (built for a 39px box with
+  a background) could not be reused. Measured: errored border `rgb(219, 31, 31)` against a plain
+  `rgb(194, 201, 214)`, background left white. The radio group colours its LABEL: when a required group
+  is unanswered no single radio is wrong, so reddening five rings would point five fingers at one
+  unanswered question. Measured: label `rgb(186, 23, 23)` against `rgb(53, 59, 77)`, rings unchanged,
+  and `aria-invalid` was already on the group.
+  **Open if you want it louder:** the rings could take the colour too, via the group handing a value down
+  a private channel that `ds-radio`'s existing border resolver already consults. Not built — that is a
+  visual call, and the label plus the message already locate the error.
+  **One API smell noted, not acted on:** `ds-radio` extends `DsFieldBase`, so a single radio *offers*
+  `error`/`invalid` inputs it should never be given. Removing them is breaking; the paint deliberately
+  does not honour them, so binding one now does nothing visible.
+  ORIGINAL:
+- [ ] **[P2] Five controls compute no `controlState`, so a validation state cannot reach the control itself — only its message.** `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-slider` and `ds-switch` are the five of fourteen that do not bind `[attr.data-field-state]`, and they do not read `controlState` at all (grep: zero occurrences in each). The other nine do, and the shared `field-state` mixin paints them.
+  **P3 → P2, 2026-08-21:** raised because the session that shipped the field-state work made the gap concrete: on a checkbox the ONLY sign of an invalid state is the red line underneath, and the same holds for radio, radio-group, slider and switch. Five of fourteen controls cannot show a validation state on the control itself, which is the inconsistency this board exists to remove, and `color-not-only` says a message alone is not enough. Still a decision rather than work — the question is whether a box-less control paints its own indicator — but it is the same class of question as the glyph one and should be answered beside it.
+  **Partly correct by design** — they have no bordered box for a border to appear on, which is also why they deliberately did not get `[success]`. **But they are not shapeless:** a checkbox has a square with a border, a switch has a track, a radio has a ring. Today none of those can carry error, warning or success, so on a checkbox the only sign of an invalid state is the red line underneath.
+  **Decide whether the box-less controls should paint their own indicator** for error/warning (and then whether `[success]` follows). If yes, it is a `field-state`-style mixin per control shape rather than a reuse of the bordered-box one, since the target is a 16px square rather than a 39px field.
+
+Nothing moves until a verdict; the work behind each is scoped.
+
+## Architecture / tokens
+
+> **Token-architecture pass (P2, interlocked).** The three items below + the semantic radius+elevation role layer (under "Missing tokens / foundations") share ONE principle — a **role layer between foundation and component**, single pointer, shades cascade. Spec them together; sequence the single-source colour model first and the rest fall out. Don't action piecemeal. _(The typography `.t-*` `--ds-t-*` hooks — the same consumer-first contract at the global utility layer — already SHIPPED 2026-07-24, see done.md.)_
+
+- [x] **DONE 2026-08-26 — `ds-table`'s pager took no inset, so it sat out of line with the columns and
+  on the container's border.** The footer carried `padding-top` alone. Reproduced in our own docs before
+  touching it: padding `12px 0 0 0`, footer content at **0** against the cells' **16**, and the summary
+  baseline on the host's bottom edge. Now `12px 16px 12px` — content at 16, aligned with the column
+  text, and "Showing 1–5 of 12" **21px** clear of the bottom.
+  **The inset is the CELLS' padding, not a number of its own**, so a retuned table keeps its footer in
+  line: verified by setting `--ds-table-cell-pad-x: 40px` and watching footer and cells move together.
+  **One trap worth keeping.** The obvious spelling — `var(--_table-cell-pad-x)` — silently produced
+  `padding: 0 0 0 0`. That private resolver is declared on `.table`, and the footer is its SIBLING, so
+  the var was unresolvable; one unresolvable var voids the WHOLE shorthand, taking the working
+  `padding-top` with it. It reads the public hook plus fallback instead, which is the house pattern
+  anyway. **The measurement caught it; reading the diff would not have.**
+  Also: the manifest lint refused the first write-up, because the informational note said a workaround
+  "can go" with no `deleteList` entry to execute it — the exact prose-only hole the board already
+  records. It now has a delete row.
+
+- [x] **DONE 2026-08-26 — `ds-banner`'s body had no size, and in `compact` it ran into the title.
+  One cause, one fix.** Two asks that looked separate: a 16px page rendered the body **larger than the
+  banner's own 14px title**, and a compact banner with both a title and a body showed **0px** between
+  them. Both came from the gap living on the TITLE — where it also fired with no body beneath it, and
+  could not fire at all in `compact`, which zeroes that margin.
+  **The gap now belongs to the body.** `<ng-content>` is wrapped so `:empty` can answer "is there a
+  body?" — projected content is usually a bare text node, which no selector can otherwise tell from
+  nothing. Measured after: 4px between title and body in `compact` (was 0), a title-only compact banner
+  unchanged because the wrapper is `:empty`, body 14px in a 16px context (was 16), and the new
+  **`--ds-banner-body-font-size`** verified at 11px.
+  **Stas's question is what made this the right shape:** *why do we hide the banner's body at all?*
+  We do not — the only `display: none` in the component is `.actions:empty`. The docs' "title and
+  dismiss only, no body" was a claim, never behaviour, and **17** of one consumer's compact banners
+  project a body (13 of them with no title, which always worked). So the recommendation I had written —
+  dev-warn against the pairing — would have warned against a working shape. Made it work instead.
+
+- [x] **DONE 2026-08-26 — ds-docs is out of BEM, and a stylelint rule keeps it out.** `__` claimed a nested component and there are none here, only states. Swept **865 occurrences across 92 files** (`state-cell__stage` alone was 184), byte-level so no line ending moved: the diff is a clean 1:1 swap.
+  **Verified as a pure rename, not by eye.** Before and after, normalised: **589 classes used and 589 classes styled, identical sets** — zero styling lost, zero gained, and the used-set byte-identical. Two flattened names collided with classes that already existed (`empty-title`, `swatch-chip`) but in DIFFERENT components, so scoped styles keep them apart; `practice/do-dont` was already written flat, which is the shape the rest now matches.
+  **My first verification was wrong and the second one is why this is trustworthy.** The checker's class pattern excluded underscores, so it could not see the BEM names at all and reported 7 "new orphans" — every one a pre-existing unstyled class that only became visible once flattened. Fixed the checker, re-ran, got the 589/589 above.
+  **The guard needed two rules, because the first one could not fail where it mattered.** `selector-class-pattern` (`^[a-z][a-z0-9-]*$`) rejects `.block__element` — but with `resolveNestedSelectors: true` it still did NOT reject `&__element`, which is exactly how BEM would creep back in SCSS. Added `selector-nested-pattern` (`^[^_]*$`) beside it. Control file with both forms: **both now error**, and the repo passes with zero violations.
+  **Deliberately left for a separate pass:** the `--modifier` forms (11 of the element kind like `cell__tag--do`, plus a standalone set like `demo--centered`). They are states, and our convention writes a state as its own class (`is-*`) rather than a `--` suffix — but converting them means editing markup and specificity together, which is a different change from removing a false claim about nesting.
+
+- [x] **DONE 2026-08-26 — two asks from mm-broker, and NEITHER symptom reproduced in the DS. Both still
+  found a real defect underneath.** Worth reading as a pair, because the pattern repeated: the reported
+  symptom was measured on the consumer's screen and is real THERE, but the cause named in the ask was
+  not the DS's, and taking the ask at its word would have shipped the wrong fix twice.
+  **`ds-banner` — "centres the title while the body stays at start".** Measured across all twelve
+  banners in the docs, in both layouts (`layout-stacked`, `layout-row`): title and body both compute
+  `start`, zero mismatches, and there is no `text-align` declaration anywhere in the component. So the
+  DS does not centre the title. It also CANNOT produce the reported split by inheritance — probed it
+  directly: under a centred ancestor **both** blocks flip to `center` together. Something on the
+  consumer's side reaches `.title` or `.body` (both very generic class names) directly.
+  **The real defect, which the ask found without naming:** the banner owned no alignment at all, so a
+  centred ancestor dragged the whole thing. It now declares `text-align: start` on its own box —
+  re-measured: all twelve stay `start`, and the centred-ancestor probe that used to return `center` now
+  returns `start`. Same class as [[feedback-components-resist-external-layout]]: the component owns it,
+  the page does not get to decide.
+  **`ds-menu-divider` — "uneven space around itself".** Measured in `ds-menu`: gap above = gap below =
+  2px, host padding 0, margin 0, on every divider on the page. Then measured the exact place the ask
+  named — the account menu in `ds-sidenav-footer`, between "Help & support" and "Sign out": **6px above
+  the line and 6px below.** Symmetric both times. The `.error` item below it was the obvious suspect for
+  a perceptual asymmetry, but it tints only on hover, so there is no resting box edge either.
+  **The real defect, again underneath:** that menu was not using `ds-menu-divider` at all. It hand-rolled
+  `<div class="separator">` with local styles, so `--ds-menu-divider-color` and
+  `--ds-menu-divider-spacing` reached every menu EXCEPT the one the DS ships itself — a consumer
+  retuning the documented token would have watched that menu ignore it. Swapped to the real component,
+  and the colour token now reaches it (tinted it red, watched the line change, restored).
+  **A correction to my own first pass, made the same day.** I first pinned
+  `--ds-menu-divider-spacing: var(--space-1)` to keep the 6px the hand-rolled line had, reasoning that
+  the rhythm there was settled. Stas: a divider must not create spacing at all — menu item, divider,
+  menu item. He is right, and the divider's own docblock already said so ("the line takes one row's
+  place instead of stacking a second gap on top of it"). The pin was me preserving the bug I had just
+  found. Removed: measured 2px above and 2px below the line, **identical to the gap between two ordinary
+  items**, so the divider cost a row and nothing more.
+  **Then Stas asked the sharper question — is padding around a divider needed AT ALL — and it went one
+  step further.** It is not. The divider's own padding had defaulted to 0 since 0.8.0, but `ds-menu` is a
+  flex column and its row gap still landed above AND below the line, so every divider in the library sat
+  one row's width from the items it separates. A boundary is not a row. The divider now cancels that gap
+  (`margin-block: calc(-1 * var(--_menu-gap, 0px))`, read by inheritance from `ds-menu`'s host):
+  **measured 0px above and 0px below**, while two ordinary items keep their 2px.
+  **The token stays, and its advice was the part that was wrong.** `--ds-menu-divider-spacing` still does
+  exactly what it says — verified `8px` gives 8px each side and clearing it returns to flush — and a
+  divider used outside a `ds-menu` is untouched (the cancel falls back to `0px`). What changed is that
+  the token reference now says setting it is the one way to desync the divider from the row rhythm, which
+  is the defect 0.8.0 removed, and points at `--ds-menu-gap` for an airier menu overall. **Nobody had ever
+  set it** — not the DS, not ds-docs, not mm-broker, across three minor versions; its only two recorded
+  uses were a consumer zeroing a no-op and my pin this morning.
+  **The history matters here:** 0.8.0's own entry measured "6px + line + 6px against 2px between rows"
+  and called the result "a separated group read as a hole". My pin reproduced that number exactly, in the
+  same kind of menu. The knob had fired once on a consumer and once on us; keeping it is fine, promoting
+  it was not.
+  **The transferable part:** an ask that arrives with a measurement is still a measurement of the
+  CONSUMER's screen. Reproduce it here before fixing it here — both of these would otherwise have become
+  a `text-align: start` on `.title` and a spacing tweak on the divider, neither of which was the problem.
+  ORIGINAL:
+- P2 · `ds-banner` centres its `title` while the body stays at `start`, so every banner reads as two
+  alignments (from mm-broker, 2026-08-26). Measured, not guessed: `div.title` computes
+  `text-align: center` at full body width (490px) while `div.body` is `start`. No token exposes it and
+  the consumer sets nothing, so the only fix on their side is a global
+  `ds-banner .title { text-align: start }` — carried there as `TODO(ds-banner-title-align)`. A
+  left-aligned title is almost certainly what was intended; if the centring IS deliberate for some
+  variant, it needs to apply to the body too, or be a documented input.
+- P3 · `ds-menu-divider` leaves uneven space around itself (from mm-broker, 2026-08-26). Reported from
+  the account menu in `ds-sidenav-footer`, where the markup is a bare `<ds-menu-divider />` between
+  `ds-menu-item`s and the consumer adds no menu styling anywhere in its workspace — verified by grep
+  over all three apps. The gap above the divider reads larger than the gap below it, so "Sign out"
+  looks detached from the group rather than separated from it.
+
+- [x] **DONE 2026-08-25 — `ds-w3w` rendered a space its own format forbids, and it took a measurement
+  to see it.** The pill showed `/// daring.lion.race`; the format is `///daring.lion.race`, flush, which
+  is what its own `aria-label` had said all along — screen and accessible name disagreed on a shipped
+  component. **Found sideways:** Stas asked why the template glued `</span>{{ address() }}` onto one
+  line, which reads badly. The answer turned out to be that the gluing was a half-fix — it removed the
+  whitespace BETWEEN the two elements while the prefix sitting on its own line INSIDE the mark element
+  kept leaking its own. **Measured, not argued:** an A/B clone with every whitespace text node trimmed
+  came out **202.18px against 209.98px** — 7.8px of rendered space.
+  **The fix removes the dependency instead of hiding it.** The mark row is `display: inline-flex`: a
+  flex container drops whitespace-only text nodes, and it blockifies the mark element so its own edge
+  whitespace is trimmed too. Re-measured on the built page: whitespace-trimmed and as-shipped are now
+  **identical to the pixel**, so the template is free to be formatted for reading — the address on its
+  own line, the prefix on its own line, no lone-bracket gymnastics, and eslint's
+  `element-content-newline` satisfied rather than fought.
+  **The transferable part:** a template that depends on source whitespace is a bug waiting for a
+  formatter. The fix is never a formatting trick — it is making the whitespace stop mattering.
+
+- [x] **DONE 2026-08-25 — a `:not()` added for readability deleted the focus ring on every button, and
+  only a real hover found it.** While building the refusal-reason work I wrote
+  `&:hover:not([aria-disabled='true'])` to keep the hover paint off a soft-disabled button. That is
+  specificity (0,3,0) against `:focus-visible`'s (0,2,0), so hover began winning the `box-shadow`
+  outright. **Measured with a real pointer over a focused button:** `:focus-visible` still matched,
+  `:hover` matched, and the computed `box-shadow` was `none`. Every `ds-button` in the library lost its
+  focus indicator under the cursor — not only ones with a custom shadow, because the hover shadow
+  defaults to `none` and `none` overwrites the ring just as well as a real shadow would.
+  **Fixed by cascade order rather than by more specificity:** hover → active → disabled →
+  `:focus-visible`, all four at one class deep, so source order decides and reads as the intent. The
+  disabled block also had to declare `box-shadow: none; transform: none`, because an `aria-disabled`
+  button DOES receive the pointer and was otherwise lifting on hover and dipping on press — feedback for
+  an action that refuses. Re-measured: ring survives hover, hover background still applies, the
+  soft-disabled button neither lightens nor dips, and its ring paints.
+  **Never shipped** — introduced and fixed inside the same unreleased window, so no CHANGELOG entry.
+  **The transferable part:** raising specificity to express "except in this case" silently reorders
+  every other rule that was relying on source order. In a state cascade, order is the mechanism; a
+  `:not()` is not a free clarification.
+
+- [x] **DONE 2026-08-25 — prettier, then stylelint, then eslint, over the whole project.** Run in that
+  order on Stas's instruction, with eslint knowingly rewriting part of prettier's output. Prettier
+  reformatted 140 files (115 html + 25 ts) and needed a **second pass** on three of them before it
+  reached a fixed point; stylelint had nothing left to change; eslint then pulled 77 of those files back
+  toward their original shape, leaving **63 files** actually changed (+903/−913). Builds, both docs
+  builds and all three checkers green afterwards. `lint` and `lint:styles` are now at **zero**.
+  **What it exposed, and what is now filed:** prettier still reports ~112 html files as unformatted and
+  always will — its line-breaking and the two `ds/template/*` eslint rules want opposite things, so each
+  tool undoes the other on the same files forever. That is a config conflict, not formatting debt, and
+  it is now a P2 on the board rather than a number everyone learns to ignore.
+
+- [x] **DONE 2026-08-25 — a refused button says why, and the two kinds of refusal took different answers.**
+  `ds-button` gained `disabledReason` plus the field message inputs `hint` / `warning` / `error` /
+  `messageIcon` / `reserveMessage`, and both buttons gained `ariaDescribedBy`. Nothing changes for a
+  button that sets none of them.
+  **Standing refusal — `disabledReason`, inside the button.** Setting it flips the disable mechanism:
+  `aria-disabled="true"` instead of the native attribute, so the button stays focusable and the reason
+  becomes its accessible DESCRIPTION rather than part of its name. **Verified in Chrome's own a11y
+  tree**: `button "Approve invoice" description="Needs the Finance role" disableable disabled`. Focus
+  lands (`document.activeElement === button`), `(pressed)` fires 0 times — against a live control on
+  the same page that fires 1 — and a plain `[disabled]="true"` button is still natively disabled with
+  focus still skipping it, so the default is provably intact.
+  **Transient refusal — the message line, under the button.** `hint`/`warning`/`error` resolve through
+  the same `resolveFieldMessage` and render the same `ds-field-message` as the fields, with the same
+  `reserveMessage` height reservation (measured: reserved-and-empty and reserved-with-text hosts are
+  both 63px, while a plain button stays 40px and takes no `with-message` class).
+  **Reused by inheritance, not copied.** `hint`, `error`, `warning`, `messageIcon`, `reserveMessage`
+  and `reserveMessageResolved` moved out of `DsFieldBase` into a new `DsMessageBase`; `DsFieldBase`
+  extends it and keeps `errors`/`invalid`/`touched`, which a button has no use for. `DsFieldBase`'s own
+  surface is unchanged (`npm run class-surface` clean) — and this is exactly the case that tool warns it
+  cannot see, so the CHANGELOG says it in prose.
+  **`ds-icon-button` deliberately got only `ariaDescribedBy`.** An icon button has no room for a second
+  line, and a reason living only in the accessibility tree reproduces exactly the invisibility this ask
+  was filed about. The consumer renders the text and points at it.
+  **Two things in the ask above are superseded, both by Stas, and both worth keeping straight.**
+  (1) The measured "one line fits inside, anything longer goes under the control" rule became **no cap
+  at all** — the reason stays inside the button, the text wraps, the button grows. Measured at a 501px
+  viewport: the 96-character reason wraps to two lines, the button is 421px, the row is 421px, and the
+  page does not scroll horizontally. (2) The transient branch was filed as "no new API, a documented
+  recipe"; it shipped as the three field inputs instead, because mirroring the field API was the point.
+  **One thing that looked like a fix was a no-op, and its comment claimed otherwise.**
+  A `ds-field-message { width: 0; min-width: 100% }` rule was meant to keep the message out of the
+  host's intrinsic width so the BUTTON would decide how wide the pair is. Measured with and without it:
+  identical widths, and two same-label buttons differing only in message length come out 127px vs 176px
+  — the message decides. Deleted, along with the comment. The behaviour is now documented as what it is:
+  a message longer than the label widens the pair, button included, exactly as a field's control spans
+  its own message.
+  Docs: `/components/button` § "Refused, and why" (standing, transient, long reason, `reserveMessage`),
+  `components.md` § `ds-button`, and a `deleteList` entry retiring the `[dsTooltip]`-on-a-disabled-button
+  workaround.
+  ORIGINAL: - [ ] **[P3] `ds-menu-item` got `[description]` in 0.10.2 and it closed this for menus; a disabled
+  BUTTON still has nowhere to say why.** The pattern is a control the server refuses — "the invitation
+  has not been accepted yet", "this is the last active admin" — where the app disables it and has to
+  say why. On a menu item the new input does it properly: visible without hover, and reaching assistive
+  tech as `aria-describedby` rather than as part of the name. mm-broker adopted it the day 0.10.2
+  landed and deleted two `[dsTooltip]`-based workarounds with their `TODO(disabled-reason)` markers.
+  **The third site is a `ds-button` and could not be fixed**: `[dsTooltip]` needs hover, and a disabled
+  button cannot be focused to announce itself, so the reason reaches a mouse and nothing else. That
+  consumer also carries a `blocked-action` mixin whose whole comment is "`ds-button` has no caption
+  slot — only `ds-menu-item` holds a second line — so the reason is a sibling". **Ask:** the same
+  `description` shape on `ds-button` (and `ds-icon-button`, where the label is already invisible), with
+  the same `aria-describedby` wiring.
+
+  **DECIDED 2026-08-25 (Stas), and the axis moved.** The question is not where the text goes, it is
+  WHAT KIND of refusal it is — and the two kinds want different components:
+
+  · **Standing refusal** — will not change while the user is on this screen (the backend capability is
+    absent, the role is missing, the record is in a state the action cannot touch). The reason belongs
+    INSIDE the button as a second line, because it is as permanent as the unavailability itself.
+    Needs `description` + an `aria-disabled` mode: a natively `disabled` button cannot be focused at
+    all (measured — `document.activeElement` never becomes it, Tab skips it), and a keyboard user
+    without a screen reader then gets nothing whatsoever.
+  · **Transient refusal** — clears as soon as the user does something (form incomplete, nothing
+    selected, terms not accepted). **Do not disable the button.** The reason is a statement about the
+    FORM, not about the button, so it belongs under the control as a `ds-field-message` alongside the
+    other form messages. No new API — a documented recipe, because consumers reach for `disabled`
+    instead today.
+
+  **Long text has a measured rule, not a guess.** In the deck at a default button: an 8-character and
+  a 26-character reason each fit one line (168px / 190px wide); an 82-character one wraps to two lines
+  and pushes the button to 348px. So: one line fits inside the button, anything longer goes under the
+  control where it can wrap. Truncating a refusal reason is not an option — it is the whole payload.
+
+  **The tooltip is out of both branches** (Stas, and the literature agrees): it needs hover, so it does
+  not exist for keyboard or touch. Carbon states the general rule — information without which the task
+  cannot be completed belongs in always-visible helper text, not a tooltip — and its "tooltip on a
+  disabled button" request has stayed open with near-weekly duplicates. Adrian Roselli goes further and
+  argues against disabling at all: prevent the submit and answer with a message, since "disabling
+  fields is no replacement for good instructions and error messages". React Spectrum's own answer to
+  the same request is `aria-disabled` + swallowing the event + a data attribute for styling, which is
+  exactly the standing-refusal mechanics above.
+  **This repo already agrees with the transient branch**: the house forms rule gates submit on presence
+  and not-in-flight only, judges validity inside the handler and shows errors inline.
+
+  Deck: `presentations/button-refusal-reason.html` (each specimen measures its own focus behaviour).
+  Variant "reason as a sibling element referenced by `aria-describedby`, button left natively disabled"
+  was REJECTED: measured, focus never lands, so the reference is never announced — it only works
+  together with the same `aria-disabled` switch, which makes it the standing-refusal branch with the
+  text moved outside.
+
+- [x] **DONE 2026-08-24 — the decks stopped lying about type, and the step now fails instead of falling back.**
+  `build:deck-css` became `tools/build-deck-css.mjs`: it compiles `ds.scss` through the sass JS API, copies
+  `src/lib/styles/fonts/` next to the CSS, and **exits non-zero if any `url()` in the output has no file beside it**.
+  Both the CSS and the 8 woff2 files are committed, matching the choice already made for `ds.css` — a deck has to be
+  honest straight out of a clone.
+  **Verified on the served deck:** all 8 faces report `status: "loaded"`, every `/decks/fonts/*.woff2` answers 200,
+  the rendered face is Mulish, and `ellipsis-glyph-clip.html` reports the same 1.257em / 17.60px / 3.60px it did with
+  its own shim — so the numbers it argued from were right, they were just propped up by a per-deck workaround. That
+  shim is now deleted and its red banner kept as a regression check.
+  **Two things went wrong on the way, both mine.** The first version shelled out to the `sass` CLI and died with
+  `spawnSync npx.cmd EINVAL` — Node 24 on Windows will not spawn a `.cmd` shim without a shell — so it uses the JS
+  API and no subprocess. And the first control run could not fail: the check validated the copy it had just made.
+  Re-run against the case that actually happens — a `@font-face` whose woff2 is missing from the SOURCE folder — it
+  reports the file by name and exits 1.
+  ORIGINAL: [P2] Every presentation deck renders in a substitute font, so a deck that judges type is lying (found 2026-08-24 while building the glyph-clip deck).** `presentations/ds.css` is compiled from `src/lib/styles/ds.scss`, so it carries the library's eight `@font-face` rules with their source-relative `url('./fonts/*.woff2')` — but `build:deck-css` copies the CSS alone and there is no `presentations/fonts/`. Measured in Chrome: all eight faces report `status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and every deck falls back to `sans-serif`. The README's claim that the decks are honest consumers of the DS holds for tokens and fails for type — and it also poisons `document.fonts.check()` for any deck that tries to verify its own font.
+  **Fix:** have `build:deck-css` copy `src/lib/styles/fonts/` next to the CSS (five Mulish weights + three JetBrains Mono), or rewrite the `url()`s to a path the docs server answers. `ellipsis-glyph-clip.html` works around it locally by re-declaring the three faces it needs and showing a banner when they fail — a per-deck patch, not the fix.
+
+- [x] **DONE 2026-08-24 — a column can BE a link, so the row no longer has to be the control.**
+  `TableColumn.link: (row) => string | readonly unknown[] | null` renders that column's value as a real
+  `<a [routerLink]>`. Verified on the built docs: 6 rows, **5 rendered as links and the one `planning` row
+  as plain text** (the `null` branch, which is what keeps a partly-reachable list in one column); the link
+  carries `href="/components/table;record=Project%20Alpha"`, is a tab stop, takes the base focus ring, and
+  paints `--ds-table-cell-link-color` + underline **without hover** — unlike `interactive`, whose tint a
+  keyboard or touch user never sees.
+  **Clicking the link fires the row handler ZERO times** (measured with a spy on the `<tr>`), so it composes
+  with `rowInteractive` instead of double-navigating. Both together cost two tab stops per row, which the
+  docs now say outright, recommending the link alone on a long list.
+  **`RouterLink` is imported by the table but instantiated only inside the `link` branch**, so an app with no
+  router provided still renders a table — the directive is never constructed. External URLs stay a
+  `[dsCellTemplate]` case on purpose rather than adding a second `href` knob nobody asked for.
+  Shipped with the demo (the interactive-cell block gained a link block beneath it), `components.md`, a
+  CHANGELOG `Added` entry and an informational migration note telling consumers the duplicated
+  `View Details` menu item can go.
+  ORIGINAL: [P2] A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.**
+  `rowInteractive` gives the `<tr>` a tabindex, Enter/Space and an accessible name, which is the
+  keyboard half — but nothing on screen says the row leads anywhere, and a screen reader still
+  announces a table row, not a link. Consumers compensate by repeating the destination as a
+  `View Details` item in the row's overflow menu (six lists in mm-broker's broker portal do this),
+  which is a menu entry that performs navigation rather than an action. The accessibility literature
+  is against the row-as-control shape itself: Adrian Roselli's "Don't Turn a Table into an ARIA Grid
+  Just for a Clickable Row" and oidaisdes.org's "How to Create an Accessible Table with Clickable
+  Rows" both land on the same answer — put the control **in a cell**, as a real link. What the table
+  is missing is a way to render one cell's value as a link (a `link` column kind, or a documented
+  cell-template contract for it) so the record's name becomes the way in: visible, in the tab order
+  as a link, and openable in a new tab with Ctrl/Cmd-click — which a row click cannot offer. Then
+  `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
+  consumers can drop the duplicated menu item.
+
+- [x] **DONE 2026-08-24 — `--ds-card-overflow`, opt-in rather than the clip-by-default the ask preferred.**
+  The ask argued for clipping every card and giving the rare one an opt-out. Rejected on the library's own
+  evidence: Foundations → Colour already names `ds-card` with `padding="none"` as THE example of a clipping
+  ancestor eating a focus ring, and `data-focus="inset"` exists as the escape hatch. Clipping by default
+  would have created that hazard on every card in every consumer, so the hook defaults to `visible` and the
+  docs pair the opt-in with `data-focus="inset"`.
+  **Proven visually, after two instruments failed.** `elementFromPoint` reported the strip as hit in BOTH
+  cards — hit-testing works off the rectangular box, while the difference here is in painting — and a
+  corner-geometry probe was inconclusive at a 12px radius. Bumping both demo cards to a 40px radius made it
+  unmistakable in a screenshot: the default card shows the strip's SQUARE corners crossing the card's
+  rounded ones, the clipped card shows them following the radius.
+  `clip`, not `hidden`, is what the docs and the token description recommend — it keeps the card out of the
+  scroll-container business. Shipped with a side-by-side demo, `components.md`, a CHANGELOG `Added` entry,
+  and a `deleteList` row so the five `::ng-deep ds-card .card { overflow: hidden }` copies in the consumer
+  can go — five, not four: the consumer recounted by grep on 2026-08-24 and found `rider-option` too.
+  ORIGINAL: ## `ds-card` cannot clip its own box, so a full-bleed child pokes past the radius (from mm-broker, 2026-08-24)
+
+- [ ] **[P3] A card that holds a full-bleed child needs `overflow` on the card's INNER box, and no hook
+  reaches it.** `ds-card` publishes `--ds-card-bg-color`, `-border`, `-focus-shadow`, `-hover-lift`,
+  `-pad`, `-radius`, `-shadow` and `-shadow-hover` — everything except the one property that makes a
+  rounded card hold a child whose background runs to its edge. Put a grey footer strip or an image at
+  the bottom of a card and its square corners paint over the card's own radius; the host's `overflow`
+  cannot help, because the rounded element is the DS's inner `.card`, not the host. **Five screens in
+  mm-broker's employee portal carry the same four-line workaround**, and it is the one shape they have
+  left: `:host ::ng-deep ds-card .card { overflow: hidden }` (`product-card`, `rider-option`,
+  `wizard-plan`, `wizard-product`, `review.desktop`) — recounted by grep on 2026-08-24, the first
+  count missed `rider-option`. **Ask:** either a `--ds-card-overflow` hook, or — better, since
+  a rounded box with a full-bleed child has no other correct rendering — clip by default and give the
+  rare card that must overflow the opt-out. Prior art in this backlog: 0.10.0's delete-list closed the
+  sibling reach (`::ng-deep .card { height: 100% }`) by making the card's box fill a stretched host;
+  this is the next `.card` reach in the same consumer.
+
+- [x] **DONE 2026-08-24 — `--ds-button-shadow` + `--ds-button-shadow-hover`, both default `none`.**
+  The ask asked for the rest hook and offered `-shadow-hover` "if the state matrix wants symmetry" — it does,
+  and the hover one falls back to the resting value, so setting one keeps the button steady under the pointer
+  instead of dropping its shadow on hover.
+  **Measured on the built docs, four checks:** rest is `none` by default (nothing moves for anyone), the focus
+  ring still wins by default, the hook paints at rest once set, and **the focus ring still wins over a resting
+  shadow** — which was the risk of putting a `box-shadow` on the base rule at all. The hover fallback was
+  checked separately: with only `--ds-button-shadow` set, `--_button-shadow-hover` resolves to the same value.
+  Shipped with token descriptions, `components.md`, a CHANGELOG `Added` entry and a `deleteList` row for the
+  `::ng-deep ds-button button` rule this removes.
+  ORIGINAL: ## `ds-button` has no resting shadow hook, which is why one consumer reaches its inner element (from mm-broker, 2026-08-24)
+
+- [ ] **[P3] Four of the five properties a consumer needed are tokens; the fifth keeps the `::ng-deep`
+  alive.** mm-broker's employee coverage-tier screen makes its option buttons the screen's primary
+  surface: `background`, `color`, `font-weight` and `border` all have hooks
+  (`--ds-button-bg-color`, `-label-color`, `-weight`, `-border`), so the only reason the rule is
+  `::ng-deep ds-button button` at all is a resting `box-shadow` — the component publishes
+  `--ds-button-focus-shadow` and `--ds-button-pressed-shadow` and nothing for the rest state. **Ask:**
+  `--ds-button-shadow` (and, if the state matrix wants symmetry, `-shadow-hover`), which would let that
+  block become four token lines and remove the last deep selector on `ds-button` in that app. Small,
+  and it is the kind of gap that only shows up as a deep selector nobody reports.
+
 ## Shipped 2026-08-21 evening (session — the manifests said what changed, not where to look)
 
+
+- [x] **DONE 2026-08-26 — the gate I shipped yesterday was accepting rows that prove nothing, and
+  four of the entries it waved through were my own.** Both blind spots were real, and the second was
+  worse than filed. **(1) It scanned the whole markdown line**, so a shape found in the "Delete it,
+  because" column counted — three 0.9.0 entries passed on a word that appeared in the explanation
+  rather than in the locator a reader greps with. **(2) It matched on shapes several entries share**,
+  so `ds-table` alone let four 0.9.0 entries pass on one unrelated row.
+  **The part the filing did not have:** three of those four had NO row at all. They were entries I
+  added during the parity back-fill, and they passed only because a generic shape matched somebody
+  else's row — so the back-fill that was supposed to close the gap left three holes and the gate
+  reported them closed.
+  **Fixed both ways.** The gate reads the FIRST column only, and it now requires a shape no sibling
+  entry shares. Four rows written (`exportFetcher`, the table live region, the ds-field-group invalid
+  border, and `--ds-table-cell-pad` added to the compact entry so it can be told apart), three
+  rewritten to carry their shape in the locator column. 80 entries pass; both rules were watched
+  FAILING on the exact controls before being believed.
+  ORIGINAL: [P2] `check-delete-tables` passes entries it should fail — measured with a control that
+  was supposed to fail and did not (2026-08-26).
 Opened and closed in one sitting, because the item measured itself: the lint that found the gap counted
 258 of them, and the count is the to-do list.
 
@@ -96,6 +503,53 @@ measurement, and a grep of `ds.scss` against a sentence that claimed the opposit
   a control can take the CVA plumbing without the message inputs, which is the honest shape if search
   is meant to stay chrome-free. Not urgent, but it grows: the fifth dead input arrived with the
   messageIcon move, and every future universal field input will land on it too.
+
+- [x] **DONE 2026-08-24 — the delete contract now has a rule that can actually fire, and eight prose
+  instructions got the rows they were promising.** The ask named M033 as narrow; it is worse than
+  narrow, and the reason is not the one the first pass reported. M033 fired only on an
+  `informational` line that STARTED with `DELETE-LIST` — but the marker never went away, it is written
+  **mid-line**: `(DELETE-LIST)` as a trailing tag on four 0.10.0 entries, `DELETE-LIST MATERIAL` inside
+  two 0.9.0 sentences. **Seven lines carry the marker and not one of them starts with it, so M033 could
+  not match a single line from the day the convention settled. The rule was inert against the very
+  marker it is named for.** Its second guard was wrong too: `&& !deleteList.length`
+  silenced it whenever the file held any structured row at all, which is exactly the state every
+  manifest is in.
+  **What the measurement found.** A pattern of second person plus a delete verb ("if you … it can go",
+  "you can drop that") matches **ten** sentences and no false positives — the shape without the second
+  person also catches `deleteList[].find for code that is now redundant`, which is prose about the
+  FIELD. Of the ten, `0.9.0` alone carried **five** and four had no row behind them; `0.6.1` and
+  `0.8.0` had one each with an empty `deleteList`.
+  **The rule is the citation, not the shape.** A shape test alone goes quiet as soon as the file holds
+  one unrelated entry — which is why the `link` column slipped past with `card-overflow` sitting right
+  there. **M034** requires such a sentence to name its row as `(delete list: <id>)` and checks the id
+  exists in that file. Proved by removing one citation: the lint fails, restores clean.
+  **The first pattern was precise but not complete, and the completeness check is what found the rest.**
+  It was measured for false positives (none) and not for false NEGATIVES; widening it to `you can
+  delete/remove/drop/unset` and `you no longer need` turned up two more, both in `0.10.0` and both
+  uncovered — a `@if(!loading)` guard around a consumer empty template, and host code re-binding the
+  sort after a clear. **Back-filled: eight new rows** — `date-picker-touch-bypass-workaround` (0.6.1),
+  `table-sticky-corner-zindex-workaround` (0.8.0), `dropdown-option-active-override`,
+  `table-export-failure-wrapper`, `date-picker-trigger-focus-within-override` and
+  `autocomplete-input-minw-override` (0.9.0), `table-empty-template-loading-guard` and
+  `table-sort-rebind-after-clear` (0.10.0), plus `row-menu-view-details-duplicate` for the link column.
+  Ten sentences across 22 manifests now cite a row.
+  **Completeness took three passes and that is the lesson.** The first pattern was measured for false
+  positives and declared done; a wider net then found two more spellings (`you can delete`), and a wider
+  one still found the seven marker lines. Precision was proved each time; completeness never was, and
+  saying "all of them" after measuring only precision is what made two of the three passes necessary.
+  Final sweep: the only sentences left are one that says to ADD a value (`pass one explicitly`, matched
+  on the word "unset") and one already covered by its line's citation. **Thirteen rows written across
+  0.6.1, 0.8.0, 0.9.0, 0.10.0 and unreleased; 18 informational lines now cite a row; 76 rows total.**
+  Both branches of the rule proved by removing a citation and restoring it. **M033 is deleted:** its
+  one spelling is folded into M034, and a rule that cannot fire is the trap this whole episode came
+  from — the next reader trusts the name and stops looking. **One row was NOT written:** the fourteen-token line promised a deletion nothing can locate —
+  a hand-rolled value contains no DS symbol, so a `find` on our token name is the sortKey trap again.
+  It says what is supported instead. **And one I had to take back:** `table-compact-padding-important`
+  duplicated `compact-cell-padding-important`, already in 0.9.0 — I back-filled without reading the 21
+  rows already there.
+  ORIGINAL: [P2] `migrations/unreleased.json` carries the same instruction twice, in two forms, and only
+  one of them can be acted on — TableColumn.link's "that item can go" lived in informational prose while
+  --ds-card-overflow got a structured deleteList row.
 
 - [x] **DONE 2026-08-24 — one focus ring per field, and the shell list that caused the miss is gone.**
   0.10.2 shipped the pass that suppresses the inner ring, and it missed `ds-input` and `ds-textarea` —

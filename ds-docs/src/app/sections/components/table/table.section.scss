@@ -27,12 +27,12 @@
     }
 
     /* ---------- States showcase overrides (header sort cells) ---------- */
-    .state-cell__stage {
+    .state-cell-stage {
       padding: var(--space-3);
       min-height: 96px;
     }
-    .state-cell__stage--tbl { padding: 0; align-items: stretch; }
-    .state-cell__stage--tbl ds-table { width: 100%; }
+    .state-cell-stage--tbl { padding: 0; align-items: stretch; }
+    .state-cell-stage--tbl ds-table { width: 100%; }
 
     /* State pin — hover on a sortable header reads the component's own resolvers;
        --text-secondary is a bare token (no --_* resolver for header hover fg). */
@@ -53,7 +53,7 @@
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     }
 
-    .expand-detail__label {
+    .expand-detail-label {
       color: var(--text-secondary);
       font-weight: var(--font-weight-bold);
       font-size: var(--font-size-xs);
@@ -61,7 +61,7 @@
       text-transform: uppercase;
     }
 
-    .expand-detail__value {
+    .expand-detail-value {
       color: var(--text-primary);
     }
 

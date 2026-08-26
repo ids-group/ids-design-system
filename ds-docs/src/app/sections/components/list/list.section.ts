@@ -26,9 +26,15 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 export class ListSection {
   protected readonly selectedItem = signal<string | null>('notifications');
 
-  protected readonly carriers = ['Northbound Freight', 'Halden Logistics', 'Kestrel Haulage'];
+  protected readonly carriers = [
+    'Northbound Freight',
+    'Halden Logistics',
+    'Kestrel Haulage',
+  ];
   protected readonly viewing = signal<string>('Halden Logistics');
-  protected readonly picked = signal<ReadonlySet<string>>(new Set(['Northbound Freight']));
+  protected readonly picked = signal<ReadonlySet<string>>(
+    new Set(['Northbound Freight']),
+  );
 
   protected toggleCarrier(name: string): void {
     this.picked.update((set) => {

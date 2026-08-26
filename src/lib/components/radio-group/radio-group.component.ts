@@ -33,6 +33,7 @@ import { isTextEntryTarget } from '../../core/key-target';
     '[attr.aria-label]': 'ariaLabel() || label() || null',
     '[attr.aria-describedby]': 'hintId()',
     '[attr.aria-invalid]': "invalidResolved() ? 'true' : null",
+    '[attr.data-field-state]': 'controlState()',
     '(keydown)': 'onKeydown($event)',
   },
   providers: [
@@ -51,7 +52,6 @@ export class RadioGroupComponent
   extends DsControlValueAccessor<unknown>
   implements RadioGroupContract
 {
-
   /** Selected radio value; two-way bound. */
   readonly value = model<unknown>(null);
   /** Native `name` shared by every radio in the group. */
@@ -81,6 +81,7 @@ export class RadioGroupComponent
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly controlState = this.fieldMessage.controlState;
 
   // contentChildren gives us references to all projected RadioComponents
   // so the group can drive roving tabindex and forward keyboard events.

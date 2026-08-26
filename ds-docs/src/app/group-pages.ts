@@ -255,7 +255,12 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
   {
     path: 'practice',
     title: 'Practice',
-    sections: [RulesSection, DoDontSection, TokenDisciplineSection, SignalFormsSection],
+    sections: [
+      RulesSection,
+      DoDontSection,
+      TokenDisciplineSection,
+      SignalFormsSection,
+    ],
   },
   {
     path: 'reference',

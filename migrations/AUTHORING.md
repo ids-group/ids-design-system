@@ -13,6 +13,32 @@ mirror; if they disagree, fix the manifest.
 **A reader (machine or agent) must be able to act on an entry without seeing the prose changelog,
 and know exactly where it does and does NOT apply.** Every rule below is in service of that.
 
+## One item, four prose fields: `action`, `appliesWhen`, `pitfall`, `note`
+
+An item is read by an agent working in somebody else's repository, field by field. Anything typed
+into a paragraph as an ALL-CAPS marker is structure it cannot reach — before these fields existed
+the notes carried **103** such markers across 189 items, and 64 notes ran past 120 words.
+
+- **`action`** — the imperative alone, and the only field an applier executes. Required on every
+  item (lint, M039). "None, unless …" is a legitimate action; write the condition that changes it.
+- **`appliesWhen`** — the boundary. Which components, which bindings, and above all what is NOT
+  affected. Half the mis-applications this format has seen were an instruction run somewhere it did
+  not belong.
+- **`pitfall`** — the way to do it mechanically right and still ship a broken app. This is the
+  highest-value field in the file: a build error announces itself, a pitfall does not. If applying
+  the item cannot go quietly wrong, leave it out rather than inventing one.
+- **`note`** — what is LEFT once those three are gone: the WHY. Capped at 120 words (lint, M041),
+  and no ALL-CAPS structural markers (lint, M040) — a marker means a field was not filled.
+
+`note` stays required on non-rename kinds (M013) even though `action` is now mandatory too. The
+two were checked against each other over a full pass of all 189 items: every time M013 forced a note
+onto an item whose instruction already lived in `action`, the note that resulted was a real fact —
+why the docs anchor moved, why three components need a title, why colour and progress state were
+split apart. The overlap earns its keep.
+
+Every key is on an allowlist (lint, M042). An unlisted key is a typo that nothing reads and nothing
+reports, which is how a `pitfal` would sit in a published manifest forever.
+
 ## Granularity & ordering
 
 - **One entry per mechanical unit, not per changelog bullet.** A bullet that renames a component AND
@@ -117,10 +143,12 @@ longer holds. `0.8.0#table-client-sort-replaced-by-sort-mode` told consumers uns
 `'client'` and that a server-paged table must declare `"server"`; `0.9.0#table-sort-filter-mode-default-server`
 made unset mean `'server'` again.
 
-So the later item carries `supersedes: ["0.8.0#table-client-sort-replaced-by-sort-mode"]` and the
-earlier one `supersededBy: ["0.9.0#table-sort-filter-mode-default-server"]`. Both directions, because
-both readers exist. `tools/migration-lint.mjs` resolves every reference, so a typo or a renamed id
-fails the release rather than pointing at nothing.
+So the LATER item carries `supersedes: ["0.8.0#table-client-sort-replaced-by-sort-mode"]`, and the
+earlier file is not touched. **The link only ever points back.** A published manifest is frozen when
+the next one is written and an upgrade applies it on its own, so a `supersededBy` would name a
+version that did not exist when the file was authored — `tools/migration-lint.mjs` rejects the field
+outright (M028). It resolves every `supersedes` reference, so a typo or a renamed id fails the
+release rather than pointing at nothing.
 
 ## `value-remap` map conventions
 
@@ -165,6 +193,13 @@ Two things to get right, both learned from the 45 prose entries that nothing act
 
 - **Never a bare token as the `find`.** `--ds-menu-item-radius` is OUR name for the fix; their code
   says `ds-menu-divider { padding: 0 }`. Grep-ability decides whether the entry exists in practice.
+- **A sentence in `informational` that tells the consumer to delete something must NAME its row**,
+  as `(delete list: <id>)`. Prose is not executed: 0.9.0 shipped five such sentences and four had no
+  row behind them. The citation is what a tool can check — a shape test alone goes quiet as soon as
+  the file holds any unrelated entry. If the thing to delete cannot be given a greppable `find` at
+  all, do not promise the deletion: say what is supported instead. The older spellings — a trailing
+  `(DELETE-LIST)` tag, `DELETE-LIST MATERIAL` mid-sentence — mark the instruction but link nothing, so
+  they now require the citation like any other sentence. (lint, M034)
 - **Say when the workaround is still legitimate.** `[reserveMessage]="false"` is dead under the new
   default and load-bearing under a `dsReserveMessages` host — the entry that omits that turns a
   cleanup into a regression.
@@ -262,12 +297,32 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] Default-value / timing / event-payload changes are their own `behavior` entry, with `restore`
       (or an explicit `null`) AND a `deleteList` entry for whatever the flip made redundant. (lint,
       for the `restore` half)
-- [ ] An entry that reverses an earlier release's guidance links it both ways — `supersedes` here,
-      `supersededBy` there. (lint, for the references resolving)
+- [ ] An entry that reverses an earlier release's guidance carries `supersedes` naming it; the earlier
+      file stays untouched, and `supersededBy` is rejected. (lint, M028 + reference resolution)
 - [ ] Substring-colliding renames: longer has its own entry; shorter's `note` says "rename longer first".
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
 - [ ] Widened/changed exported types each have a `behavior` entry naming who breaks
       (run `npm run class-surface` — do not assemble the list by eye).
 - [ ] `deleteList` holds every "you can now delete X" — with a greppable `find`, not our token name,
       and a word on when the workaround is still legitimate. (lint, for the shape)
+- [ ] Every delete instruction cites its row as `(delete list: <id>)`, or does not promise a
+      deletion at all — in an item `note` as well as in `informational`, and whether it is addressed
+      to "you" or to "consumers". (lint, M034)
+- [ ] Every `deleteList` row has a `replaceWith` — the API that replaces it, or the literal word
+      "nothing" — and a kebab id unique in the file, because M034 citations resolve against it.
+      (lint, M035 / M036)
+- [ ] The `deleteList` key is PRESENT, `[]` when the release made nothing redundant. An absent key
+      reads as "nobody looked", which is a different statement. (lint, M037)
+- [ ] Every row is reachable from the CHANGELOG: one "What you can now DELETE" row carries one of
+      the entry's `find` shapes VERBATIM. A row that only paraphrases the shape cannot be searched
+      for, so it does not count. (`npm run check-delete-tables`, in the PR gate and the preflight)
+- [ ] A `value-remap` carries a `verify` like a behavioural item: it changes what a binding MEANS
+      with no symbol removed, so a re-check has nothing to grep either. (lint, M022)
+- [ ] A behavioural item on a `typescript` or `config` surface carries `detect` — the shape of the
+      CONSUMER's own expression, or the build error they will see. `searchHints` is where OUR name
+      appears and cannot find a break that names none of it. (lint, M023)
+- [ ] Every item carries an `action` — the imperative alone, separate from the reasoning. (lint, M039)
+- [ ] The boundary is in `appliesWhen` and the silent-failure mode in `pitfall`, not buried in the note.
+- [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
+- [ ] No key outside the allowlist. (lint, M042)
 - [ ] Nothing documented in the block is silently dropped (actionable → item; else → `informational`).

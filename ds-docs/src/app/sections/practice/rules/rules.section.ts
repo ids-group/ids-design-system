@@ -23,19 +23,13 @@ import { DS_VERSION } from '../../../shared/docs-stats';
       </span>
 
       <p class="rules-source t-s">
-        Rendered from <code class="t-mono-inline">design-system.md</code>, the same
-        file shipped in the npm package so a consumer's agents read exactly this.
-        <strong>
-          One source, two renderings
-        </strong> — a second hand-maintained copy
-        would disagree with this one inside a release.
+        Rendered from <code class="t-mono-inline">design-system.md</code>, the
+        same file shipped in the npm package so a consumer's agents read exactly
+        this. <strong> One source, two renderings </strong> — a second
+        hand-maintained copy would disagree with this one inside a release.
       </p>
 
-      <div
-        class="rules-body"
-        [innerHTML]="html()"
-      >
-      </div>
+      <div class="rules-body" [innerHTML]="html()"></div>
     </docs-section>
   `,
   styles: [

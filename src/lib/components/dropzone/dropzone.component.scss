@@ -1,7 +1,6 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* Public --ds-dropzone-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_dropzone-bg-color:               var(--ds-dropzone-bg-color,               var(--surface-default));
   --_dropzone-bg-color-hover:         var(--ds-dropzone-bg-color-hover,         var(--accent-subtitle));
   --_dropzone-bg-color-active:        var(--ds-dropzone-bg-color-active,        var(--accent-subtitle));

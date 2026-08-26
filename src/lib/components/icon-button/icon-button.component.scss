@@ -17,9 +17,6 @@
   --c-muted:        var(--accent-muted);
   --c-muted-strong: var(--accent-muted-strong);
 
-  /* Public --ds-icon-button-* are read with fallbacks, never declared — consumer
-     overrides inherit in. filled/selected derive hover/active from the resolved
-     bg (theme hover/pressed recipe: 88%/76% + black) unless set individually. */
   --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        transparent);
   --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--text-secondary));
   --_icon-button-border:    var(--ds-icon-button-border,    transparent);

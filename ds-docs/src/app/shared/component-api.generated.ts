@@ -303,7 +303,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -312,7 +312,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -322,6 +322,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -349,24 +367,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -950,6 +950,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
         "name": "color",
         "kind": "input",
         "type": "ButtonColor",
@@ -1094,6 +1139,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`."
+      },
+      {
+        "name": "disabledReason",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Why the button is refused, shown as its second line. Read only while `disabled` — a greyed control that does not say why is a dead end. Setting it also changes HOW the button is disabled: it takes `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced. The click is swallowed in `onClick` instead. Leave it unset and nothing changes. Length is deliberately not capped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`."
+      },
+      {
+        "name": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-describedby` — point the button at a description the app renders itself, such as a `ds-field-message` under a form. Merged with the id of `disabledReason` when both are present."
       }
     ],
     "outputs": [
@@ -1198,7 +1261,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -1207,7 +1270,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -1217,6 +1280,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -1244,24 +1325,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -1368,7 +1431,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -1377,7 +1440,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -1387,6 +1450,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -1414,24 +1495,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -1507,7 +1570,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -1516,7 +1579,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -1526,6 +1589,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -1553,24 +1634,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -2212,6 +2275,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name — required since the button has no visible text."
       },
       {
+        "name": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-describedby` — the id of text the app renders beside the button, such as why the action is refused. Icon-only leaves no room for a second line, so unlike `ds-button` there is no `disabledReason` here: the text has to exist on screen already for this to point at it."
+      },
+      {
         "name": "variant",
         "kind": "input",
         "type": "IconButtonVariant",
@@ -2334,7 +2406,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -2343,7 +2415,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -2353,6 +2425,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -2380,24 +2470,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -3333,7 +3405,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -3342,7 +3414,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -3352,6 +3424,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -3379,24 +3469,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -3588,7 +3660,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -3597,7 +3669,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -3607,6 +3679,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -3634,24 +3724,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -4096,7 +4168,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -4105,7 +4177,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -4115,6 +4187,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -4142,24 +4232,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "checked",
@@ -4257,7 +4329,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -4266,7 +4338,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -4276,6 +4348,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -4303,24 +4393,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -4513,7 +4585,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -4522,7 +4594,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -4532,6 +4604,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -4559,24 +4649,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -4652,7 +4724,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -4661,7 +4733,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -4671,6 +4743,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -4698,24 +4788,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -4904,6 +4976,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
+      },
+      {
+        "name": "brandRoute",
+        "kind": "input",
+        "type": "string | readonly unknown[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Route the brand row links to — typically the app's home. Unset leaves the row a plain, non-interactive block. Router targets only, and `RouterLink` is instantiated only once this is set, so an app with no router still renders."
+      },
+      {
+        "name": "brandLinkLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for the brand link; unset names it \"<brand>, home\". Ignored while `brandRoute` is unset."
       }
     ],
     "outputs": []
@@ -5231,7 +5321,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -5240,7 +5330,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -5250,6 +5340,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -5277,24 +5385,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -5721,7 +5811,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -5730,7 +5820,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -5740,6 +5830,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -5767,24 +5875,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -6723,7 +6813,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -6732,7 +6822,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -6742,6 +6832,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -6769,24 +6877,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",
@@ -7006,7 +7096,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
+        "description": "Helper text shown below the control."
       },
       {
         "name": "error",
@@ -7015,7 +7105,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -7025,6 +7115,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
       },
       {
         "name": "errors",
@@ -7052,24 +7160,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
-        "name": "messageIcon",
-        "kind": "input",
-        "type": "IconName | false | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "hidden",

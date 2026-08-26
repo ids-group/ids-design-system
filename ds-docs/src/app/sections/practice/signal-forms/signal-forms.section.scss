@@ -16,7 +16,7 @@
   margin-top: var(--space-3);
 }
 
-.contract__row {
+.contract-row {
   display: grid;
   grid-template-columns: minmax(0, 15rem) 5rem minmax(0, 1fr);
   gap: var(--space-3);
@@ -30,14 +30,14 @@
   }
 }
 
-.contract__state {
+.contract-state {
   color: var(--success-text);
 }
 
-.contract__row--no .contract__state {
+.contract-row--no .contract-state {
   color: var(--text-tertiary);
 }
 
-.contract__note {
+.contract-note {
   color: var(--text-secondary);
 }

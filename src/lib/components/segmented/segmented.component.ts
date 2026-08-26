@@ -39,7 +39,6 @@ import type { SegmentedOption } from './segmented.types';
   ],
 })
 export class SegmentedComponent extends DsControlValueAccessor<string> {
-
   /** Segments to render — each needs a `label` and `value`, optional `icon`/`disabled`. */
   readonly options = input<readonly SegmentedOption[]>([]);
   /** Selected segment's `value`, two-way bound. */

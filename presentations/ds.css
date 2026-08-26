@@ -1690,8 +1690,7 @@ h1, h2, h3, h4, h5, h6 {
    can apply it to inline anchors inside <p> text without disrupting line
    flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
 .link {
-  /* Public --ds-link-* are read with fallbacks, never declared — consumer
-     overrides inherit in. Hover/active derive from the resolved color. */
+  /* Hover and active derive from the resolved color. */
   --_link-color: var(--ds-link-color, var(--text-link));
   --_link-color-hover: var(--ds-link-color-hover, color-mix(in srgb, var(--_link-color) 80%, black));
   --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
@@ -2154,7 +2153,14 @@ html {
 .ds-dropdown-panel .option .option-label {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
+  /* `clip` with a margin, not `hidden`: an ellipsis box needs a non-`visible`
+     overflow, and where the line box is tighter than the glyph box that overflow
+     eats the glyph. Mulish measures 1.257em, so --line-height-flat (1) and -tight
+     (1.1) are both under it and shave EVERY label, not only the ones with
+     descenders (MBP-245). `text-overflow` reads any non-`visible` overflow, so the
+     ellipsis still applies under `clip`. */
+  overflow: clip;
+  overflow-clip-margin: var(--space-1);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -2251,7 +2257,6 @@ html {
   }
 }
 .cdk-overlay-pane.ds-overlay-pane {
-  /* Public --ds-overlay-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
   --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
   --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));

@@ -26,7 +26,6 @@
 }
 
 .scroll-wrap {
-  /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_table-border: var(--ds-table-border, var(--border-default));
   --_table-radius: var(--ds-table-radius, var(--ds-radius-control));
   --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
@@ -119,7 +118,6 @@
 }
 
 .table {
-  /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_table-min-width: var(--ds-table-min-width, 0);
   --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
   --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));
@@ -313,6 +311,14 @@
          "clickable" and this says WHICH text is the target — colour plus a decoration, so it
          does not rest on hue alone. Scoped to .clickable for the same reason the tint is. */
       &.clickable:hover td.interactive-cell {
+        color: var(--_table-cell-link-color);
+        text-decoration: var(--_table-cell-link-decoration);
+      }
+
+      /* Unlike `interactive-cell` this is NOT gated on hover: a link a reader only
+         sees once the pointer is over the row is invisible to a keyboard or touch
+         user, which is the whole reason the column kind exists. */
+      td .cell-link {
         color: var(--_table-cell-link-color);
         text-decoration: var(--_table-cell-link-decoration);
       }
@@ -785,7 +791,11 @@
 
 /* Pagination footer — separates the paginator from the last table row. */
 .pagination-footer {
-  padding-top: var(--space-3);
+  /* Inset by the CELLS' padding so the summary lines up with the column text.
+     Spelled as the public hook, not `--_table-cell-pad-x`: that resolver is declared
+     on `.table` and invisible to this sibling, and one unresolvable var voids the
+     whole shorthand — which silently produced `padding: 0` here. */
+  padding: var(--space-3) var(--ds-table-cell-pad-x, var(--table-cell-pad-x)) var(--space-3);
   border-top: var(--border-width-default) solid var(--ds-table-divider, var(--border-divider));
 }
 

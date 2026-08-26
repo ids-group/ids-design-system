@@ -30,27 +30,22 @@ names (`--space-*`, `--radius-*`, `--font-size-*`, `--font-weight-*`,
 `--border-width-*`, `--letter-spacing-*`, `--shadow-*`, semantic colours, …). There
 is no alias/compat layer.
 
-## …except the fonts, which do NOT load
+## The fonts come with it
 
-That "exact same" holds for tokens and **fails for type.** `ds.css` carries the
-library's eight `@font-face` rules with their source-relative
-`url('./fonts/*.woff2')`, but `build:deck-css` copies the CSS alone and there is no
-`presentations/fonts/`. Measured 2026-08-24: all eight faces report
-`status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and
-every deck renders in the `sans-serif` fallback.
+`ds.css` carries the library's eight `@font-face` rules with source-relative
+`url('./fonts/*.woff2')`, so `build:deck-css` copies `src/lib/styles/fonts/` next to
+the CSS and fails if any `url()` in the output has no file beside it. Both the CSS and
+the fonts are committed, so a deck is honest straight out of a clone.
 
-For a deck about colour or spacing this changes nothing. For a deck that judges
-**type** it makes the deck lie, so `ellipsis-glyph-clip.html` re-declares the
-three faces it needs and shows a banner if they fail to load. Two traps if you
-copy that:
+It was not always: until 2026-08-24 the step copied the CSS alone, all eight faces
+reported `status: "error"`, and every deck rendered in the `sans-serif` fallback. If a
+deck of yours needs to prove which face it is rendering, two traps:
 
-- `document.fonts.check('14px Mulish')` returns **false even when your own face
-  loaded**, because one errored face for the family is enough to fail the check.
-  Compare a rendered width with and without Mulish in the stack instead.
+- `document.fonts.check('14px Mulish')` returns **false if any face for that family
+  errored**, even when the one you need is loaded. Compare a rendered width with and
+  without Mulish in the stack instead.
 - Glyph metrics do not scale perfectly: Mulish measures 1.253em probed at 100px and
   1.257em at 14px. Probe at the size you are arguing about.
-
-Filed in `docs/todo.md` (P3) — the fix belongs in `build:deck-css`, not per deck.
 
 ## Trade-off (by design)
 

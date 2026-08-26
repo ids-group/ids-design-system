@@ -31,7 +31,6 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class SwitchComponent extends DsBooleanControlValueAccessor {
-
   /** On/off state, two-way bound. */
   readonly checked = model<boolean>(false);
   /** Disables the switch and blocks all interaction. */

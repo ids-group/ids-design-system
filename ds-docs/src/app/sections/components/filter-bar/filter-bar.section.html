@@ -24,34 +24,37 @@
   </p>
 
   <p class="block-desc t-s">
-    Drag the handle to resize the frame — the filters collapse into the panel from
-    the right as room runs out, while anything marked
+    Drag the handle to resize the frame — the filters collapse into the panel
+    from the right as room runs out, while anything marked
     <code class="t-mono-inline">
       dsFilterBarTrailing
     </code> keeps its place
-    throughout. Mark each trailing control rather than wrapping them in a div: the
-    bar owns that group's gap and alignment, and a projected wrapper is a plain
-    block whose children would stack. The group sits outside the measured row, so
-    flexbox subtracts its width first and the arithmetic needs no allowance for
-    it.
+    throughout. Mark each trailing control rather than wrapping them in a div:
+    the bar owns that group's gap and alignment, and a projected wrapper is a
+    plain block whose children would stack. The group sits outside the measured
+    row, so flexbox subtracts its width first and the arithmetic needs no
+    allowance for it.
   </p>
 
   <p class="block-desc t-s">
     <strong>
       If one component genuinely has to hold two trailing controls
-    </strong> — the
-    usual reason was a Clear that must cancel a debounce armed on the search beside
-    it, and that reason is gone: <code class="t-mono-inline">ds-search</code>
+    </strong>
+    — the usual reason was a Clear that must cancel a debounce armed on the
+    search beside it, and that reason is gone:
+    <code class="t-mono-inline">
+      ds-search
+    </code>
     cancels its own pending keystroke when the host writes
     <code class="t-mono-inline">
       value
-    </code>, so a bar-level Clear no longer needs
-    to live in the same component — then mark that component and give its
+    </code>, so a bar-level Clear no longer
+    needs to live in the same component — then mark that component and give its
     <code class="t-mono-inline">
       :host
-    </code> the three declarations the bar would
-    have applied. They are the bar's own trailing rule, and the gap reads from the
-    same token so the two cannot drift.
+    </code> the three declarations the bar
+    would have applied. They are the bar's own trailing rule, and the gap reads
+    from the same token so the two cannot drift.
   </p>
 
   <pre class="t-mono-block">{{ trailingWrapperSnippet }}</pre>
@@ -64,21 +67,19 @@
     <code class="t-mono-inline">
       triggerSize
     </code> matches the trigger to the
-    filters beside it — default
-    <code class="t-mono-inline">
-      md
-    </code>. The bar cannot work this out on its own:
+    filters beside it — default <code class="t-mono-inline"> md </code>. The bar
+    cannot work this out on its own:
     <code class="t-mono-inline">
       dsFilterItem
-    </code> carries a WIDTH, and the filters
-    are arbitrary projected controls whose own
+    </code> carries a WIDTH, and the
+    filters are arbitrary projected controls whose own
     <code class="t-mono-inline">
       size
     </code> it never sees. Left unset beside
     <code class="t-mono-inline">
       sm
-    </code> filters, the trigger stands 8px taller
-    than everything next to it, since the row aligns on
+    </code> filters, the trigger stands 8px
+    taller than everything next to it, since the row aligns on
     <code class="t-mono-inline">
       flex-end
     </code>.
@@ -170,23 +171,23 @@
 
   <p class="block-desc t-s">
     The declared width is a contract rather than a hint: the bar sizes each slot
-    to exactly that number, so the arithmetic that decided the filter fits is true
-    by construction, and a filter is the same width in the panel as it was in the
-    row — no resizing as it crosses over. A control that would rather be wider is
-    narrowed instead of being allowed to break the row.
+    to exactly that number, so the arithmetic that decided the filter fits is
+    true by construction, and a filter is the same width in the panel as it was
+    in the row — no resizing as it crosses over. A control that would rather be
+    wider is narrowed instead of being allowed to break the row.
   </p>
 
   <p class="block-desc t-s">
     Crossing that boundary does destroy and re-create the view, so a control's
     internal state — an open dropdown, focus — does not survive a resize that
     collapses it. Its value does: that lives in your own signal or form control,
-    which is why the demo above keeps every selection while you drag. The trigger
-    carries the count as text and
+    which is why the demo above keeps every selection while you drag. The
+    trigger carries the count as text and
     <code class="t-mono-inline">
       aria-expanded
     </code>, and the panel is a
     focus-trapped dialog; there is exactly one copy of each filter in the
-    accessibility tree, because the filters move rather than being rendered twice
-    and hidden.
+    accessibility tree, because the filters move rather than being rendered
+    twice and hidden.
   </p>
 </docs-section>

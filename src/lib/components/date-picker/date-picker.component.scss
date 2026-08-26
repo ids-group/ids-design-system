@@ -216,7 +216,6 @@
 }
 
 .calendar {
-  /* Public --ds-date-picker-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_date-picker-bg-color: var(--ds-date-picker-bg-color, var(--surface-overlay));
   --_date-picker-border: var(--ds-date-picker-border, var(--border-default));
   --_date-picker-shadow: var(--ds-date-picker-shadow, var(--ds-elevation-overlay));

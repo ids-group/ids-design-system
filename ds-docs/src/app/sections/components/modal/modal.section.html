@@ -26,7 +26,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Deactivate policyholder"
           size="sm"
@@ -56,7 +56,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         with eyebrow
       </div>
     </div>
@@ -74,12 +74,9 @@
     </code> beside the title, and set
     <code class="t-mono-inline">
       subtitle
-    </code> for the line under it. The accessible
-    name stays the
-    <code class="t-mono-inline">
-      title
-    </code> string either way — projected
-    markup never enters
+    </code> for the line under it. The
+    accessible name stays the <code class="t-mono-inline"> title </code> string
+    either way — projected markup never enters
     <code class="t-mono-inline">
       aria-labelledby
     </code>. Same shape as
@@ -90,7 +87,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Fleet cover — commercial"
           subtitle="Aviva · Motor fleet · renews 12 Mar"
@@ -120,7 +117,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         badge + subtitle
       </div>
     </div>
@@ -138,15 +135,11 @@
       DsStatus
     </code> vocabulary as the rest of the
     library, and one word drives four things: the icon-badge tint, the title
-    colour, the DEFAULT icon and the ARIA role. The icon comes with the status on
-    purpose — a tint alone signals by colour only, which a colour-blind reader
-    cannot act on. Pass
-    <code class="t-mono-inline">
-      icon
-    </code> to override the glyph, or
-    <code class="t-mono-inline">
-      dialogRole
-    </code> to override the role.
+    colour, the DEFAULT icon and the ARIA role. The icon comes with the status
+    on purpose — a tint alone signals by colour only, which a colour-blind
+    reader cannot act on. Pass <code class="t-mono-inline"> icon </code> to
+    override the glyph, or <code class="t-mono-inline"> dialogRole </code> to
+    override the role.
   </p>
 
   <p class="block-desc t-s">
@@ -158,11 +151,9 @@
     </code> resolve to
     <code class="t-mono-inline">
       alertdialog
-    </code> — the role for a dialog that interrupts
-    with something the reader must act on — and everything else stays
-    <code class="t-mono-inline">
-      dialog
-    </code>. Same split
+    </code> — the role for a dialog
+    that interrupts with something the reader must act on — and everything else
+    stays <code class="t-mono-inline"> dialog </code>. Same split
     <code class="t-mono-inline">
       ds-alert
     </code> makes between
@@ -177,7 +168,7 @@
   <div class="modal-grid modal-grid--2">
     @for (specimen of statusSpecimens; track specimen.status) {
       <div class="state-cell">
-        <div class="state-cell__stage">
+        <div class="state-cell-stage">
           <ds-modal-card
             size="sm"
             [title]="specimen.title"
@@ -199,7 +190,7 @@
           </ds-modal-card>
         </div>
 
-        <div class="state-cell__label">
+        <div class="state-cell-label">
           {{ specimen.status }} · {{ specimen.role }}
         </div>
       </div>
@@ -213,9 +204,9 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [dividers]="false"
-    </code> drops the rules and tightens the
-    vertical padding in one move, because those are one design decision. Hiding
-    the rules alone —
+    </code> drops the rules and
+    tightens the vertical padding in one move, because those are one design
+    decision. Hiding the rules alone —
     <code class="t-mono-inline">
       --ds-modal-divider: transparent
     </code> —
@@ -224,10 +215,11 @@
   </p>
 
   <p class="block-desc t-s">
-    Which padding collapses is deliberate: the BODY's goes to zero and the header
-    and actions keep theirs. The body is the scroll container, so a gap living in
-    its padding would scroll away and content would meet the title; the header's
-    own padding-bottom cannot, so it separates the two at every scroll position.
+    Which padding collapses is deliberate: the BODY's goes to zero and the
+    header and actions keep theirs. The body is the scroll container, so a gap
+    living in its padding would scroll away and content would meet the title;
+    the header's own padding-bottom cannot, so it separates the two at every
+    scroll position.
   </p>
 
   <p class="block-desc t-s">
@@ -244,8 +236,8 @@
     </code> with no
     <code class="t-mono-inline">
       ds-modal
-    </code> ancestor to bind, and the injected
-    default gets there. An explicit
+    </code> ancestor to bind, and the
+    injected default gets there. An explicit
     <code class="t-mono-inline">
       [dividers]
     </code> on the element still wins.
@@ -253,7 +245,7 @@
 
   <div class="modal-grid modal-grid--2">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Archive this record"
           size="sm"
@@ -278,13 +270,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Archive this record"
           size="sm"
@@ -310,7 +302,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         dividers false
       </div>
     </div>
@@ -326,7 +318,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Quick confirm"
           size="sm"
@@ -351,13 +343,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         sm · 480 px
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Edit Project Alpha"
           size="md"
@@ -383,13 +375,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         md · 640 px
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Run report"
           size="lg"
@@ -415,7 +407,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         lg · 800 px
       </div>
     </div>
@@ -424,7 +416,7 @@
   <!-- xl and fullscreen as live demos (static cards would be too wide to diff meaningfully) -->
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-button
           size="sm"
           (pressed)="xlOpen.set(true)"
@@ -454,13 +446,13 @@
         </ds-modal>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         xl · 1024 px
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-button
           size="sm"
           (pressed)="fullscreenOpen.set(true)"
@@ -490,7 +482,7 @@
         </ds-modal>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         fullscreen · near-viewport
       </div>
     </div>
@@ -529,13 +521,13 @@
     </code> behaves the same way;
     <code class="t-mono-inline">
       ds-drawer
-    </code> never had the problem, because its
-    scrim is a sibling of the panel rather than its parent.
+    </code> never had the problem,
+    because its scrim is a sibling of the panel rather than its parent.
   </p>
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-button
           size="sm"
           (pressed)="persistentOpen.set(true)"
@@ -573,7 +565,7 @@
         </ds-modal>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         persistent — backdrop + Esc disabled
       </div>
     </div>
@@ -589,7 +581,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Save changes?"
           size="sm"
@@ -614,13 +606,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Delete record?"
           size="sm"
@@ -646,13 +638,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Danger confirm
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Confirm recompute"
           size="md"
@@ -698,7 +690,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Impact warning
       </div>
     </div>
@@ -714,7 +706,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Edit sub-record"
           size="md"
@@ -757,7 +749,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Form modal · md
       </div>
     </div>
@@ -779,7 +771,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div style="display: flex; gap: var(--space-3); flex-wrap: wrap">
           <ds-button
             color="neutral"
@@ -799,7 +791,7 @@
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Result: {{ confirmResult() }}
       </div>
     </div>
