@@ -35,7 +35,24 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   menu item. He is right, and the divider's own docblock already said so ("the line takes one row's
   place instead of stacking a second gap on top of it"). The pin was me preserving the bug I had just
   found. Removed: measured 2px above and 2px below the line, **identical to the gap between two ordinary
-  items**, so the divider now costs a row and nothing more.
+  items**, so the divider cost a row and nothing more.
+  **Then Stas asked the sharper question — is padding around a divider needed AT ALL — and it went one
+  step further.** It is not. The divider's own padding had defaulted to 0 since 0.8.0, but `ds-menu` is a
+  flex column and its row gap still landed above AND below the line, so every divider in the library sat
+  one row's width from the items it separates. A boundary is not a row. The divider now cancels that gap
+  (`margin-block: calc(-1 * var(--_menu-gap, 0px))`, read by inheritance from `ds-menu`'s host):
+  **measured 0px above and 0px below**, while two ordinary items keep their 2px.
+  **The token stays, and its advice was the part that was wrong.** `--ds-menu-divider-spacing` still does
+  exactly what it says — verified `8px` gives 8px each side and clearing it returns to flush — and a
+  divider used outside a `ds-menu` is untouched (the cancel falls back to `0px`). What changed is that
+  the token reference now says setting it is the one way to desync the divider from the row rhythm, which
+  is the defect 0.8.0 removed, and points at `--ds-menu-gap` for an airier menu overall. **Nobody had ever
+  set it** — not the DS, not ds-docs, not mm-broker, across three minor versions; its only two recorded
+  uses were a consumer zeroing a no-op and my pin this morning.
+  **The history matters here:** 0.8.0's own entry measured "6px + line + 6px against 2px between rows"
+  and called the result "a separated group read as a hole". My pin reproduced that number exactly, in the
+  same kind of menu. The knob had fired once on a consumer and once on us; keeping it is fine, promoting
+  it was not.
   **The transferable part:** an ask that arrives with a measurement is still a measurement of the
   CONSUMER's screen. Reproduce it here before fixing it here — both of these would otherwise have become
   a `text-align: start` on `.title` and a spacing tweak on the divider, neither of which was the problem.
