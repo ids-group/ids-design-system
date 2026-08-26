@@ -10,6 +10,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-sidenav` `brandRoute` — the brand row can lead home.** Set it and the mark plus wordmark become
+  one link; leave it unset and the row stays the plain block it was, because a logo that goes nowhere
+  should not be a link and every app decides for itself whether its mark is a way home. The link
+  announces itself as `"<brand>, home"`, overridable with **`brandLinkLabel`** — a wordmark alone does
+  not say where it goes. Router targets only, and `RouterLink` is instantiated only once `brandRoute` is
+  set, so an app with no router provided still renders the sidenav.
+
 - **`ds-button` can say WHY it is refused, without a tooltip.** A greyed button that does not explain
   itself is a dead end, and the only way to explain one was `[dsTooltip]` — reachable by mouse alone.
   One consumer carried that workaround on three buttons; two sibling cases on `ds-menu-item` already
@@ -117,6 +124,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Subclassing a DS component stays unsupported (`components.md` § Components); compose instead.
 
 ### Fixed
+
+- **A `ds-sidenav-item` with no destination was `<a href="#">`, so clicking it navigated.** With neither
+  `routerLink` nor `href` the template fell back to `href="#"` — which rewrites the URL and throws the
+  scroll position away, on every click. That is what made a sidenav SPECIMEN move the docs page.
+  It renders a `<button type="button">` now: an item that only emits `activate` is a button, not a link.
+  Verified on the built docs — the element is a `BUTTON`, carries no `href`, and a click leaves both the
+  URL and the scroll position untouched. **Styling is unaffected** (the rules are class-based, and the
+  UA's button chrome is reset on `.item`), and both `<a>` variants are unchanged.
+  **If you relied on the anchor**: an item you want to be a link needs `href` or `routerLink`, which it
+  always did — `href=""` no longer silently becomes `#`.
 
 - **`ds-table`'s pager took no inset, so it sat out of line with the columns and on the container's
   border.** The footer carried `padding-top` alone — no horizontal, no bottom — while every cell is
