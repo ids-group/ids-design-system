@@ -1293,5 +1293,6 @@
   "--yellow-50": "Yellow ramp — stop 50.",
   "--yellow-500": "Yellow ramp — stop 500.",
   "--yellow-600": "Yellow ramp — stop 600.",
-  "--yellow-700": "Yellow ramp — stop 700."
+  "--yellow-700": "Yellow ramp — stop 700.",
+  "--ds-banner-body-font-size": "Size of the banner's projected body text (default --font-size-s, matching the title). Declared rather than inherited on purpose: the body used to take the page's size, so a 16px context rendered it LARGER than its own 14px title."
 }

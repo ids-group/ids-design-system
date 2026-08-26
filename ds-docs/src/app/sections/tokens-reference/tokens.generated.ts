@@ -2223,6 +2223,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Title colour."
       },
       {
+        "name": "--ds-banner-body-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the banner's projected body text (default --font-size-s, matching the title). Declared rather than inherited on purpose: the body used to take the page's size, so a 16px context rendered it LARGER than its own 14px title."
+      },
+      {
         "name": "--ds-banner-close-icon-color",
         "value": "var(--icon-default)",
         "notes": "Close icon."
