@@ -118,6 +118,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A `compact` banner whose title was longer than its column overflowed the column and cut the text
+  with nothing to show it had been cut.** `compact` is the one-line strip, so its title carries
+  `white-space: nowrap` — but nothing made it DEGRADE: there was no `text-overflow`, and the host had
+  no `min-width: 0`, so as a flex or grid ROW item it refused to shrink below its own min-content.
+  Measured: a **260px column held a 319px banner**, with the title clipped mid-word and no ellipsis.
+  The title now ellipsises and the host can be squeezed — re-measured in the same 260px column, the
+  banner is 227px and the title ends in `…`. A non-compact banner is unaffected: its title still wraps
+  (two lines at 260px) rather than clipping, which is the difference between the two variants.
+  **This is what was behind the "crooked banner" report**, not the title alignment it was filed as —
+  that part did not reproduce, and is covered by the alignment entry above.
+
 - **`ds-banner` no longer inherits its alignment from whatever it is dropped into.** Reported as "the
   title is centred while the body stays at start" (mm-broker). The DS does not centre the title — measured
   across all twelve banners in the docs, in both layouts, title and body both compute `start` and there
