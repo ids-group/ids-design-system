@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.11.0 — 2026-08-26
+
 ### Added
 
 - **`ds-checkbox` and `ds-radio-group` now show a validation state on the CONTROL, not only in the
