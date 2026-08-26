@@ -22,6 +22,7 @@ import { resolveWithConfig } from '../../core/config-defaults';
   templateUrl: './checkbox.component.html',
   styleUrl: './checkbox.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: { '[attr.data-field-state]': 'controlState()' },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -75,6 +76,7 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly controlState = this.fieldMessage.controlState;
 
   protected readonly fieldClass = computed(
     () => `checkbox-field size-${this.sizeResolved()}`,

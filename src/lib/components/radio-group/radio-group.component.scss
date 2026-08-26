@@ -6,4 +6,10 @@
   @include field-label.field-label;
 }
 
+/* The GROUP carries the state, not the rings: when a required group is unanswered
+   no single radio is wrong, so reddening all of them would point five fingers at a
+   question nobody answered. The label locates it and the message says what. */
+:host([data-field-state='error']) .label { color: var(--error-text); }
+:host([data-field-state='warning']) .label { color: var(--warning-text); }
+
 .radios { display: flex; flex-direction: column; gap: var(--space-2, 8px); }
