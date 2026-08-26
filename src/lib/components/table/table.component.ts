@@ -1835,7 +1835,6 @@ export class TableComponent<T extends object> {
     return String((row as Record<string, unknown>)[col.key] ?? '');
   }
 
-  /** The route this cell links to, or null to render it as plain text. */
   protected cellLink(
     row: T,
     col: TableColumn<T>,

@@ -84,8 +84,8 @@ const FORWARD_PROSE =
 
 const DEFAULT_CHANGE = /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults|\bwas [^,.]{1,40}, now\b/i;
 
-// A field's worth of structure typed into prose. Every one of these was in the notes 103 times
-// before the split, which is what a missing field looks like from the outside.
+// A field's worth of structure typed into prose, which is what a missing field looks like from
+// the outside.
 const STRUCTURAL_MARKER =
   /\b(ACTION|NO ACTION|TRAP|GOTCHA|DECISION RULE|SCOPE|ALSO SCOPED HERE|INVERTED VALUE|CHANGED DEFAULT|CHANGED SEMANTICS|CHANGED MEANING|WHO IS AFFECTED|WHAT BREAKS|WHERE TO LOOK)\b/;
 

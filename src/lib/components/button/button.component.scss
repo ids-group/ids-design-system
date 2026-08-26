@@ -42,8 +42,6 @@
   --c-outline-border: var(--c-muted-strong);
   --c-ring:           var(--ds-control-focus-shadow);
 
-  /* Default fill is solid: bg = base, and hover/active darken the RESOLVED bg
-     (theme 88%/76% + black recipe) unless set individually. */
   --_button-bg-color:        var(--ds-button-bg-color,        var(--c-base));
   --_button-label-color:     var(--ds-button-label-color,     var(--c-on));
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));

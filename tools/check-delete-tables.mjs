@@ -12,7 +12,6 @@
 // this before `npm version`, so at that moment the manifest is still `unreleased.json` and the
 // `## Unreleased` block is still open — a version-only sweep sees neither, and a missing table
 // ships silently and first fails a release LATER, against a block nobody is editing any more.
-// (2026-08-25: four entries had accumulated under `## Unreleased` with no table at all.)
 //
 //   node tools/check-delete-tables.mjs
 import { readFileSync, readdirSync, existsSync } from 'node:fs';

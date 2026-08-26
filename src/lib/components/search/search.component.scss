@@ -7,7 +7,6 @@
 @use '../../styles/focus' as focus;
 
 :host {
-  /* Height falls through --ds-field-height, so one token levels a whole toolbar. */
   --_search-height:       var(--ds-search-height,       var(--ds-field-height, var(--field-h-md)));
   --_search-bg-color:           var(--ds-search-bg-color,           var(--surface-default));
   --_search-border:       var(--ds-search-border,       var(--border-default));
