@@ -1,13 +1,7 @@
-@use '../../styles/press' as press;
-@use '../../styles/text-clip' as text-clip;
+@use '../../styles/press' as press;
 
 :host {
   display: block;
-
-  /* A flex/grid ROW parent gives its items min-width: auto, which is the banner's
-     min-content — so a narrow column made the banner overflow it instead of letting
-     the text degrade (measured: a 260px column held a 319px banner). */
-  min-width: 0;
 }
 
 .banner {
@@ -138,19 +132,7 @@
     --_banner-pad-x: var(--ds-banner-pad-x, var(--space-3));
 
     .icon { margin-top: 0; }
-
-    /* Compact is a one-line strip, so the title does not wrap — but it has to
-       DEGRADE rather than refuse to fit: without the ellipsis and a shrinkable
-       body, a title longer than the container made the whole banner overflow it
-       (measured: a 260px column held a 319px banner) and cut the text off with
-       nothing to show it had been cut. */
-    .body { min-width: 0; }
-
-    .title {
-      margin: 0;
-
-      @include text-clip.single-line-ellipsis;
-    }
+    .title { margin: 0; white-space: nowrap; }
   }
 }
 
