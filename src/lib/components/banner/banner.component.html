@@ -13,7 +13,13 @@
       </div>
     }
 
-    <ng-content></ng-content>
+    <!-- Wrapped so `:empty` can answer "is there a body?": projected content is
+         usually a bare text node, which no selector can otherwise distinguish from
+         nothing at all. That answer is what separates the title from the body only
+         when a body exists. -->
+    <span class="text">
+      <ng-content></ng-content>
+    </span>
   </div>
 
   <div class="actions">

@@ -19,6 +19,7 @@
   --_banner-radius:    var(--ds-banner-radius,    var(--ds-radius-control));
   --_banner-bar-width: var(--ds-banner-bar-width, var(--banner-bar-w));
   --_banner-title-text-color:  var(--ds-banner-title-text-color,  var(--text-primary));
+  --_banner-body-font-size: var(--ds-banner-body-font-size, var(--font-size-s));
   --_banner-close-icon-color:  var(--ds-banner-close-icon-color,  var(--icon-default));
   --_banner-close-icon-color-hover: var(--ds-banner-close-icon-color-hover, var(--icon-strong));
   --_banner-enter-keyframes: var(--ds-banner-enter-keyframes, ds-slide-in);
@@ -90,7 +91,16 @@
   .title {
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     color: var(--_banner-title-text-color);
-    margin: 0 0 var(--space-1);
+    margin: 0;
+  }
+
+  /* The gap belongs to the BODY, not to the title: on the title it also fired when
+     there was no body under it, and it could not fire at all in `compact`, where the
+     title's margin is zeroed — so a compact banner with both ran them together. */
+  .text:not(:empty) {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--_banner-body-font-size);
   }
 
   .close {
@@ -144,8 +154,6 @@
        its container blew the whole banner past it and cut the text with nothing to
        show it had been cut (measured: a 260px column held a 319px banner). */
     .title {
-      margin: 0;
-
       @include text-clip.single-line-ellipsis;
     }
   }
