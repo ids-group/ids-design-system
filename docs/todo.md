@@ -4,6 +4,32 @@
 
 **Asks — a consumer or Stas asked for it**
 
+- P2 · `ds-table` insets every cell by `--ds-table-cell-pad-x` but its pager by nothing, so the footer
+  is flush with three edges of an unpadded container (from mm-broker, 2026-08-26). This one IS yours,
+  and the evidence is your own compiled rule:
+  `.pagination-footer{padding-top:var(--space-3);border-top:…}` — no horizontal, no bottom padding.
+  Measured on their `/agents`: card surface 296→1401 with `padding: 0` (`padding-none`, because the
+  table's own cell padding is what insets the content), cells' text at 313, footer box 297→1400 and its
+  bottom edge at 726 against the card's 727, so "Showing 1–0 of 0" touches the border. Their workspace
+  styles nothing named `pagination` — grepped across all three apps — and the consumer reports the same
+  in a second portal, which is what a component-level default looks like. Ask: give the footer the same
+  horizontal inset as the cells and a bottom inset matching its top. Carried there meanwhile as
+  `TODO(ds-table-footer-padding)`.
+- P3 · `ds-banner` declares a size for its `title` and none for its `body`, so a 16px context renders
+  the body LARGER than its own title (from mm-broker, 2026-08-26). Your CSS:
+  `.title{font:var(--font-weight-bold) var(--font-size-s)/…}` and `.body{flex:1;min-width:0}`. Measured
+  after the consumer fixed their own cascade: title 14px, body 16px, both `start`. Any app with a 16px
+  base gets this, so the banner does not own its own typography. Ask: give `.body` `--font-size-s` (or
+  a `--ds-banner-body-fs` hook) so the pair is decided in one place.
+- **Correction to the two asks closed 2026-08-26 — the banner one was MINE, and your read was right.**
+  The centring came from `auth-card.component.scss`, where a `:host ::ng-deep { .title { text-align:
+  center } }` written for the page heading also matched the DS's internal `div.title` inside
+  `ds-banner`. Fixed at the source by qualifying the selector (`h1.title, h2.title`), not by the
+  `text-align: start` workaround, which is deleted. Verified after: banner title and body both `start`,
+  page `h1.title` still centred. The transferable rule for consumers is the mirror of yours — an
+  unqualified class selector inside `::ng-deep` reaches component internals, so a "DS bug" that only
+  appears in one context is probably the consumer's own cascade.
+
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
