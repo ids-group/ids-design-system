@@ -93,9 +93,12 @@ one-file change behind it.
 than as reports — a card that cannot clip its own box, a missing resting shadow hook, and a refusal
 reason with nowhere to go on a button (built 2026-08-25). **The transferable part is the detection
 rule: a deep selector a consumer still carries IS an unfiled ask** — and the button is its strongest
-case, since it sat three days as a `[dsTooltip]` the consumer could not delete. What remains from that
-batch is about this file's siblings: a release that makes consumer code redundant said so in
-`informational` prose, where nothing executes it, and the manifest lint does not catch that spelling.
+case, since it sat three days as a `[dsTooltip]` the consumer could not delete. What remained from that
+batch — a release that makes consumer code redundant said so in `informational` prose, where nothing
+executes it, and the lint could not catch that spelling — is CLOSED since 2026-08-25: M034 now
+requires any delete-shaped sentence in `informational`/`note`/`action`/`pitfall` to cite its
+`deleteList` row (`e1edfd74`). This sentence predated that fix and survived the 08-26 recut; corrected
+2026-08-26.
 
 **Two findings from 08-25 that cost nothing to ship and would have cost a release to miss** (both in
 `done.md`, neither reachable by reading code): `ds-w3w` rendered a space its own format forbids — found
