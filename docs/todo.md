@@ -4,6 +4,7 @@
 
 **Asks — a consumer or Stas asked for it**
 
+- P3 · A `compact` banner carrying BOTH a title and a body glues them together, and the docs say that
 - P2 · `ds-table` insets every cell by `--ds-table-cell-pad-x` but its pager by nothing, so the footer
   is flush with three edges of an unpadded container (from mm-broker, 2026-08-26). This one IS yours,
   and the evidence is your own compiled rule:
@@ -37,6 +38,7 @@
 
 **Decisions — waiting on Stas, not on work**
 
+- P3 · ds-docs is written in BEM, which the house rule forbids — 92 files, and `__` claims a nested
 - P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
@@ -68,7 +70,7 @@
 
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**25 open: 1 P1, 7 P2, 17 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+**29 open: 1 P1, 8 P2, 20 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
 first consumer ask and two are Records, so the live board is **14 items — and 11 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
 
@@ -178,6 +180,10 @@ Requests, not defects. Ordered by who is blocked.
 
 ## Component feature gaps
 
+- [ ] **[P3] A `compact` banner carrying BOTH a title and a body glues them together, and the docs say that combination does not exist (found 2026-08-26 while chasing the crooked-banner report).** `compact` zeroes the title's bottom margin — correct for the one-line strip it documents ("Single-line variant — title and dismiss only, no body") — so when a body IS projected the two run together: **measured 0px between the title's bottom and the body text's top**, against `var(--space-1)` in every other layout.
+  **Consumers reach for it anyway, at scale.** In mm-broker: **17** compact banners carry projected body content, and **4 of those also pass a title** (agent-payouts, setup-carriers, confirm-dialog, platform-admin dashboard), plus one more on `fix/mbp-176-licensed-states`. The other 13 pass body only and no title, which works fine — no `.title` element, nothing to glue. So the broken shape is specifically title + body + compact.
+  **Why it is not just a margin fix.** The projected body is usually a TEXT NODE, so neither `:only-child` nor `:has()` can tell "title alone" from "title plus body" — both keep zeroing the margin. Making it work needs the `<ng-content>` wrapped in an element so `:empty` can answer the question, which is a DOM change for EVERY banner and a real if small risk to existing layouts. **Decide between:** (a) wrap the slot and give the title its margin back when the body is non-empty; (b) leave the CSS and make the docs' claim enforceable instead — dev-warn when `compact` and a projected body coexist, pointing at `layout="row"`; (c) accept it and document the pairing as unsupported. **(b) is the cheapest honest answer** — the variant already documents itself as bodyless, and a warning turns that sentence into something the consumer hears.
+
 - [ ] **[P2] One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle (2026-08-03, Stas — mm-broker MBP-133 review).** _(Re-counted 2026-08-05: **85** exported `*Component` classes plus 9 directives (re-counted 2026-08-10; was 83 + 8 on 08-05), by `grep -rho 'export class .*Component' src/lib | sort -u`. The item said 73; the figure does not change the argument, but it is now stated with its method so nobody re-counts.)_ `ng-package.json` declares a single `entryFile`, so the package ships as one 1.25 MB `fesm2022` module behind a single `"."` export. `sideEffects: false` is set and tree-shaking works fine — unused components are dropped — but **chunking cannot happen**: esbuild splits by module, so it can never place two DS symbols in two different chunks. Measured in mm-broker: the app's eager composition root binds `NotificationService` to a toast implementation, that one runtime import of `ToastService` pins the whole retained DS graph into a chunk statically imported by `main`, and the result is **632 kB — about 88% of a 720 kB initial bundle** — even though every feature route is lazy and the only eagerly-needed symbol is one service. The consumer has no lever: the root is the only specifier, and moving the provider to a lazy route does not help because interceptors and the `ErrorHandler` resolve from the root injector. **Ask:** secondary entry points (ng-packagr supports a nested `ng-package.json` per folder). Even a coarse split would fix it — a services/overlay entry point carrying `ToastService`, `ModalService` and `BodyScrollLockService` separately from the component layer, so an eager root can import the service and leave 70-odd components lazy. Per-component entry points would be ideal but are a bigger change; the services split is the one that unblocks consumers. **Explicit non-goal:** nothing about the public API surface needs to change — same symbols, same names, just reachable through narrower specifiers. **RE-AUDITED 2026-08-03 → read `packaging-chunking-audit.md` before actioning this item; three claims above are wrong.** The mechanism is confirmed by controlled esbuild fixtures, but: this was never filed upstream (it is the consumer's own backlog item, with a consumer-side fix); "the consumer has no lever" is false (a dynamic `import()` keeps `main` clean — it just costs tree-shaking, measured +50%); and the 07-27 "tree-shaking already works" verdict is NOT overturned — placement and tree-shaking are orthogonal and both findings stand. The audit also merges this item with the "Packaging — secondary entry points" section below, which duplicates it with the opposite verdict.
   **DEFERRED by Stas 2026-08-21, with a deck instead of a build — `presentations/packaging-entry-points.html`.**
   It draws the mechanism (one FESM is one module, so placement cannot happen), the three esbuild fixtures
@@ -229,6 +235,10 @@ Requests, not defects. Ordered by who is blocked.
 # Decisions — waiting on Stas, not on work
 
 ## Tooling
+
+- [ ] **[P3] ds-docs is written in BEM, which the house rule forbids (Stas spotted it 2026-08-26 in `.state-cell__stage`).** `__` reads as a NESTED COMPONENT, and by the convention here nested components do not exist — only states — so the notation says something untrue about every element it names. Counted: **92 files** carry it, and `state-cell__stage` alone appears **184 times** (then `state-cell__label` 168, `state__lbl` 20, `cell__tag` 15, plus `--` modifier forms like `state-cell__stage--tbl`). **The library itself is clean**: the only `src/lib` match is `components/README.md`, which catalogues the class names of an EXTERNAL prototype it compares against, not our own markup.
+  **Zero consumer impact** — none of this ships; ds-docs is the showcase app. That is also why it survived: nothing lints it, and the rule lives in a memory rather than in a check.
+  **Two things to decide together**, which is why this is filed rather than swept: (a) the rename is ~500 occurrences across 92 files, mechanical but large, and it collides with any parallel session working in those sections; (b) whether a stylelint rule should forbid `__` in class selectors afterwards, or the convention stays a memory. Doing (a) without (b) invites the same drift back.
 
 - [ ] **[P2] prettier and eslint want opposite things about HTML, so `lint:all` can never be green (measured 2026-08-25).** Ran the three formatters over the whole project on Stas's instruction — prettier, then stylelint, then eslint. Prettier reformatted **140 files** (115 html + 25 ts) and needed a second pass on three before reaching a fixed point. Eslint then pulled **77 of them back**, leaving 63 actually changed. Afterwards prettier reports **~112 html files as unformatted, permanently**: its line-breaking fights `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order`, and each tool undoes the other on the same files every time either runs. **This is not formatting debt — it is a config conflict, and no number of `fix:all` runs converges.** It is why the `format` step of `lint:all` has been red for so long that the PR gate was set to report-only, which then hid every real lint finding behind a known-red step.
   **Three ways out, and it is a taste call, not a technical one:** (a) **stop prettier at the html door** — add `*.html` to `.prettierignore` and let the two `ds/template/*` rules own template formatting alone (smallest diff, and eslint already wins today in practice); (b) **drop the two ds rules** and let prettier own html (bigger one-off diff, loses the attribute-order convention the repo chose deliberately); (c) keep both and accept a permanently red step (status quo — but then say so in the script, so nobody re-runs `fix:all` hoping it converges). **Recommendation: (a).** Eslint is already the de-facto winner, prettier still owns ts/json/md where nothing contests it, and it makes `lint:all` green so the PR gate can stop being report-only.
