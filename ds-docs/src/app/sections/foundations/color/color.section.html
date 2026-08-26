@@ -50,21 +50,21 @@
 
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--secondary)'"
         >
         </div>
 
-        <div class="swatch__meta">
+        <div class="swatch-meta">
           <div class="t-s-bold">
             secondary
           </div>
 
-          <code class="swatch__token t-mono-inline">
+          <code class="swatch-token t-mono-inline">
             --secondary
           </code>
 
-          <code class="swatch__value t-mono-inline">
+          <code class="swatch-value t-mono-inline">
             var(--secondary)
           </code>
         </div>
@@ -72,21 +72,21 @@
 
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--secondary-strong)'"
         >
         </div>
 
-        <div class="swatch__meta">
+        <div class="swatch-meta">
           <div class="t-s-bold">
             secondary-strong
           </div>
 
-          <code class="swatch__token t-mono-inline">
+          <code class="swatch-token t-mono-inline">
             --secondary-strong
           </code>
 
-          <code class="swatch__value t-mono-inline">
+          <code class="swatch-value t-mono-inline">
             var(--secondary-strong)
           </code>
         </div>
@@ -94,21 +94,21 @@
 
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--secondary-subtitle)'"
         >
         </div>
 
-        <div class="swatch__meta">
+        <div class="swatch-meta">
           <div class="t-s-bold">
             secondary-subtitle
           </div>
 
-          <code class="swatch__token t-mono-inline">
+          <code class="swatch-token t-mono-inline">
             --secondary-subtitle
           </code>
 
-          <code class="swatch__value t-mono-inline">
+          <code class="swatch-value t-mono-inline">
             var(--secondary-subtitle)
           </code>
         </div>
@@ -116,21 +116,21 @@
 
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--secondary-on)'"
         >
         </div>
 
-        <div class="swatch__meta">
+        <div class="swatch-meta">
           <div class="t-s-bold">
             secondary-on
           </div>
 
-          <code class="swatch__token t-mono-inline">
+          <code class="swatch-token t-mono-inline">
             --secondary-on
           </code>
 
-          <code class="swatch__value t-mono-inline">
+          <code class="swatch-value t-mono-inline">
             var(--secondary-on)
           </code>
         </div>
@@ -393,12 +393,12 @@
         @for (swatch of group.swatches; track swatch.token) {
           <div class="swatch">
             <div
-              class="swatch__chip"
+              class="swatch-chip"
               [style.background]="'var(' + swatch.token + ')'"
             >
             </div>
 
-            <div class="swatch__meta">
+            <div class="swatch-meta">
               <div
                 class="t-s-bold"
                 [style.color]="
@@ -410,11 +410,11 @@
                 {{ swatch.name }}
               </div>
 
-              <code class="swatch__token t-mono-inline">
+              <code class="swatch-token t-mono-inline">
                 {{ swatch.token }}
               </code>
 
-              <code class="swatch__value t-mono-inline">
+              <code class="swatch-value t-mono-inline">
                 var({{ swatch.token }})
               </code>
             </div>
@@ -437,29 +437,29 @@
 
   @for (ramp of ramps; track ramp.prefix) {
     <div class="ramp">
-      <div class="ramp__head">
+      <div class="ramp-head">
         <div class="t-overline">
           {{ ramp.label }}
         </div>
 
-        <div class="ramp__desc t-s">
+        <div class="ramp-desc t-s">
           {{ ramp.desc }}
         </div>
       </div>
 
-      <div class="ramp__row">
+      <div class="ramp-row">
         @for (stop of ramp.stops; track stop) {
-          <div class="ramp__stop">
+          <div class="ramp-stop">
             <div
-              class="ramp__chip"
+              class="ramp-chip"
               [style.background]="'var(--' + ramp.prefix + '-' + stop + ')'"
             >
-              <span class="ramp__num t-mono-inline">
+              <span class="ramp-num t-mono-inline">
                 {{ stop }}
               </span>
             </div>
 
-            <code class="ramp__var t-mono-inline">
+            <code class="ramp-var t-mono-inline">
               --{{ ramp.prefix }}-{{ stop }}
             </code>
           </div>
@@ -486,7 +486,7 @@
 
   <div class="halo-stage">
     <div class="halo-cell">
-      <div class="halo-stage__well">
+      <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--ring"
           type="button"
@@ -495,8 +495,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           --focus-ring
         </div>
 
@@ -507,7 +507,7 @@
     </div>
 
     <div class="halo-cell">
-      <div class="halo-stage__well">
+      <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--field"
           type="button"
@@ -516,8 +516,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           --focus-field
         </div>
 
@@ -528,7 +528,7 @@
     </div>
 
     <div class="halo-cell">
-      <div class="halo-stage__well">
+      <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--error"
           type="button"
@@ -537,8 +537,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           --focus-ring-error
         </div>
 
@@ -549,7 +549,7 @@
     </div>
 
     <div class="halo-cell">
-      <div class="halo-stage__well halo-stage__well--inverted">
+      <div class="halo-stage-well halo-stage-well--inverted">
         <button
           class="halo-demo halo-demo--inverted"
           type="button"
@@ -558,8 +558,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           --focus-ring-inverted
         </div>
 
@@ -740,8 +740,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           clipped, default
         </div>
 
@@ -764,8 +764,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           clipped, inset
         </div>
 
@@ -797,7 +797,7 @@
       class="surface-cell"
       style="background: var(--surface-canvas)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         canvas
       </div>
 
@@ -810,7 +810,7 @@
       class="surface-cell"
       style="background: var(--surface-default)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         default
       </div>
 
@@ -823,7 +823,7 @@
       class="surface-cell"
       style="background: var(--surface-secondary)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         secondary
       </div>
 
@@ -836,7 +836,7 @@
       class="surface-cell"
       style="background: var(--surface-tint)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         tint
       </div>
 
@@ -846,7 +846,7 @@
     </div>
 
     <div class="surface-cell surface-cell--select">
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         selection
       </div>
 
@@ -854,9 +854,9 @@
         --select-bg-color
       </code>
 
-      <p class="surface-cell__sample t-s">
+      <p class="surface-cell-sample t-s">
         The quick brown fox
-        <span class="surface-cell__selected">
+        <span class="surface-cell-selected">
           jumps over
         </span> the lazy dog.
       </p>
@@ -866,7 +866,7 @@
       class="surface-cell surface-cell--inverted"
       style="background: var(--surface-inverted)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         inverted
       </div>
 

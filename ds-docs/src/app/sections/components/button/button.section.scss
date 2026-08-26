@@ -23,8 +23,8 @@
       border-radius: var(--radius-lg);
     }
     .matrix--states .t-overline { text-align: center; }
-    .matrix__row-label { color: var(--text-secondary); }
-    .matrix__cell {
+    .matrix-row-label { color: var(--text-secondary); }
+    .matrix-cell {
       display: flex; align-items: center; justify-content: center;
       min-height: 56px;
     }

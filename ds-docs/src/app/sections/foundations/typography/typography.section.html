@@ -23,7 +23,7 @@
   </p>
 
   <div class="ramp">
-    <div class="ramp__head t-overline">
+    <div class="ramp-head t-overline">
       <div>
         Class · token
       </div>
@@ -50,34 +50,34 @@
     </div>
 
     @for (row of ramp; track row.cls) {
-      <div class="ramp__row">
-        <div class="ramp__label">
-          <code class="t-mono-inline ramp__cls">
+      <div class="ramp-row">
+        <div class="ramp-label">
+          <code class="t-mono-inline ramp-cls">
             .{{ row.cls }}
           </code>
 
-          <code class="t-mono-inline ramp__token">
+          <code class="t-mono-inline ramp-token">
             {{ row.sizeToken }}
           </code>
         </div>
 
-        <div [class]="row.cls + ' ramp__sample'">
+        <div [class]="row.cls + ' ramp-sample'">
           {{ row.sample }}
         </div>
 
-        <div class="t-mono ramp__meta">
+        <div class="t-mono ramp-meta">
           {{ row.size }}
         </div>
 
-        <div class="t-mono ramp__meta">
+        <div class="t-mono ramp-meta">
           {{ row.lineHeight }}
         </div>
 
-        <div class="t-mono ramp__meta">
+        <div class="t-mono ramp-meta">
           {{ row.weight }}
         </div>
 
-        <div class="t-mono ramp__meta">
+        <div class="t-mono ramp-meta">
           {{ row.tracking }}
         </div>
       </div>
@@ -103,7 +103,7 @@
         Inline · .t-mono
       </div>
 
-      <div class="t-mono mono-card__sample">
+      <div class="t-mono mono-card-sample">
         ORD-2026-0142 · 12 Main St, City · 06:00–22:00
       </div>
 
@@ -117,7 +117,7 @@
         Block · .t-mono-block
       </div>
 
-      <pre class="t-mono-block mono-card__block">
+      <pre class="t-mono-block mono-card-block">
 SELECT id, status, recomputed_at
 FROM   schedule
 WHERE  project_id = 'alpha'
@@ -141,13 +141,13 @@ WHERE  project_id = 'alpha'
       </div>
 
       <div
-        class="t-h3 family-card__name"
+        class="t-h3 family-card-name"
         style="font-family: var(--font-sans)"
       >
         Mulish
       </div>
 
-      <code class="t-mono-inline family-card__tok">
+      <code class="t-mono-inline family-card-tok">
         --font-sans
       </code>
     </div>
@@ -158,13 +158,13 @@ WHERE  project_id = 'alpha'
       </div>
 
       <div
-        class="t-h3 family-card__name"
+        class="t-h3 family-card-name"
         style="font-family: var(--font-mono)"
       >
         JetBrains Mono
       </div>
 
-      <code class="t-mono-inline family-card__tok">
+      <code class="t-mono-inline family-card-tok">
         --font-mono
       </code>
     </div>

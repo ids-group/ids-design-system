@@ -40,7 +40,7 @@
   <div class="states states--cols-1">
     <!-- Live ds-pagination; currentPage=1 keeps most buttons non-active. -->
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-pagination
           [total]="40"
           [pageSize]="10"
@@ -49,13 +49,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-pagination
           [total]="40"
           [pageSize]="10"
@@ -64,13 +64,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-pagination
           [total]="40"
           [pageSize]="10"
@@ -79,14 +79,14 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Active · current page
       </div>
     </div>
 
     <div class="state-cell">
       <!-- currentPage=1 disables the prev button via [disabled] on the component -->
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-pagination
           [total]="40"
           [pageSize]="10"
@@ -95,7 +95,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Prev · disabled (page 1)
       </div>
     </div>
@@ -112,8 +112,8 @@
   </p>
 
   <div class="ranges">
-    <div class="ranges__row">
-      <div class="ranges__label t-overline">
+    <div class="ranges-row">
+      <div class="ranges-label t-overline">
         3 pages · no ellipsis
       </div>
 
@@ -125,8 +125,8 @@
       />
     </div>
 
-    <div class="ranges__row">
-      <div class="ranges__label t-overline">
+    <div class="ranges-row">
+      <div class="ranges-label t-overline">
         8 pages · one ellipsis
       </div>
 
@@ -138,8 +138,8 @@
       />
     </div>
 
-    <div class="ranges__row">
-      <div class="ranges__label t-overline">
+    <div class="ranges-row">
+      <div class="ranges-label t-overline">
         24 pages · two ellipses
       </div>
 
@@ -151,8 +151,8 @@
       />
     </div>
 
-    <div class="ranges__row">
-      <div class="ranges__label t-overline">
+    <div class="ranges-row">
+      <div class="ranges-label t-overline">
         100 pages · two ellipses
       </div>
 

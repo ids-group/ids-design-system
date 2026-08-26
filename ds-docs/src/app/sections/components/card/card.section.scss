@@ -20,11 +20,11 @@
       }
     }
     .matrix > .t-overline { align-self: end; padding-bottom: var(--space-1); }
-    .matrix__row-label { color: var(--text-tertiary); align-self: center; }
-    .matrix__cell-eyebrow { color: var(--text-tertiary); }
-    .matrix__cell-title { margin: var(--space-2) 0 var(--space-1); }
-    .matrix__cell-body { color: var(--text-secondary); margin: 0 0 var(--space-3); }
-    .matrix__cell-link { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; }
+    .matrix-row-label { color: var(--text-tertiary); align-self: center; }
+    .matrix-cell-eyebrow { color: var(--text-tertiary); }
+    .matrix-cell-title { margin: var(--space-2) 0 var(--space-1); }
+    .matrix-cell-body { color: var(--text-secondary); margin: 0 0 var(--space-3); }
+    .matrix-cell-link { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; }
     .link { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
     /* ---------- Composition grid ---------- */
@@ -44,10 +44,10 @@
       padding-bottom: var(--space-3);
       border-bottom: var(--border-width-default) solid var(--border-divider);
     }
-    .card-head__meta { color: var(--text-tertiary); font-family: var(--font-mono); }
+    .card-head-meta { color: var(--text-tertiary); font-family: var(--font-mono); }
     .card-body { padding: var(--space-3) 0; }
-    .card-body__title { margin: 0 0 var(--space-1); }
-    .card-body__text { color: var(--text-secondary); margin: 0; }
+    .card-body-title { margin: 0 0 var(--space-1); }
+    .card-body-text { color: var(--text-secondary); margin: 0; }
     .card-foot {
       display: flex; align-items: center; justify-content: space-between;
       gap: var(--space-3);
@@ -59,8 +59,8 @@
     // A child whose background reaches the card edge — the shape --ds-card-overflow
     // exists for. The strip carries the radius of nothing, on purpose.
     .bleed-demo { display: flex; flex-direction: column; height: 100%; }
-    .bleed-demo__body { padding: var(--space-4); }
-    .bleed-demo__strip {
+    .bleed-demo-body { padding: var(--space-4); }
+    .bleed-demo-strip {
       margin-top: auto;
       padding: var(--space-2) var(--space-4);
       background: var(--surface-secondary);

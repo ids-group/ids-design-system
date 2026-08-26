@@ -26,7 +26,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Deactivate policyholder"
           size="sm"
@@ -56,7 +56,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         with eyebrow
       </div>
     </div>
@@ -87,7 +87,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Fleet cover — commercial"
           subtitle="Aviva · Motor fleet · renews 12 Mar"
@@ -117,7 +117,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         badge + subtitle
       </div>
     </div>
@@ -168,7 +168,7 @@
   <div class="modal-grid modal-grid--2">
     @for (specimen of statusSpecimens; track specimen.status) {
       <div class="state-cell">
-        <div class="state-cell__stage">
+        <div class="state-cell-stage">
           <ds-modal-card
             size="sm"
             [title]="specimen.title"
@@ -190,7 +190,7 @@
           </ds-modal-card>
         </div>
 
-        <div class="state-cell__label">
+        <div class="state-cell-label">
           {{ specimen.status }} · {{ specimen.role }}
         </div>
       </div>
@@ -245,7 +245,7 @@
 
   <div class="modal-grid modal-grid--2">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Archive this record"
           size="sm"
@@ -270,13 +270,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Archive this record"
           size="sm"
@@ -302,7 +302,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         dividers false
       </div>
     </div>
@@ -318,7 +318,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Quick confirm"
           size="sm"
@@ -343,13 +343,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         sm · 480 px
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Edit Project Alpha"
           size="md"
@@ -375,13 +375,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         md · 640 px
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Run report"
           size="lg"
@@ -407,7 +407,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         lg · 800 px
       </div>
     </div>
@@ -416,7 +416,7 @@
   <!-- xl and fullscreen as live demos (static cards would be too wide to diff meaningfully) -->
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-button
           size="sm"
           (pressed)="xlOpen.set(true)"
@@ -446,13 +446,13 @@
         </ds-modal>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         xl · 1024 px
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-button
           size="sm"
           (pressed)="fullscreenOpen.set(true)"
@@ -482,7 +482,7 @@
         </ds-modal>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         fullscreen · near-viewport
       </div>
     </div>
@@ -527,7 +527,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-button
           size="sm"
           (pressed)="persistentOpen.set(true)"
@@ -565,7 +565,7 @@
         </ds-modal>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         persistent — backdrop + Esc disabled
       </div>
     </div>
@@ -581,7 +581,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Save changes?"
           size="sm"
@@ -606,13 +606,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Delete record?"
           size="sm"
@@ -638,13 +638,13 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Danger confirm
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Confirm recompute"
           size="md"
@@ -690,7 +690,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Impact warning
       </div>
     </div>
@@ -706,7 +706,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-modal-card
           title="Edit sub-record"
           size="md"
@@ -749,7 +749,7 @@
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Form modal · md
       </div>
     </div>
@@ -771,7 +771,7 @@
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div style="display: flex; gap: var(--space-3); flex-wrap: wrap">
           <ds-button
             color="neutral"
@@ -791,7 +791,7 @@
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Result: {{ confirmResult() }}
       </div>
     </div>

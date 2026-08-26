@@ -194,35 +194,35 @@
       }
 
       @for (spec of stateVariants; track spec.variant) {
-        <div class="t-overline matrix__row-label">
+        <div class="t-overline matrix-row-label">
           {{ spec.label }}
         </div>
 
-        <div class="matrix__cell">
+        <div class="matrix-cell">
           <ds-button [variant]="spec.variant">
             {{ spec.label }}
           </ds-button>
         </div>
 
-        <div class="matrix__cell pin-hover">
+        <div class="matrix-cell pin-hover">
           <ds-button [variant]="spec.variant">
             {{ spec.label }}
           </ds-button>
         </div>
 
-        <div class="matrix__cell pin-focus">
+        <div class="matrix-cell pin-focus">
           <ds-button [variant]="spec.variant">
             {{ spec.label }}
           </ds-button>
         </div>
 
-        <div class="matrix__cell pin-active">
+        <div class="matrix-cell pin-active">
           <ds-button [variant]="spec.variant">
             {{ spec.label }}
           </ds-button>
         </div>
 
-        <div class="matrix__cell">
+        <div class="matrix-cell">
           <ds-button
             [variant]="spec.variant"
             [disabled]="true"
@@ -231,7 +231,7 @@
           </ds-button>
         </div>
 
-        <div class="matrix__cell">
+        <div class="matrix-cell">
           <ds-button
             [variant]="spec.variant"
             [loading]="true"

@@ -48,7 +48,7 @@
 
   <div class="states states--cols-3">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
@@ -56,7 +56,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Empty default
       </div>
     </div>
@@ -64,7 +64,7 @@
     <div class="state-cell">
       <!-- Live ds-select; pin-focus on the stage reads bare tokens from
                the component's own .dropdown rules via ::ng-deep. -->
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
@@ -72,13 +72,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Empty · focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           label="Owner"
           value="brooks"
@@ -86,13 +86,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         With value
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
@@ -100,13 +100,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           label="Owner"
           value="brooks"
@@ -115,13 +115,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           label="Owner"
           value="brooks"
@@ -130,13 +130,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Read-only
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="field-stack">
           <ds-select
             label="Tier"
@@ -151,13 +151,13 @@
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Error
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="field-stack">
           <ds-select
             label="Tier"
@@ -171,7 +171,7 @@
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Success
       </div>
     </div>
@@ -282,47 +282,47 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Empty default
       </div>
     </div>
 
     <div class="state-cell">
       <!-- Custom-dropdown variant: same ::ng-deep pin mechanism as above; hover/focus route through bare tokens here too. -->
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-select
           value="hi"
           [options]="productOptions"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--overflow">
+      <div class="state-cell-stage state-cell-stage--overflow">
         <ds-select
           value="hi"
           [staticPreview]="true"
@@ -330,13 +330,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Open
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
@@ -344,13 +344,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Error
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           value="hi"
           [options]="productOptions"
@@ -358,7 +358,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>

@@ -51,7 +51,7 @@
 .next-group:hover {
   background: var(--surface-secondary);
 }
-.next-group__label {
+.next-group-label {
   display: block;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
@@ -59,12 +59,12 @@
   letter-spacing: var(--letter-spacing-wider);
   color: var(--text-tertiary);
 }
-.next-group__title {
+.next-group-title {
   display: block;
   font-weight: var(--font-weight-semibold);
   color: var(--text-secondary);
   transition: color var(--duration-fast) var(--ease-standard);
 }
-.next-group:hover .next-group__title {
+.next-group:hover .next-group-title {
   color: var(--text-primary);
 }

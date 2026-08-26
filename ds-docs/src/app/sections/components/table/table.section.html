@@ -101,7 +101,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Sortable idle"
           [data]="stateRow"
@@ -110,13 +110,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Sortable · idle
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Sorted ascending"
           sortKey="project"
@@ -127,13 +127,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Sorted · ascending
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Sorted descending"
           sortKey="project"
@@ -144,13 +144,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Sorted · descending
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl pin-hover-th">
+      <div class="state-cell-stage state-cell-stage--tbl pin-hover-th">
         <ds-table
           caption="Header hover"
           [data]="stateRow"
@@ -159,7 +159,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
@@ -181,7 +181,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl pin-row-hover">
+      <div class="state-cell-stage state-cell-stage--tbl pin-row-hover">
         <ds-table
           caption="Hover state"
           [data]="stateRow"
@@ -191,13 +191,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl pin-row-pressed">
+      <div class="state-cell-stage state-cell-stage--tbl pin-row-pressed">
         <ds-table
           caption="Pressed state"
           [data]="stateRow"
@@ -207,13 +207,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Pressed
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Selected state"
           [data]="stateRow"
@@ -224,13 +224,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Selected
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Active state"
           [data]="stateRow"
@@ -241,7 +241,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Active
       </div>
     </div>
@@ -275,7 +275,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl pin-cell-link">
+      <div class="state-cell-stage state-cell-stage--tbl pin-cell-link">
         <ds-table
           caption="Interactive cell"
           [data]="stateRow"
@@ -285,7 +285,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hovered · Record is the target
       </div>
     </div>
@@ -562,7 +562,7 @@
 
   <div class="states states--cols-2">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-table
           [data]="noRows"
           [columns]="loadingColumns"
@@ -571,13 +571,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         no rows yet → skeleton
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-table
           [data]="events"
           [columns]="loadingColumns"
@@ -586,7 +586,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         rows on screen → overlay
       </div>
     </div>
@@ -906,19 +906,19 @@
     let-row
   >
     <div class="expand-detail">
-      <span class="expand-detail__label">
+      <span class="expand-detail-label">
         Order ID
       </span>
 
-      <span class="expand-detail__value mono muted">
+      <span class="expand-detail-value mono muted">
         {{ asEvent(row).id }}
       </span>
 
-      <span class="expand-detail__label">
+      <span class="expand-detail-label">
         Capacity
       </span>
 
-      <span class="expand-detail__value">
+      <span class="expand-detail-value">
         {{ asEvent(row).capacity }} attendees
       </span>
     </div>
@@ -967,35 +967,35 @@
     <ng-container drawer-body>
       @if (detailRow(); as row) {
         <div class="expand-detail">
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Order ID
           </span>
 
-          <span class="expand-detail__value mono muted">
+          <span class="expand-detail-value mono muted">
             {{ row.id }}
           </span>
 
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Dates
           </span>
 
-          <span class="expand-detail__value">
+          <span class="expand-detail-value">
             {{ row.date }}
           </span>
 
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Venue
           </span>
 
-          <span class="expand-detail__value">
+          <span class="expand-detail-value">
             {{ row.venue }}
           </span>
 
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Status
           </span>
 
-          <span class="expand-detail__value">
+          <span class="expand-detail-value">
             <ds-badge
               [status]="row.status"
               [withDot]="true"
@@ -1004,11 +1004,11 @@
             </ds-badge>
           </span>
 
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Capacity
           </span>
 
-          <span class="expand-detail__value">
+          <span class="expand-detail-value">
             {{ row.capacity }} attendees
           </span>
         </div>

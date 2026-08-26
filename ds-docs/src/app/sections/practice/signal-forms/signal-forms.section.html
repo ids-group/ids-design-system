@@ -108,18 +108,18 @@
   <div class="contract">
     @for (row of contract; track row.member) {
       <div
-        class="contract__row"
-        [class.contract__row--no]="row.state === 'no'"
+        class="contract-row"
+        [class.contract-row--no]="row.state === 'no'"
       >
-        <code class="contract__member t-mono-inline">
+        <code class="contract-member t-mono-inline">
           {{ row.member }}
         </code>
 
-        <span class="contract__state t-overline">
+        <span class="contract-state t-overline">
           {{ row.state === 'yes' ? 'bound' : 'not yet' }}
         </span>
 
-        <span class="contract__note t-s">
+        <span class="contract-note t-s">
           {{ row.note }}
         </span>
       </div>

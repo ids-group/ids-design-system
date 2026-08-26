@@ -24,7 +24,7 @@
     }
 
     /* ---------- States showcase overrides ---------- */
-    .state-cell__stage {
+    .state-cell-stage {
       align-items: stretch; justify-content: stretch;
       min-height: 96px;
 
@@ -34,11 +34,11 @@
     /* Showcase-only: pin focus-within / hover visuals on the inner <ds-input>
        .control without real interaction. ::ng-deep reaches past the
        component's emulated encapsulation boundary. */
-    .state-cell__stage.force-focus ::ng-deep .control {
+    .state-cell-stage.force-focus ::ng-deep .control {
       border-color: var(--primary);
       box-shadow: var(--focus-field);
     }
-    .state-cell__stage.force-hover ::ng-deep .control {
+    .state-cell-stage.force-hover ::ng-deep .control {
       border-color: var(--border-strong);
     }
 
