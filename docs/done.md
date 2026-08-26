@@ -4,6 +4,87 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Fully-closed entries moved out of todo.md (2026-08-26 sweep, on Stas's ask)
+
+Everything below was already closed where it stood — in the 08-26 board narrative or as a done
+sub-item — and is moved here verbatim so the live file holds only open work.
+
+- [x] **Correction to the two asks closed 2026-08-26 — the banner one was MINE, and your read was right.**
+  The centring came from `auth-card.component.scss`, where a `:host ::ng-deep { .title { text-align:
+  center } }` written for the page heading also matched the DS's internal `div.title` inside
+  `ds-banner`. Fixed at the source by qualifying the selector (`h1.title, h2.title`). Verified after:
+  banner title and body both `start`,
+  page `h1.title` still centred. The transferable rule for consumers is the mirror of yours — an
+  unqualified class selector inside `::ng-deep` reaches component internals, so a "DS bug" that only
+  appears in one context is probably the consumer's own cascade.
+
+  **The DS-side `text-align: start` STAYS, and that was checked rather than assumed (2026-08-26).**
+  This entry first said it was deleted as a workaround; it is not deleted, and it should not be.
+  Measured on the built docs with a centred ancestor: with the declaration the banner's title and body
+  both compute `start`; with it neutralised they both compute `center`. So it does real work that has
+  nothing to do with this incident — a banner is two text blocks that have to read as ONE alignment,
+  which is the same rule as [[feedback-components-resist-external-layout]]. Removing it would only make
+  the DS inherit whatever a page decides, which is how the consumer's bug became visible in the first
+  place. **Kept on its own merits, not as a patch over `auth-card`.** The cost is real and small: a
+  consumer who wants a centred banner can no longer get one by centring its container, and would need
+  an input — nobody has asked.
+
+**Two asks arrived and closed the same day (2026-08-26), and NEITHER symptom reproduced here** — the
+banner does not centre its title, and the menu divider is symmetric in both places it was measured.
+Each still found a real defect one level down: the banner owned no alignment, and the DS's own sidenav
+footer hand-rolled a divider instead of using `ds-menu-divider`, so the divider tokens reached every
+menu except that one. **The rule they leave behind: an ask arriving with a measurement is a measurement
+of the CONSUMER's screen. Reproduce it here before fixing it here** — taking either at its word would
+have shipped a `text-align` on `.title` and a spacing tweak, and neither was the problem.
+
+**The 08-24 batch from mm-broker is fully closed.** All three arrived as `::ng-deep` residue rather
+than as reports — a card that cannot clip its own box, a missing resting shadow hook, and a refusal
+reason with nowhere to go on a button (built 2026-08-25). **The transferable part is the detection
+rule: a deep selector a consumer still carries IS an unfiled ask** — and the button is its strongest
+case, since it sat three days as a `[dsTooltip]` the consumer could not delete. What remained from that
+batch — a release that makes consumer code redundant said so in `informational` prose, where nothing
+executes it, and the lint could not catch that spelling — is CLOSED since 2026-08-25: M034 now
+requires any delete-shaped sentence in `informational`/`note`/`action`/`pitfall` to cite its
+`deleteList` row (`e1edfd74`). This sentence predated that fix and survived the 08-26 recut; corrected
+2026-08-26.
+
+**Two findings from 08-25 that cost nothing to ship and would have cost a release to miss** (both in
+`done.md`, neither reachable by reading code): `ds-w3w` rendered a space its own format forbids — found
+only because Stas asked why a template line looked ugly, and confirmed by a 7.8px A/B measurement; and
+a `:not()` added for readability deleted the focus ring on **every** button, found only by putting a
+real pointer over a focused control. **Both say the same thing: the styles read correct and measured
+wrong.** That is the argument for the browser step in the release routine, not a preference for it.
+
+**The one buildable item spent three days filed as "not work" — and was built the same day it was
+reclassified.** A `ds-table` row could be opened only by clicking the row, and nothing on screen said
+so — seven lists in mm-broker (six in the broker portal, one in the admin) compensate by repeating the
+destination as a `View Details` entry in the overflow menu. The literature agrees on the shape of the
+fix (Roselli, oidaisdes.org): put the control **in a cell**, as a real link, so the record's name
+becomes the way in — visible, in the tab order, and Ctrl-clickable, which a row click cannot offer. It
+sat under `# Records`, whose own header reads "Not work", so the index listed it as a record. Moved to
+`# Asks`, built as `TableColumn.link` and archived to [[done]] the same day; **it is unreleased**, and
+the consumer marks each of its seven sites with a `TODO(ds-table-link)` to delete at that bump.
+
+**`compact` moved to Records by its own words.** Its last sentence reads "Not a bug — a knowingly
+duplicated decision over a single source of truth", and it sat under `# Bugs`. Nothing about it
+changed; it is now filed where it says it belongs.
+
+- [x] **DONE 2026-08-18 — a token on the kebab itself** _(was a done sub-item under the still-open
+  row-action-halves item)_. Three resolvers, covering the column
+  picker too since it shares the rule: `--ds-table-icon-btn-color`,
+  `--ds-table-icon-btn-color-hover`, `--ds-table-icon-btn-focus-color`, each defaulting to what
+  was hardcoded. mm-broker's teal row menu is now expressible without repainting
+  `--icon-default` app-wide. ORIGINAL NOTE: a token on the kebab itself — `.row-actions-btn`
+  hardcodes `color: var(--icon-default)`, hover `var(--icon-strong)` and an `--accent` focus outline,
+  with no `--ds-table-row-action-*` to override, and it is not a `ds-icon-button` so the icon-button
+  properties do not reach it. mm-broker's design asks for a teal row menu and four of their screens
+  already do that to their own trigger; on migrating, those four would silently turn grey with no
+  supported way back short of repainting `--icon-default` globally. Either expose the property or
+  tell consumers the kebab is not themeable, so they can settle the question before migrating —
+  right now "adopt rowActions" and "keep the design's teal" are simply incompatible.
+
+---
+
 - [x] **DONE 2026-08-26 — TWO of the five box-less controls needed a control state; three did not, and
   the evidence said so before I wrote a line.** Stas pushed back on the item's premise — do a slider and
   a switch really have errors to show? — so this was researched instead of implemented wholesale.
