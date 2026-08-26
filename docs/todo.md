@@ -31,6 +31,7 @@
 
 **Decisions — waiting on Stas, not on work**
 
+- P3 · ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class — `is-*`
 - P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
@@ -62,7 +63,7 @@
 
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**25 open: 1 P1, 7 P2, 17 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+**26 open: 1 P1, 7 P2, 18 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
 first consumer ask and two are Records, so the live board is **14 items — and 11 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
 
@@ -224,6 +225,10 @@ Requests, not defects. Ordered by who is blocked.
 # Decisions — waiting on Stas, not on work
 
 ## Tooling
+
+- [ ] **[P3] ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived).** `is-*` IS better here and that is the recorded preference: a modifier glued to the name with `--` reads as a different ELEMENT, while our convention says a variant of one thing is a STATE carried alongside it (`.stage.is-tbl`), which is also how a state reads in the DOM and how it composes with two states at once. Counted 2026-08-26: **11** element-plus-modifier forms flattened this pass and now spelled `state-cell-stage--tbl`, `cell-tag--do`, `cell-tag--dont`, `contract-row--no`, `demo-col--end`, `demo-group-btn--start/--mid/--end`, `halo-stage-well--inverted`, `state-stage--horiz`, `state-cell-stage--overflow`, plus a separate standalone set (`demo--centered`, `applied--stacked`, `demo-btn--ghost`, `demo-menu-item--error`, `btn--start/--mid/--end`, `cell--do/--dont`, `col--end`, …).
+  **Why it was split off rather than done in the same pass.** Removing `__` was a pure rename — 865 occurrences, zero semantic change, provable (589 classes used and 589 styled, identical before and after). Converting `--mod` to `is-mod` is NOT: it splits one class into two in the markup, which changes selector specificity from (0,1,0) to (0,2,0) wherever the SCSS is nested, and specificity is exactly what a docs section leans on when it pins a component's forced state. That wants its own pass with its own verification, not a rider on a mechanical one.
+  **Then extend the guard.** `selector-class-pattern` currently allows `-` freely, which is what lets `--` through; once the conversion lands, tighten it to reject a doubled hyphen in a class name so the notation cannot come back — the same shape as the two rules that now block `__` (`selector-class-pattern` plus `selector-nested-pattern`, because the first one alone does not see `&__x`).
 
 - [ ] **[P2] prettier and eslint want opposite things about HTML, so `lint:all` can never be green (measured 2026-08-25).** Ran the three formatters over the whole project on Stas's instruction — prettier, then stylelint, then eslint. Prettier reformatted **140 files** (115 html + 25 ts) and needed a second pass on three before reaching a fixed point. Eslint then pulled **77 of them back**, leaving 63 actually changed. Afterwards prettier reports **~112 html files as unformatted, permanently**: its line-breaking fights `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order`, and each tool undoes the other on the same files every time either runs. **This is not formatting debt — it is a config conflict, and no number of `fix:all` runs converges.** It is why the `format` step of `lint:all` has been red for so long that the PR gate was set to report-only, which then hid every real lint finding behind a known-red step.
   **Three ways out, and it is a taste call, not a technical one:** (a) **stop prettier at the html door** — add `*.html` to `.prettierignore` and let the two `ds/template/*` rules own template formatting alone (smallest diff, and eslint already wins today in practice); (b) **drop the two ds rules** and let prettier own html (bigger one-off diff, loses the attribute-order convention the repo chose deliberately); (c) keep both and accept a permanently red step (status quo — but then say so in the script, so nobody re-runs `fix:all` hoping it converges). **Recommendation: (a).** Eslint is already the de-facto winner, prettier still owns ts/json/md where nothing contests it, and it makes `lint:all` green so the PR gate can stop being report-only.
