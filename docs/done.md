@@ -4,6 +4,44 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+- [x] **DONE 2026-08-26 — `ds-table`'s pager took no inset, so it sat out of line with the columns and
+  on the container's border.** The footer carried `padding-top` alone. Reproduced in our own docs before
+  touching it: padding `12px 0 0 0`, footer content at **0** against the cells' **16**, and the summary
+  baseline on the host's bottom edge. Now `12px 16px 12px` — content at 16, aligned with the column
+  text, and "Showing 1–5 of 12" **21px** clear of the bottom.
+  **The inset is the CELLS' padding, not a number of its own**, so a retuned table keeps its footer in
+  line: verified by setting `--ds-table-cell-pad-x: 40px` and watching footer and cells move together.
+  **One trap worth keeping.** The obvious spelling — `var(--_table-cell-pad-x)` — silently produced
+  `padding: 0 0 0 0`. That private resolver is declared on `.table`, and the footer is its SIBLING, so
+  the var was unresolvable; one unresolvable var voids the WHOLE shorthand, taking the working
+  `padding-top` with it. It reads the public hook plus fallback instead, which is the house pattern
+  anyway. **The measurement caught it; reading the diff would not have.**
+  Also: the manifest lint refused the first write-up, because the informational note said a workaround
+  "can go" with no `deleteList` entry to execute it — the exact prose-only hole the board already
+  records. It now has a delete row.
+
+- [x] **DONE 2026-08-26 — `ds-banner`'s body had no size, and in `compact` it ran into the title.
+  One cause, one fix.** Two asks that looked separate: a 16px page rendered the body **larger than the
+  banner's own 14px title**, and a compact banner with both a title and a body showed **0px** between
+  them. Both came from the gap living on the TITLE — where it also fired with no body beneath it, and
+  could not fire at all in `compact`, which zeroes that margin.
+  **The gap now belongs to the body.** `<ng-content>` is wrapped so `:empty` can answer "is there a
+  body?" — projected content is usually a bare text node, which no selector can otherwise tell from
+  nothing. Measured after: 4px between title and body in `compact` (was 0), a title-only compact banner
+  unchanged because the wrapper is `:empty`, body 14px in a 16px context (was 16), and the new
+  **`--ds-banner-body-font-size`** verified at 11px.
+  **Stas's question is what made this the right shape:** *why do we hide the banner's body at all?*
+  We do not — the only `display: none` in the component is `.actions:empty`. The docs' "title and
+  dismiss only, no body" was a claim, never behaviour, and **17** of one consumer's compact banners
+  project a body (13 of them with no title, which always worked). So the recommendation I had written —
+  dev-warn against the pairing — would have warned against a working shape. Made it work instead.
+
+- [x] **DONE 2026-08-26 — ds-docs is out of BEM, and a stylelint rule keeps it out.** `__` claimed a nested component and there are none here, only states. Swept **865 occurrences across 92 files** (`state-cell__stage` alone was 184), byte-level so no line ending moved: the diff is a clean 1:1 swap.
+  **Verified as a pure rename, not by eye.** Before and after, normalised: **589 classes used and 589 classes styled, identical sets** — zero styling lost, zero gained, and the used-set byte-identical. Two flattened names collided with classes that already existed (`empty-title`, `swatch-chip`) but in DIFFERENT components, so scoped styles keep them apart; `practice/do-dont` was already written flat, which is the shape the rest now matches.
+  **My first verification was wrong and the second one is why this is trustworthy.** The checker's class pattern excluded underscores, so it could not see the BEM names at all and reported 7 "new orphans" — every one a pre-existing unstyled class that only became visible once flattened. Fixed the checker, re-ran, got the 589/589 above.
+  **The guard needed two rules, because the first one could not fail where it mattered.** `selector-class-pattern` (`^[a-z][a-z0-9-]*$`) rejects `.block__element` — but with `resolveNestedSelectors: true` it still did NOT reject `&__element`, which is exactly how BEM would creep back in SCSS. Added `selector-nested-pattern` (`^[^_]*$`) beside it. Control file with both forms: **both now error**, and the repo passes with zero violations.
+  **Deliberately left for a separate pass:** the `--modifier` forms (11 of the element kind like `cell__tag--do`, plus a standalone set like `demo--centered`). They are states, and our convention writes a state as its own class (`is-*`) rather than a `--` suffix — but converting them means editing markup and specificity together, which is a different change from removing a false claim about nesting.
+
 - [x] **DONE 2026-08-26 — two asks from mm-broker, and NEITHER symptom reproduced in the DS. Both still
   found a real defect underneath.** Worth reading as a pair, because the pattern repeated: the reported
   symptom was measured on the consumer's screen and is real THERE, but the cause named in the ask was
