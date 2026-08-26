@@ -39,8 +39,6 @@ if (!unreleased) fail("no '## Unreleased' section in CHANGELOG.md.");
 const hasEntry = unreleased[1].split('\n').some((line) => line.trim().startsWith('-'));
 if (!hasEntry) fail("'## Unreleased' is empty — add release notes before releasing.");
 
-// The class-collision entry is a snapshot of `npm run class-surface`, so every feature commit
-// that lands after it is written invalidates it silently. It went a class short twice in one day.
 try {
   execSync('node tools/check-class-surface-entry.mjs', { stdio: 'inherit' });
 } catch {

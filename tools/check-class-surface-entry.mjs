@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 // Does the `## Unreleased` class-collision entry still name every class whose member surface
-// moved? The entry is a SNAPSHOT of `npm run class-surface`, and every feature commit that lands
-// after it is written silently invalidates it — twice in one day it shipped a class short, and
-// both times the miss was found by a person re-running the tool rather than by any check.
+// moved? The entry is a SNAPSHOT of `npm run class-surface`, so any feature commit landing after
+// it is written invalidates it without touching it.
 //
 // A missed class is not cosmetic: subclassing is unsupported but consumers do it, and the entry
-// is the only place a consumer learns their build is about to stop on TS4114. Run at the cut,
-// which is the last moment the entry can still be corrected.
+// is the only place one learns their build is about to stop on TS4114. Run at the cut — the last
+// moment the entry can still be corrected.
 //
 //   node tools/check-class-surface-entry.mjs [baseRef]
 import { execSync } from 'node:child_process';
