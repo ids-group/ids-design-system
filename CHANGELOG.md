@@ -228,6 +228,7 @@ workaround written against a hook that only landed in this release.
 
 | If you have | Delete it, because |
 | --- | --- |
+| A local rule padding `.pagination-footer`, or a `TODO(ds-table-footer-padding)` marker | The footer is inset by the cells' own padding now — horizontally by `--ds-table-cell-pad-x`, and the same at the bottom as the top. A local rule doubles it. |
 | `dsTooltip` on a `ds-button` that is `disabled`, carrying the reason it is refused | `disabledReason` puts the reason inside the button AND makes it focusable, so a keyboard and a screen reader reach it too — which a tooltip never did. Scope it: a tooltip that merely NAMES the action stays. For a refusal the user can lift by filling the form in, drop `disabled` entirely and use `error`/`warning`/`hint`. |
 | `::ng-deep ds-card .card` with `overflow: hidden`, to clip a full-bleed child inside the card radius | `--ds-card-overflow: clip` — and pair it with `data-focus="inset"` where the clipped card holds focusable content |
 | `::ng-deep ds-button button` kept alive only by a resting `box-shadow` | `--ds-button-shadow` (and `--ds-button-shadow-hover`) on the host |
