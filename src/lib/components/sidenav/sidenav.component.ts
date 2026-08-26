@@ -42,15 +42,12 @@ export class SidenavComponent implements SidenavContract {
    *  "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`;
    *  unset falls back to `DS_CONFIG.brand.logoLetter`. */
   readonly logoLetter = input<string | null>(null);
-  /** Route the brand row navigates to — typically the app's home. Unset leaves the
-   *  row a plain block, exactly as before: a logo that goes nowhere should not be a
-   *  link, and every app decides for itself whether its mark is a way home.
-   *  Router targets only; `RouterLink` is instantiated only once this is set, so an
-   *  app with no router provided still renders the sidenav. */
+  /** Route the brand row links to — typically the app's home. Unset leaves the row a
+   *  plain, non-interactive block. Router targets only, and `RouterLink` is
+   *  instantiated only once this is set, so an app with no router still renders. */
   readonly brandRoute = input<string | readonly unknown[] | null>(null);
-  /** Accessible name for the brand link. Unset names it "<brand>, home" — the
-   *  destination is what a link has to announce, and a wordmark alone does not say
-   *  it. Ignored while `brandRoute` is unset. */
+  /** Accessible name for the brand link; unset names it "<brand>, home". Ignored
+   *  while `brandRoute` is unset. */
   readonly brandLinkLabel = input<string | null>(null);
 
   /** The template must read THIS, never the input beside it — that one is null

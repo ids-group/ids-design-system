@@ -39,7 +39,6 @@
   &:empty { display: none; }
 }
 
-/* Only when `brandRoute` makes the row a link — the plain row is not interactive. */
 .brand-link {
   color: inherit;
   text-decoration: none;

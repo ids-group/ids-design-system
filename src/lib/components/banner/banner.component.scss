@@ -4,9 +4,9 @@
 :host {
   display: block;
 
-  /* A flex or grid ROW parent hands its items min-width: auto, which is this
-     banner's min-content — so a narrow column made the banner overflow it rather
-     than letting the text degrade (measured: a 260px column held a 319px banner). */
+  /* A flex or grid ROW parent hands its items min-width: auto — this banner's
+     min-content — so without this it overflows a narrow column instead of letting
+     the text degrade. */
   min-width: 0;
 }
 
@@ -94,9 +94,8 @@
     margin: 0;
   }
 
-  /* The gap belongs to the BODY, not to the title: on the title it also fired when
-     there was no body under it, and it could not fire at all in `compact`, where the
-     title's margin is zeroed — so a compact banner with both ran them together. */
+  /* The gap belongs to the BODY, not the title: on the title it would fire with no
+     body under it, and never fire in `compact`, which zeroes that margin. */
   .text:not(:empty) {
     display: block;
     margin-top: var(--space-1);
@@ -149,10 +148,9 @@
 
     .icon { margin-top: 0; }
 
-    /* Compact is a one-line strip, so the title must not wrap — but it has to
-       DEGRADE rather than refuse to fit. Without the ellipsis a title longer than
-       its container blew the whole banner past it and cut the text with nothing to
-       show it had been cut (measured: a 260px column held a 319px banner). */
+    /* A one-line strip, so the title cannot wrap — hence the ellipsis: without it a
+       title longer than its container cuts off with nothing to show it was cut, and
+       forces the banner past its column. */
     .title {
       @include text-clip.single-line-ellipsis;
     }

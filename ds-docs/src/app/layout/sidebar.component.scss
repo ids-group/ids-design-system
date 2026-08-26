@@ -32,8 +32,8 @@
   overflow: clip;
 }
 
-// The mark and the wordmark are the link; the collapse toggle stays outside it,
-// so the row never nests one control inside another.
+// The collapse toggle stays OUTSIDE this link, so the row never nests one
+// control inside another.
 .brand-home {
   display: flex;
   align-items: center;

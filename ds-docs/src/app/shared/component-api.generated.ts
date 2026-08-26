@@ -4984,7 +4984,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Route the brand row navigates to — typically the app's home. Unset leaves the row a plain block, exactly as before: a logo that goes nowhere should not be a link, and every app decides for itself whether its mark is a way home. Router targets only; `RouterLink` is instantiated only once this is set, so an app with no router provided still renders the sidenav."
+        "description": "Route the brand row links to — typically the app's home. Unset leaves the row a plain, non-interactive block. Router targets only, and `RouterLink` is instantiated only once this is set, so an app with no router still renders."
       },
       {
         "name": "brandLinkLabel",
@@ -4993,7 +4993,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for the brand link. Unset names it \"<brand>, home\" — the destination is what a link has to announce, and a wordmark alone does not say it. Ignored while `brandRoute` is unset."
+        "description": "Accessible name for the brand link; unset names it \"<brand>, home\". Ignored while `brandRoute` is unset."
       }
     ],
     "outputs": []
