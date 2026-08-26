@@ -35,6 +35,7 @@
     "migration-lint": "node tools/migration-lint.mjs",
     "migration-lint:selftest": "node tools/migration-lint-selftest.mjs",
     "check-delete-tables": "node tools/check-delete-tables.mjs",
+    "check-class-surface-entry": "node tools/check-class-surface-entry.mjs",
     "check-focus-rings": "node tools/check-focus-rings.mjs",
     "extract-docs": "npm run extract-tokens && npm run extract-component-api && npm run check-docs-links",
     "build:docs": "npm run extract-docs && ng build ds-docs",
