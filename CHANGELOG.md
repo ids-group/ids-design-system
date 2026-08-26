@@ -118,6 +118,26 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-table`'s pager took no inset, so it sat out of line with the columns and on the container's
+  border.** The footer carried `padding-top` alone — no horizontal, no bottom — while every cell is
+  inset by `--ds-table-cell-pad-x`. That padding is what insets the content of a `padding: 0` container,
+  which is how tables are normally placed, so the summary line landed **16px left of the column text**
+  with its baseline **on the border**. Measured before: footer padding `12px 0 0 0`, footer content at
+  0 against the cells' 16. After: `12px 16px 12px`, footer content at 16 — aligned — and the summary
+  21px clear of the bottom edge. **It follows `--ds-table-cell-pad-x` with the cells**, verified: set
+  the hook to 40px and both move together, so a retuned table keeps its footer in line.
+
+- **`ds-banner`'s body had no size of its own, so a 16px page rendered it LARGER than its own 14px
+  title** — and in `compact` the title and body ran together with nothing between them. Both came from
+  the same place: the gap lived on the TITLE, where it also fired with no body under it and could not
+  fire at all in `compact` (which zeroes that margin). The gap now belongs to the body — it appears only
+  when a body is actually projected — and the body takes `--font-size-s`, overridable through the new
+  **`--ds-banner-body-font-size`**. Measured: title 14px and body 14px in a 16px context (was 16px);
+  4px between title and body in `compact` (was 0px); a title-only `compact` banner unchanged, because
+  the wrapper is `:empty` and contributes nothing.
+  **The "compact has no body" line in the docs was never true** — nothing was ever hidden, and 17 of
+  one consumer's compact banners project one. It is a supported pairing now rather than a claim.
+
 - **A `compact` banner whose title was longer than its column overflowed the column and cut the text
   with nothing to show it had been cut.** `compact` is the one-line strip, so its title carries
   `white-space: nowrap` — but nothing made it DEGRADE: there was no `text-overflow`, and the host had
