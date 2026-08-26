@@ -130,10 +130,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-sidenav-footer`'s account menu now uses `ds-menu-divider`, so the divider tokens reach it.** It
   hand-rolled a `div` with local styles instead, which meant `--ds-menu-divider-color` and
   `--ds-menu-divider-spacing` did nothing there — an override written against the documented tokens
-  silently skipped the one menu the DS ships itself. **Spacing is unchanged**, pinned deliberately:
-  6px above and below the line, measured before and after, because the divider's own default is 0 and
-  the rhythm in that menu was already settled. Reported as uneven spacing around the divider; that part
-  did not reproduce — the gaps are symmetric in `ds-menu` (2px/2px) and in the account menu (6px/6px).
+  silently skipped the one menu the DS ships itself. **The line also sat 6px from its neighbours where
+  every other menu puts it 2px away**, because the hand-rolled rule added `--space-1` of its own on top
+  of the menu's gap. It now behaves like the component it should always have been: **the divider adds
+  no space of its own** — measured 2px above and 2px below the line, which is exactly the gap between
+  any two ordinary items, so the line takes one row's place instead of pushing the rows apart. Reported
+  as UNEVEN spacing; that part did not reproduce — the gaps were symmetric both before and after. The
+  defect was that there was extra spacing at all.
 
 - **`ds-w3w` rendered a space its own format does not have.** The pill showed
   `/// daring.lion.race`; a what3words identifier is `///daring.lion.race`, flush, which is what the

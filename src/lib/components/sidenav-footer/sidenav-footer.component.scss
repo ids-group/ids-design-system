@@ -101,14 +101,6 @@
   text-transform: uppercase;
 }
 
-/* The account menu uses ds-menu-divider rather than a local line, so a consumer
-   retuning --ds-menu-divider-* reaches this menu too. The spacing is pinned to what
-   the hand-rolled separator measured (6px each side: 4px here + the menu's 2px gap),
-   because the divider's own default is 0 and the rhythm here was already settled. */
-ds-menu-divider {
-  --ds-menu-divider-spacing: var(--space-1);
-}
-
 .search-panel,
 .alerts-panel {
   display: flex;

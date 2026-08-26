@@ -28,9 +28,14 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   `<div class="separator">` with local styles, so `--ds-menu-divider-color` and
   `--ds-menu-divider-spacing` reached every menu EXCEPT the one the DS ships itself — a consumer
   retuning the documented token would have watched that menu ignore it. Swapped to the real component,
-  with `--ds-menu-divider-spacing: var(--space-1)` pinned locally so the rhythm does not move: measured
-  6px/6px before and 6px/6px after, and the colour token now reaches it (tinted it red, watched the line
-  change, restored).
+  and the colour token now reaches it (tinted it red, watched the line change, restored).
+  **A correction to my own first pass, made the same day.** I first pinned
+  `--ds-menu-divider-spacing: var(--space-1)` to keep the 6px the hand-rolled line had, reasoning that
+  the rhythm there was settled. Stas: a divider must not create spacing at all — menu item, divider,
+  menu item. He is right, and the divider's own docblock already said so ("the line takes one row's
+  place instead of stacking a second gap on top of it"). The pin was me preserving the bug I had just
+  found. Removed: measured 2px above and 2px below the line, **identical to the gap between two ordinary
+  items**, so the divider now costs a row and nothing more.
   **The transferable part:** an ask that arrives with a measurement is still a measurement of the
   CONSUMER's screen. Reproduce it here before fixing it here — both of these would otherwise have become
   a `text-align: start` on `.title` and a spacing tweak on the divider, neither of which was the problem.
