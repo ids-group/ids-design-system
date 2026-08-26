@@ -4976,6 +4976,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
+      },
+      {
+        "name": "brandRoute",
+        "kind": "input",
+        "type": "string | readonly unknown[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Route the brand row navigates to — typically the app's home. Unset leaves the row a plain block, exactly as before: a logo that goes nowhere should not be a link, and every app decides for itself whether its mark is a way home. Router targets only; `RouterLink` is instantiated only once this is set, so an app with no router provided still renders the sidenav."
+      },
+      {
+        "name": "brandLinkLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for the brand link. Unset names it \"<brand>, home\" — the destination is what a link has to announce, and a wordmark alone does not say it. Ignored while `brandRoute` is unset."
       }
     ],
     "outputs": []

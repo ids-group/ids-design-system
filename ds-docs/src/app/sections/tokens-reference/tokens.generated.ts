@@ -4908,6 +4908,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Brand mark label."
       },
       {
+        "name": "--ds-radius-control",
+        "value": "—",
+        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
+      },
+      {
         "name": "--ds-sidenav-brand-max-height",
         "value": "none",
         "notes": "Height cap for a logo projected into the [brand] slot; `none` by default, so an oversized logo sets the brand row's height until you set this. Height only — an image with no CSS width keeps its ratio on its own."
@@ -7095,11 +7100,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-motion-exit-large-easing",
     "value": "var(--ease-accelerate)",
     "kind": "other"
-  },
-  {
-    "name": "--ds-radius-control",
-    "value": "var(--radius-md)",
-    "kind": "length"
   },
   {
     "name": "--ds-radius-panel",
