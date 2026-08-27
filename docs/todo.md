@@ -2,6 +2,10 @@
 
 ## Open, in priority order
 
+**Bugs — something shipped misbehaves**
+
+- P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
+
 **Asks — a consumer or Stas asked for it**
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
@@ -43,9 +47,9 @@
 
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**26 open: 1 P1, 7 P2, 18 P3** (counted from the index, not by hand). Ten are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **14 items — and 10 of those are
-Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
+**27 open: 1 P1, 8 P2, 18 P3** (counted from the index, not by hand). Ten are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **15 items — and 10 of those are
+Decisions**. **`# Bugs` holds one:** the warning status pair measures 4.42:1 where AA asks 4.5.
 
 **The tooling items came out of running the tools rather than reading them, and both were invisible to a
 code read.** The formatter conflict surfaced when the three formatters were actually run end to end;
@@ -109,6 +113,12 @@ rather than re-reading our own API.
 # Bugs — something shipped misbehaves
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
+
+- [ ] **[P2] The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold.** `src/lib/styles/_status.scss:54` pairs `bg: var(--warning-subtitle)` with `text: var(--warning-text)`. Resolved in the default theme that is `#8A7400` on `#FFFBEA`, which computes to **4.42:1** by the WCAG relative-luminance formula — under AA for text below 18.66px/700. **It is the only status pair that fails:** error measures **5.92**, success **6.42** and primary **6.16** on their own subtitle backgrounds, so this is one colour out of step, not a palette-wide problem.
+  **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
+  **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
+  **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
+  Found while running a UI review over `presentations/picker-gaps-decisions.html`; the deck itself was fixed by taking the text off the failing colour and leaving the tint to carry the signal.
 
 # Asks — a consumer or Stas asked for it
 
