@@ -1374,7 +1374,7 @@ None of this is required — skipping it leaves working code that is merely redu
   differed from the live one by **1.16–1.60:1** on four of the five variants; only `color="neutral"` was
   safe, because its enabled label is nearly black. Now **2.40–2.71:1** on the coloured variants that
   were failing, and higher still on `neutral`, which reaches 6.46:1.
-  Measured, not guessed: the matrix is in `presentations/disabled-recipe.html` — 5 variants x 3 colours
+  Measured, not guessed: the matrix is in `presentations/implemented/disabled-recipe.html` — 5 variants x 3 colours
   x rest/hover/active/disabled in light, and a narrower primary-only sweep in dark. **The trade,
   stated:** the disabled label is fainter
   against its own background than it was — 2.1–2.7:1 where the old recipe gave 3.4–5.2 — which is the point,
