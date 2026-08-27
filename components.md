@@ -68,7 +68,7 @@ Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` t
 
 ### Grid
 
-Responsive 4-tier page grid loaded via `@use 'styles/ds'` (or directly via `@use '../../ds/src/lib/styles/page-grid';`). One column-count per breakpoint, gutters and margins scale with the viewport, container caps on the widest tier and stays fluid below.
+Responsive 4-tier page grid loaded via `@use 'styles/ds'` (or directly via `@use 'styles/page-grid';`). One column-count per breakpoint, gutters and margins scale with the viewport, container caps on the widest tier and stays fluid below.
 
 | Tier         | Range         | Cols | Gutter        | Margin         | Container cap            |
 | ------------ | ------------- | ---- | ------------- | -------------- | ------------------------ |
@@ -121,7 +121,7 @@ The DS aggregate (`@use 'styles/ds'`) forwards the full stack: theme primitives 
 
 ## Components
 
-Every entry below names its exported class (`ButtonComponent`, `TableComponent<T>`, …). Those names are exported for typing, DI, `viewChild` and template refs — **not as an extension point: subclassing a DS component is unsupported.** Any minor release may add members to a class, and a subclass that happens to have used one of those names breaks on it (TS4114 "must have an 'override' modifier", or TS2416 when the signature differs) — DS 0.6.3 added ~76 members to `TableComponent` alone. Compose instead: wrap the component, project into its slots, retune it through its `--ds-*` tokens. If you subclass anyway, treat every upgrade as potentially build-breaking — the changelog flags the risk (see `migrations/AUTHORING.md`), it does not avoid it.
+Every entry below names its exported class (`ButtonComponent`, `TableComponent<T>`, …). Those names are exported for typing, DI, `viewChild` and template refs — **not as an extension point: subclassing a DS component is unsupported.** Any minor release may add members to a class, and a subclass that happens to have used one of those names breaks on it (TS4114 "must have an 'override' modifier", or TS2416 when the signature differs) — DS 0.6.3 added ~76 members to `TableComponent` alone. Compose instead: wrap the component, project into its slots, retune it through its `--ds-*` tokens. If you subclass anyway, treat every upgrade as potentially build-breaking — the changelog flags the risk, it does not avoid it.
 
 **The `--ds-*` token contract, once for every component below.** Every public `--ds-<component>-*` token is READ WITH A FALLBACK and never declared by the component, so a consumer's value always wins and always inherits: set it on the host (`ds-button { --ds-button-bg-color: teal }`), on any ancestor, at `:root`, or inline. Unset tokens fall through to the component's own default, so there is nothing to opt into and nothing to reset. Two consequences worth stating: a token set at `:root` reaches EVERY instance — scope per instance or per section and keep theme-wide re-skins at role level (`--primary`, `--ds-radius-control`) — and where a component derives one value from another (a hover fill mixed from the resolved background), overriding the source retunes the derived states with it. Individual entries below therefore note only what DEVIATES from this: a derived state, a variant-specific default, a token that beats a size class.
 
@@ -152,7 +152,7 @@ Output: `(pressed): MouseEvent` — only fires when not disabled and not loading
 Content slots: default (label / leading or trailing icon), plus `[dsButtonSubtext]` for a projected second line. For icon-only actions use `<ds-icon-button>`.
 **Saying WHY a button is refused, and the two kinds of refusal.** A greyed control that does not say why is a dead end, and until 0.10.4 the only way to explain one was a tooltip — mouse-only. Which input to reach for is decided by whether the user can lift the refusal on this screen:
 - **Standing** (no permission, no integration — nothing here will change it): `disabledReason` beside `disabled`. The reason renders as a second line INSIDE the button, and setting it flips how the button is disabled — `aria-disabled="true"` instead of the native attribute, because a natively disabled button never takes focus and its description would never be announced (measured; Chrome's a11y tree reports name `"Approve invoice"`, description `"Needs the Finance role"`, state disabled). The click is swallowed in the handler instead, so `(pressed)` still never fires. Leave `disabledReason` unset and NOTHING changes: the native attribute stays, and so does every existing layout. Length is deliberately uncapped — the text wraps and the button grows.
-- **Temporary** (the form is not filled in yet): do NOT disable the button at all. Leave it live, judge validity in the submit handler (the house rule for forms), and carry the text UNDER the button with `hint` / `warning` / `error` — the same three inputs the fields take, resolved by the same `resolveFieldMessage`, rendered by the same `ds-field-message`, with the same `messageIcon` and `reserveMessage` knobs and the same `DS_CONFIG.field.*` fallbacks. This is inheritance, not a copy: `hint`/`warning`/`error`/`messageIcon`/`reserveMessage` moved out of `DsFieldBase` into a new `DsMessageBase`, which `DsFieldBase` and `ButtonComponent` both extend — `errors`/`invalid`/`touched` stay on `DsFieldBase`, since a button has no validation state of its own.
+- **Temporary** (the form is not filled in yet): do NOT disable the button at all. Leave it live, judge validity in the submit handler (the house rule for forms), and carry the text UNDER the button with `hint` / `warning` / `error` — the same three inputs the fields take, resolved and rendered exactly as a field's own message row is, with the same `messageIcon` and `reserveMessage` knobs and the same `DS_CONFIG.field.*` fallbacks. The button shares the fields' implementation rather than copying it, so the behaviour cannot drift apart. What it does NOT take is `errors` / `invalid` / `touched`: a button has no validation state of its own.
 Layout: a message-bearing button becomes a column (host class `with-message`), and because the host shrinks to fit, a message longer than the label widens the pair — button included, exactly as a field's control spans its own message. Without a message the host keeps the `inline-flex` box every existing layout was built against.
 Tokens: `--ds-button-bg-color`, `--ds-button-bg-color-hover`, `--ds-button-bg-color-active`, `--ds-button-bg-color-disabled`, `--ds-button-label-color`, `--ds-button-label-color-disabled`, `--ds-button-border`, `--ds-button-radius`, `--ds-button-focus-shadow`, `--ds-button-pressed-shadow`, `--ds-button-shadow`, `--ds-button-shadow-hover`. The last two are the REST and hover shadow, both `none` by default — before them the only way to give a button a resting shadow was a deep selector into its inner `<button>`. `-shadow-hover` falls back to `-shadow`, so setting the resting one alone keeps the button steady under the pointer; focus and pressed keep their own hooks and still win while those states are on. For `variant="solid"`, `-bg-color-hover` / `-bg-color-active` / `-pressed-shadow` default to a `color-mix()` derivation of the resolved fill (88 % / 76 % + black — the theme's hover/pressed recipe), so overriding the fill alone retints the whole state set; tonal, outline, ghost and text keep explicit ramp defaults, so a full retint there means setting the state tokens too. 
 
@@ -216,7 +216,7 @@ Pre-styled search input with built-in icon. A form control, but not a field: no 
 Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `hidden: boolean = false`, `size: DsSize | null = null`, `debounce: number = 0` (ms held before `value` updates; clearing, Enter and `clear()` all skip the timer)
 Output: `(submitted): string` — emits the current value on Enter / form submit
 Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`.
-Binds through `NG_VALUE_ACCESSOR`, taking the CVA plumbing without `DsFieldBase` — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
+Binds through `NG_VALUE_ACCESSOR`, taking the value plumbing without the field-message layer — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
 
 #### `<ds-date-picker>` — `DatePickerComponent`
 Inputs: `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `value: model<Date | RangeValue | null>` (`RangeValue = [Date | null, Date | null]`), `placeholder: string = 'Select date'`, `label: string = ''`, `hint: string = ''`, `required: boolean = false`, `optional: boolean = false`
@@ -437,7 +437,7 @@ All built-in icons (kebab-case where indicated, camelCase otherwise — DS uses 
 
 `search` `plus` `minus` `check` `x` `chevronDown` `chevronRight` `chevronLeft` `chevronUp` `arrowRight` `arrowUp` `arrowDown` `info` `warn` `error` `success` `bell` `settings` `user` `users` `home` `calendar` `truck` `box` `map` `activity` `folder` `edit` `external` `trash` `copy` `download` `upload` `eye` `filter` `sort` `sortAsc` `sortDesc` `grid` `list` `moreH` `moreV` `link` `flag` `star` `inbox` `archive` `clock` `refresh` `play` `pause` `cmd` `paperclip` `file` `image` `lock` `logout` `help` `pin` `bookmark` `sparkle` `layers` `chart` `gauge` `package` `git` `sun` `moon` `save` `rotate` `qr` `globe` `phone` `bin` `pen` `smile` `frown` `mail` `eye-off` `check-circle` `drag`
 
-Adding icons to DS: edit `src/lib/icons/icons.data.ts`; SVG paths render inside `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">`. For consumer-side icons without forking DS, use `provideDsIcons(…)` below.
+Icons render inside `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">`. For consumer-side icons without forking DS, use `provideDsIcons(…)` below.
 
 #### `DS_ICON_REGISTRY` / `provideDsIcons(icons)`
 
@@ -478,9 +478,9 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
-`DsConfig` shape (see `src/lib/config/ds-config.ts`):
+`DsConfig` shape (the exported `DsConfig` type is the full contract):
 
-Twelve sections. `src/lib/config/ds-config.ts` is the source of truth — each key carries its own
+Twelve sections. The exported `DsConfig` type is the source of truth — each key carries its own
 doc comment there, including why it is an app-level decision at all.
 
 ```ts
