@@ -26,11 +26,6 @@
     padding: var(--space-8) var(--space-6) var(--space-12);
   }
 
-  @media (max-width: 1000px) {
-    .page { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
-    .toc { position: static; }
-  }
-
   /* ---------- table of contents ---------- */
 
   .toc {
@@ -62,6 +57,18 @@
 
   .toc a:hover { background: var(--surface-secondary); color: var(--text-primary); }
   .toc a .gap-ids { display: block; font-size: var(--font-size-xs); color: var(--text-tertiary); }
+
+  /* One column below 1000px. The nav has to shrink to a chip row here, or its nine
+     items push the title and the decision summary off the first screen. */
+  @media (max-width: 1000px) {
+    .page { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+    .toc { position: static; }
+    .toc-title { margin-bottom: var(--space-2); }
+    .toc-title + ol { margin-bottom: var(--space-3); }
+    .toc ol { flex-direction: row; flex-wrap: wrap; gap: var(--space-2); }
+    .toc a { border-left: 0; border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-pill); padding: var(--space-1) var(--space-3); }
+    .toc a .gap-ids { display: none; }
+  }
 
   /* ---------- headings ---------- */
 
