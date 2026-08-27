@@ -94,9 +94,8 @@ engine is the spec; "theme recipe vs hand-tuned picks" is question (b) INSIDE th
 wording; `.ds-interactive` sits on top of whatever the engine decides. Opening any of them alone means
 deciding the other two by accident.
 
-**Where the release risk is.** 0.10.2 was cut on 2026-08-24, so the pressure is off this manifest:
-`migrations/unreleased.json` carries **3 actionable items, 1 `deleteList` entry and 3 informational
-lines**, covering two focus-ring fixes, a portaled-token fix and a tooling fix. The risk moved to the
+**Where the release risk is.** 0.11.0 was cut on 2026-08-26 and its manifest absorbed what
+`unreleased.json` had been carrying, so there is no uncut manifest today. The risk sits in the
 three manifests behind it — mm-broker was last recorded on **0.9.1** and will swallow 0.10.0, 0.10.1 and
 0.10.2 in one pass, so those three are what has to be complete, not this one.
 
