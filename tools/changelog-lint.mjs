@@ -49,6 +49,36 @@ function publishedFiles() {
   return files.filter((file) => existsSync(join(ROOT, file)));
 }
 
+// Comments ship too, and that is not obvious. `src/lib/styles` and `src/lib/themes` are
+// copied VERBATIM as assets, so every comment in them is published text; and a `.ts`
+// comment survives into the FESM bundle and its JSDoc into the single `.d.ts`. A
+// component's own `.scss` is the exception — its comments are compiled away, which is
+// why `*.component.scss` is not swept here.
+//
+// Only the rules that cannot misfire on code run over these: a file that declares
+// `DsFieldBase` mentions it on every other line, so the private-symbol and
+// script-name rules stay off.
+// C006 is left OFF here on purpose: an SVG path (`M21 13a9 9 0 0 1-12-12 …`) reads as
+// an ambiguous date, and a date in code was never the risk the rule was for.
+const SOURCE_RULES = new Set(['C001', 'C002', 'C003', 'C004', 'C008', 'C009']);
+
+function shippedSources() {
+  const found = [];
+  const crawl = (dir, keep) => {
+    if (!existsSync(dir)) return;
+    for (const item of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, item.name);
+      if (item.isDirectory()) crawl(full, keep);
+      else if (keep(item.name)) found.push(relative(ROOT, full).split('\\').join('/'));
+    }
+  };
+  crawl(join(ROOT, 'src/lib/styles'), (n) => n.endsWith('.scss'));
+  crawl(join(ROOT, 'src/lib/themes'), (n) => n.endsWith('.scss'));
+  crawl(join(ROOT, 'src/lib'), (n) => n.endsWith('.ts') && !n.endsWith('.spec.ts'));
+
+  return found;
+}
+
 // Consumer projects and clients. A published artefact is read by ALL of them, so
 // naming one to the others is a confidentiality problem, not a style one.
 const CLIENTS = [
@@ -195,19 +225,28 @@ if (process.argv.includes('--list')) {
 // An absolute argument is honoured so a staged copy of one release block can be
 // checked before it is spliced back; `join(ROOT, file)` here silently reported
 // "not found" for those.
-const targets = (requested.length ? requested : publishedFiles()).map((file) => {
-  const full = resolve(ROOT, file);
-  const label = relative(ROOT, full).split('\\').join('/');
-  return { full, label: label.startsWith('..') ? full.split('\\').join('/') : label };
-});
+const sourceSet = new Set(shippedSources());
+const targets = (requested.length ? requested : [...publishedFiles(), ...sourceSet]).map(
+  (file) => {
+    const full = resolve(ROOT, file);
+    const label = relative(ROOT, full).split('\\').join('/');
+    const shown = label.startsWith('..') ? full.split('\\').join('/') : label;
+
+    return { full, label: shown, isSource: sourceSet.has(shown) };
+  },
+);
 
 const errors = [];
-const report = (file, line, code, message) =>
+let current = { isSource: false };
+const report = (file, line, code, message) => {
+  if (current.isSource && !SOURCE_RULES.has(code)) return;
   errors.push(`${file}:${line}  ${code}  ${message}`);
+};
 
 const quote = (text) => JSON.stringify(text.trim().slice(0, 90));
 
-for (const { full, label: file } of targets) {
+for (const { full, label: file, isSource } of targets) {
+  current = { isSource };
   if (!existsSync(full)) {
     report(file, 0, 'C000', 'not found');
     continue;
