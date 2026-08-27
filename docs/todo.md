@@ -33,6 +33,7 @@
 - P3 · Primary-button CTA token layer — ASKED 2026-08-05, Stas: keep in the backlog. Add opt-in
 - P3 · MED cluster — ASKED 2026-08-05, Stas: keep in the backlog. Density beyond hit-targets
 - P3 · CDK Menu adoption (option B) — parked. ONLY if/when nested submenus, a menubar, or context menus are
+- P2 · Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27
 
 **Records — kept so they are not "simplified" away**
 
@@ -42,8 +43,8 @@
 
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**25 open: 1 P1, 6 P2, 18 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **14 items — and 11 of those are
+**26 open: 1 P1, 7 P2, 18 P3** (counted from the index, not by hand). Ten are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **14 items — and 10 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave.
 
 **The tooling items came out of running the tools rather than reading them, and both were invisible to a
@@ -302,6 +303,13 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 ## Component API / portfolio
 
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
+
+## Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)
+
+- [ ] **[P2] Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code.** Asked as proposal P4 (covering findings G4 and A1) of the ITB Workspace filter-picker gap report, written against 0.9.1, which proposed a `DS_INTL` token in the `MatPaginatorIntl` shape scoped to "all overlay text". **The scope in the ask is what makes this a project rather than a change, and is why it was deferred rather than built.** The picker literals are six places: `Select all` (`multi-select.component.html:122`), `No matches` (`:175` and `autocomplete.component.html:222`), `+N more` (`:44` and `:37`), `'Remove ' + label` (`:32` and `:25`), `Create «…»` (`:244`) and the default `placeholder = 'Select…'` (`autocomplete.component.ts:128`). Outside the pickers a sweep of `src/lib/**/*.html` finds ~35 more hardcoded `aria-label`s — alert, breadcrumbs, color-picker, date-picker (×5), drawer, dropzone, input, modal-card, number-stepper (×2), pagination (×3), search, select, sidenav-footer (×6), table (×3), time-columns (×3), time-picker, toast — plus visible text in `ds-table` and `ds-sidenav-footer`. Localizing the pickers alone ships half a mechanism to an app that needs all of it.
+  **The fork, written down so the next reader does not re-derive it:** a `DS_INTL` token with `provideDsIntl`, against per-instance inputs on each component. **The library currently leans the other way** — `ds-filter-bar` localizes with `moreLabel` and `panelLabel` inputs (`filter-bar.component.ts:75-77`) — so a token has to justify itself against a shipped precedent rather than arrive as the obvious answer. If the token wins, `provideDsConfig` already exists as the app-wide configuration point and is where it belongs; `resolveWithConfig` is the pattern it would follow.
+  **P2 rather than P3 because a consumer is actually blocked**, which none of the other parked items can claim: ITB Workspace runs a two-language `LanguageService` and cannot translate a picker panel at all. Parked on priority, not on doubt about the need.
+  The rest of that report is live work — the seven surviving findings and their forks are in `presentations/picker-gaps-decisions.html`, whose closing section is this item.
 
 # Records — kept so they are not "simplified" away
 
