@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Публичная поверхность — что вырезать, что оставить</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="awaiting verdicts; the sweep is committed in 3233e1a6..499cf182 and each row here says what to restore">
+<link rel="stylesheet" href="ds.css">
+<style>
+  body {
+    margin: 0;
+    padding: var(--space-8) var(--space-6) var(--space-16);
+    background: var(--surface-canvas);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-m);
+    line-height: var(--line-height-base);
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  h1 {
+    margin: 0 0 var(--space-3);
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+  .lede { margin: 0 0 var(--space-6); max-width: 76ch; color: var(--text-secondary); }
+  .lede b { color: var(--text-primary); }
+  h2 {
+    margin: var(--space-12) 0 var(--space-2);
+    font-size: var(--font-size-l);
+    font-weight: var(--font-weight-bold);
+  }
+  h2 .n {
+    display: inline-block;
+    min-width: 1.6em;
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+  }
+  .sub { margin: 0 0 var(--space-5); max-width: 76ch; color: var(--text-secondary); font-size: var(--font-size-s); }
+
+  .callout {
+    margin: 0 0 var(--space-8);
+    padding: var(--space-5);
+    border: var(--border-width-default) solid var(--warning-border);
+    border-radius: var(--radius-lg);
+    background: var(--warning-subtitle);
+  }
+  .callout p { margin: 0 0 var(--space-3); }
+  .callout p:last-child { margin: 0; }
+
+  .row {
+    margin-bottom: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--surface-default);
+  }
+  .row.contested { border-color: var(--error-border); background: var(--error-subtitle); }
+  .head { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: baseline; }
+  .id {
+    padding: 1px var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+  }
+  .q { flex: 1; min-width: 20ch; font-weight: var(--font-weight-semibold); }
+  .aud {
+    padding: 1px var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+  .aud.human { background: var(--accent-subtitle); color: var(--accent-strong); }
+  .aud.agent { background: var(--success-subtitle); color: var(--success-text); }
+  .aud.both { background: var(--surface-secondary); color: var(--text-secondary); }
+
+  .why { margin: var(--space-3) 0 0; color: var(--text-secondary); font-size: var(--font-size-s); }
+  .why b { color: var(--text-primary); }
+  .cost { margin: var(--space-2) 0 0; color: var(--text-secondary); font-size: var(--font-size-s); }
+  .cost::before { content: "Цена ошибки: "; font-weight: var(--font-weight-semibold); color: var(--text-primary); }
+
+  pre {
+    margin: var(--space-3) 0 0;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--surface-secondary);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    line-height: 1.65;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+  pre .del { color: var(--error-text); }
+  pre .add { color: var(--success-text); }
+
+  .choice { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-4); }
+  .choice label {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-width-default) solid var(--border-subtitle);
+    border-radius: var(--radius-md);
+    background: var(--surface-canvas);
+    cursor: pointer;
+    font-size: var(--font-size-s);
+  }
+  .choice label:hover { border-color: var(--border-strong); }
+  .choice input { margin-top: 3px; }
+  .choice input:checked + span { font-weight: var(--font-weight-bold); }
+  .choice .did { color: var(--text-tertiary); font-size: var(--font-size-xs); }
+
+  .bar {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: center;
+    margin-top: var(--space-10);
+    padding: var(--space-4) var(--space-5);
+    border: var(--border-width-default) solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface-default);
+    box-shadow: var(--shadow-card);
+  }
+  button {
+    padding: var(--space-3) var(--space-5);
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--primary);
+    color: var(--text-on-primary);
+    font-family: inherit;
+    font-size: var(--font-size-m);
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--letter-spacing-wide);
+    cursor: pointer;
+  }
+  button.ghost { background: var(--surface-secondary); color: var(--text-primary); }
+  .tally { color: var(--text-secondary); font-size: var(--font-size-s); font-variant-numeric: tabular-nums; }
+  textarea {
+    width: 100%;
+    min-height: 180px;
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--surface-secondary);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Публичная поверхность: что вырезать, что оставить</h1>
+  <p class="lede">
+    Прочистка уже отгружена восемью коммитами (<code>3233e1a6</code>…<code>499cf182</code>). Каждая строка
+    ниже — <b>отдельное решение</b>, с дословным «до → после» и с тем, что вернётся, если ты снимешь
+    галочку. В каждой строке <b>один</b> ответ. Предвыбрано то, что я уже сделал — переключай там, где не согласен.
+  </p>
+
+  <div class="callout">
+    <p><b>Где я сузил задачу и почему это важно.</b> Я применил к манифестам ту же мерку, что к прозе для
+      человека — а у них другой читатель. <span class="aud human">проза → человек</span> ставит вопрос
+      «а это ему вообще о чём?». <span class="aud agent">манифест → агент</span> ставит другой:
+      «сможет он этим опознать место в чужом коде?».</p>
+    <p>Имя типа вроде <code>DsFieldBase</code> нельзя импортировать — это я проверил сборкой пакета
+      (в опубликованном <code>.d.ts</code> оно <i>declare</i>-ится, но в списке экспорта его нет). Но
+      оно <b>появляется в тексте ошибки компилятора</b> у того, кто наследует наш компонент. Значит для
+      агента это опознавательный признак, а не «подкапотка». Ровно эту разницу я и не учёл.</p>
+  </div>
+
+  <h2><span class="n">0</span> Мета — рамка, из которой следует всё остальное</h2>
+  <p class="sub">Ответы здесь задают дефолт для всех разделов ниже. Если они разойдутся с отдельными
+    строками, я буду считать главными отдельные строки.</p>
+
+  <div class="row">
+    <div class="head"><span class="id">M1</span><span class="q">Держать манифесты по другой планке, чем CHANGELOG?</span><span class="aud both">мета</span></div>
+    <p class="why"><b>«Планка» здесь = список того, что вообще разрешено называть.</b> До этой прочистки
+      её <b>не было ни у одного из двух файлов</b>: правило для пишущего агента запрещало внутреннюю
+      РАБОТУ (refactor / CI / tooling не становятся записями) и не говорило ничего про внутренние
+      ССЫЛКИ, а манифесты на это не проверялись вообще ничем. Поэтому утечки в них накопились
+      одинаковые. Я ввёл ОДНУ планку на оба.</p>
+    <p class="why">Вопрос в том, должна ли она у манифеста быть <b>шире</b>. CHANGELOG читает человек,
+      решающий «обновляться ли». Манифест исполняет агент в чужом репозитории. Одно и то же имя может
+      быть для первого шумом, а для второго — единственной зацепкой.</p>
+    <div class="choice">
+      <label><input type="radio" name="M1" data-id="M1-split" checked><span>Да, разные планки: манифест сохраняет всё, чем можно опознать место в коде<span class="did"> — так я и буду делать дальше</span></span></label>
+      <label><input type="radio" name="M1" data-id="M1-same"><span>Нет, одна планка на всё публикуемое</span></label>
+    </div>
+  </div>
+
+  <div class="row contested">
+    <div class="head"><span class="id">M2</span><span class="q">Имя неэкспортируемого типа: оставлять, если агент опознаёт по нему ошибку компилятора?</span><span class="aud agent">манифест</span></div>
+    <p class="why">Консюмер не может <code>import { DsFieldBase }</code> и не может написать
+      <code>extends DsFieldBase</code>. Но в его ошибке TS4114 стоит
+      <code>…is not assignable to the same property in base type 'DsFieldBase'</code> — и агент,
+      читающий вывод сборки, ищет это имя.</p>
+    <p class="cost">если убрать зря — агент не свяжет ошибку сборки с пунктом миграции и пометит его «не применимо».</p>
+    <div class="choice">
+      <label><input type="radio" name="M2" data-id="M2-keep-named"><span>Оставлять имя, помечая «internal»</span></label>
+      <label><input type="radio" name="M2" data-id="M2-keep-plain"><span>Оставлять имя без пометок</span></label>
+      <label><input type="radio" name="M2" data-id="M2-drop" checked><span>Убирать, описывать словами<span class="did"> — что я сделал</span></span></label>
+    </div>
+  </div>
+
+  <div class="row contested">
+    <div class="head"><span class="id">M3</span><span class="q">Локаторы (<code>searchHints</code>, <code>detect</code>) на код, который консюмер физически не мог написать</span><span class="aud agent">манифест</span></div>
+    <p class="why">Я удалил <code>extends DsFieldBase</code> из <code>searchHints</code> и
+      <code>detect</code> в <code>0.11.0.json</code>: exports-карта не пускает вглубь пакета, значит
+      такой строки в чужом коде быть не может. Контраргумент: греп, который ничего не находит, ничего и
+      не стоит, а вот отсутствующий греп стоит пропущенного места.</p>
+    <p class="cost">если убрать зря — агент не найдёт того, кто всё-таки дотянулся (deep-import, форк, патч).</p>
+    <div class="choice">
+      <label><input type="radio" name="M3" data-id="M3-keep"><span>Держать локаторы, даже безрезультатные</span></label>
+      <label><input type="radio" name="M3" data-id="M3-drop" checked><span>Убирать невозможные<span class="did"> — что я сделал</span></span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">M4</span><span class="q">Поле <code>old</code>, описывающее невозможный код</span><span class="aud agent">манифест</span></div>
+    <p class="why"><code>old</code> перечислял <code>class MyField extends DsFieldBase</code> наравне с
+      <code>extends TableComponent</code>. Первое невозможно, второе обычно.</p>
+    <p class="why"><b>Поправка к моей же формулировке, проверено по коду линта.</b> <code>old</code> — это
+      не «для сравнения было/стало», а <b>локатор</b>: <code>tools/migration-lint.mjs:216</code> кладёт его
+      в один пул с <code>searchHints</code> и <code>detect</code>
+      (<code>[...hints, ...detect, ...(item.old ? [item.old] : [])]</code>), то есть finder ищет по нему в
+      чужом коде. Отдельно для kind'ов-переименований пара <code>old</code>+<code>new</code>
+      обязательна (<code>:172</code>) и там она действительно «было → стало». Значит я удалил
+      <b>поисковую строку</b>, а не пояснение — и вопрос сводится к M3.</p>
+    <p class="cost">если убрать зря — finder теряет одну из строк, по которым вообще находит место.</p>
+    <div class="choice">
+      <label><input type="radio" name="M4" data-id="M4-keep"><span>Оставить как есть (локатор ценнее пустого совпадения)</span></label>
+      <label><input type="radio" name="M4" data-id="M4-drop" checked><span>Оставить только реально наследуемое<span class="did"> — что я сделал</span></span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">1</span> Конфиденциальность — здесь я уверен, но спрашиваю всё равно</h2>
+  <p class="sub">Пакет публикуется на registry.npmjs.org с <code>access: "public"</code>, CHANGELOG едет
+    внутри тарбола и рендерится на docs-сайте. Каждый консюмер читает про остальных.</p>
+
+  <div class="row">
+    <div class="head"><span class="id">C1</span><span class="q">Имена клиентских проектов</span><span class="aud both">оба</span></div>
+    <p class="why"><code>mm-broker</code>, <code>mm-ecm</code>, <code>pinkmoon</code>,
+      <code>broker-portal</code>, <code>platform-admin</code>, <code>employee-portal</code>,
+      «ai-sdlc starter». 24 места. Один раз назван даже файл внутри их дерева
+      (<code>display-compare.ts</code>).</p>
+    <div class="choice">
+      <label><input type="radio" name="C1" data-id="C1" checked><span>Удалять, заменять на «a consumer»<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="C1" data-id="C1-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">C2</span><span class="q">Описательные заменители клиента</span><span class="aud both">оба</span></div>
+    <p class="why">«the ports», «the field app», «one admin port» — то же раскрытие с отпиленным именем.
+      Именно они выжили после первой прочистки.</p>
+    <div class="choice">
+      <label><input type="radio" name="C2" data-id="C2" checked><span>Удалять тоже<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="C2" data-id="C2-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">C3</span><span class="q">Ключи нашего трекера</span><span class="aud both">оба</span></div>
+    <p class="why"><code>MBP-245</code>, <code>MBP-225</code>, <code>PIN-475</code> — 5 мест в прозе плюс
+      3 в комментариях исходников. Читателю не открыть.</p>
+    <p class="cost">возможный контраргумент: ключ помогает <i>нам</i> найти историю. Но для этого есть
+      done.md и git.</p>
+    <div class="choice">
+      <label><input type="radio" name="C3" data-id="C3" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="C3" data-id="C3-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">C4</span><span class="q">Имена людей</span><span class="aud both">оба</span></div>
+    <p class="why">«Found by Stas testing the docs on a phone» ×2 в CHANGELOG и «approved by Stas» в
+      <code>styles/_press.scss</code>, который публикуется дословно.</p>
+    <div class="choice">
+      <label><input type="radio" name="C4" data-id="C4" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="C4" data-id="C4-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">2</span> Ссылки на то, чего у читателя нет</h2>
+
+  <div class="row">
+    <div class="head"><span class="id">P1</span><span class="q">Пути на наши деки и презентации</span><span class="aud both">оба</span></div>
+    <p class="why"><code>presentations/implemented/disabled-recipe.html</code> в CHANGELOG (та самая, из-за
+      которой всё началось) и ссылка на деку в комментарии <code>button.component.scss</code>.</p>
+    <pre><span class="del">− Measured, not guessed: the matrix is in `presentations/implemented/disabled-recipe.html` — 5 variants x 3 colours…</span>
+<span class="add">+ (удалено, замеры контраста в записи остались)</span></pre>
+    <div class="choice">
+      <label><input type="radio" name="P1" data-id="P1" checked><span>Удалять<span class="did"> — сделано в прозе; в комментарии компонента оставлено, т.к. не публикуется</span></span></label>
+      <label><input type="radio" name="P1" data-id="P1-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">P2</span><span class="q"><code>docs/todo.md</code> и <code>docs/done.md</code></span><span class="aud both">оба</span></div>
+    <p class="why">«Real projection support is still open — see <code>docs/todo.md</code>» в CHANGELOG и в
+      JSDoc <code>projection-dropped.directive.ts</code>, который доезжает в бандл.</p>
+    <p class="cost">домашнее правило защищает пойнтеры на todo.md от вычёркивания как «избыточных» — но
+      оно про внутренние комментарии, а этот доезжает до консюмера.</p>
+    <div class="choice">
+      <label><input type="radio" name="P2" data-id="P2" checked><span>Удалять там, где публикуется<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="P2" data-id="P2-all"><span>Удалять везде, включая невыезжающие комментарии</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">P3</span><span class="q">Пути в наше дерево: <code>tools/</code>, <code>src/lib/</code>, <code>ds-docs/</code></span><span class="aud both">оба</span></div>
+    <p class="why">19 мест. Часть — <b>замены, а не удаления</b>: <code>src/lib/styles/_surface-motion.scss</code>
+      стало <code>styles/_surface-motion.scss</code> (публикуемая форма), <code>ds-config.ts</code> стало
+      «экспортируемый тип <code>DsConfig</code>».</p>
+    <div class="choice">
+      <label><input type="radio" name="P3" data-id="P3" checked><span>Заменять на публикуемый путь, иначе удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="P3" data-id="P3-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">P4</span><span class="q">Наши npm-скрипты в инструкциях</span><span class="aud agent">манифест</span></div>
+    <p class="why">Пять манифестов велели <code>Run npm run class-surface v0.9.1 v0.10.0</code>. Скрипт
+      живёт в нашем package.json; агент консюмера получит «Missing script». Заменил на «собери проект —
+      компилятор перечислит все коллизии», то есть на инструмент, который у него есть.</p>
+    <div class="choice">
+      <label><input type="radio" name="P4" data-id="P4" checked><span>Заменять на доступный читателю способ<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="P4" data-id="P4-keep"><span>Оставить упоминание как справку «чем это считали у нас»</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">P5</span><span class="q">Идентификаторы наших линт-правил (<code>M039</code>…<code>M042</code>) и хеши коммитов</span><span class="aud both">оба</span></div>
+    <p class="why">4 места с <code>M0xx</code> плюс <code>d2e4712</code> в комментарии, доезжающем в бандл.
+      У читателя нет ни нашего линта, ни репозитория.</p>
+    <div class="choice">
+      <label><input type="radio" name="P5" data-id="P5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="P5" data-id="P5-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">3</span> Имена символов — самый спорный раздел</h2>
+  <p class="sub">Проверено сборкой пакета: в опубликованном тарболе один плоский <code>.d.ts</code>, один
+    FESM-бандл и exports-карта без <code>./lib/*</code>. Дальше разница между двумя группами
+    принципиальная.</p>
+
+  <div class="row contested">
+    <div class="head"><span class="id">S1</span><span class="q"><code>DsFieldBase</code>, <code>DsMessageBase</code>, <code>DsControlValueAccessor</code>, <code>TimeColumnsComponent</code></span><span class="aud agent">манифест</span></div>
+    <p class="why"><b>В опубликованных типах ЕСТЬ</b> (иначе тип публичного наследника не выразить), но в
+      списке экспорта нет. Импортировать нельзя — а в ошибке компилятора увидишь.</p>
+    <pre>0.10.1.json → pitfall
+<span class="del">− Beware the REPORT here… `npm run class-surface` lists those seven names as LOST from fourteen
+−   field components… they moved UP into DsFieldBase and every field still has them by inheritance.
+−   AUTHORING already flags a member that moved to a base class as something the tool cannot see.</span>
+<span class="add">+ Seven members were not lost, they moved UP onto an internal shared base, and every field still
++   has them by inheritance — so an override of one of those needs no change.</span></pre>
+    <pre>0.10.1.json → note
+<span class="del">− …declared once on a new `DsFieldBase` instead of being hand-copied into each of the fourteen
+−   fields. Both CVA bases extend it, and ds-radio extends it directly.</span>
+<span class="add">+ …declared once on a new internal shared base instead of being hand-copied into each of the
++   fourteen fields. Every field reaches them by inheritance.</span></pre>
+    <p class="cost">если убрать зря — агент видит TS4114 с именем <code>DsFieldBase</code> и не находит
+      это имя ни в одном пункте миграции.</p>
+    <div class="choice">
+      <label><input type="radio" name="S1" data-id="S1-restore"><span>Вернуть имена (и «internal» рядом)</span></label>
+      <label><input type="radio" name="S1" data-id="S1-restore-plain"><span>Вернуть имена без пометок</span></label>
+      <label><input type="radio" name="S1" data-id="S1-keep-removed" checked><span>Оставить как сделал — без имён<span class="did"> — что я сделал</span></span></label>
+    </div>
+  </div>
+
+  <div class="row contested">
+    <div class="head"><span class="id">S2</span><span class="q"><code>DsFieldBase</code> / <code>DsControlValueAccessor</code> в <code>searchHints</code> 0.10.1</span><span class="aud agent">манифест</span></div>
+    <p class="why">Это были две строки массива, по которым агент грепает чужой код.</p>
+    <pre>0.10.1.json → searchHints
+<span class="del">−   "DsFieldBase",
+−   "DsControlValueAccessor",</span></pre>
+    <div class="choice">
+      <label><input type="radio" name="S2" data-id="S2-restore"><span>Вернуть в <code>searchHints</code></span></label>
+      <label><input type="radio" name="S2" data-id="S2-keep-removed" checked><span>Оставить удалёнными<span class="did"> — что я сделал</span></span></label>
+    </div>
+  </div>
+
+  <div class="row contested">
+    <div class="head"><span class="id">S3</span><span class="q"><code>extends DsFieldBase</code> в <code>searchHints</code> и <code>detect</code> 0.11.0</span><span class="aud agent">манифест</span></div>
+    <p class="why">Удалил как «код, которого не может быть». Плюс из <code>old</code> и
+      <code>verify</code> того же пункта — а <code>old</code>, как выяснилось в M4, тоже локатор. Итого я
+      снял <b>три поисковые строки из четырёх мест</b>.</p>
+    <div class="choice">
+      <label><input type="radio" name="S3" data-id="S3-restore"><span>Вернуть все четыре места</span></label>
+      <label><input type="radio" name="S3" data-id="S3-restore-locators"><span>Вернуть только локаторы (<code>searchHints</code>/<code>detect</code>), <code>old</code>/<code>verify</code> оставить</span></label>
+      <label><input type="radio" name="S3" data-id="S3-keep-removed" checked><span>Оставить удалёнными<span class="did"> — что я сделал</span></span></label>
+    </div>
+  </div>
+
+  <div class="row contested">
+    <div class="head"><span class="id">S4</span><span class="q"><code>resolveFieldMessage</code> — какие компоненты затронуты</span><span class="aud agent">манифест</span></div>
+    <p class="why"><b>В опубликованных типах ОТСУТСТВУЕТ вовсе</b> (grep = 0). Но фразой «все 14
+      компонентов, которые ходят через <code>resolveFieldMessage</code>» манифест <i>определял область</i>.
+      Я заменил на «все 14 компонентов» — область та же, механизм не назван.</p>
+    <pre>0.10.0.json → appliesWhen
+<span class="del">− The fourteen field components that route through resolveFieldMessage — border and fill on the
+−   nine bordered ones, aria-invalid and the message state on the other five.</span>
+<span class="add">+ All fourteen field components — border and fill on the nine bordered ones, aria-invalid and
++   the message state on the other five.</span></pre>
+    <div class="choice">
+      <label><input type="radio" name="S4" data-id="S4-restore"><span>Вернуть имя функции</span></label>
+      <label><input type="radio" name="S4" data-id="S4-keep-removed" checked><span>Оставить «все 14 компонентов»<span class="did"> — что я сделал</span></span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">S5</span><span class="q"><code>valueControlBridge</code>, <code>prepareOverlayEnter</code>, <code>disposeWithLeave</code>, <code>FieldMessageComponent</code></span><span class="aud human">проза</span></div>
+    <p class="why">Все четыре отсутствуют в опубликованных типах (grep = 0) и упоминались только в
+      CHANGELOG, не в манифестах. Читателю-человеку они не дают ничего.</p>
+    <div class="choice">
+      <label><input type="radio" name="S5" data-id="S5" checked><span>Удалять из прозы<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="S5" data-id="S5-restore"><span>Вернуть</span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">4</span> Археология решений и наш процесс</h2>
+
+  <div class="row">
+    <div class="head"><span class="id">A1</span><span class="q">Как мы выбирали: «ORIGINAL:», «turned out», «мы сначала думали»</span><span class="aud human">проза</span></div>
+    <p class="why">~15 мест. Пример: «the doc line was wrong (the flag stripped the control's inset rather
+      than "reserving space")» — при том что в этой же записи вход удаляется, то есть признание уже
+      неактуально.</p>
+    <div class="choice">
+      <label><input type="radio" name="A1" data-id="A1" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="A1" data-id="A1-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">A2</span><span class="q">Отвергнутые альтернативы</span><span class="aud human">проза</span></div>
+    <p class="why">«Rejected alternative: reading <code>OutputEmitterRef.listeners</code>… It is private,
+      and a rename would kill the warning SILENTLY», «An earlier draft clamped the wordmark…».</p>
+    <p class="cost">возможный контраргумент: это спасает следующего от повторения нашей ошибки — но
+      следующий это мы, а читает чужой.</p>
+    <div class="choice">
+      <label><input type="radio" name="A2" data-id="A2" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="A2" data-id="A2-keep"><span>Оставлять, если объясняет, почему API именно такой</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">A3</span><span class="q">Наш процесс: релизные гейты, бэклог, «the deck», «dogfooding», аудиты консюмеров</span><span class="aud both">оба</span></div>
+    <p class="why">«Two dogfooding audits (mm-ecm …, mm-broker …)», «0.9.0 tried it and it was retired the
+      same day», «back-filled on 2026-08-21 (167 items across 19 releases)».</p>
+    <div class="choice">
+      <label><input type="radio" name="A3" data-id="A3" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="A3" data-id="A3-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">A4</span><span class="q">Самобичевание</span><span class="aud human">проза</span></div>
+    <p class="why">«That is a failure of these notes, not of the consumer.» В публичном документе это
+      оценка нас, а не факт о релизе.</p>
+    <div class="choice">
+      <label><input type="radio" name="A4" data-id="A4" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="A4" data-id="A4-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">A5</span><span class="q">Провенанс нашей работы</span><span class="aud human">проза</span></div>
+    <p class="why">«(absorbed from the prototype data-grid)» — <code>data-grid</code> встречается в файле
+      один раз, <code>DataGridComponent</code> никогда не был в <code>public-api.ts</code>. «(MUI's term)»
+      про выбор имени.</p>
+    <div class="choice">
+      <label><input type="radio" name="A5" data-id="A5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="A5" data-id="A5-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">5</span> Числа и замеры</h2>
+
+  <div class="row">
+    <div class="head"><span class="id">N1</span><span class="q">Замеры, доказывающие, что мы поработали</span><span class="aud human">проза</span></div>
+    <p class="why">~65 мест: «Measured on a two-column probe…», «Verified in Chrome at 604px», «9,968
+      focusable elements over 64 pages», «22.8px apart vertically».</p>
+    <div class="choice">
+      <label><input type="radio" name="N1" data-id="N1" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="N1" data-id="N1-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">N2</span><span class="q">Числа СЛОМАННОГО состояния (до фикса)</span><span class="aud human">проза</span></div>
+    <p class="why">«the disabled label was 1.11:1 from the enabled one», «2.54 → 3.41:1». Я оставлял
+      число ПОСЛЕ и убирал ДО.</p>
+    <p class="cost">если убрать зря — читатель не поймёт масштаб дефекта и не решит, надо ли ему срочно.</p>
+    <div class="choice">
+      <label><input type="radio" name="N2" data-id="N2" checked><span>Оставлять только «после»<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="N2" data-id="N2-keep"><span>Оставлять «до → после» целиком</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">N3</span><span class="q">Числа, которые читателю нужны для действия</span><span class="aud both">оба</span></div>
+    <p class="why">Новый дефолт, изменившийся размер, контрастный порог, границы версий. Их я <b>не
+      трогал</b> — подтверждаю, что правило верное.</p>
+    <div class="choice">
+      <label><input type="radio" name="N3" data-id="N3" checked><span>Не трогать никогда<span class="did"> — так и сделано</span></span></label>
+      <label><input type="radio" name="N3" data-id="N3-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">N4</span><span class="q">Цензы консюмеров</span><span class="aud both">оба</span></div>
+    <p class="why">«one consumer had 41», «9 of 14 overlay-loading tables», «46 of its ds-icon elements
+      bind [size]="16"», «one consumer binds [stickyScrollbar] on all 35 of its tables».</p>
+    <p class="cost">если убрать зря — читатель теряет ориентир «насколько это распространено».</p>
+    <div class="choice">
+      <label><input type="radio" name="N4" data-id="N4" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="N4" data-id="N4-generalise"><span>Обобщать («часто пишут вручную»), а не удалять</span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">6</span> Структура и записи целиком</h2>
+
+  <div class="row">
+    <div class="head"><span class="id">X1</span><span class="q">Записи только про docs-сайт</span><span class="aud human">проза</span></div>
+    <p class="why">Одна запись сама кончалась словами «Docs-site only, nothing in the package». Удалил
+      целиком.</p>
+    <div class="choice">
+      <label><input type="radio" name="X1" data-id="X1" checked><span>Удалять целиком<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="X1" data-id="X1-keep"><span>Оставлять — docs-сайт тоже наша поверхность</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">X2</span><span class="q">Дубликаты записей</span><span class="aud human">проза</span></div>
+    <p class="why">В 0.10.1 две записи под <code>### Removed</code> дублировали свои же, лучшие версии в
+      <code>### Changed</code> того же релиза (тот же рецепт, те же числа). Удалил копии из Removed.</p>
+    <div class="choice">
+      <label><input type="radio" name="X2" data-id="X2" checked><span>Удалять копию, оставлять лучшую<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="X2" data-id="X2-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">X3</span><span class="q">Ломающая запись, стоявшая под <code>### Added</code></span><span class="aud human">проза</span></div>
+    <p class="why"><code>invalid</code> больше не продвигает <code>hint</code> — помечено
+      <b>BREAKING</b>, а лежало в Added. Перенёс в Changed.</p>
+    <div class="choice">
+      <label><input type="radio" name="X3" data-id="X3" checked><span>Переносить в правильную секцию<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="X3" data-id="X3-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">X4</span><span class="q">Порядок секций внутри релизов</span><span class="aud human">проза</span></div>
+    <p class="why">Разный от релиза к релизу: 0.10.0 — Added&gt;Fixed&gt;Changed, 0.9.0 открывается
+      DELETE-таблицей, 0.4.0 ставит Breaking вторым. Было до меня; <b>не трогал</b>.</p>
+    <div class="choice">
+      <label><input type="radio" name="X4" data-id="X4-leave" checked><span>Не трогать<span class="did"> — так и оставлено</span></span></label>
+      <label><input type="radio" name="X4" data-id="X4-normalise"><span>Привести все 23 релиза к одному порядку</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">X5</span><span class="q">Объяснения внутренней архитектуры</span><span class="aud human">проза</span></div>
+    <p class="why">«How the split works, since it is a shape other controls may want: the plumbing is now
+      <code>valueControlBridge()</code>, a function rather than a base class…» — «other controls» это наши,
+      не его.</p>
+    <div class="choice">
+      <label><input type="radio" name="X5" data-id="X5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="X5" data-id="X5-keep"><span>Оставлять — помогает понять, почему API такой</span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">7</span> Комментарии в исходниках</h2>
+  <p class="sub"><code>styles/</code> и <code>themes/</code> копируются в тарбол дословно; комментарий из
+    <code>.ts</code> доезжает в FESM-бандл, JSDoc — в <code>.d.ts</code>. Комментарии
+    <code>*.component.scss</code> компилятор выбрасывает — проверено грепом собранного вывода.</p>
+
+  <div class="row">
+    <div class="head"><span class="id">R1</span><span class="q">Комментарии в <code>styles/</code> и <code>themes/</code></span><span class="aud both">оба</span></div>
+    <p class="why">Три утечки: «approved by Stas», <code>tools/check-focus-rings.mjs</code>,
+      <code>MBP-245</code>. Это опубликованный текст.</p>
+    <div class="choice">
+      <label><input type="radio" name="R1" data-id="R1" checked><span>Чистить<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="R1" data-id="R1-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">R2</span><span class="q">Комментарии в <code>.ts</code> (доезжают в бандл и <code>.d.ts</code>)</span><span class="aud both">оба</span></div>
+    <p class="why">Шесть утечек: <code>mm-broker</code> ×2, «the ports», <code>MBP-225</code> ×2, хеш
+      коммита, <code>docs/todo.md</code>.</p>
+    <div class="choice">
+      <label><input type="radio" name="R2" data-id="R2" checked><span>Чистить<span class="did"> — сделано</span></span></label>
+      <label><input type="radio" name="R2" data-id="R2-keep"><span>Оставить как было</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">R3</span><span class="q">Комментарии в <code>*.component.scss</code> (НЕ публикуются)</span><span class="aud both">оба</span></div>
+    <p class="why">Три оставлены осознанно: <code>pinkmoon</code>, ссылка на деку
+      <code>disabled-recipe.html</code>, <code>PIN-475</code>. Компилятор их выбрасывает (0 вхождений в
+      собранном выводе), а домашние правила защищают пойнтеры на деку и тикет.</p>
+    <div class="choice">
+      <label><input type="radio" name="R3" data-id="R3-leave" checked><span>Оставить<span class="did"> — так и оставлено</span></span></label>
+      <label><input type="radio" name="R3" data-id="R3-clean"><span>Вычистить и их, для гигиены</span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">8</span> Гейт</h2>
+
+  <div class="row">
+    <div class="head"><span class="id">G1</span><span class="q">Правило на приватные символы (C010) — оставлять ли включённым</span><span class="aud both">оба</span></div>
+    <p class="why">Если по S1–S4 имена возвращаются, правило начнёт ругаться на верный текст. Выходы: снять
+      правило; оставить с пометкой «internal» как условием (сейчас так); или ограничить его прозой, не
+      трогая манифесты.</p>
+    <div class="choice">
+      <label><input type="radio" name="G1" data-id="G1-as-is" checked><span>Как сейчас: молчит, если рядом сказано «internal»<span class="did"> — что я сделал</span></span></label>
+      <label><input type="radio" name="G1" data-id="G1-prose-only"><span>Только для прозы, манифесты не проверять</span></label>
+      <label><input type="radio" name="G1" data-id="G1-off"><span>Выключить правило совсем</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">G2</span><span class="q">Записать ли решения в правило для пишущего агента</span><span class="aud both">оба</span></div>
+    <p class="why">Сейчас блок «Never in a public changelog» лежит в
+      <code>.claude/agents/changelog-writer.md</code> — а <code>.claude/</code> целиком в gitignore, то
+      есть правило локальное и в репозиторий не попадёт.</p>
+    <div class="choice">
+      <label><input type="radio" name="G2" data-id="G2-local" checked><span>Оставить локальным<span class="did"> — как сейчас</span></span></label>
+      <label><input type="radio" name="G2" data-id="G2-repo"><span>Перенести в отслеживаемый файл (CONTRIBUTING.md или migrations/AUTHORING.md)</span></label>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button id="copy">Скопировать ответы</button>
+    <button class="ghost" id="none">Очистить ответы</button>
+    <button class="ghost" id="mine">Вернуть мои дефолты</button>
+    <span class="tally" id="tally"></span>
+  </div>
+  <textarea id="out" readonly placeholder="Нажми «Скопировать ответы» — здесь появится текст, который надо скинуть мне в чат."></textarea>
+
+</div>
+
+<script>
+  const boxes = [...document.querySelectorAll('input[type=radio]')];
+  const groups = [...new Set(boxes.map((b) => b.name))];
+  const defaults = new Map(boxes.map((b) => [b.dataset.id, b.checked]));
+  const tally = document.getElementById('tally');
+  const out = document.getElementById('out');
+
+  const label = (box) => box.closest('label').querySelector('span').textContent.replace(/\s+/g, ' ').trim();
+  const pick = (group) => boxes.find((b) => b.name === group && b.checked);
+
+  function render() {
+    const unanswered = groups.filter((g) => !pick(g));
+    const moved = groups.filter((g) => pick(g) && !defaults.get(pick(g).dataset.id));
+    tally.textContent =
+      `отвечено ${groups.length - unanswered.length} из ${groups.length}` +
+      (unanswered.length ? ` · без ответа: ${unanswered.join(', ')}` : '') +
+      ` · расхождений со мной: ${moved.length}`;
+  }
+
+  function answers() {
+    const lines = ['ВЕРДИКТЫ ПО ПУБЛИЧНОЙ ПОВЕРХНОСТИ', ''];
+    const moved = [];
+    const missing = [];
+    for (const group of groups) {
+      const picked = pick(group);
+      if (!picked) {
+        missing.push(group);
+        lines.push(`${group}: — БЕЗ ОТВЕТА`);
+        continue;
+      }
+      const changed = !defaults.get(picked.dataset.id);
+      if (changed) moved.push(group);
+      lines.push(`${group}: ${picked.dataset.id}${changed ? '  <-- ИЗМЕНЕНО' : ''}  ${label(picked)}`);
+    }
+    lines.push('');
+    lines.push(moved.length ? `РАСХОЖДЕНИЯ (${moved.length}): ${moved.join(', ')}` : 'РАСХОЖДЕНИЙ НЕТ — всё как я сделал.');
+    if (missing.length) lines.push(`БЕЗ ОТВЕТА (${missing.length}): ${missing.join(', ')}`);
+
+    return lines.join('\n');
+  }
+
+  document.getElementById('copy').addEventListener('click', async () => {
+    const text = answers();
+    out.value = text;
+    try {
+      await navigator.clipboard.writeText(text);
+      tally.textContent = 'скопировано в буфер — вставь мне в чат';
+    } catch {
+      out.select();
+      tally.textContent = 'буфер недоступен — текст выделен ниже, скопируй вручную';
+    }
+  });
+
+  document.getElementById('none').addEventListener('click', () => {
+    boxes.forEach((b) => (b.checked = false));
+    render();
+  });
+  document.getElementById('mine').addEventListener('click', () => {
+    boxes.forEach((b) => (b.checked = defaults.get(b.dataset.id)));
+    render();
+  });
+
+  boxes.forEach((b) => b.addEventListener('change', render));
+  render();
+</script>
+</body>
+</html>
