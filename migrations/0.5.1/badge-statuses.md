@@ -178,4 +178,4 @@ ds-badge.chip.in-transit { … }         // .chip now carries layout rules only
 ```
 
 This unifies every badge on one mechanism and restores the values that used to rely on factory
-colours. See the field app's `_badge-status.scss` for a full real-world map.
+colours.

@@ -41,22 +41,21 @@ One file per released version — `migrations/<version>.json` — mirroring that
 - **`supersedes`** — `<version>#<id>`, declared on the item that REVERSES an earlier one. It points
   BACKWARD only. An upgrade walks one version at a time and each manifest is frozen when the next is
   written, so a file cannot name its own future: there is no `supersededBy`, and a note that says
-  "in the next release" is a defect (M028, M029). The reversal is described in full by the later
+  "in the next release" is a defect. The reversal is described in full by the later
   item, which is the one an upgrade reaches second.
 - **`deleteList`** — the structured form of "what you can now delete" (see below).
 
 **Why:** the auto-update plugin reads the prose changelog with an LLM planner — correct, but
 re-derived on every consumer run. A shipped manifest makes the plan deterministic: the planner
 validates and prefers it, falling back to prose only when a version has no manifest. **Every
-published version has one**, so the fallback should never fire — the earliest were authored
-retroactively, and `0.6.1`, `0.6.2` and `0.9.1` were backfilled on 2026-08-11 after an audit found
-them missing. A patch release is not exempt: 0.6.2 turned out to carry an actionable change (a sheet
+published version has one**, so the fallback should never fire. A patch
+release is not exempt: 0.6.2 carries an actionable change (a sheet
 with nothing focusable in it stopped closing on Escape), which is exactly the kind a "just fixes"
 release is assumed not to have.
 
 See `AUTHORING.md` for how to write a good entry.
 
-**Do NOT write a prose guide per release — 0.9.0 tried it and it was retired the same day.**
+**Do NOT write a prose guide per release.**
 `migrations/unreleased/README.md` restated the manifest in a form nothing reads: the auto-update
 plugin loads `<version>.json`, and the only content the manifest did not already carry was the
 delete-list. Worse, it went stale inside one release — three late changes never reached it — and a
@@ -66,19 +65,18 @@ table in that version's CHANGELOG block.
 
 **A sibling folder `migrations/<version>/*.md` is still legal for the rare case a `note` genuinely
 cannot hold** — a worked before/after with code on both sides, like `migrations/0.5.1/badge-statuses.md`.
-The folder never matches the `*.json` glob, so tooling ignores it, and `tools/changelog-release.mjs`
-promotes `migrations/unreleased/` alongside the manifest if one exists. The test before writing one:
+The folder never matches the `*.json` glob, so tooling ignores it. The test before writing one:
 **would a tool or an agent ever open it?** If the answer is "a human might", it belongs in the
 CHANGELOG instead.
 
 **What the manifest must carry that a release note usually omits: what the consumer can now DELETE.**
-Two dogfooding audits (mm-ecm 08-06, mm-broker 08-07) read consumer stylesheets as a record of what
+Two audits read consumer stylesheets as a record of what
 this library made them write, and both found the same thing — most workarounds were written against
 hooks that ALREADY existed, because a release note says what broke and never says what became
 unnecessary.
 
 **Those entries are the `deleteList` ARRAY, not prose.** 0.9.0 and 0.10.0 shipped 21 and 24 of them
-as `DELETE-LIST:` sentences inside `informational`, and in the mm-broker upgrade (2026-08-21) not one
+as `DELETE-LIST:` sentences inside `informational`, and in a real upgrade not one
 of them was acted on by the loop: an array of strings has no `find` for a finder to run, so every one
 of the 45 waited for a human to read all 63 informational lines and recognise their own code in a
 sentence. Twelve local classes and a duplicated `visually-hidden` recipe survived the upgrade that
@@ -88,30 +86,30 @@ CONSUMER's code, a string or an array of them — and keep the human copy in tha
 is the one that goes stale, so new manifests do not carry it.
 
 **What made an item findable is now part of the schema, because a well-formed item can still be
-undetectable.** mm-broker walked 0.6.0 → 0.10.1 with the plugin and a review afterwards found two
+undetectable.** An upgrade walked 0.6.0 → 0.10.1 with the plugin and a review afterwards found two
 items the whole find/apply/recheck loop had passed over in silence — not malformed, not ambiguous,
 just impossible to locate from what they carried:
 
 - `0.7.1#table-sortkey-non-null-when-unsorted` named `ds-table[sortKey]` as `old`, and every
   `searchHint` named the DS. What breaks is the host's own store code —
   `sorting: store.sortKey() ? { path: sortKey()!, order: sortDir() ?? 'Asc' } : undefined` — which
-  mentions no DS symbol at all. Zero hits, "not applicable", and the recheck's clean grep CONFIRMED
-  the verdict. Three server-paged screens kept ordering by a column whose header showed no sort.
+  mentions no DS symbol at all. A DS-named search returns zero hits, the item is
+  recorded not-applicable, and a clean re-check grep agrees — while the screens keep ordering by a
+  column whose header shows no sort.
 - `0.7.1#field-reserve-message-default-off` put "consumers that wrote `[reserveMessage]="false"` can
   delete those bindings" at word 150 of a 200-word note, with no delete entry. Three of them
   survived.
 
 Hence `surface`, `detect`, `verify` and `restore`: say WHERE the consumer's code changes, what that
 code LOOKS like when it names nothing of ours, what proves the change landed, and how to get the old
-behaviour back. **`tools/migration-lint.mjs` enforces it** — run `npm run migration-lint`; the
-`preversion` hook and the PR gate both run it, so neither a release nor a merge can carry a manifest
-nobody can act on. **Every published manifest was back-filled to this contract on 2026-08-21** (167
-items across 19 releases, 32 prose delete lines into arrays), so there is no legacy tier and no
+behaviour back. **A lint enforces it** — the `preversion` hook and the PR gate both run it, so
+neither a release nor a merge can carry a manifest
+nobody can act on. **Every published manifest meets this contract**, so there is no legacy tier and no
 warning level: a gap is an error wherever it appears.
 
 **Authoring:** drafted at release time alongside the CHANGELOG entry (the `/changelog` workflow
 drafts it from the release diff; the release author reviews). The prose changelog stays canonical
 for humans — the manifest is its machine mirror; if they disagree, fix the manifest.
 
-**Shipping:** `tools/build-schematics.mjs` copies `migrations/` into `dist/ds/migrations/`, so
-consumers get manifests in `node_modules` and the plugin also reads them from the repo clone.
+**Shipping:** `migrations/` is copied into `dist/ds/migrations/`, so you get the manifests in
+`node_modules/@ids-group-ltd/ids-design-system/migrations/`.
