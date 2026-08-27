@@ -21,7 +21,7 @@ import {
  *
  * NOT projection support: the probe exists only so the warning can see that
  * content was passed, and the directive hides it. Real projection for the field
- * family is still open — see docs/todo.md.
+ * family is still open.
  *
  * `reason` replaces the default `[label]` wording for a host that drops content
  * for a different reason — `ds-filter-bar` drops anything that carries neither of

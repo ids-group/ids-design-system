@@ -62,7 +62,7 @@ const VIRTUAL_OVERSCAN = 6;
 
 /** Rendered values that read as "no data", matched case-insensitively. The list
  *  is wider than the empty string because consumers render placeholders; these
- *  are the ones mm-broker had to enumerate itself before `sortValue` existed. */
+ *  are the ones a consumer had to enumerate before `sortValue` existed. */
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
 
 /** Normalises "no data" to a single `null`, so the comparator has one blank
@@ -101,8 +101,8 @@ function compareSortValues(
   }
 
   // `sensitivity: 'base'` so "Ångström" sorts next to "Angstrom" and casing does
-  // not split a column into two runs. Taken from the comparator mm-broker is
-  // retiring, which is also where BLANK_CELL above came from — without it a
+  // not split a column into two runs. Taken from a consumer's own comparator,
+  // which is also where BLANK_CELL above came from — without it a
   // column whose `sortValue` returns strings reorders on migration.
   return firstText.localeCompare(secondText, undefined, {
     numeric: true,

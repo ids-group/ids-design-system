@@ -17,7 +17,7 @@ import { resolveBrandValue } from '../brand-defaults';
  * screens behind the login.
  *
  * Brand row, tagline, card and support footer are the same four parts in every
- * consumer that has hand-rolled this. What the ports get wrong is the full-height
+ * consumer that has hand-rolled this. What a hand-rolled version gets wrong is the full-height
  * box: they nest a `100vh` wrapper inside a `100dvh` one and scroll a page whose
  * content fits. Here the host is the only one, and it also carries the safe-area
  * insets a notched phone in landscape needs.
