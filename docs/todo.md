@@ -18,7 +18,7 @@
 - P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the
 - P2 · `.ds-interactive` — global state-interaction contract (agreed; prototype before spec —
 - P2 · Theme recipe vs hand-tuned picks — alignment decision. Button/icon-button state derivation uses the
-- P3 · Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on
+- P3 · Three signal-forms contract members are unimplemented; `disabledReasons` is ANSWERED (2026-08-26)
 - P3 · Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not
 - P3 · Three deferred DEFAULT changes for the batch after 0.9.0, all held back by the release
 
@@ -214,7 +214,9 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
   the `min`/`max` assertion). **What would overturn it:** a consumer reporting that
   `--legacy-peer-deps` is not acceptable in their install, or an app that has to start on 22.
 
-- [ ] **[P3] Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wiring.** `pending` — what does a field with an async validator in flight look like? `ds-input` has a spinner; nothing else does. `dirty` — the library renders "edited" nowhere today, so there is no treatment to bind to. `disabledReasons` — a tooltip on a disabled control, or ignored? Each is one input once the appearance is decided, so decide the appearance first. _(`focus()` was the fourth and SHIPPED 2026-08-10: a resolver on both control-value-accessor bases, verified on all twelve controls that lacked one.)_
+- [ ] **[P3] Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wiring.** `pending` — what does a field with an async validator in flight look like? `ds-input` has a spinner; nothing else does. `dirty` — the library renders "edited" nowhere today, so there is no treatment to bind to. `disabledReasons` — **ANSWERED 2026-08-26, and this one is now wiring rather than a decision.** The question was "a tooltip on a disabled control, or ignored?"; the `ds-button` refusal work settled it by measurement — **not a tooltip**: a tooltip needs hover, so it does not exist for a keyboard or touch user, and a natively `disabled` control cannot take focus to announce a description at all. The reason goes INSIDE the control (or under it as a `ds-field-message`), and the control switches to `aria-disabled` so it stays focusable. `ds-button.disabledReason` is the worked example to copy, including the `aria-describedby` wiring and the swallowed click.
+  **What the contract actually hands us, read from the installed Angular rather than assumed:** `disabledReasons?: InputSignal<readonly WithOptionalFieldTree<DisabledReason>[]>`, and `DisabledReason` is `{ fieldTree, message?: string }` — so it is an ARRAY, the `Field` directive binds it automatically if the input exists, and **`message` is OPTIONAL**. That last part is the only real design question left: a reason with no `message` has nothing to show, so the control must stay disabled silently rather than render an empty line, and several reasons with messages need a rule (first one, or joined). Our own `disabledReason` is a single string, so the adapter is ours to define.
+  The other two are still blocked on a LOOK. Each is one input once its appearance is decided. _(`focus()` was the fourth and SHIPPED 2026-08-10: a resolver on both control-value-accessor bases, verified on all twelve controls that lacked one.)_
 
 ## The field system — the two controls outside it, and the five with no box to paint
 
