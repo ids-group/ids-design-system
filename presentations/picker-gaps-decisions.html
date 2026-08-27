@@ -212,7 +212,6 @@
   .opt-head { display: flex; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-2); }
 
   .opt-id {
-    font-family: var(--font-mono);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--text-secondary);
@@ -499,6 +498,110 @@
     flex: 0 0 auto;
   }
 
+  /* Comparison matrices — the option cards carry the reasoning, these carry the
+     scan. Same criteria order in every section so the eye learns one shape. */
+  table.matrix { font-size: var(--font-size-s); }
+  table.matrix th:first-child { width: 34%; }
+  table.matrix th { white-space: normal; }
+  table.matrix td { white-space: nowrap; }
+  table.matrix thead th { color: var(--text-primary); font-size: var(--font-size-xs); }
+  table.matrix thead th.rec { color: var(--primary-strong); }
+  table.matrix tbody th {
+    font-weight: var(--font-weight-medium);
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-secondary);
+    font-size: var(--font-size-s);
+    white-space: normal;
+  }
+  table.matrix td.yes { color: var(--success-text); font-weight: var(--font-weight-semibold); }
+  table.matrix td.no { color: var(--error-text); font-weight: var(--font-weight-semibold); }
+  table.matrix td.meh { color: var(--warning-text); font-weight: var(--font-weight-semibold); }
+  table.matrix col.recommended-col { background: var(--primary-subtitle); }
+
+  .risk {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    border-radius: var(--radius-pill);
+    padding: 0.1rem var(--space-2);
+    white-space: nowrap;
+  }
+  .risk.breaks { color: var(--error-text); background: var(--error-subtitle); }
+  .risk.default { color: var(--warning-text); background: var(--warning-subtitle); }
+  .risk.safe { color: var(--success-text); background: var(--success-subtitle); }
+
+  /* Sparingly: only on the fact that actually decides the option. */
+  .key {
+    background: var(--warning-subtitle);
+    box-shadow: 0 0 0 2px var(--warning-subtitle);
+    border-radius: 2px;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .summary { margin-top: var(--space-6); }
+  .summary table td:first-child { font-weight: var(--font-weight-semibold); white-space: nowrap; }
+  .summary table td.rec code { background: var(--primary-subtitle); color: var(--primary-strong); }
+  .summary a { color: var(--primary-strong); text-decoration: none; border-bottom: 1px solid var(--primary-subtitle); }
+  .summary a:hover { border-bottom-color: var(--primary); }
+
+  .headline {
+    margin: var(--space-4) 0 0;
+    padding: var(--space-3) var(--space-4);
+    background: var(--error-subtitle);
+    border-left: 3px solid var(--error);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-size: var(--font-size-s);
+  }
+
+  .opt-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    align-items: flex-start;
+    margin: var(--space-3) 0;
+    padding: var(--space-4);
+    background: var(--surface-canvas);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+  }
+
+  .opt-preview .spec-label { font-size: 0.62rem; }
+
+  .same {
+    margin: var(--space-3) 0 0;
+    font-size: var(--font-size-s);
+    color: var(--text-secondary);
+  }
+
+  /* A locally retuned selected-row hook, so §7 can show which option honours it. */
+  .retune { --ds-option-selected-bg-color: #d81b60; --ds-option-selected-label-color: #ffffff; --ds-option-check-color: #ffffff; }
+
+  .rep-ac-list.fixed { padding: var(--space-1); }
+  .rep-ac-list.fixed .option { border-radius: var(--ds-radius-inner); }
+
+  .rep-group-all {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--primary-strong);
+  }
+
+  .rep-checkbox {
+    width: 0.85rem;
+    height: 0.85rem;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--ds-radius-inner);
+    flex: 0 0 auto;
+  }
+
+  .rep-checkbox.checked { background: var(--primary); border-color: var(--primary); }
+
   ul.plain { margin: var(--space-2) 0; padding-left: var(--space-5); }
   ul.plain li { margin: var(--space-1) 0; }
   ul.plain li::marker { color: var(--primary); }
@@ -538,6 +641,28 @@
     <div class="legend-item"><span class="badge partly">половина</span></div>
     <div class="legend-item"><span class="badge closed">закрыто</span></div>
     <div class="legend-item"><span class="badge measured">замерено</span></div>
+  </div>
+
+  <div class="summary">
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>§</th><th>Что решаем</th><th>Рекомендация</th><th>Риск</th></tr></thead>
+        <tbody>
+          <tr><td><a href="#p1">1</a></td><td>форма компактного триггера</td><td class="rec"><strong>O1</strong> слот <code>dsPickerTrigger</code></td><td><span class="risk safe">без риска</span></td></tr>
+          <tr><td><a href="#p2">2</a></td><td>отвязать панель от триггера</td><td class="rec"><strong>O1</strong> вход <code>width</code></td><td><span class="risk safe">без риска</span></td></tr>
+          <tr><td><a href="#p3">3</a></td><td>произвольный визуал опции</td><td class="rec"><strong>O1</strong> слот, только строки</td><td><span class="risk safe">без риска</span></td></tr>
+          <tr><td><a href="#p5">4</a></td><td>скрытие строки поиска</td><td class="rec"><strong>O1</strong> <code>'auto'</code> + config</td><td><span class="risk safe">без риска</span></td></tr>
+          <tr><td><a href="#p6">5</a></td><td>форма групп опций</td><td class="rec"><strong>O1</strong> форма автокомплита</td><td><span class="risk safe">без риска</span></td></tr>
+          <tr><td><a href="#p8">6</a></td><td>одна строка значения</td><td class="rec"><strong>O1</strong> исправить по умолчанию</td><td><span class="risk default">меняет дефолт</span></td></tr>
+          <tr><td><a href="#p9">7</a></td><td>панель автокомплита + X1</td><td class="rec"><strong>O1</strong> вернуть в партиалку</td><td><span class="risk breaks">ломающее</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="headline">
+      Из семи рекомендаций <strong>пять ничего не ломают</strong>. Риск только в двух: §6 меняет
+      поведение по умолчанию, §7 ломает правила на <code>.autocomplete-list</code> и требует записи
+      миграции. Обе цены расписаны в своих секциях.
+    </div>
   </div>
 </header>
 
@@ -592,8 +717,8 @@
 
   <p>
     Единственный триггер мульти-селекта — поле с чипами: ширина растёт с выбором, строка переносится.
-    Тулбару нужен фиксированный след. Из-за этого консюмер написал <code>app-filter-select</code> (~250
-    строк) на четыре фильтра доски. <code>ds-filter-bar</code> это не закрывает — он про то, сколько
+    Тулбару нужен фиксированный след. Из-за этого консюмер написал <code>app-filter-select</code> <span class="key">(~250
+    строк)</span> на четыре фильтра доски. <code>ds-filter-bar</code> это не закрывает — он про то, сколько
     фильтров влезает в строку.
   </p>
 
@@ -661,11 +786,34 @@
     </div>
   </div>
 
+  <h3>Сравнение</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · слот</th><th>O2 · вход</th><th>O3 · оба</th></tr></thead>
+      <tbody>
+          <tr><th>Форм триггера</th><td class="yes">любая</td><td class="no">одна</td><td class="yes">любая</td></tr>
+          <tr><th>Закрывает</th><td class="yes">G1 + A5</td><td class="meh">G1</td><td class="yes">G1 + A5</td></tr>
+          <tr><th>Разметка у консюмера</th><td class="meh">всегда</td><td class="yes">нет</td><td class="yes">по выбору</td></tr>
+          <tr><th>Публичных поверхностей</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
+          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p1-o1">
       <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Слот <code>dsPickerTrigger</code></span><span class="rec-flag">рекомендую</span></div>
       <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">типовой фильтр</div>
+            <div class="rep-field hugs compact"><span class="caption">Labels</span><span class="rep-count">2</span><span class="rep-chevron">▾</span></div></div>
+          <div class="spec"><div class="spec-label">то, что может только шаблон</div>
+            <div class="rep-field hugs compact"><span class="rep-avatar">AB</span><span class="caption">Avery Brooks</span><span class="rep-chevron">▾</span></div></div>
+          <div class="spec"><div class="spec-label">две строки в триггере</div>
+            <div class="rep-field hugs compact"><span class="rep-dot dot-b"></span><span class="caption"><span class="rep-two-line"><strong>Priority</strong><em>Major, Minor</em></span></span><span class="rep-chevron">▾</span></div></div>
+        </div>
         <p>Директива на все три пикера, контекст: выбранные опции, счётчик, открытость, disabled. Библиотека держит элемент триггера с ARIA и клавиатурой, внутрь проецируется разметка консюмера. Закрывает G1, A5 и любую будущую форму.</p>
         <pre><code>&lt;ng-template dsPickerTrigger let-count="count"&gt;
   Labels @if (count) { &lt;ds-badge&gt;{{ count }}&lt;/ds-badge&gt; }
@@ -676,6 +824,14 @@
     <div class="opt" data-opt="p1-o2">
       <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Один вход с фиксированной формой</span></div>
       <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">пусто</div>
+            <div class="rep-field hugs compact"><span class="caption">Labels</span><span class="rep-chevron">▾</span></div></div>
+          <div class="spec"><div class="spec-label">выбрано 2</div>
+            <div class="rep-field hugs compact is-active"><span class="caption">Labels</span><span class="rep-count">2</span><span class="rep-chevron">▾</span></div></div>
+          <div class="spec"><div class="spec-label">аватар недоступен</div>
+            <div class="rep-field hugs compact" style="opacity: 0.45"><span class="caption">Assignee</span><span class="rep-count">1</span><span class="rep-chevron">▾</span></div></div>
+        </div>
         <p>Подпись + счётчик + шеврон, своя ширина, активен при <code>count &gt; 0</code>.</p>
         <pre><code>&lt;ds-multi-select triggerDisplay="summary" label="Labels" … /&gt;</code></pre>
       </div>
@@ -683,7 +839,13 @@
     </div>
     <div class="opt" data-opt="p1-o3">
       <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Оба: вход как пресет поверх слота</span></div>
-      <div class="opt-body"><p>Вход рендерится тем же внутренним путём, что и слот.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">пресет = O2</div>
+            <div class="rep-field hugs compact is-active"><span class="caption">Labels</span><span class="rep-count">2</span><span class="rep-chevron">▾</span></div></div>
+          <div class="spec"><div class="spec-label">шаблон = O1, рядом</div>
+            <div class="rep-field hugs compact"><span class="rep-avatar">AB</span><span class="caption">Avery Brooks</span><span class="rep-chevron">▾</span></div></div>
+        </div><p>Вход рендерится тем же внутренним путём, что и слот.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> две публичные поверхности и правило, что побеждает при обоих заданных.</div>
     </div>
   </div>
@@ -698,7 +860,7 @@
 
   <p>
     <code>multi-select.component.ts:346</code> ставит <code>config.width</code> = ширине триггера. Над
-    компактным триггером (§1) панель будет такой же узкой. Развилка трёхсторонняя, а не двусторонняя:
+    компактным триггером (§1) панель будет такой же узкой. <span class="key">Развилка трёхсторонняя, а не двусторонняя:</span>
   </p>
 
   <div class="tablewrap">
@@ -758,21 +920,65 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Пол читаемости</strong><p>Токен <code>--ds-multi-select-panel-minw</code> или полом служит триггер.</p></div>
   </div>
 
+  <h3>Сравнение</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · вход width</th><th>O2 · токен</th><th>O3 · оба</th></tr></thead>
+      <tbody>
+          <tr><th>Панель отвязана от триггера</th><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td></tr>
+          <tr><th>Двигает ширину триггера</th><td class="meh">да</td><td class="yes">нет</td><td class="meh">да</td></tr>
+          <tr><th><code>ds-select</code> тоже</th><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td></tr>
+          <tr><th>Новых входов</th><td class="meh">1</td><td class="yes">0</td><td class="meh">1 + токен</td></tr>
+          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p2-o1">
       <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name"><code>width: 'fill' | 'content'</code> на мульти-селект и select</span><span class="rec-flag">рекомендую</span></div>
-      <div class="opt-body"><p>Одно имя, одна семантика, три компонента. Код уже написан и отгружен.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">content — панель по содержимому</div>
+            <div class="rep-field hugs compact"><span class="caption">Labels</span><span class="rep-chevron">▾</span></div>
+            <div class="ds-dropdown-panel" style="width: fit-content; margin-top: 4px"><div class="dropdown-panel"><ul class="dropdown-list">
+              <li class="option"><span class="option-label">Needs design review</span></li>
+              <li class="option is-selected"><span class="option-label">Ready for QA</span></li>
+            </ul></div></div>
+            <div class="spec-note">Триггер тоже жмётся к содержимому — это часть входа.</div></div>
+          <div class="spec"><div class="spec-label">fill — как сейчас</div>
+            <div class="frame" style="width: 11rem">
+              <div class="rep-field fills compact"><span class="caption">Labels</span><span class="rep-chevron">▾</span></div>
+              <div class="ds-dropdown-panel" style="width: 100%; margin-top: 4px"><div class="dropdown-panel"><ul class="dropdown-list"><li class="option"><span class="option-label">Needs design review</span></li><li class="option is-selected"><span class="option-label">Ready for QA</span></li></ul></div></div>
+            </div></div>
+        </div><p>Одно имя, одна семантика, три компонента. Код уже написан и отгружен.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> <code>content</code> двигает и ширину триггера у всех трёх.</div>
     </div>
     <div class="opt" data-opt="p2-o2">
       <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Только токен минимальной ширины</span></div>
-      <div class="opt-body"><p><code>--ds-multi-select-panel-minw</code>, ширину ставит триггер.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">пол 13rem, ширину ставит триггер</div>
+            <div class="rep-field hugs compact"><span class="caption">Labels</span><span class="rep-chevron">▾</span></div>
+            <div class="ds-dropdown-panel" style="width: 13rem; margin-top: 4px"><div class="dropdown-panel"><ul class="dropdown-list"><li class="option"><span class="option-label">Needs design review</span></li><li class="option is-selected"><span class="option-label">Ready for QA</span></li></ul></div></div>
+            <div class="spec-note">Читается, пока метка короче пола. Длиннее — снова многоточие.</div></div>
+        </div><p><code>--ds-multi-select-panel-minw</code>, ширину ставит триггер.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> панель не отвязана — тот же размер с полом снизу.</div>
     </div>
     <div class="opt" data-opt="p2-o3">
       <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Вход + токен, компактный триггер по умолчанию в <code>content</code></span></div>
-      <div class="opt-body"><p>Предложение отчёта.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">визуально = O1, но без указания width</div>
+            <div class="rep-field hugs compact"><span class="caption">Labels</span><span class="rep-chevron">▾</span></div>
+            <div class="ds-dropdown-panel" style="width: fit-content; margin-top: 4px"><div class="dropdown-panel"><ul class="dropdown-list">
+              <li class="option"><span class="option-label">Needs design review</span></li>
+              <li class="option is-selected"><span class="option-label">Ready for QA</span></li>
+            </ul></div></div></div>
+        </div>
+        <p class="same">Картинка совпадает с O1. Разница только в том, что <code>content</code> включается сам при компактном триггере.</p><p>Предложение отчёта.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> дефолт, зависящий от другого входа, надо документировать.</div>
     </div>
   </div>
@@ -787,7 +993,7 @@ else { config.width = triggerWidth; }</code></pre>
 
   <p>
     0.10.0 свёл опции к общему <code>DsOption</code> = <code>{ value, label, disabled?, icon? }</code>.
-    Не выражается иконкой: аватар, цветная точка, глиф приоритета, вторая строка. Точки проекции нет.
+    Не выражается иконкой: аватар, цветная точка, глиф приоритета, вторая строка. <span class="key">Точки проекции нет.</span>
     Конвенция в библиотеке есть — <code>ds-table</code> делает это через <code>dsCellTemplate</code>
     (<code>cell-template.directive.ts:22</code>).
   </p>
@@ -837,21 +1043,58 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Имя</strong><p><code>dsOptionTemplate</code> против <code>dsOptionDef</code>.</p></div>
   </div>
 
+  <h3>Сравнение</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · слот, строки</th><th>O2 · строки + чипы</th><th>O3 · поля в DsOption</th></tr></thead>
+      <tbody>
+          <tr><th>Аватар в панели</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Аватар в чипе триггера</th><td class="no">нет</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Новый вид визуала без правки DS</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Контрактов проекции</th><td class="yes">1</td><td class="meh">2</td><td class="yes">0</td></tr>
+          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p3-o1">
       <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name"><code>dsOptionTemplate</code>, только строки панели</span><span class="rec-flag">рекомендую</span></div>
-      <div class="opt-body"><p>Совпадает с <code>dsCellTemplate</code>, один контракт на три пикера, тип контекста уже есть.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">панель</div>
+            <div class="ds-dropdown-panel" style="width: 13rem"><div class="dropdown-panel"><ul class="dropdown-list"><li class="option"><span class="rep-avatar">AB</span><span class="option-label">Avery Brooks</span></li><li class="option is-selected"><span class="rep-avatar">JL</span><span class="option-label">Jordan Lee</span></li></ul></div></div></div>
+          <div class="spec"><div class="spec-label">чипы в триггере — плоские</div>
+            <div class="frame" style="width: 15rem"><div class="rep-field fills">
+              <span class="rep-chip">Jordan Lee <span class="x">✕</span></span><span class="rep-chevron">▾</span>
+            </div></div>
+            <div class="spec-note">Аватар виден в списке и исчезает после выбора.</div></div>
+        </div><p>Совпадает с <code>dsCellTemplate</code>, один контракт на три пикера, тип контекста уже есть.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> чипы в триггере остаются плоскими.</div>
     </div>
     <div class="opt" data-opt="p3-o2">
       <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Строки + чипы триггера</span></div>
-      <div class="opt-body"><p>Аватар виден и в списке, и после выбора.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">панель</div>
+            <div class="ds-dropdown-panel" style="width: 13rem"><div class="dropdown-panel"><ul class="dropdown-list"><li class="option"><span class="rep-avatar">AB</span><span class="option-label">Avery Brooks</span></li><li class="option is-selected"><span class="rep-avatar">JL</span><span class="option-label">Jordan Lee</span></li></ul></div></div></div>
+          <div class="spec"><div class="spec-label">чипы в триггере — с аватаром</div>
+            <div class="frame" style="width: 15rem"><div class="rep-field fills">
+              <span class="rep-chip"><span class="rep-avatar" style="width: 1rem; height: 1rem; font-size: 0.5rem">JL</span> Jordan Lee <span class="x">✕</span></span><span class="rep-chevron">▾</span>
+            </div></div></div>
+        </div><p>Аватар виден и в списке, и после выбора.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> чип — <code>ds-tag</code> с кнопкой закрытия, нужен второй контракт про то, что внутри него можно заменить.</div>
     </div>
     <div class="opt" data-opt="p3-o3">
       <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Поля в <code>DsOption</code> вместо шаблона</span></div>
-      <div class="opt-body"><p>Никакой проекции.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">что даёт закрытый набор</div>
+            <div class="ds-dropdown-panel" style="width: 13rem"><div class="dropdown-panel"><ul class="dropdown-list"><li class="option"><span class="rep-glyph">◆</span><span class="option-label">Blocked</span></li><li class="option is-selected"><span class="rep-dot dot-b"></span><span class="option-label">In review</span></li></ul></div></div>
+            <div class="spec-note">Иконка и точка — да. Аватар, вторая строка, свой глиф — только через новое поле в <code>DsOption</code>.</div></div>
+        </div><p>Никакой проекции.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> закрытый набор; четвёртый вид визуала открывает разговор заново — как было с <code>icon</code>.</div>
     </div>
   </div>
@@ -895,7 +1138,7 @@ else { config.width = triggerWidth; }</code></pre>
 
   <div class="note warn">
     <p>
-      Объём пункта не в <code>@if</code>. Поиск — клавиатурная модель панели: <code>input</code>
+      <span class="key">Объём пункта не в <code>@if</code>.</span> Поиск — клавиатурная модель панели: <code>input</code>
       получает фокус при открытии, несёт <code>aria-activedescendant</code>, а
       <code>onSearchKeydown()</code> (<code>multi-select.component.ts:302–335</code>) обрабатывает
       стрелки, Enter, Escape и Backspace, снимающий последний чип. Убрать строку = перенести это на
@@ -909,21 +1152,52 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Кто берёт фокус и клавиатуру</strong><p>Триггер через <code>aria-activedescendant</code> или сам список.</p></div>
   </div>
 
+  <h3>Сравнение</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · 'auto' + config</th><th>O2 · boolean</th><th>O3 · 'auto' + вход</th></tr></thead>
+      <tbody>
+          <tr><th>Порог задаёт</th><td class="yes">приложение</td><td class="no">консюмер</td><td class="yes">экземпляр</td></tr>
+          <tr><th>Порог виден в разметке</th><td class="no">нет</td><td class="yes">да</td><td class="yes">да</td></tr>
+          <tr><th>Один порог на приложение</th><td class="yes">да</td><td class="no">нет</td><td class="meh">нет</td></tr>
+          <tr><th>Новых входов</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
+          <tr><th>Меняет дефолт</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p5-o1">
       <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name"><code>searchable: boolean | 'auto'</code>, дефолт <code>true</code>, порог в <code>provideDsConfig</code></span><span class="rec-flag">рекомендую</span></div>
-      <div class="opt-body"><p>Текущее поведение не двигается, порог задаётся один раз там же, где размер контролов.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">4 опции — поиска нет</div>
+            <div class="ds-dropdown-panel" style="width: 13rem"><div class="dropdown-panel"><ul class="dropdown-list"><li class="option"><span class="option-label">Blocker</span></li><li class="option"><span class="option-label">Critical</span></li><li class="option is-selected"><span class="option-label">Major</span></li><li class="option"><span class="option-label">Minor</span></li></ul></div></div></div>
+          <div class="spec"><div class="spec-label">больше порога — поиск есть</div>
+            <div class="ds-dropdown-panel" style="width: 13rem"><div class="dropdown-panel">
+              <div class="rep-search"><span class="rep-search-icon">⌕</span><span class="rep-search-ph">Filter…</span></div>
+              <ul class="dropdown-list">
+                <li class="option"><span class="option-label">Avery Brooks</span></li>
+                <li class="option is-selected"><span class="option-label">Jordan Lee</span></li>
+                <li class="option"><span class="option-label">Morgan Kirby</span></li>
+                <li class="option"><span class="option-label">Sam Rowe</span></li>
+              </ul>
+            </div></div></div>
+        </div><p>Текущее поведение не двигается, порог задаётся один раз там же, где размер контролов.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> порог не виден в разметке.</div>
     </div>
     <div class="opt" data-opt="p5-o2">
       <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Только <code>boolean</code></span></div>
-      <div class="opt-body"><p>Порог считает консюмер.</p></div>
+      <div class="opt-body">
+        <p class="same">Картинка та же, что у O1 — обе панели выше. Различие только в том, кто считает порог: библиотека или консюмер.</p><p>Порог считает консюмер.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> одна и та же проверка в каждом консюмере, разные пороги в одном приложении.</div>
     </div>
     <div class="opt" data-opt="p5-o3">
       <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name"><code>'auto'</code> + вход <code>searchThreshold</code></span></div>
-      <div class="opt-body"><p>Порог на экземпляре, виден в разметке.</p></div>
+      <div class="opt-body">
+        <p class="same">Картинка та же, что у O1. Различие в том, что порог задаётся на экземпляре и виден в разметке.</p><p>Порог на экземпляре, виден в разметке.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> два входа на одно решение.</div>
     </div>
   </div>
@@ -936,7 +1210,7 @@ else { config.width = triggerWidth; }</code></pre>
     <span class="covers">G6</span>
   </div>
 
-  <p>Вопрос не «добавить ли», а какую из двух существующих форм взять:</p>
+  <p>Вопрос не «добавить ли», а <span class="key">какую из двух существующих форм взять</span>:</p>
 
   <div class="tablewrap">
     <table>
@@ -978,21 +1252,69 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Область «выбрать все»</strong><p>Глобально или по группе.</p></div>
   </div>
 
+  <h3>Сравнение</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · форма autocomplete</th><th>O2 · union select</th><th>O3 · + группа</th></tr></thead>
+      <tbody>
+          <tr><th>Паритет с автокомплитом</th><td class="yes">полный</td><td class="no">нет</td><td class="yes">полный</td></tr>
+          <tr><th>Выбрать все</th><td class="yes">глобально</td><td class="yes">глобально</td><td class="meh">+ по группе</td></tr>
+          <tr><th>Новых состояний UI</th><td class="yes">0</td><td class="yes">0</td><td class="meh">1</td></tr>
+          <tr><th>Форм групп в библиотеке</th><td class="meh">2</td><td class="yes">1</td><td class="meh">2</td></tr>
+          <tr><th>Ломает</th><td class="yes">нет</td><td class="no">да</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p6-o1">
       <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Форма автокомплита + <code>disabled</code> в оба, «выбрать все» глобально</span><span class="rec-flag">рекомендую</span></div>
-      <div class="opt-body"><p>Два мульти-значных пикера совпадают полностью.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">группы, «выбрать все» глобально</div>
+            <div class="ds-dropdown-panel" style="width: 14rem"><div class="dropdown-panel">
+              <div class="rep-group-all"><span class="rep-checkbox"></span> Выбрать все</div>
+              <ul class="dropdown-list">
+                <li class="optgroup"><span class="optgroup-label is-first">Продукт</span><ul class="optgroup-list">
+                  <li class="option"><span class="option-label">Avery Brooks</span></li>
+                  <li class="option is-selected"><span class="option-label">Jordan Lee</span></li>
+                </ul></li>
+                <li class="optgroup"><span class="optgroup-label">Платформа</span><ul class="optgroup-list">
+                  <li class="option"><span class="option-label">Sam Rowe</span></li>
+                </ul></li>
+              </ul>
+            </div></div></div>
+        </div><p>Два мульти-значных пикера совпадают полностью.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> в библиотеке остаются две формы групп — эта и союзная у селекта.</div>
     </div>
     <div class="opt" data-opt="p6-o2">
-      <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Union <code>SelectItem</code> в том же входе</span></div>
-      <div class="opt-body"><p>Одна коллекция, guard уже написан и экспортируется.</p></div>
+      <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Union <code>SelectItem</code> в том же входе</span><span class="risk breaks">ломающее</span></div>
+      <div class="opt-body">
+        <p class="same">Картинка совпадает с O1 — форма передачи данных на отрисовку не влияет. Различие только в типе входа и в том, что это ломающее изменение.</p><p>Одна коллекция, guard уже написан и экспортируется.</p></div>
       <div class="opt-cost"><strong>Цена: ломающая</strong> — меняется тип входа <code>options</code>, нужна миграция. Паритет с тем пикером, с которым его не требовали.</div>
     </div>
     <div class="opt" data-opt="p6-o3">
       <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Группы + «выбрать все» в каждой группе</span></div>
-      <div class="opt-body"><p>Ближе к настоящей фильтр-панели.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">«выбрать все» в каждой группе</div>
+            <div class="ds-dropdown-panel" style="width: 14rem"><div class="dropdown-panel"><ul class="dropdown-list">
+              <li class="optgroup"><span class="optgroup-label is-first">Продукт</span>
+                <div class="rep-group-all"><span class="rep-checkbox checked"></span> Все в группе</div>
+                <ul class="optgroup-list">
+                  <li class="option is-selected"><span class="option-label">Avery Brooks</span></li>
+                  <li class="option is-selected"><span class="option-label">Jordan Lee</span></li>
+                </ul></li>
+              <li class="optgroup"><span class="optgroup-label">Платформа</span>
+                <div class="rep-group-all"><span class="rep-checkbox"></span> Все в группе</div>
+                <ul class="optgroup-list">
+                  <li class="option"><span class="option-label">Sam Rowe</span></li>
+                </ul></li>
+            </ul></div></div>
+            <div class="spec-note">Плюс глобальный «выбрать все» — он не исчезает.</div></div>
+        </div><p>Ближе к настоящей фильтр-панели.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> второй контрол и второе неопределённое состояние, глобальный при этом остаётся.</div>
     </div>
   </div>
@@ -1013,7 +1335,7 @@ else { config.width = triggerWidth; }</code></pre>
       <tbody>
         <tr><td class="num">240px</td><td class="num good">40px</td><td class="num">14px</td><td>одна строка</td></tr>
         <tr><td class="num">176px</td><td class="num bad">51px</td><td class="num">14px</td><td>переносится flex-строка</td></tr>
-        <tr><td class="num">144px</td><td class="num bad">63px</td><td class="num bad">28px</td><td>переносится текст</td></tr>
+        <tr><td class="num">144px</td><td class="num bad">63px</td><td class="num bad">28px</td><td><span class="key">переносится текст</span></td></tr>
         <tr><td class="num">112px</td><td class="num bad">63px</td><td class="num bad">28px</td><td>span на min-content</td></tr>
       </tbody>
     </table>
@@ -1051,21 +1373,54 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Мульти-режим</strong><p>Не меняется ни в одном варианте.</p></div>
   </div>
 
+  <h3>Сравнение</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · исправить</th><th>O2 · вход</th><th>O3 · токен</th></tr></thead>
+      <tbody>
+          <tr><th>40px без настройки</th><td class="yes">да</td><td class="no">нет</td><td class="no">нет</td></tr>
+          <tr><th>Закрывает стадию 51px</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Снимает override консюмера</th><td class="yes">да</td><td class="yes">да</td><td class="meh">частично</td></tr>
+          <tr><th>Новых входов</th><td class="yes">0</td><td class="meh">1</td><td class="yes">0</td></tr>
+          <tr><th>Меняет дефолт</th><td class="no">да</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p8-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Одиночный режим не переносит — как исправление</span><span class="rec-flag">рекомендую</span></div>
-      <div class="opt-body"><p>Настраивать нечего, override на внутренние классы становится удаляемым.</p></div>
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Одиночный режим не переносит — как исправление</span><span class="rec-flag">рекомендую</span><span class="risk default">меняет дефолт</span></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">144px · 40px</div>
+            <div class="frame" style="width: 9rem"><div class="rep-field fills"><span class="rep-clipped-value">Live Nation Festivals</span><span class="rep-chevron">▾</span></div></div></div>
+          <div class="spec"><div class="spec-label">240px · без изменений</div>
+            <div class="frame" style="width: 15rem"><div class="rep-field fills"><span class="rep-clipped-value">Live Nation Festivals</span><span class="rep-chevron">▾</span></div></div></div>
+        </div><p>Настраивать нечего, override на внутренние классы становится удаляемым.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> смена поведения по умолчанию, против правила opt-in. Нужна запись в <code>Fixed</code> и миграция.</div>
     </div>
     <div class="opt" data-opt="p8-o2">
       <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name"><code>valueOverflow="ellipsis"</code>, дефолт выключен</span></div>
-      <div class="opt-body"><p>Строго по правилу opt-in.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">вход задан · 40px</div>
+            <div class="frame" style="width: 9rem"><div class="rep-field fills"><span class="rep-clipped-value">Live Nation Festivals</span><span class="rep-chevron">▾</span></div></div></div>
+          <div class="spec"><div class="spec-label">вход не задан · 63px</div>
+            <div class="frame" style="width: 9rem"><div class="rep-field fills wrapping"><span class="rep-wrapping-value">Live Nation Festivals</span><span class="rep-chevron">▾</span></div></div>
+            <div class="spec-note">Пока про вход не узнали — картинка та же, что сейчас.</div></div>
+        </div><p>Строго по правилу opt-in.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> до того, как консюмер узнает про вход, он видит трёхстрочный триггер.</div>
     </div>
     <div class="opt" data-opt="p8-o3">
       <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Токен <code>--ds-autocomplete-value-overflow</code></span></div>
-      <div class="opt-body"><p>Без TypeScript.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">текст обрезан, строка всё равно перенесена · 51px</div>
+            <div class="frame" style="width: 9rem"><div class="rep-field fills wrapping"><span class="rep-clipped-value">Live Nation Festivals</span><span class="rep-chevron">▾</span></div></div>
+            <div class="spec-note">Токен не переключает <code>flex-wrap</code> у родителя — шеврон уходит на свою строку.</div></div>
+        </div><p>Без TypeScript.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> не переключает <code>flex-wrap</code> у родителя — первая стадия (51px) остаётся.</div>
     </div>
   </div>
@@ -1079,8 +1434,8 @@ else { config.width = triggerWidth; }</code></pre>
   </div>
 
   <p>
-    <code>autocomplete.component.ts:479</code> передаёт <code>'ds-overlay-pane'</code> — этот аргумент
-    ЗАМЕНЯЕТ дефолт <code>['ds-dropdown-panel', 'ds-overlay-pane']</code>. До панели не доходит ничего из
+    <code>autocomplete.component.ts:479</code> передаёт <code>'ds-overlay-pane'</code> — <span class="key">этот аргумент
+    ЗАМЕНЯЕТ дефолт</span> <code>['ds-dropdown-panel', 'ds-overlay-pane']</code>. До панели не доходит ничего из
     <code>_dropdown-overlay.scss</code>: ни отбивка, ни радиус строки (A4), ни 4 публичных хука темы (X1).
     Чейнджлог 0.9.0 про эти хуки: «one partial paints select, autocomplete and multi-select alike».
   </p>
@@ -1137,21 +1492,57 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Имена панелей</strong><p>У select это <code>.dropdown-panel</code>, у мульти-селекта <code>.panel</code> — даже эти двое не совпадают.</p></div>
   </div>
 
+  <h3>Сравнение</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · партиалка</th><th>O2 · резолверы на месте</th><th>O3 · минимум</th></tr></thead>
+      <tbody>
+          <tr><th>Закрывает A4</th><td class="yes">да</td><td class="yes">да</td><td class="yes">да</td></tr>
+          <tr><th>Закрывает X1</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Копий стилей опций остаётся</th><td class="yes">2</td><td class="meh">3</td><td class="meh">3</td></tr>
+          <tr><th>Делает чейнджлог 0.9.0 правдой</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Ломает</th><td class="no">да</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p9-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Вернуть в общую партиалку</span><span class="rec-flag">рекомендую</span></div>
-      <div class="opt-body"><p>Убрать аргумент, добавить обёртку, переименовать классы, удалить дублирующие правила. Закрывает A4 и X1, убирает третью копию стилей.</p></div>
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Вернуть в общую партиалку</span><span class="rec-flag">рекомендую</span><span class="risk breaks">ломающее</span></div>
+      <div class="opt-body">
+        <div class="opt-preview retune">
+          <div class="spec"><div class="spec-label">отбивка, радиус строки, хуки работают</div>
+            <div class="ds-dropdown-panel" style="width: 13rem"><div class="dropdown-panel"><ul class="dropdown-list"><li class="option is-selected"><span class="option-label">Ready for QA</span></li><li class="option"><span class="option-label">Blocked</span></li></ul></div></div>
+            <div class="spec-note">Выбранная строка красится ретьюненным <code>--ds-option-selected-bg-color</code> — здесь он выставлен локально.</div></div>
+        </div><p>Убрать аргумент, добавить обёртку, переименовать классы, удалить дублирующие правила. Закрывает A4 и X1, убирает третью копию стилей.</p></div>
       <div class="opt-cost"><strong>Цена: ломающая</strong> — правила на <code>.autocomplete-list</code> / <code>.autocomplete-optgroup*</code> перестают работать. Нужна запись поверхности классов и миграция.</div>
     </div>
     <div class="opt" data-opt="p9-o2">
       <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Своя панель + отбивка, радиус и 4 резолвера</span></div>
-      <div class="opt-body"><p>Закрывает A4 и X1, ничего не ломает. Замер подтвердил, что хук доходит.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview retune">
+          <div class="spec"><div class="spec-label">та же картинка, свои имена классов</div>
+            <ul class="rep-ac-list fixed" style="width: 13rem">
+              <li class="option is-selected" style="background: var(--ds-option-selected-bg-color); color: var(--ds-option-selected-label-color)"><span class="option-label">Ready for QA</span></li>
+              <li class="option"><span class="option-label">Blocked</span></li>
+            </ul>
+            <div class="spec-note">Результат совпадает с O1. Различие — два места объявляют одно и то же.</div></div>
+        </div><p>Закрывает A4 и X1, ничего не ломает. Замер подтвердил, что хук доходит.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> два места объявляют одни и те же 4 хука и 2 значения геометрии.</div>
     </div>
     <div class="opt" data-opt="p9-o3">
       <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Только отбивка и радиус</span></div>
-      <div class="opt-body"><p>Минимальный диф, закрывает A4.</p></div>
+      <div class="opt-body">
+        <div class="opt-preview retune">
+          <div class="spec"><div class="spec-label">отбивка и радиус есть, хук игнорируется</div>
+            <ul class="rep-ac-list fixed" style="width: 13rem">
+              <li class="option is-selected"><span class="option-label">Ready for QA</span></li>
+              <li class="option"><span class="option-label">Blocked</span></li>
+            </ul>
+            <div class="spec-note">Ретьюн выставлен так же, как в O1 и O2 — строка на него не реагирует. Это X1.</div></div>
+        </div><p>Минимальный диф, закрывает A4.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> X1 остаётся, нужен отдельный пункт в <code>todo.md</code>.</div>
     </div>
   </div>
