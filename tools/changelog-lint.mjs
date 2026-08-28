@@ -31,7 +31,12 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // published manifest at the next release, and finding a leak after publishing is
 // finding it too late.
 function publishedFiles() {
-  const files = ['CHANGELOG.md', 'README.md', 'design-system.md', 'components.md'];
+  const files = [
+    'CHANGELOG.md',
+    'README.md',
+    'design-system.md',
+    'components.md',
+  ];
   const migrations = join(ROOT, 'migrations');
   if (existsSync(migrations)) {
     for (const entry of readdirSync(migrations, { withFileTypes: true })) {
@@ -69,12 +74,25 @@ function shippedSources() {
     for (const item of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, item.name);
       if (item.isDirectory()) crawl(full, keep);
-      else if (keep(item.name)) found.push(relative(ROOT, full).split('\\').join('/'));
+      else if (keep(item.name))
+        found.push(relative(ROOT, full).split('\\').join('/'));
     }
   };
-  crawl(join(ROOT, 'src/lib/styles'), (n) => n.endsWith('.scss'));
-  crawl(join(ROOT, 'src/lib/themes'), (n) => n.endsWith('.scss'));
-  crawl(join(ROOT, 'src/lib'), (n) => n.endsWith('.ts') && !n.endsWith('.spec.ts'));
+  // The asset inputs come from ng-package.json rather than a hardcoded list, because the
+  // two drifted: its glob is `**/*`, so `src/lib/themes/README.md` — 115 lines of real
+  // prose — ships on every publish and no rule had ever opened it.
+  const ngPackage = join(ROOT, 'ng-package.json');
+  const assets = existsSync(ngPackage)
+    ? (JSON.parse(readFileSync(ngPackage, 'utf8')).assets ?? [])
+    : [];
+  const TEXT = /\.(scss|css|md|json|txt)$/;
+  for (const asset of assets) {
+    if (asset.input) crawl(join(ROOT, asset.input), (n) => TEXT.test(n));
+  }
+  crawl(
+    join(ROOT, 'src/lib'),
+    (n) => n.endsWith('.ts') && !n.endsWith('.spec.ts'),
+  );
 
   return found;
 }
@@ -138,17 +156,31 @@ const PEOPLE = ['Stas', 'Misha'];
 function privateSymbols() {
   const moduleFile = (fromFile, spec) => {
     const base = resolve(dirname(fromFile), spec);
-    for (const candidate of [`${base}.ts`, join(base, 'index.ts')]) {
+    for (const candidate of [
+      `${base}.ts`,
+      `${base}.d.ts`,
+      join(base, 'index.ts'),
+    ]) {
       if (existsSync(candidate)) return candidate;
     }
 
     return null;
   };
 
+  // A block comment can hold a line that starts with `export`, and DECL_RE is
+  // line-anchored, so an example in a JSDoc would be read as a live export. In the
+  // public walk that is the dangerous direction: it would mark a genuinely private
+  // symbol public and let a mention of it through.
+  const code = (file) =>
+    readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+
   const NAMED_RE = /export\s+(?:type\s+)?\{([^}]*)\}\s*from\s*'([^']+)'/g;
-  const STAR_RE = /export\s+\*\s+from\s*'([^']+)'/g;
+  // `export * as ns from '…'` publishes the whole module under a name the reader CAN
+  // import, so its declarations are reachable and must not be accused.
+  const STAR_RE =
+    /export\s+\*\s+(?:as\s+([A-Za-z_][A-Za-z0-9_]*)\s+)?from\s*'([^']+)'/g;
   const DECL_RE =
-    /^export\s+(?:declare\s+)?(?:abstract\s+)?(?:class|interface|type|const|function|enum)\s+([A-Za-z_][A-Za-z0-9_]*)/gm;
+    /^export\s+(?:default\s+)?(?:declare\s+)?(?:abstract\s+)?(?:class|interface|type|const|function|enum)\s+([A-Za-z_][A-Za-z0-9_]*)/gm;
 
   const publicNames = new Set();
   const seen = new Set();
@@ -156,7 +188,7 @@ function privateSymbols() {
   const walk = (file) => {
     if (!file || seen.has(file) || !existsSync(file)) return;
     seen.add(file);
-    const source = readFileSync(file, 'utf8');
+    const source = code(file);
 
     for (const match of source.matchAll(NAMED_RE)) {
       for (const part of match[1].split(',')) {
@@ -173,12 +205,12 @@ function privateSymbols() {
       }
     }
     for (const match of source.matchAll(STAR_RE)) {
-      const target = moduleFile(file, match[1]);
+      if (match[1]) publicNames.add(match[1]);
+      const target = moduleFile(file, match[2]);
       walk(target);
       if (target) {
-        for (const decl of readFileSync(target, 'utf8').matchAll(DECL_RE)) {
+        for (const decl of code(target).matchAll(DECL_RE))
           publicNames.add(decl[1]);
-        }
       }
     }
   };
@@ -193,7 +225,7 @@ function privateSymbols() {
       const full = join(dir, item.name);
       if (item.isDirectory()) crawl(full);
       else if (item.name.endsWith('.ts') && !item.name.endsWith('.spec.ts')) {
-        for (const decl of readFileSync(full, 'utf8').matchAll(DECL_RE)) {
+        for (const decl of code(full).matchAll(DECL_RE)) {
           ours.set(decl[1], relative(ROOT, full).split('\\').join('/'));
         }
       }
@@ -226,15 +258,15 @@ if (process.argv.includes('--list')) {
 // checked before it is spliced back; `join(ROOT, file)` here silently reported
 // "not found" for those.
 const sourceSet = new Set(shippedSources());
-const targets = (requested.length ? requested : [...publishedFiles(), ...sourceSet]).map(
-  (file) => {
-    const full = resolve(ROOT, file);
-    const label = relative(ROOT, full).split('\\').join('/');
-    const shown = label.startsWith('..') ? full.split('\\').join('/') : label;
+const targets = (
+  requested.length ? requested : [...publishedFiles(), ...sourceSet]
+).map((file) => {
+  const full = resolve(ROOT, file);
+  const label = relative(ROOT, full).split('\\').join('/');
+  const shown = label.startsWith('..') ? full.split('\\').join('/') : label;
 
-    return { full, label: shown, isSource: sourceSet.has(shown) };
-  },
-);
+  return { full, label: shown, isSource: sourceSet.has(shown) };
+});
 
 const errors = [];
 let current = { isSource: false };
@@ -275,91 +307,129 @@ for (const { full, label: file, isSource } of targets) {
     for (let i = 0; i < trimmed.length; i++) lineAt.push(index + 1);
   });
 
-  const scanFlat = (pattern, code, describe) => {
+  const scanFlat = (pattern, code, describe, accept) => {
     for (const match of flat.matchAll(pattern)) {
-      report(file, lineAt[match.index] ?? 0, code, describe(match));
-    }
-  };
-
-  for (const script of ourScripts) {
-    scanFlat(
-      new RegExp(`npm run ${script.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'),
-      'C005',
-      () => `tells the reader to run "npm run ${script}", a script only this repo has`,
-    );
-  }
-
-  for (const phrase of INSIDER_PROSE) {
-    scanFlat(
-      new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'),
-      'C009',
-      () => `uses insider phrasing "${phrase}" — describe the change, not our process`,
-    );
-  }
-
-  lines.forEach((line, index) => {
-    const at = index + 1;
-
-    for (const client of CLIENTS) {
-      if (new RegExp(`\\b${client}\\b`, 'i').test(line)) {
-        report(file, at, 'C001', `names the consumer project "${client}" — say "a consumer" instead: ${quote(line)}`);
-      }
-    }
-
-    const ticket = line.match(/\b(MBP|PIN|MM)-\d+\b/);
-    if (ticket) {
-      report(file, at, 'C002', `cites the internal tracker key ${ticket[0]}, which the reader cannot open: ${quote(line)}`);
-    }
-
-    for (const person of PEOPLE) {
-      if (new RegExp(`\\b${person}\\b`).test(line)) {
-        report(file, at, 'C003', `names a person ("${person}") — the reader does not know them: ${quote(line)}`);
-      }
-    }
-
-    for (const path of INTERNAL_PATHS) {
-      if (line.includes(path)) {
-        report(file, at, 'C004', `points at "${path}", which is not in the published tree: ${quote(line)}`);
-      }
-    }
-
-    // A bare MM-DD reads as a date to us and as nothing to anyone else. An ISO
-    // date is already MM-DD preceded by the year, so exclude that.
-    const loose = line.match(/(?<!\d{4}-)\b(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b/);
-    if (loose) {
-      report(file, at, 'C006', `uses the ambiguous date "${loose[0]}" — write it as YYYY-MM-DD: ${quote(line)}`);
-    }
-
-    const ruleId = line.match(/\bM0\d{2}\b/);
-    if (ruleId) {
-      report(file, at, 'C007', `cites the internal lint rule ${ruleId[0]}, which is defined in tools/ and does not ship: ${quote(line)}`);
-    }
-
-    const sha = line.match(/`[0-9a-f]{7,40}`/);
-    if (sha && /^[0-9a-f]+$/.test(sha[0].slice(1, -1))) {
-      report(file, at, 'C008', `cites the commit ${sha[0]} — the reader has no repository to look it up in: ${quote(line)}`);
-    }
-
-    for (const [name, where] of PRIVATE_SYMBOLS) {
-      if (!new RegExp(`\\b${name}\\b`).test(line)) continue;
-      // Naming an internal base IS useful where a subclasser meets it in their own
-      // compiler error — but only if the text says it is internal, so nobody tries to
-      // import it. Look around the mention rather than at the line, since the
-      // qualification is usually a sentence away.
-      // From THIS line's own offset, not the name's first appearance anywhere: a name
-      // used nineteen times would otherwise be judged by whatever sits around its
-      // first mention, and two entries that do say "internal" were flagged that way.
-      const found = flat.indexOf(name, flatStart[index]);
-      const around = found === -1 ? line : flat.slice(Math.max(0, found - 400), found + 400);
-      if (/\binternal\b|\bnot exported\b|\bprivate\b/i.test(around)) continue;
+      if (accept && !accept(match)) continue;
+      const at = lineAt[match.index] ?? 0;
       report(
         file,
         at,
-        'C010',
-        `names \`${name}\`, which ${where} exports but the package root does not — say it is internal, or describe it without the name: ${quote(line)}`,
+        code,
+        `${describe(match)}: ${quote(lines[at - 1] ?? match[0])}`,
       );
     }
-  });
+  };
+
+  // A token is matched with `[-_\s]` between its words and case-insensitively: the same
+  // client is written mm-broker, mm_broker and "mm broker", and the wrap can put a
+  // newline anywhere inside the phrase.
+  const loose = (text) =>
+    text
+      .split(/[-_\s]+/)
+      .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join('[-_\\s]+');
+
+  for (const client of CLIENTS) {
+    scanFlat(
+      new RegExp(`\\b${loose(client)}\\b`, 'gi'),
+      'C001',
+      () => `names the consumer project "${client}" — say "a consumer" instead`,
+    );
+  }
+
+  scanFlat(
+    // `{0,3}` rather than `?`: a key wrapped as `MBP-\n  245` flattens to two
+    // separators, and one optional separator walks past it.
+    /\b(MBP|PIN|MM)[-_\s]{0,3}\d+\b/gi,
+    'C002',
+    (m) =>
+      `cites the internal tracker key ${m[0]}, which the reader cannot open`,
+  );
+
+  for (const person of PEOPLE) {
+    scanFlat(
+      new RegExp(`\\b${loose(person)}\\b`, 'gi'),
+      'C003',
+      () => `names a person ("${person}") — the reader does not know them`,
+    );
+  }
+
+  for (const path of INTERNAL_PATHS) {
+    // a Windows author writes the separator the other way round
+    const bare = path.replace(/\/$/, '');
+    const pattern = bare
+      .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      .replace(/\//g, '[\\\\/]');
+    // A single directory name is a path only with its separator attached — bare "tools"
+    // and "ds-docs" are ordinary words. A multi-segment one is unmistakable without it,
+    // which is what catches `includePaths: ["src/lib"]`.
+    const tail = bare.includes('/') ? '[\\\\/]?' : '[\\\\/]';
+    scanFlat(
+      new RegExp(`(?<![\\w-])${pattern}${tail}(?![\\w-])`, 'gi'),
+      'C004',
+      () => `points at "${path}", which is not in the published tree`,
+    );
+  }
+
+  for (const script of ourScripts) {
+    // bun is what CI actually runs here, so "npm run" alone would miss the real phrasing
+    scanFlat(
+      new RegExp(
+        `(?:npm|bun|yarn|pnpm)\\s+run\\s+${script.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`,
+        'gi',
+      ),
+      'C005',
+      (m) => `tells the reader to run "${m[0]}", a script only this repo has`,
+    );
+  }
+
+  // A bare MM-DD reads as a date to us and as nothing to anyone else. An ISO date already
+  // carries the year, and a page or version range is not a date at all.
+  scanFlat(
+    /(?<!\d{4}-)(?<!\b(?:pages?|lines?|rows?|items?|versions?|figures?|steps?)\s)\b(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b/gi,
+    'C006',
+    (m) => `uses the ambiguous date "${m[0]}" — write it as YYYY-MM-DD`,
+  );
+
+  scanFlat(
+    /\bM\d{3}\b/gi,
+    'C007',
+    (m) =>
+      `cites the internal lint rule ${m[0]}, which is defined in tools/ and does not ship`,
+  );
+
+  // A hash is worth flagging bare as well as backticked; 7 hex chars is the short form.
+  scanFlat(
+    /\b[0-9a-f]{7,40}\b/gi,
+    'C008',
+    (m) =>
+      `cites the commit ${m[0]} — the reader has no repository to look it up in`,
+    (m) => /[a-f]/i.test(m[0]) && /^[0-9a-f]+$/i.test(m[0]),
+  );
+
+  for (const phrase of INSIDER_PROSE) {
+    scanFlat(
+      new RegExp(`\\b${loose(phrase)}\\b`, 'gi'),
+      'C009',
+      () =>
+        `uses insider phrasing "${phrase}" — describe the change, not our process`,
+    );
+  }
+
+  for (const [name, where] of PRIVATE_SYMBOLS) {
+    scanFlat(
+      new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'),
+      'C010',
+      () =>
+        `names \`${name}\`, which ${where} exports but the package root does not — say it is internal, or describe it without the name`,
+      // naming an internal base is fine where the text says so: a subclasser meets these
+      // names in their own compiler errors
+      (m) =>
+        !/\binternal\b|\bnot exported\b|\bprivate\b/i.test(
+          flat.slice(Math.max(0, m.index - 400), m.index + 400),
+        ),
+    );
+  }
 }
 
 for (const line of errors) console.error(`changelog-lint: ERROR  ${line}`);

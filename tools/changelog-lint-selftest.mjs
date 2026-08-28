@@ -67,8 +67,72 @@ try {
     '# Fixture\r\n\r\n- **Members changed.** Run `npm run\r\n  class-surface` for the list.\r\n',
   );
   const wrapCaught = run(FIXTURE).includes('  C005  ');
-  console.log(`${wrapCaught ? 'fires ' : 'DEAD  '} C005 across a CRLF line wrap`);
+  console.log(
+    `${wrapCaught ? 'fires ' : 'DEAD  '} C005 across a CRLF line wrap`,
+  );
   if (!wrapCaught) dead.push('C005-wrapped');
+
+  // C005 was not the only rule the wrap could hide: every multi-word token can land
+  // with the break inside it, and the client names are the ones that matter.
+  const wrapped = {
+    C001: '- The fix came out of a Kit\r\n  Movement screen, and the ports saw it too.\r\n',
+    C002: '- The clipped label is fixed (MBP-\r\n  245), so descenders survive.\r\n',
+    C009: '- Carried over from our\r\n  backlog, where it had sat for a while.\r\n',
+  };
+  for (const [code, body] of Object.entries(wrapped)) {
+    writeFileSync(FIXTURE_PATH, `# Fixture\r\n\r\n${body}`);
+    const caught = run(FIXTURE).includes(`  ${code}  `);
+    if (!caught) dead.push(`${code}-wrapped`);
+    console.log(
+      `${caught ? 'fires ' : 'DEAD  '} ${code} across a CRLF line wrap`,
+    );
+  }
+
+  // Spelling is not the rule. A ticket typed in lower case and a client name joined
+  // with an underscore are the same disclosure, and a Windows author writes the
+  // separator the other way round.
+  const spellings = {
+    C002: '- Restores the descenders (mbp-245), long overdue.',
+    C001: '- Reported against mm_broker by way of a support ticket.',
+    C004: '- The recipe lives in `src\\lib\\styles\\_press.scss` if you want it.',
+  };
+  for (const [code, line] of Object.entries(spellings)) {
+    writeFileSync(FIXTURE_PATH, `# Fixture\n\n${line}\n`);
+    const caught = run(FIXTURE).includes(`  ${code}  `);
+    if (!caught) dead.push(`${code}-spelling`);
+    console.log(
+      `${caught ? 'fires ' : 'DEAD  '} ${code} regardless of case or separator`,
+    );
+  }
+
+  // Loosening a rule buys false positives, and a gate that cries wolf gets switched
+  // off. Each of these tripped a draft of the rule above it.
+  const innocent = [
+    ['C006 page range', '- See pages 10-12 of the spec for the full grid.'],
+    [
+      'C009 substring',
+      '- Requests are backlogged behind the render, not dropped.',
+    ],
+    ['C004 substring', '- Both representations stay in step automatically.'],
+    [
+      'C010 public type',
+      '- `DsStatus` and `DsButtonColor` are exported for your own maps.',
+    ],
+    [
+      'C010 named internal',
+      '- Declared once on an internal `DsFieldBase` every field extends.',
+    ],
+  ];
+  for (const [what, line] of innocent) {
+    writeFileSync(FIXTURE_PATH, `# Fixture\n\n${line}\n`);
+    const output = run(FIXTURE);
+    const quiet = output.includes('OK');
+    if (!quiet) {
+      dead.push(what);
+      console.log(output.trim());
+    }
+    console.log(`${quiet ? 'quiet ' : 'FALSE+'} ${what}`);
+  }
 
   // The mirror case: a line that trips nothing must stay green, or every rule
   // above is passing for the wrong reason.
@@ -90,4 +154,6 @@ try {
 }
 
 if (dead.length) process.exitCode = 1;
-console.log(`\n${dead.length ? 'NOT PROVEN: ' + dead.join(', ') : 'every rule fired, and a clean entry passed'}`);
+console.log(
+  `\n${dead.length ? 'NOT PROVEN: ' + dead.join(', ') : 'every rule fired, and a clean entry passed'}`,
+);
