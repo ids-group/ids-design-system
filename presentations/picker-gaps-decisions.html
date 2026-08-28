@@ -681,17 +681,17 @@
         <tbody>
           <tr><td><a href="#p1">1</a></td><td>компактный триггер фильтра</td><td class="rec"><strong>O1</strong> слот + пресет <code>triggerDisplay</code></td><td><span class="decided">решено</span></td></tr>
           <tr><td><a href="#p2">2</a></td><td>отвязать панель от триггера</td><td class="rec"><strong>O3</strong> вход <code>width</code> + токены</td><td><span class="decided">решено</span></td></tr>
-          <tr><td><a href="#p3">3</a></td><td>произвольный визуал опции</td><td class="rec"><strong>O1</strong> слот, только строки</td><td><span class="risk safe">нет</span></td></tr>
-          <tr><td><a href="#p5">4</a></td><td>скрыть поиск на коротком списке</td><td class="rec"><strong>O1</strong> <code>'auto'</code> + config</td><td><span class="risk safe">нет</span></td></tr>
-          <tr><td><a href="#p6">5</a></td><td>форма групп опций</td><td class="rec"><strong>O1</strong> форма автокомплита</td><td><span class="risk safe">нет</span></td></tr>
-          <tr><td><a href="#p8">6</a></td><td>одна строка значения</td><td class="rec"><strong>O1</strong> исправить по умолчанию</td><td><span class="risk default">дефолт</span></td></tr>
-          <tr><td><a href="#p9">7</a></td><td>панель автокомплита</td><td class="rec"><strong>O1</strong> вернуть в партиалку</td><td><span class="risk breaks">ломает</span></td></tr>
+          <tr><td><a href="#p3">3</a></td><td>произвольный визуал опции</td><td class="rec"><strong>O2</strong> два слота: строка и чип</td><td><span class="decided">решено</span></td></tr>
+          <tr><td><a href="#p5">4</a></td><td>скрыть поиск на коротком списке</td><td class="rec"><strong>O1</strong> конфиг + переопределение</td><td><span class="risk default">на выбор</span></td></tr>
+          <tr><td><a href="#p6">5</a></td><td>свести две формы групп к одной</td><td class="rec"><strong>U1</strong> один вход, union</td><td><span class="risk default">на выбор</span></td></tr>
+          <tr><td><a href="#p8">6</a></td><td>одна строка значения</td><td class="rec"><strong>O1</strong> многоточие по умолчанию</td><td><span class="risk default">на выбор</span></td></tr>
+          <tr><td><a href="#p9">7</a></td><td>панель автокомплита</td><td class="rec"><strong>O1</strong> вернуть в общий файл стилей</td><td><span class="risk default">на выбор</span></td></tr>
         </tbody>
       </table>
     </div>
     <div class="headline">
-      Пять из семи ничего не ломают. §6 меняет поведение по умолчанию, §7 ломает правила на
-      <code>.autocomplete-list</code> и требует миграции.
+      Ломающие изменения здесь не считаются ценой — платим только запись в CHANGELOG и строку
+      миграции. Три секции уже решены, четыре ждут выбора.
     </div>
   </div>
 
@@ -844,8 +844,6 @@
         <tr><th>Форм триггера</th><td class="yes">любая</td><td class="no">одна</td><td class="yes">любая</td></tr>
         <tr><th>На каких пикерах</th><td class="yes">все три</td><td class="meh">два с чипами</td><td class="yes">все три</td></tr>
         <tr><th>Закрывает</th><td class="yes">G1 + A5</td><td class="meh">G1</td><td class="yes">G1 + A5</td></tr>
-        <tr><th>Разметка у консюмера</th><td class="meh">всегда</td><td class="yes">нет</td><td class="yes">по выбору</td></tr>
-        <tr><th>Публичных поверхностей</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
       </tbody>
     </table>
   </div>
@@ -942,7 +940,6 @@
       <tbody>
         <tr><th>Панель отвязана</th><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td></tr>
         <tr><th><code>ds-select</code> тоже</th><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td></tr>
-        <tr><th>Новых входов</th><td class="meh">1</td><td class="yes">0</td><td class="meh">1 + токен</td></tr>
       </tbody>
     </table>
   </div>
@@ -1000,8 +997,8 @@
 
   <h3>Варианты</h3>
   <div class="options">
-    <div class="opt recommended" data-opt="p3-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name"><code>dsOptionTemplate</code>, только строки панели</span><span class="rec-flag">рекомендую</span></div>
+    <div class="opt" data-opt="p3-o1">
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name"><code>dsOptionTemplate</code>, только строки панели</span></div>
       <div class="opt-body">
         <div class="opt-preview">
           <div class="spec"><div class="spec-label">панель</div>
@@ -1020,8 +1017,8 @@
       <div class="opt-cost"><strong>Цена:</strong> аватар виден в списке и исчезает после выбора.</div>
     </div>
 
-    <div class="opt" data-opt="p3-o2">
-      <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Строки панели + чипы триггера</span></div>
+    <div class="opt chosen" data-opt="p3-o2">
+      <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Два слота: строка панели и чип триггера</span><span class="chosen-flag">выбрано</span></div>
       <div class="opt-body">
         <div class="opt-preview">
           <div class="spec"><div class="spec-label">чип с аватаром</div>
@@ -1030,7 +1027,21 @@
             </div></div></div>
         </div>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> чип — <code>ds-tag</code> с кнопкой закрытия, нужен второй контракт про то, что внутри можно заменить.</div>
+        <p>
+          Две директивы, а не одна с ключом: ролей ровно две и они разные, а ключ пришлось бы
+          ограничивать перечислением из двух значений. Конвенция взята у
+          <code>ds-table</code> — <code>dsCellTemplate</code> собирается через
+          <code>contentChildren</code> и раскладывается в карту шаблонов.
+        </p>
+        <pre><code>&lt;ng-template dsOptionTemplate let-option&gt;…&lt;/ng-template&gt;
+&lt;ng-template dsChipTemplate  let-option&gt;…&lt;/ng-template&gt;</code></pre>
+        <p>
+          Библиотека сохраняет за собой саму строку и сам чип: <code>role="option"</code>,
+          <code>aria-selected</code>, чекбокс, галочку и кнопку закрытия чипа. Шаблон наполняет их
+          содержимым, а не заменяет.
+        </p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> два контракта вместо одного — надо описать, что внутри чипа можно заменить, а что остаётся библиотечным.</div>
     </div>
 
     <div class="opt" data-opt="p3-o3">
@@ -1106,9 +1117,21 @@
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p5-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name"><code>searchable: boolean | 'auto'</code>, порог в <code>provideDsConfig</code></span><span class="rec-flag">рекомендую</span></div>
-      <div class="opt-body"><p>Дефолт <code>true</code> — сегодняшнее поведение не двигается. Порог задаётся один раз там же, где размер контролов.</p></div>
-      <div class="opt-cost"><strong>Цена:</strong> порог не виден в разметке.</div>
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Порог в конфиге приложения <em>и</em> переопределение на экземпляре</span><span class="rec-flag">рекомендую</span></div>
+      <div class="opt-body">
+        <p>
+          <code>searchable: boolean | 'auto'</code>. В режиме <code>'auto'</code> библиотека считает
+          сама, а порог берёт из <code>provideDsConfig</code> — один на приложение, задаётся там же,
+          где размер контролов. Нужен другой порог на конкретной панели — вход
+          <code>searchThreshold</code> перекрывает конфиг.
+        </p>
+        <pre><code>provideDsConfig({ picker: { searchThreshold: 8 } })
+
+&lt;ds-multi-select searchable="auto" … /&gt;
+&lt;ds-multi-select searchable="auto" [searchThreshold]="20" … /&gt;</code></pre>
+        <p>Библиотека считает по умолчанию, консюмер может вмешаться — без выбора между этими двумя.</p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> порог типового случая живёт в конфиге, а не в разметке — чтобы узнать, почему поиск появился, надо посмотреть конфиг приложения.</div>
     </div>
     <div class="opt" data-opt="p5-o2">
       <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Только <code>boolean</code></span></div>
@@ -1116,9 +1139,9 @@
       <div class="opt-cost"><strong>Цена:</strong> одна и та же проверка в каждом консюмере, разные пороги в одном приложении.</div>
     </div>
     <div class="opt" data-opt="p5-o3">
-      <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name"><code>'auto'</code> + вход <code>searchThreshold</code></span></div>
-      <div class="opt-body"><p>Порог на экземпляре, виден в разметке.</p></div>
-      <div class="opt-cost"><strong>Цена:</strong> два входа на одно решение.</div>
+      <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Только вход <code>searchThreshold</code>, без конфига</span></div>
+      <div class="opt-body"><p>Порог задаётся на каждой панели отдельно.</p></div>
+      <div class="opt-cost"><strong>Цена:</strong> в одном приложении панели начинают вести себя по-разному, потому что порог никто не свёл к одному.</div>
     </div>
   </div>
 
@@ -1128,9 +1151,8 @@
       <colgroup><col><col class="recommended-col"><col><col></colgroup>
       <thead><tr><th></th><th class="rec">O1 · auto + config</th><th>O2 · boolean</th><th>O3 · auto + вход</th></tr></thead>
       <tbody>
-        <tr><th>Порог задаёт</th><td class="yes">приложение</td><td class="no">консюмер</td><td class="yes">экземпляр</td></tr>
+        <tr><th>Порог задаёт</th><td class="yes">конфиг + экземпляр</td><td class="no">консюмер вручную</td><td class="meh">только экземпляр</td></tr>
         <tr><th>Один порог на приложение</th><td class="yes">да</td><td class="no">нет</td><td class="meh">нет</td></tr>
-        <tr><th>Новых входов</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
       </tbody>
     </table>
   </div>
@@ -1144,74 +1166,83 @@
   </div>
 
   <p>
-    У мульти-селекта групп нет. Вопрос не «добавить ли», а
-    <span class="key">какую из двух существующих форм взять</span> — в библиотеке их уже две, и они
-    несовместимы.
+    У мульти-селекта групп нет. Но добавить их «как у кого-то» нельзя, потому что
+    <span class="key">в библиотеке уже две несовместимые формы</span>, и вопрос на самом деле —
+    как остаться с одной.
   </p>
 
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Компонент</th><th>Форма</th><th>Передача</th><th><code>disabled</code> у группы</th></tr></thead>
+      <thead><tr><th>Компонент</th><th>Как передаются</th><th>Форма группы</th><th><code>disabled</code></th></tr></thead>
       <tbody>
-        <tr><td><code>ds-autocomplete</code></td><td><code>{ label, options }</code></td><td>вход <code>optionGroups</code></td><td class="bad">нет</td></tr>
-        <tr><td><code>ds-select</code></td><td><code>SelectOptionGroup</code> в union <code>SelectItem</code></td><td>тот же вход + type guard</td><td class="good">есть</td></tr>
-        <tr><td><code>ds-multi-select</code></td><td class="bad">нет</td><td class="bad">—</td><td class="bad">—</td></tr>
+        <tr><td><code>ds-select</code></td><td>один вход <code>options: SelectItem[]</code> — опции и группы вперемешку, разбирает type guard</td><td><code>SelectOptionGroup</code></td><td class="good">есть</td></tr>
+        <tr><td><code>ds-autocomplete</code></td><td>два входа: <code>options</code> и <code>optionGroups</code></td><td><code>AutocompleteOptionGroup</code></td><td class="bad">нет</td></tr>
+        <tr><td><code>ds-multi-select</code></td><td class="bad">никак</td><td class="bad">нет</td><td class="bad">—</td></tr>
       </tbody>
     </table>
   </div>
 
-  <h3>Варианты</h3>
+  <div class="note warn">
+    <p>
+      У автокомплита есть отдельная шероховатость: в его же документации написано, что
+      <code>options</code> <strong>игнорируется</strong>, когда задан <code>optionGroups</code>. То
+      есть два входа, один из которых молча побеждает — это надо чинить независимо от того, какую
+      форму мы выберем.
+    </p>
+  </div>
+
+  <div class="stage">
+    <div class="spec">
+      <div class="spec-label">как выглядят группы</div>
+      <div class="ds-dropdown-panel" style="width: 14rem"><div class="dropdown-panel"><ul class="dropdown-list">
+        <li class="optgroup"><span class="optgroup-label is-first">Продукт</span><ul class="optgroup-list">
+          <li class="option"><span class="option-label">Avery Brooks</span></li>
+          <li class="option is-selected"><span class="option-label">Jordan Lee</span></li>
+        </ul></li>
+        <li class="optgroup"><span class="optgroup-label">Платформа</span><ul class="optgroup-list">
+          <li class="option"><span class="option-label">Sam Rowe</span></li>
+        </ul></li>
+      </ul></div></div>
+      <div class="spec-note">Отрисовка у всех одинаковая — расходится только то, как их передают.</div>
+    </div>
+  </div>
+
+  <h3>Варианты унификации</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p6-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Форма автокомплита, <code>disabled</code> в оба, «выбрать все» глобально</span><span class="rec-flag">рекомендую</span></div>
+      <div class="opt-head"><span class="opt-id">U1</span><span class="opt-name">Один вход, union — форма <code>ds-select</code> для всех</span><span class="rec-flag">рекомендую</span></div>
       <div class="opt-body">
-        <div class="opt-preview">
-          <div class="spec"><div class="spec-label">результат</div>
-            <div class="ds-dropdown-panel" style="width: 14rem"><div class="dropdown-panel">
-              <div class="rep-group-all"><span class="rep-checkbox"></span> Выбрать все</div>
-              <ul class="dropdown-list">
-                <li class="optgroup"><span class="optgroup-label is-first">Продукт</span><ul class="optgroup-list">
-                  <li class="option"><span class="option-label">Avery Brooks</span></li>
-                  <li class="option is-selected"><span class="option-label">Jordan Lee</span></li>
-                </ul></li>
-                <li class="optgroup"><span class="optgroup-label">Платформа</span><ul class="optgroup-list">
-                  <li class="option"><span class="option-label">Sam Rowe</span></li>
-                </ul></li>
-              </ul>
-            </div></div></div>
-        </div>
-        <p>Два мульти-значных пикера после этого совпадают полностью.</p>
+        <p>
+          <code>options</code> принимает и опции, и группы: <code>DsOption | DsOptionGroup</code>.
+          Второй вход у автокомплита исчезает, вместе с правилом «один молча побеждает».
+        </p>
+        <p>
+          Это ровно то, что 0.10.0 уже сделал с самой опцией: три почти одинаковых интерфейса свели к
+          общему <code>DsOption</code>, оставив каждому своё имя. Здесь то же самое для группы.
+        </p>
+        <pre><code>export interface DsOptionGroup&lt;T = string&gt; {
+  label: string;
+  options: DsOption&lt;T&gt;[];
+  disabled?: boolean;
+}</code></pre>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> в библиотеке остаются две формы групп — эта и союзная у селекта.</div>
+      <div class="opt-cost"><strong>Цена:</strong> у автокомплита меняется способ передачи групп — миграция. Плюс союзный тип надо разбирать type guard'ом в трёх местах вместо одного.</div>
     </div>
 
     <div class="opt" data-opt="p6-o2">
-      <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name">Union <code>SelectItem</code> в том же входе</span><span class="risk breaks">ломающее</span></div>
-      <div class="opt-body"><p>Одна коллекция вместо двух входов, type guard уже написан. Картинка та же, что у O1.</p></div>
-      <div class="opt-cost"><strong>Цена:</strong> меняется тип входа <code>options</code> — нужна миграция. Паритет с тем пикером, с которым его не требовали.</div>
+      <div class="opt-head"><span class="opt-id">U2</span><span class="opt-name">Два входа везде — форма <code>ds-autocomplete</code> для всех</span></div>
+      <div class="opt-body">
+        <p><code>options</code> и <code>optionGroups</code> у всех трёх. Типы проще: никакого union и никакого guard'а.</p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> у <code>ds-select</code> меняется способ передачи, и остаётся вопрос, что делать, когда заданы оба входа — сейчас у автокомплита на него плохой ответ.</div>
     </div>
 
     <div class="opt" data-opt="p6-o3">
-      <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Группы + «выбрать все» в каждой группе</span></div>
+      <div class="opt-head"><span class="opt-id">U3</span><span class="opt-name">Общий только тип, передача у каждого своя</span></div>
       <div class="opt-body">
-        <div class="opt-preview">
-          <div class="spec"><div class="spec-label">по группе</div>
-            <div class="ds-dropdown-panel" style="width: 14rem"><div class="dropdown-panel"><ul class="dropdown-list">
-              <li class="optgroup"><span class="optgroup-label is-first">Продукт</span>
-                <div class="rep-group-all"><span class="rep-checkbox checked"></span> Все в группе</div>
-                <ul class="optgroup-list">
-                  <li class="option is-selected"><span class="option-label">Avery Brooks</span></li>
-                  <li class="option is-selected"><span class="option-label">Jordan Lee</span></li>
-                </ul></li>
-              <li class="optgroup"><span class="optgroup-label">Платформа</span>
-                <div class="rep-group-all"><span class="rep-checkbox"></span> Все в группе</div>
-                <ul class="optgroup-list">
-                  <li class="option"><span class="option-label">Sam Rowe</span></li>
-                </ul></li>
-            </ul></div></div></div>
-        </div>
+        <p>Один <code>DsOptionGroup</code> с <code>disabled?</code>, но select остаётся на union, автокомплит на двух входах.</p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> второй контрол и второе неопределённое состояние; глобальный при этом остаётся.</div>
+      <div class="opt-cost"><strong>Цена:</strong> две формы передачи так и остаются — то, что ты назвал плохим, не чинится.</div>
     </div>
   </div>
 
@@ -1219,13 +1250,20 @@
   <div class="tablewrap">
     <table class="matrix">
       <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · форма autocomplete</th><th>O2 · union select</th><th>O3 · + группа</th></tr></thead>
+      <thead><tr><th></th><th class="rec">U1 · union</th><th>U2 · два входа</th><th>U3 · только тип</th></tr></thead>
       <tbody>
-        <tr><th>Паритет с автокомплитом</th><td class="yes">полный</td><td class="no">нет</td><td class="yes">полный</td></tr>
-        <tr><th>Новых состояний UI</th><td class="yes">0</td><td class="yes">0</td><td class="meh">1</td></tr>
-        <tr><th>Ломает</th><td class="yes">нет</td><td class="no">да</td><td class="yes">нет</td></tr>
+        <tr><th>Форм передачи остаётся</th><td class="yes">одна</td><td class="yes">одна</td><td class="no">две</td></tr>
+        <tr><th>Чинит «один вход молча побеждает»</th><td class="yes">да</td><td class="no">нет</td><td class="no">нет</td></tr>
+        <tr><th>Повторяет то, что 0.10.0 сделал с опцией</th><td class="yes">да</td><td class="meh">частично</td><td class="meh">частично</td></tr>
+        <tr><th>Нужен type guard</th><td class="meh">да</td><td class="yes">нет</td><td class="meh">да</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="forks">
+    <div class="fork"><strong>Ещё выбрать</strong>
+      <p><strong>«Выбрать все» с группами:</strong> остаётся глобальным или появляется ещё и по группе — второй контрол и второе неопределённое состояние.</p>
+    </div>
   </div>
 </section>
 
@@ -1272,9 +1310,27 @@
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p8-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Одиночный режим не переносит — как исправление</span><span class="risk default">меняет дефолт</span><span class="rec-flag">рекомендую</span></div>
-      <div class="opt-body"><p>Настраивать нечего. В одиночном режиме чипов нет — переносить нечего, значит это дефект, а не режим.</p></div>
-      <div class="opt-cost"><strong>Цена:</strong> смена поведения по умолчанию; нужна запись в <code>Fixed</code> и миграция.</div>
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Многоточие по умолчанию + вход, чтобы вернуть перенос</span><span class="rec-flag">рекомендую</span></div>
+      <div class="opt-body">
+        <p>
+          Дефолт становится многоточием, а перенос остаётся доступен явно —
+          <code>valueOverflow: 'ellipsis' | 'wrap'</code>.
+        </p>
+        <p>
+          <strong>Утилита уже есть:</strong> миксин <code>single-line-ellipsis</code> в
+          <code>styles/_text-clip.scss</code>, им же обрезаются метки опций в общей партиалке.
+          Важно, что он использует <span class="key"><code>overflow: clip</code> с
+          <code>overflow-clip-margin</code>, а не <code>hidden</code></span>: при тесном
+          line-height <code>hidden</code> срезает сам глиф, это уже ловили (MBP-245).
+        </p>
+        <p>
+          <strong>Почему вход, а не токен:</strong> переключить надо ДВА свойства в разных местах —
+          <code>white-space</code> у значения и <code>flex-wrap</code> у родителя. Вход ставит один
+          класс, и оба меняются вместе. Токену для этого нужны два токена и договорённость держать их
+          согласованными.
+        </p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> у тех, кто сейчас полагается на перенос, значение станет однострочным — нужна запись в CHANGELOG и строка миграции.</div>
     </div>
     <div class="opt" data-opt="p8-o2">
       <div class="opt-head"><span class="opt-id">O2</span><span class="opt-name"><code>valueOverflow="ellipsis"</code>, по умолчанию выключено</span></div>
@@ -1320,10 +1376,25 @@
   </div>
 
   <p>
-    <code>autocomplete.component.ts:479</code> передаёт <code>'ds-overlay-pane'</code> третьим
-    аргументом, и этот аргумент <span class="key">ЗАМЕНЯЕТ</span> дефолт
-    <code>['ds-dropdown-panel', 'ds-overlay-pane']</code>. До панели не доходит ничего из общей
-    партиалки: ни отбивка, ни радиус строки, ни четыре публичных хука темы.
+    Выпадающая панель живёт не внутри компонента: CDK вставляет её в конец <code>&lt;body&gt;</code>.
+    Обычные стили компонента туда не достают, поэтому в библиотеке есть один общий файл стилей для
+    всех таких панелей, и подключается он тем, что панель получает класс
+    <code>ds-dropdown-panel</code>.
+  </p>
+  <p>
+    <code>ds-select</code> и <code>ds-multi-select</code> этот класс получают.
+    <code>ds-autocomplete</code> — <span class="key">нет</span>: ему передают
+    <code>'ds-overlay-pane'</code>, и этот аргумент не добавляется к списку, а заменяет его целиком.
+    Одна строка кода — <code>autocomplete.component.ts:479</code>.
+  </p>
+  <p>
+    <strong>Что из этого следует.</strong> У автокомплита своя копия стилей опций, отбивка панели
+    <code>0</code> вместо <code>4px</code>, углы строк квадратные — и четыре публичных токена темы
+    (<code>--ds-option-selected-*</code>) до него не доходят. Перекрасит бренд выбранную строку —
+    у select и multi-select перекрасится, у автокомплита нет.
+  </p>
+  <p>
+    Он не «недопилен»: он был написан отдельно и разошёлся с остальными двумя.
   </p>
 
   <div class="tablewrap">
@@ -1357,16 +1428,16 @@
   </div>
 
   <p>
-    Общая партиалка ждёт обёртку <code>.dropdown-panel</code> с <code>.dropdown-list</code> внутри, а
-    у автокомплита панель — сам <code>&lt;ul class="autocomplete-list"&gt;</code>. Переход = новая
-    обёртка + переименование четырёх классов = изменение поверхности классов, с записью в
-    <code>migrations/</code>.
+    Чтобы вернуть его в общий файл, нужна обёртка <code>.dropdown-panel</code> с
+    <code>.dropdown-list</code> внутри — сейчас панель это сам
+    <code>&lt;ul class="autocomplete-list"&gt;</code>. То есть один новый элемент и четыре
+    переименованных класса.
   </p>
 
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p9-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Вернуть в общую партиалку</span><span class="risk breaks">ломающее</span><span class="rec-flag">рекомендую</span></div>
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Вернуть в общую партиалку</span><span class="rec-flag">рекомендую</span></div>
       <div class="opt-body">
         <div class="opt-preview retune">
           <div class="spec"><div class="spec-label">хук темы красит строку</div>
@@ -1377,7 +1448,7 @@
         </div>
         <p>Убирает третью копию стилей опций и делает обещание чейнджлога 0.9.0 правдой.</p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> правила на <code>.autocomplete-list</code> перестают работать — нужна запись поверхности классов и миграция.</div>
+      <div class="opt-cost"><strong>Цена:</strong> чужие правила на <code>.autocomplete-list</code> перестают находить цель — нужна запись поверхности классов и строка миграции.</div>
     </div>
 
     <div class="opt" data-opt="p9-o2">
@@ -1419,7 +1490,6 @@
         <tr><th>Отбивка и радиус</th><td class="yes">да</td><td class="yes">да</td><td class="yes">да</td></tr>
         <tr><th>Хук темы работает</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
         <tr><th>Копий стилей опций</th><td class="yes">2</td><td class="meh">3</td><td class="meh">3</td></tr>
-        <tr><th>Ломает</th><td class="no">да</td><td class="yes">нет</td><td class="yes">нет</td></tr>
       </tbody>
     </table>
   </div>
