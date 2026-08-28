@@ -83,7 +83,7 @@ export class ButtonComponent extends DsMessageBase {
   /** Brand/status hue family. */
   readonly color = input<ButtonColor>('primary');
   /** Fill pattern: solid | tonal | ghost | outline | text. All color×variant
-      pairs render; some are UX-discouraged (see DISCOURAGED_COMBOS / the docs)
+      pairs render; some are UX-discouraged and dev-warn with the reason
       and emit a dev-mode warning — they work, but read poorly. `text` is
       discouraged for ALL colours — prefer the global `.link` class; it stays for
       cases needing the ds-button API (loading/fullWidth/typed pressed). */

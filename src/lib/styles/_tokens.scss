@@ -654,7 +654,7 @@
 }
 
 /* ============================================================
-   Density tiers — applied by Tweaks panel via [data-density]
+   Density tiers — set [data-density] on <html> or any container
    ============================================================ */
 [data-density="ultra-compact"] {
   /* Power-user / tradesperson tier: financial dashboards, log viewers,
@@ -662,7 +662,7 @@
      and WCAG 2.5.8 (24px minimum) margins — acceptable only when:
        (a) the screen is keyboard-first, (b) input is mouse/keys not
        touch, (c) accidental-tap risk is low, (d) the user opted in.
-     Do not enable for mobile / field-ops layouts. */
+     Do not enable for mobile or touch-first layouts. */
   --hit-cozy:          24px;
   --hit-min:           24px;
   --check-size:        14px;

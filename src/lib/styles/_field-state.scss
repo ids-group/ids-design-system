@@ -1,7 +1,7 @@
 // Keyed off `data-field-state` on the host, which each field binds from
 // `resolveFieldMessage`'s `controlState`. Only error carries a fill: a warning or
 // success tint measures 1.05:1 against a white field, too faint to do the
-// findability job a fill exists for, so both were rejected rather than deferred.
+// findability job a fill exists for, so neither carries one.
 //
 // The colour arguments exist so a component can pass its own `--ds-<name>-*-error`
 // resolver: hardcoding the family token here would silently drop overrides

@@ -3,7 +3,7 @@
 > **This file is the HOW.** Which spacing goes between what, which type role a piece of
 > text takes, where a value belongs and where a literal is a bug. For the WHAT — the
 > inventory of components, their inputs and their tokens — see `components.md`, and
-> prefer the ds-docs Component API and token reference, which are extracted from source
+> prefer the documentation site's Component API and token reference, which are generated from source
 > on every build and cannot go stale.
 >
 > **Audience: whoever composes a screen, human or agent.** Knowing the 639 tokens is not
@@ -140,8 +140,8 @@ Measured by which property each one actually lands on, across every component th
 
 - **`--<status>`** — the saturated one: `border-color`, the fill of a solid button, and the
   `color` of a MARKER — a required asterisk, an icon badge's glyph. Every one of the eight
-  `color: var(--error)` declarations in the library is a marker of that kind, six of them the
-  `.req` asterisk, and the other two an icon sitting on an `--error-subtitle` tint. **That
+  `color: var(--error)` in this library lands only on markers of that kind — a required asterisk, an
+  icon sitting on an `--error-subtitle` tint. **That
   glyph-on-tint pair is the pattern to copy**, and the reason not to put prose in this member:
   it is contrast-checked as a large glyph, not as text.
 - **`--<status>-text`** — `color`, on a light surface. This is the contrast-safe member, and the
@@ -170,7 +170,7 @@ pair the colour with an icon or text, and a new status surface should too.
 
 ## 5. Motion
 
-### Four durations, and 109 of the 139 uses are one of them
+### Four durations, and one of them carries almost everything
 
 | Token | Value | What it is for | Uses |
 | --- | --- | --- | --- |
@@ -193,7 +193,7 @@ and `--ds-motion-exit-*`, which is deliberately FASTER than its entrance.
 
 ### Transition properties, not `all`
 
-Measured: `background-color` (20), `transform` (12), `color` (10), `border-color` (5),
+In this library: `background-color` (20), `transform` (12), `color` (10), `border-color` (5),
 `opacity` (2). Nothing in the library transitions `all`, and only three places transition a
 `width` — animating a layout property costs a reflow per frame. Prefer `transform` and
 `opacity`; if you find yourself animating `height`, the answer is usually a `grid-template-rows`
@@ -219,7 +219,7 @@ anything with an exit.
 
 ### Labels are sentence case
 
-Measured: of 57 multi-word labels across the docs' own specimens, **45 are sentence case**. The
+The
 apparent exceptions are not exceptions — they are acronyms and notation the case rule does not
 touch (`Site URL`, `Project ID`, `Date (en-US, Sunday-first)`). So: capitalise the first word
 and whatever is a proper noun or an acronym, and nothing else. `Asset register`, not
@@ -240,7 +240,7 @@ told the user nothing in four different ways. The pattern's own worked examples 
 | --- | --- | --- |
 | `none` | "No asset allocated yet" | "Pick from the asset register to start building this Sub-record." |
 | `error` | "Couldn't load resource allocations" | "Network error — the request timed out after 30 seconds." |
-| `locked` | "You don't have access to this Logistics plan" | "Logistics plans are restricted to Logistics and Producer roles. Ask Alex Park or your team lead." |
+| `locked` | "You don't have access to this Logistics plan" | "Logistics plans are restricted to Logistics and Producer roles. Ask your workspace admin." |
 
 Three things to copy from those: the title is a **statement, not a label** — "No asset
 allocated yet", never "Empty"; the error body names a **concrete** cause with the number in it,
@@ -249,8 +249,8 @@ permission wall with no next step is a dead end.
 
 ### A message says what happened, what follows, and what to do
 
-The library holds itself to this. All 15 messages it prints are tagged with the component that
-printed them (`[ds-table] …`), 7 of 15 state the consequence with a plain "so", and 5 name the
+The library holds itself to this. Every message it prints is tagged with the component that
+printed it (`[ds-table] …`), states the consequence, and where there is one names the
 fix outright:
 
 > `[ds-table] lazy needs virtualScroll: without a window there is no range to fetch, so every
@@ -309,8 +309,8 @@ internals.
 ## 8. Where the rest lives
 
 The decisions this file does NOT make are the ones about which COMPONENT to reach for, and they
-have their own home: ds-docs `Practice → Do / Don't` (modal vs drawer, button hierarchy, table
+have their own home: the documentation site's `Practice → Do / Don't` (modal vs drawer, button hierarchy, table
 density, badge proliferation, status without colour, tooltips vs banners) and
 `Practice → Token Discipline` (the token-vs-literal rule, in worked pairs). The component
-inventory is `components.md`; the generated Component API and token reference in ds-docs are
+inventory is `components.md`; the generated Component API and token reference on the documentation site are
 extracted from source on every build and are the only surfaces that cannot go stale.

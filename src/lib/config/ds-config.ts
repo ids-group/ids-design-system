@@ -89,7 +89,7 @@ export interface DsConfig {
   table?: {
     /** Default for `ds-table`'s `stickyScrollbar` — the proxy that keeps the
      *  horizontal bar reachable on a tall table. Default `false`. A whole-app
-     *  opinion in practice: one consumer binds it on all 35 of its tables, and
+     *  opinion in practice: an app that wants it wants it on every table, and
      *  every new table is one forgotten binding away from scrolling invisibly. */
     stickyScrollbar?: boolean;
     /** Default for `ds-table`'s `bordered` — the outer border and radius.
@@ -144,8 +144,7 @@ export function provideDsConfig(config: DsConfig): Provider {
  * The factory body behind `provideDsConfig`, exported so a directive can put the
  * provider in its metadata as a plain object literal. Calling `provideDsConfig`
  * there instead would run at module-evaluation time, which makes the module
- * side-effectful and costs the consumer its tree-shaking (measured: the whole
- * library moved into ds-docs' eager chunk, +566 kB).
+ * side-effectful and costs the consumer its tree-shaking.
  *
  * Must be called from an injection context.
  */

@@ -155,7 +155,7 @@ export class TableComponent<T extends object> {
   /** Adds a checkbox column for row/select-all selection. */
   readonly selectable = input(false, { transform: booleanAttribute });
   /** Opt-in outer border + radius. Off by default so tables flush inside a
-   *  `<ds-card padding="none">` (workspaces, programs-list) don't double-border.
+   *  `<ds-card padding="none">` don't double-border.
    *  When `true`, the scroll-wrap gets a `var(--border-default)` outline and
    *  `var(--radius-md)` radius — useful when the table stands alone in a padded card.
    *  Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */

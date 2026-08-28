@@ -31,8 +31,7 @@ import { DS_CONFIG, inheritDsConfig } from '../../config/ds-config';
   standalone: true,
   // Object literal + arrow, NOT provideDsConfig(...): a call in decorator
   // metadata runs at module-evaluation time, which marks the module
-  // side-effectful and cost the consumer its tree-shaking of the barrel
-  // (measured on ds-docs: the whole library moved into the eager chunk, +566 kB).
+  // side-effectful and cost the consumer its tree-shaking of the barrel.
   providers: [
     {
       provide: DS_CONFIG,

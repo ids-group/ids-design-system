@@ -24,7 +24,7 @@
   @include light.theme;
 }
 
-// Brand-gray neutral family — opt-in light-context switch (ds-docs tweaks panel).
+// Brand-gray neutral family — opt-in light-context switch via <html data-neutrals="brand">.
 // A light-theme feature: dark ships its own neutral ramp and wins below.
 :root[data-neutrals='brand'] {
   --neutral-0:   var(--brand-gray-0);

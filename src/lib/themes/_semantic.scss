@@ -119,7 +119,7 @@
 
   /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
      kept distinct from --primary so the brand slots read apart. Override
-     --secondary-h/s/l per-brand (or via the tweaks panel) to reskin it —
+     --secondary-h/s/l per-brand to reskin it —
      --secondary recomposes automatically. Hover/pressed derive from --secondary
      so any hue change propagates. */
   --secondary-h:       var(--orange-h);

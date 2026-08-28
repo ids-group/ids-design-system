@@ -15,8 +15,7 @@
 // --neutral-* directly, so when both `[data-neutrals='brand']` and
 // `[data-theme='dark']` are set (equal specificity) dark wins by source order —
 // the brand-gray hue-tint is dropped and these fixed dark neutrals apply. Benign
-// (renders correctly dark, just not brand-hue-tinted); a dark brand-gray ramp is
-// a future follow-up, not v1.
+// (renders correctly dark, just not brand-hue-tinted).
 // =========================================================================
 
 @mixin palette {

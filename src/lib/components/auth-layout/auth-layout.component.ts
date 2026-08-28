@@ -56,8 +56,8 @@ import { resolveBrandValue } from '../brand-defaults';
 export class AuthLayoutComponent {
   /** Wordmark beside the letter-mark tile. For a logo image/SVG, project it into
    *  the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`.
-   *  Unset falls back to `DS_CONFIG.brand.name` — six auth screens answer this
-   *  identically. Each field resolves on its own, so `brand=""` drops the wordmark
+   *  Unset falls back to `DS_CONFIG.brand.name`, which every auth screen in an app
+   *  answers identically. Each field resolves on its own, so `brand=""` drops the wordmark
    *  but a `logoLetter` in the config still paints its tile; clear both to give one
    *  screen no brand row. */
   readonly brand = input<string | null>(null);

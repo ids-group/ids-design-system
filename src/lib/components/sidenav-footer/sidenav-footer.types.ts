@@ -22,7 +22,7 @@ export interface SidenavAlertItem {
  * A single global-search hit rendered in the sidenav Search popover. The footer
  * stays domain-agnostic: the layout supplies a {@link SidenavSearchProvider} that maps
  * a query string to these results, so the footer never needs to know about the
- * portal's sections or entities.
+ * app's sections or entities.
  */
 export interface SidenavSearchResult {
   readonly id: string;
