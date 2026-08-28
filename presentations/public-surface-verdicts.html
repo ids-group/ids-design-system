@@ -553,48 +553,53 @@
 
   <h2><span class="n">8</span> Гейт</h2>
 
-  <div class="row">
-    <div class="head"><span class="id">G1</span><span class="q">Правило на приватные символы (C010) — оставлять ли включённым</span><span class="aud both">оба</span></div>
-    <p class="why">Если по S1–S4 имена возвращаются, правило начнёт ругаться на верный текст. Выходы: снять
-      правило; оставить с пометкой «internal» как условием (сейчас так); или ограничить его прозой, не
-      трогая манифесты.</p>
-    <p class="note open"><b>нужен ответ</b> — Раз по S1–S4 имена НЕ возвращаются, правило ни на что верное не ругается. Можно оставить как есть — тогда пункт закрывается сам.</p>
-    <pre><b>Правило C010 — что оно делает на практике</b>
+    <div class="row">
+    <div class="head"><span class="id">G1</span><span class="q">Робот-проверяльщик: оставить его правило про имена классов?</span><span class="aud both">оба</span></div>
+    <p class="why"><b>Что это вообще.</b> Перед мержем и релизом запускается скрипт. Он читает все
+      публикуемые тексты и ругается, если находит то, чего читателю не понять. Одно из его правил —
+      про имена классов: <b>не называй класс, который консюмер не может к себе импортировать</b>.</p>
+    <p class="why"><b>Почему это вообще вопрос.</b> Если бы мы решили вернуть такие имена (это было в
+      S1–S4), робот начал бы ругаться на правильный текст, и его пришлось бы ослаблять. Но мы решили
+      <b>не возвращать</b> — значит ругаться ему сейчас не на что.</p>
+    <p class="note verdict"><b>сейчас</b> — правило включено и выдаёт <b>0 ошибок</b>. Ничего делать не надо.</p>
+    <pre><b>Как это выглядит на практике</b>
 
-<span class="del">ВАРИАНТ A — как сейчас: молчит, если рядом сказано «internal»</span>
-  ПРОПУСКАЕТ: «…on a new internal DsFieldBase, which every field reaches…»
-  РУГАЕТСЯ:   «…declared once on DsFieldBase.»  → C010
-  Раз по S1–S4 имена не возвращаются, сейчас ругаться не на что: 0 срабатываний.
+<span class="add">ПРОПУСКАЕТ (так написано сейчас):</span>
+  «…on a new internal DsFieldBase, which every field reaches…»
+  Сказано «internal» — робот понимает, что читателя предупредили.
 
-<span class="add">ВАРИАНТ B — не проверять манифесты, только прозу / ВАРИАНТ C — выключить</span>
-  B: манифест сможет назвать любое имя, CHANGELOG — нет.
-  C: ничто не мешает снова написать «resolveFieldMessage» в публичной записи;
-     именно так это и накопилось в прошлый раз.</pre>
+<span class="del">РУГАЕТСЯ (если кто-то напишет так):</span>
+  «…declared once on DsFieldBase.»
+  Имя названо как обычное, будто его можно импортировать. А нельзя.</pre>
     <div class="choice">
-      <label><input type="radio" name="G1" data-id="G1-as-is" checked><span>Как сейчас: молчит, если рядом сказано «internal»<span class="did"> — что я сделал</span></span></label>
-      <label><input type="radio" name="G1" data-id="G1-prose-only"><span>Только для прозы, манифесты не проверять</span></label>
-      <label><input type="radio" name="G1" data-id="G1-off"><span>Выключить правило совсем</span></label>
+      <label><input type="radio" name="G1" data-id="G1-as-is" checked><span>Оставить включённым<span class="did"> — сейчас 0 ошибок, менять нечего</span></span></label>
+      <label><input type="radio" name="G1" data-id="G1-prose-only"><span>Проверять только CHANGELOG, манифесты не трогать</span></label>
+      <label><input type="radio" name="G1" data-id="G1-off"><span>Выключить правило</span></label>
     </div>
   </div>
 
-  <div class="row">
-    <div class="head"><span class="id">G2</span><span class="q">Записать ли решения в правило для пишущего агента</span><span class="aud both">оба</span></div>
-    <p class="why">Сейчас блок «Never in a public changelog» лежит в
-      <code>.claude/agents/changelog-writer.md</code> — а <code>.claude/</code> целиком в gitignore, то
-      есть правило локальное и в репозиторий не попадёт.</p>
-    <pre><b>Где живёт правило «никогда в публичный CHANGELOG»</b>
+    <div class="row">
+    <div class="head"><span class="id">G2</span><span class="q">Памятка «что нельзя писать в CHANGELOG» лежит вне репозитория. Перенести?</span><span class="aud both">оба</span></div>
+    <p class="why"><b>Что это.</b> Я записал список запретов (не называть клиентов, тикеты, людей, наши
+      пути) в файл, который читает агент, когда пишет записи в CHANGELOG.</p>
+    <p class="why"><b>В чём загвоздка.</b> Этот файл лежит в папке <code>.claude/</code>, а она целиком
+      в <code>.gitignore</code>. То есть памятка есть <b>только на твоей машине</b>. У коллеги её нет,
+      в CI её нет, при клоне репозитория она не приедет.</p>
+    <p class="why"><b>Что НЕ зависит от этого выбора:</b> сам робот-проверяльщик уже в репозитории и
+      работает у всех. Речь только о тексте памятки для того, кто пишет.</p>
+    <pre><b>Разница между вариантами</b>
 
-<span class="del">ВАРИАНТ A — как сейчас: .claude/agents/changelog-writer.md</span>
-  Читает только агент на этой машине. `.claude/` целиком в .gitignore,
-  в репозиторий не попадёт, у коллеги и в CI его нет.
+<span class="del">ОСТАВИТЬ КАК ЕСТЬ:</span>
+  Ты пишешь релиз у себя — агент помнит правила.
+  Коллега или CI пишет — правил не видит, робот поймает только механическое
+  (имена клиентов, пути), а «не рассказывай, как мы решали» — не поймает.
 
-<span class="add">ВАРИАНТ B — перенести в отслеживаемый файл</span>
-  CONTRIBUTING.md или migrations/AUTHORING.md — правило поедет с репозиторием,
-  его увидит человек и любой другой агент. Гейт (changelog-lint) уже отслеживается
-  и работает независимо от того, где лежит текст правила.</pre>
+<span class="add">ПЕРЕНЕСТИ В РЕПОЗИТОРИЙ (CONTRIBUTING.md или migrations/AUTHORING.md):</span>
+  Памятка едет с кодом, её видят все — и человек, и любой агент.
+  Стоимость: один файл на ~40 строк в репозитории.</pre>
     <div class="choice">
-      <label><input type="radio" name="G2" data-id="G2-local" checked><span>Оставить локальным<span class="did"> — как сейчас</span></span></label>
-      <label><input type="radio" name="G2" data-id="G2-repo"><span>Перенести в отслеживаемый файл (CONTRIBUTING.md или migrations/AUTHORING.md)</span></label>
+      <label><input type="radio" name="G2" data-id="G2-local" checked><span>Оставить локальной</span></label>
+      <label><input type="radio" name="G2" data-id="G2-repo"><span>Перенести в репозиторий</span></label>
     </div>
   </div>
 
