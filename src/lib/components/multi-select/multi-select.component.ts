@@ -35,7 +35,7 @@ import {
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
-import type { MultiSelectOption } from './multi-select.types';
+import type { MultiSelectOption, MultiSelectWidth } from './multi-select.types';
 
 @Component({
   selector: 'ds-multi-select',
@@ -45,6 +45,7 @@ import type { MultiSelectOption } from './multi-select.types';
   styleUrl: './multi-select.component.scss',
   host: {
     '[attr.data-field-state]': 'controlState()',
+    '[class.content-width]': "width() === 'content'",
   },
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
@@ -68,6 +69,8 @@ export class MultiSelectComponent
     '--ds-multi-select-panel-bg-color',
     '--ds-multi-select-option-bg-color-active',
     '--ds-multi-select-check-bg-color',
+    '--ds-dropdown-panel-minw',
+    '--ds-dropdown-panel-maxw',
   ];
 
   /** Selected values, two-way bound. */
@@ -105,6 +108,10 @@ export class MultiSelectComponent
   });
   /** Accessible name for the trigger — falls back to `placeholder`. */
   readonly ariaLabel = input<string | null>(null);
+  /** Trigger width — `fill` stretches to the container and pins the panel to the
+   *  trigger's width; `content` hugs the trigger's own content and takes that width
+   *  as the panel's FLOOR, so a compact trigger does not force an unreadable panel. */
+  readonly width = input<MultiSelectWidth>('fill');
   /** Shows a "Select all" row that toggles every filter-matching, enabled option. */
   readonly selectAll = input(false, { transform: booleanAttribute });
 
@@ -343,7 +350,12 @@ export class MultiSelectComponent
       this.overlay,
       triggerElement,
     );
-    config.width = triggerElement.getBoundingClientRect().width;
+    const triggerWidth = triggerElement.getBoundingClientRect().width;
+    if (this.width() === 'content') {
+      config.minWidth = triggerWidth;
+    } else {
+      config.width = triggerWidth;
+    }
     this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
       this.overlayRef,

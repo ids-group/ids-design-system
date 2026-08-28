@@ -25,6 +25,12 @@
   width: 100%;
 }
 
+/* Hugs its own content instead of filling the container. The panel then takes the
+   trigger width as a floor rather than as its width — see openPanel(). */
+:host(.content-width) {
+  width: fit-content;
+}
+
 .label {
   @include field-label.field-label;
 

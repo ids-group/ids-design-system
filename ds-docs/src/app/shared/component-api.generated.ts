@@ -3552,6 +3552,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name for the trigger — falls back to `placeholder`."
       },
       {
+        "name": "width",
+        "kind": "input",
+        "type": "MultiSelectWidth",
+        "union": [
+          "fill",
+          "content"
+        ],
+        "default": "'fill'",
+        "required": false,
+        "description": "Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so a compact trigger does not force an unreadable panel."
+      },
+      {
         "name": "selectAll",
         "kind": "input",
         "type": "boolean",
@@ -4815,6 +4827,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[]",
         "required": false,
         "description": "Flat options or option groups rendered in the dropdown panel."
+      },
+      {
+        "name": "width",
+        "kind": "input",
+        "type": "SelectWidth",
+        "union": [
+          "fill",
+          "content"
+        ],
+        "default": "'fill'",
+        "required": false,
+        "description": "Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so the panel can still grow to its options."
       },
       {
         "name": "placeholder",

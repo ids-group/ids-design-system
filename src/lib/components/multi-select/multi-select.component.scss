@@ -23,6 +23,12 @@
   );
 }
 
+/* Hugs its own content instead of filling the container. The panel then takes the
+   trigger width as a floor rather than as its width — see openPanel(). */
+:host(.content-width) {
+  width: fit-content;
+}
+
 /* Unique class — a bare `.field` collides with consumer/docs form styles that
    set flex-direction:column and silently turn the chip row into a column. */
 .field-trigger {
@@ -106,6 +112,14 @@
   width: 100%;
   background-color: var(--_panel-bg-color);
   border: var(--border-width-default) solid var(--border-default);
+
+  /* Same names the shared partial declares, duplicated for the same reason the
+     radius chain below is: this panel is `.panel`, so the shared rule never reaches it. */
+  --_panel-minw: var(--ds-dropdown-panel-minw, 0);
+  --_panel-maxw: var(--ds-dropdown-panel-maxw, none);
+
+  min-width: var(--_panel-minw);
+  max-width: var(--_panel-maxw);
 
   // Same chain the shared dropdown overlay resolves. This panel is `.panel`, not
   // `.dropdown-panel`, so the shared rule does not reach it and the chain is

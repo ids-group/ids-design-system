@@ -1,5 +1,10 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { MultiSelectComponent, MultiSelectOption } from 'ds';
+import {
+  MultiSelectComponent,
+  MultiSelectOption,
+  SelectComponent,
+  SelectOption,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 
@@ -8,6 +13,7 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
   standalone: true,
   imports: [
     MultiSelectComponent,
+    SelectComponent,
     DocsSectionComponent,
     DocsNonmodalNoteComponent,
   ],
@@ -20,6 +26,13 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
 })
 export class MultiSelectSection {
   protected readonly tags = signal<string[]>(['design', 'frontend']);
+  protected readonly widthDemoValue = signal<string[]>(['design']);
+  protected readonly widthDemoStatus = signal<string>('');
+  protected readonly widthDemoStatuses: SelectOption[] = [
+    { value: 'ready', label: 'Ready for QA' },
+    { value: 'blocked', label: 'Blocked by upstream' },
+    { value: 'review', label: 'Needs design review' },
+  ];
   protected readonly overflow = signal<string[]>([
     'design',
     'frontend',

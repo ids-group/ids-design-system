@@ -1,6 +1,9 @@
 import type { DsOption } from '../../core/option';
+import type { DsControlWidth } from '../../core/width';
 
 export interface SelectOption extends DsOption<string> {}
+
+export type SelectWidth = DsControlWidth;
 
 export interface SelectOptionGroup {
   label: string;

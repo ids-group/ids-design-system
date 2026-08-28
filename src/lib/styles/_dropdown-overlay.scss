@@ -26,6 +26,11 @@
      `--ds-select-panel-radius`, which never existed; this is what they meant. */
   --_dropdown-panel-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
 
+  /* Only bite in `content` width mode, where the pane is auto-sized: in `fill` the
+     component pins the pane to the trigger and there is nothing left to bound. */
+  --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
+  --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
+
   .dropdown-panel {
     // Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
     // in dropdown.component.ts). Without `width: 100%` the panel is a flex
@@ -36,6 +41,8 @@
     border-radius: var(--_dropdown-panel-radius);
     box-shadow: var(--shadow-popover);
     padding: var(--space-1);
+    min-width: var(--_dropdown-panel-minw);
+    max-width: var(--_dropdown-panel-maxw);
     max-height: 320px;
     overflow-y: auto;
     z-index: var(--layer-popover);

@@ -13,15 +13,11 @@
 
   <docs-nonmodal-note />
 
-  <h3 class="block-title t-h4">
-    Basic usage
-  </h3>
+  <h3 class="block-title t-h4">Basic usage</h3>
 
   <p class="block-desc t-s">
     Chips expand horizontally; all selected values are always visible.
-    <code>
-      [selectAll]
-    </code> adds a row that toggles every filter-matching
+    <code> [selectAll] </code> adds a row that toggles every filter-matching
     option at once (shows an indeterminate state on a partial selection).
   </p>
 
@@ -42,14 +38,10 @@
     </p>
   </div>
 
-  <h3 class="block-title t-h4">
-    Overflow collapse
-  </h3>
+  <h3 class="block-title t-h4">Overflow collapse</h3>
 
   <p class="block-desc t-s">
-    <code>
-      maxVisibleChips
-    </code> defaults to <code>"fit"</code>: the trigger
+    <code> maxVisibleChips </code> defaults to <code>"fit"</code>: the trigger
     keeps as many chips as it is wide and collapses the rest into a "+N more"
     pill, re-splitting on resize. A <strong>number</strong> is a CEILING — at
     most that many, and fewer when the trigger is too narrow to hold them beside
@@ -92,14 +84,41 @@
     </p>
   </div>
 
-  <h3 class="block-title t-h4">
-    Helper / error text
-  </h3>
+  <h3 class="block-title t-h4">Width</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      hint
-    </code> renders a helper line below the
+    Default <code class="t-mono-inline">width="fill"</code> stretches to the
+    container and pins the panel to the trigger.
+    <code class="t-mono-inline">width="content"</code> hugs the trigger's own
+    content and takes that width as the panel's floor instead — so a short
+    trigger no longer forces a panel too narrow to read.
+    <code class="t-mono-inline">--ds-dropdown-panel-minw</code> and
+    <code class="t-mono-inline">--ds-dropdown-panel-maxw</code> bound the panel
+    in that mode.
+  </p>
+
+  <div style="display: flex; gap: var(--space-4); align-items: flex-start">
+    <ds-multi-select
+      data-testid="ms-content-width"
+      width="content"
+      placeholder="Tags…"
+      [options]="tagOptions"
+      [(value)]="widthDemoValue"
+    />
+
+    <ds-select
+      data-testid="select-content-width"
+      width="content"
+      placeholder="Status…"
+      [options]="widthDemoStatuses"
+      [(value)]="widthDemoStatus"
+    />
+  </div>
+
+  <h3 class="block-title t-h4">Helper / error text</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> hint </code> renders a helper line below the
     control. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
     switches to an error style with <code>role="alert"</code>.
   </p>
@@ -126,25 +145,15 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Icons in the options
-  </h3>
+  <h3 class="block-title t-h4">Icons in the options</h3>
 
   <p class="block-desc t-s">
     An option carries an optional
-    <code class="t-mono-inline">
-      icon
-    </code>, rendered before its label at
+    <code class="t-mono-inline"> icon </code>, rendered before its label at
     16px. Same field and same markup as
-    <code class="t-mono-inline">
-      ds-select
-    </code> and
-    <code class="t-mono-inline">
-      ds-autocomplete
-    </code> — all three read one
-    <code class="t-mono-inline">
-      DsOption
-    </code> shape, so a field added for
+    <code class="t-mono-inline"> ds-select </code> and
+    <code class="t-mono-inline"> ds-autocomplete </code> — all three read one
+    <code class="t-mono-inline"> DsOption </code> shape, so a field added for
     one picker is not missing from the other two. Use it for a set the reader
     recognises by glyph, like a priority scale; it is decoration for anything
     else, and an icon per row costs scanning speed.
@@ -154,9 +163,7 @@
     The chips stay text-only. A glyph inside a chip eats the width the label
     needs, and the chips are already the part of the trigger that runs out of
     room —
-    <code class="t-mono-inline">
-      maxVisibleChips
-    </code> exists for exactly
+    <code class="t-mono-inline"> maxVisibleChips </code> exists for exactly
     that.
   </p>
 

@@ -1,6 +1,8 @@
 import type { DsOption } from '../../core/option';
+import type { DsControlWidth } from '../../core/width';
+
 /** `fill` stretches to the host container (default); `content` hugs chips/value + a min typing area. */
-export type AutocompleteWidth = 'fill' | 'content';
+export type AutocompleteWidth = DsControlWidth;
 
 export interface AutocompleteOption<T = unknown> extends DsOption<T> {}
 
