@@ -218,6 +218,37 @@
 
   .opt.recommended { border-color: var(--primary); box-shadow: var(--shadow-card); }
 
+  .opt.chosen {
+    border-color: var(--success);
+    border-width: var(--border-width-strong);
+    box-shadow: var(--shadow-card);
+  }
+
+  .opt.chosen .opt-id { color: var(--text-on-success); background: var(--success); }
+
+  .opt:not(.chosen) .opt-body .opt-preview { opacity: 0.55; }
+
+  .chosen-flag {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--success-text);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .decided {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--success-text);
+    background: var(--success-subtitle);
+    border-radius: var(--radius-pill);
+    padding: 0.1rem var(--space-2);
+    white-space: nowrap;
+  }
+
   .opt-head { display: flex; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-2); }
 
   .opt-id {
@@ -646,10 +677,10 @@
   <div class="summary">
     <div class="tablewrap">
       <table>
-        <thead><tr><th>§</th><th>Что решаем</th><th>Рекомендация</th><th>Риск</th></tr></thead>
+        <thead><tr><th>§</th><th>Что решаем</th><th>Рекомендация</th><th>Статус</th></tr></thead>
         <tbody>
-          <tr><td><a href="#p1">1</a></td><td>компактный триггер фильтра</td><td class="rec"><strong>O1</strong> слот <code>dsPickerTrigger</code></td><td><span class="risk safe">нет</span></td></tr>
-          <tr><td><a href="#p2">2</a></td><td>отвязать панель от триггера</td><td class="rec"><strong>O1</strong> вход <code>width</code></td><td><span class="risk safe">нет</span></td></tr>
+          <tr><td><a href="#p1">1</a></td><td>компактный триггер фильтра</td><td class="rec"><strong>O1</strong> слот + пресет <code>triggerDisplay</code></td><td><span class="decided">решено</span></td></tr>
+          <tr><td><a href="#p2">2</a></td><td>отвязать панель от триггера</td><td class="rec"><strong>O3</strong> вход <code>width</code> + токены</td><td><span class="decided">решено</span></td></tr>
           <tr><td><a href="#p3">3</a></td><td>произвольный визуал опции</td><td class="rec"><strong>O1</strong> слот, только строки</td><td><span class="risk safe">нет</span></td></tr>
           <tr><td><a href="#p5">4</a></td><td>скрыть поиск на коротком списке</td><td class="rec"><strong>O1</strong> <code>'auto'</code> + config</td><td><span class="risk safe">нет</span></td></tr>
           <tr><td><a href="#p6">5</a></td><td>форма групп опций</td><td class="rec"><strong>O1</strong> форма автокомплита</td><td><span class="risk safe">нет</span></td></tr>
@@ -742,8 +773,8 @@
 
   <h3>Варианты</h3>
   <div class="options">
-    <div class="opt recommended" data-opt="p1-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Слот <code>dsPickerTrigger</code></span><span class="rec-flag">рекомендую</span></div>
+    <div class="opt recommended chosen" data-opt="p1-o1">
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Слот <code>dsPickerTrigger</code> + пресет <code>triggerDisplay</code></span><span class="chosen-flag">выбрано</span></div>
       <div class="opt-body">
         <div class="opt-preview">
           <div class="spec"><div class="spec-label">типовой фильтр</div>
@@ -754,8 +785,23 @@
             <div class="rep-field hugs compact"><span class="rep-dot dot-b"></span><span class="caption"><span class="rep-two-line"><strong>Priority</strong><em>Major, Minor</em></span></span><span class="rep-chevron">▾</span></div></div>
         </div>
         <p>Разметку триггера пишет консюмер, ARIA и клавиатура остаются за библиотекой. Одна директива на все три пикера, любая форма — включая будущие.</p>
+        <p>
+          <strong>Плюс пресет для типового случая:</strong> вход <code>triggerDisplay</code> с двумя
+          значениями — <code>full</code> (сегодняшний триггер, дефолт) и <code>compact</code> (метка +
+          счётчик). Консюмеру, которому хватает типового, не надо писать разметку вообще.
+        </p>
+        <p>
+          <strong>Правило приоритета:</strong> если шаблон спроецирован, он побеждает —
+          <code>triggerDisplay</code> тогда не читается вовсе. Один вход, одно значение, никаких
+          сочетаний «compact плюс шаблон», которые пришлось бы объяснять.
+        </p>
+        <pre><code>&lt;ds-multi-select triggerDisplay="compact" label="Labels" … /&gt;
+
+&lt;ds-multi-select …&gt;
+  &lt;ng-template dsPickerTrigger let-count="count"&gt;…&lt;/ng-template&gt;
+&lt;/ds-multi-select&gt;   &lt;!-- шаблон отменяет triggerDisplay --&gt;</code></pre>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> типовой случай тоже требует разметки.</div>
+      <div class="opt-cost"><strong>Цена:</strong> две публичные поверхности вместо одной — но правило приоритета однозначное, а не «зависит».</div>
     </div>
 
     <div class="opt" data-opt="p1-o2">
@@ -864,8 +910,8 @@
 
   <h3>Варианты</h3>
   <div class="options">
-    <div class="opt recommended" data-opt="p2-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Вход <code>width: 'fill' | 'content'</code> на мульти-селект и select</span><span class="rec-flag">рекомендую</span></div>
+    <div class="opt" data-opt="p2-o1">
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Вход <code>width: 'fill' | 'content'</code> на мульти-селект и select</span></div>
       <div class="opt-body"><p>Одно имя, одна семантика, три компонента. Код автокомплита переносится как есть.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> <code>content</code> двигает и ширину самого триггера — у автокомплита это уже так.</div>
     </div>
@@ -874,10 +920,17 @@
       <div class="opt-body"><p><code>--ds-multi-select-panel-minw</code>, ширину по-прежнему ставит триггер.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> панель не отвязана — тот же размер с полом снизу.</div>
     </div>
-    <div class="opt" data-opt="p2-o3">
-      <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Вход + токен, компактный триггер сам включает <code>content</code></span></div>
-      <div class="opt-body"><p>Консюмеру не надо знать про <code>width</code>: §1 включает его сам.</p></div>
-      <div class="opt-cost"><strong>Цена:</strong> дефолт, зависящий от другого входа, надо документировать.</div>
+    <div class="opt chosen" data-opt="p2-o3">
+      <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Вход <code>width</code> + токены границ</span><span class="chosen-flag">выбрано</span></div>
+      <div class="opt-body">
+        <p>
+          <code>width="content"</code> — «подстройся сам»: короткий триггер не делает панель узкой.
+          Токены — когда нужно задать границу руками: <code>--ds-multi-select-panel-minw</code> и
+          <code>--ds-multi-select-panel-maxw</code>.
+        </p>
+        <p><code>compact</code> из <a href="#p1">§1</a> включает <code>content</code> сам, чтобы консюмер не задавал два входа ради одного результата.</p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> дефолт, зависящий от другого входа, надо описать в документации.</div>
     </div>
   </div>
 
