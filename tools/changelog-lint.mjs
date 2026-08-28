@@ -355,14 +355,14 @@ for (const { full, label: file, isSource } of targets) {
   }
 
   for (const path of INTERNAL_PATHS) {
-    // a Windows author writes the separator the other way round
     const bare = path.replace(/\/$/, '');
     const pattern = bare
       .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       .replace(/\//g, '[\\\\/]');
-    // A single directory name is a path only with its separator attached — bare "tools"
-    // and "ds-docs" are ordinary words. A multi-segment one is unmistakable without it,
-    // which is what catches `includePaths: ["src/lib"]`.
+    // Both separators, because a Windows author writes it the other way round. And a
+    // single directory name is a path only with its separator attached — bare "tools"
+    // and "ds-docs" are ordinary words — while a multi-segment one is unmistakable
+    // without it, which is what catches `includePaths: ["src/lib"]`.
     const tail = bare.includes('/') ? '[\\\\/]?' : '[\\\\/]';
     scanFlat(
       new RegExp(`(?<![\\w-])${pattern}${tail}(?![\\w-])`, 'gi'),
@@ -383,8 +383,8 @@ for (const { full, label: file, isSource } of targets) {
     );
   }
 
-  // A bare MM-DD reads as a date to us and as nothing to anyone else. An ISO date already
-  // carries the year, and a page or version range is not a date at all.
+  // The lookbehinds keep the two innocent shapes out: an ISO date already carries its
+  // year, and a page or version range is not a date at all.
   scanFlat(
     /(?<!\d{4}-)(?<!\b(?:pages?|lines?|rows?|items?|versions?|figures?|steps?)\s)\b(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b/gi,
     'C006',
@@ -398,7 +398,8 @@ for (const { full, label: file, isSource } of targets) {
       `cites the internal lint rule ${m[0]}, which is defined in tools/ and does not ship`,
   );
 
-  // A hash is worth flagging bare as well as backticked; 7 hex chars is the short form.
+  // The predicate demands at least one a-f, or every seven-digit number in the prose
+  // reads as a commit.
   scanFlat(
     /\b[0-9a-f]{7,40}\b/gi,
     'C008',
