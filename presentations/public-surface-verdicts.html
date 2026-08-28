@@ -301,23 +301,8 @@
     FESM-бандл и exports-карта без <code>./lib/*</code>. Дальше разница между двумя группами
     принципиальная.</p>
 
-  <div class="row contested">
+  <div class="row done">
     <div class="head"><span class="id">S1</span><span class="q"><code>DsFieldBase</code>, <code>DsMessageBase</code>, <code>DsControlValueAccessor</code>, <code>TimeColumnsComponent</code></span><span class="aud agent">манифест</span></div>
-    <p class="why"><b>В опубликованных типах ЕСТЬ</b> (иначе тип публичного наследника не выразить), но в
-      списке экспорта нет. Импортировать нельзя — а в ошибке компилятора увидишь.</p>
-    <pre>0.10.1.json → pitfall
-<span class="del">− Beware the REPORT here… `npm run class-surface` lists those seven names as LOST from fourteen
-−   field components… they moved UP into DsFieldBase and every field still has them by inheritance.
-−   AUTHORING already flags a member that moved to a base class as something the tool cannot see.</span>
-<span class="add">+ Seven members were not lost, they moved UP onto an internal shared base, and every field still
-+   has them by inheritance — so an override of one of those needs no change.</span></pre>
-    <pre>0.10.1.json → note
-<span class="del">− …declared once on a new `DsFieldBase` instead of being hand-copied into each of the fourteen
-−   fields. Both CVA bases extend it, and ds-radio extends it directly.</span>
-<span class="add">+ …declared once on a new internal shared base instead of being hand-copied into each of the
-+   fourteen fields. Every field reaches them by inheritance.</span></pre>
-    <p class="cost">если убрать зря — агент видит TS4114 с именем <code>DsFieldBase</code> и не находит
-      это имя ни в одном пункте миграции.</p>
     <div class="choice">
       <label><input type="radio" name="S1" data-id="S1-restore"><span>Вернуть имена (и «internal» рядом)</span></label>
       <label><input type="radio" name="S1" data-id="S1-restore-plain"><span>Вернуть имена без пометок</span></label>
@@ -325,23 +310,16 @@
     </div>
   </div>
 
-  <div class="row contested">
+  <div class="row done">
     <div class="head"><span class="id">S2</span><span class="q"><code>DsFieldBase</code> / <code>DsControlValueAccessor</code> в <code>searchHints</code> 0.10.1</span><span class="aud agent">манифест</span></div>
-    <p class="why">Это были две строки массива, по которым агент грепает чужой код.</p>
-    <pre>0.10.1.json → searchHints
-<span class="del">−   "DsFieldBase",
-−   "DsControlValueAccessor",</span></pre>
     <div class="choice">
       <label><input type="radio" name="S2" data-id="S2-restore"><span>Вернуть в <code>searchHints</code></span></label>
       <label><input type="radio" name="S2" data-id="S2-keep-removed" checked><span>Оставить удалёнными<span class="did"> — что я сделал</span></span></label>
     </div>
   </div>
 
-  <div class="row contested">
+  <div class="row done">
     <div class="head"><span class="id">S3</span><span class="q"><code>extends DsFieldBase</code> в <code>searchHints</code> и <code>detect</code> 0.11.0</span><span class="aud agent">манифест</span></div>
-    <p class="why">Удалил как «код, которого не может быть». Плюс из <code>old</code> и
-      <code>verify</code> того же пункта — а <code>old</code>, как выяснилось в M4, тоже локатор. Итого я
-      снял <b>три поисковые строки из четырёх мест</b>.</p>
     <div class="choice">
       <label><input type="radio" name="S3" data-id="S3-restore"><span>Вернуть все четыре места</span></label>
       <label><input type="radio" name="S3" data-id="S3-restore-locators"><span>Вернуть только локаторы (<code>searchHints</code>/<code>detect</code>), <code>old</code>/<code>verify</code> оставить</span></label>
@@ -349,26 +327,16 @@
     </div>
   </div>
 
-  <div class="row contested">
+  <div class="row done">
     <div class="head"><span class="id">S4</span><span class="q"><code>resolveFieldMessage</code> — какие компоненты затронуты</span><span class="aud agent">манифест</span></div>
-    <p class="why"><b>В опубликованных типах ОТСУТСТВУЕТ вовсе</b> (grep = 0). Но фразой «все 14
-      компонентов, которые ходят через <code>resolveFieldMessage</code>» манифест <i>определял область</i>.
-      Я заменил на «все 14 компонентов» — область та же, механизм не назван.</p>
-    <pre>0.10.0.json → appliesWhen
-<span class="del">− The fourteen field components that route through resolveFieldMessage — border and fill on the
-−   nine bordered ones, aria-invalid and the message state on the other five.</span>
-<span class="add">+ All fourteen field components — border and fill on the nine bordered ones, aria-invalid and
-+   the message state on the other five.</span></pre>
     <div class="choice">
       <label><input type="radio" name="S4" data-id="S4-restore"><span>Вернуть имя функции</span></label>
       <label><input type="radio" name="S4" data-id="S4-keep-removed" checked><span>Оставить «все 14 компонентов»<span class="did"> — что я сделал</span></span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">S5</span><span class="q"><code>valueControlBridge</code>, <code>prepareOverlayEnter</code>, <code>disposeWithLeave</code>, <code>FieldMessageComponent</code></span><span class="aud human">проза</span></div>
-    <p class="why">Все четыре отсутствуют в опубликованных типах (grep = 0) и упоминались только в
-      CHANGELOG, не в манифестах. Читателю-человеку они не дают ничего.</p>
     <div class="choice">
       <label><input type="radio" name="S5" data-id="S5" checked><span>Удалять из прозы<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="S5" data-id="S5-restore"><span>Вернуть</span></label>
@@ -377,54 +345,40 @@
 
   <h2><span class="n">4</span> Археология решений и наш процесс</h2>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">A1</span><span class="q">Как мы выбирали: «ORIGINAL:», «turned out», «мы сначала думали»</span><span class="aud human">проза</span></div>
-    <p class="why">~15 мест. Пример: «the doc line was wrong (the flag stripped the control's inset rather
-      than "reserving space")» — при том что в этой же записи вход удаляется, то есть признание уже
-      неактуально.</p>
     <div class="choice">
       <label><input type="radio" name="A1" data-id="A1" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A1" data-id="A1-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">A2</span><span class="q">Отвергнутые альтернативы</span><span class="aud human">проза</span></div>
-    <p class="why">«Rejected alternative: reading <code>OutputEmitterRef.listeners</code>… It is private,
-      and a rename would kill the warning SILENTLY», «An earlier draft clamped the wordmark…».</p>
-    <p class="cost">возможный контраргумент: это спасает следующего от повторения нашей ошибки — но
-      следующий это мы, а читает чужой.</p>
     <div class="choice">
       <label><input type="radio" name="A2" data-id="A2" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A2" data-id="A2-keep"><span>Оставлять, если объясняет, почему API именно такой</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">A3</span><span class="q">Наш процесс: релизные гейты, бэклог, «the deck», «dogfooding», аудиты консюмеров</span><span class="aud both">оба</span></div>
-    <p class="why">«Two dogfooding audits (mm-ecm …, mm-broker …)», «0.9.0 tried it and it was retired the
-      same day», «back-filled on 2026-08-21 (167 items across 19 releases)».</p>
     <div class="choice">
       <label><input type="radio" name="A3" data-id="A3" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A3" data-id="A3-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">A4</span><span class="q">Самобичевание</span><span class="aud human">проза</span></div>
-    <p class="why">«That is a failure of these notes, not of the consumer.» В публичном документе это
-      оценка нас, а не факт о релизе.</p>
     <div class="choice">
       <label><input type="radio" name="A4" data-id="A4" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A4" data-id="A4-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">A5</span><span class="q">Провенанс нашей работы</span><span class="aud human">проза</span></div>
-    <p class="why">«(absorbed from the prototype data-grid)» — <code>data-grid</code> встречается в файле
-      один раз, <code>DataGridComponent</code> никогда не был в <code>public-api.ts</code>. «(MUI's term)»
-      про выбор имени.</p>
     <div class="choice">
       <label><input type="radio" name="A5" data-id="A5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A5" data-id="A5-keep"><span>Оставить как было</span></label>
@@ -433,42 +387,32 @@
 
   <h2><span class="n">5</span> Числа и замеры</h2>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">N1</span><span class="q">Замеры, доказывающие, что мы поработали</span><span class="aud human">проза</span></div>
-    <p class="why">~65 мест: «Measured on a two-column probe…», «Verified in Chrome at 604px», «9,968
-      focusable elements over 64 pages», «22.8px apart vertically».</p>
     <div class="choice">
       <label><input type="radio" name="N1" data-id="N1" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="N1" data-id="N1-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">N2</span><span class="q">Числа СЛОМАННОГО состояния (до фикса)</span><span class="aud human">проза</span></div>
-    <p class="why">«the disabled label was 1.11:1 from the enabled one», «2.54 → 3.41:1». Я оставлял
-      число ПОСЛЕ и убирал ДО.</p>
-    <p class="cost">если убрать зря — читатель не поймёт масштаб дефекта и не решит, надо ли ему срочно.</p>
     <div class="choice">
       <label><input type="radio" name="N2" data-id="N2" checked><span>Оставлять только «после»<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="N2" data-id="N2-keep"><span>Оставлять «до → после» целиком</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">N3</span><span class="q">Числа, которые читателю нужны для действия</span><span class="aud both">оба</span></div>
-    <p class="why">Новый дефолт, изменившийся размер, контрастный порог, границы версий. Их я <b>не
-      трогал</b> — подтверждаю, что правило верное.</p>
     <div class="choice">
       <label><input type="radio" name="N3" data-id="N3" checked><span>Не трогать никогда<span class="did"> — так и сделано</span></span></label>
       <label><input type="radio" name="N3" data-id="N3-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">N4</span><span class="q">Цензы консюмеров</span><span class="aud both">оба</span></div>
-    <p class="why">«one consumer had 41», «9 of 14 overlay-loading tables», «46 of its ds-icon elements
-      bind [size]="16"», «one consumer binds [stickyScrollbar] on all 35 of its tables».</p>
-    <p class="cost">если убрать зря — читатель теряет ориентир «насколько это распространено».</p>
     <div class="choice">
       <label><input type="radio" name="N4" data-id="N4" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="N4" data-id="N4-generalise"><span>Обобщать («часто пишут вручную»), а не удалять</span></label>
@@ -477,51 +421,40 @@
 
   <h2><span class="n">6</span> Структура и записи целиком</h2>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">X1</span><span class="q">Записи только про docs-сайт</span><span class="aud human">проза</span></div>
-    <p class="why">Одна запись сама кончалась словами «Docs-site only, nothing in the package». Удалил
-      целиком.</p>
     <div class="choice">
       <label><input type="radio" name="X1" data-id="X1" checked><span>Удалять целиком<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X1" data-id="X1-keep"><span>Оставлять — docs-сайт тоже наша поверхность</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">X2</span><span class="q">Дубликаты записей</span><span class="aud human">проза</span></div>
-    <p class="why">В 0.10.1 две записи под <code>### Removed</code> дублировали свои же, лучшие версии в
-      <code>### Changed</code> того же релиза (тот же рецепт, те же числа). Удалил копии из Removed.</p>
     <div class="choice">
       <label><input type="radio" name="X2" data-id="X2" checked><span>Удалять копию, оставлять лучшую<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X2" data-id="X2-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">X3</span><span class="q">Ломающая запись, стоявшая под <code>### Added</code></span><span class="aud human">проза</span></div>
-    <p class="why"><code>invalid</code> больше не продвигает <code>hint</code> — помечено
-      <b>BREAKING</b>, а лежало в Added. Перенёс в Changed.</p>
     <div class="choice">
       <label><input type="radio" name="X3" data-id="X3" checked><span>Переносить в правильную секцию<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X3" data-id="X3-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">X4</span><span class="q">Порядок секций внутри релизов</span><span class="aud human">проза</span></div>
-    <p class="why">Разный от релиза к релизу: 0.10.0 — Added&gt;Fixed&gt;Changed, 0.9.0 открывается
-      DELETE-таблицей, 0.4.0 ставит Breaking вторым. Было до меня; <b>не трогал</b>.</p>
     <div class="choice">
       <label><input type="radio" name="X4" data-id="X4-leave" checked><span>Не трогать<span class="did"> — так и оставлено</span></span></label>
       <label><input type="radio" name="X4" data-id="X4-normalise"><span>Привести все 23 релиза к одному порядку</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">X5</span><span class="q">Объяснения внутренней архитектуры</span><span class="aud human">проза</span></div>
-    <p class="why">«How the split works, since it is a shape other controls may want: the plumbing is now
-      <code>valueControlBridge()</code>, a function rather than a base class…» — «other controls» это наши,
-      не его.</p>
     <div class="choice">
       <label><input type="radio" name="X5" data-id="X5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X5" data-id="X5-keep"><span>Оставлять — помогает понять, почему API такой</span></label>
@@ -533,31 +466,24 @@
     <code>.ts</code> доезжает в FESM-бандл, JSDoc — в <code>.d.ts</code>. Комментарии
     <code>*.component.scss</code> компилятор выбрасывает — проверено грепом собранного вывода.</p>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">R1</span><span class="q">Комментарии в <code>styles/</code> и <code>themes/</code></span><span class="aud both">оба</span></div>
-    <p class="why">Три утечки: «approved by Stas», <code>tools/check-focus-rings.mjs</code>,
-      <code>MBP-245</code>. Это опубликованный текст.</p>
     <div class="choice">
       <label><input type="radio" name="R1" data-id="R1" checked><span>Чистить<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="R1" data-id="R1-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">R2</span><span class="q">Комментарии в <code>.ts</code> (доезжают в бандл и <code>.d.ts</code>)</span><span class="aud both">оба</span></div>
-    <p class="why">Шесть утечек: <code>mm-broker</code> ×2, «the ports», <code>MBP-225</code> ×2, хеш
-      коммита, <code>docs/todo.md</code>.</p>
     <div class="choice">
       <label><input type="radio" name="R2" data-id="R2" checked><span>Чистить<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="R2" data-id="R2-keep"><span>Оставить как было</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">R3</span><span class="q">Комментарии в <code>*.component.scss</code> (НЕ публикуются)</span><span class="aud both">оба</span></div>
-    <p class="why">Три оставлены осознанно: <code>pinkmoon</code>, ссылка на деку
-      <code>disabled-recipe.html</code>, <code>PIN-475</code>. Компилятор их выбрасывает (0 вхождений в
-      собранном выводе), а домашние правила защищают пойнтеры на деку и тикет.</p>
     <div class="choice">
       <label><input type="radio" name="R3" data-id="R3-leave" checked><span>Оставить<span class="did"> — так и оставлено</span></span></label>
       <label><input type="radio" name="R3" data-id="R3-clean"><span>Вычистить и их, для гигиены</span></label>
