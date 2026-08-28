@@ -36,7 +36,7 @@
   --ds-control-focus-shadow-error: var(--focus-field-error);
 }
 
-// A hairline flush against the element, no gap — from the pin-475 prototype.
+// A hairline flush against the element, no gap.
 :root[data-focus='edge'] {
   --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
   --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);

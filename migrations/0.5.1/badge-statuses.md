@@ -27,9 +27,7 @@ There are three moving parts:
    `[data-status='…']` rules that set the public component tokens:
 
    ```scss
-   // external consumer of the published package:
    @use '@ids-group-ltd/ids-design-system/styles/status' as status;
-   // inside this repo (ds-docs, loadPaths: src/lib): @use 'styles/status' as status;
 
    @include status.define(
      (
