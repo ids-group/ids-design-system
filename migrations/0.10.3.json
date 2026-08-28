@@ -56,10 +56,10 @@
     }
   ],
   "informational": [
-    "The shell list in styles/_focus.scss is now maintained from a measurement, not from a read of the code: it had been wrong for two releases. If you add a component that paints its own ring on :focus-within, suppress the base rule on the control it speaks for - `outline: 0` cannot do it, because the base indicator is a box-shadow.",
+    "If you add a component that paints its own ring on :focus-within, suppress the base rule on the control it speaks for - `outline: 0` cannot do it, because the base indicator is a box-shadow.",
     "Two authoring mixins are now documented for consumers building their own composite controls: `focus.owns-the-focus-ring($control)` in styles/focus, and `text-clip.single-line-ellipsis` in styles/text-clip. Both are opt-in - no existing code changes.",
     "A private --_* token declared on :host does not reach a CDK-portaled panel, and an unresolvable var() silently becomes the property's initial value - none for box-shadow, 0 for border-radius. If you style a DS panel from your own CSS, read the PUBLIC --ds-* token there, not the private one.",
-    "Fourteen public tokens were always overridable but never reached the token reference, because the extractor searched for the literal `var(--ds-` and a resolver wrapped across lines put a newline inside it: --ds-container-pad-x, --ds-multi-select-border-color (+-focus), --ds-segmented-selected-bg-color / -label-color / --ds-segmented-radius, --ds-time-picker-option-bg-color-selected / -text-color-selected / -bg-color-hover, --ds-time-picker-trigger-bg-color / -border / -color, --ds-field-message-icon-offset, --ds-time-picker-focus-shadow. Nothing changed in the components - if you hand-rolled around one of these because it looked unsupported, the override is supported and is the way to do it."
+    "Fourteen public tokens were always overridable but never reached the token reference: --ds-container-pad-x, --ds-multi-select-border-color (+-focus), --ds-segmented-selected-bg-color / -label-color / --ds-segmented-radius, --ds-time-picker-option-bg-color-selected / -text-color-selected / -bg-color-hover, --ds-time-picker-trigger-bg-color / -border / -color, --ds-field-message-icon-offset, --ds-time-picker-focus-shadow. Nothing changed in the components - if you hand-rolled around one of these because it looked unsupported, the override is supported and is the way to do it."
   ],
   "deleteList": [
     {

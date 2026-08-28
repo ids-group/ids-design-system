@@ -41,7 +41,7 @@
       "kind": "behavior",
       "old": null,
       "new": null,
-      "action": "Build the consumer immediately after the bump — the compiler enumerates every collision. Per member: where the base means the same thing, keep the name and add `override` with a base-compatible signature; otherwise rename your own member. Observed collisions: zebra, columnOrder, orderedColumns, visibleColumns, toggleColumn, onColumnDrop, moveColumn, resetColumns, columnFilters, exportCsv, onResizeMove, onResizeEnd.",
+      "action": "Build the consumer immediately after the bump — the compiler enumerates every collision. Per member: where the base means the same thing, keep the name and add `override` with a base-compatible signature; otherwise rename your own member. Base members that commonly collide: zebra, columnOrder, orderedColumns, visibleColumns, toggleColumn, onColumnDrop, moveColumn, resetColumns, columnFilters, exportCsv, onResizeMove, onResizeEnd.",
       "appliesWhen": "Only a consumer that EXTENDS TableComponent. Subclassing a DS component is unsupported (design-system.md § Components); anyone using the `<ds-table>` element is unaffected.",
       "pitfall": "Two ways to fix it wrongly. Adding `override` to `zebra` without adopting the base booleanAttribute transform changes what the input accepts. And renaming your member to something else can collide again — check the new name against the base member list, because the private and protected ones are internal and give no warning.",
       "note": "The new column API added about 76 members to TableComponent, so a subclass that already used one of those names stops compiling: TS4114 wants an `override` modifier, TS2416 fires where the signature differs.",

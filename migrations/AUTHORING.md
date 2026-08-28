@@ -330,3 +330,39 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
 - [ ] No key outside the allowlist. (lint, M042)
 - [ ] Nothing documented in the block is silently dropped (actionable → item; else → `informational`).
+
+## Why the format is shaped this way
+
+Kept here rather than in `README.md`, which ships: this is the history behind the rules, and a
+consumer upgrading their app has no use for it.
+
+**Do NOT write a prose guide per release.** `migrations/unreleased/README.md` restated the manifest
+in a form nothing reads: an upgrade tool loads `<version>.json`, and the only content the manifest
+did not already carry was the delete-list. Worse, it went stale inside one release — three late
+changes never reached it — and a stale duplicate misleads where no file would merely be silent. Its
+content now lives in the two places that ARE read: the `deleteList` array in `<version>.json`, and a
+"What you can now DELETE" table in that version's CHANGELOG block. The test before writing a sibling
+`migrations/<version>/*.md`: **would a tool or an agent ever open it?** If the answer is "a human
+might", it belongs in the CHANGELOG instead.
+
+**Where the delete list came from.** Two audits read consumer stylesheets as a record of what this
+library made them write, and both found the same thing: most workarounds were written against hooks
+that ALREADY existed, because a release note says what broke and never says what became unnecessary.
+
+**Why it has to be an ARRAY.** 0.9.0 and 0.10.0 shipped 21 and 24 delete hints as `DELETE-LIST:`
+sentences inside `informational`, and in a real upgrade not one of them was acted on by the loop: an
+array of strings has no `find` for a finder to run, so every one of the 45 waited for a human to read
+all 63 informational lines and recognise their own code in a sentence. Twelve local classes and a
+duplicated `visually-hidden` recipe survived the upgrade that way.
+
+**Where `surface` / `detect` / `verify` / `restore` came from.** An upgrade walked 0.6.0 → 0.10.1 with
+the plugin, and a review afterwards found two items the whole find/apply/recheck loop had passed over
+in silence — `0.7.1#table-sortkey-non-null-when-unsorted`, whose break lives in the host's own store
+code and mentions no DS symbol, and `0.7.1#field-reserve-message-default-off`, which buried its
+delete hint at word 150 of a 200-word note. Three of those bindings survived.
+
+**A lint enforces the contract** — the `preversion` hook and the PR gate both run it, so neither a
+release nor a merge can carry a manifest nobody can act on. A gap is an error wherever it appears.
+
+**Authoring:** drafted at release time alongside the CHANGELOG entry (the `/changelog` workflow
+drafts it from the release diff; the release author reviews).
