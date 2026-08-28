@@ -1,6 +1,6 @@
 // `.search-input` and `.kbd` rather than bare `input` / `kbd` descendants: emulated
 // encapsulation does not stop a consumer's global `.input` reset from reaching in,
-// which is what caused the PIN-475 double focus ring.
+// which is what caused a duplicate focus ring here.
 
 @use '../../styles/press' as press;
 @use '../../styles/field-group-segment' as field-group-segment;

@@ -412,16 +412,16 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">N2</span><span class="q">Числа СЛОМАННОГО состояния (до фикса)</span><span class="aud human">проза</span></div>
-    <p class="note revisit"><b>вернуться</b> — ВЕРНУЛ. Пары: 2.54 → 3.41:1, 1.11 → 2.91:1, 4.17 → 5.19:1, 1.46 → 3.58:1, хрома 0.036 → 0.099. Помечено как временное — вернуться после финального прогона.</p>
+    <p class="note verdict"><b>применено</b> — Пары вернулись: 2.54 → 3.41:1, 1.11 → 2.91:1, 4.17 → 5.19:1, 1.46 → 3.58:1, хрома 0.036 → 0.099.</p>
     <div class="choice">
       <label><input type="radio" name="N2" data-id="N2" checked><span>Оставлять только «после»<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="N2" data-id="N2-keep"><span>Оставлять «до → после» целиком</span></label>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">N3</span><span class="q">Числа, которые читателю нужны для действия</span><span class="aud both">оба</span></div>
     <p class="note open"><b>нужен ответ</b> — Пример, который ты просил: «`ds-modal` divider spacing по умолчанию 0» и «контраст не ниже 4.5:1 для обычного текста» — числа, без которых читатель не сможет действовать. Их я не трогал нигде.</p>
     <pre><b>Какие числа остаются в любом случае</b>
@@ -486,7 +486,7 @@
 
   <div class="row">
     <div class="head"><span class="id">X5</span><span class="q">Объяснения внутренней архитектуры</span><span class="aud human">проза</span></div>
-    <p class="note revisit"><b>вернуться</b> — ВЕРНУЛ объяснение — но без имён приватных символов, иначе спорит с S1/S5. Помечено как временное.</p>
+    <p class="note revisit"><b>вернуться</b> — ОСТАВЛЕНО. Открытый вопрос под этим записан в docs/todo.md: обязана ли запись объяснять ПОЧЕМУ (ds-search потерял message-входы), или довольно сказать что изменилось и что делать. Формат сам резервирует под это поле `note` («what is LEFT: the why»), то есть объяснять законно, но место у него одно. Решать с очередным релизом в руках, не в вакууме.</p>
     <pre><b>Объяснение внутренней архитектуры</b>
 
 <span class="del">ВАРИАНТ A — удалить (что я делал сначала):</span>
@@ -527,9 +527,9 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">R3</span><span class="q">Комментарии в <code>*.component.scss</code> (НЕ публикуются)</span><span class="aud both">оба</span></div>
-    <p class="note revisit"><b>вернуться</b> — Оставлено как есть. Помечено как временное — вернуться после финального прогона.</p>
+    <p class="note verdict"><b>применено</b> — Вычищено: `pinkmoon` → «the approach that pins the masthead…», ссылка на деку → «the trade taken deliberately», `PIN-475` → «a duplicate focus ring». Комментарии сбалансированы, остатков в src/lib нет.</p>
     <pre><b>Комментарии в *.component.scss — их компилятор выбрасывает</b>
 
 <span class="del">ВАРИАНТ A — оставить (сейчас так):</span>
