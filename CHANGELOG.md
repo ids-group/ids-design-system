@@ -717,9 +717,12 @@ workaround written against a hook that only landed in this release.
   enabled icon is already light (OKLCH L 80%) and a disabled one pinned at L 70% sat **1.46:1** away. The new
   default is `color-mix(in srgb, <icon> 40%, var(--surface-default))`, the same mix the
   borderless button variants take, which picks its direction per theme: light **4.17 → 5.19:1**, dark
-  **1.46 → 3.58:1**. Scoped to `standard` deliberately — `filled`'s icon is `--c-on`, and white mixed into a
-  white surface does not move at all. `--ds-icon-button-icon-color-disabled` is the same hook as
-  before and still wins; only the default under it changed.
+  **1.46 → 3.58:1**. Scoped to `standard` deliberately, and that is the trap worth knowing: the resolver is declared
+  once on the base and no variant overrode it, so moving the base would have hit `filled` too —
+  whose glyph is `--c-on`, i.e. white, and white mixed into a white surface does not move at all,
+  which would have left an invisible glyph on a pale disabled fill. `filled`, `tonal` and
+  `outlined` keep the base recipe unchanged. `--ds-icon-button-icon-color-disabled` is the same
+  hook as before and still wins; only the default under it changed.
 
 - **If you EXTEND a DS field component, read this before comparing member lists.** A diff of
   declared members against 0.10.0 says fourteen field components LOST eight members each — `hint`, `error`,
@@ -731,7 +734,9 @@ workaround written against a hook that only landed in this release.
   before. A member that moves to a base class is easy to misread as removed; it is not.
   What genuinely grew is smaller: **eight bordered fields gained `success`** (`ds-autocomplete`,
   `ds-color-picker`, `ds-date-picker`, `ds-multi-select`, `ds-otp-input`, `ds-select`,
-  `ds-textarea`, `ds-time-picker`), `ds-input` having had it all along. `ds-segmented`
+  `ds-textarea`, `ds-time-picker`), `ds-input` having had it all along. **Only the universal inputs moved:** `success`, `label`, `required` and `optional` stay on the
+  components, because they exist on 9, 9, 7 and 5 fields respectively — lifting them would hand a
+  checkbox a `success` or a slider a `label` it never had. `ds-segmented`
   is the tenth grown class and the one with real new surface — joining the form systems gave it
   `label`, `disabled`, `isDisabled`, `message`, `invalidResolved`, `fieldMessage`, `hintId` and
   `uid`. A subclass declaring `success` on one of those eight now fails with TS4114; declaring any

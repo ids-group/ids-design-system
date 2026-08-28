@@ -424,6 +424,16 @@
   <div class="row">
     <div class="head"><span class="id">N3</span><span class="q">Числа, которые читателю нужны для действия</span><span class="aud both">оба</span></div>
     <p class="note open"><b>нужен ответ</b> — Пример, который ты просил: «`ds-modal` divider spacing по умолчанию 0» и «контраст не ниже 4.5:1 для обычного текста» — числа, без которых читатель не сможет действовать. Их я не трогал нигде.</p>
+    <pre><b>Какие числа остаются в любом случае</b>
+
+<span class="del">ВАРИАНТ 1 — вырезать вместе с остальными замерами:</span>
+  «A disabled ds-button label mixes 40% toward the surface.»
+  Читатель не знает, что настраивать и от чего отталкиваться.
+
+<span class="add">ВАРИАНТ 2 — оставить (так сейчас и есть):</span>
+  «…mixes 40% toward --surface-default; the state gap becomes 2.90:1 in dark
+   and 3.39:1 in light.» — 40% это новый дефолт, который он может переопределить,
+   а 2.90/3.39 — порог, ниже которого его собственная тема не должна падать.</pre>
     <div class="choice">
       <label><input type="radio" name="N3" data-id="N3" checked><span>Не трогать никогда<span class="did"> — так и сделано</span></span></label>
       <label><input type="radio" name="N3" data-id="N3-keep"><span>Оставить как было</span></label>
@@ -448,9 +458,9 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row done">
     <div class="head"><span class="id">X2</span><span class="q">Дубликаты записей</span><span class="aud human">проза</span></div>
-    <p class="note open"><b>нужен ответ</b> — Твоя идея — не удалять копию, а сливать обе версии в лучшего потомка. Сейчас сделано удалением копии. Скажи, если переделать.</p>
+    <p class="note verdict"><b>применено</b> — Переделано на слияние. Дубликаты оказались НЕ copy-paste: в удалённых копиях был свой материал, и он возвращён — (A) почему фикс ограничен `standard`: трогать общую базу значило посадить невидимый белый глиф на бледную заливку `filled`; (B) почему `success`/`label`/`required`/`optional` НЕ переехали в общую базу (они есть у 9/9/7/5 полей). Историю дрейфа не вернул — это археология, её убирает A1.</p>
     <div class="choice">
       <label><input type="radio" name="X2" data-id="X2" checked><span>Удалять копию, оставлять лучшую<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X2" data-id="X2-keep"><span>Оставить как было</span></label>
@@ -477,6 +487,19 @@
   <div class="row">
     <div class="head"><span class="id">X5</span><span class="q">Объяснения внутренней архитектуры</span><span class="aud human">проза</span></div>
     <p class="note revisit"><b>вернуться</b> — ВЕРНУЛ объяснение — но без имён приватных символов, иначе спорит с S1/S5. Помечено как временное.</p>
+    <pre><b>Объяснение внутренней архитектуры</b>
+
+<span class="del">ВАРИАНТ A — удалить (что я делал сначала):</span>
+  «`hidden` stayed on ds-search: it belongs to the forms contract — not to the
+   message API.»
+  Коротко, но не отвечает, почему ds-search вообще потерял message-входы.
+
+<span class="add">ВАРИАНТ B — оставить, без имён приватных символов (сейчас применено):</span>
+  «How the split works…: the ControlValueAccessor plumbing is a function rather than
+   a base class, so a control can bind to a form without inheriting the message API;
+   the internal CVA base is that function plus the shared field base and delegates to
+   it. `hidden` stayed on ds-search…»
+  Отвечает на «почему API такой», имена неимпортируемых классов не называет.</pre>
     <div class="choice">
       <label><input type="radio" name="X5" data-id="X5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X5" data-id="X5-keep"><span>Оставлять — помогает понять, почему API такой</span></label>
@@ -507,6 +530,21 @@
   <div class="row">
     <div class="head"><span class="id">R3</span><span class="q">Комментарии в <code>*.component.scss</code> (НЕ публикуются)</span><span class="aud both">оба</span></div>
     <p class="note revisit"><b>вернуться</b> — Оставлено как есть. Помечено как временное — вернуться после финального прогона.</p>
+    <pre><b>Комментарии в *.component.scss — их компилятор выбрасывает</b>
+
+<span class="del">ВАРИАНТ A — оставить (сейчас так):</span>
+  button.component.scss:89 → «…the trade Stas picked from
+   `presentations/disabled-recipe.html`»
+  search.component.scss:3  → «…which caused the PIN-475 double focus ring»
+  auth-layout.component.scss:29 → «NOT pinkmoon's approach for the same exercise»
+  Проверено грепом собранного dist: 0 вхождений, до консюмера не доходят.
+
+<span class="add">ВАРИАНТ B — вычистить и их:</span>
+  «…the trade picked from the measured matrix»
+  «…which caused a duplicate focus ring»
+  «NOT the approach that pins the masthead with position: absolute»
+  Плюс: единая гигиена. Минус: домашнее правило защищает пойнтеры на деку
+  и тикет именно как «найти потом грепом».</pre>
     <div class="choice">
       <label><input type="radio" name="R3" data-id="R3-leave" checked><span>Оставить<span class="did"> — так и оставлено</span></span></label>
       <label><input type="radio" name="R3" data-id="R3-clean"><span>Вычистить и их, для гигиены</span></label>
@@ -521,6 +559,17 @@
       правило; оставить с пометкой «internal» как условием (сейчас так); или ограничить его прозой, не
       трогая манифесты.</p>
     <p class="note open"><b>нужен ответ</b> — Раз по S1–S4 имена НЕ возвращаются, правило ни на что верное не ругается. Можно оставить как есть — тогда пункт закрывается сам.</p>
+    <pre><b>Правило C010 — что оно делает на практике</b>
+
+<span class="del">ВАРИАНТ A — как сейчас: молчит, если рядом сказано «internal»</span>
+  ПРОПУСКАЕТ: «…on a new internal DsFieldBase, which every field reaches…»
+  РУГАЕТСЯ:   «…declared once on DsFieldBase.»  → C010
+  Раз по S1–S4 имена не возвращаются, сейчас ругаться не на что: 0 срабатываний.
+
+<span class="add">ВАРИАНТ B — не проверять манифесты, только прозу / ВАРИАНТ C — выключить</span>
+  B: манифест сможет назвать любое имя, CHANGELOG — нет.
+  C: ничто не мешает снова написать «resolveFieldMessage» в публичной записи;
+     именно так это и накопилось в прошлый раз.</pre>
     <div class="choice">
       <label><input type="radio" name="G1" data-id="G1-as-is" checked><span>Как сейчас: молчит, если рядом сказано «internal»<span class="did"> — что я сделал</span></span></label>
       <label><input type="radio" name="G1" data-id="G1-prose-only"><span>Только для прозы, манифесты не проверять</span></label>
@@ -533,6 +582,16 @@
     <p class="why">Сейчас блок «Never in a public changelog» лежит в
       <code>.claude/agents/changelog-writer.md</code> — а <code>.claude/</code> целиком в gitignore, то
       есть правило локальное и в репозиторий не попадёт.</p>
+    <pre><b>Где живёт правило «никогда в публичный CHANGELOG»</b>
+
+<span class="del">ВАРИАНТ A — как сейчас: .claude/agents/changelog-writer.md</span>
+  Читает только агент на этой машине. `.claude/` целиком в .gitignore,
+  в репозиторий не попадёт, у коллеги и в CI его нет.
+
+<span class="add">ВАРИАНТ B — перенести в отслеживаемый файл</span>
+  CONTRIBUTING.md или migrations/AUTHORING.md — правило поедет с репозиторием,
+  его увидит человек и любой другой агент. Гейт (changelog-lint) уже отслеживается
+  и работает независимо от того, где лежит текст правила.</pre>
     <div class="choice">
       <label><input type="radio" name="G2" data-id="G2-local" checked><span>Оставить локальным<span class="did"> — как сейчас</span></span></label>
       <label><input type="radio" name="G2" data-id="G2-repo"><span>Перенести в отслеживаемый файл (CONTRIBUTING.md или migrations/AUTHORING.md)</span></label>
