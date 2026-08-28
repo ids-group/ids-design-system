@@ -1,4 +1,8 @@
 # Authoring migration manifests
+> **These files are published.** What must never appear in one — client names, tracker
+> keys, people, our own paths and scripts, unexported symbols, decision history — is listed
+> in `CONTRIBUTING.md` under "Never in a published artefact", and `npm run changelog-lint`
+> enforces the mechanical half.
 
 How to write a `migrations/<version>.json` entry so it is complete, unambiguous, and safely
 executable by **both** consumers of these files: a machine transform / grep, and an LLM agent whose

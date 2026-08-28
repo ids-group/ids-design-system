@@ -553,7 +553,7 @@
 
   <h2><span class="n">8</span> Гейт</h2>
 
-    <div class="row">
+    <div class="row done">
     <div class="head"><span class="id">G1</span><span class="q">Робот-проверяльщик: оставить его правило про имена классов?</span><span class="aud both">оба</span></div>
     <p class="why"><b>Что это вообще.</b> Перед мержем и релизом запускается скрипт. Он читает все
       публикуемые тексты и ругается, если находит то, чего читателю не понять. Одно из его правил —
@@ -571,6 +571,7 @@
 <span class="del">РУГАЕТСЯ (если кто-то напишет так):</span>
   «…declared once on DsFieldBase.»
   Имя названо как обычное, будто его можно импортировать. А нельзя.</pre>
+    <p class="note verdict"><b>применено</b> — Ничего не меняю: правило уже включено и выдаёт 0 ошибок. Оно молчит, когда рядом с именем сказано «internal», и ругается, когда не сказано.</p>
     <div class="choice">
       <label><input type="radio" name="G1" data-id="G1-as-is" checked><span>Оставить включённым<span class="did"> — сейчас 0 ошибок, менять нечего</span></span></label>
       <label><input type="radio" name="G1" data-id="G1-prose-only"><span>Проверять только CHANGELOG, манифесты не трогать</span></label>
@@ -578,7 +579,7 @@
     </div>
   </div>
 
-    <div class="row">
+    <div class="row done">
     <div class="head"><span class="id">G2</span><span class="q">Памятка «что нельзя писать в CHANGELOG» лежит вне репозитория. Перенести?</span><span class="aud both">оба</span></div>
     <p class="why"><b>Что это.</b> Я записал список запретов (не называть клиентов, тикеты, людей, наши
       пути) в файл, который читает агент, когда пишет записи в CHANGELOG.</p>
@@ -597,6 +598,7 @@
 <span class="add">ПЕРЕНЕСТИ В РЕПОЗИТОРИЙ (CONTRIBUTING.md или migrations/AUTHORING.md):</span>
   Памятка едет с кодом, её видят все — и человек, и любой агент.
   Стоимость: один файл на ~40 строк в репозитории.</pre>
+    <p class="note verdict"><b>применено</b> — Правило переехало в <code>CONTRIBUTING.md</code> → «Never in a published artefact». <code>migrations/AUTHORING.md</code> на него ссылается, локальный файл агента — тоже, вместо второй копии. Теперь оно едет с репозиторием.</p>
     <div class="choice">
       <label><input type="radio" name="G2" data-id="G2-local" checked><span>Оставить локальной</span></label>
       <label><input type="radio" name="G2" data-id="G2-repo"><span>Перенести в репозиторий</span></label>
