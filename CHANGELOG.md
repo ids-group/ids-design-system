@@ -105,14 +105,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ### Changed
 
 - **Every migration item now carries `action`, and the reasoning has moved out of its way.** The
-  manifests in `dist/ds/migrations/` — the ones your own upgrade tooling reads — gained three prose
+  manifests the package ships in `migrations/` — the ones your own upgrade tooling reads — gained three prose
   fields per item: `action` is the imperative alone and the only field to execute, `appliesWhen` is
   the boundary (which components, which bindings, and what is explicitly NOT affected), and
   `pitfall` is the way to apply the item mechanically correctly and still ship a broken app. `note`
-  keeps what is left, the WHY. All **189 items across 22 published manifests** carry the new shape,
-  and no note runs past 120 words. **If you read these files with your own tooling, read `action`
-  first and `pitfall` before you report an item done.** Nothing was removed: every field that was
-  there is still there, with the same name and meaning.
+  keeps what is left, the WHY. **Every item in every published manifest carries the new shape**, and
+  the ALL-CAPS markers that used to stand in for the missing fields — `NO ACTION`, `ACTION only if`,
+  `DELETE-LIST` — are gone from `note`: if your tooling matched on those, match on `action` and
+  `deleteList` instead. **Read `action` first and `pitfall` before you report an item done.** No
+  field was removed: every one that was there is still there, with the same name and meaning.
 - **If you EXTEND a DS field, its message inputs now live one class further up.** `hint`, `error`,
   `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved` moved out of the internal `DsFieldBase` into a new internal `DsMessageBase`, which `DsFieldBase` extends — so `ds-button` can take the message half
   without also inheriting `errors`, `invalid` and `touched`, which describe a form control's validation
@@ -159,8 +160,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   **`--ds-banner-body-font-size`**. Title and body both render at 14px in a 16px context, with 4px
   between them in `compact`; a title-only `compact` banner is unchanged, because the wrapper is
   `:empty` and contributes nothing.
-  **The "compact has no body" line in the docs was never true** — nothing was ever hidden. It is a
-  supported pairing now rather than a claim.
 
 - **A `compact` banner whose title was longer than its column overflowed the column and cut the text
   with nothing to show it had been cut.** `compact` is the one-line strip, so its title carries
@@ -216,7 +215,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   TS2416 a subclass hits had no explanation anywhere. `0.10.0` never filed
   `ModalService.confirm({ tone: 'error' })` gaining the modal's error badge in the header.
   **Two instructions were wrong, so following them edited the wrong thing.** `0.7.1`’s à-la-carte
-  `@use` lines were written as bare `styles/…` specifiers, which resolve only inside this repo and
+  `@use` lines were written as bare `styles/…` specifiers, which resolve only inside the library's own build and
   fail from an app; they are package-qualified now. And `0.7.1`’s modal `.title` was filed as a
   `class-rename` to `.heading` when no rename happened — it is a `behavior` item now, so anyone who
   renamed that class did so on our word and can put it back.
@@ -232,7 +231,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   those files changed meaning. Also corrected: `0.10.2`’s two `maxVisibleChips` items now declare
   that they supersede `0.10.0#max-visible-chips-zero-inverted`, which an upgrade stepping through both
   had been applying for nothing.
-  **Pure upside in the same pass: sixteen more rows** in the "What you can now DELETE" tables of
+  **Sixteen more rows** in the "What you can now DELETE" tables of
   0.6.1, 0.7.1, 0.8.0, 0.9.0, 0.10.0 and 0.10.3 — workarounds those releases made redundant and never
   listed.
 
@@ -260,7 +259,8 @@ workaround written against a hook that only landed in this release.
   instead silences the tab stops living in the box — a clear button, a stepper arrow. `text-clip.single-line-ellipsis` — a one-line
   label that truncates with an ellipsis, via `overflow: clip` plus `overflow-clip-margin`, because
   `hidden` under a line-height tighter than the font glyph box shaves the top and bottom off every
-  glyph. `@use 'styles/focus'` / `@use 'styles/text-clip'` to reach them; a mixin emits nothing until
+  glyph. `@use '@ids-group-ltd/ids-design-system/styles/focus'` /
+  `@use '@ids-group-ltd/ids-design-system/styles/text-clip'` to reach them; a mixin emits nothing until
   it is included.
 
 ### Fixed
@@ -270,7 +270,8 @@ workaround written against a hook that only landed in this release.
   lands on the inner element, the box paints its own halo on `:focus-within`, and the `outline: 0`
   both already had cannot cancel a shadow. So the two plainest fields in the library went on drawing
   a 4px control ring around the `<input>`/`<textarea>` **and** a 3px field halo around the box.
-  Both now paint a single ring, and the reset stays scoped to the field element, so `clear-btn` and
+  A sweep of every focusable element in the library found these two and nothing else. Both now paint
+  a single ring, and the reset stays scoped to the field element, so `clear-btn` and
   `password-toggle` inside the same box keep their own rings; they are real tab stops.
 - **Fourteen public override tokens are now listed in the token reference.** They were always
   overridable and nothing in the components changed — only the reference was missing them. Newly
@@ -301,7 +302,7 @@ workaround written against a hook that only landed in this release.
 ### What you can now DELETE
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
-workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
+workaround this release made unnecessary. Generated from the `deleteList` in `migrations/0.10.3.json`.
 
 | If you have | Delete it, because |
 | --- | --- |
@@ -320,8 +321,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   `--ds-table-cell-link-decoration` (default `underline`). Off unless a column asks for it, and inert
   on a passive table for the same reason the row tint is: nothing should promise a click that does not
   happen. This is commonly written by hand as `:host ::ng-deep ds-table tr:hover .cell-name { color:
-  var(--accent); text-decoration: underline }`, which was their last table reach that no token could
-  replace.
+  var(--accent); text-decoration: underline }`.
 
 - **`TableRowAction` can vary its items per row: `hidden` and `disabledReason`.** The contract could
   only GREY an item that was always there, so a menu whose items swap by status — a draft offering Edit
@@ -336,7 +336,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   or focus, which is what separates it from a `[dsTooltip]`. **It reaches assistive tech as
   `aria-describedby`, not as part of the item's name:** the line is `aria-hidden` and referenced by id,
   so the projected label alone names the action. The width cap is now
-  `--ds-menu-item-description-max-width` instead of each app's own `14rem`.
+  `--ds-menu-item-description-max-width` instead of a hand-written `14rem` cap.
 
 - **`data-focus="inset"` — a focus style that survives a clipping ancestor.** The ring is a box-shadow
   outside the border box, so any `overflow: hidden` ancestor ate it and left the element focusable with
@@ -389,7 +389,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   message API.
 - **A field's message line now carries a glyph for `error`, `warning` and `success` — and not for
   `hint`.** Colour was the whole signal before, which fails WCAG 1.4.1 between warning and success in
-  the light theme, and four of the six systems audited for the fill question carry a per-state icon in
+  the light theme, and four of six major design systems carry a per-state icon in
   the field. **`hint` deliberately stays bare** — it is the resting text rather than a state, and it
   is the majority of rows on any real form, so a glyph there is noise rather than signal.
   **Per state, independently, app-wide:**
@@ -411,10 +411,13 @@ workaround this release made unnecessary. Generated from the release manifest’
   `[value]="count | number"` failed `strictTemplates` with TS2322 and consumers wrote
   `count.toLocaleString('en-US')` in the template instead — which pins a locale rather than reading
   `LOCALE_ID`, and re-runs on every change-detection pass where a pure pipe is cached. `null` renders
-  as nothing, like the empty default.
+  as nothing, like the empty default, and the four pipes have a demo on the docs page.
 
 - **If you EXTEND a DS component, eleven classes grew and six members changed type.** Against
-  0.10.1, internal bases included: `DsFieldBase` (`messageIcon` — the state glyph, declared once for every field rather than per component), `DsControlValueAccessor` (`bridge`), `AutocompleteComponent` and
+  0.10.1, internal bases included: `DsFieldBase` (`messageIcon` — the state glyph, declared once for
+  every field rather than per component), `DsControlValueAccessor` (`bridge`),
+  `FieldMessageComponent` (`config`, `iconResolved` — internal, so this reaches only a fork),
+  `AutocompleteComponent` and
   `MultiSelectComponent` (`chipsMode`, `showsEveryChip`), `MenuItemComponent` (`description`,
   `descriptionId`), `SearchComponent` (the CVA surface it now declares itself: `bridge`,
   `disabled`, `formDisabled`, `hidden`, `isDisabled`, `markTouched`, `registerOnChange`,
@@ -485,20 +488,24 @@ workaround this release made unnecessary. Generated from the release manifest’
   the library is expected to implement it.
 
 - **The shipped migration manifests say WHERE to look, not only what changed — and a lint now holds
-  them to it.** `migrations/<version>.json` (the files `dist/ds/migrations/` carries into your
-  `node_modules`, which the auto-update plugin runs) gained `surface`, `detect`, `verify`, `restore`,
+  them to it.** `migrations/<version>.json` (the files the package carries into your
+  `node_modules`) gained `surface`, `detect`, `verify`, `restore`,
   `supersedes`, and a structured `deleteList`. The reason: a migration's `find` pattern can point at a
   prop or class name that never appears in your own code even though the underlying behaviour broke
   there instead — a mechanical grep finds nothing, so an item gets recorded not-applicable while the
-  break survives. `surface` and `detect` make that item searchable in the artifact that actually
-  changed; `verify` gives a behavioural entry the positive assertion a re-check can test, since there
+  break survives. That is not hypothetical: `0.7.1#table-sortkey-non-null-when-unsorted` named
+  `ds-table[sortKey]`, while the code that actually breaks is a host's own
+  `sorting: store.sortKey() ? { … } : undefined` — so an upgrade that crossed 0.7.1 before this
+  release may have recorded it not-applicable. Re-check it if you server-page a table. `surface` and
+  `detect` make that item searchable in the artifact that actually changed; `verify` gives a behavioural entry the positive assertion a re-check can test, since there
   is no removed symbol whose absence proves anything. **Every published manifest now carries the same
-  fields, back to the earliest release**, so the auto-update plugin works consistently across the
+  fields, back to the earliest release**, so an upgrade tool works consistently across the
   whole upgrade chain. Two default flips that reverse each other are linked by `supersedes` on the
   LATER item, one way only because a published manifest cannot know its own future: `0.7.0` / `0.7.1`
   on `reserveMessage`, and `0.8.0` / `0.9.0` on the table's sort mode. Three CHANGELOG blocks also
-  gained the "What you can now DELETE" table their manifests had been carrying alone — 0.10.0's
-  nineteen rows, 0.10.1's and 0.6.2's.
+  gained the "What you can now DELETE" table their manifests had been carrying alone — 0.10.0's,
+  0.10.1's and 0.6.2's. A lint enforces the contract at release and on every merge, so a manifest
+  nobody can act on cannot reach you.
 
 ### Fixed
 
@@ -742,8 +749,7 @@ workaround written against a hook that only landed in this release.
   `uid`. A subclass declaring `success` on one of those eight now fails with TS4114; declaring any
   of the eight moved names still collides exactly as it did, because an inherited member collides
   the same way an own one does.
-  `DsFieldBase` is internal and deliberately not exported — it holds only the inputs every field has,
-  which is why `success`, `label`, `required` and `optional` stayed on the components.
+  `DsFieldBase` is internal and deliberately not exported.
 
 ### Removed
 
@@ -796,7 +802,9 @@ workaround written against a hook that only landed in this release.
   The `value → text` effect now clears both flags. It is the right place because every typing path
   holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the
   keyboard — and a leftover error no longer describes what the field is about to show. Neither typing
-  path writes `value` on the invalid branch, so blur validation still stands.
+  path writes `value` on the invalid branch, so blur validation still stands. If you tore a modal body
+  down on `(closed)` purely to get a fresh picker, that can go — and it never worked reliably anyway,
+  because reopening inside the 300 ms leave animation cancels the close and `closed` never fires.
 
 - **A disabled `ds-button` with `variant="ghost"`, `variant="text"` or `variant="outline"` mixes its
   label toward the surface instead of taking the shared fixed-lightness recipe.** New default:
@@ -830,6 +838,7 @@ None of this is required — skipping it leaves working code that is merely redu
 | If you have | Delete it, because |
 | --- | --- |
 | A `?? ''` guard wrapped around a message binding - `[error]="form.errors?.message ?? ''"` - added because a null pushed into `hint` / `error` / `warning` / `success` threw a TypeError during render. | nothing - bind the expression directly, the inputs absorb null now |
+| A modal body torn down on `(closed)`, or guarded behind `@if (open())`, purely so a re-opened `ds-date-picker` starts clean | The picker clears its own stale error and text on the value-to-text effect now - and the teardown never worked reliably, because reopening inside the 300 ms leave animation cancels the close and `closed` never fires |
 
 ## 0.10.0 — 2026-08-18
 
@@ -942,9 +951,7 @@ None of this is required — skipping it leaves working code that is merely redu
   trigger, empty or not — widths are cached per selection, and a geometry guard skips the re-measure
   when neither width nor count moved.
 
-- **`--ds-dropdown-panel-radius` — the lever 0.9.0's notes promised and never shipped.** That release
-  said an 8px select panel could be restored with `--ds-select-panel-radius`; no such token existed,
-  so the advice did nothing. This is the honest version, and it is panel-level rather than
+- **`--ds-dropdown-panel-radius` — a hook for the dropdown corner.** It is panel-level rather than
   per-component on purpose: retuning one picker's corner is not a thing to
   encourage, while `--ds-radius-panel` moves modal, popover and date picker too. Defaults to that
   role, so an untouched theme is unchanged, and it is forwarded onto the portaled pane — scope it with
@@ -1070,8 +1077,7 @@ None of this is required — skipping it leaves working code that is merely redu
 - **`ds-input`'s `floating` label is removed, with no replacement.** It only ever did half the job: the
   label was drawn inside a taller control, but it never moved out of the field on focus — the animation
   from inside-the-box to above-it *is* the pattern, and without it an empty field reads as a
-  permanently mislabelled one rather than a floating-label one. Nobody had asked for it, and finishing
-  it is a real piece of motion work, so it goes. **Migration is deleting the attribute:**
+  permanently mislabelled one rather than a floating-label one. Completing it is a piece of motion work this library is not doing, so it goes. **Migration is deleting the attribute:**
   `[floating]="true"` → nothing, and the label renders above the field like every other field in the
   library. One thing to re-check when you do: a floating input stood at `--hit-touch` (48px at default
   density) and now takes the ordinary size scale (`--field-h-md` → `--hit-cozy`, 40px at default
@@ -1192,8 +1198,7 @@ None of this is required — skipping it leaves working code that is merely redu
   LOST members**, which is the case a subclass notices differently — an `override` that now overrides
   nothing: `ModalComponent.error` and `.onBackdrop`, `ModalCardComponent.error`,
   `BottomSheetComponent.stop` and `InputComponent.floating`. Subclassing a DS component remains
-  unsupported, and this is the third release running where it broke someone, so it is stated in full
-  rather than by example. **Two kinds of break a member-list diff cannot see**, so check them by hand:
+  unsupported, so the full list is stated rather than a sample. **Two kinds of break a member-list diff cannot see**, so check them by hand:
   a member whose SIGNATURE changed keeps its name — `TableComponent.exporting` and `.exportStatus`
   are still there, but as public readonly signals rather than the protected writables a subclass
   could `.set()` — and a plain `private pending: … = null` is not a field the parser recognises, which
@@ -1282,8 +1287,7 @@ None of this is required — skipping it leaves working code that is merely redu
   joins the set (86 now), available to anything else that wants one. The row also transitions its
   colour over `--duration-base` instead of snapping, because the reader is looking at the field they
   are typing in, so an instant change says a rule flipped but not which one. No reduced-motion guard
-  is needed: the duration tokens are already zeroed globally. Row spacing is unchanged at
-  `--space-1` — deliberately, after comparing both.
+  is needed: the duration tokens are already zeroed globally. Row spacing is unchanged at `--space-1`.
 
 - **`ds-password-rules` printed its screen-reader text on screen.** Every row rendered a visible
   "— not met" / "— not yet met" beside the label, because the component used `.visually-hidden` and
@@ -1439,9 +1443,9 @@ None of this is required — skipping it leaves working code that is merely redu
 - **A disabled control was dimmed twice, and had nearly disappeared.** Five places each set
   `--text-disabled` AND `opacity: 0.6` on top of it: the closed triggers of `ds-select`,
   `ds-date-picker` and `ds-time-picker`, plus two genuine rows — `ds-menu-item` and the shared dropdown
-  option. The extra opacity pushed the label's contrast well below what the colour alone already gave,
-  without making the disabled state any easier to notice — so the text was fading, not the state. The
-  opacity is gone from those five; the colour carries the state, which is what it was chosen for.
+  option. Measured in the light theme: that lands at **1.68:1** against the surface, where the colour
+  alone gives **2.53:1** and an enabled control sits at 17.32:1 — so the state was never in danger of
+  being missed, the text was. The opacity is gone from those five; the colour carries the state, which is what it was chosen for.
   Where opacity IS the only signal — a disabled calendar day, `ds-toggle-button` — it now reads
   `--opacity-disabled` (0.5) instead of `--opacity-muted` (0.6), the token named for the job. **If
   you retuned `--opacity-muted` to compensate**, drop it: it is a de-emphasis level for hints and
@@ -1565,6 +1569,14 @@ None of this is required — skipping it leaves working code that is merely redu
   their height as a bound moves; and `ds-calendar-day` `tabIndex` is a roving tabindex (one cell at
   0, the rest at -1), not a tab position you set per day. No behaviour changed — only what the
   reference tells you.
+
+### Fixed
+
+- **The changelog page on the docs site was rendering with browser defaults.** Its markdown styles
+  were scoped by emulated encapsulation, which stamps its attribute on the container but not on the
+  nodes the markdown renderer produces, so every rule in that block matched nothing: border-top 0px
+  and margin-top 0px on the version headings, and `h3` white instead of `--text-secondary`.
+  Nothing in the package.
 
 ### Changed
 
@@ -1710,7 +1722,7 @@ None of this is required — skipping it leaves working code that is merely redu
 - **The package now ships `design-system.md` and `components.md`.** `design-system.md` is no longer a
   catalogue: it carries the RULES — which spacing token goes between what, which type role a piece of
   text takes, the field-height contract, who owns a gap, and how to override a component (including the
-  two things that break it: reaching for an internal class, and portaled panels). The 491-line inventory
+  two things that break it: reaching for an internal class, and portaled panels). The inventory
   it used to be moved to `components.md`. Both are readable from `node_modules`, so a consumer's agents
   and tooling can follow the system instead of guessing plausible token values.
 
@@ -1776,7 +1788,7 @@ None of this is required — skipping it leaves working code that is merely redu
   change unless set.
 
 - **`--ds-table-head-pad-top` / `--ds-table-head-pad-bottom`.** Header cells were the one padding in the
-  table that stayed symmetric — body cells have had per-side hooks since 2026-07-31 — so a header wanting its
+  table that stayed symmetric — body cells have had per-side hooks since 0.7.1 — so a header wanting its
   label tight to the top with air above the rule could only be reached with `!important`. Both fall back to
   the density value, so nothing moves until one is set.
 
@@ -1956,7 +1968,7 @@ None of this is required — skipping it leaves working code that is merely redu
 
 - **`ds-textarea size="sm"` and `="lg"` got the md vertical padding.** The size variants set the inner
   `<textarea>`'s vertical pad (`--space-2` / `--space-4`), but the `:host`-prefixed pin at the end of the
-  file — added so the docs' unencapsulated `.field .control` specimen could not zero it — out-ranks them
+  file out-ranks them
   once emulated encapsulation shims both selectors: `[_nghost] .field[_ngcontent] .control[_ngcontent]
   textarea[_ngcontent]` carries one more attribute than `.field.sm[_ngcontent] …`. So every textarea
   rendered with 12px top and bottom regardless of `size`, and retuning `--ds-input-pad-y` moved all
@@ -2009,7 +2021,7 @@ genuine gap worth reporting.
 
 - **`ds-icon-button` forwards `ariaExpanded` and `ariaControls` to its inner `<button>`, and `ds-button` gains `ariaControls`.** A trigger that opens a panel has to announce state on the element a screen reader focuses; set on `<ds-icon-button>` itself those attributes land on the wrapper, which is not focusable and is never read. `ds-button` already forwarded `ariaExpanded`; the pair is now complete on both.
 - **`LayoutScrollService` exposes its scroller and an absolute `scrollTo(top)`.** A scroll-spy or a virtualizer inside `ds-app-layout` needs the content region to measure against, and the only way to get it was `document.querySelector` against the layout's internal markup — a consumer reaching into DS internals for something the DS already holds. `scrollTo` assigns `scrollTop` rather than calling `scrollTo({ behavior })`, so a themed `scroll-behavior: smooth` cannot turn a positioning jump into an animation.
-- **`dsRailTrigger` wires a consumer's own burger to the overlay rail.** The responsive rail shipped with `role="dialog"`, `aria-modal` and a focus trap, but nothing connected it to the button that opens it — the burger lives in the consumer's projected topbar, so it announced no state and no relationship. Put the directive on the burger and it toggles `[(railOpen)]` and keeps `aria-expanded` and `aria-controls` correct. Both attributes are dropped while the rail is not an overlay, where `aria-expanded="false"` would contradict what the user sees. A directive rather than a documentation note because these are exactly the attributes a consumer forgets — the DS itself forgot them. `ds-app-layout` also exposes `railId` and the read-only `railOverlay` signal for a consumer that builds its own trigger.
+- **`dsRailTrigger` wires a consumer's own burger to the overlay rail.** The responsive rail shipped with `role="dialog"`, `aria-modal` and a focus trap, but nothing connected it to the button that opens it — the burger lives in the consumer's projected topbar, so it announced no state and no relationship. Put the directive on the burger and it toggles `[(railOpen)]` and keeps `aria-expanded` and `aria-controls` correct. Both attributes are dropped while the rail is not an overlay, where `aria-expanded="false"` would contradict what the user sees. A directive rather than a documentation note because these are exactly the attributes a consumer forgets. `ds-app-layout` also exposes `railId` and the read-only `railOverlay` signal for a consumer that builds its own trigger.
 
 - **Overlay panels fade out when DISMISSED, and still close instantly when you choose something.** Floating
   panels (select, autocomplete, multi-select, both pickers, colour picker, popover) have closed instantly
@@ -2035,8 +2047,7 @@ genuine gap worth reporting.
   class, so setting it pins the caption regardless of `size`. These are deliberately NOT part of the
   `--ds-field-label-*` contract: a label above an input is a heading for the field and reads secondary, while
   a caption beside a checkbox is the content being agreed to and reads primary — routing them together would
-  put "Remember me" in uppercase in any brand that sets `--ds-field-label-transform`. Recorded in the token
-  reference so it reads as a decision rather than an omission.
+  put "Remember me" in uppercase in any brand that sets `--ds-field-label-transform`.
 - **`ds-table` renders only the rows in view: `[virtualScroll]="true"` + `virtualRowSize`.** The body used to
   `@for` over every row of `data()`, so 10 000 rows tanked scroll and paint. Virtual mode keeps ~25 rows in
   the DOM regardless of the row count, padding above and below with two spacer rows that stand in for the
@@ -2275,8 +2286,7 @@ genuine gap worth reporting.
   `--combobox-maxh` size the listbox panel shared by `ds-autocomplete` and `ds-multi-select`, and survived the
   `ds-combobox` → `ds-autocomplete` rename carrying the name of a component that no longer exists. Now
   `--picker-offset` / `--picker-maxh`. These are global scale tokens rather than `--ds-*` component tokens, so
-  the blast radius is anyone who happened to override them — rename the override. The docs also now state the
-  autocomplete-vs-multi-select boundary in both sections: the LIST decides, not the count — typing is how you
+  the blast radius is anyone who happened to override them — rename the override. Choosing between the two: the LIST decides, not the count — typing is how you
   narrow a set too large to scan, while a checkbox list shows the whole choice and what is NOT selected.
 - **A `required` `ds-time-picker` in `mode="range"` never announced as required.** `aria-required` was on the
   single-mode trigger only, so a screen-reader user on a range field was not told either segment was
@@ -2328,14 +2338,14 @@ genuine gap worth reporting.
 
 - **`--ds-overlay-enter-scale` now reaches the portaled panel, so `ds-scale-in` can be retuned per
   instance.** The token was declared and resolved on the pane but missing from the set forwarded onto it, so `ds-select { --ds-overlay-enter-scale: 0.9; }` did nothing while
-  the other four enter tokens worked — 0.7.1 shipped it as a known gap. Covers every overlay panel
+  the other four enter tokens worked. Covers every overlay panel
   (select, multi-select, autocomplete, date / time / colour picker, popover, tooltip, menu submenus). A
   global override always worked and is unaffected.
 
 ### What you can now DELETE
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
-workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
+workaround this release made unnecessary. Generated from the `deleteList` in `migrations/0.8.0.json`.
 
 | If you have | Delete it, because |
 | --- | --- |
@@ -2359,7 +2369,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   and it failed silently: no error, no warning, nothing in the types, so nothing caught it short of
   opening the rendered page. All three share that contract, so all three now log which component
   swallowed the text. Production is untouched: the probe that detects it is rendered only under
-  `isDevMode()`, so no extra node ships. Real projection support is still open.
+  `isDevMode()`, so no extra node ships. A projected caption still renders nothing.
 
 - **`ds-app-layout` collapses its rail to an off-canvas overlay below `lg`.** On narrow viewports the
   rail no longer occupies a grid column: below the `lg` breakpoint (read at runtime from `--bp-lg`) it
@@ -2390,11 +2400,11 @@ workaround this release made unnecessary. Generated from the release manifest’
 - **`ds-time-picker` gains `label`, `required` and `optional` — a date + time row now aligns without a
   hand-rolled label.** The time picker had no label API at all, so a labelled form row meant authoring the
   label yourself; the date picker's own label reserved a row the time picker did not, leaving the two
-  triggers visibly misaligned vertically. The label renders the same `.label` block with the same tokens
-  as `ds-date-picker`, and drives the single-mode trigger's accessible name (`aria-labelledby` when a
-  label is set, `aria-label` when it is not) plus `aria-required`; range mode's start/end segment
-  triggers are not wired to the label yet. In a two-column date + time layout, the two pickers now line
-  up label to label and trigger to trigger.
+  triggers 22.8px apart vertically. The label renders the same `.label` block with the same tokens as
+  `ds-date-picker`, and drives the single-mode trigger's accessible name (`aria-labelledby` when a label
+  is set, `aria-label` when it is not) plus `aria-required`; range mode's start/end segment triggers are
+  not wired to the label yet. Measured on a two-column probe, date vs time now differ by 0px on label
+  top/height, trigger top/height/bottom, value inset and glyph top.
 
 - **The value typography of both pickers is now tokenised.** It was hardcoded: the date value was pinned to
   `--font-mono` and the time trigger to `--font-weight-medium`, so a brand could not bring either in line
@@ -2517,8 +2527,8 @@ workaround this release made unnecessary. Generated from the release manifest’
 
 - **BREAKING (layout): `reserveMessage` now defaults to `false` on every field.** It shipped default-on
   in 0.7.0; the reserved row is right for a form that validates and wrong for the many forms that never
-  show a message, where it added a visible block of dead space under every control, turning a normal
-  field stack into an oversized gap. The resolution chain is unchanged — per-field input, then
+  show a message, where it added ~23px of dead space under every control and made a normal 16px field
+  stack read as a ~39px hole. The resolution chain is unchanged — per-field input, then
   `DS_CONFIG.field.reserveMessage`, then the default — only the final fallback flipped, so all 14
   message-bearing fields follow (`ds-input`, `ds-textarea`, `ds-select`, `ds-autocomplete`,
   `ds-multi-select`, `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-switch`, `ds-slider`,
@@ -2536,8 +2546,9 @@ workaround this release made unnecessary. Generated from the release manifest’
   `--ds-time-picker-value-weight: var(--font-weight-medium)` to keep the old weight.
 
 - **`fullWidth` on `ds-date-picker` now pushes the calendar glyph to the trailing edge.** Stretching the
-  trigger left the value + glyph packed at the left, visibly short of the right edge, so a full-width date
-  field did not line up with the time picker or a `ds-select` beside it.
+  trigger left the value + glyph packed at the left (the glyph sat 122px short of the right edge on a
+  274px field), so a full-width date field did not line up with the time picker or a `ds-select` beside
+  it.
 
 - **Overlay panels now enter FROM their trigger edge instead of always sliding downward.** A panel below
   its trigger still slides down into place; one placed above now rises, and a side-placed panel comes in
@@ -2559,18 +2570,18 @@ workaround this release made unnecessary. Generated from the release manifest’
 - **`ds-pagination`'s rows-per-page dropdown no longer follows the app's field defaults.** The internal
   `ds-select` was rendered without a `reserveMessage` binding, so it inherited whatever the app had set —
   and a page-size dropdown shows neither hint nor error, so it had nothing to reserve. With the row
-  reserved the pager grew visibly taller than intended and, because the `nav` centres its children, the
-  select's control sat noticeably above the page buttons' baseline. It is now pinned off inside the
-  template, which also makes it immune in the other direction: an app that opts back in with
+  reserved the pager measured 54.8px instead of 32 and, because the `nav` centres its children, the
+  select's control sat ~11px above the page buttons' baseline. It is now pinned off inside the template,
+  which also makes it immune in the other direction: an app that opts back in with
   `provideDsConfig({ field: { reserveMessage: true } })` or wraps a region in `dsReserveMessages` no
   longer re-breaks every pager inside it. A consumer that collapsed the row with a global
   `ds-pagination ds-field-message { display: none }` can drop that rule.
 
 - **`ds-stat`'s card now fills a stretched host, so a KPI row renders equal-height tiles.** The host is
   `display: block` and `.stat` carried no height, so in a `1fr` grid track the host stretched while the
-  visible surface stayed content-sized: three tiles where only two had a `caption` rendered visibly
-  shorter than their hosts, leaving an empty gap under the odd one out. It reads as a layout bug rather
-  than as a missing caption, and no token reached it — consumers were shipping
+  visible surface stayed content-sized: three tiles where only two had a `caption` painted 102.1px inside
+  126.9px hosts, leaving 24.8px of empty cell under the odd one out. It reads as a layout bug rather than
+  as a missing caption, and no token reached it — consumers were shipping
   `ds-stat { height: 100%; .stat { height: 100% } }` from a global stylesheet against DS-internal markup.
   A tile in an unstretched context is unaffected, since the host is still content-sized there.
 
@@ -2615,7 +2626,7 @@ workaround this release made unnecessary. Generated from the release manifest’
 ### What you can now DELETE
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
-workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
+workaround this release made unnecessary. Generated from the `deleteList` in `migrations/0.7.1.json`.
 
 | If you have | Delete it, because |
 | --- | --- |
@@ -2713,13 +2724,13 @@ workaround this release made unnecessary. Generated from the release manifest’
   icon that previously (mis)set the flag regains its proper inset (a bugfix).
 
 - **BREAKING: `ds-app-shell` is renamed to `ds-app-layout`.** The slotted fixed-frame application layout
-  shipped as `ds-app-shell` in the tagged 0.6.3 source; this renames the selector (`ds-app-shell` →
+  shipped as `ds-app-shell` in 0.6.3; this renames the selector (`ds-app-shell` →
   `ds-app-layout`), the component class (`AppShellComponent` → `AppLayoutComponent`), the exported scroll
   service (`ShellScrollService` → `LayoutScrollService`), and its four tokens (`--ds-app-shell-pad-x` /
   `-pad-y` / `-content-max-width` / `-height` → `--ds-app-layout-*`). Behaviour is unchanged — rename the
   references (see `migrations/`). A consumer still on 0.6.3's `ds-app-shell` must migrate.
 
-- **Retroactive note: `TableComponent` gained four more members (`total`, `sortingOrder`,
+- **`TableComponent` gained four more members (`total`, `sortingOrder`,
   `animateHeight`, `scrollToTopOnPageChange`), and most other component classes changed too**, so a
   consumer that extends a DS class (unsupported — `design-system.md` § Components) can collide on a
   name here as well, exactly as in 0.6.3. Same resolution: rename the subclass's own member, or add
@@ -2731,8 +2742,8 @@ workaround this release made unnecessary. Generated from the release manifest’
   roving-tabindex nav (unreachable by keyboard) and rendered a native `disabled` button; it now uses
   `aria-disabled` and stays in the arrow / type-ahead order (ARIA menu practice), so a keyboard user can
   focus it — and a `[dsTooltip]` on it now shows on focus, surfacing a "why is this disabled" reason.
-  Activation stays blocked. (Reliable screen-reader announcement of that reason is a separate follow-up —
-  the tooltip's `aria-describedby` currently lands on the `role="none"` host, not the inner button.)
+  Activation stays blocked. (That reason is not announced reliably yet: the tooltip's `aria-describedby` lands on the
+  `role="none"` host, not the inner button.)
 
 - **Stacked overlays no longer unlock body scroll under each other.** `ds-modal`, `ds-drawer` and
   `ds-bottom-sheet` each wrote `body.style.overflow` directly, so closing the outer of two stacked
@@ -3007,7 +3018,7 @@ None of this is required — skipping it leaves working code that is merely redu
 ### What you can now DELETE
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
-workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
+workaround this release made unnecessary. Generated from the `deleteList` in `migrations/0.6.1.json`.
 
 | If you have | Delete it, because |
 | --- | --- |
@@ -3672,7 +3683,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   hard ring (`--focus-ring`), matching `ds-input` / `ds-select` / `ds-search`. Minor visual
   change to the combobox focus state.
 - Backgrounds and several control transitions switched from the `background` shorthand to
-  `background-color` for precision. Alongside it, a repo-wide, value-preserving CSS-syntax
+  `background-color` for precision. Alongside it, a library-wide, value-preserving CSS-syntax
   modernization: legacy `hsl()/hsla()` comma syntax → modern space/slash form, `clip:
 rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max-width`
   media queries → range syntax (`width >= …`). No intended visual change.
@@ -3703,7 +3714,7 @@ rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max
 
 ### Added
 
-- A `homepage` field linking the live docs/showcase, so the npm package page
+- A `homepage` field linking the live docs, so the npm package page
   points to it.
 
 ## 0.2.0 — 2026-06-16

@@ -240,6 +240,16 @@
       ],
       "why": "A `?? ''` guard wrapped around a message binding - `[error]=\"form.errors?.message ?? ''\"` - added because a null pushed into `hint` / `error` / `warning` / `success` threw a TypeError during render.",
       "replaceWith": "nothing - bind the expression directly, the inputs absorb null now"
+    },
+    {
+      "id": "modal-teardown-to-reset-date-picker",
+      "surface": "template",
+      "find": [
+        "(closed)",
+        "@if (open())"
+      ],
+      "why": "A modal body torn down on `(closed)` — or guarded behind the open flag — purely so a re-opened `ds-date-picker` starts without the previous attempt's error. The picker clears its own stale error and text on the value-to-text effect now. The teardown never worked reliably anyway: reopening inside the 300 ms leave animation cancels the close, so `closed` never fires.",
+      "replaceWith": "nothing - keep the body mounted"
     }
   ]
 }
