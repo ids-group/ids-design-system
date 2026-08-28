@@ -56,6 +56,17 @@
     border-radius: var(--radius-lg);
     background: var(--surface-default);
   }
+  .note {
+    margin: var(--space-3) 0 0;
+    padding: var(--space-2) var(--space-3);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    background: var(--surface-secondary);
+    font-size: var(--font-size-s);
+  }
+  .note.revisit { border-left-color: var(--warning-text); }
+  .note.open { border-left-color: var(--error-border); }
+  .note b { text-transform: uppercase; font-size: var(--font-size-xs); letter-spacing: var(--letter-spacing-wide); }
   .row.done { opacity: .55; }
   .row.contested { border-color: var(--error-border); background: var(--error-subtitle); }
   .head { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: baseline; }
@@ -187,6 +198,7 @@
 
   <div class="row done">
     <div class="head"><span class="id">M1</span><span class="q">Держать манифесты по другой планке, чем CHANGELOG?</span><span class="aud both">мета</span></div>
+    <p class="note verdict"><b>применено</b> — Проверка по правилу проведена: во всех 22 манифестах ровно одна запись про нашу перестройку (0.10.1 items[5]) — и она остаётся, там TS4114 у консюмера.</p>
     <div class="choice">
       <label><input type="radio" name="M1" data-id="M1-split" checked><span>Да, разные планки: манифест сохраняет всё, чем можно опознать место в коде<span class="did"> — так я и буду делать дальше</span></span></label>
       <label><input type="radio" name="M1" data-id="M1-same"><span>Нет, одна планка на всё публикуемое</span></label>
@@ -212,6 +224,7 @@
 
   <div class="row done">
     <div class="head"><span class="id">M4</span><span class="q">Поле <code>old</code>, описывающее невозможный код</span><span class="aud agent">манифест</span></div>
+    <p class="note verdict"><b>применено</b> — Применено: из 0.11.0 убран только class MyField extends DsFieldBase. Пары «было → стало» нигде не тронуты.</p>
     <div class="choice">
       <label><input type="radio" name="M4" data-id="M4-keep"><span>Оставить как есть (локатор ценнее пустого совпадения)</span></label>
       <label><input type="radio" name="M4" data-id="M4-drop" checked><span>Оставить только реально наследуемое<span class="did"> — что я сделал</span></span></label>
@@ -303,6 +316,7 @@
 
   <div class="row done">
     <div class="head"><span class="id">S1</span><span class="q"><code>DsFieldBase</code>, <code>DsMessageBase</code>, <code>DsControlValueAccessor</code>, <code>TimeColumnsComponent</code></span><span class="aud agent">манифест</span></div>
+    <p class="note verdict"><b>применено</b> — Проверено: finder ищет по исходникам консюмера (ds-usage-finder.md:15), а это имя туда попасть не может. Удаление ничего не стоило.</p>
     <div class="choice">
       <label><input type="radio" name="S1" data-id="S1-restore"><span>Вернуть имена (и «internal» рядом)</span></label>
       <label><input type="radio" name="S1" data-id="S1-restore-plain"><span>Вернуть имена без пометок</span></label>
@@ -312,6 +326,7 @@
 
   <div class="row done">
     <div class="head"><span class="id">S2</span><span class="q"><code>DsFieldBase</code> / <code>DsControlValueAccessor</code> в <code>searchHints</code> 0.10.1</span><span class="aud agent">манифест</span></div>
+    <p class="note verdict"><b>применено</b> — Осталось ловящее: extends TextareaComponent / InputComponent, reserveMessage, touched, и голое "extends " в detect.</p>
     <div class="choice">
       <label><input type="radio" name="S2" data-id="S2-restore"><span>Вернуть в <code>searchHints</code></span></label>
       <label><input type="radio" name="S2" data-id="S2-keep-removed" checked><span>Оставить удалёнными<span class="did"> — что я сделал</span></span></label>
@@ -320,6 +335,7 @@
 
   <div class="row done">
     <div class="head"><span class="id">S3</span><span class="q"><code>extends DsFieldBase</code> в <code>searchHints</code> и <code>detect</code> 0.11.0</span><span class="aud agent">манифест</span></div>
+    <p class="note verdict"><b>применено</b> — Осталось ловящее: extends TableComponent / ButtonComponent / IconButtonComponent / SidenavComponent + коды TS4114 и TS2415 — они и опознают ошибку сборки, надёжнее имени класса.</p>
     <div class="choice">
       <label><input type="radio" name="S3" data-id="S3-restore"><span>Вернуть все четыре места</span></label>
       <label><input type="radio" name="S3" data-id="S3-restore-locators"><span>Вернуть только локаторы (<code>searchHints</code>/<code>detect</code>), <code>old</code>/<code>verify</code> оставить</span></label>
@@ -329,6 +345,7 @@
 
   <div class="row done">
     <div class="head"><span class="id">S4</span><span class="q"><code>resolveFieldMessage</code> — какие компоненты затронуты</span><span class="aud agent">манифест</span></div>
+    <p class="note verdict"><b>применено</b> — Область та же: «все 14 компонентов». Имя функции в опубликованных типах отсутствует вовсе.</p>
     <div class="choice">
       <label><input type="radio" name="S4" data-id="S4-restore"><span>Вернуть имя функции</span></label>
       <label><input type="radio" name="S4" data-id="S4-keep-removed" checked><span>Оставить «все 14 компонентов»<span class="did"> — что я сделал</span></span></label>
@@ -395,16 +412,18 @@
     </div>
   </div>
 
-  <div class="row done">
+  <div class="row">
     <div class="head"><span class="id">N2</span><span class="q">Числа СЛОМАННОГО состояния (до фикса)</span><span class="aud human">проза</span></div>
+    <p class="note revisit"><b>вернуться</b> — ВЕРНУЛ. Пары: 2.54 → 3.41:1, 1.11 → 2.91:1, 4.17 → 5.19:1, 1.46 → 3.58:1, хрома 0.036 → 0.099. Помечено как временное — вернуться после финального прогона.</p>
     <div class="choice">
       <label><input type="radio" name="N2" data-id="N2" checked><span>Оставлять только «после»<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="N2" data-id="N2-keep"><span>Оставлять «до → после» целиком</span></label>
     </div>
   </div>
 
-  <div class="row done">
+  <div class="row">
     <div class="head"><span class="id">N3</span><span class="q">Числа, которые читателю нужны для действия</span><span class="aud both">оба</span></div>
+    <p class="note open"><b>нужен ответ</b> — Пример, который ты просил: «`ds-modal` divider spacing по умолчанию 0» и «контраст не ниже 4.5:1 для обычного текста» — числа, без которых читатель не сможет действовать. Их я не трогал нигде.</p>
     <div class="choice">
       <label><input type="radio" name="N3" data-id="N3" checked><span>Не трогать никогда<span class="did"> — так и сделано</span></span></label>
       <label><input type="radio" name="N3" data-id="N3-keep"><span>Оставить как было</span></label>
@@ -429,8 +448,9 @@
     </div>
   </div>
 
-  <div class="row done">
+  <div class="row">
     <div class="head"><span class="id">X2</span><span class="q">Дубликаты записей</span><span class="aud human">проза</span></div>
+    <p class="note open"><b>нужен ответ</b> — Твоя идея — не удалять копию, а сливать обе версии в лучшего потомка. Сейчас сделано удалением копии. Скажи, если переделать.</p>
     <div class="choice">
       <label><input type="radio" name="X2" data-id="X2" checked><span>Удалять копию, оставлять лучшую<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X2" data-id="X2-keep"><span>Оставить как было</span></label>
@@ -447,14 +467,16 @@
 
   <div class="row done">
     <div class="head"><span class="id">X4</span><span class="q">Порядок секций внутри релизов</span><span class="aud human">проза</span></div>
+    <p class="note verdict"><b>применено</b> — Применено: 6 релизов переставлены, 17 уже были в каноне. Порядок: Breaking → Added → Changed → Removed → Fixed → DELETE. Сверено, что мультимножество слов не изменилось.</p>
     <div class="choice">
       <label><input type="radio" name="X4" data-id="X4-leave" checked><span>Не трогать<span class="did"> — так и оставлено</span></span></label>
       <label><input type="radio" name="X4" data-id="X4-normalise"><span>Привести все 23 релиза к одному порядку</span></label>
     </div>
   </div>
 
-  <div class="row done">
+  <div class="row">
     <div class="head"><span class="id">X5</span><span class="q">Объяснения внутренней архитектуры</span><span class="aud human">проза</span></div>
+    <p class="note revisit"><b>вернуться</b> — ВЕРНУЛ объяснение — но без имён приватных символов, иначе спорит с S1/S5. Помечено как временное.</p>
     <div class="choice">
       <label><input type="radio" name="X5" data-id="X5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X5" data-id="X5-keep"><span>Оставлять — помогает понять, почему API такой</span></label>
@@ -482,8 +504,9 @@
     </div>
   </div>
 
-  <div class="row done">
+  <div class="row">
     <div class="head"><span class="id">R3</span><span class="q">Комментарии в <code>*.component.scss</code> (НЕ публикуются)</span><span class="aud both">оба</span></div>
+    <p class="note revisit"><b>вернуться</b> — Оставлено как есть. Помечено как временное — вернуться после финального прогона.</p>
     <div class="choice">
       <label><input type="radio" name="R3" data-id="R3-leave" checked><span>Оставить<span class="did"> — так и оставлено</span></span></label>
       <label><input type="radio" name="R3" data-id="R3-clean"><span>Вычистить и их, для гигиены</span></label>
@@ -497,6 +520,7 @@
     <p class="why">Если по S1–S4 имена возвращаются, правило начнёт ругаться на верный текст. Выходы: снять
       правило; оставить с пометкой «internal» как условием (сейчас так); или ограничить его прозой, не
       трогая манифесты.</p>
+    <p class="note open"><b>нужен ответ</b> — Раз по S1–S4 имена НЕ возвращаются, правило ни на что верное не ругается. Можно оставить как есть — тогда пункт закрывается сам.</p>
     <div class="choice">
       <label><input type="radio" name="G1" data-id="G1-as-is" checked><span>Как сейчас: молчит, если рядом сказано «internal»<span class="did"> — что я сделал</span></span></label>
       <label><input type="radio" name="G1" data-id="G1-prose-only"><span>Только для прозы, манифесты не проверять</span></label>
