@@ -1193,7 +1193,7 @@ None of this is required — skipping it leaves working code that is merely redu
   nothing: `ModalComponent.error` and `.onBackdrop`, `ModalCardComponent.error`,
   `BottomSheetComponent.stop` and `InputComponent.floating`. Subclassing a DS component remains
   unsupported, and this is the third release running where it broke someone, so it is stated in full
-  rather than by example. **Two kinds of break the report cannot see**, so check them by hand:
+  rather than by example. **Two kinds of break a member-list diff cannot see**, so check them by hand:
   a member whose SIGNATURE changed keeps its name — `TableComponent.exporting` and `.exportStatus`
   are still there, but as public readonly signals rather than the protected writables a subclass
   could `.set()` — and a plain `private pending: … = null` is not a field the parser recognises, which
@@ -1429,7 +1429,7 @@ None of this is required — skipping it leaves working code that is merely redu
   **1.16–1.60:1** on four of the five variants; only `color="neutral"` was
   safe, because its enabled label is nearly black. Now **2.40–2.71:1** on the coloured variants that
   were failing, and higher still on `neutral`, which reaches 6.46:1.
-**The trade, stated:** the disabled label is fainter
+  **The trade, stated:** the disabled label is fainter
   against its own background than it was — 2.1–2.7:1 where the old recipe gave 3.4–5.2 — which is the point,
   and disabled text is exempt from the WCAG contrast floor. **Override per component if you disagree:**
   `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled` still win. **And delete this
@@ -1576,8 +1576,6 @@ None of this is required — skipping it leaves working code that is merely redu
   redundant. The same table is in this file under 0.9.0 if you would rather read than run.
   `migrations/unreleased/README.md` no longer ships from the package — its content now lives in the
   manifest.
-
-### Fixed
 
 ## 0.9.0 — 2026-08-10
 
