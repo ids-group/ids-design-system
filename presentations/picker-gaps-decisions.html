@@ -686,21 +686,28 @@
 
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Компонент</th><th>Что в триггере</th><th>Своя ширина</th><th>Сводка «метка + счётчик»</th></tr></thead>
+      <thead><tr><th>Компонент</th><th>Что в триггере</th><th>Чипы</th><th>Своя ширина</th><th>Слот триггера</th><th>Пресет «метка + счётчик»</th></tr></thead>
       <tbody>
-        <tr><td><code>ds-select</code></td><td>одна метка</td><td class="bad">нет</td><td class="bad">нет</td></tr>
-        <tr><td><code>ds-multi-select</code></td><td>чипы + «+N more»</td><td class="bad">нет</td><td class="bad">нет</td></tr>
-        <tr><td><code>ds-autocomplete</code></td><td>значение или чипы</td><td class="good">да · <code>width="content"</code></td><td class="bad">нет</td></tr>
+        <tr><td><code>ds-select</code></td><td>одна метка</td><td class="bad">нет</td><td class="bad">нет</td><td class="good">да</td><td class="bad">не нужен</td></tr>
+        <tr><td><code>ds-multi-select</code></td><td>чипы + «+N more»</td><td class="good">да</td><td class="bad">нет</td><td class="good">да</td><td class="good">да</td></tr>
+        <tr><td><code>ds-autocomplete</code></td><td>значение, а в <code>multiple</code> чипы</td><td class="good">да</td><td class="good">да · <code>width="content"</code></td><td class="good">да</td><td class="good">да · только в <code>multiple</code></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="note">
     <p>
-      <strong>Расширяем <code>ds-multi-select</code>.</strong> Фильтр многозначен, а
-      <code>ds-select</code> однозначен — сводка «+2» ему не нужна. Автокомплиту она нужна только в
-      <code>multiple</code>, где он и так повторяет мульти-селект. Высота триггера уже фиксирована у
-      всех: <code>maxVisibleChips</code> по умолчанию <code>'fit'</code> обрезает чипы, а не переносит.
+      <strong>Слот — всем трём, пресет — только где есть счётчик.</strong> Слот ничем не привязан к
+      числу значений: компонент отдаёт свой элемент триггера с ARIA и клавиатурой, внутрь проецируется
+      чужая разметка — цена одинаковая для всех трёх. Пресет «метка + счётчик» осмыслен там, где
+      значений много: мульти-селект и автокомплит в <code>multiple</code>. У одиночного
+      <code>ds-select</code> считать нечего, и пресет вырождается в «метка + значение» — это и есть его
+      нынешний триггер.
+    </p>
+    <p>
+      Чипы <span class="key">и у мульти-селекта, и у автокомплита</span> — одинаковые
+      <code>ds-tag</code> в общем <code>chip-row</code>. Высота триггера у обоих уже фиксирована:
+      <code>maxVisibleChips</code> по умолчанию <code>'fit'</code> обрезает чипы, а не переносит.
     </p>
   </div>
 
@@ -746,7 +753,7 @@
           <div class="spec"><div class="spec-label">две строки</div>
             <div class="rep-field hugs compact"><span class="rep-dot dot-b"></span><span class="caption"><span class="rep-two-line"><strong>Priority</strong><em>Major, Minor</em></span></span><span class="rep-chevron">▾</span></div></div>
         </div>
-        <p>Разметку триггера пишет консюмер, ARIA и клавиатура остаются за библиотекой. Любая форма, включая будущие.</p>
+        <p>Разметку триггера пишет консюмер, ARIA и клавиатура остаются за библиотекой. Одна директива на все три пикера, любая форма — включая будущие.</p>
       </div>
       <div class="opt-cost"><strong>Цена:</strong> типовой случай тоже требует разметки.</div>
     </div>
@@ -764,7 +771,7 @@
         </div>
         <pre><code>&lt;ds-multi-select triggerDisplay="summary" label="Labels" … /&gt;</code></pre>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> ровно одна форма; второй консюмер с другой пишет своё.</div>
+      <div class="opt-cost"><strong>Цена:</strong> ровно одна форма; второй консюмер с другой пишет своё. Ставится только на мульти-селект и автокомплит — у <code>ds-select</code> нет счётчика.</div>
     </div>
 
     <div class="opt" data-opt="p1-o3">
@@ -789,6 +796,7 @@
       <thead><tr><th></th><th class="rec">O1 · слот</th><th>O2 · вход</th><th>O3 · оба</th></tr></thead>
       <tbody>
         <tr><th>Форм триггера</th><td class="yes">любая</td><td class="no">одна</td><td class="yes">любая</td></tr>
+        <tr><th>На каких пикерах</th><td class="yes">все три</td><td class="meh">два с чипами</td><td class="yes">все три</td></tr>
         <tr><th>Закрывает</th><td class="yes">G1 + A5</td><td class="meh">G1</td><td class="yes">G1 + A5</td></tr>
         <tr><th>Разметка у консюмера</th><td class="meh">всегда</td><td class="yes">нет</td><td class="yes">по выбору</td></tr>
         <tr><th>Публичных поверхностей</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
