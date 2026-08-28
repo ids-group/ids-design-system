@@ -556,6 +556,34 @@
   .summary a { color: var(--primary-strong); text-decoration: none; border-bottom: 1px solid var(--primary-subtitle); }
   .summary a:hover { border-bottom-color: var(--primary); }
 
+  /* A claim this deck made and then had to withdraw. Kept visible on purpose:
+     the wrong version was already read, so hiding it would leave the reader
+     holding it. */
+  .correction {
+    margin: var(--space-4) 0;
+    padding: var(--space-4);
+    background: var(--warning-subtitle);
+    border-left: 3px solid var(--warning);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+
+  .correction-tag {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--text-primary);
+    background: var(--surface-default);
+    box-shadow: inset 0 0 0 1px var(--warning-text);
+    border-radius: var(--radius-pill);
+    padding: 0.1rem var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .correction p { font-size: var(--font-size-s); }
+  .correction del { color: var(--text-tertiary); text-decoration-thickness: 1px; }
+
   .headline {
     margin: var(--space-4) 0 0;
     padding: var(--space-3) var(--space-4);
@@ -725,11 +753,56 @@
   </div>
 
   <p>
-    Единственный триггер мульти-селекта — поле с чипами: ширина растёт с выбором, строка переносится.
-    Тулбару нужен фиксированный след. Из-за этого консюмер написал <code>app-filter-select</code> <span class="key">(~250
-    строк)</span> на четыре фильтра доски. <code>ds-filter-bar</code> это не закрывает — он про то, сколько
-    фильтров влезает в строку.
+    Единственный триггер мульти-селекта — поле с чипами. Тулбару нужен фиксированный след: подпись,
+    счётчик, признак активности. Из-за этого консюмер написал <code>app-filter-select</code>
+    <span class="key">(~250 строк)</span> на четыре фильтра доски. <code>ds-filter-bar</code> это не
+    закрывает — он про то, сколько фильтров влезает в строку, а не про сам триггер.
   </p>
+
+  <div class="correction">
+    <span class="correction-tag">исправлено 28.08 · проверено по коду</span>
+    <p>
+      <del>Ширина растёт с выбором, строка переносится.</del> Это было неверно — взято из отчёта, а не
+      из кода. <code>maxVisibleChips</code> по умолчанию <code>'fit'</code>:
+      <code>chip-overflow.ts</code> измеряет ширину триггера и оставляет столько чипов, сколько влезает
+      в ОДНУ строку, остальное уходит в «+N more». В <code>_chip-row.scss</code> —
+      <code>flex-wrap: nowrap</code>, и чип, которому не хватило места, <strong>обрезается, а не
+      переносится</strong>, ровно чтобы триггер не вырос.
+    </p>
+    <p>
+      <strong>Что от G1 остаётся на самом деле — два пункта, а не три:</strong>
+    </p>
+    <ul class="plain">
+      <li>у <code>ds-multi-select</code> нет режима «своя ширина» — а у автокомплита он <strong>уже
+        есть</strong>: <code>width="content"</code> (<code>autocomplete.component.scss:32–36</code>);</li>
+      <li>ни один из трёх не умеет показать <strong>сводку «метка + счётчик»</strong> вместо
+        значения или чипов.</li>
+    </ul>
+    <p>
+      Значит компактный триггер — это <strong>одно новое</strong> (режим-сводка) плюс тот же вход
+      <code>width</code>, что разбирается в <a href="#p2">§2</a>. Две секции — одна работа.
+    </p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Компонент</th><th>Что в триггере</th><th>Растёт по высоте</th><th>Своя ширина</th></tr></thead>
+      <tbody>
+        <tr><td><code>ds-select</code></td><td>одна метка + иконка</td><td class="good">нет</td><td class="bad">нет · <code>width: 100%</code></td></tr>
+        <tr><td><code>ds-multi-select</code></td><td>чипы + «+N more»</td><td class="good">нет · <code>fit</code></td><td class="bad">нет · тянется по родителю</td></tr>
+        <tr><td><code>ds-autocomplete</code></td><td>значение или чипы + поле ввода</td><td class="good">нет · <code>fit</code></td><td class="good">да · <code>width="content"</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p>
+      <strong>Какой компонент расширять — предлагаю <code>ds-multi-select</code>.</strong> Фильтр
+      многозначен по природе, а <code>ds-select</code> однозначен: сводка «+2» ему не нужна, у него
+      всегда одно значение. Автокомплиту сводка нужна только в режиме <code>multiple</code>, где он и
+      так повторяет поведение мульти-селекта. Вход <code>width</code> — всем трём.
+    </p>
+  </div>
 
   <div class="stage">
     <div class="spec">
@@ -795,21 +868,6 @@
     </div>
   </div>
 
-  <h3>Сравнение</h3>
-  <div class="tablewrap">
-    <table class="matrix">
-      <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · слот</th><th>O2 · вход</th><th>O3 · оба</th></tr></thead>
-      <tbody>
-          <tr><th>Форм триггера</th><td class="yes">любая</td><td class="no">одна</td><td class="yes">любая</td></tr>
-          <tr><th>Закрывает</th><td class="yes">G1 + A5</td><td class="meh">G1</td><td class="yes">G1 + A5</td></tr>
-          <tr><th>Разметка у консюмера</th><td class="meh">всегда</td><td class="yes">нет</td><td class="yes">по выбору</td></tr>
-          <tr><th>Публичных поверхностей</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
-          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
-      </tbody>
-    </table>
-  </div>
-
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p1-o1">
@@ -847,7 +905,7 @@
       <div class="opt-cost"><strong>Цена:</strong> ровно одна форма; второй консюмер с другой пишет своё.</div>
     </div>
     <div class="opt" data-opt="p1-o3">
-      <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Оба: вход как пресет поверх слота</span></div>
+      <div class="opt-head"><span class="opt-id">O3</span><span class="opt-name">Вход-пресет и слот вместе</span></div>
       <div class="opt-body">
         <div class="opt-preview">
           <div class="spec"><div class="spec-label">пресет = O2</div>
@@ -858,6 +916,21 @@
       <div class="opt-cost"><strong>Цена:</strong> две публичные поверхности и правило, что побеждает при обоих заданных.</div>
     </div>
   </div>
+  <h3>Итог: варианты рядом</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · слот</th><th>O2 · вход</th><th>O3 · оба</th></tr></thead>
+      <tbody>
+          <tr><th>Форм триггера</th><td class="yes">любая</td><td class="no">одна</td><td class="yes">любая</td></tr>
+          <tr><th>Закрывает</th><td class="yes">G1 + A5</td><td class="meh">G1</td><td class="yes">G1 + A5</td></tr>
+          <tr><th>Разметка у консюмера</th><td class="meh">всегда</td><td class="yes">нет</td><td class="yes">по выбору</td></tr>
+          <tr><th>Публичных поверхностей</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
+          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <section class="item" id="p2">
@@ -866,6 +939,12 @@
     <h2>Ширина панели</h2>
     <span class="covers">G2</span>
   </div>
+
+  <p>
+    <span class="key">Это та же работа, что и <a href="#p1">§1</a></span>: компактный триггер без
+    отвязанной панели бесполезен, а вход <code>width</code> у автокомплита уже написан и отгружен —
+    его надо перенести, а не изобрести.
+  </p>
 
   <p>
     <code>multi-select.component.ts:346</code> ставит <code>config.width</code> = ширине триггера. Над
@@ -929,21 +1008,6 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Пол читаемости</strong><p>Токен <code>--ds-multi-select-panel-minw</code> или полом служит триггер.</p></div>
   </div>
 
-  <h3>Сравнение</h3>
-  <div class="tablewrap">
-    <table class="matrix">
-      <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · вход width</th><th>O2 · токен</th><th>O3 · оба</th></tr></thead>
-      <tbody>
-          <tr><th>Панель отвязана от триггера</th><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td></tr>
-          <tr><th>Двигает ширину триггера</th><td class="meh">да</td><td class="yes">нет</td><td class="meh">да</td></tr>
-          <tr><th><code>ds-select</code> тоже</th><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td></tr>
-          <tr><th>Новых входов</th><td class="meh">1</td><td class="yes">0</td><td class="meh">1 + токен</td></tr>
-          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
-      </tbody>
-    </table>
-  </div>
-
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p2-o1">
@@ -991,6 +1055,21 @@ else { config.width = triggerWidth; }</code></pre>
       <div class="opt-cost"><strong>Цена:</strong> дефолт, зависящий от другого входа, надо документировать.</div>
     </div>
   </div>
+  <h3>Итог: варианты рядом</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · вход width</th><th>O2 · токен</th><th>O3 · оба</th></tr></thead>
+      <tbody>
+          <tr><th>Панель отвязана от триггера</th><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td></tr>
+          <tr><th>Двигает ширину триггера</th><td class="meh">да</td><td class="yes">нет</td><td class="meh">да</td></tr>
+          <tr><th><code>ds-select</code> тоже</th><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td></tr>
+          <tr><th>Новых входов</th><td class="meh">1</td><td class="yes">0</td><td class="meh">1 + токен</td></tr>
+          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <section class="item" id="p3">
@@ -1052,21 +1131,6 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Имя</strong><p><code>dsOptionTemplate</code> против <code>dsOptionDef</code>.</p></div>
   </div>
 
-  <h3>Сравнение</h3>
-  <div class="tablewrap">
-    <table class="matrix">
-      <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · слот, строки</th><th>O2 · строки + чипы</th><th>O3 · поля в DsOption</th></tr></thead>
-      <tbody>
-          <tr><th>Аватар в панели</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
-          <tr><th>Аватар в чипе триггера</th><td class="no">нет</td><td class="yes">да</td><td class="no">нет</td></tr>
-          <tr><th>Новый вид визуала без правки DS</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
-          <tr><th>Контрактов проекции</th><td class="yes">1</td><td class="meh">2</td><td class="yes">0</td></tr>
-          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
-      </tbody>
-    </table>
-  </div>
-
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p3-o1">
@@ -1107,6 +1171,21 @@ else { config.width = triggerWidth; }</code></pre>
       <div class="opt-cost"><strong>Цена:</strong> закрытый набор; четвёртый вид визуала открывает разговор заново — как было с <code>icon</code>.</div>
     </div>
   </div>
+  <h3>Итог: варианты рядом</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · слот, строки</th><th>O2 · строки + чипы</th><th>O3 · поля в DsOption</th></tr></thead>
+      <tbody>
+          <tr><th>Аватар в панели</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Аватар в чипе триггера</th><td class="no">нет</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Новый вид визуала без правки DS</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Контрактов проекции</th><td class="yes">1</td><td class="meh">2</td><td class="yes">0</td></tr>
+          <tr><th>Ломает</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <section class="item" id="p5">
@@ -1161,21 +1240,6 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Кто берёт фокус и клавиатуру</strong><p>Триггер через <code>aria-activedescendant</code> или сам список.</p></div>
   </div>
 
-  <h3>Сравнение</h3>
-  <div class="tablewrap">
-    <table class="matrix">
-      <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · 'auto' + config</th><th>O2 · boolean</th><th>O3 · 'auto' + вход</th></tr></thead>
-      <tbody>
-          <tr><th>Порог задаёт</th><td class="yes">приложение</td><td class="no">консюмер</td><td class="yes">экземпляр</td></tr>
-          <tr><th>Порог виден в разметке</th><td class="no">нет</td><td class="yes">да</td><td class="yes">да</td></tr>
-          <tr><th>Один порог на приложение</th><td class="yes">да</td><td class="no">нет</td><td class="meh">нет</td></tr>
-          <tr><th>Новых входов</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
-          <tr><th>Меняет дефолт</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
-      </tbody>
-    </table>
-  </div>
-
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p5-o1">
@@ -1210,6 +1274,21 @@ else { config.width = triggerWidth; }</code></pre>
       <div class="opt-cost"><strong>Цена:</strong> два входа на одно решение.</div>
     </div>
   </div>
+  <h3>Итог: варианты рядом</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · 'auto' + config</th><th>O2 · boolean</th><th>O3 · 'auto' + вход</th></tr></thead>
+      <tbody>
+          <tr><th>Порог задаёт</th><td class="yes">приложение</td><td class="no">консюмер</td><td class="yes">экземпляр</td></tr>
+          <tr><th>Порог виден в разметке</th><td class="no">нет</td><td class="yes">да</td><td class="yes">да</td></tr>
+          <tr><th>Один порог на приложение</th><td class="yes">да</td><td class="no">нет</td><td class="meh">нет</td></tr>
+          <tr><th>Новых входов</th><td class="yes">1</td><td class="yes">1</td><td class="meh">2</td></tr>
+          <tr><th>Меняет дефолт</th><td class="yes">нет</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <section class="item" id="p6">
@@ -1259,21 +1338,6 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Какая форма побеждает</strong><p>Форма автокомплита делает два мульти-значных пикера идентичными — из-за их расхождения G6 и заведён.</p></div>
     <div class="fork"><strong><code>disabled</code> у группы</strong><p>Есть у селекта, нет у автокомплита. Добавлять надо в оба, иначе расхождение переезжает на новое поле.</p></div>
     <div class="fork"><strong>Область «выбрать все»</strong><p>Глобально или по группе.</p></div>
-  </div>
-
-  <h3>Сравнение</h3>
-  <div class="tablewrap">
-    <table class="matrix">
-      <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · форма autocomplete</th><th>O2 · union select</th><th>O3 · + группа</th></tr></thead>
-      <tbody>
-          <tr><th>Паритет с автокомплитом</th><td class="yes">полный</td><td class="no">нет</td><td class="yes">полный</td></tr>
-          <tr><th>Выбрать все</th><td class="yes">глобально</td><td class="yes">глобально</td><td class="meh">+ по группе</td></tr>
-          <tr><th>Новых состояний UI</th><td class="yes">0</td><td class="yes">0</td><td class="meh">1</td></tr>
-          <tr><th>Форм групп в библиотеке</th><td class="meh">2</td><td class="yes">1</td><td class="meh">2</td></tr>
-          <tr><th>Ломает</th><td class="yes">нет</td><td class="no">да</td><td class="yes">нет</td></tr>
-      </tbody>
-    </table>
   </div>
 
   <h3>Варианты</h3>
@@ -1327,6 +1391,21 @@ else { config.width = triggerWidth; }</code></pre>
       <div class="opt-cost"><strong>Цена:</strong> второй контрол и второе неопределённое состояние, глобальный при этом остаётся.</div>
     </div>
   </div>
+  <h3>Итог: варианты рядом</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · форма autocomplete</th><th>O2 · union select</th><th>O3 · + группа</th></tr></thead>
+      <tbody>
+          <tr><th>Паритет с автокомплитом</th><td class="yes">полный</td><td class="no">нет</td><td class="yes">полный</td></tr>
+          <tr><th>Выбрать все</th><td class="yes">глобально</td><td class="yes">глобально</td><td class="meh">+ по группе</td></tr>
+          <tr><th>Новых состояний UI</th><td class="yes">0</td><td class="yes">0</td><td class="meh">1</td></tr>
+          <tr><th>Форм групп в библиотеке</th><td class="meh">2</td><td class="yes">1</td><td class="meh">2</td></tr>
+          <tr><th>Ломает</th><td class="yes">нет</td><td class="no">да</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <section class="item" id="p8">
@@ -1382,21 +1461,6 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Мульти-режим</strong><p>Не меняется ни в одном варианте.</p></div>
   </div>
 
-  <h3>Сравнение</h3>
-  <div class="tablewrap">
-    <table class="matrix">
-      <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · исправить</th><th>O2 · вход</th><th>O3 · токен</th></tr></thead>
-      <tbody>
-          <tr><th>40px без настройки</th><td class="yes">да</td><td class="no">нет</td><td class="no">нет</td></tr>
-          <tr><th>Закрывает стадию 51px</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
-          <tr><th>Снимает override консюмера</th><td class="yes">да</td><td class="yes">да</td><td class="meh">частично</td></tr>
-          <tr><th>Новых входов</th><td class="yes">0</td><td class="meh">1</td><td class="yes">0</td></tr>
-          <tr><th>Меняет дефолт</th><td class="no">да</td><td class="yes">нет</td><td class="yes">нет</td></tr>
-      </tbody>
-    </table>
-  </div>
-
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p8-o1">
@@ -1433,6 +1497,21 @@ else { config.width = triggerWidth; }</code></pre>
       <div class="opt-cost"><strong>Цена:</strong> не переключает <code>flex-wrap</code> у родителя — первая стадия (51px) остаётся.</div>
     </div>
   </div>
+  <h3>Итог: варианты рядом</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · исправить</th><th>O2 · вход</th><th>O3 · токен</th></tr></thead>
+      <tbody>
+          <tr><th>40px без настройки</th><td class="yes">да</td><td class="no">нет</td><td class="no">нет</td></tr>
+          <tr><th>Закрывает стадию 51px</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Снимает override консюмера</th><td class="yes">да</td><td class="yes">да</td><td class="meh">частично</td></tr>
+          <tr><th>Новых входов</th><td class="yes">0</td><td class="meh">1</td><td class="yes">0</td></tr>
+          <tr><th>Меняет дефолт</th><td class="no">да</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <section class="item" id="p9">
@@ -1501,21 +1580,6 @@ else { config.width = triggerWidth; }</code></pre>
     <div class="fork"><strong>Имена панелей</strong><p>У select это <code>.dropdown-panel</code>, у мульти-селекта <code>.panel</code> — даже эти двое не совпадают.</p></div>
   </div>
 
-  <h3>Сравнение</h3>
-  <div class="tablewrap">
-    <table class="matrix">
-      <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · партиалка</th><th>O2 · резолверы на месте</th><th>O3 · минимум</th></tr></thead>
-      <tbody>
-          <tr><th>Закрывает A4</th><td class="yes">да</td><td class="yes">да</td><td class="yes">да</td></tr>
-          <tr><th>Закрывает X1</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
-          <tr><th>Копий стилей опций остаётся</th><td class="yes">2</td><td class="meh">3</td><td class="meh">3</td></tr>
-          <tr><th>Делает чейнджлог 0.9.0 правдой</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
-          <tr><th>Ломает</th><td class="no">да</td><td class="yes">нет</td><td class="yes">нет</td></tr>
-      </tbody>
-    </table>
-  </div>
-
   <h3>Варианты</h3>
   <div class="options">
     <div class="opt recommended" data-opt="p9-o1">
@@ -1555,6 +1619,21 @@ else { config.width = triggerWidth; }</code></pre>
       <div class="opt-cost"><strong>Цена:</strong> X1 остаётся, нужен отдельный пункт в <code>todo.md</code>.</div>
     </div>
   </div>
+  <h3>Итог: варианты рядом</h3>
+  <div class="tablewrap">
+    <table class="matrix">
+      <colgroup><col><col class="recommended-col"><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O1 · партиалка</th><th>O2 · резолверы на месте</th><th>O3 · минимум</th></tr></thead>
+      <tbody>
+          <tr><th>Закрывает A4</th><td class="yes">да</td><td class="yes">да</td><td class="yes">да</td></tr>
+          <tr><th>Закрывает X1</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Копий стилей опций остаётся</th><td class="yes">2</td><td class="meh">3</td><td class="meh">3</td></tr>
+          <tr><th>Делает чейнджлог 0.9.0 правдой</th><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+          <tr><th>Ломает</th><td class="no">да</td><td class="yes">нет</td><td class="yes">нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <section class="item" id="deferred">
