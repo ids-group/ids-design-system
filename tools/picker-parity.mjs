@@ -26,13 +26,17 @@ for (const [name, file] of Object.entries(pickers)) {
   // for a whole release while silently discarding whatever a consumer projected —
   // and this file certified it, because it only ever read the .ts.
   const template = readFileSync(file.replace(/\.ts$/, '.html'), 'utf8');
-  const declared = [...text.matchAll(/(\w+) = contentChild\((\w+)/g)].map((m) => ({
-    field: m[1],
-    directive: m[2],
-  }));
+  const declared = [...text.matchAll(/(\w+) = contentChild\((\w+)/g)].map(
+    (m) => ({
+      field: m[1],
+      directive: m[2],
+    }),
+  );
   for (const slot of declared) {
     if (!template.includes(`${slot.field}()`)) {
-      unrendered.push(`${name}: ${slot.directive} is declared as ${slot.field} and never rendered`);
+      unrendered.push(
+        `${name}: ${slot.directive} is declared as ${slot.field} and never rendered`,
+      );
     }
   }
 
@@ -72,7 +76,9 @@ for (const r of rows.filter((r) => r.count < names.length)) {
   );
 }
 if (unrendered.length) {
-  console.log('\nDECLARED BUT NEVER RENDERED — a slot a consumer can fill and nothing reads:');
+  console.log(
+    '\nDECLARED BUT NEVER RENDERED — a slot a consumer can fill and nothing reads:',
+  );
   for (const line of unrendered) {
     console.log(`  ${line}`);
   }

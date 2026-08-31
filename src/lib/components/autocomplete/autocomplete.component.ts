@@ -358,7 +358,8 @@ export class AutocompleteComponent<T = unknown>
       }
 
       return (
-        this.allOptions().find((option) => option.value === currentValue) ?? null
+        this.allOptions().find((option) => option.value === currentValue) ??
+        null
       );
     },
   );
