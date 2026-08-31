@@ -21,9 +21,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   shows, which matters once `labels` sits beside it.
 
 - **Every single-line label clips through one mixin now.** Six places hand-rolled
-  `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — `ds-select``s trigger text,
-`ds-tree``s label, `ds-sidenav-item``s label, three labels in `ds-sidenav-footer`, and the table
-  cell under `density="compact"`. They all use `single-line-ellipsis` instead, which clips with
+  `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — the `ds-select` trigger text,
+  the `ds-tree` label, the `ds-sidenav-item` label, three labels in `ds-sidenav-footer`, and the
+  table cell under `density="compact"`. They all use `single-line-ellipsis` instead, which clips with
   `overflow: clip` and an `overflow-clip-margin` rather than `hidden`: where the line box is tighter
   than the glyph box, `hidden` eats the glyph and shaves every label, not only the ones with
   descenders. Nothing to do on your side — labels stop losing their bottoms at tight line-heights.
@@ -105,7 +105,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Without it the TRIGGER runs that model instead, and the active-descendant id rides on the trigger.
 
 - **A compact filter trigger, and a slot to write your own.** `ds-multi-select` takes
-  `triggerDisplay="compact"`: a `label` caption plus a selected-count `ds-badge` at intrinsic
+  `triggerDisplay="count"`: a `label` caption plus a selected-count `ds-badge` at intrinsic
   width, with an accent border once something is picked. The chip field it replaces grows with the
   selection, which is why a board toolbar could not use it — one consumer wrote ~250 lines of their
   own control instead.
@@ -116,8 +116,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   library-owned in both cases: `aria-haspopup`, `aria-expanded`, `aria-controls`, the roving
   `aria-activedescendant` and Enter/Space/ArrowDown/Escape are not projected.
 
-  **`compact` is not offered on `ds-autocomplete`.** Its trigger holds the text input the control
-  exists for, and a caption-plus-count summary would remove it. The slot is there instead, where a
+  **Neither `count` nor `labels` is offered on `ds-autocomplete`.** Its trigger holds the text
+  input the control exists for, and a caption-plus-count summary would remove it. The slot is there instead, where a
   consumer decides what happens to the input.
 
 - **`dsOptionTemplate` and `dsChipTemplate` — the option row and the selected chip take your content.**
