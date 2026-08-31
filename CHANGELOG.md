@@ -2758,9 +2758,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   result set below the current page, the table now pulls `page` down to the last page that has rows
   instead of rendering an empty body (guarded to client paging — with `total` set the host owns the clamp).
 
-- **`ds-sidenav`: collapsed items no longer overflow the rail.** A collapsed item was sized to the
-  `--sidenav-collapsed-item` hit target, fractionally wider than the rail's content box (border-box minus
-  padding and the right border), which produced a hairline horizontal scrollbar. Collapsed items now fill
+- **`ds-sidenav`: collapsed items no longer overflow by 1px.** A collapsed item was sized to the
+  `--sidenav-collapsed-item` hit target, 1px wider than the rail's content box (border-box minus padding
+  and the right border), which produced a hairline horizontal scrollbar. Collapsed items now fill
   the available width, and the rail clips any residual x-overflow.
 
 - **`dsTooltip`: keyboard focus now shows and hides the tip reliably, and panels no longer strand.** The
