@@ -104,7 +104,11 @@ judgment half is yours.
   internal — a subclasser meets these names in their own compiler errors.
 - **An internal rule id** (`M0…`), a commit hash, or `HEAD`.
 - **Decision archaeology.** How we chose, what we first believed, which alternative we
-  rejected, that an earlier note of ours was wrong.
+  rejected, that an earlier note of ours was wrong, that a note was added after the release.
+  The line: describing the DEFECT is what a release note is for and stays — "an override
+  written against the documented tokens did nothing there" is the entry. Describing OUR
+  RECORD of it does not — how we found it, where we saw it break, that our own earlier
+  wording was wrong. Cutting the first along with the second is the commoner mistake.
 - **Our own process.** Release gates, the backlog, "the deck", "dogfooding", audits of
   our consumers, counts of our open items, self-criticism.
 - **Measurement that proves we did the work.** Keep a number the reader needs to act on —
@@ -115,6 +119,10 @@ judgment half is yours.
 **Comments ship too.** `src/lib/styles` and `src/lib/themes` are copied verbatim, and a
 `.ts` comment survives into the bundle with its JSDoc reaching the `.d.ts`. A component's
 own `.scss` is the exception — its comments are compiled away.
+
+Every rule above reaches those comments, archaeology included: a shipped comment saying what
+a token USED to resolve to, or when a bug was fixed, is read by someone who never saw either.
+State the constraint in the present tense, or say what breaks if it is ignored.
 
 **Two rules for editing an existing entry:**
 
