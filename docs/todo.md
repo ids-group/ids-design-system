@@ -69,9 +69,21 @@
 
   1. **Qualify the component selectors** so they outrank the partial by specificity rather than by order — `.ds-dropdown-panel .dropdown-panel, .dropdown-panel { … }`. Shipped in 0.12.0 as the stop-gap. It is deterministic, and it is a patch: it makes the tie moot per selector instead of removing it, and the next panel rule someone writes will not have it.
   2. **Geometry lives only in the partial; components forward alias tokens.** Each component declares `--ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, …)` on its host and forwards the SHARED token through `forwardOverlayTokens`, which already exists for this. The component stylesheet then keeps only what is genuinely its own markup — the filter row, the select-all rows, `.check-box`, `.option.multi` — and the tie disappears rather than being out-ranked. This is the shape `ds-select` is already in.
-  3. **`@layer`.** Declare `@layer ds.panel, ds.component;` once and wrap each side, so precedence is stated rather than inferred and holds no matter what order anything loads in. Angular emits component styles verbatim and rewrites selectors inside at-rules, so a component SCSS can carry a layer — but the layer ORDER statement has to reach the document before either sheet, and nothing in the repo uses `@layer` today, so this sets a precedent for every other component that styles a portaled node (`ds-modal`, `ds-drawer`, `ds-toast`, the date/time/colour pickers).
+  3. **`@layer` — MEASURED 2026-08-31, and it does NOT hold the way the idea assumes.** The two mechanical halves work: Angular lists `@layer` in `scopedAtRuleIdentifiers` (`@angular/compiler/fesm2022/compiler.mjs:6881`) so it descends into a layer block and scopes the selectors inside exactly as it does for `@media`, and esbuild's CSS minifier — the one this build uses, 0.27.3 — emits `@layer` unchanged.
 
-  2 and 3 are complementary, not alternatives: 2 removes the duplication, 3 makes what remains deterministic. 1 is what is in the release.
+     **The failure is the order statement, and it is a real one.** Layer order is fixed by FIRST APPEARANCE, so a statement that arrives after a layer already exists cannot reorder it — it appends the names it does not yet know. Measured in Chrome with three sheets:
+
+     | Case | Setup | Result |
+     | --- | --- | --- |
+     | A | component sheet creates `ds.component`, order statement arrives later | **the partial wins** — `ds.panel` is appended AFTER `ds.component`, the opposite of what the statement reads |
+     | B | order statement first, then both sheets | the component wins — the intended, deterministic result |
+     | C | no layers (today) | whichever sheet loads later wins |
+
+     So `@layer` only buys determinism if `@layer ds.panel, ds.component;` is parsed before ANY component style. **This repo's own docs build breaks that:** `dist/ds-docs/browser/index.html` carries `data-beasties-container` and defers the real stylesheet with `media="print" onload="this.media='all'"`, so the global sheet — where such a statement would live — arrives after the inlined critical block. A library cannot guarantee the ordering from inside its own stylesheet; it would have to ask every consumer to put an inline `<style>@layer …;</style>` in `index.html` before anything else, which is an integration step, not a fix.
+
+     **Verdict: not worth it for the panel problem, which option 2 already solved by deleting the duplication.** Worth revisiting only if the library ever needs a stated precedence across MANY portaled nodes at once (`ds-modal`, `ds-drawer`, `ds-toast`, the date/time/colour pickers) — and then the consumer-side ordering requirement has to be part of the proposal, not a footnote.
+
+  **Where it landed:** 2 was done — the partial owns the geometry, the components only alias its tokens, and the qualifier from 1 was removed because there is no competing rule left to out-rank. 3 was measured and rejected for this problem, for the reason above. Nothing here is outstanding; the entry stays as the record of why the panel is shaped the way it is.
 
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
