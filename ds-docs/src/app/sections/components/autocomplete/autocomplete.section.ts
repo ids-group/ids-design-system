@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
   AutocompleteComponent,
+  ButtonComponent,
+  type AutocompleteItem,
   type AutocompleteOption,
   type AutocompleteOptionGroup,
 } from 'ds';
@@ -10,6 +12,25 @@ import {
 } from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
+
+interface DemoOwner {
+  id: string;
+  name: string;
+}
+
+const OWNER_SEED: readonly DemoOwner[] = [
+  { id: '1', name: 'Ada Lovelace' },
+  { id: '2', name: 'Grace Hopper' },
+  { id: '3', name: 'Barbara Liskov' },
+];
+
+/** New objects every call, which is what a refetch hands back. */
+function buildOwners(): AutocompleteItem<DemoOwner>[] {
+  return OWNER_SEED.map((owner) => ({
+    value: { ...owner },
+    label: owner.name,
+  }));
+}
 
 const MEMBERS: readonly AutocompleteOption<string>[] = [
   { value: 'acme', label: 'Acme Holdings' },
@@ -70,6 +91,7 @@ const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
   standalone: true,
   imports: [
     AutocompleteComponent,
+    ButtonComponent,
     DocsTruncationComponent,
     DocsSectionComponent,
     DocsNonmodalNoteComponent,
@@ -79,6 +101,24 @@ const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
   styleUrl: './autocomplete.section.scss',
 })
 export class AutocompleteSection {
+  protected readonly owner = signal<DemoOwner | null>(null);
+  protected readonly searchCity = signal<string | null>(null);
+
+  protected readonly ownerOptions = signal<AutocompleteItem<DemoOwner>[]>(
+    buildOwners(),
+  );
+
+  /** Keyed on the id, not the object: that is the whole point of the demo. */
+  protected readonly sameOwner = (
+    first: DemoOwner | null,
+    second: DemoOwner | null,
+  ): boolean => first?.id === second?.id;
+
+  protected refetchOwners(): void {
+    // Fresh objects with the same data — what a real refetch returns.
+    this.ownerOptions.set(buildOwners());
+  }
+
   protected readonly members = MEMBERS;
   protected readonly products = PRODUCTS;
   protected readonly channels = CHANNELS;

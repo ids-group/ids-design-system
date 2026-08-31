@@ -550,6 +550,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows a clear affordance once there is something to clear."
       },
       {
+        "name": "searchPlaceholder",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Placeholder while the field is being typed in, when a value is already settled — `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs, as before."
+      },
+      {
         "name": "filterWith",
         "kind": "input",
         "type": "((option: AutocompleteOption<T>, query: string) => boolean) | 'none'",

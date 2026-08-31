@@ -1,5 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { SelectComponent, type SelectOption } from 'ds';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  DsPanelFooterTemplateDirective,
+  SelectComponent,
+  type SelectOption,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 import {
@@ -11,6 +15,7 @@ import {
   selector: 'section-components-select',
   standalone: true,
   imports: [
+    DsPanelFooterTemplateDirective,
     SelectComponent,
     DocsSectionComponent,
     DocsTruncationComponent,
@@ -21,6 +26,26 @@ import {
   styleUrls: ['../../../shared/section-demo.scss', './select.section.scss'],
 })
 export class SelectSection {
+  protected readonly country = signal('');
+  protected readonly plan = signal('team');
+
+  protected readonly countryOptions: SelectOption[] = [
+    'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada',
+    'Chile', 'Denmark', 'Estonia', 'Finland', 'France', 'Germany',
+    'Greece', 'Iceland', 'Ireland', 'Italy', 'Japan', 'Latvia',
+  ].map((name) => ({ value: name.toLowerCase(), label: name }));
+
+  protected readonly planOptions: SelectOption[] = [
+    { value: 'free', label: 'Free' },
+    { value: 'team', label: 'Team' },
+    {
+      value: 'enterprise',
+      label: 'Enterprise',
+      disabled: true,
+      disabledReason: 'Available on an annual contract only',
+    },
+  ];
+
   protected readonly ownerOptions: SelectOption[] = [
     { label: 'Avery Brooks', value: 'brooks' },
     { label: 'Sam Carter', value: 'carter' },

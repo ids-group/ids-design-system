@@ -1,6 +1,10 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
+  ButtonComponent,
   DsChipTemplateDirective,
+  DsGroupLabelTemplateDirective,
+  DsPanelFooterTemplateDirective,
+  DsPanelHeaderTemplateDirective,
   DsPickerTriggerDirective,
   DsOptionTemplateDirective,
   MultiSelectComponent,
@@ -21,6 +25,10 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
     DsOptionTemplateDirective,
     DsChipTemplateDirective,
     DsPickerTriggerDirective,
+    DsGroupLabelTemplateDirective,
+    DsPanelHeaderTemplateDirective,
+    DsPanelFooterTemplateDirective,
+    ButtonComponent,
     DocsSectionComponent,
     DocsNonmodalNoteComponent,
   ],
@@ -32,6 +40,76 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
   ],
 })
 export class MultiSelectSection {
+  protected readonly serverValue = signal<string[]>([]);
+  protected readonly serverQuery = signal('');
+  protected readonly serverLoading = signal(false);
+  protected readonly serverOptions = signal<MultiSelectOption[]>([]);
+  protected readonly slotLabels = signal<string[]>(['blocked']);
+  protected readonly clearableLabels = signal<string[]>(['ready']);
+  protected readonly readOnlyLabels = signal<string[]>(['blocked', 'ready']);
+  protected readonly reviewers = signal<string[]>(['ada']);
+
+  protected readonly reviewerGroups: MultiSelectItem[] = [
+    {
+      label: 'Available',
+      options: [
+        { value: 'ada', label: 'Ada Lovelace' },
+        { value: 'grace', label: 'Grace Hopper' },
+      ],
+    },
+    {
+      label: 'On leave',
+      options: [
+        {
+          value: 'alan',
+          label: 'Alan Turing',
+          disabled: true,
+          disabledReason: 'On leave until 14 September',
+        },
+        {
+          value: 'edsger',
+          label: 'Edsger Dijkstra',
+          disabled: true,
+          disabledReason: 'On leave until 2 October',
+        },
+      ],
+    },
+  ];
+
+  private readonly people: MultiSelectOption[] = [
+    { value: 'ada', label: 'Ada Lovelace' },
+    { value: 'grace', label: 'Grace Hopper' },
+    { value: 'alan', label: 'Alan Turing' },
+    { value: 'edsger', label: 'Edsger Dijkstra' },
+    { value: 'barbara', label: 'Barbara Liskov' },
+  ];
+
+  protected onServerOpened(): void {
+    this.fetchPeople('');
+  }
+
+  protected onServerQuery(query: string): void {
+    this.serverQuery.set(query);
+    this.fetchPeople(query);
+  }
+
+  /** Stands in for a request: the delay is what makes the spinner and the
+   *  `filterWith="none"` contract visible on this page. */
+  private fetchPeople(query: string): void {
+    this.serverLoading.set(true);
+    setTimeout(() => {
+      const needle = query.trim().toLowerCase();
+      this.serverOptions.set(
+        needle
+          ? this.people.filter((person) =>
+              person.label.toLowerCase().includes(needle),
+            )
+          : this.people,
+      );
+      this.serverLoading.set(false);
+    }, 400);
+  }
+
   protected readonly tags = signal<string[]>(['design', 'frontend']);
   protected readonly widthDemoValue = signal<string[]>(['design']);
   protected readonly assignees = signal<string[]>(['jordan']);
