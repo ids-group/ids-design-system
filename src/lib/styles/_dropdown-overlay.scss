@@ -22,14 +22,12 @@
      picker's corner is not a thing a design system should encourage, but moving
      every panel — modal, popover, date picker — to reach the dropdowns is too
      blunt. This is the middle lever, and `--ds-radius-panel` stays its default so
-     an untouched theme is unchanged. 0.9.0's notes promised a per-component
-     `--ds-select-panel-radius`, which never existed; this is what they meant. */
+     an untouched theme is unchanged. */
   --_dropdown-panel-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
 
   .dropdown-panel {
-    // Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
-    // in dropdown.component.ts). Without `width: 100%` the panel is a flex
-    // child of the pane and shrinks to its own option content width.
+    // The pane is sized from the trigger, so without `width: 100%` the panel is a flex
+    // child of it and shrinks to its own option content width.
     width: 100%;
     background: var(--surface-overlay);
     border: var(--border-width-default) solid var(--border-default);

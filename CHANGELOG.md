@@ -159,8 +159,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   when a body is actually projected — and the body takes `--font-size-s`, overridable through the new
   **`--ds-banner-body-font-size`**. Title and body both render at 14px in a 16px context, with 4px
   between them in `compact`; a title-only `compact` banner is unchanged, because the wrapper is
-  `:empty` and contributes nothing. A body inside a `compact` banner is a supported pairing — the
-  documentation line saying compact has none was never true, and nothing was ever hidden.
+  `:empty` and contributes nothing. A body inside a `compact` banner is a supported pairing.
 
 - **A `compact` banner whose title was longer than its column overflowed the column and cut the text
   with nothing to show it had been cut.** `compact` is the one-line strip, so its title carries
@@ -958,9 +957,8 @@ None of this is required — skipping it leaves working code that is merely redu
   trigger, empty or not — widths are cached per selection, and a geometry guard skips the re-measure
   when neither width nor count moved.
 
-- **`--ds-dropdown-panel-radius` — the lever 0.9.0's notes promised and never shipped.** That release
-  said an 8px select panel could be restored with `--ds-select-panel-radius`; no such token existed.
-  This is the working one, and it is panel-level rather than per-component on purpose: retuning one picker's corner is not a thing to
+- **`--ds-dropdown-panel-radius` — a hook for the dropdown corner.** It is panel-level rather
+  than per-component on purpose: retuning one picker's corner is not a thing to
   encourage, while `--ds-radius-panel` moves modal, popover and date picker too. Defaults to that
   role, so an untouched theme is unchanged, and it is forwarded onto the portaled pane — scope it with
   a selector (`ds-select { --ds-dropdown-panel-radius: 8px }`) and only that panel moves.
@@ -1397,10 +1395,7 @@ None of this is required — skipping it leaves working code that is merely redu
   section documented a `--ds-topbar-margin-b` that **has never existed** — telling readers the
   topbar owns the gap below it and that pages must not add their own.
   Every name in the body is now the shipped one, and the two paragraphs are rewritten from the
-  components' actual API. The preamble of its `## Components` section still carries the older
-  warning that the `ds-button` section below is out of date — which now contradicts the corrected
-  section, and is itself wrong twice over: it calls `--ds-button-bg-color` a
-  dead pre-rename name when that is the shipped token this very release tells you to set.
+  components' actual API.
 
 - **An outlined button no longer paints its own white background.** `ds-button variant="outline"`,
   `ds-icon-button variant="outlined"` and the outlined half of `ds-split-button` defaulted their fill to
@@ -2740,7 +2735,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `-pad-y` / `-content-max-width` / `-height` → `--ds-app-layout-*`). Behaviour is unchanged — rename the
   references (see `migrations/`). A consumer still on 0.6.3's `ds-app-shell` must migrate.
 
-- **Retroactive note: `TableComponent` gained four more members (`total`, `sortingOrder`,
+- **`TableComponent` gained four more members (`total`, `sortingOrder`,
   `animateHeight`, `scrollToTopOnPageChange`), and most other component classes changed too**, so a
   consumer that extends a DS class (unsupported — `design-system.md` § Components) can collide on a
   name here as well, exactly as in 0.6.3. Same resolution: rename the subclass's own member, or add
@@ -2920,7 +2915,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **`ds-toast` now slides up from below into place as it enters** (previously it dropped in from
   slightly above). The exit animation is unchanged — the toast still slides up as it fades out.
   Visual/motion only; no API change.
-- **Retroactive note: the new `ds-table` column API grew `TableComponent`'s member surface by ~76 names, which breaks
+- **The new `ds-table` column API grew `TableComponent`'s member surface by ~76 names, which breaks
   a consumer that extends the class.** Everything above is additive for anyone using the
   `<ds-table>` element. Subclassing a DS component is unsupported (`design-system.md` §
   Components), but where it happens the new names collide — TS4114 demands an `override` modifier,
@@ -3716,7 +3711,7 @@ rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max
 ### Changed
 
 - Removed the repository link from the npm package: dropped the `repository` field from
-  `package.json`. The published README no longer includes the Development/Releasing section, and its
+  `package.json`. The published README no longer includes its maintainer-only sections, and its
   License entry is now plain text (no repo link) — fixing the npm 404.
 
 ## 0.2.1 — 2026-06-16

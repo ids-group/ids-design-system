@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// Pre-release gate, run by the npm `preversion` hook before `npm version`.
 // Emergency bypass: SKIP_PREFLIGHT=1.
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -53,9 +52,8 @@ try {
   );
 }
 
-// A green lint means the data satisfies the rules, not that the rules can still fire: seven of
-// them had stopped matching anything and went on reporting OK. The selftest mutates a manifest
-// per rule and fails if the rule stays silent, so run it BEFORE trusting the lint's verdict.
+// A green lint means the data satisfies the rules, not that the rules can still fire, so run
+// the selftest BEFORE trusting the lint's verdict.
 try {
   execSync('node tools/migration-lint-selftest.mjs', { stdio: 'inherit' });
 } catch {
@@ -64,8 +62,6 @@ try {
   );
 }
 
-// The manifest is what a consumer's upgrade actually runs, and an undetectable item
-// passes the whole find/apply/recheck loop in silence. Lint before the cut.
 try {
   execSync('node tools/migration-lint.mjs', { stdio: 'inherit' });
   execSync('node tools/check-delete-tables.mjs', { stdio: 'inherit' });
@@ -91,8 +87,8 @@ try {
   );
 }
 
-// Two releases shipped a field with two focus rings; both were found by measuring in
-// a browser, not by reading the styles.
+// A double ring is invisible in the styles — the shells and the controls each paint their
+// own — so this measures instead of reading.
 try {
   execSync('node tools/check-focus-rings.mjs', { stdio: 'inherit' });
 } catch {

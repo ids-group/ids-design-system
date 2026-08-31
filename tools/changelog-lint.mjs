@@ -231,8 +231,8 @@ function privateSymbols() {
 
 const { private: PRIVATE_SYMBOLS, publicCount } = privateSymbols();
 
-// Every consumer has `npm run lint` and `npm run build`; only the repo-specific names are
-// unreachable for the reader.
+// A consumer has its own `lint` and `test`; only the repo-specific names are unreachable
+// for the reader.
 const GENERIC_SCRIPTS = new Set([
   'ng',
   'start',
