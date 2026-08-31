@@ -682,8 +682,8 @@
           <tr><td><a href="#p1">1</a></td><td>компактный триггер фильтра</td><td class="rec"><strong>O1</strong> слот + пресет <code>triggerDisplay</code></td><td><span class="decided">решено</span></td></tr>
           <tr><td><a href="#p2">2</a></td><td>отвязать панель от триггера</td><td class="rec"><strong>O3</strong> вход <code>width</code> + токены</td><td><span class="decided">решено</span></td></tr>
           <tr><td><a href="#p3">3</a></td><td>произвольный визуал опции</td><td class="rec"><strong>O2</strong> два слота: строка и чип</td><td><span class="decided">решено</span></td></tr>
-          <tr><td><a href="#p5">4</a></td><td>скрыть поиск на коротком списке</td><td class="rec"><strong>O1</strong> конфиг + переопределение</td><td><span class="risk default">на выбор</span></td></tr>
-          <tr><td><a href="#p6">5</a></td><td>свести две формы групп к одной</td><td class="rec"><strong>U1</strong> один вход, union</td><td><span class="risk default">на выбор</span></td></tr>
+          <tr><td><a href="#p5">4</a></td><td>скрыть поиск на коротком списке</td><td class="rec"><strong>O4</strong> один вход: <code>boolean | number</code></td><td><span class="risk default">на выбор</span></td></tr>
+          <tr><td><a href="#p6">5</a></td><td>свести две формы групп к одной</td><td class="rec"><strong>U1</strong> один вход, union</td><td><span class="decided">решено</span></td></tr>
           <tr><td><a href="#p8">6</a></td><td>одна строка значения</td><td class="rec"><strong>O1</strong> многоточие по умолчанию</td><td><span class="risk default">на выбор</span></td></tr>
           <tr><td><a href="#p9">7</a></td><td>панель автокомплита</td><td class="rec"><strong>O1</strong> вернуть в общий файл стилей</td><td><span class="risk default">на выбор</span></td></tr>
         </tbody>
@@ -1115,8 +1115,28 @@
 
   <h3>Варианты</h3>
   <div class="options">
-    <div class="opt recommended" data-opt="p5-o1">
-      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Порог в конфиге приложения <em>и</em> переопределение на экземпляре</span><span class="rec-flag">рекомендую</span></div>
+    <div class="opt recommended" data-opt="p5-o4">
+      <div class="opt-head"><span class="opt-id">O4</span><span class="opt-name">Один вход, три значения: <code>searchable: boolean | number</code></span><span class="rec-flag">рекомендую</span></div>
+      <div class="opt-body">
+        <p>
+          <code>true</code> — всегда показывать, <code>false</code> — никогда,
+          <span class="key">число — порог прямо здесь</span>. Отдельного
+          <code>'auto'</code> не нужно: число само означает «считай».
+        </p>
+        <pre><code>&lt;ds-multi-select /&gt;                        &lt;!-- true, как сейчас --&gt;
+&lt;ds-multi-select [searchable]="false" /&gt;   &lt;!-- четыре опции --&gt;
+&lt;ds-multi-select [searchable]="8" /&gt;       &lt;!-- порог виден в разметке --&gt;</code></pre>
+        <p>
+          Значение по умолчанию берётся из <code>provideDsConfig</code>, поэтому приложение может
+          один раз сказать «везде считай от восьми», а конкретная панель — перебить это числом или
+          выключить совсем.
+        </p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> у входа три типа значений вместо двух — это надо описать в документации одной строкой.</div>
+    </div>
+
+    <div class="opt" data-opt="p5-o1">
+      <div class="opt-head"><span class="opt-id">O1</span><span class="opt-name">Два входа: <code>searchable: boolean | 'auto'</code> и <code>searchThreshold</code></span></div>
       <div class="opt-body">
         <p>
           <code>searchable: boolean | 'auto'</code>. В режиме <code>'auto'</code> библиотека считает
@@ -1147,10 +1167,12 @@
   <h3>Итог: варианты рядом</h3>
   <div class="tablewrap">
     <table class="matrix">
-      <colgroup><col><col class="recommended-col"><col><col></colgroup>
-      <thead><tr><th></th><th class="rec">O1 · auto + config</th><th>O2 · boolean</th><th>O3 · auto + вход</th></tr></thead>
+      <colgroup><col><col class="recommended-col"><col><col><col></colgroup>
+      <thead><tr><th></th><th class="rec">O4 · один вход</th><th>O1 · два входа</th><th>O2 · boolean</th><th>O3 · только вход</th></tr></thead>
       <tbody>
-        <tr><th>Порог задаёт</th><td class="yes">конфиг + экземпляр</td><td class="no">консюмер вручную</td><td class="meh">только экземпляр</td></tr>
+        <tr><th>Порог задаёт</th><td class="yes">конфиг + экземпляр</td><td class="yes">конфиг + экземпляр</td><td class="no">консюмер вручную</td><td class="meh">только экземпляр</td></tr>
+        <tr><th>Входов на это решение</th><td class="yes">1</td><td class="meh">2</td><td class="yes">1</td><td class="meh">2</td></tr>
+        <tr><th>Порог виден в разметке</th><td class="yes">да</td><td class="no">нет</td><td class="no">нет</td><td class="yes">да</td></tr>
         <tr><th>Один порог на приложение</th><td class="yes">да</td><td class="no">нет</td><td class="meh">нет</td></tr>
       </tbody>
     </table>
@@ -1208,8 +1230,8 @@
 
   <h3>Варианты унификации</h3>
   <div class="options">
-    <div class="opt recommended" data-opt="p6-o1">
-      <div class="opt-head"><span class="opt-id">U1</span><span class="opt-name">Один вход, union — форма <code>ds-select</code> для всех</span><span class="rec-flag">рекомендую</span></div>
+    <div class="opt recommended chosen" data-opt="p6-o1">
+      <div class="opt-head"><span class="opt-id">U1</span><span class="opt-name">Один вход, union — форма <code>ds-select</code> для всех</span><span class="chosen-flag">выбрано</span></div>
       <div class="opt-body">
         <p>
           <code>options</code> принимает и опции, и группы: <code>DsOption | DsOptionGroup</code>.
