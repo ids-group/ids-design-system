@@ -10,6 +10,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **One `options` input takes groups on all three pickers.** `ds-multi-select` had no groups at
+  all; `ds-select` took them mixed into `options`; `ds-autocomplete` took them in a second
+  `optionGroups` input whose own documentation said `options` was **ignored** when it was set —
+  two inputs where one silently won. There is one shape now: `options` accepts flat options,
+  groups, or both mixed, and renders them in the order given.
+
+  The group type is shared as `DsOptionGroup` behind each picker's own name
+  (`SelectOptionGroup`, `MultiSelectOptionGroup`, `AutocompleteOptionGroup`), the way
+  `DsOption` already was. It carries `disabled`, which `ds-select` had and the other two did
+  not; disabling a group disables every option in it.
+
 - **`ds-autocomplete`'s panel is the shared dropdown panel again.** It was passing
   `'ds-overlay-pane'` as its overlay's panel class, and that argument REPLACES the default
   `['ds-dropdown-panel', 'ds-overlay-pane']` rather than adding to it — so nothing from the shared

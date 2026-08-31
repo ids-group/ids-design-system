@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
   MultiSelectComponent,
+  MultiSelectItem,
   MultiSelectOption,
   SelectComponent,
   SelectOption,
@@ -27,6 +28,29 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
 export class MultiSelectSection {
   protected readonly tags = signal<string[]>(['design', 'frontend']);
   protected readonly widthDemoValue = signal<string[]>(['design']);
+  protected readonly assignees = signal<string[]>(['jordan']);
+  protected readonly assigneeItems: MultiSelectItem[] = [
+    { value: 'unassigned', label: 'Unassigned' },
+    {
+      label: 'Product',
+      options: [
+        { value: 'avery', label: 'Avery Brooks' },
+        { value: 'jordan', label: 'Jordan Lee' },
+      ],
+    },
+    {
+      label: 'Platform',
+      options: [
+        { value: 'morgan', label: 'Morgan Kirby' },
+        { value: 'sam', label: 'Sam Rowe' },
+      ],
+    },
+    {
+      label: 'Contractors',
+      disabled: true,
+      options: [{ value: 'rue', label: 'Rue Castellan' }],
+    },
+  ];
   protected readonly widthDemoStatus = signal<string>('');
   protected readonly widthDemoStatuses: SelectOption[] = [
     { value: 'ready', label: 'Ready for QA' },

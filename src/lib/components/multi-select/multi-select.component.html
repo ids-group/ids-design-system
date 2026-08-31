@@ -118,9 +118,7 @@
           }
         </span>
 
-        <span class="select-all-label">
-          Select all
-        </span>
+        <span class="select-all-label"> Select all </span>
       </button>
     }
 
@@ -130,50 +128,106 @@
       aria-multiselectable="true"
       [id]="listboxId"
     >
-      @for (option of filteredOptions(); track option.value; let i = $index) {
-        <li role="presentation">
-          <button
-            type="button"
-            role="option"
-            class="option"
-            [id]="optionId(i)"
-            [class.is-active]="activeIndex() === i"
-            [attr.aria-selected]="isSelected(option.value)"
-            [disabled]="option.disabled"
-            (click)="toggleValue(option)"
-            (mouseenter)="activeIndex.set(i)"
+      @for (item of filteredItems(); track $index; let itemIdx = $index) {
+        @if (isGroup(item)) {
+          <li
+            class="optgroup"
+            role="group"
+            [attr.aria-label]="item.label"
           >
             <span
-              class="checkbox"
-              [class.checked]="isSelected(option.value)"
+              class="optgroup-label"
+              [class.is-first]="itemIdx === 0"
             >
-              @if (isSelected(option.value)) {
+              {{ item.label }}
+            </span>
+
+            <ul
+              class="optgroup-list"
+              role="presentation"
+            >
+              @for (option of item.options; track option.value) {
+                <li role="presentation">
+                  <button
+                    type="button"
+                    role="option"
+                    class="option"
+                    [id]="optionId(flatIndexOf(option))"
+                    [class.is-active]="activeIndex() === flatIndexOf(option)"
+                    [attr.aria-selected]="isSelected(option.value)"
+                    [disabled]="option.disabled"
+                    (click)="toggleValue(option)"
+                    (mouseenter)="activeIndex.set(flatIndexOf(option))"
+                  >
+                    <span
+                      class="checkbox"
+                      [class.checked]="isSelected(option.value)"
+                    >
+                      @if (isSelected(option.value)) {
+                        <ds-icon
+                          name="check"
+                          [size]="13"
+                        />
+                      }
+                    </span>
+
+                    @if (option.icon) {
+                      <ds-icon
+                        class="option-icon"
+                        [name]="option.icon"
+                        [size]="16"
+                      />
+                    }
+
+                    <span class="option-label">{{ option.label }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </li>
+        } @else {
+          @let option = item;
+
+          <li role="presentation">
+            <button
+              type="button"
+              role="option"
+              class="option"
+              [id]="optionId(flatIndexOf(option))"
+              [class.is-active]="activeIndex() === flatIndexOf(option)"
+              [attr.aria-selected]="isSelected(option.value)"
+              [disabled]="option.disabled"
+              (click)="toggleValue(option)"
+              (mouseenter)="activeIndex.set(flatIndexOf(option))"
+            >
+              <span
+                class="checkbox"
+                [class.checked]="isSelected(option.value)"
+              >
+                @if (isSelected(option.value)) {
+                  <ds-icon
+                    name="check"
+                    [size]="13"
+                  />
+                }
+              </span>
+
+              @if (option.icon) {
                 <ds-icon
-                  name="check"
-                  [size]="13"
+                  class="option-icon"
+                  [name]="option.icon"
+                  [size]="16"
                 />
               }
-            </span>
 
-            @if (option.icon) {
-              <ds-icon
-                class="option-icon"
-                [name]="option.icon"
-                [size]="16"
-              />
-            }
-
-            <span class="option-label">
-              {{ option.label }}
-            </span>
-          </button>
-        </li>
+              <span class="option-label">{{ option.label }}</span>
+            </button>
+          </li>
+        }
       }
 
       @if (filteredOptions().length === 0) {
-        <li class="empty">
-          No matches
-        </li>
+        <li class="empty">No matches</li>
       }
     </ul>
   </div>

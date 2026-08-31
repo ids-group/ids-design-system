@@ -35,7 +35,13 @@ import {
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
-import type { MultiSelectOption, MultiSelectWidth } from './multi-select.types';
+import type {
+  MultiSelectItem,
+  MultiSelectOption,
+  MultiSelectOptionGroup,
+  MultiSelectWidth,
+} from './multi-select.types';
+import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
 
 @Component({
   selector: 'ds-multi-select',
@@ -75,8 +81,8 @@ export class MultiSelectComponent
 
   /** Selected values, two-way bound. */
   readonly value = model<string[]>([]);
-  /** Options shown in the panel. */
-  readonly options = input<readonly MultiSelectOption[]>([]);
+  /** Options, groups, or both mixed — rendered in the order given. */
+  readonly options = input<readonly MultiSelectItem[]>([]);
   /** Placeholder shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('Select…');
   /** Placeholder for the in-panel filter input. */
@@ -148,11 +154,17 @@ export class MultiSelectComponent
     () => this.disabled() || this.formDisabled(),
   );
 
+  protected readonly allOptions = computed<MultiSelectOption[]>(() =>
+    flattenDsOptions(this.options()),
+  );
+
   // Selected options in the source order, so chip order is stable.
   protected readonly selectedOptions = computed<MultiSelectOption[]>(() => {
     const selected = this.value();
 
-    return this.options().filter((option) => selected.includes(option.value));
+    return this.allOptions().filter((option) =>
+      selected.includes(option.value),
+    );
   });
 
   private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
@@ -193,14 +205,51 @@ export class MultiSelectComponent
     () => this.selectedOptions().length - this.visibleChips().length,
   );
 
-  protected readonly filteredOptions = computed<MultiSelectOption[]>(() => {
+  /** The panel's render list: source order kept, non-matching options dropped, and
+   *  a group that matched nothing dropped with them. */
+  protected readonly filteredItems = computed<MultiSelectItem[]>(() => {
     const query = this.filter().trim().toLowerCase();
-    const options = this.options();
+    const matches = (option: MultiSelectOption): boolean =>
+      !query || option.label.toLowerCase().includes(query);
 
-    return query
-      ? options.filter((option) => option.label.toLowerCase().includes(query))
-      : options.slice();
+    const kept: MultiSelectItem[] = [];
+    for (const item of this.options()) {
+      if (!isDsOptionGroup(item)) {
+        if (matches(item)) {
+          kept.push(item);
+        }
+        continue;
+      }
+      // A disabled group disables its options HERE, not only in the flattened
+      // list: the template renders these objects, so a group left to inherit
+      // later would paint enabled rows that refuse to be picked.
+      const options = item.options
+        .filter(matches)
+        .map((option) =>
+          item.disabled ? { ...option, disabled: true } : option,
+        );
+      if (options.length > 0) {
+        kept.push({ ...item, options });
+      }
+    }
+
+    return kept;
   });
+
+  protected readonly filteredOptions = computed<MultiSelectOption[]>(() =>
+    flattenDsOptions(this.filteredItems()),
+  );
+
+  protected isGroup(item: MultiSelectItem): item is MultiSelectOptionGroup {
+    return isDsOptionGroup(item);
+  }
+
+  /** Where an option sits in the flat visible list — the id the listbox's
+   *  `aria-activedescendant` points at, which a grouped render cannot get from
+   *  the loop index. */
+  protected flatIndexOf(option: MultiSelectOption): number {
+    return this.filteredOptions().indexOf(option);
+  }
 
   protected readonly activeDescendant = computed(() => {
     const index = this.activeIndex();

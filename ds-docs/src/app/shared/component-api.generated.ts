@@ -380,20 +380,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "options",
         "kind": "input",
-        "type": "readonly AutocompleteOption<T>[]",
+        "type": "readonly AutocompleteItem<T>[]",
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Flat option list — ignored when `optionGroups` is set."
-      },
-      {
-        "name": "optionGroups",
-        "kind": "input",
-        "type": "AutocompleteOptionGroup<T>[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Options grouped under labelled sections, rendered instead of `options`."
+        "description": "Options, groups, or both mixed — rendered in the order given."
       },
       {
         "name": "value",
@@ -3503,11 +3494,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "options",
         "kind": "input",
-        "type": "readonly MultiSelectOption[]",
+        "type": "readonly MultiSelectItem[]",
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Options shown in the panel."
+        "description": "Options, groups, or both mixed — rendered in the order given."
       },
       {
         "name": "placeholder",

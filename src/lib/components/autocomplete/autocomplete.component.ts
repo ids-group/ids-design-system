@@ -35,11 +35,13 @@ import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import type {
+  AutocompleteItem,
   AutocompleteOption,
   AutocompleteOptionGroup,
   AutocompleteValueOverflow,
   AutocompleteWidth,
 } from './autocomplete.types';
+import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveWithConfig } from '../../core/config-defaults';
@@ -88,10 +90,8 @@ export class AutocompleteComponent<T = unknown>
     '--ds-dropdown-panel-maxw',
   ];
 
-  /** Flat option list — ignored when `optionGroups` is set. */
-  readonly options = input<readonly AutocompleteOption<T>[]>([]);
-  /** Options grouped under labelled sections, rendered instead of `options`. */
-  readonly optionGroups = input<AutocompleteOptionGroup<T>[]>([]);
+  /** Options, groups, or both mixed — rendered in the order given. */
+  readonly options = input<readonly AutocompleteItem<T>[]>([]);
   /** Selected value, or an array of values when `multiple`. */
   readonly value = model<T | readonly T[] | null>(null);
   /** Allows selecting more than one option, shown as removable tags. */
@@ -192,51 +192,50 @@ export class AutocompleteComponent<T = unknown>
     return this.isOpen() && index >= 0 ? this.optionId(index) : null;
   });
 
-  /** All options flattened from either optionGroups or options. */
   protected readonly allOptions = computed<readonly AutocompleteOption<T>[]>(
-    () => {
-      const groups = this.optionGroups();
-      if (groups.length > 0) {
-        return groups.flatMap((group) => group.options);
-      }
-
-      return this.options();
-    },
+    () => flattenDsOptions(this.options()),
   );
 
-  protected readonly filteredOptions = computed(() => {
-    const trimmedQuery = this.query().toLowerCase().trim();
-    if (!trimmedQuery) {
-      return this.allOptions();
+  /** The panel's render list: source order kept, non-matching options dropped, and
+   *  a group that matched nothing dropped with them. */
+  protected readonly filteredItems = computed<AutocompleteItem<T>[]>(() => {
+    const query = this.query().toLowerCase().trim();
+    const matches = (option: AutocompleteOption<T>): boolean =>
+      !query || option.label.toLowerCase().includes(query);
+
+    const kept: AutocompleteItem<T>[] = [];
+    for (const item of this.options()) {
+      if (!isDsOptionGroup(item)) {
+        if (matches(item)) {
+          kept.push(item);
+        }
+        continue;
+      }
+      // A disabled group disables its options HERE, not only in the flattened
+      // list: the template renders these objects, so a group left to inherit
+      // later would paint enabled rows that refuse to be picked.
+      const options = item.options
+        .filter(matches)
+        .map((option) =>
+          item.disabled ? { ...option, disabled: true } : option,
+        );
+      if (options.length > 0) {
+        kept.push({ ...item, options });
+      }
     }
 
-    return this.allOptions().filter((option) =>
-      option.label.toLowerCase().includes(trimmedQuery),
-    );
+    return kept;
   });
 
-  /** Filtered groups for grouped rendering — groups with no matching options are hidden. */
-  protected readonly filteredGroups = computed<AutocompleteOptionGroup<T>[]>(
-    () => {
-      const groups = this.optionGroups();
-      if (groups.length === 0) {
-        return [];
-      }
-      const trimmedQuery = this.query().toLowerCase().trim();
-      if (!trimmedQuery) {
-        return groups;
-      }
+  protected readonly filteredOptions = computed<
+    readonly AutocompleteOption<T>[]
+  >(() => flattenDsOptions(this.filteredItems()));
 
-      return groups
-        .map((group) => ({
-          ...group,
-          options: group.options.filter((option) =>
-            option.label.toLowerCase().includes(trimmedQuery),
-          ),
-        }))
-        .filter((group) => group.options.length > 0);
-    },
-  );
+  protected isGroup(
+    item: AutocompleteItem<T>,
+  ): item is AutocompleteOptionGroup<T> {
+    return isDsOptionGroup(item);
+  }
 
   /** Whether to show the "Create «text»" row at the bottom of the panel. */
   protected readonly showCreateRow = computed<boolean>(() => {

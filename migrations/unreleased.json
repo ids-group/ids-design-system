@@ -82,12 +82,28 @@
       "restore": null,
       "note": "AutocompleteWidth is now an alias of the shared DsControlWidth that SelectWidth and MultiSelectWidth also alias. The union it resolves to is unchanged, so an import keeps compiling and `width` still accepts exactly `fill` and `content`.",
       "action": "Do nothing."
+    },
+    {
+      "id": "autocomplete-option-groups-input-removed",
+      "kind": "input-rename",
+      "old": "optionGroups",
+      "new": "options",
+      "action": "Move the array you passed to `optionGroups` into `options`.",
+      "note": "The autocomplete took groups in a second input and documented `options` as ignored whenever it was set, so two inputs existed and one silently won. `options` now accepts flat options, groups, or both mixed, in the order given, which is the shape ds-select already used and ds-multi-select has gained.",
+      "appliesWhen": "You bind `[optionGroups]` on a `<ds-autocomplete>`.",
+      "pitfall": "If you were passing BOTH inputs and relying on the flat one being dropped, merging them changes what renders — the flat options now appear alongside the groups rather than vanishing.",
+      "searchHints": ["optionGroups"],
+      "surface": "template",
+      "detect": ["[optionGroups]", "optionGroups="],
+      "verify": "The autocomplete renders its labelled sections with only `options` bound, and filtering still hides a group whose options all fail the query.",
+      "restore": null
     }
   ],
   "informational": [
     "ds-multi-select and ds-select gained `width`, the input ds-autocomplete already had: `content` takes the trigger width as the panel's floor instead of its width, so a short trigger stops forcing an unreadable panel. Default `fill` is unchanged.",
     "New panel bounds for that mode: --ds-dropdown-panel-minw and --ds-dropdown-panel-maxw.",
-    "ds-select now forwards its panel custom properties onto the portaled pane, which it never did — a `ds-select { --ds-dropdown-panel-*: … }` reaches the panel now instead of being silently dropped."
+    "ds-select now forwards its panel custom properties onto the portaled pane, which it never did — a `ds-select { --ds-dropdown-panel-*: … }` reaches the panel now instead of being silently dropped.",
+    "ds-multi-select gained option groups, which it never had. A group disables all of its options when its own `disabled` is set."
   ],
   "deleteList": [
     {
