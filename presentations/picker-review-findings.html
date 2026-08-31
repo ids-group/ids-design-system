@@ -57,7 +57,10 @@
   <p class="lede">
     Пять независимых ревьюеров с разными линзами прошли всю ветку — 36 коммитов, 46 файлов,
     +4357/−627. Ниже только то, что я перепроверил сам по коду и подтвердил цитатой.
-    Непроверенное и переоценённое — в §7, отдельно.
+    <br><br>
+    <strong>Если читаешь один раздел — читай <a href="#applied">§9</a>:</strong> там всё, что я
+    переименовал, перенёс и удалил, с причиной напротив каждого пункта — и честный ответ, где был
+    костыль и что за мной осталось. Отклонённое у агентов — в <a href="#rejected">§10</a>.
   </p>
 
   <div class="tablewrap">
@@ -68,7 +71,7 @@
         <tr><td>Доки обещают несуществующее</td><td class="num bad">13</td><td>Правится до релиза: консюмер копирует из нот</td></tr>
         <tr><td>Расхождения в семействе</td><td class="num">6</td><td>Правится до релиза: контракт написан в этом же релизе</td></tr>
         <tr><td>Мёртвый код</td><td class="num">2</td><td>Дешёво, заодно</td></tr>
-        <tr><td>Было до ветки</td><td class="num">7</td><td>В <code>docs/todo.md</code>, не в этот релиз</td></tr>
+        <tr><td>Было до ветки</td><td class="num">7</td><td>Исправлены тоже — по твоему решению «всё 43»</td></tr>
       </tbody>
     </table>
   </div>
@@ -589,9 +592,151 @@
 </section>
 
 
+<section class="item" id="applied">
+  <div class="item-head">
+    <span class="item-num">§9</span>
+    <h2>Что именно я изменил</h2>
+    <span class="covers">переименования, переносы, удаления</span>
+  </div>
+
+  <p class="lede-s">
+    Раздел отвечает на один вопрос: это унификация или костыли. Ниже — всё, что переименовано,
+    перенесено и удалено, и напротив каждого пункта причина. Всё сверено по коду, а не по памяти.
+  </p>
+
+  <h3 style="margin-top:var(--space-5)">Переименованные классы — все с миграцией</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Было</th><th>Стало</th><th>Где</th><th>Покрытие</th></tr></thead>
+      <tbody>
+        <tr><td><code>.panel</code></td><td><code>.dropdown-panel</code></td><td>ds-multi-select</td><td>class-rename в манифесте</td></tr>
+        <tr><td><code>.options</code></td><td><code>.dropdown-list</code></td><td>ds-multi-select</td><td>class-rename в манифесте</td></tr>
+        <tr><td><code>.autocomplete-list</code></td><td><code>.dropdown-list</code></td><td>ds-autocomplete</td><td>class-rename в манифесте</td></tr>
+        <tr><td><code>.autocomplete-optgroup</code></td><td><code>.optgroup</code></td><td>ds-autocomplete</td><td>class-rename в манифесте</td></tr>
+        <tr><td><code>.autocomplete-optgroup-label</code></td><td><code>.optgroup-label</code></td><td>ds-autocomplete</td><td>class-rename в манифесте</td></tr>
+        <tr><td><code>.icon</code> (галка опции)</td><td><code>.option-check</code></td><td>ds-autocomplete</td><td>class-rename в манифесте</td></tr>
+        <tr><td><code>.field-trigger</code></td><td>— (класс уникализирован ранее)</td><td>ds-multi-select</td><td>снят конфликт с формами консюмера</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fact">
+    Направление одно: у трёх пикеров была своя лексика для одного и того же узла. Теперь словарь
+    общий, и каждое переименование лежит в <code>migrations/unreleased.json</code> как
+    <code>class-rename</code> с <code>detect</code>, так что апдейтер консюмера их находит.
+  </p>
+
+  <h3 style="margin-top:var(--space-5)">Новые классы</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Класс</th><th>Зачем</th><th>Где</th></tr></thead>
+      <tbody>
+        <tr><td><code>.label</code>, <code>.req</code>, <code>.optional-marker</code></td><td>метка поля, звёздочка, «(optional)»</td><td>multi-select + autocomplete</td></tr>
+        <tr><td><code>.trigger-caption</code>, <code>.trigger-label</code></td><td>подпись и метки компактного триггера</td><td>ds-multi-select</td></tr>
+        <tr><td><code>.optgroup-list</code></td><td>вложенный список опций группы</td><td>ds-multi-select</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-top:var(--space-5)">Токены</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Токен</th><th>Что с ним</th><th>Причина</th></tr></thead>
+      <tbody>
+        <tr><td><code>--ds-dropdown-panel-bg-color</code></td><td>новый</td><td>фон панели, раньше был захардкожен в партиалке и продублирован в двух компонентах</td></tr>
+        <tr><td><code>--ds-dropdown-panel-maxh</code></td><td>новый</td><td>высота панели, раньше жёсткие <code>320px</code> в партиалке</td></tr>
+        <tr><td><code>--ds-dropdown-panel-minw</code>, <code>-maxw</code></td><td>новые</td><td>границы панели в режиме <code>width="content"</code></td></tr>
+        <tr><td><code>--ds-autocomplete-option-bg-color-hover</code></td><td><span class="key">УДАЛЁН</span></td><td>заменён панельными <code>--ds-option-*</code>; есть <code>token-rename</code> в манифесте</td></tr>
+        <tr><td><code>--ds-multi-select-panel-bg-color</code></td><td>жив, стал алиасом</td><td>теперь объявлен на хосте как значение общего токена</td></tr>
+        <tr><td><code>--ds-autocomplete-panel-bg-color</code>, <code>-radius</code>, <code>-maxh</code></td><td>живы, стали алиасами</td><td>то же — имя осталось публичным, путь до панели один</td></tr>
+        <tr><td><code>--ds-select-panel-radius</code></td><td>не существовал</td><td>упоминался в комментарии как несуществующий; комментарий убран, регрессии нет</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fact">
+    <strong>Удалён ровно один токен</strong>, и на него есть <code>token-rename</code> в манифесте.
+    Ни один компонентный <code>--ds-*-panel-*</code> не пропал: они стали алиасами общих, то есть
+    имя для консюмера прежнее, а путь до панели теперь один вместо двух конкурирующих правил.
+  </p>
+
+  <h3 style="margin-top:var(--space-5)">Что перенесено</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Что</th><th>Откуда</th><th>Куда</th><th>Почему</th></tr></thead>
+      <tbody>
+        <tr><td>Геометрия панели</td><td>компонентные SCSS ×2</td><td><code>styles/_dropdown-overlay.scss</code></td><td><code>background</code>, <code>border-radius</code>, <code>max-height</code>, <code>overflow</code>, <code>display</code> объявлялись в трёх местах с равной специфичностью</td></tr>
+        <tr><td>Роль скроллера</td><td>панель</td><td>список (<code>.dropdown-list</code>)</td><td>строка фильтра и «выбрать все» остаются на месте, двигаются только опции</td></tr>
+        <tr><td>Форма группы опций</td><td>три разных типа</td><td><code>DsOptionGroup</code> / <code>DsOptionItem</code></td><td>у каждого пикера своё имя, тип один</td></tr>
+        <tr><td>Обрезка строки</td><td>7 рукописных мест</td><td>миксин <code>single-line-ellipsis</code></td><td><code>overflow: clip</code> вместо <code>hidden</code>: при тесном line-height <code>hidden</code> срезает глиф</td></tr>
+        <tr><td>Пробрасываемые токены</td><td>3 своих на пикер</td><td>5 общих + 4 хука <code>--ds-option-*</code></td><td>портированная панель не наследует от хоста, форвардер обязателен</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-top:var(--space-5)">Оверлеи</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Что</th><th>Что сделано</th><th>Где</th></tr></thead>
+      <tbody>
+        <tr><td>Гонка при переоткрытии</td><td>Хендлер <code>detachments()</code> чистил состояние, не проверяя, что отцепляется текущий оверлей. <code>disposeWithLeave</code> откладывает dispose на время анимации, поэтому переоткрытие внутри этого окна оставляло панель видимой при <code>open === false</code> и текло подписками. Теперь сравнивается ссылка.</td><td>все три</td></tr>
+        <tr><td>Двойной зазор</td><td>Панель автокомплита висела на <code>--picker-offset</code> поверх <code>DROPDOWN_GAP</code>, а при перевороте наверх этот отступ становился прозрачной полосой, съедающей клики. Убран.</td><td>ds-autocomplete</td></tr>
+        <tr><td>Ширина панели</td><td>Компактный триггер сам включает поведение <code>content</code>: ширина триггера становится ПОЛОМ, а не значением, иначе панель шириной с подпись.</td><td>ds-multi-select</td></tr>
+        <tr><td>Класс панели</td><td><code>panelClass</code> заменяет дефолт, а не дополняет его — из-за этого автокомплит три релиза жил без общей партиалки. Сейчас все трое несут <code>ds-dropdown-panel</code>.</td><td>все три</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-top:var(--space-5)">Слои каскада — честный ответ</h3>
+  <div class="findings">
+    <div class="finding">
+      <div class="finding-head"><h3>Сначала я поставил костыль, потом убрал его</h3><span class="tag t-other">важно</span></div>
+      <p class="fact">
+        Первым решением я <strong>квалифицировал</strong> компонентные селекторы
+        (<code>.ds-dropdown-panel .dropdown-panel, .dropdown-panel</code>), чтобы они перебивали
+        партиалку специфичностью, а не порядком загрузки. Это работало и было костылём: ничья не
+        исчезала, её обходили в каждом отдельном селекторе, и следующее правило про панель этой
+        защиты бы не получило.<br><br>
+        После твоего вопроса я <span class="key">убрал квалификатор совсем</span> и перенёс геометрию
+        в партиалку. Конкурирующего правила больше нет — перебивать нечего.
+      </p>
+    </div>
+    <div class="finding">
+      <div class="finding-head"><h3><code>@layer</code> — за мной долг</h3><span class="tag t-branch">не сделано</span></div>
+      <p class="fact">
+        Ты просил проверить выполнимость. Я начал и не довёл: измерил только, что в репозитории
+        <code>@layer</code> <strong>не используется нигде</strong>, и что Angular сохраняет at-rules
+        в компонентных стилях (<code>@media</code> доезжает в собранный бандл). Дальше проверки нет.<br><br>
+        Почему это всё ещё нужно, хотя дубликация убрана: слои сделали бы приоритет
+        <em>объявленным</em>, а не выведенным из порядка. Это касается не только пикеров — портированные
+        узлы есть у <code>ds-modal</code>, <code>ds-drawer</code>, <code>ds-toast</code> и трёх
+        остальных пикеров. Записано в <code>docs/todo.md</code> третьим вариантом.
+      </p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:var(--space-5)">Деградации и регрессии</h3>
+  <div class="findings">
+    <div class="finding">
+      <div class="finding-head"><h3>Что я проверял именно на регрессии</h3></div>
+      <p class="fact">
+        <strong>Токены:</strong> сравнил поверхность <code>--ds-*</code> до и после по трём компонентам
+        и партиалке — пропал один, и он покрыт миграцией.<br>
+        <strong>Геометрия панели:</strong> замерил в реальном браузере после переноса —
+        <code>max-height 320px</code>, <code>overflow hidden</code>, <code>display flex</code>,
+        радиус 12px, фон белый, панель не проливается.<br>
+        <strong>Скролл:</strong> нашёл настоящую регрессию, которую сам же вносил — во flex-колонке
+        список не сжимается без <code>min-height: 0</code>, и панель протекла бы за свой
+        <code>max-height</code>. Добавил и проверил замером (<code>list minH=0px</code>).<br>
+        <strong>Один режим остаётся с дефектом:</strong> <code>triggerDisplay="labels"</code> показывает
+        меньше меток, чем влезает (§1, F5). По твоему решению — записан в <code>docs/todo.md</code>
+        как Bug, не чинится в этом релизе.
+      </p>
+    </div>
+  </div>
+</section>
+
 <section class="item" id="rejected">
   <div class="item-head">
-    <span class="item-num">§7</span>
+    <span class="item-num">§10</span>
     <h2>Что я у агентов отклонил</h2>
     <span class="covers">3</span>
   </div>
@@ -619,7 +764,7 @@
 
 <section class="item" id="method">
   <div class="item-head">
-    <span class="item-num">§8</span>
+    <span class="item-num">§11</span>
     <h2>Почему я этого не увидел</h2>
   </div>
 
