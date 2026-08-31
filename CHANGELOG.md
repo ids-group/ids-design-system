@@ -10,6 +10,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`ds-multi-select`'s panel is the shared dropdown panel too.** `ds-autocomplete` rejoined it
+  earlier in this release; the multi-select still carried its own `.panel` / `.options` / `.option`
+  copy while its pane ALSO carried `ds-dropdown-panel`, so both rule sets applied at once. One
+  implementation now: the class names are `.dropdown-panel` and `.dropdown-list`, and the row is the
+  partial's. What stayed is what no other picker has — the filter row, the select-all rows, a real
+  `<button>` option that can be `:disabled`, and this component's own tokens.
+
+- **`triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name says what the trigger
+  shows, which matters once `labels` sits beside it.
+
 - **Every single-line label clips through one mixin now.** Six places hand-rolled
   `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — `ds-select``s trigger text,
 `ds-tree``s label, `ds-sidenav-item``s label, three labels in `ds-sidenav-footer`, and the table
@@ -20,8 +30,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
   `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` gained members, and
-  `DsOptionTemplateDirective`, `DsChipTemplateDirective` and `DsPickerTriggerDirective` are new
-  classes. Subclassing is unsupported but consumers do it, and a member of yours that shares a name
+  `DsOptionTemplateDirective`, `DsChipTemplateDirective`, `DsPickerTriggerDirective`,
+  `DsEmptyTemplateDirective` and `DsCreateTemplateDirective` are new classes. Subclassing is unsupported but consumers do it, and a member of yours that shares a name
   with one of ours stops the build. Rename yours, or add `override` if you meant to replace ours —
   the compiler enumerates every collision, so building after the upgrade is the whole check.
 
@@ -59,6 +69,30 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   its chips already had a measured cap.
 
 ### Added
+
+- **A written contract for the picker family, and a tool that enforces it.**
+  `docs/picker-contract.md` states the five rules the three pickers now share — one meaning per
+  member name, difference only by a stated reason, one panel implementation, no library-invented
+  string without a slot, one way to clip a line. `npm run picker-parity` prints every input, output,
+  model and slot that is NOT shared, so a new divergence is either a line added to the "absent by
+  design" list or a defect.
+
+- **`dsEmptyTemplate` and `dsCreateTemplate`.** "No matches" and "Create «…»" were literals with no
+  way to replace them. Both are slots now, on all three pickers and on `ds-autocomplete`
+  respectively. `ds-select` also gained an empty state at all — with no options it used to open a
+  blank panel.
+
+- **`selectAll` takes `'group'` and `'both'`.** A row per group, or a group row beside the
+  panel-wide one. A group's row is disabled when the group is, and shows the mixed state when part
+  of it is picked.
+
+- **`triggerDisplay="labels"`.** Same compact footprint as `count`, but it names the selection
+  instead of counting it, cut to the trigger's width with the rest behind "+N" — the same
+  measurement the chips already use.
+
+- **Parity the family was missing.** `label`, `required` and `optional` on `ds-multi-select` and
+  `ds-autocomplete`, and `size` on `ds-multi-select`. They existed on `ds-select` alone, which
+  meant a form built from the other two could not be labelled or marked required at all.
 
 - **`searchable` on `ds-multi-select` — one input, three meanings.** `true` always shows the
   panel's filter row (the default, unchanged), `false` never, and a **number** is the threshold at

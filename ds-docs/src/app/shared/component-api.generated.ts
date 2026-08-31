@@ -496,6 +496,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows a \"Create «text»\" row when the typed text matches no option."
       },
       {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Field label above the control — the same meaning it has on the other two pickers."
+      },
+      {
+        "name": "required",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field required: a `*` beside the label and `aria-required` on the input."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field optional in words, for a form where most fields are required."
+      },
+      {
         "name": "ariaLabel",
         "kind": "input",
         "type": "string | null",
@@ -3576,16 +3603,30 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so a compact trigger does not force an unreadable panel."
       },
       {
+        "name": "size",
+        "kind": "input",
+        "type": "DsSize | null",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+      },
+      {
         "name": "triggerDisplay",
         "kind": "input",
         "type": "DsTriggerDisplay",
         "union": [
           "full",
-          "compact"
+          "count",
+          "labels"
         ],
         "default": "'full'",
         "required": false,
-        "description": "What the trigger shows. `compact` is a caption plus a selected-count badge at intrinsic width, for a filter toolbar. A projected `dsPickerTrigger` template WINS over this — the input is then not read at all."
+        "description": "What the trigger shows. `count` is a caption plus a selected-count badge at intrinsic width; `labels` names the selection instead, cut to the width with the rest behind \"+N\". A projected `dsPickerTrigger` template WINS over this — the input is then not read at all."
       },
       {
         "name": "label",
@@ -3594,16 +3635,34 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Caption of the compact trigger. Falls back to `ariaLabel`, then `placeholder`."
+        "description": "Field label above the control — the same meaning it has on `ds-select`, and the caption a `count`/`labels` trigger uses when it needs one."
       },
       {
-        "name": "selectAll",
+        "name": "required",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows a \"Select all\" row that toggles every filter-matching, enabled option."
+        "description": "Marks the field required: a `*` beside the label and `aria-required` on the trigger."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field optional in words, for a form where most fields are required."
+      },
+      {
+        "name": "selectAll",
+        "kind": "input",
+        "type": "boolean | 'group' | 'both'",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Where a \"select all\" row appears. `false` nowhere, `true` one row over the whole panel, `'group'` one row per group, `'both'` for either. Group rows need groups in `options` — with a flat list they have nothing to head."
       }
     ],
     "outputs": []

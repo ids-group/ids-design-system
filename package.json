@@ -56,7 +56,8 @@
     "release:major": "npm version major -m \"release: %s\"",
     "release:beta": "npm version prerelease --preid=beta -m \"release: %s\"",
     "prepublishOnly": "node -e \"console.error('Publish from dist/ds (npm publish ./dist/ds), not the repo root.'); process.exit(1)\"",
-    "publish:manual": "npm run build:lib && npm publish ./dist/ds"
+    "publish:manual": "npm run build:lib && npm publish ./dist/ds",
+    "picker-parity": "node tools/picker-parity.mjs"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",

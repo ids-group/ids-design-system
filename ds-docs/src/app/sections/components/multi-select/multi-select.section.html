@@ -84,6 +84,42 @@
     </p>
   </div>
 
+  <h3 class="block-title t-h4">
+    Labels in the trigger, and per-group select-all
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">triggerDisplay="labels"</code> keeps the compact
+    footprint but names what is selected instead of counting it, cut to the
+    width with the rest behind &laquo;+N&raquo; — the same measurement the chips
+    use. <code class="t-mono-inline">selectAll</code> takes
+    <code class="t-mono-inline">'group'</code> or
+    <code class="t-mono-inline">'both'</code> to head each group with its own
+    row.
+  </p>
+
+  <div class="demo-panel">
+    <div style="display: flex; gap: var(--space-3); align-items: flex-start">
+      <ds-multi-select
+        data-testid="ms-labels"
+        triggerDisplay="labels"
+        label="Labels"
+        width="content"
+        [options]="labelOptions"
+        [(value)]="compactLabels"
+      />
+
+      <ds-multi-select
+        data-testid="ms-group-all"
+        placeholder="Assignees…"
+        ariaLabel="Assignees with per-group select all"
+        selectAll="both"
+        [options]="assigneeItems"
+        [(value)]="assignees"
+      />
+    </div>
+  </div>
+
   <h3 class="block-title t-h4">Hiding the filter row</h3>
 
   <p class="block-desc t-s">
@@ -128,7 +164,7 @@
   <h3 class="block-title t-h4">Compact trigger</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">triggerDisplay="compact"</code> swaps the chip
+    <code class="t-mono-inline">triggerDisplay="count"</code> swaps the chip
     field for a caption and a selected-count badge at intrinsic width — a fixed
     footprint for a filter toolbar, where a field that grows with the selection
     does not fit. A projected
@@ -140,7 +176,7 @@
     <div style="display: flex; gap: var(--space-3); align-items: flex-start">
       <ds-multi-select
         data-testid="ms-compact"
-        triggerDisplay="compact"
+        triggerDisplay="count"
         label="Labels"
         width="content"
         [options]="labelOptions"

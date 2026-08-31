@@ -47,6 +47,8 @@ import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
+import { DsEmptyTemplateDirective } from '../empty-template.directive';
+import { DsCreateTemplateDirective } from '../create-template.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveWithConfig } from '../../core/config-defaults';
@@ -153,6 +155,12 @@ export class AutocompleteComponent<T = unknown>
   });
   /** Shows a "Create «text»" row when the typed text matches no option. */
   readonly allowCreate = input(false, { transform: booleanAttribute });
+  /** Field label above the control — the same meaning it has on the other two pickers. */
+  readonly label = input<string>('');
+  /** Marks the field required: a `*` beside the label and `aria-required` on the input. */
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Marks the field optional in words, for a form where most fields are required. */
+  readonly optional = input(false, { transform: booleanAttribute });
   /** Accessible name for the input. */
   readonly ariaLabel = input<string | null>(null);
 
@@ -188,6 +196,12 @@ export class AutocompleteComponent<T = unknown>
   protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
+  protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly createTemplate = contentChild(DsCreateTemplateDirective, {
+    read: TemplateRef,
+  });
 
   protected readonly query = signal('');
   protected readonly isOpen = signal(false);
@@ -203,6 +217,7 @@ export class AutocompleteComponent<T = unknown>
 
   protected readonly uid = `ds-autocomplete-${++nextId}`;
   protected readonly listboxId = `${this.uid}-listbox`;
+  protected readonly labelId = `${this.uid}-label`;
   protected optionId(index: number): string {
     return `${this.uid}-opt-${index}`;
   }

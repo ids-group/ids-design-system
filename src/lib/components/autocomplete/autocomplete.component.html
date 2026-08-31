@@ -1,4 +1,28 @@
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- click opens/focuses; keyboard runs through the inner <input role="combobox"> (type/arrows/Enter/Esc) -->
+@if (label()) {
+  <span
+    class="label"
+    [id]="labelId"
+  >
+    {{ label() }}
+    @if (required()) {
+      <span
+        class="req"
+        aria-hidden="true"
+      >
+        *
+      </span>
+    } @else if (optional()) {
+      <span
+        class="optional-marker"
+        aria-hidden="true"
+      >
+        (optional)
+      </span>
+    }
+  </span>
+}
+
 <div
   #trigger
   class="autocomplete-trigger"
@@ -252,7 +276,14 @@
           class="empty t-s"
           role="status"
         >
-          No matches
+          @if (emptyTemplate(); as tpl) {
+            <ng-container
+              [ngTemplateOutlet]="tpl"
+              [ngTemplateOutletContext]="{ $implicit: query(), query: query() }"
+            />
+          } @else {
+            No matches
+          }
         </li>
       }
 
@@ -273,7 +304,19 @@
             [size]="16"
           />
 
-          <span class="option-label"> Create «{{ query().trim() }}» </span>
+          <span class="option-label">
+            @if (createTemplate(); as tpl) {
+              <ng-container
+                [ngTemplateOutlet]="tpl"
+                [ngTemplateOutletContext]="{
+                  $implicit: query().trim(),
+                  query: query().trim(),
+                }"
+              />
+            } @else {
+              Create «{{ query().trim() }}»
+            }
+          </span>
         </li>
       }
     </ul>

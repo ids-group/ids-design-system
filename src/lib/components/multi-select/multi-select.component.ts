@@ -38,9 +38,11 @@ import { FieldMessageComponent } from '../field-message/field-message.component'
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { resolveWithConfig } from '../../core/config-defaults';
+import type { DsSize } from '../../core/size';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
+import { DsEmptyTemplateDirective } from '../empty-template.directive';
 import { BadgeComponent } from '../badge/badge.component';
 import type { DsTriggerDisplay } from '../../core/trigger-display';
 import type {
@@ -67,6 +69,8 @@ import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
     '[attr.data-field-state]': 'controlState()',
     '[class.content-width]': "width() === 'content'",
     '[class.compact-trigger]': 'showsCompactTrigger()',
+    '[class.labels-trigger]':
+      "showsCompactTrigger() && triggerDisplay() === 'labels'",
   },
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
@@ -160,14 +164,32 @@ export class MultiSelectComponent
    *  trigger's width; `content` hugs the trigger's own content and takes that width
    *  as the panel's FLOOR, so a compact trigger does not force an unreadable panel. */
   readonly width = input<MultiSelectWidth>('fill');
-  /** What the trigger shows. `compact` is a caption plus a selected-count badge at
-   *  intrinsic width, for a filter toolbar. A projected `dsPickerTrigger` template
-   *  WINS over this — the input is then not read at all. */
+  /** Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
+  /** What the trigger shows. `count` is a caption plus a selected-count badge at
+   *  intrinsic width; `labels` names the selection instead, cut to the width with the
+   *  rest behind "+N". A projected `dsPickerTrigger` template WINS over this — the
+   *  input is then not read at all. */
   readonly triggerDisplay = input<DsTriggerDisplay>('full');
-  /** Caption of the compact trigger. Falls back to `ariaLabel`, then `placeholder`. */
+  /** Field label above the control — the same meaning it has on `ds-select`, and the
+   *  caption a `count`/`labels` trigger uses when it needs one. */
   readonly label = input<string>('');
-  /** Shows a "Select all" row that toggles every filter-matching, enabled option. */
-  readonly selectAll = input(false, { transform: booleanAttribute });
+  /** Marks the field required: a `*` beside the label and `aria-required` on the trigger. */
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Marks the field optional in words, for a form where most fields are required. */
+  readonly optional = input(false, { transform: booleanAttribute });
+  /** Where a "select all" row appears. `false` nowhere, `true` one row over the whole
+   *  panel, `'group'` one row per group, `'both'` for either. Group rows need groups
+   *  in `options` — with a flat list they have nothing to head. */
+  readonly selectAll = input<boolean | 'group' | 'both', unknown>(false, {
+    transform: (raw: unknown) =>
+      raw === 'group' || raw === 'both' ? raw : booleanAttribute(raw),
+  });
 
   protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
     read: TemplateRef,
@@ -178,9 +200,13 @@ export class MultiSelectComponent
   protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
+  protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
+    read: TemplateRef,
+  });
 
   protected readonly uid = nextControlId('ds-multi-select');
   protected readonly listboxId = `${this.uid}-listbox`;
+  protected readonly labelId = `${this.uid}-label`;
   protected optionId(index: number): string {
     return `${this.uid}-opt-${index}`;
   }
@@ -214,7 +240,7 @@ export class MultiSelectComponent
 
   /** A projected template wins outright, so there is no combination to explain. */
   protected readonly showsCompactTrigger = computed(
-    () => !this.pickerTrigger() && this.triggerDisplay() === 'compact',
+    () => !this.pickerTrigger() && this.triggerDisplay() !== 'full',
   );
 
   /** A number means "show it once the list is long enough to need it". */
@@ -382,6 +408,54 @@ export class MultiSelectComponent
       !this.allFilteredSelected()
     );
   });
+
+  protected readonly showsPanelSelectAll = computed(() => {
+    const setting = this.selectAll();
+
+    return setting === true || setting === 'both';
+  });
+
+  protected readonly showsGroupSelectAll = computed(() => {
+    const setting = this.selectAll();
+
+    return setting === 'group' || setting === 'both';
+  });
+
+  private enabledIn(group: MultiSelectOptionGroup): MultiSelectOption[] {
+    return group.options.filter((option) => !option.disabled);
+  }
+
+  protected groupAllSelected(group: MultiSelectOptionGroup): boolean {
+    const enabled = this.enabledIn(group);
+    const selected = this.value();
+
+    return (
+      enabled.length > 0 && enabled.every((o) => selected.includes(o.value))
+    );
+  }
+
+  protected groupSomeSelected(group: MultiSelectOptionGroup): boolean {
+    const selected = this.value();
+
+    return (
+      this.enabledIn(group).some((o) => selected.includes(o.value)) &&
+      !this.groupAllSelected(group)
+    );
+  }
+
+  protected toggleGroup(group: MultiSelectOptionGroup): void {
+    const values = this.enabledIn(group).map((o) => o.value);
+    if (this.groupAllSelected(group)) {
+      const remove = new Set(values);
+
+      this.value.set(this.value().filter((value) => !remove.has(value)));
+
+      return;
+    }
+    const next = new Set(this.value());
+    values.forEach((value) => next.add(value));
+    this.value.set([...next]);
+  }
 
   protected toggleSelectAll(): void {
     const enabledValues = this.enabledFiltered().map((o) => o.value);

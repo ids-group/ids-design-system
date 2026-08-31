@@ -2,6 +2,7 @@
    this component's encapsulation attributes — which is why both halves are styled
    here rather than the panel living in a global partial. */
 @use '../../styles/field-box' as field-box;
+@use '../../styles/field-label' as field-label;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/focus' as focus;
 @use '../../styles/field-group-segment' as field-group-segment;
@@ -34,6 +35,14 @@
   --_autocomplete-maxw: var(--ds-autocomplete-maxw, 100%);
 
   width: fit-content;
+}
+
+.label {
+  @include field-label.field-label;
+
+  .req {
+    color: var(--error);
+  }
 }
 
 .autocomplete-trigger {
@@ -189,12 +198,6 @@
       background-color: var(--accent);
       border-color: var(--accent);
     }
-  }
-
-  .empty {
-    padding: var(--space-3) var(--space-4);
-    color: var(--text-tertiary);
-    text-align: center;
   }
 
   .create-row {

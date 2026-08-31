@@ -97,13 +97,50 @@
       "detect": ["[optionGroups]", "optionGroups="],
       "verify": "The autocomplete renders its labelled sections with only `options` bound, and filtering still hides a group whose options all fail the query.",
       "restore": null
+    },
+    {
+      "id": "multi-select-panel-classes-renamed",
+      "kind": "class-rename",
+      "old": ".panel, .options (inside ds-multi-select’s portaled panel)",
+      "new": ".dropdown-panel, .dropdown-list",
+      "action": "Retarget any rule naming the old classes, then delete the ones that only restored what the shared panel already gives.",
+      "note": "The multi-select carried its own copy of the panel and the option row while its pane also carried ds-dropdown-panel, so both rule sets applied at once and the component’s won. It renders through the shared partial now, like the other two pickers.",
+      "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .panel` or `.options` for the multi-select.",
+      "pitfall": "The panel is portaled to document.body, so such a rule is almost always global rather than beside the component.",
+      "searchHints": ["ds-overlay-pane .panel", ".options"],
+      "surface": "style",
+      "detect": [".ds-overlay-pane .panel", ".ds-overlay-pane .options"],
+      "verify": "The multi-select panel renders with 4px padding and 4px row radius with no rule of yours, and its rows respond to --ds-option-* like the other two pickers.",
+      "restore": null
+    },
+    {
+      "id": "trigger-display-compact-renamed",
+      "kind": "value-remap",
+      "old": "triggerDisplay=\"compact\"",
+      "new": "triggerDisplay=\"count\"",
+      "map": {
+        "compact": "count"
+      },
+      "action": "Replace the value `compact` with `count`.",
+      "note": "A third value, `labels`, now sits beside it and names the selection instead of counting it, so the old name no longer said which of the two it was.",
+      "appliesWhen": "You set triggerDisplay on a ds-multi-select. The input shipped inside this same unreleased block, so only work in flight is affected.",
+      "pitfall": "None — the rendering of `count` is exactly what `compact` did.",
+      "searchHints": ["triggerDisplay"],
+      "surface": "template",
+      "detect": ["triggerDisplay=\"compact\"", "triggerDisplay: 'compact'"],
+      "verify": "The trigger still shows a caption and a count badge.",
+      "restore": null
     }
   ],
   "informational": [
     "ds-multi-select and ds-select gained `width`, the input ds-autocomplete already had: `content` takes the trigger width as the panel's floor instead of its width, so a short trigger stops forcing an unreadable panel. Default `fill` is unchanged.",
     "New panel bounds for that mode: --ds-dropdown-panel-minw and --ds-dropdown-panel-maxw.",
     "ds-select now forwards its panel custom properties onto the portaled pane, which it never did — a `ds-select { --ds-dropdown-panel-*: … }` reaches the panel now instead of being silently dropped.",
-    "ds-multi-select gained option groups, which it never had. A group disables all of its options when its own `disabled` is set."
+    "ds-multi-select gained option groups, which it never had. A group disables all of its options when its own `disabled` is set.",
+    "ds-multi-select and ds-autocomplete gained `label`, `required` and `optional`; ds-multi-select gained `size`. All three existed on ds-select alone.",
+    "New slots: dsEmptyTemplate on all three pickers, dsCreateTemplate on ds-autocomplete. ds-select shows an empty row when it has no options, where it used to open a blank panel.",
+    "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false.",
+    "docs/picker-contract.md states the rules the three pickers share, and `npm run picker-parity` lists every member that is not shared."
   ],
   "deleteList": [
     {

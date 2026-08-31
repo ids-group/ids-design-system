@@ -87,6 +87,13 @@
     gap: 2px;
   }
 
+  /* Every picker's "nothing to show" row, so the three do not each invent one. */
+  .empty {
+    padding: var(--space-3) var(--space-4);
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+
   .option {
     display: flex;
     align-items: center;

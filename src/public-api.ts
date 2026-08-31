@@ -79,6 +79,8 @@ export * from './lib/components/switch';
 export * from './lib/components/static-preview.directive';
 export * from './lib/components/option-template.directive';
 export * from './lib/components/picker-trigger.directive';
+export * from './lib/components/empty-template.directive';
+export * from './lib/components/create-template.directive';
 export * from './lib/components/chip-template.directive';
 export * from './lib/components/field-click-focus.directive';
 export {

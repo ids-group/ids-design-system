@@ -238,6 +238,18 @@
           </li>
         }
       }
+      @if (options().length === 0) {
+        <li
+          class="empty t-s"
+          role="status"
+        >
+          @if (emptyTemplate(); as tpl) {
+            <ng-container [ngTemplateOutlet]="tpl" />
+          } @else {
+            No options
+          }
+        </li>
+      }
     </ul>
   </div>
 </ng-template>

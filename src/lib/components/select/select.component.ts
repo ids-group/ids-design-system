@@ -47,6 +47,7 @@ import { nextControlId } from '../field-ids';
 import { resolveWithConfig } from '../../core/config-defaults';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
+import { DsEmptyTemplateDirective } from '../empty-template.directive';
 
 @Component({
   selector: 'ds-select',
@@ -148,6 +149,9 @@ export class SelectComponent
     read: TemplateRef,
   });
   protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
+    read: TemplateRef,
+  });
+  protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
     read: TemplateRef,
   });
 
