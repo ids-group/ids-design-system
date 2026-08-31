@@ -24,8 +24,8 @@
 
 <div
   #trigger
-  [class]="'field-trigger ' + sizeResolved()"
   aria-haspopup="listbox"
+  [class]="'field-trigger ' + sizeResolved()"
   [attr.role]="open() ? 'group' : 'combobox'"
   [class.open]="open()"
   [class.disabled]="isDisabled()"
@@ -53,7 +53,9 @@
       }"
     />
   } @else if (showsCompactTrigger()) {
-    <span class="trigger-caption">{{ triggerCaption() }}</span>
+    <span class="trigger-caption">
+      {{ triggerCaption() }}
+    </span>
 
     @if (triggerDisplay() === 'labels' && selectedOptions().length > 0) {
       <span
@@ -65,7 +67,9 @@
           <span
             data-chip
             class="trigger-label"
-            >{{ option.label }}</span
+            >
+            {{ option.label }}
+          </span
           >
         }
 
@@ -73,7 +77,9 @@
           <span
             class="overflow"
             data-chip-overflow
-            >+{{ overflowCount() }}</span
+            >
+            +{{ overflowCount() }}
+          </span
           >
         }
       </span>
@@ -196,7 +202,9 @@
           }
         </span>
 
-        <span class="select-all-label"> Select all </span>
+        <span class="select-all-label">
+          Select all
+        </span>
       </button>
     }
 

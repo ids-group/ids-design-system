@@ -21,15 +21,25 @@ COMPACT TRIGGER CAPTION on `ds-multi-select`. Same input, two meanings, one rele
 A member may be absent from a picker only for a reason that can be stated in one line. Two lists,
 kept honest by the audit in §6:
 
-**Absent by design.** `multiple`, `allowCreate`, `create`, `showChevron`, `valueOverflow` —
-autocomplete only, because they describe typing and a settled single value. `maxVisibleChips` and
-`dsChipTemplate` — the two that render chips, because `ds-select` holds one value and has none.
-`selectAll` and `triggerDisplay` — the multi-value pickers, because a single value has nothing to
-select all of and nothing to count.
+**Absent by design.** `multiple`, `allowCreate`, `create`, `dsCreateTemplate`, `showChevron`,
+`valueOverflow` — autocomplete only, because they describe typing and a settled single value.
+`maxVisibleChips` and `dsChipTemplate` — the two that render chips, because `ds-select` holds one
+value and has none. `selectAll` and `triggerDisplay` — the multi-value pickers, because a single
+value has nothing to select all of and nothing to count. `searchable` and `searchPlaceholder` —
+`ds-multi-select` only, because it is the one picker whose filter is a row INSIDE the panel; the
+other two type in the trigger, and a single value that needs filtering is `ds-autocomplete` by
+definition.
 
-**Absent by accident, and therefore a defect.** Anything else. When this file was written that was:
+**Absent by accident, and therefore a defect.** Anything else. When this file was written that was
 `size`, `required`, `optional`, `readOnly`, `name`, `clearable` and `label` — form-contract members
-that existed on `ds-select` and nowhere else.
+that existed on `ds-select` and nowhere else. `size`, `required`, `optional` and `label` are shared
+as of this release.
+
+Three are still open, and knowingly: `name`, `readOnly` (with its `readonly` binding alias) and
+`clearable`. Each pulls behaviour rather than only an input — a hidden control for native submit, a
+focusable-but-inert state, a clear affordance that has to decide what "empty" means for a multi-value
+trigger — so they are queued as one piece of work rather than half-done here. Until they land, this
+paragraph is the "stated reason" §2 demands; the parity audit will keep printing them.
 
 ## 3. The panel is one implementation
 
