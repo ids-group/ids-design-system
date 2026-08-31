@@ -48,6 +48,7 @@ import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
 import {
   firstEnabledIndex as firstEnabledOf,
   lastEnabledIndex as lastEnabledOf,
+  nextEnabledIndex,
 } from '../../core/list-cursor';
 import { scrollActiveOptionIntoView } from '../scroll-active-option';
 import { announceOptionCount } from '../picker-announcer';
@@ -189,8 +190,6 @@ export class AutocompleteComponent<T = unknown>
    * by NAME — a `readonly()` rule was reaching nothing before this existed.
    */
   readonly readonlyBinding = input(false, {
-    // The alias IS the point: signal forms binds by name, and the contract
-    // spells it `readonly` where the DS spells it `readOnly`.
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'readonly',
     transform: booleanAttribute,
@@ -464,8 +463,6 @@ export class AutocompleteComponent<T = unknown>
       return '';
     }
     if (this.displayLabel()) {
-      // A value is settled, so the field is a search box now, not an empty field.
-      // `searchPlaceholder` is what says so; empty keeps the old silence.
       return this.searchPlaceholder();
     }
 
@@ -542,7 +539,11 @@ export class AutocompleteComponent<T = unknown>
 
   constructor() {
     super();
-    scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
+    scrollActiveOptionIntoView(
+      this.activeDescendant,
+      this.scrollActiveIntoView,
+      this.cursorFromKeyboard,
+    );
     announceOptionCount(
       computed(() => this.filteredOptions().length),
       this.isOpen,
@@ -560,6 +561,13 @@ export class AutocompleteComponent<T = unknown>
   protected readonly isReadOnly = computed(
     () => this.readOnly() || this.readonlyBinding(),
   );
+
+  protected readonly cursorFromKeyboard = signal(false);
+
+  /** How far PageUp and PageDown move. Ten rows is the native `<select>` step and
+   *  the APG listbox example's — a fixed number rather than a measured screenful,
+   *  so the jump is the same wherever the panel happens to be clipped. */
+  private static readonly pageStep = 10;
 
   private cursorList() {
     const options = this.visibleOptions();
@@ -594,6 +602,7 @@ export class AutocompleteComponent<T = unknown>
   }
 
   protected onKeydown(event: KeyboardEvent): void {
+    this.cursorFromKeyboard.set(true);
     if (this.isDisabled()) {
       return;
     }
@@ -637,6 +646,26 @@ export class AutocompleteComponent<T = unknown>
         }
         break;
       }
+      case 'PageDown':
+        event.preventDefault();
+        this.activeIndex.set(
+          nextEnabledIndex(
+            this.cursorList(),
+            this.activeIndex(),
+            AutocompleteComponent.pageStep,
+          ),
+        );
+        break;
+      case 'PageUp':
+        event.preventDefault();
+        this.activeIndex.set(
+          nextEnabledIndex(
+            this.cursorList(),
+            this.activeIndex(),
+            -AutocompleteComponent.pageStep,
+          ),
+        );
+        break;
       case 'Home':
         event.preventDefault();
         this.activeIndex.set(firstEnabledOf(this.cursorList()));
@@ -743,6 +772,12 @@ export class AutocompleteComponent<T = unknown>
     this.markTouched();
   }
 
+  protected clearValue(event: MouseEvent): void {
+    event.stopPropagation();
+    this.clear();
+    this.markTouched();
+  }
+
   /**
    * Empties the field — both the selected value and the text the user typed.
    *
@@ -755,12 +790,6 @@ export class AutocompleteComponent<T = unknown>
    * Deliberately does NOT move focus — the caller may be navigating away, and
    * stealing focus back into a field they just left is worse than leaving it.
    */
-  protected clearValue(event: MouseEvent): void {
-    event.stopPropagation();
-    this.clear();
-    this.markTouched();
-  }
-
   clear(): void {
     this.value.set(this.multiple() ? [] : null);
     this.query.set('');

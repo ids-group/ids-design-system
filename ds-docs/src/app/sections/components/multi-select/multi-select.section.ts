@@ -93,8 +93,6 @@ export class MultiSelectSection {
     this.fetchPeople(query);
   }
 
-  /** Stands in for a request: the delay is what makes the spinner and the
-   *  `filterWith="none"` contract visible on this page. */
   private fetchPeople(query: string): void {
     this.serverLoading.set(true);
     setTimeout(() => {

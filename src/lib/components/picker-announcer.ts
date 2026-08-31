@@ -3,10 +3,6 @@ import { type Signal, effect, inject, DOCUMENT } from '@angular/core';
 /**
  * Announces how many options survived the filter.
  *
- * A reader types into a picker's filter and, without this, hears nothing: the
- * rows change but no live region says so, and `aria-activedescendant` moving is
- * not an announcement. All three pickers had that.
- *
  * Deliberately NOT a row inside the listbox. A live region there is an invalid
  * child and, worse, a region created together with its text is the case screen
  * readers reliably do not announce — there is no content CHANGE to fire on. The

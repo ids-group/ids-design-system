@@ -36,7 +36,11 @@
     "ds-multi-select no longer carries its own panel rules at all; --ds-multi-select-option-bg-color-active is an alias of the shared --ds-option-bg-color-active and still works.",
     "The select-all row now reads the option row's gap and padding, so it lines up with the options below it; it was one step wider before.",
     "DsOption gained disabledReason, announced through aria-describedby on a disabled row.",
-    "Type-ahead is on ds-select and ds-multi-select, not ds-autocomplete, whose trigger is a text field."
+    "Type-ahead is on ds-select and ds-multi-select, not ds-autocomplete, whose trigger is a text field.",
+    "PageUp and PageDown move the cursor ten rows on all three pickers; none had them.",
+    "clear() is public on all three pickers now; it empties the value and does not move focus.",
+    "scrollActiveIntoView follows the KEYBOARD only — the rows also set the active index on mouseenter, and reacting to that pulled a half-visible row under the pointer.",
+    "aria-multiselectable stays absent from ds-select on purpose: ARIA permits it only on a multi-value listbox. docs/picker-contract.md states this so nobody adds it to satisfy the audit."
   ],
   "deleteList": []
 }

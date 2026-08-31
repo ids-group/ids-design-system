@@ -108,14 +108,12 @@ export class AutocompleteSection {
     buildOwners(),
   );
 
-  /** Keyed on the id, not the object: that is the whole point of the demo. */
   protected readonly sameOwner = (
     first: DemoOwner | null,
     second: DemoOwner | null,
   ): boolean => first?.id === second?.id;
 
   protected refetchOwners(): void {
-    // Fresh objects with the same data — what a real refetch returns.
     this.ownerOptions.set(buildOwners());
   }
 

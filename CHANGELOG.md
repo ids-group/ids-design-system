@@ -12,12 +12,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
   `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` all gained members for the
+  inputs and outputs above, and `DsPanelHeaderTemplateDirective`, `DsPanelFooterTemplateDirective` and
+  `DsGroupLabelTemplateDirective` are new classes. Also for the
   inputs and outputs above. Subclassing a DS component is unsupported but consumers do it, and a
   member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
   if you meant to replace ours — the compiler enumerates every collision, so building after the
   upgrade is the whole check.
 
 ### Added
+
+- **`PageUp` and `PageDown`.** Ten rows a press, which is the native `<select>` step and the APG
+  listbox example’s — a fixed number rather than a measured screenful, so the jump is the same
+  wherever the panel happens to be clipped. No picker had these.
+
+- **`clear()` on `ds-select` and `ds-multi-select`.** `ds-autocomplete` has had it; the other two
+  offered only the in-trigger button, so an app with its own “reset filters” had to write the empty
+  value by hand and guess what empty means for that control. It does NOT move focus, deliberately:
+  the caller may be navigating away.
+
 
 - **Panel header and footer slots.** The panel was a closed box between the filter row and the
   options: "3 of 40 selected", a "clear all" button, a hint or a link under the list had nowhere to

@@ -165,8 +165,6 @@ export class MultiSelectComponent
    * by NAME — a `readonly()` rule was reaching nothing before this existed.
    */
   readonly readonlyBinding = input(false, {
-    // The alias IS the point: signal forms binds by name, and the contract
-    // spells it `readonly` where the DS spells it `readOnly`.
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'readonly',
     transform: booleanAttribute,
@@ -562,9 +560,27 @@ export class MultiSelectComponent
 
   protected clearValue(event: MouseEvent): void {
     event.stopPropagation();
-    this.value.set([]);
+    this.clear();
     this.markTouched();
+    // The button that ran this is being destroyed with the chips, so focus would
+    // fall to <body>. The public clear() below leaves focus alone on purpose.
     this.trigger().nativeElement.focus();
+  }
+
+  /**
+   * Empties the selection from outside — a "reset filters" button, a form the app
+   * clears itself. `ds-autocomplete` has had this; the other two had only the
+   * in-trigger button.
+   *
+   * Deliberately does NOT move focus: the caller may be navigating away, and
+   * stealing focus back into a field they just left is worse than leaving it.
+   */
+  clear(): void {
+    this.value.set([]);
+    this.filter.set('');
+    if (this.open()) {
+      this.close('dismiss');
+    }
   }
 
   protected removeValue(value: string): void {
@@ -576,7 +592,11 @@ export class MultiSelectComponent
 
   constructor() {
     super();
-    scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
+    scrollActiveOptionIntoView(
+      this.activeDescendant,
+      this.scrollActiveIntoView,
+      this.cursorFromKeyboard,
+    );
     announceOptionCount(
       computed(() => this.filteredOptions().length),
       this.open,
@@ -604,8 +624,6 @@ export class MultiSelectComponent
 
   private readonly typeAhead = createTypeAhead();
 
-  /** Typing a letter jumps to the next option starting with it, the way a native
-   *  `<select>` does. Returns whether the key was consumed. */
   private handleTypeAhead(key: string): boolean {
     const index = this.typeAhead.match(key, this.filteredOptions().map((option) => option.label), this.activeIndex());
     if (index < 0) {
@@ -615,6 +633,8 @@ export class MultiSelectComponent
 
     return true;
   }
+
+  protected readonly cursorFromKeyboard = signal(false);
 
   private cursorList() {
     const options = this.filteredOptions();
@@ -630,6 +650,7 @@ export class MultiSelectComponent
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
+    this.cursorFromKeyboard.set(true);
     if (this.isDisabled()) {
       return;
     }
@@ -654,14 +675,13 @@ export class MultiSelectComponent
 
       return;
     }
-    // Only while the panel is shut: an open panel with a filter row means the
-    // characters are the user's query, not a jump.
     if (!this.open() && this.handleTypeAhead(event.key)) {
       event.preventDefault();
     }
   }
 
   protected onSearchKeydown(event: KeyboardEvent): void {
+    this.cursorFromKeyboard.set(true);
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
@@ -682,6 +702,14 @@ export class MultiSelectComponent
       case 'Escape':
         event.preventDefault();
         this.close('dismiss');
+        break;
+      case 'PageDown':
+        event.preventDefault();
+        this.moveActive(MultiSelectComponent.pageStep);
+        break;
+      case 'PageUp':
+        event.preventDefault();
+        this.moveActive(-MultiSelectComponent.pageStep);
         break;
       case 'Home':
         event.preventDefault();
@@ -803,6 +831,11 @@ export class MultiSelectComponent
       this.trigger().nativeElement.focus({ preventScroll: true });
     }
   }
+
+  /** How far PageUp and PageDown move. Ten rows is the native `<select>` step and
+   *  the APG listbox example's — a fixed number rather than a measured screenful,
+   *  so the jump is the same wherever the panel happens to be clipped. */
+  private static readonly pageStep = 10;
 
   private moveActive(delta: number): void {
     const next = nextEnabledIndex(this.cursorList(), this.activeIndex(), delta);

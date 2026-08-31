@@ -5,9 +5,6 @@
  * and keeps extending the buffer while the user keeps typing. The timeout is what
  * separates "ba" from two separate "b" and "a" presses; 500ms is the interval
  * every native control and APG example uses.
- *
- * Kept out of the components because all three want it and `ds-menu` already
- * hand-rolled a single-character version — a fourth copy is what this prevents.
  */
 const RESET_AFTER_MS = 500;
 
@@ -34,8 +31,6 @@ export function createTypeAhead(): DsTypeAhead {
       last = now;
 
       const query = buffer.toLowerCase();
-      // Repeating one character cycles through the options starting with it,
-      // which is what a native select does and what a reader expects.
       const cycling = buffer.length > 1 && [...buffer].every((character) => character === buffer[0]);
       const needle = cycling ? buffer[0].toLowerCase() : query;
       const start = cycling || buffer.length === 1 ? from + 1 : 0;

@@ -2,19 +2,7 @@
  * Index arithmetic for a keyboard cursor over a list of options.
  *
  * Every picker walks the same four ways — next, previous, first, last — skipping
- * whatever is disabled and wrapping at the ends. Three of them had written that
- * walk out separately, with three different loop shapes and one off-by-one, which
- * is what this replaces.
- *
- * It deliberately knows nothing about WHERE the cursor is applied.
- * `ds-select`, `ds-multi-select` and `ds-autocomplete` point
- * `aria-activedescendant` at a row id; `ds-menu` moves real DOM focus through a
- * roving `tabindex`. Only the arithmetic is shared, and forcing the application
- * to be shared as well is what made the earlier survey recommend against a base
- * class.
- *
- * @param length how many entries the list has right now
- * @param isEnabled whether the entry at that index can take the cursor
+ * whatever is disabled and wrapping at the ends.
  */
 export interface DsListCursorList {
   length: number;
@@ -47,7 +35,7 @@ export function lastEnabledIndex(list: DsListCursorList): number {
  *
  * `from` of -1 means "no cursor yet": stepping forward lands on the first
  * enabled entry and stepping back on the last, which is what a reader expects
- * from a freshly opened panel and what the hand-written loops got wrong.
+ * from a freshly opened panel.
  */
 export function nextEnabledIndex(
   list: DsListCursorList,

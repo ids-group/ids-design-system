@@ -32,6 +32,11 @@ filter the user is typing. `searchable` and `searchPlaceholder` — `ds-multi-se
 it is the one picker whose filter is a row INSIDE the panel. `ds-autocomplete` filters from its
 trigger input, and `ds-select` has no text entry at all, so neither has a row to show or hide.
 
+**Absent because the role forbids it.** `aria-multiselectable` — `ds-select` holds one value, and
+ARIA only permits the attribute on a listbox that takes several. The capability audit prints it as a
+row `ds-select` does not have, and that row is correct: adding it would be a defect, not parity. This
+paragraph exists so nobody “fixes” the audit by adding it.
+
 **Absent by accident, and therefore a defect.** Anything else. When this file was written that was
 `required`, `optional`, `readOnly`, `name`, `clearable` and `label` — form-contract members that
 existed on `ds-select` and nowhere else — plus `size`, which `ds-multi-select` alone lacked.

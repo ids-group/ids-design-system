@@ -218,6 +218,7 @@
                 [attr.aria-disabled]="option.disabled ? 'true' : null"
                 (click)="onPick(option)"
                 (mouseenter)="
+                  cursorFromKeyboard.set(false);
                   option.disabled || activeIndex.set(flatIndexOf(option))
                 "
               >
@@ -280,7 +281,8 @@
             [attr.aria-disabled]="option.disabled ? 'true' : null"
             (click)="onPick(option)"
             (mouseenter)="
-              option.disabled || activeIndex.set(flatIndexOf(option))
+              cursorFromKeyboard.set(false);
+                  option.disabled || activeIndex.set(flatIndexOf(option))
             "
           >
             @if (multiple()) {
@@ -362,7 +364,10 @@
           [class.is-active]="activeIndex() === visibleOptions().length"
           [attr.aria-selected]="false"
           (click)="onCreateNew()"
-          (mouseenter)="activeIndex.set(visibleOptions().length)"
+          (mouseenter)="
+            cursorFromKeyboard.set(false);
+            activeIndex.set(visibleOptions().length)
+          "
         >
           <ds-icon
             name="plus"

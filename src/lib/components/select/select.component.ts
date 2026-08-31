@@ -310,13 +310,16 @@ export class SelectComponent
 
   constructor() {
     super();
-    scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
+    scrollActiveOptionIntoView(
+      this.activeDescendant,
+      this.scrollActiveIntoView,
+      this.cursorFromKeyboard,
+    );
     announceOptionCount(
       computed(() => this.flatOptions().length),
       this.open,
     );
 
-    super();
     effect(() => {
       if (!this.open()) {
         return;
@@ -431,8 +434,24 @@ export class SelectComponent
 
   protected clearValue(event: MouseEvent): void {
     event.stopPropagation();
-    this.value.set('');
+    this.clear();
     this.markTouched();
+  }
+
+  /**
+   * Empties the selection from outside — a "reset filters" button, a form the app
+   * clears itself. `ds-autocomplete` has had this; the other two had only the
+   * in-trigger button, so an app with its own reset had to write the empty value
+   * by hand and guess what "empty" is for this control.
+   *
+   * Deliberately does NOT move focus: the caller may be navigating away, and
+   * stealing focus back into a field they just left is worse than leaving it.
+   */
+  clear(): void {
+    this.value.set('');
+    if (this.open()) {
+      this.close('dismiss');
+    }
   }
 
   protected isSelected(option: SelectOption): boolean {
@@ -447,6 +466,7 @@ export class SelectComponent
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
+    this.cursorFromKeyboard.set(true);
     if (
       this.isDisabled() ||
       this.isReadOnly() ||
@@ -509,6 +529,18 @@ export class SelectComponent
 
       return;
     }
+    if (key === 'PageDown') {
+      event.preventDefault();
+      this.moveActive(SelectComponent.pageStep);
+
+      return;
+    }
+    if (key === 'PageUp') {
+      event.preventDefault();
+      this.moveActive(-SelectComponent.pageStep);
+
+      return;
+    }
     if (key === 'Home') {
       event.preventDefault();
       this.activeIndex.set(this.firstEnabledIndex());
@@ -529,8 +561,6 @@ export class SelectComponent
     }
   }
 
-  /** A closed control commits the jump straight away — the native `<select>`
-   *  behaviour a reader is used to. An open one only moves the cursor. */
   private pickActive(): void {
     const entry = this.flatOptions()[this.activeIndex()];
     if (entry) {
@@ -544,8 +574,6 @@ export class SelectComponent
 
   private readonly typeAhead = createTypeAhead();
 
-  /** Typing a letter jumps to the next option starting with it, the way a native
-   *  `<select>` does. Returns whether the key was consumed. */
   private handleTypeAhead(key: string): boolean {
     const index = this.typeAhead.match(key, this.flatOptions().map((entry) => entry.option.label), this.activeIndex());
     if (index < 0) {
@@ -556,6 +584,8 @@ export class SelectComponent
     return true;
   }
 
+  protected readonly cursorFromKeyboard = signal(false);
+
   private cursorList() {
     const opts = this.flatOptions();
 
@@ -565,6 +595,11 @@ export class SelectComponent
         !opts[index].option.disabled && !opts[index].groupDisabled,
     };
   }
+
+  /** How far PageUp and PageDown move. Ten rows is the native `<select>` step and
+   *  the APG listbox example's — a fixed number rather than a measured screenful,
+   *  so the jump is the same wherever the panel happens to be clipped. */
+  private static readonly pageStep = 10;
 
   private moveActive(delta: number): void {
     const next = nextEnabledIndex(this.cursorList(), this.activeIndex(), delta);
