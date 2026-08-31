@@ -68,5 +68,11 @@ ones that are not shared. Run it after touching any of them: a new row is either
 "absent by design" list in §2, or a defect to fix.
 
 ```bash
-npm run picker-parity
+npm run picker-parity       # which members are not shared
+npm run picker-capabilities # which behaviours are missing, and from whom
 ```
+
+The second one probes for behaviour rather than API surface — value comparison, Home/End, a loading
+state, a filter predicate, virtualisation, live announcements. It is how the sixteen proposals in
+the decision deck were found, and it is the cheap way to check that a new picker does not arrive
+missing the same things.
