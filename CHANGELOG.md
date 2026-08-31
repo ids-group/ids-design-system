@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.11.1 — 2026-08-31
+
 ### Added
 
 - **Group helpers, for building and narrowing an options array.** Alongside `DsOptionGroup<T>` —
