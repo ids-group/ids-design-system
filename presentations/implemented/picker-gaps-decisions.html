@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
 <title>Пикеры: развилки к решению</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
 <meta name="ds-deck-decided" content="2026-08-31">
-<meta name="ds-deck-evidence" content="docs/picker-contract.md - CHANGELOG.md 0.12.0 - open only because §9 has no verdict yet">
-<link rel="stylesheet" href="ds.css">
+<meta name="ds-deck-evidence" content="docs/picker-contract.md - CHANGELOG.md 0.11.1 and Unreleased - docs/done.md">
+<link rel="stylesheet" href="../ds.css">
 <style>
   body {
     margin: 0;
@@ -695,9 +695,9 @@
 <header>
   <h1>Пикеры: семь решений</h1>
   <p class="lede">
-    Семь решений приняты, реализованы и уходят в релиз — они свёрнуты, разворачивай, если нужно
-    вспомнить, что именно выбрано. Открыто одно: <a href="#proposals">§9</a>, шестнадцать
-    предложений на следующую версию.
+    Все разделы закрыты: семь решений §1–§7, четыре правки §8 и шестнадцать предложений §9 —
+    пятнадцать сделаны, виртуализация записана в <code>docs/todo.md</code> с причиной.
+    Разворачивай раздел, если нужно вспомнить, что именно выбрано и почему.
   </p>
 
   <div class="summary">
@@ -716,10 +716,10 @@
       </table>
     </div>
     <div class="headline">
-      <strong>Все семь реализованы, проверены и релизятся.</strong> Открытых решений по ним не
-      осталось, поэтому секции свёрнуты. Твоё — <a href="#proposals">§9</a>: шестнадцать
-      предложений, из них три дефекта; и <a href="#better">§8</a>: четыре правки поверх уже
-      отгруженного. Всё это следующая версия, релиз их не ждёт.
+      <strong>Ничего не ждёт твоего вердикта.</strong> Семь решений и четыре правки §8
+      отгружены, из шестнадцати предложений §9 сделано пятнадцать. Единственное несделанное —
+      виртуализация: она воюет с <code>aria-activedescendant</code>, и это записано в
+      <code>docs/todo.md</code> с порогом, при котором её стоит брать.
     </div>
   </div>
 
@@ -1565,12 +1565,14 @@
   </details>
 </section>
 
-<section class="item" id="proposals">
-  <div class="item-head">
+<section class="item shipped" id="proposals">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§9</span>
     <h2>Ещё 16 предложений</h2>
     <span class="covers">снято аудитом, не придумано</span>
-  </div>
+      <span class="decided">закрыто</span>
+  </summary>
 
   <p>
     <strong>Все шестнадцать получили вердикт, пятнадцать сделаны.</strong> Ниже под каждым пунктом —
@@ -1734,14 +1736,17 @@
       свободу. <strong>P5</strong> — последним: дороже всех и нужен реже.
     </p>
   </div>
+  </details>
 </section>
 
-<section class="item" id="better">
-  <div class="item-head">
+<section class="item shipped" id="better">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§8</span>
     <h2>Что ещё можно сделать лучше</h2>
     <span class="covers">не решено · предложения поверх принятого</span>
-  </div>
+      <span class="decided">закрыто</span>
+  </summary>
 
   <p>
     Всё, что решено, реализовано и проверено. Это — идеи сверх того, каждая меняет уже отгруженное
@@ -1749,7 +1754,7 @@
   </p>
 
   <div class="options">
-    <div class="opt recommended" data-opt="b1">
+    <div class="opt recommended chosen" data-opt="b1">
       <div class="opt-head"><span class="opt-id">B1</span><span class="opt-name">Довести §7 до конца: у мульти-селекта своя копия панели</span><span class="rec-flag">рекомендую</span></div>
       <div class="opt-body">
         <p>
@@ -1764,10 +1769,10 @@
           движение, что §7, и после него правило про строку опции живёт ровно в одном файле.
         </p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> вид меняется — зазор в строке <code>--space-3</code> против <code>--space-2</code> у общей партиалки. Это надо посмотреть глазами, поэтому не сделано.</div>
+      <div class="opt-cost"><strong>сделано:</strong> У мульти-селекта не осталось <strong>ни одного</strong> своего правила панели. Держалось на двух вещах: его строка опции — настоящая <code>&lt;button&gt;</code>, поэтому честный селектор <code>:disabled</code>, а партиалка красила <code>.is-disabled</code>; и свой кап высоты списка. Партиалка теперь делает и то и другое.</div>
     </div>
 
-    <div class="opt" data-opt="b2">
+    <div class="opt chosen" data-opt="b2">
       <div class="opt-head"><span class="opt-id">B2</span><span class="opt-name">Компактный триггер показывает метки, а не только счётчик</span></div>
       <div class="opt-body">
         <div class="opt-preview">
@@ -1784,10 +1789,10 @@
           метки.
         </p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> триггер перестаёт быть фиксированной ширины, а именно ради неё <code>compact</code> и заводился. Возможно, это третий режим, а не замена.</div>
+      <div class="opt-cost"><strong>сделано:</strong> <code>triggerDisplay="labels"</code>. Плюс исправлен дефект, который эта же карточка оценивала как «надо посмотреть глазами»: измерение читало ширину, которую само же и меняло.</div>
     </div>
 
-    <div class="opt" data-opt="b3">
+    <div class="opt chosen" data-opt="b3">
       <div class="opt-head"><span class="opt-id">B3</span><span class="opt-name">Слоты для пустого состояния и строки «создать»</span></div>
       <div class="opt-body">
         <p>
@@ -1797,10 +1802,10 @@
           целиком.
         </p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> ещё один контракт проекции в довесок к двум из §3.</div>
+      <div class="opt-cost"><strong>сделано:</strong> <code>dsEmptyTemplate</code> у всех трёх, <code>dsCreateTemplate</code> у автокомплита. <code>ds-select</code> заодно получил пустое состояние, которого у него не было вовсе — он открывал пустую панель.</div>
     </div>
 
-    <div class="opt" data-opt="b4">
+    <div class="opt chosen" data-opt="b4">
       <div class="opt-head"><span class="opt-id">B4</span><span class="opt-name">«Выбрать все» внутри группы</span></div>
       <div class="opt-body">
         <p>
@@ -1808,19 +1813,23 @@
           Теперь они есть, и «выбрать всю команду» становится очевидным жестом.
         </p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> второй контрол и второе неопределённое состояние рядом с глобальным, который никуда не девается.</div>
+      <div class="opt-cost"><strong>сделано:</strong> <code>selectAll</code> принимает <code>'group'</code> и <code>'both'</code>. Строка группы отключается вместе с группой и показывает смешанное состояние.</div>
     </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="deferred">
-  <div class="item-head"><h2>Отложено</h2></div>
+<section class="item shipped" id="deferred">
+  <details>
+  <summary class="item-head"><h2>Отложено</h2>    <span class="decided">закрыто</span>
+  </summary>
   <p>
     <strong>Локализация.</strong> В пикерах 6 захардкоженных строк, вне пикеров ещё 34
     <code>aria-label</code> плюс видимый текст в таблице и сайднав-футере. Это библиотечная тема, а не
     правка пикеров — заведена пунктом P2 в <code>docs/todo.md</code>. Развилка на будущее: токен
     <code>DS_INTL</code> против входов на экземпляре, как уже сделано в <code>ds-filter-bar</code>.
   </p>
+  </details>
 </section>
 
 </main>

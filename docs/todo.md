@@ -20,24 +20,24 @@
   five thousand rows in the first place. Worth doing when a consumer shows a list that must be long AND
   unfiltered.
 
-## Decks awaiting a verdict (audited 2026-08-31)
+## Decks awaiting a verdict (re-audited 2026-09-01)
 
-Nine decks carry `ds-deck-status: open`, which means each is a question that has not been answered.
-Listed so none of them is lost — several predate this week.
+Seven decks carry `ds-deck-status: open`. The two picker decks closed — every question in them is
+answered and they moved to `presentations/implemented/`.
 
-| Deck | Asks |
-| --- | --- |
-| `picker-gaps-decisions.html` | **§8** four changes on top of what shipped — the panel-copy one is closed, three remain. **§9** is answered: fifteen of the sixteen proposals are built, one (virtualisation) is recorded below, and every card carries what actually happened rather than an estimate. |
-| `picker-review-findings.html` | Not a question — the record of the 43 findings and, in §9, exactly what was renamed, moved and deleted. Read it to check the work, not to decide. |
-| `public-surface-verdicts.html` | What to cut from the public surface and what to keep. |
-| `migration-manifest-audit.html` | 23 findings against the shipped manifests. |
-| `packaging-entry-points.html` | MBP-133 — one entry point, and the four ways out. Pairs with the P2 ask about keeping the DS out of a consumer's initial bundle. |
-| `color-engine-derivation.html` + `color-engine-relative.html` | Two decks on the same question — one source token per role, derived. Pairs with the P2 colour-engine decision. |
-| `interaction-formula.html` | State interactions by formula, calibrated against the drawn ramp. Pairs with the `.ds-interactive` P2. |
-| `select-native-multi.html` | Whether `ds-select` native `multi` is worth building. Its backlog item is already Parked, so this deck may be answerable with "keep parked" and closed. |
+**Three have a backlog twin waiting on the same answer, so answering one closes two lines.** That is
+what makes these the cheapest thing on the board.
 
-**Three of these have a backlog twin** (colour engine, `.ds-interactive`, native multi): the deck is
-the argument, the backlog line is the placeholder. Answering the deck closes both.
+| Deck | Asks | Twin |
+| --- | --- | --- |
+| `color-engine-derivation` + `color-engine-relative` | One source token per role, derived. Two decks, one question. | the P2 colour-engine decision |
+| `interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
+| `select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
+| `public-surface-verdicts` | What to cut from the public surface, what to keep. | — |
+| `migration-manifest-audit` | 23 findings against the shipped manifests. Partly overtaken: the class-collision half became a gate on 2026-09-01. | — |
+| `packaging-entry-points` | MBP-133 — one entry point, and the four ways out. | the P2 ask about keeping the DS out of a consumer's initial bundle |
+
+---
 
 ---
 
@@ -138,25 +138,23 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 
   **Where it landed:** 2 was done — the partial owns the geometry, the components only alias its tokens, and the qualifier from 1 was removed because there is no competing rule left to out-rank. 3 was measured and rejected for this problem, for the reason above. Nothing here is outstanding; the entry stays as the record of why the panel is shaped the way it is.
 
-## Priority board (recut 2026-08-31, after the picker lane and its review merged)
+## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**31 open: 1 P1, 9 P2, 21 P3** — counted from the index line by line, not carried forward. Ten are
-*Parked* awaiting a first consumer ask and two are Records, so the live board is **19 items — 1 Bug,
-4 Asks and 14 Decisions**.
+**31 open: 1 P1, 9 P2, 21 P3** — counted from the index line by line. Ten are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **19 items — 1 Bug, 4 Asks and 14
+Decisions**.
 
-**`# Bugs` holds one, measured:** the warning status pair at 4.42:1 where AA asks 4.5. The three
-picker defects and the `labels` trigger that sat here are fixed.
+**`# Bugs` holds one, measured:** the warning status pair at 4.42:1 where AA asks 4.5. It reaches
+nine components plus `_status.scss` and `_field-state.scss` — eleven files counted — so one token
+step fixes all of them, which makes it the cheapest real win left.
 
-**The Decisions column grew by three and that is the real signal.** Nine decks are open, and three of
-them have a backlog twin waiting on the same answer — the colour engine, `.ds-interactive`, and
-`ds-select` native multi. Answering a deck closes two lines, which makes the decks the cheapest thing
-on this board and the reason they are now listed explicitly rather than living only in
-`presentations/`.
+**The board is not waiting on hands, it is waiting on verdicts.** Fourteen of the nineteen live items
+are Decisions, and seven decks are open against them. Nothing below is blocked on effort.
 
-**What came off the board this round:** the portaled-panel cascade item, resolved rather than parked —
-the duplication was deleted, so there is no competing rule left to lose a specificity tie. It stays in
-this file as a Record because the reasoning is what stops someone re-introducing it, and the `@layer`
-alternative is written up there with the measurements that rejected it.
+**What came off this round:** the whole picker lane. Seven decisions, four follow-up changes, sixteen
+proposals (fifteen built), 43 review findings and five blockers — all closed, both decks moved to
+`presentations/implemented/`. The three picker defects and the `labels` measurement left `# Bugs`
+with them.
 
 **The tooling items came out of running the tools rather than reading them, and both were invisible to a
 code read.** The formatter conflict surfaced when the three formatters were actually run end to end;
@@ -224,7 +222,7 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
-  Found while running a UI review over `presentations/picker-gaps-decisions.html`; the deck itself was fixed by taking the text off the failing colour and leaving the tint to carry the signal.
+  Found while running a UI review over `presentations/implemented/picker-gaps-decisions.html`; the deck itself was fixed by taking the text off the failing colour and leaving the tint to carry the signal.
 
 # Asks — a consumer or Stas asked for it
 
@@ -468,7 +466,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   | `countLabel="selected"` | the count badge on the compact trigger, **new in 0.11.1** | **The last two make 0.11.1 the release that both wrote §4 of `docs/picker-contract.md` and broke it**, which is the strongest argument yet that the slot-by-slot approach does not scale and the provider has to land. Outside the pickers a sweep of `src/lib/**/*.html` finds 34 more hardcoded `aria-label`s (35 across 17 files, one of which is `ds-select`s own) — alert, breadcrumbs, color-picker, date-picker (×5), drawer, dropzone, input, modal-card, number-stepper (×2), pagination (×3), search, select, sidenav-footer (×6), table (×3), time-columns (×3), time-picker, toast — plus visible text in `ds-table` and `ds-sidenav-footer`. Localizing the pickers alone ships half a mechanism to an app that needs all of it.
   **The fork, written down so the next reader does not re-derive it:** a `DS_INTL` token with `provideDsIntl`, against per-instance inputs on each component. **The library currently leans the other way** — `ds-filter-bar` localizes with `moreLabel` and `panelLabel` inputs (`filter-bar.component.ts:75-77`) — so a token has to justify itself against a shipped precedent rather than arrive as the obvious answer. If the token wins, `provideDsConfig` already exists as the app-wide configuration point and is where it belongs; `resolveWithConfig` is the pattern it would follow.
   **P2 rather than P3 because a consumer is actually blocked**, which none of the other parked items can claim: ITB Workspace runs a two-language `LanguageService` and cannot translate a picker panel at all. Parked on priority, not on doubt about the need.
-  The rest of that report is live work — the seven surviving findings and their forks are in `presentations/picker-gaps-decisions.html`, whose closing section is this item.
+  The rest of that report is live work — the seven surviving findings and their forks are in `presentations/implemented/picker-gaps-decisions.html`, whose closing section is this item.
 
 # Records — kept so they are not "simplified" away
 

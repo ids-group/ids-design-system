@@ -4,6 +4,51 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The picker lane closed end to end (2026-09-01)
+
+- [x] **DONE 2026-09-01 — both decks are answered, and the last measurement defect is fixed.** What
+  the artefact from ITB Workspace started ends here: seven decisions, four follow-up changes, sixteen
+  proposals (fifteen built), 43 review findings and five blockers. Both decks moved to
+  `presentations/implemented/`.
+
+  **The last blocker, F5, was fixed by none of the three options the deck listed.** `chipFit` measured
+  the trigger's own width, and both compact modes make the trigger `fit-content` — so the number it
+  read was decided by the chips it was about to cut. It reads the width AVAILABLE now (the parent's
+  content box), which no cut can move. The compact footprint is kept, and `ds-autocomplete` gets the
+  same correction because both pickers measure through one helper.
+
+  **Measured, not reasoned.** In a controlled repro of the geometry, dropping one chip at a time:
+
+  | | 4 chips | 3 | 2 | 1 |
+  | --- | --- | --- | --- | --- |
+  | old budget | 272 | 200 | 137 | 87 |
+  | new budget | 700 | 700 | 700 | 700 |
+
+  Each old reading shrank its own input, which is why the split settled on one label whatever the
+  space. **The general rule: a difference that exists only because a rule was duplicated is a token,
+  not a judgement call** — the same insight settled the select-all row's gap, which the deck had priced
+  as needing an eyeball.
+
+  **A review finding became a gate rather than a patch.** The manifest's `detect` had named two of the
+  three picker classes, so a consumer subclassing `ds-autocomplete` was never found.
+  `check-class-surface-entry` now fails on both halves — a class missing from the prose AND a class
+  missing from every `detect` — and skips classes whose file is new in the range, since a subclass of
+  something that did not exist cannot exist either. The rule is written up in `migrations/AUTHORING.md`:
+  `detect` names every class from the class-surface report, `action` names none of them, because the
+  compiler enumerates collisions and a list in `action` goes stale on the next commit. Built by the
+  session that owns the manifests, verified here by breaking it deliberately and watching it fail on
+  exactly the class the 0.11.1 defect involved.
+
+  **What the comment pass caught that six green gates did not:** `super()` called twice in
+  `SelectComponent` — accepted by `ngc`, thrown by the browser, so `ds-select` would not have
+  instantiated at all — and the public doc for `clear()` drifted onto the protected `clearValue()`
+  beside it. Reading a diff for prose is a different instrument from running it.
+
+  **A line-number inventory drifted twice** and is now keyed on the literal text instead. Both drifts
+  had the same cause: the templates grew between the audit and the next reading. Symbols do not drift.
+
+---
+
 ## The picker deck's sixteen proposals — fifteen built (2026-08-31)
 
 - [x] **DONE 2026-08-31 — the §9 batch, and the four helpers it produced are the part worth keeping.**
@@ -97,7 +142,7 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   from the original chip work. Recorded in `todo.md` with its three ways out rather than patched under
   time pressure.
 
-  Full record with every citation: `presentations/picker-review-findings.html`.
+  Full record with every citation: `presentations/implemented/picker-review-findings.html`.
 
 ---
 
@@ -134,7 +179,7 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
-## The picker family — seven decisions, shipped in 0.12.0 (from the ITB Workspace gap report)
+## The picker family — seven decisions, shipped in 0.11.1 (from the ITB Workspace gap report)
 
 - [x] **DONE 2026-08-31 — the report's nine findings came to seven decisions, and validating them first
   killed half of one.** The ITB Workspace filter-picker gap report (written against 0.9.1) was read
@@ -176,7 +221,7 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   library-invented string without a slot, one way to clip a line), and two scripts enforce them:
   `npm run picker-parity` prints every member that is not shared, `npm run picker-capabilities` probes
   for behaviour rather than API surface. The second one is how the sixteen further proposals in
-  `presentations/picker-gaps-decisions.html` §9 were found rather than guessed.
+  `presentations/implemented/picker-gaps-decisions.html` §9 were found rather than guessed.
 
   **Three members are deferred on purpose, not forgotten:** `name`, `readOnly` and `clearable` stay
   `ds-select`-only, because each pulls behaviour rather than an input and they are one piece of work.
