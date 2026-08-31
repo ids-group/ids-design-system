@@ -56,7 +56,7 @@ what makes these the cheapest thing on the board.
 
 **Decisions — waiting on Stas, not on work**
 
-- P2 · Nine decks carry `ds-deck-status: open` and none has a verdict — see *Decks awaiting a verdict* above
+- P2 · Seven decks carry `ds-deck-status: open` and none has a verdict; three have a backlog twin — see *Decks awaiting a verdict* above
 - P3 · Virtualising a long picker list — RECORDED 2026-08-31, fights `aria-activedescendant`, measure before building
  (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
 
