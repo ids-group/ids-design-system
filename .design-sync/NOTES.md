@@ -61,6 +61,18 @@
 ## Re-port log
 - **2026-07-29, merge of `main` into this branch.** The parity gate caught two things the merge brought in. `ds-avatar` gained `seed` + `avoidHues` (OKLCH seeded tint) — ported, with `avatar-tint.ts` added to the mirrored modules so the React side runs the DS's own hashing/hue-avoidance. `ds-app-shell` was renamed to `ds-app-layout` (breaking, `e282b99`) — binding, preview, doc and the `cfg.overrides` key renamed, host class `app-shell` → `app-layout`, `--ds-app-shell-*` → `--ds-app-layout-*`. The rename also exposed a hole in the gate: a binding whose component disappears upstream was invisible to it, since the check only walked components that still exist. Fixed.
 
+- **2026-09-01, merge of `dev` into this branch — the branch is NOT re-ported, and the gate says so.**
+  A month open (0.7.0 → 0.11.1) cost **213 parity problems**: 53 of 80 bindings sit on a changed
+  `.component.ts`/`.html`, 26 are missing 122 public props between them, 6 new components
+  (`ds-auth-layout`, `ds-calendar-day`, `ds-field-group`, `ds-filter-bar`, `ds-password-rules`,
+  `ds-time-columns`) have no binding at all, `FieldMessageState` gained `warning` on the Angular side
+  only, and `react-bindings/package.json` still says 0.7.0. The version stays 0.7.0 deliberately —
+  bumping it would assert a parity that does not exist, and the gate's version check is the last
+  thing still telling the truth about this tree.
+  **What did NOT break, and why that is the warning:** `build-css.mjs` emits 85/85 blocks and
+  `build-bindings.mjs` produces `dist/index.js` — both green. A green build here means the generated
+  halves regenerated, not that the hand-written half is right. Only `bun run check:design-sync`
+  separates the two.
 ## Re-sync risks (watch-list for the next run)
 - Binding-only props (list above) must survive any re-port from upstream.
 - `icons.gen.ts` regenerates from `icons.data.ts` on every build-bindings run — no drift, but new icon names only appear after a rebuild.
