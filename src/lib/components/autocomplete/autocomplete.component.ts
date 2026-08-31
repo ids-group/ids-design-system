@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -14,6 +15,7 @@ import {
   numberAttribute,
   output,
   signal,
+  contentChild,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -42,6 +44,8 @@ import type {
   AutocompleteWidth,
 } from './autocomplete.types';
 import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
+import { DsOptionTemplateDirective } from '../option-template.directive';
+import { DsChipTemplateDirective } from '../chip-template.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveWithConfig } from '../../core/config-defaults';
@@ -51,7 +55,12 @@ let nextId = 0;
 @Component({
   selector: 'ds-autocomplete',
   standalone: true,
-  imports: [IconComponent, TagComponent, FieldMessageComponent],
+  imports: [
+    IconComponent,
+    TagComponent,
+    FieldMessageComponent,
+    NgTemplateOutlet,
+  ],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -168,6 +177,13 @@ export class AutocompleteComponent<T = unknown>
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
+
+  protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly chipTemplate = contentChild(DsChipTemplateDirective, {
+    read: TemplateRef,
+  });
 
   protected readonly query = signal('');
   protected readonly isOpen = signal(false);

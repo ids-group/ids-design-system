@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -13,6 +14,7 @@ import {
   model,
   numberAttribute,
   signal,
+  contentChild,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -35,6 +37,8 @@ import {
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
+import { DsOptionTemplateDirective } from '../option-template.directive';
+import { DsChipTemplateDirective } from '../chip-template.directive';
 import type {
   MultiSelectItem,
   MultiSelectOption,
@@ -46,7 +50,12 @@ import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
 @Component({
   selector: 'ds-multi-select',
   standalone: true,
-  imports: [IconComponent, TagComponent, FieldMessageComponent],
+  imports: [
+    IconComponent,
+    TagComponent,
+    FieldMessageComponent,
+    NgTemplateOutlet,
+  ],
   templateUrl: './multi-select.component.html',
   styleUrl: './multi-select.component.scss',
   host: {
@@ -120,6 +129,13 @@ export class MultiSelectComponent
   readonly width = input<MultiSelectWidth>('fill');
   /** Shows a "Select all" row that toggles every filter-matching, enabled option. */
   readonly selectAll = input(false, { transform: booleanAttribute });
+
+  protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly chipTemplate = contentChild(DsChipTemplateDirective, {
+    read: TemplateRef,
+  });
 
   protected readonly uid = nextControlId('ds-multi-select');
   protected readonly listboxId = `${this.uid}-listbox`;

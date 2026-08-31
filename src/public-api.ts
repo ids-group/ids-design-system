@@ -76,6 +76,8 @@ export * from './lib/components/radio';
 export * from './lib/components/radio-group';
 export * from './lib/components/switch';
 export * from './lib/components/static-preview.directive';
+export * from './lib/components/option-template.directive';
+export * from './lib/components/chip-template.directive';
 export * from './lib/components/field-click-focus.directive';
 export {
   DS_FIELD_WARNING_KIND,

@@ -45,6 +45,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`dsOptionTemplate` and `dsChipTemplate` — the option row and the selected chip take your content.**
+  An option was `{ value, label, disabled?, icon? }` and nothing else, so an avatar, a colour dot, a
+  priority glyph or a second line of metadata had no way in. Two directives now fill those two
+  places: `dsOptionTemplate` on `ds-select`, `ds-multi-select` and `ds-autocomplete`, and
+  `dsChipTemplate` on the two that render chips — so a visual that identifies an option does not
+  vanish the moment it is picked.
+
+  Two directives rather than one keyed one: there are exactly two roles and they differ, so a key
+  would be an enum of two. The row and the chip stay library-owned — `role="option"`,
+  `aria-selected`, the active-row class, the checkbox, the check glyph and the chip close button are
+  not projected.
+
 - **`width` on `ds-multi-select` and `ds-select`, the input `ds-autocomplete` already had.**
   `fill` (the default, unchanged) stretches the control to its container and pins the panel to the
   trigger's width. `content` hugs the trigger's own content and takes that width as the panel's

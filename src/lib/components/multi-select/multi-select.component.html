@@ -32,7 +32,14 @@
           [closeLabel]="'Remove ' + option.label"
           (closed)="removeValue(option.value)"
         >
-          {{ option.label }}
+          @if (chipTemplate(); as tpl) {
+            <ng-container
+              [ngTemplateOutlet]="tpl"
+              [ngTemplateOutletContext]="{ $implicit: option, option: option }"
+            />
+          } @else {
+            {{ option.label }}
+          }
         </ds-tag>
       }
 
@@ -179,7 +186,19 @@
                       />
                     }
 
-                    <span class="option-label">{{ option.label }}</span>
+                    <span class="option-label">
+                      @if (optionTemplate(); as tpl) {
+                        <ng-container
+                          [ngTemplateOutlet]="tpl"
+                          [ngTemplateOutletContext]="{
+                            $implicit: option,
+                            option: option,
+                          }"
+                        />
+                      } @else {
+                        {{ option.label }}
+                      }
+                    </span>
                   </button>
                 </li>
               }
@@ -220,7 +239,19 @@
                 />
               }
 
-              <span class="option-label">{{ option.label }}</span>
+              <span class="option-label">
+                @if (optionTemplate(); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{
+                      $implicit: option,
+                      option: option,
+                    }"
+                  />
+                } @else {
+                  {{ option.label }}
+                }
+              </span>
             </button>
           </li>
         }

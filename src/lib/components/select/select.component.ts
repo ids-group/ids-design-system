@@ -3,6 +3,7 @@ import {
   ElementRef,
   type OnDestroy,
   TemplateRef,
+  contentChild,
   ViewContainerRef,
   ViewEncapsulation,
   booleanAttribute,
@@ -44,6 +45,7 @@ import { FieldMessageComponent } from '../field-message/field-message.component'
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { resolveWithConfig } from '../../core/config-defaults';
+import { DsOptionTemplateDirective } from '../option-template.directive';
 
 @Component({
   selector: 'ds-select',
@@ -140,6 +142,10 @@ export class SelectComponent
   readonly ariaLabel = input<string | null>(null);
   /** Shows an inline clear (×) button when a value is selected. */
   readonly clearable = input(false, { transform: booleanAttribute });
+
+  protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
+    read: TemplateRef,
+  });
 
   protected readonly uid = nextControlId('ds-select');
   protected readonly labelId = `${this.uid}-label`;

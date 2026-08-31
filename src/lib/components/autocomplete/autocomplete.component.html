@@ -149,7 +149,19 @@
                   />
                 }
 
-                <span class="option-label">{{ option.label }}</span>
+                <span class="option-label">
+                  @if (optionTemplate(); as tpl) {
+                    <ng-container
+                      [ngTemplateOutlet]="tpl"
+                      [ngTemplateOutletContext]="{
+                        $implicit: option,
+                        option: option,
+                      }"
+                    />
+                  } @else {
+                    {{ option.label }}
+                  }
+                </span>
 
                 @if (!multiple() && isSelected(option)) {
                   <ds-icon
@@ -199,7 +211,19 @@
               />
             }
 
-            <span class="option-label">{{ option.label }}</span>
+            <span class="option-label">
+              @if (optionTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{
+                    $implicit: option,
+                    option: option,
+                  }"
+                />
+              } @else {
+                {{ option.label }}
+              }
+            </span>
 
             @if (!multiple() && isSelected(option)) {
               <ds-icon

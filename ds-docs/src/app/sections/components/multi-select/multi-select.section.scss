@@ -15,3 +15,11 @@
       border: var(--border-width-default) dashed var(--border-default);
       border-radius: var(--ds-radius-panel);
     }
+
+.demo-dot {
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: var(--radius-pill);
+  flex: 0 0 auto;
+}

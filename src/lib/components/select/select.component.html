@@ -56,12 +56,7 @@
     {{ displayLabel() }}
   </span>
 
-  @if (
-      clearable() &&
-      hasValue() &&
-      !isDisabled() &&
-      !isReadOnly()
-    ) {
+  @if (clearable() && hasValue() && !isDisabled() && !isReadOnly()) {
     <button
       type="button"
       class="clear-btn"
@@ -155,7 +150,17 @@
                     }
 
                     <span class="option-label">
-                      {{ opt.label }}
+                      @if (optionTemplate(); as tpl) {
+                        <ng-container
+                          [ngTemplateOutlet]="tpl"
+                          [ngTemplateOutletContext]="{
+                            $implicit: opt,
+                            option: opt,
+                          }"
+                        />
+                      } @else {
+                        {{ opt.label }}
+                      }
                     </span>
 
                     @if (isSelected(opt)) {
@@ -196,7 +201,17 @@
               }
 
               <span class="option-label">
-                {{ item.label }}
+                @if (optionTemplate(); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{
+                      $implicit: item,
+                      option: item,
+                    }"
+                  />
+                } @else {
+                  {{ item.label }}
+                }
               </span>
 
               @if (isSelected(item)) {

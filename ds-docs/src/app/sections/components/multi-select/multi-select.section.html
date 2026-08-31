@@ -84,6 +84,59 @@
     </p>
   </div>
 
+  <h3 class="block-title t-h4">Custom option and chip content</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">dsOptionTemplate</code> fills an option row's
+    label area, <code class="t-mono-inline">dsChipTemplate</code> fills the
+    selected chip — so a visual that identifies the option does not vanish the
+    moment it is picked. Both are honoured by
+    <code class="t-mono-inline">ds-select</code> (rows only),
+    <code class="t-mono-inline">ds-multi-select</code> and
+    <code class="t-mono-inline">ds-autocomplete</code>.
+  </p>
+
+  <p class="block-desc t-s">
+    The row and the chip stay library-owned:
+    <code class="t-mono-inline">role="option"</code>,
+    <code class="t-mono-inline">aria-selected</code>, the checkbox, the check
+    glyph and the chip's close button are not projected.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        data-testid="ms-templates"
+        placeholder="Labels…"
+        ariaLabel="Labels with colour dots"
+        [options]="labelOptions"
+        [(value)]="labels"
+      >
+        <ng-template
+          dsOptionTemplate
+          let-option
+        >
+          <span
+            class="demo-dot"
+            [style.background]="dotColour(option.value)"
+          ></span>
+          {{ option.label }}
+        </ng-template>
+
+        <ng-template
+          dsChipTemplate
+          let-option
+        >
+          <span
+            class="demo-dot"
+            [style.background]="dotColour(option.value)"
+          ></span>
+          {{ option.label }}
+        </ng-template>
+      </ds-multi-select>
+    </div>
+  </div>
+
   <h3 class="block-title t-h4">Option groups</h3>
 
   <p class="block-desc t-s">
