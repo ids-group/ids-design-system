@@ -18,13 +18,35 @@ const pickers = {
 };
 
 const members = {};
+const unrendered = [];
 for (const [name, file] of Object.entries(pickers)) {
   const text = readFileSync(file, 'utf8');
+  // A slot is only a slot once the TEMPLATE renders it. Declaring the contentChild
+  // and never reading it is how `dsChipTemplate` sat "present" on ds-autocomplete
+  // for a whole release while silently discarding whatever a consumer projected —
+  // and this file certified it, because it only ever read the .ts.
+  const template = readFileSync(file.replace(/\.ts$/, '.html'), 'utf8');
+  const declared = [...text.matchAll(/(\w+) = contentChild\((\w+)/g)].map(
+    (m) => ({
+      field: m[1],
+      directive: m[2],
+    }),
+  );
+  for (const slot of declared) {
+    if (!template.includes(`${slot.field}()`)) {
+      unrendered.push(
+        `${name}: ${slot.directive} is declared as ${slot.field} and never rendered`,
+      );
+    }
+  }
+
   members[name] = {
     inputs: [...text.matchAll(/readonly (\w+) = input/g)].map((m) => m[1]),
     models: [...text.matchAll(/readonly (\w+) = model/g)].map((m) => m[1]),
     outputs: [...text.matchAll(/readonly (\w+) = output/g)].map((m) => m[1]),
-    slots: [...text.matchAll(/contentChild\((\w+)/g)].map((m) => m[1]),
+    slots: declared
+      .filter((slot) => template.includes(`${slot.field}()`))
+      .map((slot) => slot.directive),
   };
 }
 
@@ -53,6 +75,15 @@ for (const r of rows.filter((r) => r.count < names.length)) {
     r.has.map((h) => (h ? 'yes' : '—').padEnd(13)).join(''),
   );
 }
+if (unrendered.length) {
+  console.log(
+    '\nDECLARED BUT NEVER RENDERED — a slot a consumer can fill and nothing reads:',
+  );
+  for (const line of unrendered) {
+    console.log(`  ${line}`);
+  }
+}
+
 console.log('\nshared by all three:');
 console.log(
   rows

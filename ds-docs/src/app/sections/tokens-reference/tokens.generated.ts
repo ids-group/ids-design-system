@@ -1960,6 +1960,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-autocomplete-panel-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Autocomplete dropdown panel fill."
+      },
+      {
+        "name": "--ds-autocomplete-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open."
+      },
+      {
+        "name": "--ds-autocomplete-panel-maxh",
+        "value": "var(--picker-maxh)",
+        "notes": "Autocomplete dropdown panel max height before it scrolls (default --picker-maxh, shared with ds-multi-select). Forwarded onto the portaled pane on open."
+      },
+      {
         "name": "--ds-autocomplete-focus-shadow",
         "value": "var(--ds-field-focus-shadow)",
         "notes": "Autocomplete focus ring (inherits shared field focus shadow)."
@@ -1993,21 +2008,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-autocomplete-border-color-focus",
         "value": "var(--accent)",
         "notes": "Autocomplete field border colour on focus."
-      },
-      {
-        "name": "--ds-autocomplete-panel-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Autocomplete dropdown panel fill."
-      },
-      {
-        "name": "--ds-autocomplete-panel-radius",
-        "value": "var(--ds-dropdown-panel-radius, var(--ds-radius-panel))",
-        "notes": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open."
-      },
-      {
-        "name": "--ds-autocomplete-panel-maxh",
-        "value": "var(--picker-maxh)",
-        "notes": "Autocomplete dropdown panel max height before it scrolls (default --picker-maxh, shared with ds-multi-select). Forwarded onto the portaled pane on open."
       },
       {
         "name": "--ds-radius-inner",
@@ -3152,6 +3152,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
       },
       {
+        "name": "--ds-dropdown-panel-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-dropdown-panel-maxh",
+        "value": "320px",
+        "notes": ""
+      },
+      {
         "name": "--ds-dropdown-panel-minw",
         "value": "0",
         "notes": "Lower bound for the connected dropdown panel behind ds-select and ds-multi-select. Only bites in `width=\"content\"`, where the pane is auto-sized and the trigger is merely its floor; in `fill` the component pins the pane to the trigger and there is nothing left to bound. Forwarded onto the portaled pane, so a host-scoped value reaches it."
@@ -4105,6 +4115,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-multi-select-panel-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override."
+      },
+      {
         "name": "--ds-multi-select-bg-color",
         "value": "var(--surface-default)",
         "notes": "Multi-select control surface fill (defaults to --surface-default)."
@@ -4128,11 +4143,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-multi-select-border-color-focus",
         "value": "var(--accent)",
         "notes": "Multi-select trigger border while the field holds focus (defaults to --accent)."
-      },
-      {
-        "name": "--ds-multi-select-panel-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override."
       },
       {
         "name": "--ds-multi-select-option-bg-color-active",

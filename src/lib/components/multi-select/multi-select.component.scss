@@ -2,7 +2,6 @@
 @use '../../styles/field-label' as field-label;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/field-state' as field-state;
-@use '../../styles/text-clip' as text-clip;
 
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
@@ -10,6 +9,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
+
+  --ds-dropdown-panel-bg-color: var(
+    --ds-multi-select-panel-bg-color,
+    var(--surface-overlay)
+  );
 
   --_trigger-bg-color: var(--ds-multi-select-bg-color, var(--surface-default));
   --_trigger-border-color: var(
@@ -46,8 +50,6 @@
     white-space: nowrap;
   }
 
-  /* Accent border, not a fill: it is the same signal the field family already uses
-     for "this control has your attention", so a toolbar of filters reads as one set. */
   &:has(ds-badge) .field-trigger,
   &:has(.trigger-label) .field-trigger {
     border-color: var(--accent);
@@ -124,6 +126,12 @@
 
   .req {
     color: var(--error);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .optional-marker {
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-regular);
   }
 }
 
@@ -150,21 +158,13 @@
    but custom-property inheritance follows DOM position, so the panel + option
    resolvers must live HERE (portaled outside :host), not on :host. */
 
-/* The shared partial paints the panel, its rows and the selected-row hooks. What
-   stays here is what no other picker has — a filter row, a select-all row, a real
-   `<button>` option that can be `:disabled`, and this component's own tokens. */
+/* Qualified with the pane class so it OUTRANKS styles/_dropdown-overlay.scss by
+   specificity rather than by stylesheet order — the two were an exact tie, and an
+   SSR critical-CSS inline or a consumer loading the partial later flipped it. */
 .dropdown-panel {
-  --_panel-bg-color: var(--ds-multi-select-panel-bg-color, var(--surface-overlay));
   --_option-bg-color-active: var(--ds-multi-select-option-bg-color-active, var(--surface-secondary));
   --_check-bg-color: var(--ds-multi-select-check-bg-color, var(--accent));
 
-  display: flex;
-  flex-direction: column;
-  background-color: var(--_panel-bg-color);
-  overflow: hidden;
-
-  /* The shared `.is-active` fill is a role; this is the component's public knob for
-     it, and it has to outrank the partial to be one. */
   .option.is-active:not(:disabled) {
     background-color: var(--_option-bg-color-active);
   }
@@ -178,7 +178,6 @@
 
   .dropdown-list {
     max-height: var(--picker-maxh);
-    overflow-y: auto;
   }
 }
 
@@ -214,9 +213,8 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  width: calc(100% - var(--space-2));
+  width: 100%;
   padding: var(--space-2) var(--space-2-5);
-  margin: var(--space-1) var(--space-1) 0;
   border: 0;
   border-bottom: var(--border-width-default) solid var(--border-divider);
   border-radius: var(--ds-radius-inner) var(--ds-radius-inner) 0 0;
@@ -230,8 +228,13 @@
   text-align: left;
   cursor: pointer;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--surface-secondary);
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
   }
 }
 

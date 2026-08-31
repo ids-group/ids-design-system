@@ -25,8 +25,8 @@
 <div
   #trigger
   aria-haspopup="listbox"
+  role="combobox"
   [class]="'field-trigger ' + sizeResolved()"
-  [attr.role]="open() ? 'group' : 'combobox'"
   [class.open]="open()"
   [class.disabled]="isDisabled()"
   [attr.aria-invalid]="invalidResolved() ? 'true' : null"
@@ -171,7 +171,7 @@
       </div>
     }
 
-    @if (selectAll() && filteredOptions().length) {
+    @if (showsPanelSelectAll() && filteredOptions().length) {
       <button
         type="button"
         class="select-all"
@@ -229,9 +229,11 @@
             @if (showsGroupSelectAll()) {
               <button
                 type="button"
+                tabindex="-1"
                 class="select-all group"
-                role="checkbox"
+                role="option"
                 [disabled]="item.disabled"
+                [attr.aria-selected]="groupAllSelected(item)"
                 [attr.aria-checked]="
                   groupAllSelected(item)
                     ? 'true'
@@ -268,6 +270,7 @@
                 <li role="presentation">
                   <button
                     type="button"
+                    tabindex="-1"
                     role="option"
                     class="option"
                     [id]="optionId(flatIndexOf(option))"
@@ -321,6 +324,7 @@
           <li role="presentation">
             <button
               type="button"
+              tabindex="-1"
               role="option"
               class="option"
               [id]="optionId(flatIndexOf(option))"
@@ -370,8 +374,8 @@
 
       @if (filteredOptions().length === 0) {
         <li
-          class="empty"
-          role="status"
+          class="empty t-s"
+          role="presentation"
         >
           @if (emptyTemplate(); as tpl) {
             <ng-container

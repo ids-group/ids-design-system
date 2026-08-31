@@ -46,7 +46,12 @@ export function flattenDsOptions<T>(
   return items.flatMap((item) =>
     isDsOptionGroup(item)
       ? item.options.map((option) =>
-          item.disabled ? { ...option, disabled: true } : option,
+          // Only copy when the flag is not already there: the pickers pre-apply a
+          // disabled group to the options THEY render, and a second copy here
+          // would break the object identity their flat-index lookup compares by.
+          item.disabled && !option.disabled
+            ? { ...option, disabled: true }
+            : option,
         )
       : [item],
   );

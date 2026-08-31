@@ -69,8 +69,6 @@ import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
     '[attr.data-field-state]': 'controlState()',
     '[class.content-width]': "width() === 'content'",
     '[class.compact-trigger]': 'showsCompactTrigger()',
-    '[class.labels-trigger]':
-      "showsCompactTrigger() && triggerDisplay() === 'labels'",
   },
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
@@ -94,8 +92,13 @@ export class MultiSelectComponent
     '--ds-multi-select-panel-bg-color',
     '--ds-multi-select-option-bg-color-active',
     '--ds-multi-select-check-bg-color',
+    '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-minw',
     '--ds-dropdown-panel-maxw',
+    '--ds-option-selected-bg-color',
+    '--ds-option-selected-label-color',
+    '--ds-option-selected-bg-color-hover',
+    '--ds-option-check-color',
   ];
 
   /** Selected values, two-way bound. */
@@ -114,8 +117,14 @@ export class MultiSelectComponent
    *  Enter, Escape and `aria-activedescendant` are the filter input's today. */
   readonly searchable = input<boolean | number | null, unknown>(null, {
     transform: (raw: unknown) => {
-      if (raw === null || raw === undefined || raw === '') {
+      if (raw === null || raw === undefined) {
         return null;
+      }
+      // A bare attribute is Angular's '' and means true here as it does through
+      // booleanAttribute everywhere else — leaving it "unset" made
+      // `<ds-multi-select searchable>` unable to override a config that said false.
+      if (raw === '') {
+        return true;
       }
       if (typeof raw === 'number') {
         return raw;
@@ -238,12 +247,10 @@ export class MultiSelectComponent
     () => this.disabled() || this.formDisabled(),
   );
 
-  /** A projected template wins outright, so there is no combination to explain. */
   protected readonly showsCompactTrigger = computed(
     () => !this.pickerTrigger() && this.triggerDisplay() !== 'full',
   );
 
-  /** A number means "show it once the list is long enough to need it". */
   protected readonly showsSearch = computed<boolean>(() => {
     const setting = this.searchableResolved();
 
@@ -252,8 +259,6 @@ export class MultiSelectComponent
       : setting;
   });
 
-  /** Without the filter row the trigger owns the listbox cursor, so the id has to
-   *  ride on the trigger instead. */
   protected readonly triggerActiveDescendant = computed(() =>
     this.showsSearch() ? null : this.activeDescendant(),
   );
@@ -313,8 +318,6 @@ export class MultiSelectComponent
     () => this.selectedOptions().length - this.visibleChips().length,
   );
 
-  /** The panel's render list: source order kept, non-matching options dropped, and
-   *  a group that matched nothing dropped with them. */
   protected readonly filteredItems = computed<MultiSelectItem[]>(() => {
     const query = this.filter().trim().toLowerCase();
     const matches = (option: MultiSelectOption): boolean =>
@@ -488,15 +491,31 @@ export class MultiSelectComponent
 
   protected removeValue(value: string): void {
     this.value.set(this.value().filter((entry) => entry !== value));
+    // The close button that ran this is being destroyed with its chip, so focus
+    // would land on <body> and the next removal would need a tab from the top.
+    this.trigger().nativeElement.focus();
   }
 
   protected onFilter(event: Event): void {
     this.filter.set((event.target as HTMLInputElement).value);
-    this.activeIndex.set(this.filteredOptions().length ? 0 : -1);
+    this.activeIndex.set(this.firstEnabledIndex());
+  }
+
+  private firstEnabledIndex(): number {
+    return this.filteredOptions().findIndex((option) => !option.disabled);
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
     if (this.isDisabled()) {
+      return;
+    }
+    // With no filter row there is nowhere else for these to land, so the trigger
+    // runs the same handler the input would have — and it has to get first refusal
+    // on Enter, or Enter would toggle the panel shut instead of picking the active
+    // row and there would be no keyboard way to select at all.
+    if (this.open() && !this.showsSearch()) {
+      this.onSearchKeydown(event);
+
       return;
     }
     if (event.key === 'Enter' || event.key === ' ') {
@@ -508,13 +527,6 @@ export class MultiSelectComponent
     if (event.key === 'ArrowDown' && !this.open()) {
       event.preventDefault();
       this.openPanel();
-
-      return;
-    }
-    // With no filter row there is nowhere else for these to land, so the trigger
-    // runs the same handler the input would have.
-    if (this.open() && !this.showsSearch()) {
-      this.onSearchKeydown(event);
     }
   }
 
@@ -540,6 +552,9 @@ export class MultiSelectComponent
         event.preventDefault();
         this.close('dismiss');
         break;
+      case 'Tab':
+        this.close('dismiss');
+        break;
       case 'Backspace':
         if (!this.filter()) {
           const selected = this.selectedOptions();
@@ -563,7 +578,10 @@ export class MultiSelectComponent
       triggerElement,
     );
     const triggerWidth = triggerElement.getBoundingClientRect().width;
-    if (this.width() === 'content') {
+    // A compact trigger hugs its caption, so pinning the panel to it gives a panel
+    // too narrow to read its own options — the trigger width becomes a FLOOR here
+    // whether or not the consumer asked for `content`.
+    if (this.width() === 'content' || this.showsCompactTrigger()) {
       config.minWidth = triggerWidth;
     } else {
       config.width = triggerWidth;
@@ -589,8 +607,14 @@ export class MultiSelectComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
+    const detaching = this.overlayRef;
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
+      // A deferred dispose can outlive a re-open, and then this fires for the
+      // PREVIOUS panel: clearing state here would strand the live one.
+      if (this.overlayRef !== detaching) {
+        return;
+      }
       this.overlayRef = null;
       this.open.set(false);
     });
@@ -602,7 +626,7 @@ export class MultiSelectComponent
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.open.set(true);
-    this.activeIndex.set(this.filteredOptions().length ? 0 : -1);
+    this.activeIndex.set(this.firstEnabledIndex());
     if (this.showsSearch()) {
       this.focusTimer = setTimeout(() => {
         this.focusTimer = null;

@@ -122,7 +122,7 @@
       [id]="listboxId"
       [attr.aria-labelledby]="label() ? labelId : null"
     >
-      @for (item of options(); track item.label; let groupIdx = $index) {
+      @for (item of options(); track $index; let groupIdx = $index) {
         @if (isOptionGroup(item)) {
           <li
             class="optgroup"
@@ -247,7 +247,7 @@
       @if (options().length === 0) {
         <li
           class="empty t-s"
-          role="status"
+          role="presentation"
         >
           @if (emptyTemplate(); as tpl) {
             <ng-container [ngTemplateOutlet]="tpl" />

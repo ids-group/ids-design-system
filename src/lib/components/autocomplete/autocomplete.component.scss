@@ -10,6 +10,16 @@
 @use '../../styles/text-clip' as text-clip;
 
 :host {
+  --ds-dropdown-panel-bg-color: var(
+    --ds-autocomplete-panel-bg-color,
+    var(--surface-overlay)
+  );
+  --ds-dropdown-panel-radius: var(
+    --ds-autocomplete-panel-radius,
+    var(--ds-radius-panel)
+  );
+  --ds-dropdown-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
+
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
   --_autocomplete-maxw: var(--ds-autocomplete-maxw, none);
   --_autocomplete-input-minw: var(--ds-autocomplete-input-minw, 80px);
@@ -42,6 +52,12 @@
 
   .req {
     color: var(--error);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .optional-marker {
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-regular);
   }
 }
 
@@ -164,19 +180,7 @@
   margin-left: auto;
 }
 
-/* The panel is the shared `.ds-dropdown-panel` partial now: padding, row radius,
-   selected-row hooks and pressed states come from there, so this file keeps only
-   what no other picker has — plus the three panel tokens it already shipped. */
 .dropdown-panel {
-  --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
-  --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-dropdown-panel-radius, var(--ds-radius-panel)));
-  --_autocomplete-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
-
-  background: var(--_autocomplete-panel-bg-color);
-  border-radius: var(--_autocomplete-panel-radius);
-  max-height: var(--_autocomplete-panel-maxh);
-  margin: var(--picker-offset) 0 0;
-
   .option.multi {
     padding-left: var(--space-2);
   }

@@ -95,11 +95,15 @@ export class AutocompleteComponent<T = unknown>
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
    *  a consumer's `ds-autocomplete { --ds-autocomplete-panel-*: … }` reaches it. */
   private readonly panelTokens = [
-    '--ds-autocomplete-panel-bg-color',
-    '--ds-autocomplete-panel-radius',
-    '--ds-autocomplete-panel-maxh',
+    '--ds-dropdown-panel-bg-color',
+    '--ds-dropdown-panel-radius',
+    '--ds-dropdown-panel-maxh',
     '--ds-dropdown-panel-minw',
     '--ds-dropdown-panel-maxw',
+    '--ds-option-selected-bg-color',
+    '--ds-option-selected-label-color',
+    '--ds-option-selected-bg-color-hover',
+    '--ds-option-check-color',
   ];
 
   /** Options, groups, or both mixed — rendered in the order given. */
@@ -231,8 +235,6 @@ export class AutocompleteComponent<T = unknown>
     () => flattenDsOptions(this.options()),
   );
 
-  /** The panel's render list: source order kept, non-matching options dropped, and
-   *  a group that matched nothing dropped with them. */
   protected readonly filteredItems = computed<AutocompleteItem<T>[]>(() => {
     const query = this.query().toLowerCase().trim();
     const matches = (option: AutocompleteOption<T>): boolean =>
@@ -293,6 +295,12 @@ export class AutocompleteComponent<T = unknown>
     readonly AutocompleteOption<T>[]
   >(() => this.filteredOptions());
 
+  /** The visible label wins the accessible name when there is one — otherwise the
+   *  placeholder would announce over it, and `placeholder` always carries a default. */
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
+
   protected readonly selectedTags = computed(() => {
     if (!this.multiple()) {
       return [];
@@ -339,20 +347,33 @@ export class AutocompleteComponent<T = unknown>
     () => this.selectedTags().length - this.visibleTags().length,
   );
 
-  protected readonly displayLabel = computed(() => {
-    if (this.multiple()) {
-      return '';
-    }
-    const currentValue = this.value() as T | null;
-    if (currentValue === null) {
-      return '';
-    }
+  protected readonly selectedOption = computed<AutocompleteOption<T> | null>(
+    () => {
+      if (this.multiple()) {
+        return null;
+      }
+      const currentValue = this.value() as T | null;
+      if (currentValue === null) {
+        return null;
+      }
 
-    return (
-      this.allOptions().find((option) => option.value === currentValue)
-        ?.label ?? ''
-    );
-  });
+      return (
+        this.allOptions().find((option) => option.value === currentValue) ??
+        null
+      );
+    },
+  );
+
+  protected readonly displayLabel = computed(
+    () => this.selectedOption()?.label ?? '',
+  );
+  protected readonly hasSingleValue = computed(
+    () => this.selectedOption() !== null,
+  );
+
+  protected readonly triggerSelection = computed(() =>
+    this.multiple() ? this.selectedTags() : this.selectedOption(),
+  );
 
   protected readonly placeholderText = computed(() => {
     if (this.multiple()) {
@@ -395,7 +416,15 @@ export class AutocompleteComponent<T = unknown>
   /** First option a reader can actually act on — -1 when the list is empty or
    *  every option is disabled. */
   private firstEnabledIndex(): number {
-    return this.visibleOptions().findIndex((option) => !option.disabled);
+    const index = this.visibleOptions().findIndex((option) => !option.disabled);
+    if (index >= 0) {
+      return index;
+    }
+
+    // With nothing pickable, the create row IS the list, and leaving the cursor at
+    // -1 meant Enter fell through allowCreate's primary flow: type a new name, press
+    // Enter, nothing happens until an ArrowDown nobody knows to press.
+    return this.showCreateRow() ? this.visibleOptions().length : -1;
   }
 
   /** Arrow keys step OVER a disabled option rather than landing on it — an active
@@ -553,8 +582,14 @@ export class AutocompleteComponent<T = unknown>
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
+    const detaching = this.overlayRef;
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
+      // A deferred dispose can outlive a re-open, and then this fires for the
+      // PREVIOUS panel: clearing state here would strand the live one.
+      if (this.overlayRef !== detaching) {
+        return;
+      }
       this.overlayRef = null;
       this.isOpen.set(false);
     });

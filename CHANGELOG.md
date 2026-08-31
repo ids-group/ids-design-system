@@ -36,7 +36,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   measurement the chips already use.
 
 - **Parity the family was missing.** `label`, `required` and `optional` on `ds-multi-select` and
-  `ds-autocomplete`, and `size` on `ds-multi-select`. They existed on `ds-select` alone, which
+  `ds-autocomplete` — those three existed on `ds-select` alone — and `size` on `ds-multi-select`,
+  which `ds-select` and `ds-autocomplete` both already had. It
   meant a form built from the other two could not be labelled or marked required at all.
 
 - **`searchable` on `ds-multi-select` — one input, three meanings.** `true` always shows the
@@ -51,8 +52,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **A compact filter trigger, and a slot to write your own.** `ds-multi-select` takes
   `triggerDisplay="count"`: a `label` caption plus a selected-count `ds-badge` at intrinsic
-  width, with an accent border once something is picked. The chip field it replaces grows with the
-  selection, which is why a dense toolbar could not use it.
+  width, with an accent border once something is picked. The chip field it replaces is as wide as
+  the control and its content changes with every pick, which is why a dense toolbar could not budget
+  space for it. (The chips do not grow the trigger: `maxVisibleChips` defaults to `"fit"` and clips
+  behind "+N more".)
 
   `dsPickerTrigger` projects your own trigger contents into `ds-select`, `ds-multi-select` and
   `ds-autocomplete`. **A projected template WINS over `triggerDisplay`**, which is then not read at
@@ -66,7 +69,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **`dsOptionTemplate` and `dsChipTemplate` — the option row and the selected chip take your content.**
   An option was `{ value, label, disabled?, icon? }` and nothing else, so an avatar, a colour dot, a
-  priority glyph or a second line of metadata had no way in. Two directives now fill those two
+  priority glyph or a trailing count had no way in. Two directives now fill those two
   places: `dsOptionTemplate` on `ds-select`, `ds-multi-select` and `ds-autocomplete`, and
   `dsChipTemplate` on the two that render chips — so a visual that identifies an option does not
   vanish the moment it is picked.
@@ -93,6 +96,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **One stylesheet owns the dropdown panel.** The panel is portaled to `document.body`, where
+  Angular's encapsulation does not reach, so the shared partial and two component stylesheets were
+  all declaring its `background`, `border-radius`, `max-height`, `overflow` and `display` at
+  identical specificity — which rule won depended on the order the stylesheets happened to load. The
+  partial owns that geometry now, behind `--ds-dropdown-panel-bg-color` beside the `-radius`,
+  `-maxh`, `-minw` and `-maxw` knobs, and each picker declares its own name as an ALIAS of the
+  shared token on its host and forwards it onto the pane. `--ds-multi-select-panel-bg-color`,
+  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` all still work; what changed is that
+  they reach the panel through one rule instead of a second competing one.
+
+  The panel is also the flex column and the LIST is the scroller, so a filter row or a select-all row
+  stays put while the options move under it. `ds-multi-select` did that per-component before and the
+  other two did not.
+
+
 - **BREAKING for code that READS `ds-autocomplete`'s `options`: the element type is now
   `AutocompleteItem<T>`, not `AutocompleteOption<T>`.** The input holds flat options OR groups,
   so a reader — or a subclass overriding a member typed against the element — that assumed
@@ -111,8 +129,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   earlier in this release; the multi-select still carried its own `.panel` / `.options` / `.option`
   copy while its pane ALSO carried `ds-dropdown-panel`, so both rule sets applied at once. One
   implementation now: the class names are `.dropdown-panel` and `.dropdown-list`, and the row is the
-  partial's. What stayed is what no other picker has — the filter row, the select-all rows, a real
-  `<button>` option that can be `:disabled`, and this component's own tokens.
+  partial's. What stayed is what no other picker has — the filter row, the select-all rows and this
+  component's own tokens. Its option row carries only `[disabled]` where `ds-select` sets
+  `.is-disabled` beside it, which is why it still declares an `.option:disabled` of its own.
 
 - **BREAKING if you set it: `triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name
   says what the trigger shows, which matters once `labels` sits beside it. The union is exported as
@@ -122,7 +141,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **Every single-line label clips through one mixin now.** Seven rules hand-rolled
   `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — the `ds-select` trigger text,
   the `ds-tree` label, the `ds-sidenav-item` label, three labels in `ds-sidenav-footer`, and the
-  table cell under `density="compact"`. They all use `single-line-ellipsis` instead, which clips with
+  table cell in virtual mode. They all use `single-line-ellipsis` instead, which clips with
   `overflow: clip` and an `overflow-clip-margin` rather than `hidden`: where the line box is tighter
   than the glyph box, `hidden` eats the glyph and shaves every label, not only the ones with
   descenders. Nothing to do on your side — labels stop losing their bottoms at tight line-heights.
@@ -162,7 +181,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   inside a new `.dropdown-panel` wrapper, `.autocomplete-optgroup` → `.optgroup`,
   `.autocomplete-optgroup-label` → `.optgroup-label`, and an option's check icon →
   `.option-check`. `--ds-autocomplete-option-bg-color-hover` is gone; the panel-level
-  `--ds-option-*` hooks replace it and reach all three pickers.
+  `--ds-option-*` hooks replace it. They paint `.option.is-selected` and the check glyph, so they
+  reach `ds-select` and `ds-autocomplete`; `ds-multi-select` marks its selection with a checkbox and
+  keeps its own `--ds-multi-select-check-*`. All three forward the four hooks onto the portaled pane,
+  so a per-instance `ds-autocomplete { --ds-option-selected-bg-color: … }` reaches the panel.
   `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` still work.
 
 - **A settled single value in `ds-autocomplete` ellipsizes instead of wrapping.** A value 134px wide in a
@@ -173,6 +195,47 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   its chips already had a measured cap.
 
 ### Fixed
+
+- **With the filter row hidden, there was no keyboard way to pick an option.** `Enter` and `Space`
+  were consumed by the trigger before the panel's own handler saw them, so the panel toggled shut
+  instead of selecting the active row: open, arrow down, Enter, nothing chosen. The trigger delegates
+  first now. `searchable` shipped in this same release, so only work in flight is affected.
+
+- **An option inside a `disabled` group could not be addressed.** The pickers marked such options
+  disabled for rendering, and the flattening helper marked them again — a second copy, so the object
+  the template rendered and the object in the flat list were no longer the same one. Every row in the
+  group then rendered `id="…-opt--1"`, duplicated across the group, and `aria-activedescendant`
+  pointed at an element that did not exist. In `ds-autocomplete`, where a fully disabled group also
+  leaves the cursor at `-1`, every row in it painted as the active row at once.
+
+- **`selectAll="group"` also rendered the panel-wide row**, making it indistinguishable from
+  `"both"`, and rendered that row even on a flat list with no groups at all.
+
+- **`dsChipTemplate` did nothing on `ds-autocomplete`.** The slot was declared, exported and
+  documented; the template never read it, so a projected chip was discarded without a word.
+
+- **`ds-autocomplete`'s `label` was not the accessible name and `required` was not announced.**
+  The label rendered an `id` nothing referenced while `aria-label` was set unconditionally from the
+  placeholder, and `aria-required` was never emitted despite the input's own documentation. Both
+  now match `ds-select` and `ds-multi-select`.
+
+- **`ds-multi-select` keyboard and focus behaviour joined the other two.** Its option rows were tab
+  stops (a fifty-option panel was fifty of them), `Tab` did not close the panel, the initial active
+  row did not skip a disabled first option, and removing a chip dropped focus to `<body>`.
+
+- **A bare `searchable` attribute meant "unset" instead of "true"**, so it could not override an
+  app-level `DS_CONFIG.picker.searchable` of `false` — the one case that key exists for.
+
+- **A compact trigger no longer pins the panel to its own caption width**, which produced a panel too
+  narrow to read its options unless `width="content"` was also passed.
+
+- **Re-opening a picker inside its close animation left the panel visible while the component
+  believed it was closed**, and leaked that panel's listeners. The detach handler now ignores an
+  overlay that is no longer the current one.
+
+- **`ds-select` accepts a `readonly` options array**, which the other two already did, and tracks
+  its top-level items by index rather than by label, which is not unique.
+
 
 - **Four published migration manifests were corrected, and a repo that upgraded before today may
   be holding the result.** These files are executed: your upgrade tooling read them, acted and
