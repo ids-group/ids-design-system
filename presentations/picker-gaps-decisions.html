@@ -665,8 +665,8 @@
   </ol>
   <div class="toc-title" style="margin-top: var(--space-6)">Контекст</div>
   <ol>
-    <li><a href="#better">Что сделать лучше</a></li>
     <li><a href="#proposals">Ещё 16 предложений</a></li>
+    <li><a href="#better">Что сделать лучше</a></li>
     <li><a href="#deferred">Отложено</a></li>
   </ol>
 </nav>
@@ -1533,6 +1533,32 @@
     у кого её нет. Первые три — <strong>дефекты</strong>: сегодня ведут себя неверно. Остальные —
     то, чего нет.
   </p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Что не так</th><th>Чем чинится</th><th>Род</th><th>Мой приоритет</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="#proposals"><strong>D1</strong></a></td><td>Активная строка уходит за границу панели</td><td><code>scrollIntoView</code></td><td class="no">дефект</td><td class="no">сразу</td></tr>
+        <tr><td><a href="#proposals"><strong>D2</strong></a></td><td>Объектное значение теряется при перезапросе</td><td><code>вход compareWith</code></td><td class="no">дефект</td><td class="no">сразу</td></tr>
+        <tr><td><a href="#proposals"><strong>D3</strong></a></td><td>Home / End только у ds-select</td><td><code>общий обработчик</code></td><td class="no">дефект</td><td class="no">сразу</td></tr>
+        <tr><td><a href="#proposals"><strong>P1</strong></a></td><td>Пока запрос летит, панель врёт «No matches»</td><td><code>вход loading + aria-busy</code></td><td>нет функции</td><td class="meh">высокий</td></tr>
+        <tr><td><a href="#proposals"><strong>P2</strong></a></td><td>Об открытии панели узнать неоткуда</td><td><code>выходы opened / closed</code></td><td>нет функции</td><td class="meh">высокий</td></tr>
+        <tr><td><a href="#proposals"><strong>P3</strong></a></td><td>Текст фильтра не выходит наружу</td><td><code>выход filterChange</code></td><td>нет функции</td><td class="meh">высокий</td></tr>
+        <tr><td><a href="#proposals"><strong>P4</strong></a></td><td>Фильтр захардкожен по label</td><td><code>вход filterWith</code></td><td>нет функции</td><td>средний</td></tr>
+        <tr><td><a href="#proposals"><strong>P5</strong></a></td><td>5000 опций рисуются 5000 строк</td><td><code>виртуальный скролл CDK</code></td><td>нет функции</td><td class="yes">низкий</td></tr>
+        <tr><td><a href="#proposals"><strong>P6</strong></a></td><td>name / readOnly / clearable только у ds-select</td><td><code>три входа + поведение</code></td><td>разъезд API</td><td>средний</td></tr>
+        <tr><td><a href="#proposals"><strong>C1</strong></a></td><td>В панель нечего положить сверху и снизу</td><td><code>два слота</code></td><td>кастомизация</td><td class="meh">высокий</td></tr>
+        <tr><td><a href="#proposals"><strong>C2</strong></a></td><td>Заголовок группы — только текст</td><td><code>слот заголовка</code></td><td>кастомизация</td><td>средний</td></tr>
+        <tr><td><a href="#proposals"><strong>C3</strong></a></td><td>Геометрия строки зашита в партиалку</td><td><code>три токена</code></td><td>кастомизация</td><td class="meh">высокий</td></tr>
+        <tr><td><a href="#proposals"><strong>C4</strong></a></td><td>placeholder автокомплита работает за двоих</td><td><code>вход searchPlaceholder</code></td><td>кастомизация</td><td>средний</td></tr>
+        <tr><td><a href="#proposals"><strong>A1</strong></a></td><td>Число найденного не объявляется</td><td><code>aria-live</code></td><td>доступность</td><td>средний</td></tr>
+        <tr><td><a href="#proposals"><strong>A2</strong></a></td><td>Набор с клавиатуры на закрытом контроле</td><td><code>буфер набора</code></td><td>доступность</td><td>средний</td></tr>
+        <tr><td><a href="#proposals"><strong>A3</strong></a></td><td>Отключённая опция не объясняет причину</td><td><code>поле в DsOption</code></td><td>доступность</td><td class="yes">низкий</td></tr>
+      </tbody>
+    </table>
+  </div>
 
   <h3>Ведут себя неверно</h3>
   <div class="options">
