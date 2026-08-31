@@ -1,28 +1,5 @@
 # DS — improvements backlog
 
-## Start here — the next five, in order
-
-Written 2026-08-31 after the picker lane merged. Ordered by what unblocks the most, not by age.
-
-1. **Release 0.12.0.** `dev` is green and carries the whole picker lane plus the review's 43 fixes.
-   One click: Pipelines → Run pipeline → branch `dev` → `release-minor`. Everything below is easier
-   once the lane is out of the way, and the release notes are already written for it.
-2. **Nine decks are waiting on a verdict, and two of them are the picker lane's.** Nothing in them
-   costs work until you pick; each one blocks the item behind it. See *Decks awaiting a verdict*
-   below — that section is new, and it exists because the count surprised both of us.
-3. **The warning status pair fails WCAG AA** (4.42:1 against 4.5). The only shipped defect that is a
-   contrast failure rather than a behaviour one. `--warning-text` is read by nine components plus
-   `_status.scss` and `_field-state.scss` — counted, eleven files — so one token step fixes all of
-   them at once. Cheapest real win on the board.
-4. **`triggerDisplay="labels"` under-shows its labels.** Shipped with the defect in 0.12.0 by your
-   call. It has three ways out and they differ in what they give up, so it needs your pick before any
-   code — it is question 5 in the picker deck.
-5. **The prettier ↔ eslint standoff.** Measured again this session: they want opposite things about
-   HTML, so `lint:all` can never be green and `npm run format` reports files nobody should reformat.
-   Until it is settled, every future branch pays the same tax we paid twice today.
-
----
-
 ## Decks awaiting a verdict (audited 2026-08-31)
 
 Nine decks carry `ds-deck-status: open`, which means each is a question that has not been answered.
@@ -64,14 +41,14 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 - P2 · Nine decks carry `ds-deck-status: open` and none has a verdict — see *Decks awaiting a verdict* above
 - P3 · Thirteen further picker proposals (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
 
-- P3 · Does a release note owe the reader a WHY, or only a what-and-what-to-do — left open 2026-08-28
-- P3 · ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class — `is-*`
-- P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
+- P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
 - P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the
 - P2 · `.ds-interactive` — global state-interaction contract (agreed; prototype before spec —
 - P2 · Theme recipe vs hand-tuned picks — alignment decision. Button/icon-button state derivation uses the
+- P3 · Does a release note owe the reader a WHY, or only a what-and-what-to-do — left open 2026-08-28
+- P3 · ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class — `is-*`
 - P3 · Three signal-forms contract members are unimplemented; `disabledReasons` is ANSWERED (2026-08-26)
 - P3 · Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not
 - P3 · Three deferred DEFAULT changes for the batch after 0.9.0, all held back by the release
@@ -79,6 +56,7 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 
 **Parked — asked, and deliberately not now**
 
+- P2 · Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27
 - P3 · `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them. It takes
 - P3 · Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below). A
 - P3 · Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the
@@ -88,7 +66,6 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 - P3 · Primary-button CTA token layer — ASKED 2026-08-05, Stas: keep in the backlog. Add opt-in
 - P3 · MED cluster — ASKED 2026-08-05, Stas: keep in the backlog. Density beyond hit-targets
 - P3 · CDK Menu adoption (option B) — parked. ONLY if/when nested submenus, a menubar, or context menus are
-- P2 · Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27
 
 **Records — kept so they are not "simplified" away**
 
@@ -102,7 +79,7 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 
   `width="fill"` does not avoid it: `:host(.content-width)` (`:29`) and `:host(.compact-trigger)` (`:36`) are an exact specificity tie and the compact rule is declared later, so the host is `fit-content` in every `labels` and `count` configuration.
 
-  **Three ways out, and the choice is a design call, not a cleanup:** (a) `labels` stops taking `compact-trigger`, which fixes the measurement and gives up the fixed footprint that is the mode's whole point; (b) `chipFit` measures the trigger's PARENT instead, which keeps the footprint but changes a primitive two components share; (c) `labels` is not a compact mode at all and gets its own host class. Shipped as-is in 0.12.0 with the defect: it under-shows labels, it does not misbehave otherwise.
+  **Three ways out, and the choice is a design call, not a cleanup:** (a) `labels` stops taking `compact-trigger`, which fixes the measurement and gives up the fixed footprint that is the mode's whole point; (b) `chipFit` measures the trigger's PARENT instead, which keeps the footprint but changes a primitive two components share; (c) `labels` is not a compact mode at all and gets its own host class. Shipped as-is in 0.11.1 with the defect: it under-shows labels, it does not misbehave otherwise.
 
   Same class as the two self-referential loops recorded in `done.md` from the original chip work — the rule that came out of that one is the rule this broke.
 
@@ -114,7 +91,7 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 
   **The three ways out, in the order they were considered:**
 
-  1. **Qualify the component selectors** so they outrank the partial by specificity rather than by order — `.ds-dropdown-panel .dropdown-panel, .dropdown-panel { … }`. Shipped in 0.12.0 as the stop-gap. It is deterministic, and it is a patch: it makes the tie moot per selector instead of removing it, and the next panel rule someone writes will not have it.
+  1. **Qualify the component selectors** so they outrank the partial by specificity rather than by order — `.ds-dropdown-panel .dropdown-panel, .dropdown-panel { … }`. Shipped in 0.11.1 as the stop-gap. It is deterministic, and it is a patch: it makes the tie moot per selector instead of removing it, and the next panel rule someone writes will not have it.
   2. **Geometry lives only in the partial; components forward alias tokens.** Each component declares `--ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, …)` on its host and forwards the SHARED token through `forwardOverlayTokens`, which already exists for this. The component stylesheet then keeps only what is genuinely its own markup — the filter row, the select-all rows, `.check-box`, `.option.multi` — and the tie disappears rather than being out-ranked. This is the shape `ds-select` is already in.
   3. **`@layer` — MEASURED 2026-08-31, and it does NOT hold the way the idea assumes.** The two mechanical halves work: Angular lists `@layer` in `scopedAtRuleIdentifiers` (`@angular/compiler/fesm2022/compiler.mjs:6881`) so it descends into a layer block and scopes the selectors inside exactly as it does for `@media`, and esbuild's CSS minifier — the one this build uses, 0.27.3 — emits `@layer` unchanged.
 
@@ -383,7 +360,7 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
 
 ## Component API / portfolio
 
-- [ ] **[P3] Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not six, and the duplicated surface is ~25 lines each.** Measured: only `ds-select`, `ds-multi-select` and `ds-autocomplete` share the shape (an `activeIndex` signal + wrap-around arrow nav over a flat option list). `ds-date-picker` navigates a 2-D day grid, `ds-time-picker` has NO arrow handling at all (it delegates to `ds-time-columns`), and `ds-color-picker`’s arrows drive a continuous saturation/hue canvas — three different models that a shared list helper would not serve. **Type-ahead does not exist anywhere** (zero hits), so that part of the ask describes code that was never written. And the three that DO overlap differ where it matters: select carries groups + Home/End + `firstEnabledIndex()` skipping disabled, multi-select works over a filtered list with a select-all row, autocomplete counts a create/no-match slot into its modulo. **Recommendation: extract only the index cursor** — a ~30-line `createListCursor({ length, isEnabled })` returning `{ index, next, prev, first, last, reset }` — and NOT a picker base class. **Worth doing when a fourth list picker appears, not before:** 3 × 25 lines against a 30-line helper is a wash today, and the wrong shared abstraction here costs more than the duplication. **Update (0.12.0):** the three now share one panel implementation, one group shape (`DsOptionItem`) and five projection slots, and `docs/picker-contract.md` + `npm run picker-parity` keep that honest — so the remaining duplication is the index cursor alone, exactly as recommended. Still not extracted, still waiting on a fourth picker.
+- [ ] **[P3] Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not six, and the duplicated surface is ~25 lines each.** Measured: only `ds-select`, `ds-multi-select` and `ds-autocomplete` share the shape (an `activeIndex` signal + wrap-around arrow nav over a flat option list). `ds-date-picker` navigates a 2-D day grid, `ds-time-picker` has NO arrow handling at all (it delegates to `ds-time-columns`), and `ds-color-picker`’s arrows drive a continuous saturation/hue canvas — three different models that a shared list helper would not serve. **Type-ahead does not exist anywhere** (zero hits), so that part of the ask describes code that was never written. And the three that DO overlap differ where it matters: select carries groups + Home/End + `firstEnabledIndex()` skipping disabled, multi-select works over a filtered list with a select-all row, autocomplete counts a create/no-match slot into its modulo. **Recommendation: extract only the index cursor** — a ~30-line `createListCursor({ length, isEnabled })` returning `{ index, next, prev, first, last, reset }` — and NOT a picker base class. **Worth doing when a fourth list picker appears, not before:** 3 × 25 lines against a 30-line helper is a wash today, and the wrong shared abstraction here costs more than the duplication. **Update (0.11.1):** the three now share one panel implementation, one group shape (`DsOptionItem`) and five projection slots, and `docs/picker-contract.md` + `npm run picker-parity` keep that honest — so the remaining duplication is the index cursor alone, exactly as recommended. Still not extracted, still waiting on a fourth picker.
   **P2 → P3, 2026-08-21:** demoted, and it should have been on the day it was surveyed: **the item's own conclusion is not to build it** — three components share ~25 lines each, against a ~30-line helper, so extracting now is a wash and the wrong shared abstraction costs more than the duplication. It is kept open only so the survey is not repeated, which makes it a parked record, not a P2. Revisit when a FOURTH list picker appears.
 
 ## ds-auth-layout — residue from the 0.8.0/0.9.0 audit (recorded 2026-08-11, from the ai-sdlc-prototype side)
@@ -453,7 +430,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 ## Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)
 
-- [ ] **[P2] Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code.** Asked as proposal P4 (covering findings G4 and A1) of the ITB Workspace filter-picker gap report, written against 0.9.1, which proposed a `DS_INTL` token in the `MatPaginatorIntl` shape scoped to "all overlay text". **The scope in the ask is what makes this a project rather than a change, and is why it was deferred rather than built.** The picker literals were six places, and **0.12.0 took two of them off the list by giving them projection slots** — `No matches` is now the fallback inside `dsEmptyTemplate` (`multi-select.component.html:388`, `autocomplete.component.html:299`) and `Create «…»` the fallback inside `dsCreateTemplate` (`autocomplete.component.html:331`), so a consumer can replace both today without any of this. **Six are still unreachable, and 0.12.0 added two of them:** `Select all` (`multi-select.component.html:204`), `+N more` (`:124` and `autocomplete.component.html:82`), `'Remove ' + label` (`:105` and `:60`), the default `placeholder = 'Select…'` (`autocomplete.component.ts:152`), and — new in 0.12.0 — `All of {{ group.label }}` on the per-group select-all row (`multi-select.component.html:260`) and the badge's `countLabel="selected"` (`:87`). **The last two make 0.12.0 the release that both wrote §4 of `docs/picker-contract.md` and broke it**, which is the strongest argument yet that the slot-by-slot approach does not scale and the provider has to land. Outside the pickers a sweep of `src/lib/**/*.html` finds 34 more hardcoded `aria-label`s (35 across 17 files, one of which is `ds-select`s own) — alert, breadcrumbs, color-picker, date-picker (×5), drawer, dropzone, input, modal-card, number-stepper (×2), pagination (×3), search, select, sidenav-footer (×6), table (×3), time-columns (×3), time-picker, toast — plus visible text in `ds-table` and `ds-sidenav-footer`. Localizing the pickers alone ships half a mechanism to an app that needs all of it.
+- [ ] **[P2] Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code.** Asked as proposal P4 (covering findings G4 and A1) of the ITB Workspace filter-picker gap report, written against 0.9.1, which proposed a `DS_INTL` token in the `MatPaginatorIntl` shape scoped to "all overlay text". **The scope in the ask is what makes this a project rather than a change, and is why it was deferred rather than built.** The picker literals were six places, and **0.11.1 took two of them off the list by giving them projection slots** — `No matches` is now the fallback inside `dsEmptyTemplate` (`multi-select.component.html:388`, `autocomplete.component.html:299`) and `Create «…»` the fallback inside `dsCreateTemplate` (`autocomplete.component.html:331`), so a consumer can replace both today without any of this. **Six are still unreachable, and 0.11.1 added two of them:** `Select all` (`multi-select.component.html:204`), `+N more` (`:124` and `autocomplete.component.html:82`), `'Remove ' + label` (`:105` and `:60`), the default `placeholder = 'Select…'` (`autocomplete.component.ts:152`), and — new in 0.11.1 — `All of {{ group.label }}` on the per-group select-all row (`multi-select.component.html:260`) and the badge's `countLabel="selected"` (`:87`). **The last two make 0.11.1 the release that both wrote §4 of `docs/picker-contract.md` and broke it**, which is the strongest argument yet that the slot-by-slot approach does not scale and the provider has to land. Outside the pickers a sweep of `src/lib/**/*.html` finds 34 more hardcoded `aria-label`s (35 across 17 files, one of which is `ds-select`s own) — alert, breadcrumbs, color-picker, date-picker (×5), drawer, dropzone, input, modal-card, number-stepper (×2), pagination (×3), search, select, sidenav-footer (×6), table (×3), time-columns (×3), time-picker, toast — plus visible text in `ds-table` and `ds-sidenav-footer`. Localizing the pickers alone ships half a mechanism to an app that needs all of it.
   **The fork, written down so the next reader does not re-derive it:** a `DS_INTL` token with `provideDsIntl`, against per-instance inputs on each component. **The library currently leans the other way** — `ds-filter-bar` localizes with `moreLabel` and `panelLabel` inputs (`filter-bar.component.ts:75-77`) — so a token has to justify itself against a shipped precedent rather than arrive as the obvious answer. If the token wins, `provideDsConfig` already exists as the app-wide configuration point and is where it belongs; `resolveWithConfig` is the pattern it would follow.
   **P2 rather than P3 because a consumer is actually blocked**, which none of the other parked items can claim: ITB Workspace runs a two-language `LanguageService` and cannot translate a picker panel at all. Parked on priority, not on doubt about the need.
   The rest of that report is live work — the seven surviving findings and their forks are in `presentations/picker-gaps-decisions.html`, whose closing section is this item.
