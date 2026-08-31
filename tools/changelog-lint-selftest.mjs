@@ -1,12 +1,9 @@
 #!/usr/bin/env node
-// Does each changelog-lint rule still FIRE? A rule that cannot match is invisible:
-// the lint stays green either way, and a green gate over a leaking file is worse
-// than no gate, because it is evidence of the wrong thing.
+// Does each changelog-lint rule still FIRE? A rule that cannot match is invisible: the
+// lint stays green either way, so a green gate becomes evidence of the wrong thing.
 //
-// Each case writes ONE offending line into a throwaway fixture and asserts that
-// rule's code appears. Nothing real is mutated — unlike the migration-lint
-// selftest, which edits a live manifest and restores it, this cannot leave a
-// published file broken if it crashes.
+// Every case writes into a throwaway fixture, never a real file, so a crash cannot leave a
+// published file broken.
 //
 //   node tools/changelog-lint-selftest.mjs
 import { writeFileSync, rmSync, existsSync } from 'node:fs';
@@ -17,14 +14,13 @@ import { execFileSync } from 'node:child_process';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURE = 'changelog-lint-selftest.fixture.md';
 const FIXTURE_PATH = join(ROOT, FIXTURE);
-// A second fixture for the manifest rules. It lives at the root, NOT in `migrations/`,
-// so a crash between write and cleanup cannot leave a stray file that ships.
+// At the root, NOT in `migrations/`: a crash between write and cleanup would otherwise
+// leave a stray file that ships.
 const MANIFEST = 'changelog-lint-selftest.fixture.json';
 const MANIFEST_PATH = join(ROOT, MANIFEST);
 
-// One line per rule, each the shape the rule exists to catch. The prose around the
-// offending token is deliberately plausible — a rule that only fires on a bare
-// token would miss every real occurrence.
+// The prose around each offending token is deliberately plausible: a rule that only fires
+// on a bare token would miss every real occurrence.
 const cases = {
   C001: 'Fixes a table header issue mm-broker reported on a detail screen.',
   C002: 'The clipped label is fixed (MBP-245), so an option keeps its descenders.',
@@ -35,9 +31,8 @@ const cases = {
   C007: 'Four rules hold the contract — `action` required (M039) among them.',
   C008: 'The fill was corrected in `4b9e0c2` and has not moved since.',
   C009: 'Two dogfooding audits read the consumer stylesheets as a record.',
-  // Resolved from the export graph, so this case also proves the graph loaded at all:
-  // if the resolution silently returns nothing, every C010 stops firing and the rule
-  // is dead while the gate still reports green.
+  // Also proves the export graph loaded: if resolution returns nothing, every C010 stops
+  // firing and the gate still reports green.
   C010: 'The seven shared inputs are declared once, on `DsFieldBase`.',
   C011: 'Reverted at HEAD, so the shape you see is the second one.',
 };
@@ -63,10 +58,8 @@ try {
     console.log(`${fired ? 'fires ' : 'DEAD  '} ${code}`);
   }
 
-  // The published files are committed CRLF and wrap at ~100 columns, so a two-word
-  // phrase routinely lands with a `\r` and a newline in the middle of it. The first
-  // version of the lint split on '\n' alone and walked past `npm run\r\n  class-surface`
-  // in the changelog it was written to check.
+  // `core.autocrlf` checks the published files out CRLF, and they wrap at ~100 columns, so
+  // a two-word phrase routinely lands with a `\r` and a newline inside it.
   writeFileSync(
     FIXTURE_PATH,
     '# Fixture\r\n\r\n- **Members changed.** Run `npm run\r\n  class-surface` for the list.\r\n',
@@ -77,8 +70,8 @@ try {
   );
   if (!wrapCaught) dead.push('C005-wrapped');
 
-  // C005 was not the only rule the wrap could hide: every multi-word token can land
-  // with the break inside it, and the client names are the ones that matter.
+  // Every multi-word token can land with the break inside it, and the client names are the
+  // ones that matter.
   const wrapped = {
     C001: '- The fix came out of a Kit\r\n  Movement screen, and the ports saw it too.\r\n',
     C002: '- The clipped label is fixed (MBP-\r\n  245), so descenders survive.\r\n',
@@ -93,9 +86,8 @@ try {
     );
   }
 
-  // Spelling is not the rule. A ticket typed in lower case and a client name joined
-  // with an underscore are the same disclosure, and a Windows author writes the
-  // separator the other way round.
+  // A ticket typed in lower case and a client name joined with an underscore are the same
+  // disclosure.
   const spellings = {
     C002: '- Restores the descenders (mbp-245), long overdue.',
     C001: '- Reported against mm_broker by way of a support ticket.',
@@ -110,8 +102,8 @@ try {
     );
   }
 
-  // Loosening a rule buys false positives, and a gate that cries wolf gets switched
-  // off. Each of these tripped a draft of the rule above it.
+  // A gate that cries wolf gets switched off, so each loosening above is paired with the
+  // innocent line it must not flag.
   const innocent = [
     ['C006 page range', '- See pages 10-12 of the spec for the full grid.'],
     [
@@ -139,10 +131,8 @@ try {
     console.log(`${quiet ? 'quiet ' : 'FALSE+'} ${what}`);
   }
 
-  // A manifest's locators are exempt from the private-symbol rule, because a consumer's
-  // finder greps their source for every one of them. An exemption is how a leak gets in,
-  // so both halves are asserted: the locator passes, and the same name in a `note` — plus
-  // a client name in the same locator array — still fails.
+  // An exemption is how a leak gets in, so both halves are asserted: the locator passes,
+  // and the same name outside one — plus a client name inside one — still fails.
   const manifest = (items) => {
     writeFileSync(
       MANIFEST_PATH,
@@ -189,11 +179,8 @@ try {
   console.log(`${clientInLocator ? 'fires ' : 'DEAD  '} C001 inside a locator`);
   if (!clientInLocator) dead.push('C001-in-locator');
 
-  // Four holes an adversarial pass proved with fixtures. Each is asserted in BOTH
-  // directions, because an exemption is how a leak gets in.
-
-  // 1. The private-symbol escape hatch used to accept "internal" anywhere within 800
-  //    characters. With 27 of them in the changelog, that disarmed roughly a tenth of it.
+  // "internal" has to sit beside the NAME. A loose window lets an unrelated one silence a
+  // real hit lines away, and the changelog carries 27 of them.
   writeFileSync(
     FIXTURE_PATH,
     '# Fixture\n\n- The overlay now uses an internal cache, which is a detail.\n' +
@@ -206,8 +193,7 @@ try {
   );
   if (!farAway) dead.push('C010-proximity');
 
-  // 2. The brand this sweep removed from `themes/README.md` by hand was in no word list,
-  //    so the regression it fixes was unguarded. All four spellings.
+  // A brand name reaches a file in four spellings, and CLIENTS must catch all of them.
   for (const spelling of [
     'brand-manage-my',
     '[data-brand="manage-my"]',
@@ -223,8 +209,8 @@ try {
     console.log(`${caught ? 'fires ' : 'DEAD  '} C001 on "${spelling}"`);
   }
 
-  // 3. The locator exemption was keyed on the string VALUE, so the same string in
-  //    `informational` — which has no `find` for a finder to run — was exempt too.
+  // The exemption must not follow the string's VALUE out of a locator field: no finder
+  // greps `informational`.
   writeFileSync(
     MANIFEST_PATH,
     JSON.stringify(
@@ -250,8 +236,8 @@ try {
   );
   if (escaped) dead.push('C010-exemption-escapes-to-informational');
 
-  // 4. ...and it depended on one-value-per-line formatting, so a manifest written
-  //    compactly by hand lost the exemption entirely.
+  // ...and it must not depend on one-value-per-line formatting, or a manifest written
+  // compactly by hand loses the exemption.
   writeFileSync(
     MANIFEST_PATH,
     '{ "version": "9.9.9", "items": [ { "id": "one", "old": "class X extends DsFieldBase", ' +
@@ -263,7 +249,7 @@ try {
   );
   if (!compactQuiet) dead.push('C010-compact-manifest');
 
-  // Two rules used to fire the wrong way, which is how a gate teaches authors to ignore it.
+  // Neither of these may fire: a gate that flags them teaches authors to ignore it.
   const relaxed = [
     [
       'C005 generic script',

@@ -1,4 +1,3 @@
-// Inline SVG icon set.
 // All paths render inside <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">, stroke-width 1.75.
 
 export const ICONS = {

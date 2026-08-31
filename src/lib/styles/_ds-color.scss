@@ -1,8 +1,9 @@
 // Scoped accent recolour. A `ds-color="<family>"` attribute — on a zone
 // container, on a component host, or applied via the ds.color() mixin in
 // consumer config — flips the --accent-* pointer family to another brand/status
-// family for its subtree. Components read --accent-* for their accent, so the whole subtree recolours from this one rule. Pairs with
-// the button/icon-button `color` input, which flips the same pointers
+// family for its subtree. Components read --accent-* for their accent, so the whole
+// subtree recolours from this one rule. Pairs with the button/icon-button `color`
+// input, which flips the same pointers
 // per instance. With no attribute, --accent-* stays the primary family (see
 // themes/_semantic.scss), so the default theme is unchanged.
 

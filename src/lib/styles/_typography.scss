@@ -1,5 +1,5 @@
-// Type utility classes.
-// These are GLOBAL by design — consumers apply them via class.
+// GLOBAL by design — a consumer applies these by class, so the names are part of the
+// published surface.
 //
 // Consumer-first token contract (same as components): every token-driven
 // property is a longhand read through a public `--ds-t-<name>-*` custom

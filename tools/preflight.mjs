@@ -73,9 +73,8 @@ try {
   fail('migrations/ failed the manifest lint (errors above).');
 }
 
-// The tarball goes to the public registry, so a client's name or a `tools/` path in it is read
-// by every other client. The PR gate runs this too, but a release can be cut from a branch whose
-// gate never ran — and after publishing there is nothing to fix.
+// The PR gate runs this too, but a release can be cut from a branch whose gate never ran,
+// and after publishing to the public registry there is nothing to fix.
 try {
   execSync('node tools/changelog-lint-selftest.mjs', { stdio: 'inherit' });
 } catch {
