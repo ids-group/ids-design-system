@@ -8,7 +8,10 @@
       "new": ".dropdown-list, .optgroup, .optgroup-label, .option-check — all inside a new .dropdown-panel wrapper",
       "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .autocomplete-list` or a sibling. Nothing to do if you only use the `<ds-autocomplete>` element and its inputs.",
       "pitfall": "The panel is portaled to document.body, so these rules are almost always global rather than component-scoped — grep your global stylesheets, not just the component next to the picker.",
-      "searchHints": ["autocomplete-list", "autocomplete-optgroup"],
+      "searchHints": [
+        "autocomplete-list",
+        "autocomplete-optgroup"
+      ],
       "surface": "style",
       "detect": [
         ".autocomplete-list",
@@ -27,10 +30,14 @@
       "new": "--ds-option-selected-bg-color, --ds-option-selected-label-color, --ds-option-selected-bg-color-hover, --ds-option-check-color",
       "appliesWhen": "You set --ds-autocomplete-option-bg-color-hover anywhere.",
       "pitfall": "The old token painted BOTH the hover and the selected row, because the autocomplete had no separate selected treatment. The panel-level hooks separate them, so a single old value may need splitting across two.",
-      "searchHints": ["ds-autocomplete-option-bg-color-hover"],
+      "searchHints": [
+        "ds-autocomplete-option-bg-color-hover"
+      ],
       "surface": "style",
-      "detect": ["--ds-autocomplete-option-bg-color-hover"],
-      "verify": "Retuning --ds-option-selected-bg-color repaints the autocomplete's selected row, which it did not before.",
+      "detect": [
+        "--ds-autocomplete-option-bg-color-hover"
+      ],
+      "verify": "A :root or ds-autocomplete override of --ds-option-selected-bg-color repaints the selected row in ds-select and ds-autocomplete. ds-multi-select marks selection with a checkbox, so it answers to --ds-multi-select-check-* instead.",
       "restore": null,
       "note": "The autocomplete had no separate selected treatment, so one token painted both hover and selection. The panel-level hooks reach all three pickers and separate the two states, which is what the 0.9.0 notes already claimed was true.",
       "action": "Replace --ds-autocomplete-option-bg-color-hover with the panel-level --ds-option-* hooks."
@@ -42,9 +49,13 @@
       "new": null,
       "appliesWhen": "You use `<ds-autocomplete>` in single mode in a narrow column.",
       "pitfall": "Multi mode is unchanged — its chips already had a measured cap. This only affects the settled single value.",
-      "searchHints": ["ds-autocomplete"],
+      "searchHints": [
+        "ds-autocomplete"
+      ],
       "surface": "template",
-      "detect": ["<ds-autocomplete"],
+      "detect": [
+        "<ds-autocomplete"
+      ],
       "verify": "A long value in a 144px-wide single-select autocomplete keeps the trigger one row tall and ends in an ellipsis, with the full text on the element's title.",
       "restore": "valueOverflow=\"wrap\"",
       "note": "A settled single value now clips with an ellipsis and keeps the trigger one row tall, with the full text on the element title. Multi mode is untouched — its chips already had a measured cap. Nothing in your markup has to change unless the wrapping was deliberate.",
@@ -53,20 +64,25 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "class MySelect extends SelectComponent, class MyMultiSelect extends MultiSelectComponent",
+      "old": "class MySelect extends SelectComponent, class MyMultiSelect extends MultiSelectComponent, class MyAutocomplete extends AutocompleteComponent",
       "new": null,
       "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-…>` elements need nothing.",
       "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
       "searchHints": [
         "extends SelectComponent",
-        "extends MultiSelectComponent"
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent"
       ],
       "surface": "typescript",
-      "detect": ["extends SelectComponent", "extends MultiSelectComponent"],
+      "detect": [
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent"
+      ],
       "verify": "The app builds with no TS2415 or TS2416 naming a picker component.",
       "restore": null,
-      "note": "ds-select and ds-multi-select gained a `width` input, and ds-select gained a private `panelTokens` field. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check.",
-      "action": "Build after upgrading; rename or `override` any member of yours that collides with `width` or `panelTokens`."
+      "note": "All three pickers gained members: ds-select a width input and a private panelTokens field, ds-multi-select and ds-autocomplete a label/required/optional block plus projection slots. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
+      "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding."
     },
     {
       "id": "autocomplete-width-type-widened",
@@ -75,9 +91,13 @@
       "new": null,
       "appliesWhen": "You import AutocompleteWidth by name.",
       "pitfall": "Only a declaration that re-declares the type structurally (rather than importing it) could notice, and it still sees the same union.",
-      "searchHints": ["AutocompleteWidth"],
+      "searchHints": [
+        "AutocompleteWidth"
+      ],
       "surface": "typescript",
-      "detect": ["AutocompleteWidth"],
+      "detect": [
+        "AutocompleteWidth"
+      ],
       "verify": "The app builds and `width` still accepts only 'fill' and 'content'.",
       "restore": null,
       "note": "AutocompleteWidth is now an alias of the shared DsControlWidth that SelectWidth and MultiSelectWidth also alias. The union it resolves to is unchanged, so an import keeps compiling and `width` still accepts exactly `fill` and `content`.",
@@ -92,9 +112,14 @@
       "note": "The autocomplete took groups in a second input and documented `options` as ignored whenever it was set, so two inputs existed and one silently won. `options` now accepts flat options, groups, or both mixed, in the order given, which is the shape ds-select already used and ds-multi-select has gained.",
       "appliesWhen": "You bind `[optionGroups]` on a `<ds-autocomplete>`.",
       "pitfall": "If you were passing BOTH inputs and relying on the flat one being dropped, merging them changes what renders — the flat options now appear alongside the groups rather than vanishing.",
-      "searchHints": ["optionGroups"],
+      "searchHints": [
+        "optionGroups"
+      ],
       "surface": "template",
-      "detect": ["[optionGroups]", "optionGroups="],
+      "detect": [
+        "[optionGroups]",
+        "optionGroups="
+      ],
       "verify": "The autocomplete renders its labelled sections with only `options` bound, and filtering still hides a group whose options all fail the query.",
       "restore": null
     },
@@ -107,10 +132,16 @@
       "note": "The multi-select carried its own copy of the panel and the option row while its pane also carried ds-dropdown-panel, so both rule sets applied at once and the component’s won. It renders through the shared partial now, like the other two pickers.",
       "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .panel` or `.options` for the multi-select.",
       "pitfall": "The panel is portaled to document.body, so such a rule is almost always global rather than beside the component.",
-      "searchHints": ["ds-overlay-pane .panel", ".options"],
+      "searchHints": [
+        "ds-overlay-pane .panel",
+        ".options"
+      ],
       "surface": "style",
-      "detect": [".ds-overlay-pane .panel", ".ds-overlay-pane .options"],
-      "verify": "The multi-select panel renders with 4px padding and 4px row radius with no rule of yours, and its rows respond to --ds-option-* like the other two pickers.",
+      "detect": [
+        ".ds-overlay-pane .panel",
+        ".ds-overlay-pane .options"
+      ],
+      "verify": "The multi-select panel renders with 4px padding and 4px row radius with no rule of yours, and its rows pick up the shared partial’s hover and active fills.",
       "restore": null
     },
     {
@@ -125,9 +156,14 @@
       "note": "A third value, `labels`, now sits beside it and names the selection instead of counting it, so the old name no longer said which of the two it was.",
       "appliesWhen": "You set triggerDisplay on a ds-multi-select. The input shipped inside this same unreleased block, so only work in flight is affected.",
       "pitfall": "None — the rendering of `count` is exactly what `compact` did.",
-      "searchHints": ["triggerDisplay"],
+      "searchHints": [
+        "triggerDisplay"
+      ],
       "surface": "template",
-      "detect": ["triggerDisplay=\"compact\"", "triggerDisplay: 'compact'"],
+      "detect": [
+        "triggerDisplay=\"compact\"",
+        "triggerDisplay: 'compact'"
+      ],
       "verify": "The trigger still shows a caption and a count badge.",
       "restore": null
     }
@@ -137,10 +173,11 @@
     "New panel bounds for that mode: --ds-dropdown-panel-minw and --ds-dropdown-panel-maxw.",
     "ds-select now forwards its panel custom properties onto the portaled pane, which it never did — a `ds-select { --ds-dropdown-panel-*: … }` reaches the panel now instead of being silently dropped.",
     "ds-multi-select gained option groups, which it never had. A group disables all of its options when its own `disabled` is set.",
-    "ds-multi-select and ds-autocomplete gained `label`, `required` and `optional`; ds-multi-select gained `size`. All three existed on ds-select alone.",
+    "ds-multi-select and ds-autocomplete gained `label`, `required` and `optional`, which existed on ds-select alone; ds-multi-select gained `size`, which the other two already had.",
     "New slots: dsEmptyTemplate on all three pickers, dsCreateTemplate on ds-autocomplete. ds-select shows an empty row when it has no options, where it used to open a blank panel.",
     "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false.",
-    "docs/picker-contract.md states the rules the three pickers share, and `npm run picker-parity` lists every member that is not shared."
+    "docs/picker-contract.md states the rules the three pickers share, and `npm run picker-parity` lists every member that is not shared.",
+    "All three pickers now forward the four panel-level --ds-option-* hooks onto their portaled pane, so a per-instance override reaches the panel."
   ],
   "deleteList": [
     {

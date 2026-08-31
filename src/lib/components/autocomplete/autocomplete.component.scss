@@ -173,6 +173,11 @@
 /* The panel is the shared `.ds-dropdown-panel` partial now: padding, row radius,
    selected-row hooks and pressed states come from there, so this file keeps only
    what no other picker has — plus the three panel tokens it already shipped. */
+
+/* Qualified with the pane class so it OUTRANKS styles/_dropdown-overlay.scss by
+   specificity rather than by stylesheet order — the two were an exact tie, and an
+   SSR critical-CSS inline or a consumer loading the partial later flipped it. */
+.ds-dropdown-panel .dropdown-panel,
 .dropdown-panel {
   --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
   --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-dropdown-panel-radius, var(--ds-radius-panel)));
@@ -181,7 +186,7 @@
   background: var(--_autocomplete-panel-bg-color);
   border-radius: var(--_autocomplete-panel-radius);
   max-height: var(--_autocomplete-panel-maxh);
-  margin: var(--picker-offset) 0 0;
+  margin: 0;
 
   .option.multi {
     padding-left: var(--space-2);

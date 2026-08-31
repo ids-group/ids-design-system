@@ -4914,7 +4914,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "options",
         "kind": "input",
-        "type": "SelectItem[]",
+        "type": "readonly SelectItem[]",
         "union": null,
         "default": "[]",
         "required": false,

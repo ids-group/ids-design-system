@@ -121,9 +121,11 @@
   </span>
 
   @if (showChevron()) {
+     
     <ds-icon
       name="chevronDown"
       class="autocomplete-chevron"
+      aria-hidden="true"
       [size]="16"
       (click)="togglePanel($event)"
     />

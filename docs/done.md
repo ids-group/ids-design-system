@@ -34,7 +34,7 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
      own docs said `options` was ignored when it was set.
   6. **Ellipsis is the default for a settled single value.** Measured first: a 134px value in a 144px
      trigger took the trigger from 40px to 63px. `valueOverflow="wrap"` restores the old behaviour;
-     six hand-rolled clip sites moved onto the `single-line-ellipsis` mixin.
+     seven hand-rolled clip sites moved onto the `single-line-ellipsis` mixin.
   7. **The autocomplete panel rejoined the shared partial.** Its `panelClass` argument REPLACES the
      default `['ds-dropdown-panel','ds-overlay-pane']` rather than adding to it, so the panel had
      shipped for three releases with `padding: 0`, square rows, and four public `--ds-option-*` hooks

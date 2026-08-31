@@ -5,6 +5,7 @@
 **Bugs — something shipped misbehaves**
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
+- P2 · `triggerDisplay="labels"` collapses to one label: the fit measurement reads a box its own cut narrows — RECORDED 2026-08-31
 
 **Asks — a consumer or Stas asked for it**
 
@@ -46,11 +47,21 @@
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй").
 
 
+## `triggerDisplay="labels"` measures a box its own output resizes (recorded 2026-08-31, from the branch review)
+
+- [ ] **[P2] The `labels` trigger collapses to one label regardless of free space, because the measurement reads a `fit-content` box that the cut itself narrows.** `:host(.compact-trigger)` sets `width: fit-content` (`multi-select.component.scss:36`), and `labels` renders a `#chipRow` of `data-chip` spans (`multi-select.component.html:61-83`), so `chipFit` measures `trigger.clientWidth` of a box whose width is decided by the chips it is about to cut. **This is the exact case `chip-overflow.ts:13` names as its INVARIANT** — "nothing here may measure something the cut itself changes". The `lastWidth`/`lastCount` guard stops it hanging, so the symptom is a wrong converged value rather than a frozen page: pass 1 measures the full width, cuts to N, the trigger shrinks, pass 2 cuts again, and it settles at one label plus "+N".
+
+  `width="fill"` does not avoid it: `:host(.content-width)` (`:29`) and `:host(.compact-trigger)` (`:36`) are an exact specificity tie and the compact rule is declared later, so the host is `fit-content` in every `labels` and `count` configuration.
+
+  **Three ways out, and the choice is a design call, not a cleanup:** (a) `labels` stops taking `compact-trigger`, which fixes the measurement and gives up the fixed footprint that is the mode's whole point; (b) `chipFit` measures the trigger's PARENT instead, which keeps the footprint but changes a primitive two components share; (c) `labels` is not a compact mode at all and gets its own host class. Shipped as-is in 0.12.0 with the defect: it under-shows labels, it does not misbehave otherwise.
+
+  Same class as the two self-referential loops recorded in `done.md` from the original chip work — the rule that came out of that one is the rule this broke.
+
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**28 open: 1 P1, 8 P2, 19 P3** (counted from the index, not by hand). Ten are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **16 items — 1 Bug, 4 Asks and 11
-Decisions**. **`# Bugs` holds one:** the warning status pair measures 4.42:1 where AA asks 4.5.
+**29 open: 1 P1, 9 P2, 19 P3** (counted from the index, not by hand). Ten are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **17 items — 2 Bugs, 4 Asks and 11
+Decisions**. **`# Bugs` holds two:** the warning status pair measures 4.42:1 where AA asks 4.5, and the `labels` trigger under-shows its labels.
 
 **The tooling items came out of running the tools rather than reading them, and both were invisible to a
 code read.** The formatter conflict surfaced when the three formatters were actually run end to end;
@@ -324,7 +335,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 ## Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)
 
-- [ ] **[P2] Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code.** Asked as proposal P4 (covering findings G4 and A1) of the ITB Workspace filter-picker gap report, written against 0.9.1, which proposed a `DS_INTL` token in the `MatPaginatorIntl` shape scoped to "all overlay text". **The scope in the ask is what makes this a project rather than a change, and is why it was deferred rather than built.** The picker literals were six places, and **0.12.0 took two of them off the list by giving them projection slots** — `No matches` is now the fallback inside `dsEmptyTemplate` (`multi-select.component.html:387`, `autocomplete.component.html:286`) and `Create «…»` the fallback inside `dsCreateTemplate` (`autocomplete.component.html:318`), so a consumer can replace both today without any of this. **Four are still unreachable:** `Select all` (`multi-select.component.html:206`), `+N more` (`:126` and `autocomplete.component.html:73`), `'Remove ' + label` (`:107` and `:61`) and the default `placeholder = 'Select…'` (`autocomplete.component.ts:148`). Outside the pickers a sweep of `src/lib/**/*.html` finds 34 more hardcoded `aria-label`s (35 across 17 files, one of which is `ds-select`s own) — alert, breadcrumbs, color-picker, date-picker (×5), drawer, dropzone, input, modal-card, number-stepper (×2), pagination (×3), search, select, sidenav-footer (×6), table (×3), time-columns (×3), time-picker, toast — plus visible text in `ds-table` and `ds-sidenav-footer`. Localizing the pickers alone ships half a mechanism to an app that needs all of it.
+- [ ] **[P2] Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code.** Asked as proposal P4 (covering findings G4 and A1) of the ITB Workspace filter-picker gap report, written against 0.9.1, which proposed a `DS_INTL` token in the `MatPaginatorIntl` shape scoped to "all overlay text". **The scope in the ask is what makes this a project rather than a change, and is why it was deferred rather than built.** The picker literals were six places, and **0.12.0 took two of them off the list by giving them projection slots** — `No matches` is now the fallback inside `dsEmptyTemplate` (`multi-select.component.html:388`, `autocomplete.component.html:299`) and `Create «…»` the fallback inside `dsCreateTemplate` (`autocomplete.component.html:331`), so a consumer can replace both today without any of this. **Six are still unreachable, and 0.12.0 added two of them:** `Select all` (`multi-select.component.html:204`), `+N more` (`:124` and `autocomplete.component.html:82`), `'Remove ' + label` (`:105` and `:60`), the default `placeholder = 'Select…'` (`autocomplete.component.ts:152`), and — new in 0.12.0 — `All of {{ group.label }}` on the per-group select-all row (`multi-select.component.html:260`) and the badge's `countLabel="selected"` (`:87`). **The last two make 0.12.0 the release that both wrote §4 of `docs/picker-contract.md` and broke it**, which is the strongest argument yet that the slot-by-slot approach does not scale and the provider has to land. Outside the pickers a sweep of `src/lib/**/*.html` finds 34 more hardcoded `aria-label`s (35 across 17 files, one of which is `ds-select`s own) — alert, breadcrumbs, color-picker, date-picker (×5), drawer, dropzone, input, modal-card, number-stepper (×2), pagination (×3), search, select, sidenav-footer (×6), table (×3), time-columns (×3), time-picker, toast — plus visible text in `ds-table` and `ds-sidenav-footer`. Localizing the pickers alone ships half a mechanism to an app that needs all of it.
   **The fork, written down so the next reader does not re-derive it:** a `DS_INTL` token with `provideDsIntl`, against per-instance inputs on each component. **The library currently leans the other way** — `ds-filter-bar` localizes with `moreLabel` and `panelLabel` inputs (`filter-bar.component.ts:75-77`) — so a token has to justify itself against a shipped precedent rather than arrive as the obvious answer. If the token wins, `provideDsConfig` already exists as the app-wide configuration point and is where it belongs; `resolveWithConfig` is the pattern it would follow.
   **P2 rather than P3 because a consumer is actually blocked**, which none of the other parked items can claim: ITB Workspace runs a two-language `LanguageService` and cannot translate a picker panel at all. Parked on priority, not on doubt about the need.
   The rest of that report is live work — the seven surviving findings and their forks are in `presentations/picker-gaps-decisions.html`, whose closing section is this item.

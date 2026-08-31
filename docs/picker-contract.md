@@ -25,15 +25,17 @@ kept honest by the audit in §6:
 `valueOverflow` — autocomplete only, because they describe typing and a settled single value.
 `maxVisibleChips` and `dsChipTemplate` — the two that render chips, because `ds-select` holds one
 value and has none. `selectAll` and `triggerDisplay` — the multi-value pickers, because a single
-value has nothing to select all of and nothing to count. `searchable` and `searchPlaceholder` —
-`ds-multi-select` only, because it is the one picker whose filter is a row INSIDE the panel; the
-other two type in the trigger, and a single value that needs filtering is `ds-autocomplete` by
-definition.
+value has nothing to select all of and nothing to count — and `ds-autocomplete` in `multiple`
+mode is left out of both for a different reason: its trigger holds the text input the control
+exists for, so a caption-and-count summary would displace it and a select-all row would fight the
+filter the user is typing. `searchable` and `searchPlaceholder` — `ds-multi-select` only, because
+it is the one picker whose filter is a row INSIDE the panel. `ds-autocomplete` filters from its
+trigger input, and `ds-select` has no text entry at all, so neither has a row to show or hide.
 
 **Absent by accident, and therefore a defect.** Anything else. When this file was written that was
-`size`, `required`, `optional`, `readOnly`, `name`, `clearable` and `label` — form-contract members
-that existed on `ds-select` and nowhere else. `size`, `required`, `optional` and `label` are shared
-as of this release.
+`required`, `optional`, `readOnly`, `name`, `clearable` and `label` — form-contract members that
+existed on `ds-select` and nowhere else — plus `size`, which `ds-multi-select` alone lacked.
+`size`, `required`, `optional` and `label` are shared as of this release.
 
 Three are still open, and knowingly: `name`, `readOnly` (with its `readonly` binding alias) and
 `clearable`. Each pulls behaviour rather than only an input — a hidden control for native submit, a
