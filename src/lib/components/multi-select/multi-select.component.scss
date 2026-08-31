@@ -2,7 +2,6 @@
 @use '../../styles/field-label' as field-label;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/field-state' as field-state;
-@use '../../styles/text-clip' as text-clip;
 
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
@@ -124,6 +123,12 @@
 
   .req {
     color: var(--error);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .optional-marker {
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-regular);
   }
 }
 
@@ -214,9 +219,8 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  width: calc(100% - var(--space-2));
+  width: 100%;
   padding: var(--space-2) var(--space-2-5);
-  margin: var(--space-1) var(--space-1) 0;
   border: 0;
   border-bottom: var(--border-width-default) solid var(--border-divider);
   border-radius: var(--ds-radius-inner) var(--ds-radius-inner) 0 0;
@@ -230,8 +234,13 @@
   text-align: left;
   cursor: pointer;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--surface-secondary);
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
   }
 }
 

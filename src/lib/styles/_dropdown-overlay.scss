@@ -28,6 +28,7 @@
 
   /* Only bite in `content` width mode, where the pane is auto-sized: in `fill` the
      component pins the pane to the trigger and there is nothing left to bound. */
+  --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
   --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
   --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
 
@@ -43,7 +44,7 @@
     padding: var(--space-1);
     min-width: var(--_dropdown-panel-minw);
     max-width: var(--_dropdown-panel-maxw);
-    max-height: 320px;
+    max-height: var(--_dropdown-panel-maxh);
     overflow-y: auto;
     z-index: var(--layer-popover);
   }

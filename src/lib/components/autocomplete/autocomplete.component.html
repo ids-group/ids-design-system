@@ -40,9 +40,9 @@
     <ng-container
       [ngTemplateOutlet]="tpl"
       [ngTemplateOutletContext]="{
-        $implicit: selectedTags(),
-        selected: selectedTags(),
-        count: selectedTags().length,
+        $implicit: triggerSelection(),
+        selected: triggerSelection(),
+        count: multiple() ? selectedTags().length : hasSingleValue() ? 1 : 0,
         open: isOpen(),
         disabled: isDisabled(),
       }"
@@ -60,7 +60,17 @@
           [closeLabel]="'Remove ' + selectedOption.label"
           (closed)="remove(selectedOption.value)"
         >
-          {{ selectedOption.label }}
+          @if (chipTemplate(); as tpl) {
+            <ng-container
+              [ngTemplateOutlet]="tpl"
+              [ngTemplateOutletContext]="{
+                $implicit: selectedOption,
+                option: selectedOption,
+              }"
+            />
+          } @else {
+            {{ selectedOption.label }}
+          }
         </ds-tag>
       }
 
@@ -92,7 +102,9 @@
     [attr.aria-expanded]="isOpen()"
     [attr.aria-controls]="listboxId"
     [attr.aria-activedescendant]="activeDescendant()"
-    [attr.aria-label]="ariaLabel() || placeholder()"
+    [attr.aria-labelledby]="label() ? labelId : null"
+    [attr.aria-label]="resolvedAriaLabel()"
+    [attr.aria-required]="required() ? 'true' : null"
     [attr.aria-invalid]="invalidResolved() ? 'true' : null"
     [attr.aria-describedby]="hintId()"
     [disabled]="isDisabled()"
@@ -274,7 +286,7 @@
       @if (filteredOptions().length === 0 && !showCreateRow()) {
         <li
           class="empty t-s"
-          role="status"
+          role="presentation"
         >
           @if (emptyTemplate(); as tpl) {
             <ng-container

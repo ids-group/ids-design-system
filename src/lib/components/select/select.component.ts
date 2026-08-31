@@ -86,13 +86,17 @@ export class SelectComponent
   /** Selected option's value, two-way bound. */
   readonly value = model<string>('');
   /** Flat options or option groups rendered in the dropdown panel. */
-  readonly options = input<SelectItem[]>([]);
+  readonly options = input<readonly SelectItem[]>([]);
   /** Public panel tokens forwarded onto the portaled overlay pane on open, so a
    *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it. Without this the
    *  tokens can only be set globally: the pane is portaled out of this component. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-minw',
     '--ds-dropdown-panel-maxw',
+    '--ds-option-selected-bg-color',
+    '--ds-option-selected-label-color',
+    '--ds-option-selected-bg-color-hover',
+    '--ds-option-check-color',
   ];
 
   /** Trigger width — `fill` stretches to the container and pins the panel to the
@@ -339,8 +343,14 @@ export class SelectComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
+    const detaching = this.overlayRef;
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
+      // A deferred dispose can outlive a re-open, and then this fires for the
+      // PREVIOUS panel: clearing state here would strand the live one.
+      if (this.overlayRef !== detaching) {
+        return;
+      }
       this.overlayRef = null;
       this.open.set(false);
     });
