@@ -1,3 +1,4 @@
+@use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
 
 // Tokens on :host so consumer overrides (ds-sidenav-item { --ds-…: … }) win
@@ -84,8 +85,8 @@
   }
 
   .item-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include text-clip.single-line-ellipsis;
+
     white-space: nowrap;
     min-width: 0;
     flex: 1;

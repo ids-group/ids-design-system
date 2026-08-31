@@ -10,6 +10,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **Every single-line label clips through one mixin now.** Six places hand-rolled
+  `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — `ds-select``s trigger text,
+`ds-tree``s label, `ds-sidenav-item``s label, three labels in `ds-sidenav-footer`, and the table
+  cell under `density="compact"`. They all use `single-line-ellipsis` instead, which clips with
+  `overflow: clip` and an `overflow-clip-margin` rather than `hidden`: where the line box is tighter
+  than the glyph box, `hidden` eats the glyph and shaves every label, not only the ones with
+  descenders. Nothing to do on your side — labels stop losing their bottoms at tight line-heights.
+
 - **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
   `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` gained members, and
   `DsOptionTemplateDirective`, `DsChipTemplateDirective` and `DsPickerTriggerDirective` are new

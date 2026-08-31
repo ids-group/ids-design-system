@@ -450,9 +450,7 @@
     }
 
     tbody td {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include text-clip.single-line-ellipsis;
     }
   }
 
