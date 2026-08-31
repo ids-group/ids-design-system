@@ -47,6 +47,6 @@
 
   &:disabled {
     cursor: not-allowed;
-    opacity: var(--opacity-muted);
+    opacity: var(--opacity-disabled);
   }
 }

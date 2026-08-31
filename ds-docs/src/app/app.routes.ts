@@ -1,5 +1,5 @@
 import type { Routes } from '@angular/router';
-import { NAV, areaOfPath, urlForGroupPath } from './layout/nav.config';
+import { NAV, areaOfPath, urlForGroupPath } from './core/nav.config';
 
 const load = () =>
   import('./sections/section-group.page').then((m) => m.SectionGroupPage);

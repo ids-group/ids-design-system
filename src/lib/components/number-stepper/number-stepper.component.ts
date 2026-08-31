@@ -7,7 +7,9 @@ import {
   input,
   model,
 } from '@angular/core';
+import { optionalBound, boundOr } from '../../core/field-bounds';
 import type { DsSize } from '../../core/size';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-number-stepper',
@@ -21,13 +23,23 @@ export class NumberStepperComponent {
   /** Current numeric value, two-way bound. */
   readonly value = model<number>(0);
   /** Lower bound — the decrement button and typed input clamp to it. */
-  readonly min = input<number>(0);
+  readonly min = input<number, number | undefined>(0, {
+    transform: boundOr(0),
+  });
   /** Upper bound — the increment button and typed input clamp to it; unbounded when null. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
   /** Amount added or subtracted per increment/decrement. */
   readonly step = input<number>(1);
-  /** Control height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Control height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Disables the stepper and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Accessible name for the number input (the stepper has no visible label). */
@@ -41,7 +53,7 @@ export class NumberStepperComponent {
   });
 
   protected readonly stepperClass = computed(() => {
-    const parts = ['stepper', `size-${this.size()}`];
+    const parts = ['stepper', `size-${this.sizeResolved()}`];
     if (this.disabled()) {
       parts.push('disabled');
     }

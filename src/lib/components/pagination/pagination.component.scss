@@ -1,7 +1,6 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* Public --ds-pagination-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_pagination-btn-bg-color:       var(--ds-pagination-btn-bg-color,       var(--surface-default));
   --_pagination-btn-bg-color-hover: var(--ds-pagination-btn-bg-color-hover, var(--surface-secondary));
   --_pagination-btn-label-color:       var(--ds-pagination-btn-label-color,       var(--text-secondary));
@@ -10,8 +9,11 @@
   --_pagination-active-bg-color:    var(--ds-pagination-active-bg-color,    var(--accent));
   --_pagination-active-bg-color-hover: var(--ds-pagination-active-bg-color-hover, var(--accent-hover));
   --_pagination-active-label-color:    var(--ds-pagination-active-label-color,    var(--accent-on));
-  --_pagination-radius:        var(--ds-pagination-radius,        var(--radius-md));
+  --_pagination-radius:        var(--ds-pagination-radius,        var(--ds-radius-control));
   --_pagination-focus-shadow:  var(--ds-pagination-focus-shadow,  var(--ds-control-focus-shadow));
+  --_pagination-label-font-size: var(--ds-pagination-label-font-size, var(--font-size-s));
+  --_pagination-label-weight: var(--ds-pagination-label-weight, var(--font-weight-regular));
+  --_pagination-label-color: var(--ds-pagination-label-color, var(--text-secondary));
 
   display: inline-flex;
 }
@@ -23,8 +25,8 @@
   flex-wrap: wrap;
 
   .label {
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-secondary);
+    font: var(--_pagination-label-weight) var(--_pagination-label-font-size) / var(--line-height-flat) var(--font-sans);
+    color: var(--_pagination-label-color);
     margin-right: var(--space-2);
   }
 

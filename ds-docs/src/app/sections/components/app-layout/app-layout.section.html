@@ -11,24 +11,20 @@
     </code>,
     <code class="t-mono-inline">
       [topbar]
-    </code> and default slots â€” the
-    layout renders the
-    <code class="t-mono-inline">
-      &lt;main&gt;
-    </code> landmark and compensates
-    the scrollbar so the content insets stay symmetric.
+    </code> and default slots — the layout
+    renders the <code class="t-mono-inline"> &lt;main&gt; </code> landmark and
+    compensates the scrollbar so the content insets stay symmetric.
   </span>
 
-  <!-- ============================================================ Content-span topbar -->
   <h3 class="block-title t-h4">
     Content-span topbar
   </h3>
 
   <p class="block-desc t-s">
-    Default geometry â€” the rail spans the full height on the left and the
-    topbar sits above the content column only. Scroll the filler: the rail and
-    topbar hold their place. The footer's Search and Alerts rows open live
-    popovers, and opening Alerts clears the unread dot.
+    Default geometry — the rail spans the full height on the left and the topbar
+    sits above the content column only. Scroll the filler: the rail and topbar
+    hold their place. The footer's Search and Alerts rows open live popovers,
+    and opening Alerts clears the unread dot.
   </p>
 
   <div class="layout-demo">
@@ -89,12 +85,11 @@
       </ds-topbar>
 
       <div class="filler">
-        Scroll me â€” the rail and topbar stay put; only this region scrolls.
+        Scroll me — the rail and topbar stay put; only this region scrolls.
       </div>
     </ds-app-layout>
   </div>
 
-  <!-- ============================================================ Full-span topbar -->
   <h3 class="block-title t-h4">
     Full-span topbar
   </h3>
@@ -165,8 +160,136 @@
       </ds-topbar>
 
       <div class="filler">
-        Scroll me â€” the rail and topbar stay put; only this region scrolls.
+        Scroll me — the rail and topbar stay put; only this region scrolls.
       </div>
     </ds-app-layout>
   </div>
+
+  <h3 class="block-title t-h4">
+    Opening the rail from your own chrome
+  </h3>
+
+  <p class="block-desc t-s">
+    Below the lg breakpoint the rail becomes an overlay, and the button that
+    opens it lives in YOUR topbar — so the layout cannot wire it up for you. Two
+    routes, and picking the wrong one is the easy mistake. On a native
+    <code class="t-mono-inline">
+      button
+    </code> put
+    <code class="t-mono-inline">
+      dsRailTrigger
+    </code> on it: the directive
+    toggles the rail and keeps
+    <code class="t-mono-inline">
+      aria-expanded
+    </code> and
+    <code class="t-mono-inline">
+      aria-controls
+    </code> correct. On a
+    <code class="t-mono-inline">
+      ds-icon-button
+    </code> do NOT — the directive's
+    attributes would land on the wrapper, and the inner
+    <code class="t-mono-inline">
+      button
+    </code> is what a screen reader reads.
+    Bind that component's forwarding inputs instead, off a template ref:
+    <code class="t-mono-inline">
+      [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"
+    </code>
+    and <code class="t-mono-inline"> [ariaControls]="layout.railId" </code>.
+    These docs use the second route — the burger at the top of this page on a
+    narrow screen is it.
+  </p>
+
+  <p class="block-desc t-s">
+    Both attributes are dropped while the rail is NOT an overlay: above the
+    breakpoint the rail is permanently in the layout, so
+    <code class="t-mono-inline">
+      aria-expanded="false"
+    </code> would state the
+    opposite of what the reader sees.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Returning the reader to where they were
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [restoreScroll]="true"
+    </code> remembers the
+    scroll position per route and restores it — but only on a BACK, which is the
+    whole design: returning to a list should return to the reader's row, while
+    following a link into a new screen should start at the top. A history
+    traversal arms it (back, forward, the mouse side button, Alt+← and an edge
+    swipe all arrive as popstate), as does a reload, and a host that pushes
+    instead of traversing can arm it explicitly with
+    <code class="t-mono-inline">
+      state: {{ '{' }} dsRestoreScroll: true {{ '}' }}
+    </code
+    >. Any wheel, touch or key input cancels the pending restore, so it never
+    fights a reader who has already started scrolling. These docs run with it
+    on.
+  </p>
+
+  <p class="block-desc t-s">
+    Resetting is separate from restoring, and it now has a switch:
+    <code class="t-mono-inline">
+      scrollReset
+    </code> is
+    <code class="t-mono-inline">
+      'path'
+    </code> by default — the top only when
+    navigation lands on a different PATH, so a search, a sort or a page step on
+    the same screen keeps the reader's place.
+    <code class="t-mono-inline">
+      'always'
+    </code> resets on those too, which is
+    what a server-paged list usually wants, and
+    <code class="t-mono-inline">
+      'never'
+    </code> hands the decision back to the
+    screen — which can still call
+    <code class="t-mono-inline">
+      scrollToTop()
+    </code> itself. The input exists
+    because owning the scroll CONTAINER had quietly meant owning the POLICY: a
+    screen could ADD a reset and had no way to suppress one.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      LayoutNavigationService
+    </code> is public for
+    the same reason. Its <code class="t-mono-inline"> pathChanged </code> stream
+    is the layout's own answer to "did we go somewhere else?" — `NavigationEnd`,
+    path only, de-duplicated, and skipping any navigation that carries
+    <code class="t-mono-inline">
+      state: {{ '{' }} dsSamePage: true {{ '}' }}
+    </code
+    >. Inject it instead of deriving your own: one consumer ended up with three
+    answers that disagreed, because a `split('?')` keeps the fragment this one
+    strips.
+  </p>
+
+  <p class="block-desc t-s">
+    The offset is applied once the content is tall enough to hold it, watched
+    with a
+    <code class="t-mono-inline">
+      ResizeObserver
+    </code> rather than a fixed
+    frame count, and clamped at
+    <code class="t-mono-inline">
+      restoreScrollTimeout
+    </code> so a list that
+    loaded 8 of 40 rows still lands near the right place instead of nowhere. A
+    page that renders its own scroll position — a virtualizer decides which rows
+    to build BEFORE it can be scrolled — should take the offset instead of
+    letting the service assign it:
+    <code class="t-mono-inline">
+      inject(LayoutScrollService).consumePendingOffset()
+    </code
+    >.
+  </p>
 </docs-section>

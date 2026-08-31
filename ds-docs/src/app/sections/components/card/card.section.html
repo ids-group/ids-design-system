@@ -10,7 +10,6 @@
     paddings, three elevations.
   </span>
 
-  <!-- ============================================================ Elevations × paddings -->
   <h3 class="block-title t-h4">
     Elevations × paddings
   </h3>
@@ -35,7 +34,7 @@
     </div>
 
     @for (elevation of elevations; track elevation) {
-      <div class="t-overline matrix__row-label">
+      <div class="t-overline matrix-row-label">
         {{ elevation }}
       </div>
 
@@ -44,19 +43,19 @@
           [elevation]="elevation"
           [padding]="padding"
         >
-          <div class="t-overline matrix__cell-eyebrow">
+          <div class="t-overline matrix-cell-eyebrow">
             Project
           </div>
 
-          <h4 class="t-h5 matrix__cell-title">
+          <h4 class="t-h5 matrix-cell-title">
             Project Alpha
           </h4>
 
-          <p class="t-s matrix__cell-body">
+          <p class="t-s matrix-cell-body">
             30 Apr – 3 May 2026 · North Site
           </p>
 
-          <span class="t-s matrix__cell-link link">
+          <span class="t-s matrix-cell-link link">
             View details
           </span>
         </ds-card>
@@ -64,7 +63,6 @@
     }
   </div>
 
-  <!-- ============================================================ Composition: header / body / footer -->
   <h3 class="block-title t-h4">
     Header · body · footer
   </h3>
@@ -84,17 +82,17 @@
           Project
         </div>
 
-        <span class="card-head__meta t-caption">
+        <span class="card-head-meta t-caption">
           ORD-2026-0142
         </span>
       </div>
 
       <div class="card-body">
-        <h4 class="t-h5 card-body__title">
+        <h4 class="t-h5 card-body-title">
           Project Alpha
         </h4>
 
-        <p class="t-s card-body__text">
+        <p class="t-s card-body-text">
           30 Apr – 3 May 2026 · North Site
         </p>
       </div>
@@ -119,17 +117,17 @@
           Project
         </div>
 
-        <span class="card-head__meta t-caption">
+        <span class="card-head-meta t-caption">
           ORD-2026-0156
         </span>
       </div>
 
       <div class="card-body">
-        <h4 class="t-h5 card-body__title">
+        <h4 class="t-h5 card-body-title">
           Project Beta
         </h4>
 
-        <p class="t-s card-body__text">
+        <p class="t-s card-body-text">
           22 – 25 May 2026 · Two-site rollout. Sign-off pending site survey.
         </p>
       </div>
@@ -154,17 +152,17 @@
           Initiative
         </div>
 
-        <span class="card-head__meta t-caption">
+        <span class="card-head-meta t-caption">
           ORD-2026-0157
         </span>
       </div>
 
       <div class="card-body">
-        <h4 class="t-h5 card-body__title">
+        <h4 class="t-h5 card-body-title">
           Q3 Initiative
         </h4>
 
-        <p class="t-s card-body__text">
+        <p class="t-s card-body-text">
           22 – 25 Aug 2026 · South Hub
         </p>
       </div>
@@ -177,6 +175,70 @@
         <span class="t-s link">
           View details
         </span>
+      </div>
+    </ds-card>
+  </div>
+
+  <h3 class="block-title t-h4">
+    A full-bleed child needs the card to clip
+  </h3>
+
+  <p class="block-desc t-s">
+    A child whose background runs to the card’s edge paints its square corners
+    over the card’s radius, and the host cannot fix it: the rounded box is the
+    card’s own inner element. Set
+    <code class="t-mono-inline">
+      --ds-card-overflow: clip
+    </code> on the card.
+    <code class="t-mono-inline">
+      clip
+    </code> rather than
+    <code class="t-mono-inline">
+      hidden
+    </code>, so the card does not become a
+    scroll container.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      It is opt-in, and that is deliberate.
+    </strong>
+    A clipped card also cuts the focus ring off any child sitting at its edge —
+    the ring is an outset shadow, and this is the exact case Foundations →
+    Colour names. If the clipped card holds focusable content, put
+    <code class="t-mono-inline">
+      data-focus="inset"
+    </code> on it and the
+    indicator moves inside the box instead of disappearing.
+  </p>
+
+  <div class="grid-2">
+    <ds-card padding="none">
+      <div class="bleed-demo">
+        <div class="bleed-demo-body t-s">
+          Default — <code class="t-mono-inline">overflow: visible</code>
+        </div>
+
+        <div class="bleed-demo-strip t-caption">
+          Square corners over the radius
+        </div>
+      </div>
+    </ds-card>
+
+    <ds-card
+      padding="none"
+      style="--ds-card-overflow: clip"
+    >
+      <div class="bleed-demo">
+        <div class="bleed-demo-body t-s">
+          <code class="t-mono-inline">
+            --ds-card-overflow: clip
+          </code>
+        </div>
+
+        <div class="bleed-demo-strip t-caption">
+          Held inside the radius
+        </div>
       </div>
     </ds-card>
   </div>

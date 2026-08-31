@@ -4,18 +4,31 @@
   title="List"
 >
   <span lede>
-    A vertically stacked set of content rows — supports leading/trailing slots,
-    optional dividers, clickable items, and selected state.
+    A vertically stacked set of content rows — supports
+    <code class="t-mono-inline">
+      [leading]
+    </code> /
+    <code class="t-mono-inline">
+      [trailing]
+    </code> slots, optional
+    <code class="t-mono-inline">
+      [dividers]
+    </code>,
+    <code class="t-mono-inline">
+      [clickable]
+    </code> items, and a
+    <code class="t-mono-inline">
+      [selected]
+    </code> state.
   </span>
 
-  <!-- ============================================================ Basic list with icons -->
   <h3 class="block-title t-h4">
     List with leading and trailing icons
   </h3>
 
   <p class="block-desc t-s">
-    Use the <code>[leading]</code> and <code>[trailing]</code> slots for icons
-    or avatars. Set <code>[dividers]="true"</code> for a separator between
+    Use the <code> [leading] </code> and <code> [trailing] </code> slots for
+    icons or avatars. Set <code>[dividers]="true"</code> for a separator between
     items.
   </p>
 
@@ -75,7 +88,6 @@
     </ds-list>
   </div>
 
-  <!-- ============================================================ Selected state -->
   <h3 class="block-title t-h4">
     Selected state
   </h3>
@@ -126,5 +138,68 @@
         />
       </ds-list-item>
     </ds-list>
+  </div>
+
+  <h3 class="block-title t-h4">
+    A row with its own control
+  </h3>
+
+  <p class="block-desc t-s">
+    <code>
+      [leading]
+    </code> and <code> [trailing] </code> sit OUTSIDE the row's
+    button, so a row can carry its own controls and still be the thing that
+    selects. That is the master–detail shape: a checkbox per row for a bulk
+    action, the row itself choosing what the detail pane shows. Two independent
+    targets, never one.
+  </p>
+
+  <p class="block-desc t-s">
+    This is why the row is not a single <code> &lt;button&gt; </code>: a
+    checkbox nested in one is invalid HTML, its click would bubble into
+    <code>
+      activated
+    </code>, and a screen reader would fold it into the
+    button's name and never announce its checked state. Note it is a
+    <code>
+      role="list"
+    </code> and NOT a <code> listbox </code> — the ARIA spec
+    says a <code> listbox </code> option cannot hold interactive content at all.
+  </p>
+
+  <div class="demo-panel">
+    <ds-list [dividers]="true">
+      @for (carrier of carriers; track carrier) {
+        <ds-list-item
+          [title]="carrier"
+          [subtitle]="
+            picked().has(carrier) ? 'Included in this run' : 'Not included'
+          "
+          [selected]="viewing() === carrier"
+          [clickable]="true"
+          (activated)="viewing.set(carrier)"
+        >
+          <ds-checkbox
+            leading
+            [label]="'Include ' + carrier"
+            [checked]="picked().has(carrier)"
+            (checkedChange)="toggleCarrier(carrier)"
+          />
+
+          <ds-icon-button
+            trailing
+            icon="chevron-right"
+            variant="standard"
+            size="sm"
+            [ariaLabel]="'Open ' + carrier"
+          />
+        </ds-list-item>
+      }
+    </ds-list>
+
+    <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
+      Viewing: {{ viewing() }} · included: {{ picked().size }} of
+      {{ carriers.length }}
+    </p>
   </div>
 </docs-section>

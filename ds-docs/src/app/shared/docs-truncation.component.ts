@@ -21,7 +21,7 @@ export interface TruncationRule {
     </button>
 
     <div class="panel" role="tooltip">
-      <div class="panel__title">
+      <div class="panel-title">
         <ds-icon name="filter" [size]="13" /> Truncation
       </div>
 
@@ -85,7 +85,7 @@ export interface TruncationRule {
       :host:focus-within .panel {
         display: block;
       }
-      .panel__title {
+      .panel-title {
         display: inline-flex;
         align-items: center;
         gap: var(--space-2);

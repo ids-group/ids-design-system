@@ -1,0 +1,45 @@
+<div class="auth">
+  <header class="masthead">
+    <div class="brand">
+      <ng-content select="[brand]"></ng-content>
+
+      @if (letterGlyph() || brandName()) {
+        <span
+          class="mark"
+          aria-hidden="true"
+        >
+          {{ markGlyph() }}
+        </span>
+      }
+
+      @if (brandName() || hasBrandName()) {
+        <span class="brand-name">
+          @if (hasBrandName()) {
+            <ng-content select="[dsBrandName]"></ng-content>
+          } @else {
+            {{ brandName() }}
+          }
+        </span>
+      }
+    </div>
+
+    @if (taglineText()) {
+      <p class="tagline">
+        {{ taglineText() }}
+      </p>
+    }
+  </header>
+
+  <ds-card
+    class="card"
+    [attr.role]="landmark() === 'main' ? 'main' : null"
+    [elevation]="cardElevation()"
+    [padding]="cardPadding()"
+  >
+    <ng-content></ng-content>
+  </ds-card>
+
+  <footer class="support">
+    <ng-content select="[dsAuthSupport]"></ng-content>
+  </footer>
+</div>

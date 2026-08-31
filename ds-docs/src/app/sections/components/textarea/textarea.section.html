@@ -7,14 +7,13 @@
     Multi-line text input with state variants and content-driven autosize.
   </span>
 
-  <!-- ============================================================ Variant states -->
   <h3 class="block-title t-h4">
     Variant states — default · value · error · disabled
   </h3>
 
   <div class="states states--cols-2">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-textarea
           label="Description"
           placeholder="Describe the event…"
@@ -22,13 +21,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Textarea · default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-textarea
           label="Description"
           value="Multi-phase initiative for the north quadrant of the site."
@@ -36,28 +35,27 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Textarea · with value
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-textarea
           label="Brief"
-          hint="Required"
+          error="Required"
           [rows]="3"
-          [invalid]="true"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Textarea · error
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-textarea
           label="Brief"
           value="Auto-generated from event template."
@@ -66,13 +64,12 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Textarea · disabled
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ With value -->
   <h3 class="block-title t-h4">
     With value
   </h3>
@@ -85,7 +82,6 @@
     />
   </div>
 
-  <!-- ============================================================ Read-only -->
   <h3 class="block-title t-h4">
     Read-only
   </h3>
@@ -107,7 +103,6 @@
     />
   </div>
 
-  <!-- ============================================================ Character counter -->
   <h3 class="block-title t-h4">
     Character counter
   </h3>
@@ -137,7 +132,6 @@
     />
   </div>
 
-  <!-- ============================================================ Textarea autosize -->
   <h3 class="block-title t-h4">
     Autosize
   </h3>

@@ -56,7 +56,7 @@
   // -----------------------------------------------------------------------
   // Blue — defined as HSL channels so we can compose hsla() halos and tints
   // from the same source. #2F54FF ≈ hsl(229, 100%, 59%). This is the ramp the
-  // default theme maps --primary onto (see styles/_tokens.scss). Naming is
+  // default theme maps --primary onto (see themes/_semantic.scss). Naming is
   // concrete (the colour) — the semantic --primary mapping lives in the lib.
   // -----------------------------------------------------------------------
   --blue-h: 229;
@@ -122,7 +122,7 @@
 
   // -----------------------------------------------------------------------
   // Red — HSL-channel-split for halo derivation. #D81F1F ≈ hsl(0, 75%, 49%).
-  // The default theme maps --error onto this ramp (see styles/_tokens.scss).
+  // The default theme maps --error onto this ramp (see themes/_semantic.scss).
   // -----------------------------------------------------------------------
   --red-h: 0;
   --red-s: 75%;

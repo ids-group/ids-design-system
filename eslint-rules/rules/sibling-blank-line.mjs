@@ -1,3 +1,5 @@
+import { detectEol } from '../eol.mjs';
+
 /** @type {import('eslint').Rule.RuleModule} */
 export default {
   meta: {
@@ -15,6 +17,7 @@ export default {
 
   create(context) {
     const text = context.sourceCode.getText();
+    const eol = detectEol(text);
 
     const BLOCK_TYPES = new Set([
       'Element',
@@ -42,8 +45,21 @@ export default {
       return !/\S/.test(text.substring(lineStart, offset));
     }
 
+    // A blank line inside <pre> or <textarea> is a blank line on screen.
+    const exemptRanges = Array.from(
+      text.matchAll(/<(pre|textarea)\b[\s\S]*?<\/\1>/gi),
+      (match) => [match.index, match.index + match[0].length],
+    );
+
+    function isWhitespaceSensitive(offset) {
+      return exemptRanges.some(([start, end]) => offset >= start && offset < end);
+    }
+
     function checkChildren(children, parentNode) {
       if (!children || !Array.isArray(children)) return;
+      if (parentNode?.sourceSpan && isWhitespaceSensitive(parentNode.sourceSpan.start.offset)) {
+        return;
+      }
 
       let prevBlock = null;
 
@@ -91,7 +107,7 @@ export default {
                   fix(fixer) {
                     return fixer.replaceTextRange(
                       [startOffset, endOffset],
-                      '\n\n' + indent,
+                      eol + eol + indent,
                     );
                   },
                 }),

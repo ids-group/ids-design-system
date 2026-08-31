@@ -16,7 +16,7 @@ adapted to a design-system repo (library `ds` + showcase `ds-docs`).
 | `ci-pr.sh`     | PR validation in one container: build ∥ design-sync parity (`check:design-sync` — see `.design-sync/NOTES.md`), both hard gates, ∥ lint (report-only), after a single install. Used by the `validate` pipeline. |
 | `publish.sh`   | The single npm publisher. Guards: tag↔version match (`BITBUCKET_TAG`), refuse double-publish, prereleases → `next` dist-tag. Called by the tag (`v*`) pipeline after `build-lib.sh`, for both one-click and local releases. |
 | `cut-release.sh`| One-click release `<patch\|minor\|major\|beta>`: merge `dev`->`main` + bump + stamp CHANGELOG + commit + tag + push `main` + tag, then back-merge `main`->`dev`. Does **not** publish — the pushed tag triggers the `v*` pipeline. Run by the `release-*` custom pipelines. Needs `RELEASE_TOKEN`. No install/build. |
-| `trigger-docs-deploy.sh`| Final step of the `v*` pipeline: after `publish.sh`, start the `deploy-docs` custom pipeline via the Bitbucket REST API. Skips prereleases. Needs `RELEASE_TOKEN` with `pipeline:write`. |
+| `trigger-docs-deploy.sh`| Final step of the `v*` pipeline: after `publish.sh`, start the `deploy-docs` custom pipeline via the Bitbucket REST API. Skips prereleases. Needs `DOCS_DEPLOY_TOKEN` (a dedicated token scoped to `pipeline:write`). |
 
 Invoke as `sh infrastructure/scripts/<name>.sh` (no executable bit needed, which
 Windows checkouts cannot set reliably).
@@ -62,8 +62,9 @@ worth auto-firing on our cadence.
   from `dev`. `cut-release.sh` merges `dev`->`main`, bumps, stamps the CHANGELOG,
   commits, tags, pushes `main` + tag, then back-merges `main`->`dev`. It does **not**
   publish — the pushed tag triggers the `v*` pipeline. Needs Secured `RELEASE_TOKEN`
-  (`repository:write` + `pipeline:write`). Local `npm run release:*` is the fallback
-  (merge `dev`->`main` yourself first).
+  (`repository:write`); the `v*` step also needs `DOCS_DEPLOY_TOKEN` (`pipeline:write`)
+  for the docs trigger. Local `npm run release:*` is the fallback (merge `dev`->`main`
+  yourself first).
 - **Custom `deploy-docs`**: build and deploy the showcase to the IDS prototypes
   CDN.
 

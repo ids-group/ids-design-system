@@ -1,0 +1,18 @@
+.width-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  color: var(--text-secondary);
+}
+
+/* Resizable frame so the collapse can be watched without resizing the browser.
+   max-width keeps the slider from pushing the demo past the docs column. */
+.bar-demo {
+  max-width: 100%;
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-default);
+}

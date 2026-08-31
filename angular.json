@@ -57,6 +57,11 @@
                 "glob": "CHANGELOG.md",
                 "input": ".",
                 "output": "/"
+              },
+              {
+                "glob": "design-system.md",
+                "input": ".",
+                "output": "/"
               }
             ],
             "styles": [
@@ -78,7 +83,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "16kB",
+                  "maximumWarning": "20kB",
                   "maximumError": "32kB"
                 }
               ],

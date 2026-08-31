@@ -12,7 +12,6 @@
     viewports it caps its width and centres.
   </span>
 
-  <!-- ============================================================ Live demo -->
   <h3 class="block-title t-h4">
     Live demo
   </h3>
@@ -59,7 +58,6 @@
     </ds-bottom-sheet>
   </div>
 
-  <!-- ============================================================ Snap points -->
   <h3 class="block-title t-h4">
     Snap points
   </h3>
@@ -121,4 +119,31 @@
       </ng-container>
     </ds-bottom-sheet>
   </div>
+
+  <h3 class="block-title t-h4">
+    The home indicator needs one line from YOUR app
+  </h3>
+
+  <p class="block-desc t-s">
+    The sheet pads its bottom by
+    <code class="t-mono-inline">
+      env(safe-area-inset-bottom)
+    </code> so its last
+    action does not sit under the home indicator. That inset reads
+    <strong>
+      0 until the host document opts in
+    </strong>, and a library cannot
+    do it for you — it lives in the viewport meta tag of your
+    <code class="t-mono-inline">
+      index.html
+    </code>. Same requirement as
+    <code class="t-mono-inline">
+      ds-auth-layout
+    </code>, where it is spelled
+    out.
+  </p>
+
+  <pre
+    class="t-mono-block"
+  ><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /&gt;</code></pre>
 </docs-section>

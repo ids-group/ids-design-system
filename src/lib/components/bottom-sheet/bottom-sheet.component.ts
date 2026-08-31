@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
+import { backdropDismiss } from '../../core/backdrop-dismiss';
 
 let nextId = 0;
 
@@ -126,10 +127,10 @@ export class BottomSheetComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // Angular scopes @keyframes names under emulated encapsulation, so
-    // event.animationName arrives as `_ngcontent-…_ds-sheet-down`, not the bare
-    // name — match the suffix or teardown never fires and the lock leaks.
-    if (!event.animationName.endsWith('ds-sheet-down')) {
+    // The animated element is the one with the handler, so its OWN animationend is
+    // the signal; anything bubbling from inside is not. This replaces matching the
+    // keyframes NAME, which is what made the exit un-overridable.
+    if (event.target !== event.currentTarget) {
       return;
     }
     this.finishClose();
@@ -152,8 +153,12 @@ export class BottomSheetComponent implements OnDestroy {
     }
   }
 
-  protected stop(event: Event): void {
-    event.stopPropagation();
+  protected readonly backdropPress = backdropDismiss();
+
+  protected onBackdropRelease(event: PointerEvent): void {
+    if (this.backdropPress.shouldDismiss(event)) {
+      this.close();
+    }
   }
 
   protected onGrabStart(event: PointerEvent): void {

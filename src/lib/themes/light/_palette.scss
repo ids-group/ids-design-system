@@ -12,7 +12,7 @@
 @mixin palette {
   /* Neutral family slot — semantic pointer at the active gray ramp from the
      palette. Default: hand-drawn cool-gray. <html data-neutrals="brand">
-     (ds-docs tweaks panel) repoints it at the brand-derived brand-gray ramp,
+     repoints it at the brand-derived brand-gray ramp,
      where --primary-h re-tints every gray. Roles below consume --neutral-*
      so the family switch never touches them. */
   --neutral-0:   var(--cool-gray-0);

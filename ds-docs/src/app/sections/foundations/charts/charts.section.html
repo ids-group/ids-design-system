@@ -21,7 +21,7 @@
     @for (n of cats; track n) {
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--chart-cat-' + n + ')'"
         >
         </div>
@@ -46,7 +46,7 @@
     @for (n of seqs; track n) {
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--chart-seq-' + n + ')'"
         >
         </div>
@@ -70,7 +70,7 @@
     @for (n of divs; track n) {
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="divToken(n)"
         >
         </div>
@@ -458,19 +458,19 @@
       <span></span>
 
       @for (w of heatWeeks; track w) {
-        <span class="t-overline heat__col-h">
+        <span class="t-overline heat-col-h">
           {{ w }}
         </span>
       }
 
       @for (row of heatRows; track row; let r = $index) {
-        <span class="t-s-bold heat__row-h">
+        <span class="t-s-bold heat-row-h">
           {{ row }}
         </span>
 
         @for (v of heat[r]; track $index) {
           <div
-            class="heat__cell"
+            class="heat-cell"
             [style.background]="divToken(v)"
             [style.color]="
               v <= -2 || v >= 2 ? 'var(--neutral-0)' : 'var(--text-primary)'
@@ -502,7 +502,7 @@
             [size]="32"
           />
 
-          <p class="empty__msg">
+          <p class="empty-msg">
             No data for this period.<br />
 
             <span class="t-xs">

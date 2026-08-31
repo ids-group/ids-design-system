@@ -1,0 +1,548 @@
+{
+  "version": "0.10.2",
+  "items": [
+    {
+      "id": "resolved-readbacks-are-public",
+      "kind": "behavior",
+      "old": "class MyThing extends ButtonComponent (or any DS component)",
+      "new": null,
+      "action": "Only if you SUBCLASS a DS component and declare a member with one of those names: it is a public member of the base now, so an incompatible re-declaration needs `override` or a rename.",
+      "appliesWhen": "No action for a consumer that composes. Members a host can derive from its own bindings stay protected on purpose: `invalidResolved`, `railResolved`, `sortModeResolved`, `filterModeResolved`.",
+      "note": "Every readback that resolves through DS_CONFIG went from `protected` to public — `sizeResolved` on fourteen controls, the card, badge, table and modal resolvers, `reserveMessageResolved` on every field, the picker locale and format resolvers, and the sidenav / auth-layout brand resolvers. 0.10.0 told consumers to read `sizeResolved()` once `size()` returned null when unbound, and that did not compile: reading it from a host, a test or a viewChild was TS2445.",
+      "searchHints": [
+        "sizeResolved",
+        "elevationResolved",
+        "paddingResolved",
+        "withDotResolved",
+        "borderedResolved",
+        "dividersResolved",
+        "reserveMessageResolved",
+        "brandName",
+        "letterGlyph",
+        "extends ButtonComponent"
+      ],
+      "surface": "typescript",
+      "verify": "No consumer subclass redeclares a `*Resolved` readback as protected, and a host that reads `sizeResolved()` off a DS component compiles.",
+      "supersedes": [
+        "0.10.0#control-size-input-becomes-nullable"
+      ],
+      "detect": [
+        "this.sizeResolved",
+        ".sizeResolved()",
+        "extends ButtonComponent",
+        "TS2415"
+      ]
+    },
+    {
+      "id": "focus-ring-inner-transparent",
+      "kind": "behavior",
+      "old": "--focus-ring-inner: var(--surface-canvas)",
+      "new": null,
+      "action": "If you deliberately relied on an opaque gap — to hold the ring off a busy photo background, say — set `--focus-ring-inner` back to a colour on that scope.",
+      "appliesWhen": "No action on a canvas-coloured ground: the same pixels show through.",
+      "note": "The 2px gap between an element and its focus ring shows whatever is actually behind it now. A white card in a dark app used to get a dark rim around it, which read as a rendering artifact.",
+      "searchHints": [
+        "--focus-ring-inner",
+        "focus-ring",
+        "data-focus",
+        "surface-canvas",
+        "overflow: hidden",
+        "--ds-control-focus-shadow"
+      ],
+      "surface": "style",
+      "restore": "--focus-ring-inner: var(--surface-canvas);",
+      "verify": "No stylesheet still assumes an opaque ring gap: `--focus-ring-inner` is either unset, or set deliberately on the non-canvas ground that needs it."
+    },
+    {
+      "id": "max-visible-chips-null-is-unset-multi-select",
+      "kind": "value-remap",
+      "old": "ds-multi-select[maxVisibleChips]",
+      "new": null,
+      "action": "Bind the new `all` mode to keep the old behaviour. This covers the attribute and the binding alike: `[maxVisibleChips]=\"null\"`, `[maxVisibleChips]=\"undefined\"`, and any expression, field or method that can EVALUATE to null — retype those to `number | 'fit' | 'all' | null` and return `'all'` where they meant show-them-all.",
+      "appliesWhen": "A numeric value is unchanged (still a ceiling, still measured), `fit` is unchanged, and leaving the input unbound is unchanged because `fit` was already the default.",
+      "pitfall": "This SUPERSEDES the 0.10.0 guidance, which told you to bind `[maxVisibleChips]=\"null\"` to keep every chip. If you followed it, that binding now means \"unset\" and resolves to `fit` — so the release that told you to write it is the reason you have to change it.",
+      "note": "`null` used to be the LOUDEST setting — render every chip and let the trigger wrap — and it means \"unset\" now, resolving to `fit` like every other nullable input since 0.10.0.",
+      "searchHints": [
+        "maxVisibleChips",
+        "[maxVisibleChips]",
+        "maxVisibleChips="
+      ],
+      "map": {
+        "null": "maxVisibleChips=\"all\"",
+        "fit": "maxVisibleChips=\"fit\""
+      },
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "[maxVisibleChips]=\"null\"",
+        "maxVisibleChips",
+        "'fit'"
+      ],
+      "supersedes": [
+        "0.10.0#chips-cap-by-width-by-default",
+        "0.10.0#max-visible-chips-zero-inverted"
+      ],
+      "verify": "A ds-multi-select left without maxVisibleChips caps its chips to the trigger width and shows \"+N more\"; one bound to \"all\" shows every chip and wraps; a numeric cap shows at most that many. No trigger renders an empty chip row."
+    },
+    {
+      "id": "max-visible-chips-null-is-unset-autocomplete",
+      "kind": "value-remap",
+      "old": "ds-autocomplete[maxVisibleChips]",
+      "new": null,
+      "action": "Bind the new `all` mode to keep the old behaviour. This covers the attribute and the binding alike: `[maxVisibleChips]=\"null\"`, `[maxVisibleChips]=\"undefined\"`, and any expression, field or method that can EVALUATE to null — retype those to `number | 'fit' | 'all' | null` and return `'all'` where they meant show-them-all.",
+      "appliesWhen": "A numeric value is unchanged (still a ceiling, still measured), `fit` is unchanged, and leaving the input unbound is unchanged because `fit` was already the default.",
+      "pitfall": "This SUPERSEDES the 0.10.0 guidance, which told you to bind `[maxVisibleChips]=\"null\"` to keep every chip. If you followed it, that binding now means \"unset\" and resolves to `fit` — so the release that told you to write it is the reason you have to change it.",
+      "note": "`null` used to be the LOUDEST setting — render every chip and let the trigger wrap — and it means \"unset\" now, resolving to `fit` like every other nullable input since 0.10.0.",
+      "searchHints": [
+        "maxVisibleChips",
+        "[maxVisibleChips]",
+        "maxVisibleChips="
+      ],
+      "map": {
+        "null": "maxVisibleChips=\"all\"",
+        "fit": "maxVisibleChips=\"fit\""
+      },
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "[maxVisibleChips]=\"null\"",
+        "maxVisibleChips",
+        "'fit'"
+      ],
+      "supersedes": [
+        "0.10.0#chips-cap-by-width-by-default",
+        "0.10.0#max-visible-chips-zero-inverted"
+      ],
+      "verify": "A ds-autocomplete left without maxVisibleChips caps its chips to the trigger width and shows \"+N more\"; one bound to \"all\" shows every chip and wraps; a numeric cap shows at most that many. No trigger renders an empty chip row."
+    },
+    {
+      "id": "max-visible-chips-type-widened",
+      "kind": "behavior",
+      "old": "maxVisibleChips: number | 'fit' | null",
+      "new": null,
+      "action": "Retype to `number | 'fit' | 'all' | null`, or drop the annotation and let inference carry it.",
+      "appliesWhen": "A binding compiles as before. The VALUE change is the separate `max-visible-chips-null-is-unset-*` pair; this entry is only the declaration.",
+      "pitfall": "Breaking for READERS and OVERRIDERS and invisible to writers — the same asymmetry as 0.10.0's two widenings, where the consumer's type-checker was the only finder. A subclass override fails with TS2416 because the `equal` type-parameter position of InputSignalWithTransform is invariant.",
+      "note": "The declared type gained the `all` member on ds-autocomplete and ds-multi-select.",
+      "searchHints": [
+        "maxVisibleChips",
+        "InputSignalWithTransform",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "number | 'fit' | null",
+        "number | 'fit'",
+        "maxVisibleChips"
+      ],
+      "verify": "Every explicit annotation that has to hold a maxVisibleChips value accepts 'all', and no subclass override declares the old union."
+    },
+    {
+      "id": "sidenav-active-item-is-a-wash",
+      "kind": "behavior",
+      "old": "--ds-sidenav-item-bg-color-active",
+      "new": null,
+      "action": "Only if you replaced the solid pill yourself: compare your override against the new default and DROP it if they now agree, since keeping it means maintaining a copy of the DS default. The edge rail is an input now — `[rail]=\"false\"` on ds-sidenav drops it for every item, `[rail]` per item overrides that.",
+      "appliesWhen": "No token was renamed: every `--ds-sidenav-item-*-active` hook keeps its name, so an app that already retuned them looks exactly as it did. Hiding the rail through `--ds-sidenav-item-rail: transparent` or a `::ng-deep` box-shadow reset still works, though the input is the supported route. SidenavContract gained a required `rail: () => boolean`, which matters only if you provide the SIDENAV token yourself.",
+      "pitfall": "The rail also changed colour, and that one is a CONTRAST fix rather than a taste call: it was `--secondary` (orange) and is `--accent-strong` now. An orange bar across a monochrome-blue row measured 2.33:1 on the light wash, under the 3:1 floor a non-text indicator needs; the accent measures 6.16:1 light and 5.28:1 dark. Restore it with `--ds-sidenav-item-rail: var(--secondary)` only if the second hue was deliberate.",
+      "note": "The active item filled with `--accent` under a `--text-on-primary` label; it is a wash (`--accent-subtitle`) behind an `--accent-strong` label now, and the active-hover mix goes toward the accent instead of 88% toward white, which was invisible on a wash. Material fills its drawer active item with secondary-container and Carbon with $background-selected; neither uses the brand accent.",
+      "searchHints": [
+        "--ds-sidenav-item-bg-color-active",
+        "--ds-sidenav-item-label-color-active",
+        "--ds-sidenav-item-rail",
+        "ds-sidenav-item",
+        "SidenavContract"
+      ],
+      "surface": "style",
+      "restore": "ds-sidenav-item { --ds-sidenav-item-bg-color-active: var(--accent); --ds-sidenav-item-label-color-active: var(--text-on-primary); }",
+      "verify": "The app either has no --ds-sidenav-item-*-active override, or the override it keeps is one it still wants beside the new wash default."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "extends TableComponent",
+      "new": null,
+      "action": "Build after upgrading: the compiler enumerates every collision, and that list is authoritative. Then per member: rename your own, or add `override` where the base semantics genuinely match.",
+      "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md § Components); template users of the `<ds-…>` elements need nothing. No members were lost this release.",
+      "pitfall": "A redeclared PRIVATE fails with TS2415 exactly like a public collision, which is why `TimePickerComponent.insideATrigger` counts here at all. And `FieldMessageComponent` gained `iconResolved` and `config` but is internal and not exported, so those matter only to a fork.",
+      "note": "Gained: AutocompleteComponent and MultiSelectComponent (`chipsMode`, `showsEveryChip`); MenuItemComponent (`description`, `descriptionId`); SearchComponent (`bridge`, `disabled`, `formDisabled`, `hidden`, `isDisabled`, `markTouched`, `registerOnChange`, `registerOnTouched`, `setDisabledState`, `writeValue` — it declares the control-value-accessor surface itself now); SidenavComponent (`rail`); SidenavItemComponent (`rail`, `railResolved`); TableComponent (`actionReason`, `actionsFor`, `hasActionsFor`, `visibleRowActions`); TimePickerComponent (private `insideATrigger`); and `messageIcon` on all fifteen field components. TS4114 demands `override`, TS2415 fires on a redeclared private. The protected-to-public sweep across fourteen classes is the separate `resolved-readbacks-are-public` entry and collides the same way.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends SearchComponent",
+        "extends SidenavItemComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends MenuItemComponent",
+        "override ",
+        "TS4114",
+        "extends TimePickerComponent",
+        "messageIcon",
+        "extends InputComponent",
+        "writeValue",
+        "registerOnChange",
+        "registerOnTouched",
+        "setDisabledState",
+        "markTouched",
+        "formDisabled",
+        "bridge"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends TableComponent",
+        "extends SearchComponent",
+        "extends "
+      ],
+      "verify": "A typecheck of the consumer reports no TS4114 / TS2415 / TS2416 on any class that extends a DS component."
+    },
+    {
+      "id": "search-clear-becomes-public",
+      "kind": "behavior",
+      "old": "SearchComponent.clear",
+      "new": null,
+      "action": "Drop the `protected` keyword on your override, or rename your own method.",
+      "appliesWhen": "For a CALLER this is purely additive — the method is reachable now, which is the point.",
+      "pitfall": "A derived class cannot narrow a public member to protected, so a subclass that redeclared `protected clear()` no longer satisfies the base.",
+      "note": "`SearchComponent.clear` went from `protected clear(): void` to a public `clear(): void`.",
+      "searchHints": [
+        "extends SearchComponent",
+        "clear()",
+        "protected clear",
+        "ds-search"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "protected clear(",
+        "extends SearchComponent"
+      ],
+      "verify": "No SearchComponent subclass declares `protected clear()`."
+    },
+    {
+      "id": "time-columns-onkey-signature",
+      "kind": "behavior",
+      "old": "TimeColumnsComponent.onKey",
+      "new": null,
+      "action": "Read the current signature of the internal `TimeColumnsComponent.onKey` from the package's type declarations and match it, or drop the override.",
+      "appliesWhen": "It is `protected`, so no consumer calls it and templates are unaffected. The component is internal to ds-time-picker and subclassing it was never supported.",
+      "note": "The parameter list changed, so an overriding subclass has a signature that no longer matches the base (TS2416).",
+      "searchHints": [
+        "extends TimeColumnsComponent",
+        "onKey",
+        "ds-time-columns",
+        "ds-time-picker"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "onKey(",
+        "extends TimeColumnsComponent"
+      ],
+      "verify": "No subclass of the internal TimeColumnsComponent overrides `onKey` with the old parameter list."
+    },
+    {
+      "id": "overlay-outside-guard-tests-the-trigger",
+      "kind": "behavior",
+      "old": "ds-select",
+      "new": null,
+      "action": "Only where a TEST or a scripted flow relied on the old dead zone — clicking a picker's LABEL while its panel is open, to focus or assert without closing it. Retarget such a click at the trigger, or assert the closed state instead.",
+      "appliesWhen": "No action in normal use: it removes a dead zone rather than adding one, and a press on the trigger itself still keeps the panel open. ds-time-picker checks whichever of its three trigger boxes are present, since a range renders two.",
+      "pitfall": "The press now closes the panel, so an assertion written after it sees a closed overlay rather than failing where the click was.",
+      "note": "Five overlays test their TRIGGER rather than the whole host in the outside-pointer guard — ds-select, ds-multi-select, ds-autocomplete, ds-time-picker and ds-color-picker. A press in the host's own empty width used to count as INSIDE. It is the ds-date-picker fix from 0.10.1 applied to its siblings.",
+      "searchHints": [
+        "ds-select",
+        "ds-multi-select",
+        "ds-autocomplete",
+        "ds-time-picker",
+        "ds-color-picker",
+        ".click(",
+        "label",
+        "panel"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "pointerdown",
+        "mousedown",
+        "dispatchEvent"
+      ],
+      "verify": "No test asserts that a press on an overlay host's own padding (label, message row, slack beside the trigger) leaves the panel open."
+    },
+    {
+      "id": "stat-value-type-widened",
+      "kind": "behavior",
+      "old": "ds-stat[value]",
+      "new": null,
+      "action": "Retype to `string | number | null`, or drop the annotation. If you worked around the old type with `count.toLocaleString('en-US')` in the template, the pipe is the better form now.",
+      "appliesWhen": "Every existing binding compiles unchanged and nothing renders differently — null renders as nothing, like the empty-string default.",
+      "pitfall": "Breaking for READERS and OVERRIDERS and invisible to writers. A subclass override fails with TS2416 because the `equal` type-parameter position of InputSignal is invariant.",
+      "note": "Angular's number, currency, percent and date pipes are all typed `string | null`, so `[value]=\"count | number\"` failed strictTemplates with TS2322 and pushed consumers into a template-side `toLocaleString`, which pins a locale instead of reading LOCALE_ID.",
+      "searchHints": [
+        "ds-stat",
+        "toLocaleString",
+        "StatComponent",
+        "[value]",
+        "extends StatComponent"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "string | number",
+        "ds-stat",
+        "value()"
+      ],
+      "verify": "Every explicit annotation that reads a `ds-stat` value accepts null."
+    },
+    {
+      "id": "field-message-state-icons",
+      "kind": "behavior",
+      "old": "ds-field-message",
+      "new": null,
+      "action": "None if you want it. The one line back is `provideDsConfig({ field: { stateIcons: false } })` at the root. Per state: `stateIcons: { warning: false }` turns one off, `stateIcons: { hint: 'info' }` turns the hint line on, and an IconName replaces a glyph rather than removing it. Per FIELD: every one of the fifteen field components gained a `messageIcon` input that wins over the config — `[messageIcon]=\"false\"` drops the glyph there alone.",
+      "appliesWhen": "The `hint` line is unchanged and carries no glyph: it is resting text rather than a state, and it is the majority of rows on a real form.",
+      "pitfall": "One thing rides along: `align-items` on that row went `center` to `flex-start`, so a message that WRAPS keeps its glyph beside the first line instead of centred on the block. If you compensated for the old centring with your own margin on that row, drop it.",
+      "note": "The message line leads with a glyph for `error`, `warning` and `success`. Two new hooks — `--ds-field-message-icon-gap` and `--ds-field-message-icon-offset`. The glyph size is not a token (ds-icon takes a number): it is 14px, matching `--icon-sm`.",
+      "searchHints": [
+        "ds-field-message",
+        "--ds-field-message",
+        "stateIcons",
+        "messageIcon",
+        "field-message"
+      ],
+      "surface": [
+        "template",
+        "style"
+      ],
+      "verify": "Every field showing error / warning / success renders a 14px glyph before its message text and hint rows render none; an app that set stateIcons:false shows no glyph on any state; a field with [messageIcon]=\"false\" shows none while its neighbours do."
+    },
+    {
+      "id": "search-drops-the-message-inputs",
+      "kind": "removed-api",
+      "old": "ds-search[hint]",
+      "new": null,
+      "action": "Delete the binding. If the field genuinely needs a label or a validation line, use ds-input — ds-search is a toolbar filter and deliberately has no message row.",
+      "appliesWhen": "Not affected: `value`, `disabled`, `hidden`, `size`, `debounce`, `clearable`, `placeholder`, `shortcut`, `showIcon`, `ariaLabel`.",
+      "pitfall": "It used to compile and do NOTHING, and it is a template type error now — which is the whole point of the change, but it means the upgrade surfaces bindings that looked fine for releases.",
+      "note": "Removed from ds-search, which never rendered any of them: `hint`, `error`, `warning`, `errors`, `invalid`, `touched`, `reserveMessage`, `messageIcon` and the `reserveMessageResolved` readback. They arrived by inheritance when search gained form binding, so the API reference advertised eight inputs whose values nothing read.",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "verify": "Binding hint/error/warning/errors/invalid/touched/reserveMessage/messageIcon on a ds-search fails to compile, while formControl binding and the disabled surface still work.",
+      "searchHints": [
+        "ds-search",
+        "<ds-search",
+        "error=",
+        "hint=",
+        "reserveMessage",
+        "messageIcon"
+      ],
+      "detect": [
+        "<ds-search",
+        "error=",
+        "hint=",
+        "[errors]"
+      ]
+    },
+    {
+      "id": "one-focus-ring-per-field",
+      "kind": "behavior",
+      "old": "ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper, ds-field-group",
+      "new": null,
+      "action": "Only if you wrote a workaround: a rule that killed one of the two rings — `box-shadow: none` on an inner input, or a re-declared `--ds-field-focus-shadow` meant to hide the doubling — can go.",
+      "appliesWhen": "Deliberately NOT suppressed: a ds-number-stepper step button and a chip close button keep their own ring, because both are `tabindex=0` tab stops the shell halo cannot distinguish.",
+      "note": "A focused field drew TWO rings — the tight one the universal `:where(:focus-visible)` box-shadow shipped in 0.10.0 puts on the inner control, and the halo the shell paints on `:focus-within`. The inner one is suppressed where the shell speaks for the control.",
+      "surface": "style",
+      "verify": "A focused ds-search, ds-autocomplete, ds-date-picker or ds-input inside a ds-field-group shows exactly one ring; a step button inside ds-number-stepper still shows its own when tabbed to.",
+      "searchHints": [
+        "--ds-field-focus-shadow",
+        "--ds-control-focus-shadow",
+        "box-shadow: none",
+        "focus-visible",
+        "ds-field-group"
+      ]
+    },
+    {
+      "id": "clipped-labels-keep-their-descenders",
+      "kind": "behavior",
+      "old": ".option-label, .cell-clip, .crumb, ds-breadcrumbs .label",
+      "new": null,
+      "action": "Only if you worked around it: a `padding-block` or `line-height` override added to an option label, a table cell clip or a breadcrumb to get the descenders back can go.",
+      "appliesWhen": "No geometry change — option row 30px, multi-select 36px, table row 38px are all unchanged. For your own CSS of the same shape: `overflow: clip` keeps `text-overflow: ellipsis` working and keeps `scrollWidth > clientWidth` reporting true, both checked in Chromium, so a clip-detection test needs no change. Where `overflow-clip-margin` is unsupported, clip degrades to exactly the old shave.",
+      "note": "Every clipped label sat in a `line-height: 1` box with no padding, so 2.13px above the cap line and 1.47px below the baseline were cut. They use `overflow: clip` with a `--space-1` clip margin now.",
+      "surface": "style",
+      "verify": "An option list, a clipped table cell and a breadcrumb render full descenders (the tail of a g is complete) at unchanged row heights.",
+      "searchHints": [
+        "option-label",
+        "cell-clip",
+        "overflow: hidden",
+        "line-height: 1",
+        "text-overflow"
+      ]
+    }
+  ],
+  "informational": [
+    "ds-table: `TableRowAction` gained `hidden?: (row) => boolean` and `disabledReason?: string | ((row) => string)`. Purely additive -- an existing config behaves exactly as before. Reach for `hidden` where an action does not APPLY to a row rather than `disabled`, which greys an item that is always present; a row with every item hidden now renders no kebab instead of an empty menu.",
+    "ds-menu-item: new `description` input renders a standing second line and wires `aria-describedby`. If you hand-rolled that line by projecting your own span into the item, move it to the input -- yours lands INSIDE the accessible name, the input's does not.",
+    "ds-search: `clear()` is now public. A host-owned Clear button should call it rather than writing '' into `value`, which does not cancel an armed debounce when the text already matches what the control last pushed.",
+    "ds-multi-select: its panel now honours `--ds-dropdown-panel-radius` (it was hardcoded at 8px). If you set that token and wondered why one of the three connected panels ignored it, this is why -- no action needed beyond re-checking the value looks right on all three.",
+    "ds-search joins both form systems — it provides NG_VALUE_ACCESSOR and takes the same value plumbing the fields use — so [(ngModel)], formControlName and a signal form now bind it, and a new `disabled` input folds together with the form's own disabled state (the shell paints the disabled surface, which it never did). Its own [(value)] is unchanged. Deliberately NO label and no message row - a toolbar filter is not a validated field.",
+    "ds-menu: new --ds-menu-radius, defaulting to --radius-md, which is what the component hardcoded. Nothing moves. Inside a ds-popover the menu still clips to --ds-menu-clip-radius, published by the popover.",
+    "maxVisibleChips gained an 'all' mode on ds-autocomplete and ds-multi-select - render every chip, no measuring. Additive on its own; the actionable half is that null no longer means that (see max-visible-chips-null-is-unset-*).",
+    "ds-button variant=\"tonal\": the disabled label now uses the same 40% mix toward --surface-default as ghost / text / outline, instead of the shared oklch(from accent 70% ...) recipe. Visual only, no action. It fixes the dark theme, where the old recipe left the disabled label 1.11:1 from the enabled one (a hue going grey and nothing else); the state gap is now 2.90:1 dark and 3.39:1 light, and the label keeps its hue. --ds-button-label-color-disabled still overrides it.",
+    "ds-table: TableColumn gained `interactive?: boolean`. The marked column's cell takes --ds-table-cell-link-color (default --accent) and --ds-table-cell-link-decoration (default underline) while its row is hovered, on a rowInteractive table only. Purely additive - an existing column config renders exactly as before. Reach for it on the cell whose TEXT names what the row opens; the row tint says the row is clickable and nothing else said which text was the target.",
+    "ds fields on the SIGNAL FORMS path: they threw once per field (NgControl bridge has no events stream) and then displayed the first validation failure forever, because the frozen snapshot was the fallback whenever live errors went empty. Fixed - the NgControl path now bows out when it has no live stream. No consumer action: if you bind [field] on a DS control, upgrade and the console noise and the stale message both go. Reactive and template-driven forms are unchanged.",
+    "DS_CONFIG: provideDsConfig() must be called ONCE per injector. Two calls in the same `providers` array do not merge - both resolve their parent with skipSelf, so the later wins and the earlier is silently lost. Merging happens across injector LEVELS (a route or component inheriting the app's config), not within one array.",
+    "data-focus=\"inset\" draws the focus ring INSIDE the border box, for a subtree under an overflow:hidden ancestor that would otherwise clip it away and leave the element focusable with no indicator at all. Unlike the other focus styles it is NOT pinned to :root - set the attribute on the clipping element and the declarations inherit into the subtree.",
+    "migrations/<version>.json - the files this package carries in node_modules - now carry `surface`, `detect`, `verify`, `restore`, `supersedes` and a structured `deleteList` on every published release. Read `surface` for which artifact to search, `detect` plus searchHints to find it, `verify` for the positive assertion a re-check can test, and deleteList[].find for code that is now redundant. `supersedes` points BACKWARD only: a manifest never references a later version.",
+    "components.md - the digest shipped in the package for a consumer's own agent to read - was missing ds-app-layout and ds-auth-layout entirely, and named --primary, --text-on-primary and --secondary as the active sidenav item defaults, which this release replaced with the wash. Both corrected. If you hand-rolled an app shell or a sign-in screen because the digest did not list one, or overrode those three tokens to restyle the active item, re-read those entries."
+  ],
+  "deleteList": [
+    {
+      "id": "menu-item-hand-rolled-second-line",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "ds-menu-item",
+        "max-width: 14rem"
+      ],
+      "why": "A projected span plus a width cap standing in for a second line on a menu item, usually with no aria-describedby.",
+      "replaceWith": "the `description` input, capped by --ds-menu-item-description-max-width"
+    },
+    {
+      "id": "focus-ring-clipping-workaround",
+      "surface": "style",
+      "find": [
+        "overflow: visible",
+        "inset 0 0 0 2px"
+      ],
+      "why": "overflow forced back onto an element that needs to clip, or a hand-rolled inset shadow standing in for the focus ring the clip ate.",
+      "replaceWith": "data-focus=\"inset\" on the clipping element"
+    },
+    {
+      "id": "multi-select-panel-radius-override",
+      "surface": "style",
+      "find": [
+        "ds-multi-select .panel",
+        "--ds-multi-select-panel"
+      ],
+      "why": "The panel radius reached two of the three dropdowns, so the third was retuned by hand.",
+      "replaceWith": "--ds-dropdown-panel-radius, which now reaches all three"
+    },
+    {
+      "id": "search-clear-timer",
+      "surface": "typescript",
+      "find": [
+        "setTimeout",
+        "ds-search"
+      ],
+      "why": "A timer around a Clear button, or a value written twice to make the debounce let go.",
+      "replaceWith": "clear()"
+    },
+    {
+      "id": "hand-rolled-config-fallback",
+      "surface": "typescript",
+      "find": [
+        "?? config.control?.size",
+        "config.control?.size"
+      ],
+      "why": "A copy of the DS_CONFIG fallback chain in the host, written when the resolver was protected.",
+      "replaceWith": "the component's now-public *Resolved readback"
+    },
+    {
+      "id": "sidenav-active-wash-override",
+      "surface": "style",
+      "find": [
+        "--ds-sidenav-item-bg-color-active"
+      ],
+      "why": "A wash replacing the old solid active pill is what the default draws now.",
+      "replaceWith": "nothing - compare the override with the new default and drop it if they agree"
+    },
+    {
+      "id": "sidenav-rail-hidden-by-css",
+      "surface": "style",
+      "find": [
+        "--ds-sidenav-item-rail: transparent",
+        "--ds-sidenav-item-rail"
+      ],
+      "why": "Hiding the active rail through a token or a ::ng-deep shadow reset.",
+      "replaceWith": "[rail]=\"false\" on ds-sidenav"
+    },
+    {
+      "id": "menu-radius-deep-rule",
+      "surface": "style",
+      "find": [
+        "ds-menu",
+        "border-radius"
+      ],
+      "why": "A ::ng-deep radius rule on a bare ds-menu, written when the panel had no hook.",
+      "replaceWith": "--ds-menu-radius"
+    },
+    {
+      "id": "tonal-disabled-label-pin",
+      "surface": "style",
+      "find": [
+        "--ds-button-label-color-disabled"
+      ],
+      "why": "Pinned to make a tonal button's disabled state visible, most often in the dark theme only.",
+      "replaceWith": "the default disabled-label recipe"
+    },
+    {
+      "id": "stat-value-hand-formatting",
+      "surface": "template",
+      "find": [
+        "toLocaleString('en-US')",
+        "toLocaleString("
+      ],
+      "why": "Hand-rolled formatting inside a ds-stat binding, because `[value]=\"count | number\"` did not typecheck while value was `string | number`.",
+      "replaceWith": "the number pipe, which reads LOCALE_ID instead of a pinned locale"
+    },
+    {
+      "id": "table-cell-link-deep-rule",
+      "surface": "style",
+      "find": [
+        "ds-table tr:hover",
+        "::ng-deep ds-table"
+      ],
+      "why": "A deep hover rule making one cell read as the row's link target.",
+      "replaceWith": "interactive: true on that column, retuned with --ds-table-cell-link-color and --ds-table-cell-link-decoration"
+    },
+    {
+      "id": "field-state-icon-hand-rolled",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "ds-icon",
+        "field-message",
+        "align-items: center"
+      ],
+      "why": "A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row.",
+      "replaceWith": "the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing"
+    },
+    {
+      "id": "double-focus-ring-workaround",
+      "surface": "style",
+      "find": [
+        "box-shadow: none",
+        "--ds-field-focus-shadow"
+      ],
+      "why": "A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow. SCOPE, and it matters: this release suppresses the inner ring on ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper and ds-field-group ONLY. A workaround on ds-input or ds-textarea is still load-bearing here - deleting it brings the double ring back. Leave those two until you are on the release that names them. Also leave any rule you wrote against the universal :where(:focus-visible) base indicator itself: that rule is still the one this library ships.",
+      "replaceWith": "nothing: the field paints one ring now"
+    },
+    {
+      "id": "descender-clip-workaround",
+      "surface": "style",
+      "find": [
+        "padding-block",
+        "line-height",
+        "option-label"
+      ],
+      "why": "A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved.",
+      "replaceWith": "nothing: the clip carries a --space-1 margin now, at the same row height"
+    }
+  ]
+}

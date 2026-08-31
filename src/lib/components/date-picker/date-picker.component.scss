@@ -1,5 +1,10 @@
-/* Ported from claude-design-ds/components.css. */
 @use '../../styles/breakpoints' as bp;
+@use '../../styles/field-label' as field-label;
+@use '../../styles/field-box' as field-box;
+@use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/focus' as focus;
 
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
@@ -8,25 +13,42 @@
   --_date-picker-trigger-label-color: var(--ds-date-picker-trigger-label-color, var(--text-primary));
   --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
   --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
+  --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--ds-radius-control));
+  --_date-picker-trigger-pad-x: var(--ds-date-picker-trigger-pad-x, var(--field-pad-x));
 
-  /* Hug the field's content width; a consumer opts into wider by setting a
-     width on the host. Prevents an outer grid/flex column from stretching a
-     date field across its whole track. */
+  /* Mono by default: the ghost mask paints the placeholders and the real value sits
+     behind it, so only fixed-width digits keep the two in step. */
+  --_date-picker-value-font-family: var(--ds-date-picker-value-font-family, var(--font-mono));
+  --_date-picker-value-font-size: var(--ds-date-picker-value-font-size, var(--font-size-s));
+  --_date-picker-value-weight: var(--ds-date-picker-value-weight, var(--font-weight-regular));
+
+  /* Hugs its content so an outer grid or flex track cannot stretch the field; a
+     consumer opts into wider by setting a width on the host. */
   display: block;
   width: fit-content;
   max-width: 100%;
 }
 
+:host(.full-width) {
+  width: 100%;
+
+  .trigger {
+    width: 100%;
+  }
+
+  // The wrap has to take the slack too, or the value and glyph stay packed left and
+  // the affordance no longer lines up with ds-time-picker and ds-select down a row.
+  .input-wrap {
+    flex: 1;
+  }
+
+  .date-input {
+    flex: 1;
+  }
+}
+
 .visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
+  @include visually-hidden.visually-hidden;
 }
 
 .field {
@@ -37,11 +59,7 @@
   width: 100%;
 
   .label {
-    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
+    @include field-label.field-label;
 
     .req {
       color: var(--_date-picker-required-color);
@@ -62,9 +80,14 @@
   gap: var(--space-1);
   background: var(--_date-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-trigger-border-color);
-  border-radius: var(--radius-md);
-  padding: 0 var(--space-3);
-  height: var(--hit-cozy);
+  border-radius: var(--_date-picker-trigger-radius);
+
+  /* --field-pad-x, not --space-3: equal at default density, but only the token
+     shrinks under [data-density] — the literal drifted 8px from a ds-input beside it. */
+  padding: 0 var(--_date-picker-trigger-pad-x);
+
+  @include field-box.field-box-height(md);
+
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--_date-picker-trigger-label-color);
   cursor: pointer;
@@ -74,27 +97,34 @@
     border-color: var(--border-strong);
   }
 
-  &:focus-visible,
-  &:focus-within {
+  &:focus-visible {
+    box-shadow: none;
+  }
+
+  @include focus.owns-the-focus-ring('.date-input');
+
+  /* Listed too, unlike a clear button: the toggle is `tabindex="-1"` and
+     `aria-hidden`, so it is not a stop a keyboard user lands on. */
+  @include focus.owns-the-focus-ring('.calendar-toggle');
+
+  &:focus-within,
+  &.open {
     outline: none;
     box-shadow: var(--_date-picker-focus-shadow);
   }
 
   &.sm {
-    height: var(--hit-min);
+    @include field-box.field-box-height(sm);
+
     padding: 0 var(--space-2);
     font-size: var(--font-size-xs);
   }
 
   &.lg {
-    height: var(--field-h-lg);
+    @include field-box.field-box-height(lg);
+
     padding: 0 var(--space-4);
     font-size: var(--font-size-m);
-  }
-
-  &.error {
-    background: var(--error-subtitle);
-    border-color: var(--error);
   }
 
   &.disabled,
@@ -103,7 +133,6 @@
     border-color: var(--border-disabled);
     color: var(--text-disabled);
     cursor: not-allowed;
-    opacity: var(--opacity-muted);
   }
 }
 
@@ -113,19 +142,22 @@
   align-items: center;
 }
 
-/* Per-slot overlay: paints every glyph the field shows — digits at normal
-   weight, unfilled positions (format letters or `_` padding) muted. It sits
-   ABOVE the input, which is fully transparent (see .masked below), so the
-   caret and click-to-position still work against the real (fixed-width)
-   value while only the overlay is visible. Shares the input's monospace font
-   so digits and placeholders stay equal width and aligned 1:1. */
+/* Paints every glyph the field shows, sitting ABOVE a fully transparent input, so
+   the native caret and click-to-position still work against the real value while
+   only this overlay is visible. Shares the input's font or the two drift apart. */
 .mask-ghost {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   font: inherit;
-  font-family: var(--font-mono);
+
+  /* Must track the input's own family/size/weight, or the painted placeholders
+     stop lining up with the value behind them. */
+  font-family: var(--_date-picker-value-font-family);
+  font-size: var(--_date-picker-value-font-size);
+  font-weight: var(--_date-picker-value-weight);
+  font-variant-numeric: tabular-nums;
   white-space: pre;
   pointer-events: none;
   overflow: hidden;
@@ -136,22 +168,25 @@
 }
 
 .date-input {
-  /* Width is driven by the `size` attribute (the mask length) so the field
-     hugs its content instead of stretching. The monospace font keeps every
-     glyph the same width, so the value never shifts as it is typed and the
-     typed digits land exactly on the ghost mask's placeholder positions. */
+  /* Width comes from the `size` attribute, which the component sets to the mask
+     length, so the field hugs its content instead of stretching. */
   width: auto;
   border: none;
   background: transparent;
   color: inherit;
   font: inherit;
-  font-family: var(--font-mono);
+  font-family: var(--_date-picker-value-font-family);
+  font-size: var(--_date-picker-value-font-size);
+  font-weight: var(--_date-picker-value-weight);
+
+  /* Keeps digits fixed-width even when a consumer swaps the family to a
+     proportional sans — without it the value drifts off the ghost mask. */
+  font-variant-numeric: tabular-nums;
   padding: 0;
   outline: none;
 
-  /* The mask-ghost overlay paints every visible glyph; the real value stays
-     in the DOM (fixed-width, `_`-padded) purely so the native caret and
-     click-to-position land on the right slot. */
+  /* Transparent, not hidden: the value must stay in the DOM for the native caret
+     and click-to-position to land on the right slot. */
   &.masked {
     color: transparent;
     caret-color: var(--_date-picker-trigger-label-color);
@@ -181,10 +216,9 @@
 }
 
 .calendar {
-  /* Public --ds-date-picker-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_date-picker-bg-color: var(--ds-date-picker-bg-color, var(--surface-overlay));
   --_date-picker-border: var(--ds-date-picker-border, var(--border-default));
-  --_date-picker-shadow: var(--ds-date-picker-shadow, var(--shadow-popover));
+  --_date-picker-shadow: var(--ds-date-picker-shadow, var(--ds-elevation-overlay));
   --_date-picker-day-hover-bg-color: var(--ds-date-picker-day-hover-bg-color, var(--surface-secondary));
   --_date-picker-day-today-label-color: var(--ds-date-picker-day-today-label-color, var(--accent));
   --_date-picker-day-selected-bg-color: var(--ds-date-picker-day-selected-bg-color, var(--accent));
@@ -199,10 +233,16 @@
   --_date-picker-header-label-color: var(--ds-date-picker-header-label-color, var(--text-primary));
   --_date-picker-nav-icon-color: var(--ds-date-picker-nav-icon-color, var(--icon-default));
   --_date-picker-width: var(--ds-date-picker-width, var(--date-picker-w));
+  --_date-picker-panel-radius: var(--ds-date-picker-panel-radius, var(--ds-radius-panel));
+
+  /* Re-declared for the PORTAL: the :host copy does not inherit out here, and the
+     period trigger's `:focus-visible` read it as nothing — an unresolvable var makes
+     `box-shadow` its initial `none`, which left a tabbable button with no indicator. */
+  --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
 
   background-color: var(--_date-picker-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--_date-picker-panel-radius);
   box-shadow: var(--_date-picker-shadow);
   padding: var(--space-3);
   width: var(--_date-picker-width);
@@ -230,7 +270,7 @@
     border: 0;
     background: transparent;
     padding: var(--space-1) var(--space-1-5);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--_date-picker-header-label-color);
     cursor: pointer;
@@ -275,13 +315,13 @@
       place-items: center;
       color: var(--_date-picker-nav-icon-color);
       cursor: pointer;
-      border-radius: var(--radius-sm);
+      border-radius: var(--ds-radius-inner);
 
       &:hover:not(:disabled) {
         background-color: var(--_date-picker-day-hover-bg-color);
       }
       &:disabled {
-        opacity: var(--opacity-muted);
+        opacity: var(--opacity-disabled);
         cursor: not-allowed;
       }
     }
@@ -302,7 +342,7 @@
     border: 0;
     background: transparent;
     padding: var(--space-1-5) var(--space-2);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
@@ -340,7 +380,7 @@
       place-items: center;
       color: var(--_date-picker-nav-icon-color);
       cursor: pointer;
-      border-radius: var(--radius-sm);
+      border-radius: var(--ds-radius-inner);
 
       &:hover {
         background-color: var(--_date-picker-day-hover-bg-color);
@@ -351,15 +391,14 @@
   .grid {
     display: grid;
 
-    /* minmax(0, 1fr) lets tracks shrink below the cell's intrinsic width so a
-       narrow panel (e.g. a brand theme with wider tokens) can't push the
-       Sunday column outside the overlay. */
+    /* minmax(0, 1fr), so tracks can shrink below the cell's intrinsic width — a brand
+       theme with wider tokens would otherwise push the Sunday column out of the panel. */
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: var(--date-picker-cell-gap);
   }
 
-  /* role="row" wrappers stay out of the layout so the day/header cells remain
-     the direct grid items of the 7-column track. */
+  /* The role="row" wrappers stay out of the layout, or the cells stop being direct
+     grid items of the 7-column track. */
   .dow-row,
   .week {
     display: contents;
@@ -374,14 +413,12 @@
     letter-spacing: var(--letter-spacing-wider);
   }
 
-  /* Day-cell styles now live in calendar-day.component.scss (the grid renders
-     <ds-calendar-day>). The --_date-picker-day-* resolvers above stay — the
-     month/year picker cells and nav buttons read them. */
+  /* Day-cell styles live in calendar-day.component.scss. The --_date-picker-day-*
+     resolvers above stay: the month/year cells and nav buttons read them. */
 
   &.has-presets {
-    /* Presets are an ADDITIONAL column — the panel grows so the calendar keeps
-       its full width (otherwise the 7-day grid squeezes and the weekday row
-       collapses). */
+    /* The panel grows rather than sharing its width: squeezing the 7-day grid
+       collapses the weekday row. */
     display: flex;
     flex-direction: row;
     gap: var(--space-3);
@@ -415,7 +452,7 @@
     border: 0;
     background: transparent;
     padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
@@ -437,9 +474,8 @@
     }
   }
 
-  /* Phones: the presets column can't sit beside the day grid without
-     overflowing the viewport — stack it above the calendar body instead and
-     cap the whole panel so it never exceeds the screen. */
+  /* On a phone the presets column cannot sit beside the day grid without overflowing
+     the viewport, so it stacks above and the panel takes a cap. */
   @include bp.down(sm) {
     max-width: calc(100vw - var(--space-4));
 
@@ -463,3 +499,13 @@
     }
   }
 }
+
+/* Segment of a ds-field-group — see input.component.scss for why. The group
+   draws the border, the radius and the one shared focus ring. */
+:host(.in-group) {
+  @include field-group-segment.field-group-segment('.trigger');
+}
+
+@include field-state.field-state(
+  '.trigger',
+);

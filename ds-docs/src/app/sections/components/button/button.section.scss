@@ -23,8 +23,8 @@
       border-radius: var(--radius-lg);
     }
     .matrix--states .t-overline { text-align: center; }
-    .matrix__row-label { color: var(--text-secondary); }
-    .matrix__cell {
+    .matrix-row-label { color: var(--text-secondary); }
+    .matrix-cell {
       display: flex; align-items: center; justify-content: center;
       min-height: 56px;
     }
@@ -34,3 +34,12 @@
     :host ::ng-deep .pin-hover .button  { background-color: var(--_button-bg-color-hover); }
     :host ::ng-deep .pin-active .button { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); }
     :host ::ng-deep .pin-focus .button  { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
+
+    /* Flips the whole colour x variant matrix to disabled — the fastest way to see
+       whether a disabled state still reads as off next to its live self, which is
+       exactly the comparison the recipe was changed for. */
+    .demo-head {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: var(--space-2);
+    }

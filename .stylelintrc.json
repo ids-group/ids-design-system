@@ -1,9 +1,15 @@
 {
-  "extends": ["stylelint-config-standard-scss"],
+  "extends": [
+    "stylelint-config-standard-scss"
+  ],
   "rules": {
     "selector-pseudo-element-no-unknown": [
       true,
-      { "ignorePseudoElements": ["ng-deep"] }
+      {
+        "ignorePseudoElements": [
+          "ng-deep"
+        ]
+      }
     ],
     "selector-type-no-unknown": [
       true,
@@ -34,7 +40,13 @@
         ]
       }
     ],
-    "selector-class-pattern": null,
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9-]*$",
+      {
+        "resolveNestedSelectors": true,
+        "message": "Class names are kebab-case with no underscores: `__` claims a nested component, and there are none here — only states. Flatten `block__element` to `block-element`."
+      }
+    ],
     "custom-property-pattern": null,
     "no-empty-source": null,
     "custom-property-empty-line-before": null,
@@ -43,7 +55,11 @@
     "scss/comment-no-empty": null,
     "declaration-block-no-redundant-longhand-properties": [
       true,
-      { "ignoreShorthands": ["grid-template"] }
+      {
+        "ignoreShorthands": [
+          "grid-template"
+        ]
+      }
     ],
     "media-feature-name-value-allowed-list": {
       "/^(min-|max-)?width$/": [
@@ -55,6 +71,12 @@
         "1536px",
         "/#\\{/"
       ]
-    }
+    },
+    "selector-nested-pattern": [
+      "^[^_]*$",
+      {
+        "message": "Class names are kebab-case with no underscores: `__` claims a nested component, and there are none here — only states. Flatten `block__element` to `block-element`."
+      }
+    ]
   }
 }

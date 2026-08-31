@@ -6,68 +6,105 @@
       "kind": "token-rename",
       "old": "--border-subtle",
       "new": "--border-subtitle",
-      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename (8 families).",
-      "searchHints": ["--border-subtle"]
+      "action": "Replace `--border-subtle` with `--border-subtitle`.",
+      "searchHints": [
+        "--border-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "primary-subtle-token-rename",
       "kind": "token-rename",
       "old": "--primary-subtle",
       "new": "--primary-subtitle",
-      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--primary-subtle"]
+      "action": "Replace `--primary-subtle` with `--primary-subtitle`.",
+      "searchHints": [
+        "--primary-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "secondary-subtle-token-rename",
       "kind": "token-rename",
       "old": "--secondary-subtle",
       "new": "--secondary-subtitle",
-      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--secondary-subtle"]
+      "action": "Replace `--secondary-subtle` with `--secondary-subtitle`.",
+      "searchHints": [
+        "--secondary-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "tertiary-subtle-token-rename",
       "kind": "token-rename",
       "old": "--tertiary-subtle",
       "new": "--tertiary-subtitle",
-      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--tertiary-subtle"]
+      "action": "Replace `--tertiary-subtle` with `--tertiary-subtitle`.",
+      "searchHints": [
+        "--tertiary-subtle"
+      ],
+      "surface": "style"
+    },
+    {
+      "id": "surface-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--surface-subtle",
+      "new": "--surface-subtitle",
+      "action": "Replace `--surface-subtle` with `--surface-subtitle`.",
+      "searchHints": [
+        "--surface-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "success-subtle-token-rename",
       "kind": "token-rename",
       "old": "--success-subtle",
       "new": "--success-subtitle",
-      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--success-subtle"]
+      "action": "Replace `--success-subtle` with `--success-subtitle`.",
+      "searchHints": [
+        "--success-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "warning-subtle-token-rename",
       "kind": "token-rename",
       "old": "--warning-subtle",
       "new": "--warning-subtitle",
-      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--warning-subtle"]
+      "action": "Replace `--warning-subtle` with `--warning-subtitle`.",
+      "searchHints": [
+        "--warning-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "error-subtle-token-rename",
       "kind": "token-rename",
       "old": "--error-subtle",
       "new": "--error-subtitle",
-      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--error-subtle"]
+      "action": "Replace `--error-subtle` with `--error-subtitle`.",
+      "searchHints": [
+        "--error-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "info-subtle-token-rename",
       "kind": "token-rename",
       "old": "--info-subtle",
       "new": "--info-subtitle",
-      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--info-subtle"]
+      "action": "Replace `--info-subtle` with `--info-subtitle`.",
+      "searchHints": [
+        "--info-subtle"
+      ],
+      "surface": "style"
     }
   ],
   "informational": [
+    "All nine `--*-subtle` semantic tokens became `--*-subtitle` in this release - border, primary, secondary, tertiary, surface, success, warning, error and info. Each has its own item above; no token keeps the old spelling, and no longer token is built on one of these names, so the nine renames are independent and can be applied in any order.",
     "Theme re-skin guidance clarified in the shipped themes/README (brand roles retint from the --blue ramp; a fully calibrated brand may set --primary-* roles directly).",
     "Relicensed from proprietary (UNLICENSED) to MIT."
-  ]
+  ],
+  "deleteList": []
 }

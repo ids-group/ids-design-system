@@ -12,10 +12,8 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 
 export type OtpMode = 'numeric' | 'alphanumeric';
@@ -35,9 +33,9 @@ export type OtpMode = 'numeric' | 'alphanumeric';
     },
   ],
   host: {
+    '[attr.data-field-state]': 'controlState()',
     role: 'group',
     '[attr.aria-label]': 'ariaLabel()',
-    '[class.invalid]': 'invalid()',
     '[attr.aria-describedby]': 'hintId()',
   },
 })
@@ -52,14 +50,11 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   readonly mask = input(false, { transform: booleanAttribute });
   /** Disables all cells and blocks interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Applies error styling and marks each cell `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the cells. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Accessible group label for the cell row. */
   readonly ariaLabel = input<string>('Verification code');
   /** Fires once, with the full code, on the partial → complete transition. */
@@ -70,11 +65,21 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
 
   protected readonly uid = nextControlId('ds-otp-input');
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    success: this.success,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -96,12 +101,16 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
 
       return;
     }
+    // Every branch writes element.value itself: Angular diffs `[value]` against the
+    // value IT last wrote, so a split that leaves this cell's signal unchanged skips
+    // the DOM write and the browser's own text stays on screen.
     if (cleaned.length === 1) {
       this.writeCell(index, cleaned);
       element.value = cleaned;
       this.focusBox(index + 1);
     } else {
       this.distribute(cleaned, index);
+      element.value = cleaned[0];
     }
   }
 

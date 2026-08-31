@@ -1,25 +1,93 @@
+@if (label()) {
+  <span
+    class="label"
+    [id]="labelId"
+  >
+    {{ label() }}
+    @if (required()) {
+      <span
+        class="req"
+        aria-hidden="true"
+      >
+        *
+      </span>
+    } @else if (optional()) {
+      <span
+        class="optional-marker"
+        aria-hidden="true"
+      >
+        (optional)
+      </span>
+    }
+  </span>
+}
+
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- click opens/focuses; keyboard runs through the inner <input role="combobox"> (type/arrows/Enter/Esc) -->
 <div
   #trigger
   class="autocomplete-trigger"
-  [class]="size()"
+  [class]="sizeResolved()"
   [class.open]="isOpen()"
   [class.disabled]="isDisabled()"
-  [class.error]="invalid()"
+  [class.error]="invalidResolved()"
   (click)="onTriggerClick()"
 >
-  @if (multiple()) {
-    @for (selectedOption of selectedTags(); track selectedOption.value) {
-      <ds-tag
-        [closable]="true"
-        [closeLabel]="'Remove ' + selectedOption.label"
-        (closed)="remove(selectedOption.value)"
-      >
-        {{ selectedOption.label }}
-      </ds-tag>
-    }
+  <span class="addon-slot prefix">
+    <ng-content select="[dsAutocompletePrefix]"></ng-content>
+  </span>
+
+  @if (pickerTrigger(); as tpl) {
+    <ng-container
+      [ngTemplateOutlet]="tpl"
+      [ngTemplateOutletContext]="{
+        $implicit: triggerSelection(),
+        selected: triggerSelection(),
+        count: multiple() ? selectedTags().length : hasSingleValue() ? 1 : 0,
+        open: isOpen(),
+        disabled: isDisabled(),
+      }"
+    />
+  } @else if (multiple()) {
+    <span
+      #chipRow
+      class="chip-row"
+      [class.fit]="fitsChipsToWidth()"
+    >
+      @for (selectedOption of visibleTags(); track selectedOption.value) {
+        <ds-tag
+          data-chip
+          [closable]="true"
+          [closeLabel]="'Remove ' + selectedOption.label"
+          (closed)="remove(selectedOption.value)"
+        >
+          @if (chipTemplate(); as tpl) {
+            <ng-container
+              [ngTemplateOutlet]="tpl"
+              [ngTemplateOutletContext]="{
+                $implicit: selectedOption,
+                option: selectedOption,
+              }"
+            />
+          } @else {
+            {{ selectedOption.label }}
+          }
+        </ds-tag>
+      }
+
+      @if (overflowCount() > 0) {
+        <span
+          class="overflow"
+          data-chip-overflow
+        >
+          +{{ overflowCount() }} more
+        </span>
+      }
+    </span>
   } @else if (displayLabel()) {
-    <span class="autocomplete-value">
+    <span
+      class="autocomplete-value"
+      [attr.title]="valueOverflow() === 'ellipsis' ? displayLabel() : null"
+    >
       {{ displayLabel() }}
     </span>
   }
@@ -30,11 +98,16 @@
     class="autocomplete-input"
     role="combobox"
     aria-autocomplete="list"
+    [class.collapsed]="displayLabel() && !isOpen()"
     [attr.aria-expanded]="isOpen()"
     [attr.aria-controls]="listboxId"
     [attr.aria-activedescendant]="activeDescendant()"
-    [attr.aria-label]="ariaLabel() || placeholder()"
-    [attr.aria-invalid]="invalid() ? 'true' : null"
+    [attr.aria-labelledby]="label() ? labelId : null"
+    [attr.aria-label]="resolvedAriaLabel()"
+    [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-readonly]="isReadOnly() ? 'true' : null"
+    [attr.name]="name()"
+    [attr.aria-invalid]="invalidResolved() ? 'true' : null"
     [attr.aria-describedby]="hintId()"
     [disabled]="isDisabled()"
     [value]="query()"
@@ -45,157 +118,292 @@
     (keydown)="onKeydown($event)"
   />
 
-  <ds-icon
-    name="chevronDown"
-    class="autocomplete-chevron"
-    [size]="16"
-    (click)="togglePanel($event)"
-  />
+  <span class="addon-slot suffix">
+    <ng-content select="[dsAutocompleteSuffix]"></ng-content>
+  </span>
+
+  @if (
+      clearable() &&
+      hasSingleValue() &&
+      !isDisabled() &&
+      !isReadOnly()
+    ) {
+    <button
+      type="button"
+      class="clear-btn"
+      aria-label="Clear selection"
+      (click)="clearValue($event)"
+    >
+      <ds-icon
+        name="x"
+        [size]="14"
+      />
+    </button>
+  }
+
+  @if (showChevron()) {
+    <ds-icon
+      name="chevronDown"
+      class="autocomplete-chevron"
+      aria-hidden="true"
+      [size]="16"
+      (click)="togglePanel($event)"
+    />
+  }
 </div>
 
 <ds-field-message
-  [text]="hint()"
-  [state]="messageState()"
+  [icon]="messageIcon()"
+  [text]="message().text"
+  [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessage()"
+  [reserve]="reserveMessageResolved()"
 />
 
 <ng-template #panel>
-  <ul
-    class="autocomplete-list"
-    role="listbox"
-    [id]="listboxId"
-    [attr.aria-multiselectable]="multiple() ? 'true' : null"
-  >
-    @if (filteredGroups().length > 0) {
-      @for (
-        group of filteredGroups();
-        track group.label;
-        let groupIdx = $index
-      ) {
-        <li
-          class="autocomplete-optgroup"
-          role="group"
-          [attr.aria-label]="group.label"
-        >
-          <span
-            class="autocomplete-optgroup-label"
-            [class.is-first]="groupIdx === 0"
+  <div class="dropdown-panel">
+    @if (panelHeaderTemplate(); as tpl) {
+      <div class="panel-header">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: filteredOptions().length,
+            total: allOptions().length,
+            query: query(),
+          }"
+        />
+      </div>
+    }
+
+    <ul
+      class="dropdown-list"
+      role="listbox"
+      [attr.aria-busy]="loading() ? 'true' : null"
+      [id]="listboxId"
+      [attr.aria-multiselectable]="multiple() ? 'true' : null"
+    >
+      @for (item of filteredItems(); track $index; let itemIdx = $index) {
+        @if (isGroup(item)) {
+          <li
+            class="optgroup"
+            role="group"
+            [attr.aria-label]="item.label"
           >
-            {{ group.label }}
-          </span>
-
-          @for (option of group.options; track option.value) {
-            <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
-            <div
-              role="option"
-              [class]="optionClass(option)"
-              [id]="optionId(flatIndexOf(option))"
-              [class.is-active]="flatIndexOf(option) === activeIndex()"
-              [attr.aria-selected]="isSelected(option)"
-              (click)="onPick(option)"
-              (mouseenter)="activeIndex.set(flatIndexOf(option))"
-            >
-              @if (multiple()) {
-                <span
-                  class="check-box"
-                  [class.checked]="isSelected(option)"
-                >
-                  @if (isSelected(option)) {
-                    <ds-icon
-                      name="check"
-                      [size]="13"
-                    />
-                  }
-                </span>
-              }
-
-              <span class="option-label">
-                {{ option.label }}
-              </span>
-
-              @if (!multiple() && isSelected(option)) {
-                <ds-icon
-                  name="check"
-                  class="icon"
-                  [size]="14"
-                />
-              }
-            </div>
-          }
-        </li>
-      }
-    } @else {
-      @for (option of filteredOptions(); track option.value; let i = $index) {
-        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
-        <li
-          role="option"
-          [class]="optionClass(option)"
-          [id]="optionId(i)"
-          [class.is-active]="i === activeIndex()"
-          [attr.aria-selected]="isSelected(option)"
-          (click)="onPick(option)"
-          (mouseenter)="activeIndex.set(i)"
-        >
-          @if (multiple()) {
             <span
-              class="check-box"
-              [class.checked]="isSelected(option)"
+              class="optgroup-label"
+              [class.is-first]="itemIdx === 0"
             >
-              @if (isSelected(option)) {
-                <ds-icon
-                  name="check"
-                  [size]="13"
+              @if (groupLabelTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{
+                    $implicit: item,
+                    group: item,
+                    count: item.options.length,
+                  }"
                 />
+              } @else {
+                {{ item.label }}
               }
             </span>
-          }
 
-          <span class="option-label">
-            {{ option.label }}
-          </span>
+            @for (option of item.options; track option.value) {
+              <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
+              <div
+                role="option"
+                [class]="optionClass(option)"
+                [id]="optionId(flatIndexOf(option))"
+                [class.is-active]="flatIndexOf(option) === activeIndex()"
+                [attr.aria-selected]="isSelected(option)"
+                [attr.aria-disabled]="option.disabled ? 'true' : null"
+                (click)="onPick(option)"
+                (mouseenter)="
+                  cursorFromKeyboard.set(false);
+                  option.disabled || activeIndex.set(flatIndexOf(option))
+                "
+              >
+                @if (multiple()) {
+                  <span
+                    class="check-box"
+                    [class.checked]="isSelected(option)"
+                  >
+                    @if (isSelected(option)) {
+                      <ds-icon
+                        name="check"
+                        [size]="13"
+                      />
+                    }
+                  </span>
+                }
 
-          @if (!multiple() && isSelected(option)) {
-            <ds-icon
-              name="check"
-              class="icon"
-              [size]="14"
+                @if (option.icon) {
+                  <ds-icon
+                    class="option-icon"
+                    [name]="option.icon"
+                    [size]="16"
+                  />
+                }
+
+                <span class="option-label">
+                  @if (optionTemplate(); as tpl) {
+                    <ng-container
+                      [ngTemplateOutlet]="tpl"
+                      [ngTemplateOutletContext]="{
+                        $implicit: option,
+                        option: option,
+                      }"
+                    />
+                  } @else {
+                    {{ option.label }}
+                  }
+                </span>
+
+                @if (!multiple() && isSelected(option)) {
+                  <ds-icon
+                    name="check"
+                    class="option-check"
+                    [size]="14"
+                  />
+                }
+              </div>
+            }
+          </li>
+        } @else {
+          @let option = item;
+
+          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
+          <li
+            role="option"
+            [class]="optionClass(option)"
+            [id]="optionId(flatIndexOf(option))"
+            [class.is-active]="flatIndexOf(option) === activeIndex()"
+            [attr.aria-selected]="isSelected(option)"
+            [attr.aria-disabled]="option.disabled ? 'true' : null"
+            (click)="onPick(option)"
+            (mouseenter)="
+              cursorFromKeyboard.set(false);
+                  option.disabled || activeIndex.set(flatIndexOf(option))
+            "
+          >
+            @if (multiple()) {
+              <span
+                class="check-box"
+                [class.checked]="isSelected(option)"
+              >
+                @if (isSelected(option)) {
+                  <ds-icon
+                    name="check"
+                    [size]="13"
+                  />
+                }
+              </span>
+            }
+
+            @if (option.icon) {
+              <ds-icon
+                class="option-icon"
+                [name]="option.icon"
+                [size]="16"
+              />
+            }
+
+            <span class="option-label">
+              @if (optionTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{
+                    $implicit: option,
+                    option: option,
+                  }"
+                />
+              } @else {
+                {{ option.label }}
+              }
+            </span>
+
+            @if (!multiple() && isSelected(option)) {
+              <ds-icon
+                name="check"
+                class="option-check"
+                [size]="14"
+              />
+            }
+          </li>
+        }
+      }
+
+      @if (loading()) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          <ds-spinner size="sm" />
+        </li>
+      } @else if (filteredOptions().length === 0 && !showCreateRow()) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          @if (emptyTemplate(); as tpl) {
+            <ng-container
+              [ngTemplateOutlet]="tpl"
+              [ngTemplateOutletContext]="{ $implicit: query(), query: query() }"
             />
+          } @else {
+            No matches
           }
         </li>
       }
-    }
 
-    @if (filteredOptions().length === 0 && !showCreateRow()) {
-      <li
-        class="empty t-s"
-        role="status"
-      >
-        No matches
-      </li>
-    }
+      @if (showCreateRow()) {
+        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
+        <li
+          class="option create-row"
+          role="option"
+          [id]="optionId(visibleOptions().length)"
+          [class.is-active]="activeIndex() === visibleOptions().length"
+          [attr.aria-selected]="false"
+          (click)="onCreateNew()"
+          (mouseenter)="
+            cursorFromKeyboard.set(false);
+            activeIndex.set(visibleOptions().length)
+          "
+        >
+          <ds-icon
+            name="plus"
+            class="create-icon"
+            [size]="16"
+          />
 
-    @if (showCreateRow()) {
-      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
-      <li
-        class="option create-row"
-        role="option"
-        [id]="optionId(visibleOptions().length)"
-        [class.is-active]="activeIndex() === visibleOptions().length"
-        [attr.aria-selected]="false"
-        (click)="onCreateNew()"
-        (mouseenter)="activeIndex.set(visibleOptions().length)"
-      >
-        <ds-icon
-          name="plus"
-          class="create-icon"
-          [size]="16"
+          <span class="option-label">
+            @if (createTemplate(); as tpl) {
+              <ng-container
+                [ngTemplateOutlet]="tpl"
+                [ngTemplateOutletContext]="{
+                  $implicit: query().trim(),
+                  query: query().trim(),
+                }"
+              />
+            } @else {
+              Create «{{ query().trim() }}»
+            }
+          </span>
+        </li>
+      }
+    </ul>
+
+    @if (panelFooterTemplate(); as tpl) {
+      <div class="panel-footer">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: filteredOptions().length,
+            total: allOptions().length,
+            query: query(),
+          }"
         />
-
-        <span class="option-label">
-          Create «{{ query().trim() }}»
-        </span>
-      </li>
+      </div>
     }
-  </ul>
+
+  </div>
 </ng-template>

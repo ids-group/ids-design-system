@@ -1,0 +1,147 @@
+<docs-section
+  anchor="practice-signal-forms"
+  eyebrow="Practice"
+  title="Signal Forms"
+>
+  <span lede>
+    {{ lede }}
+  </span>
+
+  <h3 class="block-title t-h4">
+    The whole recipe
+  </h3>
+
+  <p class="block-desc t-s">
+    Describe the shape and the rules in the component, then point each control
+    at a field. The DS side is <strong>one attribute</strong> —
+    <code class="t-mono-inline">
+      [formField]
+    </code> — and it comes from
+    <code class="t-mono-inline">
+      &#64;angular/forms/signals
+    </code>, not from
+    this library. That is the point: a DS control participates because it
+    exposes <code class="t-mono-inline"> value </code> as a
+    <code class="t-mono-inline">
+      model()
+    </code>, which is the entire
+    <code class="t-mono-inline">
+      FormValueControl
+    </code> contract.
+  </p>
+
+  <pre class="t-mono-block">{{ snippet }}</pre>
+
+  <pre class="t-mono-block">{{ templateSnippet }}</pre>
+
+  <div class="demo-form">
+    <ds-input
+      label="Email"
+      [formField]="demoForm.email"
+    />
+
+    <ds-select
+      label="Role"
+      [options]="roles"
+      [formField]="demoForm.role"
+    />
+
+    <ds-input
+      label="Reference"
+      hint="Held read-only by a readonly() rule in the schema"
+      [formField]="demoForm.reference"
+    />
+
+    <ds-checkbox
+      label="I agree to the terms"
+      [formField]="demoForm.terms"
+    />
+
+    <ds-button [disabled]="!demoForm().valid()">
+      Send invite
+    </ds-button>
+  </div>
+
+  <p class="block-desc t-s">
+    Type an invalid address and leave the field: the message appears only after
+    the field is touched, the border turns,
+    <code class="t-mono-inline">
+      aria-invalid
+    </code> flips, and the button
+    stays disabled until the form is valid. None of that is wired in the
+    template.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Error text comes from the validator
+  </h3>
+
+  <p class="block-desc t-s">
+    A field knows it is invalid, but only your validator knows what to say.
+    Without a message the field turns red with no words — deliberately, since
+    the alternative is the library inventing copy for your domain. Two ways to
+    supply it: per rule, as
+    <code class="t-mono-inline">
+      required(path.email, &#123; message: '…' &#125;)
+    </code
+    >, or once per app for the built-in kinds:
+  </p>
+
+  <pre class="t-mono-block">{{ messagesSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    In dev, a field that is invalid with no resolvable message logs a warning
+    naming the error kinds it could not resolve, so this fails loudly rather
+    than silently.
+  </p>
+
+  <h3 class="block-title t-h4">
+    What the controls implement
+  </h3>
+
+  <p class="block-desc t-s">
+    Signal forms binds these by input NAME, so a control takes part in whichever
+    of them it happens to expose. This is the measured state, not the intended
+    one.
+  </p>
+
+  <div class="contract">
+    @for (row of contract; track row.member) {
+      <div
+        class="contract-row"
+        [class.contract-row--no]="row.state === 'no'"
+      >
+        <code class="contract-member t-mono-inline">
+          {{ row.member }}
+        </code>
+
+        <span class="contract-state t-overline">
+          {{ row.state === 'yes' ? 'bound' : 'not yet' }}
+        </span>
+
+        <span class="contract-note t-s">
+          {{ row.note }}
+        </span>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
+    Reactive and template-driven forms still work
+  </h3>
+
+  <p class="block-desc t-s">
+    Nothing here replaces anything. Every control still provides a
+    <code class="t-mono-inline">
+      ControlValueAccessor
+    </code>, so
+    <code class="t-mono-inline">
+      formControlName
+    </code> and
+    <code class="t-mono-inline">
+      ngModel
+    </code> bind exactly as before, and the
+    same message row serves both. A given field is driven by one form system at
+    a time, so the two cannot disagree.
+  </p>
+</docs-section>

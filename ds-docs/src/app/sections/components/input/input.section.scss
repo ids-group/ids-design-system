@@ -10,7 +10,7 @@
       @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
     }
 
-    /* grid-3 ("With icon · prefix · suffix · floating") holds live ds-input
+    /* grid-3 ("With icon · prefix · suffix") holds live ds-input
        specimens that refuse to shrink past their content width in a 3-up row —
        collapse to 1 column through tablet (covers the 768px viewport, which
        bp.down(md) excludes since it is the md boundary itself). */
@@ -24,7 +24,7 @@
     }
 
     /* ---------- States showcase overrides ---------- */
-    .state-cell__stage {
+    .state-cell-stage {
       align-items: stretch; justify-content: stretch;
       min-height: 96px;
 
@@ -34,10 +34,23 @@
     /* Showcase-only: pin focus-within / hover visuals on the inner <ds-input>
        .control without real interaction. ::ng-deep reaches past the
        component's emulated encapsulation boundary. */
-    .state-cell__stage.force-focus ::ng-deep .control {
+    .state-cell-stage.force-focus ::ng-deep .control {
       border-color: var(--primary);
       box-shadow: var(--focus-field);
     }
-    .state-cell__stage.force-hover ::ng-deep .control {
+    .state-cell-stage.force-hover ::ng-deep .control {
       border-color: var(--border-strong);
     }
+
+/* The reserved-row demo is about the HEIGHT difference, so the two cells must
+   hug their content — a stretched grid row would make both look identical. */
+.reserve-demo {
+  align-items: start;
+}
+
+.reserve-group-demo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}

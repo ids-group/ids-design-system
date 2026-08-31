@@ -99,15 +99,10 @@ export class DrawerComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // Angular scopes @keyframes names under emulated encapsulation, so
-    // event.animationName arrives as `_ngcontent-…_drawer-panel-close-right`,
-    // not the bare name — match the suffix or teardown never fires.
-    if (
-      !event.animationName.endsWith('drawer-panel-close-right') &&
-      !event.animationName.endsWith('drawer-panel-close-left') &&
-      !event.animationName.endsWith('drawer-panel-close-top') &&
-      !event.animationName.endsWith('drawer-panel-close-bottom')
-    ) {
+    // The panel is the element with the handler, so its OWN animationend is the
+    // signal; the scrim is a sibling and anything else is inside. This replaces
+    // matching four keyframes NAMES, which is what made the exit un-overridable.
+    if (event.target !== event.currentTarget) {
       return;
     }
     this.finishClose();

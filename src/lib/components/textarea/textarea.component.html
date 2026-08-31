@@ -28,17 +28,20 @@
     dsFieldClickFocus
   >
     <textarea
+      #control
       [id]="uid"
       [rows]="rows()"
       [attr.name]="name()"
       [attr.placeholder]="placeholder() || null"
       [attr.aria-label]="resolvedAriaLabel()"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-invalid]="invalidResolved() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
       [attr.maxlength]="maxLength()"
+      [attr.minlength]="minLength()"
+      [attr.pattern]="patternAttribute()"
       [disabled]="isDisabled()"
-      [readOnly]="readOnly()"
+      [readOnly]="isReadOnly()"
       [required]="required()"
       [style.resize]="effectiveResize()"
       [style.min-height]="autosizeMinHeight()"
@@ -51,17 +54,17 @@
   </div>
 
   @if (
-    reserveMessage() ||
-    hint() ||
-    messageState() !== 'default' ||
-    maxLength() !== null
-  ) {
+      reserveMessageResolved() ||
+      message().text ||
+      maxLength() !== null
+    ) {
     <div class="field-footer">
       <ds-field-message
-        [text]="hint()"
-        [state]="messageState()"
+        [icon]="messageIcon()"
+        [text]="message().text"
+        [state]="message().state"
         [messageId]="hintId()"
-        [reserve]="reserveMessage()"
+        [reserve]="reserveMessageResolved()"
       />
 
       @if (maxLength() !== null) {

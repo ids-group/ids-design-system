@@ -1,8 +1,7 @@
 :host {
-  /* Public --ds-sidenav-group-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_sidenav-group-open-bg-color:      var(--ds-sidenav-group-open-bg-color,      var(--surface-secondary));
   --_sidenav-group-child-indent: var(--ds-sidenav-group-child-indent, var(--space-3));
-  --_sidenav-group-radius:       var(--ds-sidenav-group-radius,       var(--radius-md));
+  --_sidenav-group-radius:       var(--ds-sidenav-group-radius,       var(--ds-radius-control));
   --_sidenav-group-label-color:  var(--ds-sidenav-group-label-color,  var(--text-tertiary));
   --_sidenav-group-focus-shadow: var(--ds-sidenav-group-focus-shadow, var(--ds-control-focus-shadow));
 

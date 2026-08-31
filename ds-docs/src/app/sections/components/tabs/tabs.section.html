@@ -10,7 +10,6 @@
     pills for compact filters. Optional icon and count chip per tab.
   </span>
 
-  <!-- ============================================================ Variants -->
   <h3 class="block-title t-h4">
     Variants
   </h3>
@@ -28,11 +27,11 @@
   </p>
 
   <div class="variant-row">
-    <div class="variant-row__label t-overline">
+    <div class="variant-row-label t-overline">
       Line
     </div>
 
-    <ds-tabs class="variant-row__stage">
+    <ds-tabs class="variant-row-stage">
       <ds-tab label="Overview">
         <p class="t-s muted pad">
           Project at a glance.
@@ -60,12 +59,12 @@
   </div>
 
   <div class="variant-row">
-    <div class="variant-row__label t-overline">
+    <div class="variant-row-label t-overline">
       Pills
     </div>
 
     <ds-tabs
-      class="variant-row__stage"
+      class="variant-row-stage"
       variant="pills"
     >
       <ds-tab label="All">
@@ -94,7 +93,6 @@
     </ds-tabs>
   </div>
 
-  <!-- ============================================================ With count · icon · disabled -->
   <h3 class="block-title t-h4">
     With count badge · icon · disabled
   </h3>
@@ -105,7 +103,7 @@
   </p>
 
   <div class="variant-row">
-    <div class="variant-row__stage">
+    <div class="variant-row-stage">
       <ds-tabs [selectedIndex]="0">
         <ds-tab
           label="Inbox"
@@ -144,7 +142,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ Scrollable -->
   <h3 class="block-title t-h4">
     Scrollable
   </h3>
@@ -156,12 +153,12 @@
   </p>
 
   <div class="variant-row">
-    <div class="variant-row__label t-overline">
+    <div class="variant-row-label t-overline">
       Line
     </div>
 
     <ds-tabs
-      class="variant-row__stage scrollable-demo"
+      class="variant-row-stage scrollable-demo"
       scrollable
     >
       <ds-tab label="Dashboard">
@@ -227,12 +224,12 @@
   </div>
 
   <div class="variant-row">
-    <div class="variant-row__label t-overline">
+    <div class="variant-row-label t-overline">
       Pills
     </div>
 
     <ds-tabs
-      class="variant-row__stage scrollable-demo"
+      class="variant-row-stage scrollable-demo"
       variant="pills"
       scrollable
     >
@@ -286,7 +283,6 @@
     </ds-tabs>
   </div>
 
-  <!-- ============================================================ Closable -->
   <h3 class="block-title t-h4">
     Closable
   </h3>
@@ -305,7 +301,7 @@
   </p>
 
   <div class="variant-row">
-    <div class="variant-row__stage">
+    <div class="variant-row-stage">
       <ds-tabs
         closable
         (tabClosed)="onTabClose($event)"
@@ -324,7 +320,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ Vertical -->
   <h3 class="block-title t-h4">
     Vertical
   </h3>
@@ -337,7 +332,7 @@
   </p>
 
   <div class="variant-row">
-    <div class="variant-row__stage">
+    <div class="variant-row-stage">
       <ds-tabs orientation="vertical">
         <ds-tab label="Overview">
           <p class="t-s muted pad">
@@ -366,7 +361,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ Lazy -->
   <h3 class="block-title t-h4">
     Lazy
   </h3>
@@ -379,7 +373,7 @@
   </p>
 
   <div class="variant-row">
-    <div class="variant-row__stage">
+    <div class="variant-row-stage">
       <ds-tabs lazy>
         <ds-tab label="First">
           <p class="t-s muted pad">
@@ -402,7 +396,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ States showcase -->
   <h3 class="block-title t-h4">
     States showcase
   </h3>
@@ -416,7 +409,7 @@
              resolvers via ::ng-deep (see styles below). selectedIndex=1 keeps
              the first tab non-active so hover/focus/default can be shown. -->
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-tabs [selectedIndex]="1">
           <ds-tab label="Overview" />
 
@@ -424,13 +417,13 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-tabs [selectedIndex]="1">
           <ds-tab label="Overview" />
 
@@ -438,13 +431,13 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-tabs [selectedIndex]="1">
           <ds-tab label="Overview" />
 
@@ -452,25 +445,25 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Focus-visible
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-tabs [selectedIndex]="0">
           <ds-tab label="Overview" />
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Active
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-tabs [selectedIndex]="0">
           <ds-tab
             label="Overview"
@@ -479,13 +472,12 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Pills states showcase -->
   <h3 class="block-title t-h4">
     Pills states showcase
   </h3>
@@ -496,7 +488,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-tabs
           variant="pills"
           [selectedIndex]="1"
@@ -507,13 +499,13 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-tabs
           variant="pills"
           [selectedIndex]="1"
@@ -524,13 +516,13 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-tabs
           variant="pills"
           [selectedIndex]="1"
@@ -541,13 +533,13 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Focus-visible
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-tabs
           variant="pills"
           [selectedIndex]="0"
@@ -556,13 +548,13 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Active
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-tabs
           variant="pills"
           [selectedIndex]="0"
@@ -574,9 +566,139 @@
         </ds-tabs>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
   </div>
+
+  <h3 class="block-title t-h4">
+    Keeping the tab in the URL
+  </h3>
+
+  <p class="block-desc t-s">
+    Set
+    <code class="t-mono-inline">
+      urlParam
+    </code> and the strip keeps the active
+    tab in a query parameter, so it survives F5, a shared link and the Back
+    button. The input both switches the behaviour on and names the parameter;
+    leave it out and the URL is untouched.
+  </p>
+
+  <pre class="t-mono-block"><code>&lt;ds-tabs urlParam="tab"&gt;
+  &lt;ds-tab label="Profile"  value="profile" /&gt;
+  &lt;ds-tab label="Activity" value="activity" /&gt;
+&lt;/ds-tabs&gt;
+
+&lt;!-- second tab active --&gt;  ?tab=activity</code></pre>
+
+  <p class="block-desc t-s">
+    The names come from each tab's
+    <code class="t-mono-inline">
+      value
+    </code>, falling back to a SLUG of its
+    <code class="t-mono-inline">
+      label
+    </code> — kebab, lowercased, diacritics
+    dropped, so "License Verification Status" gives
+    <code class="t-mono-inline">
+      ?tab=license-verification-status
+    </code> rather
+    than a percent-encoded sentence. That is not the identifier
+    <code class="t-mono-inline">
+      tabClosed
+    </code> emits: closing still carries
+    the raw label, because a host matches it against its own list. And a slug is
+    still derived from copy, so renaming a tab still breaks saved links —
+    <code class="t-mono-inline">
+      value
+    </code> is the only fix for that. Three
+    decisions are baked in. <strong>Names, not indices:</strong>
+
+    <code class="t-mono-inline">
+      ?tab=1
+    </code> would silently repoint every old
+    link the moment a tab is inserted.
+    <strong>
+      The first tab writes no parameter and every write replaces:
+    </strong>
+    a pristine screen keeps a clean address, and flipping tabs does not fill the
+    Back button with entries to walk one at a time.
+    <strong>
+      An unknown or missing name lands on the first tab
+    </strong>
+    rather than throwing — a URL is user input, and a stale bookmark should
+    still open the screen.
+  </p>
+
+  <p class="block-desc t-s">
+    Outside a routed context the input is inert, and a strip that never sets it
+    costs exactly what it did before the input existed: nothing router-shaped is
+    resolved until you set it — no DI lookup, and no subscription to the query
+    parameters. Setting it later switches both on; clearing it drops the
+    subscription again. It also pairs with
+    <code class="t-mono-inline">
+      ds-app-layout
+    </code> — the write is
+    query-only, and that layout's
+    <code class="t-mono-inline">
+      pathChanged
+    </code> ignores query-only
+    navigations, so switching tabs cannot trip its scroll reset. There is
+    deliberately no live demo here: it would write
+    <code class="t-mono-inline">
+      ?tab=
+    </code> into the docs' own address while
+    the sidebar rewrites the path from the scroll position, and the two would
+    read as fighting.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      One strip per parameter name.
+    </strong> Two
+    <code class="t-mono-inline">
+      ds-tabs
+    </code> sharing a name on the same
+    screen erase each other — both write the same parameter, and a reload
+    restores whichever wrote last. It is the easy mistake to make when turning
+    this on across an app, because <code class="t-mono-inline"> "tab" </code> is
+    the obvious name every time, so a dev-mode warning names the clash. Nested
+    or sibling strips need distinct names —
+    <code class="t-mono-inline">
+      tab
+    </code> and
+    <code class="t-mono-inline">
+      subtab
+    </code>.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Reopening the last tab
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      rememberLastTab
+    </code> stores the active tab
+    per path in <code class="t-mono-inline">sessionStorage</code>, so returning
+    to a record reopens where you left it. Off by default, and it only does
+    anything alongside <code class="t-mono-inline">urlParam</code>, which
+    supplies the names — a remembered INDEX would repoint the moment a tab is
+    inserted, for the same reason the parameter carries names rather than
+    numbers.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      A link always wins.
+    </strong> The parameter is read first; memory
+    only fills the gap the first tab deliberately leaves, since that case writes
+    no parameter at all. Tab one is remembered too — otherwise going back to it
+    would be forgotten, and the next visit would reopen the tab before it.
+    Session storage rather than local, so tomorrow is a fresh visit rather than
+    a stale one, and every access is guarded: Safari in private mode throws on
+    write, and a strip that cannot store simply stops remembering.
+  </p>
 </docs-section>

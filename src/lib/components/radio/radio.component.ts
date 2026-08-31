@@ -9,13 +9,13 @@ import {
   model,
   viewChild,
 } from '@angular/core';
+import { DsFieldBase } from '../field-base';
 import { nextControlId } from '../field-ids';
 import { RADIO_GROUP } from '../radio-group/radio-group.token';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage } from '../field-errors';
 import type { DsSize } from '../../core/size';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-radio',
@@ -25,9 +25,16 @@ import type { DsSize } from '../../core/size';
   styleUrl: './radio.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class RadioComponent {
-  /** Standalone two-way binding. When inside ds-radio-group, isChecked() is
-   *  derived from the group value instead. */
+export class RadioComponent extends DsFieldBase {
+  /** Standalone two-way binding, and the ONLY way to drive a lone radio: this
+   *  component is deliberately not a `ControlValueAccessor`, so `[formControl]` and
+   *  `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form
+   *  control — a radio is one option of a choice, not a value of its own — and a
+   *  second accessor on the option would fight it. A lone radio in a form binds
+   *  through `[(checked)]`, or becomes a one-option `ds-radio-group`.
+   *
+   *  When inside `ds-radio-group`, `isChecked()` derives from the group value and
+   *  this input is not read. */
   readonly checked = model<boolean>(false);
   /** Disables the radio; a disabled parent `ds-radio-group` also disables it. */
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -37,16 +44,14 @@ export class RadioComponent {
   readonly value = input<unknown>('');
   /** Overrides the auto-generated id used for the input and its label's `for`. */
   readonly inputId = input<string | null>(null);
-  /** Applies error styling and marks the input `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the control. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
-  /** Control size — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Control size — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Marks the radio required — shows an asterisk on the label and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the dot and wired via for/id. Omit to bring
@@ -56,11 +61,18 @@ export class RadioComponent {
   protected readonly uid = nextControlId('ds-radio');
   protected readonly controlId = computed(() => this.inputId() ?? this.uid);
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
 
   /** Injected via token to avoid circular import with RadioGroupComponent. */
   protected readonly group = inject(RADIO_GROUP, { optional: true });
@@ -76,7 +88,7 @@ export class RadioComponent {
   );
 
   protected readonly fieldClass = computed(
-    () => `radio-field size-${this.size()}`,
+    () => `radio-field size-${this.sizeResolved()}`,
   );
 
   /** Exposed so the group can implement roving tabindex. */

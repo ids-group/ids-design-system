@@ -1,5 +1,5 @@
 @if (label()) {
-  <span class="group-label">
+  <span class="label">
     {{ label() }}
   </span>
 }
@@ -9,8 +9,9 @@
 </div>
 
 <ds-field-message
-  [text]="hint()"
-  [state]="messageState()"
+  [icon]="messageIcon()"
+  [text]="message().text"
+  [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessage()"
+  [reserve]="reserveMessageResolved()"
 />

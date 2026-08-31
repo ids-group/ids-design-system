@@ -1,18 +1,26 @@
+@use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
 
 // Tokens on :host so consumer overrides (ds-sidenav-item { --ds-…: … }) win
 // against the inner .item rule's specificity.
 :host {
-  /* Public --ds-sidenav-item-* / --ds-sidenav-alert-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_sidenav-item-label-color:              var(--ds-sidenav-item-label-color,              var(--text-secondary));
   --_sidenav-item-label-color-hover:        var(--ds-sidenav-item-label-color-hover,        var(--text-primary));
   --_sidenav-item-label-weight: var(--ds-sidenav-item-label-weight, var(--font-weight-semibold));
   --_sidenav-item-bg-color-hover:        var(--ds-sidenav-item-bg-color-hover,        var(--surface-secondary));
-  --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--accent));
-  --_sidenav-item-label-color-active:       var(--ds-sidenav-item-label-color-active,       var(--text-on-primary));
-  --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, white));
-  --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--secondary));
-  --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--radius-md));
+
+  /* A tinted wash with a coloured label, not a solid brand pill: Material's
+     navigation drawer fills its active item with `secondary-container` and labels
+     it `on-secondary-container`, and Carbon uses `$background-selected` with a
+     border and a weight bump. Neither fills with the brand accent. */
+  --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--accent-subtitle));
+  --_sidenav-item-label-color-active:       var(--ds-sidenav-item-label-color-active,       var(--accent-strong));
+
+  /* Toward the accent, not toward white: hovering a pale wash has to deepen it,
+     and the old mix lightened whatever it was given — invisible on a wash. */
+  --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, var(--accent-muted));
+  --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--accent-strong));
+  --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--ds-radius-control));
   --_sidenav-alert-color:          var(--ds-sidenav-alert-color,          var(--error));
   --_sidenav-item-focus-shadow:    var(--ds-sidenav-item-focus-shadow,    var(--ds-control-focus-shadow));
 
@@ -20,6 +28,12 @@
 }
 
 .item {
+  /* The destination-less variant is a <button>, so the UA's chrome has to go for
+     it to sit level with the two <a> variants. Inert on an anchor. */
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -55,6 +69,10 @@
     box-shadow: inset var(--sidenav-item-rail-width) 0 0 var(--_sidenav-item-rail);
   }
 
+  &.active.no-rail {
+    box-shadow: none;
+  }
+
   &.active:hover {
     background-color: var(--_sidenav-item-bg-color-active-hover);
   }
@@ -67,8 +85,8 @@
   }
 
   .item-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include text-clip.single-line-ellipsis;
+
     white-space: nowrap;
     min-width: 0;
     flex: 1;
@@ -132,10 +150,15 @@
       display: none;
     }
 
+    /* The dot rides the GLYPH's top-right corner, not the tile's. Anchored to the
+       tile it sat 4px clear of a 20px glyph and would drift further on any wider
+       rail — the template renders that glyph at 20px, centred, so its corner is
+       half its size out from the tile's centre. */
     .alert {
       position: absolute;
-      top: var(--space-1-5);
-      right: var(--space-1-5);
+      top: calc(50% - var(--sidenav-collapsed-glyph) / 2);
+      left: calc(50% + var(--sidenav-collapsed-glyph) / 2);
+      transform: translate(-50%, -50%);
       margin: 0;
     }
   }

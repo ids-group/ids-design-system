@@ -12,10 +12,8 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage } from '../field-errors';
 import { nextControlId } from '../field-ids';
 
 type SliderValue = number | readonly [number, number];
@@ -37,7 +35,7 @@ type SliderValue = number | readonly [number, number];
   host: {
     '[class.range]': 'range()',
     '[class.disabled]': 'isDisabled()',
-    '[class.invalid]': 'invalid()',
+    '[class.invalid]': 'invalidResolved()',
   },
 })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
@@ -55,25 +53,25 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Accessible name for the thumb(s) — suffixed "minimum"/"maximum" in `range` mode. */
   readonly ariaLabel = input<string | null>(null);
-  /** Applies error styling. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the slider. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
 
   private readonly track = viewChild.required<ElementRef<HTMLElement>>('track');
   private dragging = -1;
 
   protected readonly uid = nextControlId('ds-slider');
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),

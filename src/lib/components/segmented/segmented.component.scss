@@ -1,6 +1,6 @@
 @use '../../styles/press' as press;
+@use '../../styles/field-label' as field-label;
 
-/* Public --ds-segmented-* are read with fallbacks, never declared. */
 
 :host {
   --_segmented-bg-color: var(--ds-segmented-bg-color, var(--surface-secondary));
@@ -20,12 +20,27 @@
     --ds-segmented-radius,
     calc(var(--_segmented-r-inner) + var(--_segmented-pad))
   );
-  --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--shadow-card));
-
-  display: inline-flex;
+  --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--ds-elevation-raised));
+  --_segmented-btn-border: var(--ds-segmented-btn-border, 0);
+  --_segmented-btn-pad-x: var(--ds-segmented-btn-pad-x, var(--space-4));
+  --_segmented-label-weight: var(--ds-segmented-label-weight, var(--font-weight-semibold));
+  --_segmented-label-font-size: var(--ds-segmented-label-font-size, var(--font-size-s));
 
   /* Own our width — an outer flex/grid (e.g. a stretch column) must not be able
      to stretch the track full-bleed; segments size to their content. */
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  gap: var(--field-label-gap);
+}
+
+.label {
+  @include field-label.field-label;
+}
+
+.track {
+  display: inline-flex;
   width: fit-content;
   gap: var(--_segmented-pad);
   padding: var(--_segmented-pad);
@@ -39,14 +54,12 @@
   justify-content: center;
   gap: var(--space-1-5);
   height: var(--_segmented-btn-h);
-  padding: 0 var(--space-4);
-  border: 0;
+  padding: 0 var(--_segmented-btn-pad-x);
+  border: var(--_segmented-btn-border);
   border-radius: var(--_segmented-r-inner);
   background: transparent;
   color: var(--_segmented-label-color);
-  font:
-    var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat)
-    var(--font-sans);
+  font: var(--_segmented-label-weight) var(--_segmented-label-font-size) / var(--line-height-flat) var(--font-sans);
   white-space: nowrap;
   cursor: pointer;
   transition:

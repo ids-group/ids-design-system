@@ -10,10 +10,8 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { RadioComponent } from '../radio/radio.component';
 import {
@@ -21,6 +19,7 @@ import {
   type RadioGroupChild,
   type RadioGroupContract,
 } from './radio-group.token';
+import { isTextEntryTarget } from '../../core/key-target';
 
 @Component({
   selector: 'ds-radio-group',
@@ -33,7 +32,8 @@ import {
     role: 'radiogroup',
     '[attr.aria-label]': 'ariaLabel() || label() || null',
     '[attr.aria-describedby]': 'hintId()',
-    '[attr.aria-invalid]': "invalid() ? 'true' : null",
+    '[attr.aria-invalid]': "invalidResolved() ? 'true' : null",
+    '[attr.data-field-state]': 'controlState()',
     '(keydown)': 'onKeydown($event)',
   },
   providers: [
@@ -58,14 +58,6 @@ export class RadioGroupComponent
   readonly name = input<string | null>(null);
   /** Disables the whole group. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Applies error styling and marks the group `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the group. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Accessible name for the group when no visible label is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Visible group label; omit to supply your own. */
@@ -76,11 +68,20 @@ export class RadioGroupComponent
   protected readonly uid = nextControlId('ds-radio-group');
   readonly groupName = computed(() => this.name() ?? this.uid);
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly controlState = this.fieldMessage.controlState;
 
   // contentChildren gives us references to all projected RadioComponents
   // so the group can drive roving tabindex and forward keyboard events.
@@ -122,16 +123,15 @@ export class RadioGroupComponent
 
   protected onKeydown(event: KeyboardEvent): void {
     const key = event.key;
+    // Enter is deliberately absent: the group sits in forms, where Enter is the
+    // submit and swallowing it leaves the form with no keyboard way out.
     if (
-      ![
-        'ArrowDown',
-        'ArrowRight',
-        'ArrowUp',
-        'ArrowLeft',
-        ' ',
-        'Enter',
-      ].includes(key)
+      !['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', ' '].includes(key)
     ) {
+      return;
+    }
+    // A text field beside the radios (the "Other: ___" row) types its own keys.
+    if (isTextEntryTarget(event)) {
       return;
     }
 
@@ -142,7 +142,7 @@ export class RadioGroupComponent
 
     event.preventDefault();
 
-    if (key === ' ' || key === 'Enter') {
+    if (key === ' ') {
       // Select whichever radio currently has DOM focus.
       const allRadios = this.radios() as unknown as RadioGroupChild[];
       const focused = allRadios.find((radio) => {

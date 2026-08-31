@@ -8,7 +8,6 @@
     systems, category trees, and organisation charts.
   </span>
 
-  <!-- ============================================================ Interactive tree -->
   <h3 class="block-title t-h4">
     Interactive tree
   </h3>
@@ -31,51 +30,50 @@
     </p>
   </div>
 
-  <!-- ============================================================ Single node states -->
   <h3 class="block-title t-h4">
     Single node states
   </h3>
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-tree [nodes]="singleNode" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-tree [nodes]="singleNode" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-selected">
+      <div class="state-cell-stage pin-selected">
         <ds-tree
           [nodes]="singleNode"
           [selectedId]="'node'"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Selected
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-tree [nodes]="singleNodeDisabled" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>

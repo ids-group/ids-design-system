@@ -1,11 +1,10 @@
 @use '../../styles/press' as press;
 
-/* Public --ds-tag-* are read with fallbacks, never declared — consumer overrides inherit in. */
 
 :host {
   --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
   --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
-  --_tag-radius:       var(--ds-tag-radius, var(--radius-md));
+  --_tag-radius:       var(--ds-tag-radius, var(--ds-radius-control));
   --_tag-bg-color:           var(--ds-tag-bg-color, var(--accent));
   --_tag-label-color: var(--ds-tag-label-color, var(--accent-on));
   --_tag-fw:            var(--ds-tag-fw, var(--font-weight-bold));
@@ -74,7 +73,7 @@
   color: inherit;
   font: inherit;
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   padding: var(--tag-close-pad);
   margin-left: var(--tag-close-pad);
   background: color-mix(in oklab, currentcolor calc(var(--opacity-state-hover) * 100%), transparent);

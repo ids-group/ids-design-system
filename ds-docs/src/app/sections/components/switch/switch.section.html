@@ -24,7 +24,6 @@
     />
   </div>
 
-  <!-- ============================================================ Switch states showcase -->
   <!-- Live ds-switch; pin-focus on the stage reads bare role token via ::ng-deep.
        success/error/disabled use real variant/disabled inputs. -->
   <h3 class="block-title t-h4">
@@ -33,96 +32,95 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-switch />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Off
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-switch />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Off · focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-switch [checked]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         On
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-switch [checked]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         On · focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-switch
           variant="success"
           [checked]="true"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Success · on
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-switch
           variant="error"
           [checked]="true"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Error · on
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-switch [disabled]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled · off
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-switch
           [disabled]="true"
           [checked]="true"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled · on
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
     Sizes
   </h3>
@@ -144,7 +142,6 @@
     />
   </div>
 
-  <!-- ============================================================ Required -->
   <h3 class="block-title t-h4">
     Required
   </h3>
@@ -156,7 +153,6 @@
     />
   </div>
 
-  <!-- ============================================================ Validation states -->
   <h3 class="block-title t-h4">
     Validation states
   </h3>
@@ -176,8 +172,7 @@
 
     <ds-switch
       label="Email notifications"
-      hint="At least one notification channel must remain active."
-      [invalid]="true"
+      error="At least one notification channel must remain active."
     />
   </div>
 </docs-section>

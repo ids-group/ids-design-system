@@ -1,4 +1,5 @@
-/* Public --ds-otp-* are read with fallbacks, never declared. */
+@use '../../styles/field-state' as field-state;
+
 
 :host {
   --_otp-cell-w: var(--ds-otp-cell-w, var(--otp-cell-w));
@@ -48,9 +49,7 @@
   }
 }
 
-:host(.invalid) .cell {
-  border-color: var(--error);
-}
-:host(.invalid) .cell:focus {
-  box-shadow: var(--focus-field-error);
-}
+@include field-state.field-state(
+  '.cell',
+  $error-focus-shadow: var(--focus-field-error),
+);

@@ -1,11 +1,12 @@
 <span
   [class]="classes()"
+  [attr.role]="countAriaLabel() ? 'img' : null"
   [attr.aria-label]="countAriaLabel()"
 >
   @if (count() !== null) {
     {{ countDisplay() }}
   } @else {
-    @if (withDot()) {
+    @if (withDotResolved()) {
       <span class="dot"></span>
     }
 

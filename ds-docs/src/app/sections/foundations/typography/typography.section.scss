@@ -10,15 +10,15 @@
       background: var(--surface-default);
       overflow: hidden;
     }
-    .ramp__head,
-    .ramp__row {
+    .ramp-head,
+    .ramp-row {
       display: grid;
       grid-template-columns: 200px minmax(0, 1fr) 56px 56px 88px 140px;
       gap: var(--space-4);
       align-items: baseline;
       padding: var(--space-3) var(--space-4);
     }
-    .ramp__head {
+    .ramp-head {
       color: var(--text-tertiary);
       background: var(--surface-secondary);
       border-bottom: var(--border-width-default) solid var(--border-divider);
@@ -26,23 +26,23 @@
 
       @include bp.down(lg) { display: none; }
     }
-    .ramp__row {
+    .ramp-row {
       @include bp.down(lg) {
         grid-template-columns: 1fr;
         gap: var(--space-2);
         padding: var(--space-4);
       }
     }
-    .ramp__row + .ramp__row {
+    .ramp-row + .ramp-row {
       @include bp.down(lg) {
         border-top: var(--border-width-default) solid var(--border-divider);
       }
     }
-    .ramp__label { display: grid; gap: var(--space-0-5); min-width: 0; }
-    .ramp__cls { color: var(--text-primary); font-size: 12px; }
-    .ramp__token { color: var(--text-tertiary); font-size: 11px; }
-    .ramp__sample { color: var(--text-primary); min-width: 0; overflow-wrap: anywhere; }
-    .ramp__meta { color: var(--text-secondary); font-size: 12px; }
+    .ramp-label { display: grid; gap: var(--space-0-5); min-width: 0; }
+    .ramp-cls { color: var(--text-primary); font-size: 12px; }
+    .ramp-token { color: var(--text-tertiary); font-size: 11px; }
+    .ramp-sample { color: var(--text-primary); min-width: 0; overflow-wrap: anywhere; }
+    .ramp-meta { color: var(--text-secondary); font-size: 12px; }
 
     /* ---------- Mono family ---------- */
     .mono-grid {
@@ -61,8 +61,8 @@
       border-radius: var(--radius-md);
       background: var(--surface-default);
     }
-    .mono-card__sample { color: var(--text-primary); overflow-wrap: anywhere; }
-    .mono-card__block { margin: 0; white-space: pre; overflow-x: auto; }
+    .mono-card-sample { color: var(--text-primary); overflow-wrap: anywhere; }
+    .mono-card-block { margin: 0; white-space: pre; overflow-x: auto; }
 
     /* ---------- Family cards ---------- */
     .family-card {
@@ -74,5 +74,5 @@
       border-radius: var(--radius-md);
       background: var(--surface-default);
     }
-    .family-card__name { color: var(--text-primary); }
-    .family-card__tok { color: var(--text-tertiary); }
+    .family-card-name { color: var(--text-primary); }
+    .family-card-tok { color: var(--text-tertiary); }

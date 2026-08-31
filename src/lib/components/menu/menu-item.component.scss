@@ -1,11 +1,35 @@
 :host {
-  /* Public --ds-menu-item-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_menu-item-label-color: var(--ds-menu-item-label-color, var(--text-primary));
   --_menu-item-focus-shadow: var(--ds-menu-item-focus-shadow, var(--ds-control-focus-shadow));
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));
   --_menu-item-error-label-color: var(--ds-menu-item-error-label-color, var(--error-text));
+  --_menu-item-quiet-label-color: var(--ds-menu-item-quiet-label-color, var(--text-secondary));
+  --_menu-item-pad-x: var(--ds-menu-item-pad-x, var(--space-3));
+  --_menu-item-pad-y: var(--ds-menu-item-pad-y, var(--space-2));
+  --_menu-item-label-weight: var(--ds-menu-item-label-weight, var(--font-weight-medium));
+  --_menu-item-label-font-size: var(--ds-menu-item-label-font-size, var(--font-size-s));
+  --_menu-item-description-color: var(--ds-menu-item-description-color, var(--text-tertiary));
+  --_menu-item-description-font-size: var(--ds-menu-item-description-font-size, var(--font-size-2xs));
+  --_menu-item-description-max-width: var(--ds-menu-item-description-max-width, 14rem);
 
   display: block;
+}
+
+.menu-item-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.menu-item-description {
+  display: block;
+  max-width: var(--_menu-item-description-max-width);
+  color: var(--_menu-item-description-color);
+  font-size: var(--_menu-item-description-font-size);
+  line-height: var(--line-height-snug);
+  font-weight: var(--font-weight-regular);
+  text-wrap: pretty;
 }
 
 .menu-item {
@@ -13,11 +37,17 @@
   align-items: center;
   gap: var(--space-2-5);
   width: 100%;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--_menu-item-pad-y) var(--_menu-item-pad-x);
   background: transparent;
   border: 0;
-  border-radius: var(--radius-md);
-  font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+
+  // Square by design: the row is flush to its container (a bare ds-menu has no
+  // padding, and .popover drops its own for a menu), so any radius here draws a
+  // curve that cannot be concentric with the panel's and leaves slivers in the
+  // corners. The MENU clips the fill — it owns the rounded corners for the edge
+  // rows, not this. Token'd for a brand that wants it back.
+  border-radius: var(--ds-menu-item-radius, 0);
+  font: var(--_menu-item-label-weight) var(--_menu-item-label-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_menu-item-label-color);
   cursor: pointer;
   text-align: left;
@@ -32,9 +62,15 @@
   &.disabled {
     color: var(--text-disabled);
     cursor: not-allowed;
-    opacity: var(--opacity-muted);
 
     &:hover { background: transparent; }
+  }
+
+  /* Before `.error` on purpose: an item marked both should read destructive,
+     which is the louder of the two. Hover is deliberately left alone — a quiet
+     row is still actionable and should highlight like its neighbours. */
+  &.quiet {
+    color: var(--_menu-item-quiet-label-color);
   }
 
   &.error {

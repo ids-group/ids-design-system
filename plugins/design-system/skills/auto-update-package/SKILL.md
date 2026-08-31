@@ -50,23 +50,42 @@ Keep at most **~8 subagents concurrent** (the platform's practical ceiling is ~1
 larger sets in waves, collecting each wave before launching the next.
 
 This workflow is **full-auto**: the applier attempts EVERY actionable change (mechanical AND
-behavioral). Primary semantic verification is YOUR job (opus) — you own the final green/not-green
-verdict, especially for behavioral fixes. Manual review is a LAST RESORT (Phase B step 9).
+behavioral) — a behavioral change is NOT sent to manual review just for being behavioral. Primary
+semantic verification is YOUR job (opus) — you own the final green/not-green verdict, especially
+for behavioral fixes. Manual review is a LAST RESORT (Phase B step 10), reached only when the auto
+attempt + auto-fix loop can't make an item green: the build still fails, opus can't confirm the
+behavioral fix, or the change is genuinely too convoluted to do safely.
 
 ## MigrationPlan schema
 
 { "version": "X.Y.Z",
   "items": [ { "id", "kind", "old", "new", "note", "searchHints": [],
-               "map": { "<oldValue>": "<newValue|null|markup>" } } ],
+               "map": { "<oldValue>": "<newValue|null|markup>" },
+               "surface": "template|typescript|style|config|none", "detect": [],
+               "verify": "...", "restore": "...|null",
+               "supersedes": ["<version>#<id>"] } ],
+  "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
   "informational": [ "..." ] }
 
 `kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
-class-rename | value-remap | scss-api | code-add | removed-api | behavior. The planner decides
-actionability by CONTENT (any entry documenting a consumer-affecting change, wherever it sits in
-the block), not by section name. `new` is null for a removal or `behavior`; `map` is present only for
+class-rename | value-remap | scss-api | code-add | removed-api | behavior.
+`new` is null for a removal or `behavior`; `map` is present only for
 `value-remap`. The planner derives every specific FROM the changelog; when it can't confidently
 fit a change to a mechanical kind it classifies it `behavior` (catch-all) so nothing is dropped.
 `id` is a stable, unique slug.
+
+**The detectability fields decide where an item is looked for, and they are the difference between
+an item that fires and one that is silently dropped.** `surface` names which of the CONSUMER's
+artifacts changes; `detect` carries the shapes as the consumer writes them, for the common case where
+the affected code names no DS symbol at all; `verify` is the positive assertion a re-check can test
+when there is no old identifier to miss; `restore` is the way back from a changed default;
+Read `action` FIRST — it is the imperative and the only field to execute; `appliesWhen` says where it does NOT apply, and `pitfall` is the way to apply it correctly and still break the app, so read it before reporting an item done. `note` is the reasoning and is not an instruction.
+`supersedes` on a LATER item names the earlier one it reverses — one direction only, since a
+published manifest cannot know its own future. `deleteList` is what the
+release made UNNECESSARY, with a greppable `find` — a separate pass, not an item.
+Every manifest in the DS repo carries these fields, but a consumer's `node_modules` copy can predate
+them (the fields shipped in the release after 0.10.1): when they are missing, the planner enriches
+those items from their own `note` rather than passing them through undetectable.
 
 Every actionable item is **auto-applied**; items differ only in how they're VERIFIED:
 - **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → verified by grep
@@ -79,11 +98,6 @@ Every actionable item is **auto-applied**; items differ only in how they're VERI
   vs what the changelog requires; `ds-recheck` gives a first-pass verdict + confidence). NOT skipped.
 - **informational** = a documented change needing NO consumer code action (purely visual, nothing to
   edit) → not an item; the planner puts it in `informational` (an FYI line in the report).
-
-**Manual review is a LAST RESORT, not a default bucket.** An item lands there only when the auto
-attempt + auto-fix loop can't make it green (Phase B step 9): the build still fails, or opus can't
-confirm the behavioral fix is correct after the attempts, or the change is genuinely too convoluted
-to do safely. A behavioral change is NOT sent to manual just for being behavioral — it is attempted.
 
 ## Reading the DS sources (when the changelog isn't enough)
 
@@ -106,7 +120,8 @@ instead of guessing. Version-exactness decides WHERE:
   unions), `fesm2022/*.mjs` (compiled internals — class names, DOM structure), `themes/` +
   `styles/` (readable SCSS token sources), `CHANGELOG.md`. Before step 4 (bump) it holds the OLD
   version — authoritative for "what did this API mean before"; after step 4 it holds V. Subagents
-  may read it directly (editing it stays forbidden).
+  may read it directly; editing anything under `node_modules`, `dist` or build output stays
+  forbidden.
 - The docs site is a SPA — WebFetch cannot render it; don't rely on it for API questions.
 
 ## Run ledger (interruption-proofing)
@@ -191,7 +206,7 @@ catches leftovers).
 version), starting at 0. It counts FIX cycles only — the initial verify (step 5) does NOT increment.
 Increment by 1 at the top of every step-6 entry (whether reached from step 5's failed verify or a
 step-7 re-check failure). Before starting a step-6 cycle, if `attempts` is already 3, do not retry —
-go to step 9. So a version gets at most 3 fix attempts after the initial verify, then stops.
+go to step 10. So a version gets at most 3 fix attempts after the initial verify, then stops.
 
 **Monorepo (shared lockfile).** Workspace targets share ONE root lockfile, so do NOT run this loop
 independently per target (it double-touches the lockfile and interleaves half-migrated commits).
@@ -206,21 +221,32 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    plan), deriving from prose only when it's absent or malformed. Parse the MigrationPlan. If
    `items` is empty → no-migration version: skip to step 4 (bump + verify only).
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
-   root — passing each MigrationItem **verbatim** (`old` / `searchHints` / `map` as the planner
-   emitted them; the same no-paraphrase rule as step 3). Collect per-item `path:line` hits.
-   Zero-hit items are not-applicable — record and drop. **Exception:** zero hits prove
-   non-applicability only for items whose `old` locates EXISTING usages (renames, remaps, removals).
-   For a `code-add` — code that must EXIST after the update — zero hits may just mean the finder
-   couldn't locate the insertion site; resolve the site yourself from the `note` (step 3 dispatches
-   it by note), and record it not-applicable only when this consumer genuinely lacks the thing the
-   addition extends, stating that reason.
+   root — passing each MigrationItem **verbatim** (`old` / `searchHints` / `map` / `surface` /
+   `detect` as the planner emitted them; the same no-paraphrase rule as step 3). Collect per-item
+   `path:line` hits. Zero-hit items are not-applicable — record and drop. **Exception:** zero hits
+   prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
+   removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
+   finder couldn't locate the insertion site; resolve the site yourself from the `note` (step 3
+   dispatches it by note), and record it not-applicable only when this consumer genuinely lacks the
+   thing the addition extends, stating that reason.
+   **Second exception, and it is the one that cost a consumer three broken screens: a
+   `behavior` / `removed-api` item whose `surface` is not `template` or `none` is NEVER dropped on
+   zero hits.** Its `old` is a DS symbol the affected code does not mention — 0.7.1's
+   `table-sortkey-non-null-when-unsorted` targets `ds-table[sortKey]` while the defect reads
+   `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` in a store — so zero hits
+   means the shapes did not match THIS consumer's spelling, not that they are unaffected. Read the
+   item's `verify` and go look yourself over the named surface (you are opus; this is a semantic
+   pass, not a grep), and record not-applicable only with the reason you satisfied yourself of it.
+   An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here with
+   that reason recorded — the later item is the one to act on, and doing both means doing work the
+   next version undoes. The link only points back, so build the skip set by reading every
+   `supersedes` in the chain and skipping the ids it names; nothing marks an item from its own file.
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
    concurrent appliers. Pass each applier the items affecting its file(s) **AND those files' finder
    hits** (`{loc, match, el, dynamic}`) so it edits the exact matched, element-scoped locations
-   instead of re-deriving them (re-deriving reintroduces the wrong-element false-positive the finder
-   exists to prevent). **This includes behavioral (`removed-api` / `behavior`) items — the applier
+   instead of re-deriving them by re-grepping. **This includes behavioral (`removed-api` / `behavior`) items — the applier
    ATTEMPTS them, not just mechanical ones.** For an item located by its `note` rather than by hits
    (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
    file. Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
@@ -251,7 +277,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    re-install before continuing.
    **Peer check:** read V's peers (`npm view @ids-group-ltd/ids-design-system@V peerDependencies
    --json`). If the target's installed `@angular/*` (or any other peer) does not satisfy V's
-   range, STOP at step 9 with the distinct reason "peer dependency unsatisfied — bump <peer> to
+   range, STOP at step 10 with the distinct reason "peer dependency unsatisfied — bump <peer> to
    <range> first". Do NOT auto-upgrade Angular.
 5. **Primary verify (you, opus).** Run the verify command and read the FULL output. Capture the
    build's REAL exit status — do NOT pipe it through `tail`/`head` (a pipe reports the filter's
@@ -303,9 +329,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 7. **Re-check (parallel, sonnet) — every item, ALWAYS.** Dispatch `ds-recheck` for each item,
    re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed only):
    grep for mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned
-   `remaining`). **Run this step unconditionally** — even when your step-5 primary verify was already
-   green and even when you applied or fixed every item inline yourself. Re-check is an INDEPENDENT
-   second pass, not a fallback for when you're unsure; never skip it because you're confident. Each
+   `remaining`). **An INDEPENDENT second pass — run it even when step 5 was green and every fix was
+   your own inline edit.** Each
    `ds-recheck` greps the WHOLE source root for the item's `old` / `searchHints`, not just the finder's
    hits — so a file the finder never reported that still carries the old usage surfaces here as a
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
@@ -316,12 +341,20 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    `migrated:false`, or a behavioral item comes back low-confidence, treat the version as not green and
    re-enter step 6 (bounded by the cap). Only items still unresolved when the cap is hit become
    manual-review.
-8. **Green → commit.** Stage EXACTLY the applier-touched files + the target's `package.json` + the
+8. **Delete-list pass (the plan's `deleteList`) — a separate sweep, after the items are green.**
+   These are not migrations; they are the workarounds this version made unnecessary, and they are the
+   half of an upgrade that is otherwise never done: 45 of them shipped across 0.9.0 and 0.10.0 and one
+   consumer acted on none until a human read the manifests by hand. For each entry, grep the surface
+   it names for its `find` shapes (a finder dispatch is fine — they are ordinary greps), then judge
+   each hit yourself, because a workaround can still be load-bearing: `[reserveMessage]="false"` is
+   dead against the new default and REQUIRED under a `dsReserveMessages` host. Apply the deletions
+   where they are dead, leave the rest, and report both halves — deleted, and kept with the reason.
+   A deletion that changes rendering belongs in "applied — human should eyeball".
+9. **Green → commit.** Stage EXACTLY the applier-touched files + the target's `package.json` + the
    lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
    `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
    (`-m` subject, `-m` body). Do not run any git command containing the word "push". Next version.
-9. **Stuck — LAST RESORT (cap hit, re-check still disagrees, or peer unsatisfied).** Only reached
-   after the auto attempt + auto-fix loop genuinely could not make the version green. **Stop the
+10. **Stuck — LAST RESORT (cap hit, re-check still disagrees, or peer unsatisfied).** **Stop the
    run.** Leave the partial edits in the working tree (do NOT roll back). Report the version reached,
    the failing output, and the specific items that couldn't be auto-resolved (with why) as the
    manual-review list. Await the user. (A peer-dependency mismatch stops here immediately — no
@@ -336,18 +369,15 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - **Applied — human should eyeball:** behavioral edits that were applied but whose correctness is
   only visual (no build/grep signal) — committed, but worth a quick visual check.
 - **Needs manual review — should be EMPTY in a clean run:** ONLY the items the auto attempt +
-  auto-fix loop could not resolve, each with why. These are the last-resort escalations, not every
-  behavioral change.
+  auto-fix loop could not resolve, each with why.
 - If stopped: which target/version, why, what to look at.
 - Suggested next step (review the branch / open a PR).
-
-## Guardrails
-
-- A file is NEVER shared between concurrent appliers — one `ds-migration-applier` per file or per
-  small disjoint batch (≤~5 files).
-- Never `git push`; never `git add -A`; stage only the exact pathspec from step 8.
-- Never edit files under `node_modules`, `dist`, or build output.
-- Pin the EXACT version `V`; use a mutating install (never a frozen/CI install).
-- Accept a changelog source only if its body contains version headings (`## <semver>`, any common
-  variant) for every chain version.
-- Prefer `AskUserQuestion` for setup decisions (which consumer, git strategy); else run autonomously.
+- **Team-setup offer.** If the target repo's committed `.claude/settings.json` does not already
+  declare the `ids` marketplace, offer (AskUserQuestion) team-wide auto-install/auto-update of
+  this plugin — everyone who trusts the repo then gets it installed and background-updated
+  (details: the plugin README's "Team setup" section). On yes, MERGE these keys into the existing
+  file (create it if absent; never clobber other keys):
+  `"extraKnownMarketplaces": { "ids": { "source": { "source": "url", "url": "https://bitbucket.org/itband/ids-design-system.git" }, "autoUpdate": true } }`
+  and `"enabledPlugins": { "design-system@ids": true }`, then commit it separately by pathspec
+  (`chore(claude): auto-install the ids design-system plugin for the team`). In dry-run make no
+  edit — add a one-line pointer to the report instead.

@@ -1,30 +1,51 @@
 @use '../../styles/press' as press;
+@use '../../styles/text-clip' as text-clip;
 
 :host {
   display: block;
+
+  /* A flex or grid ROW parent hands its items min-width: auto — this banner's
+     min-content — so without this it overflows a narrow column instead of letting
+     the text degrade. */
+  min-width: 0;
 }
 
 .banner {
-  /* Public --ds-banner-* are read with fallbacks, never declared — consumer
-     overrides inherit in. One-shot tokens are read inline at the usage site. */
   --_banner-bg-color:        var(--ds-banner-bg-color,        var(--info-subtitle));
   --_banner-text-color:        var(--ds-banner-text-color,        var(--info-text));
   --_banner-bar:       var(--ds-banner-bar,       var(--info));
   --_banner-pad-y:     var(--ds-banner-pad-y,     var(--space-3));
   --_banner-pad-x:     var(--ds-banner-pad-x,     var(--space-4));
-  --_banner-radius:    var(--ds-banner-radius,    var(--radius-md));
+  --_banner-radius:    var(--ds-banner-radius,    var(--ds-radius-control));
   --_banner-bar-width: var(--ds-banner-bar-width, var(--banner-bar-w));
   --_banner-title-text-color:  var(--ds-banner-title-text-color,  var(--text-primary));
+  --_banner-body-font-size: var(--ds-banner-body-font-size, var(--font-size-s));
   --_banner-close-icon-color:  var(--ds-banner-close-icon-color,  var(--icon-default));
   --_banner-close-icon-color-hover: var(--ds-banner-close-icon-color-hover, var(--icon-strong));
+  --_banner-enter-keyframes: var(--ds-banner-enter-keyframes, ds-slide-in);
+  --_banner-enter-duration: var(--ds-banner-enter-duration, var(--ds-motion-enter-surface-duration));
+  --_banner-enter-easing: var(--ds-banner-enter-easing, var(--ds-motion-enter-surface-easing));
+  --_banner-enter-offset: var(--ds-banner-enter-offset, 4px);
+  --_ds-enter-y: calc(-1 * var(--_banner-enter-offset));
+  --_ds-enter-scale: var(--ds-banner-enter-scale, 0.96);
 
   display: flex;
   gap: var(--space-3);
+
+  /* Owned, not inherited: a banner is two text blocks that have to read as one
+     alignment, and a centred ancestor otherwise drags both of them with it. */
+  text-align: start;
   padding: var(--_banner-pad-y) var(--_banner-pad-x);
   border-radius: var(--_banner-radius);
   background-color: var(--_banner-bg-color);
   color: var(--_banner-text-color);
-  animation: ds-banner-in var(--duration-base) var(--ease-decelerate);
+  animation-name: var(--_banner-enter-keyframes);
+  animation-duration: var(--_banner-enter-duration);
+  animation-timing-function: var(--_banner-enter-easing);
+
+  @media (prefers-reduced-motion: reduce) {
+    --_banner-enter-duration: 0ms;
+  }
 
   :host(:not(.no-rail)) & {
     border-left: var(--_banner-bar-width) solid var(--_banner-bar);
@@ -70,7 +91,15 @@
   .title {
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     color: var(--_banner-title-text-color);
-    margin: 0 0 var(--space-1);
+    margin: 0;
+  }
+
+  /* The gap belongs to the BODY, not the title: on the title it would fire with no
+     body under it, and never fire in `compact`, which zeroes that margin. */
+  .text:not(:empty) {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--_banner-body-font-size);
   }
 
   .close {
@@ -118,13 +147,13 @@
     --_banner-pad-x: var(--ds-banner-pad-x, var(--space-3));
 
     .icon { margin-top: 0; }
-    .title { margin: 0; white-space: nowrap; }
+
+    /* A one-line strip, so the title cannot wrap — hence the ellipsis: without it a
+       title longer than its container cuts off with nothing to show it was cut, and
+       forces the banner past its column. */
+    .title {
+      @include text-clip.single-line-ellipsis;
+    }
   }
 }
 
-@keyframes ds-banner-in {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-}

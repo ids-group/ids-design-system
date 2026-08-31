@@ -6,11 +6,6 @@ export type DsStatus = 'info' | 'success' | 'warning' | 'error';
  * The DS ships it EMPTY — no statuses are predefined. A consumer registers keys
  * via declaration merging to get autocomplete on the `status` input:
  *
- *   // inside this repo (ds-docs imports the lib as 'ds'):
- *   declare module 'ds' {
- *     interface DsStatusRegistry { planning: true; confirmed: true; }
- *   }
- *   // external consumer of the published package:
  *   declare module '@ids-group-ltd/ids-design-system' {
  *     interface DsStatusRegistry { shipped: true; delivered: true; }
  *   }

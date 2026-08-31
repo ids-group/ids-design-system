@@ -1,16 +1,15 @@
-/* ============================================================
-   FIELD (multiline text input subset)
-   Mirrors input.component.scss `.field` shell so consumers can
-   override via the same `--ds-input-*` token family. The only
-   visual divergence is the inner <textarea>: vertical resize,
-   min-height driven by --field-textarea-rows-min, and a
-   stretched .control box (height: auto) so it grows with rows.
-   ============================================================ */
+@use '../../styles/field-label' as field-label;
+@use '../../styles/field-state' as field-state;
+@use '../../styles/focus' as focus;
+
+/* Reads the `--ds-input-*` token family, not a `--ds-textarea-*` one: consumers
+   retune both fields with one set. Diverges from ds-input only in the inner
+   element — vertical resize, min-height from --field-textarea-rows-min, and a
+   height: auto control box so it grows with rows. */
 :host {
-  /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
   --_input-border:         var(--ds-input-border,         var(--border-default));
-  --_input-radius:         var(--ds-input-radius,         var(--radius-md));
+  --_input-radius:         var(--ds-input-radius,         var(--ds-radius-control));
   --_input-pad-y:          var(--ds-input-pad-y,          var(--space-3));
   --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
   --_input-text-color:             var(--ds-input-text-color,             var(--text-primary));
@@ -34,11 +33,7 @@
   width: 100%;
 
   .label {
-    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
+    @include field-label.field-label;
 
     .req {
       color: var(--error);
@@ -90,6 +85,8 @@
       border-color: var(--_input-border-focus);
       box-shadow: var(--_input-focus-shadow);
     }
+
+    @include focus.owns-the-focus-ring('textarea');
   }
 
   &.disabled {
@@ -108,34 +105,14 @@
     textarea { cursor: default; }
   }
 
-  &.error {
-    .control {
-      background-color: var(--_input-bg-color-error);
-      border-color: var(--_input-border-error);
-
-      &:focus-within {
-        box-shadow: var(--_input-focus-shadow-error);
-      }
-    }
-  }
-
-  &.success {
-    .control {
-      border-color: var(--_input-border-success);
-    }
-  }
-
-  /* Sizes — only padding scales; height stays driven by rows + resize.
-     Vertical pad scales with size; horizontal still uses the input-family. */
+  /* Only padding scales; height stays driven by rows + resize. The inner
+     textarea's vertical pad is set with the pins at the end of this file, which
+     out-rank anything declared here. */
   &.sm .control {
     padding: 0 var(--space-2);
-
-    textarea { padding: var(--space-2) 0; }
   }
   &.lg .control {
     padding: 0 var(--space-3);
-
-    textarea { padding: var(--space-4) 0; }
   }
 
   &.autosize .control textarea {
@@ -160,9 +137,25 @@
   }
 }
 
-/* The unencapsulated _field.scss docs specimen (shared .field/.control classes)
-   reaches this component and zeroes the textarea's vertical padding. Pin it with
-   :host specificity + a concrete token so the text isn't glued to the top edge. */
-:host .field .control textarea {
-  padding-block: var(--ds-input-pad-y, var(--space-3));
+/* Vertical padding lives on the textarea, not the box: `.sm`/`.lg` above zero the
+   control's own padding-block through the shorthand. One rule per size, because a
+   single pin out-ranks the size variants and flattens all three to md. */
+.field .control textarea {
+  padding-block: var(--_input-pad-y);
 }
+
+.field.sm .control textarea {
+  padding-block: var(--space-2);
+}
+
+.field.lg .control textarea {
+  padding-block: var(--space-4);
+}
+
+@include field-state.field-state(
+  '.control',
+    $error-border: var(--_input-border-error),
+    $error-bg: var(--_input-bg-color-error),
+    $error-focus-shadow: var(--_input-focus-shadow-error),
+    $success-border: var(--_input-border-success),
+);

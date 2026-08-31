@@ -1,0 +1,199 @@
+<meta charset="utf-8">
+<title>MBP-133 — one entry point, and the four ways out</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="docs/todo.md - one entry point (P2): deferred 2026-08-21, live choice A/C/D">
+<link rel="stylesheet" href="ds.css">
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0; padding: var(--space-6);
+    background: var(--surface-default); color: var(--text-primary);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+  main { max-width: 1180px; margin: 0 auto; }
+  h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-2); }
+  h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-7) 0 var(--space-2); }
+  p { max-width: 84ch; color: var(--text-secondary); }
+  b { color: var(--text-primary); }
+  code { font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono); }
+  pre {
+    margin: var(--space-3) 0; padding: var(--space-3);
+    background: var(--surface-secondary); border-radius: var(--radius-md);
+    overflow-x: auto;
+    font: var(--font-weight-regular) var(--font-size-xs) / 1.7 var(--font-mono);
+    color: var(--text-primary);
+  }
+  .note { border-left: 3px solid var(--primary); padding-left: var(--space-3); margin: var(--space-4) 0; }
+  .ask { border: 1px solid var(--primary); border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
+  .ask li { margin-bottom: var(--space-2); }
+
+  /* The bundle bars are the judged artefact, so their fills are inline gradients:
+     a force-dark browser must not repaint a measurement. */
+  .bars { display: grid; gap: var(--space-3); margin: var(--space-4) 0; max-width: 760px; }
+  .bar-row { display: grid; grid-template-columns: 20ch 1fr 12ch; gap: var(--space-3); align-items: center; }
+  .bar-row > .name { font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .bar-row > .num { font: var(--font-weight-bold) var(--font-size-xs) / 1.4 var(--font-mono); text-align: right; }
+  .track {
+    position: relative; height: 22px; border-radius: var(--radius-sm);
+    background-image: linear-gradient(#eef1f6, #eef1f6);
+    overflow: hidden;
+  }
+  .fill { position: absolute; inset: 0 auto 0 0; }
+  .fill.eager { background-image: linear-gradient(#db1f1f, #db1f1f); }
+  .fill.lazy { background-image: linear-gradient(#22a33a, #22a33a); }
+  .fill.bloated { background-image: linear-gradient(#f4d43a, #f4d43a); }
+  .legend { display: flex; gap: var(--space-4); margin-top: var(--space-2); font: var(--font-weight-regular) var(--font-size-2xs) / 1.6 var(--font-mono); color: var(--text-tertiary); }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+
+  table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
+  th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
+  thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
+  tbody th { width: 20ch; font-weight: var(--font-weight-semibold); }
+  .yes { color: #156822; font-weight: var(--font-weight-bold); }
+  .no { color: #ba1717; font-weight: var(--font-weight-bold); }
+</style>
+
+<main>
+  <h1>MBP-133 — one entry point, and the four ways out</h1>
+
+  <p>
+    <b>Status: deferred by decision (2026-08-21), deck for when it is picked up.</b> Every number here is
+    from <code>docs/packaging-chunking-audit.md</code> — measured, either in the consumer's build or in
+    controlled esbuild 0.27.3 fixtures. Nothing on this page is an estimate.
+  </p>
+
+  <h2>The mechanism, in one paragraph</h2>
+
+  <p>
+    <code>ng-package.json</code> declares a single <code>entryFile</code>, so the package ships as one
+    <b>1.25 MB FESM behind a single <code>"."</code> export</b>. Tree-shaking works — unused components
+    <em>are</em> dropped, verified twice. What cannot happen is <b>chunk placement</b>: esbuild splits by
+    MODULE, and one FESM is one module, so it can never put two DS symbols in two different chunks. The
+    moment an <em>eager</em> graph touches one symbol, the chunk carrying every DS symbol the app uses
+    <em>anywhere</em> becomes a static import of <code>main</code>.
+  </p>
+
+  <p>
+    In mm-broker that one symbol is a service: <code>provideCommon → NotificationService →
+    ToastNotificationService → ToastService</code>. Result: <b>632 kB of a 720 kB initial bundle — 88%</b>
+    — in an app where every feature route is lazy.
+  </p>
+
+  <div class="note">
+    <p>
+      <b>Two claims in the original filing are wrong, and the audit says so.</b> It was never a
+      tree-shaking failure (nobody upstream claimed it was), and "the consumer has no lever" is false — a
+      dynamic <code>import()</code> in the eager root keeps <code>main</code> clean. It just costs
+      tree-shaking, measured below. Also: this was never filed upstream as an ask; it is the consumer's
+      own backlog item with a consumer-side fix available.
+    </p>
+  </div>
+
+  <h2>The fixtures, isolated</h2>
+
+  <p>
+    Identical payload each time: one tiny eagerly-needed export (<code>toastService</code>, 3 lines) and
+    three heavy ones (400 lines each) — two used only by a lazy route, one used by nobody. Bars show what
+    <code>main</code> pulls eagerly against what waits for the route.
+  </p>
+
+  <div class="bars">
+    <div class="bar-row">
+      <span class="name">A — today</span>
+      <span class="track"><span class="fill eager" style="width:66%"></span></span>
+      <span class="num">40.1 kb eager</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">B — services entry</span>
+      <span class="track"><span class="fill lazy" style="width:66%"></span></span>
+      <span class="num">39.9 kb lazy</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">C — consumer <code>import()</code></span>
+      <span class="track"><span class="fill bloated" style="width:100%"></span></span>
+      <span class="num">60.6 kb lazy</span>
+    </div>
+  </div>
+
+  <p>
+    Bar width is the measured chunk size against the largest (60.6 kb), so B and A are the same
+    SIZE and differ only in WHERE they land — which is the whole point. C defers everything too,
+    and pays 50% more to do it.
+  </p>
+
+  <div class="legend">
+    <span><span class="swatch" style="background-image:linear-gradient(#db1f1f,#db1f1f)"></span>statically imported by <code>main</code></span>
+    <span><span class="swatch" style="background-image:linear-gradient(#22a33a,#22a33a)"></span>deferred to the lazy chunk</span>
+    <span><span class="swatch" style="background-image:linear-gradient(#f4d43a,#f4d43a)"></span>deferred, but carrying dead code that can no longer be dropped</span>
+  </div>
+
+  <p>
+    The grep counts inside variant <b>A</b>'s eager chunk are the proof, and they are what a summary would
+    lose:
+  </p>
+
+<pre>toast-payload        3     &larr; eagerly needed, correct
+table-payload      400     &larr; lazy-route-only, in the EAGER chunk
+datePicker-payload 400     &larr; lazy-route-only, in the EAGER chunk
+neverUsed-payload    0     &larr; tree-shaking works</pre>
+
+  <p>
+    Variant <b>C</b> is the consumer-side lever, and its cost is visible in the yellow: making the module
+    a dynamic-import target turns it into an entry point, so unused exports can no longer be dropped.
+    <code>neverUsed-payload</code> reappears at 400 hits and the chunk grows <b>40.1 → 60.6 kb, +50%</b>.
+    At library scale that is the difference between deferring the ~632 kB retained set and deferring the
+    whole 1.25 MB FESM.
+  </p>
+
+  <h2>The four options</h2>
+
+  <table>
+    <thead>
+      <tr><th>Option</th><th>What ships</th><th>Placement fixed</th><th>Tree-shaking kept</th><th>Cost</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>A · do nothing</th>
+        <td>Nothing. The consumer moves their provider or lives with it.</td>
+        <td class="no">no</td>
+        <td class="yes">yes</td>
+        <td>Defensible: their routes are all lazy anyway, so the chunk arrives with the first route. But every consumer rediscovers it, and the DS keeps a 1.25 MB single module.</td>
+      </tr>
+      <tr>
+        <th>B · one services entry point</th>
+        <td>A second <code>ng-package.json</code> for <code>ToastService</code>, <code>ModalService</code>, <code>BodyScrollLockService</code>; root <code>public-api.ts</code> stays as a facade.</td>
+        <td class="yes">yes</td>
+        <td class="yes">yes</td>
+        <td>Import paths change for anyone reaching those services directly — <b>a major</b>. No cross-entry deep-import refactor across the component folders, which is what makes it the cheap one.</td>
+      </tr>
+      <tr>
+        <th>C · leave it to consumers</th>
+        <td>A documented recipe: <code>await import('@ids-group-ltd/ids-design-system')</code> in the eager root.</td>
+        <td class="yes">yes</td>
+        <td class="no">no</td>
+        <td>+50% on the deferred chunk, measured. And it has to be rediscovered by every consumer, which is what the last two audits were about.</td>
+      </tr>
+      <tr>
+        <th>D · per-component entry points</th>
+        <td>One entry per component — the ideal end state.</td>
+        <td class="yes">yes</td>
+        <td class="yes">yes</td>
+        <td>Forces every cross-entry deep import through a public entry: a large refactor across 85 component folders, and it moves every consumer's imports. Same major as B, far more work.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="ask">
+    <p><b>Recommendation when this is picked up: B, and only B.</b></p>
+    <ul>
+      <li>It is the only option measured to fix placement without losing tree-shaking — C loses it, A fixes nothing.</li>
+      <li>The public API surface does not change: same symbols, same names, narrower specifiers. That keeps the migration to one find-and-replace per consumer.</li>
+      <li>It is a <b>major</b> either way, so it sequences with the other members of the breaking batch rather than shipping alone.</li>
+      <li>D is not wrong, it is just B plus a refactor nobody has asked for. If B turns out to be too coarse in practice, D is still available afterwards.</li>
+    </ul>
+    <p>
+      <b>What would change the recommendation:</b> a consumer whose eager root needs a COMPONENT rather
+      than a service. B does nothing for that case, and it would be the argument for D.
+    </p>
+  </div>
+</main>

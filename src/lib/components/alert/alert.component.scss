@@ -13,7 +13,13 @@
   --_alert-close-icon-color-hover: var(--ds-alert-close-icon-color-hover, var(--icon-strong));
   --_alert-pad-y:              var(--ds-alert-pad-y,              var(--space-2));
   --_alert-pad-x:              var(--ds-alert-pad-x,              var(--space-3));
-  --_alert-radius:             var(--ds-alert-radius,             var(--radius-md));
+  --_alert-radius:             var(--ds-alert-radius,             var(--ds-radius-control));
+  --_alert-enter-keyframes: var(--ds-alert-enter-keyframes, ds-slide-in);
+  --_alert-enter-duration: var(--ds-alert-enter-duration, var(--ds-motion-enter-surface-duration));
+  --_alert-enter-easing: var(--ds-alert-enter-easing, var(--ds-motion-enter-surface-easing));
+  --_alert-enter-offset: var(--ds-alert-enter-offset, 2px);
+  --_ds-enter-y: calc(-1 * var(--_alert-enter-offset));
+  --_ds-enter-scale: var(--ds-alert-enter-scale, 0.96);
 
   display: inline-flex;
   align-items: flex-start;
@@ -22,7 +28,13 @@
   border-radius: var(--_alert-radius);
   background-color: var(--_alert-bg-color);
   color: var(--_alert-text-color);
-  animation: ds-alert-in var(--duration-base) var(--ease-decelerate);
+  animation-name: var(--_alert-enter-keyframes);
+  animation-duration: var(--_alert-enter-duration);
+  animation-timing-function: var(--_alert-enter-easing);
+
+  @media (prefers-reduced-motion: reduce) {
+    --_alert-enter-duration: 0ms;
+  }
 
   &.success {
     --_alert-bg-color:   var(--ds-alert-bg-color,   var(--success-subtitle));
@@ -83,9 +95,3 @@
   }
 }
 
-@keyframes ds-alert-in {
-  from {
-    opacity: 0;
-    transform: translateY(-2px);
-  }
-}

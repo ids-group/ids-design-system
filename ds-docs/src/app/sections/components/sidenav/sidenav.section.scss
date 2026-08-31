@@ -13,7 +13,7 @@
     }
 
     /* ---------- States showcase overrides ---------- */
-    .state-cell__stage {
+    .state-cell-stage {
       align-items: stretch; justify-content: stretch;
       padding: var(--space-3);
       min-height: 64px;
@@ -42,12 +42,12 @@
       gap: var(--space-2);
       color: var(--accent);
     }
-    .brand-logo__mark { flex-shrink: 0; fill: currentcolor; }
-    .brand-logo__name {
+    .brand-logo-mark { flex-shrink: 0; fill: currentcolor; }
+    .brand-logo-name {
       font: var(--font-weight-extrabold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
 
     /* Consumer hides its own wordmark when the rail collapses, keeps the mark. */
-    ds-sidenav.collapsed .brand-logo__name { display: none; }
+    ds-sidenav.collapsed .brand-logo-name { display: none; }
 

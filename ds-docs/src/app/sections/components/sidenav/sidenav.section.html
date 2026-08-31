@@ -11,7 +11,6 @@
     into a tooltip.
   </span>
 
-  <!-- ============================================================ Default -->
   <h3 class="block-title t-h4">
     Default
   </h3>
@@ -26,12 +25,12 @@
     </code>) —
     <code class="t-mono-inline">
       preventDefault()
-    </code> intercepts navigation on
-    an <code class="t-mono-inline">href</code> item (a
+    </code> intercepts navigation
+    on an <code class="t-mono-inline">href</code> item (a
     <code class="t-mono-inline">
       routerLink
-    </code> navigates regardless), e.g. to
-    drive scroll-spy.
+    </code> navigates regardless), e.g.
+    to drive scroll-spy.
   </p>
 
   <div class="stage stage--frame">
@@ -85,7 +84,6 @@
     </ds-sidenav>
   </div>
 
-  <!-- ============================================================ Custom brand logo -->
   <h3 class="block-title t-h4">
     Custom brand logo
   </h3>
@@ -110,7 +108,7 @@
           class="brand-logo"
         >
           <svg
-            class="brand-logo__mark"
+            class="brand-logo-mark"
             viewBox="0 0 24 24"
             width="28"
             height="28"
@@ -121,7 +119,7 @@
             />
           </svg>
 
-          <span class="brand-logo__name">
+          <span class="brand-logo-name">
             Atlas
           </span>
         </span>
@@ -152,7 +150,7 @@
           class="brand-logo"
         >
           <svg
-            class="brand-logo__mark"
+            class="brand-logo-mark"
             viewBox="0 0 24 24"
             width="28"
             height="28"
@@ -163,7 +161,7 @@
             />
           </svg>
 
-          <span class="brand-logo__name">
+          <span class="brand-logo-name">
             Atlas
           </span>
         </span>
@@ -187,7 +185,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ Letter-mark & accent wordmark -->
   <h3 class="block-title t-h4">
     Letter-mark &amp; accent wordmark
   </h3>
@@ -204,6 +201,27 @@
     a two-tone "MyAdmin" whose accent slice matches the tile. Keep the string
     input alongside as the fallback semantics.
   </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      brandRoute
+    </code> makes the brand row a link —
+    normally the app's home. Unset it stays a plain block, because a logo that
+    goes nowhere should not be a link and every app decides for itself whether
+    its mark is a way home. The row announces itself as
+    <code class="t-mono-inline">
+      "&lt;brand&gt;, home"
+    </code>; override that
+    with <code class="t-mono-inline"> brandLinkLabel </code>. Router targets
+    only, and <code class="t-mono-inline"> RouterLink </code> is instantiated
+    only once the input is set, so an app with no router still renders the
+    sidenav. Not demonstrated live here on purpose: a specimen that navigates
+    takes the page with it.
+  </p>
+
+  <code class="t-mono-inline">
+    &lt;ds-sidenav brand="Atlas" brandRoute="/"&gt;
+  </code>
 
   <div class="stage stage--frame">
     <ds-sidenav
@@ -242,7 +260,6 @@
     </ds-sidenav>
   </div>
 
-  <!-- ============================================================ Expandable groups -->
   <h3 class="block-title t-h4">
     Expandable groups
   </h3>
@@ -306,7 +323,6 @@
     </ds-sidenav>
   </div>
 
-  <!-- ============================================================ Collapsed -->
   <h3 class="block-title t-h4">
     Collapsed
   </h3>
@@ -355,7 +371,6 @@
     </ds-sidenav>
   </div>
 
-  <!-- ============================================================ Item states showcase -->
   <h3 class="block-title t-h4">
     Item states showcase
   </h3>
@@ -366,7 +381,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-sidenav>
           <ds-sidenav-item
             icon="calendar"
@@ -375,7 +390,7 @@
         </ds-sidenav>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
@@ -383,7 +398,7 @@
     <!-- Live ds-sidenav; pin classes on the stage read the component's own
              resolvers via ::ng-deep (see styles below). -->
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-sidenav>
           <ds-sidenav-item
             icon="calendar"
@@ -392,13 +407,13 @@
         </ds-sidenav>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-sidenav>
           <ds-sidenav-item
             icon="calendar"
@@ -407,13 +422,13 @@
         </ds-sidenav>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Focus-visible
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-sidenav>
           <ds-sidenav-item
             icon="calendar"
@@ -423,13 +438,13 @@
         </ds-sidenav>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Active / selected
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-sidenav>
           <ds-sidenav-item
             icon="calendar"
@@ -439,13 +454,13 @@
         </ds-sidenav>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-sidenav>
           <ds-sidenav-item
             icon="bell"
@@ -456,13 +471,13 @@
         </ds-sidenav>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Active + badge
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-sidenav>
           <ds-sidenav-item
             icon="truck"
@@ -472,13 +487,13 @@
         </ds-sidenav>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Alert dot
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-sidenav [collapsed]="true">
           <ds-sidenav-item
             icon="calendar"
@@ -487,7 +502,7 @@
         </ds-sidenav>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Collapsed · default
       </div>
     </div>

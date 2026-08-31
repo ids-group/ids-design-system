@@ -6,245 +6,337 @@
       "kind": "selector-rename",
       "old": "ds-combobox",
       "new": "ds-autocomplete",
-      "note": "Component renamed (clearer industry name); behavior unchanged.",
+      "action": "Replace the element selector `ds-combobox` with `ds-autocomplete`.",
+      "note": "A rename to the industry word for the control. Behaviour is unchanged.",
       "searchHints": [
         "<ds-combobox",
         "ds-combobox"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "combobox-component-class-rename",
       "kind": "type-rename",
       "old": "ComboboxComponent",
       "new": "AutocompleteComponent",
-      "note": "TS import/reference rename only.",
+      "action": "Replace `ComboboxComponent` with `AutocompleteComponent` in imports and references.",
       "searchHints": [
         "ComboboxComponent"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-option-type-rename",
       "kind": "type-rename",
       "old": "ComboboxOption",
       "new": "AutocompleteOption",
-      "note": "TS type rename. Beware token boundaries: ComboboxOptionGroup contains ComboboxOption — rename the longer identifier first (its own item).",
+      "action": "Replace `ComboboxOption` with `AutocompleteOption`, matching whole identifiers.",
+      "pitfall": "`ComboboxOptionGroup` CONTAINS `ComboboxOption`. A substring replace run on the short name first corrupts the long one into a name that exists nowhere. Apply the group item first, or match whole identifiers.",
       "searchHints": [
         "ComboboxOption"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-option-group-type-rename",
       "kind": "type-rename",
       "old": "ComboboxOptionGroup",
       "new": "AutocompleteOptionGroup",
-      "note": "TS type rename.",
+      "action": "Replace `ComboboxOptionGroup` with `AutocompleteOptionGroup`. Apply this before the shorter `ComboboxOption`.",
       "searchHints": [
         "ComboboxOptionGroup"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-size-type-rename",
       "kind": "type-rename",
       "old": "ComboboxSize",
       "new": "AutocompleteSize",
-      "note": "TS type rename.",
+      "action": "Replace `ComboboxSize` with `AutocompleteSize`.",
       "searchHints": [
         "ComboboxSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-width-type-rename",
       "kind": "type-rename",
       "old": "ComboboxWidth",
       "new": "AutocompleteWidth",
-      "note": "TS type rename.",
+      "action": "Replace `ComboboxWidth` with `AutocompleteWidth`.",
       "searchHints": [
         "ComboboxWidth"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-token-prefix-rename",
       "kind": "token-rename",
       "old": "--ds-combobox-",
       "new": "--ds-autocomplete-",
-      "note": "Prefix rename covering --ds-combobox-focus-shadow / -maxw / -input-minw; replace within each full suffixed name.",
+      "action": "Replace the prefix `--ds-combobox-` with `--ds-autocomplete-` inside each full token name: `-focus-shadow`, `-maxw`, `-input-minw`.",
       "searchHints": [
         "--ds-combobox-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "combobox-docs-anchor",
       "kind": "behavior",
       "old": "#combobox",
       "new": null,
-      "note": "Docs-site anchor renamed #combobox -> #autocomplete; update any hardcoded documentation links in consumer code/README.",
+      "action": "Update any hardcoded documentation link pointing at `#combobox` to `#autocomplete`.",
+      "appliesWhen": "Only where a link to the docs site is written into your own code or README.",
+      "note": "The docs page moved with the component rename, so the fragment that used to address it no longer resolves and the link lands at the top of the page.",
       "searchHints": [
         "#combobox"
-      ]
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "#combobox"
+      ],
+      "verify": "No documentation link in the consumer (code, README, a help panel) still points at the #combobox anchor."
     },
     {
       "id": "dropdown-removed-use-select",
       "kind": "selector-rename",
       "old": "ds-dropdown",
       "new": "ds-select",
-      "note": "ds-dropdown removed; ds-select is the canonical select-only picker (CVA, invalid+hint, required/optional, per-option icons, readOnly). After the selector rename also apply dropdown-error-input-rename and dropdown-option-groups-fold (separate items).",
+      "action": "Replace `ds-dropdown` with `ds-select`, then apply `dropdown-error-input-rename` and `dropdown-option-groups-fold` to the same elements.",
+      "note": "ds-dropdown is gone; ds-select is the one select-only picker, and it carries the CVA, invalid and hint, required and optional, per-option icons and readOnly.",
       "searchHints": [
         "<ds-dropdown",
         "ds-dropdown"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "dropdown-error-input-rename",
       "kind": "input-rename",
       "old": "ds-dropdown[error]",
       "new": "invalid",
-      "note": "On elements migrated from ds-dropdown to ds-select: [error] -> [invalid] (and static error=\"...\" -> invalid=\"...\").",
+      "action": "On elements you moved from `ds-dropdown` to `ds-select`, rename `[error]` to `[invalid]` and `error=\"…\"` to `invalid=\"…\"`.",
       "searchHints": [
         "[error]=",
         "error=\""
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "dropdown-option-groups-fold",
       "kind": "behavior",
       "old": "ds-dropdown[optionGroups]",
       "new": null,
-      "note": "[optionGroups]=\"groups\" is gone on ds-select — pass groups inline in [options]: SelectItem = SelectOption | SelectOptionGroup, so merge the flat options and the groups into one [options] array (order = desired render order).",
+      "action": "Merge the flat options and the groups into one `[options]` array. `SelectItem` is `SelectOption | SelectOptionGroup`, so both shapes sit in the same list.",
+      "pitfall": "The array order IS the render order now. Two separate inputs used to be rendered in a fixed sequence, so concatenating them the other way round silently reshuffles the list and nothing warns.",
+      "note": "`[optionGroups]` no longer exists on ds-select.",
       "searchHints": [
         "[optionGroups]="
-      ]
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "optionGroups",
+        "[optionGroups]"
+      ],
+      "verify": "No ds-select binds optionGroups; the groups sit inside [options] in render order."
     },
     {
       "id": "dropdown-component-class-rename",
       "kind": "type-rename",
       "old": "DropdownComponent",
       "new": "SelectComponent",
-      "note": "TS import/reference rename.",
+      "action": "Replace `DropdownComponent` with `SelectComponent` in imports and references.",
       "searchHints": [
         "DropdownComponent"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "dropdown-option-type-rename",
       "kind": "type-rename",
       "old": "DropdownOption",
       "new": "SelectOption",
-      "note": "TS type rename. Token boundaries: DropdownOptionGroup contains DropdownOption — rename the longer identifier first.",
+      "action": "Replace `DropdownOption` with `SelectOption`, matching whole identifiers.",
+      "pitfall": "`DropdownOptionGroup` contains `DropdownOption`. Apply the group item first, or match whole identifiers — a substring replace corrupts the longer name.",
       "searchHints": [
         "DropdownOption"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "dropdown-option-group-type-rename",
       "kind": "type-rename",
       "old": "DropdownOptionGroup",
       "new": "SelectOptionGroup",
-      "note": "TS type rename.",
+      "action": "Replace `DropdownOptionGroup` with `SelectOptionGroup`. Apply this before the shorter `DropdownOption`.",
       "searchHints": [
         "DropdownOptionGroup"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "dropdown-size-type-rename",
       "kind": "type-rename",
       "old": "DropdownSize",
       "new": "SelectSize",
-      "note": "TS type rename.",
+      "action": "Replace `DropdownSize` with `SelectSize`.",
       "searchHints": [
         "DropdownSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "datepicker-token-prefix-rename",
       "kind": "token-rename",
       "old": "--ds-datepicker-",
       "new": "--ds-date-picker-",
-      "note": "Prefix normalized to match the selector (~14 tokens). Names only — CSS property and defaults byte-identical. Replace within each full suffixed name.",
+      "action": "Replace the prefix `--ds-datepicker-` with `--ds-date-picker-` inside each full token name — about fourteen tokens.",
+      "note": "Names only: the prefix matches the selector now, and every value and CSS property is byte-identical.",
       "searchHints": [
         "--ds-datepicker-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "statusdot-token-prefix-rename",
       "kind": "token-rename",
       "old": "--ds-statusdot-",
       "new": "--ds-status-dot-",
-      "note": "Prefix normalized (color, size). Names only.",
+      "action": "Replace the prefix `--ds-statusdot-` with `--ds-status-dot-` inside each full token name — `-color` and `-size`.",
+      "note": "Names only: the prefix matches the selector now, and every value and CSS property is byte-identical.",
       "searchHints": [
         "--ds-statusdot-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "pagehdr-token-prefix-rename",
       "kind": "token-rename",
       "old": "--ds-pagehdr-",
       "new": "--ds-page-header-",
-      "note": "Prefix normalized (~10 tokens: eyebrow/title/subtitle/meta/crumb colors, meta-icon-color, divider, title-fs, title-gap). Names only.",
+      "action": "Replace the prefix `--ds-pagehdr-` with `--ds-page-header-` inside each full token name — the page-header hooks.",
+      "note": "Names only: the prefix matches the selector now, and every value and CSS property is byte-identical.",
       "searchHints": [
         "--ds-pagehdr-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "avatargroup-token-prefix-rename",
       "kind": "token-rename",
       "old": "--ds-avatargroup-",
       "new": "--ds-avatar-group-",
-      "note": "Prefix normalized (overlap, ring, overflow-bg-color, overflow-label-color). Names only.",
+      "action": "Replace the prefix `--ds-avatargroup-` with `--ds-avatar-group-` inside each full token name — `-overlap`, `-ring`, `-overflow-bg-color` and `-overflow-label-color`.",
+      "note": "Names only: the prefix matches the selector now, and every value and CSS property is byte-identical.",
       "searchHints": [
         "--ds-avatargroup-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "search-inner-input-class-rename",
       "kind": "class-rename",
       "old": "ds-search .input",
       "new": ".search-input",
-      "note": "ds-search's inner input class renamed (over-generic .input let consumer global styles leak in). Only consumer STYLING that targeted the undocumented internal class is affected — scope strictly to selectors under ds-search.",
+      "action": "Rename `.input` to `.search-input` in selectors scoped under `ds-search`.",
+      "appliesWhen": "Only if you styled the undocumented inner class. Nothing in the public API moved.",
+      "pitfall": "Scope the replace to selectors under ds-search. `.input` is generic enough that a repo-wide rename hits your own unrelated rules — the same leak this rename exists to stop.",
+      "note": "The inner input class was over-generic, so a consumer global `.input` rule leaked into the component.",
       "searchHints": [
         "ds-search"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "date-picker-trigger-text-input-default",
       "kind": "behavior",
       "old": "ds-date-picker",
       "new": null,
-      "note": "Trigger is now an editable masked text input by default (allowInput defaults true) with a trailing calendar icon, and the field sizes to CONTENT width (was full-width). Pass [allowInput]=\"false\" for the old click-only field; set a width on the host to stretch. Usually no code change — flag for visual review (eyeball).",
+      "action": "Look at every date picker. For the old click-only field pass `[allowInput]=\"false\"`; to keep it full-width, set a width on the host.",
+      "pitfall": "Two defaults moved at once and neither breaks a build: the field went from full-width to content-width, so a picker that used to fill its column now sits narrow inside it and the layout tuned around it has a hole.",
+      "note": "The trigger is an editable masked text input by default (allowInput defaults to true) with a trailing calendar icon, and it sizes to its content.",
       "searchHints": [
         "<ds-date-picker"
-      ]
+      ],
+      "surface": [
+        "template",
+        "style"
+      ],
+      "detect": [
+        "ds-date-picker",
+        "allowInput"
+      ],
+      "restore": "[allowInput]=\"false\" for the click-only field, plus a width on the host to stretch it",
+      "verify": "Every date picker either takes the editable masked trigger at content width, or says otherwise with [allowInput]=\"false\" and a width."
     },
     {
       "id": "date-picker-locale-default-en-us",
       "kind": "behavior",
       "old": "ds-date-picker",
       "new": null,
-      "note": "The selected-date/value display now defaults to `en-US` formatting via the new `locale` input (effective locale = [locale] ?? provideDsConfig datePicker.locale ?? 'en-US'), replacing the previous ambient browser `toLocaleDateString()`. A consumer whose users run a non-US browser locale (en-GB, de, fr, ...) will see a silently DIFFERENT date format with no markup change. To restore OS/ambient-driven display, set `[locale]` per instance or `provideDsConfig({ datePicker: { locale } })` app-wide.",
+      "action": "If your readers are not en-US, set the locale: `[locale]` per instance, or `provideDsConfig({ datePicker: { locale } })` app-wide.",
+      "pitfall": "The old display followed the ambient browser locale, so on your own machine nothing need look different while an en-GB or de reader sees a silently reformatted date. No markup changes and nothing logs.",
+      "note": "The value display resolves `[locale] ?? provideDsConfig datePicker.locale ?? 'en-US'` instead of calling toLocaleDateString() with the browser default.",
       "searchHints": [
         "<ds-date-picker",
         "toLocaleDateString"
-      ]
+      ],
+      "surface": [
+        "template",
+        "config"
+      ],
+      "detect": [
+        "ds-date-picker",
+        "locale",
+        "datePicker"
+      ],
+      "restore": "[locale] per picker, or provideDsConfig({ datePicker: { locale: '<bcp47>' } })",
+      "verify": "A screen whose readers are not en-US sets the locale rather than inheriting the new default."
     },
     {
       "id": "search-fills-container-default",
       "kind": "behavior",
       "old": "ds-search",
       "new": null,
-      "note": "Default max-width changed 320px -> none (ds-search now stretches like the rest of the field family). If the 320px cap was relied on, set --ds-search-maxw: 320px on the host/theme. Usually visual-review only.",
+      "action": "To keep the old cap, set `--ds-search-maxw: 320px` on the host or in your theme.",
+      "note": "The default max-width went from 320px to none, so ds-search stretches like the rest of the field family.",
       "searchHints": [
         "<ds-search"
-      ]
+      ],
+      "surface": "style",
+      "restore": "--ds-search-maxw: 320px on the host or the theme",
+      "verify": "Every search box is meant to stretch with its container, or pins the old 320px cap."
     },
     {
       "id": "card-interactive-keyboard-activation",
       "kind": "behavior",
       "old": "ds-card[elevation=interactive]",
       "new": null,
-      "note": "ds-card with the pre-existing `elevation=\"interactive\"` value is now natively keyboard-activatable (Enter/Space trigger the click, with role=\"button\" + tabindex) — new runtime behavior on existing markup. If a consumer hand-rolled a keyboard workaround (a custom (keydown.enter)/(keydown.space) that also fires the action), it now DOUBLE-fires with the native activation — remove the workaround. Cards without elevation=\"interactive\", and consumers who never faked keyboard activation, need no action.",
+      "action": "If you hand-rolled keyboard activation on an interactive card — a `(keydown.enter)` or `(keydown.space)` that fires the same action — delete it.",
+      "appliesWhen": "Only cards carrying `elevation=\"interactive\"`. Others are untouched, and so is anyone who never faked the keyboard path.",
+      "pitfall": "Leaving the workaround makes the action fire TWICE on one key press, because the native activation runs beside it. A double submit or a double navigation is the symptom, and it shows only on the keyboard — a mouse test passes.",
+      "note": "`elevation=\"interactive\"` is natively keyboard-activatable now: Enter and Space trigger the click, with role=\"button\" and a tabindex.",
       "searchHints": [
         "elevation=\"interactive\"",
         "elevation=interactive"
-      ]
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "elevation=\"interactive\"",
+        "keydown",
+        "role=\"button\""
+      ],
+      "verify": "No interactive card carries a hand-rolled keyboard activation beside the built-in one - two handlers on one card fire twice."
     }
   ],
   "informational": [
@@ -252,5 +344,6 @@
     "Selection controls gain size + required; standalone ds-radio gains invalid/hint; input/textarea maxLength counter; date-picker minDate/maxDate/disabledDate/presets + locale/dateFormat/firstDayOfWeek/defaultMonth manual masked entry; select clearable/icons/readOnly; autocomplete optionGroups/allowCreate/width=content; table expandable rows; modal closeOnBackdrop/persistent/xl/fullscreen; drawer placement/sm; bottom-sheet snapPoints; toast loading/promise/maxVisible; menu dividers/submenus; popover arrow/placement; tabs lazy/scrollable/closable/vertical; accordion single-open/item disabled; stepper clickable/errorSteps/vertical; sidenav collapsed tooltip; badge count/max; avatar status/fallbackIcon — all additive.",
     "Public --ds-* customization token sweep across ~44 components (~160-180 new names) — purely additive resolvers, zero visual change when unset.",
     "Visual-only: rounded press feedback (+ --ds-press-brightness/--ds-press-scale tuning tokens) and native tap-highlight suppression; accessibility hardening across overlays/pickers/fields/cards (dialog semantics, Tab close, role=alert re-announce, labels)."
-  ]
+  ],
+  "deleteList": []
 }

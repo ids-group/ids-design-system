@@ -24,8 +24,8 @@
       gap: var(--space-4);
       justify-content: space-between;
     }
-    .demo__col { display: flex; flex-direction: column; }
-    .demo__col--end { align-items: flex-end; }
+    .demo-col { display: flex; flex-direction: column; }
+    .demo-col--end { align-items: flex-end; }
     .demo--placement {
       display: flex;
       flex-wrap: wrap;

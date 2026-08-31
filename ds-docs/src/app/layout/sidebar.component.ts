@@ -6,7 +6,6 @@ import {
   computed,
   effect,
   inject,
-  input,
   output,
   signal,
 } from '@angular/core';
@@ -18,14 +17,19 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IconButtonComponent, SearchComponent } from 'ds';
+import {
+  AppLayoutComponent,
+  IconButtonComponent,
+  LayoutScrollService,
+  SearchComponent,
+} from 'ds';
 import {
   NAV,
   type NavGroup,
   groupForAnchor,
   urlForAnchor,
   urlForGroupPath,
-} from './nav.config';
+} from '../core/nav.config';
 import { DS_VERSION } from '../shared/docs-stats';
 
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
@@ -38,271 +42,16 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
   host: {
     '[class.is-collapsed]': 'effectiveCollapsed()',
   },
-  template: `
-    <nav
-      class="toc"
-      [class.is-collapsed]="effectiveCollapsed()"
-      [class.is-drawer]="mode() === 'drawer'"
-    >
-      @if (mode() === 'rail') {
-        <div class="brand">
-          <span class="mark">
-            D
-          </span>
-
-          @if (!effectiveCollapsed()) {
-            <div class="brand-text">
-              <span class="brand-name">
-                Design System
-              </span>
-
-              <small>
-                Boilerplate v{{ version }}
-              </small>
-            </div>
-          }
-
-          <ds-icon-button
-            class="collapse-toggle"
-            variant="outlined"
-            size="sm"
-            [icon]="effectiveCollapsed() ? 'chevronRight' : 'chevronLeft'"
-            [ariaLabel]="
-              effectiveCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'
-            "
-            (pressed)="toggleCollapsed()"
-          />
-        </div>
-      }
-
-      @if (!effectiveCollapsed()) {
-        <ds-search
-          class="nav-search"
-          placeholder="Search…"
-          ariaLabel="Filter sections"
-          [clearable]="true"
-          [(value)]="query"
-        />
-
-        @for (group of filteredNav(); track group.title) {
-          @if (group.title === 'Start') {
-            @for (item of group.items; track item.anchor) {
-              <a
-                class="link start-link"
-                routerLinkActive="is-active"
-                [routerLink]="urlForGroupPath(group.path)"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="navigated.emit()"
-              >
-                {{ item.label }}
-              </a>
-            }
-          } @else {
-            <a
-              class="group group-link"
-              [routerLink]="urlForGroupPath(group.path)"
-              [class.is-active]="isGroupActive(group)"
-              (click)="navigated.emit()"
-            >
-              {{ group.title }}
-            </a>
-
-            @for (item of group.items; track item.anchor) {
-              <a
-                class="link"
-                [routerLink]="urlForAnchor(group.path, item.anchor)"
-                [class.is-active]="isActive(item.anchor)"
-                (click)="onItem(item.anchor)"
-              >
-                <span class="link-label">
-                  {{ item.label }}
-                </span>
-
-                @if (item.new) {
-                  <span class="nav-new">
-                    new
-                  </span>
-                }
-              </a>
-            }
-          }
-        }
-
-        @if (filteredNav().length === 0) {
-          <div class="nav-empty">
-            Nothing found
-          </div>
-        }
-      }
-    </nav>
-  `,
-  styles: [
-    `
-      :host {
-        display: block;
-        height: 100%;
-      }
-
-      .toc {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-1);
-        padding: var(--space-8) var(--space-6);
-        background: var(--surface-default);
-        border-right: var(--border-width-default) solid var(--border-divider);
-        min-height: 100%;
-        transition: padding var(--duration-fast) var(--ease-standard);
-      }
-      .toc.is-collapsed {
-        padding: var(--space-3) var(--space-1);
-        align-items: center;
-        gap: var(--space-2);
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: var(--space-2-5);
-        margin-bottom: var(--space-6);
-        letter-spacing: var(--letter-spacing-snug);
-      }
-      .toc.is-collapsed .brand {
-        flex-direction: column;
-        gap: var(--space-3);
-        margin-bottom: 0;
-      }
-
-      .collapse-toggle {
-        margin-left: auto;
-      }
-      .toc.is-collapsed .collapse-toggle {
-        margin-left: 0;
-      }
-      .brand .mark {
-        width: var(--space-8);
-        height: var(--space-8);
-        border-radius: var(--radius-md);
-        background: var(--primary);
-        color: var(--primary-on);
-        display: grid;
-        place-items: center;
-        font: var(--font-weight-extrabold) 16px/1 var(--font-sans);
-        flex-shrink: 0;
-      }
-      .brand-text {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-      .brand-name {
-        font: var(--font-weight-extrabold) var(--font-size-h5)/1
-          var(--font-sans);
-        color: var(--text-primary);
-      }
-      .brand small {
-        display: block;
-        font: var(--font-weight-medium) 11px/1 var(--font-sans);
-        color: var(--text-tertiary);
-        letter-spacing: var(--letter-spacing-wider);
-        text-transform: uppercase;
-      }
-
-      .group {
-        display: block;
-        font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
-        letter-spacing: var(--letter-spacing-wider);
-        text-transform: uppercase;
-        color: var(--text-tertiary);
-        padding: var(--space-4) var(--space-2) var(--space-1-5);
-      }
-      .group-link {
-        text-decoration: none;
-        cursor: pointer;
-      }
-      .group-link.is-active {
-        color: var(--text-primary);
-      }
-
-      .link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--space-2);
-        padding: 7px var(--space-2-5);
-        color: var(--text-secondary);
-        font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
-        border-radius: var(--radius-md);
-        text-decoration: none;
-        cursor: pointer;
-        user-select: none;
-        transition:
-          background-color var(--duration-fast) var(--ease-standard),
-          color var(--duration-fast) var(--ease-standard);
-      }
-      .link-label {
-        min-width: 0;
-      }
-      .nav-new {
-        flex: none;
-        padding: 2px 6px;
-        border-radius: var(--radius-pill);
-        background: var(--primary);
-        color: var(--primary-on);
-        font: var(--font-weight-bold) 9px/1 var(--font-sans);
-        letter-spacing: var(--letter-spacing-wider);
-        text-transform: uppercase;
-      }
-      .link:hover {
-        background: var(--surface-secondary);
-        color: var(--text-primary);
-      }
-      .link:active {
-        background: var(--surface-muted);
-        color: var(--text-primary);
-        transform: scale(0.97);
-      }
-      .link.is-active {
-        background: var(--primary-subtitle);
-        color: var(--primary-strong);
-        font-weight: var(--font-weight-bold);
-      }
-
-      .start-link {
-        font-weight: var(--font-weight-bold);
-        color: var(--text-primary);
-        margin-bottom: var(--space-1);
-      }
-
-      .nav-search {
-        display: block;
-        margin-bottom: var(--space-2);
-      }
-      .nav-empty {
-        padding: var(--space-3) var(--space-2);
-        color: var(--text-tertiary);
-        font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
-      }
-
-      .toc.is-drawer {
-        border-right: none;
-        padding: var(--space-2) 0 var(--space-6);
-      }
-      .toc.is-drawer .link {
-        min-height: var(--hit-comfy);
-        padding-block: var(--space-2);
-      }
-      .toc.is-drawer .start-link {
-        min-height: var(--hit-comfy);
-      }
-    `,
-  ],
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
+  private readonly layoutScroll = inject(LayoutScrollService);
+  protected readonly layout = inject(AppLayoutComponent);
 
-  readonly mode = input<'rail' | 'drawer'>('rail');
   readonly navigated = output<void>();
 
   protected readonly version = DS_VERSION;
@@ -320,8 +69,10 @@ export class SidebarComponent {
   });
   protected readonly activeAnchor = signal<string>('');
   protected readonly collapsed = signal<boolean>(this.readCollapsed());
+  // Read from the layout, not a second media query: ds-app-layout already owns the
+  // lg breakpoint, and a copy here is the duplication its --bp-lg lesson was about.
   protected readonly effectiveCollapsed = computed(() =>
-    this.mode() === 'drawer' ? false : this.collapsed(),
+    this.layout.railOverlay() ? false : this.collapsed(),
   );
 
   protected readonly urlForAnchor = urlForAnchor;
@@ -334,7 +85,7 @@ export class SidebarComponent {
   // Group (page) of the last real navigation. The scroll-spy rewrites only the
   // URL's anchor segment WITHIN a page, so we compare the resolved GROUP (not the
   // raw path) to skip those self-updates without re-scrolling / re-observing.
-  private lastGroup: string | null = null;
+  private readonly lastGroup = signal<string | null>(null);
   // Whether the current page has >1 spy section — home/changelog have ≤1 and so
   // never sync an anchor into the URL.
   private multiSection = false;
@@ -348,7 +99,7 @@ export class SidebarComponent {
     this.setupWhenSectionsExist();
 
     // A different group page swaps its sections: reset scroll to the target section (or top) and re-scan `[data-anchor]`.
-    // Same-group anchor rewrites are skipped here to avoid observer thrash; `main.main` is the scroll container, not window.
+    // Same-group anchor rewrites are skipped here to avoid observer thrash; the layout's content region is the scroll container, not window.
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -357,10 +108,10 @@ export class SidebarComponent {
       .subscribe((event) => {
         const url = (event as NavigationEnd).urlAfterRedirects.split('?')[0];
         const group = this.groupPathForUrl(url);
-        if (group === this.lastGroup) {
+        if (group === this.lastGroup()) {
           return;
         }
-        this.lastGroup = group;
+        this.lastGroup.set(group);
         setTimeout(() => {
           this.refreshObserver();
           this.scrollForNavigation(url);
@@ -383,7 +134,9 @@ export class SidebarComponent {
 
     // Sync the URL's anchor segment with the active section as the user scrolls
     // (/components/button → /components/segmented …) — replaceUrl so history
-    // isn't polluted. Single-section pages (home/changelog) carry no anchor.
+    // isn't polluted, and dsSamePage so the layout does not read a scroll-driven
+    // path rewrite as a page change and reset the scroll we are describing.
+    // Single-section pages (home/changelog) carry no anchor.
     effect(() => {
       const anchor = this.activeAnchor();
       if (!anchor || !this.multiSection) {
@@ -397,7 +150,10 @@ export class SidebarComponent {
       if (this.router.url.split('?')[0].split('#')[0] === target) {
         return;
       }
-      void this.router.navigateByUrl(target, { replaceUrl: true });
+      void this.router.navigateByUrl(target, {
+        replaceUrl: true,
+        state: { dsSamePage: true },
+      });
     });
   }
 
@@ -429,7 +185,7 @@ export class SidebarComponent {
       (this.document.querySelector(
         `[data-anchor="${anchor}"]`,
       ) as HTMLElement | null);
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
     if (!section || !main) {
       return;
     }
@@ -449,7 +205,7 @@ export class SidebarComponent {
     if (this.scrollToAnchor(this.anchorFromUrl(url))) {
       return;
     }
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
     main?.scrollTo({ top: 0, behavior: 'auto' });
   }
 
@@ -475,7 +231,7 @@ export class SidebarComponent {
 
     this.activeAnchor.set(anchor);
 
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
     const topbarH = this.computeTopbarHeight();
     if (main) {
       const containerTop = main.getBoundingClientRect().top;
@@ -533,6 +289,24 @@ export class SidebarComponent {
     return this.activeAnchor() === anchor;
   }
 
+  /**
+   * Marks a link whose section is already on screen as same-page navigation.
+   *
+   * `onItem` scrolls those directly and synchronously, but the `routerLink`
+   * beside it still changes the path — and `ds-app-layout` resets the scroll on
+   * a path change, undoing it before the reader sees anything. Clicking the SAME
+   * item again then worked, because the second navigation was to an unchanged
+   * URL and triggered no reset. That is the "only opens on the second click".
+   *
+   * `dsSamePage` is the contract `LayoutNavigationService` documents for exactly
+   * this: a docs URL that names the reader's position changes the path without
+   * changing the page. The scroll-spy rewrite already used it; the click that
+   * causes the rewrite did not.
+   */
+  protected linkState(groupPath: string): { dsSamePage: true } | undefined {
+    return groupPath === this.lastGroup() ? { dsSamePage: true } : undefined;
+  }
+
   // A group header is active when the active section belongs to it (the flat URL
   // shares the `/components/` prefix across groups, so prefix-match can't do it).
   protected isGroupActive(group: NavGroup): boolean {
@@ -546,7 +320,7 @@ export class SidebarComponent {
     this.intersecting.clear();
     this.anchorToSection.clear();
 
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
     const sections = Array.from(
       this.document.querySelectorAll<HTMLElement>('[data-anchor]'),
     );

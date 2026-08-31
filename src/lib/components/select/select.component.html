@@ -1,6 +1,6 @@
 @if (label()) {
   <span
-    class="select-label"
+    class="label"
     [id]="labelId"
   >
     {{ label() }}
@@ -34,7 +34,7 @@
   [attr.aria-activedescendant]="activeDescendant()"
   [attr.aria-labelledby]="label() ? labelId : null"
   [attr.aria-label]="resolvedAriaLabel()"
-  [attr.aria-invalid]="invalid() ? 'true' : null"
+  [attr.aria-invalid]="invalidResolved() ? 'true' : null"
   [attr.aria-describedby]="hintId()"
   [attr.aria-required]="required() ? 'true' : null"
   [attr.aria-disabled]="isDisabled() ? 'true' : null"
@@ -49,14 +49,32 @@
     />
   }
 
-  <span
-    class="trigger-text"
-    [class.is-placeholder]="!hasValue()"
-  >
-    {{ displayLabel() }}
-  </span>
+  @if (pickerTrigger(); as tpl) {
+    <ng-container
+      [ngTemplateOutlet]="tpl"
+      [ngTemplateOutletContext]="{
+        $implicit: selectedOption(),
+        selected: selectedOption(),
+        count: hasValue() ? 1 : 0,
+        open: open(),
+        disabled: isDisabled(),
+      }"
+    />
+  } @else {
+    <span
+      class="trigger-text"
+      [class.is-placeholder]="!hasValue()"
+    >
+      {{ displayLabel() }}
+    </span>
+  }
 
-  @if (clearable() && hasValue() && !isDisabled() && !readOnly()) {
+  @if (
+      clearable() &&
+      hasValue() &&
+      !isDisabled() &&
+      !isReadOnly()
+    ) {
     <button
       type="button"
       class="clear-btn"
@@ -79,10 +97,11 @@
 </div>
 
 <ds-field-message
-  [text]="hint()"
-  [state]="messageState()"
+  [icon]="messageIcon()"
+  [text]="message().text"
+  [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessage()"
+  [reserve]="reserveMessageResolved()"
 />
 
 @if (preview.staticPreview()) {
@@ -97,13 +116,28 @@
 
 <ng-template #panelContent>
   <div class="dropdown-panel">
+    @if (panelHeaderTemplate(); as tpl) {
+      <div class="panel-header">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: options().length,
+            total: options().length,
+            query: '',
+          }"
+        />
+      </div>
+    }
+
+
     <ul
       class="dropdown-list"
       role="listbox"
+      [attr.aria-busy]="loading() ? 'true' : null"
       [id]="listboxId"
       [attr.aria-labelledby]="label() ? labelId : null"
     >
-      @for (item of options(); track item.label; let groupIdx = $index) {
+      @for (item of options(); track $index; let groupIdx = $index) {
         @if (isOptionGroup(item)) {
           <li
             class="optgroup"
@@ -114,7 +148,18 @@
               class="optgroup-label"
               [class.is-first]="groupIdx === 0"
             >
-              {{ item.label }}
+              @if (groupLabelTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{
+                    $implicit: item,
+                    group: item,
+                    count: item.options.length,
+                  }"
+                />
+              } @else {
+                {{ item.label }}
+              }
             </span>
 
             <ul
@@ -133,12 +178,17 @@
                     [attr.aria-disabled]="
                       isOptionDisabled(opt, item.disabled) ? 'true' : null
                     "
+                    [attr.aria-describedby]="
+                      opt.disabled && opt.disabledReason
+                        ? optionId(flatIndexOf(opt)) + '-reason'
+                        : null
+                    "
                     [class.is-selected]="isSelected(opt)"
                     [class.is-active]="isActive(flatIndexOf(opt))"
                     [class.is-disabled]="isOptionDisabled(opt, item.disabled)"
                     [disabled]="isOptionDisabled(opt, item.disabled)"
                     (click)="pick(opt, item.disabled)"
-                    (mouseenter)="activeIndex.set(flatIndexOf(opt))"
+                    (mouseenter)="cursorFromKeyboard.set(false); activeIndex.set(flatIndexOf(opt))"
                   >
                     @if (opt.icon) {
                       <ds-icon
@@ -148,8 +198,27 @@
                       />
                     }
 
+                    @if (opt.disabled && opt.disabledReason) {
+                      <span
+                        class="option-reason"
+                        [id]="optionId(flatIndexOf(opt)) + '-reason'"
+                      >
+                        {{ opt.disabledReason }}
+                      </span>
+                    }
+
                     <span class="option-label">
-                      {{ opt.label }}
+                      @if (optionTemplate(); as tpl) {
+                        <ng-container
+                          [ngTemplateOutlet]="tpl"
+                          [ngTemplateOutletContext]="{
+                            $implicit: opt,
+                            option: opt,
+                          }"
+                        />
+                      } @else {
+                        {{ opt.label }}
+                      }
                     </span>
 
                     @if (isSelected(opt)) {
@@ -179,7 +248,7 @@
               [class.is-disabled]="item.disabled"
               [disabled]="item.disabled"
               (click)="pick(item)"
-              (mouseenter)="activeIndex.set(flatIndexOf(item))"
+              (mouseenter)="cursorFromKeyboard.set(false); activeIndex.set(flatIndexOf(item))"
             >
               @if (item.icon) {
                 <ds-icon
@@ -190,7 +259,17 @@
               }
 
               <span class="option-label">
-                {{ item.label }}
+                @if (optionTemplate(); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{
+                      $implicit: item,
+                      option: item,
+                    }"
+                  />
+                } @else {
+                  {{ item.label }}
+                }
               </span>
 
               @if (isSelected(item)) {
@@ -204,6 +283,40 @@
           </li>
         }
       }
+
+      @if (loading()) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          <ds-spinner size="sm" />
+        </li>
+      } @else if (options().length === 0) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          @if (emptyTemplate(); as tpl) {
+            <ng-container [ngTemplateOutlet]="tpl" />
+          } @else {
+            No options
+          }
+        </li>
+      }
     </ul>
+
+    @if (panelFooterTemplate(); as tpl) {
+      <div class="panel-footer">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: options().length,
+            total: options().length,
+            query: '',
+          }"
+        />
+      </div>
+    }
+
   </div>
 </ng-template>

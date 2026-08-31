@@ -10,7 +10,6 @@
     Initials and image avatars in four sizes, plus stacked groups with overflow.
   </span>
 
-  <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
     Sizes
   </h3>
@@ -37,7 +36,6 @@
     />
   </div>
 
-  <!-- ============================================================ Group -->
   <h3 class="block-title t-h4">
     Group
   </h3>
@@ -61,7 +59,6 @@
     </ds-avatar-group>
   </div>
 
-  <!-- ============================================================ Status dots -->
   <h3 class="block-title t-h4">
     Status dots
   </h3>
@@ -97,7 +94,6 @@
     />
   </div>
 
-  <!-- ============================================================ Fallback icon -->
   <h3 class="block-title t-h4">
     Fallback icon
   </h3>
@@ -132,20 +128,71 @@
     />
   </div>
 
-  <!-- ============================================================ Seeded tint -->
   <h3 class="block-title t-h4">
     Seeded tint
   </h3>
 
   <p class="block-desc t-s">
     Pass <code class="t-mono-inline">seed</code> (an email or name) for a
-    deterministic OKLCH colour — the same person always gets the same tint
-    across apps, and the initials auto-pick black or white for contrast. The
-    helpers <code class="t-mono-inline">avatarTint</code> and
+    deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> colour — the
+    same person always gets the same tint across apps — with WHITE initials on
+    every one. The helpers <code class="t-mono-inline">avatarTint</code> and
     <code class="t-mono-inline">
       initialsFrom
-    </code> (which also accepts a single
-    full name) are exported for use outside the component.
+    </code> (which also accepts a
+    single full name) are exported for use outside the component.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The trade this makes, stated plainly.
+    </strong>
+    HSL lightness is not perceptually even, so a yellow lands far lighter than a
+    blue at the same 62% — and that unevenness is what makes the row read as
+    bright rather than uniform. White initials on the lighter hues measure as
+    little as <strong>1.65:1</strong>, under the 4.5:1 WCAG AA asks of text. Use
+    it where the avatar is decoration beside a name that is written out anyway;
+    where the initials are the only identifier, pass your own
+    <code class="t-mono-inline">
+      lightness
+    </code> and
+    <code class="t-mono-inline">
+      foreground
+    </code>.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Or pass the name and let the avatar do both.
+    </strong>
+
+    <code class="t-mono-inline">
+      name
+    </code> replaces the two bindings this
+    demo wires by hand: it derives the initials AND seeds the tint.
+    <strong>
+      The tint hashes the NAME, never the initials
+    </strong> — two
+    letters collide wholesale, so Alice Brown and Adam Bell would otherwise
+    share one colour. Measured: same "AB", hues 198° and 356°.
+  </p>
+
+  <p class="block-desc t-s">
+    The built-in rule takes the first two words, and that is all it claims to be
+    — a Latin-script guess. Reading a name is a cultural convention rather than
+    a UI decision: a Spanish reader wants MG from "María José García López", an
+    insurer wants BC from "Blue Cross Blue Shield". So the rule is replaceable,
+    not configurable-by-mode —
+    <code class="t-mono-inline">
+      [initialsRule]
+    </code> for one table,
+    <code class="t-mono-inline">
+      provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
+    </code>
+    for the app. An explicit
+    <code class="t-mono-inline">
+      initials
+    </code> still wins over both.
   </p>
 
   <div class="row">

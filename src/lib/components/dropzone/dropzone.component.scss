@@ -1,7 +1,6 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* Public --ds-dropzone-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_dropzone-bg-color:               var(--ds-dropzone-bg-color,               var(--surface-default));
   --_dropzone-bg-color-hover:         var(--ds-dropzone-bg-color-hover,         var(--accent-subtitle));
   --_dropzone-bg-color-active:        var(--ds-dropzone-bg-color-active,        var(--accent-subtitle));
@@ -10,7 +9,7 @@
   --_dropzone-border-active:    var(--ds-dropzone-border-active,    var(--accent));
   --_dropzone-text-color:               var(--ds-dropzone-text-color,               var(--text-secondary));
   --_dropzone-text-color-active:        var(--ds-dropzone-text-color-active,        var(--accent-strong));
-  --_dropzone-radius:           var(--ds-dropzone-radius,           var(--radius-lg));
+  --_dropzone-radius:           var(--ds-dropzone-radius,           var(--ds-radius-panel));
   --_dropzone-file-progress:    var(--ds-dropzone-file-progress,    var(--accent));
   --_dropzone-file-success:     var(--ds-dropzone-file-success,     var(--success));
   --_dropzone-file-error:       var(--ds-dropzone-file-error,       var(--error));

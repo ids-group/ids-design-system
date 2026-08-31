@@ -5,11 +5,14 @@
 #
 # Triggered manually via the `validate` custom pipeline — not on every PR.
 #
-# build  -> fails the step if the library or docs don't compile
-# parity -> fails the step if the design-sync React bindings drifted from the
-#           Angular sources they port (no pre-existing debt to carry)
-# lint   -> report-only (prettier/stylelint/eslint), never fails the step while
-#           the repo carries pre-existing lint debt
+# build          -> fails the step if the library or docs don't compile
+# migration-lint -> fails the step; migrations/ has no debt to carry
+# changelog-lint -> fails the step; the published changelog and manifests must name
+#                   nothing a reader outside this repo cannot open
+# parity         -> fails the step if the design-sync React bindings drifted from
+#                   the Angular sources they port (no pre-existing debt to carry)
+# lint           -> report-only (prettier/stylelint/eslint), never fails the step
+#                   while the repo carries pre-existing lint debt
 set -e
 
 cd "$(dirname "$0")/../.."
@@ -17,6 +20,29 @@ cd "$(dirname "$0")/../.."
 
 setup_bun
 install_deps
+
+# A hard gate, and it runs before the slow work: the manifests are what a
+# consumer's upgrade actually executes, the check needs no build, and an
+# undetectable entry is the one defect that reaches them in silence (two did,
+# in 0.7.1).
+echo "===== migration-lint ====="
+node tools/migration-lint.mjs
+
+echo "===== migration-lint selftest ====="
+node tools/migration-lint-selftest.mjs
+
+echo "===== delete-table parity ====="
+node tools/check-delete-tables.mjs
+
+# Same class of gate, same argument: CHANGELOG.md and the manifests are copied into
+# the tarball and published to a public registry, so a client's name or a `tools/`
+# path in them reaches everyone. Prose review cannot hold this line, because the
+# writing agent studies the previous release for voice and inherits its leaks.
+echo "===== changelog-lint (published surface) ====="
+node tools/changelog-lint.mjs
+
+echo "===== changelog-lint selftest ====="
+node tools/changelog-lint-selftest.mjs
 
 log_dir="$(mktemp -d)"
 

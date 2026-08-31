@@ -153,6 +153,135 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'content'",
         "required": false,
         "description": "`'content'` (default): the rail spans the full viewport height on the left and the topbar sits above the content column only. `'full'`: the topbar spans the full width and the rail + content sit below it."
+      },
+      {
+        "name": "railOpen",
+        "kind": "model",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the rail is open as an overlay. Only meaningful below the `lg` breakpoint — above it the rail is always in the layout and this is ignored. Two-way, so a burger in your topbar can drive it."
+      },
+      {
+        "name": "railLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Navigation'",
+        "required": false,
+        "description": "Accessible name for the rail while it is a modal overlay."
+      },
+      {
+        "name": "restoreScroll",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Remember the content scroll per path and restore it on the way BACK. Off by default: a layout that silently moved the scroll would surprise every existing consumer. Only a history traversal restores — following a link into a screen still lands at the top — plus a host that pushes its own \"back to list\" and says so with `state: { dsRestoreScroll: true }`, and the first navigation after a reload."
+      },
+      {
+        "name": "restoreScrollTimeout",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "2000",
+        "required": false,
+        "description": "How long to wait for the restored screen's content to grow tall enough before landing as close as it allows. Only meaningful with `restoreScroll`."
+      },
+      {
+        "name": "scrollReset",
+        "kind": "input",
+        "type": "DsScrollReset",
+        "union": [
+          "path",
+          "never",
+          "always"
+        ],
+        "default": "'path'",
+        "required": false,
+        "description": "When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `LayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one."
+      }
+    ],
+    "outputs": []
+  },
+  "auth-layout": {
+    "key": "auth-layout",
+    "selector": "ds-auth-layout",
+    "isElement": true,
+    "className": "AuthLayoutComponent",
+    "status": "stable",
+    "importName": "AuthLayoutComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "brand",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name`, which every auth screen in an app answers identically. Each field resolves on its own, so `brand=\"\"` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row."
+      },
+      {
+        "name": "logoLetter",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
+      },
+      {
+        "name": "tagline",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "One line under the wordmark naming the product or audience. Unset falls back to `DS_CONFIG.brand.tagline`."
+      },
+      {
+        "name": "cardElevation",
+        "kind": "input",
+        "type": "CardElevation",
+        "union": [
+          "flat",
+          "raised",
+          "hover",
+          "interactive"
+        ],
+        "default": "'raised'",
+        "required": false,
+        "description": "Card treatment. `flat` suits a screen that already sits on a tinted canvas."
+      },
+      {
+        "name": "cardPadding",
+        "kind": "input",
+        "type": "CardPadding",
+        "union": [
+          "none",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'lg'",
+        "required": false,
+        "description": "Card padding, passed through to `ds-card`. `md` tightens a short form."
+      },
+      {
+        "name": "landmark",
+        "kind": "input",
+        "type": "'main' | 'none'",
+        "union": [
+          "main",
+          "none"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "Announce the card as the page's `main` landmark. The card holds the whole content of an auth screen and `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set this to `'main'` on a standalone auth page. It is opt-in because the layout is also embedded inside pages that already own a `main`, and two `main`s is its own violation."
       }
     ],
     "outputs": []
@@ -168,22 +297,94 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
-        "name": "options",
+        "name": "hint",
         "kind": "input",
-        "type": "readonly AutocompleteOption<T>[]",
+        "type": "string",
         "union": null,
-        "default": "[]",
+        "default": "''",
         "required": false,
-        "description": "Flat option list — ignored when `optionGroups` is set."
+        "description": "Helper text shown below the control."
       },
       {
-        "name": "optionGroups",
+        "name": "error",
         "kind": "input",
-        "type": "AutocompleteOptionGroup<T>[]",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Options grouped under labelled sections, rendered instead of `options`."
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
+        "name": "options",
+        "kind": "input",
+        "type": "readonly AutocompleteItem<T>[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Options, groups, or both mixed — rendered in the order given."
       },
       {
         "name": "value",
@@ -204,17 +405,35 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Allows selecting more than one option, shown as removable tags."
       },
       {
+        "name": "showChevron",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the trailing chevron. Turn it off for a search field, where an arrow invites a click that would list everything instead of searching."
+      },
+      {
+        "name": "maxVisibleChips",
+        "kind": "input",
+        "type": "number | 'fit' | 'all' | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER is a CEILING, not a promise: the row still measures, so you get at most that many and fewer when the trigger is narrow. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) means \"not deciding\", as it does on every other input in the library — it resolves to `\"fit\"`. It does NOT mean \"show all\": that is `\"all\"`, which is the loudest of the three modes and has to be asked for."
+      },
+      {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "width",
@@ -227,6 +446,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'fill'",
         "required": false,
         "description": "Trigger width — `fill` stretches to the container, `content` hugs the value."
+      },
+      {
+        "name": "valueOverflow",
+        "kind": "input",
+        "type": "AutocompleteValueOverflow",
+        "union": [
+          "ellipsis",
+          "wrap"
+        ],
+        "default": "'ellipsis'",
+        "required": false,
+        "description": "What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke onto a second line and pushed the chevron onto a third. Multi mode is unaffected — its chips have their own measured cap."
       },
       {
         "name": "placeholder",
@@ -247,31 +478,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the trigger and blocks all interaction."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the field `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "allowCreate",
@@ -283,16 +496,151 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows a \"Create «text»\" row when the typed text matches no option."
       },
       {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Field label above the control — the same meaning it has on the other two pickers."
+      },
+      {
+        "name": "compareWith",
+        "kind": "input",
+        "type": "(a: T | null, b: T | null) => boolean",
+        "union": null,
+        "default": "(a, b) => a === b",
+        "required": false,
+        "description": "How two values are decided to be the same one. The default is `===`, which is reference identity — so with object values a re-fetch that returns equal data as NEW objects loses the selection. Pass a comparator keyed on whatever identifies the value: `(a, b) => a?.id === b?.id`."
+      },
+      {
+        "name": "name",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `name` attribute forwarded to the trigger."
+      },
+      {
+        "name": "readOnly",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prevents opening the panel while still allowing focus."
+      },
+      {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+      },
+      {
+        "name": "clearable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows a clear affordance once there is something to clear."
+      },
+      {
+        "name": "searchPlaceholder",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Placeholder while the field is being typed in, when a value is already settled — `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs, as before."
+      },
+      {
+        "name": "filterWith",
+        "kind": "input",
+        "type": "((option: AutocompleteOption<T>, query: string) => boolean) | 'none'",
+        "union": null,
+        "default": "(option, query) => option.label.toLowerCase().includes(query)",
+        "required": false,
+        "description": "How the typed query narrows the list. The default matches a case-insensitive substring of `label`. Pass a predicate to match on anything else — a second field, ignoring diacritics, a fuzzy score. Pass `'none'` when the list arrives already filtered, which is what a server-side search needs: the query is reported through `filterChange` and every option given is rendered."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row — which would otherwise claim there are no matches — and the list reports `aria-busy`."
+      },
+      {
+        "name": "scrollActiveIntoView",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+      },
+      {
+        "name": "required",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field required: a `*` beside the label and `aria-required` on the input."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field optional in words, for a form where most fields are required."
+      },
+      {
         "name": "ariaLabel",
         "kind": "input",
         "type": "string | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for the combobox input."
+        "description": "Accessible name for the input."
       }
     ],
     "outputs": [
+      {
+        "name": "filterChange",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The query the user typed, on every change. The input for a server-side search; pair it with `filterWith=\"none\"` so the list is not narrowed twice."
+      },
+      {
+        "name": "opened",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+      },
+      {
+        "name": "closed",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel closed, for any reason — a pick, Escape, an outside click, a scroll."
+      },
       {
         "name": "create",
         "kind": "output",
@@ -335,7 +683,25 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Fallback text shown when there's no `imageUrl`."
+        "description": "Fallback text shown when there's no `imageUrl`. Wins over anything derived from `name`, so a caller that already has the letters keeps passing them."
+      },
+      {
+        "name": "name",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The person or thing this avatar stands for — one binding drives both the initials and the seed the tint hashes. The tint keys on the NAME, never on the initials — two letters collide wholesale, so every Alice Brown and Adam Bell would share one colour."
+      },
+      {
+        "name": "initialsRule",
+        "kind": "input",
+        "type": "((name: string) => string) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Replaces the built-in rule for turning `name` into initials, for one avatar or one table of them. Falls back to `DS_CONFIG.avatar.initials`, then to `initialsFrom` — first two words, a Latin-script guess the library does not pretend is universal."
       },
       {
         "name": "imageUrl",
@@ -394,7 +760,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Seed for a deterministic tint (e.g. an email or name) used when no explicit `tint` is set — the same seed always yields the same colour."
+        "description": "Seed for a deterministic tint (e.g. an email) used when no explicit `tint` is set — the same seed always yields the same colour. Defaults to `name`; set it explicitly when identity is an id or an email rather than the display name."
       },
       {
         "name": "avoidHues",
@@ -461,11 +827,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "withDot",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Shows a status dot; only rendered when `count` is unset."
+        "description": "Leading status dot, rendered only while `count` is unset — a count replaces the badge's whole content. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`."
       },
       {
         "name": "solid",
@@ -688,6 +1054,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`."
+      },
+      {
+        "name": "maxItems",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caps how many crumbs render, collapsing the middle into an ellipsis — the first and the LAST always survive. Null (default) renders every crumb. Worth setting on any trail that can get deep: the row is `nowrap` with `overflow: hidden`, so without a cap an overlong trail is clipped from the END, which is the current page — the one crumb the reader needs most."
       }
     ],
     "outputs": [
@@ -712,6 +1087,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
       {
         "name": "color",
         "kind": "input",
@@ -742,20 +1162,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'solid'",
         "required": false,
-        "description": "Fill pattern: solid | tonal | ghost | outline | text. All color×variant pairs render; some are UX-discouraged (see DISCOURAGED_COMBOS / the docs) and emit a dev-mode warning — they work, but read poorly. `text` is discouraged for ALL colours — prefer the global `.link` class; it stays for cases needing the ds-button API (loading/fullWidth/typed pressed)."
+        "description": "Fill pattern: solid | tonal | ghost | outline | text. All color×variant pairs render; some are UX-discouraged and emit a dev-mode warning naming the reason — they work, but read poorly. `text` is discouraged for ALL colours — prefer the global `.link` class; it stays for cases needing the ds-button API (loading/fullWidth/typed pressed)."
       },
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Button height — sm/md/lg."
+        "description": "Button height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "type",
@@ -848,6 +1268,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "ARIA `aria-expanded`, forwarded to the inner <button> — bind to the overlay's open state on a trigger button."
+      },
+      {
+        "name": "ariaControls",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`."
+      },
+      {
+        "name": "disabledReason",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Why the button is refused, shown as its second line. Read only while `disabled` — a greyed control that does not say why is a dead end. Setting it also changes HOW the button is disabled: it takes `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced. The click is swallowed in `onClick` instead. Leave it unset and nothing changes. Length is deliberately not capped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`."
+      },
+      {
+        "name": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-describedby` — point the button at a description the app renders itself, such as a `ds-field-message` under a form. Merged with the id of `disabledReason` when both are present."
       }
     ],
     "outputs": [
@@ -884,128 +1331,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "calendar-day": {
-    "key": "calendar-day",
-    "selector": "ds-calendar-day",
-    "isElement": true,
-    "className": "CalendarDayComponent",
-    "status": "stable",
-    "importName": "CalendarDayComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "selected",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "inRange",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "rangeStart",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "rangeEnd",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "today",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "muted",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Day from an adjacent month — dimmed."
-      },
-      {
-        "name": "disabled",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "dataDay",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Stable key the date-picker uses to focus a specific day (roving tabindex)."
-      },
-      {
-        "name": "tabIndex",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "-1",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "ariaLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": ""
-      }
-    ],
-    "outputs": [
-      {
-        "name": "daySelected",
-        "kind": "output",
-        "type": "MouseEvent",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "dayKeydown",
-        "kind": "output",
-        "type": "KeyboardEvent",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": ""
-      }
-    ]
-  },
   "card": {
     "key": "card",
     "selector": "ds-card",
@@ -1019,16 +1344,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "elevation",
         "kind": "input",
-        "type": "CardElevation",
+        "type": "CardElevation | null",
         "union": [
           "flat",
           "raised",
           "hover",
           "interactive"
         ],
-        "default": "'flat'",
+        "default": "null",
         "required": false,
-        "description": "Visual treatment; `interactive` makes the card clickable and emits `pressed`."
+        "description": "Visual treatment; `interactive` makes the card clickable and emits `pressed`. Unset falls back to `DS_CONFIG.card.elevation`, then `'flat'`."
       },
       {
         "name": "padding",
@@ -1042,7 +1367,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Inner padding preset; `null` keeps the card's default padding."
+        "description": "Inner padding preset. Unset falls back to `DS_CONFIG.card.padding`, then the card's own padding."
       }
     ],
     "outputs": [
@@ -1067,6 +1392,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control — see the note on `DsControlValueAccessor.hidden`."
+      },
       {
         "name": "checked",
         "kind": "model",
@@ -1113,44 +1519,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Overrides the generated id used by the native `<input>` and its `<label for>`."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the input `aria-invalid`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the checkbox."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
-      },
-      {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Checkbox size — sm/md/lg."
+        "description": "Checkbox size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -1183,6 +1562,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -1220,31 +1680,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name for the trigger button and panel."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the trigger `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the trigger."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       }
     ],
     "outputs": []
@@ -1260,6 +1702,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "mode",
         "kind": "input",
         "type": "DatePickerMode",
@@ -1274,15 +1797,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+      },
+      {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Stretch the trigger to fill its container instead of hugging the mask width — opt in when the field shares a grid/flex track with inputs."
       },
       {
         "name": "value",
@@ -1312,24 +1844,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Field label shown above the trigger."
       },
       {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
-      },
-      {
         "name": "required",
         "kind": "input",
         "type": "boolean",
@@ -1357,13 +1871,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the picker and blocks all interaction."
       },
       {
-        "name": "invalid",
+        "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies error styling and marks the trigger `aria-invalid`."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -1554,7 +2068,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": ""
+        "description": "`default` hairline · `strong` heavier rule · `vertical` for a row · `label` to carry projected text in the middle of the line."
       },
       {
         "name": "spacing",
@@ -1568,7 +2082,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Vertical breathing room around the rule. `none` when the parent layout already owns the gap."
       }
     ],
     "outputs": []
@@ -1773,64 +2287,99 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "field-message": {
-    "key": "field-message",
-    "selector": "ds-field-message",
+  "field-group": {
+    "key": "field-group",
+    "selector": "ds-field-group",
     "isElement": true,
-    "className": "FieldMessageComponent",
+    "className": "FieldGroupComponent",
     "status": "stable",
-    "importName": "FieldMessageComponent",
+    "importName": "FieldGroupComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
       {
-        "name": "text",
+        "name": "size",
         "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "state",
-        "kind": "input",
-        "type": "FieldMessageState",
+        "type": "DsSize | null",
         "union": [
-          "default",
-          "error",
-          "success"
+          "sm",
+          "md",
+          "lg"
         ],
-        "default": "'default'",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "messageId",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Segment height — the field family's scale, so a group lines up with a plain field beside it. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
-        "name": "icon",
-        "kind": "input",
-        "type": "IconName | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "reserve",
+        "name": "invalid",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Reserve one line of height even when there's no `text`, so a field that gains/loses a message doesn't shift the layout below it."
+        "description": "Draws the error border on the whole group. A single segment cannot be invalid on its own: the border belongs to the group."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims the group. Disable the CONTROLS too — this is the chrome, not their interactivity."
+      },
+      {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills the container instead of hugging its segments."
+      }
+    ],
+    "outputs": []
+  },
+  "filter-bar": {
+    "key": "filter-bar",
+    "selector": "ds-filter-bar",
+    "isElement": true,
+    "className": "FilterBarComponent",
+    "status": "stable",
+    "importName": "FilterBarComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "moreLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'more'",
+        "required": false,
+        "description": "Trailing word of the trigger, after the count: \"+2 filters\"."
+      },
+      {
+        "name": "panelLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'More filters'",
+        "required": false,
+        "description": "Accessible name of the overflow panel."
+      },
+      {
+        "name": "triggerSize",
+        "kind": "input",
+        "type": "DsSize",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'md'",
+        "required": false,
+        "description": "Height of the \"+N\" trigger, to match the filters beside it. The bar cannot infer this: `dsFilterItem` carries a WIDTH, and the filters are arbitrary projected controls whose own `size` it never sees — so a row of `sm` filters got an `md` trigger standing 8px taller under `align-items: flex-end`."
       }
     ],
     "outputs": []
@@ -1862,6 +2411,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Accessible name — required since the button has no visible text."
+      },
+      {
+        "name": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-describedby` — the id of text the app renders beside the button, such as why the action is refused. Icon-only leaves no room for a second line, so unlike `ds-button` there is no `disabledReason` here: the text has to exist on screen already for this to point at it."
       },
       {
         "name": "variant",
@@ -1897,15 +2455,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Button size — sm/md/lg, matches the field/button height scale."
+        "description": "Button size — sm/md/lg, matches the field/button height scale. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "type",
@@ -1937,6 +2495,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Toggle state — renders the pressed/active look and sets aria-pressed."
+      },
+      {
+        "name": "ariaExpanded",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-expanded`, forwarded to the inner `<button>` — bind to the open state when this button opens a panel. On the host element it would land on a non-focusable wrapper, which no screen reader reads."
+      },
+      {
+        "name": "ariaControls",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-controls`, forwarded to the inner `<button>` — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`."
       }
     ],
     "outputs": [
@@ -1961,6 +2537,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -1990,15 +2647,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Field height — sm/md/lg."
+        "description": "Field height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -2007,25 +2664,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Label shown above the field, or inside it when `floating`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Label shown above the field."
       },
       {
         "name": "placeholder",
@@ -2055,22 +2694,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents editing while still allowing focus and selection."
       },
       {
-        "name": "invalid",
+        "name": "readonlyBinding",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Applies error styling and marks the field `aria-invalid`."
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "loading",
@@ -2080,15 +2719,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Shows a trailing spinner — e.g. async validation in flight. The input stays editable; pair with a `hint` like \"Checking availability…\"."
-      },
-      {
-        "name": "floating",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Floating-label variant — the label sits inside a taller control instead of stacked above it."
       },
       {
         "name": "required",
@@ -2172,6 +2802,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name when no visible `label` is provided (falls back to the placeholder so the control is never unnamed)."
       },
       {
+        "name": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Extra element ids to describe the control with — a password-rule list, a policy note. MERGED with the field's own message id rather than replacing it, and it has to be an input because the attribute belongs on the inner `<input>`: set on the host it lands on a wrapper no screen reader reads."
+      },
+      {
         "name": "maxLength",
         "kind": "input",
         "type": "number | null",
@@ -2179,6 +2818,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Hard character cap — applies the native maxlength attribute and shows a live \"{current}/{max}\" counter below the field."
+      },
+      {
+        "name": "minLength",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `minlength` attribute."
+      },
+      {
+        "name": "pattern",
+        "kind": "input",
+        "type": "readonly RegExp[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Native `pattern` attribute — signal forms sends the schema's RegExp list."
       },
       {
         "name": "enterKeyHint",
@@ -2278,7 +2935,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'xl'",
         "required": false,
-        "description": ""
+        "description": "Max content width before the container centres itself. `full` removes the cap."
       }
     ],
     "outputs": []
@@ -2307,7 +2964,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Space between children. `null` inherits whatever the enclosing layout set."
       },
       {
         "name": "align",
@@ -2321,7 +2978,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Cross-axis alignment — vertical, for a row."
       },
       {
         "name": "justify",
@@ -2335,7 +2992,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Main-axis distribution — horizontal, for a row. `between` pushes the ends apart."
       },
       {
         "name": "wrap",
@@ -2344,7 +3001,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Let the row wrap onto more lines (default). `false` keeps one line and lets it overflow."
       }
     ],
     "outputs": []
@@ -2373,7 +3030,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Space between children. `null` inherits whatever the enclosing layout set."
       },
       {
         "name": "align",
@@ -2387,7 +3044,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Cross-axis alignment — horizontal, for a column."
       }
     ],
     "outputs": []
@@ -2449,7 +3106,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whole-row navigation: renders an inner button and emits `activated`."
+        "description": "Makes the row's text a button that emits `activated`. `[leading]` and `[trailing]` stay outside it, so a row can hold its own controls as well."
       },
       {
         "name": "selected",
@@ -2458,7 +3115,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Marks the row current via `aria-current`."
+        "description": "Marks the row current — `aria-current` and the selected tint."
       },
       {
         "name": "disabled",
@@ -2467,7 +3124,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Disables the row; only affects the button when `clickable`."
+        "description": "Disables the row's own button. Controls projected into `[leading]` or `[trailing]` keep their own disabled state."
       }
     ],
     "outputs": [
@@ -2606,6 +3263,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Renders the item in an error/destructive style."
       },
       {
+        "name": "quiet",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Renders the item muted — a secondary row like \"Sign out\" under a divider, still actionable but not competing with the items above it."
+      },
+      {
+        "name": "description",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "A standing second line under the label — a limitation the action carries (\"will not be saved\", \"read-only in this workspace\"). Visible without hover or focus, which is what separates it from a `[dsTooltip]`. Reaches assistive tech as `aria-describedby`, NOT as part of the item's name: the projected label names the action, and a caveat is a description of it. That is why the line is `aria-hidden` in the DOM and referenced by id — inside the button and visible, it would otherwise be concatenated into the name."
+      },
+      {
         "name": "submenu",
         "kind": "input",
         "type": "TemplateRef<unknown> | null",
@@ -2653,13 +3328,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Card width — sm/md/lg/xl/fullscreen."
       },
       {
-        "name": "error",
+        "name": "status",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "DsStatus | null",
+        "union": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Renders the error styling (icon badge and card accent)."
+        "description": "Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the default) is a neutral dialog. It picks an icon as well as a tint because a tint alone signals by colour only; `icon` overrides the pick. `false` and `undefined` land on null too, so a template can bind the short `[status]=\"isDangerous && 'error'\"` instead of spelling out the ternary."
       },
       {
         "name": "title",
@@ -2671,6 +3351,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Card title, shown in the header and used for `aria-labelledby`."
       },
       {
+        "name": "subtitle",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Secondary line under the title. Not part of the accessible name."
+      },
+      {
         "name": "showClose",
         "kind": "input",
         "type": "boolean",
@@ -2680,25 +3369,34 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows the header close button."
       },
       {
+        "name": "dividers",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
+      },
+      {
         "name": "icon",
         "kind": "input",
         "type": "IconName | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Icon badge shown next to the title."
+        "description": "Icon badge shown next to the title. Overrides the icon `status` would pick."
       },
       {
         "name": "dialogRole",
         "kind": "input",
-        "type": "'dialog' | 'alertdialog'",
+        "type": "'dialog' | 'alertdialog' | null",
         "union": [
           "dialog",
           "alertdialog"
         ],
-        "default": "'dialog'",
+        "default": "null",
         "required": false,
-        "description": "ARIA role for the dialog element."
+        "description": "ARIA role. Unset, an error or warning becomes `alertdialog` — the role for a dialog that interrupts with something the reader must act on — and anything else stays `dialog`. Same split `ds-alert` makes between `alert` and `status`."
       }
     ],
     "outputs": [
@@ -2748,13 +3446,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dialog width — sm/md/lg/xl/fullscreen."
       },
       {
-        "name": "error",
+        "name": "status",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "DsStatus | null",
+        "union": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Renders the error styling on the modal card."
+        "description": "Severity, forwarded to the card — drives its icon-badge tint, title colour, default icon and ARIA role. Null (default) is a neutral dialog. `false` and `undefined` land on null too, so `[status]=\"isDangerous && 'error'\"` binds."
       },
       {
         "name": "title",
@@ -2764,6 +3467,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Dialog title, shown in the header and used for `aria-labelledby`."
+      },
+      {
+        "name": "subtitle",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Secondary line under the title. Not part of the accessible name."
+      },
+      {
+        "name": "dividers",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
       },
       {
         "name": "closeOnBackdrop",
@@ -2805,18 +3526,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "modal:ModalConfirmComponent": {
-    "key": "modal",
-    "selector": "ds-modal-confirm",
-    "isElement": true,
-    "className": "ModalConfirmComponent",
-    "status": "stable",
-    "importName": "ModalConfirmComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [],
-    "outputs": []
-  },
   "multi-select": {
     "key": "multi-select",
     "selector": "ds-multi-select",
@@ -2827,6 +3536,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -2839,11 +3629,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "options",
         "kind": "input",
-        "type": "readonly MultiSelectOption[]",
+        "type": "readonly MultiSelectItem[]",
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Options shown in the panel."
+        "description": "Options, groups, or both mixed — rendered in the order given."
       },
       {
         "name": "placeholder",
@@ -2864,13 +3654,85 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Placeholder for the in-panel filter input."
       },
       {
-        "name": "maxVisibleChips",
+        "name": "searchable",
         "kind": "input",
-        "type": "number | null",
+        "type": "boolean | number | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Caps the number of chips shown before collapsing the rest into \"+N more\" — 0/null shows all."
+        "description": "Whether the panel carries a filter row. `true` always, `false` never, and a NUMBER is a threshold — the row appears once there are at least that many options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the panel's keyboard model onto the trigger: the arrows, Enter, Escape and `aria-activedescendant` are the filter input's today."
+      },
+      {
+        "name": "name",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `name` attribute forwarded to the trigger."
+      },
+      {
+        "name": "readOnly",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prevents opening the panel while still allowing focus."
+      },
+      {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+      },
+      {
+        "name": "clearable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows a clear affordance once there is something to clear."
+      },
+      {
+        "name": "filterWith",
+        "kind": "input",
+        "type": "((option: MultiSelectOption, query: string) => boolean) | 'none'",
+        "union": null,
+        "default": "(option, query) => option.label.toLowerCase().includes(query)",
+        "required": false,
+        "description": "How the typed query narrows the list. The default matches a case-insensitive substring of `label`. Pass a predicate to match on anything else — a second field, ignoring diacritics, a fuzzy score. Pass `'none'` when the list arrives already filtered, which is what a server-side search needs: the query is reported through `filterChange` and every option given is rendered."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row — which would otherwise claim there are no matches — and the list reports `aria-busy`."
+      },
+      {
+        "name": "scrollActiveIntoView",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+      },
+      {
+        "name": "maxVisibleChips",
+        "kind": "input",
+        "type": "number | 'fit' | 'all' | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER is a CEILING, not a promise: the row still measures, so you get at most that many and fewer when the trigger is narrow. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) means \"not deciding\", as it does on every other input in the library — it resolves to `\"fit\"`. It does NOT mean \"show all\": that is `\"all\"`, which is the loudest of the three modes and has to be asked for."
       },
       {
         "name": "disabled",
@@ -2882,31 +3744,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the trigger and blocks all interaction."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the field `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -2918,16 +3762,109 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name for the trigger — falls back to `placeholder`."
       },
       {
-        "name": "selectAll",
+        "name": "width",
+        "kind": "input",
+        "type": "MultiSelectWidth",
+        "union": [
+          "fill",
+          "content"
+        ],
+        "default": "'fill'",
+        "required": false,
+        "description": "Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so a compact trigger does not force an unreadable panel."
+      },
+      {
+        "name": "size",
+        "kind": "input",
+        "type": "DsSize | null",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+      },
+      {
+        "name": "triggerDisplay",
+        "kind": "input",
+        "type": "DsTriggerDisplay",
+        "union": [
+          "full",
+          "count",
+          "labels"
+        ],
+        "default": "'full'",
+        "required": false,
+        "description": "What the trigger shows. `count` is a caption plus a selected-count badge at intrinsic width; `labels` names the selection instead, cut to the width with the rest behind \"+N\". A projected `dsPickerTrigger` template WINS over this — the input is then not read at all."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Field label above the control — the same meaning it has on `ds-select`, and the caption a `count`/`labels` trigger uses when it needs one."
+      },
+      {
+        "name": "required",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows a \"Select all\" row that toggles every filter-matching, enabled option."
+        "description": "Marks the field required: a `*` beside the label and `aria-required` on the trigger."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field optional in words, for a form where most fields are required."
+      },
+      {
+        "name": "selectAll",
+        "kind": "input",
+        "type": "boolean | 'group' | 'both'",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Where a \"select all\" row appears. `false` nowhere, `true` one row over the whole panel, `'group'` one row per group, `'both'` for either. Group rows need groups in `options` — with a flat list they have nothing to head."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "filterChange",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The query the user typed, on every change. The input for a server-side search; pair it with `filterWith=\"none\"` so the list is not narrowed twice."
+      },
+      {
+        "name": "opened",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+      },
+      {
+        "name": "closed",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel closed, for any reason — a pick, Escape, an outside click, a scroll."
+      }
+    ]
   },
   "number-stepper": {
     "key": "number-stepper",
@@ -2978,15 +3915,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control height — sm/md/lg."
+        "description": "Control height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "disabled",
@@ -3019,6 +3956,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -3068,31 +4086,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables all cells and blocks interaction."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks each cell `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the cells."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -3263,6 +4263,73 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Shows the \"Showing X–Y of Z\" range label."
+      },
+      {
+        "name": "showPageSize",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the rows-per-page dropdown. Turn it off for a screen with a fixed page size — otherwise the control offers a choice the host won't honour."
+      }
+    ],
+    "outputs": []
+  },
+  "password-rules": {
+    "key": "password-rules",
+    "selector": "ds-password-rules",
+    "isElement": true,
+    "className": "PasswordRulesComponent",
+    "status": "stable",
+    "importName": "PasswordRulesComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The password being typed."
+      },
+      {
+        "name": "rules",
+        "kind": "input",
+        "type": "readonly DsPasswordRule[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The rule set, in the order it should read."
+      },
+      {
+        "name": "showUnmet",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an unmet rule may read as FAILED. Bind it to \"the user has tried to submit\": before that an unmet rule is merely pending, because marking a half-typed password with errors scolds someone who is still typing."
+      },
+      {
+        "name": "columns",
+        "kind": "input",
+        "type": "1 | 2",
+        "union": null,
+        "default": "1",
+        "required": false,
+        "description": "Lay the rows out in two columns — for a checklist beside a wide form."
+      },
+      {
+        "name": "listId",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "nextControlId('ds-password-rules')",
+        "required": false,
+        "description": "Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly and both sides can name the same string, which avoids threading a template ref between two siblings."
       }
     ],
     "outputs": []
@@ -3398,13 +4465,85 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
         "name": "checked",
         "kind": "model",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Standalone two-way binding. When inside ds-radio-group, isChecked() is derived from the group value instead."
+        "description": "Standalone two-way binding, and the ONLY way to drive a lone radio: this component is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form control — a radio is one option of a choice, not a value of its own — and a second accessor on the option would fight it. A lone radio in a form binds through `[(checked)]`, or becomes a one-option `ds-radio-group`. When inside `ds-radio-group`, `isChecked()` derives from the group value and this input is not read."
       },
       {
         "name": "disabled",
@@ -3443,44 +4582,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Overrides the auto-generated id used for the input and its label's `for`."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the input `aria-invalid`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the control."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
-      },
-      {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control size — sm/md/lg."
+        "description": "Control size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -3514,6 +4626,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "unknown",
@@ -3539,33 +4732,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables the whole group."
-      },
-      {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the group `aria-invalid`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the group."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "ariaLabel",
@@ -3598,6 +4764,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control, as every other DS control does. Inline `display`, not the attribute: the host sets its own, which the weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -3653,17 +4828,35 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name for the input (placeholder is not a reliable label)."
       },
       {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Disables the input and the clear button."
+      },
+      {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch."
+        "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+      },
+      {
+        "name": "debounce",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds to hold each keystroke back before `value` updates — 0 (default) writes on every keystroke, exactly as this control always has. Clearing the field BYPASSES the delay, which is the part a plain `debounceTime` gets wrong: emptying a search is a deliberate act, and making the user wait 200ms to see the full list back reads as a hang. Enter flushes for the same reason. What the input SHOWS is never delayed."
       }
     ],
     "outputs": [
@@ -3688,6 +4881,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "options",
         "kind": "input",
@@ -3714,6 +4988,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the segmented control (radiogroup role)."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Visible label above the track; omit to supply your own."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Disables every segment."
       }
     ],
     "outputs": []
@@ -3729,6 +5021,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -3740,11 +5113,23 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "options",
         "kind": "input",
-        "type": "SelectItem[]",
+        "type": "readonly SelectItem[]",
         "union": null,
         "default": "[]",
         "required": false,
         "description": "Flat options or option groups rendered in the dropdown panel."
+      },
+      {
+        "name": "width",
+        "kind": "input",
+        "type": "SelectWidth",
+        "union": [
+          "fill",
+          "content"
+        ],
+        "default": "'fill'",
+        "required": false,
+        "description": "Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so the panel can still grow to its options."
       },
       {
         "name": "placeholder",
@@ -3758,15 +5143,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -3787,6 +5172,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the trigger and blocks all interaction."
       },
       {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row — which would otherwise claim there are no matches — and the list reports `aria-busy`."
+      },
+      {
+        "name": "scrollActiveIntoView",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+      },
+      {
         "name": "readOnly",
         "kind": "input",
         "type": "boolean",
@@ -3796,31 +5199,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents opening the dropdown while still allowing focus."
       },
       {
-        "name": "invalid",
+        "name": "readonlyBinding",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Applies error styling and marks the trigger `aria-invalid`."
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the trigger."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "required",
@@ -3868,7 +5262,26 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows an inline clear (×) button when a value is selected."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "opened",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+      },
+      {
+        "name": "closed",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel closed, for any reason — a pick, Escape, an outside click, a scroll."
+      }
+    ]
   },
   "sidenav": {
     "key": "sidenav",
@@ -3890,22 +5303,49 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Collapses the rail to icon-only width; read by nested `ds-sidenav-item`/`ds-sidenav-group`."
       },
       {
+        "name": "rail",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether the ACTIVE item draws its edge marker, for the whole sidenav. Off leaves the active state on the fill and the label alone — check that is still distinguishable before turning it off. An individual `ds-sidenav-item` can override this with its own `rail`."
+      },
+      {
         "name": "brand",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead."
+        "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=\"\"` drops the wordmark while a `logoLetter` in the config still paints its tile."
       },
       {
         "name": "logoLetter",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
+      },
+      {
+        "name": "brandRoute",
+        "kind": "input",
+        "type": "string | readonly unknown[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Route the brand row links to — typically the app's home. Unset leaves the row a plain, non-interactive block. Router targets only, and `RouterLink` is instantiated only once this is set, so an app with no router still renders."
+      },
+      {
+        "name": "brandLinkLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for the brand link; unset names it \"<brand>, home\". Ignored while `brandRoute` is unset."
       }
     ],
     "outputs": []
@@ -4040,6 +5480,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables the item — non-navigable and styled as inactive."
+      },
+      {
+        "name": "rail",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether THIS item draws its edge marker when active. Unset follows the parent `ds-sidenav`, then on — the same \"null means not deciding\" reading as the rest of the library, so a sidenav-wide `[rail]=\"false\"` is not fought per item."
       }
     ],
     "outputs": [
@@ -4136,7 +5585,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "The collapse control was activated. The footer does not collapse itself — `ds-app-layout` owns the rail state, so the host relays this."
       },
       {
         "name": "alertsOpened",
@@ -4218,6 +5667,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "SliderValue",
@@ -4279,33 +5809,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the thumb(s) — suffixed \"minimum\"/\"maximum\" in `range` mode."
-      },
-      {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the slider."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       }
     ],
     "outputs": []
@@ -4446,12 +5949,12 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       },
       {
         "name": "value",
-        "kind": "input-required",
-        "type": "string | number",
+        "kind": "input",
+        "type": "string | number | null",
         "union": null,
-        "default": null,
-        "required": true,
-        "description": "Headline metric; `unit` is appended directly after it."
+        "default": "''",
+        "required": false,
+        "description": "Headline metric; `unit` is appended directly after it. Optional because the value can be PROJECTED instead — `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. The input is the fallback, the same shape `[delta]` already has. Namespaced, unlike `[delta]`: twenty components in this library have a `value` input, so a bare `value` attribute used to slot one of them in would also set that input to the empty string. Takes `null` so `[value]=\"count | number\"` typechecks: Angular's own `number`/`date`/`percent` pipes are typed `string | null`, and without the null the idiomatic form fails `strictTemplates` and pushes consumers to `toLocaleString()` in the template — which hardcodes a locale instead of reading LOCALE_ID. Renders as nothing, like the empty default."
       },
       {
         "name": "delta",
@@ -4654,6 +6157,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control — see the note on `DsControlValueAccessor.hidden`."
+      },
+      {
         "name": "checked",
         "kind": "model",
         "type": "boolean",
@@ -4703,44 +6287,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Overrides the generated id used by the native `<input>` and its `<label for>`."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the input `aria-invalid`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the switch."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
-      },
-      {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Switch size — sm/md/lg."
+        "description": "Switch size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -4783,6 +6340,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Rows to render."
       },
       {
+        "name": "rowId",
+        "kind": "input",
+        "type": "((row: T) => string) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Row identity used for tracking, selection, expansion and the active-row highlight. Defaults to `row.id`; pass an accessor for display-only data with no natural key (`[rowId]=\"row => row.channel + row.sentAt\"`), which beats mapping synthetic ids into the data just to satisfy the table."
+      },
+      {
         "name": "columns",
         "kind": "input-required",
         "type": "readonly TableColumn<T>[]",
@@ -4803,24 +6369,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "bordered",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` (workspaces, programs-list) don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card."
+        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
       },
       {
         "name": "loading",
         "kind": "input",
-        "type": "false | 'skeleton' | 'overlay'",
-        "union": [
-          "false",
-          "skeleton",
-          "overlay"
-        ],
+        "type": "boolean | 'skeleton' | 'overlay'",
+        "union": null,
         "default": "false",
         "required": false,
-        "description": "false — no loading state. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner."
+        "description": "false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it; the right choice is a function of the row count, which only the table holds. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately."
       },
       {
         "name": "stickyHeader",
@@ -4881,16 +6443,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       },
       {
         "name": "sortKey",
-        "kind": "model",
+        "kind": "input",
         "type": "string | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Column key currently sorted by; `null` when unsorted."
+        "description": "Column key currently sorted by; `null` when unsorted. Two-way bindable (`[(sortKey)]`) or one-way from your own state with `(sortChange)`."
       },
       {
         "name": "sortDir",
-        "kind": "model",
+        "kind": "input",
         "type": "SortDir",
         "union": [
           "asc",
@@ -4908,6 +6470,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "['asc', 'desc', null]",
         "required": false,
         "description": "Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists)."
+      },
+      {
+        "name": "sortAnnouncement",
+        "kind": "input",
+        "type": "(label: string, dir: SortDir) => string",
+        "union": null,
+        "default": "(label, dir) =>\r\n      dir\r\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\r\n        : `Sorting cleared`",
+        "required": false,
+        "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
+      },
+      {
+        "name": "rangeAnnouncement",
+        "kind": "input",
+        "type": "(first: number, last: number, total: number) => string",
+        "union": null,
+        "default": "(first, last, total) => `Showing ${first}–${last} of ${total}`",
+        "required": false,
+        "description": "Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing."
       },
       {
         "name": "skeletonRows",
@@ -5009,13 +6589,58 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way column order as a list of keys. `null` (default) keeps declaration order; the column panel owns it once the user reorders. Keys absent from the list fall back to declaration order after the listed ones."
       },
       {
-        "name": "stickyScrollbar",
+        "name": "persistLayout",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default."
+        "description": "Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default."
+      },
+      {
+        "name": "storageKey",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Screen id the persisted layout is stored under. Pick something stable per table, not per route instance."
+      },
+      {
+        "name": "exportButton",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Render an export button in the table's toolbar row. Off by default. Leave it off and drive `runExport()` from your own button — in a page header, a filter bar, the `[toolbar]` slot — reading `exporting()` for its loading state."
+      },
+      {
+        "name": "exportFilename",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'table.csv'",
+        "required": false,
+        "description": "Filename the export button downloads as."
+      },
+      {
+        "name": "exportFetcher",
+        "kind": "input",
+        "type": "(() => Promise<readonly T[] | Blob | string>) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Where the export button gets its data. A server-paged table only HAS the current page, so exporting without this silently exports one page. Return ROWS and the table serializes them the same way it serializes its own. Return a `Blob` (or a URL string) and the table just downloads it — which is what you want when the backend already formatted the file with its own number formats, its own columns, or a sheet the table never held."
+      },
+      {
+        "name": "stickyScrollbar",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default. Unset falls back to `DS_CONFIG.table.stickyScrollbar`, then `false`."
       },
       {
         "name": "pageSize",
@@ -5045,6 +6670,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Selectable page-size choices shown in the pagination control."
       },
       {
+        "name": "showPageSize",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the page-size picker in the footer pager. Set false for a table whose page size is fixed — the standalone `ds-pagination` has always taken this."
+      },
+      {
+        "name": "showLabel",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the \"N of M\" range label in the footer pager."
+      },
+      {
         "name": "total",
         "kind": "input",
         "type": "number | null",
@@ -5063,13 +6706,39 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Scroll the table into view on a page change (opt-in) — keeps a bottom pager from leaving the viewport on the previous page's last rows."
       },
       {
-        "name": "clientSort",
+        "name": "sortMode",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "TableSortMode | null",
+        "union": [
+          "client",
+          "server",
+          "none"
+        ],
+        "default": "null",
         "required": false,
-        "description": "When true, the table sorts `data()` itself; otherwise it only emits `sortChange` and leaves ordering to the consumer (default)."
+        "description": "Who sorts — see `TableSortMode`. Unset resolves to `'server'`: the table emits `(sortChange)` and reorders nothing, which is what a paged table needs. Declare `'client'` when the table holds every row, or `'none'` to drop the affordance entirely."
+      },
+      {
+        "name": "filterMode",
+        "kind": "input",
+        "type": "TableFilterMode | null",
+        "union": [
+          "client",
+          "server",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Who filters — see `TableFilterMode`. Unset resolves to `'server'`: the table tracks the selection in `columnFilters` for the host to turn into a request, and runs no local pass. Declare `'client'` when the table holds every row and should filter them itself."
+      },
+      {
+        "name": "columnFilterOptions",
+        "kind": "input",
+        "type": "ReadonlyMap<string, readonly string[]>",
+        "union": null,
+        "default": "new Map()",
+        "required": false,
+        "description": "The full value domain per column key, for a header filter the table cannot derive itself. Without it the checklist is built from the rows in hand, which on a server-paged table offers only the values that happen to be on the current page."
       },
       {
         "name": "stickyFirstColumn",
@@ -5079,6 +6748,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Pin the first data column (and the select column) on horizontal scroll."
+      },
+      {
+        "name": "virtualScroll",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Render only the rows in view, padding the rest with two spacer rows. Opt-in, and it needs `maxHeight` — without a bounded scroller there is no viewport to window against, so nothing is virtualized (dev-warned). Every row must be the same height, which is `virtualRowSize`: the arithmetic that decides what is in view has no other way to know where a row starts. So virtual mode forces `table-layout: fixed` and single-line cells, and the expansion panel is suppressed — a row that can grow breaks the maths."
+      },
+      {
+        "name": "virtualRowSize",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "44",
+        "required": false,
+        "description": "Row height in px in virtual mode. Must match what the rows actually measure, so it drives the CSS height rather than merely describing it."
+      },
+      {
+        "name": "lazy",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fetch rows as they scroll into view instead of receiving them all. `data` becomes a SPARSE array `total` long: put each fetched row at its absolute index and leave the rest empty. Every gap inside the window renders a skeleton row, and `(lazyLoad)` asks for the range covering it. Needs `virtualScroll` — without a window there is nothing to load lazily AGAINST — and `total`, which is what the scrollbar is sized from."
       },
       {
         "name": "rowActions",
@@ -5096,7 +6792,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "{}",
         "required": false,
-        "description": "Cell templates supplied as an explicit map instead of (or in addition to) projected `dsCellTemplate` directives. Lets a wrapper component (e.g. ids-data-table) collect the directives itself and pass them down, since content projected through a wrapper's `<ng-content>` is not seen by this component's content query. Entries here override projected ones."
+        "description": "Cell templates supplied as an explicit map instead of (or in addition to) projected `dsCellTemplate` directives. Lets a wrapper component collect the directives itself and pass them down, since content projected through a wrapper's `<ng-content>` is not seen by this component's content query. Entries here override projected ones."
       },
       {
         "name": "emptyTemplate",
@@ -5137,6 +6833,45 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": [
       {
+        "name": "sortKeyChange",
+        "kind": "output",
+        "type": "string | null",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Emitted for `[(sortKey)]`. `sortChange` carries the same click with both halves at once, which is usually the one to listen to."
+      },
+      {
+        "name": "sortDirChange",
+        "kind": "output",
+        "type": "SortDir",
+        "union": [
+          "asc",
+          "desc"
+        ],
+        "default": null,
+        "required": false,
+        "description": "Emitted for `[(sortDir)]`."
+      },
+      {
+        "name": "exportFailed",
+        "kind": "output",
+        "type": "unknown",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires when `exportFetcher` rejects. Without it a failed export is silent — the button simply re-enables and no file arrives."
+      },
+      {
+        "name": "lazyLoad",
+        "kind": "output",
+        "type": "{ first: number; rows: number }",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The range now on screen that `data` has gaps in — fetch it and write the rows back at their absolute indices. Re-emits only when the range moves."
+      },
+      {
         "name": "rowClicked",
         "kind": "output",
         "type": "T",
@@ -5152,7 +6887,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires whenever sort key/direction changes, regardless of `clientSort`."
+        "description": "Fires whenever sort key/direction changes, in every `sortMode` but `'none'`."
       },
       {
         "name": "rowActionSelected",
@@ -5301,6 +7036,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'horizontal'",
         "required": false,
         "description": "Controls whether the tab list and panel are stacked horizontally (default) or the tab list runs vertically beside the panel."
+      },
+      {
+        "name": "urlParam",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam=\"tab\"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert. Nothing router-shaped is even resolved until you set it — no DI lookup and, more to the point, no subscription — so a strip that never uses this costs exactly what it did before the input existed."
+      },
+      {
+        "name": "rememberLastTab",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default, and needs `urlParam` for the names — a remembered INDEX would repoint the moment a tab is inserted. A link always wins: the parameter is read first, memory only fills the gap the first tab leaves in the URL. Session, not local, so tomorrow is a fresh visit."
       }
     ],
     "outputs": [
@@ -5406,6 +7159,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -5417,15 +7251,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Field height — sm/md/lg."
+        "description": "Field height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -5435,24 +7269,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Label shown above the field."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "placeholder",
@@ -5482,13 +7298,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents editing while still allowing focus and selection."
       },
       {
-        "name": "invalid",
+        "name": "readonlyBinding",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Applies error styling and marks the field `aria-invalid`."
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+      },
+      {
+        "name": "success",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "required",
@@ -5584,89 +7409,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Hard character cap — applies the native maxlength attribute and shows a live \"{current}/{max}\" counter below the field."
+      },
+      {
+        "name": "minLength",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `minlength` attribute."
+      },
+      {
+        "name": "pattern",
+        "kind": "input",
+        "type": "readonly RegExp[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Native `pattern` attribute — signal forms sends the schema's RegExp list."
       }
     ],
     "outputs": []
-  },
-  "time-columns": {
-    "key": "time-columns",
-    "selector": "ds-time-columns",
-    "isElement": true,
-    "className": "TimeColumnsComponent",
-    "status": "stable",
-    "importName": "TimeColumnsComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "value",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "format",
-        "kind": "input",
-        "type": "TimeFormat",
-        "union": [
-          "24h",
-          "12h"
-        ],
-        "default": "'24h'",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "minuteStep",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "1",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "minTime",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "maxTime",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "disabledTime",
-        "kind": "input",
-        "type": "((time: string) => boolean) | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": ""
-      }
-    ],
-    "outputs": [
-      {
-        "name": "timeChange",
-        "kind": "output",
-        "type": "string",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": ""
-      }
-    ]
   },
   "time-picker": {
     "key": "time-picker",
@@ -5678,6 +7441,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -5738,15 +7582,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+      },
+      {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Stretch the trigger to fill its container instead of hugging its content — opt in when the field shares a grid/flex track with inputs."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Field label shown above the trigger — same row a `ds-date-picker` label occupies, so date + time in one form row line up without a hand-rolled label."
+      },
+      {
+        "name": "required",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows an \"(optional)\" marker beside the label — ignored when `required` is set."
       },
       {
         "name": "disabled",
@@ -5758,31 +7638,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the picker and blocks all interaction."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the trigger `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the picker."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "placeholder",

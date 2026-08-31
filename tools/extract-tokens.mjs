@@ -1,13 +1,11 @@
-// tools/extract-tokens.mjs
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Given text and the index of the "v" in a `var(--ds-...` occurrence, return
- *  the token name, its fallback expression (trimmed), and the index just past
- *  the matching close paren. Handles nested parens in the fallback. */
+/** Parses one `var(…)` from the index of its "v". Counts parens, so a fallback that
+ *  nests further `var()` or `calc()` calls is returned whole. */
 function parseVarCall(text, varIndex) {
   const open = text.indexOf('(', varIndex);
   let depth = 0;
@@ -30,7 +28,10 @@ function extractComponentTokens(scssText, component) {
   const out = [];
   const seen = new Set();
   let idx = 0;
-  while ((idx = scssText.indexOf('var(--ds-', idx)) !== -1) {
+  // `var(` and not `var(--ds-`: a resolver wrapped across lines puts a newline
+  // between them, and searching the joined string silently dropped the token from
+  // the reference. The name filter below does the narrowing.
+  while ((idx = scssText.indexOf('var(', idx)) !== -1) {
     const { name, fallback, endIndex } = parseVarCall(scssText, idx);
     idx = endIndex;
     if (!name.startsWith('--ds-') || seen.has(name)) continue;
@@ -97,9 +98,8 @@ const titleCase = (s) =>
     .replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase())
     .trim();
 
-// --ds-t-* are per-axis override hooks on the .t-* type utilities (reads inside
-// _typography.scss, not :root declarations). Templating the note from the name
-// keeps all ~90 out of the undescribed list without hand-writing each.
+// --ds-t-* are per-axis hooks on the .t-* utilities, read inside _typography.scss
+// rather than declared, so the note is templated from the name instead of by hand.
 const T_PROPS = [
   'font-weight',
   'font-size',
@@ -157,11 +157,6 @@ function findScss(dir) {
         : [];
   });
 }
-const compFiles = findScss(join(ROOT, 'src/lib/components'));
-const comp = compFiles.flatMap((f) =>
-  extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))),
-);
-
 const readIf = (p) => {
   try {
     return readFileSync(p, 'utf8');
@@ -169,6 +164,21 @@ const readIf = (p) => {
     return '';
   }
 };
+
+const compFiles = findScss(join(ROOT, 'src/lib/components'));
+const comp = compFiles.flatMap((f) =>
+  extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))),
+);
+
+// findScss only walks *.component.scss, so a public hook exposed by a shared partial
+// has to be listed here or the reference never sees it.
+const sharedPartials = [['src/lib/styles/_dropdown-overlay.scss', 'dropdown-panel']];
+comp.push(
+  ...sharedPartials.flatMap(([path, group]) =>
+    extractComponentTokens(readIf(join(ROOT, path)), group),
+  ),
+);
+
 const globalFiles = [
   'src/lib/styles/_tokens.scss',
   'src/lib/themes/_semantic.scss',
@@ -202,9 +212,28 @@ const typographyHooks = extractComponentTokens(
   readIf(join(ROOT, 'src/lib/styles/_typography.scss')),
   't',
 );
+// The pane is portaled outside every component, so its rule lives in a global
+// partial — invisible to the component sweep, hence listed here under 'overlay'.
+const overlayMotionHooks = extractComponentTokens(
+  readIf(join(ROOT, 'src/lib/styles/_overlay-motion.scss')),
+  'overlay',
+);
+// Read in a MIXIN every field includes, so no component stylesheet declares them.
+// Grouped under 'field': the contract is the family's, not one component's.
+const fieldLabelHooks = extractComponentTokens(
+  readIf(join(ROOT, 'src/lib/styles/_field-label.scss')),
+  'field',
+);
+const fieldBoxHooks = extractComponentTokens(
+  readIf(join(ROOT, 'src/lib/styles/_field-box.scss')),
+  'field',
+);
 const all = [
   ...comp.map((t) => ({ ...t, category: 'component' })),
   ...typographyHooks.map((t) => ({ ...t, category: 'component' })),
+  ...overlayMotionHooks.map((t) => ({ ...t, category: 'component' })),
+  ...fieldLabelHooks.map((t) => ({ ...t, category: 'component' })),
+  ...fieldBoxHooks.map((t) => ({ ...t, category: 'component' })),
   ...globals.map((t) => ({ ...t, category: categorize(t.name) })),
 ];
 for (const t of all)
@@ -216,6 +245,10 @@ const orphaned = Object.keys(DESCRIPTIONS).filter((k) => !names.has(k));
 console.log(
   `tokens: ${all.length}, undescribed: ${undescribed.length}, orphaned: ${orphaned.length}`,
 );
+if (undescribed.length) {
+  console.log('undescribed tokens:');
+  for (const name of undescribed) console.log(`  ${name}`);
+}
 if (orphaned.length)
   console.warn('orphaned descriptions:\n  ' + orphaned.join('\n  '));
 
@@ -449,16 +482,26 @@ const titleCaseFolder = (s) =>
   s
     .replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase())
     .trim();
+// Groups that aren't component folders — global partials surfaced alongside them.
+const PSEUDO_FOLDERS = {
+  t: {
+    component: 'Typography utilities',
+    selector: '.t-*',
+    description: 'Per-axis --ds-t-* override hooks on the .t-* type utilities.',
+  },
+  overlay: {
+    component: 'Overlay panels',
+    selector: '.ds-overlay-pane',
+    description:
+      'Enter-motion hooks shared by every portaled DS panel — select, multi-select, autocomplete, date / time / colour picker, popover, tooltip, menu submenu.',
+  },
+};
 const COMPONENT_TOKENS = Object.keys(compGroups)
   .sort((a, b) => titleCaseFolder(a).localeCompare(titleCaseFolder(b)))
   .map((folder) => ({
-    component:
-      folder === 't' ? 'Typography utilities' : titleCaseFolder(folder),
-    selector: folder === 't' ? '.t-*' : `.${folder}`,
-    description:
-      folder === 't'
-        ? 'Per-axis --ds-t-* override hooks on the .t-* type utilities.'
-        : '',
+    component: PSEUDO_FOLDERS[folder]?.component ?? titleCaseFolder(folder),
+    selector: PSEUDO_FOLDERS[folder]?.selector ?? `.${folder}`,
+    description: PSEUDO_FOLDERS[folder]?.description ?? '',
     tokens: compGroups[folder],
   }));
 
@@ -582,7 +625,9 @@ const summary = {
   MISC_BLUR: MISC_BLUR.length,
   COMPONENT_TOKENS: `${COMPONENT_TOKENS.length} groups / ${COMPONENT_TOKENS.reduce((n, g) => n + g.tokens.length, 0)} tokens`,
 };
+// Prefixed because these keys are export NAMES: an unprefixed `SEMANTIC_ERROR: 10`
+// in a CI log reads as a build failure, and a grep for /error/i finds it.
 console.log('wrote tokens.generated.ts — per-export counts:');
-for (const [k, v] of Object.entries(summary)) console.log(`  ${k}: ${v}`);
+for (const [k, v] of Object.entries(summary)) console.log(`  rows in ${k}: ${v}`);
 console.log(`  NEW_TOKENS: ${NEW_TOKENS.length}`);
 console.log(`(of ${all.length} live tokens; ${used.size} placed)`);

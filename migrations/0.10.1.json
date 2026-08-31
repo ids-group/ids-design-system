@@ -1,0 +1,260 @@
+{
+  "version": "0.10.1",
+  "items": [
+    {
+      "id": "opacity-muted-token-removed",
+      "kind": "removed-api",
+      "old": "--opacity-muted",
+      "new": null,
+      "action": "If you SET it, delete the declaration — it was a no-op then and is a no-op now; the real hooks are `--ds-button-label-color-disabled` and `--ds-icon-button-icon-color-disabled`. If you READ it, pick the token that names the job: `--opacity-disabled` (0.5) where opacity is the only disabled signal, `--opacity-text-disabled` (0.38) for disabled text, or an inline 0.6 if what you wanted was de-emphasis rather than a disabled state.",
+      "appliesWhen": "Nothing the library renders changes — no component has read it since 0.10.0 moved the disabled states onto `--text-disabled` plus `--opacity-disabled`.",
+      "pitfall": "Do NOT re-declare `--opacity-muted` yourself to keep it alive. \"Muted\" is a de-emphasis level and disabled is a state, and sharing one number between them is what put this token on the delete list in the first place. A read of it now resolves to nothing and the whole declaration is dropped, which is quieter than an error.",
+      "note": "The 0.6 custom property is deleted from the token scale.",
+      "searchHints": [
+        "--opacity-muted",
+        "var(--opacity-muted",
+        "opacity-muted"
+      ],
+      "surface": "style",
+      "verify": "No stylesheet declares or reads `--opacity-muted`: a declaration is a no-op and a read resolves to nothing, dropping the whole declaration."
+    },
+    {
+      "id": "list-item-slots-outside-activator",
+      "kind": "behavior",
+      "old": "ds-list-item ::ng-deep .activator",
+      "new": null,
+      "action": "A `::ng-deep .activator` override that set padding, gap, background or hover now applies to the TEXT only — move it to `ds-list-item` itself.",
+      "appliesWhen": "No input or output changed: title, subtitle, clickable, selected, disabled and activated all behave as before, and a plain row looks identical.",
+      "note": "`[leading]` and `[trailing]` are siblings of `.activator` now rather than children, so a row can hold a checkbox or a kebab alongside a row-level action. The row's `display: flex`, its padding, its gap and both tints sit on the HOST; `.activator` is just the text button. Fixed alongside: `selected` set `aria-current` on the inner button, so it was inert whenever `clickable` was false — it is on the host now.",
+      "searchHints": [
+        "ds-list-item",
+        ".activator",
+        "list-item-pad",
+        "list-item-gap",
+        "aria-current",
+        "leading",
+        "trailing",
+        "clickable"
+      ],
+      "surface": "style",
+      "detect": [
+        "::ng-deep .activator",
+        ".activator",
+        "ds-list-item"
+      ],
+      "verify": "Any consumer rule that set padding, gap, background or a hover tint on ds-list-item's `.activator` now targets `ds-list-item` itself."
+    },
+    {
+      "id": "button-borderless-disabled-label-recipe",
+      "kind": "behavior",
+      "old": "ds-button[variant=\"ghost\"][disabled], ds-button[variant=\"text\"][disabled], ds-button[variant=\"outline\"][disabled]",
+      "new": null,
+      "action": "None unless you relied on the exact old colour — `--ds-button-label-color-disabled` is the same hook and still wins. If you matched the old `#949EB5` by hand in a mock, a screenshot test or a hand-written twin of the disabled state, the default primary is now `#A5B4F8` in light and `#3D4979` in dark.",
+      "appliesWhen": "`variant=\"solid\"` and `variant=\"tonal\"` are NOT affected and keep the shared recipe.",
+      "pitfall": "The mix target is `--surface-default`, a stand-in for the real backdrop — so a borderless button sitting on a TINTED ground gets a label mixed against the page colour instead of the ground it is actually on. The label also stays tinted rather than going grey (chroma rises with the mix), which was chosen deliberately.",
+      "note": "The disabled label for ghost, text and outline moved from a pinned `oklch(from <accent> 70% …)` to `color-mix(in srgb, <label> 40%, var(--surface-default))`, so lightness moves toward the surface. Pinned at 70% the dark theme measured 1.11:1 — a disabled ghost was indistinguishable from an active one. After: light 2.54 → 3.41:1, dark 1.11 → 2.91:1. Outline is included because its disabled border resolves to only 1.30:1.",
+      "searchHints": [
+        "ds-button",
+        "variant=\"ghost\"",
+        "variant=\"text\"",
+        "variant=\"outline\"",
+        "--ds-button-label-color-disabled",
+        "label-color-disabled",
+        "#949EB5",
+        "disabled",
+        "oklch"
+      ],
+      "surface": "style",
+      "restore": "--ds-button-label-color-disabled: #949EB5 (the old shared value; the hook still wins over the new default)",
+      "verify": "No hand-written twin of the disabled label colour - a mock, a screenshot baseline, a CSS copy - still names the old #949EB5."
+    },
+    {
+      "id": "icon-button-standard-disabled-icon-recipe",
+      "kind": "behavior",
+      "old": "ds-icon-button[variant=\"standard\"][disabled]",
+      "new": null,
+      "action": "None unless you relied on the exact old colour — `--ds-icon-button-icon-color-disabled` is the same hook and still wins. Hand-matched values move from `#969EB5` / `#949EB5` to `#AEB1B8` (light) / `#575D69` (dark).",
+      "appliesWhen": "`variant=\"standard\"` only — the one variant with no fill and no border, so the glyph colour is the whole signal. Filled, tonal and outlined keep the shared recipe; filled deliberately, because its glyph is white and mixing white into a white surface would not move it.",
+      "note": "A dark-theme fix: pinned at L 70% the disabled glyph sat ten points of OKLCH lightness from the enabled one, a 1.46:1 gap. After: light 4.17 → 5.19:1, dark 1.46 → 3.58:1.",
+      "searchHints": [
+        "ds-icon-button",
+        "variant=\"standard\"",
+        "--ds-icon-button-icon-color-disabled",
+        "icon-color-disabled",
+        "#969EB5",
+        "disabled",
+        "oklch"
+      ],
+      "surface": "style",
+      "restore": "--ds-icon-button-icon-color-disabled: #969EB5 (light) / #949EB5 (dark)",
+      "verify": "No hand-written copy of the disabled glyph colour still names the old #969EB5 / #949EB5."
+    },
+    {
+      "id": "fields-success-is-a-string",
+      "kind": "behavior",
+      "old": "ds-input [success]=\"true\"",
+      "new": null,
+      "action": "Replace `[success]=\"true\" hint=\"Available\"` with `success=\"Available\"` — the text moves out of `hint`. A `[success]=\"someBoolean\"` becomes `[success]=\"someBoolean ? 'Looks good' : ''\"`, since an empty string is what means \"no success state\" now.",
+      "appliesWhen": "Breaking on ds-input only; the same input is ADDITIVE on ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-otp-input and ds-color-picker, which had no success state at all. Not added to ds-checkbox, ds-radio-group, ds-switch or ds-slider — no bordered box to paint. `invalid` is unchanged and remains the flag partner of `error`.",
+      "pitfall": "A leftover `[success]=\"true\"` does not error — it sets the literal text \"true\" as the message, so the field renders a green line reading `true`. And a success border with NO message is no longer expressible, exactly as it never was for `warning`.",
+      "note": "`success` went from `input(false, { transform: booleanAttribute })` to `input<string>('')`. It was the only state that could not say anything — a flag that recoloured `hint` green, which meant the message had to be smuggled through a different input. It is the fourth rung of the same ladder now: error, errors, warning, success, hint.",
+      "searchHints": [
+        "success",
+        "[success]",
+        "ds-input",
+        "ds-textarea",
+        "ds-select",
+        "ds-date-picker",
+        "data-field-state",
+        "field-state",
+        "hint"
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "[success]=\"true\"",
+        "[success]",
+        "success="
+      ],
+      "verify": "No `[success]` binding passes a boolean: every one carries the message text, and an empty string is what means \"no success state\"."
+    },
+    {
+      "id": "fields-shared-base-class-members",
+      "kind": "behavior",
+      "old": "class MyField extends TextareaComponent (or any DS field)",
+      "new": null,
+      "action": "Only if you SUBCLASS a DS field and declare a member named `hint`, `error`, `warning`, `errors`, `invalid`, `touched` or `reserveMessage`: it is an inherited member now rather than an own member, so an incompatible re-declaration fails where it may previously have shadowed. Redeclaring with the same shape still works.",
+      "appliesWhen": "No public API changed — every input keeps its name, type, default and documentation, and the generated docs reference lost nothing. `success`, `label`, `required` and `optional` were deliberately NOT lifted and remain per-component.",
+      "pitfall": "Seven members were not lost, they moved UP onto an internal shared base, and every field still has them by inheritance — so an override of one of those needs no change. The genuine new collision is different: `success` is a NEW member on the eight bordered fields that lacked it, so a subclass of any of those declaring `success` fails with TS4114.",
+      "note": "The seven shared inputs and the `reserveMessageResolved` helper are declared once on a new internal shared base instead of being hand-copied into each of the fourteen fields. Every field reaches them by inheritance.",
+      "searchHints": [
+        "extends TextareaComponent",
+        "extends InputComponent",
+        "reserveMessage",
+        "reserveMessageResolved",
+        "touched",
+        "extends DsFieldBase",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+          "DsFieldBase",
+          "DsControlValueAccessor"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends TextareaComponent",
+        "extends InputComponent",
+        "extends "
+      ],
+      "verify": "A typecheck reports no TS4114 on a subclass of a DS field declaring hint, error, warning, errors, invalid, touched or reserveMessage - or `success` on one of the eight bordered fields that just gained it."
+    },
+    {
+      "id": "fields-invalid-no-longer-recolours-hint",
+      "kind": "behavior",
+      "old": "[invalid]=\"true\" hint=\"<message>\"",
+      "new": null,
+      "action": "Wherever a field binds `[invalid]` together with `hint` and expected the hint to read as the error, move the text to `error` and drop the `[invalid]` binding — `error` implies the invalid state. `[invalid]=\"true\" hint=\"Must be before end date\"` becomes `error=\"Must be before end date\"`, and a dynamic form becomes `[error]=\"showError() ? 'Must be before end date' : ''\"`.",
+      "appliesWhen": "No action when `[invalid]` is used WITHOUT `hint` — that is still supported and exactly what the input is for: the error state with the message living elsewhere, such as a form-level summary or one message for a whole ds-field-group. `invalid` is not deprecated.",
+      "note": "It used to promote `hint` to the ERROR state — a red message rendered through `role=\"alert\"`. It paints the control and sets aria-invalid only now. The old idiom lost the real hint (with both set, the help text was replaced rather than shown alongside), announced help text as an alert, and made a template unreadable because whether `hint` was a hint depended on another attribute.",
+      "searchHints": [
+        "[invalid]",
+        "invalid",
+        "hint=",
+        "[hint]",
+        "error=",
+        "[error]",
+        "aria-invalid",
+        "role=\"alert\""
+      ],
+      "surface": "template",
+      "detect": [
+        "[invalid]",
+        "hint="
+      ],
+      "verify": "No field binds `[invalid]` together with `hint` expecting the hint to read as the error: that text sits on `error`, and `[invalid]` appears only where the message lives elsewhere (a form summary, a field group)."
+    },
+    {
+      "id": "fields-warning-kind-is-reserved",
+      "kind": "behavior",
+      "old": "a validator returning { warning: ... }",
+      "new": null,
+      "action": "Only if you already have a validator using the key `warning` — reactive, template-driven, or a signal-forms ValidationError with kind `warning` — for a BLOCKING error. Rename that key to anything else, such as `warningLimit` or `softLimit`, and the old behaviour returns.",
+      "appliesWhen": "Otherwise additive: it gives a form model a way to raise a non-blocking remark, which Angular's AbstractControl has no channel for. Ranked below the explicit `warning` input, and shown only after interaction.",
+      "pitfall": "This one changes VALIDITY, silently. An existing `warning` key that used to block now reads as advisory: aria-invalid stays off, the field stops being invalid, and a submit guard reading validity is no longer blocked. A form that refused to submit will now submit.",
+      "note": "The DsFieldError kind `warning` is reserved and exported as `DS_FIELD_WARNING_KIND`. DsFieldError and DsFieldErrorsInput are exported too, for writing a typed validator.",
+      "searchHints": [
+        "warning",
+        "DS_FIELD_WARNING_KIND",
+        "ValidationErrors",
+        "ValidationError",
+        "errors",
+        "DsFieldError",
+        "aria-invalid"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "warning:",
+        "'warning'",
+        "kind: 'warning'",
+        "ValidationErrors"
+      ],
+      "verify": "No validator returns the key `warning` for a BLOCKING error - that kind is advisory now, so the field stays valid and a submit guard is not blocked."
+    },
+    {
+      "id": "segmented-pill-moves-to-an-inner-track",
+      "kind": "behavior",
+      "old": "ds-segmented",
+      "new": null,
+      "action": "Only for a `::ng-deep` rule that treated the HOST as the pill — a background, a border-radius, a `display: grid`, a border. Retarget it at `ds-segmented .track`.",
+      "appliesWhen": "A token override (`--ds-segmented-*`) is unaffected and needs nothing: the pill's custom properties stayed on `:host` and inherit down.",
+      "pitfall": "Left alone, such a rule now paints the whole STACK — label, pill and message row — instead of the control.",
+      "note": "ds-segmented stacks a label, the pill and a message row now, so the pill moved off `:host` onto an inner `.track`. Additive alongside: the component provides NG_VALUE_ACCESSOR and resolves its message the same way the fields do, so both form systems and the label / hint / error / warning / errors inputs work as on the other fields.",
+      "searchHints": [
+        "ds-segmented",
+        "::ng-deep",
+        "segmented",
+        ".track",
+        "--ds-segmented"
+      ],
+      "surface": "style",
+      "detect": [
+        "ds-segmented",
+        "::ng-deep"
+      ],
+      "verify": "Any ::ng-deep rule that painted the ds-segmented HOST as the pill - a background, a radius, a border, a display - now targets `ds-segmented .track`."
+    }
+  ],
+  "informational": [
+    "ds-table's row-action kebab and column-picker trigger now read --ds-table-icon-btn-color, --ds-table-icon-btn-color-hover and --ds-table-icon-btn-focus-color, each defaulting to the value that was previously hardcoded (--icon-default, --icon-strong, --accent). Purely additive. ACTION only if you recoloured your own row trigger and are now adopting rowActions: set these three instead of repainting --icon-default globally.",
+    "ds-modal and ds-modal-card take per-side padding: --ds-modal-header-pad-top/-pad-bottom, --ds-modal-body-pad-top/-pad-bottom and --ds-modal-actions-pad-top/-pad-bottom. Each defaults to its region's existing --ds-modal-<region>-pad-y, which still works and still sets both edges, so this is purely additive and nothing moves unless you set one. ACTION only if you have been reaching past the API to pad a region asymmetrically - a rule on .modal > .header / > .body / > .actions, most likely carrying !important because the component's own padding outranks a descendant selector: that rule can now be a token on the host instead.",
+    "ds-date-picker: clearing or replacing `value` from outside now clears the picker's own typing error (typedInvalid / rangeInvalid). NO code change is required, but two workarounds can be REMOVED: (a) tearing a modal body down on `closed` just to get a fresh picker -- which never worked when the modal was reopened inside its 300ms leave animation, since the close is cancelled and `closed` never fires; (b) any manual `[error]` juggling used to mask the stale message. Blur validation is unchanged: a full-but-bad date still errors on blur.",
+    "A ds-menu inside a ds-popover now clips its rows to the panel's rounded corners, so a first or last row's fill — a hover tint, or a destructive item's red — no longer paints two square corners through the panel's rounded ones. The cause was a clip of the wrong SHAPE, not a missing one: ds-menu has overflow: hidden, but its :host-context(.popover) block flattened border-radius while leaving overflow in force. The popover now publishes --ds-menu-clip-radius (its own radius less its border) and the menu clips to that, so a brand overriding --ds-popover-radius is followed automatically. Nothing to do; --ds-menu-item-radius still defaults to 0, because the MENU owns the edge corners rather than the row.",
+    "Message inputs absorb null and undefined instead of crashing. hint, error, warning and success took a bare string and the resolver called .trim() on whatever arrived, so [error]=\"form.errors?.message\" pushed null in and threw a TypeError during render whenever the expression was empty. All four now transform at the input boundary — trimmed, with null/undefined becoming ''.",
+    "A disabled ds-icon-button variant=\"standard\" mixes its glyph toward the surface: color-mix(in srgb, <icon> 40%, var(--surface-default)), replacing the shared fixed-lightness recipe. It is the only variant with neither a fill nor a border, so the glyph carries the whole state, and the old recipe left it 1.46:1 from the enabled icon in dark (light 4.17 -> 5.19:1, dark 1.46 -> 3.58:1). Scoped to standard on purpose: filled's icon is --c-on, and white mixed into a white surface does not move. --ds-icon-button-icon-color-disabled is the same hook and still wins; only the default under it changed.",
+    "ds-field-message: the `state` input never picked an icon, though its docblock and the generated API reference both said it did (`state` \"decides colour and icon\"; `icon` \"overrides the glyph the state would pick\"). `icon` is a plain input<IconName|null>(null) with no per-state default. Behaviour is unchanged — only the documentation was wrong. If you left `icon` unset expecting a glyph from the state, pass one explicitly.",
+    "SegmentedComponent gained eight members when it joined the form systems (label, disabled, isDisabled, message, invalidResolved, fieldMessage, hintId, uid), which is the only genuinely new collision surface beyond `success`. A subclass of it declaring any of those names now fails with TS4114."
+  ],
+  "deleteList": [
+    {
+      "id": "message-binding-null-guard",
+      "surface": "template",
+      "find": [
+        "?? ''",
+        "?? \"\""
+      ],
+      "why": "A `?? ''` guard wrapped around a message binding - `[error]=\"form.errors?.message ?? ''\"` - added because a null pushed into `hint` / `error` / `warning` / `success` threw a TypeError during render.",
+      "replaceWith": "nothing - bind the expression directly, the inputs absorb null now"
+    },
+    {
+      "id": "modal-teardown-to-reset-date-picker",
+      "surface": "template",
+      "find": [
+        "(closed)",
+        "@if (open())"
+      ],
+      "why": "A modal body torn down on `(closed)` — or guarded behind the open flag — purely so a re-opened `ds-date-picker` starts without the previous attempt's error. The picker clears its own stale error and text on the value-to-text effect now. The teardown never worked reliably anyway: reopening inside the 300 ms leave animation cancels the close, so `closed` never fires.",
+      "replaceWith": "nothing - keep the body mounted"
+    }
+  ]
+}

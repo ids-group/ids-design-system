@@ -19,24 +19,32 @@
 
   <docs-nonmodal-note />
 
-  <!-- ============================================================ Single -->
   <h3 class="block-title t-h4">
     Single
   </h3>
 
   <p class="block-desc t-s">
     Click the trigger, pick an hour and a minute; the value updates live.
+    <code class="t-mono-inline">
+      label
+    </code> renders the same label row a
+    <code class="t-mono-inline">
+      ds-date-picker
+    </code> uses, so date + time in
+    one form row line up without a hand-rolled label above the trigger.
   </p>
 
   <div class="row">
-    <ds-time-picker [(value)]="single" />
+    <ds-time-picker
+      label="Time"
+      [(value)]="single"
+    />
 
     <span class="value-tag t-mono-inline">
       {{ single() ?? '—' }}
     </span>
   </div>
 
-  <!-- ============================================================ 12-hour -->
   <h3 class="block-title t-h4">
     12-hour (AM/PM)
   </h3>
@@ -57,7 +65,6 @@
     />
   </div>
 
-  <!-- ============================================================ Minute step -->
   <h3 class="block-title t-h4">
     Minute step
   </h3>
@@ -80,7 +87,6 @@
     </span>
   </div>
 
-  <!-- ============================================================ Min / max / disabled -->
   <h3 class="block-title t-h4">
     Min · max · disabled slots
   </h3>
@@ -112,7 +118,6 @@
     </span>
   </div>
 
-  <!-- ============================================================ Clearable + sizes -->
   <h3 class="block-title t-h4">
     Clearable · sizes
   </h3>
@@ -144,7 +149,6 @@
     />
   </div>
 
-  <!-- ============================================================ Range -->
   <h3 class="block-title t-h4">
     Range
   </h3>
@@ -162,12 +166,18 @@
       [(value)]="range"
     />
 
+    <ds-time-picker
+      mode="range"
+      label="Cover window"
+      [required]="true"
+      [(value)]="requiredRange"
+    />
+
     <span class="value-tag t-mono-inline">
       {{ range() }}
     </span>
   </div>
 
-  <!-- ============================================================ Validation + forms -->
   <h3 class="block-title t-h4">
     Validation · reactive forms
   </h3>
@@ -184,9 +194,8 @@
 
   <div class="row">
     <ds-time-picker
-      hint="A time is required."
+      error="A time is required."
       [formControl]="timeControl"
-      [invalid]="true"
     />
 
     <span class="value-tag t-mono-inline">

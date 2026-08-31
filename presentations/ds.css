@@ -296,9 +296,14 @@
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
      so re-skinning --primary-h propagates into focus state.
-     The inner halo reads --surface-canvas so the ring stays visible
-     in both light and dark themes (canvas flips, ring adapts). */
-  --focus-ring-inner: var(--surface-canvas);
+
+     The inner halo is TRANSPARENT, not a colour: its job is to separate the ring
+     from the element, so it has to match whatever is actually behind — which a
+     named surface only is when nothing intervenes. Painting --surface-canvas here
+     drew a dark rim around a white card in a dark app, reading as a rendering
+     artifact rather than a focus state. Transparent costs nothing on a canvas
+     ground (the same pixels show through) and is correct on every other. */
+  --focus-ring-inner: transparent;
   --focus-ring-outer-h: var(--primary-h);
   --focus-ring-outer-s: var(--primary-s);
   --focus-ring-outer-l: var(--primary-l);
@@ -312,6 +317,17 @@
   --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
+  /* Same ring drawn INSIDE the border box, for a subtree under a clipping
+     ancestor. An outset shadow is outside the box, so any `overflow: hidden`
+     ancestor eats it and leaves the element focusable with no indicator at all —
+     and clipping is the normal way to hold a full-bleed child inside a rounded
+     card. Reached through `[data-focus="inset"]`, not by re-declaring the role. */
+  --focus-ring-inset:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
+  --focus-ring-inset-error:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
   /* Field focus — coloured halo only (no double-ring). Derived from
      brand HSL so it tracks rebrand. Alpha is a token so dark themes
      can boost it for legibility. */
@@ -562,9 +578,14 @@
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
      so re-skinning --primary-h propagates into focus state.
-     The inner halo reads --surface-canvas so the ring stays visible
-     in both light and dark themes (canvas flips, ring adapts). */
-  --focus-ring-inner: var(--surface-canvas);
+
+     The inner halo is TRANSPARENT, not a colour: its job is to separate the ring
+     from the element, so it has to match whatever is actually behind — which a
+     named surface only is when nothing intervenes. Painting --surface-canvas here
+     drew a dark rim around a white card in a dark app, reading as a rendering
+     artifact rather than a focus state. Transparent costs nothing on a canvas
+     ground (the same pixels show through) and is correct on every other. */
+  --focus-ring-inner: transparent;
   --focus-ring-outer-h: var(--primary-h);
   --focus-ring-outer-s: var(--primary-s);
   --focus-ring-outer-l: var(--primary-l);
@@ -578,6 +599,17 @@
   --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
+  /* Same ring drawn INSIDE the border box, for a subtree under a clipping
+     ancestor. An outset shadow is outside the box, so any `overflow: hidden`
+     ancestor eats it and leaves the element focusable with no indicator at all —
+     and clipping is the normal way to hold a full-bleed child inside a rounded
+     card. Reached through `[data-focus="inset"]`, not by re-declaring the role. */
+  --focus-ring-inset:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
+  --focus-ring-inset-error:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
   /* Field focus — coloured halo only (no double-ring). Derived from
      brand HSL so it tracks rebrand. Alpha is a token so dark themes
      can boost it for legibility. */
@@ -758,6 +790,18 @@
        :root[data-theme="spreadsheet"] { --radius-pill-value: var(--radius-sm); } */
   --radius-pill-value: 999px;
   --radius-pill: var(--radius-pill-value);
+  /* Radius ROLES — the layer a consumer retunes. Reading the raw scale directly
+     meant re-rounding "panels" also re-rounded every control sharing
+     --radius-md. Each role defaults to the value its members already used, so
+     nothing moves until one is set. Components resolve
+     --ds-<comp>-radius -> role -> value, so a per-component override still wins.
+     No `field` role: fields share --radius-md with buttons, so it would either
+     duplicate `control` or silently re-round every field. A consumer who wants
+     them apart scopes the role: `ds-input { --ds-radius-control: 4px; }`. */
+  --ds-radius-inner: var(--radius-sm);
+  --ds-radius-control: var(--radius-md);
+  --ds-radius-panel: var(--radius-lg);
+  --ds-radius-pill: var(--radius-pill);
   /* Component-scoped radius — kept only when the semantic intent matters
      beyond the value itself, OR when the global scale doesn't fit. */
   --radius-flat: var(--radius-0); /* explicit "intentionally squared" — middle of btn-group, in-range datepicker */
@@ -791,10 +835,19 @@
               0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 14%);
   --shadow-4: 0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 12%),
               0 24px 48px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 18%);
-  --shadow-popover: var(--shadow-2);
-  --shadow-modal: var(--shadow-4);
-  --shadow-toast: var(--shadow-3);
-  --shadow-card: var(--shadow-1);
+  /* Elevation ROLES, and the older --shadow-<surface> aliases now point AT them
+     rather than at a step: setting a role moves every surface at that height,
+     while an alias still retunes one family. Four roles, not the three first
+     sketched — the library genuinely uses four heights, and folding toast into
+     `overlay` would have changed its shadow. */
+  --ds-elevation-raised: var(--shadow-1);
+  --ds-elevation-overlay: var(--shadow-2);
+  --ds-elevation-floating: var(--shadow-3);
+  --ds-elevation-modal: var(--shadow-4);
+  --shadow-popover: var(--ds-elevation-overlay);
+  --shadow-modal: var(--ds-elevation-modal);
+  --shadow-toast: var(--ds-elevation-floating);
+  --shadow-card: var(--ds-elevation-raised);
   /* Backdrop blur */
   --blur-sm: 4px;
   --blur-md: 8px;
@@ -819,9 +872,6 @@
   --table-sticky-corner-z: 2; /* sticky col header sits over both axes */
   --btn-focus-z: var(--layer-raised);
   --btn-group-focus-z: 2; /* focused button rises above its neighbour */
-  /* ============================================================
-     Motion
-     ============================================================ */
   --duration-instant: 80ms;
   --duration-fast: 120ms;
   --duration-base: 180ms;
@@ -849,11 +899,30 @@
   --ease-decelerate: cubic-bezier(0, 0, 0, 1);
   --ease-accelerate: cubic-bezier(.3, 0, 1, 1);
   --ease-spring: cubic-bezier(.5, 1.5, .5, 1);
+  /* Motion ROLES — the per-surface --ds-<surface>-enter/leave-* hooks defaulted
+     straight to the raw scale, so "make every panel entrance snappier" meant
+     retuning each surface. A role names the intent once and every surface at that
+     scale follows. Defaults equal the values each surface already used, so nothing
+     moves until a role is set.
+     FIVE roles, not the four first sketched: panel LEAVES run at --duration-base,
+     not fast, so folding them into `exit` would have sped them up. Two resolvers
+     stay on the raw scale on purpose — ds-loading-overlay and the toast leave use
+     --ease-standard, which no role carries, and inventing a role for two sites
+     would be worse than naming the value. */
+  --ds-motion-enter-panel-duration: var(--duration-fast);
+  --ds-motion-enter-panel-easing: var(--ease-decelerate);
+  --ds-motion-enter-surface-duration: var(--duration-base);
+  --ds-motion-enter-surface-easing: var(--ease-decelerate);
+  --ds-motion-enter-large-duration: var(--duration-slow);
+  --ds-motion-enter-large-easing: var(--ease-decelerate);
+  --ds-motion-exit-duration: var(--duration-fast);
+  --ds-motion-exit-easing: var(--ease-accelerate);
+  --ds-motion-exit-large-duration: var(--duration-base);
+  --ds-motion-exit-large-easing: var(--ease-accelerate);
   /* Opacity — semantic, purpose-named (Material/Carbon/Polaris convention).
      Each token has a real consumer in the codebase; symmetric "unused"
      numeric stops are deliberately omitted. */
   --opacity-disabled: 0.5; /* full disabled state on interactive components */
-  --opacity-muted: 0.6; /* legacy alias — being phased out in favour of --text-* roles */
   --opacity-text-disabled: 0.38; /* disabled text alpha (WCAG-derived) */
   --opacity-scrim: 0.55; /* modal/drawer backdrop overlay (light theme) */
   --opacity-state-hover: 0.08; /* hover layer over surface (overlay vs surface swap) */
@@ -878,9 +947,6 @@
   --page-margin-tablet: var(--space-6); /* 24px */
   --page-margin-desktop: var(--space-8); /* 32px */
   --page-margin-wide: var(--space-10); /* 40px */
-  /* ============================================================
-     System chrome
-     ============================================================ */
   --scrollbar-w: 10px;
   --scrollbar-thumb: var(--neutral-300);
   --scrollbar-thumb-hover: var(--neutral-400);
@@ -933,10 +999,7 @@
   --hit-min: 32px; /* dense desktop default (alias of --hit-cozy-tier-0) */
   --hit-cozy: 40px; /* default control height */
   --hit-comfy: 44px; /* WCAG min for touch */
-  --hit-touch: 48px; /* mobile-friendly — also used by floating-label fields */
-  /* ============================================================
-     Iconography
-     ============================================================ */
+  --hit-touch: 48px; /* mobile-friendly */
   --icon-2xs: 10px;
   --icon-xs: 12px;
   --icon-sm: 14px;
@@ -1034,6 +1097,8 @@
   --modal-w-xl: 1024px;
   --modal-w-fullscreen: calc(100vw - var(--space-6));
   --modal-h-fullscreen: calc(100vh - var(--space-6));
+  /* Auth layout */
+  --auth-card-w: 420px;
   /* Drawer */
   --drawer-w-sm: 320px;
   --drawer-w-md: 480px;
@@ -1046,14 +1111,8 @@
   --field-h-sm: var(--hit-min);
   --field-h-md: var(--hit-cozy);
   --field-h-lg: var(--hit-touch);
-  --field-h-floating: var(--hit-touch);
   --field-textarea-min: 96px;
-  --field-floating-label-fs: var(--font-size-2xs);
-  --field-floating-label-lh: 14px;
-  --field-floating-label-top: 8px;
   --field-num-stepper-w: var(--space-8);
-  /* Search */
-  --search-h: var(--hit-md);
   /* OTP / PIN input — one box per digit. */
   --otp-cell-w: var(--space-12); /* 48px */
   --otp-cell-h: var(--space-14); /* 56px */
@@ -1070,13 +1129,14 @@
      Tokens for atom geometries that previously lived as literals
      inside component CSS. Grouped by component for readability.
      ============================================================ */
-  /* Top bar / app shell */
+  /* Top bar / app layout */
   --topbar-h: var(--space-14); /* 56px — global app bar height */
   /* Sidenav internals — w / w-collapsed defined above */
   --sidenav-pad-brand-y: var(--space-2); /* logo top padding */
   --sidenav-pad-brand-b: var(--space-6); /* logo bottom padding */
   --sidenav-logo-size: var(--hit-sm); /* 28px — square brand mark */
   --sidenav-collapsed-item: var(--hit-cozy); /* 40px — collapsed nav-item hit area */
+  --sidenav-collapsed-glyph: var(--icon-lg); /* 20px — matches the size the item template renders its icon at */
   --sidenav-section-pad-b: var(--space-1-5); /* nav-section bottom padding */
   --sidenav-item-rail-width: 3px; /* active-item left rail */
   /* Form section grid */
@@ -1088,7 +1148,6 @@
   --bottom-sheet-handle-h: 4px;
   /* Field internals */
   --field-textarea-rows-min: 60px; /* min-h for inline textarea inside the field wrapper */
-  --field-floating-pad-t: 18px; /* top padding when --floating, leaves room for label */
   --field-select-pad-r: var(--space-6); /* select chevron clearance */
   --field-affix-overlap: var(--border-width-default); /* affix bleed over field border */
   /* Button group */
@@ -1129,9 +1188,9 @@
   /* Empty state */
   --empty-icon-size: var(--space-16); /* 64px */
   --empty-body-maxw: 360px;
-  /* Combobox */
-  --combobox-offset: var(--space-1); /* gap below trigger */
-  --combobox-maxh: 280px; /* listbox max height */
+  /* Pickers — the listbox panel shared by autocomplete and multi-select. */
+  --picker-offset: var(--space-1); /* gap below trigger */
+  --picker-maxh: 280px; /* listbox max height */
   /* Command palette (cmdk) */
   --cmdk-w: 560px;
   --cmdk-list-maxh: var(--popover-maxh); /* alias — keeps cmdk + popover synced */
@@ -1205,9 +1264,6 @@
   --tab-spec-dot-offset: var(--border-width-strong); /* -2px notification offset (negated inline) */
 }
 
-/* ============================================================
-   Reduced motion
-   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-instant: 0ms;
@@ -1250,7 +1306,6 @@
   --badge-dot-size: 4px;
   --status-dot-size: 5px;
   --sidenav-w: 200px;
-  --field-floating-label-top: 4px;
   --segmented-btn-h: 20px;
   /* Ultra also compresses field + table padding (tighter than compact/comfy). */
   --field-pad-x: var(--space-2);
@@ -1258,6 +1313,9 @@
   --table-cell-pad-x: var(--space-2);
   --table-cell-pad-y: var(--space-1);
   --table-head-pad-y: var(--space-1);
+  /* One rung, not two: a card's frame reads as padding lost long before its cells
+     do, so 24 → 16 while the cells inside it go 16 → 8. */
+  --ds-container-pad: var(--space-4);
 }
 
 [data-density=compact] {
@@ -1271,7 +1329,6 @@
   --badge-dot-size: 5px;
   --status-dot-size: 6px;
   --sidenav-w: 220px;
-  --field-floating-label-top: 6px;
   --segmented-btn-h: 24px;
 }
 
@@ -1456,100 +1513,162 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .t-display {
-  font: var(--font-weight-extrabold) var(--font-size-display)/var(--line-height-tight) var(--font-display);
-  letter-spacing: var(--letter-spacing-tight);
+  font-weight: var(--ds-t-display-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-t-display-font-size, var(--font-size-display));
+  line-height: var(--ds-t-display-line-height, var(--line-height-tight));
+  font-family: var(--ds-t-display-font-family, var(--font-display));
+  letter-spacing: var(--ds-t-display-letter-spacing, var(--letter-spacing-tight));
 }
 
 .t-h1 {
-  font: var(--font-weight-extrabold) var(--font-size-h1)/var(--line-height-tight) var(--font-heading);
-  letter-spacing: var(--letter-spacing-tight);
+  font-weight: var(--ds-t-h1-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-t-h1-font-size, var(--font-size-h1));
+  line-height: var(--ds-t-h1-line-height, var(--line-height-tight));
+  font-family: var(--ds-t-h1-font-family, var(--font-heading));
+  letter-spacing: var(--ds-t-h1-letter-spacing, var(--letter-spacing-tight));
 }
 
 .t-h2 {
-  font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-snug) var(--font-heading);
-  letter-spacing: var(--letter-spacing-snug);
+  font-weight: var(--ds-t-h2-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-t-h2-font-size, var(--font-size-h2));
+  line-height: var(--ds-t-h2-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-h2-font-family, var(--font-heading));
+  letter-spacing: var(--ds-t-h2-letter-spacing, var(--letter-spacing-snug));
 }
 
 .t-h3 {
-  font: var(--font-weight-extrabold) var(--font-size-h3)/var(--line-height-snug) var(--font-heading);
-  letter-spacing: var(--letter-spacing-snug);
+  font-weight: var(--ds-t-h3-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-t-h3-font-size, var(--font-size-h3));
+  line-height: var(--ds-t-h3-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-h3-font-family, var(--font-heading));
+  letter-spacing: var(--ds-t-h3-letter-spacing, var(--letter-spacing-snug));
 }
 
 .t-h4 {
-  font: var(--font-weight-bold) var(--font-size-h4)/var(--line-height-snug) var(--font-heading);
+  font-weight: var(--ds-t-h4-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-h4-font-size, var(--font-size-h4));
+  line-height: var(--ds-t-h4-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-h4-font-family, var(--font-heading));
 }
 
 .t-h5 {
-  font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-heading);
+  font-weight: var(--ds-t-h5-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-h5-font-size, var(--font-size-h5));
+  line-height: var(--ds-t-h5-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-h5-font-family, var(--font-heading));
 }
 
 .t-card-title {
-  font: var(--font-weight-bold) var(--card-title-fs)/var(--line-height-snug) var(--font-heading);
+  font-weight: var(--ds-t-card-title-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-card-title-font-size, var(--card-title-fs));
+  line-height: var(--ds-t-card-title-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-card-title-font-family, var(--font-heading));
   margin: 0;
-  color: var(--text-primary);
+  color: var(--ds-t-card-title-color, var(--text-primary));
 }
 
 .t-l {
-  font: var(--font-weight-regular) var(--font-size-l)/var(--line-height-base) var(--font-sans);
+  font-weight: var(--ds-t-l-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-l-font-size, var(--font-size-l));
+  line-height: var(--ds-t-l-line-height, var(--line-height-base));
+  font-family: var(--ds-t-l-font-family, var(--font-sans));
 }
 
 .t-l-bold {
-  font: var(--font-weight-bold) var(--font-size-l)/var(--line-height-base) var(--font-sans);
+  font-weight: var(--ds-t-l-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-l-bold-font-size, var(--font-size-l));
+  line-height: var(--ds-t-l-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-t-l-bold-font-family, var(--font-sans));
 }
 
 .t-m {
-  font: var(--font-weight-regular) var(--font-size-m)/var(--line-height-base) var(--font-sans);
+  font-weight: var(--ds-t-m-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-m-font-size, var(--font-size-m));
+  line-height: var(--ds-t-m-line-height, var(--line-height-base));
+  font-family: var(--ds-t-m-font-family, var(--font-sans));
 }
 
 .t-m-bold {
-  font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-base) var(--font-sans);
+  font-weight: var(--ds-t-m-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-m-bold-font-size, var(--font-size-m));
+  line-height: var(--ds-t-m-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-t-m-bold-font-family, var(--font-sans));
 }
 
 .t-s {
-  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  font-weight: var(--ds-t-s-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-s-font-size, var(--font-size-s));
+  line-height: var(--ds-t-s-line-height, var(--line-height-base));
+  font-family: var(--ds-t-s-font-family, var(--font-sans));
 }
 
 .t-s-bold {
-  font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  font-weight: var(--ds-t-s-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-s-bold-font-size, var(--font-size-s));
+  line-height: var(--ds-t-s-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-t-s-bold-font-family, var(--font-sans));
 }
 
 .t-xs {
-  font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+  font-weight: var(--ds-t-xs-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-xs-font-size, var(--font-size-xs));
+  line-height: var(--ds-t-xs-line-height, var(--line-height-base));
+  font-family: var(--ds-t-xs-font-family, var(--font-sans));
 }
 
 .t-xs-bold {
-  font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+  font-weight: var(--ds-t-xs-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-xs-bold-font-size, var(--font-size-xs));
+  line-height: var(--ds-t-xs-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-t-xs-bold-font-family, var(--font-sans));
 }
 
 .t-overline {
-  font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
-  letter-spacing: var(--letter-spacing-wider);
-  text-transform: uppercase;
-  color: var(--text-tertiary);
+  font-weight: var(--ds-t-overline-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-overline-font-size, var(--font-size-2xs));
+  line-height: var(--ds-t-overline-line-height, var(--line-height-base));
+  font-family: var(--ds-t-overline-font-family, var(--font-sans));
+  letter-spacing: var(--ds-t-overline-letter-spacing, var(--letter-spacing-wider));
+  text-transform: var(--ds-t-overline-text-transform, uppercase);
+  color: var(--ds-t-overline-color, var(--text-tertiary));
 }
 
 .t-caption {
-  font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
-  color: var(--text-tertiary);
+  font-weight: var(--ds-t-caption-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-caption-font-size, var(--font-size-xs));
+  line-height: var(--ds-t-caption-line-height, var(--line-height-base));
+  font-family: var(--ds-t-caption-font-family, var(--font-sans));
+  color: var(--ds-t-caption-color, var(--text-tertiary));
 }
 
 .t-mono {
-  font: var(--font-weight-medium) var(--font-size-mono)/var(--line-height-base) var(--font-mono);
+  font-weight: var(--ds-t-mono-font-weight, var(--font-weight-medium));
+  font-size: var(--ds-t-mono-font-size, var(--font-size-mono));
+  line-height: var(--ds-t-mono-line-height, var(--line-height-base));
+  font-family: var(--ds-t-mono-font-family, var(--font-mono));
 }
 
 .t-mono-inline {
-  font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-  background: var(--surface-secondary);
-  color: var(--text-primary);
+  font-weight: var(--ds-t-mono-inline-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-mono-inline-font-size, var(--font-size-mono));
+  line-height: var(--ds-t-mono-inline-line-height, 1);
+  font-family: var(--ds-t-mono-inline-font-family, var(--font-mono));
+  color: var(--ds-t-mono-inline-color, var(--text-primary));
+  background-color: var(--ds-t-mono-inline-bg-color, var(--surface-secondary));
   padding: 1px var(--space-1);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-t-mono-inline-radius, var(--ds-radius-inner));
 }
 
 .t-mono-block {
-  font: var(--font-weight-regular) var(--font-size-mono)/var(--line-height-loose) var(--font-mono);
-  background: var(--surface-secondary);
-  border: var(--border-width-default) solid var(--border-divider);
-  border-radius: var(--radius-md);
+  font-weight: var(--ds-t-mono-block-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-mono-block-font-size, var(--font-size-mono));
+  line-height: var(--ds-t-mono-block-line-height, var(--line-height-loose));
+  font-family: var(--ds-t-mono-block-font-family, var(--font-mono));
+  background-color: var(--ds-t-mono-block-bg-color, var(--surface-secondary));
+  border-width: var(--border-width-default);
+  border-style: solid;
+  border-color: var(--ds-t-mono-block-border-color, var(--border-divider));
+  border-radius: var(--ds-t-mono-block-radius, var(--ds-radius-control));
   padding: var(--space-3) var(--space-4);
   max-width: 100%;
   overflow-x: auto;
@@ -1571,8 +1690,7 @@ h1, h2, h3, h4, h5, h6 {
    can apply it to inline anchors inside <p> text without disrupting line
    flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
 .link {
-  /* Public --ds-link-* are read with fallbacks, never declared — consumer
-     overrides inherit in. Hover/active derive from the resolved color. */
+  /* Hover and active derive from the resolved color. */
   --_link-color: var(--ds-link-color, var(--text-link));
   --_link-color-hover: var(--ds-link-color-hover, color-mix(in srgb, var(--_link-color) 80%, black));
   --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
@@ -1609,6 +1727,28 @@ h1, h2, h3, h4, h5, h6 {
   color: currentcolor;
   flex-shrink: 0;
 }
+.link {
+  /* ds-button warns `variant="text"` off in favour of this class, and an action
+     that is not navigation has to be a <button> — which arrives with UA chrome
+     none of the rules above touch (measured: 13.3px inside 14px text, plus padding
+     and an outset border). `:where()` keeps the reset at this class's specificity,
+     so a consumer's rule still wins on source order.
+
+     Absences are deliberate and invisible in code: no `font-weight`, so `.quiet` /
+     `.standalone` keep deciding it, and no `display`, because inline-block is what
+     lays a standalone button out predictably. `appearance` is the reverse — no
+     effect in Chrome, needed where native chrome outlives a zeroed border. */
+}
+.link:where(button) {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: inherit;
+}
 .link.quiet {
   color: var(--text-secondary);
   /* Pull the underline down to match the muted text — the base rule sets
@@ -1639,6 +1779,54 @@ h1, h2, h3, h4, h5, h6 {
   font-size: var(--font-size-l);
 }
 
+:where(:focus-visible) {
+  outline: none;
+  box-shadow: var(--ds-control-focus-shadow);
+}
+
+:root[data-focus=ring] {
+  --ds-field-focus-shadow: var(--focus-ring);
+  --ds-field-focus-shadow-error: var(--focus-ring-error);
+}
+
+:root[data-focus=field] {
+  --ds-control-focus-shadow: var(--focus-field);
+  --ds-control-focus-shadow-error: var(--focus-field-error);
+}
+
+:root[data-focus=edge] {
+  --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+  --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
+  --ds-control-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+  --ds-control-focus-shadow-error: 0 0 0 var(--border-width-default)
+    var(--error);
+}
+
+[data-focus=inset] {
+  --ds-field-focus-shadow: var(--focus-ring-inset);
+  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
+  --ds-control-focus-shadow: var(--focus-ring-inset);
+  --ds-control-focus-shadow-error: var(--focus-ring-inset-error);
+}
+
+:root[data-focus=outline] {
+  --ds-field-focus-shadow: none;
+  --ds-field-focus-shadow-error: none;
+  --ds-control-focus-shadow: none;
+  --ds-control-focus-shadow-error: none;
+}
+
+:root[data-focus=outline] :where(:focus-visible) {
+  outline: var(--border-width-strong) solid var(--primary);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@media (forced-colors: active) {
+  :where(:focus-visible) {
+    outline: var(--border-width-strong) solid CanvasText;
+    outline-offset: var(--focus-ring-offset);
+  }
+}
 [ds-color=secondary] {
   --accent: var(--secondary);
   --accent-hover: var(--secondary-hover);
@@ -1880,11 +2068,30 @@ html {
   flex-shrink: 0;
 }
 
+.ds-dropdown-panel {
+  /* The selected row used to paint straight from the theme roles, so a brand that
+     wanted a different selected treatment had to RETARGET --primary-* inside this
+     panel — and then track which other content in it read the same role. Named
+     hooks instead; the defaults are those roles, so nothing moves and a retuned
+     palette still flows through. Panel-level, not per-component: one partial
+     paints the rows for select, autocomplete and multi-select alike. */
+  --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
+  --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
+  --_option-selected-bg-color-hover: var(--ds-option-selected-bg-color-hover, var(--primary-muted));
+  --_option-check-color: var(--ds-option-check-color, var(--primary));
+  /* Panel-level for the same reason as the option hooks above: retuning ONE
+     picker's corner is not a thing a design system should encourage, but moving
+     every panel — modal, popover, date picker — to reach the dropdowns is too
+     blunt. This is the middle lever, and `--ds-radius-panel` stays its default so
+     an untouched theme is unchanged. 0.9.0's notes promised a per-component
+     `--ds-select-panel-radius`, which never existed; this is what they meant. */
+  --_dropdown-panel-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
+}
 .ds-dropdown-panel .dropdown-panel {
   width: 100%;
   background: var(--surface-overlay);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-md);
+  border-radius: var(--_dropdown-panel-radius);
   box-shadow: var(--shadow-popover);
   padding: var(--space-1);
   max-height: 320px;
@@ -1935,7 +2142,7 @@ html {
   font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   text-align: left;
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
@@ -1946,46 +2153,171 @@ html {
 .ds-dropdown-panel .option .option-label {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
+  /* `clip` with a margin, not `hidden`: an ellipsis box needs a non-`visible`
+     overflow, and where the line box is tighter than the glyph box that overflow
+     eats the glyph. Mulish measures 1.257em, so --line-height-flat (1) and -tight
+     (1.1) are both under it and shave EVERY label, not only the ones with
+     descenders (MBP-245). `text-overflow` reads any non-`visible` overflow, so the
+     ellipsis still applies under `clip`. */
+  overflow: clip;
+  overflow-clip-margin: var(--space-1);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .ds-dropdown-panel .option .option-check {
-  color: var(--primary);
+  color: var(--_option-check-color);
   flex: 0 0 auto;
 }
-.ds-dropdown-panel .option:hover:not(.is-disabled), .ds-dropdown-panel .option.is-active:not(.is-disabled) {
+.ds-dropdown-panel .option:hover:not(.is-disabled, .is-selected), .ds-dropdown-panel .option.is-active:not(.is-disabled, .is-selected) {
   background: var(--surface-secondary);
+}
+.ds-dropdown-panel .option:active:not(.is-disabled) {
+  background: var(--surface-muted);
 }
 .ds-dropdown-panel .option:focus-visible {
   outline: none;
   box-shadow: var(--ds-control-focus-shadow);
 }
 .ds-dropdown-panel .option.is-selected {
-  background: var(--primary-subtitle);
-  color: var(--primary-strong);
+  background: var(--_option-selected-bg-color);
+  color: var(--_option-selected-label-color);
 }
 .ds-dropdown-panel .option.is-selected .option-icon {
-  color: var(--primary-strong);
+  color: var(--_option-selected-label-color);
+}
+.ds-dropdown-panel .option.is-selected:hover:not(.is-disabled), .ds-dropdown-panel .option.is-selected.is-active:not(.is-disabled) {
+  background: var(--_option-selected-bg-color-hover);
+}
+.ds-dropdown-panel .option.is-selected:active:not(.is-disabled) {
+  background: var(--_option-selected-bg-color);
 }
 .ds-dropdown-panel .option.is-disabled {
   color: var(--text-disabled);
   cursor: not-allowed;
-  opacity: var(--opacity-muted);
 }
 
 .cdk-global-overlay-wrapper:has(> .ds-toast-panel) {
   z-index: var(--layer-toast);
 }
 
-.cdk-overlay-pane.ds-overlay-pane > * {
-  animation: ds-overlay-in var(--duration-fast) var(--ease-decelerate);
-}
-
-@keyframes ds-overlay-in {
+/* Opacity only — the calmest entrance. */
+@keyframes ds-fade-in {
   from {
     opacity: 0;
-    transform: translateY(-4px);
+  }
+}
+/* Grows into place from a micro-scale — reads --_ds-enter-scale, and the
+   surface's transform-origin decides what it grows out of. */
+@keyframes ds-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(var(--_ds-enter-scale, 0.96));
+  }
+}
+/* Travels a short distance while fading — reads --_ds-enter-x / --_ds-enter-y. */
+@keyframes ds-slide-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--_ds-enter-x, 0), var(--_ds-enter-y, 0));
+  }
+}
+/* Edge-anchored travel with NO fade, for panels that slide fully on-screen
+   (drawer, bottom-sheet) where a fade would read as a flicker. */
+@keyframes ds-slide-edge-in {
+  from {
+    transform: translate(var(--_ds-enter-x, 0), var(--_ds-enter-y, 0));
+  }
+}
+/* ── Exits ───────────────────────────────────────────────────────────────── */
+/* Opacity only — the calmest exit, and what a scrim wants. */
+@keyframes ds-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+/* Shrinks away as it fades — the mirror of ds-scale-in. */
+@keyframes ds-scale-out {
+  to {
+    opacity: 0;
+    transform: scale(var(--_ds-exit-scale, var(--_ds-enter-scale, 0.96)));
+  }
+}
+/* Travels a short distance while fading — the mirror of ds-slide-in. */
+@keyframes ds-slide-out {
+  to {
+    opacity: 0;
+    transform: translate(var(--_ds-exit-x, var(--_ds-enter-x, 0)), var(--_ds-exit-y, var(--_ds-enter-y, 0)));
+  }
+}
+/* Edge-anchored travel with NO fade, for panels that slide fully off-screen
+   (drawer, bottom-sheet) where a fade would read as a flicker. */
+@keyframes ds-slide-edge-out {
+  to {
+    transform: translate(var(--_ds-exit-x, var(--_ds-enter-x, 0)), var(--_ds-exit-y, var(--_ds-enter-y, 0)));
+  }
+}
+.cdk-overlay-pane.ds-overlay-pane {
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
+  --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
+  --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
+  --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
+  --_ds-enter-scale: var(--ds-overlay-enter-scale, 0.96);
+  --_overlay-leave-duration: var(--ds-overlay-leave-duration, var(--ds-motion-exit-duration));
+  --_overlay-leave-easing: var(--ds-overlay-leave-easing, var(--ds-motion-exit-easing));
+  --_ds-enter-x: 0px;
+  --_ds-enter-y: calc(-1 * var(--_overlay-enter-offset));
+  --_overlay-enter-origin: top center;
+}
+.cdk-overlay-pane.ds-overlay-pane[data-ds-placement=top] {
+  --_ds-enter-y: var(--_overlay-enter-offset);
+  --_overlay-enter-origin: bottom center;
+}
+.cdk-overlay-pane.ds-overlay-pane[data-ds-placement=left] {
+  --_ds-enter-x: var(--_overlay-enter-offset);
+  --_ds-enter-y: 0px;
+  --_overlay-enter-origin: center right;
+}
+.cdk-overlay-pane.ds-overlay-pane[data-ds-placement=right] {
+  --_ds-enter-x: calc(-1 * var(--_overlay-enter-offset));
+  --_ds-enter-y: 0px;
+  --_overlay-enter-origin: center left;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cdk-overlay-pane.ds-overlay-pane {
+    --_overlay-enter-duration: 0ms;
+  }
+}
+.cdk-overlay-pane.ds-overlay-pane > * {
+  animation-name: var(--_overlay-enter-keyframes);
+  animation-duration: var(--_overlay-enter-duration);
+  animation-timing-function: var(--_overlay-enter-easing);
+  transform-origin: var(--_overlay-enter-origin);
+}
+.cdk-overlay-pane.ds-overlay-pane {
+  /* Leave, on an AMBIENT DISMISS only — Escape, a press outside, a scroll —
+     which `disposeWithLeave` marks by adding `ds-leaving`. Picking an option
+     still closes instantly: a fade on a deliberate choice reads as the panel
+     lagging behind it, which is why the old unconditional leave was cut. Opacity
+     only, no travel: a dismissal has nowhere to travel to, and movement would
+     re-add exactly the lag this avoids. Reduced motion zeroes the duration at
+     `:root`, so the animation still runs and `animationend` still tears down. */
+}
+.cdk-overlay-pane.ds-overlay-pane.ds-leaving {
+  /* A fading panel must not swallow the click aimed at what is behind it. */
+  pointer-events: none;
+}
+.cdk-overlay-pane.ds-overlay-pane.ds-leaving > * {
+  animation-name: ds-overlay-out;
+  animation-duration: var(--_overlay-leave-duration);
+  animation-timing-function: var(--_overlay-leave-easing);
+  animation-fill-mode: forwards;
+}
+
+/* Global, like the enter presets: a keyframe declared in a component stylesheet
+   is renamed by emulated encapsulation. */
+@keyframes ds-overlay-out {
+  to {
+    opacity: 0;
   }
 }
 @property --skeleton-shimmer-x {

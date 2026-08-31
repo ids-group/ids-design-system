@@ -2,28 +2,12 @@
 
 :host {
   display: block;
-  height: 100vh;
-  height: 100svh;
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr);
-  grid-template-areas: 'bar' 'main';
-  height: 100vh;
-  height: 100svh;
-
-  @include bp.up(lg) {
-    grid-template-columns: 280px minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr);
-    grid-template-areas: 'side main';
-    transition: grid-template-columns var(--duration-fast) var(--ease-standard);
-  }
-}
-
+// The topbar is mobile-only here. The layout always renders its `[topbar]` slot,
+// but that grid row is `auto`, so hiding the only child collapses it to zero and
+// the desktop layout is unchanged — no layout input needed for a bar-less desktop.
 .mob-bar {
-  grid-area: bar;
   min-width: 0;
 
   @include bp.up(lg) { display: none; }
@@ -35,22 +19,15 @@
   gap: var(--space-2);
 }
 
+// Width only: the layout's rail owns the frame, the overlay behaviour and its own
+// vertical scrolling. Below lg the rail sizes itself as an overlay, so a fixed
+// width here would fight it.
 .side {
-  display: none;
-
   @include bp.up(lg) {
-    display: block;
-    grid-area: side;
-    height: 100%;
-    overflow-y: auto;
-    min-height: 0;
-  }
-}
+    width: 280px;
+    min-width: 0;
 
-.main {
-  grid-area: main;
-  position: relative;
-  overflow-y: auto;
-  min-height: 0;
-  min-width: 0;
+    // Opening only; closing is timed on the collapsed rule in styles.scss.
+    transition: width var(--duration-base) var(--ease-standard);
+  }
 }

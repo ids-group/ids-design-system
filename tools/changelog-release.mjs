@@ -3,7 +3,7 @@
 // Unreleased section with the new version + local date, open a fresh Unreleased,
 // and stage CHANGELOG.md so it lands in the release commit and tag.
 import { execSync } from 'node:child_process';
-import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync , renameSync } from 'node:fs';
 
 const version = process.env.npm_package_version;
 if (!version) {
@@ -55,4 +55,19 @@ if (existsSync(draft)) {
   rmSync(draft);
   execSync(`git add ${draft} ${target}`);
   console.log(`changelog: promoted ${draft} -> ${target}.`);
+}
+
+// The prose guide beside the manifest has to move with it. Missed on 0.9.0: the JSON
+// was promoted and `migrations/unreleased/` was not, so that release's guide sat where
+// the NEXT release would write over it — and the manifest pointed at the same doomed path.
+const draftGuide = 'migrations/unreleased';
+if (existsSync(draftGuide)) {
+  const guideTarget = `migrations/${version}`;
+  if (existsSync(guideTarget)) {
+    console.error(`changelog: ${guideTarget}/ already exists — refusing to overwrite the guide.`);
+    process.exit(1);
+  }
+  renameSync(draftGuide, guideTarget);
+  execSync(`git add ${draftGuide} ${guideTarget}`);
+  console.log(`changelog: promoted ${draftGuide}/ -> ${guideTarget}/.`);
 }

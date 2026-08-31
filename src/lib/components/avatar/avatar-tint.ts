@@ -5,72 +5,48 @@ export interface AvatarTintOptions {
    *  pink brand hue and reds. An arc crossing 0° must be given as two arcs.
    *  Default: none (full 0–360 range). */
   avoidHues?: readonly (readonly [number, number])[];
-  /** OKLCH lightness percentage. Default 62. */
+  /** HSL lightness percentage. Default 62. */
   lightness?: number;
-  /** OKLCH chroma. Default 0.14. */
-  chroma?: number;
-  /** Text colour paired with the background. Default: auto — black or white,
-   *  whichever reads best on the derived background (WCAG luminance). */
+  /** HSL saturation percentage. Default 50. */
+  saturation?: number;
+  /** Text colour paired with the background. Default `#fff`. */
   foreground?: string;
 }
 
 /** Deterministic `{ bg, fg }` tint for a seed string (an email, a name), so the
- *  same person always gets the same colour. The background is an OKLCH colour
- *  (perceptually even lightness across hues); the text defaults to whichever of
- *  black/white reads best on it. Pass to `ds-avatar`'s `tint`, or let the
- *  component derive it via its `seed` input. */
+ *  same person always gets the same colour.
+ *
+ *  The background is `hsl(H 50% 62%)` and the text is always WHITE. HSL lightness is
+ *  not perceptually even, so the set reads bright — at the cost of contrast: white on
+ *  the lighter hues measures as little as 1.65:1, under the 4.5:1 WCAG AA asks of
+ *  text. Where the initials are the only identifier, pass your own `lightness`
+ *  (about 50) and keep white, which measures 5.3-6.6:1.
+ *
+ *  Pass to `ds-avatar`'s `tint`, or let the component derive it via `seed`. */
 export function avatarTint(
   seed: string,
   options?: AvatarTintOptions,
 ): { bg: string; fg: string } {
   const lightness = options?.lightness ?? 62;
-  const chroma = options?.chroma ?? 0.14;
+  const saturation = options?.saturation ?? 50;
   const hue = pickHue(hashSeed(seed), options?.avoidHues ?? []);
-  const foreground =
-    options?.foreground ??
-    (relativeLuminance(lightness / 100, chroma, hue) > 0.179 ? '#000' : '#fff');
 
-  return { bg: `oklch(${lightness}% ${chroma} ${hue})`, fg: foreground };
+  return {
+    bg: `hsl(${hue} ${saturation}% ${lightness}%)`,
+    fg: options?.foreground ?? '#fff',
+  };
 }
 
-// Relative luminance of an oklch(L C H) colour (L as 0–1) via OKLab → linear
-// sRGB, for the WCAG black-vs-white text crossover (~0.179).
-function relativeLuminance(
-  lightness: number,
-  chroma: number,
-  hue: number,
-): number {
-  const hueRadians = (hue * Math.PI) / 180;
-  const aAxis = chroma * Math.cos(hueRadians);
-  const bAxis = chroma * Math.sin(hueRadians);
-  const longCubeRoot = lightness + 0.3963377774 * aAxis + 0.2158037573 * bAxis;
-  const mediumCubeRoot =
-    lightness - 0.1055613458 * aAxis - 0.0638541728 * bAxis;
-  const shortCubeRoot = lightness - 0.0894841775 * aAxis - 1.291485548 * bAxis;
-  const long = longCubeRoot ** 3;
-  const medium = mediumCubeRoot ** 3;
-  const short = shortCubeRoot ** 3;
-  const red = clamp01(
-    4.0767416621 * long - 3.3077115913 * medium + 0.2309699292 * short,
-  );
-  const green = clamp01(
-    -1.2684380046 * long + 2.6097574011 * medium - 0.3413193965 * short,
-  );
-  const blue = clamp01(
-    -0.0041960863 * long - 0.7034186147 * medium + 1.707614701 * short,
-  );
-
-  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-}
-
-function clamp01(value: number): number {
-  return Math.min(1, Math.max(0, value));
-}
-
-/** Uppercased initials from the first two words. Accepts `(first, last)` parts
- *  or a single full name (`initialsFrom('Ada Lovelace')` → `AL`); a lone name
- *  gives one letter, `?` when empty. More than two words is rare — only the
- *  first two are used. */
+/** Uppercased initials from the first two words. Accepts `(first, last)` parts or
+ *  a single full name (`initialsFrom('Ada Lovelace')` → `AL`); a lone name gives
+ *  one letter, `?` when empty.
+ *
+ *  A deliberately naive Latin-script guess, and the library's ONLY naming rule.
+ *  Reading a name is a cultural convention, not a UI decision — "María José
+ *  García López" wants MG from a Spanish reader and "Blue Cross Blue Shield" wants
+ *  BC from an insurer — so an app with a real rule passes its own through
+ *  `DS_CONFIG.avatar.initials` or `ds-avatar`'s `initialsRule` rather than asking
+ *  this to grow modes it cannot get right. */
 export function initialsFrom(first?: string, last?: string): string {
   const words =
     last === undefined

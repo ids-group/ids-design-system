@@ -17,7 +17,6 @@
     SVG paths from <code class="t-mono-inline">ICONS</code>.
   </span>
 
-  <!-- ============================================================ Size scale -->
   <h3 class="block-title t-h4">
     Size scale
   </h3>
@@ -33,7 +32,7 @@
     @for (s of sizes; track s.name) {
       <div class="size-cell">
         <div
-          class="size-cell__stage"
+          class="size-cell-stage"
           [style.height.px]="32"
         >
           <ds-icon
@@ -42,7 +41,7 @@
           />
         </div>
 
-        <code class="t-mono-inline size-cell__tok">
+        <code class="t-mono-inline size-cell-tok">
           {{ s.token }}
         </code>
 
@@ -53,7 +52,6 @@
     }
   </div>
 
-  <!-- ============================================================ Full gallery -->
   <h3 class="block-title t-h4">
     Library ({{ names.length }})
   </h3>
@@ -71,14 +69,13 @@
           [size]="20"
         />
 
-        <code class="t-mono-inline icon-cell__name">
+        <code class="t-mono-inline icon-cell-name">
           {{ name }}
         </code>
       </div>
     }
   </div>
 
-  <!-- ============================================================ Colour roles -->
   <h3 class="block-title t-h4">
     Colour roles
   </h3>
@@ -98,7 +95,7 @@
         [size]="20"
       />
 
-      <code class="t-mono-inline role-cell__tok">
+      <code class="t-mono-inline role-cell-tok">
         --icon-strong
       </code>
     </div>
@@ -112,7 +109,7 @@
         [size]="20"
       />
 
-      <code class="t-mono-inline role-cell__tok">
+      <code class="t-mono-inline role-cell-tok">
         --icon-default
       </code>
     </div>
@@ -126,7 +123,7 @@
         [size]="20"
       />
 
-      <code class="t-mono-inline role-cell__tok">
+      <code class="t-mono-inline role-cell-tok">
         --icon-muted
       </code>
     </div>
@@ -140,7 +137,7 @@
         [size]="20"
       />
 
-      <code class="t-mono-inline role-cell__tok">
+      <code class="t-mono-inline role-cell-tok">
         --icon-on-primary
       </code>
     </div>

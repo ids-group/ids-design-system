@@ -13,5 +13,6 @@ import type { ContainerSize } from './layout.types';
 })
 export class ContainerComponent {
   // Max content width; defaults to the global content cap (--col-cap-content).
+  /** Max content width before the container centres itself. `full` removes the cap. */
   readonly size = input<ContainerSize>('xl');
 }

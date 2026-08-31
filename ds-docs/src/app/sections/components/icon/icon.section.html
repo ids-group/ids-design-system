@@ -15,7 +15,6 @@
     scale.
   </span>
 
-  <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
     Sizes
   </h3>
@@ -31,7 +30,7 @@
     @for (size of sizes; track size.px) {
       <div class="size-cell">
         <div
-          class="size-cell__stage"
+          class="size-cell-stage"
           [style.height.px]="32"
         >
           <ds-icon
@@ -40,7 +39,7 @@
           />
         </div>
 
-        <code class="t-mono-inline size-cell__tok">
+        <code class="t-mono-inline size-cell-tok">
           {{ size.token }}
         </code>
 
@@ -51,7 +50,6 @@
     }
   </div>
 
-  <!-- ============================================================ Stroke weight -->
   <h3 class="block-title t-h4">
     Stroke weight
   </h3>
@@ -71,7 +69,7 @@
         class="stroke-row"
         [class.is-default]="s === 1.75"
       >
-        <div class="stroke-row__label">
+        <div class="stroke-row-label">
           <code class="t-mono-inline">
             stroke {{ s }}
           </code>
@@ -84,7 +82,7 @@
         </div>
 
         @for (px of compareSizes; track px) {
-          <div class="stroke-row__group">
+          <div class="stroke-row-group">
             @for (name of compareSamples; track name) {
               <ds-icon
                 [name]="name"
@@ -102,7 +100,6 @@
     }
   </div>
 
-  <!-- ============================================================ Sample names -->
   <h3 class="block-title t-h4">
     Sample names
   </h3>
@@ -111,8 +108,7 @@
     The library is broader; these are the most common app glyphs. See
     <a
       class="link"
-      routerLink="/foundations"
-      fragment="icons"
+      routerLink="/foundations/icons"
     >
       Foundations · Icons
     </a>
@@ -127,7 +123,7 @@
           [size]="20"
         />
 
-        <code class="t-mono-inline sample-cell__name">
+        <code class="t-mono-inline sample-cell-name">
           {{ name }}
         </code>
       </div>

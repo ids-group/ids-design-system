@@ -1,14 +1,8 @@
-import {
-  Component,
-  DestroyRef,
-  ViewEncapsulation,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {
+  AppLayoutComponent,
   ButtonComponent,
-  DrawerComponent,
   IconButtonComponent,
   TopBarComponent,
 } from 'ds';
@@ -22,8 +16,8 @@ import { TweaksPanelComponent } from './tweaks-panel/tweaks-panel.component';
     RouterOutlet,
     SidebarComponent,
     TweaksPanelComponent,
+    AppLayoutComponent,
     TopBarComponent,
-    DrawerComponent,
     IconButtonComponent,
     ButtonComponent,
   ],
@@ -33,18 +27,4 @@ import { TweaksPanelComponent } from './tweaks-panel/tweaks-panel.component';
 })
 export class App {
   protected readonly navOpen = signal(false);
-
-  constructor() {
-    // Close the nav drawer when crossing up into the desktop layout (--bp-lg).
-    const desktop = window.matchMedia('(min-width: 1024px)'); /* --bp-lg */
-    const onChange = (): void => {
-      if (desktop.matches) {
-        this.navOpen.set(false);
-      }
-    };
-    desktop.addEventListener('change', onChange);
-    inject(DestroyRef).onDestroy(() =>
-      desktop.removeEventListener('change', onChange),
-    );
-  }
 }

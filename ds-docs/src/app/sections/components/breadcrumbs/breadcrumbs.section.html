@@ -10,7 +10,6 @@
     collapse to <code class="t-mono-inline">…</code> before the leaf clips.
   </span>
 
-  <!-- ============================================================ Default -->
   <h3 class="block-title t-h4">
     Default
   </h3>
@@ -23,30 +22,43 @@
     <ds-breadcrumbs [items]="defaultTrail" />
   </div>
 
-  <!-- ============================================================ Long trail with ellipsis collapse -->
   <h3 class="block-title t-h4">
     Long trail · ellipsis collapse
   </h3>
 
   <p class="block-desc t-s">
-    Six original levels collapsed to root · … · parent · leaf. The middle "…" is
-    a static glyph; the live affordance would be a menu trigger that re-expands.
+    Six levels, capped with
+    <code class="t-mono-inline">
+      [maxItems]="4"
+    </code> — the first and the LAST
+    always survive, and the collapsed crumb says how many it stands for. Worth
+    setting on any trail that can get deep: the row is
+    <code class="t-mono-inline">
+      nowrap
+    </code> with
+    <code class="t-mono-inline">
+      overflow: hidden
+    </code>, so an uncapped
+    overlong trail is clipped from the END — the current page, the one crumb the
+    reader needs most.
   </p>
 
   <div class="stage">
-    <ds-breadcrumbs [items]="longTrail" />
+    <ds-breadcrumbs
+      [items]="longTrail"
+      [maxItems]="4"
+    />
   </div>
 
   <div class="legend t-s">
-    <span class="legend__cell">
-      <span class="legend__dim">
+    <span class="legend-cell">
+      <span class="legend-dim">
         Full path:
       </span> Workspace · Clients · Acme
       Co. · Policies · 2026 Cycle · P-12894
     </span>
   </div>
 
-  <!-- ============================================================ Single level -->
   <h3 class="block-title t-h4">
     Single level
   </h3>
@@ -60,7 +72,6 @@
     <ds-breadcrumbs [items]="singleLevel" />
   </div>
 
-  <!-- ============================================================ Custom separator -->
   <h3 class="block-title t-h4">
     Custom separator
   </h3>
@@ -83,7 +94,6 @@
     />
   </div>
 
-  <!-- ============================================================ Non-clickable -->
   <h3 class="block-title t-h4">
     Non-clickable
   </h3>
@@ -103,7 +113,6 @@
     />
   </div>
 
-  <!-- ============================================================ Service-driven -->
   <h3 class="block-title t-h4">
     Service-driven (route-aware apps)
   </h3>
@@ -116,9 +125,9 @@
     crumbs from route data or an effect when the page model resolves.
   </p>
 
-  <pre class="snippet t-mono">
-    <code>
-      {{ '// in a page component or route effect' }}
+  <pre
+    class="snippet t-mono"
+  ><code>{{ '// in a page component or route effect' }}
 import {{ '{' }} BreadcrumbsService {{ '}' }} from 'ds';
 private readonly crumbs = inject(BreadcrumbsService);
 this.crumbs.set([
@@ -128,7 +137,5 @@ this.crumbs.set([
 ]);
 
 {{ '// template — items input omitted, reads from service' }}
-&lt;ds-breadcrumbs /&gt;
-    </code>
-  </pre>
+&lt;ds-breadcrumbs /&gt;</code></pre>
 </docs-section>

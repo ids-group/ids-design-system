@@ -48,10 +48,22 @@ Two verification modes:
   `note` describes NO consumer action (purely visual/informational), return `migrated: true` with
   `note: "no consumer action required"`. Always set `confidence` (high/medium/low) — the orchestrator
   escalates low-confidence and failed items.
+- **`verify` is the assertion you must test, and its absence of a symbol proves nothing.** When the
+  item carries a `verify` sentence, that sentence IS the check: search the surface it names and judge
+  it directly (*"every place that turns (sortChange) into a query gates on the direction, not the
+  key"* → read every such place and look). A behavioural item has no old identifier whose
+  disappearance means anything, so "grep for `old` came back clean" is not evidence — reporting
+  `migrated: true` on that basis is exactly how 0.7.1's sortKey item passed three times in one
+  consumer while three screens stayed broken. No `verify` on the item and no way to construct one
+  from the `note` → `confidence: "low"`, and say in `note` that the item is unverifiable as written.
 - **Not-applicable items** (the finder reported zero hits, so nothing was applied): your grep is the
   independent confirmation of that verdict. Clean grep → `migrated: true`,
   `note: "not applicable — zero usages"`. Usages found → `migrated: false` with them in `remaining`
   (the finder missed them; the orchestrator re-enters the item into the pipeline).
+  **This shortcut is for MECHANICAL items only.** On a behavioural item whose surface is not the
+  template, zero hits means the item's shapes did not match this consumer's spelling — go and test
+  the `verify` assertion over that surface yourself before agreeing it does not apply, and search the
+  consumer's own vocabulary (their store, their query builder, their theme) rather than our API name.
 - **Verifying against the real API:** don't rely on the `note` alone — verify the edit against V's
   actual surface: the DS sources checkout at the release tag (path provided in your prompt; real
   component sources) and/or the installed package (`node_modules/@ids-group-ltd/ids-design-system/`:

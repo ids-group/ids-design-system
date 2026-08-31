@@ -7,7 +7,7 @@
       max-width: 720px;
     }
     .states--cols-1 { grid-template-columns: 1fr; }
-    .state-cell__stage {
+    .state-cell-stage {
       align-items: stretch; justify-content: stretch;
       min-height: 88px;
 
@@ -36,10 +36,10 @@
         border-bottom: var(--border-width-default) solid var(--border-divider);
       }
     }
-    .panel__title {
+    .panel-title {
       color: var(--text-tertiary);
     }
-    .panel__row {
+    .panel-row {
       display: flex; align-items: center; justify-content: space-between;
       padding: var(--space-2) 0;
       border-top: var(--border-width-default) solid var(--border-divider);

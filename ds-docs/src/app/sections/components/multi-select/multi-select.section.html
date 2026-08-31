@@ -5,12 +5,14 @@
 >
   <span lede>
     Chip-based multi-value selector with search filtering, keyboard navigation,
-    and optional overflow collapse.
+    and optional overflow collapse. For a set too large to scan — where typing
+    is how you narrow it — reach for autocomplete instead; this one shows the
+    options as a checkbox list, so a reader sees the whole choice at once and
+    what is not selected.
   </span>
 
   <docs-nonmodal-note />
 
-  <!-- ============================================================ Basic usage -->
   <h3 class="block-title t-h4">
     Basic usage
   </h3>
@@ -28,8 +30,8 @@
       <ds-multi-select
         placeholder="Add tags…"
         ariaLabel="Tags"
+        maxVisibleChips="all"
         [options]="tagOptions"
-        [maxVisibleChips]="null"
         [selectAll]="true"
         [(value)]="tags"
       />
@@ -40,14 +42,22 @@
     </p>
   </div>
 
-  <!-- ============================================================ Overflow collapse -->
   <h3 class="block-title t-h4">
     Overflow collapse
   </h3>
 
   <p class="block-desc t-s">
-    Set <code>[maxVisibleChips]</code> to a positive number to collapse extra
-    chips into a "+N more" pill.
+    <code>
+      maxVisibleChips
+    </code> defaults to <code>"fit"</code>: the trigger
+    keeps as many chips as it is wide and collapses the rest into a "+N more"
+    pill, re-splitting on resize. A <strong>number</strong> is a CEILING — at
+    most that many, and fewer when the trigger is too narrow to hold them beside
+    the count and still fit what comes after; it measures for the same reason
+    the default does. Only <code>maxVisibleChips="all"</code> skips measuring:
+    it shows every chip and lets the trigger grow a line per selection. Same
+    input and same default on <code> ds-autocomplete </code>, so the two
+    multi-value pickers do not diverge.
   </p>
 
   <div class="demo-panel">
@@ -66,7 +76,304 @@
     </p>
   </div>
 
-  <!-- ============================================================ Helper / error text -->
+  <div class="demo-panel">
+    <div class="ms-resizable">
+      <ds-multi-select
+        placeholder="Add tags…"
+        ariaLabel="Tags fitted to width"
+        maxVisibleChips="fit"
+        [options]="tagOptions"
+        [(value)]="fitted"
+      />
+    </div>
+
+    <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
+      Drag the handle — the split moves with the width.
+    </p>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Labels in the trigger, and per-group select-all
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      triggerDisplay="labels"
+    </code> keeps the
+    compact footprint but names what is selected instead of counting it, cut to
+    the width with the rest behind &laquo;+N&raquo; — the same measurement the
+    chips use. <code class="t-mono-inline">selectAll</code> takes
+    <code class="t-mono-inline">
+      'group'
+    </code> or
+    <code class="t-mono-inline">
+      'both'
+    </code> to head each group with its own
+    row.
+  </p>
+
+  <div class="demo-panel">
+    <div style="display: flex; gap: var(--space-3); align-items: flex-start">
+      <ds-multi-select
+        data-testid="ms-labels"
+        triggerDisplay="labels"
+        label="Labels"
+        width="content"
+        [options]="labelOptions"
+        [(value)]="compactLabels"
+      />
+
+      <ds-multi-select
+        data-testid="ms-group-all"
+        placeholder="Assignees…"
+        ariaLabel="Assignees with per-group select all"
+        selectAll="both"
+        [options]="assigneeItems"
+        [(value)]="assignees"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Hiding the filter row
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      searchable
+    </code> takes
+    <code class="t-mono-inline">
+      true
+    </code> (always, the default),
+    <code class="t-mono-inline">
+      false
+    </code> (never), or a
+    <strong>
+      number
+    </strong> — the threshold at which the row appears, stated
+    where it applies. Set
+    <code class="t-mono-inline">
+      DS_CONFIG.picker.searchable
+    </code> to give the
+    whole app one threshold and override it per panel.
+  </p>
+
+  <p class="block-desc t-s">
+    Hiding the row moves the panel's keyboard model onto the trigger: arrows,
+    Enter, Escape and
+    <code class="t-mono-inline">
+      aria-activedescendant
+    </code> belong to the
+    filter input when it is there.
+  </p>
+
+  <div class="demo-panel">
+    <div style="display: flex; gap: var(--space-3); align-items: flex-start">
+      <ds-multi-select
+        data-testid="ms-no-search"
+        placeholder="Priority…"
+        ariaLabel="Priority, no filter row"
+        [searchable]="false"
+        [options]="labelOptions"
+        [(value)]="noSearchValue"
+      />
+
+      <ds-multi-select
+        data-testid="ms-threshold"
+        placeholder="Tags…"
+        ariaLabel="Tags, filter row past four options"
+        [searchable]="4"
+        [options]="tagOptions"
+        [(value)]="thresholdValue"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Compact trigger
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      triggerDisplay="count"
+    </code> swaps the chip
+    field for a caption and a selected-count badge at intrinsic width — a fixed
+    footprint for a filter toolbar, where a field that grows with the selection
+    does not fit. A projected
+    <code class="t-mono-inline">
+      dsPickerTrigger
+    </code> WINS over it, and
+    <code class="t-mono-inline">
+      triggerDisplay
+    </code> is then not read at all.
+  </p>
+
+  <div class="demo-panel">
+    <div style="display: flex; gap: var(--space-3); align-items: flex-start">
+      <ds-multi-select
+        data-testid="ms-compact"
+        triggerDisplay="count"
+        label="Labels"
+        width="content"
+        [options]="labelOptions"
+        [(value)]="compactLabels"
+      />
+
+      <ds-multi-select
+        data-testid="ms-custom-trigger"
+        width="content"
+        [options]="labelOptions"
+        [(value)]="customLabels"
+      >
+        <ng-template
+          let-count="count"
+          dsPickerTrigger
+        >
+          <span
+            class="demo-dot"
+            style="background: var(--primary)"
+          >
+          </span>
+          Custom
+          @if (count) {
+            · {{ count }}
+          }
+        </ng-template>
+      </ds-multi-select>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Custom option and chip content
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsOptionTemplate
+    </code> fills an option row's
+    label area, <code class="t-mono-inline">dsChipTemplate</code> fills the
+    selected chip — so a visual that identifies the option does not vanish the
+    moment it is picked. Both are honoured by
+    <code class="t-mono-inline">
+      ds-select
+    </code> (rows only),
+    <code class="t-mono-inline">
+      ds-multi-select
+    </code> and
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code>.
+  </p>
+
+  <p class="block-desc t-s">
+    The row and the chip stay library-owned:
+    <code class="t-mono-inline">
+      role="option"
+    </code>,
+    <code class="t-mono-inline">
+      aria-selected
+    </code>, the checkbox, the check
+    glyph and the chip's close button are not projected.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        data-testid="ms-templates"
+        placeholder="Labels…"
+        ariaLabel="Labels with colour dots"
+        [options]="labelOptions"
+        [(value)]="labels"
+      >
+        <ng-template
+          let-option
+          dsOptionTemplate
+        >
+          <span
+            class="demo-dot"
+            [style.background]="dotColour(option.value)"
+          >
+          </span>
+          {{ option.label }}
+        </ng-template>
+
+        <ng-template
+          let-option
+          dsChipTemplate
+        >
+          <span
+            class="demo-dot"
+            [style.background]="dotColour(option.value)"
+          >
+          </span>
+          {{ option.label }}
+        </ng-template>
+      </ds-multi-select>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Option groups
+  </h3>
+
+  <p class="block-desc t-s">
+    Groups go in the same <code class="t-mono-inline">options</code> input as
+    flat options and render in the order given, so the two may be mixed. A
+    group's own <code class="t-mono-inline">disabled</code> disables every
+    option in it. Filtering hides a group whose options all fail the query.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        data-testid="ms-groups"
+        placeholder="Assignees…"
+        ariaLabel="Assignees"
+        [options]="assigneeItems"
+        [(value)]="assignees"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Width
+  </h3>
+
+  <p class="block-desc t-s">
+    Default <code class="t-mono-inline">width="fill"</code> stretches to the
+    container and pins the panel to the trigger.
+    <code class="t-mono-inline">
+      width="content"
+    </code> hugs the trigger's own
+    content and takes that width as the panel's floor instead — so a short
+    trigger no longer forces a panel too narrow to read.
+    <code class="t-mono-inline">
+      --ds-dropdown-panel-minw
+    </code> and
+    <code class="t-mono-inline">
+      --ds-dropdown-panel-maxw
+    </code> bound the
+    panel in that mode.
+  </p>
+
+  <div style="display: flex; gap: var(--space-4); align-items: flex-start">
+    <ds-multi-select
+      data-testid="ms-content-width"
+      width="content"
+      placeholder="Tags…"
+      [options]="tagOptions"
+      [(value)]="widthDemoValue"
+    />
+
+    <ds-select
+      data-testid="select-content-width"
+      width="content"
+      placeholder="Status…"
+      [options]="widthDemoStatuses"
+      [(value)]="widthDemoStatus"
+    />
+  </div>
+
   <h3 class="block-title t-h4">
     Helper / error text
   </h3>
@@ -95,9 +402,229 @@
       <ds-multi-select
         placeholder="Add tags…"
         ariaLabel="Tags — error"
-        hint="At least one tag is required."
-        [invalid]="true"
+        error="At least one tag is required."
         [options]="tagOptions"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Icons in the options
+  </h3>
+
+  <p class="block-desc t-s">
+    An option carries an optional
+    <code class="t-mono-inline">
+      icon
+    </code>, rendered before its label at
+    16px. Same field and same markup as
+    <code class="t-mono-inline">
+      ds-select
+    </code> and
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code> — all three read one
+    <code class="t-mono-inline">
+      DsOption
+    </code> shape, so a field added for
+    one picker is not missing from the other two. Use it for a set the reader
+    recognises by glyph, like a priority scale; it is decoration for anything
+    else, and an icon per row costs scanning speed.
+  </p>
+
+  <p class="block-desc t-s">
+    The chips stay text-only. A glyph inside a chip eats the width the label
+    needs, and the chips are already the part of the trigger that runs out of
+    room —
+    <code class="t-mono-inline">
+      maxVisibleChips
+    </code> exists for exactly
+    that.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Any priority"
+        ariaLabel="Priority"
+        [options]="priorityOptions"
+        [(value)]="priority"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Server-side search
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      filterChange
+    </code> reports what was typed and
+    <code class="t-mono-inline">
+      filterWith="none"
+    </code> stops the panel narrowing the
+    list a second time — the options you hand back are the ones rendered.
+    <code class="t-mono-inline">
+      loading
+    </code> replaces the empty row with a spinner, because
+    "No matches" during a request in flight is a lie. The panel also emits
+    <code class="t-mono-inline">
+      opened
+    </code>, which is where the first fetch belongs.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Search people"
+        ariaLabel="Assignee"
+        filterWith="none"
+        [loading]="serverLoading()"
+        [options]="serverOptions()"
+        [(value)]="serverValue"
+        (opened)="onServerOpened()"
+        (filterChange)="onServerQuery($event)"
+      />
+    </div>
+
+    <p class="block-desc t-s">
+      Typed: <code class="t-mono-inline">{{ serverQuery() || '—' }}</code>
+    </p>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Panel header and footer
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsPanelHeaderTemplate
+    </code> and
+    <code class="t-mono-inline">
+      dsPanelFooterTemplate
+    </code> fill a strip above and below the
+    options, with
+    <code class="t-mono-inline">
+      count
+    </code>,
+    <code class="t-mono-inline">
+      total
+    </code> and
+    <code class="t-mono-inline">
+      query
+    </code> in context. Both sit outside the listbox, so
+    nothing here is counted as an option, and neither scrolls with the list.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Any label"
+        ariaLabel="Label"
+        [options]="labelOptions"
+        [(value)]="slotLabels"
+      >
+        <ng-template
+          let-count="count"
+          let-total="total"
+          dsPanelHeaderTemplate
+        >
+          <span class="t-s">
+            Showing {{ count }} of {{ total }}
+          </span>
+        </ng-template>
+
+        <ng-template dsPanelFooterTemplate>
+          <ds-button
+            size="sm"
+            fill="ghost"
+            (clicked)="slotLabels.set([])"
+          >
+            Clear all
+          </ds-button>
+        </ng-template>
+      </ds-multi-select>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Group headings, and why an option is off
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsGroupLabelTemplate
+    </code> fills a group's heading — the
+    element itself stays ours, so the id the group is named by cannot be detached
+    from it. An option's
+    <code class="t-mono-inline">
+      disabledReason
+    </code> reaches the row as
+    <code class="t-mono-inline">
+      aria-describedby
+    </code>: the row already looks disabled, the
+    sentence is for whoever cannot see that. Open the panel and read the "On leave"
+    rows with a screen reader.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Any reviewer"
+        ariaLabel="Reviewer"
+        [options]="reviewerGroups"
+        [(value)]="reviewers"
+      >
+        <ng-template
+          let-group
+          let-count="count"
+          dsGroupLabelTemplate
+        >
+          {{ group.label }} · {{ count }}
+        </ng-template>
+      </ds-multi-select>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Read-only, clearable, and a name for a native submit
+  </h3>
+
+  <p class="block-desc t-s">
+    The last three form-contract members that were
+    <code class="t-mono-inline">
+      ds-select
+    </code>'s alone.
+    <code class="t-mono-inline">
+      readOnly
+    </code> takes focus without opening,
+    <code class="t-mono-inline">
+      clearable
+    </code> shows the same clear button the other fields use,
+    and
+    <code class="t-mono-inline">
+      name
+    </code> reaches the trigger.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        label="Labels"
+        name="labels"
+        [clearable]="true"
+        [options]="labelOptions"
+        [(value)]="clearableLabels"
+      />
+    </div>
+
+    <div class="ms-demo">
+      <ds-multi-select
+        label="Locked selection"
+        [readOnly]="true"
+        [options]="labelOptions"
+        [(value)]="readOnlyLabels"
       />
     </div>
   </div>

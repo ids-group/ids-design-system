@@ -48,6 +48,22 @@ interface RampSpec {
   styleUrl: './color.section.scss',
 })
 export class ColorSection {
+  protected readonly shellRingSnippet = `/* Your own field-like shell: the box rings, the control inside must not. */
+.my-field:focus-within {
+  box-shadow: var(--ds-field-focus-shadow);
+}
+
+.my-field input {
+  outline: 0;          /* does NOT cancel the base rule — it is a box-shadow */
+}
+
+.my-field input:where(:focus-visible) {
+  box-shadow: none;    /* this is what silences it */
+}
+
+/* Name the ONE control. A blanket takes the ring off the tab stops too:
+   .my-field :where(:focus-visible) { box-shadow: none }   <-- kills the clear button */`;
+
   protected readonly groups: readonly SemanticGroup[] = [
     {
       label: 'Primary',

@@ -6,22 +6,57 @@
       "kind": "input-rename",
       "old": "ds-date-picker[defaultMonth]",
       "new": "defaultDate",
-      "note": "Pure rename, behavior unchanged: the input always took a full Date and the calendar opens on its month with grid focus on its exact day (only when the value is empty; never written to the value). [defaultMonth] -> [defaultDate]. No other component has a defaultMonth input.",
+      "action": "Rename `[defaultMonth]` to `[defaultDate]` on ds-date-picker.",
+      "appliesWhen": "No other component has a defaultMonth input, so the rename is unambiguous.",
+      "note": "Behaviour is unchanged: the input always took a full Date, and the calendar still opens on its month with grid focus on its exact day — only while the value is empty, and never written into the value.",
       "searchHints": [
         "[defaultMonth]",
         "defaultMonth"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "table-passive-row-hover-removed",
       "kind": "behavior",
       "old": null,
       "new": null,
-      "note": "ds-table row hover tint is now rendered ONLY when rowInteractive is set (clickable rows also gain a pressed :active fill via --ds-table-row-pressed-bg-color). Was: every table tinted rows on hover. No code compiles differently — visual/behavior only. If a passive table must keep the old always-on hover, add consumer CSS: ds-table tbody tr:hover td { background-color: var(--surface-secondary); }. Tables that already set rowInteractive need no action.",
+      "action": "None, unless a passive table must keep its hover tint. To keep it: `ds-table tbody tr:hover td { background-color: var(--surface-secondary); }`.",
+      "appliesWhen": "Tables that already set `rowInteractive` need nothing — they keep the tint and gain a pressed fill.",
+      "pitfall": "Nothing compiles differently, so this only shows on screen. A table that reads as clickable because of the hover tint, without ever having been clickable, quietly loses the affordance it should not have had.",
+      "note": "The row hover tint is rendered only when `rowInteractive` is set; clickable rows also gain a pressed `:active` fill through `--ds-table-row-pressed-bg-color`.",
       "searchHints": [
         "<ds-table",
         "rowInteractive"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "rowInteractive",
+        "tr:hover"
+      ],
+      "restore": "ds-table tbody tr:hover td { background-color: var(--surface-secondary); }",
+      "verify": "Every table whose rows are clickable sets [rowInteractive] (that is what draws the tint now), and a passive table that must keep an always-on hover carries the restore rule deliberately."
+    },
+    {
+      "id": "table-component-subclass-member-collisions",
+      "kind": "behavior",
+      "old": null,
+      "new": null,
+      "action": "Build the consumer immediately after the bump — the compiler enumerates every collision. Per member: where the base means the same thing, keep the name and add `override` with a base-compatible signature; otherwise rename your own member. Base members it collides on: zebra, columnOrder, orderedColumns, visibleColumns, toggleColumn, onColumnDrop, moveColumn, resetColumns, columnFilters, exportCsv, onResizeMove, onResizeEnd.",
+      "appliesWhen": "Only a consumer that EXTENDS TableComponent. Subclassing a DS component is unsupported (design-system.md § Components); anyone using the `<ds-table>` element is unaffected.",
+      "pitfall": "Two ways to fix it wrongly. Adding `override` to `zebra` without adopting the base booleanAttribute transform changes what the input accepts. And renaming your member to something else can collide again — check the new name against the base member list, because the private and protected ones are internal and give no warning.",
+      "note": "The new column API added about 76 members to TableComponent, so a subclass that already used one of those names stops compiling: TS4114 wants an `override` modifier, TS2416 fires where the signature differs.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends "
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends TableComponent",
+        "extends ",
+        "zebra",
+        "exportCsv"
+      ],
+      "verify": "A typecheck reports no TS4114 / TS2416 on a TableComponent subclass; every kept name uses `override` with a base-compatible signature."
     }
   ],
   "informational": [
@@ -46,5 +81,6 @@
     "New ds-app-shell — a slotted fixed-frame application shell ([sidenav]/[topbar]/default content slots) that pins to the viewport (100dvh, overflow: hidden) so only the content <main> scrolls (scrollbar-gutter: stable + automatic native-scrollbar-width padding compensation via the new --ds-scrollbar-width root variable); topbarSpan input ('content' default full-height rail | 'full' full-width topbar) switches the geometry; scroll-to-top on router navigation via the new exported ShellScrollService (also injectable from routed pages for manual scrollToTop()). Tokens: --ds-app-shell-pad-x/-pad-y/-content-max-width/-height — additive, no code change.",
     "New ds-sidenav-footer — a rail footer brick: Search row with a live grouped-results popover, Alerts row with an unread dot + feed popover, Collapse row, and a user card with an account menu; inputs userName/userRole/alerts/collapsed/searchProvider/alertItems/profileRoute, outputs collapseToggled/alertsOpened/signOutSelected; new exported types SidenavSearchProvider/SidenavSearchResult/SidenavAlertItem. Tokens: --ds-sidenav-footer-popover-width/-popover-max-width/-popover-max-height/-head-tracking/-dot-size — additive, no code change.",
     "ds-sidenav gains an optional logoLetter input (sets the brand-tile glyph when it differs from the brand's first letter) and a [dsBrandName] projection slot (exported marker directive BrandNameDirective) that renders custom wordmark markup inside .brand-name in place of the plain brand text — both optional, omitting them renders exactly as before, additive, no code change."
-  ]
+  ],
+  "deleteList": []
 }

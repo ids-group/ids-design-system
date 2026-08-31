@@ -1,0 +1,72 @@
+.scroll {
+  overflow-x: auto;
+  margin-top: var(--space-3);
+}
+.matrix {
+  display: grid;
+  gap: var(--space-4) var(--space-6);
+  align-items: center;
+  padding: var(--space-4);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+}
+.head {
+  text-align: center;
+}
+.corner {
+  color: var(--text-tertiary);
+}
+.row-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+.name {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+.note {
+  color: var(--text-tertiary);
+  margin-left: auto;
+}
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+}
+
+/* Hatching, not a tint: a flat wash would read as one more surface colour in a
+   matrix whose whole job is comparing colours. The stripes are behind the
+   specimen and clipped to the cell, so the button on top is still judged on its
+   own fill. The ⚠ badge stays — the hatch is the at-a-glance layer. */
+.cell.is-discouraged {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 5px,
+    var(--border-divider) 5px 6px
+  );
+  border-radius: var(--radius-sm);
+}
+.warn {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.warn::after {
+  content: '⚠';
+}
+.na {
+  color: var(--text-tertiary);
+}

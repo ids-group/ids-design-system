@@ -9,12 +9,11 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsBooleanControlValueAccessor } from '../control-value-accessor';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import type { DsSize } from '../../core/size';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-switch',
@@ -42,16 +41,14 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   readonly variant = input<'default' | 'success' | 'error'>('default');
   /** Overrides the generated id used by the native `<input>` and its `<label for>`. */
   readonly inputId = input<string | null>(null);
-  /** Applies error styling and marks the input `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the switch. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
-  /** Switch size — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Switch size — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the track and wired via for/id. Omit to
@@ -65,11 +62,19 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   protected readonly uid = nextControlId('ds-switch');
   protected readonly controlId = computed(() => this.inputId() ?? this.uid);
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly switchClasses = computed(() => {
     const variant = this.variant();
@@ -78,7 +83,7 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   });
 
   protected readonly fieldClass = computed(
-    () => `switch-field size-${this.size()}`,
+    () => `switch-field size-${this.sizeResolved()}`,
   );
 
   protected onCheckedChange(event: Event): void {

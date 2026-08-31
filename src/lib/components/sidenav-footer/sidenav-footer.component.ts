@@ -13,6 +13,7 @@ import { IconComponent } from '../../icons/icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuItemComponent } from '../menu/menu-item.component';
+import { MenuDividerComponent } from '../menu/menu-divider.component';
 import { PopoverComponent } from '../popover/popover.component';
 import type {
   SidenavAlertItem,
@@ -41,6 +42,7 @@ interface SearchGroup {
     PopoverComponent,
     MenuComponent,
     MenuItemComponent,
+    MenuDividerComponent,
   ],
   templateUrl: './sidenav-footer.component.html',
   styleUrl: './sidenav-footer.component.scss',
@@ -66,6 +68,8 @@ export class SidenavFooterComponent {
   /** Route for the account menu's "Your profile"; empty = the item is a no-op. */
   readonly profileRoute = input('');
 
+  /** The collapse control was activated. The footer does not collapse itself — `ds-app-layout`
+   *  owns the rail state, so the host relays this. */
   readonly collapseToggled = output<void>();
   /** Emitted when the Alerts popover is opened, so the layout can mark-all-read. */
   readonly alertsOpened = output<void>();
