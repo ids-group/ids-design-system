@@ -28,7 +28,7 @@ is no second implementation to drift from.
 
 ```sh
 node .design-sync/tools/bootstrap.mjs                  # esbuild + react into .ds-sync
-node .design-sync/elements/tools/gen.mjs               # 81 elements, 515 inputs/outputs
+node .design-sync/elements/tools/gen.mjs               # 85 elements, 625 inputs/outputs
 ng build ds-elements                                   # Angular AOT (the slow step)
 node .design-sync/elements/tools/build-bundle.mjs      # bundle + demo
 npx serve .design-sync/elements/demo                   # open index.html
@@ -65,17 +65,42 @@ working because Angular projects light-DOM children — `<div actions="">` lands
 
 ## Measured
 
-| | React port (`fa2ada2`) | this branch |
-|---|---|---|
-| JS, minified | 119 KB raw / **39 KB gzip** | 913 KB raw / **227 KB gzip** |
-| CSS | 354 KB raw / **61 KB gzip** | 47 KB raw / **9 KB gzip** |
-| total over the wire | **100 KB gzip** | **236 KB gzip** |
-| hand-written component code | ~11 000 lines | 0 (+ 90 lines of `runtime.tsx`) |
-| build | esbuild + tsc, seconds | `ng build` 5.5 s + esbuild |
+Re-measured 2026-09-01 against `dev` at 0.11.1 (85 components), after merging a
+month of upstream into both branches. Gzip is `gzip -9` over the built files.
 
-So the Angular runtime and CDK cost about **+136 KB gzip**. The binding layer
-itself is ~15 KB of the 913 — everything else is the framework the components
-already need.
+| | React port | this branch |
+|---|---|---|
+| JS, minified | 251 KB raw / **51 KB gzip** | 1049 KB raw / **259 KB gzip** |
+| CSS | 450 KB raw / **83 KB gzip** | 56 KB raw / **10 KB gzip** |
+| total over the wire | **134 KB gzip** | **269 KB gzip** |
+| hand-written component code | ~11 000 lines | 0 (+ 90 lines of `runtime.tsx`) |
+| build | esbuild + tsc, seconds | `ng build` 7.8 s + esbuild |
+
+So the Angular runtime and CDK cost about **+135 KB gzip** — the same delta the
+first measurement found at 0.7.0 (+136 KB), so the framework's cost is flat while
+the DS grows. The port is cheaper over the wire and gets relatively cheaper as the
+component count rises, because its CSS is what scales, not its JS.
+
+### What a month of drift cost each branch
+
+The two branches sat open from 2026-07-31 to 2026-09-01 while the DS went 0.7.0 →
+0.11.1. Merging `dev` into each was identical work — the same three conflicting
+files, all mechanical. Bringing each one back to *correct* was not:
+
+| | React port | this branch |
+|---|---|---|
+| `bun run check:design-sync` | **213 problems** | nothing to check — no second implementation |
+| components whose source drifted | 53 of 80 | n/a |
+| public props missing from the layer | 122 across 26 components | 0 |
+| new components with no counterpart | 6 | 0 |
+| manual work to make it correct | a re-port of 53 components | `node gen.mjs` |
+
+`gen.mjs` picked the month up on its own: 81 elements / 518 inputs-outputs became
+**85 / 625**, `ng build ds-elements` is green, and the bundle builds. The port's
+own build is *also* green — `build-css.mjs` emits 85/85 blocks and
+`build-bindings.mjs` produces a bundle — which is the point: nothing in the port's
+toolchain can tell that what it just built ships an API the DS no longer has. Only
+the parity gate can, and it does.
 
 ## Verified in Chrome
 
@@ -97,7 +122,7 @@ Against the demo page, real browser, not a headless approximation:
 
 **A component whose `<ng-content>` sits inside a conditional loses its projected
 children.** `modal.component.html` wraps everything — including the `[body]`,
-`[impact]` and `[actions]` slots — in `@if (rendered() || staticPreview)`. When
+`[impact]` and `[actions]` slots — in `@if (rendered() || preview.staticPreview())`. When
 the element upgrades in the closed state, Angular creates the view, finds no
 projection slots, and the light DOM React handed it is **discarded from the DOM
 permanently**; opening the dialog afterwards renders an empty card.
@@ -111,6 +136,12 @@ comment at the top of `popover.component.html`: hold the projection in a
 top-level `<ng-template #content><ng-content /></ng-template>` and stamp it with
 `ngTemplateOutlet` inside the branches. Popover does this and keeps its children.
 Modal, drawer and bottom-sheet don't.
+
+**Still open on 0.11.1 (checked 2026-09-01).** `modal.component.html:1`,
+`drawer.component.html:1` and `bottom-sheet.component.html:1` all still open with
+`@if (rendered() …)` and hold their `<ng-content>` inside it; `popover.component.html`
+still carries the top-level `<ng-template #content>` and the comment explaining why.
+Nothing in the month's work touched this either way.
 
 Until then, `staticPreview` is the way in: it makes the card render at view
 creation, so the slots exist when the light DOM is claimed. The generator now
@@ -139,7 +170,7 @@ dropped), so treat that one as expected-to-work rather than verified.
 
 ## Verdict
 
-The generation half is a clear win: 518 inputs/outputs across 81 components come
+The generation half is a clear win: 625 inputs/outputs across 85 components come
 out of the AST with their real types, and there is no second implementation to
 keep in sync — the parity gate the port needs has nothing to guard here. The
 runtime half is blocked on three upstream changes (hoist projection out of the
