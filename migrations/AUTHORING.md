@@ -260,6 +260,17 @@ resolution: rename the subclass's own member, or add `override` where the base's
 match. Keep the feature bullets themselves in `informational` — the item is the collision, not the
 feature.
 
+**In that item the names go in `note`, and every class goes in `detect` — not the other way
+round.** `detect` is what the updater greps with, so it must name EVERY class the tool reported:
+0.11.1's entry listed `extends SelectComponent` and `extends MultiSelectComponent` and omitted
+`AutocompleteComponent`, which had grown just as many members, so an autocomplete subclass was
+never surfaced. And `action` must NOT re-list the member names — the compiler enumerates every
+collision the moment the consumer builds, so a list typed into `action` is a second copy that
+goes stale on the next feature commit (0.11.0's went a class short twice in one day). Keep
+`action` the imperative — rename yours, or add `override` — and let `note` carry the record.
+`tools/check-class-surface-entry.mjs` fails the release gate when the CHANGELOG entry misses a
+class; nothing checks `detect`, so that half is on the author.
+
 **Widening an exported type is actionable, and it will not look it.** A field on an exported
 interface going `number` → `number | 'content'`, an input going `boolean` → `boolean | null`, a
 returned union growing a member — each is source-compatible for whoever WRITES the value and
