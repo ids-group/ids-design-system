@@ -8,6 +8,57 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
+  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` all gained members for the
+  inputs and outputs above. Subclassing a DS component is unsupported but consumers do it, and a
+  member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
+  if you meant to replace ours — the compiler enumerates every collision, so building after the
+  upgrade is the whole check.
+
+### Added
+
+- **The keyboard cursor keeps its row in view.** On a list longer than the panel the arrows walked the
+  cursor out of sight — the reader pressed down and could not see where they were. All three pickers
+  scroll the active row into view now, on by default; `scrollActiveIntoView="false"` gives the scroll
+  position back to you. It uses `block: 'nearest'`, so a row that is already visible does not move and
+  the mouse is never fought.
+
+- **`Home` and `End` on every picker.** They existed on `ds-select` alone, while ten other components
+  in the library already had them. The index arithmetic all three had written out separately — next,
+  previous, first, last, skipping disabled and wrapping — is now one helper, `DsListCursor`, exported
+  for anyone building a list control of their own.
+
+- **`compareWith` on `ds-autocomplete`.** The component is generic over its value type but compared
+  with `===`, which is reference identity: a re-fetch that returned equal data as new objects silently
+  dropped the selection. Pass a comparator keyed on what identifies the value —
+  `[compareWith]="(a, b) => a?.id === b?.id"`. The default is unchanged, so string and number values
+  behave exactly as before. `ds-select` and `ds-multi-select` key on `string` and do not need it.
+
+- **`loading`.** While options were being fetched the panel said "No matches", which is a lie the
+  consumer had no way to correct. It shows a spinner instead now, and the listbox reports
+  `aria-busy`. Spelled `booleanAttribute` to match `ds-button`, `ds-input` and `ds-loading-overlay`.
+
+- **`opened` and `closed`.** There was no way to know a panel had opened, so a picker whose options
+  are fetched on demand had nowhere to start the request. `closed` is the name eight other components
+  already use; `opened` is its missing pair. They fire on the transition, not on every write, so
+  closing by Escape emits once rather than twice.
+
+- **`filterWith` and `filterChange` — one input for both server-side search and a custom match.**
+  The query matcher was hardcoded to a case-insensitive substring of `label`: matching a second field,
+  ignoring diacritics or scoring fuzzily was impossible, and so was letting a server do the filtering.
+  `filterWith` takes a predicate for the first and the literal `'none'` for the second, where every
+  option handed in is rendered and `filterChange` reports what was typed. One input rather than two,
+  because they are one decision: who decides what the query matches.
+
+- **`name`, `readOnly` and `clearable` on `ds-multi-select` and `ds-autocomplete`.** The last three
+  form-contract members that were `ds-select`'s alone. `name` reaches seven other controls in the
+  library, so the two pickers were the outliers; `readOnly` takes focus without opening, and carries
+  the same `readonly` binding alias `ds-select` has for signal forms; `clearable` uses the same button
+  and the same accessible name as `ds-select`'s.
+
+
 ## 0.11.1 — 2026-08-31
 
 ### Added

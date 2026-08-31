@@ -12,6 +12,7 @@ import {
   forwardRef,
   inject,
   input,
+  output,
   model,
   signal,
   viewChild,
@@ -30,6 +31,7 @@ import {
 } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { DsStaticPreview } from '../static-preview.directive';
@@ -58,7 +60,7 @@ import { scrollActiveOptionIntoView } from '../scroll-active-option';
 @Component({
   selector: 'ds-select',
   standalone: true,
-  imports: [IconComponent, NgTemplateOutlet, FieldMessageComponent],
+  imports: [SpinnerComponent, IconComponent, NgTemplateOutlet, FieldMessageComponent],
   host: {
     '[attr.data-field-state]': 'controlState()',
     '[class.in-group]': 'inGroup',
@@ -124,6 +126,15 @@ export class SelectComponent
   readonly label = input<string>('');
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Options are still being fetched. The panel shows a spinner instead of the
+   *  empty row — which would otherwise claim there are no matches — and the list
+   *  reports `aria-busy`. */
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** The panel opened. The moment to fetch options for a picker whose list is
+   *  loaded on demand. */
+  readonly opened = output<void>();
+  /** The panel closed, for any reason — a pick, Escape, an outside click, a scroll. */
+  readonly closed = output<void>();
   /** Scrolls the keyboard cursor's row into view. On by default: a list longer
    *  than the panel otherwise walks the cursor out of sight. Set `false` only if
    *  you are driving the scroll position yourself. */
@@ -366,17 +377,17 @@ export class SelectComponent
         return;
       }
       this.overlayRef = null;
-      this.open.set(false);
+      this.setOpen(false);
     });
     const portal = new TemplatePortal(this.panelTpl(), this.vcr);
     this.overlayRef.attach(portal);
-    this.open.set(true);
+    this.setOpen(true);
   }
 
   protected close(cause: DsOverlayCloseCause = 'select'): void {
     disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
-    this.open.set(false);
+    this.setOpen(false);
     this.activeIndex.set(-1);
     this.markTouched();
   }
@@ -508,6 +519,14 @@ export class SelectComponent
     if (next >= 0) {
       this.activeIndex.set(next);
     }
+  }
+
+  private setOpen(next: boolean): void {
+    if (this.open() === next) {
+      return;
+    }
+    this.open.set(next);
+    (next ? this.opened : this.closed).emit();
   }
 
   private lastEnabledIndex(): number {

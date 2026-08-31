@@ -32,6 +32,7 @@ import {
 } from '../overlay-motion';
 import { chipFit } from '../chip-overflow';
 import { IconComponent } from '../../icons/icon.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
@@ -47,7 +48,6 @@ import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
 import {
   firstEnabledIndex as firstEnabledOf,
   lastEnabledIndex as lastEnabledOf,
-  nextEnabledIndex,
 } from '../../core/list-cursor';
 import { scrollActiveOptionIntoView } from '../scroll-active-option';
 import { DsOptionTemplateDirective } from '../option-template.directive';
@@ -66,6 +66,7 @@ let nextId = 0;
   standalone: true,
   imports: [
     IconComponent,
+    SpinnerComponent,
     TagComponent,
     FieldMessageComponent,
     NgTemplateOutlet,
@@ -175,6 +176,46 @@ export class AutocompleteComponent<T = unknown>
     (a, b) => a === b,
   );
 
+  /** Native `name` attribute forwarded to the trigger. */
+  readonly name = input<string | null>(null);
+  /** Prevents opening the panel while still allowing focus. */
+  readonly readOnly = input(false, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, a second input because signal forms binds
+   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   */
+  readonly readonlyBinding = input(false, {
+    // The alias IS the point: signal forms binds by name, and the contract
+    // spells it `readonly` where the DS spells it `readOnly`.
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  /** Shows a clear affordance once there is something to clear. */
+  readonly clearable = input(false, { transform: booleanAttribute });
+  /** How the typed query narrows the list.
+   *
+   *  The default matches a case-insensitive substring of `label`. Pass a predicate
+   *  to match on anything else — a second field, ignoring diacritics, a fuzzy score.
+   *  Pass `'none'` when the list arrives already filtered, which is what a
+   *  server-side search needs: the query is reported through `filterChange` and
+   *  every option given is rendered.
+   */
+  readonly filterWith = input<
+    ((option: AutocompleteOption<T>, query: string) => boolean) | 'none'
+  >((option, query) => option.label.toLowerCase().includes(query));
+  /** The query the user typed, on every change. The input for a server-side search;
+   *  pair it with `filterWith="none"` so the list is not narrowed twice. */
+  readonly filterChange = output<string>();
+  /** Options are still being fetched. The panel shows a spinner instead of the
+   *  empty row — which would otherwise claim there are no matches — and the list
+   *  reports `aria-busy`. */
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** The panel opened. The moment to fetch options for a picker whose list is
+   *  loaded on demand. */
+  readonly opened = output<void>();
+  /** The panel closed, for any reason — a pick, Escape, an outside click, a scroll. */
+  readonly closed = output<void>();
   /** Scrolls the keyboard cursor's row into view. On by default: a list longer
    *  than the panel otherwise walks the cursor out of sight. Set `false` only if
    *  you are driving the scroll position yourself. */
@@ -255,8 +296,9 @@ export class AutocompleteComponent<T = unknown>
 
   protected readonly filteredItems = computed<AutocompleteItem<T>[]>(() => {
     const query = this.query().toLowerCase().trim();
+    const filter = this.filterWith();
     const matches = (option: AutocompleteOption<T>): boolean =>
-      !query || option.label.toLowerCase().includes(query);
+      !query || filter === 'none' || filter(option, query);
 
     const kept: AutocompleteItem<T>[] = [];
     for (const item of this.options()) {
@@ -480,6 +522,18 @@ export class AutocompleteComponent<T = unknown>
     scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
   }
 
+  private setOpen(next: boolean): void {
+    if (this.isOpen() === next) {
+      return;
+    }
+    this.isOpen.set(next);
+    (next ? this.opened : this.closed).emit();
+  }
+
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
+
   private cursorList() {
     const options = this.visibleOptions();
 
@@ -590,6 +644,9 @@ export class AutocompleteComponent<T = unknown>
   }
 
   protected openPanel(): void {
+    if (this.isReadOnly()) {
+      return;
+    }
     if (this.overlayRef) {
       return;
     }
@@ -636,17 +693,17 @@ export class AutocompleteComponent<T = unknown>
         return;
       }
       this.overlayRef = null;
-      this.isOpen.set(false);
+      this.setOpen(false);
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
-    this.isOpen.set(true);
+    this.setOpen(true);
     this.activeIndex.set(this.firstEnabledIndex());
   }
 
   protected close(cause: DsOverlayCloseCause = 'select'): void {
     disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
-    this.isOpen.set(false);
+    this.setOpen(false);
     this.activeIndex.set(-1);
     // Here rather than in onPick, which is only half the paths: dismissing after
     // typing over a settled value strands the text the same way. The input
@@ -671,6 +728,12 @@ export class AutocompleteComponent<T = unknown>
    * Deliberately does NOT move focus — the caller may be navigating away, and
    * stealing focus back into a field they just left is worse than leaving it.
    */
+  protected clearValue(event: MouseEvent): void {
+    event.stopPropagation();
+    this.clear();
+    this.markTouched();
+  }
+
   clear(): void {
     this.value.set(this.multiple() ? [] : null);
     this.query.set('');
@@ -687,7 +750,9 @@ export class AutocompleteComponent<T = unknown>
   }
 
   protected onFilter(event: Event): void {
-    this.query.set((event.target as HTMLInputElement).value);
+    const typed = (event.target as HTMLInputElement).value;
+    this.query.set(typed);
+    this.filterChange.emit(typed);
     this.activeIndex.set(this.firstEnabledIndex());
   }
 

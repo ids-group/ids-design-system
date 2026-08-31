@@ -1,5 +1,25 @@
 # DS — improvements backlog
 
+## Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)
+
+- [ ] **[P3] Five thousand options render five thousand rows.** No picker uses `cdk-virtual-scroll`,
+  and the CDK is already a dependency, so this is a build rather than a research question.
+
+  **Why it is the one §9 item deliberately not built while the other eight were:** virtualisation and
+  `aria-activedescendant` fight each other. The cursor points at a row id, and a virtual viewport
+  destroys the row when it scrolls out — so the id the trigger references stops existing, which is
+  precisely the defect the review round just fixed twice (once for disabled groups, once for the
+  unrendered chip slot). Making it work means the id has to survive the row: either the viewport keeps
+  the active row rendered outside the visible range, or the cursor stops being an id reference and
+  becomes a focus move like `ds-menu`'s. Both are real designs, and both change the keyboard model
+  every picker now shares through `core/list-cursor.ts`.
+
+  **Measure before building.** The threshold that makes this worth it is unknown: nobody has reported a
+  slow picker. A list long enough to need virtualisation is also long enough that a filter is the real
+  answer, and `searchable` plus `filterWith="none"` now covers a server-side search that never sends
+  five thousand rows in the first place. Worth doing when a consumer shows a list that must be long AND
+  unfiltered.
+
 ## Decks awaiting a verdict (audited 2026-08-31)
 
 Nine decks carry `ds-deck-status: open`, which means each is a question that has not been answered.
@@ -39,7 +59,8 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 **Decisions — waiting on Stas, not on work**
 
 - P2 · Nine decks carry `ds-deck-status: open` and none has a verdict — see *Decks awaiting a verdict* above
-- P3 · Thirteen further picker proposals (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
+- P3 · Virtualising a long picker list — RECORDED 2026-08-31, fights `aria-activedescendant`, measure before building
+- P3 · Four further picker proposals (panel header/footer slots, group-header slot, row-geometry tokens, three a11y items) — §9 of the picker deck; eight of the sixteen were built 2026-08-31, one recorded (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
 
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config

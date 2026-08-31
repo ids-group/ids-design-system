@@ -105,6 +105,8 @@
     [attr.aria-labelledby]="label() ? labelId : null"
     [attr.aria-label]="resolvedAriaLabel()"
     [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-readonly]="isReadOnly() ? 'true' : null"
+    [attr.name]="name()"
     [attr.aria-invalid]="invalidResolved() ? 'true' : null"
     [attr.aria-describedby]="hintId()"
     [disabled]="isDisabled()"
@@ -119,6 +121,25 @@
   <span class="addon-slot suffix">
     <ng-content select="[dsAutocompleteSuffix]"></ng-content>
   </span>
+
+  @if (
+      clearable() &&
+      hasSingleValue() &&
+      !isDisabled() &&
+      !isReadOnly()
+    ) {
+    <button
+      type="button"
+      class="clear-btn"
+      aria-label="Clear selection"
+      (click)="clearValue($event)"
+    >
+      <ds-icon
+        name="x"
+        [size]="14"
+      />
+    </button>
+  }
 
   @if (showChevron()) {
     <ds-icon
@@ -144,6 +165,7 @@
     <ul
       class="dropdown-list"
       role="listbox"
+      [attr.aria-busy]="loading() ? 'true' : null"
       [id]="listboxId"
       [attr.aria-multiselectable]="multiple() ? 'true' : null"
     >
@@ -284,7 +306,14 @@
         }
       }
 
-      @if (filteredOptions().length === 0 && !showCreateRow()) {
+      @if (loading()) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          <ds-spinner size="sm" />
+        </li>
+      } @else if (filteredOptions().length === 0 && !showCreateRow()) {
         <li
           class="empty t-s"
           role="presentation"

@@ -505,6 +505,78 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Field label above the control — the same meaning it has on the other two pickers."
       },
       {
+        "name": "compareWith",
+        "kind": "input",
+        "type": "(a: T | null, b: T | null) => boolean",
+        "union": null,
+        "default": "(a, b) => a === b",
+        "required": false,
+        "description": "How two values are decided to be the same one. The default is `===`, which is reference identity — so with object values a re-fetch that returns equal data as NEW objects loses the selection. Pass a comparator keyed on whatever identifies the value: `(a, b) => a?.id === b?.id`."
+      },
+      {
+        "name": "name",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `name` attribute forwarded to the trigger."
+      },
+      {
+        "name": "readOnly",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prevents opening the panel while still allowing focus."
+      },
+      {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+      },
+      {
+        "name": "clearable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows a clear affordance once there is something to clear."
+      },
+      {
+        "name": "filterWith",
+        "kind": "input",
+        "type": "((option: AutocompleteOption<T>, query: string) => boolean) | 'none'",
+        "union": null,
+        "default": "(option, query) => option.label.toLowerCase().includes(query)",
+        "required": false,
+        "description": "How the typed query narrows the list. The default matches a case-insensitive substring of `label`. Pass a predicate to match on anything else — a second field, ignoring diacritics, a fuzzy score. Pass `'none'` when the list arrives already filtered, which is what a server-side search needs: the query is reported through `filterChange` and every option given is rendered."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row — which would otherwise claim there are no matches — and the list reports `aria-busy`."
+      },
+      {
+        "name": "scrollActiveIntoView",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+      },
+      {
         "name": "required",
         "kind": "input",
         "type": "boolean",
@@ -533,6 +605,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": [
+      {
+        "name": "filterChange",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The query the user typed, on every change. The input for a server-side search; pair it with `filterWith=\"none\"` so the list is not narrowed twice."
+      },
+      {
+        "name": "opened",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+      },
+      {
+        "name": "closed",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel closed, for any reason — a pick, Escape, an outside click, a scroll."
+      },
       {
         "name": "create",
         "kind": "output",
@@ -3555,6 +3654,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the panel carries a filter row. `true` always, `false` never, and a NUMBER is a threshold — the row appears once there are at least that many options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the panel's keyboard model onto the trigger: the arrows, Enter, Escape and `aria-activedescendant` are the filter input's today."
       },
       {
+        "name": "name",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `name` attribute forwarded to the trigger."
+      },
+      {
+        "name": "readOnly",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prevents opening the panel while still allowing focus."
+      },
+      {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+      },
+      {
+        "name": "clearable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows a clear affordance once there is something to clear."
+      },
+      {
+        "name": "filterWith",
+        "kind": "input",
+        "type": "((option: MultiSelectOption, query: string) => boolean) | 'none'",
+        "union": null,
+        "default": "(option, query) => option.label.toLowerCase().includes(query)",
+        "required": false,
+        "description": "How the typed query narrows the list. The default matches a case-insensitive substring of `label`. Pass a predicate to match on anything else — a second field, ignoring diacritics, a fuzzy score. Pass `'none'` when the list arrives already filtered, which is what a server-side search needs: the query is reported through `filterChange` and every option given is rendered."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row — which would otherwise claim there are no matches — and the list reports `aria-busy`."
+      },
+      {
+        "name": "scrollActiveIntoView",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+      },
+      {
         "name": "maxVisibleChips",
         "kind": "input",
         "type": "number | 'fit' | 'all' | null",
@@ -3665,7 +3827,35 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Where a \"select all\" row appears. `false` nowhere, `true` one row over the whole panel, `'group'` one row per group, `'both'` for either. Group rows need groups in `options` — with a flat list they have nothing to head."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "filterChange",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The query the user typed, on every change. The input for a server-side search; pair it with `filterWith=\"none\"` so the list is not narrowed twice."
+      },
+      {
+        "name": "opened",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+      },
+      {
+        "name": "closed",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel closed, for any reason — a pick, Escape, an outside click, a scroll."
+      }
+    ]
   },
   "number-stepper": {
     "key": "number-stepper",
@@ -4973,6 +5163,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the trigger and blocks all interaction."
       },
       {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row — which would otherwise claim there are no matches — and the list reports `aria-busy`."
+      },
+      {
+        "name": "scrollActiveIntoView",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+      },
+      {
         "name": "readOnly",
         "kind": "input",
         "type": "boolean",
@@ -5045,7 +5253,26 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows an inline clear (×) button when a value is selected."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "opened",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+      },
+      {
+        "name": "closed",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The panel closed, for any reason — a pick, Escape, an outside click, a scroll."
+      }
+    ]
   },
   "sidenav": {
     "key": "sidenav",

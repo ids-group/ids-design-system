@@ -11,6 +11,7 @@ import {
   forwardRef,
   inject,
   input,
+  output,
   model,
   numberAttribute,
   signal,
@@ -22,6 +23,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { chipFit } from '../chip-overflow';
 import { IconComponent } from '../../icons/icon.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import {
@@ -64,6 +66,7 @@ import { scrollActiveOptionIntoView } from '../scroll-active-option';
   standalone: true,
   imports: [
     IconComponent,
+    SpinnerComponent,
     TagComponent,
     BadgeComponent,
     FieldMessageComponent,
@@ -148,6 +151,46 @@ export class MultiSelectComponent
     (config) => config.picker?.searchable,
     true,
   );
+  /** Native `name` attribute forwarded to the trigger. */
+  readonly name = input<string | null>(null);
+  /** Prevents opening the panel while still allowing focus. */
+  readonly readOnly = input(false, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, a second input because signal forms binds
+   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   */
+  readonly readonlyBinding = input(false, {
+    // The alias IS the point: signal forms binds by name, and the contract
+    // spells it `readonly` where the DS spells it `readOnly`.
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  /** Shows a clear affordance once there is something to clear. */
+  readonly clearable = input(false, { transform: booleanAttribute });
+  /** How the typed query narrows the list.
+   *
+   *  The default matches a case-insensitive substring of `label`. Pass a predicate
+   *  to match on anything else — a second field, ignoring diacritics, a fuzzy score.
+   *  Pass `'none'` when the list arrives already filtered, which is what a
+   *  server-side search needs: the query is reported through `filterChange` and
+   *  every option given is rendered.
+   */
+  readonly filterWith = input<
+    ((option: MultiSelectOption, query: string) => boolean) | 'none'
+  >((option, query) => option.label.toLowerCase().includes(query));
+  /** The query the user typed, on every change. The input for a server-side search;
+   *  pair it with `filterWith="none"` so the list is not narrowed twice. */
+  readonly filterChange = output<string>();
+  /** Options are still being fetched. The panel shows a spinner instead of the
+   *  empty row — which would otherwise claim there are no matches — and the list
+   *  reports `aria-busy`. */
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** The panel opened. The moment to fetch options for a picker whose list is
+   *  loaded on demand. */
+  readonly opened = output<void>();
+  /** The panel closed, for any reason — a pick, Escape, an outside click, a scroll. */
+  readonly closed = output<void>();
   /** Scrolls the keyboard cursor's row into view. On by default: a list longer
    *  than the panel otherwise walks the cursor out of sight. Set `false` only if
    *  you are driving the scroll position yourself. */
@@ -330,8 +373,9 @@ export class MultiSelectComponent
 
   protected readonly filteredItems = computed<MultiSelectItem[]>(() => {
     const query = this.filter().trim().toLowerCase();
+    const filter = this.filterWith();
     const matches = (option: MultiSelectOption): boolean =>
-      !query || option.label.toLowerCase().includes(query);
+      !query || filter === 'none' || filter(option, query);
 
     const kept: MultiSelectItem[] = [];
     for (const item of this.options()) {
@@ -499,6 +543,13 @@ export class MultiSelectComponent
     );
   }
 
+  protected clearValue(event: MouseEvent): void {
+    event.stopPropagation();
+    this.value.set([]);
+    this.markTouched();
+    this.trigger().nativeElement.focus();
+  }
+
   protected removeValue(value: string): void {
     this.value.set(this.value().filter((entry) => entry !== value));
     // The close button that ran this is being destroyed with its chip, so focus
@@ -512,9 +563,23 @@ export class MultiSelectComponent
   }
 
   protected onFilter(event: Event): void {
-    this.filter.set((event.target as HTMLInputElement).value);
+    const typed = (event.target as HTMLInputElement).value;
+    this.filter.set(typed);
+    this.filterChange.emit(typed);
     this.activeIndex.set(this.firstEnabledIndex());
   }
+
+  private setOpen(next: boolean): void {
+    if (this.open() === next) {
+      return;
+    }
+    this.open.set(next);
+    (next ? this.opened : this.closed).emit();
+  }
+
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
 
   private cursorList() {
     const options = this.filteredOptions();
@@ -601,7 +666,7 @@ export class MultiSelectComponent
   }
 
   protected openPanel(): void {
-    if (this.overlayRef || this.isDisabled()) {
+    if (this.overlayRef || this.isDisabled() || this.isReadOnly()) {
       return;
     }
     const triggerElement = this.trigger().nativeElement;
@@ -648,7 +713,7 @@ export class MultiSelectComponent
         return;
       }
       this.overlayRef = null;
-      this.open.set(false);
+      this.setOpen(false);
     });
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
@@ -657,7 +722,7 @@ export class MultiSelectComponent
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
-    this.open.set(true);
+    this.setOpen(true);
     this.activeIndex.set(this.firstEnabledIndex());
     if (this.showsSearch()) {
       this.focusTimer = setTimeout(() => {
@@ -688,7 +753,7 @@ export class MultiSelectComponent
     const focusWasInPanel = focusIsInside(this.overlayRef);
     disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
-    this.open.set(false);
+    this.setOpen(false);
     this.filter.set('');
     this.activeIndex.set(-1);
     this.markTouched();

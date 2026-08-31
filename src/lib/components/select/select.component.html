@@ -119,6 +119,7 @@
     <ul
       class="dropdown-list"
       role="listbox"
+      [attr.aria-busy]="loading() ? 'true' : null"
       [id]="listboxId"
       [attr.aria-labelledby]="label() ? labelId : null"
     >
@@ -244,7 +245,14 @@
         }
       }
 
-      @if (options().length === 0) {
+      @if (loading()) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          <ds-spinner size="sm" />
+        </li>
+      } @else if (options().length === 0) {
         <li
           class="empty t-s"
           role="presentation"

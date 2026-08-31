@@ -36,6 +36,9 @@
   [attr.aria-labelledby]="label() ? labelId : null"
   [attr.aria-label]="resolvedAriaLabel()"
   [attr.aria-required]="required() ? 'true' : null"
+  [attr.aria-readonly]="isReadOnly() ? 'true' : null"
+  [attr.name]="name()"
+  [class.readonly]="isReadOnly()"
   [attr.aria-activedescendant]="triggerActiveDescendant()"
   [attr.tabindex]="isDisabled() ? -1 : 0"
   (click)="onTriggerClick()"
@@ -127,6 +130,25 @@
     </span>
   }
 
+  @if (
+      clearable() &&
+      selectedOptions().length > 0 &&
+      !isDisabled() &&
+      !isReadOnly()
+    ) {
+    <button
+      type="button"
+      class="clear-btn"
+      aria-label="Clear selection"
+      (click)="clearValue($event)"
+    >
+      <ds-icon
+        name="x"
+        [size]="14"
+      />
+    </button>
+  }
+
   <ds-icon
     class="chevron"
     name="chevronDown"
@@ -210,6 +232,7 @@
       class="dropdown-list"
       role="listbox"
       aria-multiselectable="true"
+      [attr.aria-busy]="loading() ? 'true' : null"
       [id]="listboxId"
     >
       @for (item of filteredItems(); track $index; let itemIdx = $index) {
@@ -372,7 +395,14 @@
         }
       }
 
-      @if (filteredOptions().length === 0) {
+      @if (loading()) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          <ds-spinner size="sm" />
+        </li>
+      } @else if (filteredOptions().length === 0) {
         <li
           class="empty t-s"
           role="presentation"

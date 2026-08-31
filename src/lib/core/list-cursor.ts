@@ -62,6 +62,7 @@ export function nextEnabledIndex(
   }
 
   let index = from;
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of -- walks from `from` with modulo wraparound; `attempts` only bounds the walk, it is not a sequential index
   for (let attempts = 0; attempts < list.length; attempts += 1) {
     index = (index + step + list.length) % list.length;
     if (list.isEnabled(index)) {
