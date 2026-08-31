@@ -26,7 +26,7 @@
    host once the URL bar retracts, visible to anyone overriding the layout's
    background.
 
-   NOT the approach that pins the masthead and the
+   NOT pinkmoon's approach for the same exercise, which pins the masthead and the
    footer with `position: absolute` (top/bottom) so they leave the flow entirely.
    That buys more room — but a DS card holds arbitrary content, and out-of-flow
    chrome OVERLAPS a tall form instead of scrolling past it. Compression cannot

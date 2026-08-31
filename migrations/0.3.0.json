@@ -25,7 +25,7 @@
       "kind": "behavior",
       "old": "--ds-*-fg",
       "new": null,
-      "action": "For each `-fg` token you override, look the replacement up in the 0.3.0 token reference on the documentation site, which lists every `--ds-*`; the global roles are also readable in the installed package under `themes/` and `styles/`. Three suffixes are in play and the split is real: `-text-color`, `-label-color` and `-icon-color`.",
+      "action": "For each `-fg` token you override, look the replacement up in the 0.3.0 token reference on the documentation site, which lists every `--ds-*`; the global roles are also readable in the installed package under `themes/` and `styles/`. Three suffixes are in play and the split is real: at 0.3.0 the package carries 23 `-text-color`, 49 `-label-color` and 21 `-icon-color`.",
       "appliesWhen": "Only to DS-owned tokens. A variable of your own ending in `-fg` is untouched.",
       "pitfall": "The suffix is NOT derivable from the old name, so guessing produces a name nothing reads and a silently unstyled element. Same shape, three answers: `--ds-modal-title-fg` became `-text-color`, `--ds-sidenav-group-fg` became `-label-color`, `--ds-icon-button-fg` became `-icon-color`.",
       "note": "The `fg` abbreviation was dropped for a suffix that says what the token paints — text, a control or nav label, or a glyph. It covers the public `--ds-<component>-…-fg` hooks on avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state, icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs, tag and topbar, plus the `--status-*` and chart-tooltip globals.",
