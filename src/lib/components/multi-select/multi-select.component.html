@@ -1,7 +1,31 @@
+@if (label()) {
+  <span
+    class="label"
+    [id]="labelId"
+  >
+    {{ label() }}
+    @if (required()) {
+      <span
+        class="req"
+        aria-hidden="true"
+      >
+        *
+      </span>
+    } @else if (optional()) {
+      <span
+        class="optional-marker"
+        aria-hidden="true"
+      >
+        (optional)
+      </span>
+    }
+  </span>
+}
+
 <div
   #trigger
-  class="field-trigger"
   aria-haspopup="listbox"
+  [class]="'field-trigger ' + sizeResolved()"
   [attr.role]="open() ? 'group' : 'combobox'"
   [class.open]="open()"
   [class.disabled]="isDisabled()"
@@ -9,12 +33,63 @@
   [attr.aria-describedby]="hintId()"
   [attr.aria-expanded]="open()"
   [attr.aria-controls]="listboxId"
+  [attr.aria-labelledby]="label() ? labelId : null"
   [attr.aria-label]="resolvedAriaLabel()"
+  [attr.aria-required]="required() ? 'true' : null"
+  [attr.aria-activedescendant]="triggerActiveDescendant()"
   [attr.tabindex]="isDisabled() ? -1 : 0"
   (click)="onTriggerClick()"
   (keydown)="onTriggerKeydown($event)"
 >
-  @if (selectedOptions().length === 0) {
+  @if (pickerTrigger(); as tpl) {
+    <ng-container
+      [ngTemplateOutlet]="tpl"
+      [ngTemplateOutletContext]="{
+        $implicit: selectedOptions(),
+        selected: selectedOptions(),
+        count: selectedOptions().length,
+        open: open(),
+        disabled: isDisabled(),
+      }"
+    />
+  } @else if (showsCompactTrigger()) {
+    <span class="trigger-caption">
+      {{ triggerCaption() }}
+    </span>
+
+    @if (triggerDisplay() === 'labels' && selectedOptions().length > 0) {
+      <span
+        #chipRow
+        class="chip-row"
+        [class.fit]="fitsChipsToWidth()"
+      >
+        @for (option of visibleChips(); track option.value) {
+          <span
+            data-chip
+            class="trigger-label"
+            >
+            {{ option.label }}
+          </span
+          >
+        }
+
+        @if (overflowCount() > 0) {
+          <span
+            class="overflow"
+            data-chip-overflow
+            >
+            +{{ overflowCount() }}
+          </span
+          >
+        }
+      </span>
+    } @else if (selectedOptions().length > 0) {
+      <ds-badge
+        [count]="selectedOptions().length"
+        [countLabel]="'selected'"
+      />
+    }
+  } @else if (selectedOptions().length === 0) {
     <span class="placeholder">
       {{ placeholder() }}
     </span>
@@ -32,7 +107,14 @@
           [closeLabel]="'Remove ' + option.label"
           (closed)="removeValue(option.value)"
         >
-          {{ option.label }}
+          @if (chipTemplate(); as tpl) {
+            <ng-container
+              [ngTemplateOutlet]="tpl"
+              [ngTemplateOutletContext]="{ $implicit: option, option: option }"
+            />
+          } @else {
+            {{ option.label }}
+          }
         </ds-tag>
       }
 
@@ -63,31 +145,33 @@
 />
 
 <ng-template #panel>
-  <div class="panel">
-    <div class="search-row">
-      <ds-icon
-        class="search-icon"
-        name="search"
-        [size]="16"
-      />
+  <div class="dropdown-panel">
+    @if (showsSearch()) {
+      <div class="search-row">
+        <ds-icon
+          class="search-icon"
+          name="search"
+          [size]="16"
+        />
 
-      <input
-        #search
-        type="text"
-        class="search-input"
-        role="combobox"
-        aria-autocomplete="list"
-        aria-expanded="true"
-        autocomplete="off"
-        spellcheck="false"
-        [placeholder]="searchPlaceholder()"
-        [value]="filter()"
-        [attr.aria-controls]="listboxId"
-        [attr.aria-activedescendant]="activeDescendant()"
-        (input)="onFilter($event)"
-        (keydown)="onSearchKeydown($event)"
-      />
-    </div>
+        <input
+          #search
+          type="text"
+          class="search-input"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="true"
+          autocomplete="off"
+          spellcheck="false"
+          [placeholder]="searchPlaceholder()"
+          [value]="filter()"
+          [attr.aria-controls]="listboxId"
+          [attr.aria-activedescendant]="activeDescendant()"
+          (input)="onFilter($event)"
+          (keydown)="onSearchKeydown($event)"
+        />
+      </div>
+    }
 
     @if (selectAll() && filteredOptions().length) {
       <button
@@ -125,54 +209,183 @@
     }
 
     <ul
-      class="options"
+      class="dropdown-list"
       role="listbox"
       aria-multiselectable="true"
       [id]="listboxId"
     >
-      @for (option of filteredOptions(); track option.value; let i = $index) {
-        <li role="presentation">
-          <button
-            type="button"
-            role="option"
-            class="option"
-            [id]="optionId(i)"
-            [class.is-active]="activeIndex() === i"
-            [attr.aria-selected]="isSelected(option.value)"
-            [disabled]="option.disabled"
-            (click)="toggleValue(option)"
-            (mouseenter)="activeIndex.set(i)"
+      @for (item of filteredItems(); track $index; let itemIdx = $index) {
+        @if (isGroup(item)) {
+          <li
+            class="optgroup"
+            role="group"
+            [attr.aria-label]="item.label"
           >
             <span
-              class="checkbox"
-              [class.checked]="isSelected(option.value)"
+              class="optgroup-label"
+              [class.is-first]="itemIdx === 0"
             >
-              @if (isSelected(option.value)) {
-                <ds-icon
-                  name="check"
-                  [size]="13"
-                />
-              }
+              {{ item.label }}
             </span>
 
-            @if (option.icon) {
-              <ds-icon
-                class="option-icon"
-                [name]="option.icon"
-                [size]="16"
-              />
+            @if (showsGroupSelectAll()) {
+              <button
+                type="button"
+                class="select-all group"
+                role="checkbox"
+                [disabled]="item.disabled"
+                [attr.aria-checked]="
+                  groupAllSelected(item)
+                    ? 'true'
+                    : groupSomeSelected(item)
+                      ? 'mixed'
+                      : 'false'
+                "
+                (click)="toggleGroup(item)"
+              >
+                <span
+                  class="checkbox"
+                  [class.checked]="groupAllSelected(item)"
+                  [class.indeterminate]="groupSomeSelected(item)"
+                >
+                  @if (groupAllSelected(item)) {
+                    <ds-icon
+                      name="check"
+                      [size]="13"
+                    />
+                  } @else if (groupSomeSelected(item)) {
+                    <span class="dash"></span>
+                  }
+                </span>
+
+                All of {{ item.label }}
+              </button>
             }
 
-            <span class="option-label">
-              {{ option.label }}
-            </span>
-          </button>
-        </li>
+            <ul
+              class="optgroup-list"
+              role="presentation"
+            >
+              @for (option of item.options; track option.value) {
+                <li role="presentation">
+                  <button
+                    type="button"
+                    role="option"
+                    class="option"
+                    [id]="optionId(flatIndexOf(option))"
+                    [class.is-active]="activeIndex() === flatIndexOf(option)"
+                    [attr.aria-selected]="isSelected(option.value)"
+                    [disabled]="option.disabled"
+                    (click)="toggleValue(option)"
+                    (mouseenter)="activeIndex.set(flatIndexOf(option))"
+                  >
+                    <span
+                      class="checkbox"
+                      [class.checked]="isSelected(option.value)"
+                    >
+                      @if (isSelected(option.value)) {
+                        <ds-icon
+                          name="check"
+                          [size]="13"
+                        />
+                      }
+                    </span>
+
+                    @if (option.icon) {
+                      <ds-icon
+                        class="option-icon"
+                        [name]="option.icon"
+                        [size]="16"
+                      />
+                    }
+
+                    <span class="option-label">
+                      @if (optionTemplate(); as tpl) {
+                        <ng-container
+                          [ngTemplateOutlet]="tpl"
+                          [ngTemplateOutletContext]="{
+                            $implicit: option,
+                            option: option,
+                          }"
+                        />
+                      } @else {
+                        {{ option.label }}
+                      }
+                    </span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </li>
+        } @else {
+          @let option = item;
+
+          <li role="presentation">
+            <button
+              type="button"
+              role="option"
+              class="option"
+              [id]="optionId(flatIndexOf(option))"
+              [class.is-active]="activeIndex() === flatIndexOf(option)"
+              [attr.aria-selected]="isSelected(option.value)"
+              [disabled]="option.disabled"
+              (click)="toggleValue(option)"
+              (mouseenter)="activeIndex.set(flatIndexOf(option))"
+            >
+              <span
+                class="checkbox"
+                [class.checked]="isSelected(option.value)"
+              >
+                @if (isSelected(option.value)) {
+                  <ds-icon
+                    name="check"
+                    [size]="13"
+                  />
+                }
+              </span>
+
+              @if (option.icon) {
+                <ds-icon
+                  class="option-icon"
+                  [name]="option.icon"
+                  [size]="16"
+                />
+              }
+
+              <span class="option-label">
+                @if (optionTemplate(); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{
+                      $implicit: option,
+                      option: option,
+                    }"
+                  />
+                } @else {
+                  {{ option.label }}
+                }
+              </span>
+            </button>
+          </li>
+        }
       }
 
       @if (filteredOptions().length === 0) {
-        <li class="empty">
-          No matches
+        <li
+          class="empty"
+          role="status"
+        >
+          @if (emptyTemplate(); as tpl) {
+            <ng-container
+              [ngTemplateOutlet]="tpl"
+              [ngTemplateOutletContext]="{
+                $implicit: filter(),
+                query: filter(),
+              }"
+            />
+          } @else {
+            No matches
+          }
         </li>
       }
     </ul>

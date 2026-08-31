@@ -1,3 +1,5 @@
+@use '../../styles/text-clip' as text-clip;
+
 :host {
   --_tree-indent: var(--ds-tree-indent, var(--tree-indent));
   --_tree-row-pad-y: var(--ds-tree-row-pad-y, var(--tree-row-pad-y));
@@ -71,7 +73,8 @@
 
 .label {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+  @include text-clip.single-line-ellipsis;
+
   white-space: nowrap;
 }

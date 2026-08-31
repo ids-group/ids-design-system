@@ -1,7 +1,8 @@
 export { SelectComponent } from './select.component';
 export type {
+  SelectItem,
   SelectOption,
   SelectOptionGroup,
-  SelectItem,
+  SelectWidth,
 } from './select.types';
 export { isSelectOptionGroup } from './select.types';

@@ -2010,11 +2010,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Autocomplete dropdown panel max height before it scrolls (default --picker-maxh, shared with ds-multi-select). Forwarded onto the portaled pane on open."
       },
       {
-        "name": "--ds-autocomplete-option-bg-color-hover",
-        "value": "var(--surface-secondary)",
-        "notes": "Autocomplete option row fill on hover."
-      },
-      {
         "name": "--ds-radius-inner",
         "value": "—",
         "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
@@ -3150,6 +3145,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-option-check-color",
         "value": "var(--primary)",
         "notes": "The check glyph on a selected row (default --primary)."
+      },
+      {
+        "name": "--ds-dropdown-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
+      },
+      {
+        "name": "--ds-dropdown-panel-minw",
+        "value": "0",
+        "notes": "Lower bound for the connected dropdown panel behind ds-select and ds-multi-select. Only bites in `width=\"content\"`, where the pane is auto-sized and the trigger is merely its floor; in `fill` the component pins the pane to the trigger and there is nothing left to bound. Forwarded onto the portaled pane, so a host-scoped value reaches it."
+      },
+      {
+        "name": "--ds-dropdown-panel-maxw",
+        "value": "none",
+        "notes": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Same `content`-only caveat as --ds-dropdown-panel-minw."
       }
     ]
   },
@@ -4133,11 +4143,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-multi-select-check-bg-color",
         "value": "var(--accent)",
         "notes": "Multi-select option checkmark fill (defaults to --accent)."
-      },
-      {
-        "name": "--ds-dropdown-panel-radius",
-        "value": "var(--ds-radius-panel)",
-        "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
       }
     ]
   },

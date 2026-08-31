@@ -180,7 +180,7 @@
     <ds-autocomplete
       width="content"
       placeholder="Venue…"
-      [optionGroups]="venueGroups"
+      [options]="venueGroups"
       [(value)]="toolbarVenueValue"
     />
   </div>
@@ -240,11 +240,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass <code class="t-mono-inline">optionGroups</code> instead of
-    <code class="t-mono-inline">
-      options
-    </code> to render labelled sections in
-    the panel. Filtering hides entire groups whose options produce no matches.
+    Put groups in the same <code class="t-mono-inline">options</code> input —
+    flat options and groups may be mixed, and render in the order given.
+    Filtering hides a group whose options produce no matches.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -254,7 +252,7 @@
 
     <ds-autocomplete
       placeholder="Search venues…"
-      [optionGroups]="venueGroups"
+      [options]="venueGroups"
       [(value)]="venueValue"
     />
   </div>

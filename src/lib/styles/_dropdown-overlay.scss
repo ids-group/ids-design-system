@@ -25,6 +25,11 @@
      an untouched theme is unchanged. */
   --_dropdown-panel-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
 
+  /* Only bite in `content` width mode, where the pane is auto-sized: in `fill` the
+     component pins the pane to the trigger and there is nothing left to bound. */
+  --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
+  --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
+
   .dropdown-panel {
     // The pane is sized from the trigger, so without `width: 100%` the panel is a flex
     // child of it and shrinks to its own option content width.
@@ -34,6 +39,8 @@
     border-radius: var(--_dropdown-panel-radius);
     box-shadow: var(--shadow-popover);
     padding: var(--space-1);
+    min-width: var(--_dropdown-panel-minw);
+    max-width: var(--_dropdown-panel-maxw);
     max-height: 320px;
     overflow-y: auto;
     z-index: var(--layer-popover);
@@ -76,6 +83,13 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+  }
+
+  /* Every picker's "nothing to show" row, so the three do not each invent one. */
+  .empty {
+    padding: var(--space-3) var(--space-4);
+    color: var(--text-tertiary);
+    text-align: center;
   }
 
   .option {

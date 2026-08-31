@@ -1,4 +1,5 @@
 @use '../../styles/field-box' as field-box;
+@use '../../styles/field-label' as field-label;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/field-state' as field-state;
 @use '../../styles/text-clip' as text-clip;
@@ -23,6 +24,45 @@
   );
 }
 
+/* Hugs its own content instead of filling the container. The panel then takes the
+   trigger width as a floor rather than as its width — see openPanel(). */
+:host(.content-width) {
+  width: fit-content;
+}
+
+/* The compact trigger is a fixed footprint by definition, so it hugs without being
+   asked and turns the panel's width mode on for the same reason `content` exists:
+   a caption-width panel is unreadable. */
+:host(.compact-trigger) {
+  width: fit-content;
+
+  .field-trigger {
+    padding: var(--space-1) var(--space-2-5);
+    gap: var(--space-1-5);
+  }
+
+  .trigger-caption {
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+  }
+
+  /* Accent border, not a fill: it is the same signal the field family already uses
+     for "this control has your attention", so a toolbar of filters reads as one set. */
+  &:has(ds-badge) .field-trigger,
+  &:has(.trigger-label) .field-trigger {
+    border-color: var(--accent);
+  }
+
+  .trigger-label {
+    color: var(--text-secondary);
+    white-space: nowrap;
+
+    &:not(:last-child)::after {
+      content: ',';
+    }
+  }
+}
+
 /* Unique class — a bare `.field` collides with consumer/docs form styles that
    set flex-direction:column and silently turn the chip row into a column. */
 .field-trigger {
@@ -42,6 +82,11 @@
   gap: var(--space-1-5);
 
   @include field-box.field-box-height(md, min-height);
+
+  /* min-height, not height: the chip row wraps in `all` mode, so a size sets the
+     floor and the trigger grows past it. */
+  &.sm { @include field-box.field-box-height(sm, min-height); }
+  &.lg { @include field-box.field-box-height(lg, min-height); }
 
   padding: var(--space-1-5) var(--field-pad-x);
   background-color: var(--_trigger-bg-color);
@@ -74,6 +119,14 @@
   }
 }
 
+.label {
+  @include field-label.field-label;
+
+  .req {
+    color: var(--error);
+  }
+}
+
 .placeholder {
   color: var(--text-tertiary);
 }
@@ -96,23 +149,37 @@
 /* Portaled panel — plain selectors reach it via the emulated _ngcontent attr,
    but custom-property inheritance follows DOM position, so the panel + option
    resolvers must live HERE (portaled outside :host), not on :host. */
-.panel {
+
+/* The shared partial paints the panel, its rows and the selected-row hooks. What
+   stays here is what no other picker has — a filter row, a select-all row, a real
+   `<button>` option that can be `:disabled`, and this component's own tokens. */
+.dropdown-panel {
   --_panel-bg-color: var(--ds-multi-select-panel-bg-color, var(--surface-overlay));
   --_option-bg-color-active: var(--ds-multi-select-option-bg-color-active, var(--surface-secondary));
   --_check-bg-color: var(--ds-multi-select-check-bg-color, var(--accent));
 
   display: flex;
   flex-direction: column;
-  width: 100%;
   background-color: var(--_panel-bg-color);
-  border: var(--border-width-default) solid var(--border-default);
-
-  // Same chain the shared dropdown overlay resolves. This panel is `.panel`, not
-  // `.dropdown-panel`, so the shared rule does not reach it and the chain is
-  // re-declared here.
-  border-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
-  box-shadow: var(--shadow-popover);
   overflow: hidden;
+
+  /* The shared `.is-active` fill is a role; this is the component's public knob for
+     it, and it has to outrank the partial to be one. */
+  .option.is-active:not(:disabled) {
+    background-color: var(--_option-bg-color-active);
+  }
+
+  /* The row is a real button here, so the honest selector is `:disabled` — the
+     partial's `.is-disabled` never lands on it. */
+  .option:disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+
+  .dropdown-list {
+    max-height: var(--picker-maxh);
+    overflow-y: auto;
+  }
 }
 
 .search-row {
@@ -140,43 +207,6 @@
 
   &:focus {
     outline: none;
-  }
-}
-
-.options {
-  list-style: none;
-  margin: 0;
-  padding: var(--space-1);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-px);
-  max-height: var(--picker-maxh);
-  overflow-y: auto;
-}
-
-.option {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  width: 100%;
-  padding: var(--space-2) var(--space-2-5);
-  border: 0;
-  border-radius: var(--ds-radius-inner);
-  background: transparent;
-  color: var(--text-primary);
-  font:
-    var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
-    var(--font-sans);
-  text-align: left;
-  cursor: pointer;
-
-  &.is-active:not(:disabled) {
-    background-color: var(--_option-bg-color-active);
-  }
-
-  &:disabled {
-    color: var(--text-disabled);
-    cursor: not-allowed;
   }
 }
 
@@ -228,20 +258,6 @@
   height: var(--check-indet-h);
   border-radius: var(--ds-radius-inner);
   background-color: var(--text-on-primary);
-}
-
-.option-label {
-  flex: 1;
-  min-width: 0;
-
-  @include text-clip.single-line-ellipsis;
-}
-
-.empty {
-  padding: var(--space-3) var(--space-3);
-  color: var(--text-tertiary);
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  text-align: center;
 }
 
 @include field-state.field-state(
