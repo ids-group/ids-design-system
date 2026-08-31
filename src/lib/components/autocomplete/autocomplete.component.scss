@@ -170,10 +170,6 @@
   margin-left: auto;
 }
 
-/* The panel is the shared `.ds-dropdown-panel` partial now: padding, row radius,
-   selected-row hooks and pressed states come from there, so this file keeps only
-   what no other picker has — plus the three panel tokens it already shipped. */
-
 /* Qualified with the pane class so it OUTRANKS styles/_dropdown-overlay.scss by
    specificity rather than by stylesheet order — the two were an exact tie, and an
    SSR critical-CSS inline or a consumer loading the partial later flipped it. */

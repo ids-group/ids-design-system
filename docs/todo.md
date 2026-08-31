@@ -6,6 +6,7 @@
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P2 · `triggerDisplay="labels"` collapses to one label: the fit measurement reads a box its own cut narrows — RECORDED 2026-08-31
+- P2 · Four files style one portaled dropdown panel at equal specificity; order decides the winner — RECORDED 2026-08-31
 
 **Asks — a consumer or Stas asked for it**
 
@@ -57,11 +58,25 @@
 
   Same class as the two self-referential loops recorded in `done.md` from the original chip work — the rule that came out of that one is the rule this broke.
 
+## Four files style one portaled panel at equal specificity (recorded 2026-08-31, from the branch review)
+
+- [ ] **[P2] The dropdown panel is styled by `styles/_dropdown-overlay.scss` AND by three component stylesheets, and nothing decides which wins except the order the stylesheets happen to load.** The panel is portaled to `document.body`, so Angular's emulated encapsulation does not apply to it: all four rule sets land in one global cascade. `.ds-dropdown-panel .dropdown-panel` (0,2,0) from the partial and `.dropdown-panel[_ngcontent-…]` (0,2,0) from a component are an exact tie. Today the component wins because Angular appends component `<style>` after the global `<link>`; SSR critical-CSS inlining, or a consumer that `@use`s the partial from a stylesheet loaded later, flips it — and that same tie is the only thing keeping `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` alive, which the release notes promise still work.
+
+  **The cause is duplication, not specificity.** `ds-select` declares nothing for the panel and is already correct. `ds-multi-select` and `ds-autocomplete` re-declare geometry the partial already sets — `background`, `border-radius`, `max-height`, `overflow`, `display: flex` — which is exactly what §3 of `docs/picker-contract.md` forbids, in the same release that wrote §3.
+
+  **The three ways out, in the order they were considered:**
+
+  1. **Qualify the component selectors** so they outrank the partial by specificity rather than by order — `.ds-dropdown-panel .dropdown-panel, .dropdown-panel { … }`. Shipped in 0.12.0 as the stop-gap. It is deterministic, and it is a patch: it makes the tie moot per selector instead of removing it, and the next panel rule someone writes will not have it.
+  2. **Geometry lives only in the partial; components forward alias tokens.** Each component declares `--ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, …)` on its host and forwards the SHARED token through `forwardOverlayTokens`, which already exists for this. The component stylesheet then keeps only what is genuinely its own markup — the filter row, the select-all rows, `.check-box`, `.option.multi` — and the tie disappears rather than being out-ranked. This is the shape `ds-select` is already in.
+  3. **`@layer`.** Declare `@layer ds.panel, ds.component;` once and wrap each side, so precedence is stated rather than inferred and holds no matter what order anything loads in. Angular emits component styles verbatim and rewrites selectors inside at-rules, so a component SCSS can carry a layer — but the layer ORDER statement has to reach the document before either sheet, and nothing in the repo uses `@layer` today, so this sets a precedent for every other component that styles a portaled node (`ds-modal`, `ds-drawer`, `ds-toast`, the date/time/colour pickers).
+
+  2 and 3 are complementary, not alternatives: 2 removes the duplication, 3 makes what remains deterministic. 1 is what is in the release.
+
 ## Priority board (2026-08-26, recut after the 0.11.0 work)
 
-**29 open: 1 P1, 9 P2, 19 P3** (counted from the index, not by hand). Ten are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **17 items — 2 Bugs, 4 Asks and 11
-Decisions**. **`# Bugs` holds two:** the warning status pair measures 4.42:1 where AA asks 4.5, and the `labels` trigger under-shows its labels.
+**30 open: 1 P1, 10 P2, 19 P3** (counted from the index, not by hand). Ten are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **18 items — 3 Bugs, 4 Asks and 11
+Decisions**. **`# Bugs` holds three:** the warning status pair measures 4.42:1 where AA asks 4.5, and the `labels` trigger under-shows its labels.
 
 **The tooling items came out of running the tools rather than reading them, and both were invisible to a
 code read.** The formatter conflict surfaced when the three formatters were actually run end to end;

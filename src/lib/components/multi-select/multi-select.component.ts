@@ -246,12 +246,10 @@ export class MultiSelectComponent
     () => this.disabled() || this.formDisabled(),
   );
 
-  /** A projected template wins outright, so there is no combination to explain. */
   protected readonly showsCompactTrigger = computed(
     () => !this.pickerTrigger() && this.triggerDisplay() !== 'full',
   );
 
-  /** A number means "show it once the list is long enough to need it". */
   protected readonly showsSearch = computed<boolean>(() => {
     const setting = this.searchableResolved();
 
@@ -260,8 +258,6 @@ export class MultiSelectComponent
       : setting;
   });
 
-  /** Without the filter row the trigger owns the listbox cursor, so the id has to
-   *  ride on the trigger instead. */
   protected readonly triggerActiveDescendant = computed(() =>
     this.showsSearch() ? null : this.activeDescendant(),
   );
@@ -321,8 +317,6 @@ export class MultiSelectComponent
     () => this.selectedOptions().length - this.visibleChips().length,
   );
 
-  /** The panel's render list: source order kept, non-matching options dropped, and
-   *  a group that matched nothing dropped with them. */
   protected readonly filteredItems = computed<MultiSelectItem[]>(() => {
     const query = this.filter().trim().toLowerCase();
     const matches = (option: MultiSelectOption): boolean =>
@@ -506,9 +500,6 @@ export class MultiSelectComponent
     this.activeIndex.set(this.firstEnabledIndex());
   }
 
-  /** First option a reader can act on — -1 when the list is empty or every option
-   *  is disabled. Landing on a disabled row instead gives a highlighted row whose
-   *  Enter does nothing and says nothing. */
   private firstEnabledIndex(): number {
     return this.filteredOptions().findIndex((option) => !option.disabled);
   }

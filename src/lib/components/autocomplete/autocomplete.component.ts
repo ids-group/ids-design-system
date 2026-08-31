@@ -235,8 +235,6 @@ export class AutocompleteComponent<T = unknown>
     () => flattenDsOptions(this.options()),
   );
 
-  /** The panel's render list: source order kept, non-matching options dropped, and
-   *  a group that matched nothing dropped with them. */
   protected readonly filteredItems = computed<AutocompleteItem<T>[]>(() => {
     const query = this.query().toLowerCase().trim();
     const matches = (option: AutocompleteOption<T>): boolean =>
@@ -372,9 +370,6 @@ export class AutocompleteComponent<T = unknown>
     () => this.selectedOption() !== null,
   );
 
-  /** What a projected trigger is handed. `selectedTags()` is empty unless
-   *  `multiple` is set, so a single-value autocomplete has to pass its one option
-   *  instead — `ds-select` passes its own selected option the same way. */
   protected readonly triggerSelection = computed(() =>
     this.multiple() ? this.selectedTags() : this.selectedOption(),
   );

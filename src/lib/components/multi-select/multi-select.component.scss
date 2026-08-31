@@ -45,8 +45,6 @@
     white-space: nowrap;
   }
 
-  /* Accent border, not a fill: it is the same signal the field family already uses
-     for "this control has your attention", so a toolbar of filters reads as one set. */
   &:has(ds-badge) .field-trigger,
   &:has(.trigger-label) .field-trigger {
     border-color: var(--accent);
@@ -154,10 +152,6 @@
 /* Portaled panel — plain selectors reach it via the emulated _ngcontent attr,
    but custom-property inheritance follows DOM position, so the panel + option
    resolvers must live HERE (portaled outside :host), not on :host. */
-
-/* The shared partial paints the panel, its rows and the selected-row hooks. What
-   stays here is what no other picker has — a filter row, a select-all row, a real
-   `<button>` option that can be `:disabled`, and this component's own tokens. */
 
 /* Qualified with the pane class so it OUTRANKS styles/_dropdown-overlay.scss by
    specificity rather than by stylesheet order — the two were an exact tie, and an
