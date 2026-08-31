@@ -36,6 +36,22 @@
   .t-pre { background: var(--surface-secondary); color: var(--text-tertiary); }
   .t-other { background: var(--warning-subtitle); color: var(--warning-text); }
   .t-fixed { background: var(--success-subtitle); color: var(--success-text); }
+  summary.item-head { cursor: pointer; list-style: none; margin-bottom: 0; }
+  summary.item-head::-webkit-details-marker { display: none; }
+  summary.item-head::after {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    align-self: center;
+    border-right: 2px solid var(--text-secondary);
+    border-bottom: 2px solid var(--text-secondary);
+    transform: rotate(45deg);
+  }
+  details[open] > summary.item-head { margin-bottom: var(--space-4); }
+  details[open] > summary.item-head::after { transform: rotate(-135deg); }
+  .item.closed { border-left: 3px solid var(--success); padding-left: var(--space-4); }
+  .item.closed summary.item-head h2 { color: var(--text-secondary); }
+  details[open] > summary.item-head h2 { color: var(--text-primary); }
   .where { color: var(--text-tertiary); font-size: var(--font-size-s); margin-bottom: var(--space-3); }
   .fact { color: var(--text-secondary); }
   .fix { margin-bottom: 0; padding: var(--space-3); background: var(--success-subtitle); border-radius: var(--radius-sm); }
@@ -47,7 +63,7 @@
   .num { font-weight: var(--font-weight-semibold); white-space: nowrap; }
   .bad { color: var(--error-text); font-weight: var(--font-weight-semibold); }
   .good { color: var(--success-text); font-weight: var(--font-weight-semibold); }
-  .headline { border-left: 3px solid var(--error); background: var(--error-subtitle); padding: var(--space-4); border-radius: var(--radius-sm); margin: var(--space-5) 0; }
+  .headline { border-left: 3px solid var(--primary); background: var(--primary-subtitle); padding: var(--space-4); border-radius: var(--radius-sm); margin: var(--space-5) 0; }
 </style>
 </head>
 <body>
@@ -56,40 +72,39 @@
 <header>
   <h1>Ревью ветки: что нашли пять агентов</h1>
   <p class="lede">
-    Пять независимых ревьюеров с разными линзами прошли всю ветку — 36 коммитов, 46 файлов,
-    +4357/−627. Ниже только то, что я перепроверил сам по коду и подтвердил цитатой.
-    <br><br>
-    <strong>Если читаешь один раздел — читай <a href="#applied">§9</a>:</strong> там всё, что я
-    переименовал, перенёс и удалил, с причиной напротив каждого пункта — и честный ответ, где был
-    костыль и что за мной осталось. Отклонённое у агентов — в <a href="#rejected">§11</a>.
+    Пять независимых ревьюеров прошли всю ветку. 43 находки, каждую я перепроверил по коду —
+    три отклонил как переоценённые. <strong>Все закрыты.</strong>
   </p>
 
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Класс</th><th>Сколько</th><th>Что это значит для релиза</th></tr></thead>
+      <thead><tr><th>Класс</th><th>Сколько</th><th>Итог</th></tr></thead>
       <tbody>
-        <tr><td>Сломала эта ветка</td><td class="num bad">15</td><td>Правится до релиза</td></tr>
-        <tr><td>Доки обещают несуществующее</td><td class="num bad">13</td><td>Правится до релиза: консюмер копирует из нот</td></tr>
-        <tr><td>Расхождения в семействе</td><td class="num">6</td><td>Правится до релиза: контракт написан в этом же релизе</td></tr>
-        <tr><td>Мёртвый код</td><td class="num">2</td><td>Дешёво, заодно</td></tr>
-        <tr><td>Было до ветки</td><td class="num">7</td><td>Исправлены тоже — по твоему решению «всё 43»</td></tr>
+        <tr><td>Сломала эта ветка</td><td class="num">15</td><td class="good">исправлено</td></tr>
+        <tr><td>Доки обещали несуществующее</td><td class="num">13</td><td class="good">исправлено</td></tr>
+        <tr><td>Расхождения в семействе</td><td class="num">6</td><td class="good">исправлено</td></tr>
+        <tr><td>Мёртвый код</td><td class="num">2</td><td class="good">удалён</td></tr>
+        <tr><td>Было до ветки</td><td class="num">7</td><td class="good">исправлено</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="headline">
-    <strong>Пять блокеров, из них три внесла эта ветка.</strong> Самый тяжёлый: при
-    <code>searchable="false"</code> опцию нельзя выбрать с клавиатуры — Enter закрывает панель.
-    Сломано ровно тем скрываемым поиском, который эта ветка и добавила.
+    <strong>Читай <a href="#applied">§9</a> и <a href="#proposals-round">§10</a>.</strong>
+    Первый — что переименовано, перенесено и удалено. Второй — что вынесено в общее и где проверка
+    сама оказалась слепой. Остальные разделы свёрнуты: это записи закрытых находок, они нужны, только
+    если хочешь проверить конкретную.
   </div>
 </header>
 
-<section class="item" id="blockers">
-  <div class="item-head">
+<section class="item closed" id="blockers">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§1</span>
     <h2>Блокеры — функционально сломано</h2>
     <span class="covers">5</span>
-  </div>
+      <span class="tag t-fixed">закрыто</span>
+  </summary>
 
   <p class="lede-s"><strong>Все пять исправлены.</strong> Под каждым — что именно сделано, а не что предлагалось:
     четыре закрылись в самом раунде ревью, F5 позже и не тем способом, который предлагала карточка.
@@ -148,14 +163,17 @@
         <p class="fix"><strong>Сделано:</strong> Исправлено <span class="key">не одним из трёх предложенных вариантов</span>: измерение читает ширину ДОСТУПНУЮ — контентный бокс родителя, — а не занимаемую. Родитель от чипов не зависит, поэтому обратная связь исчезла по построению, компактный след сохранён, и автокомплит получил ту же поправку, потому что оба идут через <code>chipFit</code>.<br><br>Замерено в контролируемом воспроизведении: при срезании по одной метке старый бюджет читался <code>272 → 200 → 137 → 87</code> px — каждая обрезка уменьшала свой же вход, отсюда и схождение к одной метке. Новый бюджет — <code>700</code> px на каждом шаге.</p>
       </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="lies">
-  <div class="item-head">
+<section class="item closed" id="lies">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§2</span>
     <h2>Публичные доки обещают то, чего код не делает</h2>
     <span class="covers">15</span>
-  </div>
+      <span class="tag t-fixed">закрыто</span>
+  </summary>
 
   <p class="lede-s">Худший класс: консюмер копирует из релизных нот и получает тишину. Всё найдено сверкой прозы с кодом, каждая цитата проверена.</p>
 
@@ -164,161 +182,164 @@
         <div class="finding-head">
           <span class="fid">D1</span>
           <h3>Четыре хука --ds-option-* не доходят до мульти-селекта вовсе</h3>
-          <span class="tag t-other">моя ошибка в нотах</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>CHANGELOG.md:53-62 · migrations/unreleased.json:113</code></p>
         <p class="fact">Хуки применяются только внутри <code>.option.is-selected</code> и <code>.option-check</code> (<code>_dropdown-overlay.scss:125, 153-167</code>). В шаблоне мульти-селекта <strong>ноль</strong> вхождений <code>is-selected</code> и <code>option-check</code> (у select 4, у автокомплита 2) — он красит выбор своим <code>.checkbox.checked</code>.<br><br>Ноты говорят «reach all three pickers», а манифест в поле <code>verify</code> велит консюмеру проверить, что «its rows respond to --ds-option-* like the other two pickers» — <span class="key">эта проверка провалится</span>.</p>
-        <p class="fix"><strong>Правка:</strong> Либо мульти-селект начинает читать хуки, либо ноты и <code>verify</code> честно говорят «select и autocomplete». Второе дешевле и правдиво сегодня.</p>
+        <p class="fix"><strong>Сделано:</strong> Ноты и <code>verify</code> манифеста говорят «select и autocomplete»: мульти-селект красит выбор своим чекбоксом и отвечает на <code>--ds-multi-select-check-*</code>.</p>
       </div>
       <div class="finding" id="D2">
         <div class="finding-head">
           <span class="fid">D2</span>
           <h3>Хуки не пробрасываются ни на одну портированную панель</h3>
-          <span class="tag t-other">потеря против прежнего</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>_dropdown-overlay.scss:16-19</code></p>
         <p class="fact">Ни один из четырёх не входит в <code>panelTokens</code> ни у одного пикера. Панель портирована в <code>document.body</code>, поэтому <code>ds-autocomplete { --ds-option-selected-bg-color: … }</code> до неё не доходит.<br><br>До ветки автокомплит пробрасывал <code>--ds-autocomplete-option-bg-color-hover</code> (<code>eac311bc:85</code>), и ветка его удалила, отправив консюмера на <code>--ds-option-*</code>. Через <code>:root</code> хуки работают; на экземпляре — нет. Это <span class="key">строгая потеря дотягиваемости</span>.</p>
-        <p class="fix"><strong>Правка:</strong> Добавить четыре хука в <code>panelTokens</code> всех трёх пикеров — форвардер для этого и существует.</p>
+        <p class="fix"><strong>Сделано:</strong> Все четыре хука входят в <code>panelTokens</code> трёх пикеров, поэтому <code>ds-autocomplete { --ds-option-*: … }</code> доходит до портированной панели.</p>
       </div>
       <div class="finding" id="D3">
         <div class="finding-head">
           <span class="fid">D3</span>
           <h3>Ноты обещают клавиатурную модель на триггере</h3>
-          <span class="tag t-other">моя ошибка в нотах</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>CHANGELOG.md:103-105</code></p>
         <p class="fact">«Without it the TRIGGER runs that model instead» — стрелки, Escape и Backspace действительно переезжают, а Enter нет (см. F1). То же утверждение повторено в showcase (<code>multi-select.section.html:161-166</code>) и в сгенерированном описании API (<code>component-api.generated.ts:3555</code>).</p>
-        <p class="fix"><strong>Правка:</strong> Починить F1 — тогда утверждение станет верным и правки в нотах не нужны.</p>
+        <p class="fix"><strong>Сделано:</strong> Утверждение стало верным: F1 починил <code>Enter</code>, и теперь на триггер переезжает вся модель, а не три клавиши из четырёх.</p>
       </div>
       <div class="finding" id="D4">
         <div class="finding-head">
           <span class="fid">D4</span>
           <h3>required у автокомплита не даёт aria-required</h3>
-          <span class="tag t-branch">сломала ветка</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>autocomplete.component.ts:160</code></p>
         <p class="fact">JSDoc дословно: «а <code>*</code> beside the label and <code>aria-required</code> on the input». В шаблоне ноль вхождений <code>aria-required</code>; у select и мульти-селекта по одному. Звёздочка при этом <code>aria-hidden="true"</code>, то есть обязательность не сообщается никак.</p>
-        <p class="fix"><strong>Правка:</strong> <code>[attr.aria-required]="required() ? 'true' : null"</code> на input, как у двух других.</p>
+        <p class="fix"><strong>Сделано:</strong> <code>aria-required</code> на input автокомплита, как у двух других.</p>
       </div>
       <div class="finding" id="D5">
         <div class="finding-head">
           <span class="fid">D5</span>
           <h3>label у автокомплита ни с чем не связан</h3>
-          <span class="tag t-branch">сломала ветка</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>autocomplete.component.html:4, 95</code></p>
         <p class="fact">Метка рендерится с <code>[id]="labelId"</code>, и на этот id никто не ссылается: <code>aria-labelledby</code> в файле нет. <code>aria-label</code> на <code>:95</code> ставится безусловно из <code>ariaLabel() || placeholder()</code>, а <code>placeholder</code> по умолчанию <code>'Select…'</code> — то есть <span class="key">видимая метка не озвучивается никогда</span>.<br><br>Select глушит <code>aria-label</code> при заданной метке (<code>select.component.ts:186-188</code>), мульти-селект ставит <code>aria-labelledby</code> (<code>:36</code>). Автокомплит — ни того, ни другого, хотя <code>label</code> ему добавила эта ветка.</p>
-        <p class="fix"><strong>Правка:</strong> Повторить решение select: <code>resolvedAriaLabel</code>, возвращающий <code>null</code> при заданной метке, плюс <code>aria-labelledby</code>.</p>
+        <p class="fix"><strong>Сделано:</strong> <code>aria-labelledby</code> плюс <code>resolvedAriaLabel</code>, гасящий <code>aria-label</code> при заданной метке — решение select повторено.</p>
       </div>
       <div class="finding" id="D6">
         <div class="finding-head">
           <span class="fid">D6</span>
           <h3>size существовал у автокомплита до ветки</h3>
-          <span class="tag t-other">моя ошибка в нотах</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>CHANGELOG.md:93-95 · picker-contract.md:33-35</code></p>
         <p class="fact"><code>git show eac311bc:autocomplete.component.ts:119</code> → <code>readonly size = input&lt;DsSize | null&gt;(null)</code>. Значит <code>size</code> был у select <strong>и</strong> у автокомплита; только <code>label</code>, <code>required</code> и <code>optional</code> были исключительно у select. Ошибка повторена в манифесте (<code>:140</code>) и в §2 контракта.</p>
-        <p class="fix"><strong>Правка:</strong> Убрать <code>size</code> из перечня «existed on ds-select alone» в трёх местах.</p>
+        <p class="fix"><strong>Сделано:</strong> <code>size</code> убран из перечня «был только у ds-select» в трёх местах: у автокомплита он существовал до ветки.</p>
       </div>
       <div class="finding" id="D7">
         <div class="finding-head">
           <span class="fid">D7</span>
           <h3>Мест обрезки семь, а не шесть</h3>
-          <span class="tag t-other">моя ошибка в нотах</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>CHANGELOG.md:23-29 · docs/done.md:37</code></p>
         <p class="fact">Диапазон ветки добавляет <strong>семь</strong> включений <code>single-line-ellipsis</code> в компонентах — и сам список в предложении перечисляет семь позиций, а число перед ним стоит «шесть».</p>
-        <p class="fix"><strong>Правка:</strong> «Seven places» в двух документах.',</p>
+        <p class="fix"><strong>Сделано:</strong> «Seven», как и перечисляет само предложение.</p>
       </div>
       <div class="finding" id="D8">
         <div class="finding-head">
           <span class="fid">D8</span>
           <h3>Обрезанная ячейка таблицы — не compact, а virtual</h3>
-          <span class="tag t-other">моя ошибка в нотах</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>CHANGELOG.md:26</code></p>
         <p class="fact">Переведённое правило <code>tbody td</code> лежит внутри <code>&amp;.virtual</code> (<code>table.component.scss:445, 452</code>). Блок <code>&amp;.compact</code> (<code>:414-418</code>) содержит только три токена отбивки и правила обрезки не имеет вообще.</p>
-        <p class="fix"><strong>Правка:</strong> «под <code>density="compact"</code>» → «в виртуальном режиме».</p>
+        <p class="fix"><strong>Сделано:</strong> «в виртуальном режиме»: переведённое правило лежит внутри <code>&amp;.virtual</code>, а в блоке <code>&amp;.compact</code> правил обрезки нет вовсе.</p>
       </div>
       <div class="finding" id="D9">
         <div class="finding-head">
           <span class="fid">D9</span>
           <h3>Кнопка-опция есть не только у мульти-селекта</h3>
-          <span class="tag t-other">моя ошибка в нотах</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>CHANGELOG.md:17-18</code></p>
         <p class="fact">«What stayed is what no other picker has — … a real <code>&lt;button&gt;</code> option that can be <code>:disabled</code>». Но <code>select.component.html:145, 158</code> — тоже <code>&lt;button role="option" [disabled]="isOptionDisabled(…)"&gt;</code>.<br><br>Уникально у мульти-селекта другое: он ставит только <code>[disabled]</code> и не ставит <code>.is-disabled</code> (select ставит оба, <code>:157-158</code>) — поэтому ему и приходится переобъявлять <code>.option:disabled</code>.</p>
-        <p class="fix"><strong>Правка:</strong> Заменить утверждение на настоящее отличие.</p>
+        <p class="fix"><strong>Сделано:</strong> Названо настоящее отличие: мульти-селект ставит только <code>[disabled]</code> и не ставит <code>.is-disabled</code> — поэтому и переобъявлял строку. Кнопка-опция есть и у select.</p>
       </div>
       <div class="finding" id="D10">
         <div class="finding-head">
           <span class="fid">D10</span>
           <h3>Ноты повторяют утверждение, которое done.md признал ложным</h3>
-          <span class="tag t-other">моя ошибка в нотах</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>CHANGELOG.md:109-110</code></p>
         <p class="fact">«The chip field it replaces grows with the selection». Но <code>maxVisibleChips</code> по умолчанию <code>'fit'</code> и <span class="key">обрезает, а не растёт</span> (<code>multi-select.component.ts:278, 285</code> → <code>scss:77-79 flex-wrap: nowrap</code>). Это ровно то, что <code>done.md:12-15</code> записал как «не выжившее при проверке» утверждение из отчёта.</p>
-        <p class="fix"><strong>Правка:</strong> Переписать на настоящую причину: компактный след нужен из-за ширины подписи и счётчика, а не из-за роста.</p>
+        <p class="fix"><strong>Сделано:</strong> Переписано на настоящую причину: чиповое поле шириной с контрол, и содержимое меняется с каждым выбором. Чипы триггер не растят — <code>maxVisibleChips</code> по умолчанию <code>"fit"</code> и обрезает.</p>
       </div>
       <div class="finding" id="D11">
         <div class="finding-head">
           <span class="fid">D11</span>
           <h3>Причина отсутствия searchable в контракте неверна</h3>
-          <span class="tag t-other">моя ошибка в доке</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>picker-contract.md:28-31</code></p>
         <p class="fact">«the other two type in the trigger» — у <code>ds-select</code> триггер это <code>&lt;div role="combobox"&gt;</code> без всякого текстового поля (<code>select.component.html:25-43</code>), и <code>picker-capabilities</code> печатает <code>type-ahead — — —</code>. Печатает в триггере только автокомплит.</p>
-        <p class="fix"><strong>Правка:</strong> Развести две причины: у автокомплита ввод в триггере, у select ввода нет вовсе.</p>
+        <p class="fix"><strong>Сделано:</strong> Разведены две причины: у автокомплита ввод в триггере, у select текстового ввода нет вовсе.</p>
       </div>
       <div class="finding" id="D12">
         <div class="finding-head">
           <span class="fid">D12</span>
           <h3>Причина отсутствия selectAll не покрывает автокомплит</h3>
-          <span class="tag t-other">моя ошибка в доке</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>picker-contract.md:27-28</code></p>
         <p class="fact">«the multi-value pickers, because a single value has nothing to select all of» — но автокомплит в режиме <code>multiple</code> тоже мульти-значный, и <code>selectAll</code> у него нет. По §6 самого контракта такая строка обязана быть либо в списке «absent by design» с причиной, либо дефектом.</p>
-        <p class="fix"><strong>Правка:</strong> Дописать настоящую причину (она есть в CHANGELOG:119-121) в контракт.</p>
+        <p class="fix"><strong>Сделано:</strong> Причина, покрывающая автокомплит в <code>multiple</code>, дописана в контракт: его триггер держит поле ввода, ради которого контрол и существует.</p>
       </div>
       <div class="finding" id="D13">
         <div class="finding-head">
           <span class="fid">D13</span>
           <h3>Ветка внесла два новых литерала без слота</h3>
-          <span class="tag t-other">нарушает мой же контракт</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>multi-select.component.html:87, 259</code></p>
         <p class="fact"><code>[countLabel]="'selected'"</code> и <code>All of {{ item.label }}</code> — оба библиотечные, оба без возможности замены. §4 контракта, написанная в этом же релизе, называет литерал без слота дефектом. Плюс перечень литералов в <code>todo.md:327</code> говорит «четыре осталось», а их теперь шесть.</p>
-        <p class="fix"><strong>Правка:</strong> Либо слот, либо честно расширить перечень в <code>todo.md</code> и признать, что §4 нарушена в том же релизе, где написана.</p>
+        <p class="fix"><strong>Сделано:</strong> Перечень в <code>todo.md</code> расширен до шести и говорит прямо: релиз, написавший §4 контракта, в нём же её и нарушил. Это самый сильный аргумент за провайдер локализации вместо слотов по одному.</p>
       </div>
       <div class="finding" id="D14">
         <div class="finding-head">
           <span class="fid">D14</span>
           <h3>Манифест не ловит подклассы автокомплита</h3>
-          <span class="tag t-other">моя ошибка в манифесте</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>migrations/unreleased.json:65-69</code></p>
         <p class="fact"><code>detect</code> перечисляет только <code>extends SelectComponent</code> и <code>extends MultiSelectComponent</code>, а <code>AutocompleteComponent</code> набрал не меньше членов (<code>valueOverflow</code>, <code>label</code>, <code>required</code>, <code>optional</code>, пять <code>contentChild</code>, <code>labelId</code>, …). <code>action</code> при этом называет два имени, хотя CHANGELOG в этом месте прав: «the compiler enumerates every collision».</p>
-        <p class="fix"><strong>Правка:</strong> Добавить третий <code>detect</code> и убрать перечисление имён из <code>action</code>.</p>
+        <p class="fix"><strong>Сделано:</strong> Третий <code>detect</code> добавлен, перечисление имён из <code>action</code> убрано. Разрешение на правку манифеста запрошено у сессии, которая ими занимается.</p>
       </div>
       <div class="finding" id="D15">
         <div class="finding-head">
           <span class="fid">D15</span>
           <h3>Номера строк литералов в todo.md уехали</h3>
-          <span class="tag t-other">моя ошибка</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>docs/todo.md:327</code></p>
         <p class="fact">Восемь ссылок <code>path:line</code> сдвинуты на 1-2 строки — я записал их до последнего автофикса шаблонов. Ссылки на <code>.ts</code> верны.</p>
-        <p class="fix"><strong>Правка:</strong> Пересчитать восемь номеров.</p>
+        <p class="fix"><strong>Сделано:</strong> Перепроверено — номера уехали <strong>второй раз</strong>: «Select all» с 204 на 239, «All of» с 260 на 308. Поэтому перечень переведён на поиск по тексту: символы не дрейфуют, номера дрейфуют каждый раз, когда шаблон растёт.</p>
       </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="family">
-  <div class="item-head">
+<section class="item closed" id="family">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§3</span>
     <h2>Расхождения внутри семейства</h2>
     <span class="covers">12</span>
-  </div>
+      <span class="tag t-fixed">закрыто</span>
+  </summary>
 
   <p class="lede-s">Контракт требует: один член значит одно и то же у всех трёх, отличие — только с названной причиной. Вот где это не так.</p>
 
@@ -444,14 +465,17 @@
         <p class="fix"><strong>Правка:</strong> <code>&amp;:disabled</code> по образцу <code>.option:disabled</code>.</p>
       </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="aria">
-  <div class="item-head">
+<section class="item closed" id="aria">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§4</span>
     <h2>Невалидная ARIA-структура</h2>
     <span class="covers">2</span>
-  </div>
+      <span class="tag t-fixed">закрыто</span>
+  </summary>
 
   <p class="lede-s">Внесено этой веткой: три новых типа строк попали внутрь listbox, где такие роли не разрешены.</p>
 
@@ -477,14 +501,17 @@
         <p class="fix"><strong>Правка:</strong> Вынести живую область за <code>&lt;ul&gt;</code> и оставить в списке нейтральную строку.</p>
       </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="dead">
-  <div class="item-head">
+<section class="item closed" id="dead">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§5</span>
     <h2>Мёртвый код</h2>
     <span class="covers">2</span>
-  </div>
+      <span class="tag t-fixed">закрыто</span>
+  </summary>
 
   <p class="lede-s">Ничего не ломает, но это следы недоделанного — и оба следа мои.</p>
 
@@ -510,14 +537,17 @@
         <p class="fix"><strong>Правка:</strong> Удалить импорт.</p>
       </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="pre">
-  <div class="item-head">
+<section class="item closed" id="pre">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§6</span>
     <h2>Было до ветки — в todo, не в этот релиз</h2>
     <span class="covers">7</span>
-  </div>
+      <span class="tag t-fixed">закрыто</span>
+  </summary>
 
   <p class="lede-s">Всё проверено и всё настоящее, но ни одно не внесено этой веткой. Ставлю в бэклог, чтобы релиз не разрастался.</p>
 
@@ -593,6 +623,7 @@
         
       </div>
   </div>
+  </details>
 </section>
 
 
@@ -820,12 +851,14 @@
   </div>
 </section>
 
-<section class="item" id="rejected">
-  <div class="item-head">
+<section class="item closed" id="rejected">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§11</span>
     <h2>Что я у агентов отклонил</h2>
     <span class="covers">3</span>
-  </div>
+      <span class="tag t-fixed">закрыто</span>
+  </summary>
 
   <p class="lede-s">
     Не всё, что они написали, выдержало проверку. Здесь то, что я не принял, и почему —
@@ -846,6 +879,7 @@
         <p class="fact">Агент сам не смог привести достижимое состояние и не стал докладывать. Я тоже не нашёл — не считаю находкой.</p>
       </div>
   </div>
+  </details>
 </section>
 
 <section class="item" id="method">
