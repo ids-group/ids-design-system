@@ -663,6 +663,7 @@
   </ol>
   <div class="toc-title" style="margin-top: var(--space-6)">Контекст</div>
   <ol>
+    <li><a href="#better">Что сделать лучше</a></li>
     <li><a href="#deferred">Отложено</a></li>
   </ol>
 </nav>
@@ -682,7 +683,7 @@
           <tr><td><a href="#p1">1</a></td><td>компактный триггер фильтра</td><td class="rec"><strong>O1</strong> слот + пресет <code>triggerDisplay</code></td><td><span class="decided">сделано</span></td></tr>
           <tr><td><a href="#p2">2</a></td><td>отвязать панель от триггера</td><td class="rec"><strong>O3</strong> вход <code>width</code> + токены</td><td><span class="decided">сделано</span></td></tr>
           <tr><td><a href="#p3">3</a></td><td>произвольный визуал опции</td><td class="rec"><strong>O2</strong> два слота: строка и чип</td><td><span class="decided">сделано</span></td></tr>
-          <tr><td><a href="#p5">4</a></td><td>скрыть поиск на коротком списке</td><td class="rec"><strong>O4</strong> один вход: <code>boolean | number</code></td><td><span class="risk default">на выбор</span></td></tr>
+          <tr><td><a href="#p5">4</a></td><td>скрыть поиск на коротком списке</td><td class="rec"><strong>O4</strong> один вход: <code>boolean | number</code></td><td><span class="decided">сделано</span></td></tr>
           <tr><td><a href="#p6">5</a></td><td>свести две формы групп к одной</td><td class="rec"><strong>U1</strong> один вход, union</td><td><span class="decided">сделано</span></td></tr>
           <tr><td><a href="#p8">6</a></td><td>одна строка значения</td><td class="rec"><strong>O1</strong> многоточие по умолчанию</td><td><span class="decided">сделано</span></td></tr>
           <tr><td><a href="#p9">7</a></td><td>панель автокомплита</td><td class="rec"><strong>O1</strong> вернуть в общий файл стилей</td><td><span class="decided">сделано</span></td></tr>
@@ -690,10 +691,9 @@
       </table>
     </div>
     <div class="headline">
-      <strong>Шесть из семи реализованы и проверены в живом приложении.</strong> Осталась одна —
-      §4: выбрать между <strong>O4</strong> (один вход <code>searchable: boolean | number</code>) и
-      <strong>O1</strong> (два входа). Ломающие изменения ценой не считаются: платим записью в
-      CHANGELOG и строкой миграции.
+      <strong>Все семь реализованы и проверены в живом приложении.</strong> Открытых решений по ним
+      не осталось. Новое — в <a href="#better">§8</a>: четыре предложения поверх принятого, каждое
+      меняет уже отгруженное, поэтому ждёт тебя.
     </div>
   </div>
 
@@ -1515,6 +1515,83 @@
         <tr><th>Копий стилей опций</th><td class="yes">2</td><td class="meh">3</td><td class="meh">3</td></tr>
       </tbody>
     </table>
+  </div>
+</section>
+
+<section class="item" id="better">
+  <div class="item-head">
+    <span class="item-num">§8</span>
+    <h2>Что ещё можно сделать лучше</h2>
+    <span class="covers">не решено · предложения поверх принятого</span>
+  </div>
+
+  <p>
+    Всё, что решено, реализовано и проверено. Это — идеи сверх того, каждая меняет уже отгруженное
+    поведение или вид, поэтому ни одна не внедрена молча. Обратная совместимость ценой не считается.
+  </p>
+
+  <div class="options">
+    <div class="opt recommended" data-opt="b1">
+      <div class="opt-head"><span class="opt-id">B1</span><span class="opt-name">Довести §7 до конца: у мульти-селекта своя копия панели</span><span class="rec-flag">рекомендую</span></div>
+      <div class="opt-body">
+        <p>
+          §7 вернул в общую партиалку <strong>автокомплит</strong>. У <code>ds-multi-select</code>
+          панель по-прежнему своя — <code>.panel</code> / <code>.options</code> и полный блок
+          <code>.option</code> с собственными отбивкой, радиусом, шрифтом и активной строкой. Его
+          пейн при этом несёт <code>ds-dropdown-panel</code>, так что оба набора правил применяются
+          одновременно.
+        </p>
+        <p>
+          <span class="key">Три компонента, две реализации панели.</span> Свести к одной — то же
+          движение, что §7, и после него правило про строку опции живёт ровно в одном файле.
+        </p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> вид меняется — зазор в строке <code>--space-3</code> против <code>--space-2</code> у общей партиалки. Это надо посмотреть глазами, поэтому не сделано.</div>
+    </div>
+
+    <div class="opt" data-opt="b2">
+      <div class="opt-head"><span class="opt-id">B2</span><span class="opt-name">Компактный триггер показывает метки, а не только счётчик</span></div>
+      <div class="opt-body">
+        <div class="opt-preview">
+          <div class="spec"><div class="spec-label">сейчас</div>
+            <div class="rep-field hugs compact is-active"><span class="caption">Labels</span><span class="rep-count">2</span><span class="rep-chevron">▾</span></div></div>
+          <div class="spec"><div class="spec-label">B2 · метки, пока влезают</div>
+            <div class="rep-field hugs compact is-active"><span class="caption">Labels:</span><span class="caption">Design, Frontend</span><span class="rep-chevron">▾</span></div></div>
+          <div class="spec"><div class="spec-label">B2 · и «+N», когда нет</div>
+            <div class="rep-field hugs compact is-active"><span class="caption">Labels:</span><span class="caption">Design</span><span class="rep-overflow">+3</span><span class="rep-chevron">▾</span></div></div>
+        </div>
+        <p>
+          «2» говорит, что фильтр включён, но не что в нём. Механика измерения уже есть —
+          <code>chipFit</code> считает, сколько чипов влезает в строку, и та же функция сосчитала бы
+          метки.
+        </p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> триггер перестаёт быть фиксированной ширины, а именно ради неё <code>compact</code> и заводился. Возможно, это третий режим, а не замена.</div>
+    </div>
+
+    <div class="opt" data-opt="b3">
+      <div class="opt-head"><span class="opt-id">B3</span><span class="opt-name">Слоты для пустого состояния и строки «создать»</span></div>
+      <div class="opt-body">
+        <p>
+          «No matches» — захардкоженная строка, и заменить её нечем: ни входа, ни слота.
+          <code>dsEmptyTemplate</code> закрыл бы и вёрстку (иконка, подсказка, кнопка «сбросить
+          фильтр»), и половину локализации — до того, как <a href="#deferred">P4</a> будет сделан
+          целиком.
+        </p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> ещё один контракт проекции в довесок к двум из §3.</div>
+    </div>
+
+    <div class="opt" data-opt="b4">
+      <div class="opt-head"><span class="opt-id">B4</span><span class="opt-name">«Выбрать все» внутри группы</span></div>
+      <div class="opt-body">
+        <p>
+          Это был третий вариант §5, и тогда он выглядел преждевременным — групп не существовало.
+          Теперь они есть, и «выбрать всю команду» становится очевидным жестом.
+        </p>
+      </div>
+      <div class="opt-cost"><strong>Цена:</strong> второй контрол и второе неопределённое состояние рядом с глобальным, который никуда не девается.</div>
+    </div>
   </div>
 </section>
 
