@@ -40,7 +40,9 @@ const probes = {
   'aria-multiselectable': /aria-multiselectable/,
   'live announcement of results': /aria-live|LiveAnnouncer/,
   'clearing the value from outside': /\bclear\(\)/,
-  'scroll the active row into view': /scrollIntoView/,
+  // Matches the shared helper too, not just an inline call: the behaviour moved
+  // into components/scroll-active-option.ts and this probe kept reporting —.
+  'scroll the active row into view': /scrollIntoView|scrollActiveOptionIntoView/,
 };
 
 const rows = Object.entries(probes).map(([label, re]) => ({

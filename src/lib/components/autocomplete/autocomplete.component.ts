@@ -44,6 +44,12 @@ import type {
   AutocompleteWidth,
 } from './autocomplete.types';
 import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
+import {
+  firstEnabledIndex as firstEnabledOf,
+  lastEnabledIndex as lastEnabledOf,
+  nextEnabledIndex,
+} from '../../core/list-cursor';
+import { scrollActiveOptionIntoView } from '../scroll-active-option';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
@@ -161,6 +167,18 @@ export class AutocompleteComponent<T = unknown>
   readonly allowCreate = input(false, { transform: booleanAttribute });
   /** Field label above the control — the same meaning it has on the other two pickers. */
   readonly label = input<string>('');
+  /** How two values are decided to be the same one. The default is `===`, which
+   *  is reference identity — so with object values a re-fetch that returns equal
+   *  data as NEW objects loses the selection. Pass a comparator keyed on whatever
+   *  identifies the value: `(a, b) => a?.id === b?.id`. */
+  readonly compareWith = input<(a: T | null, b: T | null) => boolean>(
+    (a, b) => a === b,
+  );
+
+  /** Scrolls the keyboard cursor's row into view. On by default: a list longer
+   *  than the panel otherwise walks the cursor out of sight. Set `false` only if
+   *  you are driving the scroll position yourself. */
+  readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
   /** Marks the field required: a `*` beside the label and `aria-required` on the input. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Marks the field optional in words, for a form where most fields are required. */
@@ -306,9 +324,11 @@ export class AutocompleteComponent<T = unknown>
       return [];
     }
     const selectedValues = (this.value() as readonly T[] | null) ?? [];
-    const selectedSet = new Set(selectedValues);
+    const same = this.compareWith();
 
-    return this.allOptions().filter((option) => selectedSet.has(option.value));
+    return this.allOptions().filter((option) =>
+      selectedValues.some((selected) => same(selected, option.value)),
+    );
   });
 
   private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
@@ -358,8 +378,9 @@ export class AutocompleteComponent<T = unknown>
       }
 
       return (
-        this.allOptions().find((option) => option.value === currentValue) ??
-        null
+        this.allOptions().find((option) =>
+          this.compareWith()(option.value, currentValue),
+        ) ?? null
       );
     },
   );
@@ -390,10 +411,12 @@ export class AutocompleteComponent<T = unknown>
     if (this.multiple()) {
       const selectedValues = (this.value() as readonly T[] | null) ?? [];
 
-      return selectedValues.includes(option.value);
+      const same = this.compareWith();
+
+      return selectedValues.some((selected) => same(selected, option.value));
     }
 
-    return this.value() === option.value;
+    return this.compareWith()(this.value() as T | null, option.value);
   }
 
   protected optionClass(option: AutocompleteOption<T>): string {
@@ -450,6 +473,20 @@ export class AutocompleteComponent<T = unknown>
   /** Flat index of the given option within the visible (filtered) list. */
   protected flatIndexOf(option: AutocompleteOption<T>): number {
     return this.visibleOptions().findIndex((opt) => opt === option);
+  }
+
+  constructor() {
+    super();
+    scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
+  }
+
+  private cursorList() {
+    const options = this.visibleOptions();
+
+    return {
+      length: options.length,
+      isEnabled: (index: number) => !options[index].disabled,
+    };
   }
 
   protected onTriggerClick(): void {
@@ -519,6 +556,14 @@ export class AutocompleteComponent<T = unknown>
         }
         break;
       }
+      case 'Home':
+        event.preventDefault();
+        this.activeIndex.set(firstEnabledOf(this.cursorList()));
+        break;
+      case 'End':
+        event.preventDefault();
+        this.activeIndex.set(lastEnabledOf(this.cursorList()));
+        break;
       case 'Escape':
         if (this.overlayRef) {
           event.preventDefault();
@@ -652,7 +697,8 @@ export class AutocompleteComponent<T = unknown>
     }
     if (this.multiple()) {
       const current = (this.value() as readonly T[] | null) ?? [];
-      const next = current.includes(option.value)
+      const same = this.compareWith();
+      const next = current.some((entry) => same(entry, option.value))
         ? current.filter((existing) => existing !== option.value)
         : [...current, option.value];
       this.value.set(next);

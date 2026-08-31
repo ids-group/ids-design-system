@@ -52,6 +52,12 @@ import type {
   MultiSelectWidth,
 } from './multi-select.types';
 import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
+import {
+  firstEnabledIndex as firstEnabledOf,
+  lastEnabledIndex as lastEnabledOf,
+  nextEnabledIndex,
+} from '../../core/list-cursor';
+import { scrollActiveOptionIntoView } from '../scroll-active-option';
 
 @Component({
   selector: 'ds-multi-select',
@@ -142,6 +148,10 @@ export class MultiSelectComponent
     (config) => config.picker?.searchable,
     true,
   );
+  /** Scrolls the keyboard cursor's row into view. On by default: a list longer
+   *  than the panel otherwise walks the cursor out of sight. Set `false` only if
+   *  you are driving the scroll position yourself. */
+  readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
   /** How the chips collapse when they outgrow one line. `"fit"` (the default)
    *  measures and shows as many as the trigger is wide, the rest behind "+N more".
    *  A NUMBER is a CEILING, not a promise: the row still measures, so you get at
@@ -496,13 +506,27 @@ export class MultiSelectComponent
     this.trigger().nativeElement.focus();
   }
 
+  constructor() {
+    super();
+    scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
+  }
+
   protected onFilter(event: Event): void {
     this.filter.set((event.target as HTMLInputElement).value);
     this.activeIndex.set(this.firstEnabledIndex());
   }
 
+  private cursorList() {
+    const options = this.filteredOptions();
+
+    return {
+      length: options.length,
+      isEnabled: (index: number) => !options[index].disabled,
+    };
+  }
+
   private firstEnabledIndex(): number {
-    return this.filteredOptions().findIndex((option) => !option.disabled);
+    return firstEnabledOf(this.cursorList());
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
@@ -551,6 +575,14 @@ export class MultiSelectComponent
       case 'Escape':
         event.preventDefault();
         this.close('dismiss');
+        break;
+      case 'Home':
+        event.preventDefault();
+        this.activeIndex.set(this.firstEnabledIndex());
+        break;
+      case 'End':
+        event.preventDefault();
+        this.activeIndex.set(lastEnabledOf(this.cursorList()));
         break;
       case 'Tab':
         this.close('dismiss');
@@ -666,20 +698,9 @@ export class MultiSelectComponent
   }
 
   private moveActive(delta: number): void {
-    const options = this.filteredOptions();
-    const count = options.length;
-    if (!count) {
-      return;
-    }
-    let next = this.activeIndex();
-    let remaining = count;
-    while (remaining-- > 0) {
-      next = (next + delta + count) % count;
-      if (!options[next].disabled) {
-        this.activeIndex.set(next);
-
-        return;
-      }
+    const next = nextEnabledIndex(this.cursorList(), this.activeIndex(), delta);
+    if (next >= 0) {
+      this.activeIndex.set(next);
     }
   }
 }
