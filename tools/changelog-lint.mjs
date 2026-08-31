@@ -288,13 +288,11 @@ for (const { full, label: file, isSource } of targets) {
   // multi-word ones below.
   const lines = readFileSync(full, 'utf8').split(/\r?\n/);
 
-  // A manifest's LOCATORS are exempt from the private-symbol rule. `migration-lint` pools
-  // `old`, `searchHints` and `detect` and a consumer's finder greps their source for every
-  // string in them: `extends DsFieldBase` matches only inside a subclass, which is exactly
-  // who the item is for, and being unimportable is beside the point for a grep pattern.
-  // Every other rule still applies to them — a client name in a searchHint is still a leak.
-  // Recognised by SHAPE rather than by path, so the selftest can prove the exemption
-  // without writing a fixture into the published `migrations/` directory.
+  // A manifest's locators are exempt from the private-symbol rule only: a consumer's finder
+  // greps their source for every string in `old` / `searchHints` / `detect`, so being
+  // unimportable is beside the point. Every other rule still applies inside them.
+  // Matched by SHAPE, not by path, so the selftest can prove the exemption without writing
+  // a fixture into the published `migrations/` directory.
   const locatorLines = new Set();
   if (file.endsWith('.json')) {
     const collect = (value, inLocator) => {
