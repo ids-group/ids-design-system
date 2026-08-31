@@ -131,6 +131,23 @@
   }
 
   .item-head { display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4); }
+  summary.item-head { cursor: pointer; list-style: none; margin-bottom: 0; }
+  summary.item-head::-webkit-details-marker { display: none; }
+  summary.item-head::after {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    align-self: center;
+    border-right: 2px solid var(--text-secondary);
+    border-bottom: 2px solid var(--text-secondary);
+    transform: rotate(45deg);
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  details[open] > summary.item-head { margin-bottom: var(--space-4); }
+  details[open] > summary.item-head::after { transform: rotate(-135deg); }
+  .item.shipped { border-left: 3px solid var(--success); padding-left: var(--space-4); }
+  .item.shipped summary.item-head h2 { color: var(--text-secondary); }
+  details[open] > summary.item-head h2 { color: var(--text-primary); }
 
   .item-num {
     font-size: var(--font-size-xs);
@@ -675,7 +692,9 @@
 <header>
   <h1>Пикеры: семь решений</h1>
   <p class="lede">
-    Выбери вариант в каждой секции. Рекомендация обведена рамкой. Всё проверено по коду 0.11.0.
+    Семь решений приняты, реализованы и уходят в релиз — они свёрнуты, разворачивай, если нужно
+    вспомнить, что именно выбрано. Открыто одно: <a href="#proposals">§9</a>, шестнадцать
+    предложений на следующую версию.
   </p>
 
   <div class="summary">
@@ -694,9 +713,10 @@
       </table>
     </div>
     <div class="headline">
-      <strong>Все семь реализованы и проверены в живом приложении.</strong> Открытых решений по ним
-      не осталось. Новое — в <a href="#better">§8</a>: четыре предложения поверх принятого, каждое
-      меняет уже отгруженное, поэтому ждёт тебя.
+      <strong>Все семь реализованы, проверены и релизятся.</strong> Открытых решений по ним не
+      осталось, поэтому секции свёрнуты. Твоё — <a href="#proposals">§9</a>: шестнадцать
+      предложений, из них три дефекта; и <a href="#better">§8</a>: четыре правки поверх уже
+      отгруженного. Всё это следующая версия, релиз их не ждёт.
     </div>
   </div>
 
@@ -707,12 +727,14 @@
   </p>
 </header>
 
-<section class="item" id="p1">
-  <div class="item-head">
+<section class="item shipped" id="p1">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§1</span>
     <h2>Компактный триггер фильтра</h2>
     <span class="covers">G1, A5</span>
-  </div>
+    <span class="decided">сделано</span>
+  </summary>
 
   <p>
     Тулбару доски нужен триггер с фиксированным следом: подпись, счётчик, признак активности.
@@ -858,14 +880,17 @@
       <p><strong>Имя входа:</strong> <code>variant="filter"</code> или <code>triggerDisplay="summary"</code> — <code>variant</code> в библиотеке уже занят оформлением у <code>ds-button</code>. · <strong>Активное состояние:</strong> рамка / заливка / жирная подпись — три варианта выше. · <strong>Счётчик:</strong> <code>ds-badge</code> или закрашенный <code>span</code>.</p>
     </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="p2">
-  <div class="item-head">
+<section class="item shipped" id="p2">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§2</span>
     <h2>Ширина панели</h2>
     <span class="covers">G2</span>
-  </div>
+    <span class="decided">сделано</span>
+  </summary>
 
   <p>
     <code>multi-select.component.ts:346</code> ставит ширину панели равной ширине триггера. Над
@@ -948,14 +973,17 @@
       </tbody>
     </table>
   </div>
+  </details>
 </section>
 
-<section class="item" id="p3">
-  <div class="item-head">
+<section class="item shipped" id="p3">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§3</span>
     <h2>Слот шаблона опции</h2>
     <span class="covers">G3 · все три пикера</span>
-  </div>
+    <span class="decided">сделано</span>
+  </summary>
 
   <p>
     Опция — это <code>{ value, label, disabled?, icon? }</code>. Иконку рендерят все три пикера, а
@@ -1077,14 +1105,17 @@
       </tbody>
     </table>
   </div>
+  </details>
 </section>
 
-<section class="item" id="p5">
-  <div class="item-head">
+<section class="item shipped" id="p5">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§4</span>
     <h2>Скрываемый поиск</h2>
     <span class="covers">G5</span>
-  </div>
+    <span class="decided">сделано</span>
+  </summary>
 
   <p>
     <code>multi-select.component.html:67–90</code> рендерит строку поиска всегда — даже над четырьмя
@@ -1182,14 +1213,17 @@
       </tbody>
     </table>
   </div>
+  </details>
 </section>
 
-<section class="item" id="p6">
-  <div class="item-head">
+<section class="item shipped" id="p6">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§5</span>
     <h2>Группы опций</h2>
     <span class="covers">G6</span>
-  </div>
+    <span class="decided">сделано</span>
+  </summary>
 
   <p>
     У мульти-селекта групп нет. Но добавить их «как у кого-то» нельзя, потому что
@@ -1291,14 +1325,17 @@
       <p><strong>«Выбрать все» с группами:</strong> остаётся глобальным или появляется ещё и по группе — второй контрол и второе неопределённое состояние.</p>
     </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="p8">
-  <div class="item-head">
+<section class="item shipped" id="p8">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§6</span>
     <h2>Одна строка значения</h2>
     <span class="covers">A3</span>
-  </div>
+    <span class="decided">сделано</span>
+  </summary>
 
   <p>
     Одиночный <code>ds-autocomplete</code> в узкой колонке разъезжается: замерено
@@ -1392,14 +1429,17 @@
       </tbody>
     </table>
   </div>
+  </details>
 </section>
 
-<section class="item" id="p9">
-  <div class="item-head">
+<section class="item shipped" id="p9">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§7</span>
     <h2>Панель автокомплита</h2>
     <span class="covers">A4, X1</span>
-  </div>
+    <span class="decided">сделано</span>
+  </summary>
 
   <p>
     Выпадающая панель живёт не внутри компонента: CDK вставляет её в конец <code>&lt;body&gt;</code>.
@@ -1519,6 +1559,7 @@
       </tbody>
     </table>
   </div>
+  </details>
 </section>
 
 <section class="item" id="proposals">
