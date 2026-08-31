@@ -72,6 +72,16 @@ export interface DsConfig {
      *  `ds-modal` ancestor to bind — an attribute cannot reach it. */
     dividers?: boolean;
   };
+  picker?: {
+    /** Default for `ds-multi-select``s `searchable`. `true` always shows the panel's
+     *  filter row, `false` never, and a NUMBER is a threshold — the row appears once
+     *  there are at least that many options. Default `true`.
+     *
+     *  One threshold for the app is the point: left to each call site, two panels of
+     *  the same length in the same screen end up disagreeing. */
+    searchable?: boolean | number;
+  };
+
   control?: {
     /** Default `size` for every control on the field-height contract. Default `'md'`.
      *

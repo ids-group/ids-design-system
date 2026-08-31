@@ -84,6 +84,47 @@
     </p>
   </div>
 
+  <h3 class="block-title t-h4">Hiding the filter row</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">searchable</code> takes
+    <code class="t-mono-inline">true</code> (always, the default),
+    <code class="t-mono-inline">false</code> (never), or a
+    <strong>number</strong> — the threshold at which the row appears, stated
+    where it applies. Set
+    <code class="t-mono-inline">DS_CONFIG.picker.searchable</code> to give the
+    whole app one threshold and override it per panel.
+  </p>
+
+  <p class="block-desc t-s">
+    Hiding the row moves the panel's keyboard model onto the trigger: arrows,
+    Enter, Escape and
+    <code class="t-mono-inline">aria-activedescendant</code> belong to the
+    filter input when it is there.
+  </p>
+
+  <div class="demo-panel">
+    <div style="display: flex; gap: var(--space-3); align-items: flex-start">
+      <ds-multi-select
+        data-testid="ms-no-search"
+        placeholder="Priority…"
+        ariaLabel="Priority, no filter row"
+        [searchable]="false"
+        [options]="labelOptions"
+        [(value)]="noSearchValue"
+      />
+
+      <ds-multi-select
+        data-testid="ms-threshold"
+        placeholder="Tags…"
+        ariaLabel="Tags, filter row past four options"
+        [searchable]="4"
+        [options]="tagOptions"
+        [(value)]="thresholdValue"
+      />
+    </div>
+  </div>
+
   <h3 class="block-title t-h4">Compact trigger</h3>
 
   <p class="block-desc t-s">

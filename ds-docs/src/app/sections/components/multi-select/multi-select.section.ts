@@ -38,6 +38,8 @@ export class MultiSelectSection {
   protected readonly labels = signal<string[]>(['blocked']);
   protected readonly compactLabels = signal<string[]>(['blocked', 'ready']);
   protected readonly customLabels = signal<string[]>(['review']);
+  protected readonly noSearchValue = signal<string[]>([]);
+  protected readonly thresholdValue = signal<string[]>([]);
   protected readonly labelOptions: MultiSelectOption[] = [
     { value: 'blocked', label: 'Blocked' },
     { value: 'review', label: 'In review' },

@@ -37,6 +37,7 @@ import {
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
+import { resolveWithConfig } from '../../core/config-defaults';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
@@ -101,6 +102,33 @@ export class MultiSelectComponent
   readonly placeholder = input<string>('Select…');
   /** Placeholder for the in-panel filter input. */
   readonly searchPlaceholder = input<string>('Filter…');
+  /** Whether the panel carries a filter row. `true` always, `false` never, and a
+   *  NUMBER is a threshold — the row appears once there are at least that many
+   *  options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`.
+   *
+   *  Hiding it moves the panel's keyboard model onto the trigger: the arrows,
+   *  Enter, Escape and `aria-activedescendant` are the filter input's today. */
+  readonly searchable = input<boolean | number | null, unknown>(null, {
+    transform: (raw: unknown) => {
+      if (raw === null || raw === undefined || raw === '') {
+        return null;
+      }
+      if (typeof raw === 'number') {
+        return raw;
+      }
+      if (typeof raw === 'boolean') {
+        return raw;
+      }
+      const asNumber = Number(raw);
+
+      return Number.isFinite(asNumber) ? asNumber : raw !== 'false';
+    },
+  });
+  readonly searchableResolved = resolveWithConfig<boolean | number>(
+    this.searchable,
+    (config) => config.picker?.searchable,
+    true,
+  );
   /** How the chips collapse when they outgrow one line. `"fit"` (the default)
    *  measures and shows as many as the trigger is wide, the rest behind "+N more".
    *  A NUMBER is a CEILING, not a promise: the row still measures, so you get at
@@ -187,6 +215,21 @@ export class MultiSelectComponent
   /** A projected template wins outright, so there is no combination to explain. */
   protected readonly showsCompactTrigger = computed(
     () => !this.pickerTrigger() && this.triggerDisplay() === 'compact',
+  );
+
+  /** A number means "show it once the list is long enough to need it". */
+  protected readonly showsSearch = computed<boolean>(() => {
+    const setting = this.searchableResolved();
+
+    return typeof setting === 'number'
+      ? this.allOptions().length >= setting
+      : setting;
+  });
+
+  /** Without the filter row the trigger owns the listbox cursor, so the id has to
+   *  ride on the trigger instead. */
+  protected readonly triggerActiveDescendant = computed(() =>
+    this.showsSearch() ? null : this.activeDescendant(),
   );
 
   protected readonly triggerCaption = computed(
@@ -388,9 +431,16 @@ export class MultiSelectComponent
 
       return;
     }
-    if (event.key === 'ArrowDown') {
+    if (event.key === 'ArrowDown' && !this.open()) {
       event.preventDefault();
       this.openPanel();
+
+      return;
+    }
+    // With no filter row there is nowhere else for these to land, so the trigger
+    // runs the same handler the input would have.
+    if (this.open() && !this.showsSearch()) {
+      this.onSearchKeydown(event);
     }
   }
 
@@ -479,10 +529,12 @@ export class MultiSelectComponent
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.open.set(true);
     this.activeIndex.set(this.filteredOptions().length ? 0 : -1);
-    this.focusTimer = setTimeout(() => {
-      this.focusTimer = null;
-      this.searchInput()?.nativeElement.focus();
-    });
+    if (this.showsSearch()) {
+      this.focusTimer = setTimeout(() => {
+        this.focusTimer = null;
+        this.searchInput()?.nativeElement.focus();
+      });
+    }
   }
 
   protected onTriggerClick(): void {

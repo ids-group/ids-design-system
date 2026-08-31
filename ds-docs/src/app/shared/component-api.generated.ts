@@ -3519,6 +3519,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Placeholder for the in-panel filter input."
       },
       {
+        "name": "searchable",
+        "kind": "input",
+        "type": "boolean | number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the panel carries a filter row. `true` always, `false` never, and a NUMBER is a threshold — the row appears once there are at least that many options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the panel's keyboard model onto the trigger: the arrows, Enter, Escape and `aria-activedescendant` are the filter input's today."
+      },
+      {
         "name": "maxVisibleChips",
         "kind": "input",
         "type": "number | 'fit' | 'all' | null",

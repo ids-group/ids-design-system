@@ -60,6 +60,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`searchable` on `ds-multi-select` — one input, three meanings.** `true` always shows the
+  panel's filter row (the default, unchanged), `false` never, and a **number** is the threshold at
+  which it appears — stated where it applies rather than hidden in a config. Set
+  `DS_CONFIG.picker.searchable` to give a whole app one threshold and override it per panel with a
+  number.
+
+  Hiding the row is not just an `@if`: the filter input is what takes focus on open and what carries
+  `aria-activedescendant`, the arrows, Enter, Escape and the Backspace that removes the last chip.
+  Without it the TRIGGER runs that model instead, and the active-descendant id rides on the trigger.
+
 - **A compact filter trigger, and a slot to write your own.** `ds-multi-select` takes
   `triggerDisplay="compact"`: a `label` caption plus a selected-count `ds-badge` at intrinsic
   width, with an accent border once something is picked. The chip field it replaces grows with the

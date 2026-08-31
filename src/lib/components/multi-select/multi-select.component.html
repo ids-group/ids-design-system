@@ -10,6 +10,7 @@
   [attr.aria-expanded]="open()"
   [attr.aria-controls]="listboxId"
   [attr.aria-label]="resolvedAriaLabel()"
+  [attr.aria-activedescendant]="triggerActiveDescendant()"
   [attr.tabindex]="isDisabled() ? -1 : 0"
   (click)="onTriggerClick()"
   (keydown)="onTriggerKeydown($event)"
@@ -91,30 +92,32 @@
 
 <ng-template #panel>
   <div class="panel">
-    <div class="search-row">
-      <ds-icon
-        class="search-icon"
-        name="search"
-        [size]="16"
-      />
+    @if (showsSearch()) {
+      <div class="search-row">
+        <ds-icon
+          class="search-icon"
+          name="search"
+          [size]="16"
+        />
 
-      <input
-        #search
-        type="text"
-        class="search-input"
-        role="combobox"
-        aria-autocomplete="list"
-        aria-expanded="true"
-        autocomplete="off"
-        spellcheck="false"
-        [placeholder]="searchPlaceholder()"
-        [value]="filter()"
-        [attr.aria-controls]="listboxId"
-        [attr.aria-activedescendant]="activeDescendant()"
-        (input)="onFilter($event)"
-        (keydown)="onSearchKeydown($event)"
-      />
-    </div>
+        <input
+          #search
+          type="text"
+          class="search-input"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="true"
+          autocomplete="off"
+          spellcheck="false"
+          [placeholder]="searchPlaceholder()"
+          [value]="filter()"
+          [attr.aria-controls]="listboxId"
+          [attr.aria-activedescendant]="activeDescendant()"
+          (input)="onFilter($event)"
+          (keydown)="onSearchKeydown($event)"
+        />
+      </div>
+    }
 
     @if (selectAll() && filteredOptions().length) {
       <button
