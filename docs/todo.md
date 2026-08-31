@@ -46,7 +46,6 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 **Bugs — something shipped misbehaves**
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
-- P2 · `triggerDisplay="labels"` collapses to one label: the fit measurement reads a box its own cut narrows — RECORDED 2026-08-31
 
 **Asks — a consumer or Stas asked for it**
 
@@ -93,7 +92,7 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй").
 
 
-## `triggerDisplay="labels"` measures a box its own output resizes (recorded 2026-08-31, from the branch review)
+## `triggerDisplay="labels"` measured a box its own output resized — FIXED 2026-08-31
 
 - [ ] **[P2] The `labels` trigger collapses to one label regardless of free space, because the measurement reads a `fit-content` box that the cut itself narrows.** `:host(.compact-trigger)` sets `width: fit-content` (`multi-select.component.scss:36`), and `labels` renders a `#chipRow` of `data-chip` spans (`multi-select.component.html:61-83`), so `chipFit` measures `trigger.clientWidth` of a box whose width is decided by the chips it is about to cut. **This is the exact case `chip-overflow.ts:13` names as its INVARIANT** — "nothing here may measure something the cut itself changes". The `lastWidth`/`lastCount` guard stops it hanging, so the symptom is a wrong converged value rather than a frozen page: pass 1 measures the full width, cuts to N, the trigger shrinks, pass 2 cuts again, and it settles at one label plus "+N".
 
@@ -102,6 +101,16 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
   **Three ways out, and the choice is a design call, not a cleanup:** (a) `labels` stops taking `compact-trigger`, which fixes the measurement and gives up the fixed footprint that is the mode's whole point; (b) `chipFit` measures the trigger's PARENT instead, which keeps the footprint but changes a primitive two components share; (c) `labels` is not a compact mode at all and gets its own host class. Shipped as-is in 0.11.1 with the defect: it under-shows labels, it does not misbehave otherwise.
 
   Same class as the two self-referential loops recorded in `done.md` from the original chip work — the rule that came out of that one is the rule this broke.
+
+  **FIXED 2026-08-31, and by none of the three options above.** The measurement now reads the width
+  available — the trigger's PARENT content box — instead of the width occupied. The parent does not
+  move when chips do, so the feedback is gone by construction rather than worked around, the compact
+  footprint is kept, and `ds-autocomplete` gets the same correction for free since both go through
+  `chipFit`. For a `width="fill"` trigger the two numbers are identical, so nothing moves there.
+
+  **Measured rather than reasoned**, in a controlled repro of the geometry: dropping one chip at a
+  time, the old budget read 272 → 200 → 137 → 87 px — each cut shrinking its own input, which is what
+  settled the split at one label. The new budget read 700 px at every step.
 
 ## Four files style one portaled panel at equal specificity (recorded 2026-08-31, from the branch review)
 
@@ -131,13 +140,12 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 
 ## Priority board (recut 2026-08-31, after the picker lane and its review merged)
 
-**32 open: 1 P1, 10 P2, 21 P3** — counted from the index line by line, not carried forward. Ten are
-*Parked* awaiting a first consumer ask and two are Records, so the live board is **20 items — 2 Bugs,
+**31 open: 1 P1, 9 P2, 21 P3** — counted from the index line by line, not carried forward. Ten are
+*Parked* awaiting a first consumer ask and two are Records, so the live board is **19 items — 1 Bug,
 4 Asks and 14 Decisions**.
 
-**`# Bugs` holds two, both measured:** the warning status pair at 4.42:1 where AA asks 4.5, and the
-`labels` trigger showing one label where more fit. The three picker defects that sat here were fixed
-with the §9 batch.
+**`# Bugs` holds one, measured:** the warning status pair at 4.42:1 where AA asks 4.5. The three
+picker defects and the `labels` trigger that sat here are fixed.
 
 **The Decisions column grew by three and that is the real signal.** Nine decks are open, and three of
 them have a backlog twin waiting on the same answer — the colour engine, `.ds-interactive`, and

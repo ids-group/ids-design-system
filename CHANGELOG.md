@@ -296,6 +296,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A compact trigger showed one chip where several fitted.** `triggerDisplay="count"` and
+  `"labels"` make the trigger hug its content, so the width the chip fit measured was decided by the
+  chips it was about to cut — each pass shrank its own input and the split settled on one. The fit
+  reads the space AVAILABLE now (the trigger's parent), which no cut can move. `ds-autocomplete` gets
+  the same correction, since both pickers measure through one helper, and a `width="fill"` trigger is
+  unaffected because there the two numbers are identical.
+
+
 - **With the filter row hidden, there was no keyboard way to pick an option.** `Enter` and `Space`
   were consumed by the trigger before the panel's own handler saw them, so the panel toggled shut
   instead of selecting the active row: open, arrow down, Enter, nothing chosen. The trigger delegates
