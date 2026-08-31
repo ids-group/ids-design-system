@@ -8,17 +8,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
-### Changed
-
-- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
-  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` all gained members for the
-  inputs and outputs above, and `DsPanelHeaderTemplateDirective`, `DsPanelFooterTemplateDirective` and
-  `DsGroupLabelTemplateDirective` are new classes. Also for the
-  inputs and outputs above. Subclassing a DS component is unsupported but consumers do it, and a
-  member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
-  if you meant to replace ours — the compiler enumerates every collision, so building after the
-  upgrade is the whole check.
-
 ### Added
 
 - **`PageUp` and `PageDown`.** Ten rows a press, which is the native `<select>` step and the APG
@@ -105,6 +94,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the same `readonly` binding alias `ds-select` has for signal forms; `clearable` uses the same button
   and the same accessible name as `ds-select`'s.
 
+
+### Changed
+
+- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
+  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` all gained members for the
+  inputs and outputs above, and `DsPanelHeaderTemplateDirective`, `DsPanelFooterTemplateDirective` and
+  `DsGroupLabelTemplateDirective` are new classes. Also for the
+  inputs and outputs above. Subclassing a DS component is unsupported but consumers do it, and a
+  member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
+  if you meant to replace ours — the compiler enumerates every collision, so building after the
+  upgrade is the whole check.
 
 ## 0.11.1 — 2026-08-31
 
