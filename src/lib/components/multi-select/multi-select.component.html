@@ -67,20 +67,18 @@
           <span
             data-chip
             class="trigger-label"
-            >
-            {{ option.label }}
-          </span
           >
+            {{ option.label }}
+          </span>
         }
 
         @if (overflowCount() > 0) {
           <span
             class="overflow"
             data-chip-overflow
-            >
-            +{{ overflowCount() }}
-          </span
           >
+            +{{ overflowCount() }}
+          </span>
         }
       </span>
     } @else if (selectedOptions().length > 0) {
@@ -202,9 +200,7 @@
           }
         </span>
 
-        <span class="select-all-label">
-          Select all
-        </span>
+        <span class="select-all-label"> Select all </span>
       </button>
     }
 

@@ -69,12 +69,7 @@
     </span>
   }
 
-  @if (
-      clearable() &&
-      hasValue() &&
-      !isDisabled() &&
-      !isReadOnly()
-    ) {
+  @if (clearable() && hasValue() && !isDisabled() && !isReadOnly()) {
     <button
       type="button"
       class="clear-btn"
