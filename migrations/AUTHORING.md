@@ -268,8 +268,9 @@ never surfaced. And `action` must NOT re-list the member names — the compiler 
 collision the moment the consumer builds, so a list typed into `action` is a second copy that
 goes stale on the next feature commit (0.11.0's went a class short twice in one day). Keep
 `action` the imperative — rename yours, or add `override` — and let `note` carry the record.
-`tools/check-class-surface-entry.mjs` fails the release gate when the CHANGELOG entry misses a
-class; nothing checks `detect`, so that half is on the author.
+`tools/check-class-surface-entry.mjs` fails the release gate on both halves: a class missing
+from the CHANGELOG entry, and a class no `detect` in the draft manifest names. It skips a class
+whose file is new in the range — nothing pre-existing can subclass it.
 
 **Widening an exported type is actionable, and it will not look it.** A field on an exported
 interface going `number` → `number | 'content'`, an input going `boolean` → `boolean | null`, a

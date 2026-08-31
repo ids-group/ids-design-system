@@ -21,8 +21,18 @@ try {
   process.exit(1);
 }
 
-// The report indents a source path by two spaces and its member names by four.
-const files = [...new Set(report.split('\n').filter((line) => /^ {2}\S.*\.ts/.test(line)).map((line) => line.trim().replace(/\s+\(.*\)$/, '')))];
+// The report indents a source path by two spaces and its member names by four, and annotates a
+// path it did not see at the base ref. A file that is new in the range has no pre-existing
+// subclass to collide, so it is reported for completeness and checked against nothing.
+const files = [
+  ...new Set(
+    report
+      .split('\n')
+      .filter((line) => /^ {2}\S.*\.ts/.test(line))
+      .filter((line) => !/\(new or renamed file\)/.test(line))
+      .map((line) => line.trim().replace(/\s+\(.*\)$/, '')),
+  ),
+];
 
 if (!files.length) {
   console.log('check-class-surface-entry: no class member surface moved since ' + base + '.');
@@ -37,7 +47,19 @@ if (!unreleased) {
 }
 const block = unreleased[1];
 
-const missing = [];
+// `detect` is the field the consumer's updater greps with, so a class missing from it is a
+// subclass the update never surfaces — 0.11.1 shipped with Autocomplete left out that way while
+// the prose named it. Checked separately from the prose, and only when a draft exists.
+let draftDetect = null;
+try {
+  const draft = JSON.parse(readFileSync('migrations/unreleased.json', 'utf8'));
+  draftDetect = (draft.items ?? []).flatMap((item) => item.detect ?? []).join('\n');
+} catch {
+  draftDetect = null;
+}
+
+const missingProse = [];
+const missingDetect = [];
 for (const file of files) {
   let source;
   try {
@@ -51,20 +73,34 @@ for (const file of files) {
   // Any exported class in the file counts: a file can hold more than one, and the entry only has
   // to name the one it is talking about.
   if (!named.some((name) => block.includes(name))) {
-    missing.push(`${file} — ${named.join(' / ')}`);
+    missingProse.push(`${file} — ${named.join(' / ')}`);
+  }
+  if (draftDetect !== null && !named.some((name) => draftDetect.includes(name))) {
+    missingDetect.push(`${file} — ${named.join(' / ')}`);
   }
 }
 
-if (missing.length) {
+if (missingProse.length) {
   console.error(
     'check-class-surface-entry: `## Unreleased` does not name ' +
-      `${missing.length} class(es) whose member surface moved since ${base}:`,
+      `${missingProse.length} class(es) whose member surface moved since ${base}:`,
   );
-  for (const line of missing) console.error(`  ${line}`);
+  for (const line of missingProse) console.error(`  ${line}`);
   console.error(`  Re-run \`npm run class-surface ${base} HEAD\` and extend the entry — an unnamed class`);
   console.error('  is a consumer whose build stops with nothing in the release notes to explain it.');
-  process.exit(1);
 }
+
+if (missingDetect.length) {
+  console.error(
+    'check-class-surface-entry: no `detect` in migrations/unreleased.json names ' +
+      `${missingDetect.length} class(es) whose member surface moved since ${base}:`,
+  );
+  for (const line of missingDetect) console.error(`  ${line}`);
+  console.error('  Add it to the subclass item\'s `detect` — the prose naming a class is not enough,');
+  console.error('  `detect` is what the consumer\'s updater greps with.');
+}
+
+if (missingProse.length || missingDetect.length) process.exit(1);
 
 console.log(
   `check-class-surface-entry: all ${files.length} class(es) with a moved member surface are named in \`## Unreleased\`.`,
