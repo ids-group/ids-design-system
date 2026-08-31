@@ -8,70 +8,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
-### Changed
-
-- **BREAKING for CSS overrides: `ds-multi-select`'s panel is the shared dropdown panel too.** `ds-autocomplete` rejoined it
-  earlier in this release; the multi-select still carried its own `.panel` / `.options` / `.option`
-  copy while its pane ALSO carried `ds-dropdown-panel`, so both rule sets applied at once. One
-  implementation now: the class names are `.dropdown-panel` and `.dropdown-list`, and the row is the
-  partial's. What stayed is what no other picker has — the filter row, the select-all rows, a real
-  `<button>` option that can be `:disabled`, and this component's own tokens.
-
-- **BREAKING if you set it: `triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name
-  says what the trigger shows, which matters once `labels` sits beside it. The union is exported as
-  `DsTriggerDisplay` — `'full' | 'count' | 'labels'` — so a variable typed against it fails to
-  compile rather than passing a dead string.
-
-- **Every single-line label clips through one mixin now.** Six places hand-rolled
-  `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — the `ds-select` trigger text,
-  the `ds-tree` label, the `ds-sidenav-item` label, three labels in `ds-sidenav-footer`, and the
-  table cell under `density="compact"`. They all use `single-line-ellipsis` instead, which clips with
-  `overflow: clip` and an `overflow-clip-margin` rather than `hidden`: where the line box is tighter
-  than the glyph box, `hidden` eats the glyph and shaves every label, not only the ones with
-  descenders. Nothing to do on your side — labels stop losing their bottoms at tight line-heights.
-
-- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
-  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` gained members, and
-  `DsOptionTemplateDirective`, `DsChipTemplateDirective`, `DsPickerTriggerDirective`,
-  `DsEmptyTemplateDirective` and `DsCreateTemplateDirective` are new classes. Subclassing is unsupported but consumers do it, and a member of yours that shares a name
-  with one of ours stops the build. Rename yours, or add `override` if you meant to replace ours —
-  the compiler enumerates every collision, so building after the upgrade is the whole check.
-
-- **BREAKING for `ds-autocomplete`: one `options` input takes groups on all three pickers.**
-  `ds-multi-select` had no groups at
-  all; `ds-select` took them mixed into `options`; `ds-autocomplete` took them in a second
-  `optionGroups` input whose own documentation said `options` was **ignored** when it was set —
-  two inputs where one silently won. There is one shape now: `options` accepts flat options,
-  groups, or both mixed, and renders them in the order given.
-
-  The group type is shared as `DsOptionGroup` behind each picker's own name
-  (`SelectOptionGroup`, `MultiSelectOptionGroup`, `AutocompleteOptionGroup`), the way
-  `DsOption` already was. It carries `disabled`, which `ds-select` had and the other two did
-  not; disabling a group disables every option in it.
-
-- **BREAKING for CSS overrides and one token: `ds-autocomplete`'s panel is the shared dropdown
-  panel again.** It was passing
-  `'ds-overlay-pane'` as its overlay's panel class, and that argument REPLACES the default
-  `['ds-dropdown-panel', 'ds-overlay-pane']` rather than adding to it — so nothing from the shared
-  partial reached it. The panel had `padding: 0` against the other two pickers' `--space-1`, square
-  rows against their `--ds-radius-inner`, and none of `--ds-option-selected-bg-color`,
-  `-label-color`, `-bg-color-hover` or `--ds-option-check-color` reached it — set on an
-  autocomplete they did nothing at all. One partial paints all three pickers now.
-
-  The panel's classes moved to the shared vocabulary: `.autocomplete-list` → `.dropdown-list`
-  inside a new `.dropdown-panel` wrapper, `.autocomplete-optgroup` → `.optgroup`,
-  `.autocomplete-optgroup-label` → `.optgroup-label`, and an option's check icon →
-  `.option-check`. `--ds-autocomplete-option-bg-color-hover` is gone; the panel-level
-  `--ds-option-*` hooks replace it and reach all three pickers.
-  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` still work.
-
-- **A settled single value in `ds-autocomplete` ellipsizes instead of wrapping.** A value 134px wide in a
-  144px trigger took the trigger from **40px to 63px** — the text
-  broke onto a second line and the chevron onto a third. Single mode has no chip row to wrap for, so
-  the wrapping had nothing to protect. `valueOverflow="wrap"` restores it; multi mode is untouched,
-  its chips already had a measured cap.
-
 ### Added
+
+- **Group helpers, for building and narrowing an options array.** Alongside `DsOptionGroup<T>` —
+  the shared group type behind each picker's own name — the package exports the union
+  `DsOptionItem<T> = DsOption<T> | DsOptionGroup<T>`, the type guard `isDsOptionGroup<T>(item)`
+  and `flattenDsOptions<T>(items)`, which returns the options in source order and stamps
+  `disabled: true` onto every option of a disabled group. `isDsOptionGroup` is the narrowing to
+  read an `options` array back through, now that any element may be a group.
 
 - **A written contract for the picker family.**
   Five rules now hold across the three pickers: one meaning per member name, difference only by a
@@ -141,11 +85,114 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   The three pickers now share one `DsControlWidth` behind their own exported names
   (`SelectWidth`, `MultiSelectWidth`, `AutocompleteWidth`), the same way 0.10.0 unified
   `DsOption`. Two new panel-level tokens bound the result in `content` mode:
-  `--ds-dropdown-panel-minw` and `--ds-dropdown-panel-maxw`.
+  `--ds-dropdown-panel-minw` (default `0`) and `--ds-dropdown-panel-maxw` (default `none`).
 
   `ds-select` also gained token forwarding onto its portaled pane, which it did not have: without
   it a `ds-select { --ds-dropdown-panel-*: … }` never reached the panel, because CDK portals it out
   of the component.
+
+### Changed
+
+- **BREAKING for code that READS `ds-autocomplete`'s `options`: the element type is now
+  `AutocompleteItem<T>`, not `AutocompleteOption<T>`.** The input holds flat options OR groups,
+  so a reader — or a subclass overriding a member typed against the element — that assumed
+  every element has `.value` must narrow with `isDsOptionGroup` first. Passing plain options in
+  is unchanged.
+
+- **BREAKING for code that READS `ds-multi-select`'s `options`: the element type is now
+  `MultiSelectItem`, not `MultiSelectOption`.** The same narrowing: read `.value` only after
+  `isDsOptionGroup` has ruled out a group. Writers passing options in are unaffected.
+
+- **BREAKING for code that READS `ds-multi-select`'s `selectAll` into a `boolean`: the type is
+  now `boolean | 'group' | 'both'`.** The default is still `false`, so setting it is unchanged;
+  assigning it back into a `boolean` stops compiling. The two new values are under Added.
+
+- **BREAKING for CSS overrides: `ds-multi-select`'s panel is the shared dropdown panel too.** `ds-autocomplete` rejoined it
+  earlier in this release; the multi-select still carried its own `.panel` / `.options` / `.option`
+  copy while its pane ALSO carried `ds-dropdown-panel`, so both rule sets applied at once. One
+  implementation now: the class names are `.dropdown-panel` and `.dropdown-list`, and the row is the
+  partial's. What stayed is what no other picker has — the filter row, the select-all rows, a real
+  `<button>` option that can be `:disabled`, and this component's own tokens.
+
+- **BREAKING if you set it: `triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name
+  says what the trigger shows, which matters once `labels` sits beside it. The union is exported as
+  `DsTriggerDisplay` — `'full' | 'count' | 'labels'` — so a variable typed against it fails to
+  compile rather than passing a dead string.
+
+- **Every single-line label clips through one mixin now.** Seven rules hand-rolled
+  `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — the `ds-select` trigger text,
+  the `ds-tree` label, the `ds-sidenav-item` label, three labels in `ds-sidenav-footer`, and the
+  table cell under `density="compact"`. They all use `single-line-ellipsis` instead, which clips with
+  `overflow: clip` and an `overflow-clip-margin` rather than `hidden`: where the line box is tighter
+  than the glyph box, `hidden` eats the glyph and shaves every label, not only the ones with
+  descenders. Nothing to do on your side — labels stop losing their bottoms at tight line-heights.
+
+- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
+  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` gained members, and
+  `DsOptionTemplateDirective`, `DsChipTemplateDirective`, `DsPickerTriggerDirective`,
+  `DsEmptyTemplateDirective` and `DsCreateTemplateDirective` are new classes. Subclassing is unsupported but consumers do it, and a member of yours that shares a name
+  with one of ours stops the build. Rename yours, or add `override` if you meant to replace ours —
+  the compiler enumerates every collision, so building after the upgrade is the whole check.
+  `AutocompleteComponent` also LOST a member — the protected computed `filteredGroups` — and that
+  loss fails silently: a subclass that overrode it now overrides nothing and still compiles. It is
+  the one case the build will not flag, so check for it by hand.
+
+- **BREAKING for `ds-autocomplete`: one `options` input takes groups on all three pickers.**
+  `ds-multi-select` had no groups at
+  all; `ds-select` took them mixed into `options`; `ds-autocomplete` took them in a second
+  `optionGroups` input whose own documentation said `options` was **ignored** when it was set —
+  two inputs where one silently won. There is one shape now: `options` accepts flat options,
+  groups, or both mixed, and renders them in the order given.
+
+  The group type is shared as `DsOptionGroup` behind each picker's own name
+  (`SelectOptionGroup`, `MultiSelectOptionGroup`, `AutocompleteOptionGroup`), the way
+  `DsOption` already was. It carries `disabled`, which `ds-select` had and the other two did
+  not; disabling a group disables every option in it.
+
+- **BREAKING for CSS overrides and one token: `ds-autocomplete`'s panel is the shared dropdown
+  panel again.** It was passing
+  `'ds-overlay-pane'` as its overlay's panel class, and that argument REPLACES the default
+  `['ds-dropdown-panel', 'ds-overlay-pane']` rather than adding to it — so nothing from the shared
+  partial reached it. The panel had `padding: 0` against the other two pickers' `--space-1`, square
+  rows against their `--ds-radius-inner`, and none of `--ds-option-selected-bg-color`,
+  `-label-color`, `-bg-color-hover` or `--ds-option-check-color` reached it — set on an
+  autocomplete they did nothing at all. One partial paints all three pickers now.
+
+  The panel's classes moved to the shared vocabulary: `.autocomplete-list` → `.dropdown-list`
+  inside a new `.dropdown-panel` wrapper, `.autocomplete-optgroup` → `.optgroup`,
+  `.autocomplete-optgroup-label` → `.optgroup-label`, and an option's check icon →
+  `.option-check`. `--ds-autocomplete-option-bg-color-hover` is gone; the panel-level
+  `--ds-option-*` hooks replace it and reach all three pickers.
+  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` still work.
+
+- **A settled single value in `ds-autocomplete` ellipsizes instead of wrapping.** A value 134px wide in a
+  144px trigger took the trigger from **40px to 63px** — the text
+  broke onto a second line and the chevron onto a third. Single mode has no chip row to wrap for, so
+  the wrapping had nothing to protect. The ellipsized value carries a `title`, so the full text is
+  still there on hover. `valueOverflow="wrap"` restores wrapping; multi mode is untouched,
+  its chips already had a measured cap.
+
+### Fixed
+
+- **Four published migration manifests were corrected, and a repo that upgraded before today may
+  be holding the result.** These files are executed: your upgrade tooling read them, acted and
+  reported done, so a defect in one is a defect in your codebase.
+  **`0.5.1#progress-variant-remap` certified the wrong component.** Its `verify` was the text
+  belonging to the badge item beside it, checking that chips render in their status colours — so
+  a `ds-progress` still binding `variant="warn"` or `variant="indeterminate"`, or TypeScript
+  still naming a removed `ProgressVariant` member, passed the check and shipped.
+  **Two items named too few locators to be found.**
+  `0.9.0#search-height-joins-field-scale` searched only `--ds-search-height`, so a short search
+  row pinned through `--hit-min` instead was never flagged; `0.10.1#fields-shared-base-class-members`
+  searched the bare base names, so a subclass written `extends` one of the internal field bases
+  went unfound and its `success` collision surfaced only at build.
+  **`0.10.1` also gained a delete row it never carried** — a modal body torn down on `(closed)`,
+  or held behind the open flag, purely so a re-opened `ds-date-picker` starts clean. The picker
+  clears itself now, and the teardown never fired reliably: re-opening inside the leave animation
+  cancels the close, so `closed` never comes.
+  `0.11.0#exported-class-members-grew` pointed its `detect` and `verify` at a base no consumer can
+  extend; corrected, with no consequence for anyone.
+  Re-run those items if your last upgrade crossed those versions.
 
 ### What you can now DELETE
 
