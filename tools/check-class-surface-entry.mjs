@@ -49,7 +49,7 @@ const block = unreleased[1];
 
 // `detect` is the field the consumer's updater greps with, so a class missing from it is a
 // subclass the update never surfaces — 0.11.1 shipped with Autocomplete left out that way while
-// the prose named it. Checked separately from the prose, and only when a draft exists.
+// the prose named it, which is why checking the prose alone is not enough.
 let draftDetect = null;
 try {
   const draft = JSON.parse(readFileSync('migrations/unreleased.json', 'utf8'));
