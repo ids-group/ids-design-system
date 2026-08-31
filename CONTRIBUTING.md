@@ -128,5 +128,9 @@ own `.scss` is the exception — its comments are compiled away.
 **A manifest is held to the same confidentiality bar but a different usefulness bar.**
 Its reader is an agent upgrading someone else's repo, so anything that helps it FIND the
 affected code stays — `old`, `searchHints` and `detect` are pooled as locators by
-`migration-lint`. What does not belong there is internal work with no consumer action:
-if we refactored and nobody has to do anything, it is not a migration item.
+`migration-lint`. `changelog-lint` knows this: inside those fields, and inside a
+`deleteList` entry's `find`, an unexported symbol is allowed, because a grep pattern does
+not have to be importable. Every other rule still applies there — a client name in a
+`searchHint` is the same leak it would be anywhere else. What does not belong in a
+manifest is internal work with no consumer action: if we refactored and nobody has to do
+anything, it is not a migration item.

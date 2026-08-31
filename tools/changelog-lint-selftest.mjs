@@ -17,6 +17,10 @@ import { execFileSync } from 'node:child_process';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURE = 'changelog-lint-selftest.fixture.md';
 const FIXTURE_PATH = join(ROOT, FIXTURE);
+// A second fixture for the manifest rules. It lives at the root, NOT in `migrations/`,
+// so a crash between write and cleanup cannot leave a stray file that ships.
+const MANIFEST = 'changelog-lint-selftest.fixture.json';
+const MANIFEST_PATH = join(ROOT, MANIFEST);
 
 // One line per rule, each the shape the rule exists to catch. The prose around the
 // offending token is deliberately plausible — a rule that only fires on a bare
@@ -134,6 +138,56 @@ try {
     console.log(`${quiet ? 'quiet ' : 'FALSE+'} ${what}`);
   }
 
+  // A manifest's locators are exempt from the private-symbol rule, because a consumer's
+  // finder greps their source for every one of them. An exemption is how a leak gets in,
+  // so both halves are asserted: the locator passes, and the same name in a `note` — plus
+  // a client name in the same locator array — still fails.
+  const manifest = (items) => {
+    writeFileSync(
+      MANIFEST_PATH,
+      JSON.stringify({ version: '9.9.9', items }, null, 2),
+    );
+
+    return run(MANIFEST);
+  };
+
+  const locatorExempt = manifest([
+    {
+      id: 'fixture',
+      old: 'class MyField extends DsFieldBase',
+      searchHints: ['extends DsFieldBase', 'extends DsControlValueAccessor'],
+      detect: ['DsMessageBase'],
+      action: 'Rename your own member.',
+    },
+  ]).includes('  C010  ');
+  console.log(
+    `${locatorExempt ? 'FALSE+' : 'quiet '} C010 spares a manifest locator`,
+  );
+  if (locatorExempt) dead.push('C010-locator-exemption');
+
+  const noteStillCaught = manifest([
+    {
+      id: 'fixture',
+      old: 'x',
+      action: 'Declare it once on DsFieldBase instead.',
+    },
+  ]).includes('  C010  ');
+  console.log(
+    `${noteStillCaught ? 'fires ' : 'DEAD  '} C010 outside a locator field`,
+  );
+  if (!noteStillCaught) dead.push('C010-exemption-too-wide');
+
+  const clientInLocator = manifest([
+    {
+      id: 'fixture',
+      old: 'x',
+      searchHints: ['mm-broker/src/app'],
+      action: 'Rename it.',
+    },
+  ]).includes('  C001  ');
+  console.log(`${clientInLocator ? 'fires ' : 'DEAD  '} C001 inside a locator`);
+  if (!clientInLocator) dead.push('C001-in-locator');
+
   // The mirror case: a line that trips nothing must stay green, or every rule
   // above is passing for the wrong reason.
   writeFileSync(
@@ -151,6 +205,7 @@ try {
   }
 } finally {
   if (existsSync(FIXTURE_PATH)) rmSync(FIXTURE_PATH);
+  if (existsSync(MANIFEST_PATH)) rmSync(MANIFEST_PATH);
 }
 
 if (dead.length) process.exitCode = 1;

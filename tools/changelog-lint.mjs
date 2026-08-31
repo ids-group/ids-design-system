@@ -288,6 +288,42 @@ for (const { full, label: file, isSource } of targets) {
   // multi-word ones below.
   const lines = readFileSync(full, 'utf8').split(/\r?\n/);
 
+  // A manifest's LOCATORS are exempt from the private-symbol rule. `migration-lint` pools
+  // `old`, `searchHints` and `detect` and a consumer's finder greps their source for every
+  // string in them: `extends DsFieldBase` matches only inside a subclass, which is exactly
+  // who the item is for, and being unimportable is beside the point for a grep pattern.
+  // Every other rule still applies to them — a client name in a searchHint is still a leak.
+  // Recognised by SHAPE rather than by path, so the selftest can prove the exemption
+  // without writing a fixture into the published `migrations/` directory.
+  const locatorLines = new Set();
+  if (file.endsWith('.json')) {
+    const collect = (value, inLocator) => {
+      if (typeof value === 'string') {
+        if (inLocator) locatorLines.add(value);
+      } else if (Array.isArray(value)) {
+        for (const one of value) collect(one, inLocator);
+      } else if (value && typeof value === 'object') {
+        for (const [key, one] of Object.entries(value)) {
+          collect(one, ['old', 'searchHints', 'detect', 'find'].includes(key));
+        }
+      }
+    };
+    try {
+      collect(JSON.parse(lines.join('\n')), false);
+    } catch {
+      // a malformed manifest is migration-lint's error to raise, not this one's
+    }
+  }
+  const onLocatorLine = (index) => {
+    const text = (lines[index - 1] ?? '').trim().replace(/,$/, '');
+    const bare = text.replace(/^"(?:old|searchHints|detect|find)":\s*/, '');
+    try {
+      return locatorLines.has(JSON.parse(bare));
+    } catch {
+      return false;
+    }
+  };
+
   // These files wrap at ~100 columns, so a two-word phrase splits across lines and a
   // line-by-line scan walks straight past it — `npm run\n  class-surface` sat in the
   // changelog through the first pass of this very check. Flatten the file into one
@@ -426,6 +462,7 @@ for (const { full, label: file, isSource } of targets) {
       // naming an internal base is fine where the text says so: a subclasser meets these
       // names in their own compiler errors
       (m) =>
+        !onLocatorLine(lineAt[m.index] ?? 0) &&
         !/\binternal\b|\bnot exported\b|\bprivate\b/i.test(
           flat.slice(Math.max(0, m.index - 400), m.index + 400),
         ),
