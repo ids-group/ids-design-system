@@ -141,6 +141,20 @@ const INSIDER_PROSE = [
 
 const PEOPLE = ['Stas', 'Misha'];
 
+// A release block runs Breaking, Added, Changed, Removed, Fixed, DELETE. Ranked by slot rather
+// than by heading, so a release that spells its breaking half `Changed (breaking, visual)` still
+// lands in the Breaking slot.
+const SECTION_SLOTS = [
+  [/^breaking|\(breaking/i, 0],
+  [/^added$/i, 1],
+  [/^changed$/i, 2],
+  [/^(removed|deprecated)$/i, 3],
+  [/^fixed$/i, 4],
+  [/^what you can now delete$/i, 5],
+];
+const SECTION_ORDER =
+  'Breaking → Added → Changed → Removed → Fixed → What you can now DELETE';
+
 // Symbols a module exports but the package root never surfaces: naming one tells a reader
 // to import something the package cannot give them. Resolved from the export graph, not a
 // list, so promoting or withdrawing a symbol needs no edit here.
@@ -562,6 +576,51 @@ for (const { full, label: file, isSource } of targets) {
           flat.slice(Math.max(0, m.index - 60), m.index + name.length + 60),
         ),
     );
+  }
+
+  // C012 — section order. Only for a file that actually looks like a changelog, so the rule
+  // stays silent on a digest or a manifest that happens to carry `###` headings.
+  if (lines.some((line) => /^## (Unreleased|\d+\.\d+\.\d+)/.test(line))) {
+    let release = null;
+    let seen = [];
+    const checkOrder = () => {
+      for (let i = 1; i < seen.length; i++) {
+        if (seen[i][1] < seen[i - 1][1]) {
+          report(
+            file,
+            seen[i][2],
+            'C012',
+            `in ${release}, "### ${seen[i][0]}" comes after "### ${seen[i - 1][0]}" — the order is ` +
+              SECTION_ORDER,
+          );
+          break;
+        }
+      }
+    };
+    lines.forEach((line, index) => {
+      if (line.startsWith('## ')) {
+        if (release) checkOrder();
+        release = line.slice(3).split(' — ')[0].trim();
+        seen = [];
+
+        return;
+      }
+      if (!release || !line.startsWith('### ')) return;
+      const heading = line.slice(4).trim();
+      const slot = SECTION_SLOTS.find(([pattern]) => pattern.test(heading));
+      if (!slot) {
+        report(
+          file,
+          index + 1,
+          'C012',
+          `unknown section "### ${heading}" in ${release}`,
+        );
+
+        return;
+      }
+      seen.push([heading, slot[1], index + 1]);
+    });
+    if (release) checkOrder();
   }
 }
 

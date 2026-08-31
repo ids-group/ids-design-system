@@ -284,6 +284,32 @@ try {
     );
   }
 
+  // C012 — the section order, which arrived wrong twice in two days before anything checked it.
+  const WRONG_ORDER =
+    '# Fixture\n\n## Unreleased\n\n### Changed\n\n- **A.** x\n\n### Added\n\n- **B.** y\n';
+  const HOUSE_ORDER =
+    '# Fixture\n\n## Unreleased\n\n### Added\n\n- **B.** y\n\n### Changed\n\n- **A.** x\n';
+  // 0.9.0 spells its breaking half `Changed (breaking, visual)`, which is the Breaking slot.
+  const BREAKING_ALIAS =
+    '# Fixture\n\n## 0.9.0 — 2026-01-01\n\n### Changed (breaking, visual)\n\n- **A.** x\n\n### Added\n\n- **B.** y\n';
+
+  writeFileSync(FIXTURE_PATH, WRONG_ORDER);
+  const orderCaught = run(FIXTURE).includes('  C012  ');
+  console.log(
+    `${orderCaught ? 'fires ' : 'DEAD  '} C012 on Changed before Added`,
+  );
+  if (!orderCaught) dead.push('C012');
+
+  for (const [what, body] of [
+    ['C012 on the house order', HOUSE_ORDER],
+    ['C012 on a breaking section under another name', BREAKING_ALIAS],
+  ]) {
+    writeFileSync(FIXTURE_PATH, body);
+    const quiet = run(FIXTURE).includes('OK');
+    if (!quiet) dead.push(what);
+    console.log(`${quiet ? 'quiet ' : 'FALSE+'} ${what}`);
+  }
+
   // The mirror case: a line that trips nothing must stay green, or every rule
   // above is passing for the wrong reason.
   writeFileSync(
