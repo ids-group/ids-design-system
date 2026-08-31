@@ -52,7 +52,7 @@ function publishedFiles() {
 // Only rules that cannot misfire on CODE are listed: a file declaring `DsFieldBase`
 // names it on every other line, and an SVG path (`M21 13a9 9 0 0 1-12-12 …`) reads as
 // an ambiguous date.
-const SOURCE_RULES = new Set(['C001', 'C002', 'C003', 'C004', 'C008', 'C009']);
+const SOURCE_RULES = new Set(['C001', 'C002', 'C003', 'C004', 'C008', 'C009', 'C011']);
 
 function shippedSources() {
   const found = [];
