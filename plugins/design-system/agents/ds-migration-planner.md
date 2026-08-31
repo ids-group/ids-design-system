@@ -29,8 +29,9 @@ every item that lacks them, ADD the fields from what the item's own `note` alrea
 rewrite: you are not changing the migration, you are stating where to look for it. Read the note for
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
 a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()`
-is null" is handing you both `surface: "typescript"` and two `detect` strings. Same for a top-level
-`deleteList`: build it from the `DELETE-LIST:` prose lines in `informational`, whose `find` is
+is null" is handing you both `surface: "typescript"` and two `detect` strings. A top-level `deleteList` is DATA, not something to reconstruct: every published manifest carries
+it as `{ id, surface, find, why, replaceWith }` rows, so read them and run each `find`. Build one
+from prose only when planning a version that ships no manifest at all, taking the `find` from
 whatever consumer-side shape the sentence names.
 
 ## What to read

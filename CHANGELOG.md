@@ -1577,8 +1577,8 @@ None of this is required — skipping it leaves working code that is merely redu
 ### Changed
 
 - **`migrations/<version>.json` now carries the delete-list, so an upgrade tool can act on it.**
-  Each version's manifest gains `DELETE-LIST: if you have <X> -> <why it can go>` entries — 21 of
-  them for 0.9.0 — naming the workarounds that release made unnecessary, from the
+  Each version's manifest gains a `deleteList` array — `{ id, surface, find, why, replaceWith }`
+  per row — naming the workarounds that release made unnecessary, from the
   `.button.button.button` triple-class to hand-binding `[value]`/`(valueChange)` on every field of a
   signal form. They existed for 0.9.0 in prose only, which no tool reads — so an upgrade that
   crossed 0.9.0 before this release applied none of them. **Nothing here is required**: skipping it leaves working code that is merely
