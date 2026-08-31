@@ -37,6 +37,7 @@ import { resolveFieldMessage, trimmedText } from '../field-errors';
 import type {
   AutocompleteOption,
   AutocompleteOptionGroup,
+  AutocompleteValueOverflow,
   AutocompleteWidth,
 } from './autocomplete.types';
 import type { DsSize } from '../../core/size';
@@ -56,6 +57,7 @@ let nextId = 0;
     '[attr.data-field-state]': 'controlState()',
     '[class.in-group]': 'inGroup',
     '[class.content-width]': "width() === 'content'",
+    '[class.value-wraps]': "valueOverflow() === 'wrap'",
   },
   providers: [
     {
@@ -82,7 +84,8 @@ export class AutocompleteComponent<T = unknown>
     '--ds-autocomplete-panel-bg-color',
     '--ds-autocomplete-panel-radius',
     '--ds-autocomplete-panel-maxh',
-    '--ds-autocomplete-option-bg-color-hover',
+    '--ds-dropdown-panel-minw',
+    '--ds-dropdown-panel-maxw',
   ];
 
   /** Flat option list — ignored when `optionGroups` is set. */
@@ -124,6 +127,11 @@ export class AutocompleteComponent<T = unknown>
   );
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
+  /** What a settled single value does when it is wider than the trigger. Defaults
+   *  to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke
+   *  onto a second line and pushed the chevron onto a third. Multi mode is
+   *  unaffected — its chips have their own measured cap. */
+  readonly valueOverflow = input<AutocompleteValueOverflow>('ellipsis');
   /** Placeholder shown in the input when empty. */
   readonly placeholder = input<string>('Select…');
   /** Disables the trigger and blocks all interaction. */
@@ -341,6 +349,11 @@ export class AutocompleteComponent<T = unknown>
     if (option.disabled) {
       parts.push('is-disabled');
     }
+    // The shared panel partial paints the selected row off this class, not off
+    // `aria-selected`, so a picker that only set the attribute went unpainted.
+    if (this.isSelected(option)) {
+      parts.push('is-selected');
+    }
 
     return parts.join(' ');
   }
@@ -476,7 +489,6 @@ export class AutocompleteComponent<T = unknown>
     const { positionStrategy, config: overlayConfig } = dropdownOverlay(
       this.overlay,
       triggerElement,
-      'ds-overlay-pane',
     );
     // Content-width trigger can be narrow — let the panel size to its options
     // with the trigger as the floor; fill mode keeps the exact trigger width.

@@ -2010,11 +2010,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Autocomplete dropdown panel max height before it scrolls (default --picker-maxh, shared with ds-multi-select). Forwarded onto the portaled pane on open."
       },
       {
-        "name": "--ds-autocomplete-option-bg-color-hover",
-        "value": "var(--surface-secondary)",
-        "notes": "Autocomplete option row fill on hover."
-      },
-      {
         "name": "--ds-radius-inner",
         "value": "—",
         "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."

@@ -457,6 +457,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Trigger width — `fill` stretches to the container, `content` hugs the value."
       },
       {
+        "name": "valueOverflow",
+        "kind": "input",
+        "type": "AutocompleteValueOverflow",
+        "union": [
+          "ellipsis",
+          "wrap"
+        ],
+        "default": "'ellipsis'",
+        "required": false,
+        "description": "What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke onto a second line and pushed the chevron onto a third. Multi mode is unaffected — its chips have their own measured cap."
+      },
+      {
         "name": "placeholder",
         "kind": "input",
         "type": "string",

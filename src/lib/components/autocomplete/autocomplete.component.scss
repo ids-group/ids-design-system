@@ -6,6 +6,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/text-clip' as text-clip;
 
 :host {
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
@@ -55,6 +56,13 @@
      to a second line, which is exactly what the cap exists to prevent. `:has()` keys
      off the measured row, so the mode drives the rule without a second class. */
   &:has(> .chip-row.fit) {
+    flex-wrap: nowrap;
+  }
+
+  /* Single mode has no chip row to wrap FOR, so the same rule applies unless the
+     host asks for wrapping back. Without it a long value breaks onto a second line
+     and the chevron onto a third: measured 40px → 63px at a 144px trigger. */
+  :host(:not(.value-wraps)) & {
     flex-wrap: nowrap;
   }
 
@@ -111,6 +119,14 @@
 .autocomplete-value {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
+
+  /* `min-width: 0` is the load-bearing half: a flex item refuses to shrink below
+     its content, so the ellipsis never engages without it. */
+  :host(:not(.value-wraps)) & {
+    min-width: 0;
+
+    @include text-clip.single-line-ellipsis;
+  }
 }
 
 .autocomplete-input {
@@ -139,80 +155,39 @@
   margin-left: auto;
 }
 
-.autocomplete-list {
-  /* Resolvers live here, NOT on :host: the panel is portaled into document.body, so
-     a :host-scoped custom property never inherits down to it and every value that
-     read one would collapse to its initial. */
+/* The panel is the shared `.ds-dropdown-panel` partial now: padding, row radius,
+   selected-row hooks and pressed states come from there, so this file keeps only
+   what no other picker has — plus the three panel tokens it already shipped. */
+.dropdown-panel {
   --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
-
   --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-dropdown-panel-radius, var(--ds-radius-panel)));
   --_autocomplete-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
-  --_autocomplete-option-bg-color-hover: var(--ds-autocomplete-option-bg-color-hover, var(--surface-secondary));
 
-  /* Fills the pane, whose width the component sets from the trigger's rect. Without
-     it the panel shrinks to its own content inside that absolutely-positioned pane. */
-  width: 100%;
-  list-style: none;
-  padding: 0;
   background: var(--_autocomplete-panel-bg-color);
-  border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--_autocomplete-panel-radius);
-  box-shadow: var(--shadow-popover);
-  margin: var(--picker-offset) 0 0;
   max-height: var(--_autocomplete-panel-maxh);
-  overflow-y: auto;
-  z-index: var(--layer-popover);
+  margin: var(--picker-offset) 0 0;
 
-  .option {
-    display: flex;
-    width: 100%;
+  .option.multi {
+    padding-left: var(--space-2);
+  }
+
+  /* A painted `<span>`, not a ds-checkbox: the option row is the button, so a real
+     control in it would add a second tab stop inside one tab stop. */
+  .check-box {
+    flex: none;
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    cursor: pointer;
-    transition: background-color var(--duration-fast) var(--ease-standard);
+    justify-content: center;
+    width: var(--check-size);
+    height: var(--check-size);
+    border: var(--border-width-strong) solid var(--border-strong);
+    border-radius: var(--ds-radius-inner);
+    color: var(--text-on-primary);
 
-    &:hover,
-    &.is-active,
-    &[aria-selected="true"] {
-      background: var(--_autocomplete-option-bg-color-hover);
-    }
-
-    .icon {
-      color: var(--accent);
-      margin-left: auto;
-    }
-
-    &.multi {
-      padding-left: var(--space-2);
-    }
-
-    .option-label {
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* A painted `<span>`, not a ds-checkbox: the option row is the button, so a real
-       control in it would add a second tab stop inside one tab stop. */
-    .check-box {
-      flex: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--check-size);
-      height: var(--check-size);
-      border: var(--border-width-strong) solid var(--border-strong);
-      border-radius: var(--ds-radius-inner);
-      color: var(--text-on-primary);
-
-      &.checked {
-        background-color: var(--accent);
-        border-color: var(--accent);
-      }
+    &.checked {
+      background-color: var(--accent);
+      border-color: var(--accent);
     }
   }
 
@@ -220,23 +195,6 @@
     padding: var(--space-3) var(--space-4);
     color: var(--text-tertiary);
     text-align: center;
-  }
-
-  .autocomplete-optgroup {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .autocomplete-optgroup-label {
-    display: block;
-    padding: var(--space-2) var(--space-3) var(--space-1);
-    font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-wide);
-
-    &.is-first { padding-top: var(--space-1); }
   }
 
   .create-row {

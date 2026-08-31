@@ -39,7 +39,10 @@
       }
     </span>
   } @else if (displayLabel()) {
-    <span class="autocomplete-value">
+    <span
+      class="autocomplete-value"
+      [attr.title]="valueOverflow() === 'ellipsis' ? displayLabel() : null"
+    >
       {{ displayLabel() }}
     </span>
   }
@@ -89,161 +92,161 @@
 />
 
 <ng-template #panel>
-  <ul
-    class="autocomplete-list"
-    role="listbox"
-    [id]="listboxId"
-    [attr.aria-multiselectable]="multiple() ? 'true' : null"
-  >
-    @if (filteredGroups().length > 0) {
-      @for (
-        group of filteredGroups();
-        track group.label;
-        let groupIdx = $index
-      ) {
-        <li
-          class="autocomplete-optgroup"
-          role="group"
-          [attr.aria-label]="group.label"
-        >
-          <span
-            class="autocomplete-optgroup-label"
-            [class.is-first]="groupIdx === 0"
+  <div class="dropdown-panel">
+    <ul
+      class="dropdown-list"
+      role="listbox"
+      [id]="listboxId"
+      [attr.aria-multiselectable]="multiple() ? 'true' : null"
+    >
+      @if (filteredGroups().length > 0) {
+        @for (
+          group of filteredGroups();
+          track group.label;
+          let groupIdx = $index
+        ) {
+          <li
+            class="optgroup"
+            role="group"
+            [attr.aria-label]="group.label"
           >
-            {{ group.label }}
-          </span>
-
-          @for (option of group.options; track option.value) {
-            <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
-            <div
-              role="option"
-              [class]="optionClass(option)"
-              [id]="optionId(flatIndexOf(option))"
-              [class.is-active]="flatIndexOf(option) === activeIndex()"
-              [attr.aria-selected]="isSelected(option)"
-              [attr.aria-disabled]="option.disabled ? 'true' : null"
-              (click)="onPick(option)"
-              (mouseenter)="
-                option.disabled || activeIndex.set(flatIndexOf(option))
-              "
+            <span
+              class="optgroup-label"
+              [class.is-first]="groupIdx === 0"
             >
-              @if (multiple()) {
-                <span
-                  class="check-box"
-                  [class.checked]="isSelected(option)"
-                >
-                  @if (isSelected(option)) {
-                    <ds-icon
-                      name="check"
-                      [size]="13"
-                    />
-                  }
+              {{ group.label }}
+            </span>
+
+            @for (option of group.options; track option.value) {
+              <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
+              <div
+                role="option"
+                [class]="optionClass(option)"
+                [id]="optionId(flatIndexOf(option))"
+                [class.is-active]="flatIndexOf(option) === activeIndex()"
+                [attr.aria-selected]="isSelected(option)"
+                [attr.aria-disabled]="option.disabled ? 'true' : null"
+                (click)="onPick(option)"
+                (mouseenter)="
+                  option.disabled || activeIndex.set(flatIndexOf(option))
+                "
+              >
+                @if (multiple()) {
+                  <span
+                    class="check-box"
+                    [class.checked]="isSelected(option)"
+                  >
+                    @if (isSelected(option)) {
+                      <ds-icon
+                        name="check"
+                        [size]="13"
+                      />
+                    }
+                  </span>
+                }
+
+                @if (option.icon) {
+                  <ds-icon
+                    class="option-icon"
+                    [name]="option.icon"
+                    [size]="16"
+                  />
+                }
+
+                <span class="option-label">
+                  {{ option.label }}
                 </span>
-              }
 
-              @if (option.icon) {
-                <ds-icon
-                  class="option-icon"
-                  [name]="option.icon"
-                  [size]="16"
-                />
-              }
-
-              <span class="option-label">
-                {{ option.label }}
+                @if (!multiple() && isSelected(option)) {
+                  <ds-icon
+                    name="check"
+                    class="option-check"
+                    [size]="14"
+                  />
+                }
+              </div>
+            }
+          </li>
+        }
+      } @else {
+        @for (option of filteredOptions(); track option.value; let i = $index) {
+          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
+          <li
+            role="option"
+            [class]="optionClass(option)"
+            [id]="optionId(i)"
+            [class.is-active]="i === activeIndex()"
+            [attr.aria-selected]="isSelected(option)"
+            [attr.aria-disabled]="option.disabled ? 'true' : null"
+            (click)="onPick(option)"
+            (mouseenter)="option.disabled || activeIndex.set(i)"
+          >
+            @if (multiple()) {
+              <span
+                class="check-box"
+                [class.checked]="isSelected(option)"
+              >
+                @if (isSelected(option)) {
+                  <ds-icon
+                    name="check"
+                    [size]="13"
+                  />
+                }
               </span>
+            }
 
-              @if (!multiple() && isSelected(option)) {
-                <ds-icon
-                  name="check"
-                  class="icon"
-                  [size]="14"
-                />
-              }
-            </div>
-          }
+            @if (option.icon) {
+              <ds-icon
+                class="option-icon"
+                [name]="option.icon"
+                [size]="16"
+              />
+            }
+
+            <span class="option-label">
+              {{ option.label }}
+            </span>
+
+            @if (!multiple() && isSelected(option)) {
+              <ds-icon
+                name="check"
+                class="option-check"
+                [size]="14"
+              />
+            }
+          </li>
+        }
+      }
+
+      @if (filteredOptions().length === 0 && !showCreateRow()) {
+        <li
+          class="empty t-s"
+          role="status"
+        >
+          No matches
         </li>
       }
-    } @else {
-      @for (option of filteredOptions(); track option.value; let i = $index) {
+
+      @if (showCreateRow()) {
         <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
         <li
+          class="option create-row"
           role="option"
-          [class]="optionClass(option)"
-          [id]="optionId(i)"
-          [class.is-active]="i === activeIndex()"
-          [attr.aria-selected]="isSelected(option)"
-          [attr.aria-disabled]="option.disabled ? 'true' : null"
-          (click)="onPick(option)"
-          (mouseenter)="option.disabled || activeIndex.set(i)"
+          [id]="optionId(visibleOptions().length)"
+          [class.is-active]="activeIndex() === visibleOptions().length"
+          [attr.aria-selected]="false"
+          (click)="onCreateNew()"
+          (mouseenter)="activeIndex.set(visibleOptions().length)"
         >
-          @if (multiple()) {
-            <span
-              class="check-box"
-              [class.checked]="isSelected(option)"
-            >
-              @if (isSelected(option)) {
-                <ds-icon
-                  name="check"
-                  [size]="13"
-                />
-              }
-            </span>
-          }
+          <ds-icon
+            name="plus"
+            class="create-icon"
+            [size]="16"
+          />
 
-          @if (option.icon) {
-            <ds-icon
-              class="option-icon"
-              [name]="option.icon"
-              [size]="16"
-            />
-          }
-
-          <span class="option-label">
-            {{ option.label }}
-          </span>
-
-          @if (!multiple() && isSelected(option)) {
-            <ds-icon
-              name="check"
-              class="icon"
-              [size]="14"
-            />
-          }
+          <span class="option-label"> Create «{{ query().trim() }}» </span>
         </li>
       }
-    }
-
-    @if (filteredOptions().length === 0 && !showCreateRow()) {
-      <li
-        class="empty t-s"
-        role="status"
-      >
-        No matches
-      </li>
-    }
-
-    @if (showCreateRow()) {
-      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
-      <li
-        class="option create-row"
-        role="option"
-        [id]="optionId(visibleOptions().length)"
-        [class.is-active]="activeIndex() === visibleOptions().length"
-        [attr.aria-selected]="false"
-        (click)="onCreateNew()"
-        (mouseenter)="activeIndex.set(visibleOptions().length)"
-      >
-        <ds-icon
-          name="plus"
-          class="create-icon"
-          [size]="16"
-        />
-
-        <span class="option-label">
-          Create «{{ query().trim() }}»
-        </span>
-      </li>
-    }
-  </ul>
+    </ul>
+  </div>
 </ng-template>

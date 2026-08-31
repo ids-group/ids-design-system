@@ -8,6 +8,30 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **`ds-autocomplete`'s panel is the shared dropdown panel again.** It was passing
+  `'ds-overlay-pane'` as its overlay's panel class, and that argument REPLACES the default
+  `['ds-dropdown-panel', 'ds-overlay-pane']` rather than adding to it — so nothing from the shared
+  partial reached it. The panel had `padding: 0` against the other two pickers' `--space-1`, square
+  rows against their `--ds-radius-inner`, and — the part the 0.9.0 notes got wrong — none of
+  `--ds-option-selected-bg-color`, `-label-color`, `-bg-color-hover` or `--ds-option-check-color`
+  did anything. Those notes said "one partial paints select, autocomplete and multi-select alike";
+  now it does.
+
+  The panel's classes moved to the shared vocabulary: `.autocomplete-list` → `.dropdown-list`
+  inside a new `.dropdown-panel` wrapper, `.autocomplete-optgroup` → `.optgroup`,
+  `.autocomplete-optgroup-label` → `.optgroup-label`, and an option's check icon →
+  `.option-check`. `--ds-autocomplete-option-bg-color-hover` is gone; the panel-level
+  `--ds-option-*` hooks replace it and reach all three pickers.
+  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` still work.
+
+- **A settled single value in `ds-autocomplete` ellipsizes instead of wrapping.** Measured before
+  the change: a value 134px wide in a 144px trigger took the trigger from **40px to 63px** — the text
+  broke onto a second line and the chevron onto a third. Single mode has no chip row to wrap for, so
+  the wrapping had nothing to protect. `valueOverflow="wrap"` restores it; multi mode is untouched,
+  its chips already had a measured cap.
+
 ### Added
 
 - **`width` on `ds-multi-select` and `ds-select`, the input `ds-autocomplete` already had.**
@@ -24,6 +48,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `ds-select` also gained token forwarding onto its portaled pane, which it did not have: without
   it a `ds-select { --ds-dropdown-panel-*: … }` never reached the panel, because CDK portals it out
   of the component.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the release manifest's `deleteList`.
+
+| If you have                                                       | Delete it, because                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.ds-overlay-pane .autocomplete-list`, `padding`, `border-radius` | The autocomplete panel shipped with `padding: 0` and square rows while ds-select's dropdown had `--space-1` padding and rounded rows, so consumers patched the difference globally. The panel now uses the same shared partial as the other two pickers and matches without help. Replace with: nothing — the padding is `--space-1` and the row radius is `--ds-radius-inner` out of the box. |
 
 ## 0.11.0 — 2026-08-26
 

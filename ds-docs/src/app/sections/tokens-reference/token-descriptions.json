@@ -202,7 +202,6 @@
   "--ds-autocomplete-focus-shadow": "Autocomplete focus ring (inherits shared field focus shadow).",
   "--ds-autocomplete-input-minw": "Autocomplete input minimum width (80px).",
   "--ds-autocomplete-maxw": "Autocomplete max width (none by default).",
-  "--ds-autocomplete-option-bg-color-hover": "Autocomplete option row fill on hover.",
   "--ds-autocomplete-panel-bg-color": "Autocomplete dropdown panel fill.",
   "--ds-autocomplete-panel-maxh": "Autocomplete dropdown panel max height before it scrolls (default --picker-maxh, shared with ds-multi-select). Forwarded onto the portaled pane on open.",
   "--ds-autocomplete-panel-radius": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open.",

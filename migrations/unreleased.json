@@ -1,0 +1,105 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "autocomplete-panel-classes-renamed",
+      "kind": "class-rename",
+      "old": ".autocomplete-list, .autocomplete-optgroup, .autocomplete-optgroup-label, and the check icon's .icon inside an option",
+      "new": ".dropdown-list, .optgroup, .optgroup-label, .option-check — all inside a new .dropdown-panel wrapper",
+      "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .autocomplete-list` or a sibling. Nothing to do if you only use the `<ds-autocomplete>` element and its inputs.",
+      "pitfall": "The panel is portaled to document.body, so these rules are almost always global rather than component-scoped — grep your global stylesheets, not just the component next to the picker.",
+      "searchHints": ["autocomplete-list", "autocomplete-optgroup"],
+      "surface": "style",
+      "detect": [
+        ".autocomplete-list",
+        ".autocomplete-optgroup",
+        ".autocomplete-optgroup-label"
+      ],
+      "verify": "The autocomplete's open panel carries `ds-dropdown-panel` on its `.cdk-overlay-pane`, and its rows have 4px padding and a 4px radius without any rule of yours.",
+      "restore": null,
+      "note": "The panel now renders through the same shared partial as ds-select and ds-multi-select, so it inherits their padding, row radius, selected-row hooks and pressed states. An override that existed only to close that gap is dead weight, and one that names an old class silently stops matching.",
+      "action": "Retarget every rule that names an old class, then delete the ones that only restored padding or row radius."
+    },
+    {
+      "id": "autocomplete-option-hover-token-removed",
+      "kind": "token-rename",
+      "old": "--ds-autocomplete-option-bg-color-hover",
+      "new": "--ds-option-selected-bg-color, --ds-option-selected-label-color, --ds-option-selected-bg-color-hover, --ds-option-check-color",
+      "appliesWhen": "You set --ds-autocomplete-option-bg-color-hover anywhere.",
+      "pitfall": "The old token painted BOTH the hover and the selected row, because the autocomplete had no separate selected treatment. The panel-level hooks separate them, so a single old value may need splitting across two.",
+      "searchHints": ["ds-autocomplete-option-bg-color-hover"],
+      "surface": "style",
+      "detect": ["--ds-autocomplete-option-bg-color-hover"],
+      "verify": "Retuning --ds-option-selected-bg-color repaints the autocomplete's selected row, which it did not before.",
+      "restore": null,
+      "note": "The autocomplete had no separate selected treatment, so one token painted both hover and selection. The panel-level hooks reach all three pickers and separate the two states, which is what the 0.9.0 notes already claimed was true.",
+      "action": "Replace --ds-autocomplete-option-bg-color-hover with the panel-level --ds-option-* hooks."
+    },
+    {
+      "id": "autocomplete-single-value-ellipsizes",
+      "kind": "behavior",
+      "old": "A settled single value wider than the trigger wrapped onto a second line and pushed the chevron onto a third — measured 40px to 63px at a 144px trigger.",
+      "new": null,
+      "appliesWhen": "You use `<ds-autocomplete>` in single mode in a narrow column.",
+      "pitfall": "Multi mode is unchanged — its chips already had a measured cap. This only affects the settled single value.",
+      "searchHints": ["ds-autocomplete"],
+      "surface": "template",
+      "detect": ["<ds-autocomplete"],
+      "verify": "A long value in a 144px-wide single-select autocomplete keeps the trigger one row tall and ends in an ellipsis, with the full text on the element's title.",
+      "restore": "valueOverflow=\"wrap\"",
+      "note": "A settled single value now clips with an ellipsis and keeps the trigger one row tall, with the full text on the element title. Multi mode is untouched — its chips already had a measured cap. Nothing in your markup has to change unless the wrapping was deliberate.",
+      "action": "Do nothing, or set valueOverflow=\"wrap\" on the pickers that relied on the value wrapping."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "class MySelect extends SelectComponent, class MyMultiSelect extends MultiSelectComponent",
+      "new": null,
+      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-…>` elements need nothing.",
+      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
+      "searchHints": [
+        "extends SelectComponent",
+        "extends MultiSelectComponent"
+      ],
+      "surface": "typescript",
+      "detect": ["extends SelectComponent", "extends MultiSelectComponent"],
+      "verify": "The app builds with no TS2415 or TS2416 naming a picker component.",
+      "restore": null,
+      "note": "ds-select and ds-multi-select gained a `width` input, and ds-select gained a private `panelTokens` field. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check.",
+      "action": "Build after upgrading; rename or `override` any member of yours that collides with `width` or `panelTokens`."
+    },
+    {
+      "id": "autocomplete-width-type-widened",
+      "kind": "behavior",
+      "old": "export type AutocompleteWidth = 'fill' | 'content';",
+      "new": null,
+      "appliesWhen": "You import AutocompleteWidth by name.",
+      "pitfall": "Only a declaration that re-declares the type structurally (rather than importing it) could notice, and it still sees the same union.",
+      "searchHints": ["AutocompleteWidth"],
+      "surface": "typescript",
+      "detect": ["AutocompleteWidth"],
+      "verify": "The app builds and `width` still accepts only 'fill' and 'content'.",
+      "restore": null,
+      "note": "AutocompleteWidth is now an alias of the shared DsControlWidth that SelectWidth and MultiSelectWidth also alias. The union it resolves to is unchanged, so an import keeps compiling and `width` still accepts exactly `fill` and `content`.",
+      "action": "Do nothing."
+    }
+  ],
+  "informational": [
+    "ds-multi-select and ds-select gained `width`, the input ds-autocomplete already had: `content` takes the trigger width as the panel's floor instead of its width, so a short trigger stops forcing an unreadable panel. Default `fill` is unchanged.",
+    "New panel bounds for that mode: --ds-dropdown-panel-minw and --ds-dropdown-panel-maxw.",
+    "ds-select now forwards its panel custom properties onto the portaled pane, which it never did — a `ds-select { --ds-dropdown-panel-*: … }` reaches the panel now instead of being silently dropped."
+  ],
+  "deleteList": [
+    {
+      "id": "autocomplete-listbox-padding-override",
+      "surface": "style",
+      "find": [
+        ".ds-overlay-pane .autocomplete-list",
+        "padding",
+        "border-radius"
+      ],
+      "why": "The autocomplete panel shipped with `padding: 0` and square rows while ds-select's dropdown had `--space-1` padding and rounded rows, so consumers patched the difference globally. The panel now uses the same shared partial as the other two pickers and matches without help.",
+      "replaceWith": "Nothing — delete the rule. The padding is --space-1 and the row radius is --ds-radius-inner out of the box; --ds-dropdown-panel-minw / -maxw are there if you want to bound the panel."
+    }
+  ]
+}
