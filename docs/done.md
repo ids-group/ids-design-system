@@ -4,6 +4,87 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The review round on the picker lane — 43 findings, 42 fixed (2026-08-31)
+
+- [x] **DONE 2026-08-31 — five adversarial reviewers found 43 defects in work that had already passed
+  every gate, and the split by layer is the transferable part.** Five independent passes with distinct
+  lenses (runtime correctness, ARIA, public API surface, CSS/tokens, prose-vs-code) ran over the whole
+  branch. Every claim was re-checked against the code before being accepted; three were rejected as
+  overstated and are written up in the deck rather than dropped silently.
+
+  | Layer | Found by the tools I ran | Found by the reviewers |
+  | --- | --- | --- |
+  | Lint, gates, builds, audits | 5 | 0 |
+  | Prose against code | 3 | 15 |
+  | Logic and keyboard model | **0** | 9 |
+  | ARIA structure | **0** | 6 |
+  | CSS and tokens | 1 | 10 |
+
+  **Five were blockers, three of them introduced by the lane itself.** With the filter row hidden,
+  `Enter` was consumed by the trigger before the panel's handler saw it, so there was no keyboard way
+  to pick an option at all — broken by the same `searchable` input the lane added. An option inside a
+  `disabled` group lost object identity, because the picker marked it disabled for rendering and the
+  flattening helper marked it again: `flatIndexOf` returned `-1`, every row in the group rendered the
+  same `opt--1` id, and `aria-activedescendant` pointed at nothing. `dsChipTemplate` was declared,
+  exported and documented on `ds-autocomplete` and never rendered. `selectAll="group"` also drew the
+  panel-wide row, making `"both"` indistinguishable from it.
+
+  **Fifteen prose errors came out of checking each sentence against the code**, including release notes
+  that told a consumer to write a value the same release had renamed.
+
+  **Three rules came out of it, and they are the reason to keep this entry:**
+
+  1. **Grep a new slot, computed or host class on READ, not on declaration.** Declared-and-never-used
+     hit three times in one branch — a `contentChild` no template read, a `computed` no template
+     called, a host class no rule matched. All three compiled and all three shipped inert.
+  2. **An audit written by the author of the code proves intent, not behaviour.** `picker-parity`
+     grepped `contentChild(` in the `.ts` and certified the unrendered slot as present. It reads the
+     template now, and the check was proved by breaking the render deliberately and watching it fail.
+  3. **A claim in release notes is a testable promise.** That pass belongs before a release, not after.
+
+  **One defect shipped knowingly:** `triggerDisplay="labels"` under-shows its labels, because the fit
+  measurement reads a `fit-content` box that its own cut narrows — the exact invariant
+  `chip-overflow.ts` documents at the top of the file, and the same class as the two loops recorded
+  from the original chip work. Recorded in `todo.md` with its three ways out rather than patched under
+  time pressure.
+
+  Full record with every citation: `presentations/picker-review-findings.html`.
+
+---
+
+## The dropdown panel has one owner (2026-08-31)
+
+- [x] **DONE 2026-08-31 — the cascade race was deleted rather than out-ranked.** The panel is portaled
+  to `document.body`, where Angular's encapsulation does not reach, so the shared partial and two
+  component stylesheets were all declaring `background`, `border-radius`, `max-height`, `overflow`
+  and `display` at identical specificity: which rule won depended on the order the stylesheets loaded,
+  and this repo's own docs build defers the global sheet.
+
+  **First attempt was a stop-gap and is named as one:** qualifying the component selectors
+  (`.ds-dropdown-panel .dropdown-panel`) so they outrank the partial by specificity instead of by
+  order. It worked and it was a patch — the tie was side-stepped per selector, and the next panel rule
+  anyone wrote would not inherit the protection.
+
+  **What shipped instead:** the partial owns the geometry behind `--ds-dropdown-panel-bg-color` beside
+  the existing `-radius`/`-maxh`/`-minw`/`-maxw`, and each picker declares its own public name as an
+  ALIAS of the shared token on its host, forwarded onto the pane by the helper that already existed.
+  Every per-picker `--ds-*-panel-*` name still works; the qualifier is gone because nothing competes.
+  `ds-select` was already in this shape and is what the other two were moved to.
+
+  **`@layer` was measured and rejected for this problem.** Angular scopes selectors inside a layer
+  (`compiler.mjs` lists `@layer` among its scoped at-rules) and esbuild preserves it — but layer order
+  is fixed by FIRST APPEARANCE, so an order statement arriving after a layer exists appends rather than
+  reorders. Measured in Chrome: order-declared-late gives the opposite of what the statement reads.
+  A library cannot guarantee that ordering from inside its own stylesheet; it would need an inline
+  `<style>` in every consumer's `index.html`. Worth revisiting only for a repo-wide precedence
+  problem across many portaled nodes, and then the consumer-side requirement is part of the proposal.
+
+  **One regression found in this very refactor, by measuring rather than reading:** a flex column child
+  does not shrink below its content without `min-height: 0`, so the list would have pushed the panel
+  past its own `max-height`. Caught in a browser probe, fixed, re-measured.
+
+---
+
 ## The picker family — seven decisions, shipped in 0.12.0 (from the ITB Workspace gap report)
 
 - [x] **DONE 2026-08-31 — the report's nine findings came to seven decisions, and validating them first

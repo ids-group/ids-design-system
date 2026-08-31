@@ -1,12 +1,56 @@
 # DS — improvements backlog
 
+## Start here — the next five, in order
+
+Written 2026-08-31 after the picker lane merged. Ordered by what unblocks the most, not by age.
+
+1. **Release 0.12.0.** `dev` is green and carries the whole picker lane plus the review's 43 fixes.
+   One click: Pipelines → Run pipeline → branch `dev` → `release-minor`. Everything below is easier
+   once the lane is out of the way, and the release notes are already written for it.
+2. **Nine decks are waiting on a verdict, and two of them are the picker lane's.** Nothing in them
+   costs work until you pick; each one blocks the item behind it. See *Decks awaiting a verdict*
+   below — that section is new, and it exists because the count surprised both of us.
+3. **The warning status pair fails WCAG AA** (4.42:1 against 4.5). The only shipped defect that is a
+   contrast failure rather than a behaviour one. `--warning-text` is read by nine components plus
+   `_status.scss` and `_field-state.scss` — counted, eleven files — so one token step fixes all of
+   them at once. Cheapest real win on the board.
+4. **`triggerDisplay="labels"` under-shows its labels.** Shipped with the defect in 0.12.0 by your
+   call. It has three ways out and they differ in what they give up, so it needs your pick before any
+   code — it is question 5 in the picker deck.
+5. **The prettier ↔ eslint standoff.** Measured again this session: they want opposite things about
+   HTML, so `lint:all` can never be green and `npm run format` reports files nobody should reformat.
+   Until it is settled, every future branch pays the same tax we paid twice today.
+
+---
+
+## Decks awaiting a verdict (audited 2026-08-31)
+
+Nine decks carry `ds-deck-status: open`, which means each is a question that has not been answered.
+Listed so none of them is lost — several predate this week.
+
+| Deck | Asks |
+| --- | --- |
+| `picker-gaps-decisions.html` | **§8** four changes on top of what shipped, **§9** sixteen further proposals (three of them defects that still reproduce: no `scrollIntoView` on the active row, no `compareWith` for object values, no Home/End outside `ds-select`). §1–§7 are decided and collapsed. |
+| `picker-review-findings.html` | Not a question — the record of the 43 findings and, in §9, exactly what was renamed, moved and deleted. Read it to check the work, not to decide. |
+| `public-surface-verdicts.html` | What to cut from the public surface and what to keep. |
+| `migration-manifest-audit.html` | 23 findings against the shipped manifests. |
+| `packaging-entry-points.html` | MBP-133 — one entry point, and the four ways out. Pairs with the P2 ask about keeping the DS out of a consumer's initial bundle. |
+| `color-engine-derivation.html` + `color-engine-relative.html` | Two decks on the same question — one source token per role, derived. Pairs with the P2 colour-engine decision. |
+| `interaction-formula.html` | State interactions by formula, calibrated against the drawn ramp. Pairs with the `.ds-interactive` P2. |
+| `select-native-multi.html` | Whether `ds-select` native `multi` is worth building. Its backlog item is already Parked, so this deck may be answerable with "keep parked" and closed. |
+
+**Three of these have a backlog twin** (colour engine, `.ds-interactive`, native multi): the deck is
+the argument, the backlog line is the placeholder. Answering the deck closes both.
+
+---
+
 ## Open, in priority order
 
 **Bugs — something shipped misbehaves**
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
+- P2 · Three picker defects still reproduce: no `scrollIntoView` on the active row, `===` comparison for object values, Home/End only on `ds-select` — §9 of the picker deck, VERIFIED STILL OPEN 2026-08-31
 - P2 · `triggerDisplay="labels"` collapses to one label: the fit measurement reads a box its own cut narrows — RECORDED 2026-08-31
-- P2 · Four files style one portaled dropdown panel at equal specificity; order decides the winner — RECORDED 2026-08-31
 
 **Asks — a consumer or Stas asked for it**
 
@@ -16,6 +60,9 @@
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
 
 **Decisions — waiting on Stas, not on work**
+
+- P2 · Nine decks carry `ds-deck-status: open` and none has a verdict — see *Decks awaiting a verdict* above
+- P3 · Thirteen further picker proposals (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
 
 - P3 · Does a release note owe the reader a WHY, or only a what-and-what-to-do — left open 2026-08-28
 - P3 · ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class — `is-*`
@@ -85,11 +132,27 @@
 
   **Where it landed:** 2 was done — the partial owns the geometry, the components only alias its tokens, and the qualifier from 1 was removed because there is no competing rule left to out-rank. 3 was measured and rejected for this problem, for the reason above. Nothing here is outstanding; the entry stays as the record of why the panel is shaped the way it is.
 
-## Priority board (2026-08-26, recut after the 0.11.0 work)
+## Priority board (recut 2026-08-31, after the picker lane and its review merged)
 
-**30 open: 1 P1, 10 P2, 19 P3** (counted from the index, not by hand). Ten are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **18 items — 3 Bugs, 4 Asks and 11
-Decisions**. **`# Bugs` holds three:** the warning status pair measures 4.42:1 where AA asks 4.5, and the `labels` trigger under-shows its labels.
+**33 open: 1 P1, 11 P2, 21 P3** — counted from the index line by line, not carried forward. Ten are
+*Parked* awaiting a first consumer ask and two are Records, so the live board is **21 items — 3 Bugs,
+4 Asks and 14 Decisions**.
+
+**`# Bugs` holds three, all measured:** the warning status pair at 4.42:1 where AA asks 4.5; the
+`labels` trigger showing one label where more fit; and the three picker defects that survived the
+review round unfixed by your call (no `scrollIntoView`, `===` on object values, Home/End on one
+picker of three).
+
+**The Decisions column grew by three and that is the real signal.** Nine decks are open, and three of
+them have a backlog twin waiting on the same answer — the colour engine, `.ds-interactive`, and
+`ds-select` native multi. Answering a deck closes two lines, which makes the decks the cheapest thing
+on this board and the reason they are now listed explicitly rather than living only in
+`presentations/`.
+
+**What came off the board this round:** the portaled-panel cascade item, resolved rather than parked —
+the duplication was deleted, so there is no competing rule left to lose a specificity tie. It stays in
+this file as a Record because the reasoning is what stops someone re-introducing it, and the `@layer`
+alternative is written up there with the measurements that rejected it.
 
 **The tooling items came out of running the tools rather than reading them, and both were invisible to a
 code read.** The formatter conflict surfaced when the three formatters were actually run end to end;
