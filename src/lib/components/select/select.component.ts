@@ -91,6 +91,7 @@ export class SelectComponent
    *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it. Without this the
    *  tokens can only be set globally: the pane is portaled out of this component. */
   private readonly panelTokens = [
+    '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-minw',
     '--ds-dropdown-panel-maxw',
     '--ds-option-selected-bg-color',

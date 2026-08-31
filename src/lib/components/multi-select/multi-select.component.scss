@@ -10,6 +10,11 @@
   flex-direction: column;
   gap: var(--field-label-gap);
 
+  --ds-dropdown-panel-bg-color: var(
+    --ds-multi-select-panel-bg-color,
+    var(--surface-overlay)
+  );
+
   --_trigger-bg-color: var(--ds-multi-select-bg-color, var(--surface-default));
   --_trigger-border-color: var(
     --ds-multi-select-border-color,
@@ -156,19 +161,10 @@
 /* Qualified with the pane class so it OUTRANKS styles/_dropdown-overlay.scss by
    specificity rather than by stylesheet order — the two were an exact tie, and an
    SSR critical-CSS inline or a consumer loading the partial later flipped it. */
-.ds-dropdown-panel .dropdown-panel,
 .dropdown-panel {
-  --_panel-bg-color: var(--ds-multi-select-panel-bg-color, var(--surface-overlay));
   --_option-bg-color-active: var(--ds-multi-select-option-bg-color-active, var(--surface-secondary));
   --_check-bg-color: var(--ds-multi-select-check-bg-color, var(--accent));
 
-  display: flex;
-  flex-direction: column;
-  background-color: var(--_panel-bg-color);
-  overflow: hidden;
-
-  /* The shared `.is-active` fill is a role; this is the component's public knob for
-     it, and it has to outrank the partial to be one. */
   .option.is-active:not(:disabled) {
     background-color: var(--_option-bg-color-active);
   }
@@ -182,7 +178,6 @@
 
   .dropdown-list {
     max-height: var(--picker-maxh);
-    overflow-y: auto;
   }
 }
 

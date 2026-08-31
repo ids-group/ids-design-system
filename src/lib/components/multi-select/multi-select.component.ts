@@ -92,6 +92,7 @@ export class MultiSelectComponent
     '--ds-multi-select-panel-bg-color',
     '--ds-multi-select-option-bg-color-active',
     '--ds-multi-select-check-bg-color',
+    '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-minw',
     '--ds-dropdown-panel-maxw',
     '--ds-option-selected-bg-color',

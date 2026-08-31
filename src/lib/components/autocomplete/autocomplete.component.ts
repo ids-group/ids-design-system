@@ -95,9 +95,9 @@ export class AutocompleteComponent<T = unknown>
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
    *  a consumer's `ds-autocomplete { --ds-autocomplete-panel-*: … }` reaches it. */
   private readonly panelTokens = [
-    '--ds-autocomplete-panel-bg-color',
-    '--ds-autocomplete-panel-radius',
-    '--ds-autocomplete-panel-maxh',
+    '--ds-dropdown-panel-bg-color',
+    '--ds-dropdown-panel-radius',
+    '--ds-dropdown-panel-maxh',
     '--ds-dropdown-panel-minw',
     '--ds-dropdown-panel-maxw',
     '--ds-option-selected-bg-color',

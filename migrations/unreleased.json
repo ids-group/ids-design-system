@@ -177,7 +177,8 @@
     "New slots: dsEmptyTemplate on all three pickers, dsCreateTemplate on ds-autocomplete. ds-select shows an empty row when it has no options, where it used to open a blank panel.",
     "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false.",
     "docs/picker-contract.md states the rules the three pickers share, and `npm run picker-parity` lists every member that is not shared.",
-    "All three pickers now forward the four panel-level --ds-option-* hooks onto their portaled pane, so a per-instance override reaches the panel."
+    "All three pickers now forward the four panel-level --ds-option-* hooks onto their portaled pane, so a per-instance override reaches the panel.",
+    "The dropdown panel geometry now lives only in styles/_dropdown-overlay.scss, behind --ds-dropdown-panel-bg-color/-radius/-maxh/-minw/-maxw. The per-picker names (--ds-multi-select-panel-bg-color, --ds-autocomplete-panel-bg-color/-radius/-maxh) are aliases of those and still work; a global rule of yours that relied on a component stylesheet out-ranking the partial no longer has a competing rule to beat."
   ],
   "deleteList": [
     {

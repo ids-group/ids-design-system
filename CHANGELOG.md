@@ -10,6 +10,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **One stylesheet owns the dropdown panel.** The panel is portaled to `document.body`, where
+  Angular’s encapsulation does not reach, so `styles/_dropdown-overlay.scss` and two component
+  stylesheets were all declaring its `background`, `border-radius`, `max-height`, `overflow` and
+  `display` at identical specificity — which rule won depended on the order the stylesheets loaded.
+  The partial owns that geometry now, behind `--ds-dropdown-panel-bg-color` beside the `-radius`,
+  `-maxh`, `-minw` and `-maxw` knobs, and each picker declares its own name as an ALIAS of the shared
+  token on its host and forwards it onto the pane. `--ds-multi-select-panel-bg-color`,
+  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` all still work; what changed is that they
+  reach the panel through one rule instead of a second competing one.
+
+  The panel is also the flex column and the LIST is the scroller now, so a filter row or a select-all
+  row stays put while the options move under it — `ds-multi-select` did this per-component before and
+  the other two did not.
+
+
 - **`ds-multi-select`'s panel is the shared dropdown panel too.** `ds-autocomplete` rejoined it
   earlier in this release; the multi-select still carried its own `.panel` / `.options` / `.option`
   copy while its pane ALSO carried `ds-dropdown-panel`, so both rule sets applied at once. One
