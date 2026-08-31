@@ -1,2 +1,7 @@
 export { MultiSelectComponent } from './multi-select.component';
-export type { MultiSelectOption } from './multi-select.types';
+export type {
+  MultiSelectItem,
+  MultiSelectOption,
+  MultiSelectOptionGroup,
+  MultiSelectWidth,
+} from './multi-select.types';

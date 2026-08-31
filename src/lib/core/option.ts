@@ -15,3 +15,39 @@ export interface DsOption<T = string> {
   /** Rendered before the label at 16px by every picker's option row. */
   icon?: IconName;
 }
+
+/**
+ * A labelled section of options. `disabled` turns the whole section off.
+ */
+export interface DsOptionGroup<T = string> {
+  label: string;
+  options: DsOption<T>[];
+  disabled?: boolean;
+}
+
+/**
+ * What a picker's `options` input takes: flat options, groups, or both mixed.
+ * One input rather than two, because a second `optionGroups` input can only
+ * answer "what if both are set" by silently ignoring one — which is what
+ * `ds-autocomplete` used to do.
+ */
+export type DsOptionItem<T = string> = DsOption<T> | DsOptionGroup<T>;
+
+export function isDsOptionGroup<T>(
+  item: DsOptionItem<T>,
+): item is DsOptionGroup<T> {
+  return 'options' in item && Array.isArray((item as DsOptionGroup<T>).options);
+}
+
+/** Every option in `items`, groups flattened in place, in source order. */
+export function flattenDsOptions<T>(
+  items: readonly DsOptionItem<T>[],
+): DsOption<T>[] {
+  return items.flatMap((item) =>
+    isDsOptionGroup(item)
+      ? item.options.map((option) =>
+          item.disabled ? { ...option, disabled: true } : option,
+        )
+      : [item],
+  );
+}

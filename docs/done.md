@@ -4,6 +4,56 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The picker family — seven decisions, shipped in 0.12.0 (from the ITB Workspace gap report)
+
+- [x] **DONE 2026-08-31 — the report's nine findings came to seven decisions, and validating them first
+  killed half of one.** The ITB Workspace filter-picker gap report (written against 0.9.1) was read
+  claim by claim against 0.11.0 before anything was built. Two claims did not survive the read:
+  `maxVisibleChips` already defaulted to `"fit"` and CLIPS rather than wraps, so "the trigger grows
+  with the selection" was only half true and G1 reduced to two real gaps; and the localization ask
+  (G4/A1) was a library-wide project rather than a picker change, so it stayed in `todo.md`. What
+  shipped:
+
+  1. **A compact trigger, and a slot instead of a preset.** `triggerDisplay="count" | "labels"` on the
+     multi-value pickers, plus `dsPickerTrigger` on all three. A projected trigger WINS over
+     `triggerDisplay`, which is then not read at all — so there is no "preset plus template"
+     combination to define. The trigger ELEMENT stays library-owned either way.
+  2. **The panel is no longer chained to the trigger's width.** `width="content"` takes the trigger
+     width as the panel's FLOOR rather than its value, bounded by `--ds-dropdown-panel-minw/-maxw`.
+     `ds-select` also gained the token forwarding it never had — without it a consumer's
+     `ds-select { --ds-dropdown-panel-*: … }` never reached the portaled pane at all.
+  3. **Five projection slots**: `dsOptionTemplate`, `dsChipTemplate`, `dsPickerTrigger`,
+     `dsEmptyTemplate`, `dsCreateTemplate`. Two directives rather than one keyed one, because there
+     are exactly two option-shaped roles and a key would be an enum of two.
+  4. **`searchable: boolean | number`** — one input, three meanings, with `DS_CONFIG.picker.searchable`
+     as the app-wide threshold. Hiding the filter row is not an `@if`: that input owns focus-on-open,
+     `aria-activedescendant`, the arrows, Enter, Escape and the chip-removing Backspace, so the
+     TRIGGER has to run that model when the row is gone.
+  5. **One group shape.** `DsOptionGroup` / `DsOptionItem` behind each picker's own exported name;
+     `ds-multi-select` gained groups, `ds-autocomplete` lost the second `optionGroups` input whose
+     own docs said `options` was ignored when it was set.
+  6. **Ellipsis is the default for a settled single value.** Measured first: a 134px value in a 144px
+     trigger took the trigger from 40px to 63px. `valueOverflow="wrap"` restores the old behaviour;
+     six hand-rolled clip sites moved onto the `single-line-ellipsis` mixin.
+  7. **The autocomplete panel rejoined the shared partial.** Its `panelClass` argument REPLACES the
+     default `['ds-dropdown-panel','ds-overlay-pane']` rather than adding to it, so the panel had
+     shipped for three releases with `padding: 0`, square rows, and four public `--ds-option-*` hooks
+     that did nothing. The multi-select turned out to have the mirror defect — its own `.panel` /
+     `.options` copy applying ON TOP of the shared partial — and that is fixed in the same release.
+
+  **The part worth keeping is not any one of the seven.** `docs/picker-contract.md` states five rules
+  (one meaning per member name, difference only by a stated reason, one panel implementation, no
+  library-invented string without a slot, one way to clip a line), and two scripts enforce them:
+  `npm run picker-parity` prints every member that is not shared, `npm run picker-capabilities` probes
+  for behaviour rather than API surface. The second one is how the sixteen further proposals in
+  `presentations/picker-gaps-decisions.html` §9 were found rather than guessed.
+
+  **Three members are deferred on purpose, not forgotten:** `name`, `readOnly` and `clearable` stay
+  `ds-select`-only, because each pulls behaviour rather than an input and they are one piece of work.
+  The parity audit keeps printing them, and §2 of the contract states the reason.
+
+---
+
 ## Fully-closed entries moved out of todo.md (2026-08-26 sweep, on Stas's ask)
 
 Everything below was already closed where it stood — in the 08-26 board narrative or as a done

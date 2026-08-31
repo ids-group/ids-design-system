@@ -8,6 +8,154 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **`ds-multi-select`'s panel is the shared dropdown panel too.** `ds-autocomplete` rejoined it
+  earlier in this release; the multi-select still carried its own `.panel` / `.options` / `.option`
+  copy while its pane ALSO carried `ds-dropdown-panel`, so both rule sets applied at once. One
+  implementation now: the class names are `.dropdown-panel` and `.dropdown-list`, and the row is the
+  partial's. What stayed is what no other picker has — the filter row, the select-all rows, a real
+  `<button>` option that can be `:disabled`, and this component's own tokens.
+
+- **`triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name says what the trigger
+  shows, which matters once `labels` sits beside it.
+
+- **Every single-line label clips through one mixin now.** Six places hand-rolled
+  `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — the `ds-select` trigger text,
+  the `ds-tree` label, the `ds-sidenav-item` label, three labels in `ds-sidenav-footer`, and the
+  table cell under `density="compact"`. They all use `single-line-ellipsis` instead, which clips with
+  `overflow: clip` and an `overflow-clip-margin` rather than `hidden`: where the line box is tighter
+  than the glyph box, `hidden` eats the glyph and shaves every label, not only the ones with
+  descenders. Nothing to do on your side — labels stop losing their bottoms at tight line-heights.
+
+- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
+  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` gained members, and
+  `DsOptionTemplateDirective`, `DsChipTemplateDirective`, `DsPickerTriggerDirective`,
+  `DsEmptyTemplateDirective` and `DsCreateTemplateDirective` are new classes. Subclassing is unsupported but consumers do it, and a member of yours that shares a name
+  with one of ours stops the build. Rename yours, or add `override` if you meant to replace ours —
+  the compiler enumerates every collision, so building after the upgrade is the whole check.
+
+- **One `options` input takes groups on all three pickers.** `ds-multi-select` had no groups at
+  all; `ds-select` took them mixed into `options`; `ds-autocomplete` took them in a second
+  `optionGroups` input whose own documentation said `options` was **ignored** when it was set —
+  two inputs where one silently won. There is one shape now: `options` accepts flat options,
+  groups, or both mixed, and renders them in the order given.
+
+  The group type is shared as `DsOptionGroup` behind each picker's own name
+  (`SelectOptionGroup`, `MultiSelectOptionGroup`, `AutocompleteOptionGroup`), the way
+  `DsOption` already was. It carries `disabled`, which `ds-select` had and the other two did
+  not; disabling a group disables every option in it.
+
+- **`ds-autocomplete`'s panel is the shared dropdown panel again.** It was passing
+  `'ds-overlay-pane'` as its overlay's panel class, and that argument REPLACES the default
+  `['ds-dropdown-panel', 'ds-overlay-pane']` rather than adding to it — so nothing from the shared
+  partial reached it. The panel had `padding: 0` against the other two pickers' `--space-1`, square
+  rows against their `--ds-radius-inner`, and — the part the 0.9.0 notes got wrong — none of
+  `--ds-option-selected-bg-color`, `-label-color`, `-bg-color-hover` or `--ds-option-check-color`
+  did anything. Those notes said "one partial paints select, autocomplete and multi-select alike";
+  now it does.
+
+  The panel's classes moved to the shared vocabulary: `.autocomplete-list` → `.dropdown-list`
+  inside a new `.dropdown-panel` wrapper, `.autocomplete-optgroup` → `.optgroup`,
+  `.autocomplete-optgroup-label` → `.optgroup-label`, and an option's check icon →
+  `.option-check`. `--ds-autocomplete-option-bg-color-hover` is gone; the panel-level
+  `--ds-option-*` hooks replace it and reach all three pickers.
+  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` still work.
+
+- **A settled single value in `ds-autocomplete` ellipsizes instead of wrapping.** Measured before
+  the change: a value 134px wide in a 144px trigger took the trigger from **40px to 63px** — the text
+  broke onto a second line and the chevron onto a third. Single mode has no chip row to wrap for, so
+  the wrapping had nothing to protect. `valueOverflow="wrap"` restores it; multi mode is untouched,
+  its chips already had a measured cap.
+
+### Added
+
+- **A written contract for the picker family, and a tool that enforces it.**
+  `docs/picker-contract.md` states the five rules the three pickers now share — one meaning per
+  member name, difference only by a stated reason, one panel implementation, no library-invented
+  string without a slot, one way to clip a line. `npm run picker-parity` prints every input, output,
+  model and slot that is NOT shared, so a new divergence is either a line added to the "absent by
+  design" list or a defect.
+
+- **`dsEmptyTemplate` and `dsCreateTemplate`.** "No matches" and "Create «…»" were literals with no
+  way to replace them. Both are slots now, on all three pickers and on `ds-autocomplete`
+  respectively. `ds-select` also gained an empty state at all — with no options it used to open a
+  blank panel.
+
+- **`selectAll` takes `'group'` and `'both'`.** A row per group, or a group row beside the
+  panel-wide one. A group's row is disabled when the group is, and shows the mixed state when part
+  of it is picked.
+
+- **`triggerDisplay="labels"`.** Same compact footprint as `count`, but it names the selection
+  instead of counting it, cut to the trigger's width with the rest behind "+N" — the same
+  measurement the chips already use.
+
+- **Parity the family was missing.** `label`, `required` and `optional` on `ds-multi-select` and
+  `ds-autocomplete`, and `size` on `ds-multi-select`. They existed on `ds-select` alone, which
+  meant a form built from the other two could not be labelled or marked required at all.
+
+- **`searchable` on `ds-multi-select` — one input, three meanings.** `true` always shows the
+  panel's filter row (the default, unchanged), `false` never, and a **number** is the threshold at
+  which it appears — stated where it applies rather than hidden in a config. Set
+  `DS_CONFIG.picker.searchable` to give a whole app one threshold and override it per panel with a
+  number.
+
+  Hiding the row is not just an `@if`: the filter input is what takes focus on open and what carries
+  `aria-activedescendant`, the arrows, Enter, Escape and the Backspace that removes the last chip.
+  Without it the TRIGGER runs that model instead, and the active-descendant id rides on the trigger.
+
+- **A compact filter trigger, and a slot to write your own.** `ds-multi-select` takes
+  `triggerDisplay="count"`: a `label` caption plus a selected-count `ds-badge` at intrinsic
+  width, with an accent border once something is picked. The chip field it replaces grows with the
+  selection, which is why a board toolbar could not use it — one consumer wrote ~250 lines of their
+  own control instead.
+
+  `dsPickerTrigger` projects your own trigger contents into `ds-select`, `ds-multi-select` and
+  `ds-autocomplete`. **A projected template WINS over `triggerDisplay`**, which is then not read at
+  all, so there is no "compact plus a template" combination to document. The trigger ELEMENT stays
+  library-owned in both cases: `aria-haspopup`, `aria-expanded`, `aria-controls`, the roving
+  `aria-activedescendant` and Enter/Space/ArrowDown/Escape are not projected.
+
+  **Neither `count` nor `labels` is offered on `ds-autocomplete`.** Its trigger holds the text
+  input the control exists for, and a caption-plus-count summary would remove it. The slot is there instead, where a
+  consumer decides what happens to the input.
+
+- **`dsOptionTemplate` and `dsChipTemplate` — the option row and the selected chip take your content.**
+  An option was `{ value, label, disabled?, icon? }` and nothing else, so an avatar, a colour dot, a
+  priority glyph or a second line of metadata had no way in. Two directives now fill those two
+  places: `dsOptionTemplate` on `ds-select`, `ds-multi-select` and `ds-autocomplete`, and
+  `dsChipTemplate` on the two that render chips — so a visual that identifies an option does not
+  vanish the moment it is picked.
+
+  Two directives rather than one keyed one: there are exactly two roles and they differ, so a key
+  would be an enum of two. The row and the chip stay library-owned — `role="option"`,
+  `aria-selected`, the active-row class, the checkbox, the check glyph and the chip close button are
+  not projected.
+
+- **`width` on `ds-multi-select` and `ds-select`, the input `ds-autocomplete` already had.**
+  `fill` (the default, unchanged) stretches the control to its container and pins the panel to the
+  trigger's width. `content` hugs the trigger's own content and takes that width as the panel's
+  FLOOR instead, so the panel keeps growing to its options — a short trigger no longer forces a
+  panel too narrow to read its own labels. Nothing moves until you ask for `content`.
+
+  The three pickers now share one `DsControlWidth` behind their own exported names
+  (`SelectWidth`, `MultiSelectWidth`, `AutocompleteWidth`), the same way 0.10.0 unified
+  `DsOption`. Two new panel-level tokens bound the result in `content` mode:
+  `--ds-dropdown-panel-minw` and `--ds-dropdown-panel-maxw`.
+
+  `ds-select` also gained token forwarding onto its portaled pane, which it did not have: without
+  it a `ds-select { --ds-dropdown-panel-*: … }` never reached the panel, because CDK portals it out
+  of the component.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the release manifest's `deleteList`.
+
+| If you have                                                       | Delete it, because                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.ds-overlay-pane .autocomplete-list`, `padding`, `border-radius` | The autocomplete panel shipped with `padding: 0` and square rows while ds-select's dropdown had `--space-1` padding and rounded rows, so consumers patched the difference globally. The panel now uses the same shared partial as the other two pickers and matches without help. Replace with: nothing — the padding is `--space-1` and the row radius is `--ds-radius-inner` out of the box. |
+
 ## 0.11.0 — 2026-08-26
 
 ### Added
@@ -56,15 +204,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
     rendered by the same `ds-field-message`, with **`messageIcon`**, **`reserveMessage`** and the same
     `DS_CONFIG.field.*` fallbacks. `reserveMessage` holds the line's height while it is empty, so a
     button that gains an error mid-form does not shove the layout below it.
-  Also new: **`ariaDescribedBy`** on both `ds-button` and `ds-icon-button`, for pointing at a
-  description the app renders itself. On `ds-button` it is merged with the reason's own id.
-  **`ds-icon-button` gets no `disabledReason`** — icon-only leaves no room for a second line, and a
-  reason living only in the accessibility tree reproduces exactly the invisibility this closes.
-  **Nothing changes for a button that sets none of these.** Without `disabledReason` the native
-  `disabled` attribute stays and focus still skips it; without a message the host keeps the
-  `inline-flex` box every existing layout was built against. A message-bearing button becomes a column,
-  and since the host shrinks to fit, a message longer than the label widens the pair — button included,
-  exactly as a field's control spans its own message.
+    Also new: **`ariaDescribedBy`** on both `ds-button` and `ds-icon-button`, for pointing at a
+    description the app renders itself. On `ds-button` it is merged with the reason's own id.
+    **`ds-icon-button` gets no `disabledReason`** — icon-only leaves no room for a second line, and a
+    reason living only in the accessibility tree reproduces exactly the invisibility this closes.
+    **Nothing changes for a button that sets none of these.** Without `disabledReason` the native
+    `disabled` attribute stays and focus still skips it; without a message the host keeps the
+    `inline-flex` box every existing layout was built against. A message-bearing button becomes a column,
+    and since the host shrinks to fit, a message longer than the label widens the pair — button included,
+    exactly as a field's control spans its own message.
 
 - **`--ds-button-shadow` and `--ds-button-shadow-hover` — the rest state finally has a hook.** Focus and
   pressed already had one (`--ds-button-focus-shadow`, `--ds-button-pressed-shadow`); the resting shadow
@@ -263,14 +411,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
 workaround written against a hook that only landed in this release.
 
-| If you have | Delete it, because |
-| --- | --- |
-| A local rule padding `.pagination-footer`, or a `TODO(ds-table-footer-padding)` marker | The footer is inset by the cells' own padding now — horizontally by `--ds-table-cell-pad-x`, and the same at the bottom as the top. A local rule doubles it. |
-| `dsTooltip` on a `ds-button` that is `disabled`, carrying the reason it is refused | `disabledReason` puts the reason inside the button AND makes it focusable, so a keyboard and a screen reader reach it too — which a tooltip never did. Scope it: a tooltip that merely NAMES the action stays. For a refusal the user can lift by filling the form in, drop `disabled` entirely and use `error`/`warning`/`hint`. |
-| `::ng-deep ds-card .card` with `overflow: hidden`, to clip a full-bleed child inside the card radius | `--ds-card-overflow: clip` — and pair it with `data-focus="inset"` where the clipped card holds focusable content |
-| `::ng-deep ds-button button` kept alive only by a resting `box-shadow` | `--ds-button-shadow` (and `--ds-button-shadow-hover`) on the host |
-| A `View Details` `ds-menu-item` in `rowActions` that only repeats where the row already leads | `link` on the column that names the record — a real `<a>`, tabbable and Ctrl/Cmd-clickable, announced as a link rather than as a table row |
-
+| If you have                                                                                          | Delete it, because                                                                                                                                                                                                                                                                                                                |
+| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A local rule padding `.pagination-footer`, or a `TODO(ds-table-footer-padding)` marker               | The footer is inset by the cells' own padding now — horizontally by `--ds-table-cell-pad-x`, and the same at the bottom as the top. A local rule doubles it.                                                                                                                                                                      |
+| `dsTooltip` on a `ds-button` that is `disabled`, carrying the reason it is refused                   | `disabledReason` puts the reason inside the button AND makes it focusable, so a keyboard and a screen reader reach it too — which a tooltip never did. Scope it: a tooltip that merely NAMES the action stays. For a refusal the user can lift by filling the form in, drop `disabled` entirely and use `error`/`warning`/`hint`. |
+| `::ng-deep ds-card .card` with `overflow: hidden`, to clip a full-bleed child inside the card radius | `--ds-card-overflow: clip` — and pair it with `data-focus="inset"` where the clipped card holds focusable content                                                                                                                                                                                                                 |
+| `::ng-deep ds-button button` kept alive only by a resting `box-shadow`                               | `--ds-button-shadow` (and `--ds-button-shadow-hover`) on the host                                                                                                                                                                                                                                                                 |
+| A `View Details` `ds-menu-item` in `rowActions` that only repeats where the row already leads        | `link` on the column that names the record — a real `<a>`, tabbable and Ctrl/Cmd-clickable, announced as a link rather than as a table row                                                                                                                                                                                        |
 
 ## 0.10.3 — 2026-08-24
 
@@ -337,10 +484,10 @@ workaround written against a hook that only landed in this release.
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
 workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
 
-| If you have | Delete it, because |
-| --- | --- |
-| `ds-input input`, `ds-textarea textarea`, `--ds-input-focus-shadow`, `box-shadow: none` | A rule killing one of the two focus rings a ds-input or ds-textarea used to paint - typically box-shadow: none on the inner input, or --ds-input-focus-shadow re-declared as none to hide the doubling. Replace with: nothing - the component now paints one ring on its own. |
-| `.search-clear`, `ds-search`, `:focus-visible`, `box-shadow` | A focus rule you added to the ds-search clear button because it showed no indicator at all - the shell-wide reset 0.10.2 used silenced that tab stop too. Every shell names the one control it silences now, so the button keeps its own ring. Replace with: nothing - the component paints it. |
+| If you have                                                                             | Delete it, because                                                                                                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ds-input input`, `ds-textarea textarea`, `--ds-input-focus-shadow`, `box-shadow: none` | A rule killing one of the two focus rings a ds-input or ds-textarea used to paint - typically box-shadow: none on the inner input, or --ds-input-focus-shadow re-declared as none to hide the doubling. Replace with: nothing - the component now paints one ring on its own.                   |
+| `.search-clear`, `ds-search`, `:focus-visible`, `box-shadow`                            | A focus rule you added to the ds-search clear button because it showed no indicator at all - the shell-wide reset 0.10.2 used silenced that tab stop too. Every shell names the one control it silences now, so the button keeps its own ring. Replace with: nothing - the component paints it. |
 
 ## 0.10.2 — 2026-08-24
 
@@ -359,12 +506,12 @@ workaround this release made unnecessary. Generated from the release manifest’
 
 - **`TableRowAction` can vary its items per row: `hidden` and `disabledReason`.** The contract could
   only GREY an item that was always there, so a menu whose items swap by status — a draft offering Edit
-  + Launch where a live record offers Revert + Delete — grew a permanently dead half on every row. That
-  is why the row-action column shipped in 0.6.3 and one consumer adopted it in **zero** of eleven row
-  menus. `hidden?: (row) => boolean` leaves the item out instead, and **a row with every item hidden
-  renders no kebab at all** rather than opening an empty menu. `disabledReason?: string | ((row) =>
-  string)` puts the why on the item's second line, read only when `disabled` returns true for that row —
-  a reason on a live item would read as a caveat on something that works.
+  - Launch where a live record offers Revert + Delete — grew a permanently dead half on every row. That
+    is why the row-action column shipped in 0.6.3 and one consumer adopted it in **zero** of eleven row
+    menus. `hidden?: (row) => boolean` leaves the item out instead, and **a row with every item hidden
+    renders no kebab at all** rather than opening an empty menu. `disabledReason?: string | ((row) =>
+string)` puts the why on the item's second line, read only when `disabled` returns true for that row —
+    a reason on a live item would read as a caveat on something that works.
 
 - **`ds-menu-item` takes a `description` — a standing second line under the label.** For a limitation
   the action carries ("only the first 1,000 rows", "read-only in this workspace"), visible without hover
@@ -453,7 +600,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   that section compiles under `strictTemplates`.
 
 - **If you EXTEND a DS component, eleven classes grew and six members changed type.** `npm run
-  class-surface` against 0.10.1: `DsFieldBase` (`messageIcon` — the state glyph, declared once for
+class-surface` against 0.10.1: `DsFieldBase` (`messageIcon` — the state glyph, declared once for
   every field rather than per component), `DsControlValueAccessor` (`bridge`),
   `FieldMessageComponent` (`config`, `iconResolved`), `AutocompleteComponent` and
   `MultiSelectComponent` (`chipsMode`, `showsEveryChip`), `MenuItemComponent` (`description`,
@@ -575,7 +722,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   rules in `ds-topbar` / `ds-page-header`, which share the shape and are unreachable in our own docs.
   **Two behaviours checked rather than assumed:** the ellipsis still applies (`text-overflow` reads any
   non-`visible` overflow), and `ds-table`'s clipped-cell popover still fires, since `scrollWidth >
-  clientWidth` still reports true under `clip`.
+clientWidth` still reports true under `clip`.
 - **A field bound with signal forms threw once per field, and then showed an error it had already
   cleared.** `resolveFieldMessage` subscribes to `NgControl`'s `events` stream to follow reactive and
   template-driven forms. The `NgControl` that signal forms bridges carries no such stream, so the
@@ -643,22 +790,22 @@ workaround this release made unnecessary. Generated from the release manifest’
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
 workaround written against a hook that only landed in this release.
 
-| If you have | Delete it, because |
-| --- | --- |
-| A hand-rolled second line inside a `ds-menu-item` — a projected span, a `max-width` near `14rem`, and probably no `aria-describedby` | The `description` input, capped by `--ds-menu-item-description-max-width` |
-| `overflow: visible` forced back onto an element that needs to clip, or your own inset shadow standing in for a focus ring | `data-focus="inset"` on the clipping element |
-| A `border-radius` override aimed at `ds-multi-select .panel` alone | `--ds-dropdown-panel-radius` now reaches all three connected panels |
-| A timer of your own around a `ds-search` Clear button, or a value written twice to make the debounce let go | `clear()` |
-| A copy of the config fallback chain in your own host — `this.size() ?? config.control?.size ?? 'md'` | The component's resolver is public now; read `sizeResolved()` |
-| Your own wash replacing the solid active sidenav pill — a `--ds-sidenav-item-bg-color-active` override plus a matching label colour | That IS the default now; compare yours against it and drop it if they agree |
-| `--ds-sidenav-item-rail: transparent`, or a `::ng-deep` box-shadow reset to hide the active rail | `[rail]="false"` on `ds-sidenav` |
-| A `::ng-deep` `border-radius` rule on a bare `ds-menu` | `--ds-menu-radius` |
-| `--ds-button-label-color-disabled` pinned on a tonal button to make its disabled state visible, most likely only in the dark theme | The default disabled-label recipe carries it |
-| `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a `ds-stat` binding, because `[value]="count \| number"` would not typecheck | The pipe binds now, and it reads `LOCALE_ID` instead of a pinned locale |
-| A `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target | `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration` |
-| `ds-icon`, `field-message`, `align-items: center` | A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row. Replace with: the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing. |
-| `box-shadow: none`, `--ds-field-focus-shadow` | A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow. SCOPE, and it matters: this release suppresses the inner ring on ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper and ds-field-group ONLY. A workaround on ds-input or ds-textarea is still load-bearing here - deleting it brings the double ring back. Leave those two until you are on the release that names them. Also leave any rule you wrote against the universal :where(:focus-visible) base indicator itself: that rule is still the one this library ships. Replace with: nothing: the field paints one ring now. |
-| `padding-block`, `line-height`, `option-label` | A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved. Replace with: nothing: the clip carries a --space-1 margin now, at the same row height. |
+| If you have                                                                                                                                         | Delete it, because                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A hand-rolled second line inside a `ds-menu-item` — a projected span, a `max-width` near `14rem`, and probably no `aria-describedby`                | The `description` input, capped by `--ds-menu-item-description-max-width`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `overflow: visible` forced back onto an element that needs to clip, or your own inset shadow standing in for a focus ring                           | `data-focus="inset"` on the clipping element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| A `border-radius` override aimed at `ds-multi-select .panel` alone                                                                                  | `--ds-dropdown-panel-radius` now reaches all three connected panels                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| A timer of your own around a `ds-search` Clear button, or a value written twice to make the debounce let go                                         | `clear()`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| A copy of the config fallback chain in your own host — `this.size() ?? config.control?.size ?? 'md'`                                                | The component's resolver is public now; read `sizeResolved()`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Your own wash replacing the solid active sidenav pill — a `--ds-sidenav-item-bg-color-active` override plus a matching label colour                 | That IS the default now; compare yours against it and drop it if they agree                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `--ds-sidenav-item-rail: transparent`, or a `::ng-deep` box-shadow reset to hide the active rail                                                    | `[rail]="false"` on `ds-sidenav`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| A `::ng-deep` `border-radius` rule on a bare `ds-menu`                                                                                              | `--ds-menu-radius`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `--ds-button-label-color-disabled` pinned on a tonal button to make its disabled state visible, most likely only in the dark theme                  | The default disabled-label recipe carries it                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a `ds-stat` binding, because `[value]="count \| number"` would not typecheck | The pipe binds now, and it reads `LOCALE_ID` instead of a pinned locale                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| A `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target                           | `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `ds-icon`, `field-message`, `align-items: center`                                                                                                   | A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row. Replace with: the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing.                                                                                                                                                                                                                                                                                                                          |
+| `box-shadow: none`, `--ds-field-focus-shadow`                                                                                                       | A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow. SCOPE, and it matters: this release suppresses the inner ring on ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper and ds-field-group ONLY. A workaround on ds-input or ds-textarea is still load-bearing here - deleting it brings the double ring back. Leave those two until you are on the release that names them. Also leave any rule you wrote against the universal :where(:focus-visible) base indicator itself: that rule is still the one this library ships. Replace with: nothing: the field paints one ring now. |
+| `padding-block`, `line-height`, `option-label`                                                                                                      | A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved. Replace with: nothing: the clip carries a --space-1 margin now, at the same row height.                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ## 0.10.1 — 2026-08-20
 
@@ -859,7 +1006,7 @@ workaround written against a hook that only landed in this release.
   have no fill that could carry the state, so the label is the whole signal — and the shared recipe
   was failing it, badly in dark. Measured against the enabled label: light **2.54 → 3.41:1**, dark
   **1.11 → 2.91:1**. `outline` does have a border, but its disabled border resolves to only
-  **1.30:1** against the page — less than its own *enabled* border at 1.49:1 — so it never covered
+  **1.30:1** against the page — less than its own _enabled_ border at 1.49:1 — so it never covered
   for the label.
   **The dark number is the real defect.** `--primary-strong` there is already light (OKLCH L 67.9%),
   so a recipe pinning the disabled label at L 70% landed two points from the enabled one and the two
@@ -878,6 +1025,7 @@ workaround written against a hook that only landed in this release.
   backdrop, so on a tinted ground (a card at `--surface-secondary`, an alert) the disabled label is
   computed against the page colour rather than that ground. Consumers who set
   `--ds-button-label-color-disabled` are unaffected.
+
 ### Changed
 
 - **A disabled `ds-icon-button variant="standard"` mixes its glyph toward the surface too.** It is
@@ -914,8 +1062,8 @@ workaround written against a hook that only landed in this release.
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
 
-| If you have | Delete it, because |
-| --- | --- |
+| If you have                                                                                                                                                                                            | Delete it, because                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
 | A `?? ''` guard wrapped around a message binding - `[error]="form.errors?.message ?? ''"` - added because a null pushed into `hint` / `error` / `warning` / `success` threw a TypeError during render. | nothing - bind the expression directly, the inputs absorb null now |
 
 ## 0.10.0 — 2026-08-18
@@ -995,7 +1143,7 @@ None of this is required — skipping it leaves working code that is merely redu
   wins. **No default moved** — an app that provides nothing renders exactly as before, with one edge
   worth knowing: the booleans that swapped `booleanAttribute` for a nullable transform
   (`table.bordered`, `table.stickyScrollbar`, `badge.withDot`, and `dividers` on both modal components)
-  used to read a binding evaluating to `null`/`undefined` as `false`, and now read it as *unset* — so it
+  used to read a binding evaluating to `null`/`undefined` as `false`, and now read it as _unset_ — so it
   falls through to the config and then the built-in, which for `dividers` is `true`. A literal
   `[bordered]="false"` is unaffected. **You can now
   delete** the attribute an app repeats on every element: one consumer binds `[stickyScrollbar]="true"`
@@ -1195,7 +1343,7 @@ None of this is required — skipping it leaves working code that is merely redu
   item's corner, landed above the glyph's middle instead of beside it. One cause for both:
   `:host(.collapsed)` set `align-items: center`, which stops a flex child stretching, so each projected
   `ds-sidenav-item` and `ds-sidenav-group` shrank to its 20px icon and the `width: 100%` on `.item`
-  resolved against *that*. The rail no longer centres its children — `.brand` already centres its own
+  resolved against _that_. The rail no longer centres its children — `.brand` already centres its own
   contents, which is all that line was there for. Items now measure 39×40 (the rail's 64px less its
   padding and border). The dot is anchored to the GLYPH's top-right corner rather than the tile's, via a
   new `--sidenav-collapsed-glyph`, so it stays put if the rail width ever changes.
@@ -1205,12 +1353,12 @@ None of this is required — skipping it leaves working code that is merely redu
 - **`ds-time-picker`: the time you just picked stopped looking selected.** Hovering a chosen hour or
   minute painted it with the neutral hover fill while it kept the selected white text — white on pale
   grey, unreadable. Pure specificity: `.opt:hover:not(:disabled)` scores (0,3,0) and out-ranked
-  `.opt.is-selected` at (0,2,0). It read as a *touch* bug because a touch screen leaves `:hover` on the
+  `.opt.is-selected` at (0,2,0). It read as a _touch_ bug because a touch screen leaves `:hover` on the
   last-tapped cell until something else is tapped, so the minute you had just chosen sat greyed out
   until you looked away. Hover now skips a selected option; an unselected one is unchanged.
 
 - **`ds-time-picker` in single mode closes itself, and `Done` is gone from it.** Choosing an hour and a
-  minute *is* the completion, so a confirm button underneath it was a second way to say the same thing.
+  minute _is_ the completion, so a confirm button underneath it was a second way to say the same thing.
   The panel now closes once both columns have been used **in that opening** — re-opening a field that
   already holds a value asks for both again rather than closing on the first tap, and changing only the
   hour leaves the panel up. `Now` takes the full width of the footer beneath the columns, so it reads as
@@ -1242,7 +1390,7 @@ None of this is required — skipping it leaves working code that is merely redu
 - **`ds-otp-input` no longer shows two digits in one cell.** Typing a second character into a cell that
   already held one left `12` sitting in that box while the model had already split it correctly across
   two cells — so what the user read and what the form held disagreed. The distribution was never the
-  bug: `[value]` was. Angular diffs a binding against the value *it* last wrote, and the typed-in cell's
+  bug: `[value]` was. Angular diffs a binding against the value _it_ last wrote, and the typed-in cell's
   signal is unchanged by the split (`'1'` before and after), so the DOM write was skipped and the
   browser's own `"12"` survived. That branch now writes the element itself, like the other two already
   did. Pasting a full code is unaffected — it cancels the native input, so nothing ever reaches the box.
@@ -1261,7 +1409,7 @@ None of this is required — skipping it leaves working code that is merely redu
   The nine had drifted badly and are now one shared `field-state` mixin keyed off a `data-field-state`
   attribute: five painted the error box as border + fill and four as a border alone;
   **`ds-autocomplete` reached for a `--border-error` token that does not exist**, so an invalid
-  autocomplete drew a *near-black* border (`rgb(22,26,40)` — `border-color` falling back to
+  autocomplete drew a _near-black_ border (`rgb(22,26,40)` — `border-color` falling back to
   `currentColor`) instead of a red one; and the same state was spelled four ways — `.error` on the
   wrapper in `ds-input` and `ds-textarea`, `.error` on the box itself in `ds-select`, `ds-date-picker`,
   `ds-time-picker` and `ds-autocomplete`, `.invalid` on the box in `ds-multi-select`, and
@@ -1489,7 +1637,7 @@ None of this is required — skipping it leaves working code that is merely redu
 
 - **`ds-input`'s `floating` label is removed, with no replacement.** It only ever did half the job: the
   label was drawn inside a taller control, but it never moved out of the field on focus — the animation
-  from inside-the-box to above-it *is* the pattern, and without it an empty field reads as a
+  from inside-the-box to above-it _is_ the pattern, and without it an empty field reads as a
   permanently mislabelled one rather than a floating-label one. Nobody had asked for it, and finishing
   it is a real piece of motion work, so it goes. **Migration is deleting the attribute:**
   `[floating]="true"` → nothing, and the label renders above the field like every other field in the
@@ -1624,33 +1772,33 @@ None of this is required — skipping it leaves working code that is merely redu
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
 
-| If you have | Delete it, because |
-| --- | --- |
-| A `ResizeObserver`, a container query or a hand-tuned per-breakpoint `maxVisibleChips` number, keeping a chip trigger on one line. | `maxVisibleChips="fit"`, which re-splits on any width change rather than at the breakpoints you listed |
-| A `max-height` plus `overflow: hidden` on a chip trigger, stopping it growing a line per selection - it clips a chip mid-glyph and hides the count. | `maxVisibleChips` (a number, or `"fit"`), which drops whole chips and reports how many are hidden |
-| Your own `max-height` on a logo projected into `ds-sidenav`'s `[brand]` slot, or a wrapper sized to hold it. | `--ds-sidenav-brand-max-height` (default `none`, so nothing changes until you set it) |
-| A global rule against `.ds-dropdown-panel` or `.cdk-overlay-pane` to change a dropdown corner. | `--ds-dropdown-panel-radius`, which scopes to one picker when written under a component selector |
-| A query for `ds-autocomplete`'s inner `<input>` plus a synthetic `input` event, clearing leftover filter text after a pick. | `clear()` - and the component clears that text itself now |
-| A local `.link-button` class, or a padding / border / background / font reset on `button.link` in your overrides. | the global `.link` class with `.inline` / `.standalone` / `.sm` / `.xs` |
-| A `[dsStatValue]` projection used only to set `white-space: normal` or a smaller font size on a TEXT value. | the two hooks on the ordinary `value` input - keep the slot for a value that is genuinely another component, like a badge |
-| A wrapper around `ds-search` adding a typing debounce (typically 200ms) with an immediate path when the field empties. | `[debounce]`, which does both plus the Enter flush |
-| `--ds-button-height` / `--ds-button-font-size` / `--ds-button-pad-x` pinned under `ds-filter-bar` to force its trigger smaller. | `triggerSize="sm"` |
-| `[dividers]="false"` repeated on every modal (one consumer had 41), or a reach into `.modal > .header` / `.body` / `.actions` with `!important` because hiding the rules left the padding stacked. | `provideDsConfig({ modal: { dividers: false } })`, which drops the rules AND the padding that existed to clear them |
-| A helper keeping the last visited tab per path in `sessionStorage`. | `rememberLastTab` on `ds-tabs` (needs `urlParam`, which supplies the names) |
-| An adapter component that injects a brand object and fans it out into `brand` / `logoLetter` / `tagline` bindings on each auth screen. | `provideDsConfig({ brand: … })`; the accent stays a `[dsBrandName]` projection instead of a `brandAccent` string plus an `indexOf` split |
-| The `ds-avatar` wiring around your own initials helper (the helper itself stays yours). | `[name]` plus one `[initialsRule]` |
-| An attribute repeated identically on every element - one consumer binds `[stickyScrollbar]="true"` on all 35 of its tables and `size="sm"` on 146 buttons. | `provideDsConfig` with the matching section (`table`, `control.size`, …) |
-| A button wired to `exportCsv()` on a SERVER-PAGED table - it serialises the rows the table holds, so the file is one page. | `runExport()` with an `exportFetcher` |
-| The computed beside every list table - `items().length > 0 ? 'overlay' : 'skeleton'` - one consumer feature carried three copies of it. | `[loading]="true"`, which resolves the treatment itself; pin a value only where you mean to override the rule |
-| An override retuning `--opacity-muted` to compensate for a washed-out disabled state. That token is a de-emphasis level for hints and secondary text and carries no disabled state at all - and on `ds-button` / `ds-icon-button` it was always inert, because neither ever read it. | `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled` |
-| A `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` override - the shrink-to-content idiom. | `TableColumn.width: 'content'` |
-| A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays. | nothing on the key path - `onRowKey` now requires `target === currentTarget` |
-| `sortChange`, `sortKey`, `sortDir`, `setTimeout` | Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now. Replace with: nothing - answer the cleared sort with your default and stop there. |
-| `.visually-hidden`, `clip: rect`, `clip-path: inset(50%)` | Your own .visually-hidden definition, or a rule targeting the pending row glyph by name, written because the class ds-password-rules used was declared by no stylesheet and its screen-reader text rendered visibly. One shared mixin backs all four components now. Replace with: nothing - the components carry the class themselves. |
-| `ds-timeline-item`, `margin-top`, `margin: -` | A margin you added on ds-timeline-item or its node to pull the marker onto the heading centre. The component pulls the node column up itself now, so your compensation double-applies. Replace with: nothing - remove the margin. |
-| `--field-h-floating`, `--field-floating-label-fs`, `--field-floating-label-lh`, `--field-floating-label-top`, `--field-floating-pad-t` | An override of one of the five floating-label tokens. They were :root declarations backing the floating variant, which this release removed, so the declaration now sets a custom property nothing reads. Replace with: nothing - delete the declaration. |
-| `new Event('input'`, `dispatchEvent`, `querySelector` | A query for `ds-autocomplete`'s inner `<input>` plus a synthetic `input` event, clearing leftover filter text after a pick. Replace with: `clear()` - and the component clears that text itself now. |
-| A `::ng-deep` override on `ds-field-group` forcing the invalid `border-error` back to red, or suppressing a segment fill inside a group | Both are fixed in the component. Replace with: nothing - both overrides are redundant. |
+| If you have                                                                                                                                                                                                                                                                          | Delete it, because                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A `ResizeObserver`, a container query or a hand-tuned per-breakpoint `maxVisibleChips` number, keeping a chip trigger on one line.                                                                                                                                                   | `maxVisibleChips="fit"`, which re-splits on any width change rather than at the breakpoints you listed                                                                                                                                                                                                                                  |
+| A `max-height` plus `overflow: hidden` on a chip trigger, stopping it growing a line per selection - it clips a chip mid-glyph and hides the count.                                                                                                                                  | `maxVisibleChips` (a number, or `"fit"`), which drops whole chips and reports how many are hidden                                                                                                                                                                                                                                       |
+| Your own `max-height` on a logo projected into `ds-sidenav`'s `[brand]` slot, or a wrapper sized to hold it.                                                                                                                                                                         | `--ds-sidenav-brand-max-height` (default `none`, so nothing changes until you set it)                                                                                                                                                                                                                                                   |
+| A global rule against `.ds-dropdown-panel` or `.cdk-overlay-pane` to change a dropdown corner.                                                                                                                                                                                       | `--ds-dropdown-panel-radius`, which scopes to one picker when written under a component selector                                                                                                                                                                                                                                        |
+| A query for `ds-autocomplete`'s inner `<input>` plus a synthetic `input` event, clearing leftover filter text after a pick.                                                                                                                                                          | `clear()` - and the component clears that text itself now                                                                                                                                                                                                                                                                               |
+| A local `.link-button` class, or a padding / border / background / font reset on `button.link` in your overrides.                                                                                                                                                                    | the global `.link` class with `.inline` / `.standalone` / `.sm` / `.xs`                                                                                                                                                                                                                                                                 |
+| A `[dsStatValue]` projection used only to set `white-space: normal` or a smaller font size on a TEXT value.                                                                                                                                                                          | the two hooks on the ordinary `value` input - keep the slot for a value that is genuinely another component, like a badge                                                                                                                                                                                                               |
+| A wrapper around `ds-search` adding a typing debounce (typically 200ms) with an immediate path when the field empties.                                                                                                                                                               | `[debounce]`, which does both plus the Enter flush                                                                                                                                                                                                                                                                                      |
+| `--ds-button-height` / `--ds-button-font-size` / `--ds-button-pad-x` pinned under `ds-filter-bar` to force its trigger smaller.                                                                                                                                                      | `triggerSize="sm"`                                                                                                                                                                                                                                                                                                                      |
+| `[dividers]="false"` repeated on every modal (one consumer had 41), or a reach into `.modal > .header` / `.body` / `.actions` with `!important` because hiding the rules left the padding stacked.                                                                                   | `provideDsConfig({ modal: { dividers: false } })`, which drops the rules AND the padding that existed to clear them                                                                                                                                                                                                                     |
+| A helper keeping the last visited tab per path in `sessionStorage`.                                                                                                                                                                                                                  | `rememberLastTab` on `ds-tabs` (needs `urlParam`, which supplies the names)                                                                                                                                                                                                                                                             |
+| An adapter component that injects a brand object and fans it out into `brand` / `logoLetter` / `tagline` bindings on each auth screen.                                                                                                                                               | `provideDsConfig({ brand: … })`; the accent stays a `[dsBrandName]` projection instead of a `brandAccent` string plus an `indexOf` split                                                                                                                                                                                                |
+| The `ds-avatar` wiring around your own initials helper (the helper itself stays yours).                                                                                                                                                                                              | `[name]` plus one `[initialsRule]`                                                                                                                                                                                                                                                                                                      |
+| An attribute repeated identically on every element - one consumer binds `[stickyScrollbar]="true"` on all 35 of its tables and `size="sm"` on 146 buttons.                                                                                                                           | `provideDsConfig` with the matching section (`table`, `control.size`, …)                                                                                                                                                                                                                                                                |
+| A button wired to `exportCsv()` on a SERVER-PAGED table - it serialises the rows the table holds, so the file is one page.                                                                                                                                                           | `runExport()` with an `exportFetcher`                                                                                                                                                                                                                                                                                                   |
+| The computed beside every list table - `items().length > 0 ? 'overlay' : 'skeleton'` - one consumer feature carried three copies of it.                                                                                                                                              | `[loading]="true"`, which resolves the treatment itself; pin a value only where you mean to override the rule                                                                                                                                                                                                                           |
+| An override retuning `--opacity-muted` to compensate for a washed-out disabled state. That token is a de-emphasis level for hints and secondary text and carries no disabled state at all - and on `ds-button` / `ds-icon-button` it was always inert, because neither ever read it. | `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled`                                                                                                                                                                                                                                                             |
+| A `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` override - the shrink-to-content idiom.                                                                                                                                                           | `TableColumn.width: 'content'`                                                                                                                                                                                                                                                                                                          |
+| A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays.                             | nothing on the key path - `onRowKey` now requires `target === currentTarget`                                                                                                                                                                                                                                                            |
+| `sortChange`, `sortKey`, `sortDir`, `setTimeout`                                                                                                                                                                                                                                     | Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now. Replace with: nothing - answer the cleared sort with your default and stop there.                  |
+| `.visually-hidden`, `clip: rect`, `clip-path: inset(50%)`                                                                                                                                                                                                                            | Your own .visually-hidden definition, or a rule targeting the pending row glyph by name, written because the class ds-password-rules used was declared by no stylesheet and its screen-reader text rendered visibly. One shared mixin backs all four components now. Replace with: nothing - the components carry the class themselves. |
+| `ds-timeline-item`, `margin-top`, `margin: -`                                                                                                                                                                                                                                        | A margin you added on ds-timeline-item or its node to pull the marker onto the heading centre. The component pulls the node column up itself now, so your compensation double-applies. Replace with: nothing - remove the margin.                                                                                                       |
+| `--field-h-floating`, `--field-floating-label-fs`, `--field-floating-label-lh`, `--field-floating-label-top`, `--field-floating-pad-t`                                                                                                                                               | An override of one of the five floating-label tokens. They were :root declarations backing the floating variant, which this release removed, so the declaration now sets a custom property nothing reads. Replace with: nothing - delete the declaration.                                                                               |
+| `new Event('input'`, `dispatchEvent`, `querySelector`                                                                                                                                                                                                                                | A query for `ds-autocomplete`'s inner `<input>` plus a synthetic `input` event, clearing leftover filter text after a pick. Replace with: `clear()` - and the component clears that text itself now.                                                                                                                                    |
+| A `::ng-deep` override on `ds-field-group` forcing the invalid `border-error` back to red, or suppressing a segment fill inside a group                                                                                                                                              | Both are fixed in the component. Replace with: nothing - both overrides are redundant.                                                                                                                                                                                                                                                  |
 
 ## 0.9.1 — 2026-08-10
 
@@ -1699,34 +1847,34 @@ the consumer had no signal that anything had been tokenised since. That is a fai
 not of the consumer. None of this is required; skipping it leaves working code that is merely
 redundant.
 
-| If you have | Delete it, because |
-| --- | --- |
-| `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary` | `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant="outline"]` |
-| `--radius-sm: 0` to square a checkbox | `--ds-checkbox-radius` |
-| `.title.title { font-size }` inside a modal | `--ds-modal-title-font-size` |
-| Pagination label type overrides — a rule on `ds-pagination` setting `--ds-pagination-label-*` | `--ds-pagination-label-*` |
-| `.size { display: none }` on a pager | `[showPageSize]="false"` — and it is now forwarded through `ds-table` too |
-| `.actions:empty { display: none }` on a modal | The library already ships it |
-| `--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards | `[dividers]="false"` — it drops the rules *and* the padding that existed to clear them |
-| A defensive `:hover` rule guarding the selected dropdown row — a selector naming `is-selected` | The `:not(.is-selected)` branch already handles it |
-| `ds-menu-divider { padding: 0 }` | `--ds-menu-divider-spacing`, which already defaults to 0 |
-| A dozen scattered `--ds-*-radius: 0` | For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page |
-| A global rule squaring `.ds-overlay-pane` | Radius and elevation roles now travel onto portaled panes when the host overrides them |
-| Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` | `dsAutocompletePrefix` and `[showChevron]="false"` |
-| Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |
-| A hand-built KPI tile — a `kpi` block pairing your own markup with `ds-badge`, where `ds-stat` now fits | `ds-stat` takes a projected `[dsStatValue]` |
-| A pinned `--ds-search-height` (or any sibling) to get a shorter control row | `density="compact"` on the container — every field control is 32px there, measured |
-| A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer |
-| `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` on every field of a signal form | `[formField]="f.x"` — the control implements the contract already |
-| `white-space: normal` forced onto a badge in a table cell | `--ds-badge-white-space` |
-| `::ng-deep .card { height: 100% }` for equal-height cards | The card's box fills a stretched host on its own |
-| `!important` on a `--ds-table-cell-pad` override under `density="compact"` | Compact no longer out-specifies the padding hooks |
-| A wrapper around `ds-table` for sort/range announcements, a `role="separator"` resize handle, or a header filter the checklist cannot express | All three ship: the live region, the `role="separator"` handle, and `dsHeaderFilter` |
-| `new Event('input'`, `dispatchEvent`, `querySelector` | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it Replace with: `clear()`. |
-| `--ds-autocomplete-input-minw` | A --ds-autocomplete-input-minw override, written to hide the empty filter box that sat beside a chosen value in single mode. The input collapses on its own once a value is picked and the panel closes. Replace with: nothing - unless you genuinely want a wider typing area. |
-| `.trigger`, `:focus-within`, `ds-date-picker` | A :focus-within rule on the date-picker trigger, written because the trigger went dark while its panel was open. The component keeps an "open" class alongside the focus rules now. Replace with: nothing - the component holds the indicator itself. |
-| A wrapper around the export button catching a rejected `exportFetcher` — a `try {` / `catch` around it | ds-table emits `(exportFailed)` now. Replace with: bind (exportFailed) on ds-table. |
-| Your own live region around `ds-table` — an `aria-live` or `role="status"` element announcing sort state or row range | The table announces both through its own role="status" region, so keeping yours announces every change twice. Replace with: nothing - retune the wording through sortAnnouncement and rangeAnnouncement. |
+| If you have                                                                                                                                   | Delete it, because                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary`                                                                  | `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant="outline"]`                                                                                                                                                                         |
+| `--radius-sm: 0` to square a checkbox                                                                                                         | `--ds-checkbox-radius`                                                                                                                                                                                                                                                                |
+| `.title.title { font-size }` inside a modal                                                                                                   | `--ds-modal-title-font-size`                                                                                                                                                                                                                                                          |
+| Pagination label type overrides — a rule on `ds-pagination` setting `--ds-pagination-label-*`                                                 | `--ds-pagination-label-*`                                                                                                                                                                                                                                                             |
+| `.size { display: none }` on a pager                                                                                                          | `[showPageSize]="false"` — and it is now forwarded through `ds-table` too                                                                                                                                                                                                             |
+| `.actions:empty { display: none }` on a modal                                                                                                 | The library already ships it                                                                                                                                                                                                                                                          |
+| `--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards                                                  | `[dividers]="false"` — it drops the rules _and_ the padding that existed to clear them                                                                                                                                                                                                |
+| A defensive `:hover` rule guarding the selected dropdown row — a selector naming `is-selected`                                                | The `:not(.is-selected)` branch already handles it                                                                                                                                                                                                                                    |
+| `ds-menu-divider { padding: 0 }`                                                                                                              | `--ds-menu-divider-spacing`, which already defaults to 0                                                                                                                                                                                                                              |
+| A dozen scattered `--ds-*-radius: 0`                                                                                                          | For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page |
+| A global rule squaring `.ds-overlay-pane`                                                                                                     | Radius and elevation roles now travel onto portaled panes when the host overrides them                                                                                                                                                                                                |
+| Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron`                                                 | `dsAutocompletePrefix` and `[showChevron]="false"`                                                                                                                                                                                                                                    |
+| Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it                                             | `clear()`                                                                                                                                                                                                                                                                             |
+| A hand-built KPI tile — a `kpi` block pairing your own markup with `ds-badge`, where `ds-stat` now fits                                       | `ds-stat` takes a projected `[dsStatValue]`                                                                                                                                                                                                                                           |
+| A pinned `--ds-search-height` (or any sibling) to get a shorter control row                                                                   | `density="compact"` on the container — every field control is 32px there, measured                                                                                                                                                                                                    |
+| A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line                            | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer                                                                                                                                        |
+| `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` on every field of a signal form                                             | `[formField]="f.x"` — the control implements the contract already                                                                                                                                                                                                                     |
+| `white-space: normal` forced onto a badge in a table cell                                                                                     | `--ds-badge-white-space`                                                                                                                                                                                                                                                              |
+| `::ng-deep .card { height: 100% }` for equal-height cards                                                                                     | The card's box fills a stretched host on its own                                                                                                                                                                                                                                      |
+| `!important` on a `--ds-table-cell-pad` override under `density="compact"`                                                                    | Compact no longer out-specifies the padding hooks                                                                                                                                                                                                                                     |
+| A wrapper around `ds-table` for sort/range announcements, a `role="separator"` resize handle, or a header filter the checklist cannot express | All three ship: the live region, the `role="separator"` handle, and `dsHeaderFilter`                                                                                                                                                                                                  |
+| `new Event('input'`, `dispatchEvent`, `querySelector`                                                                                         | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it Replace with: `clear()`.                                                                                                                                                            |
+| `--ds-autocomplete-input-minw`                                                                                                                | A --ds-autocomplete-input-minw override, written to hide the empty filter box that sat beside a chosen value in single mode. The input collapses on its own once a value is picked and the panel closes. Replace with: nothing - unless you genuinely want a wider typing area.       |
+| `.trigger`, `:focus-within`, `ds-date-picker`                                                                                                 | A :focus-within rule on the date-picker trigger, written because the trigger went dark while its panel was open. The component keeps an "open" class alongside the focus rules now. Replace with: nothing - the component holds the indicator itself.                                 |
+| A wrapper around the export button catching a rejected `exportFetcher` — a `try {` / `catch` around it                                        | ds-table emits `(exportFailed)` now. Replace with: bind (exportFailed) on ds-table.                                                                                                                                                                                                   |
+| Your own live region around `ds-table` — an `aria-live` or `role="status"` element announcing sort state or row range                         | The table announces both through its own role="status" region, so keeping yours announces every change twice. Replace with: nothing - retune the wording through sortAnnouncement and rangeAnnouncement.                                                                              |
 
 **To sweep for the rest:** grep your styles for `::ng-deep`, `!important` and any selector naming a
 DS internal class (`.button`, `.trigger`, `.option`, `.modal`). Each hit is either a row above or a
@@ -2117,7 +2265,7 @@ genuine gap worth reporting.
   `<textarea>`'s vertical pad (`--space-2` / `--space-4`), but the `:host`-prefixed pin at the end of the
   file — added so the docs' unencapsulated `.field .control` specimen could not zero it — out-ranks them
   once emulated encapsulation shims both selectors: `[_nghost] .field[_ngcontent] .control[_ngcontent]
-  textarea[_ngcontent]` carries one more attribute than `.field.sm[_ngcontent] …`. So every textarea
+textarea[_ngcontent]` carries one more attribute than `.field.sm[_ngcontent] …`. So every textarea
   rendered with 12px top and bottom regardless of `size`, and retuning
   `--ds-input-pad-y` moved all three. There are now three pins, one per size, and the size blocks keep
   only the horizontal padding they own. Consumers see it only on a non-md textarea; the md default is
@@ -2399,13 +2547,13 @@ genuine gap worth reporting.
   to the corner token.
 - **`ng add` never ran its schematic — in any released version.** The package is `"type": "module"` while
   the compiled schematic is CommonJS, so Node refused to load it (`exports is not defined in ES module
-  scope`) and the DS global styles were never wired automatically; every consumer either added the `@use`
+scope`) and the DS global styles were never wired automatically; every consumer either added the `@use`
   line by hand or shipped without the styles. The build already wrote a nested
   `schematics/package.json` with `{"type":"commonjs"}` to fix exactly this, and **`npm pack` silently drops
   it** — npm treats a directory holding a `package.json` as a separate package root — so the marker existed
   in `dist/` and was absent from the tarball. The schematic is now authored as `.cts` and ships as `.cjs`,
   which survives packing, and the build fails loudly if that emit is missing.
-- **`ds-menu-divider` added a gap on top of the menu's own row rhythm, so a separated group read as a hole.** The divider carried `padding: var(--space-1) 0` while `ds-menu` already spaces its rows with `gap: var(--space-0-5)`. The two stack: measured in a consumer's account menu, adjacent items sat 2px apart while the divider produced 6px + line + 6px, tripling the local rhythm exactly where the eye reads a boundary. Menu items already carry their own `8px 12px` padding, so the line needs no help to separate. The default padding is now **0** — the line takes one row's place instead of adding a second gap — and a menu that genuinely wants divider *plus* air opts in with the new **`--ds-menu-divider-spacing`** token. This follows the direction the platforms took: Material 3 Expressive treats "with gap" as a device SEPARATE from "with divider" rather than bundling them, and Angular Material exposes the same spacing as tokens (`--mat-menu-divider-top-spacing` / `-bottom-spacing`) after shipping it baked in. Visual-only, and only for menus that use the divider.
+- **`ds-menu-divider` added a gap on top of the menu's own row rhythm, so a separated group read as a hole.** The divider carried `padding: var(--space-1) 0` while `ds-menu` already spaces its rows with `gap: var(--space-0-5)`. The two stack: measured in a consumer's account menu, adjacent items sat 2px apart while the divider produced 6px + line + 6px, tripling the local rhythm exactly where the eye reads a boundary. Menu items already carry their own `8px 12px` padding, so the line needs no help to separate. The default padding is now **0** — the line takes one row's place instead of adding a second gap — and a menu that genuinely wants divider _plus_ air opts in with the new **`--ds-menu-divider-spacing`** token. This follows the direction the platforms took: Material 3 Expressive treats "with gap" as a device SEPARATE from "with divider" rather than bundling them, and Angular Material exposes the same spacing as tokens (`--mat-menu-divider-top-spacing` / `-bottom-spacing`) after shipping it baked in. Visual-only, and only for menus that use the divider.
 - **`ds-table` gave the page a second scrollbar when it sat below the fold.** Its host was `display: block` with no `position`, while the `.visually-hidden` nodes it renders — the caption, the two `role="status"` announcers and the per-header sort-state spans — are `position: absolute`. With no positioned ancestor they resolved against the initial containing block, so each one contributed its layout offset to the DOCUMENT's root scroller: a consumer whose shell is `100vh` + `overflow: hidden` with one inner scrolling region got a phantom second scrollbar beside it, growing with how far down the page the table sat. Measured in a consumer with three tables on one tab — the root scroller reported 1902px against a 728px viewport, 1174px of overflow that no visible content occupied; with the host positioned it is 0 and the app's own region still scrolls. The host is now `position: relative`. Nothing else moves: the SR nodes stay 1×1 and clipped, and the overlays that must escape the table are portaled rather than absolutely positioned inside it.
 - **A nested `ds-app-layout` opened its rail whenever an OUTER one was open, and its scrim swallowed the clicks meant for the outer.** The open state was written as `:host(.rail-open) &`, which Angular's emulated encapsulation compiles to a DESCENDANT selector — and every instance of a component shares one encapsulation attribute, so `.rail-open[_nghost-x] .rail[_ngcontent-x]` matched the rail of every layout nested inside an open one. Two layouts on a page (a docs shell holding a demo, an app holding a preview pane) opened and closed in lockstep, and clicking the backdrop hit the inner layout's scrim, whose `closeRail()` was a no-op. The state now lives on the elements it styles (`.rail.open` / `.scrim.open`), where a selector cannot reach across host boundaries.
 - **The overlay rail escaped its layout and covered the whole window.** Below `lg` the rail is `position: fixed`, which resolves against the viewport, so a layout embedded in a page threw its rail over the top-left of the window instead of its own box — three shells on one docs page stacked three rails and three full-page scrims. The rail and scrim are now `absolute` against a `position: relative` host, which is identical for a full-viewport shell and correct for an embedded one.
@@ -2449,8 +2597,8 @@ genuine gap worth reporting.
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
 workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
 
-| If you have | Delete it, because |
-| --- | --- |
+| If you have                                                | Delete it, because                                                                                                                                                                                                                                                                                                                                       |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ds-table`, `z-index`, `--table-sticky-corner-z`, `sticky` | A consumer z-index on DS table cells, raised to stop the first body row painting over the header when stickyHeader and stickyFirstColumn were both on. The sticky-header rule out-specified --table-sticky-corner-z and both landed on the same z-index; that is fixed in the component. Replace with: nothing - the component orders the layers itself. |
 
 ## 0.7.1 — 2026-08-04
@@ -2578,7 +2726,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   modal, drawer, bottom sheet, toast, banner, alert and loading overlay. The presets are global keyframes —
   `ds-slide-in` (fade + short travel), `ds-scale-in` (grows from a micro-scale), `ds-fade-in` (opacity only)
   and `ds-slide-edge-in` (full-distance travel, no fade) — so `ds-select { --ds-overlay-enter-keyframes:
-  ds-fade-in; }` is enough to re-skin one instance, and portaled panels forward the tokens onto their
+ds-fade-in; }` is enough to re-skin one instance, and portaled panels forward the tokens onto their
   overlay pane on open — every one except `--ds-overlay-enter-scale`, which is not forwarded, so scaling
   one overlay panel per instance does not work yet (scope it globally instead). Your own `@keyframes` work
   too, but must be declared in GLOBAL styles: emulated view encapsulation renames keyframes defined in a
@@ -2697,7 +2845,7 @@ workaround this release made unnecessary. Generated from the release manifest’
 
 - **`ds-table`'s header no longer desyncs when a host maps the "off" sort click back to its own default.**
   Cycling past `desc` nulled `sortKey` internally; a server-paged host that cannot honour "unordered" pushes
-  its default key back, and on the *default* column that write is a no-op for Angular's binding diff — so the
+  its default key back, and on the _default_ column that write is a no-op for Angular's binding diff — so the
   table kept `sortKey === null`, leaving rows ordered while every header showed the neutral icon and
   `aria-sort="none"`. The key now survives the cycle and `sortDir === null` alone means unsorted; rendering
   is unchanged. **If your host reads `sortKey` to decide whether a sort is active, gate on `sortDir`
@@ -2731,11 +2879,11 @@ workaround this release made unnecessary. Generated from the release manifest’
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
 workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
 
-| If you have | Delete it, because |
-| --- | --- |
-| `[reserveMessage]="false"` | The default is FALSE again, so an opt-out binding only restates it - unless the field sits under a `dsReserveMessages` host or an app config that turns it on, where the binding is still the way back out. mm-broker carried six, three of them dead (2026-08-21). Replace with: nothing - delete the binding where no host reserves. |
-| `gap: var(--space-1)`, `margin-top: -` | A tighter sub-stack or a negative margin added to swallow the reserved message row is now over-tightening a form that no longer reserves it. Replace with: the normal 16px field stack. |
-| `ds-pagination`, `ds-field-message`, `display: none` | A rule hiding the empty message row inside the pagination rows-per-page select. The component pins that select to its own compact shape now, so the row is gone at the source. Replace with: nothing - delete the rule. |
+| If you have                                          | Delete it, because                                                                                                                                                                                                                                                                                                                     |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[reserveMessage]="false"`                           | The default is FALSE again, so an opt-out binding only restates it - unless the field sits under a `dsReserveMessages` host or an app config that turns it on, where the binding is still the way back out. mm-broker carried six, three of them dead (2026-08-21). Replace with: nothing - delete the binding where no host reserves. |
+| `gap: var(--space-1)`, `margin-top: -`               | A tighter sub-stack or a negative margin added to swallow the reserved message row is now over-tightening a form that no longer reserves it. Replace with: the normal 16px field stack.                                                                                                                                                |
+| `ds-pagination`, `ds-field-message`, `display: none` | A rule hiding the empty message row inside the pagination rows-per-page select. The component pins that select to its own compact shape now, so the row is gone at the source. Replace with: nothing - delete the rule.                                                                                                                |
 
 ## 0.7.0 — 2026-07-30
 
@@ -3094,9 +3242,9 @@ workaround this release made unnecessary. Generated from the release manifest’
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
 
-| If you have | Delete it, because |
-| --- | --- |
-| A logo overlaid on ds-sidenav’s brand row — `position: absolute` against `ds-sidenav`'s brand row, written when there was no slot for one. | project it into `[brand]` |
+| If you have                                                                                                                                                        | Delete it, because                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| A logo overlaid on ds-sidenav’s brand row — `position: absolute` against `ds-sidenav`'s brand row, written when there was no slot for one.                         | project it into `[brand]`                                        |
 | A scrollTop pin or a scroll-lock hack written against the content jolt an opening sheet used to cause in a shell that is a containing block for fixed descendants. | nothing - the entering panel no longer contributes that overflow |
 
 ## 0.6.1 — 2026-07-16
@@ -3111,9 +3259,9 @@ None of this is required — skipping it leaves working code that is merely redu
 - **`ds-date-picker` masked typing works on mobile keyboards.** Segment-aware editing was wired to
   `keydown`, but Android/Gboard fires no reliable `keydown` for edits (Backspace arrives as a
   `beforeinput` with `inputType: "deleteContentBackward"`), so deletion fell back to a native delete
-  + re-mask that couldn't cross a `/` separator — leaving the caret stuck (many taps to pass a
-  separator). Editing (digit entry, Backspace, Delete, selection replace) now also routes through
-  `beforeinput`, so a single tap crosses separators on a phone, matching desktop.
+  - re-mask that couldn't cross a `/` separator — leaving the caret stuck (many taps to pass a
+    separator). Editing (digit entry, Backspace, Delete, selection replace) now also routes through
+    `beforeinput`, so a single tap crosses separators on a phone, matching desktop.
 - **`ds-date-picker` panel drops the misleading `aria-modal` attribute.** The calendar panel is
   non-modal (no backdrop, the rest of the page stays interactive) but still advertised
   `aria-modal="true"`, telling assistive technology the page behind it was inert. Removed so the
@@ -3124,8 +3272,8 @@ None of this is required — skipping it leaves working code that is merely redu
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
 workaround this release made unnecessary. Generated from the release manifest’s `deleteList`.
 
-| If you have | Delete it, because |
-| --- | --- |
+| If you have                                                                      | Delete it, because                                                                                                                                                                                                                                                                                                                                                     |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ds-date-picker`, `pointer: coarse`, `ontouchstart`, `matchMedia`, `type="date"` | A branch that swapped ds-date-picker for a native input, or disabled its masked typing, on touch devices. It existed because segment-aware editing was wired to keydown, which soft keyboards do not report faithfully; the mobile path goes through beforeinput now, so the masked field works there. Replace with: nothing - render ds-date-picker on touch as well. |
 
 ## 0.6.0 — 2026-07-16
@@ -3155,7 +3303,7 @@ workaround this release made unnecessary. Generated from the release manifest’
 - **`.t-mono-block` scrolls instead of overflowing.** Added `max-width: 100%; overflow-x: auto;` so
   long unbroken lines scroll within the block rather than forcing page-level horizontal overflow.
 - **`ds-modal` panel clamps to the viewport on small screens.** New `max-width: calc(100vw -
-  var(--space-6))`; `max-height` is now `90vh` with a `90dvh` fallback (browsers without `dvh`
+var(--space-6))`; `max-height` is now `90vh` with a `90dvh` fallback (browsers without `dvh`
   support keep `90vh`).
 - **`ds-date-picker` shows per-segment placeholders and a fixed-width value.** Each empty
   `MM` / `DD` / `YYYY` segment now renders its own format-letter placeholder (e.g. `MM/DD/YYYY`),
@@ -3227,7 +3375,7 @@ workaround this release made unnecessary. Generated from the release manifest’
   `(tabClosed)`, `ds-tree` `(nodeSelect)` → `(nodeSelected)`, `ds-split-button` `(itemSelect)` →
   `(itemSelected)`.
 - **`ds-progress` — `indeterminate` is now a boolean input, not a `variant` value.** The animation
-  mode was conflated with the colour variant (a bar could not be `success`-coloured *and*
+  mode was conflated with the colour variant (a bar could not be `success`-coloured _and_
   indeterminate). Migration: `<ds-progress variant="indeterminate" />` →
   `<ds-progress indeterminate />`; `'indeterminate'` removed from `ProgressVariant`.
 - **`ds-badge` / `ds-status-dot` status API redesigned — factory statuses replaced by a

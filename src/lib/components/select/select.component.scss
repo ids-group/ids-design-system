@@ -3,6 +3,7 @@
    Native <select> was replaced; the public API is preserved.
    Absorbed the former <ds-dropdown> (removed as a duplicate) - trigger and panel share its source.
    ============================================================ */
+@use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
@@ -23,6 +24,12 @@
   flex-direction: column;
   gap: var(--field-label-gap);
   width: 100%;
+}
+
+/* Hugs its own content instead of filling the container. The panel then takes the
+   trigger width as a floor rather than as its width — see openPanel(). */
+:host(.content-width) {
+  width: fit-content;
 }
 
 .label {
@@ -63,9 +70,8 @@
   .trigger-text {
     flex: 1;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+
+    @include text-clip.single-line-ellipsis;
 
     &.is-placeholder {
       color: var(--text-tertiary);
