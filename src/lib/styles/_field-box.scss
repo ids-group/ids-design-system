@@ -1,11 +1,7 @@
 // One control-box height for the field family.
 //
-// `--field-h-sm`/`-md`/`-lg` have shipped as the field height scale since the
-// token file was written, but only `-lg` was ever read: every field spelled the
-// other two as the raw `var(--hit-min)` / `var(--hit-cozy)` instead. A consumer
-// retuning `--field-h-md` — the obvious lever, and the one the token name
-// advertises — therefore changed nothing. Same values, so routing through the
-// scale is visually neutral; it just makes the knob real.
+// `--field-h-sm`/`-md`/`-lg` is the height scale every field-shaped control resolves
+// through, so retuning `--field-h-md` moves them together.
 //
 // `--ds-field-height` is the public override and beats the size class, because a
 // consumer setting it has already decided. Per-instance is CSS-variable scoping:

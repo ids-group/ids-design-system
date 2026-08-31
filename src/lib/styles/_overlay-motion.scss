@@ -2,9 +2,8 @@
 // panelClass (select, autocomplete, multi-select, date-picker, time-picker,
 // color-picker, popover, tooltip, menu submenu). Animates the panel's ROOT
 // CHILD, not the pane itself, so CDK's positioning transforms on
-// `.cdk-overlay-pane` are left untouched. The leave/exit animation was removed
-// (close is instant) — see the TODO(overlay-leave) in components/overlay-motion.ts
-// to reinstate it.
+// `.cdk-overlay-pane` are left untouched. A leave animation runs on an ambient
+// dismiss only; picking an option closes instantly (see `.ds-leaving` below).
 //
 // `data-ds-placement` names WHERE the panel sits relative to its trigger and is
 // stamped by `prepareOverlayEnter()` before the panel is attached, so the panel

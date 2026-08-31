@@ -84,7 +84,7 @@
         "style",
         "typescript"
       ],
-      "verify": "No `variant` remains on the component. The chips render in their status colours, not grey: the `styles/status` partial is included and any custom status is registered through DsStatusRegistry, or the colour resolves to the neutral default and you meant that."
+      "verify": "No ds-progress binds `variant=\"warn\"` or `variant=\"indeterminate\"`: the colour vocabulary is `default | success | warning | error`, and the indeterminate state is the bare `indeterminate` attribute. Nothing is typed with a removed ProgressVariant member."
     },
     {
       "id": "modal-confirm-tone-danger-remap",

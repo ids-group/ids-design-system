@@ -1,4 +1,3 @@
-// Inline SVG icon set. Ported 1:1 from CLAUDE_DESIGN_DS/ds-icons.jsx.
 // All paths render inside <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">, stroke-width 1.75.
 
 export const ICONS = {

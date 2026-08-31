@@ -3,7 +3,7 @@
   "items": [],
   "informational": [
     "New .t-mono-inline typography utility (inline code chip), completing the mono family alongside .t-mono and .t-mono-block — additive.",
-    "npm package hygiene: repository field dropped from package.json, maintainer docs moved to repo-only CONTRIBUTING.md, README license entry made plain text (fixes the npm 404). No consumer action."
+    "npm package hygiene: repository field dropped from package.json, README license entry made plain text (fixes the npm 404). No consumer action."
   ],
   "deleteList": []
 }

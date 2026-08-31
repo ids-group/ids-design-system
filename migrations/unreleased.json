@@ -8,7 +8,10 @@
       "new": ".dropdown-list, .optgroup, .optgroup-label, .option-check — all inside a new .dropdown-panel wrapper",
       "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .autocomplete-list` or a sibling. Nothing to do if you only use the `<ds-autocomplete>` element and its inputs.",
       "pitfall": "The panel is portaled to document.body, so these rules are almost always global rather than component-scoped — grep your global stylesheets, not just the component next to the picker.",
-      "searchHints": ["autocomplete-list", "autocomplete-optgroup"],
+      "searchHints": [
+        "autocomplete-list",
+        "autocomplete-optgroup"
+      ],
       "surface": "style",
       "detect": [
         ".autocomplete-list",
@@ -27,9 +30,13 @@
       "new": "--ds-option-selected-bg-color, --ds-option-selected-label-color, --ds-option-selected-bg-color-hover, --ds-option-check-color",
       "appliesWhen": "You set --ds-autocomplete-option-bg-color-hover anywhere.",
       "pitfall": "The old token painted BOTH the hover and the selected row, because the autocomplete had no separate selected treatment. The panel-level hooks separate them, so a single old value may need splitting across two.",
-      "searchHints": ["ds-autocomplete-option-bg-color-hover"],
+      "searchHints": [
+        "ds-autocomplete-option-bg-color-hover"
+      ],
       "surface": "style",
-      "detect": ["--ds-autocomplete-option-bg-color-hover"],
+      "detect": [
+        "--ds-autocomplete-option-bg-color-hover"
+      ],
       "verify": "Retuning --ds-option-selected-bg-color repaints the autocomplete's selected row, which it did not before.",
       "restore": null,
       "note": "The autocomplete had no separate selected treatment, so one token painted both hover and selection. The panel-level hooks reach all three pickers and separate the two states, which is what the 0.9.0 notes already claimed was true.",
@@ -42,9 +49,13 @@
       "new": null,
       "appliesWhen": "You use `<ds-autocomplete>` in single mode in a narrow column.",
       "pitfall": "Multi mode is unchanged — its chips already had a measured cap. This only affects the settled single value.",
-      "searchHints": ["ds-autocomplete"],
+      "searchHints": [
+        "ds-autocomplete"
+      ],
       "surface": "template",
-      "detect": ["<ds-autocomplete"],
+      "detect": [
+        "<ds-autocomplete"
+      ],
       "verify": "A long value in a 144px-wide single-select autocomplete keeps the trigger one row tall and ends in an ellipsis, with the full text on the element's title.",
       "restore": "valueOverflow=\"wrap\"",
       "note": "A settled single value now clips with an ellipsis and keeps the trigger one row tall, with the full text on the element title. Multi mode is untouched — its chips already had a measured cap. Nothing in your markup has to change unless the wrapping was deliberate.",
@@ -62,7 +73,10 @@
         "extends MultiSelectComponent"
       ],
       "surface": "typescript",
-      "detect": ["extends SelectComponent", "extends MultiSelectComponent"],
+      "detect": [
+        "extends SelectComponent",
+        "extends MultiSelectComponent"
+      ],
       "verify": "The app builds with no TS2415 or TS2416 naming a picker component.",
       "restore": null,
       "note": "ds-select and ds-multi-select gained a `width` input, and ds-select gained a private `panelTokens` field. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check.",
@@ -75,9 +89,13 @@
       "new": null,
       "appliesWhen": "You import AutocompleteWidth by name.",
       "pitfall": "Only a declaration that re-declares the type structurally (rather than importing it) could notice, and it still sees the same union.",
-      "searchHints": ["AutocompleteWidth"],
+      "searchHints": [
+        "AutocompleteWidth"
+      ],
       "surface": "typescript",
-      "detect": ["AutocompleteWidth"],
+      "detect": [
+        "AutocompleteWidth"
+      ],
       "verify": "The app builds and `width` still accepts only 'fill' and 'content'.",
       "restore": null,
       "note": "AutocompleteWidth is now an alias of the shared DsControlWidth that SelectWidth and MultiSelectWidth also alias. The union it resolves to is unchanged, so an import keeps compiling and `width` still accepts exactly `fill` and `content`.",
@@ -92,9 +110,14 @@
       "note": "The autocomplete took groups in a second input and documented `options` as ignored whenever it was set, so two inputs existed and one silently won. `options` now accepts flat options, groups, or both mixed, in the order given, which is the shape ds-select already used and ds-multi-select has gained.",
       "appliesWhen": "You bind `[optionGroups]` on a `<ds-autocomplete>`.",
       "pitfall": "If you were passing BOTH inputs and relying on the flat one being dropped, merging them changes what renders — the flat options now appear alongside the groups rather than vanishing.",
-      "searchHints": ["optionGroups"],
+      "searchHints": [
+        "optionGroups"
+      ],
       "surface": "template",
-      "detect": ["[optionGroups]", "optionGroups="],
+      "detect": [
+        "[optionGroups]",
+        "optionGroups="
+      ],
       "verify": "The autocomplete renders its labelled sections with only `options` bound, and filtering still hides a group whose options all fail the query.",
       "restore": null
     },
@@ -107,9 +130,15 @@
       "note": "The multi-select carried its own copy of the panel and the option row while its pane also carried ds-dropdown-panel, so both rule sets applied at once and the component’s won. It renders through the shared partial now, like the other two pickers.",
       "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .panel` or `.options` for the multi-select.",
       "pitfall": "The panel is portaled to document.body, so such a rule is almost always global rather than beside the component.",
-      "searchHints": ["ds-overlay-pane .panel", ".options"],
+      "searchHints": [
+        "ds-overlay-pane .panel",
+        ".options"
+      ],
       "surface": "style",
-      "detect": [".ds-overlay-pane .panel", ".ds-overlay-pane .options"],
+      "detect": [
+        ".ds-overlay-pane .panel",
+        ".ds-overlay-pane .options"
+      ],
       "verify": "The multi-select panel renders with 4px padding and 4px row radius with no rule of yours, and its rows respond to --ds-option-* like the other two pickers.",
       "restore": null
     },
@@ -125,11 +154,126 @@
       "note": "A third value, `labels`, now sits beside it and names the selection instead of counting it, so the old name no longer said which of the two it was.",
       "appliesWhen": "You set triggerDisplay on a ds-multi-select. The input shipped inside this same unreleased block, so only work in flight is affected.",
       "pitfall": "None — the rendering of `count` is exactly what `compact` did.",
-      "searchHints": ["triggerDisplay"],
+      "searchHints": [
+        "triggerDisplay"
+      ],
       "surface": "template",
-      "detect": ["triggerDisplay=\"compact\"", "triggerDisplay: 'compact'"],
+      "detect": [
+        "triggerDisplay=\"compact\"",
+        "triggerDisplay: 'compact'"
+      ],
       "verify": "The trigger still shows a caption and a count badge.",
       "restore": null
+    },
+    {
+      "id": "published-manifest-corrections",
+      "kind": "behavior",
+      "old": "a repo upgraded through 0.5.1, 0.9.0 or 0.10.1 before this release",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript",
+        "style"
+      ],
+      "action": "Re-run three items whose earlier text could not do its job. 0.5.1#progress-variant-remap: search for `variant=\"warn\"` and `variant=\"indeterminate\"` on ds-progress and for `ProgressVariant` in TypeScript, and finish that remap — the colour vocabulary is `default | success | warning | error` and the indeterminate state is the bare `indeterminate` attribute. 0.9.0#search-height-joins-field-scale: search for `--hit-min` and drop the pin where it was set only to shorten a ds-search row. 0.10.1: search for `(closed)` on a modal whose body holds a ds-date-picker and keep the body mounted instead.",
+      "appliesWhen": "Only if your last upgrade ran BEFORE this release and crossed 0.5.1, 0.9.0 or 0.10.1. A first-time consumer, or one whose upgrade runs from here on, reads the corrected files and needs none of this. The three are independent — crossing 0.5.1 says nothing about 0.10.1.",
+      "pitfall": "The 0.5.1 one is the silent case: its old check inspected ds-badge chips and the status registry, so it passed on a ds-progress that was never migrated. A clean upgrade report from that run proves nothing about ds-progress, so search rather than trusting it. The other two leave redundant code, not broken code — a `--hit-min` pin set deliberately for density is not this, so read each hit before deleting it.",
+      "note": "These manifests are executed by an upgrade tool, so a wrong verify or a locator that finds nothing lands in the consumer repo as an unapplied migration that reported success.",
+      "searchHints": [
+        "variant=\"warn\"",
+        "variant=\"indeterminate\"",
+        "ProgressVariant",
+        "--hit-min",
+        "ds-progress",
+        "(closed)"
+      ],
+      "detect": [
+        "variant=\"warn\"",
+        "variant=\"indeterminate\"",
+        "ProgressVariant",
+        "--hit-min",
+        "@if (open())"
+      ],
+      "verify": "No ds-progress binds `variant=\"warn\"` or `variant=\"indeterminate\"` and nothing is typed against a removed ProgressVariant member; no `--hit-min` pin exists whose only purpose was a shorter ds-search row; no modal body is torn down on `(closed)` to reset a ds-date-picker.",
+      "restore": null,
+      "supersedes": null
+    },
+    {
+      "id": "autocomplete-options-element-type-widened",
+      "kind": "behavior",
+      "old": "ds-autocomplete [options] typed readonly AutocompleteOption<T>[]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only where you READ the array back or type a variable against its element: change `AutocompleteOption<T>` to `AutocompleteItem<T>` and narrow each element with `isDsOptionGroup` before touching `.value`. Narrow before reading: `for (const item of picker.options()) { if (isDsOptionGroup(item)) continue; /* item.value is safe here */ }`. `isDsOptionGroup` and `flattenDsOptions` are exported from the package root.",
+      "appliesWhen": "Only code that reads the input back, declares a variable or field typed against its element, or overrides a member typed that way. Passing plain options IN is unchanged and needs nothing — a template binding is unaffected.",
+      "pitfall": "The compiler catches the type, not the assumption. Code that already destructures `.value` off each element keeps compiling wherever the variable is inferred rather than annotated, and then reads `undefined` at runtime for a group.",
+      "note": "The element type is now `AutocompleteItem<T>`. The input takes flat options, groups, or both mixed, so an element is no longer always an option.",
+      "searchHints": [
+        "AutocompleteOption",
+        "AutocompleteItem",
+        "ds-autocomplete",
+        "[options]",
+        "isDsOptionGroup"
+      ],
+      "detect": [
+        "AutocompleteOption<",
+        ": AutocompleteOption",
+        "AutocompleteOption[]"
+      ],
+      "verify": "No variable, field or override is typed `AutocompleteOption` where it receives the contents of an `options` array, and every `.value` read off such an element is guarded by `isDsOptionGroup`.",
+      "restore": null,
+      "supersedes": null
+    },
+    {
+      "id": "multi-select-options-element-type-widened",
+      "kind": "behavior",
+      "old": "ds-multi-select [options] typed readonly MultiSelectOption[]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only where you READ the array back or type a variable against its element: change `MultiSelectOption` to `MultiSelectItem` and narrow with `isDsOptionGroup` before touching `.value`. Narrow before reading: `for (const item of picker.options()) { if (isDsOptionGroup(item)) continue; /* item.value is safe here */ }`. `isDsOptionGroup` and `flattenDsOptions` are exported from the package root.",
+      "appliesWhen": "Only code that reads the input back, declares a variable or field typed against its element, or overrides a member typed that way. Passing plain options IN is unchanged.",
+      "pitfall": "ds-multi-select accepted no groups at all before this release, so existing code has no reason to guard and every element really was an option. That is exactly why the read sites are worth finding rather than trusting.",
+      "note": "The element type is now `MultiSelectItem`. Groups are new on this component, so the element union is new here too.",
+      "searchHints": [
+        "MultiSelectOption",
+        "MultiSelectItem",
+        "ds-multi-select",
+        "[options]",
+        "isDsOptionGroup"
+      ],
+      "detect": [
+        "MultiSelectOption<",
+        ": MultiSelectOption",
+        "MultiSelectOption[]"
+      ],
+      "verify": "No variable, field or override is typed `MultiSelectOption` where it receives the contents of an `options` array, and every `.value` read off such an element is guarded by `isDsOptionGroup`.",
+      "restore": null,
+      "supersedes": null
+    },
+    {
+      "id": "multi-select-select-all-type-widened",
+      "kind": "behavior",
+      "old": "ds-multi-select selectAll typed boolean",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only where you READ `selectAll` back into a `boolean`: widen the receiving type to `boolean | 'group' | 'both'`, or compare against the value you meant (`selectAll() === true`).",
+      "appliesWhen": "Only code that assigns the input back into a `boolean`, or a subclass that re-declares it. Setting it — `[selectAll]=\"true\"` or the bare attribute — is unchanged, and the default is still `false`.",
+      "pitfall": "A truthiness test that used to mean \"the whole panel\" now also passes for `'group'`, where there is no panel-wide row at all — so a guard written as `if (selectAll())` silently changes meaning while still compiling.",
+      "note": "The type is now `boolean | 'group' | 'both'`. `'group'` renders a row per group and `'both'` adds the panel-wide row beside them.",
+      "searchHints": [
+        "selectAll",
+        "ds-multi-select",
+        "'group'",
+        "'both'"
+      ],
+      "detect": [
+        "selectAll()",
+        "[selectAll]",
+        "selectAll:"
+      ],
+      "verify": "Nothing assigns `selectAll` into a `boolean`, and any truthiness test on it has been read once to confirm it still means what it did.",
+      "restore": null,
+      "supersedes": null
     }
   ],
   "informational": [
@@ -139,8 +283,7 @@
     "ds-multi-select gained option groups, which it never had. A group disables all of its options when its own `disabled` is set.",
     "ds-multi-select and ds-autocomplete gained `label`, `required` and `optional`; ds-multi-select gained `size`. All three existed on ds-select alone.",
     "New slots: dsEmptyTemplate on all three pickers, dsCreateTemplate on ds-autocomplete. ds-select shows an empty row when it has no options, where it used to open a blank panel.",
-    "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false.",
-    "docs/picker-contract.md states the rules the three pickers share, and `npm run picker-parity` lists every member that is not shared."
+    "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false."
   ],
   "deleteList": [
     {

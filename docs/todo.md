@@ -15,6 +15,7 @@
 
 **Decisions — waiting on Stas, not on work**
 
+- P3 · Does a release note owe the reader a WHY, or only a what-and-what-to-do — left open 2026-08-28
 - P3 · ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class — `is-*`
 - P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
@@ -99,11 +100,10 @@ engine is the spec; "theme recipe vs hand-tuned picks" is question (b) INSIDE th
 wording; `.ds-interactive` sits on top of whatever the engine decides. Opening any of them alone means
 deciding the other two by accident.
 
-**Where the release risk is.** 0.10.2 was cut on 2026-08-24, so the pressure is off this manifest:
-`migrations/unreleased.json` carries **3 actionable items, 1 `deleteList` entry and 3 informational
-lines**, covering two focus-ring fixes, a portaled-token fix and a tooling fix. The risk moved to the
-three manifests behind it — mm-broker was last recorded on **0.9.1** and will swallow 0.10.0, 0.10.1 and
-0.10.2 in one pass, so those three are what has to be complete, not this one.
+**Where the release risk is.** 0.11.0 was cut on 2026-08-26 and its manifest absorbed what
+`unreleased.json` had been carrying, so there is no uncut manifest today. The risk sits in the
+five manifests behind it — mm-broker was last recorded on **0.9.1** and will swallow 0.10.0, 0.10.1,
+0.10.2, 0.10.3 and 0.11.0 in one pass, so those five are what has to be complete, not this one.
 
 **Two habits this session kept catching, worth reading before opening anything new.** A number measured
 in ONE theme carried into the other unchecked (three times, all wrong — the latest being the claim that
@@ -166,6 +166,26 @@ Requests, not defects. Ordered by who is blocked.
 # Decisions — waiting on Stas, not on work
 
 ## Tooling
+
+- [ ] **[P3] Real content projection for the field family (recorded 2026-08-31; the task had no entry anywhere).** `ds-checkbox`, `ds-radio` and `ds-switch` render their caption from `[label]` only — `<ds-checkbox>Accept the terms</ds-checkbox>` renders nothing. Since 0.7.1 a dev-mode probe (`projection-dropped.directive.ts`) warns which component swallowed the text, and the shipped JSDoc there tells a consumer that "real projection for the field family is still open" — a promise with nothing behind it until this is filed. `ds-filter-bar` drops anything carrying neither of its slot attributes and uses the same probe. Decide whether projection is supported at all before the next field release: if it is not, the JSDoc should say so instead of calling it open.
+
+- [ ] **[P3] Drop the brand and domain EXAMPLES from the published docs, not just their names (Stas, 2026-08-31).** The sweep genericised them; his instruction was to consider removing them outright. Exact locations:
+  - `src/lib/themes/README.md` — three brand mentions, now `acme` / `brand-acme`: the Option C code block (`@use './app/styles/brand-acme'`), the "Brand vs theme" bullet, and the "Rules summary" bullet. The question is whether the rule ("a brand is an attribute-scoped overlay authored on a theme") needs a named brand in the example at all, or reads fine with `[data-brand="X"]` alone, which the rest of the file already uses.
+  - `design-system.md` §6 — five worked examples, now on orders/catalogue/warehouse: the sentence-case pair (`Order history` / `Order History`), and the three `ds-empty-state` table rows plus the sentence under it that quotes the `none` title back. These were one consumer's domain (logistics plans, asset register, producer roles) until this sweep. The empty-state table is the most useful thing in the section, so removing the examples means finding a way to show "the title states the situation" without a situation.
+  - `components.md` — the 9+3 grid line, now "a narrow picker or filter rail", previously named a consumer's two screens.
+
+- [ ] **[P3] Re-wrap `CHANGELOG.md` to ~100 columns (Stas, 2026-08-31: "запиши пока в туду … щас не будем").** This is a RE-WRAP, not a rewrite — no prose is shortened and no entry changes meaning. 31 lines run past 118 characters; 19 of them predate the public-surface sweep and 12 came out of it. By release, with the line numbers as of 2026-08-31:
+  - 0.8.0 is the bad one — 13 lines, the longest 1039 characters: 2022, 2023, 2024, 2213, 2278, 2289, 2307, 2308, 2309, 2310, 2327, 2328, 2340. Several entries there are a single unwrapped line each.
+  - 0.10.0 — 6 lines, longest 199: 911, 1066, 1080, 1201, 1448, 1527.
+  - 0.11.0 — 3 lines, longest 221: 118, 121, 124. 0.10.2 — 374, 500. 0.10.1 — 744, 836. 0.9.0 — 1747, 1849. 0.10.3 — 259. 0.6.2 — 2991. 0.4.0 — 3543.
+  Two constraints for whoever does it: table rows (`| … |`) must NOT be re-wrapped, because `check-delete-tables` matches a manifest's `find` shapes verbatim against them; and several inline code spans are currently split across a break (`` `<button\n  class="link">` ``, `` `flex: 1;\n  height: auto` ``, `` `<ng-template\n  [dsFilterItem]="180">` ``), which a re-wrap should join rather than preserve. Three more came out of the same reflow and must join too: `` `ds-select { --ds-field-label-transform: uppercase; }` ``, the `::ng-deep ds-table tr:hover .cell-name { … }` workaround shape, and `` `color="neutral" variant="outline"` `` — that last one is a rename map, so a line-oriented grep for it currently misses the CHANGELOG, which is the exact hazard this gate was written for. Six shipped comments are ragged too and are NOT in this item: `_ds-color.scss:4`, `auth-layout.component.ts:20`, `_tokens-charts.scss:36`, `themes/light/_palette.scss:15`, `auth-layout.component.scss:29`, and `_status.scss:10-11`. Verify by comparing the whitespace-normalised word stream before and after.
+
+- [ ] **[P3] Does a release note owe the reader a WHY, or only a what-and-what-to-do? (Stas, 2026-08-28, left open on purpose during the public-surface sweep.)** The case that raised it: `ds-search` lost `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon`. Two shapes are available and the release currently ships BOTH — the entry states the removal, and a following paragraph explains the CVA split that caused it.
+  **The narrow shape** is what the manifest already does: `old`/`new`, an `action`, and the locators to find it. A consumer's agent needs nothing else to migrate — it does not care why the inputs left.
+  **The wide shape** is the changelog paragraph: it answers "why did they leave, and will they come back", which a human deciding whether to upgrade may want and an agent never reads.
+  **What the format itself says**, and this is the argument for keeping the why somewhere: `migrations/README.md` defines `note` as "what is LEFT: the why" — so the schema deliberately reserves a field for it, separate from `action`. That makes "explain" legitimate but bounded: the why belongs in `note` and in the changelog prose, never in `action`.
+  **Held as undecided rather than settled** because the sweep already removed a lot of explanation as archaeology, and the line between "why the API is shaped this way" (useful) and "how we arrived at it" (ours) is exactly what was hard to draw all day. Revisit with the next release note in hand rather than in the abstract.
+
 
 - [ ] **[P3] ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived).** `is-*` IS better here and that is the recorded preference: a modifier glued to the name with `--` reads as a different ELEMENT, while our convention says a variant of one thing is a STATE carried alongside it (`.stage.is-tbl`), which is also how a state reads in the DOM and how it composes with two states at once. Counted 2026-08-26: **11** element-plus-modifier forms flattened this pass and now spelled `state-cell-stage--tbl`, `cell-tag--do`, `cell-tag--dont`, `contract-row--no`, `demo-col--end`, `demo-group-btn--start/--mid/--end`, `halo-stage-well--inverted`, `state-stage--horiz`, `state-cell-stage--overflow`, plus a separate standalone set (`demo--centered`, `applied--stacked`, `demo-btn--ghost`, `demo-menu-item--error`, `btn--start/--mid/--end`, `cell--do/--dont`, `col--end`, …).
   **Why it was split off rather than done in the same pass.** Removing `__` was a pure rename — 865 occurrences, zero semantic change, provable (589 classes used and 589 styled, identical before and after). Converting `--mod` to `is-mod` is NOT: it splits one class into two in the markup, which changes selector specificity from (0,1,0) to (0,2,0) wherever the SCSS is nested, and specificity is exactly what a docs section leans on when it pins a component's forced state. That wants its own pass with its own verification, not a rider on a mechanical one.
