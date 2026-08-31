@@ -134,7 +134,10 @@
         "extends InputComponent",
         "reserveMessage",
         "reserveMessageResolved",
-        "touched"
+        "touched",
+        "extends DsFieldBase",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor"
       ],
       "surface": "typescript",
       "detect": [

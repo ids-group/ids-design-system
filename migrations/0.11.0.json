@@ -27,7 +27,9 @@
         "brandRoute",
         "brandLinkLabel",
         "brandAriaLabel",
-        "controlState"
+        "controlState",
+        "extends DsFieldBase",
+        "extends DsMessageBase"
       ],
       "detect": [
         "extends TableComponent",
