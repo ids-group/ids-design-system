@@ -167,7 +167,7 @@
       "kind": "behavior",
       "old": "extends TableComponent",
       "new": null,
-      "action": "Run `npm run class-surface v0.10.1 v0.10.2` for the authoritative list, then per member: rename your own, or add `override` where the base semantics genuinely match.",
+      "action": "Build after upgrading: the compiler enumerates every collision, and that list is authoritative. Then per member: rename your own, or add `override` where the base semantics genuinely match.",
       "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md § Components); template users of the `<ds-…>` elements need nothing. No members were lost this release.",
       "pitfall": "A redeclared PRIVATE fails with TS2415 exactly like a public collision, which is why `TimePickerComponent.insideATrigger` counts here at all. And `FieldMessageComponent` gained `iconResolved` and `config` but is internal and not exported, so those matter only to a fork.",
       "note": "Gained: AutocompleteComponent and MultiSelectComponent (`chipsMode`, `showsEveryChip`); MenuItemComponent (`description`, `descriptionId`); SearchComponent (`bridge`, `disabled`, `formDisabled`, `hidden`, `isDisabled`, `markTouched`, `registerOnChange`, `registerOnTouched`, `setDisabledState`, `writeValue` — it declares the control-value-accessor surface itself now); SidenavComponent (`rail`); SidenavItemComponent (`rail`, `railResolved`); TableComponent (`actionReason`, `actionsFor`, `hasActionsFor`, `visibleRowActions`); TimePickerComponent (private `insideATrigger`); and `messageIcon` on all fifteen field components. TS4114 demands `override`, TS2415 fires on a redeclared private. The protected-to-public sweep across fourteen classes is the separate `resolved-readbacks-are-public` entry and collides the same way.",
@@ -226,7 +226,7 @@
       "kind": "behavior",
       "old": "TimeColumnsComponent.onKey",
       "new": null,
-      "action": "Read the current declaration in `time-columns.component.ts` and match it, or drop the override.",
+      "action": "Read the current signature of the internal `TimeColumnsComponent.onKey` from the package's type declarations and match it, or drop the override.",
       "appliesWhen": "It is `protected`, so no consumer calls it and templates are unaffected. The component is internal to ds-time-picker and subclassing it was never supported.",
       "note": "The parameter list changed, so an overriding subclass has a signature that no longer matches the base (TS2416).",
       "searchHints": [
@@ -240,7 +240,7 @@
         "onKey(",
         "extends TimeColumnsComponent"
       ],
-      "verify": "No TimeColumnsComponent subclass overrides `onKey` with the old parameter list."
+      "verify": "No subclass of the internal TimeColumnsComponent overrides `onKey` with the old parameter list."
     },
     {
       "id": "overlay-outside-guard-tests-the-trigger",
@@ -369,7 +369,7 @@
       "new": null,
       "action": "Only if you worked around it: a `padding-block` or `line-height` override added to an option label, a table cell clip or a breadcrumb to get the descenders back can go.",
       "appliesWhen": "No geometry change — option row 30px, multi-select 36px, table row 38px are all unchanged. For your own CSS of the same shape: `overflow: clip` keeps `text-overflow: ellipsis` working and keeps `scrollWidth > clientWidth` reporting true, both checked in Chromium, so a clip-detection test needs no change. Where `overflow-clip-margin` is unsupported, clip degrades to exactly the old shave.",
-      "note": "Every clipped label sat in a `line-height: 1` box with no padding, so 2.13px above the cap line and 1.47px below the baseline were cut (MBP-245). They use `overflow: clip` with a `--space-1` clip margin now.",
+      "note": "Every clipped label sat in a `line-height: 1` box with no padding, so 2.13px above the cap line and 1.47px below the baseline were cut. They use `overflow: clip` with a `--space-1` clip margin now.",
       "surface": "style",
       "verify": "An option list, a clipped table cell and a breadcrumb render full descenders (the tail of a g is complete) at unchanged row heights.",
       "searchHints": [
@@ -386,16 +386,16 @@
     "ds-menu-item: new `description` input renders a standing second line and wires `aria-describedby`. If you hand-rolled that line by projecting your own span into the item, move it to the input -- yours lands INSIDE the accessible name, the input's does not.",
     "ds-search: `clear()` is now public. A host-owned Clear button should call it rather than writing '' into `value`, which does not cancel an armed debounce when the text already matches what the control last pushed.",
     "ds-multi-select: its panel now honours `--ds-dropdown-panel-radius` (it was hardcoded at 8px). If you set that token and wondered why one of the three connected panels ignored it, this is why -- no action needed beyond re-checking the value looks right on all three.",
-    "ds-search joins both form systems: NG_VALUE_ACCESSOR + DsControlValueAccessor, so [(ngModel)], formControlName and a signal form now bind it, and a new `disabled` input folds together with the form's own disabled state (the shell paints the disabled surface, which it never did). Its own [(value)] is unchanged. Deliberately NO label and no message row - a toolbar filter is not a validated field.",
+    "ds-search joins both form systems — it provides NG_VALUE_ACCESSOR and takes the same value plumbing the fields use — so [(ngModel)], formControlName and a signal form now bind it, and a new `disabled` input folds together with the form's own disabled state (the shell paints the disabled surface, which it never did). Its own [(value)] is unchanged. Deliberately NO label and no message row - a toolbar filter is not a validated field.",
     "ds-menu: new --ds-menu-radius, defaulting to --radius-md, which is what the component hardcoded. Nothing moves. Inside a ds-popover the menu still clips to --ds-menu-clip-radius, published by the popover.",
     "maxVisibleChips gained an 'all' mode on ds-autocomplete and ds-multi-select - render every chip, no measuring. Additive on its own; the actionable half is that null no longer means that (see max-visible-chips-null-is-unset-*).",
     "ds-button variant=\"tonal\": the disabled label now uses the same 40% mix toward --surface-default as ghost / text / outline, instead of the shared oklch(from accent 70% ...) recipe. Visual only, no action. It fixes the dark theme, where the old recipe left the disabled label 1.11:1 from the enabled one (a hue going grey and nothing else); the state gap is now 2.90:1 dark and 3.39:1 light, and the label keeps its hue. --ds-button-label-color-disabled still overrides it.",
     "ds-table: TableColumn gained `interactive?: boolean`. The marked column's cell takes --ds-table-cell-link-color (default --accent) and --ds-table-cell-link-decoration (default underline) while its row is hovered, on a rowInteractive table only. Purely additive - an existing column config renders exactly as before. Reach for it on the cell whose TEXT names what the row opens; the row tint says the row is clickable and nothing else said which text was the target.",
     "ds fields on the SIGNAL FORMS path: they threw once per field (NgControl bridge has no events stream) and then displayed the first validation failure forever, because the frozen snapshot was the fallback whenever live errors went empty. Fixed - the NgControl path now bows out when it has no live stream. No consumer action: if you bind [field] on a DS control, upgrade and the console noise and the stale message both go. Reactive and template-driven forms are unchanged.",
-    "DS_CONFIG: provideDsConfig() must be called ONCE per injector. Two calls in the same `providers` array do not merge - both resolve their parent with skipSelf, so the later wins and the earlier is silently lost. Merging happens across injector LEVELS (a route or component inheriting the app's config), not within one array. Documented on the function after it bit us in our own docs app.",
+    "DS_CONFIG: provideDsConfig() must be called ONCE per injector. Two calls in the same `providers` array do not merge - both resolve their parent with skipSelf, so the later wins and the earlier is silently lost. Merging happens across injector LEVELS (a route or component inheriting the app's config), not within one array.",
     "data-focus=\"inset\" draws the focus ring INSIDE the border box, for a subtree under an overflow:hidden ancestor that would otherwise clip it away and leave the element focusable with no indicator at all. Unlike the other focus styles it is NOT pinned to :root - set the attribute on the clipping element and the declarations inherit into the subtree.",
-    "migrations/<version>.json - the files dist/ds/migrations carries into node_modules - now carry `surface`, `detect`, `verify`, `restore`, `supersedes` and a structured `deleteList` on every published release. Read `surface` for which artifact to search, `detect` plus searchHints to find it, `verify` for the positive assertion a re-check can test, and deleteList[].find for code that is now redundant. `supersedes` points BACKWARD only: a manifest never references a later version, and the lint rejects one that tries.",
-    "components.md - the digest tools/build-schematics.mjs copies into dist/ds for a consumer's own agent to read - was missing ds-app-layout and ds-auth-layout entirely, and named --primary, --text-on-primary and --secondary as the active sidenav item defaults, which this release replaced with the wash. Both corrected. If you hand-rolled an app shell or a sign-in screen because the digest did not list one, or overrode those three tokens to restyle the active item, re-read those entries."
+    "migrations/<version>.json - the files this package carries in node_modules - now carry `surface`, `detect`, `verify`, `restore`, `supersedes` and a structured `deleteList` on every published release. Read `surface` for which artifact to search, `detect` plus searchHints to find it, `verify` for the positive assertion a re-check can test, and deleteList[].find for code that is now redundant. `supersedes` points BACKWARD only: a manifest never references a later version.",
+    "components.md - the digest shipped in the package for a consumer's own agent to read - was missing ds-app-layout and ds-auth-layout entirely, and named --primary, --text-on-primary and --secondary as the active sidenav item defaults, which this release replaced with the wash. Both corrected. If you hand-rolled an app shell or a sign-in screen because the digest did not list one, or overrode those three tokens to restyle the active item, re-read those entries."
   ],
   "deleteList": [
     {

@@ -108,7 +108,8 @@
      hue/saturation/lightness become configurable.
      ============================================================ */
 
-  /* --shadow-tint-h/s/l live in themes/light/_palette.scss — palette-level
+  /* --shadow-tint-h/s live in themes/_base-palette.scss and -l in each theme's
+     _palette.scss — palette-level
      so dark palettes can override --shadow-tint-l → ~95% for soft light glows. */
 
   --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
@@ -654,7 +655,7 @@
 }
 
 /* ============================================================
-   Density tiers — applied by Tweaks panel via [data-density]
+   Density tiers — set [data-density] on <html> or any container
    ============================================================ */
 [data-density="ultra-compact"] {
   /* Power-user / tradesperson tier: financial dashboards, log viewers,
@@ -662,7 +663,7 @@
      and WCAG 2.5.8 (24px minimum) margins — acceptable only when:
        (a) the screen is keyboard-first, (b) input is mouse/keys not
        touch, (c) accidental-tap risk is low, (d) the user opted in.
-     Do not enable for mobile / field-ops layouts. */
+     Do not enable for mobile or touch-first layouts. */
   --hit-cozy:          24px;
   --hit-min:           24px;
   --check-size:        14px;

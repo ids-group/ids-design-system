@@ -3,6 +3,7 @@ import {
   ElementRef,
   type OnDestroy,
   TemplateRef,
+  contentChild,
   ViewContainerRef,
   ViewEncapsulation,
   booleanAttribute,
@@ -24,6 +25,7 @@ import {
   disposeWithLeave,
   dropdownOverlay,
   type DsOverlayCloseCause,
+  forwardOverlayTokens,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
@@ -36,12 +38,16 @@ import {
   type SelectItem,
   type SelectOption,
   type SelectOptionGroup,
+  type SelectWidth,
 } from './select.types';
 import type { DsSize } from '../../core/size';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { resolveWithConfig } from '../../core/config-defaults';
+import { DsOptionTemplateDirective } from '../option-template.directive';
+import { DsPickerTriggerDirective } from '../picker-trigger.directive';
+import { DsEmptyTemplateDirective } from '../empty-template.directive';
 
 @Component({
   selector: 'ds-select',
@@ -50,6 +56,7 @@ import { resolveWithConfig } from '../../core/config-defaults';
   host: {
     '[attr.data-field-state]': 'controlState()',
     '[class.in-group]': 'inGroup',
+    '[class.content-width]': "width() === 'content'",
   },
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
@@ -79,7 +86,24 @@ export class SelectComponent
   /** Selected option's value, two-way bound. */
   readonly value = model<string>('');
   /** Flat options or option groups rendered in the dropdown panel. */
-  readonly options = input<SelectItem[]>([]);
+  readonly options = input<readonly SelectItem[]>([]);
+  /** Public panel tokens forwarded onto the portaled overlay pane on open, so a
+   *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it. Without this the
+   *  tokens can only be set globally: the pane is portaled out of this component. */
+  private readonly panelTokens = [
+    '--ds-dropdown-panel-bg-color',
+    '--ds-dropdown-panel-minw',
+    '--ds-dropdown-panel-maxw',
+    '--ds-option-selected-bg-color',
+    '--ds-option-selected-label-color',
+    '--ds-option-selected-bg-color-hover',
+    '--ds-option-check-color',
+  ];
+
+  /** Trigger width — `fill` stretches to the container and pins the panel to the
+   *  trigger's width; `content` hugs the trigger's own content and takes that width
+   *  as the panel's FLOOR, so the panel can still grow to its options. */
+  readonly width = input<SelectWidth>('fill');
   /** Shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('');
   /** Trigger height — sm/md/lg.
@@ -125,6 +149,16 @@ export class SelectComponent
   readonly ariaLabel = input<string | null>(null);
   /** Shows an inline clear (×) button when a value is selected. */
   readonly clearable = input(false, { transform: booleanAttribute });
+
+  protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
+    read: TemplateRef,
+  });
+  protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
+    read: TemplateRef,
+  });
 
   protected readonly uid = nextControlId('ds-select');
   protected readonly labelId = `${this.uid}-label`;
@@ -279,17 +313,26 @@ export class SelectComponent
       return;
     }
     const triggerElement = this.trigger().nativeElement;
-    const width = triggerElement.getBoundingClientRect().width;
+    const triggerWidth = triggerElement.getBoundingClientRect().width;
     const { positionStrategy, config } = dropdownOverlay(
       this.overlay,
       triggerElement,
     );
-    config.width = width;
+    if (this.width() === 'content') {
+      config.minWidth = triggerWidth;
+    } else {
+      config.width = triggerWidth;
+    }
     this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
       this.overlayRef,
       this.host.nativeElement,
       positionStrategy,
+    );
+    forwardOverlayTokens(
+      this.overlayRef,
+      this.host.nativeElement,
+      this.panelTokens,
     );
     closeOnOutsidePointer(
       this.overlayRef,
@@ -301,8 +344,14 @@ export class SelectComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
+    const detaching = this.overlayRef;
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
+      // A deferred dispose can outlive a re-open, and then this fires for the
+      // PREVIOUS panel: clearing state here would strand the live one.
+      if (this.overlayRef !== detaching) {
+        return;
+      }
       this.overlayRef = null;
       this.open.set(false);
     });

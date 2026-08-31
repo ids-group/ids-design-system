@@ -127,16 +127,19 @@
       "new": null,
       "action": "Only if you SUBCLASS a DS field and declare a member named `hint`, `error`, `warning`, `errors`, `invalid`, `touched` or `reserveMessage`: it is an inherited member now rather than an own member, so an incompatible re-declaration fails where it may previously have shadowed. Redeclaring with the same shape still works.",
       "appliesWhen": "No public API changed — every input keeps its name, type, default and documentation, and the generated docs reference lost nothing. `success`, `label`, `required` and `optional` were deliberately NOT lifted and remain per-component.",
-      "pitfall": "Beware the REPORT here, not just the code. `npm run class-surface` lists those seven names as LOST from fourteen field components, which is an artefact of counting declarations per FILE — they moved UP into DsFieldBase and every field still has them by inheritance. AUTHORING already flags a member that moved to a base class as something the tool cannot see. The genuine new collision is different: `success` is a NEW member on the eight bordered fields that lacked it, so a subclass of any of those declaring `success` fails with TS4114.",
-      "note": "The seven shared inputs and the `reserveMessageResolved` helper are declared once on a new `DsFieldBase` instead of being hand-copied into each of the fourteen fields. Both CVA bases extend it, and ds-radio extends it directly.",
+      "pitfall": "Seven members were not lost, they moved UP onto an internal shared base, and every field still has them by inheritance — so an override of one of those needs no change. The genuine new collision is different: `success` is a NEW member on the eight bordered fields that lacked it, so a subclass of any of those declaring `success` fails with TS4114.",
+      "note": "The seven shared inputs and the `reserveMessageResolved` helper are declared once on a new internal shared base instead of being hand-copied into each of the fourteen fields. Every field reaches them by inheritance.",
       "searchHints": [
         "extends TextareaComponent",
         "extends InputComponent",
-        "DsFieldBase",
-        "DsControlValueAccessor",
         "reserveMessage",
         "reserveMessageResolved",
-        "touched"
+        "touched",
+        "extends DsFieldBase",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+          "DsFieldBase",
+          "DsControlValueAccessor"
       ],
       "surface": "typescript",
       "detect": [
@@ -206,7 +209,7 @@
       "action": "Only for a `::ng-deep` rule that treated the HOST as the pill — a background, a border-radius, a `display: grid`, a border. Retarget it at `ds-segmented .track`.",
       "appliesWhen": "A token override (`--ds-segmented-*`) is unaffected and needs nothing: the pill's custom properties stayed on `:host` and inherit down.",
       "pitfall": "Left alone, such a rule now paints the whole STACK — label, pill and message row — instead of the control.",
-      "note": "ds-segmented stacks a label, the pill and a message row now, so the pill moved off `:host` onto an inner `.track`. Additive alongside: the component provides NG_VALUE_ACCESSOR and resolves its message through resolveFieldMessage, so both form systems and the label / hint / error / warning / errors inputs work as on the other fields.",
+      "note": "ds-segmented stacks a label, the pill and a message row now, so the pill moved off `:host` onto an inner `.track`. Additive alongside: the component provides NG_VALUE_ACCESSOR and resolves its message the same way the fields do, so both form systems and the label / hint / error / warning / errors inputs work as on the other fields.",
       "searchHints": [
         "ds-segmented",
         "::ng-deep",
@@ -230,7 +233,7 @@
     "Message inputs absorb null and undefined instead of crashing. hint, error, warning and success took a bare string and the resolver called .trim() on whatever arrived, so [error]=\"form.errors?.message\" pushed null in and threw a TypeError during render whenever the expression was empty. All four now transform at the input boundary — trimmed, with null/undefined becoming ''.",
     "A disabled ds-icon-button variant=\"standard\" mixes its glyph toward the surface: color-mix(in srgb, <icon> 40%, var(--surface-default)), replacing the shared fixed-lightness recipe. It is the only variant with neither a fill nor a border, so the glyph carries the whole state, and the old recipe left it 1.46:1 from the enabled icon in dark (light 4.17 -> 5.19:1, dark 1.46 -> 3.58:1). Scoped to standard on purpose: filled's icon is --c-on, and white mixed into a white surface does not move. --ds-icon-button-icon-color-disabled is the same hook and still wins; only the default under it changed.",
     "ds-field-message: the `state` input never picked an icon, though its docblock and the generated API reference both said it did (`state` \"decides colour and icon\"; `icon` \"overrides the glyph the state would pick\"). `icon` is a plain input<IconName|null>(null) with no per-state default. Behaviour is unchanged — only the documentation was wrong. If you left `icon` unset expecting a glyph from the state, pass one explicitly.",
-    "SegmentedComponent gained eight members when it joined the form systems (label, disabled, isDisabled, message, invalidResolved, fieldMessage, hintId, uid), so it is the tenth class in this release's class-surface report and the only genuinely new collision surface beyond `success`. A subclass of it declaring any of those names now fails with TS4114."
+    "SegmentedComponent gained eight members when it joined the form systems (label, disabled, isDisabled, message, invalidResolved, fieldMessage, hintId, uid), which is the only genuinely new collision surface beyond `success`. A subclass of it declaring any of those names now fails with TS4114."
   ],
   "deleteList": [
     {
@@ -242,6 +245,16 @@
       ],
       "why": "A `?? ''` guard wrapped around a message binding - `[error]=\"form.errors?.message ?? ''\"` - added because a null pushed into `hint` / `error` / `warning` / `success` threw a TypeError during render.",
       "replaceWith": "nothing - bind the expression directly, the inputs absorb null now"
+    },
+    {
+      "id": "modal-teardown-to-reset-date-picker",
+      "surface": "template",
+      "find": [
+        "(closed)",
+        "@if (open())"
+      ],
+      "why": "A modal body torn down on `(closed)` — or guarded behind the open flag — purely so a re-opened `ds-date-picker` starts without the previous attempt's error. The picker clears its own stale error and text on the value-to-text effect now. The teardown never worked reliably anyway: reopening inside the 300 ms leave animation cancels the close, so `closed` never fires.",
+      "replaceWith": "nothing - keep the body mounted"
     }
   ]
 }

@@ -14,10 +14,9 @@
 // surface, and swapping presets never loses the surface's own geometry.
 //
 // Exit presets mirror the entrances and are swappable the same way, via
-// `--ds-<surface>-leave-keyframes`. They were absent until 2026-08-10 for a real
-// reason — teardown matched the animation NAME, so renaming the keyframe broke
-// closing entirely — and the guard now checks that the event came from the
-// animated element rather than from something inside it, which frees the name.
+// `--ds-<surface>-leave-keyframes`. Swapping one is only safe because teardown checks
+// that the animationend came from the animated element rather than matching the
+// animation NAME — a name match would break closing entirely on a renamed keyframe.
 //
 // An exit reads `--_ds-exit-*` and falls back to the matching `--_ds-enter-*`, so
 // a surface that leaves the way it arrived declares nothing: one preset replaces

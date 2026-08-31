@@ -1,5 +1,14 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { MultiSelectComponent, MultiSelectOption } from 'ds';
+import {
+  DsChipTemplateDirective,
+  DsPickerTriggerDirective,
+  DsOptionTemplateDirective,
+  MultiSelectComponent,
+  MultiSelectItem,
+  MultiSelectOption,
+  SelectComponent,
+  SelectOption,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 
@@ -8,6 +17,10 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
   standalone: true,
   imports: [
     MultiSelectComponent,
+    SelectComponent,
+    DsOptionTemplateDirective,
+    DsChipTemplateDirective,
+    DsPickerTriggerDirective,
     DocsSectionComponent,
     DocsNonmodalNoteComponent,
   ],
@@ -20,6 +33,56 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
 })
 export class MultiSelectSection {
   protected readonly tags = signal<string[]>(['design', 'frontend']);
+  protected readonly widthDemoValue = signal<string[]>(['design']);
+  protected readonly assignees = signal<string[]>(['jordan']);
+  protected readonly labels = signal<string[]>(['blocked']);
+  protected readonly compactLabels = signal<string[]>(['blocked', 'ready']);
+  protected readonly customLabels = signal<string[]>(['review']);
+  protected readonly noSearchValue = signal<string[]>([]);
+  protected readonly thresholdValue = signal<string[]>([]);
+  protected readonly labelOptions: MultiSelectOption[] = [
+    { value: 'blocked', label: 'Blocked' },
+    { value: 'review', label: 'In review' },
+    { value: 'ready', label: 'Ready for QA' },
+  ];
+
+  protected dotColour(value: string): string {
+    const dots: Record<string, string> = {
+      blocked: 'var(--error)',
+      review: 'var(--warning)',
+      ready: 'var(--success)',
+    };
+
+    return dots[value] ?? 'var(--border-strong)';
+  }
+  protected readonly assigneeItems: MultiSelectItem[] = [
+    { value: 'unassigned', label: 'Unassigned' },
+    {
+      label: 'Product',
+      options: [
+        { value: 'avery', label: 'Avery Brooks' },
+        { value: 'jordan', label: 'Jordan Lee' },
+      ],
+    },
+    {
+      label: 'Platform',
+      options: [
+        { value: 'morgan', label: 'Morgan Kirby' },
+        { value: 'sam', label: 'Sam Rowe' },
+      ],
+    },
+    {
+      label: 'Contractors',
+      disabled: true,
+      options: [{ value: 'rue', label: 'Rue Castellan' }],
+    },
+  ];
+  protected readonly widthDemoStatus = signal<string>('');
+  protected readonly widthDemoStatuses: SelectOption[] = [
+    { value: 'ready', label: 'Ready for QA' },
+    { value: 'blocked', label: 'Blocked by upstream' },
+    { value: 'review', label: 'Needs design review' },
+  ];
   protected readonly overflow = signal<string[]>([
     'design',
     'frontend',

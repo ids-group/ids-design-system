@@ -168,7 +168,7 @@ export class TimePickerComponent
 
   /** Any of the three trigger boxes, not the host: a range renders two and a single
    *  one renders one, while the host also carries the label and the message row —
-   *  clicking those has to dismiss the panel (MBP-225). */
+   *  clicking those has to dismiss the panel. */
   private insideATrigger(target: Node): boolean {
     return [this.singleTrigger(), this.startTrigger(), this.endTrigger()].some(
       (trigger) => trigger?.nativeElement.contains(target) ?? false,

@@ -49,12 +49,25 @@
     />
   }
 
-  <span
-    class="trigger-text"
-    [class.is-placeholder]="!hasValue()"
-  >
-    {{ displayLabel() }}
-  </span>
+  @if (pickerTrigger(); as tpl) {
+    <ng-container
+      [ngTemplateOutlet]="tpl"
+      [ngTemplateOutletContext]="{
+        $implicit: selectedOption(),
+        selected: selectedOption(),
+        count: hasValue() ? 1 : 0,
+        open: open(),
+        disabled: isDisabled(),
+      }"
+    />
+  } @else {
+    <span
+      class="trigger-text"
+      [class.is-placeholder]="!hasValue()"
+    >
+      {{ displayLabel() }}
+    </span>
+  }
 
   @if (
       clearable() &&
@@ -109,7 +122,7 @@
       [id]="listboxId"
       [attr.aria-labelledby]="label() ? labelId : null"
     >
-      @for (item of options(); track item.label; let groupIdx = $index) {
+      @for (item of options(); track $index; let groupIdx = $index) {
         @if (isOptionGroup(item)) {
           <li
             class="optgroup"
@@ -155,7 +168,17 @@
                     }
 
                     <span class="option-label">
-                      {{ opt.label }}
+                      @if (optionTemplate(); as tpl) {
+                        <ng-container
+                          [ngTemplateOutlet]="tpl"
+                          [ngTemplateOutletContext]="{
+                            $implicit: opt,
+                            option: opt,
+                          }"
+                        />
+                      } @else {
+                        {{ opt.label }}
+                      }
                     </span>
 
                     @if (isSelected(opt)) {
@@ -196,7 +219,17 @@
               }
 
               <span class="option-label">
-                {{ item.label }}
+                @if (optionTemplate(); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{
+                      $implicit: item,
+                      option: item,
+                    }"
+                  />
+                } @else {
+                  {{ item.label }}
+                }
               </span>
 
               @if (isSelected(item)) {
@@ -209,6 +242,19 @@
             </button>
           </li>
         }
+      }
+
+      @if (options().length === 0) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          @if (emptyTemplate(); as tpl) {
+            <ng-container [ngTemplateOutlet]="tpl" />
+          } @else {
+            No options
+          }
+        </li>
       }
     </ul>
   </div>

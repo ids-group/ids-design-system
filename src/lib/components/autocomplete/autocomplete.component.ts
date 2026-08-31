@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -14,6 +15,7 @@ import {
   numberAttribute,
   output,
   signal,
+  contentChild,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -35,10 +37,18 @@ import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import type {
+  AutocompleteItem,
   AutocompleteOption,
   AutocompleteOptionGroup,
+  AutocompleteValueOverflow,
   AutocompleteWidth,
 } from './autocomplete.types';
+import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
+import { DsOptionTemplateDirective } from '../option-template.directive';
+import { DsChipTemplateDirective } from '../chip-template.directive';
+import { DsPickerTriggerDirective } from '../picker-trigger.directive';
+import { DsEmptyTemplateDirective } from '../empty-template.directive';
+import { DsCreateTemplateDirective } from '../create-template.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveWithConfig } from '../../core/config-defaults';
@@ -48,7 +58,12 @@ let nextId = 0;
 @Component({
   selector: 'ds-autocomplete',
   standalone: true,
-  imports: [IconComponent, TagComponent, FieldMessageComponent],
+  imports: [
+    IconComponent,
+    TagComponent,
+    FieldMessageComponent,
+    NgTemplateOutlet,
+  ],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -56,6 +71,7 @@ let nextId = 0;
     '[attr.data-field-state]': 'controlState()',
     '[class.in-group]': 'inGroup',
     '[class.content-width]': "width() === 'content'",
+    '[class.value-wraps]': "valueOverflow() === 'wrap'",
   },
   providers: [
     {
@@ -79,16 +95,19 @@ export class AutocompleteComponent<T = unknown>
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
    *  a consumer's `ds-autocomplete { --ds-autocomplete-panel-*: … }` reaches it. */
   private readonly panelTokens = [
-    '--ds-autocomplete-panel-bg-color',
-    '--ds-autocomplete-panel-radius',
-    '--ds-autocomplete-panel-maxh',
-    '--ds-autocomplete-option-bg-color-hover',
+    '--ds-dropdown-panel-bg-color',
+    '--ds-dropdown-panel-radius',
+    '--ds-dropdown-panel-maxh',
+    '--ds-dropdown-panel-minw',
+    '--ds-dropdown-panel-maxw',
+    '--ds-option-selected-bg-color',
+    '--ds-option-selected-label-color',
+    '--ds-option-selected-bg-color-hover',
+    '--ds-option-check-color',
   ];
 
-  /** Flat option list — ignored when `optionGroups` is set. */
-  readonly options = input<readonly AutocompleteOption<T>[]>([]);
-  /** Options grouped under labelled sections, rendered instead of `options`. */
-  readonly optionGroups = input<AutocompleteOptionGroup<T>[]>([]);
+  /** Options, groups, or both mixed — rendered in the order given. */
+  readonly options = input<readonly AutocompleteItem<T>[]>([]);
   /** Selected value, or an array of values when `multiple`. */
   readonly value = model<T | readonly T[] | null>(null);
   /** Allows selecting more than one option, shown as removable tags. */
@@ -124,6 +143,11 @@ export class AutocompleteComponent<T = unknown>
   );
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
+  /** What a settled single value does when it is wider than the trigger. Defaults
+   *  to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke
+   *  onto a second line and pushed the chevron onto a third. Multi mode is
+   *  unaffected — its chips have their own measured cap. */
+  readonly valueOverflow = input<AutocompleteValueOverflow>('ellipsis');
   /** Placeholder shown in the input when empty. */
   readonly placeholder = input<string>('Select…');
   /** Disables the trigger and blocks all interaction. */
@@ -135,6 +159,12 @@ export class AutocompleteComponent<T = unknown>
   });
   /** Shows a "Create «text»" row when the typed text matches no option. */
   readonly allowCreate = input(false, { transform: booleanAttribute });
+  /** Field label above the control — the same meaning it has on the other two pickers. */
+  readonly label = input<string>('');
+  /** Marks the field required: a `*` beside the label and `aria-required` on the input. */
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Marks the field optional in words, for a form where most fields are required. */
+  readonly optional = input(false, { transform: booleanAttribute });
   /** Accessible name for the input. */
   readonly ariaLabel = input<string | null>(null);
 
@@ -161,6 +191,22 @@ export class AutocompleteComponent<T = unknown>
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
+  protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly chipTemplate = contentChild(DsChipTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
+    read: TemplateRef,
+  });
+  protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly createTemplate = contentChild(DsCreateTemplateDirective, {
+    read: TemplateRef,
+  });
+
   protected readonly query = signal('');
   protected readonly isOpen = signal(false);
   protected readonly activeIndex = signal(-1);
@@ -175,6 +221,7 @@ export class AutocompleteComponent<T = unknown>
 
   protected readonly uid = `ds-autocomplete-${++nextId}`;
   protected readonly listboxId = `${this.uid}-listbox`;
+  protected readonly labelId = `${this.uid}-label`;
   protected optionId(index: number): string {
     return `${this.uid}-opt-${index}`;
   }
@@ -184,51 +231,48 @@ export class AutocompleteComponent<T = unknown>
     return this.isOpen() && index >= 0 ? this.optionId(index) : null;
   });
 
-  /** All options flattened from either optionGroups or options. */
   protected readonly allOptions = computed<readonly AutocompleteOption<T>[]>(
-    () => {
-      const groups = this.optionGroups();
-      if (groups.length > 0) {
-        return groups.flatMap((group) => group.options);
-      }
-
-      return this.options();
-    },
+    () => flattenDsOptions(this.options()),
   );
 
-  protected readonly filteredOptions = computed(() => {
-    const trimmedQuery = this.query().toLowerCase().trim();
-    if (!trimmedQuery) {
-      return this.allOptions();
+  protected readonly filteredItems = computed<AutocompleteItem<T>[]>(() => {
+    const query = this.query().toLowerCase().trim();
+    const matches = (option: AutocompleteOption<T>): boolean =>
+      !query || option.label.toLowerCase().includes(query);
+
+    const kept: AutocompleteItem<T>[] = [];
+    for (const item of this.options()) {
+      if (!isDsOptionGroup(item)) {
+        if (matches(item)) {
+          kept.push(item);
+        }
+        continue;
+      }
+      // A disabled group disables its options HERE, not only in the flattened
+      // list: the template renders these objects, so a group left to inherit
+      // later would paint enabled rows that refuse to be picked.
+      const options = item.options
+        .filter(matches)
+        .map((option) =>
+          item.disabled ? { ...option, disabled: true } : option,
+        );
+      if (options.length > 0) {
+        kept.push({ ...item, options });
+      }
     }
 
-    return this.allOptions().filter((option) =>
-      option.label.toLowerCase().includes(trimmedQuery),
-    );
+    return kept;
   });
 
-  /** Filtered groups for grouped rendering — groups with no matching options are hidden. */
-  protected readonly filteredGroups = computed<AutocompleteOptionGroup<T>[]>(
-    () => {
-      const groups = this.optionGroups();
-      if (groups.length === 0) {
-        return [];
-      }
-      const trimmedQuery = this.query().toLowerCase().trim();
-      if (!trimmedQuery) {
-        return groups;
-      }
+  protected readonly filteredOptions = computed<
+    readonly AutocompleteOption<T>[]
+  >(() => flattenDsOptions(this.filteredItems()));
 
-      return groups
-        .map((group) => ({
-          ...group,
-          options: group.options.filter((option) =>
-            option.label.toLowerCase().includes(trimmedQuery),
-          ),
-        }))
-        .filter((group) => group.options.length > 0);
-    },
-  );
+  protected isGroup(
+    item: AutocompleteItem<T>,
+  ): item is AutocompleteOptionGroup<T> {
+    return isDsOptionGroup(item);
+  }
 
   /** Whether to show the "Create «text»" row at the bottom of the panel. */
   protected readonly showCreateRow = computed<boolean>(() => {
@@ -250,6 +294,12 @@ export class AutocompleteComponent<T = unknown>
   protected readonly visibleOptions = computed<
     readonly AutocompleteOption<T>[]
   >(() => this.filteredOptions());
+
+  /** The visible label wins the accessible name when there is one — otherwise the
+   *  placeholder would announce over it, and `placeholder` always carries a default. */
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
 
   protected readonly selectedTags = computed(() => {
     if (!this.multiple()) {
@@ -297,20 +347,33 @@ export class AutocompleteComponent<T = unknown>
     () => this.selectedTags().length - this.visibleTags().length,
   );
 
-  protected readonly displayLabel = computed(() => {
-    if (this.multiple()) {
-      return '';
-    }
-    const currentValue = this.value() as T | null;
-    if (currentValue === null) {
-      return '';
-    }
+  protected readonly selectedOption = computed<AutocompleteOption<T> | null>(
+    () => {
+      if (this.multiple()) {
+        return null;
+      }
+      const currentValue = this.value() as T | null;
+      if (currentValue === null) {
+        return null;
+      }
 
-    return (
-      this.allOptions().find((option) => option.value === currentValue)
-        ?.label ?? ''
-    );
-  });
+      return (
+        this.allOptions().find((option) => option.value === currentValue) ??
+        null
+      );
+    },
+  );
+
+  protected readonly displayLabel = computed(
+    () => this.selectedOption()?.label ?? '',
+  );
+  protected readonly hasSingleValue = computed(
+    () => this.selectedOption() !== null,
+  );
+
+  protected readonly triggerSelection = computed(() =>
+    this.multiple() ? this.selectedTags() : this.selectedOption(),
+  );
 
   protected readonly placeholderText = computed(() => {
     if (this.multiple()) {
@@ -341,6 +404,11 @@ export class AutocompleteComponent<T = unknown>
     if (option.disabled) {
       parts.push('is-disabled');
     }
+    // The shared panel partial paints the selected row off this class, not off
+    // `aria-selected`, so a picker that only set the attribute went unpainted.
+    if (this.isSelected(option)) {
+      parts.push('is-selected');
+    }
 
     return parts.join(' ');
   }
@@ -348,7 +416,15 @@ export class AutocompleteComponent<T = unknown>
   /** First option a reader can actually act on — -1 when the list is empty or
    *  every option is disabled. */
   private firstEnabledIndex(): number {
-    return this.visibleOptions().findIndex((option) => !option.disabled);
+    const index = this.visibleOptions().findIndex((option) => !option.disabled);
+    if (index >= 0) {
+      return index;
+    }
+
+    // With nothing pickable, the create row IS the list, and leaving the cursor at
+    // -1 meant Enter fell through allowCreate's primary flow: type a new name, press
+    // Enter, nothing happens until an ArrowDown nobody knows to press.
+    return this.showCreateRow() ? this.visibleOptions().length : -1;
   }
 
   /** Arrow keys step OVER a disabled option rather than landing on it — an active
@@ -476,7 +552,6 @@ export class AutocompleteComponent<T = unknown>
     const { positionStrategy, config: overlayConfig } = dropdownOverlay(
       this.overlay,
       triggerElement,
-      'ds-overlay-pane',
     );
     // Content-width trigger can be narrow — let the panel size to its options
     // with the trigger as the floor; fill mode keeps the exact trigger width.
@@ -507,8 +582,14 @@ export class AutocompleteComponent<T = unknown>
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
+    const detaching = this.overlayRef;
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
+      // A deferred dispose can outlive a re-open, and then this fires for the
+      // PREVIOUS panel: clearing state here would strand the live one.
+      if (this.overlayRef !== detaching) {
+        return;
+      }
       this.overlayRef = null;
       this.isOpen.set(false);
     });

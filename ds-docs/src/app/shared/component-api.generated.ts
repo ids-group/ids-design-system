@@ -223,7 +223,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name` — six auth screens answer this identically. Each field resolves on its own, so `brand=\"\"` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row."
+        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name`, which every auth screen in an app answers identically. Each field resolves on its own, so `brand=\"\"` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row."
       },
       {
         "name": "logoLetter",
@@ -281,7 +281,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'none'",
         "required": false,
-        "description": "Announce the card as the page's `main` landmark. The card holds the whole content of an auth screen and `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set this to `'main'` on a standalone auth page. It is opt-in because the layout is also embedded inside pages that already own a `main` (this repo's own docs site nests it inside `ds-app-layout`), and two `main`s is its own violation. Defaulting it to `'main'` is the better end state and belongs in the next batch of default changes."
+        "description": "Announce the card as the page's `main` landmark. The card holds the whole content of an auth screen and `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set this to `'main'` on a standalone auth page. It is opt-in because the layout is also embedded inside pages that already own a `main`, and two `main`s is its own violation."
       }
     ],
     "outputs": []
@@ -380,20 +380,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "options",
         "kind": "input",
-        "type": "readonly AutocompleteOption<T>[]",
+        "type": "readonly AutocompleteItem<T>[]",
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Flat option list — ignored when `optionGroups` is set."
-      },
-      {
-        "name": "optionGroups",
-        "kind": "input",
-        "type": "AutocompleteOptionGroup<T>[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Options grouped under labelled sections, rendered instead of `options`."
+        "description": "Options, groups, or both mixed — rendered in the order given."
       },
       {
         "name": "value",
@@ -457,6 +448,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Trigger width — `fill` stretches to the container, `content` hugs the value."
       },
       {
+        "name": "valueOverflow",
+        "kind": "input",
+        "type": "AutocompleteValueOverflow",
+        "union": [
+          "ellipsis",
+          "wrap"
+        ],
+        "default": "'ellipsis'",
+        "required": false,
+        "description": "What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke onto a second line and pushed the chevron onto a third. Multi mode is unaffected — its chips have their own measured cap."
+      },
+      {
         "name": "placeholder",
         "kind": "input",
         "type": "string",
@@ -491,6 +494,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Shows a \"Create «text»\" row when the typed text matches no option."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Field label above the control — the same meaning it has on the other two pickers."
+      },
+      {
+        "name": "required",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field required: a `*` beside the label and `aria-required` on the input."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field optional in words, for a form where most fields are required."
       },
       {
         "name": "ariaLabel",
@@ -1024,7 +1054,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'solid'",
         "required": false,
-        "description": "Fill pattern: solid | tonal | ghost | outline | text. All color×variant pairs render; some are UX-discouraged (see DISCOURAGED_COMBOS / the docs) and emit a dev-mode warning — they work, but read poorly. `text` is discouraged for ALL colours — prefer the global `.link` class; it stays for cases needing the ds-button API (loading/fullWidth/typed pressed)."
+        "description": "Fill pattern: solid | tonal | ghost | outline | text. All color×variant pairs render; some are UX-discouraged and emit a dev-mode warning naming the reason — they work, but read poorly. `text` is discouraged for ALL colours — prefer the global `.link` class; it stays for cases needing the ds-button API (loading/fullWidth/typed pressed)."
       },
       {
         "name": "size",
@@ -3491,11 +3521,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "options",
         "kind": "input",
-        "type": "readonly MultiSelectOption[]",
+        "type": "readonly MultiSelectItem[]",
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Options shown in the panel."
+        "description": "Options, groups, or both mixed — rendered in the order given."
       },
       {
         "name": "placeholder",
@@ -3514,6 +3544,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'Filter…'",
         "required": false,
         "description": "Placeholder for the in-panel filter input."
+      },
+      {
+        "name": "searchable",
+        "kind": "input",
+        "type": "boolean | number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the panel carries a filter row. `true` always, `false` never, and a NUMBER is a threshold — the row appears once there are at least that many options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the panel's keyboard model onto the trigger: the arrows, Enter, Escape and `aria-activedescendant` are the filter input's today."
       },
       {
         "name": "maxVisibleChips",
@@ -3552,13 +3591,78 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name for the trigger — falls back to `placeholder`."
       },
       {
-        "name": "selectAll",
+        "name": "width",
+        "kind": "input",
+        "type": "MultiSelectWidth",
+        "union": [
+          "fill",
+          "content"
+        ],
+        "default": "'fill'",
+        "required": false,
+        "description": "Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so a compact trigger does not force an unreadable panel."
+      },
+      {
+        "name": "size",
+        "kind": "input",
+        "type": "DsSize | null",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+      },
+      {
+        "name": "triggerDisplay",
+        "kind": "input",
+        "type": "DsTriggerDisplay",
+        "union": [
+          "full",
+          "count",
+          "labels"
+        ],
+        "default": "'full'",
+        "required": false,
+        "description": "What the trigger shows. `count` is a caption plus a selected-count badge at intrinsic width; `labels` names the selection instead, cut to the width with the rest behind \"+N\". A projected `dsPickerTrigger` template WINS over this — the input is then not read at all."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Field label above the control — the same meaning it has on `ds-select`, and the caption a `count`/`labels` trigger uses when it needs one."
+      },
+      {
+        "name": "required",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows a \"Select all\" row that toggles every filter-matching, enabled option."
+        "description": "Marks the field required: a `*` beside the label and `aria-required` on the trigger."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field optional in words, for a form where most fields are required."
+      },
+      {
+        "name": "selectAll",
+        "kind": "input",
+        "type": "boolean | 'group' | 'both'",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Where a \"select all\" row appears. `false` nowhere, `true` one row over the whole panel, `'group'` one row per group, `'both'` for either. Group rows need groups in `options` — with a flat list they have nothing to head."
       }
     ],
     "outputs": []
@@ -4810,11 +4914,23 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "options",
         "kind": "input",
-        "type": "SelectItem[]",
+        "type": "readonly SelectItem[]",
         "union": null,
         "default": "[]",
         "required": false,
         "description": "Flat options or option groups rendered in the dropdown panel."
+      },
+      {
+        "name": "width",
+        "kind": "input",
+        "type": "SelectWidth",
+        "union": [
+          "fill",
+          "content"
+        ],
+        "default": "'fill'",
+        "required": false,
+        "description": "Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so the panel can still grow to its options."
       },
       {
         "name": "placeholder",
@@ -6021,7 +6137,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` (workspaces, programs-list) don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
+        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
       },
       {
         "name": "loading",

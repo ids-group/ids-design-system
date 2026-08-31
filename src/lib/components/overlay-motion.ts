@@ -121,7 +121,7 @@ const LEAVE_TIMEOUT_MS = 400;
  * `'dismiss'`.
  *
  * The split is the point. An unconditional leave animation shipped once and was
- * cut in `d2e4712`, because ~120ms of fade after picking an option reads as the
+ * cut, because ~120ms of fade after picking an option reads as the
  * panel lagging behind a decision the user has already made. A dismissal is the
  * opposite: nothing was chosen, so the fade reads as the panel backing out rather
  * than as delay. Defaults to `'select'`, so a call site that says nothing keeps

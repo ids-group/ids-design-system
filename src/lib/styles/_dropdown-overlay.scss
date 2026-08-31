@@ -22,22 +22,35 @@
      picker's corner is not a thing a design system should encourage, but moving
      every panel — modal, popover, date picker — to reach the dropdowns is too
      blunt. This is the middle lever, and `--ds-radius-panel` stays its default so
-     an untouched theme is unchanged. 0.9.0's notes promised a per-component
-     `--ds-select-panel-radius`, which never existed; this is what they meant. */
+     an untouched theme is unchanged. */
   --_dropdown-panel-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
 
+  /* Only bite in `content` width mode, where the pane is auto-sized: in `fill` the
+     component pins the pane to the trigger and there is nothing left to bound. */
+  --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
+  --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
+  --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
+  --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
+
   .dropdown-panel {
-    // Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
-    // in dropdown.component.ts). Without `width: 100%` the panel is a flex
-    // child of the pane and shrinks to its own option content width.
+    // The pane is sized from the trigger, so without `width: 100%` the panel is a flex
+    // child of it and shrinks to its own option content width.
     width: 100%;
-    background: var(--surface-overlay);
+    background: var(--_dropdown-panel-bg-color);
     border: var(--border-width-default) solid var(--border-default);
     border-radius: var(--_dropdown-panel-radius);
     box-shadow: var(--shadow-popover);
     padding: var(--space-1);
-    max-height: 320px;
-    overflow-y: auto;
+    min-width: var(--_dropdown-panel-minw);
+    max-width: var(--_dropdown-panel-maxw);
+    max-height: var(--_dropdown-panel-maxh);
+
+    // The panel clips and the LIST scrolls, so a filter row or a select-all row
+    // stays put while the options move under it. A panel that scrolled itself
+    // would carry those rows out of view.
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     z-index: var(--layer-popover);
   }
 
@@ -47,6 +60,11 @@
     padding: 0;
     display: flex;
     flex-direction: column;
+
+    // A flex child will not shrink below its content without this, so the list
+    // would push the panel past its own max-height instead of scrolling.
+    min-height: 0;
+    overflow-y: auto;
     gap: 2px;
   }
 
@@ -78,6 +96,12 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+  }
+
+  .empty {
+    padding: var(--space-3) var(--space-4);
+    color: var(--text-tertiary);
+    text-align: center;
   }
 
   .option {
@@ -121,11 +145,9 @@
       background: var(--surface-secondary);
     }
 
-    // Pressed. The equivalent rows elsewhere (ds-menu-item, ds-list-item) have
-    // had one since 2026-07-02; the picker panels were left with hover only, so
-    // a tap on a phone — where there is no hover at all — gave no feedback that
-    // the row had been hit. One rule here covers select, autocomplete and
-    // multi-select, which all render their options through this partial.
+    // A tap on a phone has no hover, so a pressed state is the only feedback that the
+    // row was hit. One rule here covers select, autocomplete and multi-select, which
+    // all render their options through this partial.
     &:active:not(.is-disabled) {
       background: var(--surface-muted);
     }

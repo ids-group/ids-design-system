@@ -1,14 +1,12 @@
 // One label contract for the field family.
 //
-// Five components hard-coded the identical rule and ds-select named its element
-// `.select-label`, so a form mixing a select with an input rendered labels in two
-// sizes and colours out of the box, and retuning them from an app needed
-// `.field.field .label.label, .select-label.select-label` to out-rank the shimmed
-// component rule. One class (`.label`), one token set, resolved here.
+// One class (`.label`), one token set, resolved here, so a form mixing a select with an
+// input renders its labels at one size and colour. It lives in one place because
+// out-ranking a shimmed component rule from an app needs doubled selectors
+// (`.field.field .label.label`).
 //
 // A MIXIN, not a global rule: a global `.label` would match consumer markup that
-// happens to use the same class name — the leak that global `.field`/`.check`
-// specimens caused in ds-docs. Each field pays ~6 declarations of its own CSS.
+// happens to use the same class name. Each field pays ~6 declarations of its own CSS.
 //
 // Per-instance retune is CSS-variable scoping, so no per-component token set is
 // needed: `ds-select { --ds-field-label-transform: uppercase; }` reaches exactly
@@ -23,9 +21,6 @@
 
   display: flex;
   align-items: center;
-
-  // --field-gap-req is the label↔asterisk token; the old rules all spelled its
-  // value out as var(--space-1) instead of naming it.
   gap: var(--field-gap-req);
   font: var(--_field-label-weight) var(--_field-label-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_field-label-color);

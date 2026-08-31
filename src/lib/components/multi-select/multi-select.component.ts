@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -13,6 +14,7 @@ import {
   model,
   numberAttribute,
   signal,
+  contentChild,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -35,16 +37,38 @@ import {
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
-import type { MultiSelectOption } from './multi-select.types';
+import { resolveWithConfig } from '../../core/config-defaults';
+import type { DsSize } from '../../core/size';
+import { DsOptionTemplateDirective } from '../option-template.directive';
+import { DsChipTemplateDirective } from '../chip-template.directive';
+import { DsPickerTriggerDirective } from '../picker-trigger.directive';
+import { DsEmptyTemplateDirective } from '../empty-template.directive';
+import { BadgeComponent } from '../badge/badge.component';
+import type { DsTriggerDisplay } from '../../core/trigger-display';
+import type {
+  MultiSelectItem,
+  MultiSelectOption,
+  MultiSelectOptionGroup,
+  MultiSelectWidth,
+} from './multi-select.types';
+import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
 
 @Component({
   selector: 'ds-multi-select',
   standalone: true,
-  imports: [IconComponent, TagComponent, FieldMessageComponent],
+  imports: [
+    IconComponent,
+    TagComponent,
+    BadgeComponent,
+    FieldMessageComponent,
+    NgTemplateOutlet,
+  ],
   templateUrl: './multi-select.component.html',
   styleUrl: './multi-select.component.scss',
   host: {
     '[attr.data-field-state]': 'controlState()',
+    '[class.content-width]': "width() === 'content'",
+    '[class.compact-trigger]': 'showsCompactTrigger()',
   },
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
@@ -68,16 +92,56 @@ export class MultiSelectComponent
     '--ds-multi-select-panel-bg-color',
     '--ds-multi-select-option-bg-color-active',
     '--ds-multi-select-check-bg-color',
+    '--ds-dropdown-panel-bg-color',
+    '--ds-dropdown-panel-minw',
+    '--ds-dropdown-panel-maxw',
+    '--ds-option-selected-bg-color',
+    '--ds-option-selected-label-color',
+    '--ds-option-selected-bg-color-hover',
+    '--ds-option-check-color',
   ];
 
   /** Selected values, two-way bound. */
   readonly value = model<string[]>([]);
-  /** Options shown in the panel. */
-  readonly options = input<readonly MultiSelectOption[]>([]);
+  /** Options, groups, or both mixed — rendered in the order given. */
+  readonly options = input<readonly MultiSelectItem[]>([]);
   /** Placeholder shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('Select…');
   /** Placeholder for the in-panel filter input. */
   readonly searchPlaceholder = input<string>('Filter…');
+  /** Whether the panel carries a filter row. `true` always, `false` never, and a
+   *  NUMBER is a threshold — the row appears once there are at least that many
+   *  options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`.
+   *
+   *  Hiding it moves the panel's keyboard model onto the trigger: the arrows,
+   *  Enter, Escape and `aria-activedescendant` are the filter input's today. */
+  readonly searchable = input<boolean | number | null, unknown>(null, {
+    transform: (raw: unknown) => {
+      if (raw === null || raw === undefined) {
+        return null;
+      }
+      // A bare attribute is Angular's '' and means true here as it does through
+      // booleanAttribute everywhere else — leaving it "unset" made
+      // `<ds-multi-select searchable>` unable to override a config that said false.
+      if (raw === '') {
+        return true;
+      }
+      if (typeof raw === 'number') {
+        return raw;
+      }
+      if (typeof raw === 'boolean') {
+        return raw;
+      }
+      const asNumber = Number(raw);
+
+      return Number.isFinite(asNumber) ? asNumber : raw !== 'false';
+    },
+  });
+  readonly searchableResolved = resolveWithConfig<boolean | number>(
+    this.searchable,
+    (config) => config.picker?.searchable,
+    true,
+  );
   /** How the chips collapse when they outgrow one line. `"fit"` (the default)
    *  measures and shows as many as the trigger is wide, the rest behind "+N more".
    *  A NUMBER is a CEILING, not a promise: the row still measures, so you get at
@@ -105,11 +169,53 @@ export class MultiSelectComponent
   });
   /** Accessible name for the trigger — falls back to `placeholder`. */
   readonly ariaLabel = input<string | null>(null);
-  /** Shows a "Select all" row that toggles every filter-matching, enabled option. */
-  readonly selectAll = input(false, { transform: booleanAttribute });
+  /** Trigger width — `fill` stretches to the container and pins the panel to the
+   *  trigger's width; `content` hugs the trigger's own content and takes that width
+   *  as the panel's FLOOR, so a compact trigger does not force an unreadable panel. */
+  readonly width = input<MultiSelectWidth>('fill');
+  /** Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
+  /** What the trigger shows. `count` is a caption plus a selected-count badge at
+   *  intrinsic width; `labels` names the selection instead, cut to the width with the
+   *  rest behind "+N". A projected `dsPickerTrigger` template WINS over this — the
+   *  input is then not read at all. */
+  readonly triggerDisplay = input<DsTriggerDisplay>('full');
+  /** Field label above the control — the same meaning it has on `ds-select`, and the
+   *  caption a `count`/`labels` trigger uses when it needs one. */
+  readonly label = input<string>('');
+  /** Marks the field required: a `*` beside the label and `aria-required` on the trigger. */
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Marks the field optional in words, for a form where most fields are required. */
+  readonly optional = input(false, { transform: booleanAttribute });
+  /** Where a "select all" row appears. `false` nowhere, `true` one row over the whole
+   *  panel, `'group'` one row per group, `'both'` for either. Group rows need groups
+   *  in `options` — with a flat list they have nothing to head. */
+  readonly selectAll = input<boolean | 'group' | 'both', unknown>(false, {
+    transform: (raw: unknown) =>
+      raw === 'group' || raw === 'both' ? raw : booleanAttribute(raw),
+  });
+
+  protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly chipTemplate = contentChild(DsChipTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
+    read: TemplateRef,
+  });
+  protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
+    read: TemplateRef,
+  });
 
   protected readonly uid = nextControlId('ds-multi-select');
   protected readonly listboxId = `${this.uid}-listbox`;
+  protected readonly labelId = `${this.uid}-label`;
   protected optionId(index: number): string {
     return `${this.uid}-opt-${index}`;
   }
@@ -141,11 +247,37 @@ export class MultiSelectComponent
     () => this.disabled() || this.formDisabled(),
   );
 
+  protected readonly showsCompactTrigger = computed(
+    () => !this.pickerTrigger() && this.triggerDisplay() !== 'full',
+  );
+
+  protected readonly showsSearch = computed<boolean>(() => {
+    const setting = this.searchableResolved();
+
+    return typeof setting === 'number'
+      ? this.allOptions().length >= setting
+      : setting;
+  });
+
+  protected readonly triggerActiveDescendant = computed(() =>
+    this.showsSearch() ? null : this.activeDescendant(),
+  );
+
+  protected readonly triggerCaption = computed(
+    () => this.label() || this.ariaLabel() || this.placeholder(),
+  );
+
+  protected readonly allOptions = computed<MultiSelectOption[]>(() =>
+    flattenDsOptions(this.options()),
+  );
+
   // Selected options in the source order, so chip order is stable.
   protected readonly selectedOptions = computed<MultiSelectOption[]>(() => {
     const selected = this.value();
 
-    return this.options().filter((option) => selected.includes(option.value));
+    return this.allOptions().filter((option) =>
+      selected.includes(option.value),
+    );
   });
 
   private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
@@ -186,14 +318,49 @@ export class MultiSelectComponent
     () => this.selectedOptions().length - this.visibleChips().length,
   );
 
-  protected readonly filteredOptions = computed<MultiSelectOption[]>(() => {
+  protected readonly filteredItems = computed<MultiSelectItem[]>(() => {
     const query = this.filter().trim().toLowerCase();
-    const options = this.options();
+    const matches = (option: MultiSelectOption): boolean =>
+      !query || option.label.toLowerCase().includes(query);
 
-    return query
-      ? options.filter((option) => option.label.toLowerCase().includes(query))
-      : options.slice();
+    const kept: MultiSelectItem[] = [];
+    for (const item of this.options()) {
+      if (!isDsOptionGroup(item)) {
+        if (matches(item)) {
+          kept.push(item);
+        }
+        continue;
+      }
+      // A disabled group disables its options HERE, not only in the flattened
+      // list: the template renders these objects, so a group left to inherit
+      // later would paint enabled rows that refuse to be picked.
+      const options = item.options
+        .filter(matches)
+        .map((option) =>
+          item.disabled ? { ...option, disabled: true } : option,
+        );
+      if (options.length > 0) {
+        kept.push({ ...item, options });
+      }
+    }
+
+    return kept;
   });
+
+  protected readonly filteredOptions = computed<MultiSelectOption[]>(() =>
+    flattenDsOptions(this.filteredItems()),
+  );
+
+  protected isGroup(item: MultiSelectItem): item is MultiSelectOptionGroup {
+    return isDsOptionGroup(item);
+  }
+
+  /** Where an option sits in the flat visible list — the id the listbox's
+   *  `aria-activedescendant` points at, which a grouped render cannot get from
+   *  the loop index. */
+  protected flatIndexOf(option: MultiSelectOption): number {
+    return this.filteredOptions().indexOf(option);
+  }
 
   protected readonly activeDescendant = computed(() => {
     const index = this.activeIndex();
@@ -245,6 +412,54 @@ export class MultiSelectComponent
     );
   });
 
+  protected readonly showsPanelSelectAll = computed(() => {
+    const setting = this.selectAll();
+
+    return setting === true || setting === 'both';
+  });
+
+  protected readonly showsGroupSelectAll = computed(() => {
+    const setting = this.selectAll();
+
+    return setting === 'group' || setting === 'both';
+  });
+
+  private enabledIn(group: MultiSelectOptionGroup): MultiSelectOption[] {
+    return group.options.filter((option) => !option.disabled);
+  }
+
+  protected groupAllSelected(group: MultiSelectOptionGroup): boolean {
+    const enabled = this.enabledIn(group);
+    const selected = this.value();
+
+    return (
+      enabled.length > 0 && enabled.every((o) => selected.includes(o.value))
+    );
+  }
+
+  protected groupSomeSelected(group: MultiSelectOptionGroup): boolean {
+    const selected = this.value();
+
+    return (
+      this.enabledIn(group).some((o) => selected.includes(o.value)) &&
+      !this.groupAllSelected(group)
+    );
+  }
+
+  protected toggleGroup(group: MultiSelectOptionGroup): void {
+    const values = this.enabledIn(group).map((o) => o.value);
+    if (this.groupAllSelected(group)) {
+      const remove = new Set(values);
+
+      this.value.set(this.value().filter((value) => !remove.has(value)));
+
+      return;
+    }
+    const next = new Set(this.value());
+    values.forEach((value) => next.add(value));
+    this.value.set([...next]);
+  }
+
   protected toggleSelectAll(): void {
     const enabledValues = this.enabledFiltered().map((o) => o.value);
     if (this.allFilteredSelected()) {
@@ -276,15 +491,31 @@ export class MultiSelectComponent
 
   protected removeValue(value: string): void {
     this.value.set(this.value().filter((entry) => entry !== value));
+    // The close button that ran this is being destroyed with its chip, so focus
+    // would land on <body> and the next removal would need a tab from the top.
+    this.trigger().nativeElement.focus();
   }
 
   protected onFilter(event: Event): void {
     this.filter.set((event.target as HTMLInputElement).value);
-    this.activeIndex.set(this.filteredOptions().length ? 0 : -1);
+    this.activeIndex.set(this.firstEnabledIndex());
+  }
+
+  private firstEnabledIndex(): number {
+    return this.filteredOptions().findIndex((option) => !option.disabled);
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
     if (this.isDisabled()) {
+      return;
+    }
+    // With no filter row there is nowhere else for these to land, so the trigger
+    // runs the same handler the input would have — and it has to get first refusal
+    // on Enter, or Enter would toggle the panel shut instead of picking the active
+    // row and there would be no keyboard way to select at all.
+    if (this.open() && !this.showsSearch()) {
+      this.onSearchKeydown(event);
+
       return;
     }
     if (event.key === 'Enter' || event.key === ' ') {
@@ -293,7 +524,7 @@ export class MultiSelectComponent
 
       return;
     }
-    if (event.key === 'ArrowDown') {
+    if (event.key === 'ArrowDown' && !this.open()) {
       event.preventDefault();
       this.openPanel();
     }
@@ -321,6 +552,9 @@ export class MultiSelectComponent
         event.preventDefault();
         this.close('dismiss');
         break;
+      case 'Tab':
+        this.close('dismiss');
+        break;
       case 'Backspace':
         if (!this.filter()) {
           const selected = this.selectedOptions();
@@ -343,7 +577,15 @@ export class MultiSelectComponent
       this.overlay,
       triggerElement,
     );
-    config.width = triggerElement.getBoundingClientRect().width;
+    const triggerWidth = triggerElement.getBoundingClientRect().width;
+    // A compact trigger hugs its caption, so pinning the panel to it gives a panel
+    // too narrow to read its own options — the trigger width becomes a FLOOR here
+    // whether or not the consumer asked for `content`.
+    if (this.width() === 'content' || this.showsCompactTrigger()) {
+      config.minWidth = triggerWidth;
+    } else {
+      config.width = triggerWidth;
+    }
     this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
       this.overlayRef,
@@ -365,8 +607,14 @@ export class MultiSelectComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
+    const detaching = this.overlayRef;
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
+      // A deferred dispose can outlive a re-open, and then this fires for the
+      // PREVIOUS panel: clearing state here would strand the live one.
+      if (this.overlayRef !== detaching) {
+        return;
+      }
       this.overlayRef = null;
       this.open.set(false);
     });
@@ -378,11 +626,13 @@ export class MultiSelectComponent
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.open.set(true);
-    this.activeIndex.set(this.filteredOptions().length ? 0 : -1);
-    this.focusTimer = setTimeout(() => {
-      this.focusTimer = null;
-      this.searchInput()?.nativeElement.focus();
-    });
+    this.activeIndex.set(this.firstEnabledIndex());
+    if (this.showsSearch()) {
+      this.focusTimer = setTimeout(() => {
+        this.focusTimer = null;
+        this.searchInput()?.nativeElement.focus();
+      });
+    }
   }
 
   protected onTriggerClick(): void {
