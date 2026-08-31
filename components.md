@@ -217,6 +217,10 @@ Shared slots — content-projected directives, each a `<ng-template>`:
 - `[dsEmptyTemplate]` — the "no matches" state, on all three
 - `[dsCreateTemplate]` — the "create «…»" row, on autocomplete
 
+Shared panel tokens — the three pickers portal their panel out of the component, so these are declared on the host and forwarded onto the pane; a per-instance `ds-select { --ds-dropdown-panel-radius: 8px }` reaches it. `--ds-dropdown-panel-bg-color`, `-radius`, `-maxh`, `-minw`, `-maxw` (the last two bound the panel in `width="content"`). Each picker's own `--ds-<name>-panel-bg-color` / `-radius` / `-maxh` is an ALIAS of the shared one and still works.
+
+Shared option tokens, painting the row inside any of the three panels: `--ds-option-selected-bg-color`, `-hover`, `--ds-option-selected-label-color`, `--ds-option-check-color`. `ds-select` and `ds-autocomplete` mark the selection with the check glyph these paint; `ds-multi-select` uses a checkbox and answers to `--ds-multi-select-check-bg-color` instead.
+
 #### `<ds-select>` — `SelectComponent`
 Inputs: `value: model<string>`, `options: SelectItem[]`, `placeholder: string = ''`, `size`, `width`, `label`, `disabled`, `readOnly`, `readonly` (an alias of `readOnly`, because signal forms binds by name), `success`, `required`, `optional`, `clearable`, `name: string | null = null`, `ariaLabel`
 Trigger plus a CDK overlay panel. Keyboard: ArrowUp/Down, Enter/Space, Home/End, Escape, skipping group headers. `isSelectOptionGroup(item)` is re-exported as a type guard.
