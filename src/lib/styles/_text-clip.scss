@@ -3,7 +3,7 @@
      overflow, and where the line box is tighter than the glyph box that overflow
      eats the glyph. Mulish measures 1.257em, so --line-height-flat (1) and -tight
      (1.1) are both under it and shave EVERY label, not only the ones with
-     descenders (MBP-245). `text-overflow` reads any non-`visible` overflow, so the
+     descenders. `text-overflow` reads any non-`visible` overflow, so the
      ellipsis still applies under `clip`. */
   overflow: clip;
   overflow-clip-margin: var(--space-1);

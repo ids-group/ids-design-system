@@ -1,8 +1,6 @@
-// Rounded press feedback — Recipe C (approved by Stas 2026-07-02).
-//
-// Complements the global tap-highlight reset (_reset.scss). The native mobile
-// tap overlay was a rectangle that ignored border-radius; we removed it, and
-// this gives each interactive control a press state that INHERITS its shape:
+// Complements the global tap-highlight reset (_reset.scss), which drops the native
+// mobile overlay — a rectangle that ignored border-radius. This replaces it with a
+// press state that INHERITS the control shape:
 // `filter` + `transform` apply to the rendered element, so any border-radius /
 // clip is followed automatically, and neither conflicts with the box-shadow
 // focus rings (different properties).

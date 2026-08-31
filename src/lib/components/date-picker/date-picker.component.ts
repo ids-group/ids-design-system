@@ -749,7 +749,7 @@ export class DatePickerComponent
       this.host.nativeElement,
       this.panelTokens,
     );
-    // The anchor, not the host: a stretched host's empty width must dismiss (MBP-225).
+    // The anchor, not the host: a stretched host's empty width must dismiss.
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.anchor().nativeElement.contains(target),

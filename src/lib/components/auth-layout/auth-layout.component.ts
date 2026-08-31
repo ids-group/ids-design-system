@@ -17,7 +17,7 @@ import { resolveBrandValue } from '../brand-defaults';
  * screens behind the login.
  *
  * Brand row, tagline, card and support footer are the same four parts in every
- * consumer that has hand-rolled this. What the ports get wrong is the full-height
+ * consumer that has hand-rolled this. What a hand-rolled version gets wrong is the full-height
  * box: they nest a `100vh` wrapper inside a `100dvh` one and scroll a page whose
  * content fits. Here the host is the only one, and it also carries the safe-area
  * insets a notched phone in landscape needs.
@@ -56,8 +56,8 @@ import { resolveBrandValue } from '../brand-defaults';
 export class AuthLayoutComponent {
   /** Wordmark beside the letter-mark tile. For a logo image/SVG, project it into
    *  the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`.
-   *  Unset falls back to `DS_CONFIG.brand.name` — six auth screens answer this
-   *  identically. Each field resolves on its own, so `brand=""` drops the wordmark
+   *  Unset falls back to `DS_CONFIG.brand.name`, which every auth screen in an app
+   *  answers identically. Each field resolves on its own, so `brand=""` drops the wordmark
    *  but a `logoLetter` in the config still paints its tile; clear both to give one
    *  screen no brand row. */
   readonly brand = input<string | null>(null);
@@ -82,10 +82,8 @@ export class AuthLayoutComponent {
    *  content of an auth screen and `ds-card` renders an `<article>`, which is NOT
    *  a landmark, so by default a screen-reader user has nothing to jump to — set
    *  this to `'main'` on a standalone auth page. It is opt-in because the layout
-   *  is also embedded inside pages that already own a `main` (this repo's own docs
-   *  site nests it inside `ds-app-layout`), and two `main`s is its own violation.
-   *  Defaulting it to `'main'` is the better end state and belongs in the next
-   *  batch of default changes. */
+   *  is also embedded inside pages that already own a `main`, and two `main`s is its
+   *  own violation. */
   readonly landmark = input<'main' | 'none'>('none');
 
   /** Projected `[dsBrandName]` wordmark markup, when the consumer provides one. */

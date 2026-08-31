@@ -6,8 +6,7 @@
 // component keys off [data-status]; these rules set the public --ds-badge-* /
 // --ds-status-dot-* tokens the components already read.
 //
-//   @use 'styles/status' as status;                                   // ds-docs (loadPaths: src/lib)
-//   // @use '@ids-group-ltd/ids-design-system/styles/status' as status; // external consumer
+//   @use '@ids-group-ltd/ids-design-system/styles/status' as status;
 //   @include status.semantic-preset;                                  // optional universal set
 //   @include status.define((
 //     confirmed: (bg: var(--primary-subtitle), text: var(--primary-strong), dot: var(--accent)),

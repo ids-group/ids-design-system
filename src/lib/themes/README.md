@@ -83,13 +83,13 @@ On-fill text uses theme-stable `--static-white` / `--static-ink` so it doesn't f
 
 ```scss
 @use 'styles/ds';
-@use './app/styles/brand-manage-my'; // [data-brand="manage-my"] overrides (light-authored)
+@use './app/styles/brand-acme'; // [data-brand="acme"] overrides (light-authored)
 ```
 
 ## Brand vs theme
 
 - **Theme** swaps the whole role map (light ↔ dark). Light is the default; dark is opt-in and, when active, fully replaces light.
-- **Brand** is a thin overlay scoped via attribute (`[data-brand="X"]`), authored on a theme. `manage-my` is authored on **light** — pair it with the default (light) theme. A brand that wants dark adds a separate `[data-theme='dark'][data-brand="X"]` layer.
+- **Brand** is a thin overlay scoped via attribute (`[data-brand="X"]`), authored on a theme. A brand authored on **light** pairs with the default (light) theme. A brand that wants dark adds a separate `[data-theme='dark'][data-brand="X"]` layer.
 
 ## Adding a new theme
 
@@ -110,5 +110,5 @@ Components never change — they consume semantic roles, which the active theme 
 - Components never reference base-palette primitives (`--blue-600`, `--neutral-200`) directly — use a Tier-2 role.
 - Light is the default; dark is opt-in (`data-theme="dark"`); OS-follow is a consumer opt-in. No `prefers-color-scheme` by default.
 - Themes are sibling and self-contained; `_semantic.scss`'s `@mixin roles` holds the light-default values, dark overrides the deltas.
-- Brands are theme-authored overlays. `manage-my` is light.
+- Brands are theme-authored overlays, and a brand authored on light pairs with the default theme.
 - `--primary-hover`/`--primary-pressed` are auto-derived via `color-mix()` (toward black in light, toward white in dark).

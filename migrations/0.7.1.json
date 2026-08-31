@@ -8,7 +8,7 @@
       "new": "@use '@ids-group-ltd/ids-design-system/styles/surface-motion';\n@use '@ids-group-ltd/ids-design-system/styles/overlay-motion';",
       "action": "Add `@use '@ids-group-ltd/ids-design-system/styles/surface-motion';` to your styles entry, beside `styles/overlay-motion`. If you have no overlay-motion line, put it beside whatever DS partials you do `@use`. Order does not matter.",
       "appliesWhen": "Only à-la-carte consumers who `@use` DS partials individually. `styles/ds` forwards it, so its users need nothing at all.",
-      "pitfall": "Missing it fails SILENTLY — no error, no warning. The keyframes simply do not exist, and modal, drawer, bottom-sheet, toast, banner, alert, loading-overlay and the overlay panels all render with no entrance animation. Write the package-qualified specifier too: a bare `styles/…` resolves only inside the DS repo, which puts `includePaths: [\"src/lib\"]` on its own docs build.",
+      "pitfall": "Missing it fails SILENTLY — no error, no warning. The keyframes simply do not exist, and modal, drawer, bottom-sheet, toast, banner, alert, loading-overlay and the overlay panels all render with no entrance animation. Write the package-qualified specifier too: a bare `styles/…` does not resolve in a consumer build.",
       "note": "A new global partial `styles/_surface-motion.scss` holds the shared entrance keyframes — ds-fade-in, ds-scale-in, ds-slide-in, ds-slide-edge-in — that every DS surface names through `--ds-<surface>-enter-keyframes`.",
       "searchHints": [
         "styles/overlay-motion",
@@ -25,7 +25,7 @@
       "new": null,
       "action": "Gate on `sortDir`, not on `sortKey`. `if (sortKey())` becomes `if (sortDir())`, and a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()` is null.",
       "appliesWhen": "Hosts that already read both need nothing, and neither do those passing `sortingOrder: ['asc','desc']`, which has no unsorted state. The table's own icons, aria-sort and client-side sorting were always gated on `sortDir` and are unchanged.",
-      "pitfall": "This item finds NOTHING in a template. The code that breaks is the host's own — a store, a page class, a query builder — and it names no DS symbol at all, so a search for `ds-table` comes back clean and the item gets recorded not-applicable. mm-broker had three, each written as `sorting: store.sortKey() ? { path: store.sortKey()!, order: store.sortDir() ?? 'Asc' } : undefined`, and all three kept ordering a server-paged list by the last column the reader touched while the header showed no sort. Grep the `.ts` for the `detect` shapes.",
+      "pitfall": "This item finds NOTHING in a template. The code that breaks is the host's own — a store, a page class, a query builder — and it names no DS symbol at all, so a search for `ds-table` comes back clean and the item gets recorded not-applicable. A common shape is `sorting: store.sortKey() ? { path: store.sortKey()!, order: store.sortDir() ?? 'Asc' } : undefined`, which keeps ordering a server-paged list by the last column the reader touched while the header shows no sort. Grep the `.ts` for the `detect` shapes.",
       "note": "`sortKey` is no longer nulled when the cycle reaches unsorted: it keeps naming the column the user last touched, and `sortDir === null` alone means unsorted. It fixes a header desync for hosts that map \"off\" back to their own default sort.",
       "searchHints": [
         "sortKey",
@@ -231,7 +231,7 @@
       "find": [
         "[reserveMessage]=\"false\""
       ],
-      "why": "The default is FALSE again, so an opt-out binding only restates it - unless the field sits under a `dsReserveMessages` host or an app config that turns it on, where the binding is still the way back out. mm-broker carried six, three of them dead (2026-08-21).",
+      "why": "The default is FALSE again, so an opt-out binding only restates it - unless the field sits under a `dsReserveMessages` host or an app config that turns it on, where the binding is still the way back out.",
       "replaceWith": "nothing - delete the binding where no host reserves"
     },
     {

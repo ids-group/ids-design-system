@@ -7,6 +7,8 @@
 #
 # build          -> fails the step if the library or docs don't compile
 # migration-lint -> fails the step; migrations/ has no debt to carry
+# changelog-lint -> fails the step; the published changelog and manifests must name
+#                   nothing a reader outside this repo cannot open
 # lint           -> report-only (prettier/stylelint/eslint), never fails the step
 #                   while the repo carries pre-existing lint debt
 set -e
@@ -29,6 +31,16 @@ node tools/migration-lint-selftest.mjs
 
 echo "===== delete-table parity ====="
 node tools/check-delete-tables.mjs
+
+# Same class of gate, same argument: CHANGELOG.md and the manifests are copied into
+# the tarball and published to a public registry, so a client's name or a `tools/`
+# path in them reaches everyone. Prose review cannot hold this line, because the
+# writing agent studies the previous release for voice and inherits its leaks.
+echo "===== changelog-lint (published surface) ====="
+node tools/changelog-lint.mjs
+
+echo "===== changelog-lint selftest ====="
+node tools/changelog-lint-selftest.mjs
 
 log_dir="$(mktemp -d)"
 
