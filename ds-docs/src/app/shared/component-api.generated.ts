@@ -3567,6 +3567,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so a compact trigger does not force an unreadable panel."
       },
       {
+        "name": "triggerDisplay",
+        "kind": "input",
+        "type": "DsTriggerDisplay",
+        "union": [
+          "full",
+          "compact"
+        ],
+        "default": "'full'",
+        "required": false,
+        "description": "What the trigger shows. `compact` is a caption plus a selected-count badge at intrinsic width, for a filter toolbar. A projected `dsPickerTrigger` template WINS over this — the input is then not read at all."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Caption of the compact trigger. Falls back to `ariaLabel`, then `placeholder`."
+      },
+      {
         "name": "selectAll",
         "kind": "input",
         "type": "boolean",

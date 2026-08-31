@@ -14,7 +14,27 @@
   (click)="onTriggerClick()"
   (keydown)="onTriggerKeydown($event)"
 >
-  @if (selectedOptions().length === 0) {
+  @if (pickerTrigger(); as tpl) {
+    <ng-container
+      [ngTemplateOutlet]="tpl"
+      [ngTemplateOutletContext]="{
+        $implicit: selectedOptions(),
+        selected: selectedOptions(),
+        count: selectedOptions().length,
+        open: open(),
+        disabled: isDisabled(),
+      }"
+    />
+  } @else if (showsCompactTrigger()) {
+    <span class="trigger-caption">{{ triggerCaption() }}</span>
+
+    @if (selectedOptions().length > 0) {
+      <ds-badge
+        [count]="selectedOptions().length"
+        [countLabel]="'selected'"
+      />
+    }
+  } @else if (selectedOptions().length === 0) {
     <span class="placeholder">
       {{ placeholder() }}
     </span>

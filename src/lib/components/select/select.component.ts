@@ -46,6 +46,7 @@ import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { resolveWithConfig } from '../../core/config-defaults';
 import { DsOptionTemplateDirective } from '../option-template.directive';
+import { DsPickerTriggerDirective } from '../picker-trigger.directive';
 
 @Component({
   selector: 'ds-select',
@@ -144,6 +145,9 @@ export class SelectComponent
   readonly clearable = input(false, { transform: booleanAttribute });
 
   protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
 

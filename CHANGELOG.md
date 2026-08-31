@@ -45,6 +45,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **A compact filter trigger, and a slot to write your own.** `ds-multi-select` takes
+  `triggerDisplay="compact"`: a `label` caption plus a selected-count `ds-badge` at intrinsic
+  width, with an accent border once something is picked. The chip field it replaces grows with the
+  selection, which is why a board toolbar could not use it — one consumer wrote ~250 lines of their
+  own control instead.
+
+  `dsPickerTrigger` projects your own trigger contents into `ds-select`, `ds-multi-select` and
+  `ds-autocomplete`. **A projected template WINS over `triggerDisplay`**, which is then not read at
+  all, so there is no "compact plus a template" combination to document. The trigger ELEMENT stays
+  library-owned in both cases: `aria-haspopup`, `aria-expanded`, `aria-controls`, the roving
+  `aria-activedescendant` and Enter/Space/ArrowDown/Escape are not projected.
+
+  **`compact` is not offered on `ds-autocomplete`.** Its trigger holds the text input the control
+  exists for, and a caption-plus-count summary would remove it. The slot is there instead, where a
+  consumer decides what happens to the input.
+
 - **`dsOptionTemplate` and `dsChipTemplate` — the option row and the selected chip take your content.**
   An option was `{ value, label, disabled?, icon? }` and nothing else, so an avatar, a colour dot, a
   priority glyph or a second line of metadata had no way in. Two directives now fill those two

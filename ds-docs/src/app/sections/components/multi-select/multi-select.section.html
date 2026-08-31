@@ -84,6 +84,51 @@
     </p>
   </div>
 
+  <h3 class="block-title t-h4">Compact trigger</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">triggerDisplay="compact"</code> swaps the chip
+    field for a caption and a selected-count badge at intrinsic width — a fixed
+    footprint for a filter toolbar, where a field that grows with the selection
+    does not fit. A projected
+    <code class="t-mono-inline">dsPickerTrigger</code> WINS over it, and
+    <code class="t-mono-inline">triggerDisplay</code> is then not read at all.
+  </p>
+
+  <div class="demo-panel">
+    <div style="display: flex; gap: var(--space-3); align-items: flex-start">
+      <ds-multi-select
+        data-testid="ms-compact"
+        triggerDisplay="compact"
+        label="Labels"
+        width="content"
+        [options]="labelOptions"
+        [(value)]="compactLabels"
+      />
+
+      <ds-multi-select
+        data-testid="ms-custom-trigger"
+        width="content"
+        [options]="labelOptions"
+        [(value)]="customLabels"
+      >
+        <ng-template
+          dsPickerTrigger
+          let-count="count"
+        >
+          <span
+            class="demo-dot"
+            style="background: var(--primary)"
+          ></span>
+          Custom
+          @if (count) {
+            · {{ count }}
+          }
+        </ng-template>
+      </ds-multi-select>
+    </div>
+  </div>
+
   <h3 class="block-title t-h4">Custom option and chip content</h3>
 
   <p class="block-desc t-s">

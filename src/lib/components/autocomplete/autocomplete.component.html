@@ -12,7 +12,18 @@
     <ng-content select="[dsAutocompletePrefix]"></ng-content>
   </span>
 
-  @if (multiple()) {
+  @if (pickerTrigger(); as tpl) {
+    <ng-container
+      [ngTemplateOutlet]="tpl"
+      [ngTemplateOutletContext]="{
+        $implicit: selectedTags(),
+        selected: selectedTags(),
+        count: selectedTags().length,
+        open: isOpen(),
+        disabled: isDisabled(),
+      }"
+    />
+  } @else if (multiple()) {
     <span
       #chipRow
       class="chip-row"

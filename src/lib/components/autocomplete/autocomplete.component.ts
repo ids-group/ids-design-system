@@ -46,6 +46,7 @@ import type {
 import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
+import { DsPickerTriggerDirective } from '../picker-trigger.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveWithConfig } from '../../core/config-defaults';
@@ -182,6 +183,9 @@ export class AutocompleteComponent<T = unknown>
     read: TemplateRef,
   });
   protected readonly chipTemplate = contentChild(DsChipTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
 

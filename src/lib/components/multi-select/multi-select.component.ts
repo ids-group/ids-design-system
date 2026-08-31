@@ -39,6 +39,9 @@ import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
+import { DsPickerTriggerDirective } from '../picker-trigger.directive';
+import { BadgeComponent } from '../badge/badge.component';
+import type { DsTriggerDisplay } from '../../core/trigger-display';
 import type {
   MultiSelectItem,
   MultiSelectOption,
@@ -53,6 +56,7 @@ import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
   imports: [
     IconComponent,
     TagComponent,
+    BadgeComponent,
     FieldMessageComponent,
     NgTemplateOutlet,
   ],
@@ -61,6 +65,7 @@ import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
   host: {
     '[attr.data-field-state]': 'controlState()',
     '[class.content-width]': "width() === 'content'",
+    '[class.compact-trigger]': 'showsCompactTrigger()',
   },
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
@@ -127,6 +132,12 @@ export class MultiSelectComponent
    *  trigger's width; `content` hugs the trigger's own content and takes that width
    *  as the panel's FLOOR, so a compact trigger does not force an unreadable panel. */
   readonly width = input<MultiSelectWidth>('fill');
+  /** What the trigger shows. `compact` is a caption plus a selected-count badge at
+   *  intrinsic width, for a filter toolbar. A projected `dsPickerTrigger` template
+   *  WINS over this — the input is then not read at all. */
+  readonly triggerDisplay = input<DsTriggerDisplay>('full');
+  /** Caption of the compact trigger. Falls back to `ariaLabel`, then `placeholder`. */
+  readonly label = input<string>('');
   /** Shows a "Select all" row that toggles every filter-matching, enabled option. */
   readonly selectAll = input(false, { transform: booleanAttribute });
 
@@ -134,6 +145,9 @@ export class MultiSelectComponent
     read: TemplateRef,
   });
   protected readonly chipTemplate = contentChild(DsChipTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
 
@@ -168,6 +182,15 @@ export class MultiSelectComponent
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
+  );
+
+  /** A projected template wins outright, so there is no combination to explain. */
+  protected readonly showsCompactTrigger = computed(
+    () => !this.pickerTrigger() && this.triggerDisplay() === 'compact',
+  );
+
+  protected readonly triggerCaption = computed(
+    () => this.label() || this.ariaLabel() || this.placeholder(),
   );
 
   protected readonly allOptions = computed<MultiSelectOption[]>(() =>

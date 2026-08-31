@@ -49,12 +49,25 @@
     />
   }
 
-  <span
-    class="trigger-text"
-    [class.is-placeholder]="!hasValue()"
-  >
-    {{ displayLabel() }}
-  </span>
+  @if (pickerTrigger(); as tpl) {
+    <ng-container
+      [ngTemplateOutlet]="tpl"
+      [ngTemplateOutletContext]="{
+        $implicit: selectedOption(),
+        selected: selectedOption(),
+        count: hasValue() ? 1 : 0,
+        open: open(),
+        disabled: isDisabled(),
+      }"
+    />
+  } @else {
+    <span
+      class="trigger-text"
+      [class.is-placeholder]="!hasValue()"
+    >
+      {{ displayLabel() }}
+    </span>
+  }
 
   @if (clearable() && hasValue() && !isDisabled() && !isReadOnly()) {
     <button

@@ -6,6 +6,7 @@ export * from './lib/core/option';
 export * from './lib/core/status';
 export * from './lib/core/size';
 export * from './lib/core/width';
+export * from './lib/core/trigger-display';
 export * from './lib/icons';
 export * from './lib/components/reserve-messages';
 export * from './lib/components/button';
@@ -77,6 +78,7 @@ export * from './lib/components/radio-group';
 export * from './lib/components/switch';
 export * from './lib/components/static-preview.directive';
 export * from './lib/components/option-template.directive';
+export * from './lib/components/picker-trigger.directive';
 export * from './lib/components/chip-template.directive';
 export * from './lib/components/field-click-focus.directive';
 export {

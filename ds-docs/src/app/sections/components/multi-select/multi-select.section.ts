@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
   DsChipTemplateDirective,
+  DsPickerTriggerDirective,
   DsOptionTemplateDirective,
   MultiSelectComponent,
   MultiSelectItem,
@@ -19,6 +20,7 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
     SelectComponent,
     DsOptionTemplateDirective,
     DsChipTemplateDirective,
+    DsPickerTriggerDirective,
     DocsSectionComponent,
     DocsNonmodalNoteComponent,
   ],
@@ -34,6 +36,8 @@ export class MultiSelectSection {
   protected readonly widthDemoValue = signal<string[]>(['design']);
   protected readonly assignees = signal<string[]>(['jordan']);
   protected readonly labels = signal<string[]>(['blocked']);
+  protected readonly compactLabels = signal<string[]>(['blocked', 'ready']);
+  protected readonly customLabels = signal<string[]>(['review']);
   protected readonly labelOptions: MultiSelectOption[] = [
     { value: 'blocked', label: 'Blocked' },
     { value: 'review', label: 'In review' },

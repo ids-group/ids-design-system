@@ -29,6 +29,29 @@
   width: fit-content;
 }
 
+/* The compact trigger is a fixed footprint by definition, so it hugs without being
+   asked and turns the panel's width mode on for the same reason `content` exists:
+   a caption-width panel is unreadable. */
+:host(.compact-trigger) {
+  width: fit-content;
+
+  .field-trigger {
+    padding: var(--space-1) var(--space-2-5);
+    gap: var(--space-1-5);
+  }
+
+  .trigger-caption {
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+  }
+
+  /* Accent border, not a fill: it is the same signal the field family already uses
+     for "this control has your attention", so a toolbar of filters reads as one set. */
+  &:has(ds-badge) .field-trigger {
+    border-color: var(--accent);
+  }
+}
+
 /* Unique class — a bare `.field` collides with consumer/docs form styles that
    set flex-direction:column and silently turn the chip row into a column. */
 .field-trigger {
