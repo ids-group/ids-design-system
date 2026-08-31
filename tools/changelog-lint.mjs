@@ -117,9 +117,7 @@ const INTERNAL_PATHS = [
   'ds-docs/',
   'infrastructure/',
   '.claude/',
-  'docs/todo.md',
-  'docs/done.md',
-  'docs/superpowers',
+  'docs/',
   'migrations/AUTHORING.md',
 ];
 

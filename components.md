@@ -203,14 +203,32 @@ Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string = 
 #### `<ds-switch>` — `SwitchComponent`
 Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`
 
-#### `<ds-select>` — `SelectComponent`
-Inputs: `value: model<string>`, `options: SelectItem[]` (`SelectOption | SelectOptionGroup`, where `SelectOption = { label, value, disabled? }` and `SelectOptionGroup = { label, options: SelectOption[], disabled? }`), `placeholder: string = ''`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `disabled: boolean = false`, `invalid: boolean = false`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`
-Renders trigger + CDK overlay panel; keyboard support: ArrowUp/Down, Enter/Space, Home/End, Escape — skipping group-header labels. Pass a mix of flat `SelectOption`s and `SelectOptionGroup`s to render `<optgroup>`-style sections; existing flat-list consumers keep working unchanged. Type guard `isSelectOptionGroup(item)` is re-exported.
+#### The picker family — `<ds-select>`, `<ds-multi-select>`, `<ds-autocomplete>`
+Five rules hold across all three: one meaning per member name, difference only where a reason is stated, one panel implementation (`.dropdown-panel` / `.dropdown-list`), no library-invented string without a slot to replace it, and one way to clip a line.
 
-#### `<ds-combobox>` — `ComboboxComponent<T>`
-Searchable select with typeahead. Generic on the option value type `T`.
-Inputs: `options: readonly ComboboxOption<T>[]` (`{ value: T, label: string }`), `value: model<T | readonly T[] | null>`, `multiple: boolean = false`, `placeholder: string = 'Select…'`
-In multi mode, selected values render as `<ds-tag closable>` chips above the trigger.
+Shared inputs: `options` (flat items, groups, or a mix), `value: model`, `placeholder`, `size: DsSize | null = null`, `width: DsControlWidth = 'fill'` (`'fill' | 'content'`), `label`, `disabled`, `required`, `optional`, `success`, `ariaLabel`.
+
+Shared option shape: `DsOption<T> = { label, value, disabled? }` and `DsOptionGroup<T> = { label, options, disabled? }`, with `DsOptionItem<T>` the union. Each picker re-exports it under its own name (`SelectItem`, `MultiSelectItem`, `AutocompleteItem<T>`), so one array literal fits all three.
+
+Shared slots — content-projected directives, each a `<ng-template>`:
+- `[dsOptionTemplate]` — the option row, on all three
+- `[dsChipTemplate]` — a selected chip, on multi-select and autocomplete
+- `[dsPickerTrigger]` — replaces the trigger, on all three
+- `[dsEmptyTemplate]` — the "no matches" state, on all three
+- `[dsCreateTemplate]` — the "create «…»" row, on autocomplete
+
+#### `<ds-select>` — `SelectComponent`
+Inputs: `value: model<string>`, `options: SelectItem[]`, `placeholder: string = ''`, `size`, `width`, `label`, `disabled`, `readOnly`, `readonly` (an alias of `readOnly`, because signal forms binds by name), `success`, `required`, `optional`, `clearable`, `name: string | null = null`, `ariaLabel`
+Trigger plus a CDK overlay panel. Keyboard: ArrowUp/Down, Enter/Space, Home/End, Escape, skipping group headers. `isSelectOptionGroup(item)` is re-exported as a type guard.
+
+#### `<ds-multi-select>` — `MultiSelectComponent`
+Inputs: `value: model<string[]>`, `options: readonly MultiSelectItem[]`, `placeholder: string = 'Select…'`, `searchPlaceholder: string = 'Filter…'`, `searchable: boolean | number | null = null` (`true` always shows the filter row, `false` never, a NUMBER shows it once the option count reaches it), `selectAll: boolean | 'group' | 'both' = false` (`'group'` puts a row per group, `'both'` adds a global row beside them), `triggerDisplay: DsTriggerDisplay = 'full'` (`'full' | 'count' | 'labels'`), `maxVisibleChips: number | 'fit' | 'all' | null = null` (a NUMBER is a ceiling, not an exact count — fewer fit when the trigger is narrow), `width`, `size`, `label`, `disabled`, `success`, `required`, `optional`, `ariaLabel`
+
+#### `<ds-autocomplete>` — `AutocompleteComponent<T>`
+Type-ahead picker, generic on the option value.
+Inputs: `options: readonly AutocompleteItem<T>[]`, `value: model<T | readonly T[] | null>`, `multiple: boolean = false`, `placeholder: string = 'Select…'`, `showChevron: boolean = true`, `valueOverflow: AutocompleteValueOverflow = 'ellipsis'` (`'ellipsis' | 'wrap'` — a settled single value clips rather than growing the trigger), `maxVisibleChips`, `allowCreate: boolean = false`, `width`, `size`, `label`, `disabled`, `success`, `required`, `optional`, `ariaLabel`
+Output: `(create): string` — the typed text, when `allowCreate` is on and nothing matched.
+In multiple mode the selection renders as chips above the trigger.
 
 #### `<ds-search>` — `SearchComponent`
 Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.

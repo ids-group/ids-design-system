@@ -10,15 +10,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
-- **`ds-multi-select`'s panel is the shared dropdown panel too.** `ds-autocomplete` rejoined it
+- **BREAKING for CSS overrides: `ds-multi-select`'s panel is the shared dropdown panel too.** `ds-autocomplete` rejoined it
   earlier in this release; the multi-select still carried its own `.panel` / `.options` / `.option`
   copy while its pane ALSO carried `ds-dropdown-panel`, so both rule sets applied at once. One
   implementation now: the class names are `.dropdown-panel` and `.dropdown-list`, and the row is the
   partial's. What stayed is what no other picker has — the filter row, the select-all rows, a real
   `<button>` option that can be `:disabled`, and this component's own tokens.
 
-- **`triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name says what the trigger
-  shows, which matters once `labels` sits beside it.
+- **BREAKING if you set it: `triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name
+  says what the trigger shows, which matters once `labels` sits beside it. The union is exported as
+  `DsTriggerDisplay` — `'full' | 'count' | 'labels'` — so a variable typed against it fails to
+  compile rather than passing a dead string.
 
 - **Every single-line label clips through one mixin now.** Six places hand-rolled
   `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — the `ds-select` trigger text,
@@ -35,7 +37,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   with one of ours stops the build. Rename yours, or add `override` if you meant to replace ours —
   the compiler enumerates every collision, so building after the upgrade is the whole check.
 
-- **One `options` input takes groups on all three pickers.** `ds-multi-select` had no groups at
+- **BREAKING for `ds-autocomplete`: one `options` input takes groups on all three pickers.**
+  `ds-multi-select` had no groups at
   all; `ds-select` took them mixed into `options`; `ds-autocomplete` took them in a second
   `optionGroups` input whose own documentation said `options` was **ignored** when it was set —
   two inputs where one silently won. There is one shape now: `options` accepts flat options,
@@ -46,14 +49,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `DsOption` already was. It carries `disabled`, which `ds-select` had and the other two did
   not; disabling a group disables every option in it.
 
-- **`ds-autocomplete`'s panel is the shared dropdown panel again.** It was passing
+- **BREAKING for CSS overrides and one token: `ds-autocomplete`'s panel is the shared dropdown
+  panel again.** It was passing
   `'ds-overlay-pane'` as its overlay's panel class, and that argument REPLACES the default
   `['ds-dropdown-panel', 'ds-overlay-pane']` rather than adding to it — so nothing from the shared
   partial reached it. The panel had `padding: 0` against the other two pickers' `--space-1`, square
-  rows against their `--ds-radius-inner`, and — the part the 0.9.0 notes got wrong — none of
-  `--ds-option-selected-bg-color`, `-label-color`, `-bg-color-hover` or `--ds-option-check-color`
-  did anything. Those notes said "one partial paints select, autocomplete and multi-select alike";
-  now it does.
+  rows against their `--ds-radius-inner`, and none of `--ds-option-selected-bg-color`,
+  `-label-color`, `-bg-color-hover` or `--ds-option-check-color` reached it — set on an
+  autocomplete they did nothing at all. One partial paints all three pickers now.
 
   The panel's classes moved to the shared vocabulary: `.autocomplete-list` → `.dropdown-list`
   inside a new `.dropdown-panel` wrapper, `.autocomplete-optgroup` → `.optgroup`,
@@ -62,20 +65,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `--ds-option-*` hooks replace it and reach all three pickers.
   `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` still work.
 
-- **A settled single value in `ds-autocomplete` ellipsizes instead of wrapping.** Measured before
-  the change: a value 134px wide in a 144px trigger took the trigger from **40px to 63px** — the text
+- **A settled single value in `ds-autocomplete` ellipsizes instead of wrapping.** A value 134px wide in a
+  144px trigger took the trigger from **40px to 63px** — the text
   broke onto a second line and the chevron onto a third. Single mode has no chip row to wrap for, so
   the wrapping had nothing to protect. `valueOverflow="wrap"` restores it; multi mode is untouched,
   its chips already had a measured cap.
 
 ### Added
 
-- **A written contract for the picker family, and a tool that enforces it.**
-  `docs/picker-contract.md` states the five rules the three pickers now share — one meaning per
-  member name, difference only by a stated reason, one panel implementation, no library-invented
-  string without a slot, one way to clip a line. `npm run picker-parity` prints every input, output,
-  model and slot that is NOT shared, so a new divergence is either a line added to the "absent by
-  design" list or a defect.
+- **A written contract for the picker family.**
+  Five rules now hold across the three pickers: one meaning per member name, difference only by a
+  stated reason, one panel implementation, no library-invented string without a slot, and one way
+  to clip a line. A divergence from them is a defect unless the reason is stated.
 
 - **`dsEmptyTemplate` and `dsCreateTemplate`.** "No matches" and "Create «…»" were literals with no
   way to replace them. Both are slots now, on all three pickers and on `ds-autocomplete`
@@ -107,8 +108,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **A compact filter trigger, and a slot to write your own.** `ds-multi-select` takes
   `triggerDisplay="count"`: a `label` caption plus a selected-count `ds-badge` at intrinsic
   width, with an accent border once something is picked. The chip field it replaces grows with the
-  selection, which is why a board toolbar could not use it — one consumer wrote ~250 lines of their
-  own control instead.
+  selection, which is why a dense toolbar could not use it.
 
   `dsPickerTrigger` projects your own trigger contents into `ds-select`, `ds-multi-select` and
   `ds-autocomplete`. **A projected template WINS over `triggerDisplay`**, which is then not read at
@@ -150,7 +150,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ### What you can now DELETE
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
-workaround this release made unnecessary. Generated from the release manifest's `deleteList`.
+workaround this release made unnecessary. Generated from the `deleteList` in the release manifest
+this package ships under `migrations/`.
 
 | If you have                                                       | Delete it, because                                                                                                                                                                                                                                                                                                                                                                             |
 | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

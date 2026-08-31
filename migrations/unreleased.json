@@ -139,8 +139,7 @@
     "ds-multi-select gained option groups, which it never had. A group disables all of its options when its own `disabled` is set.",
     "ds-multi-select and ds-autocomplete gained `label`, `required` and `optional`; ds-multi-select gained `size`. All three existed on ds-select alone.",
     "New slots: dsEmptyTemplate on all three pickers, dsCreateTemplate on ds-autocomplete. ds-select shows an empty row when it has no options, where it used to open a blank panel.",
-    "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false.",
-    "docs/picker-contract.md states the rules the three pickers share, and `npm run picker-parity` lists every member that is not shared."
+    "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false."
   ],
   "deleteList": [
     {
