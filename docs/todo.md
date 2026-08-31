@@ -417,6 +417,8 @@ Stas said keep it in the backlog. Left untouched on purpose.
 
 ## DS-docs showcase
 
+- [ ] **[P3] Sidebar nav labels reflow while the rail animates, the way the brand text used to (recorded 2026-08-12, from the collapse-animation work).** The brand block was fixed by pinning its layout — `white-space: nowrap` plus `overflow: clip` on `.brand` — so it is clipped rather than re-wrapped on every frame of the width transition; measured 31px tall at every width afterwards, against 31px at 280 and 60px at anything under 240 before. The nav links were left alone and still wrap: at a mid-transition width of 150px, `Buttons · group & segmented` breaks onto three lines and unwraps again when the rail settles. Same defect class, same one-line fix — `nowrap` on `.link` and a clip on the scrolling container. **Ask:** confirm the labels should be CLIPPED rather than wrapped in the collapsed/animating state, then apply; the collapsed rail shows icons only, so nothing is lost.
+
 - [ ] **[P3] Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below).** A section-heading toggle that draws a visual "inspect" overlay on the live demos: colour-coded lines/boxes for paddings, gaps, sizes with values+units, plus WHICH token/class drives each value. Read computed styles + `getBoundingClientRect`; map values back to the `--space-*`/`--radius-*`/`--font-size-*` scales. **Rewritten 2026-07-24 → start as a scoped pilot:** spacing-only on ONE section (e.g. button), then generalize. Greenfield, docs-only, no product impact. _(Verified: nothing exists today.)_
 
 ## Component feature gaps
