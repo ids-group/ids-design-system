@@ -68,6 +68,12 @@
   .note.open { border-left-color: var(--error-border); }
   .note b { text-transform: uppercase; font-size: var(--font-size-xs); letter-spacing: var(--letter-spacing-wide); }
   .row.done { opacity: .55; }
+  details.row.done > summary { cursor: pointer; list-style: none; }
+  details.row.done > summary::-webkit-details-marker { display: none; }
+  details.row.done > summary::before { content: '▸'; margin-right: .5rem; opacity: .6; }
+  details.row.done[open] > summary::before { content: '▾'; }
+  details.row.done[open] { opacity: 1; }
+  details.row.done > summary .head { display: inline-flex; }
   .row.contested { border-color: var(--error-border); background: var(--error-subtitle); }
   .head { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: baseline; }
   .id {
@@ -196,233 +202,233 @@
   <p class="sub">Ответы здесь задают дефолт для всех разделов ниже. Если они разойдутся с отдельными
     строками, я буду считать главными отдельные строки.</p>
 
-  <div class="row done">
-    <div class="head"><span class="id">M1</span><span class="q">Держать манифесты по другой планке, чем CHANGELOG?</span><span class="aud both">мета</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">M1</span><span class="q">Держать манифесты по другой планке, чем CHANGELOG?</span><span class="aud both">мета</span></div></summary>
     <p class="note verdict"><b>применено</b> — Проверка по правилу проведена: во всех 22 манифестах ровно одна запись про нашу перестройку (0.10.1 items[5]) — и она остаётся, там TS4114 у консюмера.</p>
     <div class="choice">
       <label><input type="radio" name="M1" data-id="M1-split" checked><span>Да, разные планки: манифест сохраняет всё, чем можно опознать место в коде<span class="did"> — так я и буду делать дальше</span></span></label>
       <label><input type="radio" name="M1" data-id="M1-same"><span>Нет, одна планка на всё публикуемое</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">M2</span><span class="q">Имя неэкспортируемого типа: оставлять, если агент опознаёт по нему ошибку компилятора?</span><span class="aud agent">манифест</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">M2</span><span class="q">Имя неэкспортируемого типа: оставлять, если агент опознаёт по нему ошибку компилятора?</span><span class="aud agent">манифест</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="M2" data-id="M2-keep-named"><span>Оставлять имя, помечая «internal»</span></label>
       <label><input type="radio" name="M2" data-id="M2-keep-plain"><span>Оставлять имя без пометок</span></label>
       <label><input type="radio" name="M2" data-id="M2-drop" checked><span>Убирать, описывать словами<span class="did"> — что я сделал</span></span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">M3</span><span class="q">Локаторы (<code>searchHints</code>, <code>detect</code>) на код, который консюмер физически не мог написать</span><span class="aud agent">манифест</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">M3</span><span class="q">Локаторы (<code>searchHints</code>, <code>detect</code>) на код, который консюмер физически не мог написать</span><span class="aud agent">манифест</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="M3" data-id="M3-keep"><span>Держать локаторы, даже безрезультатные</span></label>
       <label><input type="radio" name="M3" data-id="M3-drop" checked><span>Убирать невозможные<span class="did"> — что я сделал</span></span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">M4</span><span class="q">Поле <code>old</code>, описывающее невозможный код</span><span class="aud agent">манифест</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">M4</span><span class="q">Поле <code>old</code>, описывающее невозможный код</span><span class="aud agent">манифест</span></div></summary>
     <p class="note verdict"><b>применено</b> — Применено: из 0.11.0 убран только class MyField extends DsFieldBase. Пары «было → стало» нигде не тронуты.</p>
     <div class="choice">
       <label><input type="radio" name="M4" data-id="M4-keep"><span>Оставить как есть (локатор ценнее пустого совпадения)</span></label>
       <label><input type="radio" name="M4" data-id="M4-drop" checked><span>Оставить только реально наследуемое<span class="did"> — что я сделал</span></span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">1</span> Конфиденциальность — здесь я уверен, но спрашиваю всё равно</h2>
   <p class="sub">Пакет публикуется на registry.npmjs.org с <code>access: "public"</code>, CHANGELOG едет
     внутри тарбола и рендерится на docs-сайте. Каждый консюмер читает про остальных.</p>
 
-  <div class="row done">
-    <div class="head"><span class="id">C1</span><span class="q">Имена клиентских проектов</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">C1</span><span class="q">Имена клиентских проектов</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="C1" data-id="C1" checked><span>Удалять, заменять на «a consumer»<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="C1" data-id="C1-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">C2</span><span class="q">Описательные заменители клиента</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">C2</span><span class="q">Описательные заменители клиента</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="C2" data-id="C2" checked><span>Удалять тоже<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="C2" data-id="C2-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">C3</span><span class="q">Ключи нашего трекера</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">C3</span><span class="q">Ключи нашего трекера</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="C3" data-id="C3" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="C3" data-id="C3-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">C4</span><span class="q">Имена людей</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">C4</span><span class="q">Имена людей</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="C4" data-id="C4" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="C4" data-id="C4-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">2</span> Ссылки на то, чего у читателя нет</h2>
 
-  <div class="row done">
-    <div class="head"><span class="id">P1</span><span class="q">Пути на наши деки и презентации</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">P1</span><span class="q">Пути на наши деки и презентации</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="P1" data-id="P1" checked><span>Удалять<span class="did"> — сделано в прозе; в комментарии компонента оставлено, т.к. не публикуется</span></span></label>
       <label><input type="radio" name="P1" data-id="P1-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">P2</span><span class="q"><code>docs/todo.md</code> и <code>docs/done.md</code></span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">P2</span><span class="q"><code>docs/todo.md</code> и <code>docs/done.md</code></span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="P2" data-id="P2" checked><span>Удалять там, где публикуется<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="P2" data-id="P2-all"><span>Удалять везде, включая невыезжающие комментарии</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">P3</span><span class="q">Пути в наше дерево: <code>tools/</code>, <code>src/lib/</code>, <code>ds-docs/</code></span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">P3</span><span class="q">Пути в наше дерево: <code>tools/</code>, <code>src/lib/</code>, <code>ds-docs/</code></span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="P3" data-id="P3" checked><span>Заменять на публикуемый путь, иначе удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="P3" data-id="P3-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">P4</span><span class="q">Наши npm-скрипты в инструкциях</span><span class="aud agent">манифест</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">P4</span><span class="q">Наши npm-скрипты в инструкциях</span><span class="aud agent">манифест</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="P4" data-id="P4" checked><span>Заменять на доступный читателю способ<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="P4" data-id="P4-keep"><span>Оставить упоминание как справку «чем это считали у нас»</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">P5</span><span class="q">Идентификаторы наших линт-правил (<code>M039</code>…<code>M042</code>) и хеши коммитов</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">P5</span><span class="q">Идентификаторы наших линт-правил (<code>M039</code>…<code>M042</code>) и хеши коммитов</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="P5" data-id="P5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="P5" data-id="P5-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">3</span> Имена символов — самый спорный раздел</h2>
   <p class="sub">Проверено сборкой пакета: в опубликованном тарболе один плоский <code>.d.ts</code>, один
     FESM-бандл и exports-карта без <code>./lib/*</code>. Дальше разница между двумя группами
     принципиальная.</p>
 
-  <div class="row done">
-    <div class="head"><span class="id">S1</span><span class="q"><code>DsFieldBase</code>, <code>DsMessageBase</code>, <code>DsControlValueAccessor</code>, <code>TimeColumnsComponent</code></span><span class="aud agent">манифест</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">S1</span><span class="q"><code>DsFieldBase</code>, <code>DsMessageBase</code>, <code>DsControlValueAccessor</code>, <code>TimeColumnsComponent</code></span><span class="aud agent">манифест</span></div></summary>
     <p class="note verdict"><b>применено</b> — Проверено: finder ищет по исходникам консюмера (ds-usage-finder.md:15), а это имя туда попасть не может. Удаление ничего не стоило.</p>
     <div class="choice">
       <label><input type="radio" name="S1" data-id="S1-restore"><span>Вернуть имена (и «internal» рядом)</span></label>
       <label><input type="radio" name="S1" data-id="S1-restore-plain"><span>Вернуть имена без пометок</span></label>
       <label><input type="radio" name="S1" data-id="S1-keep-removed" checked><span>Оставить как сделал — без имён<span class="did"> — что я сделал</span></span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">S2</span><span class="q"><code>DsFieldBase</code> / <code>DsControlValueAccessor</code> в <code>searchHints</code> 0.10.1</span><span class="aud agent">манифест</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">S2</span><span class="q"><code>DsFieldBase</code> / <code>DsControlValueAccessor</code> в <code>searchHints</code> 0.10.1</span><span class="aud agent">манифест</span></div></summary>
     <p class="note verdict"><b>применено</b> — Осталось ловящее: extends TextareaComponent / InputComponent, reserveMessage, touched, и голое "extends " в detect.</p>
     <div class="choice">
       <label><input type="radio" name="S2" data-id="S2-restore"><span>Вернуть в <code>searchHints</code></span></label>
       <label><input type="radio" name="S2" data-id="S2-keep-removed" checked><span>Оставить удалёнными<span class="did"> — что я сделал</span></span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">S3</span><span class="q"><code>extends DsFieldBase</code> в <code>searchHints</code> и <code>detect</code> 0.11.0</span><span class="aud agent">манифест</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">S3</span><span class="q"><code>extends DsFieldBase</code> в <code>searchHints</code> и <code>detect</code> 0.11.0</span><span class="aud agent">манифест</span></div></summary>
     <p class="note verdict"><b>применено</b> — Осталось ловящее: extends TableComponent / ButtonComponent / IconButtonComponent / SidenavComponent + коды TS4114 и TS2415 — они и опознают ошибку сборки, надёжнее имени класса.</p>
     <div class="choice">
       <label><input type="radio" name="S3" data-id="S3-restore"><span>Вернуть все четыре места</span></label>
       <label><input type="radio" name="S3" data-id="S3-restore-locators"><span>Вернуть только локаторы (<code>searchHints</code>/<code>detect</code>), <code>old</code>/<code>verify</code> оставить</span></label>
       <label><input type="radio" name="S3" data-id="S3-keep-removed" checked><span>Оставить удалёнными<span class="did"> — что я сделал</span></span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">S4</span><span class="q"><code>resolveFieldMessage</code> — какие компоненты затронуты</span><span class="aud agent">манифест</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">S4</span><span class="q"><code>resolveFieldMessage</code> — какие компоненты затронуты</span><span class="aud agent">манифест</span></div></summary>
     <p class="note verdict"><b>применено</b> — Область та же: «все 14 компонентов». Имя функции в опубликованных типах отсутствует вовсе.</p>
     <div class="choice">
       <label><input type="radio" name="S4" data-id="S4-restore"><span>Вернуть имя функции</span></label>
       <label><input type="radio" name="S4" data-id="S4-keep-removed" checked><span>Оставить «все 14 компонентов»<span class="did"> — что я сделал</span></span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">S5</span><span class="q"><code>valueControlBridge</code>, <code>prepareOverlayEnter</code>, <code>disposeWithLeave</code>, <code>FieldMessageComponent</code></span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">S5</span><span class="q"><code>valueControlBridge</code>, <code>prepareOverlayEnter</code>, <code>disposeWithLeave</code>, <code>FieldMessageComponent</code></span><span class="aud human">проза</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="S5" data-id="S5" checked><span>Удалять из прозы<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="S5" data-id="S5-restore"><span>Вернуть</span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">4</span> Археология решений и наш процесс</h2>
 
-  <div class="row done">
-    <div class="head"><span class="id">A1</span><span class="q">Как мы выбирали: «ORIGINAL:», «turned out», «мы сначала думали»</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">A1</span><span class="q">Как мы выбирали: «ORIGINAL:», «turned out», «мы сначала думали»</span><span class="aud human">проза</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="A1" data-id="A1" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A1" data-id="A1-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">A2</span><span class="q">Отвергнутые альтернативы</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">A2</span><span class="q">Отвергнутые альтернативы</span><span class="aud human">проза</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="A2" data-id="A2" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A2" data-id="A2-keep"><span>Оставлять, если объясняет, почему API именно такой</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">A3</span><span class="q">Наш процесс: релизные гейты, бэклог, «the deck», «dogfooding», аудиты консюмеров</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">A3</span><span class="q">Наш процесс: релизные гейты, бэклог, «the deck», «dogfooding», аудиты консюмеров</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="A3" data-id="A3" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A3" data-id="A3-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">A4</span><span class="q">Самобичевание</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">A4</span><span class="q">Самобичевание</span><span class="aud human">проза</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="A4" data-id="A4" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A4" data-id="A4-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">A5</span><span class="q">Провенанс нашей работы</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">A5</span><span class="q">Провенанс нашей работы</span><span class="aud human">проза</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="A5" data-id="A5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="A5" data-id="A5-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">5</span> Числа и замеры</h2>
 
-  <div class="row done">
-    <div class="head"><span class="id">N1</span><span class="q">Замеры, доказывающие, что мы поработали</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">N1</span><span class="q">Замеры, доказывающие, что мы поработали</span><span class="aud human">проза</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="N1" data-id="N1" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="N1" data-id="N1-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">N2</span><span class="q">Числа СЛОМАННОГО состояния (до фикса)</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">N2</span><span class="q">Числа СЛОМАННОГО состояния (до фикса)</span><span class="aud human">проза</span></div></summary>
     <p class="note verdict"><b>применено</b> — Пары вернулись: 2.54 → 3.41:1, 1.11 → 2.91:1, 4.17 → 5.19:1, 1.46 → 3.58:1, хрома 0.036 → 0.099.</p>
     <div class="choice">
       <label><input type="radio" name="N2" data-id="N2" checked><span>Оставлять только «после»<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="N2" data-id="N2-keep"><span>Оставлять «до → после» целиком</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">N3</span><span class="q">Числа, которые читателю нужны для действия</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">N3</span><span class="q">Числа, которые читателю нужны для действия</span><span class="aud both">оба</span></div></summary>
     <p class="note open"><b>нужен ответ</b> — Пример, который ты просил: «`ds-modal` divider spacing по умолчанию 0» и «контраст не ниже 4.5:1 для обычного текста» — числа, без которых читатель не сможет действовать. Их я не трогал нигде.</p>
     <pre><b>Какие числа остаются в любом случае</b>
 
@@ -438,51 +444,51 @@
       <label><input type="radio" name="N3" data-id="N3" checked><span>Не трогать никогда<span class="did"> — так и сделано</span></span></label>
       <label><input type="radio" name="N3" data-id="N3-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">N4</span><span class="q">Цензы консюмеров</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">N4</span><span class="q">Цензы консюмеров</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="N4" data-id="N4" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="N4" data-id="N4-generalise"><span>Обобщать («часто пишут вручную»), а не удалять</span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">6</span> Структура и записи целиком</h2>
 
-  <div class="row done">
-    <div class="head"><span class="id">X1</span><span class="q">Записи только про docs-сайт</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">X1</span><span class="q">Записи только про docs-сайт</span><span class="aud human">проза</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="X1" data-id="X1" checked><span>Удалять целиком<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X1" data-id="X1-keep"><span>Оставлять — docs-сайт тоже наша поверхность</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">X2</span><span class="q">Дубликаты записей</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">X2</span><span class="q">Дубликаты записей</span><span class="aud human">проза</span></div></summary>
     <p class="note verdict"><b>применено</b> — Переделано на слияние. Дубликаты оказались НЕ copy-paste: в удалённых копиях был свой материал, и он возвращён — (A) почему фикс ограничен `standard`: трогать общую базу значило посадить невидимый белый глиф на бледную заливку `filled`; (B) почему `success`/`label`/`required`/`optional` НЕ переехали в общую базу (они есть у 9/9/7/5 полей). Историю дрейфа не вернул — это археология, её убирает A1.</p>
     <div class="choice">
       <label><input type="radio" name="X2" data-id="X2" checked><span>Удалять копию, оставлять лучшую<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X2" data-id="X2-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">X3</span><span class="q">Ломающая запись, стоявшая под <code>### Added</code></span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">X3</span><span class="q">Ломающая запись, стоявшая под <code>### Added</code></span><span class="aud human">проза</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="X3" data-id="X3" checked><span>Переносить в правильную секцию<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X3" data-id="X3-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">X4</span><span class="q">Порядок секций внутри релизов</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">X4</span><span class="q">Порядок секций внутри релизов</span><span class="aud human">проза</span></div></summary>
     <p class="note verdict"><b>применено</b> — Применено: 6 релизов переставлены, 17 уже были в каноне. Порядок: Breaking → Added → Changed → Removed → Fixed → DELETE. Сверено, что мультимножество слов не изменилось.</p>
     <div class="choice">
       <label><input type="radio" name="X4" data-id="X4-leave" checked><span>Не трогать<span class="did"> — так и оставлено</span></span></label>
       <label><input type="radio" name="X4" data-id="X4-normalise"><span>Привести все 23 релиза к одному порядку</span></label>
     </div>
-  </div>
+  </details>
 
   <div class="row">
     <div class="head"><span class="id">X5</span><span class="q">Объяснения внутренней архитектуры</span><span class="aud human">проза</span></div>
@@ -511,24 +517,24 @@
     <code>.ts</code> доезжает в FESM-бандл, JSDoc — в <code>.d.ts</code>. Комментарии
     <code>*.component.scss</code> компилятор выбрасывает — проверено грепом собранного вывода.</p>
 
-  <div class="row done">
-    <div class="head"><span class="id">R1</span><span class="q">Комментарии в <code>styles/</code> и <code>themes/</code></span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">R1</span><span class="q">Комментарии в <code>styles/</code> и <code>themes/</code></span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="R1" data-id="R1" checked><span>Чистить<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="R1" data-id="R1-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">R2</span><span class="q">Комментарии в <code>.ts</code> (доезжают в бандл и <code>.d.ts</code>)</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">R2</span><span class="q">Комментарии в <code>.ts</code> (доезжают в бандл и <code>.d.ts</code>)</span><span class="aud both">оба</span></div></summary>
     <div class="choice">
       <label><input type="radio" name="R2" data-id="R2" checked><span>Чистить<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="R2" data-id="R2-keep"><span>Оставить как было</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row done">
-    <div class="head"><span class="id">R3</span><span class="q">Комментарии в <code>*.component.scss</code> (НЕ публикуются)</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">R3</span><span class="q">Комментарии в <code>*.component.scss</code> (НЕ публикуются)</span><span class="aud both">оба</span></div></summary>
     <p class="note verdict"><b>применено</b> — Вычищено: `pinkmoon` → «the approach that pins the masthead…», ссылка на деку → «the trade taken deliberately», `PIN-475` → «a duplicate focus ring». Комментарии сбалансированы, остатков в src/lib нет.</p>
     <pre><b>Комментарии в *.component.scss — их компилятор выбрасывает</b>
 
@@ -549,12 +555,12 @@
       <label><input type="radio" name="R3" data-id="R3-leave" checked><span>Оставить<span class="did"> — так и оставлено</span></span></label>
       <label><input type="radio" name="R3" data-id="R3-clean"><span>Вычистить и их, для гигиены</span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">8</span> Гейт</h2>
 
-    <div class="row done">
-    <div class="head"><span class="id">G1</span><span class="q">Робот-проверяльщик: оставить его правило про имена классов?</span><span class="aud both">оба</span></div>
+    <details class="row done">
+    <summary><div class="head"><span class="id">G1</span><span class="q">Робот-проверяльщик: оставить его правило про имена классов?</span><span class="aud both">оба</span></div></summary>
     <p class="why"><b>Что это вообще.</b> Перед мержем и релизом запускается скрипт. Он читает все
       публикуемые тексты и ругается, если находит то, чего читателю не понять. Одно из его правил —
       про имена классов: <b>не называй класс, который консюмер не может к себе импортировать</b>.</p>
@@ -577,10 +583,10 @@
       <label><input type="radio" name="G1" data-id="G1-prose-only"><span>Проверять только CHANGELOG, манифесты не трогать</span></label>
       <label><input type="radio" name="G1" data-id="G1-off"><span>Выключить правило</span></label>
     </div>
-  </div>
+  </details>
 
-    <div class="row done">
-    <div class="head"><span class="id">G2</span><span class="q">Памятка «что нельзя писать в CHANGELOG» лежит вне репозитория. Перенести?</span><span class="aud both">оба</span></div>
+    <details class="row done">
+    <summary><div class="head"><span class="id">G2</span><span class="q">Памятка «что нельзя писать в CHANGELOG» лежит вне репозитория. Перенести?</span><span class="aud both">оба</span></div></summary>
     <p class="why"><b>Что это.</b> Я записал список запретов (не называть клиентов, тикеты, людей, наши
       пути) в файл, который читает агент, когда пишет записи в CHANGELOG.</p>
     <p class="why"><b>В чём загвоздка.</b> Этот файл лежит в папке <code>.claude/</code>, а она целиком
@@ -602,6 +608,127 @@
     <div class="choice">
       <label><input type="radio" name="G2" data-id="G2-local" checked><span>Оставить локальной</span></label>
       <label><input type="radio" name="G2" data-id="G2-repo"><span>Перенести в репозиторий</span></label>
+    </div>
+  </details>
+
+
+  <h2><span class="n">9</span> Гейт — вопросы этой итерации</h2>
+
+  <p class="why" style="margin:0 0 1.2rem">G1 и G2 выше решены и свёрнуты. Ниже — то, что я
+    поменял в гейте <b>сам</b>, после того как адверсальное ревью пробило его фикстурами. Каждый
+    пункт менял поведение, поэтому каждый твой.</p>
+
+  <div class="row">
+    <div class="head"><span class="id">G3</span><span class="q">Гейт теперь блокирует и PR, и релиз. Так и оставить?</span><span class="aud both">оба</span></div>
+    <p class="why"><b>Что изменилось.</b> Ревьюер заметил, что <code>changelog-lint</code> стоял
+      в PR-гейте и в <code>lint:all</code>, но <b>не</b> в <code>tools/preflight.mjs</code> — то есть
+      на релизном пути его не было вообще. Релиз, срезанный с ветки, где PR-гейт не прогонялся,
+      публиковался в реестр непроверенным. Я добавил его в preflight.</p>
+    <p class="why"><b>Цена.</b> Сейчас 0 ошибок на 304 артефактах, так что платить нечего до первого
+      ложного срабатывания. Два таких я уже убрал: <code>npm run lint</code> и hex-цвет
+      <code>#1a2b3c4d</code>, который читался как хеш коммита.</p>
+    <div class="choice">
+      <label><input type="radio" name="G3" data-id="G3-both" checked><span>Блокирующим везде<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G3" data-id="G3-release-only"><span>Только релиз, PR — отчётом</span></label>
+      <label><input type="radio" name="G3" data-id="G3-report"><span>Везде отчётом, нигде не блокирует</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">G4</span><span class="q">Слово «internal» теперь должно стоять рядом с именем, а не где-то в абзаце</span><span class="aud both">оба</span></div>
+    <p class="why"><b>Что было сломано.</b> Правило про неэкспортируемые имена молчало, если слово
+      «internal» встречалось <b>где угодно в пределах 800 символов</b>. В CHANGELOG таких слов 27,
+      а строки по ~100 символов — значит каждое снимало правило примерно с восьми строк в обе
+      стороны. Ревьюер доказал фикстурой: «internal cache» в одном пункте глушило
+      <code>DsFieldBase</code> в другом. Правило молчало примерно на десятой части файла.</p>
+    <p class="why"><b>Что я сделал.</b> Сжал окно до ±60 символов вокруг самого имени.</p>
+    <pre><b>Чего это стоило в текстах</b>
+
+<span class="del">БЫЛО (проходило, потому что «internal» стояло абзацем выше):</span>
+  «…`DsFieldBase`'s own surface is unchanged…»
+  «…reaches either directly or through `DsControlValueAccessor`…»
+
+<span class="add">СТАЛО (пришлось переписать 6 мест):</span>
+  «…**That internal base's own surface is unchanged**…»
+  «…reaches either directly or through the internal `DsControlValueAccessor`…»</pre>
+    <div class="choice">
+      <label><input type="radio" name="G4" data-id="G4-tight" checked><span>Оставить ±60<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G4" data-id="G4-sentence"><span>Требовать в том же предложении, а не по символам</span></label>
+      <label><input type="radio" name="G4" data-id="G4-wide"><span>Вернуть широкое окно — переписывать тексты дороже</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">G5</span><span class="q">Правило про имена людей теперь ловит форму, а не список</span><span class="aud both">оба</span></div>
+    <p class="why"><b>Почему.</b> В списке было два имени — твоё и Мишино. «Ask Alex Park» проходило
+      насквозь, хотя CONTRIBUTING запрещает <b>любое</b> имя. Я добавил два шаблона:
+      «Found/Reported/Raised/Spotted/Noticed/Flagged/Requested by &lt;Имя&gt;» и «Ask &lt;Имя&gt; &lt;Фамилия&gt;».</p>
+    <p class="why"><b>Риск, который я вижу.</b> После «by» может стоять не человек, а инструмент:
+      «Reported by Chrome», «Flagged by Lighthouse», «Requested by Angular». Такое будет ругаться
+      ложно. Сейчас в файлах таких мест нет, но в следующем релизе легко появится.</p>
+    <div class="choice">
+      <label><input type="radio" name="G5" data-id="G5-keep" checked><span>Оставить шаблоны<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G5" data-id="G5-allowlist"><span>Оставить, но завести список исключений (Chrome, Lighthouse, Angular…)</span></label>
+      <label><input type="radio" name="G5" data-id="G5-names-only"><span>Вернуть только список имён — меньше шума</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">G6</span><span class="q">Порог: гейт падает, если нашёл меньше 100 артефактов вместо 304</span><span class="aud dev">разработчику</span></div>
+    <p class="why"><b>Зачем вообще.</b> Оба резолвера деградировали молча:
+      <code>publishedFiles()</code> фильтрует по <code>existsSync</code>, а
+      <code>shippedSources()</code> читает <code>assets ?? []</code> из <code>ng-package.json</code>.
+      Переименуй ключ — и весь свип сжимается до четырёх документов или до нуля, а гейт продолжает
+      печатать <b>OK</b>. Зелёная строка была единственным доказательством и ничего не доказывала.</p>
+    <p class="why"><b>Число 100 я взял сам</b> при текущих 304. Оно ловит обвал, но не дрейф: если
+      тихо отвалится половина исходников, гейт этого не заметит.</p>
+    <div class="choice">
+      <label><input type="radio" name="G6" data-id="G6-100" checked><span>Оставить 100<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G6" data-id="G6-pin"><span>Зафиксировать точное число и обновлять руками — ловит и дрейф</span></label>
+      <label><input type="radio" name="G6" data-id="G6-none"><span>Убрать порог</span></label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="head"><span class="id">G7</span><span class="q">Десять родовых имён скриптов исключены из правила про «наши» команды</span><span class="aud dev">разработчику</span></div>
+    <p class="why"><b>Что было.</b> Правило брало <b>все</b> ключи из <code>package.json</code>
+      scripts, включая <code>lint</code>, <code>build</code>, <code>test</code>, <code>format</code>.
+      Совет «run <code>npm run lint</code> afterwards» — который у консюмера работает — гейт называл
+      «скриптом, который есть только в этом репозитории». Хуже того, собственная фикстура селф-теста
+      использовала именно <code>npm run lint</code>, то есть ложное срабатывание было несущим:
+      ослабить правило означало покрасить селф-тест.</p>
+    <p class="why"><b>Что исключил:</b> <code>ng, start, dev, watch, build, test, lint, format,
+      serve, clean</code> — и по первому сегменту, так что <code>build:lib</code> тоже проходит.
+      <code>class-surface</code>, <code>changelog-lint</code> и прочие наши — ловятся.</p>
+    <div class="choice">
+      <label><input type="radio" name="G7" data-id="G7-generic" checked><span>Оставить список исключений<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G7" data-id="G7-exact"><span>Не по первому сегменту, а точным совпадением (тогда build:lib ругается)</span></label>
+      <label><input type="radio" name="G7" data-id="G7-all"><span>Ловить все скрипты как раньше</span></label>
+    </div>
+  </div>
+
+  <h2><span class="n">10</span> Что надо знать, решать нечего</h2>
+
+  <div class="row">
+    <div class="head"><span class="id">F1</span><span class="q">Четыре находки этой итерации</span><span class="aud both">оба</span></div>
+    <p class="why"><b>1. Ничего не доехало до npm.</b> Ты сбросил <code>dev</code> и форс-пушнул до
+      свипа, релиз не резался, ветка не публиковалась. Всё, что нашли оба раунда ревью, жило только
+      в ветке — у консюмеров нулевой эффект.</p>
+    <p class="why"><b>2. Гейт был слеп примерно на десятой части CHANGELOG</b> до вчера (см. G4), и
+      его вообще не было на релизном пути (см. G3). То есть тот самый механизм, который я построил,
+      чтобы доказать чистоту свипа, сам был непроверен.</p>
+    <p class="why"><b>3. Три файла я правил зря.</b>
+      <code>auth-layout.component.scss</code>, <code>button.component.scss</code>,
+      <code>search.component.scss</code> — комментарии компонентных стилей вырезаются при сборке и
+      не публикуются. Две правки из трёх при этом потеряли смысл («which is the trade taken
+      deliberately» перестало называть сам компромисс). Откатил все три.</p>
+    <p class="why"><b>4. В коде я не изменил ни строки.</b> 124 изменённые строки в 36 файлах
+      <code>src/</code> — все внутри комментариев. Проверил конечным автоматом по блочным
+      комментариям, отдельно на старом и новом файле; независимо подтвердил второй ревьюер, сверив с
+      <code>sourcesContent</code> собранного бандла.</p>
+    <div class="choice">
+      <label><input type="radio" name="F1" data-id="F1-ack"><span>Понял</span></label>
+      <label><input type="radio" name="F1" data-id="F1-ask"><span>Есть вопрос — отвечу в чате</span></label>
     </div>
   </div>
 
