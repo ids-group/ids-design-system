@@ -10,6 +10,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
+  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` gained members, and
+  `DsOptionTemplateDirective`, `DsChipTemplateDirective` and `DsPickerTriggerDirective` are new
+  classes. Subclassing is unsupported but consumers do it, and a member of yours that shares a name
+  with one of ours stops the build. Rename yours, or add `override` if you meant to replace ours —
+  the compiler enumerates every collision, so building after the upgrade is the whole check.
+
 - **One `options` input takes groups on all three pickers.** `ds-multi-select` had no groups at
   all; `ds-select` took them mixed into `options`; `ds-autocomplete` took them in a second
   `optionGroups` input whose own documentation said `options` was **ignored** when it was set —

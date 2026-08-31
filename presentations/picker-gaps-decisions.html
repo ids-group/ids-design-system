@@ -679,19 +679,21 @@
       <table>
         <thead><tr><th>§</th><th>Что решаем</th><th>Рекомендация</th><th>Статус</th></tr></thead>
         <tbody>
-          <tr><td><a href="#p1">1</a></td><td>компактный триггер фильтра</td><td class="rec"><strong>O1</strong> слот + пресет <code>triggerDisplay</code></td><td><span class="decided">решено</span></td></tr>
-          <tr><td><a href="#p2">2</a></td><td>отвязать панель от триггера</td><td class="rec"><strong>O3</strong> вход <code>width</code> + токены</td><td><span class="decided">решено</span></td></tr>
-          <tr><td><a href="#p3">3</a></td><td>произвольный визуал опции</td><td class="rec"><strong>O2</strong> два слота: строка и чип</td><td><span class="decided">решено</span></td></tr>
+          <tr><td><a href="#p1">1</a></td><td>компактный триггер фильтра</td><td class="rec"><strong>O1</strong> слот + пресет <code>triggerDisplay</code></td><td><span class="decided">сделано</span></td></tr>
+          <tr><td><a href="#p2">2</a></td><td>отвязать панель от триггера</td><td class="rec"><strong>O3</strong> вход <code>width</code> + токены</td><td><span class="decided">сделано</span></td></tr>
+          <tr><td><a href="#p3">3</a></td><td>произвольный визуал опции</td><td class="rec"><strong>O2</strong> два слота: строка и чип</td><td><span class="decided">сделано</span></td></tr>
           <tr><td><a href="#p5">4</a></td><td>скрыть поиск на коротком списке</td><td class="rec"><strong>O4</strong> один вход: <code>boolean | number</code></td><td><span class="risk default">на выбор</span></td></tr>
-          <tr><td><a href="#p6">5</a></td><td>свести две формы групп к одной</td><td class="rec"><strong>U1</strong> один вход, union</td><td><span class="decided">решено</span></td></tr>
-          <tr><td><a href="#p8">6</a></td><td>одна строка значения</td><td class="rec"><strong>O1</strong> многоточие по умолчанию</td><td><span class="risk default">на выбор</span></td></tr>
-          <tr><td><a href="#p9">7</a></td><td>панель автокомплита</td><td class="rec"><strong>O1</strong> вернуть в общий файл стилей</td><td><span class="risk default">на выбор</span></td></tr>
+          <tr><td><a href="#p6">5</a></td><td>свести две формы групп к одной</td><td class="rec"><strong>U1</strong> один вход, union</td><td><span class="decided">сделано</span></td></tr>
+          <tr><td><a href="#p8">6</a></td><td>одна строка значения</td><td class="rec"><strong>O1</strong> многоточие по умолчанию</td><td><span class="decided">сделано</span></td></tr>
+          <tr><td><a href="#p9">7</a></td><td>панель автокомплита</td><td class="rec"><strong>O1</strong> вернуть в общий файл стилей</td><td><span class="decided">сделано</span></td></tr>
         </tbody>
       </table>
     </div>
     <div class="headline">
-      Ломающие изменения здесь не считаются ценой — платим только запись в CHANGELOG и строку
-      миграции. Три секции уже решены, четыре ждут выбора.
+      <strong>Шесть из семи реализованы и проверены в живом приложении.</strong> Осталась одна —
+      §4: выбрать между <strong>O4</strong> (один вход <code>searchable: boolean | number</code>) и
+      <strong>O1</strong> (два входа). Ломающие изменения ценой не считаются: платим записью в
+      CHANGELOG и строкой миграции.
     </div>
   </div>
 
