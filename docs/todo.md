@@ -222,7 +222,6 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
-  Found while running a UI review over `presentations/implemented/picker-gaps-decisions.html`; the deck itself was fixed by taking the text off the failing colour and leaving the tint to carry the signal.
 
 # Asks — a consumer or Stas asked for it
 
@@ -410,9 +409,8 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
   a NUMBER (`size`, falling back to `DS_CONFIG.icon.size`) and writes `width`/`height` attributes, while
   publishing `--ds-icon-size` OUTWARD as an inline custom property. So the scale is only usable by
   hand-written CSS on someone else's svg, and an ancestor cannot say "icons in here are 14px" the way it
-  can say that about every other dimension in the library. **Found while adding the field-message state
-  glyph:** the natural hook would have been a CSS token, and the only route to one was `::ng-deep` into
-  `ds-icon`'s template — so that feature took a config value instead, and the glyph is a hardcoded 14px.
+  can say that about every other dimension in the library. **The natural hook would be a CSS token, and the only route to one is `::ng-deep` into
+  `ds-icon`'s template** — so that feature took a config value instead, and the glyph is a hardcoded 14px.
   **The shape of the fix:** size the svg from `var(--ds-icon-size, <attr fallback>)` in `ds-icon`'s own
   (global) styles, and set the inline `--ds-icon-size` ONLY when `size` is explicitly bound — an unbound
   icon then inherits whatever an ancestor declares, and a bound one still wins. **Not urgent and not
