@@ -9,7 +9,6 @@
     tokens, so a brand re-skin propagates without code changes.
   </span>
 
-  <!-- ============================================================ Secondary role -->
   <h3 class="block-title t-h4">
     Secondary role
   </h3>
@@ -51,21 +50,21 @@
 
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--secondary)'"
         >
         </div>
 
-        <div class="swatch__meta">
+        <div class="swatch-meta">
           <div class="t-s-bold">
             secondary
           </div>
 
-          <code class="swatch__token t-mono-inline">
+          <code class="swatch-token t-mono-inline">
             --secondary
           </code>
 
-          <code class="swatch__value t-mono-inline">
+          <code class="swatch-value t-mono-inline">
             var(--secondary)
           </code>
         </div>
@@ -73,21 +72,21 @@
 
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--secondary-strong)'"
         >
         </div>
 
-        <div class="swatch__meta">
+        <div class="swatch-meta">
           <div class="t-s-bold">
             secondary-strong
           </div>
 
-          <code class="swatch__token t-mono-inline">
+          <code class="swatch-token t-mono-inline">
             --secondary-strong
           </code>
 
-          <code class="swatch__value t-mono-inline">
+          <code class="swatch-value t-mono-inline">
             var(--secondary-strong)
           </code>
         </div>
@@ -95,21 +94,21 @@
 
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--secondary-subtitle)'"
         >
         </div>
 
-        <div class="swatch__meta">
+        <div class="swatch-meta">
           <div class="t-s-bold">
             secondary-subtitle
           </div>
 
-          <code class="swatch__token t-mono-inline">
+          <code class="swatch-token t-mono-inline">
             --secondary-subtitle
           </code>
 
-          <code class="swatch__value t-mono-inline">
+          <code class="swatch-value t-mono-inline">
             var(--secondary-subtitle)
           </code>
         </div>
@@ -117,21 +116,21 @@
 
       <div class="swatch">
         <div
-          class="swatch__chip"
+          class="swatch-chip"
           [style.background]="'var(--secondary-on)'"
         >
         </div>
 
-        <div class="swatch__meta">
+        <div class="swatch-meta">
           <div class="t-s-bold">
             secondary-on
           </div>
 
-          <code class="swatch__token t-mono-inline">
+          <code class="swatch-token t-mono-inline">
             --secondary-on
           </code>
 
-          <code class="swatch__value t-mono-inline">
+          <code class="swatch-value t-mono-inline">
             var(--secondary-on)
           </code>
         </div>
@@ -139,7 +138,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ Secondary in use -->
   <h3 class="block-title t-h4">
     Secondary in use
   </h3>
@@ -180,7 +178,7 @@
         ds-sidenav-item (active rail)
       </div>
 
-      <ds-sidenav>
+      <ds-sidenav ds-color="secondary">
         <ds-sidenav-item
           label="Inactive"
           icon="users"
@@ -199,7 +197,7 @@
       </ds-sidenav>
 
       <code class="t-mono-inline">
-        &lt;ds-sidenav-item [active]="true"&gt;
+        &lt;ds-sidenav ds-color="secondary"&gt;
       </code>
     </div>
 
@@ -293,7 +291,6 @@
     </code> becomes Coral (#FF6156).
   </p>
 
-  <!-- ============================================================ Tertiary in use -->
   <h3 class="block-title t-h4">
     Tertiary in use
   </h3>
@@ -301,8 +298,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       --tertiary
-    </code> is the third brand hue (violet
-    family) with a full ramp (<code class="t-mono-inline"
+    </code> is the third brand hue
+    (violet family) with a full ramp (<code class="t-mono-inline"
       >-hover / -strong / -subtitle / -muted</code
     >). Fewer touchpoints than <code class="t-mono-inline">--secondary</code> —
     today it drives the <code class="t-mono-inline">tertiary</code> button
@@ -377,7 +374,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ Semantic groups -->
   <h3 class="block-title t-h4">
     Semantic roles
   </h3>
@@ -397,12 +393,12 @@
         @for (swatch of group.swatches; track swatch.token) {
           <div class="swatch">
             <div
-              class="swatch__chip"
+              class="swatch-chip"
               [style.background]="'var(' + swatch.token + ')'"
             >
             </div>
 
-            <div class="swatch__meta">
+            <div class="swatch-meta">
               <div
                 class="t-s-bold"
                 [style.color]="
@@ -414,11 +410,11 @@
                 {{ swatch.name }}
               </div>
 
-              <code class="swatch__token t-mono-inline">
+              <code class="swatch-token t-mono-inline">
                 {{ swatch.token }}
               </code>
 
-              <code class="swatch__value t-mono-inline">
+              <code class="swatch-value t-mono-inline">
                 var({{ swatch.token }})
               </code>
             </div>
@@ -428,7 +424,6 @@
     }
   </div>
 
-  <!-- ============================================================ Primitive ramps -->
   <h3 class="block-title t-h4">
     Primitive ramps
   </h3>
@@ -442,29 +437,29 @@
 
   @for (ramp of ramps; track ramp.prefix) {
     <div class="ramp">
-      <div class="ramp__head">
+      <div class="ramp-head">
         <div class="t-overline">
           {{ ramp.label }}
         </div>
 
-        <div class="ramp__desc t-s">
+        <div class="ramp-desc t-s">
           {{ ramp.desc }}
         </div>
       </div>
 
-      <div class="ramp__row">
+      <div class="ramp-row">
         @for (stop of ramp.stops; track stop) {
-          <div class="ramp__stop">
+          <div class="ramp-stop">
             <div
-              class="ramp__chip"
+              class="ramp-chip"
               [style.background]="'var(--' + ramp.prefix + '-' + stop + ')'"
             >
-              <span class="ramp__num t-mono-inline">
+              <span class="ramp-num t-mono-inline">
                 {{ stop }}
               </span>
             </div>
 
-            <code class="ramp__var t-mono-inline">
+            <code class="ramp-var t-mono-inline">
               --{{ ramp.prefix }}-{{ stop }}
             </code>
           </div>
@@ -473,7 +468,6 @@
     </div>
   }
 
-  <!-- ============================================================ Halo proof -->
   <h3 class="block-title t-h4">
     Focus halo proof
   </h3>
@@ -492,7 +486,7 @@
 
   <div class="halo-stage">
     <div class="halo-cell">
-      <div class="halo-stage__well">
+      <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--ring"
           type="button"
@@ -501,8 +495,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           --focus-ring
         </div>
 
@@ -513,7 +507,7 @@
     </div>
 
     <div class="halo-cell">
-      <div class="halo-stage__well">
+      <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--field"
           type="button"
@@ -522,8 +516,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           --focus-field
         </div>
 
@@ -534,7 +528,7 @@
     </div>
 
     <div class="halo-cell">
-      <div class="halo-stage__well">
+      <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--error"
           type="button"
@@ -543,8 +537,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           --focus-ring-error
         </div>
 
@@ -555,7 +549,7 @@
     </div>
 
     <div class="halo-cell">
-      <div class="halo-stage__well halo-stage__well--inverted">
+      <div class="halo-stage-well halo-stage-well--inverted">
         <button
           class="halo-demo halo-demo--inverted"
           type="button"
@@ -564,8 +558,8 @@
         </button>
       </div>
 
-      <div class="halo-cell__label">
-        <div class="halo-cell__title">
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
           --focus-ring-inverted
         </div>
 
@@ -576,7 +570,212 @@
     </div>
   </div>
 
-  <!-- ============================================================ Surface contrast -->
+  <h3 class="block-title t-h4">
+    Switching the focus style brand-wide
+  </h3>
+
+  <p class="block-desc t-s">
+    The two families above are the default split — a soft halo on fields, a
+    crisp double ring on controls. Set
+    <code class="t-mono-inline">
+      data-focus
+    </code> on
+    <code class="t-mono-inline">
+      &lt;html&gt;
+    </code> to change it everywhere at
+    once: <code class="t-mono-inline"> ring </code> puts the double ring on
+    fields too, <code class="t-mono-inline"> field </code> puts the halo on
+    controls, <code class="t-mono-inline"> edge </code> is a hairline flush
+    against the element, and <code class="t-mono-inline"> outline </code> swaps
+    the shadow for a real <code class="t-mono-inline"> outline </code>. Omit the
+    attribute and nothing changes. It works because 20 components already
+    resolve through the
+    <code class="t-mono-inline">
+      --ds-field-focus-shadow
+    </code> /
+    <code class="t-mono-inline">
+      --ds-control-focus-shadow
+    </code> roles, so the
+    switch only has to retarget two roles rather than reach every component.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Anything focusable that styles nothing itself still gets a ring.
+    </strong>
+    The library emits one base rule —
+    <code class="t-mono-inline">
+      :where(:focus-visible)
+    </code> with
+    <code class="t-mono-inline">
+      --ds-control-focus-shadow
+    </code> — at zero
+    specificity, so a component rule and your own CSS both out-rank it. Without
+    it a close button inside <code class="t-mono-inline"> ds-alert </code>, a
+    link in projected content, or a plain
+    <code class="t-mono-inline">
+      &lt;button&gt;
+    </code> of yours fell through to
+    the browser default, which in Chrome is a black
+    <code class="t-mono-inline">
+      outline: auto
+    </code> — visibly foreign beside
+    the DS ring. Audited across the docs: 247 focusable elements on one page,
+    none left without an indicator.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Building your own ringed shell? Silence the control inside — and name it
+  </h3>
+
+  <p class="block-desc t-s">
+    <strong>
+      The base rule is a box-shadow, so
+      <code class="t-mono-inline">
+        outline: 0
+      </code> cannot cancel it.
+    </strong>
+    If your composite control paints a ring on
+    <code class="t-mono-inline">
+      :focus-within
+    </code> — a field box, a
+    segmented row, a toolbar cell — the element inside it still gets the base
+    ring, and the result is two: a tight one on the control and the halo on the
+    box. This is the trap the DS itself fell into twice, in
+    <code class="t-mono-inline">
+      ds-input
+    </code> and
+    <code class="t-mono-inline">
+      ds-textarea
+    </code>, both found by measuring in
+    a browser rather than by reading the styles.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Silence one named control, never the whole box.
+    </strong>
+    A box-wide reset also hits the tab stops living inside — a clear button, a
+    password toggle, a stepper arrow — and then tabbing from the field to that
+    button changes nothing on screen, so a keyboard user cannot tell what has
+    focus. That is a WCAG 2.4.7 failure, and it is the same defect seen from the
+    other side. The DS ships
+    <code class="t-mono-inline">
+      focus.owns-the-focus-ring($control)
+    </code> for
+    its own shells and fails its build when one is missing.
+  </p>
+
+  <pre class="t-mono-block">{{ shellRingSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      outline
+    </code> is the one style that also
+    emits a rule, because an outline cannot be carried by a box-shadow token; it
+    is written at zero specificity with
+    <code class="t-mono-inline">
+      :where()
+    </code> so a component or your own CSS
+    still wins. Separately, and regardless of which style is set: under
+    <code class="t-mono-inline">
+      forced-colors
+    </code> every focused element
+    gets a <code class="t-mono-inline"> CanvasText </code> outline, because
+    Windows High Contrast DROPS box-shadow and a shadow-only indicator
+    disappears there completely. Consumers who
+    <code class="t-mono-inline">
+      &#64;use
+    </code> the DS partials à la carte
+    need <code class="t-mono-inline"> &#64;use 'styles/focus' </code> to get
+    either; the bundled <code class="t-mono-inline"> styles/ds </code> entry
+    already includes it.
+  </p>
+
+  <h3 class="block-title t-h4">
+    A clipping ancestor eats the ring —
+    <code class="t-mono-inline">
+      data-focus="inset"
+    </code> is the answer
+  </h3>
+
+  <p class="block-desc t-s">
+    Every style above draws OUTSIDE the border box, so an ancestor with
+    <code class="t-mono-inline">
+      overflow: hidden
+    </code> cuts the indicator
+    away and leaves the element focusable with nothing to see. That ancestor is
+    not exotic: clipping a card is how a full-bleed child stays inside a rounded
+    corner, and <code class="t-mono-inline"> ds-card </code> with
+    <code class="t-mono-inline">
+      padding="none"
+    </code> invites it.
+    <code class="t-mono-inline">
+      inset
+    </code> draws the same two rings INSIDE
+    the box instead, where nothing can clip them.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      It is the one style not pinned to
+      <code class="t-mono-inline">
+        &lt;html&gt;
+      </code>.
+    </strong>
+    A clip is local, so put the attribute on the clipping element and the two
+    roles inherit into everything below it — Tab into both wells to see it.
+    Setting it brand-wide would move every ring inside its control, which is a
+    different look, not a fix.
+  </p>
+
+  <div class="halo-stage">
+    <div class="halo-cell">
+      <div class="clip-well">
+        <button
+          class="clip-fill"
+          type="button"
+        >
+          Tab here — no ring
+        </button>
+      </div>
+
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
+          clipped, default
+        </div>
+
+        <code class="t-mono-inline">
+          overflow: hidden
+        </code>
+      </div>
+    </div>
+
+    <div class="halo-cell">
+      <div
+        class="clip-well"
+        data-focus="inset"
+      >
+        <button
+          class="clip-fill"
+          type="button"
+        >
+          Tab here — ring inside
+        </button>
+      </div>
+
+      <div class="halo-cell-label">
+        <div class="halo-cell-title">
+          clipped, inset
+        </div>
+
+        <code class="t-mono-inline">
+          data-focus="inset"
+        </code>
+      </div>
+    </div>
+  </div>
+
   <h3 class="block-title t-h4">
     Surface contrast
   </h3>
@@ -598,7 +797,7 @@
       class="surface-cell"
       style="background: var(--surface-canvas)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         canvas
       </div>
 
@@ -611,7 +810,7 @@
       class="surface-cell"
       style="background: var(--surface-default)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         default
       </div>
 
@@ -624,7 +823,7 @@
       class="surface-cell"
       style="background: var(--surface-secondary)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         secondary
       </div>
 
@@ -637,7 +836,7 @@
       class="surface-cell"
       style="background: var(--surface-tint)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         tint
       </div>
 
@@ -647,7 +846,7 @@
     </div>
 
     <div class="surface-cell surface-cell--select">
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         selection
       </div>
 
@@ -655,9 +854,9 @@
         --select-bg-color
       </code>
 
-      <p class="surface-cell__sample t-s">
+      <p class="surface-cell-sample t-s">
         The quick brown fox
-        <span class="surface-cell__selected">
+        <span class="surface-cell-selected">
           jumps over
         </span> the lazy dog.
       </p>
@@ -667,7 +866,7 @@
       class="surface-cell surface-cell--inverted"
       style="background: var(--surface-inverted)"
     >
-      <div class="surface-cell__label">
+      <div class="surface-cell-label">
         inverted
       </div>
 

@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
@@ -7,19 +8,21 @@ import {
   input,
   model,
   output,
+  viewChild,
 } from '@angular/core';
+import { optionalBound } from '../../core/field-bounds';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { InputType } from './input.types';
 import type { DsSize } from '../../core/size';
+import { inFieldGroup } from '../field-group/field-group.token';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-input',
@@ -31,6 +34,10 @@ import type { DsSize } from '../../core/size';
     FieldMessageComponent,
     FieldClickFocusDirective,
   ],
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.in-group]': 'inGroup',
+  },
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -43,36 +50,53 @@ import type { DsSize } from '../../core/size';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
+  private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   /** Text value, two-way bound. */
   readonly value = model<string>('');
   /** Native input type — also affects the default clear button and password toggle. */
   readonly type = input<InputType>('text');
-  /** Field height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
-  /** Label shown above the field, or inside it when `floating`. */
+  /** Field height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
+  /** Label shown above the field. */
   readonly label = input<string>('');
-  /** Helper text shown below the field. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
   /** Disables the field and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Prevents editing while still allowing focus and selection. */
   readonly readOnly = input(false, { transform: booleanAttribute });
-  /** Applies error styling and marks the field `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Applies success styling to the field. */
-  readonly success = input(false, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, a second input because signal forms binds
+   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   */
+  readonly readonlyBinding = input(false, {
+    // The alias IS the point: signal forms binds by name, and the contract
+    // spells it `readonly` where the DS spells it `readOnly`.
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Shows a trailing spinner — e.g. async validation in flight. The input
    *  stays editable; pair with a `hint` like "Checking availability…". */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Floating-label variant — the label sits inside a taller control instead
-   *  of stacked above it. */
-  readonly floating = input(false, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
@@ -80,9 +104,13 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Native `name` attribute. */
   readonly name = input<string | null>(null);
   /** Native `min` attribute — applies when `type="number"`. */
-  readonly min = input<number | null>(null);
+  readonly min = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
   /** Native `max` attribute — applies when `type="number"`. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
   /** Native `step` attribute — applies when `type="number"`. */
   readonly step = input<number | null>(null);
   /** Native autocomplete token (e.g. "email", "current-password"). */
@@ -92,9 +120,34 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Accessible name when no visible `label` is provided (falls back to the
    *  placeholder so the control is never unnamed). */
   readonly ariaLabel = input<string | null>(null);
+  /** Extra element ids to describe the control with — a password-rule list, a
+   *  policy note. MERGED with the field's own message id rather than replacing
+   *  it, and it has to be an input because the attribute belongs on the inner
+   *  `<input>`: set on the host it lands on a wrapper no screen reader reads. */
+  readonly ariaDescribedBy = input<string | null>(null);
   /** Hard character cap — applies the native maxlength attribute and shows a
    *  live "{current}/{max}" counter below the field. */
-  readonly maxLength = input<number | null>(null);
+  readonly maxLength = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
+  // Signal forms binds these by name; without them a `pattern()` or `minLength()`
+  // rule validated in the form model while the native element advertised nothing.
+  /** Native `minlength` attribute. */
+  readonly minLength = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
+  /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
+  readonly pattern = input<
+    readonly RegExp[],
+    readonly RegExp[] | string | undefined
+  >([], {
+    transform: (value) =>
+      value === undefined
+        ? []
+        : typeof value === 'string'
+          ? [new RegExp(value)]
+          : value,
+  });
   /** Mobile keyboard hints — forwarded to the native input as attributes. */
   readonly enterKeyHint = input<
     'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null
@@ -136,13 +189,41 @@ export class InputComponent extends DsControlValueAccessor<string> {
     return this.type() === 'search';
   });
 
+  /** A native `pattern` takes ONE expression; the schema can carry several, so
+   *  they are ANDed with lookaheads rather than silently dropping all but one. */
+  protected readonly patternAttribute = computed(() => {
+    const expressions = this.pattern();
+    if (!expressions.length) {
+      return null;
+    }
+
+    return (
+      expressions.map((expression) => `(?=${expression.source})`).join('') +
+      '.*'
+    );
+  });
   protected readonly uid = nextControlId('ds-input');
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : this.success() ? 'success' : 'default',
-  );
+  protected readonly describedBy = computed(() => {
+    const ids = [this.hintId(), this.ariaDescribedBy()].filter(Boolean);
+
+    return ids.length ? ids.join(' ') : null;
+  });
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    success: this.success,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
   /** Only name via aria-label when there's no visible `<label for>`. */
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
@@ -177,32 +258,35 @@ export class InputComponent extends DsControlValueAccessor<string> {
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
-    if (this.size() === 'sm') {
+    if (this.sizeResolved() === 'sm') {
       parts.push('sm');
     }
-    if (this.size() === 'lg') {
+    if (this.sizeResolved() === 'lg') {
       parts.push('lg');
     }
-    if (this.invalid()) {
+    if (this.invalidResolved()) {
       parts.push('error');
-    } else if (this.success()) {
+    } else if (this.success().trim()) {
       parts.push('success');
     }
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.readOnly()) {
+    if (this.isReadOnly()) {
       parts.push('read-only');
     }
     if (this.loading()) {
       parts.push('loading');
     }
-    if (this.floating()) {
-      parts.push('floating');
-    }
 
     return parts.join(' ');
   });
+
+  /** Move keyboard focus to the native input — public so a host can drive it
+   *  deliberately, e.g. focusing the first invalid field on a failed submit. */
+  override focus(options?: FocusOptions): void {
+    this.control()?.nativeElement.focus(options);
+  }
 
   protected clear(): void {
     this.value.set('');

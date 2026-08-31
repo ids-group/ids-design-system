@@ -1,18 +1,35 @@
-/* Autocomplete — trigger lives on host; listbox panel is rendered via
-   TemplatePortal so its DOM carries this component's encapsulation attrs.
-   Both halves are styled here. */
+/* The listbox panel is portaled through a TemplatePortal, so its DOM still carries
+   this component's encapsulation attributes — which is why both halves are styled
+   here rather than the panel living in a global partial. */
+@use '../../styles/field-box' as field-box;
+@use '../../styles/field-label' as field-label;
+@use '../../styles/chip-row' as chip-row;
+@use '../../styles/focus' as focus;
+@use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
+@use '../../styles/text-clip' as text-clip;
 
 :host {
+  --ds-dropdown-panel-bg-color: var(
+    --ds-autocomplete-panel-bg-color,
+    var(--surface-overlay)
+  );
+  --ds-dropdown-panel-radius: var(
+    --ds-autocomplete-panel-radius,
+    var(--ds-radius-panel)
+  );
+  --ds-dropdown-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
+
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
   --_autocomplete-maxw: var(--ds-autocomplete-maxw, none);
   --_autocomplete-input-minw: var(--ds-autocomplete-input-minw, 80px);
   --_autocomplete-bg-color: var(--ds-autocomplete-bg-color, var(--surface-default));
   --_autocomplete-border-color: var(--ds-autocomplete-border-color, var(--border-default));
-  --_autocomplete-radius: var(--ds-autocomplete-radius, var(--radius-md));
+  --_autocomplete-radius: var(--ds-autocomplete-radius, var(--ds-radius-control));
   --_autocomplete-border-color-focus: var(--ds-autocomplete-border-color-focus, var(--accent));
 
-  // Flex column + gap so the hint/error (ds-field-message) sits the canonical
-  // --space-1-5 below the trigger, matching input/textarea/select/date-picker.
+  // The message gap is the field family's, so a form row of mixed field types keeps
+  // one rhythm — input, textarea, select and date-picker all use --field-label-gap.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
@@ -21,13 +38,27 @@
   position: relative;
 }
 
-/* width="content" — hug chips/value + the min typing area instead of filling
-   the container. The maxw resolver re-defaults to 100% so chips wrap at the
-   parent edge; an explicit --ds-autocomplete-maxw still wins in both modes. */
+/* Hugs its chips and typing area instead of filling the container. The maxw resolver
+   re-defaults to 100% so chips still wrap at the parent edge, and an explicit
+   --ds-autocomplete-maxw wins in both modes. */
 :host(.content-width) {
   --_autocomplete-maxw: var(--ds-autocomplete-maxw, 100%);
 
   width: fit-content;
+}
+
+.label {
+  @include field-label.field-label;
+
+  .req {
+    color: var(--error);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .optional-marker {
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-regular);
+  }
 }
 
 .autocomplete-trigger {
@@ -35,7 +66,9 @@
   align-items: center;
   gap: var(--space-2);
   width: 100%;
-  min-height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md, min-height);
+
   padding: var(--space-1) var(--space-2);
   background: var(--_autocomplete-bg-color);
   border: var(--border-width-default) solid var(--_autocomplete-border-color);
@@ -43,16 +76,43 @@
   cursor: text;
   text-align: left;
   flex-wrap: wrap;
+
+  /* A wrapping flex container never shrinks its chip row — it pushes the text input
+     to a second line, which is exactly what the cap exists to prevent. `:has()` keys
+     off the measured row, so the mode drives the rule without a second class. */
+  &:has(> .chip-row.fit) {
+    flex-wrap: nowrap;
+  }
+
+  /* Single mode has no chip row to wrap FOR, so the same rule applies unless the
+     host asks for wrapping back. Without it a long value breaks onto a second line
+     and the chevron onto a third: measured 40px → 63px at a 144px trigger. */
+  :host(:not(.value-wraps)) & {
+    flex-wrap: nowrap;
+  }
+
   transition: border-color var(--duration-fast) var(--ease-standard);
 
+  /* ds-input's addon class names on purpose: a consumer styling a leading glyph
+     writes one rule for the whole field family. */
+  .addon-slot {
+    display: inline-flex;
+    align-items: center;
+    align-self: stretch;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+
+    &:empty { display: none; }
+  }
+
   &:hover:not(.disabled) { border-color: var(--border-strong); }
+
+  @include focus.owns-the-focus-ring('.autocomplete-input');
   &:focus-within:not(.disabled) {
     border-color: var(--_autocomplete-border-color-focus);
     box-shadow: var(--_autocomplete-focus-shadow);
     outline: 0;
   }
-
-  &.error { border-color: var(--border-error); }
 
   &.disabled {
     background: var(--surface-disabled);
@@ -65,20 +125,49 @@
     .autocomplete-chevron { color: var(--text-disabled); }
   }
 
-  /* Density — mirror ds-select (sm 32 / md 40 / lg 48). Multi chips wrap, so
-     size sets min-height; the default (md) lives on the base rule above. */
-  &.sm { min-height: var(--hit-min); }
-  &.lg { min-height: var(--field-h-lg); }
+  /* min-height, not height: multi chips wrap, so a size sets the floor and the row
+     grows past it. */
+  &.sm { @include field-box.field-box-height(sm, min-height); }
+  &.lg { @include field-box.field-box-height(lg, min-height); }
+}
+
+.chip-row {
+  @include chip-row.chip-row;
+}
+
+.overflow {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
 }
 
 .autocomplete-value {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
+
+  /* `min-width: 0` is the load-bearing half: a flex item refuses to shrink below
+     its content, so the ellipsis never engages without it. */
+  :host(:not(.value-wraps)) & {
+    min-width: 0;
+
+    @include text-clip.single-line-ellipsis;
+  }
 }
 
 .autocomplete-input {
   flex: 1;
   min-width: var(--_autocomplete-input-minw);
+
+  /* Collapsed, not removed: the input keeps focus, so clicking the field opens the
+     panel and expands it again, and typing still filters. Removing it would drop
+     focus and break both. */
+  &.collapsed {
+    flex: 0 0 0;
+    min-width: 0;
+    width: 0;
+    padding: 0;
+  }
+
   border: 0;
   outline: 0;
   background: transparent;
@@ -91,102 +180,28 @@
   margin-left: auto;
 }
 
-.autocomplete-list {
-  /* Panel + option resolvers live here, NOT on :host — the panel is portaled
-     into document.body (outside :host), so :host-scoped custom props never
-     inherit down to it and background would collapse to transparent. */
-  --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
-  --_autocomplete-option-bg-color-hover: var(--ds-autocomplete-option-bg-color-hover, var(--surface-secondary));
+.dropdown-panel {
+  .option.multi {
+    padding-left: var(--space-2);
+  }
 
-  /* Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
-     in autocomplete.component.ts). Without `width: 100%` the panel shrinks
-     to its own option content width inside the absolutely-positioned pane. */
-  width: 100%;
-  list-style: none;
-  padding: 0;
-  background: var(--_autocomplete-panel-bg-color);
-  border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-popover);
-  margin: var(--combobox-offset) 0 0;
-  max-height: var(--combobox-maxh);
-  overflow-y: auto;
-  z-index: var(--layer-popover);
-
-  .option {
-    display: flex;
-    width: 100%;
+  /* A painted `<span>`, not a ds-checkbox: the option row is the button, so a real
+     control in it would add a second tab stop inside one tab stop. */
+  .check-box {
+    flex: none;
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    cursor: pointer;
-    transition: background-color var(--duration-fast) var(--ease-standard);
+    justify-content: center;
+    width: var(--check-size);
+    height: var(--check-size);
+    border: var(--border-width-strong) solid var(--border-strong);
+    border-radius: var(--ds-radius-inner);
+    color: var(--text-on-primary);
 
-    &:hover,
-    &.is-active,
-    &[aria-selected="true"] {
-      background: var(--_autocomplete-option-bg-color-hover);
+    &.checked {
+      background-color: var(--accent);
+      border-color: var(--accent);
     }
-
-    .icon {
-      color: var(--accent);
-      margin-left: auto;
-    }
-
-    &.multi {
-      padding-left: var(--space-2);
-    }
-
-    .option-label {
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* Self-styled multi checkbox (mirrors ds-multi-select). A unique class so
-       the global `.check` specimen can't leak its border/box onto the option. */
-    .check-box {
-      flex: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--check-size);
-      height: var(--check-size);
-      border: var(--border-width-strong) solid var(--border-strong);
-      border-radius: var(--radius-sm);
-      color: var(--text-on-primary);
-
-      &.checked {
-        background-color: var(--accent);
-        border-color: var(--accent);
-      }
-    }
-  }
-
-  .empty {
-    padding: var(--space-3) var(--space-4);
-    color: var(--text-tertiary);
-    text-align: center;
-  }
-
-  .autocomplete-optgroup {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .autocomplete-optgroup-label {
-    display: block;
-    padding: var(--space-2) var(--space-3) var(--space-1);
-    font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-wide);
-
-    &.is-first { padding-top: var(--space-1); }
   }
 
   .create-row {
@@ -195,3 +210,13 @@
     .create-icon { flex: 0 0 auto; }
   }
 }
+
+/* Segment of a ds-field-group — see input.component.scss for why. The group
+   draws the border, the radius and the one shared focus ring. */
+:host(.in-group) {
+  @include field-group-segment.field-group-segment('.autocomplete-trigger');
+}
+
+@include field-state.field-state(
+  '.autocomplete-trigger',
+);

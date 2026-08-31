@@ -1,7 +1,8 @@
-/* Public --ds-color-picker-* are read with fallbacks, never declared. The panel
-   is portaled via CDK Overlay OUTSIDE the host, so the private resolvers are
-   declared on both :host (the trigger) and .panel — custom properties inherit
-   down the DOM tree, which the portaled panel is not part of. */
+/* The panel is portaled by the CDK OUTSIDE the host, and custom properties inherit
+   down the DOM tree — which the portaled panel is not part of. So the private
+   resolvers are declared twice: on :host for the trigger, and on .panel. */
+@use '../../styles/field-box' as field-box;
+@use '../../styles/field-state' as field-state;
 
 :host,
 .panel {
@@ -25,7 +26,9 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md);
+
   padding: 0 var(--field-pad-x);
   background-color: var(--surface-default);
   border: var(--border-width-default) solid var(--_cp-trigger-border-color);
@@ -60,7 +63,7 @@
 .trigger .swatch {
   width: var(--_cp-swatch);
   height: var(--_cp-swatch);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   border: var(--border-width-default) solid var(--border-default);
   flex: none;
 }
@@ -80,10 +83,6 @@
 
 :host(.open) .trigger .chevron {
   transform: rotate(180deg);
-}
-
-:host(.invalid) .trigger {
-  border-color: var(--error);
 }
 
 .panel {
@@ -204,7 +203,7 @@
   padding: 0 var(--space-2);
   background-color: var(--surface-default);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   color: var(--text-primary);
   font:
     var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
@@ -228,7 +227,7 @@
   width: var(--_cp-swatch);
   height: var(--_cp-swatch);
   padding: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   border: var(--border-width-default) solid var(--border-default);
   cursor: pointer;
 
@@ -243,3 +242,7 @@
     outline-offset: var(--border-width-strong);
   }
 }
+
+@include field-state.field-state(
+  '.trigger',
+);

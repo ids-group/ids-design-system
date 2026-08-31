@@ -6,43 +6,49 @@
       "kind": "input-rename",
       "old": "ds-modal[danger]",
       "new": "error",
-      "note": "Status vocab unified to DsStatus (info|success|warning|error). Boolean input [danger] -> [error] (also static danger=\"...\" -> error=\"...\"). Default value unchanged.",
+      "action": "Rename the input `[danger]` to `[error]` on ds-modal, and `danger` to `error` as a static attribute.",
+      "note": "Part of one status vocabulary across the library: `error` is the word every component uses now.",
       "searchHints": [
         "<ds-modal",
         "[danger]",
         "danger="
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "modal-card-danger-input-rename",
       "kind": "input-rename",
       "old": "ds-modal-card[danger]",
       "new": "error",
-      "note": "Same danger -> error boolean-input rename on ds-modal-card.",
+      "action": "Rename `[danger]` to `[error]` on ds-modal-card.",
       "searchHints": [
         "<ds-modal-card",
         "[danger]",
         "danger="
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "menu-item-danger-input-rename",
       "kind": "input-rename",
       "old": "ds-menu-item[danger]",
       "new": "error",
-      "note": "Same danger -> error boolean-input rename on ds-menu-item.",
+      "action": "Rename `[danger]` to `[error]` on ds-menu-item.",
       "searchHints": [
         "<ds-menu-item",
         "[danger]",
         "danger="
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "stat-variant-danger-remap",
       "kind": "value-remap",
       "old": "ds-stat[variant]",
       "new": null,
-      "note": "ds-stat variant value 'danger' -> 'error'. Other variant values unchanged (absent from map — leave them).",
+      "action": "Replace `variant=\"danger\"` with `variant=\"error\"` on ds-stat.",
+      "appliesWhen": "Other variant values are unchanged and absent from the map — leave them.",
+      "note": "Part of one status vocabulary across the library: every component says error where some used to say danger.",
       "searchHints": [
         "<ds-stat",
         "variant=\"",
@@ -50,14 +56,19 @@
       ],
       "map": {
         "danger": "variant=\"error\""
-      }
+      },
+      "surface": "template",
+      "verify": "No ds-stat binds variant=\"danger\". Every stat that used to be danger renders in the error colour, and stats on other variant values are untouched."
     },
     {
       "id": "progress-variant-remap",
       "kind": "value-remap",
       "old": "ds-progress[variant]",
       "new": null,
-      "note": "Two changes on ds-progress[variant]: 'warn' -> 'warning'; and 'indeterminate' is no longer a variant value — it becomes the boolean [indeterminate] input, so variant=\"indeterminate\" -> the bare indeterminate attribute (a bar can now be e.g. success-coloured AND indeterminate). ProgressVariant is now 'default' | 'success' | 'warning' | 'error' — TS references to the removed 'warn'/'indeterminate' members update accordingly. 'success'/'error'/'default' unchanged (absent from map).",
+      "action": "Rename `variant=\"warn\"` to `variant=\"warning\"`, and move `variant=\"indeterminate\"` to the bare `indeterminate` attribute. Update TS references to the removed `ProgressVariant` members; the union is `default | success | warning | error` now.",
+      "appliesWhen": "success, error and default are unchanged and absent from the map.",
+      "pitfall": "`indeterminate` was a variant VALUE and is a boolean input now, so the two are no longer mutually exclusive — a bar can be success-coloured and indeterminate at once. Leaving `variant=\"indeterminate\"` in place gives an unknown value, which resolves to the default colour and a determinate bar.",
+      "note": "Two axes were conflated in one input. Colour and progress state are independent, so the state moved out to its own boolean and the colour vocabulary joined the library-wide status words.",
       "searchHints": [
         "<ds-progress",
         "variant=\"",
@@ -67,234 +78,387 @@
       "map": {
         "warn": "variant=\"warning\"",
         "indeterminate": "indeterminate"
-      }
+      },
+      "surface": [
+        "template",
+        "style",
+        "typescript"
+      ],
+      "verify": "No ds-progress binds `variant=\"warn\"` or `variant=\"indeterminate\"`: the colour vocabulary is `default | success | warning | error`, and the indeterminate state is the bare `indeterminate` attribute. Nothing is typed with a removed ProgressVariant member."
     },
     {
       "id": "modal-confirm-tone-danger-remap",
       "kind": "behavior",
       "old": "ModalConfirmTone",
       "new": null,
-      "note": "ModalConfirmTone value 'danger' -> 'error'. Update ModalService.confirm({ tone: 'danger' }) -> { tone: 'error' } and any TS typed with ModalConfirmTone.",
+      "action": "Replace the `'danger'` tone with `'error'` in ModalService.confirm() calls and anything typed with ModalConfirmTone.",
+      "note": "Same status vocabulary as the component inputs.",
       "searchHints": [
         "ModalConfirmTone",
         "tone:",
         "tone="
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "tone: 'danger'",
+        "ModalConfirmTone"
+      ],
+      "verify": "No ModalService.confirm call passes `tone: 'danger'`, and nothing is typed with the removed union member."
     },
     {
       "id": "split-button-item-danger-property",
       "kind": "behavior",
       "old": "SplitButtonItem",
       "new": null,
-      "note": "SplitButtonItem object property `danger` renamed to `error`. Update item literals ({ danger: true } -> { error: true }) and any TS typed with SplitButtonItem.",
+      "action": "Rename the `danger` property on a SplitButtonItem to `error`.",
+      "note": "Same status vocabulary, on the item object rather than an input.",
       "searchHints": [
         "SplitButtonItem",
         "danger:"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "danger: true",
+        "SplitButtonItem"
+      ],
+      "verify": "No SplitButtonItem literal carries `danger`; every one uses `error`."
     },
     {
       "id": "menu-item-danger-label-token-rename",
       "kind": "token-rename",
       "old": "--ds-menu-item-danger-label-color",
       "new": "--ds-menu-item-error-label-color",
-      "note": "Public token renamed in lockstep with [danger] -> [error]. CSS property and default unchanged.",
+      "action": "Replace `--ds-menu-item-danger-label-color` with `--ds-menu-item-error-label-color`.",
       "searchHints": [
         "--ds-menu-item-danger-label-color"
-      ]
+      ],
+      "surface": "style"
+    },
+    {
+      "id": "modal-card-danger-class-rename",
+      "kind": "class-rename",
+      "old": "ds-modal .danger",
+      "new": ".error",
+      "action": "Rename `.danger` to `.error` in selectors scoped under ds-modal and ds-modal-card.",
+      "appliesWhen": "Only if a stylesheet of yours keys off the class the component puts on its root.",
+      "pitfall": "The input rename fixes the BINDING and nothing about it reaches your stylesheet, so a search for `danger` in templates comes back clean while the CSS keyed on `.danger` quietly stops matching. Two artifacts, two items — this is the second one.",
+      "note": "The root class follows the input: `[danger]` used to emit `danger`, `[error]` emits `error`.",
+      "searchHints": [
+        "ds-modal",
+        "ds-modal-card",
+        ".modal.danger",
+        "&.danger"
+      ],
+      "surface": "style"
+    },
+    {
+      "id": "menu-item-danger-class-rename",
+      "kind": "class-rename",
+      "old": "ds-menu-item .danger",
+      "new": ".error",
+      "action": "Rename `.danger` to `.error` in selectors scoped under ds-menu-item.",
+      "appliesWhen": "Only if a stylesheet of yours keys off the class rather than the input.",
+      "searchHints": [
+        "ds-menu-item",
+        ".danger"
+      ],
+      "surface": "style"
+    },
+    {
+      "id": "stat-danger-class-rename",
+      "kind": "class-rename",
+      "old": "ds-stat .danger",
+      "new": ".error",
+      "action": "Rename `.danger` to `.error` in selectors scoped under ds-stat.",
+      "appliesWhen": "Only if a stylesheet of yours keys off the class rather than the input.",
+      "searchHints": [
+        "ds-stat",
+        ".danger"
+      ],
+      "surface": "style"
+    },
+    {
+      "id": "progress-danger-class-rename",
+      "kind": "class-rename",
+      "old": "ds-progress .danger",
+      "new": ".error",
+      "action": "Rename `.danger` to `.error` in selectors scoped under ds-progress.",
+      "appliesWhen": "Only if a stylesheet of yours keys off the class rather than the input.",
+      "searchHints": [
+        "ds-progress",
+        ".danger"
+      ],
+      "surface": "style"
     },
     {
       "id": "progress-bar-warn-token-rename",
       "kind": "token-rename",
       "old": "--ds-progress-bar-color-warn",
       "new": "--ds-progress-bar-color-warning",
-      "note": "Public token renamed in lockstep with the 'warn' -> 'warning' value. CSS property and default unchanged.",
+      "action": "Replace `--ds-progress-bar-color-warn` with `--ds-progress-bar-color-warning`.",
       "searchHints": [
         "--ds-progress-bar-color-warn"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "alert-dismissed-output-rename",
       "kind": "output-rename",
       "old": "ds-alert[dismissed]",
       "new": "closed",
-      "note": "Dismissal event unified to (closed): (dismissed) -> (closed) on ds-alert.",
+      "action": "Rename `(dismissed)` to `(closed)` on ds-alert.",
       "searchHints": [
         "<ds-alert",
         "(dismissed)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "banner-dismissed-output-rename",
       "kind": "output-rename",
       "old": "ds-banner[dismissed]",
       "new": "closed",
-      "note": "(dismissed) -> (closed) on ds-banner.",
+      "action": "Rename `(dismissed)` to `(closed)` on ds-banner.",
       "searchHints": [
         "<ds-banner",
         "(dismissed)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "toast-dismissed-output-rename",
       "kind": "output-rename",
       "old": "ds-toast[dismissed]",
       "new": "closed",
-      "note": "(dismissed) -> (closed) on ds-toast.",
+      "action": "Rename `(dismissed)` to `(closed)` on ds-toast.",
       "searchHints": [
         "<ds-toast",
         "(dismissed)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "table-rowclick-output-rename",
       "kind": "output-rename",
       "old": "ds-table[rowClick]",
       "new": "rowClicked",
-      "note": "Action event made past-tense: (rowClick) -> (rowClicked) on ds-table.",
+      "action": "Rename `(rowClick)` to `(rowClicked)` on ds-table.",
       "searchHints": [
         "<ds-table",
         "(rowClick)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "stepper-stepclick-output-rename",
       "kind": "output-rename",
       "old": "ds-stepper[stepClick]",
       "new": "stepClicked",
-      "note": "(stepClick) -> (stepClicked) on ds-stepper.",
+      "action": "Rename `(stepClick)` to `(stepClicked)` on ds-stepper.",
       "searchHints": [
         "<ds-stepper",
         "(stepClick)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "calendar-day-dayselect-output-rename",
       "kind": "output-rename",
       "old": "ds-calendar-day[daySelect]",
       "new": "daySelected",
-      "note": "(daySelect) -> (daySelected) on ds-calendar-day.",
+      "action": "Rename `(daySelect)` to `(daySelected)` on ds-calendar-day.",
       "searchHints": [
         "<ds-calendar-day",
         "(daySelect)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "tabs-tabclose-output-rename",
       "kind": "output-rename",
       "old": "ds-tabs[tabClose]",
       "new": "tabClosed",
-      "note": "(tabClose) -> (tabClosed) on ds-tabs.",
+      "action": "Rename `(tabClose)` to `(tabClosed)` on ds-tabs.",
       "searchHints": [
         "<ds-tabs",
         "(tabClose)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "tree-nodeselect-output-rename",
       "kind": "output-rename",
       "old": "ds-tree[nodeSelect]",
       "new": "nodeSelected",
-      "note": "(nodeSelect) -> (nodeSelected) on ds-tree.",
+      "action": "Rename `(nodeSelect)` to `(nodeSelected)` on ds-tree.",
       "searchHints": [
         "<ds-tree",
         "(nodeSelect)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "split-button-itemselect-output-rename",
       "kind": "output-rename",
       "old": "ds-split-button[itemSelect]",
       "new": "itemSelected",
-      "note": "(itemSelect) -> (itemSelected) on ds-split-button.",
+      "action": "Rename `(itemSelect)` to `(itemSelected)` on ds-split-button.",
       "searchHints": [
         "<ds-split-button",
         "(itemSelect)"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "title-required-name-bearing",
       "kind": "behavior",
       "old": "ds-drawer",
       "new": null,
-      "note": "title is now REQUIRED on ds-drawer, ds-bottom-sheet, and ds-accordion-item (it is the component's accessible name / disclosure-button label). Add a [title]/title if any instance is missing one. ds-page-header title is now OPTIONAL (plain <h1>) — no action there.",
+      "action": "Add a `title` to every ds-drawer, ds-bottom-sheet and ds-accordion-item that lacks one — it is the accessible name, and on the accordion the disclosure-button label.",
+      "appliesWhen": "ds-page-header went the other way: its title is optional now, a plain h1. Nothing to do there.",
+      "note": "These three are named by their title: it is the accessible name a screen reader announces, and on the accordion it is also the disclosure-button label. Without one the control announces nothing.",
       "searchHints": [
         "<ds-drawer",
         "<ds-bottom-sheet",
         "<ds-accordion-item"
-      ]
+      ],
+      "surface": "template",
+      "detect": [
+        "ds-drawer",
+        "ds-bottom-sheet",
+        "ds-accordion-item"
+      ],
+      "verify": "Every ds-drawer, ds-bottom-sheet and ds-accordion-item carries a title - it is the component's accessible name, and a missing one leaves the disclosure button unlabelled."
     },
     {
       "id": "badge-variant-to-status-rename",
       "kind": "input-rename",
       "old": "ds-badge[variant]",
       "new": "status",
-      "note": "ds-badge [variant] (BadgeVariant) renamed to [status] (typed DsStatusKey); the value is emitted as a data-status attribute, NOT a factory/status-named CSS class, and the component ships NO built-in colour for any value. Full migration is THREE coupled steps — the rename alone leaves badges uncoloured: (1) rename the input, keeping the value: variant=\"active\" -> status=\"active\", [variant]=\"expr\" -> [status]=\"expr\" (a static variant=\"x\" left on ds-badge is a SILENT failure — Angular ignores the unknown attribute rather than erroring — so grep variant= scoped to ds-badge). (2) Wire colours via the styles/status SCSS API keyed on [data-status] (see status-lifecycle-tokens-removed for the @use/@include snippet). (3) For TS type-safety, augment DsStatusRegistry with your keys so DsStatusKey narrows from open string to your union. NOTE for consumers who coloured badges via their OWN status-named class (class=\"chip {{ status }}\" + ds-badge.chip.completed{...}) instead of [variant]: that keeps working (the --ds-badge-* hooks are unchanged), BUT any value that previously fell through to a FACTORY colour is now uncoloured — move colour off the class onto [data-status] via styles/status. Full guide + before/after: migrations/0.5.1/badge-statuses.md. [count]/[solid]/[withDot]/[max] and the --ds-badge-* hooks are unchanged.",
+      "action": "Three coupled steps. (1) Rename the input, keeping the value: `variant=\"active\"` → `status=\"active\"`, `[variant]=\"expr\"` → `[status]=\"expr\"`. (2) Wire the colours through the `styles/status` SCSS API keyed on `[data-status]` — see status-lifecycle-tokens-removed for the snippet. (3) Augment DsStatusRegistry with your keys so DsStatusKey narrows from an open string to your union. Full guide: migrations/0.5.1/badge-statuses.md.",
+      "appliesWhen": "`[count]`, `[solid]`, `[withDot]`, `[max]` and every `--ds-badge-*` hook are unchanged. If you coloured badges through your OWN class (`class=\"chip {{ status }}\"`), that keeps working — but any value that used to fall through to a factory colour is now uncoloured.",
+      "pitfall": "Step 1 alone leaves every badge UNCOLOURED, because the component ships no built-in colour for any value. And a static `variant=\"x\"` left behind fails silently: Angular ignores an unknown attribute instead of erroring, so the badge renders plain with nothing in the console. Grep `variant=` scoped to ds-badge.",
+      "note": "The value is emitted as a `data-status` attribute now rather than a status-named CSS class, and the input is typed DsStatusKey.",
       "searchHints": [
         "<ds-badge",
         "variant=\"",
         "[variant]="
-      ]
+      ],
+      "surface": [
+        "template",
+        "style",
+        "typescript"
+      ],
+      "verify": "No `variant` remains on the component. The chips render in their status colours, not grey: the `styles/status` partial is included and any custom status is registered through DsStatusRegistry, or the colour resolves to the neutral default and you meant that."
     },
     {
       "id": "status-dot-status-retype",
       "kind": "behavior",
       "old": "ds-status-dot",
       "new": null,
-      "note": "ds-status-dot [status] keeps its name but is retyped StatusValue -> DsStatusKey and no longer defaults to 'planning'; the value is now emitted as a data-status attribute, not a `.status-dot <value>` CSS class. Any custom CSS targeting .status-dot.active / .planning / .confirmed / .completed / .warning / .error / .secondary must switch to [data-status='...']. Define status colours via the styles/status SCSS API.",
+      "action": "Switch any CSS targeting `.status-dot.active`, `.planning`, `.confirmed`, `.completed`, `.warning`, `.error` or `.secondary` to `[data-status='…']`, and define the colours through the `styles/status` SCSS API.",
+      "pitfall": "The input name did not change, so a search for `status` finds nothing wrong while the class-based CSS stops matching. It also no longer defaults to `planning` — a dot with no status now has none.",
+      "note": "`[status]` is retyped from StatusValue to DsStatusKey and the value reaches the DOM as `data-status`.",
       "searchHints": [
         "<ds-status-dot",
         ".status-dot"
-      ]
+      ],
+      "surface": [
+        "template",
+        "style",
+        "typescript"
+      ],
+      "detect": [
+        ".status-dot",
+        "StatusValue",
+        "data-status",
+        "status-dot."
+      ],
+      "verify": "No CSS targets `.status-dot.<value>` (the value is a data-status attribute now) and nothing types a status with StatusValue instead of DsStatusKey.",
+      "restore": "status=\"planning\" stated explicitly, where a dot relied on the old default"
     },
     {
       "id": "badge-status-dot-types-removed",
       "kind": "removed-api",
       "old": "BadgeVariant",
       "new": null,
-      "note": "The exported types BadgeVariant, BadgeLifecycle, BadgeSemantic (badge) and StatusValue (status-dot) are no longer exported. Type badge/status-dot status with DsStatusKey (or your own registered union via DsStatusRegistry augmentation).",
+      "action": "Type badge and status-dot status with DsStatusKey, or with your own union registered through a DsStatusRegistry augmentation.",
+      "note": "BadgeVariant, BadgeLifecycle, BadgeSemantic and StatusValue are no longer exported.",
       "searchHints": [
         "BadgeVariant",
         "BadgeLifecycle",
         "BadgeSemantic",
         "StatusValue"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "BadgeVariant",
+        "BadgeLifecycle",
+        "BadgeSemantic",
+        "StatusValue"
+      ],
+      "verify": "None of the four removed type names is imported; badge and status-dot statuses are typed DsStatusKey or a registry-augmented union."
     },
     {
       "id": "status-lifecycle-tokens-removed",
       "kind": "removed-api",
       "old": "--status-planning-bg-color",
       "new": null,
-      "note": "The factory lifecycle status theme tokens --status-planning-bg-color / -text-color, --status-confirmed-*, --status-active-*, --status-completed-* are removed. If you set them to theme lifecycle badges/dots, declare your statuses instead via the styles/status SCSS API, which writes the public --ds-badge-* / --ds-status-dot-* tokens keyed on [data-status]. Example: `@use '@ids-group-ltd/ids-design-system/styles/status' as status; @include status.define(('completed': (bg: var(--success), text: var(--text-on-success)), 'active': (bg: var(--info-subtitle), text: var(--info-text))));` — one entry per status value you pass to ds-badge/ds-status-dot [status]; entry shape is (bg required, text?, dot?); or use status.semantic-preset for the info/success/warning/error/neutral set. Pair with the DsStatusRegistry TS augmentation (see badge-variant-to-status-rename) so [status] is type-checked. Full guide: migrations/0.5.1/badge-statuses.md. The dimension token --status-dot-size is NOT removed.",
+      "action": "Declare your statuses through the styles/status API instead: `@use '@ids-group-ltd/ids-design-system/styles/status' as status;` then `@include status.define(('completed': (bg: var(--success), text: var(--text-on-success)), 'active': (bg: var(--info-subtitle), text: var(--info-text))));` — one entry per value you pass to `[status]`, shape `(bg required, text?, dot?)`. `status.semantic-preset` covers the info/success/warning/error/neutral set. Pair it with the DsStatusRegistry augmentation. Full guide: migrations/0.5.1/badge-statuses.md.",
+      "appliesWhen": "The dimension token `--status-dot-size` is NOT removed and needs nothing.",
+      "pitfall": "These tokens were the only colour those badges and dots had. Removing them without defining the replacements leaves the elements rendering with no status colour at all — nothing errors, the colour is simply gone.",
+      "note": "The factory lifecycle tokens `--status-planning-*`, `--status-confirmed-*`, `--status-active-*` and `--status-completed-*` are gone; the API writes the public `--ds-badge-*` / `--ds-status-dot-*` hooks keyed on `[data-status]`.",
       "searchHints": [
         "--status-planning",
         "--status-confirmed",
         "--status-active",
         "--status-completed"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "--status-planning",
+        "--status-confirmed",
+        "--status-active",
+        "--status-completed"
+      ],
+      "verify": "No stylesheet declares a --status-<lifecycle>-* token; a themed lifecycle status is declared through the styles/status Sass API instead."
     },
     {
       "id": "default-secondary-tertiary-hues",
       "kind": "behavior",
       "old": "--secondary-h",
       "new": null,
-      "note": "Default secondary/tertiary hues changed: --secondary-h/s/l now default to the --orange palette family (warm orange) and --tertiary-h/s/l to --violet (cool violet), where they previously both defaulted to --primary channels (blue). Consumers who never set --secondary-h/s/l or --tertiary-h/s/l now render orange/violet where they saw blue — VISUAL REVIEW (usually no code change). To keep the old single-hue look, set --secondary-h/s/l and --tertiary-h/s/l back to var(--primary-h/s/l).",
+      "action": "Look at anything using the secondary or tertiary roles. To keep the old single-hue look, set `--secondary-h/s/l` and `--tertiary-h/s/l` back to `var(--primary-h/s/l)`.",
+      "appliesWhen": "Only if you never set those channels yourself. If you did, your values still win.",
+      "pitfall": "Both roles used to fall through to the primary channels, so everything that read them was blue. They are orange and violet now, and because no markup or API moved, the only thing that reports it is a screen.",
+      "note": "`--secondary-h/s/l` default to the `--orange` family and `--tertiary-h/s/l` to `--violet`.",
       "searchHints": [
         "--secondary-h",
         "--tertiary-h",
         "--secondary",
         "--tertiary"
-      ]
+      ],
+      "surface": "style",
+      "restore": "--secondary-h/s/l and --tertiary-h/s/l pointed back at the --primary channels",
+      "verify": "An app that never set those channels has looked at every secondary and tertiary surface (they are orange and violet now, not blue), or pins them back."
     },
     {
       "id": "static-white-token-removed",
       "kind": "removed-api",
       "old": "--static-white",
       "new": "white",
-      "note": "The fixed-value --static-white custom property is removed; replace any var(--static-white) with the literal keyword white (identical value, no visual change). --static-ink is retained.",
+      "action": "Replace `var(--static-white)` with the keyword `white`.",
+      "appliesWhen": "`--static-ink` is retained and needs nothing.",
+      "note": "Identical value, no visual change — the fixed-value custom property earned nothing over the keyword.",
       "searchHints": [
         "--static-white",
         "var(--static-white)"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "--static-white"
+      ],
+      "verify": "No stylesheet reads var(--static-white); the literal `white` stands in its place."
     }
   ],
   "informational": [
@@ -303,5 +467,6 @@
     "Visual/behavioral only, no code change: press-feedback reworked (no button-style press on non-buttons; list/menu rows and color-picker trigger get a flat :active tint; small icon action buttons — close/dismiss/clear/remove x and the ds-tag chip close — get the button press-scale); booleanAttribute coercion on ~54 boolean inputs; ds-button tonal :active now darkens past hover.",
     "Fixes, no action required: overlay panel --ds-* overrides now reach the portaled pane (ds-autocomplete/ds-multi-select/ds-date-picker/ds-color-picker/ds-popover/ds-time-picker); ds-autocomplete/ds-multi-select panels no longer render transparent; ds-tabs secondary variant now applies; ds-date-picker range mask no longer clips the second date + tighter value-to-icon gap; the ultra-compact density tier now scales avatar/sidenav/badge/status-dot/switch geometry.",
     "Visual/behavioral only, no code change: ds-date-picker keeps the format mask visible while typing — the unfilled tail of the mask stays on-screen as a muted ghost (e.g. \"12/DD/YYYY\") and the typed value renders in the monospace font for exact glyph alignment."
-  ]
+  ],
+  "deleteList": []
 }

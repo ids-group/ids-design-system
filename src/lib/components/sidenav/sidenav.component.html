@@ -1,21 +1,38 @@
-<div class="brand">
+@if (brandRoute()) {
+  <a
+    class="brand brand-link"
+    [routerLink]="brandRoute()"
+    [attr.aria-label]="brandAriaLabel()"
+  >
+    <ng-container [ngTemplateOutlet]="brandContent" />
+  </a>
+} @else {
+  <div class="brand">
+    <ng-container [ngTemplateOutlet]="brandContent" />
+  </div>
+}
+
+<ng-template #brandContent>
   <ng-content select="[brand]"></ng-content>
 
-  @if (brand() || hasBrandName()) {
-    @if (logoLetter() || brand()) {
-      <span class="mark">
-        {{ logoLetter() || brand().charAt(0) }}
-      </span>
-    }
+  @if (letterGlyph() || brandName()) {
+    <span
+      class="mark"
+      aria-hidden="true"
+    >
+      {{ markGlyph() }}
+    </span>
+  }
 
+  @if (brandName() || hasBrandName()) {
     <span class="brand-name">
       @if (hasBrandName()) {
         <ng-content select="[dsBrandName]"></ng-content>
       } @else {
-        {{ brand() }}
+        {{ brandName() }}
       }
     </span>
   }
-</div>
+</ng-template>
 
 <ng-content></ng-content>

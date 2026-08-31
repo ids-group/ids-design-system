@@ -1,4 +1,28 @@
 <div class="field">
+  @if (label()) {
+    <span
+      class="label"
+      [id]="labelId"
+    >
+      {{ label() }}
+      @if (required()) {
+        <span
+          class="req"
+          aria-hidden="true"
+        >
+          *
+        </span>
+      } @else if (optional()) {
+        <span
+          class="optional-marker"
+          aria-hidden="true"
+        >
+          (optional)
+        </span>
+      }
+    </span>
+  }
+
   @if (mode() === 'range') {
     <div class="range-wrap">
       <div class="trigger-wrap">
@@ -10,18 +34,19 @@
           [disabled]="isDisabled()"
           [attr.aria-expanded]="openSegment() === 'start'"
           [attr.aria-label]="ariaLabelFor('start')"
-          [attr.aria-invalid]="invalid() ? 'true' : null"
+          [attr.aria-required]="required() ? 'true' : null"
+          [attr.aria-invalid]="invalidResolved() ? 'true' : null"
           [attr.aria-describedby]="hintId()"
           (click)="onTriggerClick('start')"
         >
-          <ds-icon
-            name="clock"
-            [size]="14"
-          />
-
           <span class="time-value">
             {{ formatFor(rangeValue()[0]) || placeholder() }}
           </span>
+
+          <ds-icon
+            name="clock"
+            [size]="16"
+          />
         </button>
       </div>
 
@@ -41,18 +66,19 @@
           [disabled]="isDisabled()"
           [attr.aria-expanded]="openSegment() === 'end'"
           [attr.aria-label]="ariaLabelFor('end')"
-          [attr.aria-invalid]="invalid() ? 'true' : null"
+          [attr.aria-required]="required() ? 'true' : null"
+          [attr.aria-invalid]="invalidResolved() ? 'true' : null"
           [attr.aria-describedby]="hintId()"
           (click)="onTriggerClick('end')"
         >
-          <ds-icon
-            name="clock"
-            [size]="14"
-          />
-
           <span class="time-value">
             {{ formatFor(rangeValue()[1]) || placeholder() }}
           </span>
+
+          <ds-icon
+            name="clock"
+            [size]="16"
+          />
         </button>
       </div>
     </div>
@@ -65,19 +91,21 @@
         [class]="triggerClasses()"
         [disabled]="isDisabled()"
         [attr.aria-expanded]="openSegment() === 'single'"
-        [attr.aria-label]="ariaLabelFor('single')"
-        [attr.aria-invalid]="invalid() ? 'true' : null"
+        [attr.aria-labelledby]="label() ? labelId : null"
+        [attr.aria-label]="label() ? null : ariaLabelFor('single')"
+        [attr.aria-required]="required() ? 'true' : null"
+        [attr.aria-invalid]="invalidResolved() ? 'true' : null"
         [attr.aria-describedby]="hintId()"
         (click)="onTriggerClick('single')"
       >
-        <ds-icon
-          name="clock"
-          [size]="14"
-        />
-
         <span class="time-value">
           {{ displayValue() }}
         </span>
+
+        <ds-icon
+          name="clock"
+          [size]="16"
+        />
       </button>
 
       @if (clearable() && hasValue()) {
@@ -98,10 +126,11 @@
   }
 
   <ds-field-message
-    [text]="hint()"
-    [state]="messageState()"
+    [icon]="messageIcon()"
+    [text]="message().text"
+    [state]="message().state"
     [messageId]="hintId()"
-    [reserve]="reserveMessage()"
+    [reserve]="reserveMessageResolved()"
   />
 </div>
 
@@ -115,6 +144,7 @@
       [maxTime]="panelMaxTime()"
       [disabledTime]="disabledTime()"
       (timeChange)="onPick($event)"
+      (partPicked)="onPartPicked($event)"
     />
 
     <div class="time-footer">
@@ -126,13 +156,15 @@
         Now
       </button>
 
-      <button
-        type="button"
-        class="time-action primary"
-        (click)="onEscape()"
-      >
-        Done
-      </button>
+      @if (mode() === 'range') {
+        <button
+          type="button"
+          class="time-action primary"
+          (click)="onEscape()"
+        >
+          Done
+        </button>
+      }
     </div>
   </div>
 </ng-template>

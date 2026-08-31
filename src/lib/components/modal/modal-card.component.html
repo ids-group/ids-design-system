@@ -1,15 +1,12 @@
 <div
   aria-modal="true"
-  [attr.role]="dialogRole()"
+  [attr.role]="resolvedRole()"
   [class]="classes()"
   [attr.aria-labelledby]="titleId"
 >
   <div class="header">
-    @if (icon(); as iconName) {
-      <span
-        class="icon-badge"
-        [class.error]="error()"
-      >
+    @if (resolvedIcon(); as iconName) {
+      <span [class]="status() ? 'icon-badge ' + status() : 'icon-badge'">
         <ds-icon
           [name]="iconName"
           [size]="20"
@@ -17,12 +14,28 @@
       </span>
     }
 
-    <h2
-      class="title"
-      [id]="titleId"
-    >
-      {{ title() }}
-    </h2>
+    <div class="heading">
+      <div class="eyebrow">
+        <ng-content select="[eyebrow]"></ng-content>
+      </div>
+
+      <div class="title-line">
+        <h2
+          class="title"
+          [id]="titleId"
+        >
+          {{ title() }}
+        </h2>
+
+        <ng-content select="[title-badge]"></ng-content>
+      </div>
+
+      @if (subtitle()) {
+        <p class="subtitle">
+          {{ subtitle() }}
+        </p>
+      }
+    </div>
 
     @if (showClose()) {
       <button

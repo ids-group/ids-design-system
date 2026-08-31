@@ -3,8 +3,8 @@
     alt=""
     [src]="imageUrl()"
   />
-} @else if (initials()) {
-  {{ initials() }}
+} @else if (initialsText()) {
+  {{ initialsText() }}
 } @else if (fallbackIcon()) {
   <ds-icon
     [name]="fallbackIcon()!"

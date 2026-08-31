@@ -3,6 +3,7 @@ import {
   ElementRef,
   type OnDestroy,
   TemplateRef,
+  contentChild,
   ViewContainerRef,
   ViewEncapsulation,
   booleanAttribute,
@@ -11,39 +12,65 @@ import {
   forwardRef,
   inject,
   input,
+  output,
   model,
   signal,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  dropdownOverlay,
+  type DsOverlayCloseCause,
+  forwardOverlayTokens,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { inFieldGroup } from '../field-group/field-group.token';
 import { DsStaticPreview } from '../static-preview.directive';
 import {
   isSelectOptionGroup,
   type SelectItem,
   type SelectOption,
   type SelectOptionGroup,
+  type SelectWidth,
 } from './select.types';
 import type { DsSize } from '../../core/size';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
+import { resolveWithConfig } from '../../core/config-defaults';
+import { DsOptionTemplateDirective } from '../option-template.directive';
+import { DsPickerTriggerDirective } from '../picker-trigger.directive';
+import { DsEmptyTemplateDirective } from '../empty-template.directive';
+import { DsPanelHeaderTemplateDirective } from '../panel-header-template.directive';
+import { DsPanelFooterTemplateDirective } from '../panel-footer-template.directive';
+import { DsGroupLabelTemplateDirective } from '../group-label-template.directive';
+import {
+  firstEnabledIndex as firstEnabledOf,
+  lastEnabledIndex as lastEnabledOf,
+  nextEnabledIndex,
+} from '../../core/list-cursor';
+import { scrollActiveOptionIntoView } from '../scroll-active-option';
+import { announceOptionCount } from '../picker-announcer';
+import { createTypeAhead } from '../type-ahead';
 
 @Component({
   selector: 'ds-select',
   standalone: true,
-  imports: [IconComponent, NgTemplateOutlet, FieldMessageComponent],
+  imports: [SpinnerComponent, IconComponent, NgTemplateOutlet, FieldMessageComponent],
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.in-group]': 'inGroup',
+    '[class.content-width]': "width() === 'content'",
+  },
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -61,6 +88,10 @@ export class SelectComponent
   implements OnDestroy
 {
   private readonly overlay = inject(Overlay);
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly preview = inject(DsStaticPreview);
@@ -68,25 +99,72 @@ export class SelectComponent
   /** Selected option's value, two-way bound. */
   readonly value = model<string>('');
   /** Flat options or option groups rendered in the dropdown panel. */
-  readonly options = input<SelectItem[]>([]);
+  readonly options = input<readonly SelectItem[]>([]);
+  /** Public panel tokens forwarded onto the portaled overlay pane on open, so a
+   *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it. Without this the
+   *  tokens can only be set globally: the pane is portaled out of this component. */
+  private readonly panelTokens = [
+    '--ds-dropdown-panel-bg-color',
+    '--ds-dropdown-panel-minw',
+    '--ds-dropdown-panel-maxw',
+    '--ds-option-selected-bg-color',
+    '--ds-option-selected-label-color',
+    '--ds-option-selected-bg-color-hover',
+    '--ds-option-check-color',
+  ];
+
+  /** Trigger width — `fill` stretches to the container and pins the panel to the
+   *  trigger's width; `content` hugs the trigger's own content and takes that width
+   *  as the panel's FLOOR, so the panel can still grow to its options. */
+  readonly width = input<SelectWidth>('fill');
   /** Shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('');
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Label shown above the trigger. */
   readonly label = input<string>('');
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Options are still being fetched. The panel shows a spinner instead of the
+   *  empty row — which would otherwise claim there are no matches — and the list
+   *  reports `aria-busy`. */
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** The panel opened. The moment to fetch options for a picker whose list is
+   *  loaded on demand. */
+  readonly opened = output<void>();
+  /** The panel closed, for any reason — a pick, Escape, an outside click, a scroll. */
+  readonly closed = output<void>();
+  /** Scrolls the keyboard cursor's row into view. On by default: a list longer
+   *  than the panel otherwise walks the cursor out of sight. Set `false` only if
+   *  you are driving the scroll position yourself. */
+  readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
   /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
-  /** Applies error styling and marks the trigger `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the trigger. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, a second input because signal forms binds
+   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   */
+  readonly readonlyBinding = input(false, {
+    // The alias IS the point: signal forms binds by name, and the contract
+    // spells it `readonly` where the DS spells it `readOnly`.
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
@@ -98,15 +176,47 @@ export class SelectComponent
   /** Shows an inline clear (×) button when a value is selected. */
   readonly clearable = input(false, { transform: booleanAttribute });
 
+  protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
+    read: TemplateRef,
+  });
+  protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
+    read: TemplateRef,
+  });
+  protected readonly panelHeaderTemplate = contentChild(
+    DsPanelHeaderTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly panelFooterTemplate = contentChild(
+    DsPanelFooterTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly groupLabelTemplate = contentChild(
+    DsGroupLabelTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
+    read: TemplateRef,
+  });
+
   protected readonly uid = nextControlId('ds-select');
   protected readonly labelId = `${this.uid}-label`;
   protected readonly listboxId = `${this.uid}-listbox`;
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    success: this.success,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
   protected optionId(flatIndex: number): string {
     return `${this.uid}-opt-${flatIndex}`;
   }
@@ -176,19 +286,19 @@ export class SelectComponent
 
   protected readonly triggerClasses = computed<string>(() => {
     const parts = ['dropdown'];
-    if (this.size() === 'sm') {
+    if (this.sizeResolved() === 'sm') {
       parts.push('sm');
     }
-    if (this.size() === 'lg') {
+    if (this.sizeResolved() === 'lg') {
       parts.push('lg');
     }
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.readOnly()) {
+    if (this.isReadOnly()) {
       parts.push('readonly');
     }
-    if (this.invalid()) {
+    if (this.invalidResolved()) {
       parts.push('error');
     }
     if (this.open() || this.preview.staticPreview()) {
@@ -200,6 +310,16 @@ export class SelectComponent
 
   constructor() {
     super();
+    scrollActiveOptionIntoView(
+      this.activeDescendant,
+      this.scrollActiveIntoView,
+      this.cursorFromKeyboard,
+    );
+    announceOptionCount(
+      computed(() => this.flatOptions().length),
+      this.open,
+    );
+
     effect(() => {
       if (!this.open()) {
         return;
@@ -222,7 +342,11 @@ export class SelectComponent
   }
 
   protected toggle(): void {
-    if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
+    if (
+      this.isDisabled() ||
+      this.isReadOnly() ||
+      this.preview.staticPreview()
+    ) {
       return;
     }
     if (this.open()) {
@@ -237,61 +361,57 @@ export class SelectComponent
       return;
     }
     const triggerElement = this.trigger().nativeElement;
-    const width = triggerElement.getBoundingClientRect().width;
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(triggerElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
+    const triggerWidth = triggerElement.getBoundingClientRect().width;
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      triggerElement,
+    );
+    if (this.width() === 'content') {
+      config.minWidth = triggerWidth;
+    } else {
+      config.width = triggerWidth;
+    }
+    this.overlayRef = this.overlay.create(config);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
       positionStrategy,
-      hasBackdrop: false,
-      // Reuse the global panel skin defined in styles/_dropdown-overlay.scss
-      // so the portaled panel actually renders styled — `:host ::ng-deep`
-      // selectors can't reach a node outside the host's DOM tree.
-      panelClass: ['ds-dropdown-panel', 'ds-overlay-pane'],
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      width,
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    );
+    forwardOverlayTokens(
+      this.overlayRef,
+      this.host.nativeElement,
+      this.panelTokens,
+    );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      (target) => this.trigger().nativeElement.contains(target),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
+    const detaching = this.overlayRef;
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
+      // A deferred dispose can outlive a re-open, and then this fires for the
+      // PREVIOUS panel: clearing state here would strand the live one.
+      if (this.overlayRef !== detaching) {
+        return;
+      }
       this.overlayRef = null;
-      this.open.set(false);
+      this.setOpen(false);
     });
     const portal = new TemplatePortal(this.panelTpl(), this.vcr);
     this.overlayRef.attach(portal);
-    this.open.set(true);
+    this.setOpen(true);
   }
 
-  protected close(): void {
-    disposeWithLeave(this.overlayRef);
+  protected close(cause: DsOverlayCloseCause = 'select'): void {
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
-    this.open.set(false);
+    this.setOpen(false);
     this.activeIndex.set(-1);
     this.markTouched();
   }
@@ -314,8 +434,24 @@ export class SelectComponent
 
   protected clearValue(event: MouseEvent): void {
     event.stopPropagation();
-    this.value.set('');
+    this.clear();
     this.markTouched();
+  }
+
+  /**
+   * Empties the selection from outside — a "reset filters" button, a form the app
+   * clears itself. `ds-autocomplete` has had this; the other two had only the
+   * in-trigger button, so an app with its own reset had to write the empty value
+   * by hand and guess what "empty" is for this control.
+   *
+   * Deliberately does NOT move focus: the caller may be navigating away, and
+   * stealing focus back into a field they just left is worse than leaving it.
+   */
+  clear(): void {
+    this.value.set('');
+    if (this.open()) {
+      this.close('dismiss');
+    }
   }
 
   protected isSelected(option: SelectOption): boolean {
@@ -330,7 +466,12 @@ export class SelectComponent
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
+    this.cursorFromKeyboard.set(true);
+    if (
+      this.isDisabled() ||
+      this.isReadOnly() ||
+      this.preview.staticPreview()
+    ) {
       return;
     }
     // Only handle keys aimed at the trigger itself — a keydown bubbling up from
@@ -362,7 +503,7 @@ export class SelectComponent
     }
     if (key === 'Escape') {
       event.preventDefault();
-      this.close();
+      this.close('dismiss');
 
       return;
     }
@@ -388,6 +529,18 @@ export class SelectComponent
 
       return;
     }
+    if (key === 'PageDown') {
+      event.preventDefault();
+      this.moveActive(SelectComponent.pageStep);
+
+      return;
+    }
+    if (key === 'PageUp') {
+      event.preventDefault();
+      this.moveActive(-SelectComponent.pageStep);
+
+      return;
+    }
     if (key === 'Home') {
       event.preventDefault();
       this.activeIndex.set(this.firstEnabledIndex());
@@ -397,6 +550,21 @@ export class SelectComponent
     if (key === 'End') {
       event.preventDefault();
       this.activeIndex.set(this.lastEnabledIndex());
+
+      return;
+    }
+    if (this.handleTypeAhead(key)) {
+      event.preventDefault();
+      if (!this.open()) {
+        this.pickActive();
+      }
+    }
+  }
+
+  private pickActive(): void {
+    const entry = this.flatOptions()[this.activeIndex()];
+    if (entry) {
+      this.pick(entry.option, entry.groupDisabled);
     }
   }
 
@@ -404,45 +572,55 @@ export class SelectComponent
     return this.activeIndex() === index;
   }
 
-  private moveActive(delta: number): void {
-    const opts = this.flatOptions();
-    if (opts.length === 0) {
-      return;
-    }
-    let next = this.activeIndex();
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of -- walks from activeIndex with modulo wraparound; `attempts` only bounds the walk, it isn't a sequential index
-    for (let attempts = 0; attempts < opts.length; attempts++) {
-      next = (next + delta + opts.length) % opts.length;
-      const candidate = opts[next];
-      if (candidate && !candidate.option.disabled && !candidate.groupDisabled) {
-        this.activeIndex.set(next);
+  private readonly typeAhead = createTypeAhead();
 
-        return;
-      }
+  private handleTypeAhead(key: string): boolean {
+    const index = this.typeAhead.match(key, this.flatOptions().map((entry) => entry.option.label), this.activeIndex());
+    if (index < 0) {
+      return false;
+    }
+    this.activeIndex.set(index);
+
+    return true;
+  }
+
+  protected readonly cursorFromKeyboard = signal(false);
+
+  private cursorList() {
+    const opts = this.flatOptions();
+
+    return {
+      length: opts.length,
+      isEnabled: (index: number) =>
+        !opts[index].option.disabled && !opts[index].groupDisabled,
+    };
+  }
+
+  /** How far PageUp and PageDown move. Ten rows is the native `<select>` step and
+   *  the APG listbox example's — a fixed number rather than a measured screenful,
+   *  so the jump is the same wherever the panel happens to be clipped. */
+  private static readonly pageStep = 10;
+
+  private moveActive(delta: number): void {
+    const next = nextEnabledIndex(this.cursorList(), this.activeIndex(), delta);
+    if (next >= 0) {
+      this.activeIndex.set(next);
     }
   }
 
-  private firstEnabledIndex(): number {
-    const opts = this.flatOptions();
-    for (let i = 0; i < opts.length; i++) {
-      const candidate = opts[i];
-      if (candidate && !candidate.option.disabled && !candidate.groupDisabled) {
-        return i;
-      }
+  private setOpen(next: boolean): void {
+    if (this.open() === next) {
+      return;
     }
-
-    return -1;
+    this.open.set(next);
+    (next ? this.opened : this.closed).emit();
   }
 
   private lastEnabledIndex(): number {
-    const opts = this.flatOptions();
-    for (let i = opts.length - 1; i >= 0; i--) {
-      const candidate = opts[i];
-      if (candidate && !candidate.option.disabled && !candidate.groupDisabled) {
-        return i;
-      }
-    }
+    return lastEnabledOf(this.cursorList());
+  }
 
-    return -1;
+  private firstEnabledIndex(): number {
+    return firstEnabledOf(this.cursorList());
   }
 }

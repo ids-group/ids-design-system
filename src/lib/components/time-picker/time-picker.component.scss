@@ -1,4 +1,7 @@
 @use '../../styles/press' as press;
+@use '../../styles/field-label' as field-label;
+@use '../../styles/field-box' as field-box;
+@use '../../styles/field-state' as field-state;
 
 :host {
   --_time-picker-focus-shadow: var(
@@ -17,7 +20,13 @@
     --ds-time-picker-trigger-color,
     var(--text-primary)
   );
-  --_time-picker-trigger-radius: var(--ds-time-picker-trigger-radius, var(--radius-md));
+  --_time-picker-trigger-radius: var(--ds-time-picker-trigger-radius, var(--ds-radius-control));
+  --_time-picker-trigger-pad-x: var(--ds-time-picker-trigger-pad-x, var(--field-pad-x));
+  --_time-picker-panel-radius: var(--ds-time-picker-panel-radius, var(--ds-radius-panel));
+  --_time-picker-required-color: var(--ds-time-picker-required-color, var(--error));
+  --_time-picker-value-font-family: var(--ds-time-picker-value-font-family, var(--font-sans));
+  --_time-picker-value-font-size: var(--ds-time-picker-value-font-size, var(--font-size-s));
+  --_time-picker-value-weight: var(--ds-time-picker-value-weight, var(--font-weight-regular));
 
   display: block;
 }
@@ -27,12 +36,37 @@
   flex-direction: column;
   gap: var(--field-label-gap);
   width: 100%;
+
+  // Same class names and tokens as ds-date-picker's label block, so a date and a
+  // time in one form row keep an identical label row and a shared baseline.
+  .label {
+    @include field-label.field-label;
+
+    .req {
+      color: var(--_time-picker-required-color);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .optional-marker {
+      color: var(--text-tertiary);
+      font-weight: var(--font-weight-regular);
+    }
+  }
 }
 
 .trigger-wrap {
   position: relative;
   display: inline-flex;
   width: fit-content;
+}
+
+// All three hug by default, so all three have to give for the field to fill a track.
+:host(.full-width) {
+  .trigger-wrap,
+  .range-wrap,
+  .trigger {
+    width: 100%;
+  }
 }
 
 .range-wrap {
@@ -49,13 +83,15 @@
 .trigger {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   background: var(--_time-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_time-picker-trigger-border);
   border-radius: var(--_time-picker-trigger-radius);
-  padding: 0 var(--space-3);
-  height: var(--hit-cozy);
-  font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
+  padding: 0 var(--_time-picker-trigger-pad-x);
+
+  @include field-box.field-box-height(md);
+
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat)
     var(--font-sans);
   color: var(--_time-picker-trigger-color);
   cursor: pointer;
@@ -71,20 +107,17 @@
   }
 
   &.sm {
-    height: var(--hit-min);
+    @include field-box.field-box-height(sm);
+
     padding: 0 var(--space-2);
     font-size: var(--font-size-xs);
   }
 
   &.lg {
-    height: var(--field-h-lg);
+    @include field-box.field-box-height(lg);
+
     padding: 0 var(--space-4);
     font-size: var(--font-size-m);
-  }
-
-  &.error {
-    background: var(--error-subtitle);
-    border-color: var(--error);
   }
 
   &.disabled,
@@ -93,7 +126,6 @@
     border-color: var(--border-disabled);
     color: var(--text-disabled);
     cursor: not-allowed;
-    opacity: var(--opacity-muted);
   }
 
   // Clear-button room — after the size rules so their padding shorthand can't reset padding-right.
@@ -107,6 +139,13 @@
 }
 
 .time-value {
+  // Takes the slack, so in fullWidth the trailing glyph lands on the right edge —
+  // the same vertical line as ds-date-picker's calendar button.
+  flex: 1;
+  text-align: left;
+  font-family: var(--_time-picker-value-font-family);
+  font-size: var(--_time-picker-value-font-size);
+  font-weight: var(--_time-picker-value-weight);
   font-variant-numeric: tabular-nums;
 }
 
@@ -120,7 +159,7 @@
   justify-content: center;
   border: 0;
   padding: var(--space-1);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   background: transparent;
   color: var(--text-tertiary);
   cursor: pointer;
@@ -144,8 +183,12 @@
   background: var(--ds-time-picker-bg-color, var(--surface-overlay));
   border: var(--border-width-default) solid
     var(--ds-time-picker-border, var(--border-default));
-  border-radius: var(--radius-md);
-  box-shadow: var(--ds-time-picker-shadow, var(--shadow-popover));
+
+  /* The PUBLIC token, like the declarations around it: this panel is portaled out of
+     the host, so a :host-declared `--_…` resolves to nothing here and the property
+     silently falls back to its initial value — 0 for a radius, square corners. */
+  border-radius: var(--ds-time-picker-panel-radius, var(--ds-radius-panel));
+  box-shadow: var(--ds-time-picker-shadow, var(--ds-elevation-overlay));
   padding: var(--space-2);
   gap: var(--space-1);
 }
@@ -156,6 +199,12 @@
   gap: var(--space-2);
   padding-top: var(--space-1);
   border-top: var(--border-width-default) solid var(--border-subtitle);
+
+  // With no Done beside it, Now spans the panel instead of hugging the right edge.
+  &:not(:has(.primary)) .time-action {
+    flex: 1;
+    text-align: center;
+  }
 }
 
 .time-action {
@@ -164,7 +213,7 @@
   background: transparent;
   cursor: pointer;
   padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
     var(--font-sans);
   color: var(--text-secondary);
@@ -178,8 +227,13 @@
     color: var(--accent);
   }
 
+  /* Public token, for the portal reason spelled out on .time-panel above. */
   &:focus-visible {
     outline: none;
-    box-shadow: var(--_time-picker-focus-shadow);
+    box-shadow: var(--ds-time-picker-focus-shadow, var(--ds-control-focus-shadow));
   }
 }
+
+@include field-state.field-state(
+  '.trigger',
+);

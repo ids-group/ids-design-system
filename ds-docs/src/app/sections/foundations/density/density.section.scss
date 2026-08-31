@@ -48,9 +48,9 @@
     .dens-sandbox[data-density="compact"] { --hit-cozy: 32px; }
     .dens-sandbox[data-density="regular"] { --hit-cozy: 40px; }
     .dens-sandbox[data-density="comfy"]   { --hit-cozy: 48px; }
-    .dens-sandbox__head { display: grid; gap: var(--space-0-5); }
-    .dens-sandbox__attr { color: var(--text-tertiary); font-size: 11px; }
-    .dens-sandbox__body { display: grid; gap: var(--space-3); }
+    .dens-sandbox-head { display: grid; gap: var(--space-0-5); }
+    .dens-sandbox-attr { color: var(--text-tertiary); font-size: 11px; }
+    .dens-sandbox-body { display: grid; gap: var(--space-3); }
     .dens-btn {
       height: var(--hit-cozy);
       padding: 0 var(--space-4);
@@ -98,20 +98,20 @@
       border-radius: var(--radius-sm);
       background: var(--surface-secondary);
     }
-    .dens-list__dot {
+    .dens-list-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: var(--primary);
     }
-    .dens-list__label {
+    .dens-list-label {
       font: var(--font-weight-regular) var(--font-size-s) / 1 var(--font-sans);
       color: var(--text-primary);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .dens-list__meta {
+    .dens-list-meta {
       color: var(--text-tertiary);
       font-size: 12px;
     }

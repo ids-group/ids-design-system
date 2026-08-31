@@ -7,6 +7,7 @@
   --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
   --_checkbox-selected-bg: var(--ds-checkbox-selected-bg-color, var(--accent));
   --_checkbox-selected-border: var(--ds-checkbox-selected-border-color, var(--accent));
+  --_checkbox-radius: var(--ds-checkbox-radius, var(--ds-radius-inner));
 
   // Local resolvers for size scaling; md references the global token so it stays
   // density-responsive. sm/lg are explicit per-instance overrides.
@@ -14,6 +15,18 @@
   --_checkbox-label-fs: var(--font-size-s);
 
   display: inline-flex;
+}
+
+/* A 16px square cannot take the field mixin's border+fill treatment — at that size
+   a tinted fill reads as "checked". Only the border moves. */
+:host([data-field-state='error']) {
+  --_checkbox-border: var(--error);
+  --_checkbox-hover-border: var(--error);
+}
+
+:host([data-field-state='warning']) {
+  --_checkbox-border: var(--warning-text);
+  --_checkbox-hover-border: var(--warning-text);
 }
 
 .checkbox-field {
@@ -32,10 +45,16 @@
   gap: var(--space-2);
 
   .control-text {
-    font: var(--font-weight-regular) var(--_checkbox-label-fs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-primary);
+    font: var(--ds-checkbox-label-weight, var(--font-weight-regular)) var(--ds-checkbox-label-font-size, var(--_checkbox-label-fs)) / var(--line-height-base) var(--font-sans);
+    color: var(--ds-checkbox-label-color, var(--text-primary));
     cursor: pointer;
     user-select: none;
+
+    /* No [label] and nothing projected: collapse, or the empty caption
+       still takes the row gap and offsets the control. */
+    &:empty {
+      display: none;
+    }
 
     .req {
       color: var(--error);
@@ -58,7 +77,7 @@
   place-items: center;
   flex-shrink: 0;
   margin: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--_checkbox-radius);
   transition: background-color var(--duration-fast) var(--ease-standard),
               border-color var(--duration-fast) var(--ease-standard);
 
@@ -104,9 +123,12 @@
       width: var(--check-indet-w);
       height: var(--check-indet-h);
       background: var(--icon-on-primary);
-      border-radius: var(--radius-sm);
+      border-radius: var(--ds-radius-inner);
       transform: scale(1);
       opacity: 1;
     }
   }
 }
+
+/* Dev-only detection sink for a projected caption (checkbox.component.html).
+   Never rendered visible, so it cannot become a flex item in .control-line's gap. */

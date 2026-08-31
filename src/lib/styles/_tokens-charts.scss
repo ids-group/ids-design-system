@@ -33,9 +33,7 @@
   --chart-seq-6: var(--blue-900);
 
   /* DIVERGENT — red ← neutral → green
-     Values taken verbatim from the source design prototype
-     (CLAUDE_DESIGN_DS/patterns.css) so the Excess/Shortage matrix
-     matches the reference one-for-one. Explicit HSL keeps the ramp
+     Explicit HSL keeps the ramp
      independent of palette retunes — re-skinning brand/red/green
      should not shift the dataviz colour story. */
   --chart-div--3: hsl(0deg 70% 40%);       /* large negative (worst) */

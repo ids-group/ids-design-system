@@ -15,8 +15,10 @@ import {
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
+import { nextControlId } from '../field-ids';
 import type { IconName } from '../../icons/icons.data';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
+import { prepareOverlayEnter } from '../overlay-motion';
 
 @Component({
   selector: 'ds-menu-item',
@@ -47,10 +49,24 @@ export class MenuItemComponent implements OnDestroy {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Renders the item in an error/destructive style. */
   readonly error = input(false, { transform: booleanAttribute });
+  /** Renders the item muted — a secondary row like "Sign out" under a divider,
+   *  still actionable but not competing with the items above it. */
+  readonly quiet = input(false, { transform: booleanAttribute });
+  /** A standing second line under the label — a limitation the action carries
+   *  ("will not be saved", "read-only in this workspace"). Visible without hover
+   *  or focus, which is what separates it from a `[dsTooltip]`.
+   *
+   *  Reaches assistive tech as `aria-describedby`, NOT as part of the item's name:
+   *  the projected label names the action, and a caveat is a description of it.
+   *  That is why the line is `aria-hidden` in the DOM and referenced by id — inside
+   *  the button and visible, it would otherwise be concatenated into the name. */
+  readonly description = input<string>('');
   /** Optional submenu template — renders a nested `ds-menu` on hover / ArrowRight. */
   readonly submenu = input<TemplateRef<unknown> | null>(null);
   /** Fires on click, unless the item is disabled or opens a submenu. */
   readonly pressed = output<MouseEvent>();
+
+  protected readonly descriptionId = nextControlId('ds-menu-item-desc');
 
   /** Roving tabindex, owned by ds-menu — exactly one item is tabbable (0), the
    *  rest -1. Defaults true so a standalone item (outside ds-menu) stays
@@ -164,6 +180,11 @@ export class MenuItemComponent implements OnDestroy {
       panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     });
+    prepareOverlayEnter(
+      this.submenuRef,
+      this.hostElement.nativeElement,
+      positionStrategy,
+    );
 
     this.submenuRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape' || event.key === 'ArrowLeft') {

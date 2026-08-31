@@ -4,10 +4,13 @@ import {
   computed,
   inject,
   input,
+  isDevMode,
+  numberAttribute,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { DS_ICON_REGISTRY } from './icon-registry';
 import { ICONS, type IconName } from './icons.data';
+import { resolveWithConfig } from '../core/config-defaults';
 
 @Component({
   selector: 'ds-icon',
@@ -36,9 +39,9 @@ import { ICONS, type IconName } from './icons.data';
       stroke="currentColor"
       stroke-linecap="round"
       stroke-linejoin="round"
-      [style.--ds-icon-size]="size() + 'px'"
-      [attr.width]="size()"
-      [attr.height]="size()"
+      [style.--ds-icon-size]="sizeResolved() + 'px'"
+      [attr.width]="sizeResolved()"
+      [attr.height]="sizeResolved()"
       [attr.stroke-width]="stroke()"
       [attr.role]="ariaLabel() ? 'img' : null"
       [attr.aria-label]="ariaLabel()"
@@ -53,7 +56,16 @@ export class IconComponent {
   // Consumer-supplied icons via provideDsIcons(...). Empty record by default.
   private readonly registry = inject(DS_ICON_REGISTRY);
   readonly name = input.required<IconName>();
-  readonly size = input<number>(16);
+  /** Pixel size of the square glyph. Unset falls back to `DS_CONFIG.icon.size`,
+   *  then `16`. */
+  readonly size = input<number | null, unknown>(null, {
+    transform: (value) => (value == null ? null : numberAttribute(value)),
+  });
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.icon?.size,
+    16,
+  );
   readonly stroke = input<number>(1.75);
   /** When set, the icon is exposed to assistive tech as an image with this
    *  name; otherwise it is decorative and hidden (`aria-hidden`). */
@@ -63,6 +75,16 @@ export class IconComponent {
     // Built-in DS set wins over consumer registry — see provideDsIcons() docs.
     const body =
       (ICONS as Record<string, string>)[key] ?? this.registry[key] ?? '';
+    // A misspelled name renders an empty <svg> and nothing else — no error, and
+    // the type cannot catch it: IconName stays open (`| (string & {})`) so a
+    // consumer can register their own through provideDsIcons(), and closing the
+    // union would reject every registered name. This branch is the only place
+    // that knows. Production pays one falsy check.
+    if (!body && isDevMode()) {
+      console.warn(
+        `[ds-icon] Unknown icon name "${key}" — not in the DS set and not registered through provideDsIcons(), so nothing renders.`,
+      );
+    }
 
     return this.sanitizer.bypassSecurityTrustHtml(body);
   });

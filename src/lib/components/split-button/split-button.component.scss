@@ -1,10 +1,15 @@
+@use '../../styles/field-box' as field-box;
+
 :host {
   display: inline-flex;
   --_split-button-bg-color: var(--ds-split-button-bg-color, var(--accent));
   --_split-button-text-color: var(--ds-split-button-text-color, var(--accent-on));
   --_split-button-bg-hover-color: var(--ds-split-button-bg-hover-color, var(--accent-strong));
   --_split-button-divider-color: var(--ds-split-button-divider-color, var(--btn-split-divider));
-  --_split-button-outline-bg-color: var(--ds-split-button-outline-bg-color, var(--surface-default));
+
+  /* Transparent, matching ds-button's outline variant — the split button's outlined
+     half must adopt the surface it sits on. */
+  --_split-button-outline-bg-color: var(--ds-split-button-outline-bg-color, transparent);
   --_split-button-outline-border-color: var(--ds-split-button-outline-border-color, var(--border-default));
 }
 
@@ -14,7 +19,9 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md);
+
   border: var(--border-width-default) solid transparent;
   background: transparent;
   font:

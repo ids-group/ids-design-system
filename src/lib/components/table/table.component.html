@@ -1,3 +1,21 @@
+<div class="table-toolbar">
+  <div class="toolbar-slot">
+    <ng-content select="[toolbar]"></ng-content>
+  </div>
+
+  @if (exportButton()) {
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [disabled]="exporting()"
+      (pressed)="runExport()"
+    >
+      {{ exporting() ? 'Preparing…' : 'Export CSV' }}
+    </ds-button>
+  }
+</div>
+
 <div
   #scrollWrap
   class="scroll-wrap"
@@ -9,9 +27,7 @@
     role="status"
     aria-live="polite"
   >
-    @if (loading() !== false) {
-      Loading…
-    }
+    {{ statusMessage() }}
   </div>
 
   <ds-loading-overlay
@@ -21,6 +37,7 @@
   >
     <table
       [class]="tableClasses()"
+      [style.--_table-virtual-row-h]="virtualRowHeight()"
       [attr.role]="rowInteractive() ? 'grid' : null"
       [attr.aria-busy]="loading() !== false ? 'true' : null"
     >
@@ -65,12 +82,15 @@
               [class]="headerClasses(col)"
               [class.numeric]="col.align === 'right'"
               [class.pin-first]="first && stickyFirstColumn()"
+              [class.fit-content]="fitsContent(col)"
               [style.width.px]="columnWidth(col)"
               [style.min-width.px]="columnWidth(col)"
               [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
+              [attr.data-col-key]="col.key"
+              (pointerenter)="onHeaderEnter($event, col)"
             >
-              @if (col.sortable) {
+              @if (sortableCol(col)) {
                 <button
                   type="button"
                   class="th-label"
@@ -122,11 +142,16 @@
               @if (resizableColumns()) {
                 <span
                   class="col-resize"
-                  aria-hidden="true"
+                  role="separator"
+                  tabindex="0"
+                  aria-orientation="vertical"
+                  [attr.aria-label]="'Resize ' + col.label"
+                  [attr.aria-valuenow]="columnWidth(col)"
                   (pointerdown)="onResizeStart(col, $event)"
                   (pointermove)="onResizeMove($event)"
                   (pointerup)="onResizeEnd()"
                   (pointercancel)="onResizeEnd()"
+                  (keydown)="onResizeKey(col, $event)"
                 >
                 </span>
               }
@@ -165,48 +190,13 @@
       <tbody>
         @if (isSkeletonLoading()) {
           @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
-            <tr>
-              @if (selectable()) {
-                <td class="select-col pin-select">
-                  <ds-skeleton
-                    width="14px"
-                    height="14px"
-                    [inline]="true"
-                  />
-                </td>
-              }
-
-              @if (expandableRows()) {
-                <td
-                  class="expand-col"
-                  [class.pin-expand]="stickyFirstColumn()"
-                >
-                </td>
-              }
-
-              @for (
-                col of visibleColumns();
-                track col.key;
-                let first = $first
-              ) {
-                <td
-                  [class.numeric]="col.align === 'right'"
-                  [class.pin-first]="first && stickyFirstColumn()"
-                >
-                  <ds-skeleton
-                    height="14px"
-                    [width]="skeletonWidth(col, rowIndex)"
-                    [inline]="true"
-                  />
-                </td>
-              }
-
-              @if (hasUtilityColumn()) {
-                <td class="actions-col"></td>
-              }
-            </tr>
+            <ng-container
+              [ngTemplateOutlet]="skeletonRow"
+              [ngTemplateOutletContext]="{ $implicit: rowIndex }"
+            >
+            </ng-container>
           }
-        } @else if (!filteredData().length) {
+        } @else if (showsEmptyRow()) {
           <tr>
             <td
               class="empty"
@@ -221,139 +211,215 @@
             </td>
           </tr>
         } @else {
-          @for (row of displayData(); track row.id) {
+          @if (virtualWindow(); as window) {
             <tr
-              [class.selected]="isSelected(row)"
-              [class.expanded]="isExpanded(row)"
-              [class.clickable]="rowInteractive()"
-              [class.active]="row.id === activeRowId()"
-              [attr.aria-current]="row.id === activeRowId() ? 'true' : null"
-              [attr.tabindex]="rowInteractive() ? 0 : null"
-              [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
-              (mousedown)="onRowMousedown()"
-              (click)="onRowClick(row, $event)"
-              (keydown.enter)="onRowKey(row, $event)"
-              (keydown.space)="onRowKey(row, $event)"
+              class="spacer"
+              aria-hidden="true"
+              [style.height.px]="window.padTop"
             >
-              @if (selectable()) {
-                <td class="select-col pin-select">
-                  <input
-                    type="checkbox"
-                    class="check"
-                    [attr.aria-label]="'Select ' + rowAriaLabel(row)"
-                    [checked]="isSelected(row)"
-                    (change)="onToggleRow(row, $event)"
-                    (click)="$event.stopPropagation()"
-                  />
-                </td>
-              }
+            </tr>
+          }
 
-              @if (expandableRows()) {
-                <td
-                  class="expand-col"
-                  [class.pin-expand]="stickyFirstColumn()"
-                >
-                  <button
-                    type="button"
-                    class="expand-btn"
-                    [attr.aria-expanded]="isExpanded(row)"
-                    [attr.aria-label]="
-                      isExpanded(row) ? 'Collapse row' : 'Expand row'
-                    "
-                    (click)="onToggleExpand(row, $event)"
-                  >
-                    <ds-icon
-                      class="expand-chev"
-                      name="chevronRight"
-                      [class.is-expanded]="isExpanded(row)"
-                      [size]="16"
-                    />
-                  </button>
-                </td>
-              }
-
-              @for (
-                col of visibleColumns();
-                track col.key;
-                let first = $first
-              ) {
-                <td
-                  [class.numeric]="col.align === 'right'"
-                  [class.pin-first]="first && stickyFirstColumn()"
-                  [class.editable-cell]="col.editable"
-                  (dblclick)="startEdit(row, col, $event)"
-                >
-                  @if (isEditing(row, col)) {
+          @for (slot of rowSlots(); track slot.index) {
+            @if (slot.row; as row) {
+              <tr
+                [class.selected]="isSelected(row)"
+                [class.expanded]="isExpanded(row)"
+                [class.clickable]="rowInteractive()"
+                [class.stripe]="isStriped(slot.index)"
+                [class.active]="rowKey(row) === activeRowId()"
+                [attr.aria-current]="
+                  rowKey(row) === activeRowId() ? 'true' : null
+                "
+                [attr.tabindex]="rowInteractive() ? 0 : null"
+                [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
+                (mousedown)="onRowMousedown()"
+                (click)="onRowClick(row, $event)"
+                (keydown.enter)="onRowKey(row, $event)"
+                (keydown.space)="onRowKey(row, $event)"
+              >
+                @if (selectable()) {
+                  <td class="select-col pin-select">
                     <input
-                      #editInput
-                      type="text"
-                      class="cell-edit"
-                      [value]="editDraft()"
-                      (input)="onEditInput($event)"
+                      type="checkbox"
+                      class="check"
+                      [attr.aria-label]="'Select ' + rowAriaLabel(row)"
+                      [checked]="isSelected(row)"
+                      (change)="onToggleRow(row, $event)"
                       (click)="$event.stopPropagation()"
-                      (keydown.enter)="commitEdit(row, col)"
-                      (keydown.escape)="cancelEdit()"
-                      (blur)="commitEdit(row, col)"
                     />
-                  } @else if (cellTemplate(col); as tpl) {
-                    <ng-container
-                      [ngTemplateOutlet]="tpl"
-                      [ngTemplateOutletContext]="{ $implicit: row, row: row }"
-                    >
-                    </ng-container>
-                  } @else if (col.truncate) {
-                    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- pointer-only enhancement: the clip is visual (CSS ellipsis), keyboard/AT users already get the full DOM text + title; a tab stop per cell would wreck keyboard traversal -->
-                    <span
-                      class="cell-clip"
-                      [style.max-width.px]="col.width ?? 240"
-                      [attr.title]="cellValue(row, col)"
-                      (click)="onCellClipClick(row, col, $event)"
-                    >
-                      {{ cellValue(row, col) }}
-                    </span>
-                  } @else {
-                    {{ cellValue(row, col) }}
-                  }
-                </td>
-              }
+                  </td>
+                }
 
-              @if (hasUtilityColumn()) {
-                <td class="actions-col">
-                  @if (hasRowActions()) {
+                @if (expandableRows()) {
+                  <td
+                    class="expand-col"
+                    [class.pin-expand]="stickyFirstColumn()"
+                  >
                     <button
                       type="button"
-                      class="row-actions-btn"
-                      aria-haspopup="menu"
-                      [attr.aria-expanded]="isMenuOpenFor(row)"
-                      [attr.aria-label]="'Actions for ' + rowAriaLabel(row)"
-                      (click)="onRowMenuClick(row, $event)"
-                      (keydown.enter)="$event.stopPropagation()"
-                      (keydown.space)="$event.stopPropagation()"
+                      class="expand-btn"
+                      [attr.aria-expanded]="isExpanded(row)"
+                      [attr.aria-label]="
+                        isExpanded(row) ? 'Collapse row' : 'Expand row'
+                      "
+                      (click)="onToggleExpand(row, $event)"
                     >
                       <ds-icon
-                        name="moreV"
+                        class="expand-chev"
+                        name="chevronRight"
+                        [class.is-expanded]="isExpanded(row)"
                         [size]="16"
                       />
                     </button>
-                  }
-                </td>
-              }
-            </tr>
+                  </td>
+                }
 
-            @if (expandableRows() && isExpanded(row) && rowExpandTemplate()) {
-              <tr class="expand-panel-row">
-                <td
-                  class="expand-panel-cell"
-                  [attr.colspan]="expandedColspan()"
-                >
-                  <ng-container
-                    [ngTemplateOutlet]="rowExpandTemplate()!"
-                    [ngTemplateOutletContext]="{ $implicit: row, row: row }"
+                @for (
+                  col of visibleColumns();
+                  track col.key;
+                  let first = $first
+                ) {
+                  <td
+                    [class.numeric]="col.align === 'right'"
+                    [class.pin-first]="first && stickyFirstColumn()"
+                    [class.editable-cell]="col.editable"
+                    [class.interactive-cell]="col.interactive"
+                    [class.fit-content]="fitsContent(col)"
+                    (dblclick)="startEdit(row, col, $event)"
                   >
-                  </ng-container>
-                </td>
+                    @if (isEditing(row, col)) {
+                      <input
+                        #editInput
+                        type="text"
+                        class="cell-edit"
+                        [value]="editDraft()"
+                        (input)="onEditInput($event)"
+                        (click)="$event.stopPropagation()"
+                        (keydown.enter)="commitEdit(row, col)"
+                        (keydown.escape)="cancelEdit()"
+                        (blur)="commitEdit(row, col)"
+                      />
+                    } @else if (cellTemplate(col); as tpl) {
+                      @if (col.truncate) {
+                        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- same pointer-only enhancement as the plain truncate branch below; the value stays in the DOM for AT -->
+                        <span
+                          class="cell-clip"
+                          [style.max-width.px]="clipWidth(col)"
+                          [attr.title]="cellValue(row, col)"
+                          (click)="onCellClipClick(row, col, $event)"
+                        >
+                          <ng-container
+                            [ngTemplateOutlet]="tpl"
+                            [ngTemplateOutletContext]="{
+                              $implicit: row,
+                              row: row,
+                            }"
+                          >
+                          </ng-container>
+                        </span>
+                      } @else {
+                        <ng-container
+                          [ngTemplateOutlet]="tpl"
+                          [ngTemplateOutletContext]="{
+                            $implicit: row,
+                            row: row,
+                          }"
+                        >
+                        </ng-container>
+                      }
+                    } @else if (col.truncate) {
+                      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- pointer-only enhancement: the clip is visual (CSS ellipsis), keyboard/AT users already get the full DOM text + title; a tab stop per cell would wreck keyboard traversal -->
+                      <span
+                        class="cell-clip"
+                        [style.max-width.px]="clipWidth(col)"
+                        [attr.title]="cellValue(row, col)"
+                        (click)="onCellClipClick(row, col, $event)"
+                      >
+                        @if (cellLink(row, col); as target) {
+                          <a
+                            class="cell-link"
+                            [routerLink]="target"
+                            (click)="$event.stopPropagation()"
+                          >
+                            {{ cellValue(row, col) }}
+                          </a>
+                        } @else {
+                          {{ cellValue(row, col) }}
+                        }
+                      </span>
+                    } @else if (cellLink(row, col); as target) {
+                      <a
+                        class="cell-link"
+                        [routerLink]="target"
+                        (click)="$event.stopPropagation()"
+                      >
+                        {{ cellValue(row, col) }}
+                      </a>
+                    } @else {
+                      {{ cellValue(row, col) }}
+                    }
+                  </td>
+                }
+
+                @if (hasUtilityColumn()) {
+                  <td class="actions-col">
+                    @if (hasRowActions() && hasActionsFor(row)) {
+                      <button
+                        type="button"
+                        class="row-actions-btn"
+                        aria-haspopup="menu"
+                        [attr.aria-expanded]="isMenuOpenFor(row)"
+                        [attr.aria-label]="'Actions for ' + rowAriaLabel(row)"
+                        (click)="onRowMenuClick(row, $event)"
+                        (keydown.enter)="$event.stopPropagation()"
+                        (keydown.space)="$event.stopPropagation()"
+                      >
+                        <ds-icon
+                          name="moreV"
+                          [size]="16"
+                        />
+                      </button>
+                    }
+                  </td>
+                }
               </tr>
+
+              @if (
+                  expandableRows() &&
+                  isExpanded(row) &&
+                  rowExpandTemplate() &&
+                  !virtualizing()
+                ) {
+                <tr class="expand-panel-row">
+                  <td
+                    class="expand-panel-cell"
+                    [attr.colspan]="expandedColspan()"
+                  >
+                    <ng-container
+                      [ngTemplateOutlet]="rowExpandTemplate()!"
+                      [ngTemplateOutletContext]="{ $implicit: row, row: row }"
+                    >
+                    </ng-container>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <ng-container
+                [ngTemplateOutlet]="skeletonRow"
+                [ngTemplateOutletContext]="{ $implicit: slot.index }"
+              >
+              </ng-container>
             }
+          }
+
+          @if (virtualWindow(); as window) {
+            <tr
+              class="spacer"
+              aria-hidden="true"
+              [style.height.px]="window.padBottom"
+            >
+            </tr>
           }
         }
       </tbody>
@@ -361,7 +427,7 @@
   </ds-loading-overlay>
 </div>
 
-@if (stickyScrollbar()) {
+@if (stickyScrollbarResolved()) {
   <div
     #hscrollProxy
     class="hscroll-proxy"
@@ -382,6 +448,8 @@
       [total]="total() ?? filteredData().length"
       [pageSize]="size"
       [pageSizeOptions]="pageSizeOptions()"
+      [showPageSize]="showPageSize()"
+      [showLabel]="showLabel()"
       [(currentPage)]="page"
       (pageSizeChange)="pageSize.set($event)"
     />
@@ -403,48 +471,57 @@
     panelRole="dialog"
     panelLabel="Filter values"
   >
-    <div class="col-filter">
-      <input
-        type="text"
-        class="col-filter-search"
-        placeholder="Search…"
-        [value]="filterSearch()"
-        (input)="onFilterSearch($event)"
-        (click)="$event.stopPropagation()"
-      />
-
-      <div class="col-filter-list">
-        @for (value of filterValues(); track value) {
-          <label class="col-filter-option">
-            <input
-              type="checkbox"
-              class="check"
-              [checked]="isFilterValueChecked(value)"
-              (change)="toggleFilterValue(value)"
-            />
-            {{ value || '(empty)' }}
-          </label>
-        } @empty {
-          <div class="col-filter-empty">
-            No matches
-          </div>
-        }
+    @if (headerFilterFor(filterColumn()!); as projected) {
+      <div class="col-filter col-filter-custom">
+        <ng-container
+          [ngTemplateOutlet]="projected.template"
+          [ngTemplateOutletContext]="headerFilterContext(filterColumn()!)"
+        />
       </div>
+    } @else {
+      <div class="col-filter">
+        <input
+          type="text"
+          class="col-filter-search"
+          placeholder="Search…"
+          [value]="filterSearch()"
+          (input)="onFilterSearch($event)"
+          (click)="$event.stopPropagation()"
+        />
 
-      <div class="col-filter-footer">
-        <span class="col-filter-count">
-          {{ filterSelectedCount() }} selected
-        </span>
+        <div class="col-filter-list">
+          @for (value of filterValues(); track value) {
+            <label class="col-filter-option">
+              <input
+                type="checkbox"
+                class="check"
+                [checked]="isFilterValueChecked(value)"
+                (change)="toggleFilterValue(value)"
+              />
+              {{ value || '(empty)' }}
+            </label>
+          } @empty {
+            <div class="col-filter-empty">
+              No matches
+            </div>
+          }
+        </div>
 
-        <button
-          type="button"
-          class="col-reset"
-          (click)="clearColumnFilter()"
-        >
-          Clear
-        </button>
+        <div class="col-filter-footer">
+          <span class="col-filter-count">
+            {{ filterSelectedCount() }} selected
+          </span>
+
+          <button
+            type="button"
+            class="col-reset"
+            (click)="clearColumnFilter()"
+          >
+            Clear
+          </button>
+        </div>
       </div>
-    </div>
+    }
   </ds-popover>
 }
 
@@ -544,11 +621,12 @@
     align="end"
   >
     <ds-menu>
-      @for (action of rowActions(); track action.id) {
+      @for (action of visibleRowActions(); track action.id) {
         <ds-menu-item
           [icon]="action.icon ?? null"
           [error]="action.error ?? false"
           [disabled]="isActionDisabled(action)"
+          [description]="actionReason(action)"
           (pressed)="onRowAction(action)"
         >
           {{ action.label }}
@@ -569,3 +647,48 @@
     <ng-content select="[bulk-actions]"></ng-content>
   </div>
 }
+
+<!-- One skeleton row, shared by loading="skeleton" and the gaps a lazy
+     window has not filled yet. `$implicit` is the row's index: skeletonWidth
+     varies the bar lengths from it, so a block of them does not read as a grid. -->
+<ng-template
+  #skeletonRow
+  let-rowIndex
+>
+  <tr>
+    @if (selectable()) {
+      <td class="select-col pin-select">
+        <ds-skeleton
+          width="14px"
+          height="14px"
+          [inline]="true"
+        />
+      </td>
+    }
+
+    @if (expandableRows()) {
+      <td
+        class="expand-col"
+        [class.pin-expand]="stickyFirstColumn()"
+      >
+      </td>
+    }
+
+    @for (col of visibleColumns(); track col.key; let first = $first) {
+      <td
+        [class.numeric]="col.align === 'right'"
+        [class.pin-first]="first && stickyFirstColumn()"
+      >
+        <ds-skeleton
+          height="14px"
+          [width]="skeletonWidth(col, rowIndex)"
+          [inline]="true"
+        />
+      </td>
+    }
+
+    @if (hasUtilityColumn()) {
+      <td class="actions-col"></td>
+    }
+  </tr>
+</ng-template>

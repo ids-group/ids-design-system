@@ -10,7 +10,6 @@
     queued file list.
   </span>
 
-  <!-- ============================================================ States showcase -->
   <!-- Every cell is a live <ds-dropzone>; pin-active on the stage reads the
        component's own resolvers via ::ng-deep, with-files passes a static
        [files] list, disabled uses [disabled]. -->
@@ -25,55 +24,54 @@
 
   <div class="states states--cols-1">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="dz-demo">
           <ds-dropzone />
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Idle
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-active">
+      <div class="state-cell-stage pin-active">
         <div class="dz-demo">
           <ds-dropzone />
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Active · drag-over
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="dz-demo">
           <ds-dropzone [files]="withFilesDemo" />
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         With files
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="dz-demo">
           <ds-dropzone [disabled]="true" />
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Single-file mode -->
   <h3 class="block-title t-h4">
     Single-file mode
   </h3>
@@ -93,7 +91,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ File row states -->
   <h3 class="block-title t-h4">
     File row states
   </h3>
@@ -104,49 +101,49 @@
 
   <div class="states states--cols-1 states--file-rows">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="dz-demo">
           <ds-dropzone [files]="rowQueued" />
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Queued
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="dz-demo">
           <ds-dropzone [files]="rowUploading" />
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Uploading
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="dz-demo">
           <ds-dropzone [files]="rowSuccess" />
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Success
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="dz-demo">
           <ds-dropzone [files]="rowError" />
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Error
       </div>
     </div>

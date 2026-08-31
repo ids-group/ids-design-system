@@ -1,17 +1,86 @@
 // Enter motion for CDK-overlay panels that carry the `ds-overlay-pane`
 // panelClass (select, autocomplete, multi-select, date-picker, time-picker,
-// color-picker, popover, tooltip). Animates the panel's ROOT CHILD, not the
-// pane itself, so CDK's positioning transforms on `.cdk-overlay-pane` are left
-// untouched. The leave/exit animation was removed (close is instant) — see the
-// TODO(overlay-leave) in components/overlay-motion.ts to reinstate it.
+// color-picker, popover, tooltip, menu submenu). Animates the panel's ROOT
+// CHILD, not the pane itself, so CDK's positioning transforms on
+// `.cdk-overlay-pane` are left untouched. A leave animation runs on an ambient
+// dismiss only; picking an option closes instantly (see `.ds-leaving` below).
+//
+// `data-ds-placement` names WHERE the panel sits relative to its trigger and is
+// stamped by `prepareOverlayEnter()` before the panel is attached, so the panel
+// always enters FROM the trigger edge: the offset axis/sign and the scale origin
+// both follow it. The keyframe name never changes with placement, so a mid-scroll
+// CDK flip redirects the motion instead of restarting it.
+//
+// Duration/easing stay longhands the library owns: reduced motion zeroes the
+// duration rather than dropping the animation, which keeps `animationend`-driven
+// teardown working and outranks a consumer keyframe carrying its own timing.
 
-.cdk-overlay-pane.ds-overlay-pane > * {
-  animation: ds-overlay-in var(--duration-fast) var(--ease-decelerate);
+.cdk-overlay-pane.ds-overlay-pane {
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
+  --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
+  --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
+  --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
+  --_ds-enter-scale: var(--ds-overlay-enter-scale, 0.96);
+
+  --_overlay-leave-duration: var(--ds-overlay-leave-duration, var(--ds-motion-exit-duration));
+  --_overlay-leave-easing: var(--ds-overlay-leave-easing, var(--ds-motion-exit-easing));
+
+  --_ds-enter-x: 0px;
+  --_ds-enter-y: calc(-1 * var(--_overlay-enter-offset));
+  --_overlay-enter-origin: top center;
+
+  &[data-ds-placement='top'] {
+    --_ds-enter-y: var(--_overlay-enter-offset);
+    --_overlay-enter-origin: bottom center;
+  }
+
+  &[data-ds-placement='left'] {
+    --_ds-enter-x: var(--_overlay-enter-offset);
+    --_ds-enter-y: 0px;
+    --_overlay-enter-origin: center right;
+  }
+
+  &[data-ds-placement='right'] {
+    --_ds-enter-x: calc(-1 * var(--_overlay-enter-offset));
+    --_ds-enter-y: 0px;
+    --_overlay-enter-origin: center left;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    --_overlay-enter-duration: 0ms;
+  }
+
+  > * {
+    animation-name: var(--_overlay-enter-keyframes);
+    animation-duration: var(--_overlay-enter-duration);
+    animation-timing-function: var(--_overlay-enter-easing);
+    transform-origin: var(--_overlay-enter-origin);
+  }
+
+  /* Leave, on an AMBIENT DISMISS only — Escape, a press outside, a scroll —
+     which `disposeWithLeave` marks by adding `ds-leaving`. Picking an option
+     still closes instantly: a fade on a deliberate choice reads as the panel
+     lagging behind it, which is why the old unconditional leave was cut. Opacity
+     only, no travel: a dismissal has nowhere to travel to, and movement would
+     re-add exactly the lag this avoids. Reduced motion zeroes the duration at
+     `:root`, so the animation still runs and `animationend` still tears down. */
+  &.ds-leaving {
+    /* A fading panel must not swallow the click aimed at what is behind it. */
+    pointer-events: none;
+
+    > * {
+      animation-name: ds-overlay-out;
+      animation-duration: var(--_overlay-leave-duration);
+      animation-timing-function: var(--_overlay-leave-easing);
+      animation-fill-mode: forwards;
+    }
+  }
 }
 
-@keyframes ds-overlay-in {
-  from {
+/* Global, like the enter presets: a keyframe declared in a component stylesheet
+   is renamed by emulated encapsulation. */
+@keyframes ds-overlay-out {
+  to {
     opacity: 0;
-    transform: translateY(-4px);
   }
 }

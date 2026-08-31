@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { MenuItemComponent } from './menu-item.component';
+import { isTextEntryTarget } from '../../core/key-target';
 
 @Component({
   selector: 'ds-menu',
@@ -41,7 +42,9 @@ export class MenuComponent {
 
   protected onKeydown(event: KeyboardEvent): void {
     const items = this.items();
-    if (!items.length) {
+    // A projected search/filter field owns its typing — type-ahead below would
+    // eat every character it receives.
+    if (!items.length || isTextEntryTarget(event)) {
       return;
     }
     const count = items.length;

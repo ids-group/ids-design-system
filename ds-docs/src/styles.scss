@@ -10,6 +10,7 @@
 @use 'styles/reset';
 @use 'styles/typography';
 @use 'styles/link';
+@use 'styles/focus';
 @use 'styles/ds-color';
 @use 'styles/layout-utils';
 @use 'styles/scrollbar';
@@ -17,6 +18,11 @@
 
 // Global rules for the CDK Overlay portal used by <ds-select>.
 @use 'styles/dropdown-overlay';
+
+// Enter-motion presets + the overlay-pane entrance. Both are global by design
+// (see _surface-motion.scss) — without them DS surfaces render with no entrance.
+@use 'styles/surface-motion';
+@use 'styles/overlay-motion';
 
 // Surfaces for raw showcase specimens (docs only) — see _specimens.scss header.
 @use 'styles/specimens';
@@ -37,9 +43,12 @@
 html, body { height: 100%; margin: 0; }
 
 // Global scope only: Angular's emulated encapsulation can't rewrite `:root` on the real <html> element.
-// Gated to lg+ — below that the sidebar renders in the nav drawer, which ignores this column.
+// Gated to lg+ — below that the layout's rail is an overlay and sizes itself.
+// Targets the projected wrapper's width, not a grid column: the layout's rail
+// track is `auto`, so the width the docs set on .side is what defines it.
 @media (width >= #{bp.$bp-lg}) {
-  :root.ds-docs-sidebar-collapsed app-root .layout {
-    grid-template-columns: 48px minmax(0, 1fr);
+  :root.ds-docs-sidebar-collapsed app-root .side {
+    width: 48px;
+    transition-duration: var(--duration-fast);
   }
 }

@@ -7,9 +7,11 @@
   [attr.aria-disabled]="disabled() ? 'true' : null"
   [class.disabled]="disabled()"
   [class.error]="error()"
+  [class.quiet]="quiet()"
   [class.has-submenu]="hasSubmenu()"
   [attr.aria-haspopup]="hasSubmenu() ? 'menu' : null"
   [attr.aria-expanded]="hasSubmenu() ? submenuOpen() : null"
+  [attr.aria-describedby]="description() ? descriptionId : null"
   (click)="onClick($event)"
   (keydown)="onKeydown($event)"
   (mouseenter)="onMouseEnter()"
@@ -27,8 +29,18 @@
     </span>
   }
 
-  <span>
+  <span class="menu-item-body">
     <ng-content></ng-content>
+
+    @if (description()) {
+      <span
+        class="menu-item-description"
+        aria-hidden="true"
+        [id]="descriptionId"
+      >
+        {{ description() }}
+      </span>
+    }
   </span>
 
   @if (hasSubmenu()) {

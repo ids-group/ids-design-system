@@ -11,7 +11,6 @@
     schedules, rosters.
   </span>
 
-  <!-- ============================================================ Default -->
   <h3 class="block-title t-h4">
     Default
   </h3>
@@ -57,7 +56,6 @@
     </ng-template>
   </ds-table>
 
-  <!-- ============================================================ Sortable columns -->
   <h3 class="block-title t-h4">
     Sortable columns
   </h3>
@@ -65,7 +63,7 @@
   <p class="block-desc t-s">
     Mark columns <code class="t-mono-inline"> sortable: true </code> and add
     <code class="t-mono-inline">
-      [clientSort]="true"
+      sortMode="client"
     </code> to let the table
     order its own rows. Click a header to cycle asc → desc → none; the active
     column shows a coloured chevron. Pass
@@ -78,9 +76,9 @@
 
   <ds-table
     caption="Records"
+    sortMode="client"
     [data]="sortableRows"
     [columns]="sortableColumns"
-    [clientSort]="true"
     [stickyHeader]="false"
   >
     <ng-template
@@ -93,7 +91,6 @@
     </ng-template>
   </ds-table>
 
-  <!-- ============================================================ Header sort states -->
   <h3 class="block-title t-h4">
     Header sort states
   </h3>
@@ -104,7 +101,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Sortable idle"
           [data]="stateRow"
@@ -113,13 +110,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Sortable · idle
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Sorted ascending"
           sortKey="project"
@@ -130,13 +127,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Sorted · ascending
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Sorted descending"
           sortKey="project"
@@ -147,13 +144,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Sorted · descending
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl pin-hover-th">
+      <div class="state-cell-stage state-cell-stage--tbl pin-hover-th">
         <ds-table
           caption="Header hover"
           [data]="stateRow"
@@ -162,13 +159,12 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Row interaction states -->
   <h3 class="block-title t-h4">
     Row interaction states
   </h3>
@@ -185,7 +181,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl pin-row-hover">
+      <div class="state-cell-stage state-cell-stage--tbl pin-row-hover">
         <ds-table
           caption="Hover state"
           [data]="stateRow"
@@ -195,13 +191,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl pin-row-pressed">
+      <div class="state-cell-stage state-cell-stage--tbl pin-row-pressed">
         <ds-table
           caption="Pressed state"
           [data]="stateRow"
@@ -211,13 +207,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Pressed
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Selected state"
           [data]="stateRow"
@@ -228,13 +224,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Selected
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--tbl">
+      <div class="state-cell-stage state-cell-stage--tbl">
         <ds-table
           caption="Active state"
           [data]="stateRow"
@@ -245,13 +241,122 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Active
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Row selection + bulk bar -->
+  <h3 class="block-title t-h4">
+    The cell that names what the row opens
+  </h3>
+
+  <p class="block-desc t-s">
+    On a
+    <code class="t-mono-inline">
+      [rowInteractive]
+    </code> table the whole row is
+    the control, so the tint says <em>clickable</em> and nothing says WHICH text
+    is the target. Mark that column
+    <code class="t-mono-inline">
+      interactive: true
+    </code> and its cell takes a
+    link colour and an underline while the row is hovered — colour plus a
+    decoration, never hue alone. Retune with
+    <code class="t-mono-inline">
+      --ds-table-cell-link-color
+    </code> and
+    <code class="t-mono-inline">
+      --ds-table-cell-link-decoration
+    </code>. Off
+    unless a column asks for it, and inert on a passive table for the same
+    reason the tint is: nothing should promise a click that does not happen.
+  </p>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell-stage state-cell-stage--tbl pin-cell-link">
+        <ds-table
+          caption="Interactive cell"
+          [data]="stateRow"
+          [columns]="linkCellColumns"
+          [rowInteractive]="true"
+          [stickyHeader]="false"
+        />
+      </div>
+
+      <div class="state-cell-label">
+        Hovered · Record is the target
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    A cell that IS a link — the accessible way to say a row leads somewhere
+  </h3>
+
+  <p class="block-desc t-s">
+    <strong>
+      A clickable row cannot be a link.
+    </strong>
+    It has no href, so it never appears in the tab order as a link, a screen
+    reader announces a table row, and Ctrl/Cmd-click cannot open it in a new tab
+    — and the hover tint above is invisible to a keyboard or touch user. Give
+    the column a
+    <code class="t-mono-inline">
+      link
+    </code> function returning an Angular
+    route target and the value renders as a real
+    <code class="t-mono-inline">
+      &lt;a&gt;
+    </code>: visible without hovering,
+    tabbable, and Ctrl-clickable. Return
+    <code class="t-mono-inline">
+      null
+    </code> for a row that leads nowhere and
+    that cell stays plain text, so a partly-reachable list needs no second
+    column. External URLs go through a
+    <code class="t-mono-inline">
+      [cell]
+    </code> template instead — this takes
+    route targets only, and the router is touched at all only once a column sets
+    <code class="t-mono-inline">
+      link
+    </code>.
+  </p>
+
+  <p class="block-desc t-s">
+    It composes with
+    <code class="t-mono-inline">
+      rowInteractive
+    </code>: the link stops its own
+    click from reaching the row, so clicking the name navigates once and the
+    rest of the row still fires the row handler. That is the shape the
+    accessibility literature lands on — Roselli’s "Don’t Turn a Table into an
+    ARIA Grid Just for a Clickable Row" — with the row click left as an
+    enhancement on top of a control that works without it.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Both together cost two tab stops per row
+    </strong>
+    — the row and the link — so on a long list drop
+    <code class="t-mono-inline">
+      rowInteractive
+    </code> once the link is there
+    and keep one stop per row. Keep both only where the row click is genuinely
+    worth the second stop.
+  </p>
+
+  <ds-table
+    caption="Records, with the name as a link"
+    [data]="events"
+    [columns]="linkColumns"
+    [rowInteractive]="true"
+    [stickyHeader]="false"
+  />
+
   <h3 class="block-title t-h4">
     Row selection · bulk-action bar
   </h3>
@@ -320,7 +425,6 @@
     </ds-button>
   </ds-table>
 
-  <!-- ============================================================ Sticky header -->
   <h3 class="block-title t-h4">
     Sticky header
   </h3>
@@ -363,7 +467,6 @@
     </ng-template>
   </ds-table>
 
-  <!-- ============================================================ Bordered -->
   <h3 class="block-title t-h4">
     Bordered
   </h3>
@@ -386,7 +489,6 @@
     [stickyHeader]="false"
   />
 
-  <!-- ============================================================ Loading skeleton -->
   <h3 class="block-title t-h4">
     Loading · skeleton
   </h3>
@@ -410,7 +512,6 @@
     [stickyHeader]="false"
   />
 
-  <!-- ============================================================ Loading overlay -->
   <h3 class="block-title t-h4">
     Loading · overlay
   </h3>
@@ -431,7 +532,66 @@
     [stickyHeader]="false"
   />
 
-  <!-- ============================================================ Empty states -->
+  <h3 class="block-title t-h4">
+    Loading · let the table choose
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [loading]="true"
+    </code> resolves the two above
+    by the row count: skeleton while there is nothing on screen, overlay once
+    there is. <strong> Prefer it. </strong> Which treatment is right is not a
+    preference — replacing visible rows with placeholders throws away what the
+    reader is looking at, and dimming an empty card announces nothing about what
+    is coming — and the table is the only place that holds both halves of the
+    condition. Every list screen was otherwise writing the same
+    <code class="t-mono-inline">
+      items().length > 0 ? 'overlay' : 'skeleton'
+    </code>
+    line; one consumer feature had three copies of it.
+  </p>
+
+  <p class="block-desc t-s">
+    Both tables below are
+    <code class="t-mono-inline">
+      [loading]="true"
+    </code>. They differ only in
+    whether they have rows.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-table
+          [data]="noRows"
+          [columns]="loadingColumns"
+          [loading]="true"
+          [stickyHeader]="false"
+        />
+      </div>
+
+      <div class="state-cell-label">
+        no rows yet → skeleton
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-table
+          [data]="events"
+          [columns]="loadingColumns"
+          [loading]="true"
+          [stickyHeader]="false"
+        />
+      </div>
+
+      <div class="state-cell-label">
+        rows on screen → overlay
+      </div>
+    </div>
+  </div>
+
   <h3 class="block-title t-h4">
     Empty states
   </h3>
@@ -557,7 +717,43 @@
     </ds-empty-state>
   </ds-table>
 
-  <!-- ============================================================ Dense · zebra -->
+  <div class="block-sub t-overline">
+    e · Zero rows WHILE loading — the table says nothing
+  </div>
+
+  <p class="block-desc t-s">
+    The empty state is a claim about the data — “there are none” — so the table
+    withholds it until it has finished asking. Both loading modes suppress it:
+    the same table with
+    <code class="t-mono-inline">
+      [loading]="'overlay'"
+    </code> and zero rows
+    shows its spinner and no message, where it used to paint “No records match
+    your filters” underneath one.
+    <strong>
+      You do not need a guard of your own
+    </strong> — a consumer audit
+    found 9 of 14 overlay-loading tables shipping that sentence during a load,
+    because branching failure-vs-empty looks complete while saying nothing about
+    loading.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="noRows"
+    [columns]="loadingColumns"
+    [loading]="'overlay'"
+    [stickyHeader]="false"
+  >
+    <ds-empty-state
+      empty
+      variant="none"
+      icon="search"
+      title="No matches for your filters"
+      body="This message is bound, and deliberately not shown while the load is in flight."
+    />
+  </ds-table>
+
   <h3 class="block-title t-h4">
     Dense · zebra
   </h3>
@@ -609,7 +805,6 @@
     </ng-template>
   </ds-table>
 
-  <!-- ============================================================ Pagination · sticky column -->
   <h3 class="block-title t-h4">
     Pagination · sticky column
   </h3>
@@ -624,9 +819,23 @@
     </code> pins the first
     column on horizontal scroll;
     <code class="t-mono-inline">
-      [clientSort]
-    </code> lets the table sort its
-    own rows. 12 rows across three pages;
+      sortMode
+    </code> says who sorts —
+    <code class="t-mono-inline">
+      "server"
+    </code> (the default) emits
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> and leaves ordering to
+    you, <code class="t-mono-inline"> "client" </code> has the table reorder its
+    own rows and is what a table holding EVERY row wants, and
+    <code class="t-mono-inline">
+      "none"
+    </code> drops the affordance so a
+    <code class="t-mono-inline">
+      sortable
+    </code> column cannot draw a header
+    that does nothing. 12 rows across three pages;
     <code class="t-mono-inline">
       [animateHeight]
     </code> tweens the body height
@@ -644,10 +853,10 @@
 
   <ds-table
     caption="Projects"
+    sortMode="client"
     [data]="projectRows"
     [columns]="projectColumns"
     [selectable]="true"
-    [clientSort]="true"
     [stickyFirstColumn]="true"
     [pageSize]="5"
     [animateHeight]="true"
@@ -658,7 +867,6 @@
     Selected: {{ projectSelected().size }}
   </p>
 
-  <!-- ============================================================ Expandable rows -->
   <h3 class="block-title t-h4">
     Expandable rows
   </h3>
@@ -698,25 +906,24 @@
     let-row
   >
     <div class="expand-detail">
-      <span class="expand-detail__label">
+      <span class="expand-detail-label">
         Order ID
       </span>
 
-      <span class="expand-detail__value mono muted">
+      <span class="expand-detail-value mono muted">
         {{ asEvent(row).id }}
       </span>
 
-      <span class="expand-detail__label">
+      <span class="expand-detail-label">
         Capacity
       </span>
 
-      <span class="expand-detail__value">
+      <span class="expand-detail-value">
         {{ asEvent(row).capacity }} attendees
       </span>
     </div>
   </ng-template>
 
-  <!-- ============================================================ Clickable rows · drawer -->
   <h3 class="block-title t-h4">
     Clickable rows · drawer detail
   </h3>
@@ -760,35 +967,35 @@
     <ng-container drawer-body>
       @if (detailRow(); as row) {
         <div class="expand-detail">
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Order ID
           </span>
 
-          <span class="expand-detail__value mono muted">
+          <span class="expand-detail-value mono muted">
             {{ row.id }}
           </span>
 
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Dates
           </span>
 
-          <span class="expand-detail__value">
+          <span class="expand-detail-value">
             {{ row.date }}
           </span>
 
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Venue
           </span>
 
-          <span class="expand-detail__value">
+          <span class="expand-detail-value">
             {{ row.venue }}
           </span>
 
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Status
           </span>
 
-          <span class="expand-detail__value">
+          <span class="expand-detail-value">
             <ds-badge
               [status]="row.status"
               [withDot]="true"
@@ -797,11 +1004,11 @@
             </ds-badge>
           </span>
 
-          <span class="expand-detail__label">
+          <span class="expand-detail-label">
             Capacity
           </span>
 
-          <span class="expand-detail__value">
+          <span class="expand-detail-value">
             {{ row.capacity }} attendees
           </span>
         </div>
@@ -809,7 +1016,6 @@
     </ng-container>
   </ds-drawer>
 
-  <!-- ============================================================ Row actions · kebab -->
   <h3 class="block-title t-h4">
     Row actions · kebab menu
   </h3>
@@ -826,10 +1032,33 @@
     <code class="t-mono-inline">
       disabled
     </code> predicate greys items out
-    (here Delete is blocked for completed records). The kebab stops propagation,
-    so on a <code class="t-mono-inline"> [rowInteractive] </code> table a menu
-    click never fires <code class="t-mono-inline"> (rowClicked) </code>. A
-    hand-built action column with no visible header should give its
+    (here Delete is blocked for completed records), and
+    <code class="t-mono-inline">
+      disabledReason
+    </code> puts the WHY on the
+    item's second line — a greyed item that does not say why is the same dead
+    control as a greyed button.
+    <br />
+    Where an action does not APPLY to a row, use
+    <code class="t-mono-inline">
+      hidden
+    </code> rather than
+    <code class="t-mono-inline">
+      disabled
+    </code>: greying leaves every row with
+    a permanently dead half, which is what happens when one status offers Edit +
+    Launch and another Revert + Delete. Relaunch below is hidden except on
+    completed records.
+    <b>
+      If every item of a row is hidden the kebab is not rendered at all
+    </b>,
+    so a row with nothing applicable does not open an empty menu. The kebab
+    stops propagation, so on a
+    <code class="t-mono-inline">
+      [rowInteractive]
+    </code> table a menu click
+    never fires <code class="t-mono-inline"> (rowClicked) </code>. A hand-built
+    action column with no visible header should give its
     <code class="t-mono-inline">
       TableColumn
     </code> an
@@ -855,7 +1084,6 @@
     {{ lastRowAction() ?? '—' }}
   </p>
 
-  <!-- ============================================================ Column picker · reorder -->
   <h3 class="block-title t-h4">
     Column picker · reorder
   </h3>
@@ -893,7 +1121,6 @@
     [stickyHeader]="false"
   />
 
-  <!-- ============================================================ Resizable columns -->
   <h3 class="block-title t-h4">
     Resizable columns
   </h3>
@@ -912,6 +1139,20 @@
     <code class="t-mono-inline">
       column.width
     </code>.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The first resize records a width for EVERY visible column, not just the
+      one you dragged — deliberately.
+    </strong>
+    Until then the untouched columns are auto-sized, so the browser
+    redistributes whatever the dragged column gives up and columns nobody
+    touched visibly jump. Measuring them all once, at the first grab, keeps the
+    auto-sized geometry instead of losing it. The consequence to expect: if you
+    persist <code class="t-mono-inline"> [(columnWidths)] </code>, one drag
+    fills the map for the whole row. That is the saved layout, not a leak — and
+    a second drag adds nothing further.
   </p>
 
   <ds-table
@@ -952,7 +1193,6 @@
     </ng-template>
   </ds-table>
 
-  <!-- ============================================================ Inline editing -->
   <h3 class="block-title t-h4">
     Inline editing
   </h3>
@@ -978,7 +1218,263 @@
     (cellEdited)="onCellEdited($event)"
   />
 
-  <!-- ============================================================ Column filters -->
+  <h3 class="block-title t-h4">
+    Persisted layout &amp; export
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [persistLayout]="true"
+    </code> with a
+    <code class="t-mono-inline">
+      storageKey
+    </code> round-trips the column
+    order, widths and hidden set through
+    <code class="t-mono-inline">
+      localStorage
+    </code>, so reorder a column or
+    hide one, reload the page, and it stays. Without a key nothing is stored —
+    two tables would otherwise overwrite each other.
+    <code class="t-mono-inline">
+      [exportButton]="true"
+    </code> renders the CSV
+    button; a server-paged table passes
+    <code class="t-mono-inline">
+      [exportFetcher]
+    </code> so the export covers
+    the whole set instead of the page it holds.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    storageKey="docs-demo-projects"
+    sortMode="client"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [persistLayout]="true"
+    [exportButton]="true"
+    [reorderableColumns]="true"
+    [resizableColumns]="true"
+  />
+
+  <h3 class="block-title t-h4">
+    Toolbar slot · the export button anywhere
+  </h3>
+
+  <p class="block-desc t-s">
+    A row above the table, filled through one
+    <code class="t-mono-inline">
+      [toolbar]
+    </code> slot, for controls that act
+    on THIS table: a search box, a status filter, a refresh. Project a handful
+    of controls and the row lays them out — flex, wrap, 8px gap — so the
+    ordinary case needs no CSS of yours. Project one element of your own instead
+    and the layout is entirely yours; the row's flex then has a single child and
+    stays out of the way. It disappears when nothing filled it and
+    <code class="t-mono-inline">
+      exportButton
+    </code> is off, so a table that
+    uses neither is unchanged. Filters that belong to the PAGE still belong in a
+    <code class="t-mono-inline">
+      ds-filter-bar
+    </code> above it — the slot is
+    for the ones that would otherwise read as page furniture one card away from
+    the rows they narrow.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      One slot rather than a start/end pair, and that was a correction.
+    </strong>
+    The fork this replaces had exactly one, its right-hand side being the
+    component's own buttons — and all four screens that used it projected a
+    container of their own anyway, each writing the same four declarations. A
+    second slot would have been API nobody had asked for, and the layout it
+    promised to own is one the consumer writes regardless when their case
+    differs.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The export button does not have to live there either.
+    </strong>
+
+    <code class="t-mono-inline">
+      runExport()
+    </code> is public and so are
+    <code class="t-mono-inline">
+      exporting()
+    </code> and
+    <code class="t-mono-inline">
+      exportStatus()
+    </code>, so a button in a page
+    header or a filter bar runs the same path — the
+    <code class="t-mono-inline">
+      exportFetcher
+    </code> call, the download, the
+    in-flight state and the live-region announcement. Leave
+    <code class="t-mono-inline">
+      exportButton
+    </code> off and drive it yourself.
+  </p>
+
+  <ds-table
+    #toolbarTable
+    caption="Projects"
+    sortMode="client"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [exportFetcher]="slowExportFetcher"
+  >
+    <ds-search
+      toolbar
+      size="sm"
+      placeholder="Search projects…"
+      ariaLabel="Search projects"
+      [debounce]="300"
+    />
+
+    <ds-button
+      toolbar
+      color="neutral"
+      variant="outline"
+      size="sm"
+      icon="download"
+      [loading]="toolbarTable.exporting()"
+      (pressed)="toolbarTable.runExport()"
+    >
+      Export
+    </ds-button>
+  </ds-table>
+
+  <h3 class="block-title t-h4">
+    Sizing a column to its content
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      width: 'content'
+    </code> on a column sizes it
+    to its widest cell and stops it wrapping, leaving the slack to the columns
+    that should absorb it. An auto-layout table spreads leftover width evenly,
+    so a status or a figure ends up as wide as its own header while the name
+    column that should take the space does not. A pixel
+    <code class="t-mono-inline">
+      width
+    </code> cannot express that — pin one
+    column and the rest still spread. Below, Status and Budget are
+    <code class="t-mono-inline">
+      'content'
+    </code>; Project and Owner share what
+    is left. Dragging a column's edge still wins, since that is a deliberate
+    pixel width.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="fitColumns"
+    [resizableColumns]="true"
+  />
+
+  <h3 class="block-title t-h4">
+    Server sort · a host that answers with its own default
+  </h3>
+
+  <p class="block-desc t-s">
+    The shape a server-paged list actually has:
+    <code class="t-mono-inline">
+      [sortKey]
+    </code> and
+    <code class="t-mono-inline">
+      [sortDir]
+    </code> are bound ONE-WAY from the
+    host's own state (usually a computed over the URL), and
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> is where it hears about a
+    click. This host's default is <strong> Owner descending </strong>, and it
+    answers a cleared sort by returning to it — the case that used to leave the
+    header marking nothing over sorted rows.
+  </p>
+
+  <p class="block-desc t-s">
+    Third click on the same column clears it, so watch the header: after the
+    clear the highlight must land back on
+    <strong>
+      Owner ▼
+    </strong>. Host state:
+    <code class="t-mono-inline">
+      {{ serverSortKey() }} · {{ serverSortDir() ?? 'null' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Projects"
+    sortMode="server"
+    [data]="serverSortedRows()"
+    [columns]="serverSortColumns"
+    [sortKey]="serverSortKey()"
+    [sortDir]="serverSortDir()"
+    (sortChange)="onServerSort($event)"
+  />
+
+  <h3 class="block-title t-h4">
+    The same thing two-way, when the host has no opinion to defend
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      sortKey
+    </code> and
+    <code class="t-mono-inline">
+      sortDir
+    </code> each have a matching
+    <code class="t-mono-inline">
+      Change
+    </code> output, so
+    <code class="t-mono-inline">
+      [(sortKey)]
+    </code> and
+    <code class="t-mono-inline">
+      [(sortDir)]
+    </code> work: the table writes the
+    host's state and the host reads it back, with no handler to write. Below is
+    the demo above with the handler deleted and nothing else changed.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      What you give up is the third click.
+    </strong>
+    Clearing a sort sets
+    <code class="t-mono-inline">
+      sortDir
+    </code> to
+    <code class="t-mono-inline">
+      null
+    </code> and the rows come back unsorted,
+    because there is nowhere left to say "then fall back to Owner descending".
+    Prefer two-way where any sort state is equally valid — a saved view, a URL
+    you round-trip — and the one-way pair plus
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> where the host owns a
+    default it has to be able to restore. Host state:
+    <code class="t-mono-inline">
+      {{ twoWaySortKey() }} · {{ twoWaySortDir() ?? 'null' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Projects, two-way sort"
+    sortMode="server"
+    [data]="twoWaySortedRows()"
+    [columns]="serverSortColumns"
+    [(sortKey)]="twoWaySortKey"
+    [(sortDir)]="twoWaySortDir"
+  />
+
   <h3 class="block-title t-h4">
     Column filters
   </h3>
@@ -1012,7 +1508,6 @@
     </ng-template>
   </ds-table>
 
-  <!-- ============================================================ Truncation · popover -->
   <h3 class="block-title t-h4">
     Truncation · full-text popover
   </h3>
@@ -1026,6 +1521,23 @@
     it in a popover — an unclipped cell passes the click through to the row.
   </p>
 
+  <p class="block-desc t-s">
+    <strong>
+      Only columns that asked for it are watched, and that is the point.
+    </strong>
+    Clip detection runs on cells in a
+    <code class="t-mono-inline">
+      truncate
+    </code> column, not on every
+    overflowing cell in the table: a click handler on every
+    <code class="t-mono-inline">
+      &lt;td&gt;
+    </code> would swallow the row click
+    on an interactive table. Within such a column it does look deeper than the
+    cell itself — a <code class="t-mono-inline"> dsCellTemplate </code> puts the
+    ellipsis on a descendant, so testing only the wrapper would miss it.
+  </p>
+
   <ds-table
     caption="Records"
     [data]="truncateRows"
@@ -1033,7 +1545,6 @@
     [stickyHeader]="false"
   />
 
-  <!-- ============================================================ Sticky horizontal scrollbar -->
   <h3 class="block-title t-h4">
     Sticky horizontal scrollbar
   </h3>
@@ -1056,7 +1567,6 @@
     [stickyHeader]="false"
   />
 
-  <!-- ============================================================ CSV export -->
   <h3 class="block-title t-h4">
     CSV export
   </h3>
@@ -1070,15 +1580,17 @@
     reference.
   </p>
 
-  <ds-button
-    color="neutral"
-    variant="outline"
-    size="sm"
-    icon="download"
-    (pressed)="exportTable.exportCsv('records.csv')"
-  >
-    Export CSV
-  </ds-button>
+  <div class="export-row">
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      icon="download"
+      (pressed)="exportTable.exportCsv('records.csv')"
+    >
+      Export CSV
+    </ds-button>
+  </div>
 
   <ds-table
     #exportTable
@@ -1117,4 +1629,173 @@
       </ds-badge>
     </ng-template>
   </ds-table>
+
+  <h3 class="block-title t-h4">
+    Server-side filtering, and a filter of your own
+  </h3>
+
+  <p class="block-desc t-s">
+    Header filters default to
+    <code class="t-mono-inline">
+      filterMode="server"
+    </code>: the table tracks
+    <code class="t-mono-inline">
+      columnFilters
+    </code> without filtering
+    anything, so your request drives the rows; pass the real domain through
+    <code class="t-mono-inline">
+      columnFilterOptions
+    </code>. That is the right
+    default because a paged table filtering locally would filter what the server
+    already filtered, over a checklist offering only the values on THIS page.
+    Declare <code class="t-mono-inline"> filterMode="client" </code> when the
+    table holds every row and should filter them itself — there is a dev warning
+    for the giveaway case, a filterable column on a table that binds no `total`
+    and declares no mode.
+    <code class="t-mono-inline">
+      filterMode="none"
+    </code> drops the affordance
+    entirely.
+  </p>
+
+  <p class="block-desc t-s">
+    When the criterion is not a list of values — a date range, a numeric
+    threshold, an async lookup — project the panel instead. The table keeps the
+    header button, the popover and the active-filter styling; only the contents
+    change. It cannot know whether YOUR criterion is set, so
+    <code class="t-mono-inline">
+      active
+    </code> is how the highlight is told.
+  </p>
+
+  <pre
+    class="t-mono-block"
+  ><code>&lt;ng-template dsHeaderFilter="opened" [active]="!!range()" let-close="close"&gt;
+  &lt;ds-date-picker mode="range" [(value)]="range" /&gt;
+  &lt;ds-button size="sm" (pressed)="apply(); close()"&gt;Apply&lt;/ds-button&gt;
+&lt;/ng-template&gt;</code></pre>
+
+  <h3 class="block-title t-h4">
+    What a screen reader is told
+  </h3>
+
+  <p class="block-desc t-s">
+    Sorting and paging are read off the header and the pager by everyone else;
+    the table now says them out loud too. One
+    <code class="t-mono-inline">
+      role="status"
+    </code> region carries "Sorted by
+    Owner, ascending" and "Showing 1–25 of 240", with loading taking precedence
+    while it lasts — announcing a new sort order over rows that are still being
+    replaced describes a state the reader cannot inspect. Both strings are
+    inputs (<code class="t-mono-inline"> sortAnnouncement </code>,
+    <code class="t-mono-inline">
+      rangeAnnouncement
+    </code>) taking the facts and
+    returning the sentence, so translation and word order stay yours; return an
+    empty string to stay silent. The first render is silent regardless —
+    <code class="t-mono-inline">
+      aria-live="polite"
+    </code> announces changes,
+    not initial content.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Virtual scroll
+  </h3>
+
+  <p class="block-desc t-s">
+    10 000 rows. With
+    <code class="t-mono-inline">
+      [virtualScroll]="true"
+    </code> only the rows in
+    view are in the DOM, padded above and below by two spacer rows that stand in
+    for the rest — so the scrollbar is the full length of the data and the row
+    count in the DOM stays flat. It needs
+    <code class="t-mono-inline">
+      maxHeight
+    </code>, because a bounded scroller
+    is the viewport it windows against.
+  </p>
+
+  <p class="block-desc t-s">
+    Every row must be exactly
+    <code class="t-mono-inline">
+      virtualRowSize
+    </code> tall — that number is
+    the only thing telling the maths where a row starts, so one row that grows
+    puts every offset below it out by the difference. Virtual mode therefore
+    fixes the row height from that same input, forces
+    <code class="t-mono-inline">
+      table-layout: fixed
+    </code> (auto layout
+    re-measures against whichever rows happen to be rendered, and the columns
+    twitch as you scroll) and keeps cells to one line. Row EXPANSION is
+    suppressed for the same reason, with a dev warning; sorting, selection,
+    sticky header and sticky first column all keep working.
+  </p>
+
+  <ds-table
+    caption="Ten thousand records"
+    maxHeight="420px"
+    [data]="bulkRows"
+    [columns]="bulkColumns"
+    [virtualScroll]="true"
+    [virtualRowSize]="44"
+    [selectable]="true"
+    [zebra]="true"
+    [stickyFirstColumn]="true"
+  />
+
+  <h3 class="block-title t-h4">
+    Lazy loading
+  </h3>
+
+  <p class="block-desc t-s">
+    The same 10 000 records, except the table starts with none of them. With
+    <code class="t-mono-inline">
+      [lazy]="true"
+    </code> the window asks for the
+    range it is about to show through
+    <code class="t-mono-inline">
+      (lazyLoad)
+    </code>, and every index the host
+    has not filled yet renders a skeleton row. Scroll fast and you outrun the
+    fetch — that is what the skeletons are for.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      data
+    </code> is a SPARSE array
+    <code class="t-mono-inline">
+      total
+    </code> long: write each fetched row at
+    its absolute index. The scroller is sized from
+    <code class="t-mono-inline">
+      total
+    </code>, not from what has arrived, so
+    the scrollbar tells the truth from the first frame. The demo answers after
+    600 ms; a request already in flight is never re-sent.
+  </p>
+
+  <p class="block-desc t-s">
+    Requests so far:
+    <code class="t-mono-inline">
+      {{ lazyRequests().join(' · ') || 'none yet' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Ten thousand records, fetched as they scroll into view"
+    maxHeight="420px"
+    [data]="lazyRows()"
+    [columns]="bulkColumns"
+    [total]="lazyTotal"
+    [lazy]="true"
+    [virtualScroll]="true"
+    [virtualRowSize]="44"
+    [zebra]="true"
+    (lazyLoad)="onLazyLoad($event)"
+  />
 </docs-section>

@@ -3,7 +3,12 @@
    Native <select> was replaced; the public API is preserved.
    Absorbed the former <ds-dropdown> (removed as a duplicate) - trigger and panel share its source.
    ============================================================ */
+@use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
+@use '../../styles/field-label' as field-label;
+@use '../../styles/field-box' as field-box;
+@use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
 
 :host {
   --_select-focus-shadow: var(--ds-select-focus-shadow, var(--ds-field-focus-shadow));
@@ -11,7 +16,7 @@
   --_select-bg-color: var(--ds-select-bg-color, var(--surface-default));
   --_select-border-color: var(--ds-select-border-color, var(--border-default));
   --_select-text-color: var(--ds-select-text-color, var(--text-primary));
-  --_select-radius: var(--ds-select-radius, var(--radius-md));
+  --_select-radius: var(--ds-select-radius, var(--ds-radius-control));
 
   // Flex column + gap so label→trigger→hint all sit the canonical --space-1-5
   // apart, matching input/textarea/autocomplete/date-picker.
@@ -21,12 +26,14 @@
   width: 100%;
 }
 
-.select-label {
-  font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
+/* Hugs its own content instead of filling the container. The panel then takes the
+   trigger width as a floor rather than as its width — see openPanel(). */
+:host(.content-width) {
+  width: fit-content;
+}
+
+.label {
+  @include field-label.field-label;
 
   .req {
     color: var(--error);
@@ -48,7 +55,9 @@
   border: var(--border-width-default) solid var(--_select-border-color);
   border-radius: var(--_select-radius);
   padding: var(--field-pad-y) var(--field-pad-x);
-  height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md);
+
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--_select-text-color);
   text-align: left;
@@ -61,9 +70,8 @@
   .trigger-text {
     flex: 1;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+
+    @include text-clip.single-line-ellipsis;
 
     &.is-placeholder {
       color: var(--text-tertiary);
@@ -82,7 +90,7 @@
     align-items: center;
     justify-content: center;
     color: var(--icon-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     padding: var(--space-0-5);
     cursor: pointer;
     flex: 0 0 auto;
@@ -119,15 +127,6 @@
     }
   }
 
-  &.error {
-    background: var(--error-subtitle);
-    border-color: var(--error);
-
-    &:focus-visible {
-      box-shadow: var(--_select-focus-shadow-error);
-    }
-  }
-
   &.readonly {
     background: var(--surface-secondary);
     border-color: var(--border-divider);
@@ -144,18 +143,18 @@
     border-color: var(--border-disabled);
     color: var(--text-disabled);
     cursor: not-allowed;
-    opacity: var(--opacity-muted);
 
     .chevron { color: var(--icon-muted); }
   }
 
   &.sm {
-    height: var(--hit-min);
+    @include field-box.field-box-height(sm);
+
     padding: 0 var(--space-2);
   }
 
   &.lg {
-    height: var(--field-h-lg);
+    @include field-box.field-box-height(lg);
   }
 }
 
@@ -163,3 +162,18 @@
    the `ds-dropdown-panel` class (set on the overlay config). The portaled
    panel sits outside this component's encapsulation, so `:host ::ng-deep`
    selectors here would never reach it. */
+
+/* Segment of a ds-field-group. The group draws the border, the radius and the
+   ONE focus ring for the whole row, so this control gives all three up — a
+   second box mid-row is exactly what the group exists to remove. Width goes to
+   auto because the host stretches to 100% inside a flex segment, and the label
+   and message row are suppressed: they would break the glued line, and a
+   group-level label is not built yet. */
+:host(.in-group) {
+  @include field-group-segment.field-group-segment('.dropdown');
+}
+
+@include field-state.field-state(
+  '.dropdown',
+    $error-focus-shadow: var(--_select-focus-shadow-error),
+);

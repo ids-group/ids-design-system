@@ -30,7 +30,6 @@
     />
   </div>
 
-  <!-- ============================================================ Radio states showcase -->
   <!-- Live ds-radio; pin classes on the stage read bare role tokens via ::ng-deep. -->
   <h3 class="block-title t-h4">
     Radio states showcase
@@ -38,80 +37,79 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-radio />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-radio />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-radio />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-radio [checked]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Selected
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-radio [checked]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Selected · focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-radio [disabled]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-radio
           [disabled]="true"
           [checked]="true"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled · selected
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
     Sizes
   </h3>
@@ -133,7 +131,6 @@
     />
   </div>
 
-  <!-- ============================================================ Required -->
   <h3 class="block-title t-h4">
     Required
   </h3>
@@ -145,7 +142,6 @@
     />
   </div>
 
-  <!-- ============================================================ Validation (standalone) -->
   <h3 class="block-title t-h4">
     Validation (standalone)
   </h3>
@@ -166,12 +162,10 @@
 
     <ds-radio
       label="Preferred contact"
-      hint="A selection is required to continue."
-      [invalid]="true"
+      error="A selection is required to continue."
     />
   </div>
 
-  <!-- ============================================================ Radio group (forms usage) -->
   <h3 class="block-title t-h4">
     Radio group
   </h3>
@@ -213,8 +207,7 @@
 
     <ds-radio-group
       label="Schedule type"
-      hint="A selection is required."
-      [invalid]="true"
+      error="A selection is required."
       [(value)]="invalidGroupValue"
     >
       <ds-radio

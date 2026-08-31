@@ -1,0 +1,39 @@
+// Keyed off `data-field-state` on the host, which each field binds from
+// `resolveFieldMessage`'s `controlState`. Only error carries a fill: a warning or
+// success tint measures 1.05:1 against a white field, too faint to do the
+// findability job a fill exists for, so neither carries one.
+//
+// The colour arguments exist so a component can pass its own `--ds-<name>-*-error`
+// resolver: hardcoding the family token here would silently drop overrides
+// published since 0.7.x.
+@mixin field-state(
+  $box,
+  $error-border: var(--error),
+  $error-bg: var(--error-subtitle),
+  $error-focus-shadow: var(--ds-field-focus-shadow-error),
+  $warning-border: var(--warning-text),
+  $success-border: var(--success)
+) {
+  // `:not(.in-group)` on all three: a segment ties `.in-group` at (0,3,0) and this
+  // mixin is included last, so without it the fill repaints one segment mid-row.
+  :host([data-field-state='error']:not(.in-group)) #{$box} {
+    border-color: #{$error-border};
+    background-color: #{$error-bg};
+
+    &:focus-within,
+    &:focus-visible {
+      box-shadow: #{$error-focus-shadow};
+    }
+  }
+
+  // --warning is yellow-400, 1.47:1 against a white field — invisible as a
+  // boundary, where WCAG 1.4.11 asks 3:1. --warning-text (yellow-700) is the
+  // first rung of the ramp that clears it, at 4.59:1.
+  :host([data-field-state='warning']:not(.in-group)) #{$box} {
+    border-color: #{$warning-border};
+  }
+
+  :host([data-field-state='success']:not(.in-group)) #{$box} {
+    border-color: #{$success-border};
+  }
+}

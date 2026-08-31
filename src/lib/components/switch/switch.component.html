@@ -12,18 +12,18 @@
       [disabled]="isDisabled()"
       [attr.name]="name()"
       [attr.id]="controlId()"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-invalid]="invalidResolved() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
       (change)="onCheckedChange($event)"
       (blur)="markTouched()"
     />
 
-    @if (label()) {
-      <label
-        class="control-text"
-        [attr.for]="controlId()"
-      >
+    <label
+      class="control-text"
+      [attr.for]="controlId()"
+    >
+      @if (label()) {
         {{ label() }}
         @if (required()) {
           <span
@@ -33,14 +33,17 @@
             *
           </span>
         }
-      </label>
-    }
+      } @else {
+        <ng-content></ng-content>
+      }
+    </label>
   </span>
 
   <ds-field-message
-    [text]="hint()"
-    [state]="messageState()"
+    [icon]="messageIcon()"
+    [text]="message().text"
+    [state]="message().state"
     [messageId]="hintId()"
-    [reserve]="reserveMessage()"
+    [reserve]="reserveMessageResolved()"
   />
 </div>

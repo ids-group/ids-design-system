@@ -1,6 +1,6 @@
 {
   "name": "@ids-group-ltd/ids-design-system",
-  "version": "0.7.0",
+  "version": "0.11.1",
   "description": "IDS Group Angular design system: components, tokens, themes",
   "license": "MIT",
   "homepage": "https://ids-ds.proto.ids-group.co.uk/",
@@ -16,7 +16,8 @@
   },
   "exports": {
     "./styles/*": "./styles/*",
-    "./themes/*": "./themes/*"
+    "./themes/*": "./themes/*",
+    "./migrations/*": "./migrations/*"
   },
   "scripts": {
     "ng": "ng",
@@ -29,18 +30,27 @@
     "build:schematics": "node tools/build-schematics.mjs",
     "extract-tokens": "node tools/extract-tokens.mjs",
     "extract-component-api": "node tools/extract-component-api.mjs",
-    "extract-docs": "npm run extract-tokens && npm run extract-component-api",
+    "class-surface": "node tools/class-surface-diff.mjs",
     "check:design-sync": "node .design-sync/tools/check-parity.mjs",
+    "check-docs-links": "node tools/check-docs-links.mjs",
+    "migration-lint": "node tools/migration-lint.mjs",
+    "migration-lint:selftest": "node tools/migration-lint-selftest.mjs",
+    "changelog-lint": "node tools/changelog-lint.mjs",
+    "changelog-lint:selftest": "node tools/changelog-lint-selftest.mjs",
+    "check-delete-tables": "node tools/check-delete-tables.mjs",
+    "check-class-surface-entry": "node tools/check-class-surface-entry.mjs",
+    "check-focus-rings": "node tools/check-focus-rings.mjs",
+    "extract-docs": "npm run extract-tokens && npm run extract-component-api && npm run check-docs-links",
     "build:docs": "npm run extract-docs && ng build ds-docs",
     "build:docs:dev": "npm run extract-docs && ng build ds-docs --configuration development",
-    "build:deck-css": "sass src/lib/styles/ds.scss presentations/ds.css --no-source-map --style=expanded",
+    "build:deck-css": "node tools/build-deck-css.mjs",
     "format": "prettier --check \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
     "format:fix": "prettier --write \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
     "lint": "eslint \"{src,ds-docs/src}/**/*.{ts,html}\"",
     "lint:fix": "eslint \"{src,ds-docs/src}/**/*.{ts,html}\" --fix",
     "lint:styles": "stylelint \"{src,ds-docs/src}/**/*.{scss,css}\"",
     "lint:styles:fix": "stylelint \"{src,ds-docs/src}/**/*.{scss,css}\" --fix",
-    "lint:all": "run-s -c format lint:styles lint",
+    "lint:all": "run-s -c format lint:styles check-focus-rings changelog-lint lint",
     "fix:all": "run-s -c format:fix lint:styles:fix lint:fix",
     "preversion": "node tools/preflight.mjs",
     "version": "node tools/changelog-release.mjs",
@@ -49,7 +59,9 @@
     "release:major": "npm version major -m \"release: %s\"",
     "release:beta": "npm version prerelease --preid=beta -m \"release: %s\"",
     "prepublishOnly": "node -e \"console.error('Publish from dist/ds (npm publish ./dist/ds), not the repo root.'); process.exit(1)\"",
-    "publish:manual": "npm run build:lib && npm publish ./dist/ds"
+    "publish:manual": "npm run build:lib && npm publish ./dist/ds",
+    "picker-parity": "node tools/picker-parity.mjs",
+    "picker-capabilities": "node tools/picker-capabilities.mjs"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",

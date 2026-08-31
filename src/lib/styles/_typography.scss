@@ -1,5 +1,5 @@
-// Type utility classes — ported from CLAUDE_DESIGN_DS/tokens.css §Type utilities.
-// These are GLOBAL by design — consumers apply them via class.
+// GLOBAL by design — a consumer applies these by class, so the names are part of the
+// published surface.
 //
 // Consumer-first token contract (same as components): every token-driven
 // property is a longhand read through a public `--ds-t-<name>-*` custom
@@ -153,7 +153,7 @@
   color: var(--ds-t-mono-inline-color, var(--text-primary));
   background-color: var(--ds-t-mono-inline-bg-color, var(--surface-secondary));
   padding: 1px var(--space-1);
-  border-radius: var(--ds-t-mono-inline-radius, var(--radius-sm));
+  border-radius: var(--ds-t-mono-inline-radius, var(--ds-radius-inner));
 }
 
 .t-mono-block {
@@ -165,7 +165,7 @@
   border-width: var(--border-width-default);
   border-style: solid;
   border-color: var(--ds-t-mono-block-border-color, var(--border-divider));
-  border-radius: var(--ds-t-mono-block-radius, var(--radius-md));
+  border-radius: var(--ds-t-mono-block-radius, var(--ds-radius-control));
   padding: var(--space-3) var(--space-4);
   max-width: 100%;
   overflow-x: auto;

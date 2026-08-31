@@ -1,3 +1,6 @@
+@use '../../styles/field-box' as field-box;
+@use '../../styles/focus' as focus;
+
 :host {
   --_number-stepper-focus-shadow: var(--ds-number-stepper-focus-shadow, var(--ds-field-focus-shadow));
   --_number-stepper-bg-color: var(--ds-number-stepper-bg-color, var(--surface-default));
@@ -15,30 +18,31 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 
+  @include focus.owns-the-focus-ring('.qty');
   &:focus-within {
     border-color: var(--accent);
     box-shadow: var(--_number-stepper-focus-shadow);
   }
 
   &.size-sm {
-    height: var(--hit-min);
+    @include field-box.field-box-height(sm);
 
-    .step { width: var(--hit-min); }
-    .qty  { width: calc(var(--hit-min) * 1.25); }
+    .step { width: var(--_field-box-height); }
+    .qty  { width: calc(var(--_field-box-height) * 1.25); }
   }
 
   &.size-md {
-    height: var(--hit-cozy);
+    @include field-box.field-box-height(md);
 
-    .step { width: var(--hit-cozy); }
-    .qty  { width: calc(var(--hit-cozy) * 1.25); }
+    .step { width: var(--_field-box-height); }
+    .qty  { width: calc(var(--_field-box-height) * 1.25); }
   }
 
   &.size-lg {
-    height: var(--hit-comfy);
+    @include field-box.field-box-height(lg);
 
-    .step { width: var(--hit-comfy); }
-    .qty  { width: calc(var(--hit-comfy) * 1.25); }
+    .step { width: var(--_field-box-height); }
+    .qty  { width: calc(var(--_field-box-height) * 1.25); }
   }
 
   &.disabled {

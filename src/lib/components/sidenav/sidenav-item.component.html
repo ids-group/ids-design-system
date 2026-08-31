@@ -19,10 +19,10 @@
   >
     <ng-container [ngTemplateOutlet]="content" />
   </a>
-} @else {
+} @else if (href()) {
   <a
     dsTooltipPlacement="right"
-    [href]="href() || '#'"
+    [href]="href()"
     [class]="linkClasses()"
     [attr.aria-label]="collapsedAriaLabel()"
     [attr.aria-current]="active() ? 'page' : null"
@@ -33,6 +33,22 @@
   >
     <ng-container [ngTemplateOutlet]="content" />
   </a>
+} @else {
+  <!-- No destination, so not a link: an `href="#"` navigates — it rewrites the URL
+       and discards the scroll position on every click. An item that only emits
+       `activate` is a button. -->
+  <button
+    type="button"
+    dsTooltipPlacement="right"
+    [class]="linkClasses()"
+    [attr.aria-label]="collapsedAriaLabel()"
+    [attr.aria-current]="active() ? 'page' : null"
+    [disabled]="disabled()"
+    [dsTooltip]="collapsedTooltip()"
+    (click)="onActivate($event)"
+  >
+    <ng-container [ngTemplateOutlet]="content" />
+  </button>
 }
 
 <ng-template #content>

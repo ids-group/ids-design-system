@@ -469,7 +469,7 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   },
   {
     "name": "--focus-ring-inner",
-    "value": "var(--surface-canvas)",
+    "value": "transparent",
     "notes": "Inner ring band (reads canvas — flips with theme)."
   },
   {
@@ -492,6 +492,16 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
     "name": "--focus-ring-error",
     "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
     "notes": "Focus ring shadow for invalid/error controls."
+  },
+  {
+    "name": "--focus-ring-inset",
+    "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
+    "notes": "The focus ring drawn INSIDE the border box, for a subtree under data-focus=\"inset\". Same two rings and colours as --focus-ring; only the direction differs, so an overflow:hidden ancestor cannot clip it away."
+  },
+  {
+    "name": "--focus-ring-inset-error",
+    "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
+    "notes": "The inset ring in the error colour, for a field that is invalid while focused under data-focus=\"inset\"."
   },
   {
     "name": "--focus-field-alpha",
@@ -1355,7 +1365,7 @@ export const SPACING: readonly SpacingRow[] = [
   {
     "name": "--ds-container-pad",
     "value": "var(--space-6)",
-    "notes": "Default inner padding for card / stat."
+    "notes": "Default inner padding for card / stat, 24px. Retune it once here instead of per component; ultra-compact density drops it to 16px."
   }
 ];
 
@@ -1425,22 +1435,22 @@ export const SHADOWS: readonly ShadowRow[] = [
   },
   {
     "name": "--shadow-popover",
-    "alias": "var(--shadow-2)",
+    "alias": "",
     "notes": "Alias — popovers, dropdowns."
   },
   {
     "name": "--shadow-modal",
-    "alias": "var(--shadow-4)",
+    "alias": "",
     "notes": "Alias — modals."
   },
   {
     "name": "--shadow-toast",
-    "alias": "var(--shadow-3)",
+    "alias": "",
     "notes": "Alias — toasts."
   },
   {
     "name": "--shadow-card",
-    "alias": "var(--shadow-1)",
+    "alias": "",
     "notes": "Alias — applied to .card."
   },
   {
@@ -1560,7 +1570,7 @@ export const DENSITY_HIT: readonly SizeRow[] = [
   {
     "name": "--hit-touch",
     "value": "48px",
-    "notes": "Mobile-friendly, floating-label fields."
+    "notes": "Mobile-friendly hit target."
   }
 ];
 
@@ -1681,13 +1691,7 @@ export const MISC_OPACITY: readonly MiscRow[] = [
     "name": "--opacity-disabled",
     "value": "0.5",
     "renderAs": "opacity",
-    "notes": "Full disabled state on interactive components."
-  },
-  {
-    "name": "--opacity-muted",
-    "value": "0.6",
-    "renderAs": "opacity",
-    "notes": "Legacy alias — being phased out."
+    "notes": "Full disabled state where opacity is the ONLY signal — a calendar day, a toggle button. A control that already swaps to --text-disabled must not stack this on top."
   },
   {
     "name": "--opacity-text-disabled",
@@ -1816,8 +1820,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Alert corner radius (8px)."
+      },
+      {
+        "name": "--ds-alert-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Alert entrance @keyframes (default ds-slide-in)."
+      },
+      {
+        "name": "--ds-alert-enter-duration",
+        "value": "var(--ds-motion-enter-surface-duration)",
+        "notes": "Alert entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-alert-enter-easing",
+        "value": "var(--ds-motion-enter-surface-easing)",
+        "notes": "Alert entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-alert-enter-offset",
+        "value": "2px",
+        "notes": "How far the alert drops in — read by ds-slide-in (default 2px)."
+      },
+      {
+        "name": "--ds-alert-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the alert enters with ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -1842,6 +1871,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Max width of the centred content wrapper (none by default — full width)."
       },
       {
+        "name": "--ds-app-layout-rail-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Rail background while it is an overlay below the lg breakpoint (defaults to --surface-overlay); above lg the rail is in the layout and inherits its own component's surface."
+      },
+      {
+        "name": "--ds-app-layout-rail-shadow",
+        "value": "var(--ds-elevation-modal)",
+        "notes": "Rail elevation while it is an overlay below the lg breakpoint (defaults to --shadow-modal)."
+      },
+      {
+        "name": "--ds-app-layout-scrim-color",
+        "value": "var(--scrim, hsl(220deg 20% 12% / 45%))",
+        "notes": "Scrim behind the rail overlay below the lg breakpoint (defaults to --scrim)."
+      },
+      {
         "name": "--ds-app-layout-height",
         "value": "100dvh",
         "notes": "Host height, pinned to the viewport so only the content region scrolls (defaults to 100dvh)."
@@ -1854,10 +1898,82 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Auth Layout",
+    "selector": ".auth-layout",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-auth-layout-min-height",
+        "value": "100dvh",
+        "notes": "Host height the centring works against (defaults to 100dvh); set it to 100% to embed the layout in a box that is not the page."
+      },
+      {
+        "name": "--ds-auth-layout-bg-color",
+        "value": "var(--surface-canvas)",
+        "notes": "Auth screen canvas fill (defaults to --surface-canvas)."
+      },
+      {
+        "name": "--ds-auth-layout-gap",
+        "value": "clamp(var(--space-4), 4svh, var(--space-8))",
+        "notes": "Space between masthead, card and support footer. Defaults to a clamp that compresses on a short viewport (16px…32px, 32px at an 800px-tall viewport); a fixed value opts out."
+      },
+      {
+        "name": "--ds-auth-layout-pad-block",
+        "value": "clamp(var(--space-4), 5svh, var(--space-10))",
+        "notes": "Block padding around the auth column. Defaults to a clamp that COMPRESSES on a short viewport (16px…40px, reaching 40px at an 800px-tall viewport) so the layout's own furniture is never what pushes a card into scrolling; set a fixed value to opt out of the compression."
+      },
+      {
+        "name": "--ds-auth-layout-mark-size",
+        "value": "clamp(var(--space-6), 4svh, var(--space-8))",
+        "notes": "Letter-mark tile size. Defaults to a clamp (24px…32px, reaching 32px at a viewport 800px tall or more). The glyph inside is a fixed size and does not track it."
+      },
+      {
+        "name": "--ds-auth-layout-mark-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": "Letter-mark tile radius (defaults to --ds-radius-control). Squaring a brand with --ds-radius-control: 0 reaches this tile too; set this to keep it rounded independently."
+      },
+      {
+        "name": "--ds-auth-layout-card-max-width",
+        "value": "var(--auth-card-w)",
+        "notes": "Measure of the auth column — the card, and with it the tagline and support line (defaults to --auth-card-w, 420px)."
+      },
+      {
+        "name": "--ds-auth-layout-mark-bg-color",
+        "value": "var(--accent)",
+        "notes": "Letter-mark tile fill (defaults to --accent — the same default as the sidenav's mark, but a separate hook, so retinting the mark means setting both)."
+      },
+      {
+        "name": "--ds-auth-layout-mark-label-color",
+        "value": "var(--accent-on)",
+        "notes": "Letter-mark glyph colour (defaults to --accent-on)."
+      },
+      {
+        "name": "--ds-auth-layout-brand-max-height",
+        "value": "none",
+        "notes": "Cap for a logo projected into [brand] (defaults to none — nothing constrains it, so an oversized image sets the masthead's height). Set it to var(--ds-auth-layout-mark-size) to make the logo track the letter-mark tile it replaces."
+      }
+    ]
+  },
+  {
     "component": "Autocomplete",
     "selector": ".autocomplete",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-autocomplete-panel-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Autocomplete dropdown panel fill."
+      },
+      {
+        "name": "--ds-autocomplete-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open."
+      },
+      {
+        "name": "--ds-autocomplete-panel-maxh",
+        "value": "var(--picker-maxh)",
+        "notes": "Autocomplete dropdown panel max height before it scrolls (default --picker-maxh, shared with ds-multi-select). Forwarded onto the portaled pane on open."
+      },
       {
         "name": "--ds-autocomplete-focus-shadow",
         "value": "var(--ds-field-focus-shadow)",
@@ -1885,7 +2001,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Autocomplete field corner radius (8px)."
       },
       {
@@ -1894,14 +2010,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Autocomplete field border colour on focus."
       },
       {
-        "name": "--ds-autocomplete-panel-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Autocomplete dropdown panel fill."
-      },
-      {
-        "name": "--ds-autocomplete-option-bg-color-hover",
-        "value": "var(--surface-secondary)",
-        "notes": "Autocomplete option row fill on hover."
+        "name": "--ds-radius-inner",
+        "value": "—",
+        "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
       }
     ]
   },
@@ -1927,7 +2038,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-avatar-radius",
-        "value": "var(--radius-pill)",
+        "value": "var(--ds-radius-pill)",
         "notes": "Pill / square."
       },
       {
@@ -2011,7 +2122,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-badge-radius",
-        "value": "var(--radius-pill)",
+        "value": "var(--ds-radius-pill)",
         "notes": "Pill radius."
       },
       {
@@ -2028,6 +2139,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-badge-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Label weight."
+      },
+      {
+        "name": "--ds-badge-white-space",
+        "value": "nowrap",
+        "notes": "Label wrapping (default nowrap). Set to normal for a badge in a narrow, fixed-layout table column, where nowrap clips the label."
       },
       {
         "name": "--badge-dot-size",
@@ -2088,7 +2204,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -2102,6 +2218,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Title colour."
       },
       {
+        "name": "--ds-banner-body-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the banner's projected body text (default --font-size-s, matching the title). Declared rather than inherited on purpose: the body used to take the page's size, so a 16px context rendered it LARGER than its own 14px title."
+      },
+      {
         "name": "--ds-banner-close-icon-color",
         "value": "var(--icon-default)",
         "notes": "Close icon."
@@ -2110,6 +2231,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-banner-close-icon-color-hover",
         "value": "var(--icon-strong)",
         "notes": "Close icon hover."
+      },
+      {
+        "name": "--ds-banner-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Banner entrance @keyframes (default ds-slide-in)."
+      },
+      {
+        "name": "--ds-banner-enter-duration",
+        "value": "var(--ds-motion-enter-surface-duration)",
+        "notes": "Banner entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-banner-enter-easing",
+        "value": "var(--ds-motion-enter-surface-easing)",
+        "notes": "Banner entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-banner-enter-offset",
+        "value": "4px",
+        "notes": "How far the banner drops in — read by ds-slide-in (default 4px)."
+      },
+      {
+        "name": "--ds-banner-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the banner enters with ds-scale-in (default 0.96)."
       },
       {
         "name": "--banner-bar-w",
@@ -2140,7 +2286,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-bottom-sheet-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Top corner radius."
       },
       {
@@ -2157,6 +2303,41 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-bottom-sheet-title-text-color",
         "value": "var(--text-primary)",
         "notes": "Bottom sheet title text colour."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-keyframes",
+        "value": "ds-slide-edge-in",
+        "notes": "Bottom-sheet entrance @keyframes (default ds-slide-edge-in — travel with no fade)."
+      },
+      {
+        "name": "--ds-bottom-sheet-leave-keyframes",
+        "value": "ds-slide-edge-out",
+        "notes": "Exit keyframes name for the sheet panel (default ds-slide-edge-out). The scrim keeps its own fade."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-duration",
+        "value": "var(--ds-motion-enter-surface-duration)",
+        "notes": "Bottom-sheet entrance duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-easing",
+        "value": "var(--ds-motion-enter-surface-easing)",
+        "notes": "Bottom-sheet + scrim entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-bottom-sheet-leave-duration",
+        "value": "var(--ds-motion-exit-large-duration)",
+        "notes": "Bottom-sheet close duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-bottom-sheet-leave-easing",
+        "value": "var(--ds-motion-exit-large-easing)",
+        "notes": "Bottom-sheet + scrim close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the sheet enters with ds-scale-in (default 0.96)."
       },
       {
         "name": "--bottom-sheet-handle-w",
@@ -2258,24 +2439,64 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Opt-in pressed halo (default off) — set to re-enable a ring on press."
       },
       {
+        "name": "--ds-button-shadow",
+        "value": "none",
+        "notes": "Resting shadow — `none` by default, so a button carries one only where an app asks. Focus and pressed keep their own hooks and still win while those states are on."
+      },
+      {
+        "name": "--ds-button-shadow-hover",
+        "value": "var(--_button-shadow)",
+        "notes": "Shadow on hover. Falls back to `--ds-button-shadow`, so setting the resting one alone keeps the button steady under the pointer."
+      },
+      {
         "name": "--ds-button-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
+      },
+      {
+        "name": "--ds-button-font-size",
+        "value": "var(--font-size-m)",
+        "notes": "Label size. Overrides the size class, so one value holds across sm/md/lg."
+      },
+      {
+        "name": "--ds-button-weight",
+        "value": "var(--font-weight-extrabold)",
+        "notes": "Label weight (default extrabold)."
+      },
+      {
+        "name": "--ds-button-tracking",
+        "value": "var(--letter-spacing-wide)",
+        "notes": "Label letter-spacing (default --letter-spacing-wide)."
+      },
+      {
+        "name": "--ds-button-height",
+        "value": "var(--field-h-md)",
+        "notes": "Button height, overriding the size class. Set with --ds-button-pad-y for a box sized by its padding instead."
+      },
+      {
+        "name": "--ds-button-pad-x",
+        "value": "var(--space-5)",
+        "notes": "Horizontal padding."
+      },
+      {
+        "name": "--ds-button-pad-y",
+        "value": "0",
+        "notes": "Vertical padding — 0 by default, since height is fixed; pair with height:auto styling for a padding-sized button."
       },
       {
         "name": "--ds-button-bg-color-disabled",
         "value": "oklch(from var(--_button-accent) 92% 0.03 h)",
-        "notes": "Disabled fill — per-variant muted tint: A (flat pale) for solid + text; secondary/tertiary/outline use B = color-mix(fill 28%, surface-disabled)."
+        "notes": "Disabled fill. Per variant: a flat pale tint of the accent for solid; color-mix(fill 28%, surface-disabled) for tonal; transparent for ghost, outline and text."
       },
       {
         "name": "--ds-button-label-color-disabled",
-        "value": "oklch(from var(--_button-accent) 58% 0.035 h)",
-        "notes": "Disabled label — low-chroma tint of the accent hue."
+        "value": "oklch(from var(--_button-accent) 70% 0.035 h)",
+        "notes": "Disabled label — ONE recipe for every variant, oklch(from accent 70% 0.035 h). 70% because the old 58%/52% pair sat where a saturated accent already is, so a disabled coloured button barely differed from its live self."
       },
       {
         "name": "--ds-button-border-disabled",
         "value": "oklch(from var(--_button-accent) 86% 0.04 h)",
-        "notes": "Disabled border (B variants: color-mix(border 55%))."
+        "notes": "Disabled border — a pale tint of the accent for solid, color-mix(border 55%, surface-disabled) for outline."
       },
       {
         "name": "--ds-control-focus-shadow-error",
@@ -2383,7 +2604,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-card-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -2410,6 +2631,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-card-hover-lift",
         "value": "var(--card-hover-lift)",
         "notes": "Translate-Y on hover."
+      },
+      {
+        "name": "--ds-card-overflow",
+        "value": "visible",
+        "notes": "Overflow of the card's own rounded box — `visible` by default. Set `clip` where a full-bleed child (an image, a footer strip) would otherwise paint its square corners over the card's radius; `clip` rather than `hidden` keeps it from becoming a scroll container. A clipped card also cuts the focus ring of any child at its edge, so pair it with `data-focus=\"inset\"` on the card."
       },
       {
         "name": "--card-hover-lift",
@@ -2457,6 +2683,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-checkbox-selected-border-color",
         "value": "var(--accent)",
         "notes": "Checked box border colour (defaults to --accent)."
+      },
+      {
+        "name": "--ds-checkbox-radius",
+        "value": "var(--ds-radius-inner)",
+        "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
+      },
+      {
+        "name": "--ds-checkbox-label-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Checkbox label weight — the third label property; size and colour were already hookable."
+      },
+      {
+        "name": "--ds-checkbox-label-font-size",
+        "value": "var(--_checkbox-label-fs)",
+        "notes": "Checkbox caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
+      },
+      {
+        "name": "--ds-checkbox-label-color",
+        "value": "var(--text-primary)",
+        "notes": "Checkbox caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
       },
       {
         "name": "--check-size",
@@ -2603,6 +2849,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Date picker trigger placeholder text colour."
       },
       {
+        "name": "--ds-date-picker-trigger-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": "Date-picker trigger corner radius (default --radius-md) — the counterpart of --ds-time-picker-trigger-radius."
+      },
+      {
+        "name": "--ds-date-picker-trigger-pad-x",
+        "value": "var(--field-pad-x)",
+        "notes": "Trigger horizontal padding; follows the field family via --field-pad-x, so it tracks density like ds-input."
+      },
+      {
+        "name": "--ds-date-picker-value-font-family",
+        "value": "var(--font-mono)",
+        "notes": "Font family of the date value AND its ghost mask (default --font-mono — fixed-width digits keep the typed value on the mask; a proportional override still lines up thanks to tabular-nums)."
+      },
+      {
+        "name": "--ds-date-picker-value-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the date value and its ghost mask (default --font-size-s)."
+      },
+      {
+        "name": "--ds-date-picker-value-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the date value and its ghost mask (default --font-weight-regular)."
+      },
+      {
         "name": "--ds-date-picker-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Popover fill."
@@ -2614,7 +2885,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Popover shadow."
       },
       {
@@ -2636,6 +2907,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-date-picker-width",
         "value": "var(--date-picker-w)",
         "notes": "Calendar width."
+      },
+      {
+        "name": "--ds-date-picker-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Calendar panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
       },
       {
         "name": "--date-picker-w",
@@ -2665,14 +2941,39 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Description list term (label) text colour."
       },
       {
+        "name": "--ds-description-list-term-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Description list term font size (defaults to --font-size-s)."
+      },
+      {
+        "name": "--ds-description-list-term-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Term (label) weight. Completes the eyebrow set the modal eyebrow and ds-field-label already expose."
+      },
+      {
+        "name": "--ds-description-list-term-tracking",
+        "value": "normal",
+        "notes": "Term letter-spacing (default normal)."
+      },
+      {
+        "name": "--ds-description-list-term-transform",
+        "value": "none",
+        "notes": "Term text-transform (default none) — set uppercase for an eyebrow-style label column."
+      },
+      {
         "name": "--ds-description-list-details-color",
         "value": "var(--text-primary)",
         "notes": "Description list details (value) text colour."
       },
       {
-        "name": "--ds-description-list-term-font-size",
+        "name": "--ds-description-list-details-font-size",
         "value": "var(--font-size-s)",
-        "notes": "Description list term font size (defaults to --font-size-s)."
+        "notes": "Value size."
+      },
+      {
+        "name": "--ds-description-list-details-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Value weight."
       },
       {
         "name": "--ds-description-list-label-w",
@@ -2735,7 +3036,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-drawer-shadow",
-        "value": "var(--shadow-modal)",
+        "value": "var(--ds-elevation-modal)",
         "notes": "Drawer panel elevation shadow (defaults to --shadow-modal)."
       },
       {
@@ -2769,6 +3070,41 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Drawer panel width (defaults to --drawer-w-sm)."
       },
       {
+        "name": "--ds-drawer-enter-keyframes",
+        "value": "ds-slide-edge-in",
+        "notes": "Drawer panel entrance @keyframes, shared by all four sides (default ds-slide-edge-in)."
+      },
+      {
+        "name": "--ds-drawer-leave-keyframes",
+        "value": "ds-slide-edge-out",
+        "notes": "Exit keyframes name (default ds-slide-edge-out, which travels back the way the panel arrived). One token covers all four sides."
+      },
+      {
+        "name": "--ds-drawer-enter-duration",
+        "value": "var(--ds-motion-enter-large-duration)",
+        "notes": "Drawer entrance duration (default --duration-slow); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-drawer-enter-easing",
+        "value": "var(--ds-motion-enter-large-easing)",
+        "notes": "Drawer panel + scrim entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-drawer-leave-duration",
+        "value": "var(--ds-motion-exit-large-duration)",
+        "notes": "Drawer close duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-drawer-leave-easing",
+        "value": "var(--ds-motion-exit-large-easing)",
+        "notes": "Drawer panel + scrim close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-drawer-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the drawer enters with ds-scale-in (default 0.96)."
+      },
+      {
         "name": "--drawer-w-sm",
         "value": "320px",
         "notes": "Drawer small width preset (320px)."
@@ -2782,6 +3118,73 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--drawer-w-lg",
         "value": "640px",
         "notes": "Drawer large width preset (640px)."
+      }
+    ]
+  },
+  {
+    "component": "Dropdown Panel",
+    "selector": ".dropdown-panel",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-option-selected-bg-color",
+        "value": "var(--primary-subtitle)",
+        "notes": "Fill of the selected row in a dropdown panel (default --primary-subtitle). Panel-level: one partial paints select, autocomplete and multi-select alike."
+      },
+      {
+        "name": "--ds-option-selected-label-color",
+        "value": "var(--primary-strong)",
+        "notes": "Label and icon colour of the selected row (default --primary-strong)."
+      },
+      {
+        "name": "--ds-option-selected-bg-color-hover",
+        "value": "var(--primary-muted)",
+        "notes": "Fill of the selected row while hovered or keyboard-active (default --primary-muted)."
+      },
+      {
+        "name": "--ds-option-check-color",
+        "value": "var(--primary)",
+        "notes": "The check glyph on a selected row (default --primary)."
+      },
+      {
+        "name": "--ds-dropdown-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
+      },
+      {
+        "name": "--ds-option-radius",
+        "value": "var(--ds-radius-inner)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-row-gap",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-bg-color-active",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-dropdown-panel-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-dropdown-panel-maxh",
+        "value": "320px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-dropdown-panel-minw",
+        "value": "0",
+        "notes": "Lower bound for the connected dropdown panel behind ds-select and ds-multi-select. Only bites in `width=\"content\"`, where the pane is auto-sized and the trigger is merely its floor; in `fill` the component pins the pane to the trigger and there is nothing left to bound. Forwarded onto the portaled pane, so a host-scoped value reaches it."
+      },
+      {
+        "name": "--ds-dropdown-panel-maxw",
+        "value": "none",
+        "notes": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Same `content`-only caveat as --ds-dropdown-panel-minw."
       }
     ]
   },
@@ -2832,7 +3235,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropzone-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -2910,6 +3313,85 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Field",
+    "selector": ".field",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-field-label-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": "Label size for the whole field family — input, textarea, select, both pickers and radio-group resolve through it."
+      },
+      {
+        "name": "--ds-field-label-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Label weight for the whole field family."
+      },
+      {
+        "name": "--ds-field-label-color",
+        "value": "var(--text-secondary)",
+        "notes": "Label colour for the field family — input, textarea, select, both pickers and radio-group. Does NOT reach the checkbox / switch / radio CAPTIONS, which have their own --ds-<control>-label-color: see those for why."
+      },
+      {
+        "name": "--ds-field-label-transform",
+        "value": "none",
+        "notes": "Label text-transform — set `uppercase` for the tracked editorial label pattern. Default `none`."
+      },
+      {
+        "name": "--ds-field-label-tracking",
+        "value": "normal",
+        "notes": "Label letter-spacing, for uppercase labels that need opening up. Default `normal`."
+      },
+      {
+        "name": "--ds-field-height",
+        "value": "var(--field-h-#{$size})",
+        "notes": "Control-box height for the field family, overriding the size class. The sm/md/lg defaults come from the --field-h-* scale; set this to pin one height regardless of size."
+      }
+    ]
+  },
+  {
+    "component": "Field Group",
+    "selector": ".field-group",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-field-group-bg-color",
+        "value": "var(--surface-default)",
+        "notes": "Fill behind the whole glued row."
+      },
+      {
+        "name": "--ds-field-group-border-color",
+        "value": "var(--border-default)",
+        "notes": "The single border the group draws around all its segments."
+      },
+      {
+        "name": "--ds-field-group-border-color-focus",
+        "value": "var(--accent)",
+        "notes": "Border colour while any segment has focus (default --accent)."
+      },
+      {
+        "name": "--ds-field-group-border-color-error",
+        "value": "var(--error)",
+        "notes": "Border colour of a ds-field-group marked invalid. Defaults to --error; the group draws the row's one border, so its segments never paint their own."
+      },
+      {
+        "name": "--ds-field-group-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": "Corner radius of the group (default --ds-radius-control); the end segments are clipped to it."
+      },
+      {
+        "name": "--ds-field-group-focus-shadow",
+        "value": "var(--ds-field-focus-shadow)",
+        "notes": "The ONE focus ring for the group (default --ds-field-focus-shadow) — segments suppress their own."
+      },
+      {
+        "name": "--ds-field-group-divider-color",
+        "value": "var(--border-divider)",
+        "notes": "Hairline between adjacent segments (default --border-divider)."
+      }
+    ]
+  },
+  {
     "component": "Field Message",
     "selector": ".field-message",
     "description": "",
@@ -2923,6 +3405,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-message-font-size",
         "value": "var(--font-size-xs)",
         "notes": "Helper-text size."
+      },
+      {
+        "name": "--ds-field-message-icon-gap",
+        "value": "var(--space-1)",
+        "notes": "Space between the state glyph and the message text (default --space-1). Also the row gap when there is no glyph, since the row holds nothing else."
+      },
+      {
+        "name": "--ds-field-message-icon-offset",
+        "value": "calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2)",
+        "notes": "Top offset that centres the 14px glyph on the FIRST line of the message rather than on the whole block, which matters once a message wraps. Defaults to a calc over --ds-field-message-font-size and --line-height-base, so it still holds if the message type is retuned; set a length to override."
+      }
+    ]
+  },
+  {
+    "component": "Filter Bar",
+    "selector": ".filter-bar",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-filter-bar-gap",
+        "value": "var(--space-3)",
+        "notes": "Space between filters, and between the row and the trailing group (defaults to --space-3). Read back off the DOM by the overflow arithmetic, so retuning it stays in sync with what is rendered."
+      },
+      {
+        "name": "--ds-filter-bar-panel-gap",
+        "value": "var(--space-4)",
+        "notes": "Vertical space between filters stacked in the overflow panel (defaults to --space-4, looser than the row because they read as a form there)."
       }
     ]
   },
@@ -2968,7 +3477,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-icon-button-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -2979,12 +3488,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-icon-button-bg-color-disabled",
         "value": "transparent",
-        "notes": "Disabled fill — boxless for standard; tonal/outlined use color-mix(fill 28%, surface-disabled)."
+        "notes": "Disabled fill — boxless for standard, a pale accent tint for filled, color-mix(fill 28%, surface-disabled) for tonal, transparent for outlined."
       },
       {
         "name": "--ds-icon-button-icon-color-disabled",
-        "value": "oklch(from var(--_icon-button-accent) 58% 0.035 h)",
-        "notes": "Disabled icon — low-chroma tint of the accent hue."
+        "value": "oklch(from var(--_icon-button-accent) 70% 0.035 h)",
+        "notes": "Disabled icon — same single recipe as ds-button's label, oklch(from accent 70% 0.035 h). It matters more here: there is no word to read, only a 16px glyph."
       },
       {
         "name": "--ds-icon-button-border-disabled",
@@ -3035,7 +3544,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -3080,17 +3589,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-label-color",
-        "value": "var(--text-secondary)",
+        "value": "var(--ds-field-label-color,       var(--text-secondary))",
         "notes": "Label colour."
       },
       {
         "name": "--ds-input-label-fs",
-        "value": "var(--font-size-xs)",
+        "value": "var(--ds-field-label-font-size,   var(--font-size-xs))",
         "notes": "Label size."
       },
       {
         "name": "--ds-input-label-fw",
-        "value": "var(--font-weight-bold)",
+        "value": "var(--ds-field-label-weight,      var(--font-weight-bold))",
         "notes": "Label weight."
       },
       {
@@ -3114,6 +3623,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-container-max",
         "value": "var(--col-cap-content)",
         "notes": "Page container max width (defaults to --col-cap-content)."
+      },
+      {
+        "name": "--ds-container-pad-x",
+        "value": "clamp(var(--space-4), 4vw, var(--space-6))",
+        "notes": "Horizontal page padding, fluid: clamp(--space-4, 4vw, --space-6). The vertical counterpart is --ds-container-pad."
       },
       {
         "name": "--ds-inline-gap",
@@ -3201,13 +3715,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-loading-overlay-scrim-color",
-        "value": "color-mix(\n    in srgb,\n    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),\n    transparent\n  )",
+        "value": "color-mix(\r\n    in srgb,\r\n    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),\r\n    transparent\r\n  )",
         "notes": "Loading overlay scrim tint over the canvas (opacity-driven mix of --surface-canvas)."
       },
       {
         "name": "--ds-loading-overlay-label-color",
         "value": "var(--text-secondary)",
         "notes": "Loading overlay status text colour (defaults to --text-secondary)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-keyframes",
+        "value": "ds-fade-in",
+        "notes": "Loading-scrim entrance @keyframes (default ds-fade-in)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-duration",
+        "value": "var(--duration-fast)",
+        "notes": "Loading-scrim entrance duration (default --duration-fast)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-easing",
+        "value": "var(--ease-standard)",
+        "notes": "Loading-scrim entrance easing (default --ease-standard)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the scrim enters with ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -3220,6 +3754,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-divider-color",
         "value": "var(--border-divider)",
         "notes": "Menu item group divider colour (defaults to --border-divider)."
+      },
+      {
+        "name": "--ds-menu-divider-spacing",
+        "value": "0px",
+        "notes": "Air above and below a ds-menu-divider. Default 0, and 0 means FLUSH: the divider cancels the menu's own row gap, so the items touch the line rather than sitting a row's width away from it. Set this only when you want the boundary to breathe more than the rows do — it is the one knob that can desync the divider from the row rhythm, which is exactly the defect 0.8.0 removed (a separated group read as a hole). For an airier menu overall, --ds-menu-gap is the better lever: it spaces every row evenly and cannot open a gap only at the boundary."
       },
       {
         "name": "--ds-menu-item-label-color",
@@ -3242,6 +3781,51 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Destructive menu item label colour (defaults to --error-text)."
       },
       {
+        "name": "--ds-menu-item-quiet-label-color",
+        "value": "var(--text-secondary)",
+        "notes": "Label colour for a [quiet] item (default --text-secondary) — a secondary row like \"Sign out\" under a divider."
+      },
+      {
+        "name": "--ds-menu-item-pad-x",
+        "value": "var(--space-3)",
+        "notes": "Menu item horizontal padding."
+      },
+      {
+        "name": "--ds-menu-item-pad-y",
+        "value": "var(--space-2)",
+        "notes": "Menu item vertical padding."
+      },
+      {
+        "name": "--ds-menu-item-label-weight",
+        "value": "var(--font-weight-medium)",
+        "notes": "Menu item label weight."
+      },
+      {
+        "name": "--ds-menu-item-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Menu item label size."
+      },
+      {
+        "name": "--ds-menu-item-description-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary, quieter than the label so the action still reads first)."
+      },
+      {
+        "name": "--ds-menu-item-description-font-size",
+        "value": "var(--font-size-2xs)",
+        "notes": "Type size of that second line (default --font-size-xs)."
+      },
+      {
+        "name": "--ds-menu-item-description-max-width",
+        "value": "14rem",
+        "notes": "Where the description wraps (default 14rem). It exists because the line is prose, and an unbounded one would stretch the menu to the width of its longest sentence."
+      },
+      {
+        "name": "--ds-menu-item-radius",
+        "value": "0",
+        "notes": "Corner radius of a menu row (default 0). Square by design: rows sit flush inside the panel, whose own radius is --ds-menu-radius."
+      },
+      {
         "name": "--ds-menu-bg-color",
         "value": "var(--surface-default)",
         "notes": "Menu panel surface fill (defaults to --surface-default)."
@@ -3250,6 +3834,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-border-color",
         "value": "var(--border-divider)",
         "notes": "Menu panel border colour (defaults to --border-divider)."
+      },
+      {
+        "name": "--ds-menu-min-width",
+        "value": "auto",
+        "notes": "Minimum menu width (default auto). Forwarded onto the overlay pane by ds-popover, so it also works for a menu projected into a popover."
+      },
+      {
+        "name": "--ds-menu-max-width",
+        "value": "none",
+        "notes": "Maximum menu width (default none). Pairs with --ds-menu-min-width; forwarded onto the pane by ds-popover."
+      },
+      {
+        "name": "--ds-menu-gap",
+        "value": "var(--space-0-5)",
+        "notes": "Gap between menu items."
+      },
+      {
+        "name": "--ds-menu-radius",
+        "value": "var(--radius-md)",
+        "notes": "Corner of a bare ds-menu (default --radius-md, which is what the component hardcoded before). Inside a ds-popover the menu clips to --ds-menu-clip-radius instead, published by the popover."
+      },
+      {
+        "name": "--ds-menu-clip-radius",
+        "value": "var(--radius-flat)",
+        "notes": "Radius a ds-menu clips its rows to when it sits inside a rounded panel. Published by ds-popover as its own radius less the border it contains, so the rows stay concentric with the panel; a bare menu leaves it flat and rounds its edge rows from --ds-menu-radius instead."
       },
       {
         "name": "--menu-minw",
@@ -3275,18 +3884,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
         "name": "--ds-modal-shadow",
-        "value": "var(--shadow-modal)",
+        "value": "var(--ds-elevation-modal)",
         "notes": "Dialog shadow."
       },
       {
         "name": "--ds-modal-divider",
         "value": "var(--border-divider)",
-        "notes": "Header/actions divider."
+        "notes": "Header/actions divider colour. To remove the rules entirely use [dividers]=\"false\" — it also drops the padding they were sized for, which setting this to transparent does not."
       },
       {
         "name": "--ds-modal-title-text-color",
@@ -3296,12 +3905,67 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-modal-title-text-color-error",
         "value": "var(--error-text)",
-        "notes": "Danger title colour."
+        "notes": "Title colour when status=\"error\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-warning",
+        "value": "var(--warning-text)",
+        "notes": "Title colour when status=\"warning\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-success",
+        "value": "var(--success-text)",
+        "notes": "Title colour when status=\"success\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-info",
+        "value": "var(--info-text)",
+        "notes": "Title colour when status=\"info\"."
       },
       {
         "name": "--ds-modal-title-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Title font-weight (defaults to --font-weight-bold)."
+      },
+      {
+        "name": "--ds-modal-title-font-size",
+        "value": "var(--font-size-h5)",
+        "notes": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-weight."
+      },
+      {
+        "name": "--ds-modal-subtitle-text-color",
+        "value": "var(--text-secondary)",
+        "notes": "Colour of the optional subtitle under the title (default --text-secondary)."
+      },
+      {
+        "name": "--ds-modal-subtitle-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the optional subtitle under the title (default --font-size-s)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-text-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Colour of the optional [eyebrow] line above the dialog title (default --text-tertiary)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": "Size of the [eyebrow] line above the dialog title (default --font-size-xs)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Weight of the [eyebrow] line above the dialog title (default --font-weight-bold)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-tracking",
+        "value": "var(--letter-spacing-wide)",
+        "notes": "Letter-spacing of the [eyebrow] line (default --letter-spacing-wide) — it renders uppercase by default."
+      },
+      {
+        "name": "--ds-modal-eyebrow-transform",
+        "value": "uppercase",
+        "notes": "text-transform for the [eyebrow] line (default uppercase; set none for sentence case)."
       },
       {
         "name": "--ds-modal-close-icon-color",
@@ -3327,6 +3991,91 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-modal-impact-text-color",
         "value": "var(--warning-text)",
         "notes": "Modal impact/warning message text colour (defaults to --warning-text)."
+      },
+      {
+        "name": "--ds-modal-enter-keyframes",
+        "value": "ds-scale-in",
+        "notes": "Modal card entrance @keyframes (default ds-scale-in); the backdrop always fades."
+      },
+      {
+        "name": "--ds-modal-enter-duration",
+        "value": "var(--ds-motion-enter-surface-duration)",
+        "notes": "Modal card + backdrop entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-modal-enter-easing",
+        "value": "var(--ds-motion-enter-surface-easing)",
+        "notes": "Modal card + backdrop entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-modal-leave-duration",
+        "value": "var(--ds-motion-exit-duration)",
+        "notes": "Modal close duration (default --duration-fast). Reduced motion zeroes it so teardown stays instant."
+      },
+      {
+        "name": "--ds-modal-leave-keyframes",
+        "value": "ds-fade-out",
+        "notes": "Exit keyframes name (default ds-fade-out). Must name GLOBAL @keyframes — a component-scoped name is renamed by Angular and will not resolve."
+      },
+      {
+        "name": "--ds-modal-leave-easing",
+        "value": "var(--ds-motion-exit-easing)",
+        "notes": "Modal close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-modal-pad-x",
+        "value": "var(--space-5)",
+        "notes": "Horizontal gutter shared by the header, body and actions. Set it on ds-modal AND ds-modal-card — a dialog opened through ModalService has no ds-modal ancestor."
+      },
+      {
+        "name": "--ds-modal-header-pad-y",
+        "value": "var(--space-4)",
+        "notes": "Vertical padding of the header row."
+      },
+      {
+        "name": "--ds-modal-body-pad-y",
+        "value": "var(--space-5)",
+        "notes": "Vertical padding of the body. Falls to 0 under [dividers]=\"false\", since it exists to clear a rule; set this token to keep a value in both modes."
+      },
+      {
+        "name": "--ds-modal-actions-pad-y",
+        "value": "var(--space-4)",
+        "notes": "Vertical padding of the footer actions row. Worth tightening alongside --ds-modal-divider: transparent, which leaves spacing sized for dividers that are gone."
+      },
+      {
+        "name": "--ds-modal-header-pad-top",
+        "value": "var(--_modal-header-pad-y)",
+        "notes": "Padding on the modal's header, top edge only. Falls back to --ds-modal-header-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-header-pad-bottom",
+        "value": "var(--_modal-header-pad-y)",
+        "notes": "Padding on the modal's header, bottom edge only. Falls back to --ds-modal-header-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-body-pad-top",
+        "value": "var(--_modal-body-pad-y)",
+        "notes": "Padding on the modal's body, top edge only. Falls back to --ds-modal-body-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-body-pad-bottom",
+        "value": "var(--_modal-body-pad-y)",
+        "notes": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-actions-pad-top",
+        "value": "var(--_modal-actions-pad-y)",
+        "notes": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-actions-pad-bottom",
+        "value": "var(--_modal-actions-pad-y)",
+        "notes": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-enter-scale",
+        "value": "0.97",
+        "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."
       },
       {
         "name": "--ds-modal-backdrop",
@@ -3381,13 +4130,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-multi-select-panel-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override."
+      },
+      {
         "name": "--ds-multi-select-bg-color",
         "value": "var(--surface-default)",
         "notes": "Multi-select control surface fill (defaults to --surface-default)."
       },
       {
+        "name": "--ds-multi-select-border-color",
+        "value": "var(--border-default)",
+        "notes": "Multi-select trigger border (defaults to --border-default)."
+      },
+      {
         "name": "--ds-multi-select-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Multi-select control corner radius (defaults to --radius-md)."
       },
       {
@@ -3396,19 +4155,29 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Multi-select selected-value text colour (defaults to --text-primary)."
       },
       {
-        "name": "--ds-multi-select-panel-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": ""
+        "name": "--ds-multi-select-border-color-focus",
+        "value": "var(--accent)",
+        "notes": "Multi-select trigger border while the field holds focus (defaults to --accent)."
       },
       {
         "name": "--ds-multi-select-option-bg-color-active",
         "value": "var(--surface-secondary)",
-        "notes": ""
+        "notes": "Option row fill while pressed (default --surface-secondary). Separate from hover, which does nothing on touch."
       },
       {
         "name": "--ds-multi-select-check-bg-color",
         "value": "var(--accent)",
         "notes": "Multi-select option checkmark fill (defaults to --accent)."
+      },
+      {
+        "name": "--ds-option-gap",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-padding",
+        "value": "var(--space-2) var(--space-2-5)",
+        "notes": ""
       }
     ]
   },
@@ -3477,6 +4246,48 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Overlay panels",
+    "selector": ".ds-overlay-pane",
+    "description": "Enter-motion hooks shared by every portaled DS panel — select, multi-select, autocomplete, date / time / colour picker, popover, tooltip, menu submenu.",
+    "tokens": [
+      {
+        "name": "--ds-overlay-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Entrance @keyframes for every portaled panel — default ds-slide-in; also ds-scale-in / ds-fade-in, your own GLOBAL keyframes, or none."
+      },
+      {
+        "name": "--ds-overlay-enter-duration",
+        "value": "var(--ds-motion-enter-panel-duration)",
+        "notes": "Portaled-panel entrance duration (default --duration-fast)."
+      },
+      {
+        "name": "--ds-overlay-enter-easing",
+        "value": "var(--ds-motion-enter-panel-easing)",
+        "notes": "Portaled-panel entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-overlay-enter-offset",
+        "value": "4px",
+        "notes": "How far a panel travels in from the trigger edge — read by ds-slide-in (default 4px)."
+      },
+      {
+        "name": "--ds-overlay-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96)."
+      },
+      {
+        "name": "--ds-overlay-leave-duration",
+        "value": "var(--ds-motion-exit-duration)",
+        "notes": "Fade-out length when an overlay panel is DISMISSED (Escape, a press outside, a scroll). Defaults to --ds-motion-exit-duration (120ms). Choosing an option closes instantly and is not affected."
+      },
+      {
+        "name": "--ds-overlay-leave-easing",
+        "value": "var(--ds-motion-exit-easing)",
+        "notes": "Easing of that dismissal fade. Defaults to --ds-motion-exit-easing."
+      }
+    ]
+  },
+  {
     "component": "Page Footer",
     "selector": ".page-footer",
     "description": "",
@@ -3503,7 +4314,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-page-footer-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Page footer corner radius (defaults to --radius-lg)."
       }
     ]
@@ -3556,7 +4367,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-page-header-title-fs",
         "value": "var(--font-size-h3)",
-        "notes": "Title size."
+        "notes": "Title size — 28px, dropping to 22px below the mobile breakpoint. Raise it for a brand-scale header; 28px is the productive-UI rung."
       },
       {
         "name": "--ds-page-header-title-gap",
@@ -3617,13 +4428,60 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-pagination-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Button radius."
       },
       {
         "name": "--ds-pagination-focus-shadow",
         "value": "var(--ds-control-focus-shadow)",
         "notes": "Pagination control focus ring (defaults to --ds-control-focus-shadow)."
+      },
+      {
+        "name": "--ds-pagination-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the \"Showing X–Y of Z\" range label (default --font-size-s)."
+      },
+      {
+        "name": "--ds-pagination-label-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the range label (default --font-weight-regular)."
+      },
+      {
+        "name": "--ds-pagination-label-color",
+        "value": "var(--text-secondary)",
+        "notes": "Colour of the range label (default --text-secondary)."
+      }
+    ]
+  },
+  {
+    "component": "Password Rules",
+    "selector": ".password-rules",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-password-rules-gap",
+        "value": "var(--space-1)",
+        "notes": "Space between rule lines in ds-password-rules (default --space-1)."
+      },
+      {
+        "name": "--ds-password-rules-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": "Rule line size (default --font-size-xs) — a checklist beside a field, not body copy."
+      },
+      {
+        "name": "--ds-password-rules-pending-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Colour of a rule not yet evaluated (default --text-tertiary): the user has not typed enough to judge it, which must not read as failure."
+      },
+      {
+        "name": "--ds-password-rules-met-color",
+        "value": "var(--success-text)",
+        "notes": "Colour of a satisfied rule (default --success-text)."
+      },
+      {
+        "name": "--ds-password-rules-failed-color",
+        "value": "var(--error-text)",
+        "notes": "Colour of a rule the current value breaks (default --error-text). Only after the user has typed — see the pending colour."
       }
     ]
   },
@@ -3644,12 +4502,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-popover-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Popover corner radius (defaults to --radius-lg)."
       },
       {
         "name": "--ds-popover-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Popover drop shadow (defaults to --shadow-popover)."
       },
       {
@@ -3661,6 +4519,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-popover-max-width",
         "value": "var(--popover-maxw)",
         "notes": "Popover max width (defaults to --popover-maxw)."
+      },
+      {
+        "name": "--ds-popover-min-width",
+        "value": "auto",
+        "notes": "Minimum panel width (default auto — the panel hugs its content). Set it to widen a menu/actions popover without touching internals."
       },
       {
         "name": "--ds-popover-arrow-size",
@@ -3749,7 +4612,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-radio-label-color",
         "value": "var(--text-primary)",
-        "notes": "Radio label text colour (defaults to --text-primary)."
+        "notes": "Radio caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
+      },
+      {
+        "name": "--ds-radio-label-font-size",
+        "value": "var(--_radio-label-fs)",
+        "notes": "Radio caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
       },
       {
         "name": "--radio-dot-size",
@@ -3780,7 +4648,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-search-height",
-        "value": "var(--search-h)",
+        "value": "var(--ds-field-height, var(--field-h-md))",
         "notes": "Control height."
       },
       {
@@ -3795,7 +4663,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-search-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -3832,11 +4700,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-search-maxw",
         "value": "none",
         "notes": "Search field max-width cap (none by default)."
-      },
-      {
-        "name": "--search-h",
-        "value": "var(--hit-md)",
-        "notes": "Search input height (var(--hit-md))."
       }
     ]
   },
@@ -3849,6 +4712,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-segmented-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "Segmented control track fill (defaults to --surface-secondary)."
+      },
+      {
+        "name": "--ds-segmented-selected-bg-color",
+        "value": "var(--surface-default)",
+        "notes": "Fill of the selected segment, which reads as a raised chip on the track (defaults to --surface-default)."
+      },
+      {
+        "name": "--ds-segmented-selected-label-color",
+        "value": "var(--text-primary)",
+        "notes": "Label colour of the selected segment (defaults to --text-primary)."
       },
       {
         "name": "--ds-segmented-label-color",
@@ -3871,9 +4744,34 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Segmented control button corner radius (defaults to --segmented-r-inner)."
       },
       {
+        "name": "--ds-segmented-radius",
+        "value": "calc(var(--_segmented-r-inner) + var(--_segmented-pad))",
+        "notes": "Outer radius of the segmented track. Defaults to the inner radius plus the track padding, so the selected chip and the track stay concentric — set both if you override this."
+      },
+      {
         "name": "--ds-segmented-selected-shadow",
-        "value": "var(--shadow-card)",
+        "value": "var(--ds-elevation-raised)",
         "notes": "Selected segment shadow (defaults to --shadow-card)."
+      },
+      {
+        "name": "--ds-segmented-btn-border",
+        "value": "0",
+        "notes": "Segment border (default 0) — set a hairline for a bordered chip row."
+      },
+      {
+        "name": "--ds-segmented-btn-pad-x",
+        "value": "var(--space-4)",
+        "notes": "Segment horizontal padding."
+      },
+      {
+        "name": "--ds-segmented-label-weight",
+        "value": "var(--font-weight-semibold)",
+        "notes": "Segment label weight."
+      },
+      {
+        "name": "--ds-segmented-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Segment label size."
       },
       {
         "name": "--segmented-btn-h",
@@ -3924,7 +4822,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-select-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Select corner radius (defaults to --radius-md)."
       },
       {
@@ -3951,7 +4849,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-group-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Group radius."
       },
       {
@@ -3986,27 +4884,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-item-bg-color-active",
-        "value": "var(--accent)",
+        "value": "var(--accent-subtitle)",
         "notes": "Active item fill."
       },
       {
         "name": "--ds-sidenav-item-label-color-active",
-        "value": "var(--text-on-primary)",
+        "value": "var(--accent-strong)",
         "notes": "Active item label."
       },
       {
         "name": "--ds-sidenav-item-bg-color-active-hover",
-        "value": "color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, white)",
+        "value": "var(--accent-muted)",
         "notes": "Active item hover fill."
       },
       {
         "name": "--ds-sidenav-item-rail",
-        "value": "var(--secondary)",
-        "notes": "Active item rail accent."
+        "value": "var(--accent-strong)",
+        "notes": "Edge marker on the active item (defaults to --accent-strong, the same colour as the active label). It is the second signal beside the wash, so the state does not rest on colour alone — turn it off with [rail] on ds-sidenav or ds-sidenav-item rather than painting it transparent."
       },
       {
         "name": "--ds-sidenav-item-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Item radius."
       },
       {
@@ -4050,6 +4948,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Brand mark label."
       },
       {
+        "name": "--ds-radius-control",
+        "value": "—",
+        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
+      },
+      {
+        "name": "--ds-sidenav-brand-max-height",
+        "value": "none",
+        "notes": "Height cap for a logo projected into the [brand] slot; `none` by default, so an oversized logo sets the brand row's height until you set this. Height only — an image with no CSS width keeps its ratio on its own."
+      },
+      {
         "name": "--sidenav-w",
         "value": "240px",
         "notes": "Sidenav geometry — expanded width (240px)."
@@ -4078,6 +4986,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--sidenav-collapsed-item",
         "value": "var(--hit-cozy)",
         "notes": "Sidenav collapsed item hit size (--hit-cozy)."
+      },
+      {
+        "name": "--sidenav-collapsed-glyph",
+        "value": "var(--icon-lg)",
+        "notes": "20px — the icon size the collapsed rail's items render at, and what the alert dot is positioned against so it rides the glyph's corner rather than the tile's."
       },
       {
         "name": "--sidenav-section-pad-b",
@@ -4261,8 +5174,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-split-button-outline-bg-color",
-        "value": "var(--surface-default)",
-        "notes": "Outline split button surface fill (defaults to --surface-default)."
+        "value": "transparent",
+        "notes": "Fill of the outlined split button. Transparent by default, so it adopts the surface it sits on."
       },
       {
         "name": "--ds-split-button-outline-border-color",
@@ -4288,7 +5201,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-stat-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -4305,6 +5218,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-stat-value-color",
         "value": "var(--text-primary)",
         "notes": "Value colour."
+      },
+      {
+        "name": "--ds-stat-value-font-size",
+        "value": "var(--font-size-h2)",
+        "notes": "Value size. Applies at every `size`, not just the default — the sm/lg variants move this token rather than restating font-size, so one override reaches all three."
+      },
+      {
+        "name": "--ds-stat-value-white-space",
+        "value": "nowrap",
+        "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around. Without it the line does not wrap and, since `.stat` sets no `overflow`, the text runs OUT of the tile rather than being clipped inside it."
       },
       {
         "name": "--ds-stat-up-color",
@@ -4426,6 +5349,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-switch-thumb-bg-color",
         "value": "var(--surface-default)",
         "notes": "Switch thumb fill (defaults to --surface-default)."
+      },
+      {
+        "name": "--ds-switch-label-font-size",
+        "value": "var(--_switch-label-fs)",
+        "notes": "Switch caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
+      },
+      {
+        "name": "--ds-switch-label-color",
+        "value": "var(--text-primary)",
+        "notes": "Switch caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
       },
       {
         "name": "--switch-track-w",
@@ -4896,7 +5829,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-t-mono-inline-radius",
-        "value": "var(--radius-sm)",
+        "value": "var(--ds-radius-inner)",
         "notes": "Per-axis override for the `.t-mono-inline` utility's radius."
       },
       {
@@ -4931,7 +5864,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-t-mono-block-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Per-axis override for the `.t-mono-block` utility's radius."
       }
     ]
@@ -4948,13 +5881,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-table-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Outer corner radius."
       },
       {
         "name": "--ds-table-bg-color",
         "value": "var(--surface-default)",
         "notes": "Table fill."
+      },
+      {
+        "name": "--ds-table-hscroll-bottom",
+        "value": "0",
+        "notes": "Offset of the sticky horizontal scrollbar from the scrollport edge (default 0). Set a negative value equal to the container's bottom padding when the table sits in a padded box, or the bar floats above the content it belongs to."
+      },
+      {
+        "name": "--ds-table-min-width",
+        "value": "0",
+        "notes": "Readability floor on the inner table (default 0 = none). Below it the columns stop shrinking and the wrapper's horizontal scroller takes over, which is what a wide table wants on a narrow screen."
       },
       {
         "name": "--ds-table-row-hover-bg-color",
@@ -4982,6 +5925,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Zebra odd-row stripe fill."
       },
       {
+        "name": "--ds-table-cell-link-color",
+        "value": "var(--accent)",
+        "notes": "Colour a cell marked `interactive: true` takes while its row is hovered on a `rowInteractive` table (default --accent). It names WHICH text opens the record, where the row tint only says the row is clickable."
+      },
+      {
+        "name": "--ds-table-cell-link-decoration",
+        "value": "underline",
+        "notes": "Decoration on that same cell (default `underline`), so the target is not signalled by hue alone. Set `none` only if something else in the row carries the signal."
+      },
+      {
         "name": "--ds-table-head-text-color",
         "value": "var(--text-secondary)",
         "notes": "Head label."
@@ -5007,6 +5960,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Active sort caret."
       },
       {
+        "name": "--ds-table-icon-btn-color",
+        "value": "var(--icon-default)",
+        "notes": "Icon colour of ds-table's own icon buttons — the row-action kebab and the column picker. Defaults to --icon-default. Neither is a ds-icon-button, so the icon-button tokens do not reach them."
+      },
+      {
+        "name": "--ds-table-icon-btn-color-hover",
+        "value": "var(--icon-strong)",
+        "notes": "Hover icon colour for ds-table's row-action kebab and column picker. Defaults to --icon-strong."
+      },
+      {
+        "name": "--ds-table-icon-btn-focus-color",
+        "value": "var(--accent)",
+        "notes": "Focus-outline colour for ds-table's row-action kebab and column picker. Defaults to --accent."
+      },
+      {
         "name": "--ds-table-cell-pad-x",
         "value": "var(--table-cell-pad-x)",
         "notes": "Cell horizontal padding."
@@ -5015,6 +5983,51 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-table-cell-pad-y",
         "value": "var(--table-cell-pad-y)",
         "notes": "Cell vertical padding."
+      },
+      {
+        "name": "--ds-table-cell-pad-top",
+        "value": "var(--_table-cell-pad-y)",
+        "notes": "Per-side cell padding override; falls back to --ds-table-cell-pad-y."
+      },
+      {
+        "name": "--ds-table-cell-pad-right",
+        "value": "var(--_table-cell-pad-x)",
+        "notes": "Per-side cell padding override (also the header gutter); falls back to --ds-table-cell-pad-x."
+      },
+      {
+        "name": "--ds-table-cell-pad-bottom",
+        "value": "var(--_table-cell-pad-y)",
+        "notes": "Per-side cell padding override; falls back to --ds-table-cell-pad-y."
+      },
+      {
+        "name": "--ds-table-cell-pad-left",
+        "value": "var(--_table-cell-pad-x)",
+        "notes": "Per-side cell padding override (also the header gutter) — set 0 for a flush first column; falls back to --ds-table-cell-pad-x."
+      },
+      {
+        "name": "--ds-table-head-pad-top",
+        "value": "var(--table-head-pad-y)",
+        "notes": "Per-side header padding override; falls back to the density value --table-head-pad-y."
+      },
+      {
+        "name": "--ds-table-head-pad-bottom",
+        "value": "var(--table-head-pad-y)",
+        "notes": "Per-side header padding override; falls back to the density value --table-head-pad-y."
+      },
+      {
+        "name": "--ds-table-head-border-color",
+        "value": "var(--_table-divider)",
+        "notes": "Colour of the rule under the header row (default --ds-table-divider)."
+      },
+      {
+        "name": "--ds-table-head-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Header label weight (default --font-weight-bold)."
+      },
+      {
+        "name": "--ds-table-head-tracking",
+        "value": "var(--letter-spacing-wider)",
+        "notes": "Header label letter-spacing (default --letter-spacing-wider)."
       },
       {
         "name": "--ds-table-select-col-w",
@@ -5094,6 +6107,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Vertical padding."
       },
       {
+        "name": "--ds-tab-pad-top",
+        "value": "var(--_tab-pad-y)",
+        "notes": "Per-side tab padding override; falls back to --ds-tab-pad-y."
+      },
+      {
+        "name": "--ds-tab-pad-bottom",
+        "value": "var(--_tab-pad-y)",
+        "notes": "Per-side tab padding override; falls back to --ds-tab-pad-y. An underline tab usually wants its padding here only."
+      },
+      {
+        "name": "--ds-tab-label-weight",
+        "value": "var(--font-weight-semibold)",
+        "notes": "Tab label weight."
+      },
+      {
+        "name": "--ds-tab-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Tab label size."
+      },
+      {
+        "name": "--ds-tabs-strip-gap",
+        "value": "var(--space-2)",
+        "notes": "Gap between tabs in the strip."
+      },
+      {
+        "name": "--ds-tabs-panel-pad-top",
+        "value": "var(--space-3)",
+        "notes": "Space between the tab strip and its panel."
+      },
+      {
         "name": "--ds-tab-label-color",
         "value": "var(--text-secondary)",
         "notes": "Default tab label."
@@ -5145,7 +6188,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tab-pill-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Pill radius."
       },
       {
@@ -5192,7 +6235,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tag-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -5293,6 +6336,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-time-picker-option-bg-color-selected",
+        "value": "var(--accent)",
+        "notes": "Fill of the selected hour/minute option in the panel (defaults to --accent)."
+      },
+      {
+        "name": "--ds-time-picker-option-text-color-selected",
+        "value": "var(--accent-on)",
+        "notes": "Label colour of the selected option (defaults to --accent-on)."
+      },
+      {
+        "name": "--ds-time-picker-option-bg-color-hover",
+        "value": "var(--surface-secondary)",
+        "notes": "Option fill on hover (defaults to --surface-secondary)."
+      },
+      {
         "name": "--ds-time-picker-column-width",
         "value": "3rem",
         "notes": "Min width of each column."
@@ -5301,6 +6359,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-time-picker-column-height",
         "value": "13.5rem",
         "notes": "Max height of each scroll column."
+      },
+      {
+        "name": "--ds-time-picker-focus-shadow",
+        "value": "var(--ds-control-focus-shadow, var(--focus-ring))",
+        "notes": "Time picker focus ring shadow (defaults to --ds-control-focus-shadow) — read directly by the portaled panel, where a :host-scoped private token cannot reach."
       }
     ]
   },
@@ -5310,9 +6373,54 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-time-picker-trigger-bg-color",
+        "value": "var(--surface-default)",
+        "notes": "Time-picker trigger fill (defaults to --surface-default)."
+      },
+      {
+        "name": "--ds-time-picker-trigger-border",
+        "value": "var(--border-default)",
+        "notes": "Time-picker trigger border (defaults to --border-default)."
+      },
+      {
+        "name": "--ds-time-picker-trigger-color",
+        "value": "var(--text-primary)",
+        "notes": "Time-picker trigger text colour (defaults to --text-primary)."
+      },
+      {
         "name": "--ds-time-picker-trigger-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Time picker trigger corner radius (defaults to --radius-md)."
+      },
+      {
+        "name": "--ds-time-picker-trigger-pad-x",
+        "value": "var(--field-pad-x)",
+        "notes": "Trigger horizontal padding; follows the field family via --field-pad-x, so it tracks density like ds-input."
+      },
+      {
+        "name": "--ds-time-picker-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Time panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
+      },
+      {
+        "name": "--ds-time-picker-required-color",
+        "value": "var(--error)",
+        "notes": "Colour of the required asterisk beside the time label (default --error)."
+      },
+      {
+        "name": "--ds-time-picker-value-font-family",
+        "value": "var(--font-sans)",
+        "notes": "Font family of the time value (default --font-sans). Set it to --font-mono to pair with a mono date value."
+      },
+      {
+        "name": "--ds-time-picker-value-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the time value (default --font-size-s)."
+      },
+      {
+        "name": "--ds-time-picker-value-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the time value (default --font-weight-regular — matches ds-input / ds-select / ds-date-picker)."
       },
       {
         "name": "--ds-time-picker-bg-color",
@@ -5326,7 +6434,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-time-picker-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Panel shadow."
       }
     ]
@@ -5394,6 +6502,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-toast-leave-duration",
+        "value": "var(--duration-base)",
+        "notes": "Toast dismiss duration — a transition, not an animation (default --duration-base)."
+      },
+      {
+        "name": "--ds-toast-leave-easing",
+        "value": "var(--ease-standard)",
+        "notes": "Toast dismiss easing (default --ease-standard)."
+      },
+      {
         "name": "--ds-toast-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Base surface fill."
@@ -5417,6 +6535,41 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-toast-icon-color",
         "value": "var(--accent)",
         "notes": "Toast leading icon colour (defaults to --accent, per severity)."
+      },
+      {
+        "name": "--ds-toast-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Toast entrance @keyframes (default ds-slide-in — rises into place from below)."
+      },
+      {
+        "name": "--ds-toast-enter-duration",
+        "value": "var(--ds-motion-enter-large-duration)",
+        "notes": "Toast entrance duration (default --duration-slow)."
+      },
+      {
+        "name": "--ds-toast-enter-easing",
+        "value": "var(--ds-motion-enter-large-easing)",
+        "notes": "Toast entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-toast-enter-offset",
+        "value": "var(--space-2)",
+        "notes": "How far the toast rises into place — read by ds-slide-in (default --space-2)."
+      },
+      {
+        "name": "--ds-toast-min-width",
+        "value": "var(--toast-minw)",
+        "notes": "Toast minimum width (default --toast-minw) — a per-instance hook over the global geometry token."
+      },
+      {
+        "name": "--ds-toast-max-width",
+        "value": "var(--toast-maxw)",
+        "notes": "Toast maximum width (default --toast-maxw) — a per-instance hook over the global geometry token."
+      },
+      {
+        "name": "--ds-toast-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the toast enters with ds-scale-in (default 0.96)."
       },
       {
         "name": "--ds-toast-bg-color-info",
@@ -5534,12 +6687,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tooltip-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Tooltip corner radius (defaults to --radius-md)."
       },
       {
         "name": "--ds-tooltip-shadow",
-        "value": "var(--shadow-2)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Tooltip drop shadow (defaults to --shadow-2)."
       },
       {
@@ -5709,6 +6862,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
 
 export const NEW_TOKENS: readonly NewToken[] = [
   {
+    "name": "--auth-card-w",
+    "value": "420px",
+    "kind": "length"
+  },
+  {
     "name": "--binpack-bay-h",
     "value": "var(--hit-touch)",
     "kind": "length"
@@ -5824,16 +6982,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
-    "name": "--combobox-maxh",
-    "value": "280px",
-    "kind": "length"
-  },
-  {
-    "name": "--combobox-offset",
-    "value": "var(--space-1)",
-    "kind": "length"
-  },
-  {
     "name": "--compare-dt-w",
     "value": "90px",
     "kind": "length"
@@ -5914,6 +7062,26 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--ds-elevation-floating",
+    "value": "var(--shadow-3)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-modal",
+    "value": "var(--shadow-4)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-overlay",
+    "value": "var(--shadow-2)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-raised",
+    "value": "var(--shadow-1)",
+    "kind": "other"
+  },
+  {
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
     "kind": "color"
@@ -5922,6 +7090,66 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow-error",
     "value": "var(--focus-field-error)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-enter-large-duration",
+    "value": "var(--duration-slow)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-large-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-panel-duration",
+    "value": "var(--duration-fast)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-panel-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-surface-duration",
+    "value": "var(--duration-base)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-surface-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-duration",
+    "value": "var(--duration-fast)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-easing",
+    "value": "var(--ease-accelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-large-duration",
+    "value": "var(--duration-base)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-large-easing",
+    "value": "var(--ease-accelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-radius-panel",
+    "value": "var(--radius-lg)",
+    "kind": "length"
+  },
+  {
+    "name": "--ds-radius-pill",
+    "value": "var(--radius-pill)",
+    "kind": "length"
   },
   {
     "name": "--empty-body-maxw",
@@ -5939,33 +7167,8 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "color"
   },
   {
-    "name": "--field-floating-label-fs",
-    "value": "var(--font-size-2xs)",
-    "kind": "other"
-  },
-  {
-    "name": "--field-floating-label-lh",
-    "value": "14px",
-    "kind": "length"
-  },
-  {
-    "name": "--field-floating-label-top",
-    "value": "8px",
-    "kind": "length"
-  },
-  {
-    "name": "--field-floating-pad-t",
-    "value": "18px",
-    "kind": "length"
-  },
-  {
     "name": "--field-gap-req",
     "value": "var(--space-1)",
-    "kind": "length"
-  },
-  {
-    "name": "--field-h-floating",
-    "value": "var(--hit-touch)",
     "kind": "length"
   },
   {
@@ -6236,6 +7439,16 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--page-margin-wide",
     "value": "var(--space-10)",
+    "kind": "length"
+  },
+  {
+    "name": "--picker-maxh",
+    "value": "280px",
+    "kind": "length"
+  },
+  {
+    "name": "--picker-offset",
+    "value": "var(--space-1)",
     "kind": "length"
   },
   {

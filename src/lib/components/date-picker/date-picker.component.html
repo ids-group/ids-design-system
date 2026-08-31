@@ -49,9 +49,7 @@
         [attr.aria-labelledby]="label() ? labelId : null"
         [attr.aria-label]="resolvedAriaLabel()"
         [attr.aria-required]="required() ? 'true' : null"
-        [attr.aria-invalid]="
-          invalid() || typedInvalid() || rangeInvalid() ? 'true' : null
-        "
+        [attr.aria-invalid]="invalidResolved() ? 'true' : null"
         [attr.aria-describedby]="hintId()"
         [attr.aria-placeholder]="fieldPlaceholder()"
         (beforeinput)="onFieldBeforeInput($event)"
@@ -89,7 +87,7 @@
       tabindex="-1"
       aria-hidden="true"
       [disabled]="isDisabled()"
-      (click)="open(true); $event.stopPropagation()"
+      (click)="onFieldClick(); $event.stopPropagation()"
     >
       <ds-icon
         name="calendar"
@@ -99,10 +97,11 @@
   </div>
 
   <ds-field-message
-    [text]="messageText()"
-    [state]="messageState()"
+    [icon]="messageIcon()"
+    [text]="message().text"
+    [state]="message().state"
     [messageId]="hintId()"
-    [reserve]="reserveMessage()"
+    [reserve]="reserveMessageResolved()"
   />
 </div>
 

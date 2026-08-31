@@ -1,0 +1,216 @@
+{
+  "version": "0.11.0",
+  "items": [
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "class MyTable extends TableComponent, class MyButton extends ButtonComponent (or any exported DS component you subclass)",
+      "new": null,
+      "action": "Only if you extend one of these and already declare one of the GAINED names: rename yours, or add `override` if you meant to replace ours. Build after upgrading — the compiler enumerates every collision.",
+      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-…>` elements need nothing.",
+      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does. Six members — `hint`, `error`, `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved` — moved one level up between two internal base classes, so a member-by-member diff can report them as lost and regained. They still reach your subclass with the same names, types and defaults, and an existing `override` still works because it accepts a member from any ancestor. Nothing to do for those; only the GAINED names below can collide.",
+      "note": "Compared against 0.10.3. Gained: TableComponent `cellLink`; ButtonComponent `disabledReason`, `ariaDescribedBy`, `softDisabled`, `message`, `fieldMessage`, `hasMessageRow`, `describedBy`, `hintId`, `reasonId`, `uid`; IconButtonComponent `ariaDescribedBy`; SidenavComponent `brandRoute`, `brandLinkLabel` and the protected `brandAriaLabel`; CheckboxComponent and RadioGroupComponent each the protected `controlState`. TS4114 asks for an `override` modifier, TS2415 fires where the signature differs.",
+      "surface": "typescript",
+      "verify": "Build your app: no TS4114 or TS2415 is raised against a class that extends a DS component.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends ButtonComponent",
+        "extends IconButtonComponent",
+        "cellLink",
+        "disabledReason",
+        "ariaDescribedBy",
+        "softDisabled",
+        "hasMessageRow",
+        "TS4114",
+        "TS2415",
+        "extends SidenavComponent",
+        "brandRoute",
+        "brandLinkLabel",
+        "brandAriaLabel",
+        "controlState",
+        "extends DsFieldBase",
+        "extends DsMessageBase"
+      ],
+      "detect": [
+        "extends TableComponent",
+        "extends ButtonComponent",
+        "extends IconButtonComponent",
+        "cellLink",
+        "disabledReason",
+        "ariaDescribedBy",
+        "softDisabled",
+        "hasMessageRow",
+        "TS4114",
+        "TS2415",
+        "extends SidenavComponent",
+        "brandRoute",
+        "brandLinkLabel",
+        "brandAriaLabel",
+        "controlState"
+      ]
+    },
+    {
+      "id": "menu-divider-now-flush",
+      "kind": "behavior",
+      "old": "ds-menu-divider",
+      "new": null,
+      "surface": "style",
+      "note": "A divider is a boundary, not a row, so it no longer takes space of its own: it cancels ds-menu's row gap and the items sit flush against the line. Measured 0px above and 0px below, where it was one row gap (2px at the default --ds-menu-gap) on each side. Its own padding already defaulted to 0 in 0.8.0; this removes the gap that was landing on top of it. The --ds-menu-divider-spacing token is unchanged and still gives the boundary air.",
+      "action": "Nothing unless you set --ds-menu-divider-spacing. If you do, your boundary now measures your value alone instead of your value plus the row gap, so add one --ds-menu-gap back into it to keep the previous measurement.",
+      "appliesWhen": "Only menus that use ds-menu-divider.",
+      "pitfall": "0.8.0's restore recipe (`ds-menu { --ds-menu-divider-spacing: var(--space-1) }`) counts as setting it, so a menu that followed that advice tightens without anyone editing it.",
+      "verify": "Open a menu with a divider: the items touch the line. If you set the spacing token, the air either side equals your value exactly.",
+      "searchHints": [
+        "ds-menu-divider",
+        "--ds-menu-divider-spacing",
+        "--ds-menu-gap",
+        "menu-divider"
+      ],
+      "detect": [
+        "ds-menu-divider",
+        "--ds-menu-divider-spacing"
+      ]
+    },
+    {
+      "id": "published-manifests-corrected",
+      "kind": "behavior",
+      "old": "A repo whose last @ids-group-ltd/ids-design-system upgrade ran before this release and crossed 0.2.0, 0.5.1, 0.7.1, 0.8.0, 0.9.0 or 0.10.0",
+      "new": null,
+      "action": "Re-run these items, now corrected in migrations/<version>.json: 0.2.0#surface-subtle-token-rename, 0.5.1#progress-variant-remap, 0.5.1#badge-variant-to-status-rename, 0.7.1#surface-motion-partial-a-la-carte, 0.7.1#modal-title-flex-moved-to-heading, 0.8.0#table-client-sort-replaced-by-sort-mode, 0.9.0#input-signal-types-widened-by-transforms, 0.10.0#input-floating-removed, 0.10.0#modal-confirm-error-tone-paints-a-badge. Nothing else in those files changed meaning.",
+      "appliesWhen": "Only for a repo that already stepped through one of those six versions. A first-time consumer, or one whose upgrade runs from here on, reads the corrected files and needs none of this. The defects are independent - crossing 0.7.1 says nothing about 0.9.0.",
+      "pitfall": "Two of these UNDO work rather than adding it. 0.7.1 filed the modal `.title` as a rename to `.heading`; no rename ever happened, so a repo that renamed it on our word must put it back - `.title` still paints the heading text. And 0.7.1 handed out bare `styles/…` @use specifiers that resolve only inside this library's own source tree: the line looks right and fails at build from an app. The 0.8.0 one is the silent case - an unset sortMode was documented as resolving to server when it resolves to client, so a server-paged table passes every check while sorting only the rows already on screen.",
+      "note": "Each listed item was corrected against the code of its own release: three changes that had no item, two wrong instructions, one verify that certified a bug, and three items whose surface named too few file types.",
+      "surface": [
+        "style",
+        "template",
+        "typescript"
+      ],
+      "verify": "No `--surface-subtle` remains in any stylesheet. No bare `@use 'styles/…'` of a design-system partial remains - each is package-qualified. Every ds-table that binds [total] declares sortMode=\"server\" explicitly. No `variant` remains on ds-badge or ds-progress in any file type. No stylesheet sets --field-h-floating, --field-floating-label-fs, --field-floating-label-lh, --field-floating-label-top or --field-floating-pad-t. The app builds with no TS2322 naming InputSignal and no TS2416 on a class extending a DS field.",
+      "searchHints": [
+        "--surface-subtle",
+        "@use 'styles/surface-motion'",
+        "@use 'styles/overlay-motion'",
+        ".heading",
+        "sortMode",
+        "[total]",
+        "variant",
+        "--field-h-floating",
+        "--field-floating-label-fs",
+        "--field-floating-pad-t",
+        "InputSignal<",
+        "ds-badge",
+        "ds-progress",
+        "ds-modal-card",
+        "floating"
+      ],
+      "detect": [
+        "--surface-subtle",
+        "@use 'styles/surface-motion'",
+        "@use 'styles/overlay-motion'",
+        "--field-h-floating",
+        "--field-floating-label-fs",
+        "--field-floating-label-lh",
+        "--field-floating-label-top",
+        "--field-floating-pad-t",
+        "InputSignal<",
+        "ds-modal-card ::ng-deep .heading"
+      ]
+    },
+    {
+      "id": "sidenav-item-without-destination-is-a-button",
+      "kind": "behavior",
+      "old": "ds-sidenav-item",
+      "new": null,
+      "surface": "template",
+      "note": "A ds-sidenav-item with neither routerLink nor href used to render <a href=\"#\">, which navigates: it rewrites the URL and discards the scroll position on click. It renders <button type=\"button\"> now. Styling is unchanged - the rules are class-based and the button's UA chrome is reset - and both anchor variants behave exactly as before.",
+      "action": "Nothing for an item that already sets href or routerLink. An item you INTENDED as a link needs one of those; an empty href no longer becomes \"#\". If any CSS or test selects the item by tag, widen it to the class: `.item` covers all three variants.",
+      "appliesWhen": "Only items with no href and no routerLink.",
+      "pitfall": "A querySelector('ds-sidenav-item a') or an `a` type selector silently matches nothing for those items now.",
+      "verify": "Click a destination-less item: the URL and the scroll position stay put, and `activate` still fires.",
+      "searchHints": [
+        "ds-sidenav-item",
+        "href=\"#\"",
+        "sidenav-item a",
+        "activate"
+      ],
+      "detect": [
+        "ds-sidenav-item",
+        "sidenav-item a"
+      ]
+    }
+  ],
+  "informational": [
+    "`--ds-field-message-icon-offset` and `--ds-time-picker-focus-shadow` are public, overridable, and listed in the token reference - the supported way to retune either. Nothing changed in the components - if you hand-rolled around either because it looked unsupported, the override is supported and is the way to do it. They belong with the twelve named under 0.10.3.",
+    "If you applied 0.10.2 before its manifest was completed, two of its notes were reachable only from the CHANGELOG; this is one of them. components.md, the digest this package carries for your own agent, had named --primary, --text-on-primary and --secondary as the active ds-sidenav-item defaults - the wash replaced them, so an override written against those three does not do what it looks like.",
+    "The second note 0.10.2 kept only in its CHANGELOG: `data-focus=\"inset\"` (shipped in that release) draws the focus ring INSIDE the border box, for a subtree under an overflow:hidden ancestor that would otherwise clip it away entirely. It is the only focus style not pinned to :root - set it on the clipping element.",
+    "ds-table columns take a new optional `link: (row) => string | readonly unknown[] | null`. Nothing changes on a column that does not set it; see the exported-class-members-grew item if you SUBCLASS TableComponent. Where you compensated for an invisible row click by repeating the destination as a 'View Details' item in the row overflow menu, that item can go: give the name column `link` instead and the destination becomes a real <a> - tabbable as a link, Ctrl/Cmd-clickable, and announced as a link rather than as a table row. If you also set `rowInteractive`, note the pair costs two tab stops per row; the link alone is usually the better trade on a long list. (delete list: row-menu-view-details-duplicate)",
+    "ds-card gains --ds-card-overflow, default visible. Opt-in on purpose: clipping a card also cuts the focus ring off any child at its edge, so where a clipped card holds focusable content pair it with data-focus=\"inset\".",
+    "ds-button gains --ds-button-shadow and --ds-button-shadow-hover, both default none. Purely additive; -shadow-hover falls back to -shadow, and the focus/pressed hooks still win in their own states.",
+    "ds-button gains disabledReason, hint, warning, error, messageIcon, reserveMessage and ariaDescribedBy; ds-icon-button gains ariaDescribedBy. All additive - a button that sets none of them is byte-identical in behaviour and layout. Two things worth knowing before you use them. (1) disabledReason CHANGES HOW THE BUTTON IS DISABLED: with a reason set the button carries aria-disabled=\"true\" instead of the native disabled attribute, so it stays focusable and the reason is announced as its accessible description; the click is swallowed in the handler, so (pressed) still never fires. If you have CSS keyed on `ds-button button[disabled]` or `:disabled`, add `[aria-disabled=\"true\"]` - the library's own disabled paint already covers both. (2) hint/warning/error are for the OTHER kind of refusal: a temporary one the user lifts by filling the form in. Do not disable the button for those - leave it live, judge validity in the submit handler, and let the message line explain. A message-bearing button becomes a column, and since the host shrinks to fit, a message longer than the label widens the pair, button included. (delete list: button-disabled-reason-tooltip)",
+    "Every item in every published manifest now carries `action` (the imperative alone, the only field to execute), `appliesWhen` (the boundary, including what is NOT affected) and `pitfall` (the way to apply it correctly and still break the app); `note` keeps the reasoning. If you read these files with your own tooling, read `action` first and `pitfall` before reporting an item done. Nothing was removed - every field that was there is still there with the same name and meaning.",
+    "ds-w3w renders `///word.word.word` flush now. It previously showed a space after the `///` prefix (7.8px wider than the format allows, measured), which also disagreed with its own aria-label. Purely a rendering fix - no API change and nothing to edit. Worth a look only if you compensated for the space: a negative margin or a letter-spacing tweak aimed at ds-w3w's mark, or a hand-built pill you wrote because the DS one looked wrong, would now over-correct.",
+    "ds-banner now sets `text-align: start` on its own box instead of inheriting. Nothing to do unless you were centring a banner by centring its container - that no longer reaches the banner, and the fix is to say so rather than to work around it. The reported symptom (a centred title over a start-aligned body) does not come from the DS: measured across every banner and both layouts, title and body both compute `start`, and a centred ancestor moves BOTH - it cannot split them. If you still see the split, something on your side targets `.title` or `.body` directly; those are generic class names and a global rule reaches them.",
+    "ds-sidenav-footer's account menu uses ds-menu-divider now instead of a hand-rolled div, so --ds-menu-divider-color and --ds-menu-divider-spacing finally reach it. Its line also moves CLOSER - it sat 6px from its neighbours and is flush now, along with every other divider; see the menu-divider-now-flush item for what that means if you set the spacing token.",
+    "A compact ds-banner with a title longer than its container used to overflow that container and cut the title mid-word with no ellipsis; it now ellipsises and the banner shrinks to fit. Nothing to edit. Worth a look only if you compensated for it - a width, a min-width or a font-size override on a compact banner, or a title you shortened to stop it blowing out a narrow column, can go back to the wording you wanted.",
+    "ds-table's pagination footer is now inset like the cells (horizontally by --ds-table-cell-pad-x, and the same at the bottom as the top). It previously had padding-top only, so the summary line sat 16px left of the column text and on the container's border. Nothing to edit - and if you carried a TODO(ds-table-footer-padding) or a local rule padding .pagination-footer, it can go. A local rule will now DOUBLE the inset, so check for one. (delete list: table-footer-padding-workaround)",
+    "ds-banner's projected body takes --font-size-s now, overridable via the new --ds-banner-body-font-size, instead of inheriting the page size - a 16px context used to render the body larger than the banner's own 14px title. The title/body gap also moved onto the body, so it appears only when a body exists: a compact banner with BOTH a title and a body no longer runs them together, and a title-only banner gains no trailing space. If you set a font-size on a banner's content from outside to compensate, drop it or move it to the token.",
+    "ds-sidenav gains brandRoute and brandLinkLabel: set brandRoute and the brand row becomes a link (typically to home), announced as \"<brand>, home\" unless brandLinkLabel says otherwise. Unset, the row is the plain block it always was, so nothing changes without an explicit opt-in. Router targets only, and RouterLink is instantiated only once the input is set. If you hand-rolled a link around the brand slot, this replaces it.",
+    "ds-checkbox and ds-radio-group paint a validation state on the control now: the checkbox reddens its border (border only - a fill at 16px reads as checked), the radio group reddens its label (not the rings - an unanswered group is not five wrong radios). Both also handle warning. Purely additive, and only visible where you already bind error/errors/invalid. ds-radio, ds-switch and ds-slider deliberately do NOT paint: a lone radio's choice belongs to its group, a switch applies on flip rather than on submit, and a slider always holds an in-range value. If you hand-rolled a red outline on a checkbox or a red group label, drop it - it will now double up."
+  ],
+  "deleteList": [
+    {
+      "id": "card-overflow-ng-deep-workaround",
+      "surface": "style",
+      "find": [
+        "ds-card .card",
+        "overflow: hidden",
+        "::ng-deep"
+      ],
+      "why": "A ::ng-deep reach into ds-card's inner .card to clip a full-bleed child (an image or footer strip) inside the card radius, because no token exposed it.",
+      "replaceWith": "--ds-card-overflow: clip on the card (clip, not hidden — it keeps the card from becoming a scroll container)"
+    },
+    {
+      "id": "row-menu-view-details-duplicate",
+      "surface": "template",
+      "find": [
+        "View Details",
+        "ds-menu-item",
+        "rowActions"
+      ],
+      "why": "A \"View Details\" entry in a row overflow menu that only repeats where the row already leads. It existed because the row click was the sole, invisible way in; a naming column with `link` makes the destination a real anchor, so the menu entry is a second control for the same navigation.",
+      "replaceWith": "set `link` on the column that names the record, and delete the menu item"
+    },
+    {
+      "id": "button-resting-shadow-ng-deep",
+      "surface": "style",
+      "find": [
+        "::ng-deep ds-button button",
+        "ds-button button",
+        "box-shadow"
+      ],
+      "why": "A deep selector into ds-button's inner <button> kept alive only by a resting box-shadow — background, colour, weight and border already had tokens.",
+      "replaceWith": "--ds-button-shadow (and --ds-button-shadow-hover) on the ds-button host"
+    },
+    {
+      "id": "button-disabled-reason-tooltip",
+      "surface": "template",
+      "find": [
+        "dsTooltip",
+        "ds-button",
+        "disabled"
+      ],
+      "why": "A tooltip on a disabled ds-button used to carry the reason it is refused. It reaches a mouse only: a natively disabled button never takes focus, so a keyboard user gets nothing and a screen reader gets no description. Applies to the tooltip that EXPLAINS the refusal, not to one that merely names the action - leave the latter alone.",
+      "replaceWith": "[disabledReason]=\"'...'\" on the ds-button for a standing refusal (no permission, no integration); for a refusal the user can lift by filling the form in, drop `disabled` altogether and use [error]/[warning]/[hint] with validity judged in the submit handler"
+    },
+    {
+      "id": "table-footer-padding-workaround",
+      "surface": "style",
+      "find": [
+        "pagination-footer",
+        "TODO(ds-table-footer-padding)"
+      ],
+      "why": "A local rule padding ds-table's `.pagination-footer`, added because the component gave it a top inset only — so the summary line sat left of the column text and on the container's border. The footer is inset by the cells' own padding now, and a local rule DOUBLES it.",
+      "replaceWith": "nothing — and retune both together through --ds-table-cell-pad-x if the inset is wrong for you"
+    }
+  ]
+}

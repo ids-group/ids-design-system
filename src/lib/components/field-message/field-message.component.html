@@ -8,9 +8,10 @@
       role="alert"
       [id]="messageId()"
     >
-      @if (icon()) {
+      @if (iconResolved(); as glyph) {
         <ds-icon
-          [name]="icon()!"
+          class="message-icon"
+          [name]="glyph"
           [size]="14"
         />
       }
@@ -21,9 +22,10 @@
       class="field-message {{ state() }}"
       [id]="messageId()"
     >
-      @if (icon()) {
+      @if (iconResolved(); as glyph) {
         <ds-icon
-          [name]="icon()!"
+          class="message-icon"
+          [name]="glyph"
           [size]="14"
         />
       }

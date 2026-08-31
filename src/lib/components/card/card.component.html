@@ -1,11 +1,10 @@
 <article
-  #root
   [class]="classes()"
   [attr.role]="interactive() ? 'button' : null"
   [attr.tabindex]="interactive() ? 0 : null"
   (click)="onClick($event)"
-  (keydown.enter)="$event.preventDefault(); root.click()"
-  (keydown.space)="$event.preventDefault(); root.click()"
+  (keydown.enter)="onActivationKey($event)"
+  (keydown.space)="onActivationKey($event)"
 >
   <ng-content></ng-content>
 </article>

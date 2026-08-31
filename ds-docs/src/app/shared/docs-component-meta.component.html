@@ -1,0 +1,19 @@
+@let api = data();
+
+@if (api) {
+  <div class="meta">
+    <div class="row">
+      <span class="chip tagchip">
+        <span class="tag">
+          {{ api.isElement ? '<' + api.selector + '>' : api.selector }}
+        </span>
+      </span>
+    </div>
+
+    @if (api.summary) {
+      <p class="summary">
+        {{ api.summary }}
+      </p>
+    }
+  </div>
+}

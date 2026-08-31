@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
   AutocompleteComponent,
+  ButtonComponent,
+  type AutocompleteItem,
   type AutocompleteOption,
   type AutocompleteOptionGroup,
 } from 'ds';
@@ -10,6 +12,25 @@ import {
 } from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
+
+interface DemoOwner {
+  id: string;
+  name: string;
+}
+
+const OWNER_SEED: readonly DemoOwner[] = [
+  { id: '1', name: 'Ada Lovelace' },
+  { id: '2', name: 'Grace Hopper' },
+  { id: '3', name: 'Barbara Liskov' },
+];
+
+/** New objects every call, which is what a refetch hands back. */
+function buildOwners(): AutocompleteItem<DemoOwner>[] {
+  return OWNER_SEED.map((owner) => ({
+    value: { ...owner },
+    label: owner.name,
+  }));
+}
 
 const MEMBERS: readonly AutocompleteOption<string>[] = [
   { value: 'acme', label: 'Acme Holdings' },
@@ -24,6 +45,19 @@ const PRODUCTS: readonly AutocompleteOption<string>[] = [
   { value: 'spirits', label: 'Spirits' },
   { value: 'wine', label: 'Wine' },
   { value: 'mixers', label: 'Mixers' },
+];
+
+const CHANNELS: readonly AutocompleteOption<string>[] = [
+  { value: 'broker', label: 'Broker portal', icon: 'users' },
+  {
+    value: 'api',
+    label: 'Partner API — not enabled',
+    icon: 'link',
+    disabled: true,
+  },
+  { value: 'direct', label: 'Direct — web', icon: 'globe' },
+  { value: 'phone', label: 'Telephone', icon: 'phone' },
+  { value: 'post', label: 'Post', icon: 'mail' },
 ];
 
 const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
@@ -57,6 +91,7 @@ const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
   standalone: true,
   imports: [
     AutocompleteComponent,
+    ButtonComponent,
     DocsTruncationComponent,
     DocsSectionComponent,
     DocsNonmodalNoteComponent,
@@ -66,14 +101,44 @@ const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
   styleUrl: './autocomplete.section.scss',
 })
 export class AutocompleteSection {
+  protected readonly owner = signal<DemoOwner | null>(null);
+  protected readonly searchCity = signal<string | null>(null);
+
+  protected readonly ownerOptions = signal<AutocompleteItem<DemoOwner>[]>(
+    buildOwners(),
+  );
+
+  protected readonly sameOwner = (
+    first: DemoOwner | null,
+    second: DemoOwner | null,
+  ): boolean => first?.id === second?.id;
+
+  protected refetchOwners(): void {
+    this.ownerOptions.set(buildOwners());
+  }
+
   protected readonly members = MEMBERS;
   protected readonly products = PRODUCTS;
+  protected readonly channels = CHANNELS;
   protected readonly venueGroups = VENUE_GROUPS;
+  protected readonly channelValue = signal<string | null>('broker');
   protected readonly memberValue = signal<string | null>('festi');
   protected readonly productsValue = signal<readonly string[]>([
     'beer',
     'cider',
     'spirits',
+  ]);
+  protected readonly cappedProductsValue = signal<readonly string[]>([
+    'beer',
+    'cider',
+    'spirits',
+    'wine',
+  ]);
+  protected readonly fitProductsValue = signal<readonly string[]>([
+    'beer',
+    'cider',
+    'spirits',
+    'wine',
   ]);
   protected readonly venueValue = signal<string | null>(null);
   protected readonly toolbarProductsValue = signal<readonly string[]>(['beer']);

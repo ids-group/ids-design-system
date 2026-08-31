@@ -1,5 +1,3 @@
-/* Public --ds-list-item-* are read with fallbacks, never declared. */
-
 :host {
   --_list-item-pad-y: var(--ds-list-item-pad-y, var(--list-item-pad-y));
   --_list-item-pad-x: var(--ds-list-item-pad-x, var(--list-item-pad-x));
@@ -10,15 +8,19 @@
   --_list-item-label-color: var(--ds-list-item-label-color, var(--text-primary));
   --_list-item-subtitle-color: var(--ds-list-item-subtitle-color, var(--text-tertiary));
 
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--_list-item-gap);
+  padding: var(--_list-item-pad-y) var(--_list-item-pad-x);
+  transition: background-color var(--duration-fast) var(--ease-standard);
 }
 
 .activator {
   display: flex;
   align-items: center;
-  gap: var(--_list-item-gap);
-  width: 100%;
-  padding: var(--_list-item-pad-y) var(--_list-item-pad-x);
+  flex: 1;
+  min-width: 0;
+  padding: 0;
   border: 0;
   background: transparent;
   color: var(--text-primary);
@@ -28,15 +30,6 @@
 
 button.activator {
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-standard);
-
-  &:hover {
-    background-color: var(--_list-item-hover-bg-color);
-  }
-
-  &:active:not(:disabled) {
-    background-color: var(--surface-muted);
-  }
 
   &:focus-visible {
     outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
@@ -46,6 +39,15 @@ button.activator {
   &:disabled {
     cursor: not-allowed;
   }
+}
+
+/* Tinted from the host, so the whole row lights up even though only the body is the
+   button. Hover on the button alone would leave the control gutters unpainted. */
+:host(:has(button.activator:hover)) {
+  background-color: var(--_list-item-hover-bg-color);
+}
+:host(:has(button.activator:active:not(:disabled))) {
+  background-color: var(--surface-muted);
 }
 
 .leading,
@@ -85,7 +87,7 @@ button.activator {
     var(--font-sans);
 }
 
-:host(.selected) .activator {
+:host(.selected) {
   background-color: var(--_list-item-selected-bg-color);
 }
 :host(.selected) .title {

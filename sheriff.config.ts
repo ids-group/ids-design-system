@@ -17,6 +17,7 @@ export const config: SheriffConfig = {
   excludeRoot: true,
   modules: {
     'ds-docs/src/app/sections/<group>/<section>': 'docs:section',
+    'ds-docs/src/app/core': 'docs:core',
     'ds-docs/src/app/shared': 'docs:shared',
     'ds-docs/src/app/layout': 'docs:layout',
   },
@@ -24,13 +25,14 @@ export const config: SheriffConfig = {
     // Root = composition files (docs.page, app.*, tweaks-panel) AND the `ds`
     // library itself (its alias resolves to in-repo dist/ds). Everyone may use it.
     root: () => true,
-    // A section composes shared + layout + the ds lib (root); NOT another section.
-    'docs:section': ['docs:shared', 'docs:layout', 'root'],
-    // shared derives docs stats from the nav config (layout); + the ds lib.
-    'docs:shared': ['docs:layout', 'root'],
-    // layout uses its own nav config + shared (sidebar reads docs-stats) + ds lib.
-    // NOTE: shared↔layout is a mild cycle (docs-stats reads nav.config); the clean
-    // fix is a `core/` tier for nav.config + docs-stats — tracked as a follow-up.
-    'docs:layout': ['docs:shared', 'root'],
+    // A section composes core + shared + layout + the ds lib (root); NOT another section.
+    'docs:section': ['docs:core', 'docs:shared', 'docs:layout', 'root'],
+    // The bottom tier: the nav config, which is data and depends on nothing.
+    // It exists so `shared` and `layout` can both read it without pointing at
+    // each other — that pair used to be a cycle (docs-stats reads nav.config
+    // while the sidebar reads docs-stats).
+    'docs:core': ['root'],
+    'docs:shared': ['docs:core', 'root'],
+    'docs:layout': ['docs:core', 'docs:shared', 'root'],
   },
 };

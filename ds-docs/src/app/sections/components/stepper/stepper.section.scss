@@ -7,7 +7,12 @@
     }
     .demo--centered {
       display: flex;
-      justify-content: center;
+
+      /* `safe` or the inline stepper's first step is unreachable on a phone: plain
+         `center` spills an over-wide child equally both ways, and scrollLeft cannot
+         go below 0, so the 141px hanging off the left at 412px could not be scrolled
+         back into view — which is why step one showed as a clipped half-circle. */
+      justify-content: safe center;
       max-width: 100%;
       overflow-x: auto;
     }
@@ -17,7 +22,7 @@
       gap: var(--space-4);
     }
     .state { display: flex; flex-direction: column; gap: var(--space-2); }
-    .state__lbl { font-size: 11px; color: var(--text-secondary); }
+    .state-lbl { font-size: 11px; color: var(--text-secondary); }
 
     .single-nodes {
       display: flex;

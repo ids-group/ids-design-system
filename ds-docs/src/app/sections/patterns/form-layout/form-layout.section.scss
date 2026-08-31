@@ -21,7 +21,7 @@
 
       @include bp.down(md) { grid-template-columns: 1fr; gap: var(--space-3); }
     }
-    .form-section__body {
+    .form-section-body {
       display: grid;
       gap: var(--space-4);
     }
@@ -78,11 +78,11 @@
 
       @include bp.down(md) { grid-template-columns: 1fr; }
     }
-    .inline-edit__label {
+    .inline-edit-label {
       color: var(--text-secondary);
       font-weight: var(--font-weight-bold);
     }
-    .inline-edit__actions {
+    .inline-edit-actions {
       display: inline-flex;
       gap: var(--space-2);
     }
@@ -113,3 +113,36 @@
       gap: var(--space-2);
       max-width: var(--col-cap-text);
     }
+
+/* Side-by-side gap comparison — two identical stacks that differ only in the
+   stack's own gap, so the doubled rhythm is visible rather than described. */
+.gap-demo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-6);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--radius-lg);
+}
+
+.gap-demo-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.gap-demo-tag {
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+
+.gap-demo-controls {
+  margin-top: var(--space-3);
+}
+
+/* The per-child fix the prose describes: a child with no message row of its own
+   borrows the same trailing space a reserved field carries. */
+.gap-demo-inset {
+  padding-bottom: var(--space-5);
+}

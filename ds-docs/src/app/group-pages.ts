@@ -17,6 +17,7 @@ import { InputSection } from './sections/components/input/input.section';
 import { MultiSelectSection } from './sections/components/multi-select/multi-select.section';
 import { NumberStepperSection } from './sections/components/number-stepper/number-stepper.section';
 import { OtpInputSection } from './sections/components/otp-input/otp-input.section';
+import { PasswordRulesSection } from './sections/components/password-rules/password-rules.section';
 import { RadioSection } from './sections/components/radio/radio.section';
 import { SearchSection } from './sections/components/search/search.section';
 import { SelectSection } from './sections/components/select/select.section';
@@ -27,6 +28,7 @@ import { TimePickerSection } from './sections/components/time-picker/time-picker
 import { W3wSection } from './sections/components/w3w/w3w.section';
 
 import { AppLayoutSection } from './sections/components/app-layout/app-layout.section';
+import { AuthLayoutSection } from './sections/components/auth-layout/auth-layout.section';
 import { BreadcrumbsSection } from './sections/components/breadcrumbs/breadcrumbs.section';
 import { MenuSection } from './sections/components/menu/menu.section';
 import { PaginationSection } from './sections/components/pagination/pagination.section';
@@ -64,6 +66,8 @@ import { ModalSection } from './sections/components/modal/modal.section';
 import { PopoverSection } from './sections/components/popover/popover.section';
 import { TooltipSection } from './sections/components/tooltip/tooltip.section';
 
+import { FieldGroupSection } from './sections/components/field-group/field-group.section';
+import { FilterBarSection as ComponentsFilterBarSection } from './sections/components/filter-bar/filter-bar.section';
 import { PageFooterSection } from './sections/components/page-footer/page-footer.section';
 import { PageHeaderSection as ComponentsPageHeaderSection } from './sections/components/page-header/page-header.section';
 
@@ -88,12 +92,14 @@ import { ZIndexSection } from './sections/foundations/z-index/z-index.section';
 
 import { ActivitySection } from './sections/patterns/activity/activity.section';
 import { EmptyStateSection } from './sections/patterns/empty-state/empty-state.section';
-import { FilterBarSection } from './sections/patterns/filter-bar/filter-bar.section';
+import { FilterBarSection as PatternsFilterBarSection } from './sections/patterns/filter-bar/filter-bar.section';
 import { FormLayoutSection } from './sections/patterns/form-layout/form-layout.section';
 import { PageHeaderSection as PatternsPageHeaderSection } from './sections/patterns/page-header/page-header.section';
 
 import { DoDontSection } from './sections/practice/do-dont/do-dont.section';
 import { TokenDisciplineSection } from './sections/practice/token-discipline/token-discipline.section';
+import { SignalFormsSection } from './sections/practice/signal-forms/signal-forms.section';
+import { RulesSection } from './sections/practice/rules/rules.section';
 
 import { TokensReferenceSection } from './sections/tokens-reference/tokens-reference.section';
 import { ChangelogSection } from './sections/changelog/changelog.section';
@@ -127,10 +133,12 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       ColorPickerSection,
       DatePickerSection,
       DropzoneSection,
+      FieldGroupSection,
       InputSection,
       MultiSelectSection,
       NumberStepperSection,
       OtpInputSection,
+      PasswordRulesSection,
       RadioSection,
       SearchSection,
       SelectSection,
@@ -146,6 +154,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Navigation',
     sections: [
       AppLayoutSection,
+      AuthLayoutSection,
       BreadcrumbsSection,
       MenuSection,
       PaginationSection,
@@ -202,7 +211,11 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
   {
     path: 'components/page-structure',
     title: 'Page structure',
-    sections: [PageFooterSection, ComponentsPageHeaderSection],
+    sections: [
+      ComponentsFilterBarSection,
+      PageFooterSection,
+      ComponentsPageHeaderSection,
+    ],
   },
   {
     path: 'foundations',
@@ -234,7 +247,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     sections: [
       ActivitySection,
       EmptyStateSection,
-      FilterBarSection,
+      PatternsFilterBarSection,
       FormLayoutSection,
       PatternsPageHeaderSection,
     ],
@@ -242,7 +255,12 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
   {
     path: 'practice',
     title: 'Practice',
-    sections: [DoDontSection, TokenDisciplineSection],
+    sections: [
+      RulesSection,
+      DoDontSection,
+      TokenDisciplineSection,
+      SignalFormsSection,
+    ],
   },
   {
     path: 'reference',

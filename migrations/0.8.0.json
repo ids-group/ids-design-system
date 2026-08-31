@@ -1,0 +1,255 @@
+{
+  "version": "0.8.0",
+  "items": [
+    {
+      "id": "table-client-sort-replaced-by-sort-mode",
+      "kind": "removed-api",
+      "old": "ds-table[clientSort]",
+      "new": "sortMode",
+      "action": "`[clientSort]=\"true\"` and a bare `clientSort` become `sortMode=\"client\"`; `[clientSort]=\"false\"` or `[clientSort]=\"expr\"` becomes `[sortMode]=\"expr ? 'client' : 'server'\"`. A table that had NO clientSort binding and reorders in its own `(sortChange)` handler must declare `sortMode=\"server\"`. A table that renders a sortable column but sorts nowhere declares `sortMode=\"none\"`, which drops the button, the caret and `aria-sort` instead of leaving a dead control. TypeScript callers can type the value with `import type { TableSortMode }`.",
+      "pitfall": "The last case is the one that is not a find/replace, because the DEFAULT CHANGED: unset resolves to `client` at this version. A server-paged table that only emitted `sortChange` will now ALSO sort its own rows — and client sorting reorders the current page only, so the rows look sorted and are not. Dev builds warn on `total` plus client, but a production build says nothing.",
+      "note": "The boolean could not express \"nothing sorts\", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing.",
+      "searchHints": [
+        "clientSort",
+        "[clientSort]",
+        "sortChange",
+        "(sortChange)",
+        "sortable: true",
+        "TableColumn",
+        "ds-table"
+      ],
+      "surface": "template",
+      "verify": "No `clientSort` is left anywhere. Every server-paged `<ds-table>` - one that binds `total` and reorders in its own (sortChange) - declares sortMode=\"server\" EXPLICITLY: at this version an unset sortMode resolves to \"client\", so leaving it off makes the table re-sort the page it is showing and the rows look sorted while the server order is unchanged. A table holding all its rows declares sortMode=\"client\" or leaves it unset; a table that sorts nothing declares sortMode=\"none\". Dev builds warn on total + client.",
+      "restore": "sortMode=\"server\" on a table that should only emit (sortChange) and sort nothing itself"
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "extends InputComponent",
+      "new": null,
+      "action": "Build after upgrading — the compiler enumerates every collision. Per member: rename your own, or add `override` where the base semantics genuinely match. A subclass that overrode `messageState` should move its logic to an `error` or `warning` binding on the element instead, since the message is resolved centrally now.",
+      "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md § Components); template users of the `<ds-…>` elements need nothing.",
+      "pitfall": "A PRIVATE member collides too — TS2415 — and `TableComponent.saveLayout()` is the likeliest to collide, because a table wrapper commonly declares the same name. Two more shapes hide here: this release REMOVES members as well as adding them (the fourteen fields dropped protected `messageState`, DatePicker also `messageText`, and Checkbox, Switch and Radio dropped protected `devMode`), so an `override` can start naming nothing; and `close()` gained an optional `cause`, which an override declared as `close()` still satisfies — only a subclass that re-declares the parameter list differently breaks.",
+      "note": "Additions: the fourteen field classes gained the `error`, `warning`, `errors` and `touched` inputs plus protected `message` and `invalidResolved`; both CVA bases gained protected `touchedSelf`; AppLayoutComponent gained `railOverlay` and `railId`; TableComponent lost `clientSort` and gained `sortModeResolved`, `sortableCol()`, `exporting`, `runExport()`, `virtualizing`, `virtualRowHeight`, `virtualWindow`, `windowData`, `isStriped()`, the `persistLayout`, `storageKey`, `exportButton`, `exportFilename`, `exportFetcher`, `virtualScroll` and `virtualRowSize` inputs and the private `saveLayout()` / `restoreLayout()`; ButtonComponent gained `ariaControls`; IconButtonComponent `ariaExpanded` and `ariaControls`; LayoutScrollService `scroller`, `scrollTo()`, `configureRestore()`, `consumePendingOffset()` and `contentReady()`.",
+      "searchHints": [
+        "extends InputComponent",
+        "extends SelectComponent",
+        "extends TextareaComponent",
+        "extends DatePickerComponent",
+        "extends CheckboxComponent",
+        "extends AppLayoutComponent",
+        "extends TableComponent",
+        "extends ButtonComponent",
+        "extends IconButtonComponent",
+        "extends DsControlValueAccessor",
+        "extends ",
+        "messageState",
+        "override readonly",
+        "saveLayout",
+        "TS4114"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends InputComponent",
+        "extends TableComponent",
+        "extends ",
+        "saveLayout"
+      ],
+      "verify": "A typecheck reports no TS4114 / TS2415 / TS2416 on any class extending a DS component - including a PRIVATE collision (saveLayout / restoreLayout on the table) and a subclass that overrode the removed protected `messageState`."
+    },
+    {
+      "id": "select-label-class-renamed-to-label",
+      "kind": "class-rename",
+      "old": "ds-select .select-label",
+      "new": ".label",
+      "action": "Retarget `.select-label` to `.label`, scoped to the element: `ds-select .label { … }`.",
+      "appliesWhen": "Only a consumer who styles ds-select internal DOM. In most cases the rule can simply be DELETED — it existed to make the select label match the input, and they match by default now.",
+      "pitfall": "`.label` is also the class ds-input, ds-textarea, ds-date-picker, ds-time-picker and ds-radio-group use, so an unscoped retarget spreads the rule across the whole field family. Scope every selector under `ds-select`.",
+      "note": "The label element uses the same class as the rest of the family now, so `.select-label` — and the doubled `.select-label.select-label` written to out-rank the shimmed component rule — silently match nothing.",
+      "searchHints": [
+        "select-label",
+        ".select-label",
+        "ds-select",
+        "label",
+        "field-label"
+      ],
+      "surface": "style"
+    },
+    {
+      "id": "radio-group-label-class-and-type",
+      "kind": "class-rename",
+      "old": "ds-radio-group .group-label",
+      "new": ".label",
+      "action": "Retarget `.group-label` to `.label` under ds-radio-group, or delete the rule. To keep the old look, scope the family tokens: `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`.",
+      "appliesWhen": "None of this is needed for most screens — matching the family is the point of the change.",
+      "pitfall": "`.group-label` is ALSO the class `ds-sidenav-group` uses for its heading, and that one is unchanged. A repo-wide rename takes the sidenav heading with it. Only rules scoped under ds-radio-group are affected.",
+      "note": "Two changes to one element: the class, and the type — the label draws `--font-weight-bold` at `--font-size-xs` now instead of its own medium weight at `--font-size-s`. It was the only field label drawing its own, and beside an input it read as a different kind of element.",
+      "searchHints": [
+        "group-label",
+        ".group-label",
+        "ds-radio-group",
+        "radio-group",
+        "label"
+      ],
+      "surface": "style",
+      "restore": "ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }"
+    },
+    {
+      "id": "ng-add-schematic-now-loads",
+      "kind": "behavior",
+      "old": "ng add @ids-group-ltd/ids-design-system",
+      "new": null,
+      "action": "Nothing, if you already added `@use '@ids-group-ltd/ids-design-system/styles/ds';` to your global stylesheet by hand — `ng add` prepends the same line and skips when it is present. If you never wired the styles, run `ng add` now or add that one line yourself.",
+      "appliesWhen": "Relevant to anyone whose components render unthemed, which is the symptom of the styles never having been wired.",
+      "note": "`ng add` never ran its schematic in any released version: the package is `\"type\": \"module\"` while the compiled schematic was CommonJS, and the nested `{\"type\":\"commonjs\"}` marker that fixed it in `dist/` was dropped by `npm pack`, which treats a directory holding a package.json as a separate root. The schematic is `.cts` compiled to `.cjs` now, which survives packing.",
+      "searchHints": [
+        "ng add",
+        "ng-add",
+        "styles/ds",
+        "@use '@ids-group-ltd",
+        "schematics"
+      ],
+      "surface": "style",
+      "detect": [
+        "@use '@ids-group-ltd/ids-design-system/styles/ds'",
+        "styles/ds"
+      ],
+      "verify": "The app's global stylesheet contains the DS styles entry exactly once - by hand or through `ng add`, which prepends the same line and skips when it is there."
+    },
+    {
+      "id": "menu-item-radius-default-now-square",
+      "kind": "behavior",
+      "old": "ds-menu",
+      "new": null,
+      "action": "None if the new look is fine. To restore the rounded highlight: `ds-menu { --ds-menu-item-radius: var(--radius-md); padding: var(--space-1); }` — both declarations.",
+      "pitfall": "Setting the radius WITHOUT restoring some padding is the one combination to avoid: the rows run edge to edge now, so a corner at zero inset has nothing to curve away from. The panel padding has no token, which is why the restore names a raw `padding`.",
+      "note": "The row fill was `--radius-md` and is square now through the new `--ds-menu-item-radius`, defaulting to 0; ds-menu also dropped its own padding to 0 and gained `overflow: hidden`. A curve at zero inset can never be concentric with the panel, and inside a ds-popover the row's 8px sat against the popover's 12px corner and left visible slivers.",
+      "searchHints": [
+        "ds-menu",
+        "ds-menu-item",
+        "--ds-menu-item-radius",
+        "menu-item",
+        "ds-popover"
+      ],
+      "surface": "style",
+      "restore": "ds-menu { --ds-menu-item-radius: var(--radius-md); padding: var(--space-1); } - both, because a radius with no panel padding has nothing to curve away from",
+      "verify": "No menu is left with a rounded row highlight and no panel padding (the one combination to avoid), and nothing depends on the old 8px hover fill."
+    },
+    {
+      "id": "menu-divider-spacing-default-now-zero",
+      "kind": "behavior",
+      "old": "ds-menu-divider",
+      "new": null,
+      "action": "None unless you want the airier boundary back: `ds-menu { --ds-menu-divider-spacing: var(--space-1); }`.",
+      "appliesWhen": "Only menus that actually use `ds-menu-divider`.",
+      "note": "The divider carried 4px above and below on top of the 2px gap ds-menu already puts between rows, so a separated group read as a hole. Its padding defaults to 0 now, so the line takes one row's place; menu items keep their own padding, so it still separates.",
+      "searchHints": [
+        "ds-menu-divider",
+        "--ds-menu-divider-spacing",
+        "menu-divider",
+        "ds-menu"
+      ],
+      "surface": "style",
+      "restore": "ds-menu { --ds-menu-divider-spacing: var(--space-1); }",
+      "verify": "Every menu that uses ds-menu-divider reads as intended with the line taking one row's place instead of adding a second gap."
+    },
+    {
+      "id": "time-picker-panel-radius-now-panel-role",
+      "kind": "behavior",
+      "old": "ds-time-picker",
+      "new": null,
+      "action": "None unless you want the old 8px corner: `ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }`. The hook is forwarded onto the portaled overlay pane, so a per-instance override does reach the panel.",
+      "appliesWhen": "The open dropdown only. The trigger radius is unchanged and still resolves through `--ds-time-picker-trigger-radius`.",
+      "note": "The panel drew the CONTROL radius (8px) and draws the panel role now (12px). It was the last floating panel in the library still doing so, and it rendered different corners beside its own sibling ds-date-picker in the same form.",
+      "searchHints": [
+        "ds-time-picker",
+        "--ds-time-picker-panel-radius",
+        "--ds-time-picker-trigger-radius",
+        "time-panel",
+        "time-picker"
+      ],
+      "surface": "style",
+      "restore": "ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }",
+      "verify": "A time picker beside a date picker draws the same corner, or the app pins the old 8px deliberately."
+    },
+    {
+      "id": "focus-partial-needs-use-line",
+      "kind": "code-add",
+      "old": "@use '@ids-group-ltd/ids-design-system/styles",
+      "new": "@use '@ids-group-ltd/ids-design-system/styles/focus';",
+      "action": "Add `@use '@ids-group-ltd/ids-design-system/styles/focus';` to the same global stylesheet that already `@use`s the other DS partials.",
+      "appliesWhen": "ONLY a consumer who cherry-picks partials. Do NOT add it beside a `styles/ds` import — that entry forwards it already, and its users must do nothing.",
+      "pitfall": "Missing it costs accessibility, silently. The `data-focus` switch simply does nothing, and — the part that matters — focused elements have NO visible indicator at all in Windows High Contrast and other forced-colors modes, because forced-colors drops box-shadow and the shadow-only indicator was all they had.",
+      "note": "The `data-focus` switch and the `@media (forced-colors: active)` fallback both live in the new `styles/_focus.scss`.",
+      "searchHints": [
+        "@use '@ids-group-ltd/ids-design-system/styles",
+        "styles/ds",
+        "styles/focus",
+        "ids-design-system/styles",
+        "data-focus",
+        "forced-colors"
+      ],
+      "surface": "style"
+    },
+    {
+      "id": "combobox-tokens-renamed-to-picker",
+      "kind": "removed-api",
+      "old": "--combobox-offset / --combobox-maxh",
+      "new": "--picker-offset / --picker-maxh",
+      "action": "Rename `--combobox-offset` to `--picker-offset` and `--combobox-maxh` to `--picker-maxh`.",
+      "appliesWhen": "Only if you overrode them. These are global scale tokens, not `--ds-*` component tokens, and the values are unchanged.",
+      "note": "The two tokens sizing the listbox panel shared by ds-autocomplete and ds-multi-select still carried the name of a component that no longer exists.",
+      "searchHints": [
+        "--combobox-offset",
+        "--combobox-maxh",
+        "combobox"
+      ],
+      "surface": "style",
+      "detect": [
+        "--combobox-offset",
+        "--combobox-maxh"
+      ],
+      "verify": "No stylesheet declares --combobox-offset or --combobox-maxh; a panel override names --picker-offset / --picker-maxh."
+    }
+  ],
+  "informational": [
+    "Every field gained `error` and `warning` beside `hint`, resolved on a fixed ladder: `error` (an explicit string, shown at once) → validation errors → `warning` → `hint`. Only ONE line renders, so a field's height does not depend on how many sources are populated. Purely additive: a field that binds only `hint` behaves exactly as before, and when something is invalid but no source produced text the `hint` still renders in the error state — so the pre-existing `[invalid]` + `[hint]=\"errorText\"` idiom keeps working untouched.",
+    "Fields now read validation state from the bound form control, so `error` is optional. Signal forms binds `errors` and `touched` automatically (those input names are Angular 21's `FormUiControl` contract) and already drove the value through the `ControlValueAccessor` DS fields have always implemented. Reactive and template-driven forms need NO new binding: the field resolves `NgControl` after first render and subscribes to `control.events`. Errors wait for the first blur, or for the parent form to be submitted, so a `required` error never greets an untouched form. `invalid` is now OR-ed with what the control reports; the explicit input still wins.",
+    "`DS_CONFIG` gained `field.errorMessages` — one shared map from validation-error kind to text, for errors whose validator carried no message (Angular's built-ins never do). A message on the error itself always wins, so `required(path, { message })` in signal forms or `{ myError: 'text' }` from a plain validator overrides the map per case. An error that resolves to no text anywhere warns in dev instead of rendering an error style with an empty line.",
+    "`dsRailTrigger` is a new directive: put it on your own burger anywhere inside `ds-app-layout` and it toggles `[(railOpen)]` and keeps `aria-expanded` / `aria-controls` pointing at the rail panel, so the trigger and the panel are related for a screen reader. Both attributes are dropped while the rail is not an overlay, where `aria-expanded=\"false\"` would contradict what the user sees. `ds-app-layout` also exposes `railId` and the read-only `railOverlay` signal for a consumer that builds its own trigger.",
+    "`ds-table` `sortMode=\"none\"` is the way to render a column that is sortable in principle but not on this screen: the header renders as plain text, with no button, caret or `aria-sort`, instead of a control that does nothing.",
+    "Bugfix, no action: a CLOSED compact `ds-app-layout` rail is now `inert`, and closing it (Escape, scrim click, navigation) returns focus to the control that claims the rail via `aria-controls`. Before, the off-canvas panel kept `role=\"dialog\"`/`aria-modal=\"true\"`, left every nav link tabbable and stranded the caret inside the hidden panel, because cdkTrapFocusAutoCapture restores focus only on directive destroy. A consumer whose custom burger sets neither `dsRailTrigger` nor `aria-controls` gets the inert fix but no focus return - add `aria-controls` pointing at `ds-app-layout`'s `railId` to get it.",
+    "Bugfix, no action: NESTING one `ds-app-layout` inside another now works. Three separate faults are fixed. (1) The rail's open state was written as `:host(.rail-open) &`, which Angular's emulated encapsulation compiles to a DESCENDANT selector, and every instance of a component shares one encapsulation attribute — so an inner layout's rail opened whenever an outer one was open, and the inner scrim swallowed clicks meant for the outer. The state now lives on the elements it styles (`.rail.open` / `.scrim.open`). (2) Below `lg` the rail was `position: fixed`, resolving against the viewport, so an embedded layout threw its rail over the top-left of the WINDOW; rail and scrim are now `absolute` against a `position: relative` host. (3) The host now also sets `isolation: isolate`, so each layout z-indexes its rail (`--layer-drawer`) and scrim in its own stacking context instead of the one root context, where an inner layout's rail could paint over an outer layout's open rail. All three are identical to the old behaviour for a single full-viewport shell, which is the normal case.",
+    "Bugfix, no action: `--ds-overlay-enter-scale` is now forwarded onto the portaled overlay pane, so scoping it per instance (`ds-select { --ds-overlay-enter-scale: 0.9; }`) finally reaches select / multi-select / autocomplete / date / time / colour picker / popover / tooltip / menu-submenu panels. 0.7.1 shipped it as a known gap — the token was resolved on the pane but absent from the forwarded set, while the other four enter tokens did forward. A GLOBAL override worked before and is unaffected.",
+    "The field family gained one label contract: --ds-field-label-font-size / -weight / -color / -transform / -tracking, resolved by ds-input, ds-textarea, ds-select, ds-date-picker, ds-time-picker and ds-radio-group through a shared mixin. Defaults equal the values those components hard-coded, so nothing moves unless you set a token. There is deliberately no per-component token set - custom-property scoping already narrows a retune to one element (`ds-select { --ds-field-label-transform: uppercase; }`) - and -transform/-tracking make the uppercase tracked label reachable through tokens for the first time. ds-input's --ds-input-label-color/-fs/-fw still take precedence where set and now fall through to the family token rather than the raw scale.",
+    "`--ds-field-height` is new, and the --field-h-sm/-md/-lg scale is now actually read by ds-input, ds-select, ds-date-picker and ds-time-picker - previously only -lg was, the other two sizes reaching past the scale to the raw --hit-min/--hit-cozy. Values are identical, so no height moves on upgrade. NO ACTION, but two things become possible that silently did nothing before: retuning --field-h-md (or -sm) now moves every field, and --ds-field-height pins one height regardless of the size class, scopable per component. NOT a fix for unequal picker heights - those were already equal as of 0.7.1's aligned trigger geometry.",
+    "ds-button gained --ds-button-font-size / -weight / -tracking / -height / -pad-x / -pad-y, and reflects data-variant / data-color on its host element for external targeting. Defaults equal the hard-coded values, so nothing moves. NO ACTION - but a consumer who wrote .button.button.button { font-size; font-weight; letter-spacing; padding; height } to out-rank the shimmed .button.md can replace it with the tokens, set on the host. Per-variant --ds-button-* values were ALREADY reachable from the host before this change (the colour/fill resolvers read the hook first and never declare it), so an indirection layer added to work around that can go too.",
+    "ds-app-layout gained opt-in restoreScroll + restoreScrollTimeout, and LayoutScrollService gained contentReady() and consumePendingOffset(). Off by default, so NO ACTION. Turn it on for a list-and-details app and going back returns the reader to their place; forward links still land at the top. A 'back to list' control that adds a history entry instead of traversing must pass state: { dsRestoreScroll: true } to be restored. Note that an app which scrolls on navigation itself (an anchor jump, a URL that names a section) writes after the layout and wins, so restoreScroll is a no-op on those routes.",
+    "New role layer between the foundation scales and components: --ds-radius-{inner,control,panel,pill}, --ds-elevation-{raised,overlay,floating,modal}, and --ds-motion-{enter-panel,enter-surface,enter-large,exit,exit-large}-{duration,easing}. Every role defaults to the value its members already used, so NO ACTION and nothing moves visually. What becomes possible: retune one family without hitting the others - re-round panels while buttons keep their radius, lift every overlay in one line, make panel entrances snappier once. The old --shadow-popover/-modal/-toast/-card aliases still work and now resolve THROUGH the elevation roles. A per-component --ds-<comp>-radius / -shadow / -enter-duration override still wins over its role. Note: two motion resolvers (ds-loading-overlay, the toast leave) deliberately stay on the raw scale because they use --ease-standard, which no role carries.",
+    "New global focus-style switch: set data-focus=\"ring\" | \"field\" | \"edge\" | \"outline\" on <html>. Omitting it keeps the current split (halo on fields, double ring on controls), so NO ACTION for a consumer of the bundled `styles/ds` entry — it picks up both the switch and the forced-colors fallback automatically. (A consumer who cherry-picks partials à la carte DOES have one line to add; that is the actionable `focus-partial-needs-use-line` item.) Also new, and not part of the switch: under @media (forced-colors: active) every focused element gets a CanvasText outline, because forced-colors drops box-shadow and a shadow-only focus indicator disappeared there entirely.",
+    "ds-table gained [persistLayout] + storageKey (round-tripping columnOrder, columnWidths and hiddenKeys through localStorage) and [exportButton] + exportFilename + exportFetcher. All opt-in and off by default, so NO ACTION. A consumer who wrote their own localStorage effect for the three column models, or their own export button, can delete both - together with the sortValue accessor these were the last three reasons to keep a wrapper around ds-table. exportCsv() is unchanged for existing callers and now accepts an optional row set as its second argument.",
+    "New component ds-password-rules: the live requirement checklist under a new-password field. Purely additive, NO ACTION. A consumer with a hand-rolled password checklist can replace it - pass the rule set as { label, test } pairs (the policy stays yours, it has to mirror your server), bind [value] to the field and [showUnmet] to whether the user has tried to submit. Exposes metCount and allMet for gating a submit button, and the standalone passwordRulesMet(value, rules) function — the same predicate that backs allMet — for gating one without rendering the list. Also exported: the DsPasswordRule ({ label, test }) and DsPasswordRuleState ('pending' | 'met' | 'failed') types for typing the rule set, plus a listId input that names the <ul> so a field's aria-describedby can point at the checklist.",
+    "ds-input gained ariaDescribedBy, merged with the field's own message id rather than replacing it - for describing a field with a password-rule list or a policy note. Additive, NO ACTION. Note that setting aria-describedby on the <ds-input> element itself does NOT work: it lands on the wrapper, not the inner input.",
+    "New component ds-auth-shell: the scaffold for the screens in front of the login (sign-in, forgot password, reset, MFA), counterpart to ds-app-layout. Purely additive, NO ACTION. A consumer with a hand-rolled auth scaffold can replace it: brand lockup + optional tagline + one card holding the form + a support line. The brand row is the ds-sidenav row - same brand / logoLetter / [dsBrandName] contract and the same letter-mark tile - so it is NOT a string-splitting brandAccent; project [dsBrandName] to tint a slice of the wordmark. Card body is the default slot, the support line goes in [dsAuthSupport] (a real <footer>, so it carries the contentinfo landmark). cardElevation / cardPadding pass through to ds-card. Tokens: --ds-auth-shell-min-height, -card-max-width, -gap, -bg-color, -mark-bg-color, -mark-label-color. WORTH KNOWING when porting: the shell owns the full-height box itself, so do NOT wrap it in your own 100vh/100dvh container - nesting two of them scrolls a page whose content fits. It also adds env(safe-area-inset-*) padding, and centres with auto margins rather than centre alignment so a form taller than the box stays reachable when the shell is embedded at min-height 100%.",
+    "New component ds-filter-bar: a Priority+ filter row - as many filters as fit inline, the rest behind a \"+N more\" panel. Purely additive, NO ACTION. A consumer with a hand-rolled filter row (or one that wraps to two lines on a laptop) can replace it. Each filter goes in an <ng-template [dsFilterItem]=\"180\"> carrying the width it should occupy; the bar decides the split from those numbers plus a ResizeObserver on the row. Trailing controls (search, Clear) carry the dsFilterBarTrailing attribute - mark each control, do NOT wrap them in a div: the bar owns that group's gap and alignment, and a projected wrapper is a plain block whose children stack. Tokens: --ds-filter-bar-gap, --ds-filter-bar-panel-gap. Inputs moreLabel and panelLabel exist for translation. WORTH KNOWING: the declared width is a contract, not a hint - the slot is sized to exactly that number, so declare what the control actually occupies. And because a filter that collapses is MOVED into the panel, its view is destroyed and re-created: internal state such as an open dropdown or focus does not survive that, while its value does (it lives in your signal or form control). Content that reaches the bar with neither slot marker is dropped, with a dev-mode console warning.",
+    "ds-table gained virtual scrolling: [virtualScroll]=\"true\" plus virtualRowSize (px). Opt-in and off by default, so NO ACTION. Only the rows in view stay in the DOM (~25 regardless of row count), padded by two spacer rows so the scrollbar still spans the whole data set. REQUIRES maxHeight - a bounded scroller is the viewport it windows against, and without one nothing is virtualized (dev warning). CONSTRAINTS in virtual mode, all enforced rather than assumed: every row is exactly virtualRowSize tall (the CSS height comes from that same input), table-layout becomes fixed, and cells are kept to one line - so declare column widths, and do not rely on wrapping cell text there. Row EXPANSION is suppressed with a dev warning (an expanded row is taller than virtualRowSize and every offset below it would be wrong); pageSize alongside virtualScroll is also warned about, since virtual scrolling is what pagination was for. Sorting, filtering, selection, sticky header, sticky first column and column resizing all keep working. NOT built on the CDK virtual-scroll viewport on purpose: that wraps the table in a transformed content wrapper, and the transform breaks this table's sticky header and sticky first column. STILL OPEN: lazy loading (fetching slices from a server as they scroll into view) is NOT part of this.",
+    "FIXED in ds-table: with stickyHeader and stickyFirstColumn both on, the first body row painted OVER the header in the pinned columns, so the header read as that row's data. --table-sticky-corner-z was already there to keep the corner above the body, but the sticky-header rule out-specified it and both ended up at the same z-index, where DOM order puts the body on top. No action needed - it is a pure CSS fix. If you worked around it with your own z-index on DS table cells, that override can go. (delete list: table-sticky-corner-zindex-workaround)",
+    "ds-checkbox / ds-switch / ds-radio now RENDER a projected caption instead of dropping it, and expose the caption's colour and size. Additive, NO ACTION - [label] stays the documented API and still wins when both are supplied. If you added a dev-warning workaround after 0.7.1 (moving markup-bearing captions into a string), you can move them back: <ds-checkbox>I accept the <a href=...>Terms</a></ds-checkbox> now works. ONE DIFFERENCE: the required asterisk comes with [label] only - a projected caption owns its own marker, since only your markup knows where it belongs. New hooks: --ds-checkbox-label-color / -label-font-size, the same pair on ds-switch, and --ds-radio-label-font-size (--ds-radio-label-color already shipped). The font-size hook beats the size class. These are deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, a caption beside a checkbox is the content being agreed to and reads primary. If you were overriding the caption colour with a descendant selector against .control-text, replace it with the token.",
+    "Overlay panels now fade out when DISMISSED and still close instantly when something is CHOSEN. No action - behaviour only. Escape, a press outside, or the page scrolling away fades the panel over --ds-motion-exit-duration (120ms); picking an option, pressing the trigger again, or Tab still closes instantly, because a fade on a deliberate choice reads as the panel lagging behind it. Applies to select, autocomplete, multi-select, date-picker, time-picker, color-picker and popover. Tune with --ds-overlay-leave-duration / --ds-overlay-leave-easing, or set the duration to 0ms to get the old always-instant close everywhere. Reduced motion already zeroes it. A fading panel is pointer-events: none, so it cannot swallow a click aimed at what is behind it. If you built anything that assumed the overlay pane is removed from the DOM synchronously on Escape, note that it now lives for one exit duration longer (the component state - open(), overlayRef - is still cleared immediately).",
+    "design-system.md now states the --ds-* token contract once instead of repeating it per component, and carries a warning that its hand-written API and token lists have drifted from the code (ds-button is documented with its pre-color/variant API and the pre-rename --ds-button-bg / -fg names). For the authoritative surface use the Component API tables and token reference on the documentation site, generated from the source of each release. No action - documentation only."
+  ],
+  "deleteList": [
+    {
+      "id": "table-sticky-corner-zindex-workaround",
+      "surface": "style",
+      "find": [
+        "ds-table",
+        "z-index",
+        "--table-sticky-corner-z",
+        "sticky"
+      ],
+      "why": "A consumer z-index on DS table cells, raised to stop the first body row painting over the header when stickyHeader and stickyFirstColumn were both on. The sticky-header rule out-specified --table-sticky-corner-z and both landed on the same z-index; that is fixed in the component.",
+      "replaceWith": "nothing - the component orders the layers itself"
+    }
+  ]
+}

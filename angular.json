@@ -57,6 +57,11 @@
                 "glob": "CHANGELOG.md",
                 "input": ".",
                 "output": "/"
+              },
+              {
+                "glob": "design-system.md",
+                "input": ".",
+                "output": "/"
               }
             ],
             "styles": ["ds-docs/src/styles.scss"],
@@ -74,7 +79,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "16kB",
+                  "maximumWarning": "20kB",
                   "maximumError": "32kB"
                 }
               ],

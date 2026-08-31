@@ -38,7 +38,7 @@
   gap: var(--space-2);
   min-width: 0;
 }
-.state-cell__stage {
+.state-cell-stage {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +50,7 @@
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--radius-md);
 }
-.state-cell__label {
+.state-cell-label {
   text-align: center;
   font:
     var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base)

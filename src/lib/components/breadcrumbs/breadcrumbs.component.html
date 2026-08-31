@@ -4,7 +4,11 @@
   [class.is-static]="!effectiveClickable()"
 >
   @for (item of resolvedItems(); track $index; let last = $last) {
-    @if (item.href && !last && effectiveClickable()) {
+    @if (
+        item.href &&
+        !last &&
+        effectiveClickable()
+      ) {
       <a
         [href]="item.href"
         (click)="onNav($event, item)"

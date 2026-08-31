@@ -18,23 +18,24 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { A11yModule } from '@angular/cdk/a11y';
 import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
+  dropdownOverlay,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { DS_CONFIG } from '../../config/ds-config';
 import {
   type DateFormatSpec,
@@ -66,6 +67,8 @@ import type {
   RangeValue,
 } from './date-picker.types';
 import type { DsSize } from '../../core/size';
+import { inFieldGroup } from '../field-group/field-group.token';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 let nextId = 0;
 const YEAR_PAGE_SIZE = 12;
@@ -101,11 +104,20 @@ interface DayCell {
       multi: true,
     },
   ],
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.in-group]': 'inGroup',
+    '[class.full-width]': 'fullWidth()',
+  },
 })
 export class DatePickerComponent
   extends DsControlValueAccessor<Date | RangeValue | null>
   implements OnDestroy
 {
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   constructor() {
     super();
     // Renders through toFieldText so the field is fixed-width `_`-padded once any
@@ -118,6 +130,11 @@ export class DatePickerComponent
       if (this.editing) {
         return;
       }
+      // Every typing path holds `editing` while it runs, so reaching here means the
+      // value did NOT come from the keyboard and a leftover typing error no longer
+      // describes what the field is about to show.
+      this.typedInvalid.set(false);
+      this.rangeInvalid.set(false);
       if (this.mode() === 'single') {
         const date = value as Date | null;
         this.inputText.set(date ? formatDate(date, spec) : '');
@@ -173,32 +190,39 @@ export class DatePickerComponent
     '--ds-date-picker-header-label-color',
     '--ds-date-picker-nav-icon-color',
     '--ds-date-picker-width',
+    '--ds-date-picker-panel-radius',
   ];
 
   /** Selection mode — single date or start/end range. */
   readonly mode = input<DatePickerMode>('single');
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
+  /** Stretch the trigger to fill its container instead of hugging the mask
+   *  width — opt in when the field shares a grid/flex track with inputs. */
+  readonly fullWidth = input(false, { transform: booleanAttribute });
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
   readonly value = model<Date | RangeValue | null>(null);
   /** Accessible-name fallback only — the mask fills the visible placeholder, not this. */
   readonly placeholder = input<string>('Select date');
   /** Field label shown above the trigger. */
   readonly label = input<string>('');
-  /** Helper text shown below the field. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
   readonly optional = input(false, { transform: booleanAttribute });
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Applies error styling and marks the trigger `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Bounds for the year dropdown in the calendar header. */
@@ -230,15 +254,16 @@ export class DatePickerComponent
     () => this.disabled() || this.formDisabled(),
   );
   protected readonly hintId = computed(() =>
-    this.messageText() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() || this.typedInvalid() || this.rangeInvalid()
-      ? 'error'
-      : 'default',
-  );
-  /** Field-message text: a validation message when typing is invalid, else the hint. */
-  protected readonly messageText = computed(() => {
+  // An unparseable date is the picker's OWN error, so it enters the ladder at the
+  // error rung rather than replacing the hint. An explicit `error` still wins:
+  // the consumer knows something this component cannot.
+  private readonly localError = computed(() => {
+    const explicit = this.error().trim();
+    if (explicit) {
+      return explicit;
+    }
     if (this.typedInvalid() || this.rangeInvalid()) {
       const mask =
         this.mode() === 'single'
@@ -248,10 +273,26 @@ export class DatePickerComponent
       return `Enter a valid date (${mask})`;
     }
 
-    return this.hint();
+    return '';
   });
+  private readonly dateInvalid = computed(
+    () => this.invalid() || this.typedInvalid() || this.rangeInvalid(),
+  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.localError,
+    errors: this.errors,
+    invalid: this.dateInvalid,
+    success: this.success,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
 
-  protected readonly resolvedLocale = computed(
+  readonly resolvedLocale = computed(
     () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',
   );
   protected readonly resolvedFirstDay = computed(
@@ -409,15 +450,22 @@ export class DatePickerComponent
 
   protected readonly triggerClasses = computed(() => {
     const parts = ['trigger'];
-    const size = this.size();
+    const size = this.sizeResolved();
     if (size !== 'md') {
       parts.push(size);
     }
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.invalid() || this.typedInvalid() || this.rangeInvalid()) {
+    if (this.invalidResolved()) {
       parts.push('error');
+    }
+    // The indicator cannot be left to :focus-within: opening from the calendar
+    // glyph moves focus into the day grid, so the trigger would go dark while
+    // its OWN panel is open. A control stays visibly active for as long as it
+    // owns an open panel, wherever focus went.
+    if (this.isOpen()) {
+      parts.push('open');
     }
 
     return parts.join(' ');
@@ -685,47 +733,33 @@ export class DatePickerComponent
     if (this.isDisabled() || this.overlayRef) {
       return;
     }
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.anchor().nativeElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      this.anchor().nativeElement,
+      'ds-overlay-pane',
+    );
+    this.overlayRef = this.overlay.create(config);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
       positionStrategy,
-      hasBackdrop: false,
-      panelClass: 'ds-overlay-pane',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,
       this.panelTokens,
     );
+    // The anchor, not the host: a stretched host's empty width must dismiss.
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      (target) => this.anchor().nativeElement.contains(target),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll, and CDK's scroll strategies don't see a
     // plain overflow container — so close on any outside scroll ourselves. Sync
     // state on every detach so a stray CDK detach can't wedge the reopen guard.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -735,7 +769,7 @@ export class DatePickerComponent
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        this.close();
+        this.close('dismiss');
         this.focusTrigger();
       }
     });
@@ -757,11 +791,11 @@ export class DatePickerComponent
     }
   }
 
-  protected close(): void {
+  protected close(cause: DsOverlayCloseCause = 'select'): void {
     const focusWasInPanel = this.overlayRef
       ? focusIsInside(this.overlayRef)
       : false;
-    disposeWithLeave(this.overlayRef);
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.isOpen.set(false);
     this.closeMenus();
@@ -783,6 +817,14 @@ export class DatePickerComponent
     this.overlayRef = null;
   }
 
+  /**
+   * Also the calendar glyph's handler. A POINTER open must not drag focus into
+   * the day grid: the reader did not ask to leave a field they may want to type
+   * in, and `allowInput` defaults to true. So focus follows what the field IS —
+   * typeable, and the caret stays; read-only, and the grid is the only thing
+   * worth focusing. The keyboard path is unaffected: ArrowDown on the field
+   * calls `open(true)` and enters the grid however the panel was opened.
+   */
   protected onFieldClick(): void {
     this.open(!this.allowInput());
     if (this.allowInput()) {

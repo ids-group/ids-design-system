@@ -15,6 +15,10 @@ export default defineConfig(
       '**/index.html',
       'dist/**',
       '.angular/**',
+      // Standalone decks: single-file HTML with inline scripts, written to be
+      // opened straight from disk. They are not part of the app or the library,
+      // and the app's rules (Angular templates, module syntax) do not apply.
+      'presentations/**',
     ],
   },
   {
@@ -99,6 +103,7 @@ export default defineConfig(
     rules: {
       'ds/template/sibling-blank-line': 'warn',
       'ds/template/element-content-newline': 'warn',
+      'ds/template/control-flow-condition-newline': 'warn',
       '@angular-eslint/template/attributes-order': 'warn',
       '@angular-eslint/template/click-events-have-key-events': 'warn',
       '@angular-eslint/template/interactive-supports-focus': 'warn',

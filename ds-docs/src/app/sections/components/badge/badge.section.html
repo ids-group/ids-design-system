@@ -10,7 +10,6 @@
     Completed.
   </span>
 
-  <!-- ============================================================ Lifecycle states showcase -->
   <h3 class="block-title t-h4">
     Lifecycle states showcase
   </h3>
@@ -30,74 +29,73 @@
     </ng-template>
   </docs-specimens>
 
-  <!-- ============================================================ Semantic states showcase -->
   <h3 class="block-title t-h4">
     Semantic states showcase
   </h3>
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge status="info">
           Info
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Info
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge status="success">
           Allocated
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Success
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge status="warning">
           Pending
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Warning
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge status="error">
           Conflict
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Error
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge status="neutral">
           Draft
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Neutral
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge
           status="neutral"
           [solid]="true"
@@ -106,13 +104,13 @@
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Solid
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge
           status="neutral"
           [solid]="true"
@@ -121,25 +119,24 @@
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Count · solid
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge status="neutral">
           3
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Count · neutral
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Per-instance tone -->
   <h3 class="block-title t-h4">
     Per-instance tone
   </h3>
@@ -154,7 +151,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge
           [style.--ds-badge-bg-color]="'#E1EFFF'"
           [style.--ds-badge-label-color]="'#0A6DB3'"
@@ -163,13 +160,13 @@
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Carrier · Aflac
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge
           [style.--ds-badge-bg-color]="'#D8F1EA'"
           [style.--ds-badge-label-color]="'#15805A'"
@@ -178,13 +175,13 @@
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Carrier · Guardian
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge
           [style.--ds-badge-bg-color]="'#FFF1D7'"
           [style.--ds-badge-label-color]="'#A86B1A'"
@@ -193,13 +190,12 @@
         </ds-badge>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Carrier · Assurity
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Numeric count badge -->
   <h3 class="block-title t-h4">
     Numeric count badge
   </h3>
@@ -217,47 +213,47 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge [count]="3" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Count · 3
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge [count]="42" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Count · 42
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge
           [count]="150"
           [max]="99"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Count · 99+
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-badge
           [count]="5"
           [solid]="true"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Count · solid
       </div>
     </div>

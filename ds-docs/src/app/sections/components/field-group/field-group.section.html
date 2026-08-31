@@ -1,0 +1,196 @@
+<docs-section
+  anchor="field-group"
+  eyebrow="Components"
+  title="Field group"
+>
+  <span lede>
+    Several controls, one bordered box — scope + search, amount + unit, input +
+    action.
+  </span>
+
+  <p class="block-desc t-s">
+    The group owns the border, the radius, the divider and a single focus ring;
+    the controls inside render naked. A segment knows it is inside a group
+    because the group provides
+    <code class="t-mono-inline">
+      DS_FIELD_GROUP
+    </code>, which it injects —
+    nothing to remember per child, and no way to forget it on one of them and
+    leave a stray border mid-row.
+  </p>
+
+  <p class="block-desc t-s">
+    Segments hug their content. Mark the one that should take the slack with
+    <code class="t-mono-inline">
+      grow
+    </code>.
+  </p>
+
+  <div class="demo-row">
+    <ds-field-group>
+      <ds-select
+        [options]="scopes"
+        [(value)]="scope"
+      />
+
+      <ds-input
+        grow
+        placeholder="Search…"
+        [(value)]="term"
+      />
+    </ds-field-group>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Trailing action, and a unit after the value
+  </h3>
+
+  <p class="block-desc t-s">
+    Any supported control can be a segment, in any order — a
+    <code class="t-mono-inline">
+      ds-button
+    </code> at the end is the same
+    mechanism as a <code class="t-mono-inline"> ds-select </code> at the start.
+  </p>
+
+  <div class="demo-row">
+    <ds-field-group>
+      <ds-input
+        grow
+        placeholder="Search…"
+        [(value)]="term"
+      />
+
+      <ds-button variant="ghost">
+        Go
+      </ds-button>
+    </ds-field-group>
+
+    <ds-field-group>
+      <ds-input
+        grow
+        placeholder="0"
+        [(value)]="amount"
+      />
+
+      <ds-select
+        [options]="units"
+        [(value)]="unit"
+      />
+    </ds-field-group>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Every supported control
+  </h3>
+
+  <p class="block-desc t-s">
+    Six controls can be segments:
+    <code class="t-mono-inline">
+      ds-input
+    </code>,
+    <code class="t-mono-inline">
+      ds-select
+    </code>,
+    <code class="t-mono-inline">
+      ds-search
+    </code>,
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code>,
+    <code class="t-mono-inline">
+      ds-date-picker
+    </code> and
+    <code class="t-mono-inline">
+      ds-button
+    </code>. Not
+    <code class="t-mono-inline">
+      ds-number-stepper
+    </code> (already a composite
+    of its own) or <code class="t-mono-inline"> ds-multi-select </code> (its
+    chips wrap, which a fixed-height row cannot take).
+  </p>
+
+  <div class="demo-row">
+    <ds-field-group>
+      <ds-search
+        grow
+        placeholder="Quick find"
+        [(value)]="quickFind"
+      />
+
+      <ds-date-picker [(value)]="since" />
+    </ds-field-group>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Sizes, error and full width
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      size
+    </code> is the field family's scale, so a
+    group lines up with a plain field beside it.
+    <code class="t-mono-inline">
+      invalid
+    </code> colours the whole box: a single
+    segment cannot be in error on its own, because the border is not its own.
+  </p>
+
+  <div class="demo-row demo-stack">
+    <ds-field-group size="sm">
+      <ds-select
+        [options]="scopes"
+        [(value)]="scope"
+      />
+
+      <ds-input
+        grow
+        placeholder="Small"
+        [(value)]="term"
+      />
+    </ds-field-group>
+
+    <ds-field-group size="lg">
+      <ds-select
+        [options]="scopes"
+        [(value)]="scope"
+      />
+
+      <ds-input
+        grow
+        placeholder="Large"
+        [(value)]="term"
+      />
+    </ds-field-group>
+
+    <ds-field-group
+      [invalid]="true"
+      [fullWidth]="true"
+    >
+      <ds-select
+        [options]="scopes"
+        [(value)]="scope"
+      />
+
+      <ds-input
+        grow
+        placeholder="Full width, in error"
+        [(value)]="invalidTerm"
+      />
+    </ds-field-group>
+  </div>
+
+  <p class="block-desc t-s">
+    Do not give a grouped control a
+    <code class="t-mono-inline">
+      label
+    </code> or a
+    <code class="t-mono-inline">
+      hint
+    </code>: its message row would break the
+    glued line, so both are suppressed. A group-level label is not built yet —
+    put one above the group with your own markup until it is.
+  </p>
+</docs-section>

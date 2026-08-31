@@ -15,22 +15,23 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
+  dropdownOverlay,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import {
   type Hsv,
@@ -72,9 +73,9 @@ const DEFAULT_PRESETS: readonly string[] = [
     },
   ],
   host: {
+    '[attr.data-field-state]': 'controlState()',
     '[class.open]': 'open()',
     '[class.disabled]': 'isDisabled()',
-    '[class.invalid]': 'invalid()',
   },
 })
 export class ColorPickerComponent
@@ -103,14 +104,11 @@ export class ColorPickerComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Accessible name for the trigger button and panel. */
   readonly ariaLabel = input<string>('Choose colour');
-  /** Applies error styling and marks the trigger `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the trigger. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
 
   protected readonly trigger =
     viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
@@ -137,11 +135,21 @@ export class ColorPickerComponent
 
   protected readonly uid = nextControlId('ds-color-picker');
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    success: this.success,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -296,32 +304,16 @@ export class ColorPickerComponent
     if (parsed) {
       this.hsv.set(parsed);
     }
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.host.nativeElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      this.host.nativeElement,
+    );
+    this.overlayRef = this.overlay.create(config);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
       positionStrategy,
-      hasBackdrop: false,
-      panelClass: ['ds-dropdown-panel', 'ds-overlay-pane'],
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,
@@ -329,13 +321,13 @@ export class ColorPickerComponent
     );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      (target) => this.trigger().nativeElement.contains(target),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -345,19 +337,19 @@ export class ColorPickerComponent
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        this.close();
+        this.close('dismiss');
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.open.set(true);
   }
 
-  close(): void {
+  close(cause: DsOverlayCloseCause = 'select'): void {
     if (!this.overlayRef) {
       return;
     }
     const focusWasInPanel = focusIsInside(this.overlayRef);
-    disposeWithLeave(this.overlayRef);
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.open.set(false);
     this.markTouched();

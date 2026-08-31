@@ -1,10 +1,11 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
 import {
   BadgeComponent,
   ButtonComponent,
   CellTemplateDirective,
   DrawerComponent,
   EmptyStateComponent,
+  SearchComponent,
   TableComponent,
   type TableCellEditEvent,
   type TableColumn,
@@ -35,6 +36,22 @@ interface ProjectRow {
   budget: number;
 }
 
+const BULK_SUBJECTS = [
+  'intake review',
+  'renewal',
+  'audit',
+  'onboarding',
+  'settlement',
+];
+const BULK_OWNERS = [
+  'Ann Fletcher',
+  'Raj Patel',
+  'Mei Lin',
+  'Tomas Novak',
+  'Sara Okafor',
+];
+const BULK_STATUSES = ['Open', 'Pending', 'Closed'];
+
 @Component({
   selector: 'section-components-table',
   standalone: true,
@@ -46,6 +63,7 @@ interface ProjectRow {
     DocsTruncationComponent,
     DrawerComponent,
     EmptyStateComponent,
+    SearchComponent,
     TableComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -73,8 +91,11 @@ export class TableSection {
   // project / id / status carry custom cell templates (bold, mono, badge).
   protected readonly defaultColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
-    { key: 'id', label: 'ID' },
-    { key: 'date', label: 'Dates' },
+    // A fixed-format identifier and a date range are exactly what width: 'content'
+    // is for: on a phone the auto layout squeezed them to 68px and 76px and broke
+    // ORD-2026-0142 across three lines, which took every row to six lines tall.
+    { key: 'id', label: 'ID', width: 'content' },
+    { key: 'date', label: 'Dates', width: 'content' },
     { key: 'venue', label: 'Venue' },
     { key: 'status', label: 'Status' },
     { key: 'capacity', label: 'Capacity', align: 'right' },
@@ -89,6 +110,26 @@ export class TableSection {
 
   protected readonly stateColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
+  ];
+
+  protected readonly linkCellColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', interactive: true },
+    { key: 'venue', label: 'Venue' },
+  ];
+
+  protected readonly linkColumns: TableColumn<EventRow>[] = [
+    {
+      key: 'project',
+      label: 'Record',
+      // A planning record has no page to open yet, and returning null leaves that
+      // cell as plain text — which is how a partly-reachable list stays one column.
+      link: (row) =>
+        row.status === 'planning'
+          ? null
+          : ['/components/table', { record: row.project }],
+    },
+    { key: 'venue', label: 'Venue' },
+    { key: 'status', label: 'Status' },
   ];
 
   protected readonly sortStateColumns: TableColumn<EventRow>[] = [
@@ -346,6 +387,92 @@ export class TableSection {
 
   protected readonly projectSelected = signal(new Set<string>());
 
+  /** Status and Budget shrink to their content; Project absorbs the slack. */
+  protected readonly fitColumns: TableColumn<ProjectRow>[] = [
+    { key: 'project', label: 'Project' },
+    { key: 'owner', label: 'Owner' },
+    { key: 'status', label: 'Status', width: 'content' },
+    {
+      key: 'budget',
+      label: 'Budget',
+      align: 'right',
+      width: 'content',
+      cell: (row) => '£' + row.budget.toLocaleString(),
+    },
+  ];
+
+  protected readonly serverSortColumns: TableColumn<ProjectRow>[] = [
+    { key: 'project', label: 'Project', sortable: true },
+    { key: 'owner', label: 'Owner', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+  ];
+  /** The host's own sort state, one-way bound into the table — a stand-in for the
+   *  computed over the URL a real list keeps. Its default is owner/desc, and a
+   *  cleared sort returns to it, which is the case that used to desync. */
+  protected readonly serverSortKey = signal<string>('owner');
+  protected readonly serverSortDir = signal<'asc' | 'desc' | null>('desc');
+  protected readonly serverSortedRows = computed<readonly ProjectRow[]>(() => {
+    const key = this.serverSortKey() as keyof ProjectRow;
+    const dir = this.serverSortDir();
+    const rows = this.projectRows.slice(0, 6);
+    if (!dir) {
+      return rows;
+    }
+
+    return rows.sort(
+      (left, right) =>
+        String(left[key]).localeCompare(String(right[key])) *
+        (dir === 'asc' ? 1 : -1),
+    );
+  });
+
+  /** The same server shape with NO handler: the table writes these directly, so
+   *  the host reads its sort state back rather than deciding it. `dir` reaching
+   *  null is the trade — see the demo above, which keeps a handler for exactly
+   *  that case. */
+  protected readonly twoWaySortKey = signal<string>('project');
+  protected readonly twoWaySortDir = signal<'asc' | 'desc' | null>('asc');
+  protected readonly twoWaySortedRows = computed<readonly ProjectRow[]>(() => {
+    const key = this.twoWaySortKey() as keyof ProjectRow;
+    const dir = this.twoWaySortDir();
+    const rows = this.projectRows.slice(0, 6);
+    if (!dir) {
+      return rows;
+    }
+
+    return rows
+      .slice()
+      .sort(
+        (left, right) =>
+          String(left[key]).localeCompare(String(right[key])) *
+          (dir === 'asc' ? 1 : -1),
+      );
+  });
+
+  protected onServerSort(event: {
+    key: string;
+    dir: 'asc' | 'desc' | null;
+  }): void {
+    if (!event.dir) {
+      this.serverSortKey.set('owner');
+      this.serverSortDir.set('desc');
+
+      return;
+    }
+    this.serverSortKey.set(event.key);
+    this.serverSortDir.set(event.dir);
+  }
+
+  /** Slow on purpose: the demo is about the in-flight state an OUTSIDE button
+   *  can now read, which a fetch that resolves at once never shows. */
+  protected readonly slowExportFetcher = async (): Promise<
+    readonly ProjectRow[]
+  > => {
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+
+    return this.projectRows;
+  };
+
   protected readonly expandColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
     { key: 'date', label: 'Dates' },
@@ -378,6 +505,13 @@ export class TableSection {
       icon: 'trash',
       error: true,
       disabled: (row) => row.status === 'completed',
+      disabledReason: 'A completed run is kept for the audit trail',
+    },
+    {
+      id: 'relaunch',
+      label: 'Relaunch',
+      icon: 'refresh',
+      hidden: (row) => row.status !== 'completed',
     },
   ];
 
@@ -441,7 +575,57 @@ export class TableSection {
     { key: 'capacity', label: 'Capacity', align: 'right', hideable: true },
   ];
 
+  protected readonly bulkColumns: TableColumn<ProjectRow>[] = [
+    { key: 'id', label: 'ID', width: 120 },
+    { key: 'project', label: 'Record', width: 320, sortable: true },
+    { key: 'owner', label: 'Owner', width: 200, sortable: true },
+    { key: 'status', label: 'Status', width: 160 },
+    { key: 'budget', label: 'Budget', align: 'right', width: 160 },
+  ];
+
+  /** 10 000 rows — the size at which rendering every row tanks scroll and paint. */
+  protected readonly bulkRows: ProjectRow[] = Array.from(
+    { length: 10_000 },
+    (_, index) => ({
+      id: `REC-${String(index + 1).padStart(5, '0')}`,
+      project: `Record ${index + 1} · ${BULK_SUBJECTS[index % BULK_SUBJECTS.length]}`,
+      owner: BULK_OWNERS[index % BULK_OWNERS.length],
+      status: BULK_STATUSES[index % BULK_STATUSES.length],
+      budget: 1000 + ((index * 37) % 90_000),
+    }),
+  );
+
   protected onRowAction(event: TableRowActionEvent<EventRow>): void {
     this.lastRowAction.set(`${event.action.label} · ${event.row.project}`);
+  }
+
+  /** Lazy demo: the same 10 000 records, but the table starts with NONE of them
+   *  and the array is filled at the absolute indices each request covers. */
+  protected readonly lazyTotal = 10_000;
+  protected readonly lazyRows = signal<ProjectRow[]>(
+    new Array<ProjectRow>(this.lazyTotal),
+  );
+  protected readonly lazyRequests = signal<string[]>([]);
+
+  protected onLazyLoad(range: { first: number; rows: number }): void {
+    this.lazyRequests.update((log) =>
+      [`first ${range.first} · rows ${range.rows}`, ...log].slice(0, 4),
+    );
+    // A real host would fetch here; the delay is what makes the skeleton rows
+    // visible, which is the whole point of the demo.
+    setTimeout(() => {
+      this.lazyRows.update((rows) => {
+        const next = rows.slice();
+        for (
+          let index = range.first;
+          index < range.first + range.rows;
+          index++
+        ) {
+          next[index] = this.bulkRows[index];
+        }
+
+        return next;
+      });
+    }, 600);
   }
 }

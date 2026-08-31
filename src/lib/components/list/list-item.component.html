@@ -1,8 +1,30 @@
-<ng-template #content>
-  <span class="leading">
-    <ng-content select="[leading]"></ng-content>
-  </span>
+<span class="leading">
+  <ng-content select="[leading]"></ng-content>
+</span>
 
+<!-- `[leading]` and `[trailing]` are siblings of the activator, never inside it: a
+     row that carries its own control (a checkbox, a kebab) alongside a row-level
+     action cannot nest that control in a <button> — invalid, and its click would
+     bubble into `activated`. Legal here because `role="listitem"` places no
+     restriction on interactive descendants, unlike `role="option"`. -->
+@if (clickable()) {
+  <button
+    type="button"
+    class="activator"
+    [disabled]="disabled()"
+    (click)="activated.emit()"
+  >
+    <ng-container [ngTemplateOutlet]="body"></ng-container>
+  </button>
+} @else {
+  <ng-container [ngTemplateOutlet]="body"></ng-container>
+}
+
+<span class="trailing">
+  <ng-content select="[trailing]"></ng-content>
+</span>
+
+<ng-template #body>
   <span class="body">
     @if (title()) {
       <span class="title">
@@ -18,24 +40,4 @@
 
     <ng-content></ng-content>
   </span>
-
-  <span class="trailing">
-    <ng-content select="[trailing]"></ng-content>
-  </span>
 </ng-template>
-
-@if (clickable()) {
-  <button
-    type="button"
-    class="activator"
-    [disabled]="disabled()"
-    [attr.aria-current]="selected() ? 'true' : null"
-    (click)="activated.emit()"
-  >
-    <ng-container [ngTemplateOutlet]="content"></ng-container>
-  </button>
-} @else {
-  <div class="activator">
-    <ng-container [ngTemplateOutlet]="content"></ng-container>
-  </div>
-}

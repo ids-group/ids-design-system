@@ -1,16 +1,18 @@
-// Ported from vendor/claude-design-ds components.css (FIELD block); textarea/
-// select/number-stepper/floating-label rules are intentionally out of scope here.
 @use '../../styles/press' as press;
+@use '../../styles/field-label' as field-label;
+@use '../../styles/field-box' as field-box;
+@use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
+@use '../../styles/focus' as focus;
 
 :host {
-  /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
   --_input-border:         var(--ds-input-border,         var(--border-default));
   --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
   --_input-border-focus:   var(--ds-input-border-focus,   var(--accent));
   --_input-text-color:             var(--ds-input-text-color,             var(--text-primary));
   --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
-  --_input-radius:         var(--ds-input-radius,         var(--radius-md));
+  --_input-radius:         var(--ds-input-radius,         var(--ds-radius-control));
   --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
   --_input-pad-y:          var(--ds-input-pad-y,          var(--field-pad-y));
   --_input-focus-shadow:       var(--ds-input-focus-shadow,       var(--ds-field-focus-shadow));
@@ -19,9 +21,12 @@
   --_input-bg-color-error:       var(--ds-input-bg-color-error,       var(--error-subtitle));
   --_input-border-success: var(--ds-input-border-success, var(--success));
   --_input-bg-color-disabled:    var(--ds-input-bg-color-disabled,    var(--surface-disabled));
-  --_input-label-color:    var(--ds-input-label-color,    var(--text-secondary));
-  --_input-label-fs:       var(--ds-input-label-fs,       var(--font-size-xs));
-  --_input-label-fw:       var(--ds-input-label-fw,       var(--font-weight-bold));
+
+  // These predate the --ds-field-label-* family and still win, but they chain into
+  // it — so one family-level retune reaches ds-input as well.
+  --_input-label-color:    var(--ds-input-label-color,    var(--ds-field-label-color,       var(--text-secondary)));
+  --_input-label-fs:       var(--ds-input-label-fs,       var(--ds-field-label-font-size,   var(--font-size-xs)));
+  --_input-label-fw:       var(--ds-input-label-fw,       var(--ds-field-label-weight,      var(--font-weight-bold)));
   --_input-fs:             var(--ds-input-fs,             var(--font-size-s));
   --_input-clear-color: var(--ds-input-clear-color, var(--text-secondary));
 
@@ -35,11 +40,11 @@
   width: 100%;
 
   .label {
-    font: var(--_input-label-fw) var(--_input-label-fs) / var(--line-height-base) var(--font-sans);
-    color: var(--_input-label-color);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
+    @include field-label.field-label;
+
+    --_field-label-font-size: var(--_input-label-fs);
+    --_field-label-weight: var(--_input-label-fw);
+    --_field-label-color: var(--_input-label-color);
 
     .req {
       color: var(--error);
@@ -60,7 +65,9 @@
     border: var(--border-width-default) solid var(--_input-border);
     border-radius: var(--_input-radius);
     padding: var(--_input-pad-y) var(--_input-pad-x);
-    height: var(--hit-cozy);
+
+    @include field-box.field-box-height(md);
+
     transition:
       border-color var(--duration-fast) var(--ease-standard),
       box-shadow var(--duration-fast) var(--ease-standard),
@@ -80,16 +87,13 @@
         color: var(--_input-placeholder);
       }
 
-      // We render our own clear button (see .clear-btn below) — suppress
-      // the native type=search cancel/decoration so it doesn't double up.
+      // The component renders its own × below, so the native one would double up.
       &[type='search'] {
         &::-webkit-search-cancel-button,
         &::-webkit-search-decoration { display: none; appearance: none; }
       }
     }
 
-    // Inline × clear button (Material/PrimeNG-style). Visible whenever
-    // the input has a non-empty value and clearable resolves to true.
     .clear-btn {
       display: inline-flex;
       align-items: center;
@@ -98,15 +102,15 @@
       height: var(--icon-md);
       padding: 0;
       border: 0;
+
+      // Not a muted colour: the × only appears when there IS a value, so it has to
+      // read on a blurred field too.
       background-color: var(--_input-clear-color);
       cursor: pointer;
       flex-shrink: 0;
       transition: background-color var(--duration-fast) var(--ease-standard),
               opacity var(--duration-fast) var(--ease-standard);
               mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M18 6L6 18M6 6l12 12'/></svg>") center/contain no-repeat;
-
-      // visible regardless of focus — bumped from text-tertiary so the affordance
-      // reads when the field is blurred (it only shows when there IS a value).
 
       &:hover { background-color: var(--text-primary); }
       &:focus-visible {
@@ -147,6 +151,8 @@
       border-color: var(--_input-border-focus);
       box-shadow: var(--_input-focus-shadow);
     }
+
+    @include focus.owns-the-focus-ring('input');
   }
 
   &.disabled {
@@ -165,33 +171,15 @@
     input { cursor: default; }
   }
 
-  &.error {
-    .control {
-      background-color: var(--_input-bg-color-error);
-      border-color: var(--_input-border-error);
-
-      &:focus-within {
-        box-shadow: var(--_input-focus-shadow-error);
-      }
-    }
-  }
-
-  &.success {
-    .control {
-      border-color: var(--_input-border-success);
-    }
-  }
-
   &.sm .control {
-    height: var(--hit-min);
+    @include field-box.field-box-height(sm);
+
     padding: 0 var(--space-2);
   }
   &.lg .control {
-    height: var(--field-h-lg);
+    @include field-box.field-box-height(lg);
   }
 
-  /* Addon slots. Slotted pills/icons carry the CONSUMER's scope attribute —
-     ::ng-deep is required to style them from here. */
   .addon-slot {
     display: inline-flex;
     align-items: center;
@@ -202,7 +190,9 @@
     &:empty { display: none; }
   }
 
-  /* Label-pill addons (e.g. "https://" url prefix) — bare icons use .addon-slot instead. */
+  /* A label pill projected by the consumer (an "https://" prefix), as opposed to the
+     bare icons `.addon-slot` holds. It carries the CONSUMER's scope attribute, so
+     ::ng-deep is the only way to reach it from here. */
   ::ng-deep .addon {
     display: inline-flex;
     align-items: center;
@@ -220,8 +210,6 @@
     }
   }
 
-  /* A boxed .addon (not a bare projected icon) sits flush: drop the control's
-     inset on that side and round the addon's outer corners to match the field. */
   &:has(.addon-slot.prefix .addon) .control {
     padding-left: 0;
   }
@@ -237,7 +225,6 @@
     border-bottom-right-radius: var(--_input-radius);
   }
 
-  /* Trailing spinner (loading) — keep it from shrinking in the control flex. */
   .control ds-spinner {
     flex-shrink: 0;
   }
@@ -257,21 +244,20 @@
     flex-shrink: 0;
     margin-left: auto;
   }
-
-  /* Floating label — label sits inside a taller control instead of stacked above. */
-  &.floating .control {
-    height: var(--field-h-floating);
-    padding-top: var(--field-floating-pad-t);
-    padding-bottom: var(--space-1-5);
-    position: relative;
-  }
-  &.floating .floating-label {
-    position: absolute;
-    top: var(--field-floating-label-top);
-    left: var(--_input-pad-x);
-    font: var(--font-weight-bold) var(--field-floating-label-fs) / var(--field-floating-label-lh) var(--font-sans);
-    color: var(--_input-label-color);
-    letter-spacing: var(--letter-spacing-wide);
-    pointer-events: none;
-  }
 }
+
+/* As a group segment this control gives up its border, radius and focus ring — the
+   group draws one of each for the whole row. Width goes to auto because the host
+   stretches to 100% inside a flex segment; the label and message rows are
+   suppressed because they would break the glued line. */
+:host(.in-group) {
+  @include field-group-segment.field-group-segment('.control');
+}
+
+@include field-state.field-state(
+  '.control',
+    $error-border: var(--_input-border-error),
+    $error-bg: var(--_input-bg-color-error),
+    $error-focus-shadow: var(--_input-focus-shadow-error),
+    $success-border: var(--_input-border-success),
+);

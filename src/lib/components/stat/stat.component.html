@@ -4,7 +4,7 @@
   </div>
 
   <div class="value">
-    {{ value() }}{{ unit() }}
+    <ng-content select="[dsStatValue]">{{ value() }}{{ unit() }}</ng-content>
   </div>
 
   @if (delta() !== null) {

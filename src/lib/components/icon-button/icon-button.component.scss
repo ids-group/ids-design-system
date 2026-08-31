@@ -17,9 +17,6 @@
   --c-muted:        var(--accent-muted);
   --c-muted-strong: var(--accent-muted-strong);
 
-  /* Public --ds-icon-button-* are read with fallbacks, never declared — consumer
-     overrides inherit in. filled/selected derive hover/active from the resolved
-     bg (theme hover/pressed recipe: 88%/76% + black) unless set individually. */
   --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        transparent);
   --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--text-secondary));
   --_icon-button-border:    var(--ds-icon-button-border,    transparent);
@@ -27,16 +24,16 @@
   --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--_icon-button-bg-color-hover));
   --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--text-primary));
   --_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--ds-control-focus-shadow));
-  --_icon-button-radius: var(--ds-icon-button-radius, var(--radius-md));
+  --_icon-button-radius: var(--ds-icon-button-radius, var(--ds-radius-control));
   --_icon-button-press-scale: var(--ds-icon-button-press-scale, 0.96);
 
-  /* Disabled tone — hand-picked per variant (mirrors ds-button): solid fills
-     (filled/selected) + chrome-less standard use recipe A (flat pale tint / boxless);
-     tonal + outlined use recipe B (color-mix of their fill). Icon = low-chroma
-     accent tint throughout. Base/standard stays boxless. */
+  /* Disabled tone, mirroring ds-button: the FILL differs per variant (pale tint for
+     filled, mix toward --surface-disabled for tonal/outlined, nothing for standard)
+     and the ICON has one recipe at 70% lightness. It matters more here than on
+     ds-button — there is no word to read, just a 16px glyph at 1.75px stroke. */
   --_icon-button-accent: var(--_icon-button-icon-color);
   --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);
-  --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 58% 0.035 h));
+  --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 70% 0.035 h));
   --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, transparent);
 
   --_icon-button-size: var(--ds-icon-button-size, var(--hit-cozy));
@@ -100,8 +97,16 @@
     width: var(--_icon-button-size); height: var(--_icon-button-size);
   }
 
-  /* Variants re-bind the resolvers (consumer token still wins). `standard`
-     equals the base defaults (no block needed). */
+  /* Variants re-bind the resolvers (consumer token still wins). */
+  &.standard {
+    /* No fill and no border here, so the glyph's colour is the whole disabled
+       signal — and the base's fixed lightness cannot carry it in dark, where the
+       enabled icon is already OKLCH L 80% against a disabled L 70%: a 1.46:1 gap.
+       Scoped to this variant, not the base, because filled's icon is --c-on and
+       white mixed into a white surface does not move. */
+    --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, color-mix(in srgb, var(--_icon-button-icon-color) 40%, var(--surface-default)));
+  }
+
   &.filled {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-base));
     --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-on));
@@ -119,14 +124,17 @@
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--c-strong));
     --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
+
+  /* Transparent for the same reason as ds-button's outline: the variant must adopt
+     the surface under it rather than paint its own. */
   &.outlined {
-    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--surface-default));
+    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        transparent);
     --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--text-primary));
     --_icon-button-border:    var(--ds-icon-button-border,    var(--border-default));
     --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--surface-secondary));
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--surface-muted));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--text-primary));
-    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
+    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);
     --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, color-mix(in srgb, var(--_icon-button-border) 55%, var(--surface-disabled)));
   }
 

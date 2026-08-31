@@ -1,21 +1,19 @@
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/text-clip' as text-clip;
+
 /* `.table.skeleton-mode` is the row-level loading flag — named distinctly so it
    does not shadow the global `.skeleton` cell-shimmer class. */
 
+// Positioned to contain the absolute `.visually-hidden` nodes below; without it they resolve against
+// the initial containing block and grow the consuming PAGE's root scroller into a second scrollbar.
 :host {
   display: block;
+  position: relative;
 }
 
 // Visually-hidden but screen-reader-available (table caption + loading status).
 .visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
+  @include visually-hidden.visually-hidden;
 }
 
 /* Opt-in outer frame via `[bordered]="true"` — gives standalone tables
@@ -28,9 +26,8 @@
 }
 
 .scroll-wrap {
-  /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_table-border: var(--ds-table-border, var(--border-default));
-  --_table-radius: var(--ds-table-radius, var(--radius-md));
+  --_table-radius: var(--ds-table-radius, var(--ds-radius-control));
   --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
 
   width: 100%;
@@ -83,14 +80,32 @@
   }
 
   &:hover::after,
-  &:active::after {
+  &:active::after,
+  &:focus-visible::after {
     background-color: var(--_table-sort-active-icon-color);
+  }
+
+  /* The handle is a hairline, so the standard ring would sit almost entirely
+     outside it and read as belonging to the neighbouring column. Widening the
+     line IS the focus indicator here, and the outline is dropped rather than
+     doubled. */
+  &:focus-visible {
+    outline: none;
+
+    &::after {
+      width: var(--border-width-strong);
+    }
   }
 }
 
 .hscroll-proxy {
   position: sticky;
-  bottom: 0;
+
+  /* `bottom: 0` pins it to the scrollport edge, which is wrong when the table
+     sits in a container with bottom padding — the bar then floats above the
+     content it belongs to. A consumer offsets it with a negative value equal to
+     that padding. */
+  bottom: var(--ds-table-hscroll-bottom, 0);
   overflow: auto hidden;
 }
 
@@ -103,20 +118,37 @@
 }
 
 .table {
-  /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_table-min-width: var(--ds-table-min-width, 0);
   --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
   --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));
   --_table-row-selected-bg-color: var(--ds-table-row-selected-bg-color, var(--accent-subtitle));
   --_table-row-pressed-bg-color: var(--ds-table-row-pressed-bg-color, var(--surface-muted));
   --_table-row-active-bg-color: var(--ds-table-row-active-bg-color, var(--accent-subtitle));
   --_table-row-stripe-bg-color: var(--ds-table-row-stripe-bg-color, var(--surface-secondary));
+  --_table-cell-link-color: var(--ds-table-cell-link-color, var(--accent));
+  --_table-cell-link-decoration: var(--ds-table-cell-link-decoration, underline);
   --_table-head-text-color:         var(--ds-table-head-text-color,         var(--text-secondary));
   --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
   --_table-head-fs:         var(--ds-table-head-fs,         var(--font-size-xs));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));
   --_table-sort-active-icon-color:  var(--ds-table-sort-active-icon-color,  var(--accent));
+  --_table-icon-btn-color: var(--ds-table-icon-btn-color, var(--icon-default));
+  --_table-icon-btn-color-hover: var(--ds-table-icon-btn-color-hover, var(--icon-strong));
+  --_table-icon-btn-focus-color: var(--ds-table-icon-btn-focus-color, var(--accent));
   --_table-cell-pad-x:      var(--ds-table-cell-pad-x,      var(--table-cell-pad-x));
   --_table-cell-pad-y:      var(--ds-table-cell-pad-y,      var(--table-cell-pad-y));
+
+  /* Per-side overrides fall back to the x/y pair, so an editorial table can ask
+     for a right-only gutter (first column flush) without redefining both axes. */
+  --_table-cell-pad-top: var(--ds-table-cell-pad-top, var(--_table-cell-pad-y));
+  --_table-cell-pad-right: var(--ds-table-cell-pad-right, var(--_table-cell-pad-x));
+  --_table-cell-pad-bottom: var(--ds-table-cell-pad-bottom, var(--_table-cell-pad-y));
+  --_table-cell-pad-left: var(--ds-table-cell-pad-left, var(--_table-cell-pad-x));
+  --_table-head-pad-top: var(--ds-table-head-pad-top, var(--table-head-pad-y));
+  --_table-head-pad-bottom: var(--ds-table-head-pad-bottom, var(--table-head-pad-y));
+  --_table-head-border-color: var(--ds-table-head-border-color, var(--_table-divider));
+  --_table-head-weight: var(--ds-table-head-weight, var(--font-weight-bold));
+  --_table-head-tracking: var(--ds-table-head-tracking, var(--letter-spacing-wider));
 
   width: 100%;
   border-collapse: collapse;
@@ -124,15 +156,26 @@
   color: var(--text-primary);
   background-color: var(--_table-bg-color);
 
+  /* width: 'content' — the shrink-to-fit idiom, spelled once here instead of in
+     every consumer's ::ng-deep. `width: 1%` is the trick: a table lays out at
+     least the content width, so an under-sized request collapses the column onto
+     its widest cell and hands the slack to the columns that can use it. nowrap
+     stops that cell wrapping to defeat the point. */
+  th.fit-content,
+  td.fit-content {
+    width: 1%;
+    white-space: nowrap;
+  }
+
   thead th {
     text-align: left;
-    padding: var(--table-head-pad-y) var(--_table-cell-pad-x);
-    font: var(--font-weight-bold) var(--_table-head-fs) / var(--line-height-base) var(--font-sans);
-    letter-spacing: var(--letter-spacing-wider);
+    padding: var(--_table-head-pad-top) var(--_table-cell-pad-right) var(--_table-head-pad-bottom) var(--_table-cell-pad-left);
+    font: var(--_table-head-weight) var(--_table-head-fs) / var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--_table-head-tracking);
     text-transform: uppercase;
     color: var(--_table-head-text-color);
     background-color: var(--_table-head-bg-color);
-    border-bottom: var(--border-width-default) solid var(--_table-divider);
+    border-bottom: var(--border-width-default) solid var(--_table-head-border-color);
     white-space: nowrap;
 
     .th-label {
@@ -214,16 +257,25 @@
     }
   }
 
-  /* Sticky header — gated on the `stickyHeader()` input (default on). */
+  /* Sticky header — gated on the `stickyHeader()` input (default on).
+     Pinned header cells are excluded from the z-index: the corner where both
+     sticky axes meet has to sit above the body's pinned cells, which is what
+     `--table-sticky-corner-z` is for. This rule out-specifies that one, so
+     including them left the corner at the same z as the body's pinned cells —
+     and on a tie DOM order wins, which painted the first BODY row over the
+     header. Position and offset still apply to every header cell. */
   &.sticky-header thead th {
     position: sticky;
     top: 0;
+  }
+
+  &.sticky-header thead th:not(.pin-select, .pin-first, .pin-expand) {
     z-index: var(--table-sticky-header-z);
   }
 
   tbody {
     td {
-      padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
+      padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
       line-height: var(--line-height-flat);
       transition: background-color var(--duration-fast) var(--ease-standard);
 
@@ -253,6 +305,22 @@
          table stays static so the tint honestly signals clickability. */
       &.clickable:not(.active):hover td {
         background-color: var(--_table-row-hover-bg-color);
+      }
+
+      /* The cell that NAMES what the row opens, opted into per column. The row tint says
+         "clickable" and this says WHICH text is the target — colour plus a decoration, so it
+         does not rest on hue alone. Scoped to .clickable for the same reason the tint is. */
+      &.clickable:hover td.interactive-cell {
+        color: var(--_table-cell-link-color);
+        text-decoration: var(--_table-cell-link-decoration);
+      }
+
+      /* Unlike `interactive-cell` this is NOT gated on hover: a link a reader only
+         sees once the pointer is over the row is invisible to a keyboard or touch
+         user, which is the whole reason the column kind exists. */
+      td .cell-link {
+        color: var(--_table-cell-link-color);
+        text-decoration: var(--_table-cell-link-decoration);
       }
 
       &.selected td {
@@ -296,7 +364,7 @@
     }
 
     .expand-panel-cell {
-      padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
+      padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
     }
 
     /* Ellipsis clip for `truncate` text cells — the inline max-width (column
@@ -304,9 +372,10 @@
        layout can't stretch the column to fit the full text. */
     .cell-clip {
       display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+
+      /* `scrollWidth > clientWidth` still reports true under `clip`, checked in
+         Chromium — which is how a clipped cell earns its full-text popover. */
+      @include text-clip.single-line-ellipsis;
     }
   }
 
@@ -324,29 +393,77 @@
     border: 0;
     background: none;
     cursor: pointer;
-    color: var(--icon-default);
-    border-radius: var(--radius-sm);
+    color: var(--_table-icon-btn-color);
+    border-radius: var(--ds-radius-inner);
     transition: color var(--duration-fast) var(--ease-standard);
 
     &:hover {
-      color: var(--icon-strong);
+      color: var(--_table-icon-btn-color-hover);
     }
 
     &:focus-visible {
-      outline: var(--border-width-strong, 2px) solid var(--accent);
+      outline: var(--border-width-strong, 2px) solid var(--_table-icon-btn-focus-color);
       outline-offset: var(--focus-ring-offset);
     }
   }
 
+  /* Retunes the density tokens the resolvers already read, rather than setting
+     `padding` on the cells. Pinning padding here out-specifies every
+     `--ds-table-*-pad-*` hook, so a compact table silently ignored all of them —
+     the same values, reached the way `[data-density]` reaches them. */
   &.compact {
-    tbody td,
-    thead th {
-      padding: var(--space-2) var(--space-3);
+    --table-cell-pad-x: var(--space-3);
+    --table-cell-pad-y: var(--space-2);
+    --table-head-pad-y: var(--space-2);
+  }
+
+  /* :nth-child cannot see past windowing — a rendered row's parity depends on its
+     ABSOLUTE index, and the spacer rows are children too. Virtual mode gets the
+     parity from a class instead. */
+
+  /* A readability floor: below this the columns stop shrinking and the wrap's
+     horizontal scroller takes over instead. Defaults to 0, so nothing changes
+     until a consumer sets one — a table with few columns should still be free to
+     be narrow. */
+  min-width: var(--_table-min-width);
+
+  &.zebra:not(.virtual) tbody tr:nth-child(odd) td {
+    background-color: var(--_table-row-stripe-bg-color);
+  }
+
+  &.zebra.virtual tbody tr.stripe td {
+    background-color: var(--_table-row-stripe-bg-color);
+  }
+
+  /* Virtual mode. Every row must be exactly --_table-virtual-row-h tall, because
+     that is the only thing telling the arithmetic where a row starts: a row that
+     grows puts every offset below it out by the difference. So the height comes
+     from the same input as the maths, cells may not wrap whatever the column
+     asked for, and the layout is fixed — auto layout re-measures against
+     whichever rows happen to be rendered and the columns would twitch as you
+     scroll. */
+  &.virtual {
+    table-layout: fixed;
+
+    tbody tr:not(.spacer) {
+      height: var(--_table-virtual-row-h);
+    }
+
+    tbody td {
+      @include text-clip.single-line-ellipsis;
     }
   }
 
-  &.zebra tbody tr:nth-child(odd) td {
-    background-color: var(--_table-row-stripe-bg-color);
+  /* Pure height: it stands in for the rows that are not rendered, so it must not
+     take a border, a stripe or a hover. */
+  tbody tr.spacer {
+    padding: 0;
+    border: 0;
+    background: none;
+
+    &:hover td {
+      background-color: transparent;
+    }
   }
 
 }
@@ -366,7 +483,7 @@
 
   &.cdk-drag-preview {
     background-color: var(--surface-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     box-shadow: var(--shadow-popover);
     padding: var(--space-1) var(--space-2);
   }
@@ -478,7 +595,7 @@
   box-sizing: border-box;
   padding: var(--space-1) var(--space-2);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--surface-default);
@@ -539,7 +656,7 @@
   margin: calc(-1 * var(--space-1)) 0;
   padding: var(--space-1) var(--space-2);
   border: var(--border-width-default) solid var(--accent);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--surface-default);
@@ -672,7 +789,11 @@
 
 /* Pagination footer — separates the paginator from the last table row. */
 .pagination-footer {
-  padding-top: var(--space-3);
+  /* Inset by the CELLS' padding so the summary lines up with the column text.
+     Spelled as the public hook, not `--_table-cell-pad-x`: that resolver is declared
+     on `.table` and invisible to this sibling, and one unresolvable var voids the
+     whole shorthand — which silently produced `padding: 0` here. */
+  padding: var(--space-3) var(--ds-table-cell-pad-x, var(--table-cell-pad-x)) var(--space-3);
   border-top: var(--border-width-default) solid var(--ds-table-divider, var(--border-divider));
 }
 
@@ -708,5 +829,45 @@
     &:hover {
       background: var(--surface-inverted-hover);
     }
+  }
+}
+
+.table-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+
+  /* The row is always in the markup now that it holds a slot, so it has to take
+     itself out when nothing filled it and the export button is off — otherwise
+     every table pays its margin. `:not(:has(*))` rather than `:empty`, which a
+     single whitespace text node defeats. */
+  &:not(:has(.toolbar-slot > *, > ds-button)) {
+    display: none;
+  }
+}
+
+/* Lays out a HANDFUL of projected controls so the simple case needs no CSS at
+   all — every consumer of the fork this replaces wrote these same four
+   declarations, wrap included. Project one element of your own instead and the
+   flex has a single child, so your layout is untouched. */
+.toolbar-slot {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+
+  /* One projected element means the consumer brought their own layout, so give it
+     the whole row — otherwise a `justify-content: space-between` of theirs has
+     nothing to distribute. Pierces encapsulation because projected nodes carry the
+     CONSUMER's attribute, not this component's (same reason as ds-auth-layout's
+     brand slot); anchored here so it compiles scoped rather than global, and a
+     DIRECT child so their inner markup is left alone. */
+  ::ng-deep > :only-child {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 }

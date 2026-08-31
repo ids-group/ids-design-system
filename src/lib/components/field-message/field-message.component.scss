@@ -1,5 +1,5 @@
-/* display:contents so an empty message (no text) adds no layout box / flex gap,
-   and the rendered span sits directly in the field's flow. */
+/* display: contents — an empty message must add no flex gap to the field, and the
+   span has to sit directly in the field's own flow rather than in a wrapper. */
 :host {
   display: contents;
 }
@@ -7,17 +7,29 @@
 .field-message {
   --_field-message-color:     var(--ds-field-message-color,     var(--text-tertiary));
   --_field-message-font-size: var(--ds-field-message-font-size, var(--font-size-xs));
+  --_field-message-icon-gap: var(--ds-field-message-icon-gap, var(--space-1));
+  --_field-message-icon-offset: var(--ds-field-message-icon-offset, calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2));
 
   display: flex;
-  align-items: center;
-  gap: var(--space-1);
+
+  /* Top, not centre: a two-line message would otherwise put the glyph in the middle
+     of the block instead of beside the first line. */
+  align-items: flex-start;
+  gap: var(--_field-message-icon-gap);
   font: var(--font-weight-regular) var(--_field-message-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_field-message-color);
 
+  /* Centred against the FIRST line, not the block: the offset is computed from the
+     two tokens that decide that line, so it survives a retuned message type. */
+  .message-icon {
+    margin-top: var(--_field-message-icon-offset);
+  }
+
   &.error   { color: var(--error-text); }
+  &.warning { color: var(--warning-text); }
   &.success { color: var(--success-text); }
 
-  /* Empty reserve placeholder: an nbsp gives it exactly one line of height so
-     the footer row stays present with no message (prevents layout shift). */
+  /* An nbsp, so the reserved row is exactly one line tall and the footer holds its
+     height with no message — otherwise the field shifts when one appears. */
   &.reserve-placeholder::before { content: '\00a0'; }
 }

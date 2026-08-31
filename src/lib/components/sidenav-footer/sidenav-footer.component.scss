@@ -1,3 +1,5 @@
+@use '../../styles/text-clip' as text-clip;
+
 :host {
   --_footer-popover-width: var(--ds-sidenav-footer-popover-width, 300px);
   --_footer-popover-max-width: var(--ds-sidenav-footer-popover-max-width, 82vw);
@@ -61,12 +63,11 @@
 }
 
 .name {
-  overflow: hidden;
   color: var(--text-primary);
   font-size: var(--font-size-s);
   font-weight: var(--font-weight-semibold);
-  white-space: nowrap;
-  text-overflow: ellipsis;
+
+  @include text-clip.single-line-ellipsis;
 }
 
 .role {
@@ -101,12 +102,6 @@
   text-transform: uppercase;
 }
 
-.separator {
-  height: var(--border-width-default);
-  margin: var(--space-1) 0;
-  background: var(--border-divider);
-}
-
 .search-panel,
 .alerts-panel {
   display: flex;
@@ -125,21 +120,19 @@
   }
 
   .title {
-    overflow: hidden;
     color: var(--text-primary);
     font-size: var(--font-size-s);
     font-weight: var(--font-weight-medium);
-    white-space: nowrap;
-    text-overflow: ellipsis;
+
+    @include text-clip.single-line-ellipsis;
   }
 
   .subtitle,
   .body {
-    overflow: hidden;
     color: var(--text-tertiary);
     font-size: var(--font-size-xs);
-    white-space: nowrap;
-    text-overflow: ellipsis;
+
+    @include text-clip.single-line-ellipsis;
   }
 
   .empty {

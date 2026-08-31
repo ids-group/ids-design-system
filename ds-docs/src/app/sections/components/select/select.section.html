@@ -12,7 +12,6 @@
 
   <docs-nonmodal-note />
 
-  <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
     Sizes
   </h3>
@@ -39,7 +38,6 @@
     />
   </div>
 
-  <!-- ============================================================ States showcase -->
   <h3 class="block-title t-h4">
     States showcase
   </h3>
@@ -50,7 +48,7 @@
 
   <div class="states states--cols-3">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
@@ -58,7 +56,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Empty default
       </div>
     </div>
@@ -66,7 +64,7 @@
     <div class="state-cell">
       <!-- Live ds-select; pin-focus on the stage reads bare tokens from
                the component's own .dropdown rules via ::ng-deep. -->
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
@@ -74,13 +72,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Empty · focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           label="Owner"
           value="brooks"
@@ -88,13 +86,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         With value
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
@@ -102,13 +100,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           label="Owner"
           value="brooks"
@@ -117,13 +115,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           label="Owner"
           value="brooks"
@@ -132,13 +130,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Read-only
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="field-stack">
           <ds-select
             label="Tier"
@@ -153,13 +151,13 @@
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Error
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <div class="field-stack">
           <ds-select
             label="Tier"
@@ -173,13 +171,12 @@
         </div>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Success
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Long option list -->
   <h3 class="block-title t-h4">
     Long option list
   </h3>
@@ -197,7 +194,6 @@
     />
   </div>
 
-  <!-- ============================================================ Custom dropdown variant -->
   <h3 class="block-title t-h4">
     Custom dropdown — &lt;ds-select&gt;
   </h3>
@@ -286,47 +282,47 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Empty default
       </div>
     </div>
 
     <div class="state-cell">
       <!-- Custom-dropdown variant: same ::ng-deep pin mechanism as above; hover/focus route through bare tokens here too. -->
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-select
           value="hi"
           [options]="productOptions"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage state-cell__stage--overflow">
+      <div class="state-cell-stage state-cell-stage--overflow">
         <ds-select
           value="hi"
           [staticPreview]="true"
@@ -334,13 +330,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Open
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
@@ -348,13 +344,13 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Error
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-select
           value="hi"
           [options]="productOptions"
@@ -362,7 +358,7 @@
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
@@ -389,7 +385,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ Helper / error text -->
   <h3 class="block-title t-h4">
     Helper / error text
   </h3>
@@ -413,13 +408,11 @@
     <ds-select
       label="Role"
       placeholder="Choose a role…"
-      hint="A role is required to save this member."
-      [invalid]="true"
+      error="A role is required to save this member."
       [options]="roleOptions"
     />
   </div>
 
-  <!-- ============================================================ Clearable -->
   <h3 class="block-title t-h4">
     Clearable
   </h3>
@@ -447,7 +440,6 @@
     />
   </div>
 
-  <!-- ============================================================ Per-option icons -->
   <h3 class="block-title t-h4">
     Per-option icons
   </h3>
@@ -475,5 +467,127 @@
       [clearable]="true"
       [options]="roleIconOptions"
     />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Type-ahead, and the cursor staying in view
+  </h3>
+
+  <p class="block-desc t-s">
+    Typing a letter on the closed trigger jumps to the first option starting with
+    it and commits, the way a native
+    <code class="t-mono-inline">
+      &lt;select&gt;
+    </code> does; repeating the letter
+    cycles. With the panel open the same keys move the cursor, and the active row
+    scrolls itself into view — try
+    <kbd>
+      ArrowDown
+    </kbd> through this list, which is longer than the panel.
+    <code class="t-mono-inline">
+      scrollActiveIntoView="false"
+    </code> hands the scroll
+    position back to you.
+  </p>
+
+  <p class="block-desc t-s">
+    <kbd>
+      PageDown
+    </kbd> and <kbd>PageUp</kbd> move ten rows — the native
+    <code class="t-mono-inline">
+      &lt;select&gt;
+    </code> step, a fixed number rather than a measured
+    screenful so the jump does not change with the panel's height.
+    <kbd>
+      Home
+    </kbd> and <kbd>End</kbd> go to the first and last option a reader can
+    actually pick, skipping a disabled one.
+  </p>
+
+  <p class="block-desc t-s">
+    The scroll follows the KEYBOARD only. The rows set the active row on hover too,
+    and scrolling for that would pull a half-visible row up under the pointer while
+    you were reading with the mouse — try hovering the bottom row here: nothing
+    jumps.
+  </p>
+
+  <div class="demo-panel">
+    <div class="select-demo">
+      <ds-select
+        label="Country"
+        [options]="countryOptions"
+        [(value)]="country"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    A panel footer, and a reason an option is off
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsPanelFooterTemplate
+    </code> puts a strip under the options,
+    outside the listbox so it is not counted as one. An option's
+    <code class="t-mono-inline">
+      disabledReason
+    </code> is announced through
+    <code class="t-mono-inline">
+      aria-describedby
+    </code> — the row already looks disabled, the
+    sentence is for whoever cannot see it.
+  </p>
+
+  <div class="demo-panel">
+    <div class="select-demo">
+      <ds-select
+        label="Plan"
+        [options]="planOptions"
+        [(value)]="plan"
+      >
+        <ng-template dsPanelFooterTemplate>
+          <span class="t-s">
+            Contact sales for the enterprise plan
+          </span>
+        </ng-template>
+      </ds-select>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Clearing from outside
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      clear()
+    </code> empties the value from a template reference — a
+    "reset filters" button, a form the app clears itself. All three pickers have it
+    now;
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code> was the only one before, so an app
+    with its own reset had to write the empty value by hand and guess what empty
+    means for each control. It deliberately does not move focus.
+  </p>
+
+  <div class="demo-panel">
+    <div class="select-demo">
+      <ds-select
+        #resettable
+        label="Plan"
+        [options]="planOptions"
+        [(value)]="resetPlan"
+      />
+    </div>
+
+    <ds-button
+      size="sm"
+      fill="ghost"
+      (clicked)="resettable.clear()"
+    >
+      Reset
+    </ds-button>
   </div>
 </docs-section>

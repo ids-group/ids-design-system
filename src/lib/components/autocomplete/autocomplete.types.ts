@@ -1,12 +1,16 @@
-/** `fill` stretches to the host container (default); `content` hugs chips/value + a min typing area. */
-export type AutocompleteWidth = 'fill' | 'content';
+import type { DsOption, DsOptionGroup, DsOptionItem } from '../../core/option';
+import type { DsControlWidth } from '../../core/width';
 
-export interface AutocompleteOption<T = unknown> {
-  readonly value: T;
-  readonly label: string;
-}
+/** `content` here also reserves a minimum typing area beside the chips. */
+export type AutocompleteWidth = DsControlWidth;
 
-export interface AutocompleteOptionGroup<T = unknown> {
-  readonly label: string;
-  readonly options: AutocompleteOption<T>[];
-}
+/** What a settled single value does when it outgrows the trigger. */
+export type AutocompleteValueOverflow = 'ellipsis' | 'wrap';
+
+export interface AutocompleteOption<T = unknown> extends DsOption<T> {}
+
+export interface AutocompleteOptionGroup<
+  T = unknown,
+> extends DsOptionGroup<T> {}
+
+export type AutocompleteItem<T = unknown> = DsOptionItem<T>;

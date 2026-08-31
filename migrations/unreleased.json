@@ -1,0 +1,46 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "picker-subclass-members-grew",
+      "kind": "behavior",
+      "old": "class MySelect extends SelectComponent, class MyMultiSelect extends MultiSelectComponent, class MyAutocomplete extends AutocompleteComponent",
+      "new": null,
+      "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
+      "note": "All three pickers gained members for the new inputs and outputs. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
+      "appliesWhen": "You subclass a picker component. Template users of the `<ds-...>` elements need nothing.",
+      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
+      "searchHints": [
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent"
+      ],
+      "verify": "The app builds with no TS2415 or TS2416 naming a picker component.",
+      "restore": null
+    }
+  ],
+  "informational": [
+    "All three pickers scroll the keyboard cursor into view by default; scrollActiveIntoView=\"false\" turns it off.",
+    "Home and End now work on ds-multi-select and ds-autocomplete, which only ds-select had.",
+    "ds-autocomplete takes compareWith for object values; the default stays === so string and number values are unaffected.",
+    "New on all three pickers: loading, opened, closed. New on the two that filter: filterWith (a predicate, or \"none\" for a server-filtered list) and filterChange.",
+    "ds-multi-select and ds-autocomplete gained name, readOnly (with its readonly binding alias) and clearable, which were ds-select-only.",
+    "New slots on all three pickers: dsPanelHeaderTemplate, dsPanelFooterTemplate, dsGroupLabelTemplate.",
+    "The option row is tokenised: --ds-option-gap, --ds-option-padding, --ds-option-radius, --ds-option-row-gap, --ds-option-bg-color-active.",
+    "ds-multi-select no longer carries its own panel rules at all; --ds-multi-select-option-bg-color-active is an alias of the shared --ds-option-bg-color-active and still works.",
+    "The select-all row now reads the option row's gap and padding, so it lines up with the options below it; it was one step wider before.",
+    "DsOption gained disabledReason, announced through aria-describedby on a disabled row.",
+    "Type-ahead is on ds-select and ds-multi-select, not ds-autocomplete, whose trigger is a text field.",
+    "PageUp and PageDown move the cursor ten rows on all three pickers; none had them.",
+    "clear() is public on all three pickers now; it empties the value and does not move focus.",
+    "scrollActiveIntoView follows the KEYBOARD only — the rows also set the active index on mouseenter, and reacting to that pulled a half-visible row under the pointer.",
+    "aria-multiselectable stays absent from ds-select on purpose: ARIA permits it only on a multi-value listbox. docs/picker-contract.md states this so nobody adds it to satisfy the audit."
+  ],
+  "deleteList": []
+}

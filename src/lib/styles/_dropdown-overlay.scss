@@ -4,36 +4,83 @@
 // `panelClass: 'ds-dropdown-panel'` on the overlay config; this partial
 // declares the matching rules so the portaled panel renders styled.
 
+@use 'text-clip' as text-clip;
+@use 'visually-hidden' as visually-hidden;
+
 .ds-dropdown-panel {
+  /* The selected row used to paint straight from the theme roles, so a brand that
+     wanted a different selected treatment had to RETARGET --primary-* inside this
+     panel — and then track which other content in it read the same role. Named
+     hooks instead; the defaults are those roles, so nothing moves and a retuned
+     palette still flows through. Panel-level, not per-component: one partial
+     paints the rows for select, autocomplete and multi-select alike. */
+  --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
+  --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
+  --_option-selected-bg-color-hover: var(--ds-option-selected-bg-color-hover, var(--primary-muted));
+  --_option-check-color: var(--ds-option-check-color, var(--primary));
+
+  /* Panel-level for the same reason as the option hooks above: retuning ONE
+     picker's corner is not a thing a design system should encourage, but moving
+     every panel — modal, popover, date picker — to reach the dropdowns is too
+     blunt. This is the middle lever, and `--ds-radius-panel` stays its default so
+     an untouched theme is unchanged. */
+  --_dropdown-panel-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
+
+  /* Only bite in `content` width mode, where the pane is auto-sized: in `fill` the
+     component pins the pane to the trigger and there is nothing left to bound. */
+  --_option-gap: var(--ds-option-gap, var(--space-2));
+  --_option-padding: var(--ds-option-padding, var(--space-2) var(--space-2-5));
+  --_option-radius: var(--ds-option-radius, var(--ds-radius-inner));
+  --_option-row-gap: var(--ds-option-row-gap, 2px);
+  --_option-bg-color-active: var(--ds-option-bg-color-active, var(--surface-secondary));
+
+  --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
+  --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
+  --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
+  --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
+
   .dropdown-panel {
-    // Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
-    // in dropdown.component.ts). Without `width: 100%` the panel is a flex
-    // child of the pane and shrinks to its own option content width.
+    // The pane is sized from the trigger, so without `width: 100%` the panel is a flex
+    // child of it and shrinks to its own option content width.
     width: 100%;
-    background: var(--surface-overlay);
+    background: var(--_dropdown-panel-bg-color);
     border: var(--border-width-default) solid var(--border-default);
-    border-radius: var(--radius-md);
+    border-radius: var(--_dropdown-panel-radius);
     box-shadow: var(--shadow-popover);
     padding: var(--space-1);
-    max-height: 320px;
-    overflow-y: auto;
+    min-width: var(--_dropdown-panel-minw);
+    max-width: var(--_dropdown-panel-maxw);
+    max-height: var(--_dropdown-panel-maxh);
+
+    // The panel clips and the LIST scrolls, so a filter row or a select-all row
+    // stays put while the options move under it. A panel that scrolled itself
+    // would carry those rows out of view.
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     z-index: var(--layer-popover);
   }
 
   .dropdown-list {
+    max-height: var(--picker-maxh);
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+
+    // A flex child will not shrink below its content without this, so the list
+    // would push the panel past its own max-height instead of scrolling.
+    min-height: 0;
+    overflow-y: auto;
+    gap: var(--_option-row-gap);
   }
 
   .optgroup {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--_option-row-gap);
   }
 
   .optgroup-label {
@@ -56,21 +103,27 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--_option-row-gap);
+  }
+
+  .empty {
+    padding: var(--space-3) var(--space-4);
+    color: var(--text-tertiary);
+    text-align: center;
   }
 
   .option {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--_option-gap);
     width: 100%;
-    padding: var(--space-2) var(--space-2-5);
+    padding: var(--_option-padding);
     border: 0;
     background: transparent;
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
-    border-radius: var(--radius-sm);
+    border-radius: var(--_option-radius);
     text-align: left;
     transition: background-color var(--duration-fast) var(--ease-standard);
 
@@ -82,19 +135,40 @@
     .option-label {
       flex: 1;
       min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+
+      @include text-clip.single-line-ellipsis;
+    }
+
+    // Visually hidden, not display:none — the latter leaves the accessibility
+    // tree and the reason would be announced nowhere.
+    .option-reason {
+      @include visually-hidden.visually-hidden;
     }
 
     .option-check {
-      color: var(--primary);
+      color: var(--_option-check-color);
       flex: 0 0 auto;
     }
 
-    &:hover:not(.is-disabled),
-    &.is-active:not(.is-disabled) {
-      background: var(--surface-secondary);
+    // `:not(.is-selected)` is load-bearing: this branch outranks `.is-selected`
+    // on specificity, so without it a hovered (or keyboard-active) selected row
+    // repaints to the neutral surface while KEEPING the selected label colour —
+    // unreadable as soon as a brand gives the selected row a dark fill.
+    &:disabled {
+      color: var(--text-disabled);
+      cursor: not-allowed;
+    }
+
+    &:hover:not(.is-disabled, .is-selected, :disabled),
+    &.is-active:not(.is-disabled, .is-selected, :disabled) {
+      background: var(--_option-bg-color-active);
+    }
+
+    // A tap on a phone has no hover, so a pressed state is the only feedback that the
+    // row was hit. One rule here covers select, autocomplete and multi-select, which
+    // all render their options through this partial.
+    &:active:not(.is-disabled, :disabled) {
+      background: var(--surface-muted);
     }
 
     &:focus-visible {
@@ -103,16 +177,27 @@
     }
 
     &.is-selected {
-      background: var(--primary-subtitle);
-      color: var(--primary-strong);
+      background: var(--_option-selected-bg-color);
+      color: var(--_option-selected-label-color);
 
-      .option-icon { color: var(--primary-strong); }
+      .option-icon { color: var(--_option-selected-label-color); }
+
+      &:hover:not(.is-disabled),
+      &.is-active:not(.is-disabled) {
+        background: var(--_option-selected-bg-color-hover);
+      }
+
+      // Selected rows keep the brand family when pressed, for the same reason
+      // the hover above exists: falling back to the neutral pressed fill would
+      // strand the selected label colour on it.
+      &:active:not(.is-disabled) {
+        background: var(--_option-selected-bg-color);
+      }
     }
 
     &.is-disabled {
       color: var(--text-disabled);
       cursor: not-allowed;
-      opacity: var(--opacity-muted);
     }
   }
 }

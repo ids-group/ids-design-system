@@ -54,11 +54,11 @@
       background: var(--surface-default);
       border-radius: var(--radius-lg);
     }
-    .demo-card__title {
+    .demo-card-title {
       font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
-    .demo-card__meta {
+    .demo-card-meta {
       margin-top: var(--space-1);
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
@@ -96,17 +96,17 @@
       border-radius: var(--radius-lg);
       overflow: hidden;
     }
-    .demo-toast__bar {
+    .demo-toast-bar {
       width: var(--toast-bar-w, 3px);
       align-self: stretch;
       background: var(--success);
       border-radius: var(--radius-sm);
     }
-    .demo-toast__title {
+    .demo-toast-title {
       font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
-    .demo-toast__msg {
+    .demo-toast-msg {
       margin-top: var(--space-0-5);
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
@@ -129,16 +129,16 @@
       background: var(--surface-overlay);
       border-radius: var(--radius-lg);
     }
-    .demo-modal__title {
+    .demo-modal-title {
       font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
-    .demo-modal__body {
+    .demo-modal-body {
       margin-top: var(--space-2);
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
-    .demo-modal__actions {
+    .demo-modal-actions {
       display: flex;
       gap: var(--space-2);
       justify-content: flex-end;

@@ -47,10 +47,16 @@
   gap: var(--space-2);
 
   .control-text {
-    font: var(--font-weight-regular) var(--_switch-label-fs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-primary);
+    font: var(--font-weight-regular) var(--ds-switch-label-font-size, var(--_switch-label-fs)) / var(--line-height-base) var(--font-sans);
+    color: var(--ds-switch-label-color, var(--text-primary));
     cursor: pointer;
     user-select: none;
+
+    /* No [label] and nothing projected: collapse, or the empty caption
+       still takes the row gap and offsets the control. */
+    &:empty {
+      display: none;
+    }
 
     .req {
       color: var(--error);

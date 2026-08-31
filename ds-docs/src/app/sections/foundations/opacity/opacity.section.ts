@@ -16,12 +16,7 @@ const STOPS: readonly OpacityStop[] = [
   {
     token: '--opacity-disabled',
     value: 0.5,
-    use: 'Full disabled state on interactive components',
-  },
-  {
-    token: '--opacity-muted',
-    value: 0.6,
-    use: 'Legacy alias — being phased out in favour of --text-* roles',
+    use: 'Disabled where opacity is the only signal — never stacked on --text-disabled',
   },
   {
     token: '--opacity-text-disabled',

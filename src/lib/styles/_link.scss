@@ -3,8 +3,7 @@
    flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
 
 .link {
-  /* Public --ds-link-* are read with fallbacks, never declared — consumer
-     overrides inherit in. Hover/active derive from the resolved color. */
+  /* Hover and active derive from the resolved color. */
   --_link-color:        var(--ds-link-color,        var(--text-link));
   --_link-color-hover:  var(--ds-link-color-hover,  color-mix(in srgb, var(--_link-color) 80%, black));
   --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
@@ -45,6 +44,27 @@
   .icon {
     color: currentcolor;
     flex-shrink: 0;
+  }
+
+  /* ds-button warns `variant="text"` off in favour of this class, and an action
+     that is not navigation has to be a <button> — which arrives with UA chrome
+     none of the rules above touch (measured: 13.3px inside 14px text, plus padding
+     and an outset border). `:where()` keeps the reset at this class's specificity,
+     so a consumer's rule still wins on source order.
+
+     Absences are deliberate and invisible in code: no `font-weight`, so `.quiet` /
+     `.standalone` keep deciding it, and no `display`, because inline-block is what
+     lays a standalone button out predictably. `appearance` is the reverse — no
+     effect in Chrome, needed where native chrome outlives a zeroed border. */
+  &:where(button) {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: inherit;
   }
 
   &.quiet {

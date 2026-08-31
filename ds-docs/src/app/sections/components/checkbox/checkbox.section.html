@@ -22,7 +22,6 @@
     />
   </div>
 
-  <!-- ============================================================ Checkbox states showcase -->
   <!-- Live ds-checkbox; pin classes on the stage read bare role tokens via
        ::ng-deep (see styles). API-expressible states use real inputs. -->
   <h3 class="block-title t-h4">
@@ -31,90 +30,89 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-checkbox />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-hover">
+      <div class="state-cell-stage pin-hover">
         <ds-checkbox />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-checkbox />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-checkbox [checked]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Checked
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage pin-focus">
+      <div class="state-cell-stage pin-focus">
         <ds-checkbox [checked]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Checked · focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-checkbox [indeterminate]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Indeterminate
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-checkbox [disabled]="true" />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <ds-checkbox
           [disabled]="true"
           [checked]="true"
         />
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled · checked
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
     Sizes
   </h3>
@@ -136,7 +134,6 @@
     />
   </div>
 
-  <!-- ============================================================ Required -->
   <h3 class="block-title t-h4">
     Required
   </h3>
@@ -148,7 +145,6 @@
     />
   </div>
 
-  <!-- ============================================================ Validation states -->
   <h3 class="block-title t-h4">
     Validation states
   </h3>
@@ -167,8 +163,48 @@
 
     <ds-checkbox
       label="Acknowledge terms"
-      hint="You must accept the terms to continue."
-      [invalid]="true"
+      error="You must accept the terms to continue."
     />
+  </div>
+
+  <h3 class="block-title t-h4">
+    A caption with markup in it
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [label]
+    </code> stays the documented API and is
+    what you want almost always. When the caption needs a link or emphasis in
+    it, project the caption instead — the natural markup now works rather than
+    rendering nothing. The two are exclusive: a
+    <code class="t-mono-inline">
+      [label]
+    </code> wins and the projected content
+    is ignored. Note that the required asterisk comes with
+    <code class="t-mono-inline">
+      [label]
+    </code> only; a projected caption owns
+    its own marker, since the DS cannot know where in your markup it belongs.
+    The same applies to <code class="t-mono-inline"> ds-switch </code> and
+    <code class="t-mono-inline">
+      ds-radio
+    </code>.
+  </p>
+
+  <div class="stack">
+    <ds-checkbox>
+      I accept the
+      <a
+        class="link"
+        href="#section-checkbox"
+      >
+        Terms of Service
+      </a>
+    </ds-checkbox>
+
+    <ds-switch>
+      Email me about <strong>security</strong> events
+    </ds-switch>
   </div>
 </docs-section>

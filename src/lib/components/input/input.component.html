@@ -1,5 +1,5 @@
 <div [class]="wrapperClasses()">
-  @if (label() && !floating()) {
+  @if (label()) {
     <label
       class="label"
       [attr.for]="uid"
@@ -27,20 +27,12 @@
     class="control"
     dsFieldClickFocus
   >
-    @if (floating() && label()) {
-      <label
-        class="floating-label"
-        [attr.for]="uid"
-      >
-        {{ label() }}
-      </label>
-    }
-
     <span class="addon-slot prefix">
       <ng-content select="[dsInputPrefix]"></ng-content>
     </span>
 
     <input
+      #control
       [id]="uid"
       [type]="effectiveType()"
       [attr.name]="name()"
@@ -51,20 +43,26 @@
       [attr.autofocus]="autofocus() ? '' : null"
       [attr.placeholder]="placeholder() || null"
       [attr.aria-label]="resolvedAriaLabel()"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
-      [attr.aria-describedby]="hintId()"
+      [attr.aria-invalid]="invalidResolved() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
       [attr.aria-required]="required() ? 'true' : null"
       [attr.enterkeyhint]="enterKeyHint()"
       [attr.inputmode]="inputMode()"
       [attr.maxlength]="maxLength()"
+      [attr.minlength]="minLength()"
+      [attr.pattern]="patternAttribute()"
       [disabled]="isDisabled()"
-      [readOnly]="readOnly()"
+      [readOnly]="isReadOnly()"
       [required]="required()"
       [(ngModel)]="value"
       (blur)="blurred.emit(); markTouched()"
     />
 
-    @if (canClear() && value() && !isDisabled()) {
+    @if (
+        canClear() &&
+        value() &&
+        !isDisabled()
+      ) {
       <button
         type="button"
         class="clear-btn"
@@ -101,17 +99,17 @@
   </div>
 
   @if (
-    reserveMessage() ||
-    hint() ||
-    messageState() !== 'default' ||
-    maxLength() !== null
-  ) {
+      reserveMessageResolved() ||
+      message().text ||
+      maxLength() !== null
+    ) {
     <div class="field-footer">
       <ds-field-message
-        [text]="hint()"
-        [state]="messageState()"
+        [icon]="messageIcon()"
+        [text]="message().text"
+        [state]="message().state"
         [messageId]="hintId()"
-        [reserve]="reserveMessage()"
+        [reserve]="reserveMessageResolved()"
       />
 
       @if (maxLength() !== null) {

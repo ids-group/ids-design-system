@@ -12,7 +12,6 @@
 
   <docs-nonmodal-note />
 
-  <!-- ============================================================ Single date -->
   <h3 class="block-title t-h4">
     Single date
   </h3>
@@ -34,7 +33,6 @@
     />
   </div>
 
-  <!-- ============================================================ Date range -->
   <h3 class="block-title t-h4">
     Date range
   </h3>
@@ -50,7 +48,6 @@
     />
   </div>
 
-  <!-- ============================================================ With label + hint -->
   <h3 class="block-title t-h4">
     Label · hint · required
   </h3>
@@ -84,7 +81,6 @@
     />
   </div>
 
-  <!-- ============================================================ Validation + disabled -->
   <h3 class="block-title t-h4">
     Validation states
   </h3>
@@ -101,9 +97,8 @@
     <ds-date-picker
       mode="single"
       label="Build start"
-      hint="A start date is required."
+      error="A start date is required."
       placeholder="Pick a date"
-      [invalid]="true"
     />
 
     <ds-date-picker
@@ -115,7 +110,6 @@
     />
   </div>
 
-  <!-- ============================================================ min/max bounds -->
   <h3 class="block-title t-h4">
     Min / max date bounds
   </h3>
@@ -142,7 +136,6 @@
     />
   </div>
 
-  <!-- ============================================================ disabledDate -->
   <h3 class="block-title t-h4">
     Disabled-date predicate
   </h3>
@@ -173,7 +166,6 @@
     />
   </div>
 
-  <!-- ============================================================ Presets -->
   <h3 class="block-title t-h4">
     Presets
   </h3>
@@ -210,7 +202,6 @@
     />
   </div>
 
-  <!-- ============================================================ Masked entry -->
   <h3 class="block-title t-h4">
     Masked manual entry
   </h3>
@@ -240,7 +231,6 @@
     />
   </div>
 
-  <!-- ============================================================ Date of birth -->
   <h3 class="block-title t-h4">
     Date of birth
   </h3>
@@ -264,7 +254,6 @@
     />
   </div>
 
-  <!-- ============================================================ Localization -->
   <h3 class="block-title t-h4">
     Localization
   </h3>
@@ -300,7 +289,6 @@
     />
   </div>
 
-  <!-- ============================================================ Custom format -->
   <h3 class="block-title t-h4">
     Custom format
   </h3>
@@ -328,7 +316,6 @@
     />
   </div>
 
-  <!-- ============================================================ Calendar-only -->
   <h3 class="block-title t-h4">
     Calendar-only
   </h3>
@@ -349,7 +336,6 @@
     />
   </div>
 
-  <!-- ============================================================ Day states showcase -->
   <h3 class="block-title t-h4">
     Day states
   </h3>
@@ -363,7 +349,7 @@
 
   <div class="states states--cols-4">
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <button
           type="button"
           class="day-specimen"
@@ -372,13 +358,13 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Default
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <button
           type="button"
           class="day-specimen is-forced-hover"
@@ -387,13 +373,13 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <button
           type="button"
           class="day-specimen is-forced-focus"
@@ -402,13 +388,13 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Focus
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <button
           type="button"
           class="day-specimen selected"
@@ -417,13 +403,13 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Selected
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <button
           type="button"
           class="day-specimen selected is-forced-hover"
@@ -432,13 +418,13 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Selected · hover
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <button
           type="button"
           class="day-specimen in-range"
@@ -447,13 +433,13 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         In-range
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <button
           type="button"
           class="day-specimen today"
@@ -462,13 +448,13 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Today
       </div>
     </div>
 
     <div class="state-cell">
-      <div class="state-cell__stage">
+      <div class="state-cell-stage">
         <button
           type="button"
           class="day-specimen disabled"
@@ -478,7 +464,7 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
+      <div class="state-cell-label">
         Disabled
       </div>
     </div>

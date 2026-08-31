@@ -12,9 +12,12 @@ import {
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ModalCardComponent } from './modal-card.component';
+import { resolveDividers } from './modal-defaults';
 import { DsStaticPreview } from '../static-preview.directive';
 import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
 import type { ModalSize } from './modal.types';
+import type { DsStatus } from '../../core/status';
+import { backdropDismiss } from '../../core/backdrop-dismiss';
 
 @Component({
   selector: 'ds-modal',
@@ -33,14 +36,30 @@ export class ModalComponent implements OnDestroy {
   readonly open = model<boolean>(false);
   /** Dialog width — sm/md/lg/xl/fullscreen. */
   readonly size = input<ModalSize>('md');
-  /** Renders the error styling on the modal card. */
-  readonly error = input(false, { transform: booleanAttribute });
+  /** Severity, forwarded to the card — drives its icon-badge tint, title colour,
+   *  default icon and ARIA role. Null (default) is a neutral dialog. `false` and
+   *  `undefined` land on null too, so `[status]="isDangerous && 'error'"` binds. */
+  readonly status = input<DsStatus | null, DsStatus | false | null | undefined>(
+    null,
+    { transform: (value) => value || null },
+  );
   /** Dialog title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
+  /** Secondary line under the title. Not part of the accessible name. */
+  readonly subtitle = input<string | null>(null);
   /** Fires once the close (leave) animation finishes. */
   readonly closed = output<void>();
   /** Emit this yourself from a confirm action in the projected content — not fired by the modal itself. */
   readonly confirmed = output<void>();
+  /** Draws the rules under the header and over the actions. Turning them off also
+   *  tightens the vertical padding they were sized for. Unset falls back to
+   *  `DS_CONFIG.modal.dividers`, then `true`. */
+  readonly dividers = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  /** Resolved here and passed down, so the card is told rather than resolving a
+   *  second time — the two would disagree if a provider sat between them. */
+  readonly dividersResolved = resolveDividers(this.dividers);
   /** When false, clicking the scrim does not close the modal. */
   readonly closeOnBackdrop = input(true, { transform: booleanAttribute });
   /** When true, neither backdrop click nor Escape closes the modal — only programmatic or explicit close button. */
@@ -102,10 +121,10 @@ export class ModalComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // Angular scopes @keyframes names under emulated encapsulation, so
-    // event.animationName arrives as `_ngcontent-…_modal-out`, not the bare
-    // name — match the suffix or teardown never fires and the lock leaks.
-    if (!event.animationName.endsWith('modal-out')) {
+    // The animated element is the one with the handler, so its OWN animationend is
+    // the signal; anything bubbling from inside is not. This replaces matching the
+    // keyframes NAME, which is what made the exit un-overridable.
+    if (event.target !== event.currentTarget) {
       return;
     }
     this.finishClose();
@@ -122,8 +141,10 @@ export class ModalComponent implements OnDestroy {
     this.closed.emit();
   }
 
-  protected onBackdrop(event: MouseEvent): void {
-    if (event.target !== event.currentTarget) {
+  protected readonly backdropPress = backdropDismiss();
+
+  protected onBackdropRelease(event: PointerEvent): void {
+    if (!this.backdropPress.shouldDismiss(event)) {
       return;
     }
     if (this.persistent() || !this.closeOnBackdrop()) {

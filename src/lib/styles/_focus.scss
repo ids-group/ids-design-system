@@ -1,0 +1,78 @@
+// Focus-indicator style, switched in ONE place: `<html data-focus="…">`.
+//
+// Two families — a soft halo on fields (`--focus-field`), a crisp double ring on
+// controls (`--focus-ring`) — and every component resolves through the
+// `--ds-field-focus-shadow` / `--ds-control-focus-shadow` roles, so a brand-wide
+// switch only has to retarget two roles. No attribute keeps the default split.
+
+// Catches anything focusable that styles nothing itself, so it cannot fall through to
+// the browser default.
+//
+// CONSEQUENCE inside a shell that rings on `:focus-within`: the shell must silence
+// the control, and `outline: 0` cannot do it because what this sets is a SHADOW.
+// Leave it and the field paints two rings. `owns-the-focus-ring` below is the reset.
+:where(:focus-visible) {
+  outline: none;
+  box-shadow: var(--ds-control-focus-shadow);
+}
+
+// `$control` names ONE control and must never be a blanket: a box-wide reset also
+// silences the tab stops living in the box — a clear button, a stepper arrow — and
+// then tabbing from the field to that button changes nothing on screen.
+@mixin owns-the-focus-ring($control) {
+  #{$control}:where(:focus-visible) {
+    box-shadow: none;
+  }
+}
+
+:root[data-focus='ring'] {
+  --ds-field-focus-shadow: var(--focus-ring);
+  --ds-field-focus-shadow-error: var(--focus-ring-error);
+}
+
+:root[data-focus='field'] {
+  --ds-control-focus-shadow: var(--focus-field);
+  --ds-control-focus-shadow-error: var(--focus-field-error);
+}
+
+:root[data-focus='edge'] {
+  --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+  --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
+  --ds-control-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+  --ds-control-focus-shadow-error: 0 0 0 var(--border-width-default)
+    var(--error);
+}
+
+// The one style NOT pinned to :root, because a clipping ancestor is a local problem:
+// set it on the clipping element and everything inside keeps an indicator.
+[data-focus='inset'] {
+  --ds-field-focus-shadow: var(--focus-ring-inset);
+  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
+  --ds-control-focus-shadow: var(--focus-ring-inset);
+  --ds-control-focus-shadow-error: var(--focus-ring-inset-error);
+}
+
+:root[data-focus='outline'] {
+  --ds-field-focus-shadow: none;
+  --ds-field-focus-shadow-error: none;
+  --ds-control-focus-shadow: none;
+  --ds-control-focus-shadow-error: none;
+}
+
+// The only style that emits a rule of its own: an `outline` cannot be carried by a
+// box-shadow token, so the roles go to `none` above and this draws the indicator.
+:root[data-focus='outline'] :where(:focus-visible) {
+  outline: var(--border-width-strong) solid var(--primary);
+  outline-offset: var(--focus-ring-offset);
+}
+
+// Not part of the switch — it applies under every style, because Windows High
+// Contrast DROPS box-shadow and a shadow-only indicator vanishes there completely.
+@media (forced-colors: active) {
+  // CanvasText, not a brand colour: the palette is replaced, and a system keyword is
+  // the only value guaranteed to contrast with the forced background.
+  :where(:focus-visible) {
+    outline: var(--border-width-strong) solid CanvasText;
+    outline-offset: var(--focus-ring-offset);
+  }
+}

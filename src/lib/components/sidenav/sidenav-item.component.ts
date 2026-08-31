@@ -51,7 +51,18 @@ export class SidenavItemComponent {
    *  RouterLink ignores `defaultPrevented` — so treat it as a click hook there. */
   readonly activate = output<MouseEvent>();
 
+  /** Whether THIS item draws its edge marker when active. Unset follows the parent
+   *  `ds-sidenav`, then on — the same "null means not deciding" reading as the rest
+   *  of the library, so a sidenav-wide `[rail]="false"` is not fought per item. */
+  readonly rail = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
   private readonly sidenav = inject(SIDENAV, { optional: true });
+
+  protected readonly railResolved = computed(
+    () => this.rail() ?? this.sidenav?.rail() ?? true,
+  );
 
   protected onActivate(event: MouseEvent): void {
     if (this.disabled()) {
@@ -76,6 +87,11 @@ export class SidenavItemComponent {
     const parts = ['item'];
     if (this.active()) {
       parts.push('active');
+    }
+    // The routerLink variant gets `active` from routerLinkActive, not from here,
+    // so the rail opt-out has to be a class of its own rather than folded in.
+    if (!this.railResolved()) {
+      parts.push('no-rail');
     }
     if (this.disabled()) {
       parts.push('disabled');

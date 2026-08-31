@@ -1,17 +1,16 @@
-// Ported from vendor/claude-design-ds/components.css ".search" block.
-// Source markup uses bare descendants (.search input, .search kbd).
-// Our port introduces explicit nested elements .search-input and .kbd —
-// scoped naming keeps consumer global `.input` resets from leaking in
-// through emulated encapsulation (PIN-475 double-focus-ring root cause).
+// `.search-input` and `.kbd` rather than bare `input` / `kbd` descendants: emulated
+// encapsulation does not stop a consumer's global `.input` reset from reaching in,
+// which is what caused the PIN-475 double focus ring.
 
 @use '../../styles/press' as press;
+@use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/focus' as focus;
 
 :host {
-  /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_search-height:       var(--ds-search-height,       var(--search-h));
+  --_search-height:       var(--ds-search-height,       var(--ds-field-height, var(--field-h-md)));
   --_search-bg-color:           var(--ds-search-bg-color,           var(--surface-default));
   --_search-border:       var(--ds-search-border,       var(--border-default));
-  --_search-radius:       var(--ds-search-radius,       var(--radius-md));
+  --_search-radius:       var(--ds-search-radius,       var(--ds-radius-control));
   --_search-border-hover: var(--ds-search-border-hover, var(--border-default));
   --_search-bg-color-focus:     var(--ds-search-bg-color-focus,     var(--surface-default));
   --_search-border-focus: var(--ds-search-border-focus, var(--accent));
@@ -42,10 +41,25 @@
     border-color: var(--_search-border-hover);
   }
 
+  @include focus.owns-the-focus-ring('.search-input');
   &:focus-within {
     background-color: var(--_search-bg-color-focus);
     border-color: var(--_search-border-focus);
     box-shadow: var(--_search-focus-shadow);
+  }
+
+  // `:has(:disabled)` rather than a host class: the state arrives on the inner
+  // <input> (bound, or from a form calling setDisabledState) while the shell carries
+  // the border. After :hover, so a pointer over a dead field does not light it.
+  &:has(.search-input:disabled) {
+    background-color: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    cursor: not-allowed;
+
+    .search-input,
+    .icon {
+      color: var(--text-disabled);
+    }
   }
 
   .icon {
@@ -98,14 +112,19 @@
     padding: var(--space-px) var(--space-1-5);
     background: var(--surface-default);
     border: var(--border-width-default) solid var(--border-divider);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     color: var(--text-tertiary);
   }
 
-  /* Size modifiers — opt-in, align search with the canonical hit-target scale
-     when sitting in a control row beside input/select/button. Default stays at
-     --search-h (36px / --hit-md) for back-compat. */
-  &.sm { --_search-height: var(--ds-search-height, var(--hit-min)); }
-  &.md { --_search-height: var(--ds-search-height, var(--search-h)); }
-  &.lg { --_search-height: var(--ds-search-height, var(--field-h-lg)); }
+  /* The field scale, not a scale of its own: search sits in control rows beside
+     input/select/button, and ds-button resolves --field-h-md like the fields do. */
+  &.sm { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-sm))); }
+  &.md { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-md))); }
+  &.lg { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-lg))); }
+}
+
+/* Segment of a ds-field-group — see input.component.scss for why. The group
+   draws the border, the radius and the one shared focus ring. */
+:host(.in-group) {
+  @include field-group-segment.field-group-segment('.search');
 }

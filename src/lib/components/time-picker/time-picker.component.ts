@@ -18,22 +18,26 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
+  dropdownOverlay,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent } from '../field-message/field-message.component';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
-import { TimeColumnsComponent } from '../time-columns/time-columns.component';
+  TimeColumnsComponent,
+  type TimeColumnId,
+} from '../time-columns/time-columns.component';
 import { DS_CONFIG } from '../../config/ds-config';
 import {
   clampToRange,
@@ -49,6 +53,7 @@ import type {
   TimeRangeValue,
 } from './time-picker.types';
 import type { DsSize } from '../../core/size';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 type Segment = 'single' | 'start' | 'end';
 let nextId = 0;
@@ -67,6 +72,10 @@ let nextId = 0;
       multi: true,
     },
   ],
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.full-width]': 'fullWidth()',
+  },
 })
 export class TimePickerComponent
   extends DsControlValueAccessor<string | TimeRangeValue | null>
@@ -87,6 +96,7 @@ export class TimePickerComponent
     '--ds-time-picker-bg-color',
     '--ds-time-picker-border',
     '--ds-time-picker-shadow',
+    '--ds-time-picker-panel-radius',
   ];
 
   /** Selected time, or `[start, end]` tuple when `mode="range"`. Two-way bound. */
@@ -101,18 +111,31 @@ export class TimePickerComponent
   readonly maxTime = input<string | null>(null);
   /** Predicate marking individual times unselectable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
+  /** Stretch the trigger to fill its container instead of hugging its content —
+   *  opt in when the field shares a grid/flex track with inputs. */
+  readonly fullWidth = input(false, { transform: booleanAttribute });
+  /** Field label shown above the trigger — same row a `ds-date-picker` label
+   *  occupies, so date + time in one form row line up without a hand-rolled label. */
+  readonly label = input<string>('');
+  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
+  readonly optional = input(false, { transform: booleanAttribute });
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Applies error styling and marks the trigger `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the picker. */
-  readonly hint = input<string>('');
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Shown in the trigger when no time is set. */
   readonly placeholder = input<string>('--:--');
   /** Shows an inline clear button when a value is set — single mode only. */
@@ -123,7 +146,14 @@ export class TimePickerComponent
   readonly format = input<TimeFormat | null>(null);
 
   protected readonly uid = `ds-timepicker-${++nextId}`;
+  protected readonly labelId = `${this.uid}-label`;
   protected readonly openSegment = signal<Segment | null>(null);
+  // Which columns the user has been through since THIS opening. In single mode
+  // the panel has no Done button, so it closes itself once both halves of a time
+  // have been chosen — "picked an hour and a minute" is the completion. Reset on
+  // open, so re-opening a field that already holds a value asks for both again
+  // rather than closing on the first tap.
+  private readonly pickedParts = signal<ReadonlySet<TimeColumnId>>(new Set());
   private overlayRef: OverlayRef | null = null;
 
   protected readonly singleTrigger =
@@ -136,16 +166,35 @@ export class TimePickerComponent
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly columns = viewChild(TimeColumnsComponent);
 
+  /** Any of the three trigger boxes, not the host: a range renders two and a single
+   *  one renders one, while the host also carries the label and the message row —
+   *  clicking those has to dismiss the panel. */
+  private insideATrigger(target: Node): boolean {
+    return [this.singleTrigger(), this.startTrigger(), this.endTrigger()].some(
+      (trigger) => trigger?.nativeElement.contains(target) ?? false,
+    );
+  }
+
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
   );
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
-  protected readonly resolvedFormat = computed<TimeFormat>(
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    success: this.success,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
+  readonly resolvedFormat = computed<TimeFormat>(
     () => this.format() ?? this.config.timePicker?.format ?? '24h',
   );
 
@@ -166,14 +215,14 @@ export class TimePickerComponent
 
   protected readonly triggerClasses = computed(() => {
     const parts = ['trigger'];
-    const size = this.size();
+    const size = this.sizeResolved();
     if (size !== 'md') {
       parts.push(size);
     }
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.invalid()) {
+    if (this.invalidResolved()) {
       parts.push('error');
     }
     if (this.mode() === 'single' && this.clearable() && this.hasValue()) {
@@ -208,7 +257,9 @@ export class TimePickerComponent
   protected readonly panelMaxTime = computed(() => this.maxTime());
 
   protected ariaLabelFor(segment: Segment): string {
-    const base = this.ariaLabel() ?? 'Select time';
+    // A visible label is the accessible name; range segments still need the
+    // from/to suffix, so they keep an aria-label built from it.
+    const base = this.ariaLabel() ?? (this.label() || 'Select time');
     if (segment === 'start') {
       return `${base} (from)`;
     }
@@ -231,32 +282,17 @@ export class TimePickerComponent
     if (!triggerRef) {
       return;
     }
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(triggerRef.nativeElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      triggerRef.nativeElement,
+      'ds-overlay-pane',
+    );
+    this.overlayRef = this.overlay.create(config);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
       positionStrategy,
-      hasBackdrop: false,
-      panelClass: 'ds-overlay-pane',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,
@@ -264,13 +300,13 @@ export class TimePickerComponent
     );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      (target) => this.insideATrigger(target),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -280,11 +316,12 @@ export class TimePickerComponent
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        this.onEscape();
+        this.onEscape('dismiss');
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.openSegment.set(segment);
+    this.pickedParts.set(new Set());
     afterNextRender(() => this.columns()?.focusSelected(), {
       injector: this.injector,
     });
@@ -304,12 +341,12 @@ export class TimePickerComponent
     this.open(segment);
   }
 
-  protected close(): void {
+  protected close(cause: DsOverlayCloseCause = 'select'): void {
     const segment = this.openSegment();
     const focusWasInPanel = this.overlayRef
       ? focusIsInside(this.overlayRef)
       : false;
-    disposeWithLeave(this.overlayRef);
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.openSegment.set(null);
     this.markTouched();
@@ -325,8 +362,8 @@ export class TimePickerComponent
     this.overlayRef = null;
   }
 
-  protected onEscape(): void {
-    this.close();
+  protected onEscape(cause: DsOverlayCloseCause = 'dismiss'): void {
+    this.close(cause);
   }
 
   protected onPick(next: string): void {
@@ -344,6 +381,14 @@ export class TimePickerComponent
       return;
     }
     this.value.set(next);
+  }
+
+  protected onPartPicked(part: TimeColumnId): void {
+    const seen = new Set(this.pickedParts()).add(part);
+    this.pickedParts.set(seen);
+    if (this.mode() === 'single' && seen.has('hours') && seen.has('minutes')) {
+      this.close('select');
+    }
   }
 
   protected setNow(): void {

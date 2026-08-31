@@ -7,8 +7,8 @@
     Colour is layered in three concerns — a theme-independent
     <strong>
       base palette
-    </strong>, the <strong> theme </strong> role maps (light
-    / dark), and optional <strong>brand</strong> overlays.
+    </strong>, the <strong> theme </strong> role maps
+    (light / dark), and optional <strong>brand</strong> overlays.
     <strong>
       Light is the default; dark is opt-in.
     </strong> Components only
@@ -16,7 +16,6 @@
     without touching component code.
   </span>
 
-  <!-- ============================================================ Activation -->
   <h3 class="block-title t-h4">
     Activation
   </h3>
@@ -52,23 +51,18 @@
 
   <p class="block-desc t-s">
     There is
-    <strong
-      >
+    <strong>
       no automatic
       <code class="t-mono-inline">
         prefers-color-scheme
       </code> switch
-    </strong
-    >
+    </strong>
     — light is deterministic by default. To follow the OS, opt in from your app
     bootstrap; set the attribute before first paint to avoid a flash:
   </p>
 
-  <pre class="t-mono-block">
-    {{ osFollowSnippet }}
-  </pre>
+  <pre class="t-mono-block">{{ osFollowSnippet }}</pre>
 
-  <!-- ============================================================ Three layers -->
   <h3 class="block-title t-h4">
     Three layers
   </h3>
@@ -144,7 +138,6 @@
     </code>) or component tokens.
   </p>
 
-  <!-- ============================================================ Sibling themes -->
   <h3 class="block-title t-h4">
     Sibling themes, not a patch
   </h3>
@@ -168,11 +161,8 @@
     contrast across themes.
   </p>
 
-  <pre class="t-mono-block">
-    {{ activationSnippet }}
-  </pre>
+  <pre class="t-mono-block">{{ activationSnippet }}</pre>
 
-  <!-- ============================================================ Custom theme / brand -->
   <h3 class="block-title t-h4">
     Writing your own theme or brand
   </h3>
@@ -204,9 +194,7 @@
     block.
   </p>
 
-  <pre class="t-mono-block">
-    {{ brandSnippet }}
-  </pre>
+  <pre class="t-mono-block">{{ brandSnippet }}</pre>
 
   <p class="theming-note t-xs">
     Leave <code class="t-mono-inline">--primary-hover</code> /
@@ -222,12 +210,124 @@
     </code>.
   </p>
 
-  <!-- ============================================================ Consuming -->
   <h3 class="block-title t-h4">
     Picking a theme (consumer)
   </h3>
 
-  <pre class="t-mono-block">
-    {{ consumerSnippet }}
-  </pre>
+  <pre class="t-mono-block">{{ consumerSnippet }}</pre>
+
+  <h3 class="block-title t-h4">
+    App-level defaults — <code class="t-mono-inline">provideDsConfig</code>
+  </h3>
+
+  <p class="block-desc t-s">
+    Tokens answer “what does it look like”. This answers the other repetition:
+    <strong>
+      an input whose value an app writes identically on every element.
+    </strong>
+    One consumer binds
+    <code class="t-mono-inline">
+      [stickyScrollbar]="true"
+    </code> on all 35 of
+    its tables and <code class="t-mono-inline"> size="sm" </code> on 146 buttons
+    — not a per-element decision, a house default restated 146 times, and every
+    new element is one forgotten binding away from looking wrong.
+  </p>
+
+  <p class="block-desc t-s">
+    Precedence is <strong>input → config → built-in</strong>, so a screen that
+    differs still binds the attribute and wins. Nothing changes for an app that
+    provides nothing: every built-in default is what it always was. Provide it
+    at the app root, on a <code class="t-mono-inline">Route</code>, or on a
+    component — the config resolves through the injector chain and a nested call
+    MERGES with the one above it, section by section.
+  </p>
+
+  <pre class="t-mono-block">{{ configSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    <strong>
+      <code class="t-mono-inline">
+        control.size
+      </code> is not the same axis as
+      <code class="t-mono-inline">
+        [data-density]
+      </code>.
+    </strong>
+    The density tier rewrites hit targets and padding in CSS for a route; this
+    picks which of the three declared sizes a control renders at. An app can use
+    both.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Worked example — a square brand
+  </h3>
+
+  <p class="block-desc t-s">
+    The most common whole-brand change, and the one most often done the long
+    way: a consumer audit found <strong>twelve</strong> scattered
+    <code class="t-mono-inline">
+      --ds-&lt;component&gt;-radius: 0
+    </code>
+    declarations written one component at a time. Four lines replace all of
+    them.
+  </p>
+
+  <pre class="t-mono-block">{{ squareSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    <strong>
+      Three role declarations do it, and as of 2026-08-10 that is finally true.
+    </strong>
+    Measured: on a component page, zeroing
+    <code class="t-mono-inline">
+      --ds-radius-inner
+    </code>,
+    <code class="t-mono-inline">
+      -control
+    </code> and
+    <code class="t-mono-inline">
+      -panel
+    </code> squares
+    <strong>
+      every
+    </strong> rounded surface. It used to leave five behind —
+    thirty-three small affordances read
+    <code class="t-mono-inline">
+      --radius-sm
+    </code> directly, and the shared
+    dropdown panel read <code class="t-mono-inline"> --radius-md </code>; both
+    now resolve their role.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Zeroing the SCALE instead is the blunter option, and it reaches one more
+      thing:
+    </strong>
+    the focus-ring radii, which deliberately follow the scale rather than a role
+    — a ring traces a box, it is not a surface a brand designs. Use it if you
+    want square focus rings too.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Leave
+      <code class="t-mono-inline">
+        --radius-pill
+      </code> alone either way.
+    </strong>
+    A switch track, an avatar and a status dot are round because of what they
+    are, not because of the brand — verified: with the scale zeroed, the switch
+    track stays fully rounded because it resolves the pill token instead.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The roles also give you the partial case
+    </strong>, which the scale
+    cannot — one declaration moves a family and leaves its neighbour alone:
+  </p>
+
+  <pre class="t-mono-block">{{ squarePartialSnippet }}</pre>
 </docs-section>

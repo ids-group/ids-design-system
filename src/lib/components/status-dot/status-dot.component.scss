@@ -1,6 +1,5 @@
 /* Status dot atom — ported verbatim from vendor/claude-design-ds/components.css */
 :host {
-  /* Public --ds-status-dot-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_status-dot-color: var(--ds-status-dot-color, var(--icon-muted));
   --_status-dot-size:  var(--ds-status-dot-size,  var(--status-dot-size));
 

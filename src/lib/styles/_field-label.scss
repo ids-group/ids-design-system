@@ -1,0 +1,29 @@
+// One label contract for the field family.
+//
+// One class (`.label`), one token set, resolved here, so a form mixing a select with an
+// input renders its labels at one size and colour. It lives in one place because
+// out-ranking a shimmed component rule from an app needs doubled selectors
+// (`.field.field .label.label`).
+//
+// A MIXIN, not a global rule: a global `.label` would match consumer markup that
+// happens to use the same class name. Each field pays ~6 declarations of its own CSS.
+//
+// Per-instance retune is CSS-variable scoping, so no per-component token set is
+// needed: `ds-select { --ds-field-label-transform: uppercase; }` reaches exactly
+// one component. ds-input keeps its older `--ds-input-label-*` trio winning above
+// this, since those shipped in 0.7.x.
+@mixin field-label {
+  --_field-label-font-size: var(--ds-field-label-font-size, var(--font-size-xs));
+  --_field-label-weight: var(--ds-field-label-weight, var(--font-weight-bold));
+  --_field-label-color: var(--ds-field-label-color, var(--text-secondary));
+  --_field-label-transform: var(--ds-field-label-transform, none);
+  --_field-label-tracking: var(--ds-field-label-tracking, normal);
+
+  display: flex;
+  align-items: center;
+  gap: var(--field-gap-req);
+  font: var(--_field-label-weight) var(--_field-label-font-size) / var(--line-height-base) var(--font-sans);
+  color: var(--_field-label-color);
+  text-transform: var(--_field-label-transform);
+  letter-spacing: var(--_field-label-tracking);
+}
