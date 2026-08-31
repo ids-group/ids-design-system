@@ -45,6 +45,9 @@ import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
 import { DsEmptyTemplateDirective } from '../empty-template.directive';
+import { DsPanelHeaderTemplateDirective } from '../panel-header-template.directive';
+import { DsPanelFooterTemplateDirective } from '../panel-footer-template.directive';
+import { DsGroupLabelTemplateDirective } from '../group-label-template.directive';
 import { BadgeComponent } from '../badge/badge.component';
 import type { DsTriggerDisplay } from '../../core/trigger-display';
 import type {
@@ -60,6 +63,8 @@ import {
   nextEnabledIndex,
 } from '../../core/list-cursor';
 import { scrollActiveOptionIntoView } from '../scroll-active-option';
+import { announceOptionCount } from '../picker-announcer';
+import { createTypeAhead } from '../type-ahead';
 
 @Component({
   selector: 'ds-multi-select',
@@ -262,6 +267,18 @@ export class MultiSelectComponent
   protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
+  protected readonly panelHeaderTemplate = contentChild(
+    DsPanelHeaderTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly panelFooterTemplate = contentChild(
+    DsPanelFooterTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly groupLabelTemplate = contentChild(
+    DsGroupLabelTemplateDirective,
+    { read: TemplateRef },
+  );
   protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
     read: TemplateRef,
   });
@@ -560,6 +577,10 @@ export class MultiSelectComponent
   constructor() {
     super();
     scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
+    announceOptionCount(
+      computed(() => this.filteredOptions().length),
+      this.open,
+    );
   }
 
   protected onFilter(event: Event): void {
@@ -580,6 +601,20 @@ export class MultiSelectComponent
   protected readonly isReadOnly = computed(
     () => this.readOnly() || this.readonlyBinding(),
   );
+
+  private readonly typeAhead = createTypeAhead();
+
+  /** Typing a letter jumps to the next option starting with it, the way a native
+   *  `<select>` does. Returns whether the key was consumed. */
+  private handleTypeAhead(key: string): boolean {
+    const index = this.typeAhead.match(key, this.filteredOptions().map((option) => option.label), this.activeIndex());
+    if (index < 0) {
+      return false;
+    }
+    this.activeIndex.set(index);
+
+    return true;
+  }
 
   private cursorList() {
     const options = this.filteredOptions();
@@ -616,6 +651,13 @@ export class MultiSelectComponent
     if (event.key === 'ArrowDown' && !this.open()) {
       event.preventDefault();
       this.openPanel();
+
+      return;
+    }
+    // Only while the panel is shut: an open panel with a filter row means the
+    // characters are the user's query, not a jump.
+    if (!this.open() && this.handleTypeAhead(event.key)) {
+      event.preventDefault();
     }
   }
 

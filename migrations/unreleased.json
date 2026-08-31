@@ -30,7 +30,13 @@
     "Home and End now work on ds-multi-select and ds-autocomplete, which only ds-select had.",
     "ds-autocomplete takes compareWith for object values; the default stays === so string and number values are unaffected.",
     "New on all three pickers: loading, opened, closed. New on the two that filter: filterWith (a predicate, or \"none\" for a server-filtered list) and filterChange.",
-    "ds-multi-select and ds-autocomplete gained name, readOnly (with its readonly binding alias) and clearable, which were ds-select-only."
+    "ds-multi-select and ds-autocomplete gained name, readOnly (with its readonly binding alias) and clearable, which were ds-select-only.",
+    "New slots on all three pickers: dsPanelHeaderTemplate, dsPanelFooterTemplate, dsGroupLabelTemplate.",
+    "The option row is tokenised: --ds-option-gap, --ds-option-padding, --ds-option-radius, --ds-option-row-gap, --ds-option-bg-color-active.",
+    "ds-multi-select no longer carries its own panel rules at all; --ds-multi-select-option-bg-color-active is an alias of the shared --ds-option-bg-color-active and still works.",
+    "The select-all row now reads the option row's gap and padding, so it lines up with the options below it; it was one step wider before.",
+    "DsOption gained disabledReason, announced through aria-describedby on a disabled row.",
+    "Type-ahead is on ds-select and ds-multi-select, not ds-autocomplete, whose trigger is a text field."
   ],
   "deleteList": []
 }

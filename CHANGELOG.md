@@ -19,6 +19,41 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Panel header and footer slots.** The panel was a closed box between the filter row and the
+  options: "3 of 40 selected", a "clear all" button, a hint or a link under the list had nowhere to
+  go. `dsPanelHeaderTemplate` and `dsPanelFooterTemplate` fill a strip above and below, with
+  `count`, `total` and `query` in context. Both sit OUTSIDE the `listbox`, so nothing you put there
+  is counted as an option or breaks a reader's "N of M" position, and neither scrolls with the list —
+  the panel clips and the list is the scroller.
+
+- **`dsGroupLabelTemplate`.** A group heading rendered its text and nothing else, so a count, a team
+  glyph or a second line was impossible. The heading ELEMENT stays the library's — it keeps the id the
+  group's `aria-labelledby` points at — and only its contents are yours.
+
+- **The option row's geometry is tokens.** `--ds-option-gap`, `--ds-option-padding`,
+  `--ds-option-radius` and `--ds-option-row-gap`, plus `--ds-option-bg-color-active` for the
+  hover/keyboard fill. A denser panel meant re-declaring the row before, which is exactly how a second
+  copy of the panel ended up inside a component.
+
+- **`searchPlaceholder` on `ds-autocomplete`.** Its `placeholder` was doing two jobs — the
+  empty-field caption and the hint for typing over a settled value. `ds-multi-select` already
+  separated them; now the name means one thing on both. Empty by default, so nothing moves.
+
+- **The result count is announced.** A reader typed into the filter and heard nothing: no live region
+  existed in any picker. One is created per picker now, outside the listbox and empty at first — a
+  region created together with its text is the case screen readers reliably do not announce.
+
+- **Type-ahead on `ds-select` and `ds-multi-select`.** Typing "ba" jumps to the first option starting
+  with "ba", the way a native `<select>` does, and repeating one letter cycles through the options
+  beginning with it. On a closed `ds-select` the jump commits, matching the native control.
+  `ds-autocomplete` is deliberately excluded: its trigger IS a text field, so typing there is the
+  filter and a jump would fight it.
+
+- **`disabledReason` on an option.** A disabled row said it could not be picked and never why. The
+  reason reaches the row through `aria-describedby` and is visually hidden — the row already looks
+  disabled; the text is for whoever cannot see that.
+
+
 - **The keyboard cursor keeps its row in view.** On a list longer than the panel the arrows walked the
   cursor out of sight — the reader pressed down and could not see where they were. All three pickers
   scroll the active row into view now, on by default; `scrollActiveIntoView="false"` gives the scroll

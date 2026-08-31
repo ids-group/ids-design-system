@@ -14,12 +14,30 @@ const W = join(
 
 const pickers = ['select', 'multi-select', 'autocomplete'];
 
+const readSafe = (file) => {
+  try {
+    return readFileSync(file, 'utf8');
+  } catch {
+    return '';
+  }
+};
+
 const read = (name) => {
   const dir = join(W, name);
-  return readdirSync(dir)
+  const own = readdirSync(dir)
     .filter((f) => /\.(ts|html|scss)$/.test(f))
     .map((f) => readFileSync(join(dir, f), 'utf8'))
     .join('\n');
+
+  // Every helper the component imports from a sibling directory, so a capability
+  // that was extracted still counts as present. Without this the probe rewards
+  // keeping code inline, which is the opposite of what the contract asks for.
+  const helpers = [...own.matchAll(/from '(\.\.\/[\w./-]+)'/g)]
+    .map((match) => match[1])
+    .filter((specifier) => !specifier.includes('/core/'))
+    .map((specifier) => readSafe(join(dir, `${specifier}.ts`)));
+
+  return [own, ...helpers].join('\n');
 };
 
 const sources = Object.fromEntries(pickers.map((p) => [p, read(p)]));
@@ -28,7 +46,7 @@ const probes = {
   'compareWith (object values)': /compareWith/,
   'Home / End keys': /'Home'|'End'/,
   'PageUp / PageDown': /'PageUp'|'PageDown'/,
-  'type-ahead (jump by typing)': /typeahead|typeAhead/i,
+  'type-ahead (jump by typing)': /typeAhead|createTypeAhead/i,
   'loading / busy state': /\bloading\b|aria-busy/,
   'opened / closed outputs':
     /output<[^>]*>\(\)[\s\S]{0,40}(opened|closed)|readonly (opened|closed) = output/,
@@ -36,7 +54,7 @@ const probes = {
     /readonly (filterChange|queryChange|search) = output/,
   'custom filter predicate': /filterFn|filterWith|readonly filter = input/,
   'virtual scrolling': /cdk-virtual|CdkVirtualScroll/,
-  'panel header / footer slot': /dsPanelHeader|dsPanelFooter/,
+  'panel header / footer slot': /PanelHeaderTemplate|PanelFooterTemplate/,
   'aria-multiselectable': /aria-multiselectable/,
   'live announcement of results': /aria-live|LiveAnnouncer/,
   'clearing the value from outside': /\bclear\(\)/,

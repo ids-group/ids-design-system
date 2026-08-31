@@ -116,6 +116,20 @@
 
 <ng-template #panelContent>
   <div class="dropdown-panel">
+    @if (panelHeaderTemplate(); as tpl) {
+      <div class="panel-header">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: options().length,
+            total: options().length,
+            query: '',
+          }"
+        />
+      </div>
+    }
+
+
     <ul
       class="dropdown-list"
       role="listbox"
@@ -134,7 +148,18 @@
               class="optgroup-label"
               [class.is-first]="groupIdx === 0"
             >
-              {{ item.label }}
+              @if (groupLabelTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{
+                    $implicit: item,
+                    group: item,
+                    count: item.options.length,
+                  }"
+                />
+              } @else {
+                {{ item.label }}
+              }
             </span>
 
             <ul
@@ -153,6 +178,11 @@
                     [attr.aria-disabled]="
                       isOptionDisabled(opt, item.disabled) ? 'true' : null
                     "
+                    [attr.aria-describedby]="
+                      opt.disabled && opt.disabledReason
+                        ? optionId(flatIndexOf(opt)) + '-reason'
+                        : null
+                    "
                     [class.is-selected]="isSelected(opt)"
                     [class.is-active]="isActive(flatIndexOf(opt))"
                     [class.is-disabled]="isOptionDisabled(opt, item.disabled)"
@@ -166,6 +196,15 @@
                         [name]="opt.icon"
                         [size]="16"
                       />
+                    }
+
+                    @if (opt.disabled && opt.disabledReason) {
+                      <span
+                        class="option-reason"
+                        [id]="optionId(flatIndexOf(opt)) + '-reason'"
+                      >
+                        {{ opt.disabledReason }}
+                      </span>
                     }
 
                     <span class="option-label">
@@ -265,5 +304,19 @@
         </li>
       }
     </ul>
+
+    @if (panelFooterTemplate(); as tpl) {
+      <div class="panel-footer">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: options().length,
+            total: options().length,
+            query: '',
+          }"
+        />
+      </div>
+    }
+
   </div>
 </ng-template>

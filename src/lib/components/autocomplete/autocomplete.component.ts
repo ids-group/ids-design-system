@@ -50,10 +50,14 @@ import {
   lastEnabledIndex as lastEnabledOf,
 } from '../../core/list-cursor';
 import { scrollActiveOptionIntoView } from '../scroll-active-option';
+import { announceOptionCount } from '../picker-announcer';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
 import { DsEmptyTemplateDirective } from '../empty-template.directive';
+import { DsPanelHeaderTemplateDirective } from '../panel-header-template.directive';
+import { DsPanelFooterTemplateDirective } from '../panel-footer-template.directive';
+import { DsGroupLabelTemplateDirective } from '../group-label-template.directive';
 import { DsCreateTemplateDirective } from '../create-template.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
@@ -193,6 +197,11 @@ export class AutocompleteComponent<T = unknown>
   });
   /** Shows a clear affordance once there is something to clear. */
   readonly clearable = input(false, { transform: booleanAttribute });
+  /** Placeholder while the field is being typed in, when a value is already
+   *  settled — `placeholder` is the empty-field caption and cannot be both.
+   *  Empty (the default) keeps `placeholder` doing both jobs, as before. */
+  readonly searchPlaceholder = input<string>('');
+
   /** How the typed query narrows the list.
    *
    *  The default matches a case-insensitive substring of `label`. Pass a predicate
@@ -259,6 +268,18 @@ export class AutocompleteComponent<T = unknown>
   protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
+  protected readonly panelHeaderTemplate = contentChild(
+    DsPanelHeaderTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly panelFooterTemplate = contentChild(
+    DsPanelFooterTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly groupLabelTemplate = contentChild(
+    DsGroupLabelTemplateDirective,
+    { read: TemplateRef },
+  );
   protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
     read: TemplateRef,
   });
@@ -443,7 +464,9 @@ export class AutocompleteComponent<T = unknown>
       return '';
     }
     if (this.displayLabel()) {
-      return '';
+      // A value is settled, so the field is a search box now, not an empty field.
+      // `searchPlaceholder` is what says so; empty keeps the old silence.
+      return this.searchPlaceholder();
     }
 
     return this.placeholder();
@@ -520,6 +543,10 @@ export class AutocompleteComponent<T = unknown>
   constructor() {
     super();
     scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
+    announceOptionCount(
+      computed(() => this.filteredOptions().length),
+      this.isOpen,
+    );
   }
 
   private setOpen(next: boolean): void {

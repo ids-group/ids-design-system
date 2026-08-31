@@ -50,12 +50,17 @@ import { resolveWithConfig } from '../../core/config-defaults';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
 import { DsEmptyTemplateDirective } from '../empty-template.directive';
+import { DsPanelHeaderTemplateDirective } from '../panel-header-template.directive';
+import { DsPanelFooterTemplateDirective } from '../panel-footer-template.directive';
+import { DsGroupLabelTemplateDirective } from '../group-label-template.directive';
 import {
   firstEnabledIndex as firstEnabledOf,
   lastEnabledIndex as lastEnabledOf,
   nextEnabledIndex,
 } from '../../core/list-cursor';
 import { scrollActiveOptionIntoView } from '../scroll-active-option';
+import { announceOptionCount } from '../picker-announcer';
+import { createTypeAhead } from '../type-ahead';
 
 @Component({
   selector: 'ds-select',
@@ -177,6 +182,18 @@ export class SelectComponent
   protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
+  protected readonly panelHeaderTemplate = contentChild(
+    DsPanelHeaderTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly panelFooterTemplate = contentChild(
+    DsPanelFooterTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly groupLabelTemplate = contentChild(
+    DsGroupLabelTemplateDirective,
+    { read: TemplateRef },
+  );
   protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
     read: TemplateRef,
   });
@@ -294,6 +311,10 @@ export class SelectComponent
   constructor() {
     super();
     scrollActiveOptionIntoView(this.activeDescendant, this.scrollActiveIntoView);
+    announceOptionCount(
+      computed(() => this.flatOptions().length),
+      this.open,
+    );
 
     super();
     effect(() => {
@@ -497,11 +518,42 @@ export class SelectComponent
     if (key === 'End') {
       event.preventDefault();
       this.activeIndex.set(this.lastEnabledIndex());
+
+      return;
+    }
+    if (this.handleTypeAhead(key)) {
+      event.preventDefault();
+      if (!this.open()) {
+        this.pickActive();
+      }
+    }
+  }
+
+  /** A closed control commits the jump straight away — the native `<select>`
+   *  behaviour a reader is used to. An open one only moves the cursor. */
+  private pickActive(): void {
+    const entry = this.flatOptions()[this.activeIndex()];
+    if (entry) {
+      this.pick(entry.option, entry.groupDisabled);
     }
   }
 
   protected isActive(index: number): boolean {
     return this.activeIndex() === index;
+  }
+
+  private readonly typeAhead = createTypeAhead();
+
+  /** Typing a letter jumps to the next option starting with it, the way a native
+   *  `<select>` does. Returns whether the key was consumed. */
+  private handleTypeAhead(key: string): boolean {
+    const index = this.typeAhead.match(key, this.flatOptions().map((entry) => entry.option.label), this.activeIndex());
+    if (index < 0) {
+      return false;
+    }
+    this.activeIndex.set(index);
+
+    return true;
   }
 
   private cursorList() {

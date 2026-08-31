@@ -166,6 +166,19 @@
 
 <ng-template #panel>
   <div class="dropdown-panel">
+    @if (panelHeaderTemplate(); as tpl) {
+      <div class="panel-header">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: filteredOptions().length,
+            total: allOptions().length,
+            query: filter(),
+          }"
+        />
+      </div>
+    }
+
     @if (showsSearch()) {
       <div class="search-row">
         <ds-icon
@@ -246,7 +259,18 @@
               class="optgroup-label"
               [class.is-first]="itemIdx === 0"
             >
-              {{ item.label }}
+              @if (groupLabelTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{
+                    $implicit: item,
+                    group: item,
+                    count: item.options.length,
+                  }"
+                />
+              } @else {
+                {{ item.label }}
+              }
             </span>
 
             @if (showsGroupSelectAll()) {
@@ -421,5 +445,19 @@
         </li>
       }
     </ul>
+
+    @if (panelFooterTemplate(); as tpl) {
+      <div class="panel-footer">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: filteredOptions().length,
+            total: allOptions().length,
+            query: filter(),
+          }"
+        />
+      </div>
+    }
+
   </div>
 </ng-template>
