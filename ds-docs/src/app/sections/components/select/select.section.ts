@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
+  ButtonComponent,
   DsPanelFooterTemplateDirective,
   SelectComponent,
   type SelectOption,
@@ -15,6 +16,7 @@ import {
   selector: 'section-components-select',
   standalone: true,
   imports: [
+    ButtonComponent,
     DsPanelFooterTemplateDirective,
     SelectComponent,
     DocsSectionComponent,
@@ -28,6 +30,7 @@ import {
 export class SelectSection {
   protected readonly country = signal('');
   protected readonly plan = signal('team');
+  protected readonly resetPlan = signal('team');
 
   protected readonly countryOptions: SelectOption[] = [
     'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada',

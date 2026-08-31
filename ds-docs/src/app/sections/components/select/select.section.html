@@ -490,6 +490,27 @@
     position back to you.
   </p>
 
+  <p class="block-desc t-s">
+    <kbd>
+      PageDown
+    </kbd> and <kbd>PageUp</kbd> move ten rows — the native
+    <code class="t-mono-inline">
+      &lt;select&gt;
+    </code> step, a fixed number rather than a measured
+    screenful so the jump does not change with the panel's height.
+    <kbd>
+      Home
+    </kbd> and <kbd>End</kbd> go to the first and last option a reader can
+    actually pick, skipping a disabled one.
+  </p>
+
+  <p class="block-desc t-s">
+    The scroll follows the KEYBOARD only. The rows set the active row on hover too,
+    and scrolling for that would pull a half-visible row up under the pointer while
+    you were reading with the mouse — try hovering the bottom row here: nothing
+    jumps.
+  </p>
+
   <div class="demo-panel">
     <div class="select-demo">
       <ds-select
@@ -532,5 +553,41 @@
         </ng-template>
       </ds-select>
     </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Clearing from outside
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      clear()
+    </code> empties the value from a template reference — a
+    "reset filters" button, a form the app clears itself. All three pickers have it
+    now;
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code> was the only one before, so an app
+    with its own reset had to write the empty value by hand and guess what empty
+    means for each control. It deliberately does not move focus.
+  </p>
+
+  <div class="demo-panel">
+    <div class="select-demo">
+      <ds-select
+        #resettable
+        label="Plan"
+        [options]="planOptions"
+        [(value)]="resetPlan"
+      />
+    </div>
+
+    <ds-button
+      size="sm"
+      fill="ghost"
+      (clicked)="resettable.clear()"
+    >
+      Reset
+    </ds-button>
   </div>
 </docs-section>

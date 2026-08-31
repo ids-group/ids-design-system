@@ -27,7 +27,7 @@ Listed so none of them is lost — several predate this week.
 
 | Deck | Asks |
 | --- | --- |
-| `picker-gaps-decisions.html` | **§8** four changes on top of what shipped, **§9** sixteen further proposals (three of them defects that still reproduce: no `scrollIntoView` on the active row, no `compareWith` for object values, no Home/End outside `ds-select`). §1–§7 are decided and collapsed. |
+| `picker-gaps-decisions.html` | **§8** four changes on top of what shipped — the panel-copy one is closed, three remain. **§9** is answered: fifteen of the sixteen proposals are built, one (virtualisation) is recorded below, and every card carries what actually happened rather than an estimate. |
 | `picker-review-findings.html` | Not a question — the record of the 43 findings and, in §9, exactly what was renamed, moved and deleted. Read it to check the work, not to decide. |
 | `public-surface-verdicts.html` | What to cut from the public surface and what to keep. |
 | `migration-manifest-audit.html` | 23 findings against the shipped manifests. |
@@ -46,7 +46,6 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 **Bugs — something shipped misbehaves**
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
-- P2 · Three picker defects still reproduce: no `scrollIntoView` on the active row, `===` comparison for object values, Home/End only on `ds-select` — §9 of the picker deck, VERIFIED STILL OPEN 2026-08-31
 - P2 · `triggerDisplay="labels"` collapses to one label: the fit measurement reads a box its own cut narrows — RECORDED 2026-08-31
 
 **Asks — a consumer or Stas asked for it**
@@ -60,7 +59,7 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 
 - P2 · Nine decks carry `ds-deck-status: open` and none has a verdict — see *Decks awaiting a verdict* above
 - P3 · Virtualising a long picker list — RECORDED 2026-08-31, fights `aria-activedescendant`, measure before building
-- P3 · Four further picker proposals (panel header/footer slots, group-header slot, row-geometry tokens, three a11y items) — §9 of the picker deck; eight of the sixteen were built 2026-08-31, one recorded (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
+ (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
 
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
@@ -132,14 +131,13 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 
 ## Priority board (recut 2026-08-31, after the picker lane and its review merged)
 
-**33 open: 1 P1, 11 P2, 21 P3** — counted from the index line by line, not carried forward. Ten are
-*Parked* awaiting a first consumer ask and two are Records, so the live board is **21 items — 3 Bugs,
+**32 open: 1 P1, 10 P2, 21 P3** — counted from the index line by line, not carried forward. Ten are
+*Parked* awaiting a first consumer ask and two are Records, so the live board is **20 items — 2 Bugs,
 4 Asks and 14 Decisions**.
 
-**`# Bugs` holds three, all measured:** the warning status pair at 4.42:1 where AA asks 4.5; the
-`labels` trigger showing one label where more fit; and the three picker defects that survived the
-review round unfixed by your call (no `scrollIntoView`, `===` on object values, Home/End on one
-picker of three).
+**`# Bugs` holds two, both measured:** the warning status pair at 4.42:1 where AA asks 4.5, and the
+`labels` trigger showing one label where more fit. The three picker defects that sat here were fixed
+with the §9 batch.
 
 **The Decisions column grew by three and that is the real signal.** Nine decks are open, and three of
 them have a backlog twin waiting on the same answer — the colour engine, `.ds-interactive`, and
