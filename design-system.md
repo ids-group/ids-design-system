@@ -222,8 +222,8 @@ anything with an exit.
 The
 apparent exceptions are not exceptions — they are acronyms and notation the case rule does not
 touch (`Site URL`, `Project ID`, `Date (en-US, Sunday-first)`). So: capitalise the first word
-and whatever is a proper noun or an acronym, and nothing else. `Asset register`, not
-`Asset Register`. No trailing colon: the field's shape already says a value follows.
+and whatever is a proper noun or an acronym, and nothing else. `Order history`, not
+`Order History`. No trailing colon: the field's shape already says a value follows.
 
 Mark the exception, not the rule. `required` is the default expectation in most forms, so
 `ds-input` and its siblings carry an `optional` input that renders "(optional)" rather than
@@ -238,12 +238,12 @@ told the user nothing in four different ways. The pattern's own worked examples 
 
 | Variant | Title says the SITUATION | Body says the NEXT STEP or the CAUSE |
 | --- | --- | --- |
-| `none` | "No asset allocated yet" | "Pick from the asset register to start building this Sub-record." |
-| `error` | "Couldn't load resource allocations" | "Network error — the request timed out after 30 seconds." |
-| `locked` | "You don't have access to this Logistics plan" | "Logistics plans are restricted to Logistics and Producer roles. Ask your workspace admin." |
+| `none` | "No items in this order yet" | "Add a product from the catalogue to start building it." |
+| `error` | "Couldn't load the order lines" | "Network error — the request timed out after 30 seconds." |
+| `locked` | "You don't have access to this warehouse" | "Warehouses are restricted to the Operations and Manager roles. Ask your workspace admin." |
 
-Three things to copy from those: the title is a **statement, not a label** — "No asset
-allocated yet", never "Empty"; the error body names a **concrete** cause with the number in it,
+Three things to copy from those: the title is a **statement, not a label** — "No items
+in this order yet", never "Empty"; the error body names a **concrete** cause with the number in it,
 not "Something went wrong"; and the locked body names **who can unblock them**, because a
 permission wall with no next step is a dead end.
 
