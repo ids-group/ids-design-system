@@ -35,6 +35,7 @@
   .t-branch { background: var(--error-subtitle); color: var(--error-text); }
   .t-pre { background: var(--surface-secondary); color: var(--text-tertiary); }
   .t-other { background: var(--warning-subtitle); color: var(--warning-text); }
+  .t-fixed { background: var(--success-subtitle); color: var(--success-text); }
   .where { color: var(--text-tertiary); font-size: var(--font-size-s); margin-bottom: var(--space-3); }
   .fact { color: var(--text-secondary); }
   .fix { margin-bottom: 0; padding: var(--space-3); background: var(--success-subtitle); border-radius: var(--radius-sm); }
@@ -90,58 +91,61 @@
     <span class="covers">5</span>
   </div>
 
-  <p class="lede-s">Каждый пункт ломает работу пользователя сейчас, на отгруженном коде. Три из пяти сломала ровно эта ветка.</p>
+  <p class="lede-s"><strong>Все пять исправлены.</strong> Под каждым — что именно сделано, а не что предлагалось:
+    четыре закрылись в самом раунде ревью, F5 позже и не тем способом, который предлагала карточка.
+    Оставлены здесь потому, что три из пяти сломала ровно эта ветка, и это единственная запись о том,
+    как именно.</p>
 
   <div class="findings">
       <div class="finding" id="F1">
         <div class="finding-head">
           <span class="fid">F1</span>
           <h3>Enter на триггере закрывает панель вместо выбора</h3>
-          <span class="tag t-branch">сломала ветка</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>multi-select.component.ts:502</code></p>
         <p class="fact">Ветка <code>Enter</code>/<code>Space</code> делает <code>return</code> до делегации на строке 516. При <code>searchable="false"</code> Enter уходит в <code>onTriggerClick()</code>, видит <code>overlayRef</code> и закрывает панель. Ветка <code>Enter</code> в <code>onSearchKeydown</code> (531-538), которая переключает активную опцию, <span class="key">недостижима с триггера</span>.<br><br>Итог: открыл панель, стрелками дошёл до опции, Enter — панель закрылась, значение не изменилось. <strong>Выбрать опцию с клавиатуры нельзя вообще.</strong> Сломано тем самым скрываемым поиском, который добавила §4.</p>
-        <p class="fix"><strong>Правка:</strong> Пропускать <code>Enter</code>/<code>Space</code> в делегацию, когда панель открыта и <code>!showsSearch()</code>: перенести проверку ниже блока делегации либо добавить в него условие.</p>
+        <p class="fix"><strong>Сделано:</strong> Делегация перенесена выше перехвата: при открытой панели и скрытом поиске <code>Enter</code> идёт в <code>onSearchKeydown</code> и переключает активную опцию.</p>
       </div>
       <div class="finding" id="F2">
         <div class="finding-head">
           <span class="fid">F2</span>
           <h3>dsChipTemplate на автокомплите объявлен и не рендерится</h3>
-          <span class="tag t-branch">сломала ветка</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>autocomplete.component.ts:193</code></p>
         <p class="fact"><code>contentChild(DsChipTemplateDirective)</code> объявлен, но в <code>autocomplete.component.html</code> не читается ни разу — грепом ноль вхождений. Чип печатает <code>{{ selectedOption.label }}</code> безусловно (<code>:57-64</code>).<br><br>Слот обещан в трёх местах: CHANGELOG, <code>docs/picker-contract.md:26-27</code> и док самой директивы. Плюс showcase (<code>multi-select.section.html:254-262</code>) прямо говорит «honoured by ds-select, ds-multi-select и ds-autocomplete». Консюмер копирует сниппет — получает ничего, без ошибки и без предупреждения.</p>
-        <p class="fix"><strong>Правка:</strong> Отрисовать слот в чипе автокомплита по образцу <code>multi-select.component.html:108</code>, с тем же контекстом <code>{ $implicit: option, option }</code>.</p>
+        <p class="fix"><strong>Сделано:</strong> Слот отрисован в чипе автокомплита с тем же контекстом, что у мульти-селекта. Аудит перестал засчитывать его по объявлению — теперь читает шаблон.</p>
       </div>
       <div class="finding" id="F3">
         <div class="finding-head">
           <span class="fid">F3</span>
           <h3>showsPanelSelectAll() написан и не подключён</h3>
-          <span class="tag t-branch">сломала ветка</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>multi-select.component.ts:412</code></p>
         <p class="fact">Computed существует ровно для того, чтобы <code>selectAll="group"</code> не рисовал панельную строку — и не используется нигде (грепом только объявление). Шаблон гейтит сырым <code>selectAll()</code> (<code>:174</code>), а <code>'group'</code> — истинная строка.<br><br>Значит <code>'group'</code> рисует и панельную строку, и групповые, то есть <span class="key">'both' неотличим от 'group'</span>. На плоском списке без групп <code>selectAll="group"</code> тоже рисует панельную строку, хотя док входа обещает обратное.</p>
-        <p class="fix"><strong>Правка:</strong> <code>@if (showsPanelSelectAll() &amp;&amp; filteredOptions().length)</code> вместо <code>@if (selectAll() &amp;&amp; …)</code>.</p>
+        <p class="fix"><strong>Сделано:</strong> Шаблон гейтит <code>showsPanelSelectAll()</code>, так что <code>'group'</code> рисует только групповые строки, а <code>'both'</code> снова отличается от него.</p>
       </div>
       <div class="finding" id="F4">
         <div class="finding-head">
           <span class="fid">F4</span>
           <h3>Опции отключённой группы теряют идентичность</h3>
-          <span class="tag t-branch">сломала ветка</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>core/option.ts:47-51</code></p>
         <p class="fact"><code>filteredItems</code> уже спредит опции отключённой группы в <code>{ ...option, disabled: true }</code>, а <code>flattenDsOptions</code> спредит их <strong>второй раз</strong>, потому что <code>{ ...item }</code> сохранил <code>item.disabled</code>. Шаблон рендерит первые копии, <code>flatIndexOf</code> ищет во вторых → <code>−1</code>.<br><br>Проверено на <code>[{disabled: true, options:[a,b]}, c]</code>: <code>flatIndexOf(a) = −1</code>, <code>flatIndexOf(b) = −1</code>, <code>flatIndexOf(c) = 2</code>.<br><br>Последствия: дубль <code>id="…-opt--1"</code> на всех строках группы; <code>aria-activedescendant</code> указывает на элемент, которого в документе нет (мульти-селект ставит <code>activeIndex = 0</code> на открытии); в автокомплите при полностью отключённой группе <code>activeIndex</code> тоже <code>−1</code>, и <code>-1 === -1</code> красит <span class="key">все строки активными сразу</span>.</p>
-        <p class="fix"><strong>Правка:</strong> <code>flattenDsOptions</code> только сплющивает, без трансформации. Проставление <code>disabled</code> остаётся за вызывающим — оба вызывающих это уже делают осознанно, с комментарием почему.</p>
+        <p class="fix"><strong>Сделано:</strong> <code>flattenDsOptions</code> копирует опцию только если флага ещё нет, поэтому идентичность сохраняется. Проверено на том самом падавшем случае: было <code>−1, −1, 2</code>, стало <code>0, 1, 2</code>.</p>
       </div>
       <div class="finding" id="F5">
         <div class="finding-head">
           <span class="fid">F5</span>
           <h3>labels меряет то, что сам же меняет</h3>
-          <span class="tag t-branch">сломала ветка</span>
+          <span class="tag t-fixed">исправлено</span>
         </div>
         <p class="where"><code>multi-select.component.scss:36</code></p>
         <p class="fact"><code>:host(.compact-trigger) { width: fit-content }</code>, а <code>labels</code> рендерит <code>#chipRow</code> с <code>data-chip</code> (<code>:61-83</code>) — значит <code>chipFit</code> меряет <code>trigger.clientWidth</code> бокса, чью ширину задаёт результат его же обрезки.<br><br>Это дословное нарушение INVARIANT в шапке <code>chip-overflow.ts:13</code>: «nothing here may measure something the cut itself changes». Guard по <code>lastWidth</code>/<code>lastCount</code> не даёт зависнуть, поэтому получается не повисшая страница, а <span class="key">неверное сошедшееся значение</span> — одна метка и «+N» независимо от свободного места.<br><br><code>width="fill"</code> не спасает: <code>:host(.content-width)</code> (<code>:29</code>) и <code>:host(.compact-trigger)</code> (<code>:36</code>) равны по специфичности, второй объявлен позже.</p>
-        <p class="fix"><strong>Правка:</strong> Развилка, нужен твой выбор. (а) <code>labels</code> не берёт <code>fit-content</code> — тогда компактный след теряется. (б) Мерять родителя триггера, а не сам триггер. (в) <code>labels</code> считать не компактным режимом и не давать ему <code>compact-trigger</code>.</p>
+        <p class="fix"><strong>Сделано:</strong> Исправлено <span class="key">не одним из трёх предложенных вариантов</span>: измерение читает ширину ДОСТУПНУЮ — контентный бокс родителя, — а не занимаемую. Родитель от чипов не зависит, поэтому обратная связь исчезла по построению, компактный след сохранён, и автокомплит получил ту же поправку, потому что оба идут через <code>chipFit</code>.<br><br>Замерено в контролируемом воспроизведении: при срезании по одной метке старый бюджет читался <code>272 → 200 → 137 → 87</code> px — каждая обрезка уменьшала свой же вход, отсюда и схождение к одной метке. Новый бюджет — <code>700</code> px на каждом шаге.</p>
       </div>
   </div>
 </section>

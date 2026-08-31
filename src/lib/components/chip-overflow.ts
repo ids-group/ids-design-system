@@ -22,6 +22,27 @@ import {
 
 /** Room held for "+N more", in em so a retuned type scale carries. Measured at
  *  4.5em wide with three digits; 5em keeps a chip from being dropped for a pixel. */
+/**
+ * The content width of the element the trigger sits in, or null when there is no
+ * usable one — a detached node, or a parent that hugs its content too, in which
+ * case it carries the same feedback and measuring it would buy nothing.
+ */
+function hostContentWidth(host: HTMLElement | null): number | null {
+  if (!host || host.clientWidth === 0) {
+    return null;
+  }
+  const styles = getComputedStyle(host);
+  if (styles.width === 'fit-content' || styles.display === 'inline') {
+    return null;
+  }
+
+  return (
+    host.clientWidth -
+    parseFloat(styles.paddingLeft) -
+    parseFloat(styles.paddingRight)
+  );
+}
+
 const MARKER_RESERVE_EM = 5;
 
 /** What a sibling of the chip row costs the chips. One that can grow gives back
@@ -64,7 +85,16 @@ export function chipFit(
       return;
     }
 
-    const width = trigger.clientWidth;
+    // The INVARIANT at the top of this file, made concrete: a trigger that hugs
+    // its content (`width: fit-content`, which both compact modes set) has a width
+    // decided by the chips this cut removes, so reading it feeds the result back
+    // into its own input. The parent's content box is the space actually
+    // available and does not move when the chips do. For a `fill` trigger the two
+    // are the same number, so nothing changes there.
+    const host = trigger.parentElement;
+    const budget = hostContentWidth(host) ?? trigger.clientWidth;
+
+    const width = budget;
     const currentCount = untracked(count);
     const cacheIsCurrent = untracked(measuredFor) === currentCount;
     if (width === lastWidth && currentCount === lastCount && cacheIsCurrent) {
@@ -76,9 +106,11 @@ export function chipFit(
     const triggerStyles = getComputedStyle(trigger);
     const columnGap = parseFloat(triggerStyles.columnGap) || 0;
     let free =
-      trigger.clientWidth -
+      budget -
       parseFloat(triggerStyles.paddingLeft) -
-      parseFloat(triggerStyles.paddingRight);
+      parseFloat(triggerStyles.paddingRight) -
+      parseFloat(triggerStyles.borderLeftWidth) -
+      parseFloat(triggerStyles.borderRightWidth);
     for (const sibling of trigger.children) {
       if (sibling !== row) {
         free -= reservedWidth(sibling as HTMLElement) + columnGap;
