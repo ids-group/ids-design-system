@@ -452,4 +452,180 @@
       />
     </div>
   </div>
+
+  <h3 class="block-title t-h4">
+    Server-side search
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      filterChange
+    </code> reports what was typed and
+    <code class="t-mono-inline">
+      filterWith="none"
+    </code> stops the panel narrowing the
+    list a second time — the options you hand back are the ones rendered.
+    <code class="t-mono-inline">
+      loading
+    </code> replaces the empty row with a spinner, because
+    "No matches" during a request in flight is a lie. The panel also emits
+    <code class="t-mono-inline">
+      opened
+    </code>, which is where the first fetch belongs.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Search people"
+        ariaLabel="Assignee"
+        filterWith="none"
+        [loading]="serverLoading()"
+        [options]="serverOptions()"
+        [(value)]="serverValue"
+        (opened)="onServerOpened()"
+        (filterChange)="onServerQuery($event)"
+      />
+    </div>
+
+    <p class="block-desc t-s">
+      Typed: <code class="t-mono-inline">{{ serverQuery() || '—' }}</code>
+    </p>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Panel header and footer
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsPanelHeaderTemplate
+    </code> and
+    <code class="t-mono-inline">
+      dsPanelFooterTemplate
+    </code> fill a strip above and below the
+    options, with
+    <code class="t-mono-inline">
+      count
+    </code>,
+    <code class="t-mono-inline">
+      total
+    </code> and
+    <code class="t-mono-inline">
+      query
+    </code> in context. Both sit outside the listbox, so
+    nothing here is counted as an option, and neither scrolls with the list.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Any label"
+        ariaLabel="Label"
+        [options]="labelOptions"
+        [(value)]="slotLabels"
+      >
+        <ng-template
+          let-count="count"
+          let-total="total"
+          dsPanelHeaderTemplate
+        >
+          <span class="t-s">
+            Showing {{ count }} of {{ total }}
+          </span>
+        </ng-template>
+
+        <ng-template dsPanelFooterTemplate>
+          <ds-button
+            size="sm"
+            fill="ghost"
+            (clicked)="slotLabels.set([])"
+          >
+            Clear all
+          </ds-button>
+        </ng-template>
+      </ds-multi-select>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Group headings, and why an option is off
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsGroupLabelTemplate
+    </code> fills a group's heading — the
+    element itself stays ours, so the id the group is named by cannot be detached
+    from it. An option's
+    <code class="t-mono-inline">
+      disabledReason
+    </code> reaches the row as
+    <code class="t-mono-inline">
+      aria-describedby
+    </code>: the row already looks disabled, the
+    sentence is for whoever cannot see that. Open the panel and read the "On leave"
+    rows with a screen reader.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Any reviewer"
+        ariaLabel="Reviewer"
+        [options]="reviewerGroups"
+        [(value)]="reviewers"
+      >
+        <ng-template
+          let-group
+          let-count="count"
+          dsGroupLabelTemplate
+        >
+          {{ group.label }} · {{ count }}
+        </ng-template>
+      </ds-multi-select>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Read-only, clearable, and a name for a native submit
+  </h3>
+
+  <p class="block-desc t-s">
+    The last three form-contract members that were
+    <code class="t-mono-inline">
+      ds-select
+    </code>'s alone.
+    <code class="t-mono-inline">
+      readOnly
+    </code> takes focus without opening,
+    <code class="t-mono-inline">
+      clearable
+    </code> shows the same clear button the other fields use,
+    and
+    <code class="t-mono-inline">
+      name
+    </code> reaches the trigger.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        label="Labels"
+        name="labels"
+        [clearable]="true"
+        [options]="labelOptions"
+        [(value)]="clearableLabels"
+      />
+    </div>
+
+    <div class="ms-demo">
+      <ds-multi-select
+        label="Locked selection"
+        [readOnly]="true"
+        [options]="labelOptions"
+        [(value)]="readOnlyLabels"
+      />
+    </div>
+  </div>
 </docs-section>

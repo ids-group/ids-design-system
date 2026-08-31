@@ -4,6 +4,55 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The picker deck's sixteen proposals — fifteen built (2026-08-31)
+
+- [x] **DONE 2026-08-31 — the §9 batch, and the four helpers it produced are the part worth keeping.**
+  Stas gave a verdict on all sixteen. Fifteen shipped; virtualisation is recorded in `todo.md` because
+  it fights `aria-activedescendant`, which is the defect class the review round had just fixed twice.
+
+  **What was extracted rather than copied**, because three or four components wanted the same thing:
+
+  | File | What | What it replaced |
+  | --- | --- | --- |
+  | `core/list-cursor.ts` | next / prev / first / last, skipping disabled, wrapping | three implementations, three loop shapes, one off-by-one |
+  | `components/scroll-active-option.ts` | the cursor's row stays visible | nothing — the cursor walked out of view |
+  | `components/picker-announcer.ts` | a live region with the result count | nothing — a reader heard no count |
+  | `components/type-ahead.ts` | jump by typing, cycling on a repeat | nothing in the pickers; `ds-menu` had its own single-character version, so this is the fourth copy that did not get written |
+
+  **Three were done differently from what the card proposed, each for a stated reason.** P3 and P4
+  became ONE input (`filterWith: predicate | 'none'`), because "a custom matcher" and "do not filter,
+  I will" are one decision about who defines a match. Type-ahead was not given to `ds-autocomplete`,
+  whose trigger IS a text field. `compareWith` was not given to the two string-keyed pickers, where
+  `===` is correct and the input would be noise.
+
+  **Section 7 closed with it:** `ds-multi-select` now declares no panel rule of its own at all. It had
+  held on for two reasons — its option row is a real `<button>`, so the honest selector is
+  `:disabled` where the partial styled `.is-disabled`; and its own list cap. The partial covers both.
+
+  **And the deck's one "needs an eyeball" item answered itself.** The select-all row's gap was
+  `--space-3` against the options' `--space-2`. Tokenising the row geometry made the row read the same
+  token, so it lines up by construction rather than by someone judging 4px acceptable. That is the
+  general lesson: **a difference that only exists because a rule was duplicated is a token, not a
+  judgement call.**
+
+  **Two defects were found by the comment pass, not by a build or a lint.** `super()` was called twice
+  in `SelectComponent` — `ngc` accepts it and the browser throws `ReferenceError`, so `ds-select`
+  would not have instantiated at all. And the public doc for `clear()` had drifted onto the protected
+  `clearValue()` beside it, leaving the published method undocumented. Reading the diff for prose found
+  what six green gates did not.
+
+  **The capability probe reported three false negatives in one session** — the scroll, the type-ahead
+  and the live region all read as absent because the behaviour had moved into a shared helper and the
+  probe only looked inside the picker folders. It follows a component's imports now. Same lesson as the
+  review round's, arriving a second time: a tool that rewards keeping code inline is measuring the
+  wrong thing.
+
+  **One row in the audit stays empty on purpose:** `aria-multiselectable` on `ds-select`. ARIA permits
+  it only on a multi-value listbox, so adding it would be a defect rather than parity, and
+  `docs/picker-contract.md` says so where someone would otherwise "fix" the audit.
+
+---
+
 ## The review round on the picker lane — 43 findings, 42 fixed (2026-08-31)
 
 - [x] **DONE 2026-08-31 — five adversarial reviewers found 43 defects in work that had already passed

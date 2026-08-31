@@ -8,6 +8,104 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
+  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` all gained members for the
+  inputs and outputs above, and `DsPanelHeaderTemplateDirective`, `DsPanelFooterTemplateDirective` and
+  `DsGroupLabelTemplateDirective` are new classes. Also for the
+  inputs and outputs above. Subclassing a DS component is unsupported but consumers do it, and a
+  member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
+  if you meant to replace ours — the compiler enumerates every collision, so building after the
+  upgrade is the whole check.
+
+### Added
+
+- **`PageUp` and `PageDown`.** Ten rows a press, which is the native `<select>` step and the APG
+  listbox example’s — a fixed number rather than a measured screenful, so the jump is the same
+  wherever the panel happens to be clipped. No picker had these.
+
+- **`clear()` on `ds-select` and `ds-multi-select`.** `ds-autocomplete` has had it; the other two
+  offered only the in-trigger button, so an app with its own “reset filters” had to write the empty
+  value by hand and guess what empty means for that control. It does NOT move focus, deliberately:
+  the caller may be navigating away.
+
+
+- **Panel header and footer slots.** The panel was a closed box between the filter row and the
+  options: "3 of 40 selected", a "clear all" button, a hint or a link under the list had nowhere to
+  go. `dsPanelHeaderTemplate` and `dsPanelFooterTemplate` fill a strip above and below, with
+  `count`, `total` and `query` in context. Both sit OUTSIDE the `listbox`, so nothing you put there
+  is counted as an option or breaks a reader's "N of M" position, and neither scrolls with the list —
+  the panel clips and the list is the scroller.
+
+- **`dsGroupLabelTemplate`.** A group heading rendered its text and nothing else, so a count, a team
+  glyph or a second line was impossible. The heading ELEMENT stays the library's — it keeps the id the
+  group's `aria-labelledby` points at — and only its contents are yours.
+
+- **The option row's geometry is tokens.** `--ds-option-gap`, `--ds-option-padding`,
+  `--ds-option-radius` and `--ds-option-row-gap`, plus `--ds-option-bg-color-active` for the
+  hover/keyboard fill. A denser panel meant re-declaring the row before, which is exactly how a second
+  copy of the panel ended up inside a component.
+
+- **`searchPlaceholder` on `ds-autocomplete`.** Its `placeholder` was doing two jobs — the
+  empty-field caption and the hint for typing over a settled value. `ds-multi-select` already
+  separated them; now the name means one thing on both. Empty by default, so nothing moves.
+
+- **The result count is announced.** A reader typed into the filter and heard nothing: no live region
+  existed in any picker. One is created per picker now, outside the listbox and empty at first — a
+  region created together with its text is the case screen readers reliably do not announce.
+
+- **Type-ahead on `ds-select` and `ds-multi-select`.** Typing "ba" jumps to the first option starting
+  with "ba", the way a native `<select>` does, and repeating one letter cycles through the options
+  beginning with it. On a closed `ds-select` the jump commits, matching the native control.
+  `ds-autocomplete` is deliberately excluded: its trigger IS a text field, so typing there is the
+  filter and a jump would fight it.
+
+- **`disabledReason` on an option.** A disabled row said it could not be picked and never why. The
+  reason reaches the row through `aria-describedby` and is visually hidden — the row already looks
+  disabled; the text is for whoever cannot see that.
+
+
+- **The keyboard cursor keeps its row in view.** On a list longer than the panel the arrows walked the
+  cursor out of sight — the reader pressed down and could not see where they were. All three pickers
+  scroll the active row into view now, on by default; `scrollActiveIntoView="false"` gives the scroll
+  position back to you. It uses `block: 'nearest'`, so a row that is already visible does not move and
+  the mouse is never fought.
+
+- **`Home` and `End` on every picker.** They existed on `ds-select` alone, while ten other components
+  in the library already had them. The index arithmetic all three had written out separately — next,
+  previous, first, last, skipping disabled and wrapping — is now one helper, `DsListCursor`, exported
+  for anyone building a list control of their own.
+
+- **`compareWith` on `ds-autocomplete`.** The component is generic over its value type but compared
+  with `===`, which is reference identity: a re-fetch that returned equal data as new objects silently
+  dropped the selection. Pass a comparator keyed on what identifies the value —
+  `[compareWith]="(a, b) => a?.id === b?.id"`. The default is unchanged, so string and number values
+  behave exactly as before. `ds-select` and `ds-multi-select` key on `string` and do not need it.
+
+- **`loading`.** While options were being fetched the panel said "No matches", which is a lie the
+  consumer had no way to correct. It shows a spinner instead now, and the listbox reports
+  `aria-busy`. Spelled `booleanAttribute` to match `ds-button`, `ds-input` and `ds-loading-overlay`.
+
+- **`opened` and `closed`.** There was no way to know a panel had opened, so a picker whose options
+  are fetched on demand had nowhere to start the request. `closed` is the name eight other components
+  already use; `opened` is its missing pair. They fire on the transition, not on every write, so
+  closing by Escape emits once rather than twice.
+
+- **`filterWith` and `filterChange` — one input for both server-side search and a custom match.**
+  The query matcher was hardcoded to a case-insensitive substring of `label`: matching a second field,
+  ignoring diacritics or scoring fuzzily was impossible, and so was letting a server do the filtering.
+  `filterWith` takes a predicate for the first and the literal `'none'` for the second, where every
+  option handed in is rendered and `filterChange` reports what was typed. One input rather than two,
+  because they are one decision: who decides what the query matches.
+
+- **`name`, `readOnly` and `clearable` on `ds-multi-select` and `ds-autocomplete`.** The last three
+  form-contract members that were `ds-select`'s alone. `name` reaches seven other controls in the
+  library, so the two pickers were the outliers; `readOnly` takes focus without opening, and carries
+  the same `readonly` binding alias `ds-select` has for signal forms; `clearable` uses the same button
+  and the same accessible name as `ds-select`'s.
+
+
 ## 0.11.1 — 2026-08-31
 
 ### Added

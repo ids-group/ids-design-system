@@ -32,6 +32,7 @@ import {
 } from '../overlay-motion';
 import { chipFit } from '../chip-overflow';
 import { IconComponent } from '../../icons/icon.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
@@ -44,10 +45,20 @@ import type {
   AutocompleteWidth,
 } from './autocomplete.types';
 import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
+import {
+  firstEnabledIndex as firstEnabledOf,
+  lastEnabledIndex as lastEnabledOf,
+  nextEnabledIndex,
+} from '../../core/list-cursor';
+import { scrollActiveOptionIntoView } from '../scroll-active-option';
+import { announceOptionCount } from '../picker-announcer';
 import { DsOptionTemplateDirective } from '../option-template.directive';
 import { DsChipTemplateDirective } from '../chip-template.directive';
 import { DsPickerTriggerDirective } from '../picker-trigger.directive';
 import { DsEmptyTemplateDirective } from '../empty-template.directive';
+import { DsPanelHeaderTemplateDirective } from '../panel-header-template.directive';
+import { DsPanelFooterTemplateDirective } from '../panel-footer-template.directive';
+import { DsGroupLabelTemplateDirective } from '../group-label-template.directive';
 import { DsCreateTemplateDirective } from '../create-template.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
@@ -60,6 +71,7 @@ let nextId = 0;
   standalone: true,
   imports: [
     IconComponent,
+    SpinnerComponent,
     TagComponent,
     FieldMessageComponent,
     NgTemplateOutlet,
@@ -161,6 +173,61 @@ export class AutocompleteComponent<T = unknown>
   readonly allowCreate = input(false, { transform: booleanAttribute });
   /** Field label above the control — the same meaning it has on the other two pickers. */
   readonly label = input<string>('');
+  /** How two values are decided to be the same one. The default is `===`, which
+   *  is reference identity — so with object values a re-fetch that returns equal
+   *  data as NEW objects loses the selection. Pass a comparator keyed on whatever
+   *  identifies the value: `(a, b) => a?.id === b?.id`. */
+  readonly compareWith = input<(a: T | null, b: T | null) => boolean>(
+    (a, b) => a === b,
+  );
+
+  /** Native `name` attribute forwarded to the trigger. */
+  readonly name = input<string | null>(null);
+  /** Prevents opening the panel while still allowing focus. */
+  readonly readOnly = input(false, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, a second input because signal forms binds
+   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   */
+  readonly readonlyBinding = input(false, {
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  /** Shows a clear affordance once there is something to clear. */
+  readonly clearable = input(false, { transform: booleanAttribute });
+  /** Placeholder while the field is being typed in, when a value is already
+   *  settled — `placeholder` is the empty-field caption and cannot be both.
+   *  Empty (the default) keeps `placeholder` doing both jobs, as before. */
+  readonly searchPlaceholder = input<string>('');
+
+  /** How the typed query narrows the list.
+   *
+   *  The default matches a case-insensitive substring of `label`. Pass a predicate
+   *  to match on anything else — a second field, ignoring diacritics, a fuzzy score.
+   *  Pass `'none'` when the list arrives already filtered, which is what a
+   *  server-side search needs: the query is reported through `filterChange` and
+   *  every option given is rendered.
+   */
+  readonly filterWith = input<
+    ((option: AutocompleteOption<T>, query: string) => boolean) | 'none'
+  >((option, query) => option.label.toLowerCase().includes(query));
+  /** The query the user typed, on every change. The input for a server-side search;
+   *  pair it with `filterWith="none"` so the list is not narrowed twice. */
+  readonly filterChange = output<string>();
+  /** Options are still being fetched. The panel shows a spinner instead of the
+   *  empty row — which would otherwise claim there are no matches — and the list
+   *  reports `aria-busy`. */
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** The panel opened. The moment to fetch options for a picker whose list is
+   *  loaded on demand. */
+  readonly opened = output<void>();
+  /** The panel closed, for any reason — a pick, Escape, an outside click, a scroll. */
+  readonly closed = output<void>();
+  /** Scrolls the keyboard cursor's row into view. On by default: a list longer
+   *  than the panel otherwise walks the cursor out of sight. Set `false` only if
+   *  you are driving the scroll position yourself. */
+  readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
   /** Marks the field required: a `*` beside the label and `aria-required` on the input. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Marks the field optional in words, for a form where most fields are required. */
@@ -200,6 +267,18 @@ export class AutocompleteComponent<T = unknown>
   protected readonly pickerTrigger = contentChild(DsPickerTriggerDirective, {
     read: TemplateRef,
   });
+  protected readonly panelHeaderTemplate = contentChild(
+    DsPanelHeaderTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly panelFooterTemplate = contentChild(
+    DsPanelFooterTemplateDirective,
+    { read: TemplateRef },
+  );
+  protected readonly groupLabelTemplate = contentChild(
+    DsGroupLabelTemplateDirective,
+    { read: TemplateRef },
+  );
   protected readonly emptyTemplate = contentChild(DsEmptyTemplateDirective, {
     read: TemplateRef,
   });
@@ -237,8 +316,9 @@ export class AutocompleteComponent<T = unknown>
 
   protected readonly filteredItems = computed<AutocompleteItem<T>[]>(() => {
     const query = this.query().toLowerCase().trim();
+    const filter = this.filterWith();
     const matches = (option: AutocompleteOption<T>): boolean =>
-      !query || option.label.toLowerCase().includes(query);
+      !query || filter === 'none' || filter(option, query);
 
     const kept: AutocompleteItem<T>[] = [];
     for (const item of this.options()) {
@@ -306,9 +386,11 @@ export class AutocompleteComponent<T = unknown>
       return [];
     }
     const selectedValues = (this.value() as readonly T[] | null) ?? [];
-    const selectedSet = new Set(selectedValues);
+    const same = this.compareWith();
 
-    return this.allOptions().filter((option) => selectedSet.has(option.value));
+    return this.allOptions().filter((option) =>
+      selectedValues.some((selected) => same(selected, option.value)),
+    );
   });
 
   private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
@@ -358,8 +440,9 @@ export class AutocompleteComponent<T = unknown>
       }
 
       return (
-        this.allOptions().find((option) => option.value === currentValue) ??
-        null
+        this.allOptions().find((option) =>
+          this.compareWith()(option.value, currentValue),
+        ) ?? null
       );
     },
   );
@@ -380,7 +463,7 @@ export class AutocompleteComponent<T = unknown>
       return '';
     }
     if (this.displayLabel()) {
-      return '';
+      return this.searchPlaceholder();
     }
 
     return this.placeholder();
@@ -390,10 +473,12 @@ export class AutocompleteComponent<T = unknown>
     if (this.multiple()) {
       const selectedValues = (this.value() as readonly T[] | null) ?? [];
 
-      return selectedValues.includes(option.value);
+      const same = this.compareWith();
+
+      return selectedValues.some((selected) => same(selected, option.value));
     }
 
-    return this.value() === option.value;
+    return this.compareWith()(this.value() as T | null, option.value);
   }
 
   protected optionClass(option: AutocompleteOption<T>): string {
@@ -452,6 +537,47 @@ export class AutocompleteComponent<T = unknown>
     return this.visibleOptions().findIndex((opt) => opt === option);
   }
 
+  constructor() {
+    super();
+    scrollActiveOptionIntoView(
+      this.activeDescendant,
+      this.scrollActiveIntoView,
+      this.cursorFromKeyboard,
+    );
+    announceOptionCount(
+      computed(() => this.filteredOptions().length),
+      this.isOpen,
+    );
+  }
+
+  private setOpen(next: boolean): void {
+    if (this.isOpen() === next) {
+      return;
+    }
+    this.isOpen.set(next);
+    (next ? this.opened : this.closed).emit();
+  }
+
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
+
+  protected readonly cursorFromKeyboard = signal(false);
+
+  /** How far PageUp and PageDown move. Ten rows is the native `<select>` step and
+   *  the APG listbox example's — a fixed number rather than a measured screenful,
+   *  so the jump is the same wherever the panel happens to be clipped. */
+  private static readonly pageStep = 10;
+
+  private cursorList() {
+    const options = this.visibleOptions();
+
+    return {
+      length: options.length,
+      isEnabled: (index: number) => !options[index].disabled,
+    };
+  }
+
   protected onTriggerClick(): void {
     if (this.isDisabled()) {
       return;
@@ -476,6 +602,7 @@ export class AutocompleteComponent<T = unknown>
   }
 
   protected onKeydown(event: KeyboardEvent): void {
+    this.cursorFromKeyboard.set(true);
     if (this.isDisabled()) {
       return;
     }
@@ -519,6 +646,34 @@ export class AutocompleteComponent<T = unknown>
         }
         break;
       }
+      case 'PageDown':
+        event.preventDefault();
+        this.activeIndex.set(
+          nextEnabledIndex(
+            this.cursorList(),
+            this.activeIndex(),
+            AutocompleteComponent.pageStep,
+          ),
+        );
+        break;
+      case 'PageUp':
+        event.preventDefault();
+        this.activeIndex.set(
+          nextEnabledIndex(
+            this.cursorList(),
+            this.activeIndex(),
+            -AutocompleteComponent.pageStep,
+          ),
+        );
+        break;
+      case 'Home':
+        event.preventDefault();
+        this.activeIndex.set(firstEnabledOf(this.cursorList()));
+        break;
+      case 'End':
+        event.preventDefault();
+        this.activeIndex.set(lastEnabledOf(this.cursorList()));
+        break;
       case 'Escape':
         if (this.overlayRef) {
           event.preventDefault();
@@ -545,6 +700,9 @@ export class AutocompleteComponent<T = unknown>
   }
 
   protected openPanel(): void {
+    if (this.isReadOnly()) {
+      return;
+    }
     if (this.overlayRef) {
       return;
     }
@@ -591,17 +749,17 @@ export class AutocompleteComponent<T = unknown>
         return;
       }
       this.overlayRef = null;
-      this.isOpen.set(false);
+      this.setOpen(false);
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
-    this.isOpen.set(true);
+    this.setOpen(true);
     this.activeIndex.set(this.firstEnabledIndex());
   }
 
   protected close(cause: DsOverlayCloseCause = 'select'): void {
     disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
-    this.isOpen.set(false);
+    this.setOpen(false);
     this.activeIndex.set(-1);
     // Here rather than in onPick, which is only half the paths: dismissing after
     // typing over a settled value strands the text the same way. The input
@@ -611,6 +769,12 @@ export class AutocompleteComponent<T = unknown>
     if (this.displayLabel()) {
       this.query.set('');
     }
+    this.markTouched();
+  }
+
+  protected clearValue(event: MouseEvent): void {
+    event.stopPropagation();
+    this.clear();
     this.markTouched();
   }
 
@@ -642,7 +806,9 @@ export class AutocompleteComponent<T = unknown>
   }
 
   protected onFilter(event: Event): void {
-    this.query.set((event.target as HTMLInputElement).value);
+    const typed = (event.target as HTMLInputElement).value;
+    this.query.set(typed);
+    this.filterChange.emit(typed);
     this.activeIndex.set(this.firstEnabledIndex());
   }
 
@@ -652,7 +818,8 @@ export class AutocompleteComponent<T = unknown>
     }
     if (this.multiple()) {
       const current = (this.value() as readonly T[] | null) ?? [];
-      const next = current.includes(option.value)
+      const same = this.compareWith();
+      const next = current.some((entry) => same(entry, option.value))
         ? current.filter((existing) => existing !== option.value)
         : [...current, option.value];
       this.value.set(next);

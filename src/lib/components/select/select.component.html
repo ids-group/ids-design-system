@@ -116,9 +116,24 @@
 
 <ng-template #panelContent>
   <div class="dropdown-panel">
+    @if (panelHeaderTemplate(); as tpl) {
+      <div class="panel-header">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: options().length,
+            total: options().length,
+            query: '',
+          }"
+        />
+      </div>
+    }
+
+
     <ul
       class="dropdown-list"
       role="listbox"
+      [attr.aria-busy]="loading() ? 'true' : null"
       [id]="listboxId"
       [attr.aria-labelledby]="label() ? labelId : null"
     >
@@ -133,7 +148,18 @@
               class="optgroup-label"
               [class.is-first]="groupIdx === 0"
             >
-              {{ item.label }}
+              @if (groupLabelTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{
+                    $implicit: item,
+                    group: item,
+                    count: item.options.length,
+                  }"
+                />
+              } @else {
+                {{ item.label }}
+              }
             </span>
 
             <ul
@@ -152,12 +178,17 @@
                     [attr.aria-disabled]="
                       isOptionDisabled(opt, item.disabled) ? 'true' : null
                     "
+                    [attr.aria-describedby]="
+                      opt.disabled && opt.disabledReason
+                        ? optionId(flatIndexOf(opt)) + '-reason'
+                        : null
+                    "
                     [class.is-selected]="isSelected(opt)"
                     [class.is-active]="isActive(flatIndexOf(opt))"
                     [class.is-disabled]="isOptionDisabled(opt, item.disabled)"
                     [disabled]="isOptionDisabled(opt, item.disabled)"
                     (click)="pick(opt, item.disabled)"
-                    (mouseenter)="activeIndex.set(flatIndexOf(opt))"
+                    (mouseenter)="cursorFromKeyboard.set(false); activeIndex.set(flatIndexOf(opt))"
                   >
                     @if (opt.icon) {
                       <ds-icon
@@ -165,6 +196,15 @@
                         [name]="opt.icon"
                         [size]="16"
                       />
+                    }
+
+                    @if (opt.disabled && opt.disabledReason) {
+                      <span
+                        class="option-reason"
+                        [id]="optionId(flatIndexOf(opt)) + '-reason'"
+                      >
+                        {{ opt.disabledReason }}
+                      </span>
                     }
 
                     <span class="option-label">
@@ -208,7 +248,7 @@
               [class.is-disabled]="item.disabled"
               [disabled]="item.disabled"
               (click)="pick(item)"
-              (mouseenter)="activeIndex.set(flatIndexOf(item))"
+              (mouseenter)="cursorFromKeyboard.set(false); activeIndex.set(flatIndexOf(item))"
             >
               @if (item.icon) {
                 <ds-icon
@@ -244,7 +284,14 @@
         }
       }
 
-      @if (options().length === 0) {
+      @if (loading()) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          <ds-spinner size="sm" />
+        </li>
+      } @else if (options().length === 0) {
         <li
           class="empty t-s"
           role="presentation"
@@ -257,5 +304,19 @@
         </li>
       }
     </ul>
+
+    @if (panelFooterTemplate(); as tpl) {
+      <div class="panel-footer">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: options().length,
+            total: options().length,
+            query: '',
+          }"
+        />
+      </div>
+    }
+
   </div>
 </ng-template>

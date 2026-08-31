@@ -1,5 +1,25 @@
 # DS — improvements backlog
 
+## Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)
+
+- [ ] **[P3] Five thousand options render five thousand rows.** No picker uses `cdk-virtual-scroll`,
+  and the CDK is already a dependency, so this is a build rather than a research question.
+
+  **Why it is the one §9 item deliberately not built while the other eight were:** virtualisation and
+  `aria-activedescendant` fight each other. The cursor points at a row id, and a virtual viewport
+  destroys the row when it scrolls out — so the id the trigger references stops existing, which is
+  precisely the defect the review round just fixed twice (once for disabled groups, once for the
+  unrendered chip slot). Making it work means the id has to survive the row: either the viewport keeps
+  the active row rendered outside the visible range, or the cursor stops being an id reference and
+  becomes a focus move like `ds-menu`'s. Both are real designs, and both change the keyboard model
+  every picker now shares through `core/list-cursor.ts`.
+
+  **Measure before building.** The threshold that makes this worth it is unknown: nobody has reported a
+  slow picker. A list long enough to need virtualisation is also long enough that a filter is the real
+  answer, and `searchable` plus `filterWith="none"` now covers a server-side search that never sends
+  five thousand rows in the first place. Worth doing when a consumer shows a list that must be long AND
+  unfiltered.
+
 ## Decks awaiting a verdict (audited 2026-08-31)
 
 Nine decks carry `ds-deck-status: open`, which means each is a question that has not been answered.
@@ -7,7 +27,7 @@ Listed so none of them is lost — several predate this week.
 
 | Deck | Asks |
 | --- | --- |
-| `picker-gaps-decisions.html` | **§8** four changes on top of what shipped, **§9** sixteen further proposals (three of them defects that still reproduce: no `scrollIntoView` on the active row, no `compareWith` for object values, no Home/End outside `ds-select`). §1–§7 are decided and collapsed. |
+| `picker-gaps-decisions.html` | **§8** four changes on top of what shipped — the panel-copy one is closed, three remain. **§9** is answered: fifteen of the sixteen proposals are built, one (virtualisation) is recorded below, and every card carries what actually happened rather than an estimate. |
 | `picker-review-findings.html` | Not a question — the record of the 43 findings and, in §9, exactly what was renamed, moved and deleted. Read it to check the work, not to decide. |
 | `public-surface-verdicts.html` | What to cut from the public surface and what to keep. |
 | `migration-manifest-audit.html` | 23 findings against the shipped manifests. |
@@ -26,7 +46,6 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 **Bugs — something shipped misbehaves**
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
-- P2 · Three picker defects still reproduce: no `scrollIntoView` on the active row, `===` comparison for object values, Home/End only on `ds-select` — §9 of the picker deck, VERIFIED STILL OPEN 2026-08-31
 - P2 · `triggerDisplay="labels"` collapses to one label: the fit measurement reads a box its own cut narrows — RECORDED 2026-08-31
 
 **Asks — a consumer or Stas asked for it**
@@ -39,7 +58,8 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 **Decisions — waiting on Stas, not on work**
 
 - P2 · Nine decks carry `ds-deck-status: open` and none has a verdict — see *Decks awaiting a verdict* above
-- P3 · Thirteen further picker proposals (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
+- P3 · Virtualising a long picker list — RECORDED 2026-08-31, fights `aria-activedescendant`, measure before building
+ (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
 
 - P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
 - P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
@@ -111,14 +131,13 @@ the argument, the backlog line is the placeholder. Answering the deck closes bot
 
 ## Priority board (recut 2026-08-31, after the picker lane and its review merged)
 
-**33 open: 1 P1, 11 P2, 21 P3** — counted from the index line by line, not carried forward. Ten are
-*Parked* awaiting a first consumer ask and two are Records, so the live board is **21 items — 3 Bugs,
+**32 open: 1 P1, 10 P2, 21 P3** — counted from the index line by line, not carried forward. Ten are
+*Parked* awaiting a first consumer ask and two are Records, so the live board is **20 items — 2 Bugs,
 4 Asks and 14 Decisions**.
 
-**`# Bugs` holds three, all measured:** the warning status pair at 4.42:1 where AA asks 4.5; the
-`labels` trigger showing one label where more fit; and the three picker defects that survived the
-review round unfixed by your call (no `scrollIntoView`, `===` on object values, Home/End on one
-picker of three).
+**`# Bugs` holds two, both measured:** the warning status pair at 4.42:1 where AA asks 4.5, and the
+`labels` trigger showing one label where more fit. The three picker defects that sat here were fixed
+with the §9 batch.
 
 **The Decisions column grew by three and that is the real signal.** Nine decks are open, and three of
 them have a backlog twin waiting on the same answer — the colour engine, `.ds-interactive`, and

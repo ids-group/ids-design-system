@@ -3152,6 +3152,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
       },
       {
+        "name": "--ds-option-radius",
+        "value": "var(--ds-radius-inner)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-row-gap",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-bg-color-active",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
         "name": "--ds-dropdown-panel-bg-color",
         "value": "var(--surface-overlay)",
         "notes": ""
@@ -4153,6 +4168,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-multi-select-check-bg-color",
         "value": "var(--accent)",
         "notes": "Multi-select option checkmark fill (defaults to --accent)."
+      },
+      {
+        "name": "--ds-option-gap",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-padding",
+        "value": "var(--space-2) var(--space-2-5)",
+        "notes": ""
       }
     ]
   },
