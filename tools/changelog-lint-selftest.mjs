@@ -30,7 +30,7 @@ const cases = {
   C002: 'The clipped label is fixed (MBP-245), so an option keeps its descenders.',
   C003: 'Found by Stas while testing the docs on a phone.',
   C004: 'The recipe lives in `src/lib/styles/_press.scss` if you want to read it.',
-  C005: 'Run `npm run lint` for the authoritative list of changed members.',
+  C005: 'Run `npm run class-surface` for the authoritative list of changed members.',
   C006: 'Body cells have had per-side hooks since 07-31, so the header follows.',
   C007: 'Four rules hold the contract — `action` required (M039) among them.',
   C008: 'The fill was corrected in `4b9e0c2` and has not moved since.',
@@ -39,6 +39,7 @@ const cases = {
   // if the resolution silently returns nothing, every C010 stops firing and the rule
   // is dead while the gate still reports green.
   C010: 'The seven shared inputs are declared once, on `DsFieldBase`.',
+  C011: 'Reverted at HEAD, so the shape you see is the second one.',
 };
 
 const run = (file) => {
@@ -187,6 +188,115 @@ try {
   ]).includes('  C001  ');
   console.log(`${clientInLocator ? 'fires ' : 'DEAD  '} C001 inside a locator`);
   if (!clientInLocator) dead.push('C001-in-locator');
+
+  // Four holes an adversarial pass proved with fixtures. Each is asserted in BOTH
+  // directions, because an exemption is how a leak gets in.
+
+  // 1. The private-symbol escape hatch used to accept "internal" anywhere within 800
+  //    characters. With 27 of them in the changelog, that disarmed roughly a tenth of it.
+  writeFileSync(
+    FIXTURE_PATH,
+    '# Fixture\n\n- The overlay now uses an internal cache, which is a detail.\n' +
+      '- Unrelated paragraph, padding padding padding padding padding padding padding.\n' +
+      '- The seven shared inputs are declared once on `DsFieldBase`, extend it freely.\n',
+  );
+  const farAway = run(FIXTURE).includes('  C010  ');
+  console.log(
+    `${farAway ? 'fires ' : 'DEAD  '} C010 when "internal" is a paragraph away`,
+  );
+  if (!farAway) dead.push('C010-proximity');
+
+  // 2. The brand this sweep removed from `themes/README.md` by hand was in no word list,
+  //    so the regression it fixes was unguarded. All four spellings.
+  for (const spelling of [
+    'brand-manage-my',
+    '[data-brand="manage-my"]',
+    'the Manage My portal',
+    'brand-mm',
+  ]) {
+    writeFileSync(
+      FIXTURE_PATH,
+      `# Fixture\n\n- Authored on light: ${spelling}.\n`,
+    );
+    const caught = run(FIXTURE).includes('  C001  ');
+    if (!caught) dead.push(`C001-${spelling}`);
+    console.log(`${caught ? 'fires ' : 'DEAD  '} C001 on "${spelling}"`);
+  }
+
+  // 3. The locator exemption was keyed on the string VALUE, so the same string in
+  //    `informational` — which has no `find` for a finder to run — was exempt too.
+  writeFileSync(
+    MANIFEST_PATH,
+    JSON.stringify(
+      {
+        version: '9.9.9',
+        items: [
+          {
+            id: 'one',
+            old: 'x',
+            searchHints: ['DsMessageBase'],
+            action: 'Rename it.',
+          },
+        ],
+        informational: ['DsMessageBase'],
+      },
+      null,
+      2,
+    ),
+  );
+  const escaped = !run(MANIFEST).includes('  C010  ');
+  console.log(
+    `${escaped ? 'FALSE-' : 'fires '} C010 on a locator string reused in informational`,
+  );
+  if (escaped) dead.push('C010-exemption-escapes-to-informational');
+
+  // 4. ...and it depended on one-value-per-line formatting, so a manifest written
+  //    compactly by hand lost the exemption entirely.
+  writeFileSync(
+    MANIFEST_PATH,
+    '{ "version": "9.9.9", "items": [ { "id": "one", "old": "class X extends DsFieldBase", ' +
+      '"searchHints": ["extends DsFieldBase"], "action": "Rename." } ] }\n',
+  );
+  const compactQuiet = run(MANIFEST).includes('OK');
+  console.log(
+    `${compactQuiet ? 'quiet ' : 'FALSE+'} C010 spares a compact one-line locator`,
+  );
+  if (!compactQuiet) dead.push('C010-compact-manifest');
+
+  // Two rules used to fire the wrong way, which is how a gate teaches authors to ignore it.
+  const relaxed = [
+    [
+      'C005 generic script',
+      '- Run `npm run lint` afterwards to confirm nothing else moved.',
+    ],
+    [
+      'C008 hex colour',
+      '- A scrim of #1a2b3c4d over the surface, and #0f172aE6 for the veil.',
+    ],
+  ];
+  for (const [what, line] of relaxed) {
+    writeFileSync(FIXTURE_PATH, `# Fixture\n\n${line}\n`);
+    const output = run(FIXTURE);
+    const quiet = output.includes('OK');
+    if (!quiet) {
+      dead.push(what);
+      console.log(output.trim());
+    }
+    console.log(`${quiet ? 'quiet ' : 'FALSE+'} ${what}`);
+  }
+
+  // A person's name reaches an entry in two shapes, and a two-name list catches neither.
+  for (const line of [
+    '- Found by Alex Park while testing the docs on a phone.',
+    '- Ask Alex Park or your team lead.',
+  ]) {
+    writeFileSync(FIXTURE_PATH, `# Fixture\n\n${line}\n`);
+    const caught = run(FIXTURE).includes('  C003  ');
+    if (!caught) dead.push('C003-shape');
+    console.log(
+      `${caught ? 'fires ' : 'DEAD  '} C003 on a name not in the list`,
+    );
+  }
 
   // The mirror case: a line that trips nothing must stay green, or every rule
   // above is passing for the wrong reason.

@@ -226,7 +226,7 @@
       "kind": "behavior",
       "old": "TimeColumnsComponent.onKey",
       "new": null,
-      "action": "Read the current signature of `TimeColumnsComponent.onKey` from the package's type declarations and match it, or drop the override.",
+      "action": "Read the current signature of the internal `TimeColumnsComponent.onKey` from the package's type declarations and match it, or drop the override.",
       "appliesWhen": "It is `protected`, so no consumer calls it and templates are unaffected. The component is internal to ds-time-picker and subclassing it was never supported.",
       "note": "The parameter list changed, so an overriding subclass has a signature that no longer matches the base (TS2416).",
       "searchHints": [
@@ -240,7 +240,7 @@
         "onKey(",
         "extends TimeColumnsComponent"
       ],
-      "verify": "No TimeColumnsComponent subclass overrides `onKey` with the old parameter list."
+      "verify": "No subclass of the internal TimeColumnsComponent overrides `onKey` with the old parameter list."
     },
     {
       "id": "overlay-outside-guard-tests-the-trigger",

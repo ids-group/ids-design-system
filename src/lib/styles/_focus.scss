@@ -19,7 +19,6 @@
 // `$control` names ONE control and must never be a blanket: a box-wide reset also
 // silences the tab stops living in the box — a clear button, a stepper arrow — and
 // then tabbing from the field to that button changes nothing on screen.
-// Enforced by a build check.
 @mixin owns-the-focus-ring($control) {
   #{$control}:where(:focus-visible) {
     box-shadow: none;

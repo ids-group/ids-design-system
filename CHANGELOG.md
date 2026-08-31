@@ -117,7 +117,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **If you EXTEND a DS field, its message inputs now live one class further up.** `hint`, `error`,
   `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved` moved out of the internal `DsFieldBase` into a new internal `DsMessageBase`, which `DsFieldBase` extends — so `ds-button` can take the message half
   without also inheriting `errors`, `invalid` and `touched`, which describe a form control's validation
-  state and mean nothing on a button. **`DsFieldBase`'s own surface is unchanged**: every one of those
+  state and mean nothing on a button. **That internal base's own surface is unchanged**: every one of those
   members still resolves through it, with the same names, types and defaults. A subclass redeclaring one of these collides exactly as it did
   before; subclassing a DS component stays unsupported (`components.md` § Components).
 
@@ -147,9 +147,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-table`'s pager took no inset, so it sat out of line with the columns and on the container's
   border.** The footer carried `padding-top` alone — no horizontal, no bottom — while every cell is
   inset by `--ds-table-cell-pad-x`. That padding is what insets the content of a `padding: 0` container,
-  which is how tables are normally placed, so the summary line sat out of alignment with the column
-  text, its baseline running along the border. The footer padding is now `12px 16px 12px`, matching the
-  cells' inset, with the summary clear of the bottom edge. **It follows `--ds-table-cell-pad-x` with the
+  which is how tables are normally placed, so the summary line landed **16px left of the column text**
+  with its baseline **on the border** — footer padding was `12px 0 0 0`. It is now `12px 16px 12px`,
+  matching the cells' inset, with the summary clear of the bottom edge. **It follows `--ds-table-cell-pad-x` with the
   cells**, so retuning that token moves the footer's inset along with the columns'.
 
 - **`ds-banner`'s body had no size of its own, so a 16px page rendered it LARGER than its own 14px
@@ -159,13 +159,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   when a body is actually projected — and the body takes `--font-size-s`, overridable through the new
   **`--ds-banner-body-font-size`**. Title and body both render at 14px in a 16px context, with 4px
   between them in `compact`; a title-only `compact` banner is unchanged, because the wrapper is
-  `:empty` and contributes nothing.
+  `:empty` and contributes nothing. A body inside a `compact` banner is a supported pairing — the
+  documentation line saying compact has none was never true, and nothing was ever hidden.
 
 - **A `compact` banner whose title was longer than its column overflowed the column and cut the text
   with nothing to show it had been cut.** `compact` is the one-line strip, so its title carries
   `white-space: nowrap` — but nothing made it DEGRADE: there was no `text-overflow`, and the host had
   no `min-width: 0`, so as a flex or grid ROW item it refused to shrink below its own min-content.
-  The title now ellipsises and the host can be squeezed to fit its column instead of overflowing it.
+  A 260px column held a **319px** banner with the title clipped mid-word; the title now ellipsises and
+  the host can be squeezed, fitting at 227px instead of overflowing.
   A non-compact banner is unaffected: its title still wraps rather than clipping, which is the
   difference between the two variants.
 
@@ -178,8 +180,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-sidenav-footer`'s account menu now uses `ds-menu-divider`, so the divider tokens reach it.** It
   hand-rolled a `div` with local styles instead, which meant `--ds-menu-divider-color` and
   `--ds-menu-divider-spacing` did nothing there — an override written against the documented tokens
-  silently skipped the one menu the DS ships itself. **The line also sat noticeably farther from its
-  neighbours than every other menu's divider**, because the hand-rolled rule added `--space-1` of its
+  silently skipped the one menu the DS ships itself. **The line also sat 6px from its neighbours
+  where every other menu puts it 2px away**, because the hand-rolled rule added `--space-1` of its
   own on top of the menu's gap. It now behaves like the component it should always have been: **the
   divider adds no space of its own** — 2px above and 2px below the line, exactly the gap between any
   two ordinary items, so the line takes one row's place instead of pushing the rows apart.
@@ -388,8 +390,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   belongs to the forms contract — signal forms reaches every control through it — not to the
   message API.
 - **A field's message line now carries a glyph for `error`, `warning` and `success` — and not for
-  `hint`.** Colour was the whole signal before, which fails WCAG 1.4.1 between warning and success in
-  the light theme, and four of six major design systems carry a per-state icon in
+  `hint`.** Colour was the whole signal before, which fails WCAG 1.4.1: in the light theme warning
+  (#8A7400) against success (#156822) is a hue apart and nothing else. Four of six major design
+  systems carry a per-state icon in
   the field. **`hint` deliberately stays bare** — it is the resting text rather than a state, and it
   is the majority of rows on any real form, so a glyph there is noise rather than signal.
   **Per state, independently, app-wide:**
@@ -414,9 +417,10 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   as nothing, like the empty default, and the four pipes have a demo on the docs page.
 
 - **If you EXTEND a DS component, eleven classes grew and six members changed type.** Against
-  0.10.1, internal bases included: `DsFieldBase` (`messageIcon` — the state glyph, declared once for
-  every field rather than per component), `DsControlValueAccessor` (`bridge`),
-  `FieldMessageComponent` (`config`, `iconResolved` — internal, so this reaches only a fork),
+  0.10.1, and the first three are internal so they reach only a fork: `DsFieldBase`
+  (`messageIcon` — the state glyph, declared once for every field rather than per component),
+  internal `DsControlValueAccessor` (`bridge`), internal `FieldMessageComponent` (`config`,
+  `iconResolved`),
   `AutocompleteComponent` and
   `MultiSelectComponent` (`chipsMode`, `showsEveryChip`), `MenuItemComponent` (`description`,
   `descriptionId`), `SearchComponent` (the CVA surface it now declares itself: `bridge`,
@@ -428,7 +432,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   collides just as a public one does, and a name on `DsFieldBase` reaches every field through it.
   **Six members kept their name and changed type**, which is the case that compiles for a caller
   and breaks an overrider: `maxVisibleChips` on both pickers (widened to
-  `number | 'fit' | 'all' | null`, default now `null`), `FieldMessageComponent.icon` (widened to
+  `number | 'fit' | 'all' | null`, default now `null`), internal `FieldMessageComponent.icon` (widened to
   `IconName | false | null`, so `false` can mean "no glyph" against a state that supplies one),
   `DsConfig.field` (its shape grew the glyph defaults), `SearchComponent.clear` (`protected` →
   public), `StatComponent.value` (widened to `string | number | null`) and
@@ -468,15 +472,15 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **The active `ds-sidenav-item` is a tinted wash with a coloured label, not a solid brand pill** — and
   the edge rail is an input rather than a token you blank out. The item filled with `--accent` and put
   `--text-on-primary` on its label, making the loudest element on the screen out of a state that only
-  says "you are here";
-  Material fills its navigation drawer's active item with `secondary-container` and labels it
+  says "you are here". Material fills its navigation drawer's active item with `secondary-container` and labels it
   `on-secondary-container`; Carbon uses `$background-selected` with a border and a weight bump.
   Neither fills with the brand accent. Ours is `--accent-subtitle` behind an `--accent-strong` label,
   and hover deepens toward the accent (`--accent-muted`) instead of lightening toward white — the old
   88%-toward-white mix was invisible on a wash. **The state still does not rest on colour alone:** the
   edge rail and the weight bump both stay — and **the rail is now `--accent-strong`, the active label's
-  own colour, instead of `--secondary`.** An orange bar across a monochrome-blue row fell under the
-  3:1 floor a non-text indicator needs on the light wash; the accent measures 6.16:1 light and
+  own colour, instead of `--secondary`.** An orange bar across a monochrome-blue row measured
+  **2.33:1** on the light wash, under the 3:1 floor a non-text indicator needs; the accent measures
+  6.16:1 light and
   5.28:1 dark. Carbon's indicator is the interactive colour and Material's IS the wash — neither
   introduces a second hue. Restore the old bar with `--ds-sidenav-item-rail: var(--secondary)`.
   Every `--ds-sidenav-item-*-active` token keeps its name, so an app that already retuned them keeps
@@ -569,9 +573,10 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   caret, and re-focus).
 
 - **`variant="tonal"` now reads as disabled in the dark theme, where it rested on desaturation alone.**
-  The disabled label was barely darker than the enabled one, so the only signal was a hue going grey —
-  and it still read clearly against its own fill, which reads as a live control. Tonal now takes the
-  same 40% label mix ghost, text and outline already use, toward `--surface-default`: the state gap
+  The disabled label was **1.11:1** from the enabled one and the fill **1.20:1**, so the only signal was
+  a hue going grey — and the label sat at **5.51:1** on its own fill, which reads as a live control.
+  Tonal now takes the same 40% label mix ghost, text and outline already use, toward
+  `--surface-default`: the state gap
   becomes **2.90:1** in dark and **3.39:1** in light, and the label keeps its hue instead of turning
   grey. **The mix moves toward the surface, not toward tonal's own fill**, even though the label sits
   on that fill: mixing into the fill instead would keep the gap too small to read. The fill itself
@@ -734,8 +739,10 @@ workaround written against a hook that only landed in this release.
 - **If you EXTEND a DS field component, read this before comparing member lists.** A diff of
   declared members against 0.10.0 says fourteen field components LOST eight members each — `hint`, `error`,
   `warning`, `errors`, `invalid`, `touched`, `reserveMessage` and `reserveMessageResolved`.
-  **Nothing was removed.** Those inputs were declared once per component and are now declared once in
-  total, on a new internal `DsFieldBase`, which every field reaches either directly or through
+  **Nothing was removed.** The duplication had drifted — `ds-date-picker` had been reading a different
+  `invalid` source, and now resolves it like every other field. Those inputs were declared once per
+  component and are now declared once in total, on a new internal `DsFieldBase`, which every field
+  reaches either directly or through the internal
   `DsControlValueAccessor` / `DsBooleanControlValueAccessor`. All fourteen still carry all eight by
   inheritance, so a template binding, a TS read and an existing `override` all behave exactly as
   before. A member that moves to a base class is easy to misread as removed; it is not.
@@ -821,7 +828,7 @@ workaround written against a hook that only landed in this release.
   surface knows that direction and a constant does not — which is the whole reason the mix target is
   `--surface-default` rather than a number.
   **The trade:** the disabled label is fainter against its own ground — **2.00:1** light, **1.99:1**
-  dark. Disabled text is exempt from WCAG 1.4.3 and 1.4.11 and Material ships its equivalent at
+  dark, where the old recipe gave 2.69 / 6.45. Disabled text is exempt from WCAG 1.4.3 and 1.4.11 and Material ships its equivalent at
   1.93:1, so this is inside practice. Chroma rises with the mix (0.036 → 0.099 light), so the disabled
   label stays tinted rather than going grey.
   **`solid` and `tonal` are unchanged**, deliberately: a white label mixed into a white surface does
@@ -951,8 +958,9 @@ None of this is required — skipping it leaves working code that is merely redu
   trigger, empty or not — widths are cached per selection, and a geometry guard skips the re-measure
   when neither width nor count moved.
 
-- **`--ds-dropdown-panel-radius` — a hook for the dropdown corner.** It is panel-level rather than
-  per-component on purpose: retuning one picker's corner is not a thing to
+- **`--ds-dropdown-panel-radius` — the lever 0.9.0's notes promised and never shipped.** That release
+  said an 8px select panel could be restored with `--ds-select-panel-radius`; no such token existed.
+  This is the working one, and it is panel-level rather than per-component on purpose: retuning one picker's corner is not a thing to
   encourage, while `--ds-radius-panel` moves modal, popover and date picker too. Defaults to that
   role, so an untouched theme is unchanged, and it is forwarded onto the portaled pane — scope it with
   a selector (`ds-select { --ds-dropdown-panel-radius: 8px }`) and only that panel moves.
@@ -1088,7 +1096,8 @@ None of this is required — skipping it leaves working code that is merely redu
   `--ds-elevation-floating` is a different token for toasts and is untouched.
 
 - **`ds-table`'s `sortKey` and `sortDir` are an `input` + `output` pair instead of a `model`** — the
-  mechanism behind the indicator fix above, because a `model` cannot tell a host's write apart from the
+  mechanism behind the sort-indicator fix under **Fixed** below, because a `model` cannot tell a host's
+  write apart from the
   table's own. **Templates are unaffected:** `[(sortKey)]` still works (`sortKeyChange` and
   `sortDirChange` are emitted), one-way `[sortKey]` with `(sortChange)` still works, and a static
   `sortKey="project"` still works. What breaks is reaching into the component in TypeScript:
@@ -1570,6 +1579,18 @@ None of this is required — skipping it leaves working code that is merely redu
   0, the rest at -1), not a tab position you set per day. No behaviour changed — only what the
   reference tells you.
 
+### Changed
+
+- **`migrations/<version>.json` now carries the delete-list, so an upgrade tool can act on it.**
+  Each version's manifest gains `DELETE-LIST: if you have <X> -> <why it can go>` entries — 21 of
+  them for 0.9.0 — naming the workarounds that release made unnecessary, from the
+  `.button.button.button` triple-class to hand-binding `[value]`/`(valueChange)` on every field of a
+  signal form. They existed for 0.9.0 in prose only, which no tool reads — so an upgrade that
+  crossed 0.9.0 before this release applied none of them. **Nothing here is required**: skipping it leaves working code that is merely
+  redundant. The same table is in this file under 0.9.0 if you would rather read than run.
+  `migrations/unreleased/README.md` no longer ships from the package — its content now lives in the
+  manifest.
+
 ### Fixed
 
 - **The changelog page on the docs site was rendering with browser defaults.** Its markdown styles
@@ -1577,17 +1598,6 @@ None of this is required — skipping it leaves working code that is merely redu
   nodes the markdown renderer produces, so every rule in that block matched nothing: border-top 0px
   and margin-top 0px on the version headings, and `h3` white instead of `--text-secondary`.
   Nothing in the package.
-
-### Changed
-
-- **`migrations/<version>.json` now carries the delete-list, so an upgrade tool can act on it.**
-  Each version's manifest gains `DELETE-LIST: if you have <X> -> <why it can go>` entries — 21 of
-  them for 0.9.0 — naming the workarounds that release made unnecessary, from the
-  `.button.button.button` triple-class to hand-binding `[value]`/`(valueChange)` on every field of a
-  signal form. **Nothing here is required**: skipping it leaves working code that is merely
-  redundant. The same table is in this file under 0.9.0 if you would rather read than run.
-  `migrations/unreleased/README.md` no longer ships from the package — its content now lives in the
-  manifest.
 
 ## 0.9.0 — 2026-08-10
 
@@ -2648,7 +2658,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   Off by default.
 
 - **`ds-search` gains a `size` input (`sm`/`md`/`lg`, default `md`).** Search previously ignored `size`
-  and its size CSS never matched, so it stood visibly taller than sibling controls in dense toolbars.
+  and its size CSS never matched, so it sat 4px taller than sibling controls in dense toolbars.
   `sm` is now 32px (matching `ds-input`/`ds-button` at `sm`); the default `md` keeps the prior 36px
   search-row height, so existing consumers are unaffected.
 
@@ -2730,7 +2740,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `-pad-y` / `-content-max-width` / `-height` → `--ds-app-layout-*`). Behaviour is unchanged — rename the
   references (see `migrations/`). A consumer still on 0.6.3's `ds-app-shell` must migrate.
 
-- **`TableComponent` gained four more members (`total`, `sortingOrder`,
+- **Retroactive note: `TableComponent` gained four more members (`total`, `sortingOrder`,
   `animateHeight`, `scrollToTopOnPageChange`), and most other component classes changed too**, so a
   consumer that extends a DS class (unsupported — `design-system.md` § Components) can collide on a
   name here as well, exactly as in 0.6.3. Same resolution: rename the subclass's own member, or add
@@ -2910,7 +2920,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **`ds-toast` now slides up from below into place as it enters** (previously it dropped in from
   slightly above). The exit animation is unchanged — the toast still slides up as it fades out.
   Visual/motion only; no API change.
-- **The new `ds-table` column API grew `TableComponent`'s member surface by ~76 names, which breaks
+- **Retroactive note: the new `ds-table` column API grew `TableComponent`'s member surface by ~76 names, which breaks
   a consumer that extends the class.** Everything above is additive for anyone using the
   `<ds-table>` element. Subclassing a DS component is unsupported (`design-system.md` §
   Components), but where it happens the new names collide — TS4114 demands an `override` modifier,

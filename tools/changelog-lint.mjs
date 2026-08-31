@@ -25,11 +25,11 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-// Kept in step with tools/build-schematics.mjs, which is what actually copies
-// these into dist/ds. `AUTHORING.md` and `unreleased.json` are excluded there and
-// so are excluded here; `unreleased.json` is linted anyway because it BECOMES a
-// published manifest at the next release, and finding a leak after publishing is
-// finding it too late.
+// Kept in step with tools/build-schematics.mjs, which copies the changelog, the two
+// digests and `migrations/` into dist/ds; `README.md` and `LICENSE` arrive via ng-packagr
+// instead, because the `ds` project's root is the repo root. `AUTHORING.md` is excluded
+// from the tarball and from here. `unreleased.json` is excluded from the tarball but
+// linted anyway, because it BECOMES a published manifest at the next release and finding
 function publishedFiles() {
   const files = [
     'CHANGELOG.md',
@@ -110,6 +110,11 @@ const CLIENTS = [
   'ai-sdlc',
   'Kit Movement',
   'Festicket',
+  // The brand this sweep removed from `themes/README.md` by hand. `loose()` reaches
+  // manage-my, manage_my and "manage my"; `brand-mm` needs its own entry because C002
+  // wants digits after MM.
+  'manage my',
+  'brand-mm',
   // Descriptive stand-ins are the same disclosure with the name filed off, and they
   // are what survived the first sweep: "the field app", "the ports".
   'the field app',
@@ -118,8 +123,9 @@ const CLIENTS = [
   'the portals',
 ];
 
-// Paths that exist only in this repo. The published tree has `styles/`, `themes/`
-// and `migrations/` at its root and nothing else, so those three are NOT here.
+// Paths that exist only in this repo. The published tree has `styles/`, `themes/`,
+// `migrations/` and `schematics/` at its root, plus the four root documents, so none of
+// those are here.
 const INTERNAL_PATHS = [
   'src/lib/',
   'src/public-api',
@@ -137,6 +143,7 @@ const INTERNAL_PATHS = [
 const INSIDER_PROSE = [
   'dogfooding',
   'the deck',
+  'the decks',
   'priority board',
   'release gate',
   'our backlog',
@@ -244,14 +251,34 @@ function privateSymbols() {
 
 const { private: PRIVATE_SYMBOLS, publicCount } = privateSymbols();
 
+// Every consumer has `npm run lint` and `npm run build`; only the repo-specific names are
+// unreachable for the reader. Flagging the generic ones taught an author that this gate's
+// errors are noise, which is how a real instruction gets deleted next time.
+const GENERIC_SCRIPTS = new Set([
+  'ng',
+  'start',
+  'dev',
+  'watch',
+  'build',
+  'test',
+  'lint',
+  'format',
+  'serve',
+  'clean',
+]);
 const ourScripts = (() => {
   const json = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
-  return Object.keys(json.scripts ?? {});
+  return Object.keys(json.scripts ?? {}).filter(
+    (name) => !GENERIC_SCRIPTS.has(name.split(':')[0]),
+  );
 })();
 
 const requested = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 if (process.argv.includes('--list')) {
-  for (const file of publishedFiles()) console.log(file);
+  // Both groups: the shipped sources ARE published text, and listing only the documents
+  // made `themes/README.md` look unchecked to anyone auditing coverage this way.
+  for (const file of publishedFiles()) console.log(`document  ${file}`);
+  for (const file of shippedSources()) console.log(`source    ${file}`);
   process.exit(0);
 }
 // An absolute argument is honoured so a staged copy of one release block can be
@@ -268,6 +295,28 @@ const targets = (
   return { full, label: shown, isSource: sourceSet.has(shown) };
 });
 
+// Both resolvers degrade quietly: `publishedFiles()` filters on existsSync and
+// `shippedSources()` reads `assets ?? []` from ng-package.json. Rename either and the sweep
+// shrinks toward nothing while still reporting OK, so the count is asserted rather than
+// trusted. The floor is well under the current 304 — it catches a collapse, not drift.
+if (!requested.length) {
+  const REQUIRED = [
+    'CHANGELOG.md',
+    'README.md',
+    'design-system.md',
+    'components.md',
+  ];
+  const missing = REQUIRED.filter((file) => !existsSync(join(ROOT, file)));
+  if (missing.length || targets.length < 100) {
+    console.error(
+      `changelog-lint: resolved only ${targets.length} target(s)` +
+        (missing.length ? ` and could not find ${missing.join(', ')}` : '') +
+        ' — publishedFiles()/shippedSources() has drifted from what actually ships.',
+    );
+    process.exit(1);
+  }
+}
+
 const errors = [];
 let current = { isSource: false };
 const report = (file, line, code, message) => {
@@ -283,44 +332,79 @@ for (const { full, label: file, isSource } of targets) {
     report(file, 0, 'C000', 'not found');
     continue;
   }
-  // Split on either ending: these files are committed CRLF, and a trailing \r left on
-  // every line defeats any pattern that spans a line break — which is most of the
-  // multi-word ones below.
+  // Split on either ending: the tree mixes them, and a trailing CR left on every line
+  // defeats any pattern that spans a line break — which is most of the multi-word ones
+  // below. The historic miss (`npm run` + a break + `class-surface`) was the LINE-BY-LINE
+  // scan, not a stray CR; the flattening below is what fixes it.
   const lines = readFileSync(full, 'utf8').split(/\r?\n/);
 
   // A manifest's locators are exempt from the private-symbol rule only: a consumer's finder
-  // greps their source for every string in `old` / `searchHints` / `detect`, so being
+  // greps their source for every string in `old` / `searchHints` / `detect` / `find`, so being
   // unimportable is beside the point. Every other rule still applies inside them.
-  // Matched by SHAPE, not by path, so the selftest can prove the exemption without writing
-  // a fixture into the published `migrations/` directory.
-  const locatorLines = new Set();
+  //
+  // Keyed on POSITION, not on the string's value: pooling the values exempted the same string
+  // wherever else it appeared — `informational` carrying a bare `DsMessageBase` was exempt too,
+  // and `informational` has no `find` for a finder to run. Positions also survive a manifest
+  // written compactly by hand, where a whole item sits on one line.
+  const locatorSpans = [];
   if (file.endsWith('.json')) {
-    const collect = (value, inLocator) => {
-      if (typeof value === 'string') {
-        if (inLocator) locatorLines.add(value);
-      } else if (Array.isArray(value)) {
-        for (const one of value) collect(one, inLocator);
-      } else if (value && typeof value === 'object') {
-        for (const [key, one] of Object.entries(value)) {
-          collect(one, ['old', 'searchHints', 'detect', 'find'].includes(key));
-        }
+    const LOCATOR_KEYS = new Set(['old', 'searchHints', 'detect', 'find']);
+    const raw = lines.join('\n');
+    let at = 0;
+    const readString = (from) => {
+      let index = from + 1;
+      while (index < raw.length) {
+        if (raw[index] === '\\') index += 2;
+        else if (raw[index] === '"') return index + 1;
+        else index += 1;
       }
+
+      return raw.length;
     };
-    try {
-      collect(JSON.parse(lines.join('\n')), false);
-    } catch {
-      // a malformed manifest is migration-lint's error to raise, not this one's
+    while (at < raw.length) {
+      if (raw[at] !== '"') {
+        at += 1;
+        continue;
+      }
+      const stringEnd = readString(at);
+      let after = stringEnd;
+      while (after < raw.length && /\s/.test(raw[after])) after += 1;
+      if (raw[after] !== ':') {
+        at = stringEnd;
+        continue;
+      }
+      const key = raw.slice(at + 1, stringEnd - 1);
+      let valueAt = after + 1;
+      while (valueAt < raw.length && /\s/.test(raw[valueAt])) valueAt += 1;
+      let valueEnd = valueAt;
+      if (raw[valueAt] === '"') valueEnd = readString(valueAt);
+      else if (raw[valueAt] === '[') {
+        let depth = 0;
+        while (valueEnd < raw.length) {
+          if (raw[valueEnd] === '"') {
+            valueEnd = readString(valueEnd);
+            continue;
+          }
+          if (raw[valueEnd] === '[') depth += 1;
+          if (raw[valueEnd] === ']') {
+            depth -= 1;
+            valueEnd += 1;
+            if (!depth) break;
+            continue;
+          }
+          valueEnd += 1;
+        }
+      } else {
+        while (valueEnd < raw.length && !',}]'.includes(raw[valueEnd]))
+          valueEnd += 1;
+      }
+      if (LOCATOR_KEYS.has(key)) locatorSpans.push([valueAt, valueEnd]);
+      // Skip a string value whole, but DESCEND into an array or object: jumping to
+      // `valueEnd` on `"items": [ … ]` skipped every nested key in the file, which is
+      // why this found four keys and no locators at all.
+      at = raw[valueAt] === '"' ? valueEnd : valueAt + 1;
     }
   }
-  const onLocatorLine = (index) => {
-    const text = (lines[index - 1] ?? '').trim().replace(/,$/, '');
-    const bare = text.replace(/^"(?:old|searchHints|detect|find)":\s*/, '');
-    try {
-      return locatorLines.has(JSON.parse(bare));
-    } catch {
-      return false;
-    }
-  };
 
   // These files wrap at ~100 columns, so a two-word phrase splits across lines and a
   // line-by-line scan walks straight past it — `npm run\n  class-surface` sat in the
@@ -329,17 +413,33 @@ for (const { full, label: file, isSource } of targets) {
   // against that instead.
   let flat = '';
   const lineAt = [];
-  const flatStart = [];
+  // The raw offset behind every flat character, so a match can be tested against the
+  // locator spans, which are measured on the unflattened text.
+  const rawAt = [];
+  let rawOffset = 0;
   lines.forEach((line, index) => {
     if (index) {
       flat += ' ';
       lineAt.push(index + 1);
+      rawAt.push(rawOffset);
+      rawOffset += 1;
     }
-    flatStart[index] = flat.length;
-    const trimmed = index ? line.replace(/^\s+/, '') : line;
+    const lead = index ? line.length - line.replace(/^\s+/, '').length : 0;
+    const trimmed = index ? line.slice(lead) : line;
+    rawOffset += lead;
     flat += trimmed;
-    for (let i = 0; i < trimmed.length; i++) lineAt.push(index + 1);
+    for (let i = 0; i < trimmed.length; i++) {
+      lineAt.push(index + 1);
+      rawAt.push(rawOffset + i);
+    }
+    rawOffset += trimmed.length;
   });
+
+  const insideLocator = (flatIndex) => {
+    const offset = rawAt[flatIndex];
+
+    return locatorSpans.some(([from, to]) => offset >= from && offset < to);
+  };
 
   const scanFlat = (pattern, code, describe, accept) => {
     for (const match of flat.matchAll(pattern)) {
@@ -388,6 +488,19 @@ for (const { full, label: file, isSource } of targets) {
     );
   }
 
+  // A name list only catches the names on it, and CONTRIBUTING.md states the rule for
+  // any person. These two shapes are how a name actually reaches an entry.
+  scanFlat(
+    /\b(?:Found|Reported|Raised|Spotted|Noticed|Flagged|Requested)\s+by\s+[A-Z][a-z]{2,}\b/g,
+    'C003',
+    (m) => `credits a person ("${m[0]}") — write it without the name`,
+  );
+  scanFlat(
+    /\bAsk\s+[A-Z][a-z]{2,}\s+[A-Z][a-z]{2,}\b/g,
+    'C003',
+    (m) => `names a person ("${m[0]}") the reader cannot find`,
+  );
+
   for (const path of INTERNAL_PATHS) {
     const bare = path.replace(/\/$/, '');
     const pattern = bare
@@ -435,11 +548,20 @@ for (const { full, label: file, isSource } of targets) {
   // The predicate demands at least one a-f, or every seven-digit number in the prose
   // reads as a commit.
   scanFlat(
-    /\b[0-9a-f]{7,40}\b/gi,
+    // `(?<!#)` so an eight-digit #RRGGBBAA colour is not reported as a commit — the theme
+    // partials are swept by this rule and are full of hex.
+    /(?<!#)\b[0-9a-f]{7,40}\b/gi,
     'C008',
     (m) =>
       `cites the commit ${m[0]} — the reader has no repository to look it up in`,
     (m) => /[a-f]/i.test(m[0]) && /^[0-9a-f]+$/i.test(m[0]),
+  );
+
+  scanFlat(
+    /\bHEAD(?:~\d+|\^+)?\b/g,
+    'C011',
+    (m) =>
+      `cites "${m[0]}" — the reader has no repository to resolve it against`,
   );
 
   for (const phrase of INSIDER_PROSE) {
@@ -457,12 +579,14 @@ for (const { full, label: file, isSource } of targets) {
       'C010',
       () =>
         `names \`${name}\`, which ${where} exports but the package root does not — say it is internal, or describe it without the name`,
-      // naming an internal base is fine where the text says so: a subclasser meets these
-      // names in their own compiler errors
+      // Naming an internal base is fine where the text says so — a subclasser meets these
+      // names in their own compiler errors. The window is TIGHT on purpose: at ±400 one
+      // unrelated "internal" eight lines away disarmed the rule, and the changelog has 27
+      // of them, so about a tenth of the file had this check silently off.
       (m) =>
-        !onLocatorLine(lineAt[m.index] ?? 0) &&
-        !/\binternal\b|\bnot exported\b|\bprivate\b/i.test(
-          flat.slice(Math.max(0, m.index - 400), m.index + 400),
+        !insideLocator(m.index) &&
+        !/\binternal\b|\bnot exported\b|\bprivate\b|\bunexported\b/i.test(
+          flat.slice(Math.max(0, m.index - 60), m.index + name.length + 60),
         ),
     );
   }

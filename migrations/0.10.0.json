@@ -34,10 +34,10 @@
       "kind": "behavior",
       "old": "extends AutocompleteComponent",
       "new": null,
-      "action": "Build after upgrading: the compiler raises most of these collisions, but NOT the ones named in `pitfall` below — check those by hand, because they compile clean. Then per member: rename your own, or add `override` where the base semantics genuinely match. For the lost ones, drop the override and use the public API — `runExport()`, `exporting()`, `exportStatus()`, `status`.",
+      "action": "Build after upgrading — the compiler enumerates every collision, including the three shapes in `pitfall` below that a member-by-member diff does not show. Then per member: rename your own, or add `override` where the base semantics genuinely match. For the lost ones, drop the override and use the public API — `runExport()`, `exporting()`, `exportStatus()`, `status`.",
       "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md § Components); template users need nothing.",
       "pitfall": "Three shapes a member-by-member diff will not show you. (1) `TableComponent.exporting` and `.exportStatus` keep their NAMES but are public readonly signals now instead of the protected writable ones a subclass could set — assigning to them stops compiling and nothing in the diff says so. (2) SearchComponent also declares the plain private fields `pending` and `pushed`; a member diff matches `readonly` fields and methods, and a redeclared private still fails with TS2415. (3) Four classes LOST members — ModalComponent `error` and `onBackdrop`, ModalCardComponent `error`, BottomSheetComponent `stop`, InputComponent `floating` — so an `override` there now overrides nothing.",
-      "note": "Thirty classes gained members, including `controlState` on the nine bordered fields.",
+      "note": "Thirty classes gained members, including `controlState` on the nine bordered fields; this release's CHANGELOG block lists them by class.",
       "searchHints": [
         "extends ButtonComponent",
         "extends TableComponent",
@@ -822,7 +822,7 @@
         "[stickyScrollbar]=\"true\"",
         "size=\"sm\""
       ],
-      "why": "An attribute repeated identically on every element.",
+      "why": "An attribute repeated identically on every element - `[stickyScrollbar]=\"true\"` on every table, `size=\"sm\"` on every button.",
       "replaceWith": "`provideDsConfig` with the matching section (`table`, `control.size`, …)"
     },
     {

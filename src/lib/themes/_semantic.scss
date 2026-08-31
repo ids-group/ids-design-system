@@ -83,7 +83,7 @@
   --icon-on-primary:     white;
 
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
+     (themes/_base-palette.scss) ships the concrete ramps + HSL channels. This
      is the one place that maps semantic roles onto a concrete palette. A brand
      re-skins by overriding either the palette (--blue-*, --red-*) or these
      role tokens directly.

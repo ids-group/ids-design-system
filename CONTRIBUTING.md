@@ -96,7 +96,7 @@ judgment half is yours.
 - **A person's name.** "Found by X testing on a phone" → "Found while testing on a phone".
 - **A path outside the published tree.** `src/lib/…`, `tools/…`, `presentations/…`,
   `docs/todo.md`, `.claude/…`, `migrations/AUTHORING.md`. The published tree holds
-  `styles/`, `themes/` and `migrations/` and nothing else.
+  `styles/`, `themes/`, `migrations/` and `schematics/`, plus the four root documents.
 - **One of our npm scripts.** `npm run class-surface` does not exist for the reader —
   state the result, or an instruction they can follow, instead.
 - **A symbol the package root does not export.** If it is not in `src/public-api.ts`, the

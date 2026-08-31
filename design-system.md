@@ -3,7 +3,8 @@
 > **This file is the HOW.** Which spacing goes between what, which type role a piece of
 > text takes, where a value belongs and where a literal is a bug. For the WHAT — the
 > inventory of components, their inputs and their tokens — see `components.md`, and
-> prefer the documentation site's Component API and token reference, which are generated from source
+> prefer the Component API and token reference on the documentation site
+> (https://ids-ds.proto.ids-group.co.uk/), which are generated from source
 > on every build and cannot go stale.
 >
 > **Audience: whoever composes a screen, human or agent.** Knowing the 639 tokens is not
@@ -139,10 +140,9 @@ the next reader of your CSS.
 Measured by which property each one actually lands on, across every component that uses one:
 
 - **`--<status>`** — the saturated one: `border-color`, the fill of a solid button, and the
-  `color` of a MARKER — a required asterisk, an icon badge's glyph. Every one of the eight
-  `color: var(--error)` in this library lands only on markers of that kind — a required asterisk, an
-  icon sitting on an `--error-subtitle` tint. **That
-  glyph-on-tint pair is the pattern to copy**, and the reason not to put prose in this member:
+  `color` of a MARKER — a required asterisk, an icon badge's glyph. Every `color: var(--error)`
+  declaration in this library lands on a marker of that kind: an asterisk, or a glyph sitting on an
+  `--error-subtitle` tint. **That glyph-on-tint pair is the pattern to copy**, and the reason not to put prose in this member:
   it is contrast-checked as a large glyph, not as text.
 - **`--<status>-text`** — `color`, on a light surface. This is the contrast-safe member, and the
   one you want for a message.
@@ -170,7 +170,7 @@ pair the colour with an icon or text, and a new status surface should too.
 
 ## 5. Motion
 
-### Four durations, and one of them carries almost everything
+### Four durations, and 109 of the 139 uses are one of them
 
 | Token | Value | What it is for | Uses |
 | --- | --- | --- | --- |
@@ -219,7 +219,7 @@ anything with an exit.
 
 ### Labels are sentence case
 
-The
+Most multi-word labels in this system already are, and the
 apparent exceptions are not exceptions — they are acronyms and notation the case rule does not
 touch (`Site URL`, `Project ID`, `Date (en-US, Sunday-first)`). So: capitalise the first word
 and whatever is a proper noun or an acronym, and nothing else. `Order history`, not

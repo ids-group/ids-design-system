@@ -42,6 +42,12 @@ One file per released version — `migrations/<version>.json` — mirroring that
   written, so a file cannot name its own future: there is no `supersededBy`, and a note that says
   "in the next release" is a defect. The reversal is described in full by the later
   item, which is the one an upgrade reaches second.
+- **`action`** — the imperative: what to change, in the order to change it. The one field an
+  upgrade executes.
+- **`appliesWhen`** — the boundary: which components, which bindings, and what is explicitly NOT
+  affected, so an item can be ruled out without searching.
+- **`pitfall`** — the way to apply the item mechanically correctly and still ship a broken app.
+  Read it before deciding a clean build means done.
 - **`deleteList`** — the structured form of "what you can now delete" (see below).
 
 **Why:** an upgrade tool can read the plan out of the prose changelog, but it re-derives it on
@@ -86,8 +92,8 @@ behaviour back. **Every published manifest meets this contract**, back to the ea
 legacy tier and no warning level: `surface`, `detect`, `verify` and `restore` are present wherever
 they apply.
 
-The prose CHANGELOG is the human copy of a release; the manifest is its machine mirror of the same
-release.
+The prose CHANGELOG is the human copy of a release; the manifest is its machine mirror of the
+same release. Where the two disagree, the CHANGELOG is the one to trust.
 
 **Shipping:** the manifests are in
 `node_modules/@ids-group-ltd/ids-design-system/migrations/`.

@@ -108,7 +108,8 @@
      hue/saturation/lightness become configurable.
      ============================================================ */
 
-  /* --shadow-tint-h/s/l live in themes/light/_palette.scss — palette-level
+  /* --shadow-tint-h/s live in themes/_base-palette.scss and -l in each theme's
+     _palette.scss — palette-level
      so dark palettes can override --shadow-tint-l → ~95% for soft light glows. */
 
   --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),

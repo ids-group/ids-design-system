@@ -101,9 +101,9 @@ function compareSortValues(
   }
 
   // `sensitivity: 'base'` so "Ångström" sorts next to "Angstrom" and casing does
-  // not split a column into two runs. Taken from a consumer's own comparator,
-  // which is also where BLANK_CELL above came from — without it a
-  // column whose `sortValue` returns strings reorders on migration.
+  // not split a column into two runs. Taken from a consumer's own comparator, which is
+  // also where BLANK_CELL above came from — without it a column whose `sortValue` returns
+  // strings reorders when an app moves off its own comparator onto this one.
   return firstText.localeCompare(secondText, undefined, {
     numeric: true,
     sensitivity: 'base',

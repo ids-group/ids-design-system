@@ -6,7 +6,8 @@
 > which type role where, how a page is composed) see `design-system.md`, which carries
 > the rules this catalogue deliberately does not.
 >
-> **Where it overlaps with generated output:** the documentation site carries a generated Component API table and
+> **Where it overlaps with generated output:** the documentation site
+> (https://ids-ds.proto.ids-group.co.uk/) carries a generated Component API table and
 > a token reference from source on every build, and those cannot go stale. Where this file
 > and the generated tables disagree, the generated ones are right — prefer them for exact inputs and token names, and
 > use this catalogue for orientation. Each entry shows the selector, the key inputs/outputs/slots, and the public CSS custom properties that consumers can override.
@@ -45,7 +46,7 @@ Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` t
 
 **Typography:**
 - Families: `--font-sans`, `--font-mono`, `--font-display`, `--font-heading`
-- Weights: `--font-weight-regular` 400, `--font-weight-medium` 500, `--font-weight-semibold` 600, `--font-weight-bold` 700, `--font-weight-extrabold` 800
+- Weights: `--font-weight-regular` 400, `--font-weight-medium` 500, `--font-weight-semibold` 600, `--font-weight-bold` 700, `--font-weight-extrabold` 800 (a brand overlay may step this down to 700)
 - Sizes: `--font-size-display` 64, `--font-size-h1` 48, `--font-size-h2` 36, `--font-size-h3` 28, `--font-size-h4` 22, `--font-size-h5` 18, `--font-size-h5-strong` 20, `--font-size-l` 18, `--font-size-m` 16, `--font-size-s` 14, `--font-size-xs` 12, `--font-size-2xs` 11, `--font-size-3xs` 10, `--font-size-4xs` 9, `--font-size-mono` 13
 - Line heights: `--line-height-tight` 1.1, `--line-height-snug` 1.25, `--line-height-base` 1.4, `--line-height-loose` 1.6, `--line-height-flat` 1
 - Letter spacing: `--letter-spacing-tight`, `--letter-spacing-snug`, `--letter-spacing-normal`, `--letter-spacing-wide`, `--letter-spacing-wider`
@@ -88,7 +89,7 @@ Responsive 4-tier page grid loaded via `@use 'styles/ds'` (or directly via `@use
 - Snap to columns, not pixels. Canonical two-column splits: 8+4, 6+6, 9+3. Never 7+5.
 - Sidenav lives OUTSIDE the grid. Reserve its rail (collapsed 64px / open 240px via `--sidenav-w` / `--sidenav-w-collapsed`), then start `.page-grid` in the remaining width.
 - Prose caps at 720px via `--col-cap-text` regardless of grid width.
-- 8+4 is canonical for record-detail pages (main + meta sidebar); 9+3 suits a narrow picker or filter rail.
+- 8+4 is canonical for record-detail pages (main + meta sidebar); 9+3 is reserved for a narrow picker or filter rail.
 
 **Markup example:**
 
@@ -152,7 +153,7 @@ Output: `(pressed): MouseEvent` — only fires when not disabled and not loading
 Content slots: default (label / leading or trailing icon), plus `[dsButtonSubtext]` for a projected second line. For icon-only actions use `<ds-icon-button>`.
 **Saying WHY a button is refused, and the two kinds of refusal.** A greyed control that does not say why is a dead end, and until 0.10.4 the only way to explain one was a tooltip — mouse-only. Which input to reach for is decided by whether the user can lift the refusal on this screen:
 - **Standing** (no permission, no integration — nothing here will change it): `disabledReason` beside `disabled`. The reason renders as a second line INSIDE the button, and setting it flips how the button is disabled — `aria-disabled="true"` instead of the native attribute, because a natively disabled button never takes focus and its description would never be announced (measured; Chrome's a11y tree reports name `"Approve invoice"`, description `"Needs the Finance role"`, state disabled). The click is swallowed in the handler instead, so `(pressed)` still never fires. Leave `disabledReason` unset and NOTHING changes: the native attribute stays, and so does every existing layout. Length is deliberately uncapped — the text wraps and the button grows.
-- **Temporary** (the form is not filled in yet): do NOT disable the button at all. Leave it live, judge validity in the submit handler, and carry the text UNDER the button with `hint` / `warning` / `error` — the same three inputs the fields take, resolved and rendered exactly as a field's own message row is, with the same `messageIcon` and `reserveMessage` knobs and the same `DS_CONFIG.field.*` fallbacks. The button shares the fields' implementation rather than copying it, so the behaviour cannot drift apart. What it does NOT take is `errors` / `invalid` / `touched`: a button has no validation state of its own.
+- **Temporary** (the form is not filled in yet): do NOT disable the button at all. Leave it live, judge validity in the submit handler, and carry the text UNDER the button with `hint` / `warning` / `error` — the same three inputs the fields take, resolved and rendered by the same `ds-field-message` row the fields use, with the same `messageIcon` and `reserveMessage` knobs and the same `DS_CONFIG.field.*` fallbacks. Those inputs live on an internal shared base class that `ButtonComponent` and every field extend, so the behaviour cannot drift apart. What it does NOT take is `errors` / `invalid` / `touched`: a button has no validation state of its own.
 Layout: a message-bearing button becomes a column (host class `with-message`), and because the host shrinks to fit, a message longer than the label widens the pair — button included, exactly as a field's control spans its own message. Without a message the host keeps the `inline-flex` box every existing layout was built against.
 Tokens: `--ds-button-bg-color`, `--ds-button-bg-color-hover`, `--ds-button-bg-color-active`, `--ds-button-bg-color-disabled`, `--ds-button-label-color`, `--ds-button-label-color-disabled`, `--ds-button-border`, `--ds-button-radius`, `--ds-button-focus-shadow`, `--ds-button-pressed-shadow`, `--ds-button-shadow`, `--ds-button-shadow-hover`. The last two are the REST and hover shadow, both `none` by default — before them the only way to give a button a resting shadow was a deep selector into its inner `<button>`. `-shadow-hover` falls back to `-shadow`, so setting the resting one alone keeps the button steady under the pointer; focus and pressed keep their own hooks and still win while those states are on. For `variant="solid"`, `-bg-color-hover` / `-bg-color-active` / `-pressed-shadow` default to a `color-mix()` derivation of the resolved fill (88 % / 76 % + black — the theme's hover/pressed recipe), so overriding the fill alone retints the whole state set; tonal, outline, ghost and text keep explicit ramp defaults, so a full retint there means setting the state tokens too. 
 

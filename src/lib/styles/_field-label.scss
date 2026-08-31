@@ -1,7 +1,9 @@
 // One label contract for the field family.
 //
-// One class (`.label`), one token set, resolved here, so a form mixing a select
-// with an input renders its labels at one size and colour.
+// One class (`.label`), one token set, resolved here, so a form mixing a select with an
+// input renders its labels at one size and colour. Five components used to hard-code it,
+// and out-ranking a shimmed component rule from an app needed doubled selectors
+// (`.field.field .label.label`).
 //
 // A MIXIN, not a global rule: a global `.label` would match consumer markup that
 // happens to use the same class name. Each field pays ~6 declarations of its own CSS.
