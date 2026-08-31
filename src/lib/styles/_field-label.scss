@@ -1,8 +1,8 @@
 // One label contract for the field family.
 //
 // One class (`.label`), one token set, resolved here, so a form mixing a select with an
-// input renders its labels at one size and colour. Five components used to hard-code it,
-// and out-ranking a shimmed component rule from an app needed doubled selectors
+// input renders its labels at one size and colour. It lives in one place because
+// out-ranking a shimmed component rule from an app needs doubled selectors
 // (`.field.field .label.label`).
 //
 // A MIXIN, not a global rule: a global `.label` would match consumer markup that
@@ -21,9 +21,6 @@
 
   display: flex;
   align-items: center;
-
-  // --field-gap-req is the label↔asterisk token; the old rules all spelled its
-  // value out as var(--space-1) instead of naming it.
   gap: var(--field-gap-req);
   font: var(--_field-label-weight) var(--_field-label-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_field-label-color);

@@ -207,7 +207,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Nine defects in six already-published manifests, and a repo upgraded before today may be holding
   the result.** The prose split above rewrote every item; this is the separate, smaller set where the
-  DATA was wrong — found by auditing each manifest against the code of its own release. It matters
+  DATA was wrong. It matters
   because these files are executed: your upgrade tooling read them, acted, and reported done.
   **Three changes had no item at all.** `0.2.0` never filed the `--surface-subtle` →
   `--surface-subtitle` rename, so an override still naming the old token resolves to nothing and says
@@ -3240,7 +3240,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `ComboboxOptionGroup` / `ComboboxSize` / `ComboboxWidth` → `AutocompleteOption` /
   `AutocompleteOptionGroup` / `AutocompleteSize` / `AutocompleteWidth`; public tokens
   `--ds-combobox-focus-shadow` / `--ds-combobox-maxw` / `--ds-combobox-input-minw` →
-  `--ds-autocomplete-*`; docs anchor `#combobox` → `#autocomplete`. Behavior unchanged.
+  `--ds-autocomplete-*`. Behavior unchanged.
 - **`ds-dropdown` removed — use `ds-select`.** The two were near-identical select-only single
   pickers (same trigger, same panel, same keyboard model); `ds-select` is the richer canonical
   form field (`ControlValueAccessor`, `invalid` + `hint` via `ds-field-message`, `required` /
@@ -3248,8 +3248,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `<ds-select>`; `[error]` → `[invalid]`; `[optionGroups]="groups"` → pass groups inline in
   `[options]` (`SelectItem = SelectOption | SelectOptionGroup`); `DropdownOption` /
   `DropdownOptionGroup` / `DropdownSize` → `SelectOption` / `SelectOptionGroup` / `SelectSize`.
-  `readOnly` moved to `ds-select` (see Added). Docs "Dropdown" section removed — the Select
-  section covers everything.
+  `readOnly` moved to `ds-select` (see Added).
 - **Public token prefixes normalized to match the selector (not aliased).** Four components had
   their `--ds-*` token name fragments hyphenated to align with the Angular selector; the old
   concatenated names silently stop resolving, so consumers who override any of these must rename.

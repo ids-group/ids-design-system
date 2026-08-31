@@ -121,11 +121,9 @@
       background: var(--surface-secondary);
     }
 
-    // Pressed. The equivalent rows elsewhere (ds-menu-item, ds-list-item) have
-    // had one since 2026-07-02; the picker panels were left with hover only, so
-    // a tap on a phone — where there is no hover at all — gave no feedback that
-    // the row had been hit. One rule here covers select, autocomplete and
-    // multi-select, which all render their options through this partial.
+    // A tap on a phone has no hover, so a pressed state is the only feedback that the
+    // row was hit. One rule here covers select, autocomplete and multi-select, which
+    // all render their options through this partial.
     &:active:not(.is-disabled) {
       background: var(--surface-muted);
     }
