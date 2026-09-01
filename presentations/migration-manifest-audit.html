@@ -654,9 +654,37 @@
       <strong>Five carried a “Fixed” tag that the code did not support</strong> — 02, 06, 10, 14 and
       18, each now marked in place and each now actually fixed. Two things this page cannot know
       about itself: its scope line reads <em>22 manifests · 186 items</em> and the folder now holds
-      <strong>24 and 204</strong>, so <code>0.11.0</code> and <code>0.11.1</code> have never had an
-      adversarial pass — one reader checked them by these criteria and found no tier-1 defect, which
-      is not the same assurance the other 22 have.
+      <strong>24 and 204</strong>.
+    </p>
+    <p>
+      <strong><code>0.11.0</code> and <code>0.11.1</code> were audited on 2026-09-01</strong>, each
+      against its own boundary — <code>v0.10.3..v0.11.0</code> and <code>v0.11.0..v0.11.1</code>.
+      Every <code>old</code> name is present at the predecessor tag and gone at its own; every
+      <code>new</code> name is present; no declared custom property was removed at either boundary
+      without an item; and both grown-class notes match <code>class-surface-diff</code> exactly —
+      0.11.0 enumerates all seventeen members, 0.11.1 describes the shape and says why a list could
+      not stay current. <strong>No tier-1 or tier-2 defect.</strong> One cosmetic gap, recorded and
+      deliberately not fixed: three of the five new template directives are named in the CHANGELOG
+      but not in the manifest, where 0.9.0 put new exports in its <code>pitfall</code>; correcting a
+      released file for a wildcard-import shadowing risk costs a migration note worth more than the
+      defect.
+    </p>
+    <p>
+      <strong>Reading a released manifest against HEAD is itself the bug</strong>, and it hid two
+      defects from the original audit. A manifest describes ONE boundary, and today's source is
+      evidence for neither side of it: a symbol removed two releases later is absent from HEAD, one
+      that never existed is also absent, and one re-added since is present although the removal was
+      correct. Diffing the tree at each tag instead found both.
+      <strong><code>0.2.0#surface-subtle-token-rename</code> renamed a token this library never
+      had.</strong> Eight semantic tints moved from <code>-subtle</code> to <code>-subtitle</code> —
+      border, error, info, primary, secondary, success, tertiary, warning — and the item named
+      <code>--surface-subtle</code>, which existed only in the docs app at 0.1.0, to
+      <code>--surface-subtitle</code>, which has never existed anywhere. Every upgrade that ran it
+      searched for a token the consumer could not have and reported nothing to do.
+      <strong><code>themes/README.md</code> still advertised <code>--static-white</code></strong>,
+      removed at 0.5.1, three times — and that README ships verbatim as a package asset.
+      The rule is now in <code>migrations/AUTHORING.md</code>: only <code>unreleased.json</code> is
+      checked against HEAD, because HEAD is the version it describes.
     </p>
     <div class="scroller">
       <table>
