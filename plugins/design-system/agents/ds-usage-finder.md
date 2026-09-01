@@ -14,7 +14,8 @@ comes from the item; don't assume anything about particular components.
 
 - For each item, search the consumer source for every string in `searchHints` plus `old`. Some items
   have no `old` (e.g. `code-add`) — then `searchHints` is the only signal: locate the insertion
-  site(s) it names, or report `[]` if that site doesn't exist in this consumer.
+  site(s) it names; a site that doesn't exist in this consumer is a zero-hit (the
+  `{ "hits": [], "searched": [...] }` form below).
 - Search `*.html`, `*.ts`, `*.scss`, `*.css`. Skip `node_modules`, `dist`, build output, `.git`.
 - **`surface` RANKS the search — it never restricts it.** Search ALL artifact classes for every
   item; a hit outside the declared surface is reported with `outOfSurface: true`, not skipped

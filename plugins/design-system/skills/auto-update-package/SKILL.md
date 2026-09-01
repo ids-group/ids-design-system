@@ -232,6 +232,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
      repo-wide, all surfaces. That is evidence about the MANIFEST, not the consumer — an item naming
      a token that never existed passed every prior upgrade exactly this way. Record it separately
      (never inside the not-applicable total) and carry the whole set into the Phase C report.
+     The two exceptions below still run FIRST — locator-dead is the classification of a zero that
+     SURVIVES them, never a reason to skip the code-add site resolution or the semantic pass.
    **Exception:** zero hits
    prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
    removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
@@ -336,7 +338,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    short-circuit that item to the manual-review list rather than burning the remaining cap. Add any
    newly-touched files to the touched-files union, then re-verify. Bounded by the 3-attempt cap.
 7. **Re-check (parallel, sonnet) — every item, ALWAYS.** Dispatch `ds-recheck` for each item,
-   re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed only):
+   re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed
+   only) — plus, for `scss-api` / `code-add`, the applier's reported `replaced | inserted` mode,
+   which decides what the re-check greps for:
    grep for mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned
    `remaining`). **An INDEPENDENT second pass — run it even when step 5 was green and every fix was
    your own inline edit.** Each
