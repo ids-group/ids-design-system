@@ -513,9 +513,6 @@ export class TableComponent<T extends object> {
 
   protected readonly tableClasses = computed(() => {
     const parts = ['table'];
-    if (this.loadingMode() === 'skeleton') {
-      parts.push('skeleton-mode');
-    }
     if (this.stickyHeader()) {
       parts.push('sticky-header');
     }
@@ -962,6 +959,53 @@ export class TableComponent<T extends object> {
     this.resizeState = null;
   }
 
+  private readonly resizeFocus = signal<{
+    key: string;
+    measured: number;
+    max: number;
+  } | null>(null);
+
+  protected onResizeFocus(col: TableColumn<T>, event: FocusEvent): void {
+    const target = event.target as HTMLElement;
+
+    this.resizeFocus.set({
+      key: col.key,
+      measured: this.resolvedColumnWidth(col, target),
+      max: Math.max(
+        TableComponent.MIN_COLUMN_WIDTH,
+        target.closest('.scroll-wrap')?.clientWidth ?? 0,
+      ),
+    });
+  }
+
+  protected onResizeBlur(): void {
+    this.resizeFocus.set(null);
+  }
+
+  /**
+   * The separator's range, and only while it holds focus — that is when a range
+   * widget is announced, and an auto-sized column has no width to report until
+   * something measures one. Measuring on every change detection to fill an
+   * attribute nothing is reading would force layout once per resizable column.
+   *
+   * `now` prefers `columnWidth`, which the first arrow key makes known and keeps
+   * live; the focus measurement only covers the moment before that.
+   */
+  protected resizeRange(
+    col: TableColumn<T>,
+  ): { now: number; min: number; max: number } | null {
+    const focused = this.resizeFocus();
+    if (focused?.key !== col.key) {
+      return null;
+    }
+
+    return {
+      now: this.columnWidth(col) ?? focused.measured,
+      min: TableComponent.MIN_COLUMN_WIDTH,
+      max: focused.max,
+    };
+  }
+
   /** Current rendered width for the keyboard resize path. Falls back to the DOM
    *  when the column was auto-sized and has neither an override nor a declared
    *  width. */
@@ -1237,13 +1281,6 @@ export class TableComponent<T extends object> {
       padTop: start * rowSize,
       padBottom: Math.max(0, count - end) * rowSize,
     };
-  });
-
-  protected readonly windowData = computed<readonly T[]>(() => {
-    const window = this.virtualWindow();
-    const data = this.displayData();
-
-    return window ? data.slice(window.start, window.end) : data;
   });
 
   /**

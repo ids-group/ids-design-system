@@ -234,7 +234,6 @@ what makes these the cheapest thing on the board.
 
 - P2 · **One entry point for the whole library** — a consumer cannot keep the DS out of their initial bundle; secondary entry points would fix it (MBP-133, deck attached)
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
-- P3 · Three dead or unreachable branches in `ds-table` — a computed nobody reads, a host class nothing styles, and a resize handle whose `aria-valuenow` is absent until the first drag
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
 - P2 · **No page-level design approach for an agent** — radii, composition and page patterns are unwritten; `design-system.md` answers "what value", not "where does it go"
@@ -464,8 +463,6 @@ Requests, not defects. Ordered by who is blocked.
 
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
-
-- [ ] **[P3] Three dead or unreachable branches in `ds-table`, found by the comment sweep.** (a) `windowData` (`table.component.ts`) is a `computed` with zero references repo-wide — it re-derives what `rowSlots` already derives and recomputes on every window change for nothing; its docblock claimed it was "the rows the template actually renders", which the template has never done. The docblock is gone; the member is still there because deleting it moves the class surface and that is a call to make deliberately. (b) `tableClasses()` pushes `skeleton-mode` onto the host and NOTHING styles it — no selector in the component's SCSS, anywhere in `src/`, or in `ds-docs`. Either a rule was lost or the class should go; a consumer could be hooking it through `::ng-deep`, which cannot be checked from here. (c) The resize handle binds `[attr.aria-valuenow]="columnWidth(col)"`, which returns `null` for an auto-sized column with no declared width — so a focusable `role="separator"` announces no value until the first drag, while `resolvedColumnWidth()` exists and falls back to the DOM for exactly this. Same handle carries `aria-valuenow` in pixels with no `aria-valuemin`/`aria-valuemax`, so a value like 240 is read against the implicit 0–100 range. Not verified in a screen reader.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form. **GATE HELD 2026-08-25 (Stas), asked explicitly.**
 
@@ -802,6 +799,49 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
   <script type="text/plain" id="done-md"># DS — completed work (archive)
 
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
+
+---
+
+## Three dead branches in `ds-table`, and none of them wanted deleting first (2026-09-01)
+
+- [x] **DONE 2026-09-01 — each one was traced to what it used to do before anything was removed.**
+  Stas's instruction on finding them was the right one: check whether the duplicate halves differ,
+  merge them if they do, and end at one reachable solution rather than a smaller pile of code.
+  That changed the answer in one of the three.
+
+  **`windowData` vs `rowSlots` — the merge was already done, in the wrong direction.** Both walk
+  the same window over the same `displayData()`. `rowSlots` adds the absolute index every
+  downstream consumer needs, and normalises a lazy gap to `null`; `windowData` used
+  `Array.slice`, which PRESERVES holes, so it could hand back `undefined` typed as `T` — verified
+  on a sparse array rather than assumed. So `rowSlots` strictly subsumes it and is also the safer
+  of the two: there was nothing to merge back, and `windowData` went. Virtual scrolling was then
+  re-measured in Chromium — the window still moves (16 → 22 rendered rows, two spacers) and the
+  rows still carry their text.
+
+  **`skeleton-mode` — the rule it switched on became unnecessary, and only the switch survived.**
+  Found by reading history rather than by guessing: the class gated a block that suppressed a row
+  hover tint and pointer cursor on skeleton rows, and it was deleted in `e0e67356` — the commit
+  that moved every hover visual behind `.clickable`. A skeleton row is a bare `<tr>` that never
+  gets `.clickable`, so the tint can no longer reach it and the suppression has nothing left to
+  do. Every other class `tableClasses()` emits drives a real selector; this one drove none. Gone,
+  with a migration note, because it was observable on the host.
+
+  **The resize handle's ARIA — this one was FIXED, not removed.** A focusable
+  `role="separator"` is a range widget, and the handle bound `aria-valuenow` to
+  `columnWidth(col)`, which is `null` for an auto-sized column that has never been dragged — so
+  the attribute was simply absent, while `resolvedColumnWidth()` sat unused with exactly the DOM
+  fallback needed. It also carried no `aria-valuemin`/`aria-valuemax`, so a value in pixels was
+  being announced against ARIA's implicit 0–100. All three now travel together, in pixels, and
+  only while the handle holds focus: that is when a range widget is announced, and measuring the
+  wrap on every change detection to fill an attribute nothing is reading would force layout once
+  per resizable column. `now` prefers `columnWidth`, which the first arrow key makes known and
+  keeps live. Measured: 172 / 48 / 911 on focus, 188 after one ArrowRight, all three cleared on
+  blur, and no other handle on the page affected.
+
+  A note for the next time this is measured: `element.focus()` in headless Chrome does not
+  dispatch a focus event when the page has no window focus, so the first run reported the
+  attributes still absent and the fix looked dead. Dispatching `FocusEvent('focus')` is what
+  showed it working. A harness that cannot focus will happily report working code as broken.
 
 ---
 

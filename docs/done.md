@@ -4,6 +4,49 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Three dead branches in `ds-table`, and none of them wanted deleting first (2026-09-01)
+
+- [x] **DONE 2026-09-01 — each one was traced to what it used to do before anything was removed.**
+  Stas's instruction on finding them was the right one: check whether the duplicate halves differ,
+  merge them if they do, and end at one reachable solution rather than a smaller pile of code.
+  That changed the answer in one of the three.
+
+  **`windowData` vs `rowSlots` — the merge was already done, in the wrong direction.** Both walk
+  the same window over the same `displayData()`. `rowSlots` adds the absolute index every
+  downstream consumer needs, and normalises a lazy gap to `null`; `windowData` used
+  `Array.slice`, which PRESERVES holes, so it could hand back `undefined` typed as `T` — verified
+  on a sparse array rather than assumed. So `rowSlots` strictly subsumes it and is also the safer
+  of the two: there was nothing to merge back, and `windowData` went. Virtual scrolling was then
+  re-measured in Chromium — the window still moves (16 → 22 rendered rows, two spacers) and the
+  rows still carry their text.
+
+  **`skeleton-mode` — the rule it switched on became unnecessary, and only the switch survived.**
+  Found by reading history rather than by guessing: the class gated a block that suppressed a row
+  hover tint and pointer cursor on skeleton rows, and it was deleted in `e0e67356` — the commit
+  that moved every hover visual behind `.clickable`. A skeleton row is a bare `<tr>` that never
+  gets `.clickable`, so the tint can no longer reach it and the suppression has nothing left to
+  do. Every other class `tableClasses()` emits drives a real selector; this one drove none. Gone,
+  with a migration note, because it was observable on the host.
+
+  **The resize handle's ARIA — this one was FIXED, not removed.** A focusable
+  `role="separator"` is a range widget, and the handle bound `aria-valuenow` to
+  `columnWidth(col)`, which is `null` for an auto-sized column that has never been dragged — so
+  the attribute was simply absent, while `resolvedColumnWidth()` sat unused with exactly the DOM
+  fallback needed. It also carried no `aria-valuemin`/`aria-valuemax`, so a value in pixels was
+  being announced against ARIA's implicit 0–100. All three now travel together, in pixels, and
+  only while the handle holds focus: that is when a range widget is announced, and measuring the
+  wrap on every change detection to fill an attribute nothing is reading would force layout once
+  per resizable column. `now` prefers `columnWidth`, which the first arrow key makes known and
+  keeps live. Measured: 172 / 48 / 911 on focus, 188 after one ArrowRight, all three cleared on
+  blur, and no other handle on the page affected.
+
+  A note for the next time this is measured: `element.focus()` in headless Chrome does not
+  dispatch a focus event when the page has no window focus, so the first run reported the
+  attributes still absent and the fix looked dead. Dispatching `FocusEvent('focus')` is what
+  showed it working. A harness that cannot focus will happily report working code as broken.
+
+---
+
 ## A docblock cannot lose its symbol any more (2026-09-01)
 
 - [x] **DONE 2026-09-01 — the comment sweep over `ds-table` turned up a defect worth a gate, so

@@ -63,7 +63,9 @@
     "ds-table takes expandMode=\"single\" to keep one row open at a time; the default stays \"multiple\", which is what it did before.",
     "ds-table takes expandAllToggle to put an expand-all chevron in the expander column header; it is page-scoped when paginating, like select-all, and is suppressed under expandMode=\"single\".",
     "ds-table emits (rowExpanded) and (rowCollapsed), expand-all included. Neither fires for a collapse the host writes into expandedIds itself, nor for an id whose row is not in data().",
-    "ds-table announces \"N rows expanded\" in its live region from two rows up; a single expander already says so through its own aria-expanded."
+    "ds-table announces \"N rows expanded\" in its live region from two rows up; a single expander already says so through its own aria-expanded.",
+    "ds-table no longer puts `skeleton-mode` on its host element. Nothing in the library styled it: the rule it switched on suppressed a row hover that used to reach every row, and that hover now needs `.clickable`, which a skeleton row never has. Only a consumer reaching in through ::ng-deep would notice.",
+    "The column-resize handle now carries aria-valuemin and aria-valuemax alongside aria-valuenow, all in px, while it has focus. A focusable role=\"separator\" is a range widget, so a bare pixel value was being announced against ARIA's implicit 0-100."
   ],
   "deleteList": []
 }

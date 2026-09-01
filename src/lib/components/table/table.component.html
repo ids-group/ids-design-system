@@ -155,13 +155,19 @@
               }
 
               @if (resizableColumns()) {
+                @let range = resizeRange(col);
+
                 <span
                   class="col-resize"
                   role="separator"
                   tabindex="0"
                   aria-orientation="vertical"
                   [attr.aria-label]="'Resize ' + col.label"
-                  [attr.aria-valuenow]="columnWidth(col)"
+                  [attr.aria-valuenow]="range?.now ?? null"
+                  [attr.aria-valuemin]="range?.min ?? null"
+                  [attr.aria-valuemax]="range?.max ?? null"
+                  (focus)="onResizeFocus(col, $event)"
+                  (blur)="onResizeBlur()"
                   (pointerdown)="onResizeStart(col, $event)"
                   (pointermove)="onResizeMove($event)"
                   (pointerup)="onResizeEnd()"
