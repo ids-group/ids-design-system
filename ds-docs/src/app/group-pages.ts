@@ -94,6 +94,7 @@ import { ActivitySection } from './sections/patterns/activity/activity.section';
 import { EmptyStateSection } from './sections/patterns/empty-state/empty-state.section';
 import { FilterBarSection as PatternsFilterBarSection } from './sections/patterns/filter-bar/filter-bar.section';
 import { FormLayoutSection } from './sections/patterns/form-layout/form-layout.section';
+import { ClaudeDesignSection } from './sections/practice/claude-design/claude-design.section';
 import { PageCompositionSection } from './sections/patterns/page-composition/page-composition.section';
 import { PageHeaderSection as PatternsPageHeaderSection } from './sections/patterns/page-header/page-header.section';
 
@@ -259,6 +260,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Practice',
     sections: [
       RulesSection,
+      ClaudeDesignSection,
       DoDontSection,
       TokenDisciplineSection,
       SignalFormsSection,
