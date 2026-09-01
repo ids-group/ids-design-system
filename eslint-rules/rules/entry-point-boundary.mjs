@@ -4,9 +4,8 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 /**
  * ng-packagr refuses a relative import that crosses an entry-point boundary, and the
  * failure it produces names nothing: `Cannot destructure property 'pos' of
- * 'file.referencedFiles[index]' as it is undefined`. Measured 2026-09-01 — a missed rewrite
- * reads as a broken toolchain, which is what this rule exists to prevent. It also catches
- * `import type`, because an erased import is still an entry-point dependency (same failure).
+ * 'file.referencedFiles[index]' as it is undefined`. It also catches `import type`, because
+ * an erased import is still an entry-point dependency and fails the same way.
  *
  * Turned OFF until the per-component entry points land — see `docs/todo.md` → A3. It reports
  * every existing cross-folder import until then, which is the point: the count is the size of
@@ -17,7 +16,7 @@ const LIB_ROOT = 'src' + sep + 'lib';
 
 /** Folders whose imports of each other are fine because they share one entry point:
  *  two sibling pairs that are genuinely mutually dependent, and the four-way cycle the
- *  config's type imports create (accepted 2026-09-01 — breaking it saves 593 B gzip). */
+ *  config's type imports create — accepted, because breaking it saves 593 B gzip. */
 const DEFAULT_CO_LOCATED = [
   ['components/radio', 'components/radio-group'],
   ['components/time-columns', 'components/time-picker'],

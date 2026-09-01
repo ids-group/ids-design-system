@@ -17,16 +17,12 @@ export interface DsConfig {
      *  override at the validator covers both. Unmapped kinds warn in dev. */
     errorMessages?: Record<string, string>;
     /** Leading glyph on a field's message line, per state. Defaults carry one for
-     *  the three states that mean something — `error`, `warn`, `success` — and NONE
-     *  for `hint`, which is the resting text rather than a state: a form where every
-     *  field carries an info circle reads as noise. Each key is independent, so
-     *  `{ warning: false, hint: 'info' }` turns one off and the other on. A glyph name
-     *  replaces the default; `false` removes it. `stateIcons: false` removes all four,
-     *  which is the one-line way to turn the glyphs off entirely.
+     *  `error`, `warning` and `success` and NONE for `hint`, which is resting text
+     *  rather than a state. Each key is independent — a glyph name replaces the
+     *  default, `false` removes it, and `stateIcons: false` removes all four.
      *
-     *  WHY a glyph at all: colour alone carried error / warning / success, and in the
-     *  light theme warning (#8A7400) and success (#156822) differ by hue and nothing
-     *  else — which WCAG 1.4.1 forbids a state from resting on. */
+     *  The glyphs exist because warning and success differ from each other by hue
+     *  and nothing else, which WCAG 1.4.1 forbids a state from resting on. */
     stateIcons?:
       | false
       | {
@@ -47,8 +43,8 @@ export interface DsConfig {
   };
   avatar?: {
     /** How `ds-avatar` turns its `name` into initials, app-wide. The built-in rule
-     *  takes the first two words — a Latin-script guess. Reading a name is a cultural
-     *  convention, so an app that knows its own provides it here. */
+     *  takes the first two words, which is a Latin-script guess — an app whose names
+     *  follow another convention supplies its own here. */
     initials?: (name: string) => string;
   };
   brand?: {
@@ -59,12 +55,10 @@ export interface DsConfig {
     logoLetter?: string;
     /** Strapline under the brand row. `ds-auth-layout` only. */
     tagline?: string;
-    /* No accent here on purpose. A two-tone wordmark is PROJECTED markup
-       (`[dsBrandName]`) so the consumer says where the accent belongs; a config
-       could only carry a string, and splitting it back apart — the `indexOf`
-       every app ends up writing — is the guessing the projection exists to
-       avoid. Provide the name here and project the accented version where a
-       screen needs one. */
+    /* No accent key on purpose: a two-tone wordmark is projected markup
+       (`[dsBrandName]`), so the consumer says where the accent belongs. A config
+       string would have to be split back apart, which is the guessing the
+       projection exists to avoid. */
   };
   modal?: {
     /** Default for `dividers` on `ds-modal` and `ds-modal-card`. Default `true`.
@@ -75,10 +69,9 @@ export interface DsConfig {
   picker?: {
     /** Default for `ds-multi-select``s `searchable`. `true` always shows the panel's
      *  filter row, `false` never, and a NUMBER is a threshold — the row appears once
-     *  there are at least that many options. Default `true`.
-     *
-     *  One threshold for the app is the point: left to each call site, two panels of
-     *  the same length in the same screen end up disagreeing. */
+     *  there are at least that many options. Default `true`. One threshold for the
+     *  app is the point: left to each call site, two panels of the same length in
+     *  the same screen end up disagreeing. */
     searchable?: boolean | number;
   };
 
@@ -98,14 +91,12 @@ export interface DsConfig {
   };
   table?: {
     /** Default for `ds-table`'s `stickyScrollbar` — the proxy that keeps the
-     *  horizontal bar reachable on a tall table. Default `false`. A whole-app
-     *  opinion in practice: an app that wants it wants it on every table, and
-     *  every new table is one forgotten binding away from scrolling invisibly. */
+     *  horizontal bar reachable on a tall table. Default `false`. Here rather than
+     *  per table because every new table is one forgotten binding away from
+     *  scrolling invisibly. */
     stickyScrollbar?: boolean;
     /** Default for `ds-table`'s `bordered` — the outer border and radius.
-     *  Default `false`. Per app rather than per table in practice, which is why
-     *  it is here: `provideDsConfig` scopes to a root or a route subtree, so the
-     *  deliberate exceptions stay visible as bindings. */
+     *  Default `false`. */
     bordered?: boolean;
   };
   icon?: {
@@ -134,17 +125,14 @@ export const DS_CONFIG = new InjectionToken<DsConfig>('DS_CONFIG', {
  *
  *   providers: [provideDsConfig({ control: { size: 'sm' } })]
  *
- * Works at the app root, on a `Route`, or on a component/directive — the
- * config resolves through the element-injector chain, so a subtree can differ
- * from the app. Component inputs (e.g. `<ds-card padding="lg">`) still win.
+ * Works at the app root, on a `Route`, or on a component/directive — the config
+ * resolves through the element-injector chain, so a subtree can differ from the
+ * app. Component inputs (e.g. `<ds-card padding="lg">`) still win.
  *
- * A nested call MERGES with the config above it, section by section, so
- * scoping one flag cannot silently drop unrelated app-level settings. Only the
- * keys you name are replaced.
- *
- * ONE call per injector, though: two in the SAME `providers` array both resolve
- * their parent with `skipSelf`, so the later one wins and the earlier is silently
- * lost. Merging happens across injector levels, not within one array.
+ * A nested call MERGES with the config above it section by section; only the keys
+ * you name are replaced. ONE call per injector, though: two in the SAME
+ * `providers` array both resolve their parent with `skipSelf`, so the later wins
+ * and the earlier is silently lost.
  */
 export function provideDsConfig(config: DsConfig): Provider {
   return { provide: DS_CONFIG, useFactory: () => inheritDsConfig(config) };
@@ -153,9 +141,9 @@ export function provideDsConfig(config: DsConfig): Provider {
 /**
  * The factory body behind `provideDsConfig`, exported so a directive can put the
  * provider in its metadata as a plain object literal. Calling `provideDsConfig`
- * there instead would run at module-evaluation time, which makes the module
- * side-effectful and costs the consumer its tree-shaking (measured at +566 kB moved
- * into the eager chunk).
+ * there instead runs at module-evaluation time, which makes the module
+ * side-effectful and costs the consumer its tree-shaking (measured at +566 kB
+ * moved into the eager chunk).
  *
  * Must be called from an injection context.
  */

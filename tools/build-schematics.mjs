@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-// Compiles the schematics collection into dist/ds/schematics and registers it in
-// the published package.json. Runs as the second half of `build:lib` (after
-// `ng build ds` regenerates dist/ds), so the collection ships with the package.
+// Runs as the second half of `build:lib` (after `ng build ds` regenerates
+// dist/ds), so the schematics collection ships with the package.
 import { execSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -32,8 +31,8 @@ execSync(`node "${tscBin}" -p schematics/tsconfig.json`, { stdio: 'inherit' });
 console.log('▶ Copying collection.json and schemas…');
 cpSync('schematics/collection.json', `${distSchematics}/collection.json`);
 // Copy every generator's schema.json (tsc only emits .js, not .json).
-// Architecture generators (feature/store/data-access/page/ui) now live in the
-// app starter repo; the DS package ships only `ng-add` (DS style wiring).
+// Architecture generators (feature/store/data-access/page/ui) live in the app
+// starter repo.
 for (const gen of ['ng-add']) {
   cpSync(
     `schematics/${gen}/schema.json`,
@@ -81,8 +80,7 @@ console.log('▶ Copying CHANGELOG.md into dist/ds…');
 cpSync('CHANGELOG.md', 'dist/ds/CHANGELOG.md');
 
 // Ship the rules and the catalogue so a consumer's agents can read them straight from
-// node_modules — the rules are the half that cannot be generated from source, and they
-// are only useful where the code that uses them lives.
+// node_modules.
 for (const doc of ['design-system.md', 'components.md']) {
   if (!existsSync(doc)) {
     console.error(

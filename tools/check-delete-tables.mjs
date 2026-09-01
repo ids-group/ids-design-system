@@ -41,6 +41,7 @@ for (const { file, label, needle } of manifests) {
   const entries = manifest.deleteList ?? [];
   if (!entries.length) continue;
 
+  // The trailing space is what keeps `## 0.1.0` from matching the start of `## 0.10.0`.
   const start = changelog.indexOf(needle ?? `\n## ${label} `);
   if (start < 0) {
     problems.push(`${label}: ${entries.length} delete entr(ies) and no CHANGELOG block`);
@@ -65,7 +66,7 @@ for (const { file, label, needle } of manifests) {
     .map((line) => line.split('|')[1] ?? '');
 
   // A shape several entries share cannot identify a row: matching on `ds-table` alone let four
-  // 0.9.0 entries pass on one unrelated row. Only a shape unique to this entry counts as finding it.
+  // 0.9.0 entries pass on one unrelated row.
   const shapeUses = new Map();
   for (const entry of entries) {
     for (const shape of [entry.find ?? []].flat()) {

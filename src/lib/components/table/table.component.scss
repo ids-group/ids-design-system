@@ -35,10 +35,8 @@
   }
 }
 
-/* Sticky-proxy horizontal scrollbar (opt-in `stickyScrollbar`): the native
-   bar on .scroll-wrap is hidden and the proxy — stuck to the bottom of the
-   nearest scroll ancestor while the table is in view — mirrors scrollLeft
-   both ways, so a tall table's horizontal bar is always reachable. */
+/* The native bar is safe to hide only because `.hscroll-proxy` mirrors
+   scrollLeft both ways. */
 :host(.sticky-scrollbar) .scroll-wrap {
   scrollbar-width: none;
 
@@ -578,7 +576,6 @@
   }
 }
 
-/* Header filter (funnel) button + its popover (opt-in `column.filter: 'set'`). */
 .col-filter-btn {
   display: inline-flex;
   margin-left: var(--space-1);
@@ -683,7 +680,6 @@
   }
 }
 
-/* Full value of a clipped `truncate` cell — also portaled into a popover. */
 .cell-text-pop {
   max-width: 360px;
   overflow-wrap: anywhere;
@@ -848,19 +844,18 @@
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 
-  /* The row is always in the markup now that it holds a slot, so it has to take
-     itself out when nothing filled it and the export button is off — otherwise
-     every table pays its margin. `:not(:has(*))` rather than `:empty`, which a
-     single whitespace text node defeats. */
+  /* The row is always in the markup, so it has to take itself out when nothing
+     filled the slot and the export button is off — otherwise every table pays
+     its margin. `:has()` rather than `:empty`, which the slot wrapper and its
+     whitespace text nodes defeat. */
   &:not(:has(.toolbar-slot > *, > ds-button)) {
     display: none;
   }
 }
 
 /* Lays out a HANDFUL of projected controls so the simple case needs no CSS at
-   all — every consumer of the fork this replaces wrote these same four
-   declarations, wrap included. Project one element of your own instead and the
-   flex has a single child, so your layout is untouched. */
+   all. Project one element of your own instead and the flex has a single child,
+   so your layout is untouched. */
 .toolbar-slot {
   display: flex;
   flex: 1 1 auto;

@@ -120,9 +120,6 @@ export class DatePickerComponent
 
   constructor() {
     super();
-    // Renders through toFieldText so the field is fixed-width `_`-padded once any
-    // digit exists (even a partial range pads the empty end date), but genuinely
-    // empty ('') when untouched.
     effect(() => {
       const spec = this.formatSpec();
       const value = this.value();
@@ -225,7 +222,7 @@ export class DatePickerComponent
   });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
-  /** Bounds for the year dropdown in the calendar header. */
+  /** Lower bound for the year dropdown in the calendar header. */
   readonly minYear = input<number>(new Date().getFullYear() - 100);
   /** Upper bound for the year dropdown in the calendar header. */
   readonly maxYear = input<number>(new Date().getFullYear() + 10);
@@ -247,7 +244,8 @@ export class DatePickerComponent
    *  the panel shows its month and grid focus lands on its exact day.
    *  Never written to `value` — selection stays with the user. */
   readonly defaultDate = input<Date | null>(null);
-  /** Allow masked manual typing. When false the trigger is a button (calendar-only). */
+  /** Allow masked manual typing. When false the field is read-only and a date can
+   *  only be picked from the calendar. */
   readonly allowInput = input(true, { transform: booleanAttribute });
 
   protected readonly isDisabled = computed(
@@ -304,7 +302,6 @@ export class DatePickerComponent
       this.dateFormat() ?? this.config.datePicker?.dateFormat,
     ),
   );
-  /** Slot/literal layout for the current mode — single date or doubled range. */
   protected readonly layout = computed<FieldLayout>(() =>
     this.mode() === 'range'
       ? rangeFieldLayout(this.formatSpec())
@@ -316,11 +313,9 @@ export class DatePickerComponent
   protected readonly weekdays = computed(() =>
     weekdayLabels(this.resolvedLocale(), this.resolvedFirstDay()),
   );
-  /** Full weekday names for the grid column headers' accessible names. */
   protected readonly weekdaysFull = computed(() =>
     weekdayLabels(this.resolvedLocale(), this.resolvedFirstDay(), 'long'),
   );
-  /** Localized "Month YYYY" caption — the grid's accessible name + live label. */
   protected readonly monthYearLabel = computed(
     () => `${this.monthNames()[this.viewMonthIndex()]} ${this.viewYear()}`,
   );
@@ -443,7 +438,6 @@ export class DatePickerComponent
     element?.focus();
   }
 
-  /** Full, unambiguous date for a day cell's accessible name. */
   protected dayLabel(cell: DayCell): string {
     return fullDateLabel(cell.date, this.resolvedLocale());
   }
@@ -484,11 +478,9 @@ export class DatePickerComponent
     this.inputEl().nativeElement.focus();
   }
 
-  /** Text shown in the field: masked single value, or the combined range string. */
   protected readonly fieldText = computed(() =>
     this.mode() === 'single' ? this.inputText() : this.rangeText(),
   );
-  /** Format-mask placeholder (single) or the doubled range mask. */
   protected readonly fieldPlaceholder = computed(() =>
     this.mode() === 'single'
       ? this.formatSpec().mask
@@ -502,8 +494,6 @@ export class DatePickerComponent
   protected readonly fieldSize = computed(
     () => this.fieldPlaceholder().length + 1,
   );
-  /** Per-slot overlay runs: digits at normal weight, unfilled positions
-   *  (format letters or `_` padding) muted — see displayParts(). */
   protected readonly displaySlots = computed<DisplayPart[]>(() =>
     displayParts(
       parseFieldText(this.fieldText(), this.layout()),
@@ -518,7 +508,6 @@ export class DatePickerComponent
   );
   protected readonly viewYear = computed(() => this.viewMonth().getFullYear());
 
-  /** First year shown in the year grid; paged by YEAR_PAGE_SIZE within [minYear, maxYear]. */
   protected readonly yearPageStart = signal<number>(0);
 
   protected readonly yearsOnPage = computed<number[]>(() => {
@@ -648,6 +637,8 @@ export class DatePickerComponent
     const cells: DayCell[] = [];
     const today = new Date();
     const todayKey = today.toDateString();
+    // Six weeks of seven days, whatever the month: a fixed cell count keeps the
+    // panel from changing height as you page through the year.
     for (let i = 0; i < 42; i++) {
       const d = new Date(gridStart);
       d.setDate(d.getDate() + i);
@@ -670,7 +661,6 @@ export class DatePickerComponent
     return cells;
   });
 
-  /** daysGrid split into rows of 7 for the grid's `role="row"` structure. */
   protected readonly weeksGrid = computed<DayCell[][]>(() => {
     const cells = this.daysGrid();
     const weeks: DayCell[][] = [];
@@ -755,12 +745,11 @@ export class DatePickerComponent
       (target) => this.anchor().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
-    // No backdrop catches a page scroll, and CDK's scroll strategies don't see a
-    // plain overflow container — so close on any outside scroll ourselves. Sync
-    // state on every detach so a stray CDK detach can't wedge the reopen guard.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
+    // Sync state on EVERY detach, so a stray CDK detach cannot leave a stale
+    // `overlayRef` wedging this method's reopen guard.
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
       this.overlayRef = null;
@@ -776,7 +765,6 @@ export class DatePickerComponent
     const portal = new TemplatePortal(this.panelTpl(), this.vcr);
     this.overlayRef.attach(portal);
     this.isOpen.set(true);
-    // Seed grid focus on the selected day (or today) and move focus into it.
     const selected =
       this.mode() === 'single'
         ? (this.value() as Date | null)
@@ -811,8 +799,6 @@ export class DatePickerComponent
   }
 
   ngOnDestroy(): void {
-    // Host torn down while open → close() never runs. Dispose the overlay so
-    // its pane and event subscriptions don't leak.
     this.overlayRef?.dispose();
     this.overlayRef = null;
   }
@@ -820,10 +806,9 @@ export class DatePickerComponent
   /**
    * Also the calendar glyph's handler. A POINTER open must not drag focus into
    * the day grid: the reader did not ask to leave a field they may want to type
-   * in, and `allowInput` defaults to true. So focus follows what the field IS —
-   * typeable, and the caret stays; read-only, and the grid is the only thing
-   * worth focusing. The keyboard path is unaffected: ArrowDown on the field
-   * calls `open(true)` and enters the grid however the panel was opened.
+   * in. So focus follows what the field IS — typeable, and the caret stays;
+   * read-only, and the grid is the only thing worth focusing. The keyboard path is
+   * unaffected: ArrowDown on the field calls `open(true)`.
    */
   protected onFieldClick(): void {
     this.open(!this.allowInput());
@@ -844,8 +829,6 @@ export class DatePickerComponent
     if (this.mobileEdit) {
       const { value, caret } = this.mobileEdit;
       this.mobileEdit = null;
-      // beforeinput already applied the segment edit; overwrite whatever the
-      // native change did with the intended fixed-width value + caret.
       this.writeBackText(element, value, caret);
 
       return;
@@ -854,8 +837,7 @@ export class DatePickerComponent
   }
 
   /** Physical-keyboard editing (desktop): typed digits fill the caret's slot;
-   *  Backspace/Delete never shift digits across a separator. Delegates to the
-   *  shared segment editor. */
+   *  Backspace/Delete never shift digits across a separator. */
   protected onFieldKeydown(event: KeyboardEvent): void {
     if (!this.allowInput()) {
       return;
@@ -920,10 +902,8 @@ export class DatePickerComponent
     queueMicrotask(() => (this.mobileEdit = null));
   }
 
-  /** Apply one segment edit (type a digit / Backspace / Delete) at the caret or
-   *  over the selection, then write the fixed-width value + caret back. A
-   *  selection is cleared through the model so `_` placeholders are never
-   *  natively erased — only digits are editable. Shared by keydown + beforeinput. */
+  /** A selection is cleared through the model so `_` placeholders are never
+   *  natively erased — only digits are editable. */
   private runSegmentEdit(
     element: HTMLInputElement,
     kind: 'type' | 'backspace' | 'delete',
@@ -1009,10 +989,9 @@ export class DatePickerComponent
     return text.replace(/\D/g, '').length;
   }
 
-  /** Rebuild `raw` as a digit stream (IME / autofill / suggestion fallback —
-   *  any `input` event with no preceding handled `beforeinput`), split per slot
-   *  by its fixed width, then render fixed-width so it matches the overlay —
-   *  empty when no digits remain. */
+  /** The fallback for any `input` event with no preceding handled `beforeinput`
+   *  (IME, autofill, a suggestion): `raw` is re-read as a flat digit stream and
+   *  redistributed over the slots, since its own layout cannot be trusted. */
   private commitRaw(element: HTMLInputElement, raw: string): void {
     const layout = this.layout();
     const capacity = layout.slots.reduce(
@@ -1030,7 +1009,6 @@ export class DatePickerComponent
     this.applyEditedText(element, text, this.caretAfterFill(segments, layout));
   }
 
-  /** Write masked text + caret into the DOM, then parse and validate it. */
   private applyEditedText(
     element: HTMLInputElement,
     text: string,
@@ -1093,10 +1071,9 @@ export class DatePickerComponent
     }
   }
 
-  /** Force the DOM value to `text` (over-typed digits can't accumulate) and
-   *  place the caret at `caret`. Setting `value` first parks the caret at the
-   *  end, so the explicit range must follow; the later `[value]` binding writes
-   *  the same string, which leaves the caret untouched. */
+  /** Writing `value` parks the caret at the end, so the explicit range has to
+   *  follow it; the later `[value]` binding writes the same string, which leaves
+   *  the caret untouched. */
   private writeBackText(
     element: HTMLInputElement,
     text: string,
@@ -1108,9 +1085,8 @@ export class DatePickerComponent
     element.setSelectionRange(caret, caret);
   }
 
-  /** Caret just past the last digit filled by a flat digit stream (commitRaw's
-   *  fallback path) — the first slot short of its max length, or the very end
-   *  once every slot is full. Empty segments naturally resolve to 0. */
+  /** Caret just past the last digit a flat digit stream filled — the first slot
+   *  short of its max length, or the very end once every slot is full. */
   private caretAfterFill(segments: string[], layout: FieldLayout): number {
     for (let slot = 0; slot < segments.length; slot++) {
       if (segments[slot].length < layout.slots[slot].maxLength) {
@@ -1122,7 +1098,8 @@ export class DatePickerComponent
     return slotToCaret(layout, last, layout.slots[last].maxLength);
   }
 
-  /** Parse the combined range text, flag malformed segments, commit on blur. */
+  /** `commit` is the blur pass: only then is the field text rewritten from the
+   *  parsed value, and a half-filled range written through to `value`. */
   private applyRangeText(
     text: string,
     spec: DateFormatSpec,

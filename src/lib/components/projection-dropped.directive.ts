@@ -21,9 +21,7 @@ import {
  * It is NOT projection support: the probe exists so the warning can see that
  * content arrived, and then hides it.
  *
- * `ds-filter-bar` is the only host today. The field family used to be the reason
- * this exists, and is not any more — `ds-checkbox`, `ds-radio` and `ds-switch`
- * render a projected caption since 0.8.0 and dropped the probe with that release.
+ * `ds-filter-bar` is the only host today.
  *
  * `reason` replaces the default `[label]` wording for a host that drops content
  * for a different reason — `ds-filter-bar` drops anything that carries neither of

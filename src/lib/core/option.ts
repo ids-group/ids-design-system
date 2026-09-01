@@ -32,8 +32,7 @@ export interface DsOptionGroup<T = string> {
 /**
  * What a picker's `options` input takes: flat options, groups, or both mixed.
  * One input rather than two, because a second `optionGroups` input can only
- * answer "what if both are set" by silently ignoring one — which is what
- * `ds-autocomplete` used to do.
+ * answer "what if both are set" by silently ignoring one.
  */
 export type DsOptionItem<T = string> = DsOption<T> | DsOptionGroup<T>;
 

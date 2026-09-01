@@ -115,8 +115,8 @@ const CLIENTS = [
   'the portals',
 ];
 
-// Paths that exist only in this repo. The published tree holds `styles/`, `themes/`,
-// `migrations/`, `schematics/` and the root documents, so none of those belong here.
+// The published tree holds `styles/`, `themes/`, `migrations/`, `schematics/` and the
+// root documents, so none of those belong here.
 const INTERNAL_PATHS = [
   'src/lib/',
   'src/public-api',
@@ -154,9 +154,8 @@ const OUR_RECORD = [
 
 const PEOPLE = ['Stas', 'Misha'];
 
-// A release block runs Breaking, Added, Changed, Removed, Fixed, DELETE. Ranked by slot rather
-// than by heading, so a release that spells its breaking half `Changed (breaking, visual)` still
-// lands in the Breaking slot.
+// Ranked by slot rather than by heading, so a release that spells its breaking half
+// `Changed (breaking, visual)` still lands in the Breaking slot.
 const SECTION_SLOTS = [
   [/^breaking|\(breaking/i, 0],
   [/^added$/i, 1],
@@ -295,7 +294,6 @@ const ourScripts = (() => {
 
 const requested = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 if (process.argv.includes('--list')) {
-  // Both groups, because the shipped sources are published text too.
   for (const file of publishedFiles()) console.log(`document  ${file}`);
   for (const file of shippedSources()) console.log(`source    ${file}`);
   process.exit(0);
@@ -421,8 +419,7 @@ for (const { full, label: file, isSource } of targets) {
   }
 
   // These files wrap at ~100 columns, so a two-word phrase splits across lines and a
-  // line-by-line scan walks straight past `npm run\n  class-surface`. Flatten the file,
-  // keeping a line number for every character, and match against that.
+  // line-by-line scan walks straight past `npm run\n  class-surface`.
   let flat = '';
   const lineAt = [];
   // The locator spans are measured on the unflattened text, so a flat match needs its raw
@@ -584,7 +581,7 @@ for (const { full, label: file, isSource } of targets) {
 
   // C013 — a name that resolves to nothing at all. C010 walks the symbols that exist and are
   // not exported, so it cannot see one that was never declared: `DsListCursor` reached
-  // `## Unreleased` described as exported, and the module declares `DsListCursorList` and four
+  // `## Unreleased` described as exported, and the module declares `DsListCursorList` and three
   // functions. Only our own `Ds*` prefix is resolved — Angular and TypeScript names are all
   // over this prose and are not ours to account for.
   scanFlat(
