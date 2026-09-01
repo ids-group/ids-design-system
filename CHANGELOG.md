@@ -134,9 +134,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   consumer then marks the covered subtree itself — `ds-table` does this, because its scrim starts
   below the header and re-sorting during a refresh is exactly what puts the scrim up.
 
-- **Three published migration manifests were corrected, and a repo that upgraded across 0.4.0, 0.7.1
-  or 0.9.0 may be holding the result.** All three failed the same way — by finding nothing — so the
-  tooling reported success and there is no error to search for.
+- **Four published migration manifests were corrected, and a repo that upgraded across 0.4.0, 0.7.1,
+  0.9.0 or 0.11.1 may be holding the result.** All four failed the same way — by finding nothing — so
+  the tooling reported success and there is no error to search for.
   **`0.7.1#surface-motion-partial-a-la-carte` did nothing for the consumers it was written for.** It
   was filed as a path swap keyed on an `@use` of `styles/overlay-motion`, a line an à-la-carte
   consumer need not have, while its own instruction said to add the partial beside whatever DS
@@ -151,6 +151,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `DatePickerComponent` and `SearchComponent` each gained `inGroup` and were missing from the list,
   and `AuthLayoutComponent` was on it although it did not exist at 0.8.0 — it is a new export, which
   shadows a local name rather than colliding with a member of yours.
+  **`0.11.1` named one of the seven symbols it newly exported.** `DsTriggerDisplay` and the five
+  picker template directives — `DsChipTemplateDirective`, `DsCreateTemplateDirective`,
+  `DsEmptyTemplateDirective`, `DsOptionTemplateDirective`, `DsPickerTriggerDirective` — reach you
+  through the package root and can shadow a local name of the same spelling. They are new names,
+  not changed ones, so nothing of yours breaks unless you already had one.
 
 - **The 0.2.0 token rename was documented under a name this library never had, so eight tokens
   went unfound.** 0.2.0 renamed the semantic tint tokens from `-subtle` to `-subtitle` across

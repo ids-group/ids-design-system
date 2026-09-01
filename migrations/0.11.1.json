@@ -67,11 +67,18 @@
       "old": "class MySelect extends SelectComponent, class MyMultiSelect extends MultiSelectComponent, class MyAutocomplete extends AutocompleteComponent",
       "new": null,
       "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-…>` elements need nothing.",
-      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
+      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does. Separately, seven symbols are newly exported and can shadow a local name of the same spelling rather than collide with a member: `DsControlWidth`, `DsTriggerDisplay`, `DsChipTemplateDirective`, `DsCreateTemplateDirective`, `DsEmptyTemplateDirective`, `DsOptionTemplateDirective`, `DsPickerTriggerDirective`. Those are new names, not changed ones — nothing of yours breaks unless you already had one.",
       "searchHints": [
         "extends SelectComponent",
         "extends MultiSelectComponent",
-        "extends AutocompleteComponent"
+        "extends AutocompleteComponent",
+        "DsControlWidth",
+        "DsTriggerDisplay",
+        "DsChipTemplateDirective",
+        "DsCreateTemplateDirective",
+        "DsEmptyTemplateDirective",
+        "DsOptionTemplateDirective",
+        "DsPickerTriggerDirective"
       ],
       "surface": "typescript",
       "detect": [
