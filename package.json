@@ -28,6 +28,7 @@
     "build:lib": "ng build ds && node tools/build-schematics.mjs",
     "build:lib:dev": "ng build ds --configuration development",
     "build:schematics": "node tools/build-schematics.mjs",
+    "build:elements": "node .design-sync/elements/tools/gen.mjs && ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs",
     "extract-tokens": "node tools/extract-tokens.mjs",
     "extract-component-api": "node tools/extract-component-api.mjs",
     "class-surface": "node tools/class-surface-diff.mjs",

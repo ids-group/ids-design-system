@@ -33,7 +33,8 @@ In the Bitbucket UI: **Pipelines → Run pipeline → branch `dev` →** pick
 `dev` → `main`, bumps the version, stamps the CHANGELOG, commits, pushes `main` +
 a `vX.Y.Z` tag, and back-merges `main` → `dev` — no local tooling needed. The tag
 push triggers the `Publish to npm` pipeline, which publishes and then starts the
-`deploy-docs` pipeline (three runs: release, publish, deploy-docs). `## Unreleased`
+`after-release` pipeline — docs deploy plus the Claude Design bundle (three runs:
+release, publish, after-release). `## Unreleased`
 must be filled first; preflight fails the pipeline early otherwise.
 
 ### Option B — locally
@@ -64,7 +65,7 @@ CI auth uses two Secured repository variables: `NPM_TOKEN` (npm granular access
 token, read+write on `@ids-group-ltd`, "Bypass 2FA" enabled) for publishing, and —
 for the one-click pipelines only — two Bitbucket Repository Access Tokens:
 `RELEASE_TOKEN` (`repository:write`, to push the bump commit, tag, and dev
-back-sync) and `DOCS_DEPLOY_TOKEN` (`pipeline:write`, to start the `deploy-docs`
+back-sync) and `DOCS_DEPLOY_TOKEN` (`pipeline:write`, to start the `after-release`
 pipeline after publish). Split so each carries only the scope it needs.
 
 Manual publish (fallback, requires an authenticated npm session):
