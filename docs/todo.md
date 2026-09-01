@@ -236,6 +236,17 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 
 Requests, not defects. Ordered by who is blocked.
 
+## DS-docs
+
+- [ ] **[P3] ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01).**
+  The house lint rule `ds/template/element-content-newline` moves the content of an inline `<code>` onto
+  its own line, so `</code>.` becomes a collapsed newline plus the period and the browser renders
+  `--radius-pill-value .` — measured in the radius section's own lede, which predates this note, so it
+  affects every section that puts punctuation after a code span. **Not a local defect:** fixing it in one
+  section would fight the lint rule and make that section inconsistent with the other sixty. The fix is
+  either a rule exemption for inline `<code>` or a CSS-level one; either way it is a single change for the
+  whole site. Low priority — it is one space — but it is in every paragraph that names a token.
+
 ## Component feature gaps
 
 
