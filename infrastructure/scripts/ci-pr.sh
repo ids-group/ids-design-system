@@ -7,6 +7,8 @@
 #
 # build          -> fails the step if the library or docs don't compile
 # migration-lint -> fails the step; migrations/ has no debt to carry
+# agent-catalogue -> fails the step; docs/agent/ is generated from components.md and must
+#                   be committed in sync with it
 # changelog-lint -> fails the step; the published changelog and manifests must name
 #                   nothing a reader outside this repo cannot open
 # surface        -> fails the step when the @angular/elements route's hand-maintained
@@ -34,6 +36,11 @@ node tools/migration-lint.mjs
 
 echo "===== migration-lint selftest ====="
 node tools/migration-lint-selftest.mjs
+
+# Before anything regenerates it: the agent catalogue is derived from components.md, so a
+# commit that edits the source without regenerating leaves the shipped leaves lying.
+echo "===== agent catalogue ====="
+node tools/split-agent-catalogue.mjs --check
 
 echo "===== delete-table parity ====="
 node tools/check-delete-tables.mjs

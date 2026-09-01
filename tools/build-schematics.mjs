@@ -94,6 +94,18 @@ for (const doc of ['design-system.md', 'components.md']) {
   cpSync(doc, `dist/ds/${doc}`);
 }
 
+// The agent-facing catalogue: an index plus one leaf per component, generated from
+// components.md. A consumer's agent reads the index and one leaf instead of the whole
+// 58 KB catalogue, which is the entire point of the split.
+if (existsSync('docs/agent')) {
+  console.log('▶ Copying docs/agent/ into dist/ds/docs/agent…');
+  mkdirSync('dist/ds/docs', { recursive: true });
+  cpSync('docs/agent', 'dist/ds/docs/agent', { recursive: true });
+} else {
+  console.error('build-schematics: docs/agent missing — run `npm run agent-catalogue` first.');
+  process.exit(1);
+}
+
 // Ship the machine-readable migration manifests (migrations/<version>.json — structured
 // mirrors of the changelog, consumed by the auto-update plugin) alongside the changelog.
 if (existsSync('migrations')) {
