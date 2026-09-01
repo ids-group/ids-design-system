@@ -1,5 +1,5 @@
 import { Signal, computed, inject } from '@angular/core';
-import { DS_CONFIG } from '../config/ds-config';
+import { DS_CONFIG } from '../core/ds-config';
 
 /**
  * Resolve one brand string against the app-level default. `ds-sidenav` and

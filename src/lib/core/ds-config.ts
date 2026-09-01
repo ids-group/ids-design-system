@@ -1,7 +1,7 @@
 import { InjectionToken, Provider, inject } from '@angular/core';
 import type { IconName } from '../icons/icons.data';
-import type { DsSize } from '../core/size';
-import type { CardElevation, CardPadding } from '../components/card/card.types';
+import type { DsSize } from './size';
+import type { CardElevation, CardPadding } from './card.types';
 
 export interface DsConfig {
   field?: {

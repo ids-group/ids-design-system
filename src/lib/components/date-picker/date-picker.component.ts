@@ -36,7 +36,7 @@ import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
-import { DS_CONFIG } from '../../config/ds-config';
+import { DS_CONFIG } from '../../core/ds-config';
 import {
   type DateFormatSpec,
   type DisplayPart,

@@ -38,7 +38,7 @@ import {
   TimeColumnsComponent,
   type TimeColumnId,
 } from '../time-columns/time-columns.component';
-import { DS_CONFIG } from '../../config/ds-config';
+import { DS_CONFIG } from '../../core/ds-config';
 import {
   clampToRange,
   formatTime,

@@ -7,7 +7,7 @@ import {
   input,
 } from '@angular/core';
 import { CardComponent } from '../card/card.component';
-import type { CardElevation, CardPadding } from '../card/card.types';
+import type { CardElevation, CardPadding } from '../../core/card.types';
 import { BrandNameDirective } from '../sidenav/brand-name.directive';
 import { resolveBrandValue } from '../brand-defaults';
 

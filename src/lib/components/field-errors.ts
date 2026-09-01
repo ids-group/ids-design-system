@@ -15,7 +15,7 @@ import {
   NgForm,
   type ValidationErrors,
 } from '@angular/forms';
-import { DS_CONFIG } from '../config/ds-config';
+import { DS_CONFIG } from '../core/ds-config';
 import type { FieldMessageState } from './field-message/field-message.component';
 
 /**

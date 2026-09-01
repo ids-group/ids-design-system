@@ -1,5 +1,5 @@
 import { Signal, computed, inject } from '@angular/core';
-import { DS_CONFIG, type DsConfig } from '../config/ds-config';
+import { DS_CONFIG, type DsConfig } from './ds-config';
 
 /**
  * Resolve an input against `DS_CONFIG`, then a built-in default.

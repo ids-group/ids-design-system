@@ -1,5 +1,5 @@
 import { Signal, computed, inject } from '@angular/core';
-import { DS_CONFIG } from '../config/ds-config';
+import { DS_CONFIG } from '../core/ds-config';
 
 /**
  * Resolve a field's `reserveMessage` against the app-level default.

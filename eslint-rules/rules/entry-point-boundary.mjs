@@ -15,12 +15,20 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 const LIB_ROOT = 'src' + sep + 'lib';
 
 /** Folders whose imports of each other are fine because they share one entry point:
- *  two sibling pairs that are genuinely mutually dependent, and the four-way cycle the
- *  config's type imports create — accepted, because breaking it saves 593 B gzip. */
+ *  two sibling pairs that are genuinely mutually dependent.
+ *
+ *  A four-way cycle (`components/card`, `config`, `core`, `icons`) sat here until
+ *  2026-09-02, when A3-pre broke it by moving `ds-config.ts` and `card.types.ts` into
+ *  `core`. Accepting that cycle cost 593 B gzip, because `components/card` was dragged
+ *  into the core entry point with it.
+ *
+ *  These defaults are cycles, NOT the entry-point partition. Supplying `coLocated` is
+ *  mandatory before turning the rule on: at `'error'` with the defaults it reports 31
+ *  imports that live inside one entry point, and "fixing" one means writing a
+ *  self-referential entry-point import. */
 const DEFAULT_CO_LOCATED = [
   ['components/radio', 'components/radio-group'],
   ['components/time-columns', 'components/time-picker'],
-  ['components/card', 'config', 'core', 'icons'],
 ];
 
 function groupOf(absolutePath, libRoot) {

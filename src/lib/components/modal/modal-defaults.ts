@@ -1,5 +1,5 @@
 import { Signal, computed, inject } from '@angular/core';
-import { DS_CONFIG } from '../../config/ds-config';
+import { DS_CONFIG } from '../../core/ds-config';
 
 /**
  * Resolve `dividers` against the app-level default — same `null`-means-unset
