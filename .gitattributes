@@ -5,3 +5,9 @@
 # Generated docs data is emitted with LF by the extractors; pin eol=lf so it
 # doesn't churn to CRLF on every build under core.autocrlf.
 *.generated.ts text eol=lf
+
+# docs/todo.md was stored verbatim as CRLF (git read it as binary) and picked up 23
+# doubled carriage returns from a tool writing CRLF into an already-CRLF file.
+# Pinning eol=lf keeps it LF in the worktree too, so no conversion step is left to
+# double, and the file diffs and merges like every other doc.
+docs/todo.md text eol=lf

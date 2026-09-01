@@ -944,29 +944,29 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 
 ---
 
-## `changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)
-
-- [ ] **[P3] The gate's own floor does not catch the failure it was written for.** Before it can
-  check anything, `changelog-lint` builds the list of published artefacts from two resolvers, and
-  both degrade quietly: `publishedFiles()` filters through `existsSync`, and `shippedSources()`
-  reads `assets ?? []` out of `ng-package.json`. Rename a directory, or rename that key, and the
-  list simply gets shorter — the gate checks what it found, prints `OK`, and never opens the rest.
-  A leak in an unopened file ships.
-
-  **Measured 2026-09-01.** The sweep is 320 files, and it is three groups, not one: **30**
-  documents, **36** assets from `src/lib/styles` + `src/lib/themes`, **254** TypeScript sources
-  under `src/lib`. Dropping the `assets` key costs the 36 and leaves **284** — which clears the
-  floor of 100 with room to spare. **The floor is green for exactly the collapse it exists to
-  catch**, because a single total cannot see one group of three go to zero.
-
-  **Two ways out, and the smaller one may be enough.** (a) A committed census per group in
-  `tools/surface-baseline.json`: fewer than last time fails and names the group, more is normal
-  growth, and `tools/changelog-release.mjs` rewrites the numbers at the cut so they land in the
-  release commit rather than dirtying an unrelated branch. (b) Just assert that every directory
-  named in `ng-package.json` `assets` yields at least one file — three lines, catches this exact
-  scenario, no numbers to maintain. **Nothing has broken yet**; this is a guard against a future
-  rename, which is why it is parked rather than open.
-
+## `changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)
+
+- [ ] **[P3] The gate's own floor does not catch the failure it was written for.** Before it can
+  check anything, `changelog-lint` builds the list of published artefacts from two resolvers, and
+  both degrade quietly: `publishedFiles()` filters through `existsSync`, and `shippedSources()`
+  reads `assets ?? []` out of `ng-package.json`. Rename a directory, or rename that key, and the
+  list simply gets shorter — the gate checks what it found, prints `OK`, and never opens the rest.
+  A leak in an unopened file ships.
+
+  **Measured 2026-09-01.** The sweep is 320 files, and it is three groups, not one: **30**
+  documents, **36** assets from `src/lib/styles` + `src/lib/themes`, **254** TypeScript sources
+  under `src/lib`. Dropping the `assets` key costs the 36 and leaves **284** — which clears the
+  floor of 100 with room to spare. **The floor is green for exactly the collapse it exists to
+  catch**, because a single total cannot see one group of three go to zero.
+
+  **Two ways out, and the smaller one may be enough.** (a) A committed census per group in
+  `tools/surface-baseline.json`: fewer than last time fails and names the group, more is normal
+  growth, and `tools/changelog-release.mjs` rewrites the numbers at the cut so they land in the
+  release commit rather than dirtying an unrelated branch. (b) Just assert that every directory
+  named in `ng-package.json` `assets` yields at least one file — three lines, catches this exact
+  scenario, no numbers to maintain. **Nothing has broken yet**; this is a guard against a future
+  rename, which is why it is parked rather than open.
+
 ## Board history — the 08-10 actualization, kept for the release-gate reasoning
 
 > Superseded as a BOARD by the 08-21 one above. Kept because the reasoning is still the rule: a
