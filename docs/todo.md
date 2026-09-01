@@ -57,38 +57,39 @@ what makes these the cheapest thing on the board.
 
 **Decisions — waiting on Stas, not on work**
 
-- P2 · Seven decks carry `ds-deck-status: open` and none has a verdict; three have a backlog twin — see *Decks awaiting a verdict* above
-- P3 · `schematics/tsconfig.json` asks for `moduleResolution: "node"`, which TypeScript 6 removes — fix is `node16`
-- P3 · Sidebar nav labels reflow while the rail animates — same class as the brand block, same fix
-- P3 · Re-wrap `CHANGELOG.md` to ~100 columns — Stas 2026-08-31: "щас не будем"
-- P3 · Virtualising a long picker list — RECORDED 2026-08-31, fights `aria-activedescendant`, measure before building
- (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
+Ordered by what each unblocks. The top four each hold a deck or a whole lane hostage.
 
-- P1 · Upgrade to Angular 22 — DECIDED 2026-08-25 (Stas): not now, peers stay `^21.2.0`. No longer awaiting a
-- P2 · prettier and eslint want opposite things about HTML, so `lint:all` can never be green — a config
-- P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in,
-- P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the
-- P2 · `.ds-interactive` — global state-interaction contract (agreed; prototype before spec —
-- P2 · Theme recipe vs hand-tuned picks — alignment decision. Button/icon-button state derivation uses the
-- P3 · Does a release note owe the reader a WHY, or only a what-and-what-to-do — left open 2026-08-28
-- P3 · ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class — `is-*`
-- P3 · Three signal-forms contract members are unimplemented; `disabledReasons` is ANSWERED (2026-08-26)
-- P3 · Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not
-- P3 · Three deferred DEFAULT changes for the batch after 0.9.0, all held back by the release
-- P3 · Ten manifest-format practices the 2026-08-25 audit marked *Adopt* and nobody has ratified —
+- P2 · **Seven decks have no verdict**; three have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
+- P2 · **Single-source colour engine** — one token per role, derived. Two decks argue it; the warning-contrast bug is downstream of the same palette question
+- P2 · **prettier vs eslint on HTML** — they want opposite things, so `lint:all` can never be green. Every branch pays this until a config wins
+- P2 · **`.ds-interactive`** — global state-interaction contract, agreed in principle, prototype before spec
+- P2 · **Theme recipe vs hand-tuned picks** — does state derivation follow the theme's mix-to-black recipe, or the drawn ramp? Blocks the two above
+- P2 · **`ds-number-stepper` and `ds-dropzone` are outside the field-message system** — bring them in, or say they are not fields
+- P3 · **Ten manifest-format practices** the audit marked *Adopt* and nobody ratified
+- P3 · **Three deferred DEFAULT changes** held back by the release policy
+- P3 · **Does a release note owe a WHY**, or only a what-and-what-to-do
+- P3 · **ds-docs still writes BEM modifiers as `--suffix`** — a state should be its own `is-*` class
+- P3 · **Three signal-forms contract members** are unimplemented, all blocked on a LOOK rather than wiring
+- P3 · **Shared picker internals** — surveyed, and the recommendation is NOT to build until a fourth list picker appears
+- P3 · **Virtualising a long picker list** — fights `aria-activedescendant`; measure before building
+- P3 · **`schematics/tsconfig.json` asks for `moduleResolution: "node"`**, which TypeScript 6 removes — fix is `node16`, cheap, do it before the bump
+- P3 · **Re-wrap `CHANGELOG.md` to ~100 columns** — mechanical, no prose changes; Stas 2026-08-31: "щас не будем"
+- P1 · **Angular 22** — DECIDED 2026-08-25: not now, peers stay `^21.2.0`. Kept so the decision is not re-litigated
 
 **Parked — asked, and deliberately not now**
 
-- P2 · Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27
-- P3 · `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them. It takes
-- P3 · Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below). A
-- P3 · Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the
-- P3 · Image / lightbox. No demand stated; overlay/motion infra (`modal`/`drawer`/`overlay-motion.ts`)
-- P3 · Splitter — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed). Resizable
-- P3 · CascadeSelect — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed).
-- P3 · Primary-button CTA token layer — ASKED 2026-08-05, Stas: keep in the backlog. Add opt-in
-- P3 · MED cluster — ASKED 2026-08-05, Stas: keep in the backlog. Density beyond hit-targets
-- P3 · CDK Menu adoption (option B) — parked. ONLY if/when nested submenus, a menubar, or context menus are
+Ordered by how close each is to a first consumer ask, which is the only thing that unparks any of them.
+
+- P2 · **Every user-visible string is a hardcoded English literal** — a consumer IS blocked (ITB Workspace runs two languages); parked on scope, not on doubt
+- P3 · **`ds-select` native `multi`** — researched, deck attached; answerable with "keep parked" and closed
+- P3 · **`--icon-xs/sm/md/lg` exist and `ds-icon` cannot be sized by them** — the smallest of these, and the gap is visible in the docs
+- P3 · **Primary-button CTA token layer** — opt-in, no demand stated yet
+- P3 · **Inspect mode** — asked, Stas: not now; pilot scope recorded
+- P3 · **Splitter** — asked, keep in the backlog
+- P3 · **CascadeSelect** — asked, keep in the backlog
+- P3 · **MED cluster** — density beyond hit-targets
+- P3 · **Image / lightbox** — no demand stated; the overlay and motion infrastructure exists to build on
+- P3 · **CDK Menu adoption** — only if nested submenus, a menubar or context menus are actually wanted
 
 **Records — kept so they are not "simplified" away**
 
@@ -144,8 +145,8 @@ what makes these the cheapest thing on the board.
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**35 open: 1 P1, 9 P2, 25 P3** — counted from the index line by line. Ten are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **23 items — 1 Bug, 5 Asks and 17
+**34 open: 1 P1, 9 P2, 24 P3** — counted from the index line by line. Ten are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **22 items — 1 Bug, 5 Asks and 16
 Decisions**.
 
 **Four items had lived in the body with no index line**, so the board never counted them and nobody
