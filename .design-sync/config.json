@@ -4,43 +4,110 @@
   "pkg": "@ids-group-ltd/ids-design-system",
   "globalName": "IdsDs",
   "entry": ".design-sync/elements/dist/ds-bundle.js",
-  "cssEntry": "dist/browser/styles.css",
+  "cssEntry": "dist/ds-bundle.css",
   "docsDir": "../docs",
   "readmeHeader": ".design-sync/conventions.md",
   "overrides": {
-    "Icon": { "cardMode": "column" },
-    "EmptyState": { "cardMode": "column" },
-    "LoadingOverlay": { "cardMode": "column" },
-    "Progress": { "cardMode": "column" },
-    "RadioGroup": { "cardMode": "column" },
-    "Search": { "cardMode": "column" },
-    "Textarea": { "cardMode": "column" },
-    "Table": { "cardMode": "column" },
-    "Timeline": { "cardMode": "column" },
-    "Alert": { "cardMode": "column" },
-    "Banner": { "cardMode": "column" },
-    "Autocomplete": { "cardMode": "column" },
-    "MultiSelect": { "cardMode": "column" },
-    "OtpInput": { "cardMode": "column" },
-    "Slider": { "cardMode": "column" },
-    "Menu": { "cardMode": "column" },
-    "Stepper": { "cardMode": "column" },
-    "Tabs": { "cardMode": "column" },
-    "PageHeader": { "cardMode": "column" },
-    "PageFooter": { "cardMode": "column" },
-    "DatePicker": { "cardMode": "column" },
-    "TimePicker": { "cardMode": "column" },
-    "Modal": { "cardMode": "column" },
-    "ModalCard": { "cardMode": "column" },
-    "ModalConfirm": { "cardMode": "column" },
-    "Drawer": { "cardMode": "column" },
-    "AppLayout": { "cardMode": "column", "primaryStory": "FullShell" },
-    "Topbar": { "cardMode": "column" },
-    "AuthLayout": { "cardMode": "column" },
-    "FieldGroup": { "cardMode": "column" },
-    "FieldMessage": { "cardMode": "column" },
-    "FilterBar": { "cardMode": "column" },
-    "PasswordRules": { "cardMode": "column" }
+    "Icon": {
+      "cardMode": "column"
+    },
+    "EmptyState": {
+      "cardMode": "column"
+    },
+    "LoadingOverlay": {
+      "cardMode": "column"
+    },
+    "Progress": {
+      "cardMode": "column"
+    },
+    "RadioGroup": {
+      "cardMode": "column"
+    },
+    "Search": {
+      "cardMode": "column"
+    },
+    "Textarea": {
+      "cardMode": "column"
+    },
+    "Table": {
+      "cardMode": "column"
+    },
+    "Timeline": {
+      "cardMode": "column"
+    },
+    "Alert": {
+      "cardMode": "column"
+    },
+    "Banner": {
+      "cardMode": "column"
+    },
+    "Autocomplete": {
+      "cardMode": "column"
+    },
+    "MultiSelect": {
+      "cardMode": "column"
+    },
+    "OtpInput": {
+      "cardMode": "column"
+    },
+    "Slider": {
+      "cardMode": "column"
+    },
+    "Menu": {
+      "cardMode": "column"
+    },
+    "Stepper": {
+      "cardMode": "column"
+    },
+    "Tabs": {
+      "cardMode": "column"
+    },
+    "PageHeader": {
+      "cardMode": "column"
+    },
+    "PageFooter": {
+      "cardMode": "column"
+    },
+    "DatePicker": {
+      "cardMode": "column"
+    },
+    "TimePicker": {
+      "cardMode": "column"
+    },
+    "Modal": {
+      "cardMode": "column"
+    },
+    "ModalCard": {
+      "cardMode": "column"
+    },
+    "ModalConfirm": {
+      "cardMode": "column"
+    },
+    "Drawer": {
+      "cardMode": "column"
+    },
+    "AppLayout": {
+      "cardMode": "column",
+      "primaryStory": "FullShell"
+    },
+    "Topbar": {
+      "cardMode": "column"
+    },
+    "AuthLayout": {
+      "cardMode": "column"
+    },
+    "FieldGroup": {
+      "cardMode": "column"
+    },
+    "FieldMessage": {
+      "cardMode": "column"
+    },
+    "FilterBar": {
+      "cardMode": "column"
+    },
+    "PasswordRules": {
+      "cardMode": "column"
+    }
   },
   "buildCmd": "node .design-sync/elements/tools/gen.mjs && npx ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
 }

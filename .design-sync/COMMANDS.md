@@ -61,7 +61,7 @@ and reports stale layout, which has faked bugs here before.
 
 ```jsonc
 "entry":    ".design-sync/elements/dist/ds-bundle.js"
-"cssEntry": "dist/browser/styles.css"
+"cssEntry": "dist/ds-bundle.css"
 "docsDir":  "../docs"
 "buildCmd": "node .design-sync/elements/tools/gen.mjs && npx ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
 ```
@@ -70,8 +70,12 @@ and reports stale layout, which has faked bugs here before.
 `docsDir` resolve against the nearest `package.json` above it. Under the deleted port that was
 `.design-sync/react-bindings/`, which is why its own `dist/ds-all.css` and `../docs` worked. So
 `.design-sync/elements/` was given its own `package.json` — same depth, same shape — and both
-relative paths keep their meaning: `dist/browser/styles.css` and `../docs` resolve to the files
-that exist. All three paths verified present on disk after a full build.
+relative paths keep their meaning: `dist/ds-bundle.css` and `../docs` resolve to the files that
+exist. All three paths verified present on disk after a full build.
+
+`cssEntry` points at `ds-bundle.css`, not at Angular's own `styles.css`, because Angular writes the
+faces as `./media/*.woff2` — correct beside its output, and 404 in the project, where the same eight
+files already sit at `fonts/`. `build-bundle.mjs` writes the upload copy with those URLs rewritten.
 
 `check-manual-surface.mjs` fails if that `package.json` goes missing or its version drifts from
 the root — it is load-bearing for path resolution and nothing else would notice.

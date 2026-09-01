@@ -7,7 +7,7 @@
 // Stage 1 is `ng build ds-elements` — the Angular CLI is what runs AOT template
 // compilation and the partial-Ivy linker, which plain esbuild cannot do.
 import { createRequire } from 'node:module';
-import { copyFileSync, existsSync, mkdirSync, statSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -75,10 +75,13 @@ await esbuild.build({
   logLevel: 'warning',
 });
 
-// Declarations are the contract the design agent reads — the live project carries a
-// .d.ts per component and the port emitted them via tsc. This route emitted none until
-// 2026-09-01, so every prop reached the agent untyped. Resolved from the lockfile, not
-// via npx, for the reason recorded in tools/build-schematics.mjs.
+// Type-CHECK the generated code. This is not what the project's per-component
+// `<Name>.d.ts` comes from — those are written by the /design-sync skill, which stamps
+// a header the compiler could never know (`@replaces <tag>` and the package version,
+// read off the live Button.d.ts on 2026-09-01). The value here is that the route emitted
+// no declarations at all until then, and the first pass over the generated code found
+// four generator bugs. Resolved from the lockfile, not via npx, for the reason recorded
+// in tools/build-schematics.mjs.
 const tsc = createRequire(import.meta.url).resolve('typescript/bin/tsc');
 execFileSync(process.execPath, [tsc, '-p', join(elements, 'tsconfig.types.json')], {
   cwd: repo,
@@ -88,7 +91,15 @@ execFileSync(process.execPath, [tsc, '-p', join(elements, 'tsconfig.types.json')
 const styles = join(elements, 'dist/browser/styles.css');
 copyFileSync(styles, join(elements, 'demo/dist/styles.css'));
 
+// The upload copy of the stylesheet. Angular emits the faces as `./media/*.woff2`,
+// which is right beside `styles.css` here and nowhere at all in the design project:
+// its fonts live at `fonts/` with the same eight filenames, uploaded once. Rewriting
+// the URLs reuses them, so a sync ships one CSS file and no binaries. Measured: served
+// unrewritten, every face 404s and the cards fall back to a system font.
+const uploadCss = join(elements, 'dist/ds-bundle.css');
+writeFileSync(uploadCss, readFileSync(styles, 'utf8').replaceAll('./media/', 'fonts/'));
+
 console.error(
   `✓ ds-bundle.js ${kb(bundlePath)} (react from window) · angular main.js ${kb(ngOutput)}`
-  + ` · styles.css ${kb(styles)} · demo ${kb(demoPath)} · d.ts emitted`,
+  + ` · ds-bundle.css ${kb(uploadCss)} (fonts/ rewritten) · demo ${kb(demoPath)} · d.ts emitted`,
 );

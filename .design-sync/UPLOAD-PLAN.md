@@ -69,15 +69,19 @@ the model context.
   to LOAD in a local copy of the host's four-script chain (React 18.3.1 from `_vendor`, the
   bundle, then a preview) — `window.IdsDs` resolves and overlay previews render their projected
   content. The upload itself has still never run.
-- Run the full chain first: `gen.mjs` → `ng build ds-elements` → `build-bundle.mjs`. The last
-  step also emits declarations, but NOT in the remote's shape: it produces one aggregate
-  `dist/types/.design-sync/elements/gen/wrappers.d.ts` carrying all 85 `<Name>Props`, whereas the
-  project stores a `<Name>.d.ts` per component. Whoever runs the upload has to slice it or accept
-  one shared declaration file — this is not solved.
-- **Fonts.** `styles.css` inlines `@font-face` pointing at `./media/*.woff2`, and the project
-  already carries `fonts/` from the port's upload. Either upload `dist/browser/media/**` beside
-  the CSS or rewrite those URLs to `fonts/`; uploading the CSS alone leaves every face 404 and the
-  cards render in a fallback font. Measured 2026-09-01 against the local host copy.
+- Run the full chain first: `gen.mjs` → `ng build ds-elements` → `build-bundle.mjs`.
+- **Fonts are handled — upload `dist/ds-bundle.css`, not `dist/browser/styles.css`.** Angular emits
+  the faces as `./media/*.woff2`, which is correct beside its own output and wrong in the project,
+  where the eight files already sit at `fonts/` from the July upload. `build-bundle.mjs` writes an
+  upload copy with those URLs rewritten to `fonts/`, so a sync ships one CSS file and no binaries;
+  `cssEntry` points at it. Verified 2026-09-01 against a local copy of the project's layout: served
+  unrewritten every face 404s, rewritten there are none and the page renders in Mulish.
+- **The per-component `<Name>.d.ts` is the skill's output, not ours.** The live `Button.d.ts` opens
+  with `Button — from @ids-group-ltd/ids-design-system@0.6.2.` and `@replaces button` — a header no
+  compiler can produce — and its unions are inlined flat with no imports. So do not try to ship
+  declarations: `build-bundle.mjs` runs tsc to type-CHECK the generated wrappers, which is worth
+  doing on its own (the first pass found four generator bugs), and the aggregate it emits under
+  `dist/types/` is a by-product, not an upload artefact.
 - Previews must set their state as INITIAL props, never toggle it after mount — see
   `COMMANDS.md`. A modal preview passes `staticPreview`; a table preview showing
   `[bulk-actions]` passes `selectedIds`.
