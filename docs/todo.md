@@ -468,6 +468,27 @@ the service was just the one somebody noticed. Full table and every tested hypot
   between entry points, so any clustering must be de-cycled first. Per-component has only the two
   trivial sibling cycles. **Verdict: go per-component.**
 
+  **Re-validated 2026-09-02 after a challenge, and the rejection got stronger.** The first argument was
+  weak — it rested on ONE attempted clustering having a cycle, which proves nothing about clustering in
+  general. So the question was asked properly: make that clustering acyclic and see what it becomes. A
+  cluster graph is made acyclic by merging its strongly-connected components, and `data`, `fields`,
+  `display` and `shell` all merge:
+
+  | cluster after merging | groups |
+  | --- | --- |
+  | `data+display+fields+shell` | **60** |
+  | `core` | 15 |
+  | `services` | 2 |
+
+  **Six semantic clusters collapse to three, and one of them holds 60 of the 77 groups.** That is the
+  three-layer partition again, which is already measured as delivering roughly nothing for an
+  eager-shell consumer. A lazy route using `ds-table` would drag **59 sibling groups** with it.
+
+  The cause is that the cycle is made of real edges — `pagination -> select`, `autocomplete -> tag`,
+  `multi-select -> badge`, `empty-state -> loading-overlay`. Components compose across semantic
+  categories, so the categories do not match the dependency structure. It is not that this particular
+  clustering was badly chosen; it is that clustering by meaning does not survive contact with the graph.
+
   **A missed rewrite fails the build with a useless message, tested:** swapping one public specifier for
   a relative path across a boundary gives `Cannot destructure property 'pos' of
   'file.referencedFiles[index]' as it is undefined`, with nothing naming the cause. The good news is it
@@ -483,19 +504,30 @@ the service was just the one somebody noticed. Full table and every tested hypot
   (ng-packagr `docs/secondary-entrypoints.md` on `main`, plus a Feb 2026 guide). Full analysis:
   `packaging-diagnosis.md` « Do we have to split? ».
 
-- [x] **[P2] A3-pre — DECLINED 2026-09-01, measured: the cycle costs 593 B gzip, the fix costs 40
-  import rewrites.** The four-way SCC (`components/card`, `config`, `core`, `icons`) is real, and every
-  edge out of `ds-config.ts` that creates it is a TYPE import. The minimum cut was priced: move
-  `ds-config.ts` (11 importers), `icons.data.ts` (27) and card's two type aliases (2) into `core` —
-  **40 import statements**, plus moving a component's public types into the bottom layer, plus conflict
-  risk against the active parallel lane.
+- [ ] **[P2] A3-pre — DO IT. Reversed 2026-09-02: the minimum cut is 14 import rewrites, not 40.**
+  The earlier decline rested on my own inflated figure. Recomputed by searching every subset of
+  candidate moves for the cheapest one that breaks the four-way SCC (`components/card`, `config`,
+  `core`, `icons`):
 
-  **What the cycle actually costs is almost nothing.** `config`, `core` and `icons` were always going to
-  share the `core` entry point, so the ONLY consequence of leaving the SCC intact is that `ds-card`
-  ships with them. Measured: core seed (button, icon, spinner, field-group, popover, menu, menu-item)
-  **84 430 B gzip**; the same seed plus `CardComponent` **85 023 B** — **593 B**. And `card` is a common
-  component most consumers use anyway. **Decision: accept the SCC, put `card` in the core entry.** Do
-  not re-open without a new measurement.
+  | move | import statements to rewrite |
+  | --- | --- |
+  | `config/ds-config.ts` -> `core` | 11 |
+  | `components/card/card.types.ts` -> `core` | 3 |
+  | **total** | **14** |
+
+  The 40 came from assuming `icons.data.ts` (28 importers) had to move too. **It does not.** After the
+  two moves above the four-way cycle is gone and what remains is `core <-> icons`, a two-group cycle
+  that costs nothing: `icons` has in-degree 38 and was always going to live in the `core` entry.
+
+  **Why do it, now that it is cheap.** Bytes were never the case — accepting the cycle costs 593 B gzip
+  (core seed 84 430 B, seed + `CardComponent` 85 023 B). The case is architectural and I failed to weigh
+  it the first time: `ds-config.ts` type-imports `CardElevation`/`CardPadding` from a COMPONENT, which is
+  a layering inversion — the config knows about a thing that depends on it. Fixing that also makes
+  `card` an ordinary leaf component with its own entry point instead of a permanent resident of the
+  bottom layer. Fourteen rewrites is a twentieth of the 307 the entry-point work needs anyway.
+
+  Do it as the FIRST commit of the entry-point work, on its own, so the layering fix is reviewable
+  separately from the 307 mechanical rewrites.
 
   **Still worth having, and independent of the cycle:** `theme` as its own entry point.
   `provide-ds-theme.ts` imports only `@angular/core` and `@angular/common`, so it is a true leaf, and
