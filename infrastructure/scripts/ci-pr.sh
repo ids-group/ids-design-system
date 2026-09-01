@@ -9,6 +9,8 @@
 # migration-lint -> fails the step; migrations/ has no debt to carry
 # changelog-lint -> fails the step; the published changelog and manifests must name
 #                   nothing a reader outside this repo cannot open
+# surface        -> fails the step when the @angular/elements route's hand-maintained
+#                   list drifts from src/lib (see .design-sync/MANUAL-SURFACE.md)
 # parity         -> fails the step if the design-sync React bindings drifted from
 #                   the Angular sources they port (no pre-existing debt to carry)
 # lint           -> report-only (prettier/stylelint/eslint), never fails the step
@@ -51,6 +53,7 @@ echo "Building (lib -> docs) and linting in parallel..."
 # the artifact checks fail loud if a build silently produced nothing.
 ( bun run build:lib && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
 bun run check:design-sync               > "$log_dir/parity.log"    2>&1 &  pid_parity=$!
+bun run check:manual-surface            > "$log_dir/surface.log"   2>&1 &  pid_surface=$!
 bun run format                          > "$log_dir/format.log"    2>&1 &  pid_format=$!
 bun run lint:styles                     > "$log_dir/stylelint.log" 2>&1 &  pid_styles=$!
 bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_eslint=$!
@@ -61,12 +64,15 @@ wait "$pid_build" || build_failed=1
 parity_failed=0
 wait "$pid_parity" || parity_failed=1
 
+surface_failed=0
+wait "$pid_surface" || surface_failed=1
+
 lint_failed=0
 wait "$pid_format" || lint_failed=1
 wait "$pid_styles" || lint_failed=1
 wait "$pid_eslint" || lint_failed=1
 
-for name in build parity format stylelint eslint; do
+for name in build parity surface format stylelint eslint; do
   echo "===== $name ====="
   cat "$log_dir/$name.log"
 done
@@ -88,3 +94,9 @@ if [ "$parity_failed" -ne 0 ]; then
   exit 1
 fi
 echo "design-sync parity passed"
+
+if [ "$surface_failed" -ne 0 ]; then
+  echo "manual-surface check failed"
+  exit 1
+fi
+echo "manual surface passed"

@@ -32,6 +32,7 @@
     "extract-component-api": "node tools/extract-component-api.mjs",
     "class-surface": "node tools/class-surface-diff.mjs",
     "check:design-sync": "node .design-sync/tools/check-parity.mjs",
+    "check:manual-surface": "node .design-sync/tools/check-manual-surface.mjs",
     "check-docs-links": "node tools/check-docs-links.mjs",
     "migration-lint": "node tools/migration-lint.mjs",
     "migration-lint:selftest": "node tools/migration-lint-selftest.mjs",
