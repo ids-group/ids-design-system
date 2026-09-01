@@ -50,6 +50,7 @@ what makes these the cheapest thing on the board.
 **Asks — a consumer or Stas asked for it**
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
+- P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
@@ -57,6 +58,9 @@ what makes these the cheapest thing on the board.
 **Decisions — waiting on Stas, not on work**
 
 - P2 · Seven decks carry `ds-deck-status: open` and none has a verdict; three have a backlog twin — see *Decks awaiting a verdict* above
+- P3 · `schematics/tsconfig.json` asks for `moduleResolution: "node"`, which TypeScript 6 removes — fix is `node16`
+- P3 · Sidebar nav labels reflow while the rail animates — same class as the brand block, same fix
+- P3 · Re-wrap `CHANGELOG.md` to ~100 columns — Stas 2026-08-31: "щас не будем"
 - P3 · Virtualising a long picker list — RECORDED 2026-08-31, fights `aria-activedescendant`, measure before building
  (server data, panel slots, row-geometry tokens, a11y) — §9 of the picker deck, batched deliberately: they are one design conversation, not thirteen tickets
 
@@ -140,9 +144,13 @@ what makes these the cheapest thing on the board.
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**31 open: 1 P1, 9 P2, 21 P3** — counted from the index line by line. Ten are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **19 items — 1 Bug, 4 Asks and 14
+**35 open: 1 P1, 9 P2, 25 P3** — counted from the index line by line. Ten are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **23 items — 1 Bug, 5 Asks and 17
 Decisions**.
+
+**Four items had lived in the body with no index line**, so the board never counted them and nobody
+scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
+reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
 **`# Bugs` holds one, measured:** the warning status pair at 4.42:1 where AA asks 4.5. It reaches
 nine components plus `_status.scss` and `_field-state.scss` — eleven files counted — so one token
@@ -272,8 +280,6 @@ Requests, not defects. Ordered by who is blocked.
 - [ ] **[P3] `schematics/tsconfig.json` still asks for `moduleResolution: "node"`, which TypeScript 6 removes (recorded 2026-08-31).** `"node"` is the alias for `node10`. TypeScript 5.9.3 — what this repo pins — accepts it, so `npm run build:lib` is green today and 0.11.1 shipped complete: `dist/ds` carries the changelog, both digests, 25 manifests and a registered `schematics/collection.json`. On TypeScript 6 the same config fails with `TS5108: Option 'moduleResolution=node10' has been removed`, and because that error stops `tools/build-schematics.mjs` at its FIRST step, the run never reaches the copy steps — the package would then publish without the changelog, the digests, the manifests or the schematics, and `ng build ds` alone reports success.
   **The fix when the bump comes:** `module` and `moduleResolution` both go to `node16`. `ng-add/index.cts` is already a `.cts` file, so node16 emits CommonJS for it regardless and the `index.cjs` check in the build script keeps passing.
   **How this was found, and the trap in it:** running `npm run build:lib` from a git worktree that has no `node_modules` of its own. `npx` then fetches a current TypeScript instead of the pinned one, and the failure looks like a broken build rather than a worktree without dependencies. Verify a build failure in the real checkout before believing it.
-
-- [ ] **[P3] Real content projection for the field family (recorded 2026-08-31; the task had no entry anywhere).** `ds-checkbox`, `ds-radio` and `ds-switch` render their caption from `[label]` only — `<ds-checkbox>Accept the terms</ds-checkbox>` renders nothing. Since 0.7.1 a dev-mode probe (`projection-dropped.directive.ts`) warns which component swallowed the text, and the shipped JSDoc there tells a consumer that "real projection for the field family is still open" — a promise with nothing behind it until this is filed. `ds-filter-bar` drops anything carrying neither of its slot attributes and uses the same probe. Decide whether projection is supported at all before the next field release: if it is not, the JSDoc should say so instead of calling it open.
 
 - [ ] **[P3] Drop the brand and domain EXAMPLES from the published docs, not just their names (Stas, 2026-08-31).** The sweep genericised them; his instruction was to consider removing them outright. Exact locations:
   - `src/lib/themes/README.md` — three brand mentions, now `acme` / `brand-acme`: the Option C code block (`@use './app/styles/brand-acme'`), the "Brand vs theme" bullet, and the "Rules summary" bullet. The question is whether the rule ("a brand is an attribute-scoped overlay authored on a theme") needs a named brand in the example at all, or reads fine with `[data-brand="X"]` alone, which the rest of the file already uses.
