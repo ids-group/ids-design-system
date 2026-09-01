@@ -245,3 +245,80 @@ static edge, so the 11 kB arrives with any button. The only two ways out are to 
 `ds-button`, or to move it behind an opt-in directive — **the same seam pattern as the table**
 (`basic-advanced-split-audit.md` §9). That is a design decision, not a defect, and it belongs in the
 same lane as A1/A2 rather than in A3.
+
+## Do we have to split? Yes — and per-component is nearly the cheapest option
+
+Asked directly on 2026-09-01: *"пока entry point один, никакой внутренний рефакторинг не вынесет из
+initial ни байта — нужно разделять?"* Every other lever has now been measured, so the comparison is
+complete:
+
+| Lever | What it moves out of the initial bundle | Catch |
+| --- | --- | --- |
+| internal refactor of any kind | **0 bytes** | placement is per module; there is one module |
+| `DS_CONFIG.prototype: true` | **0 bytes** | a runtime flag cannot be folded at build time |
+| basic/advanced as two packages | ~18 kB gzip of retention, 0 of placement | a second table to mirror forever |
+| consumer-side `await import()` / `@defer` | most of it | costs the consumer ~50% of tree-shaking, and every consumer must rediscover it |
+| **secondary entry points** | **~108 kB gzip** (eager service) / **~98 kB** (eager shell) | one internal refactor, sized below |
+
+### The refactor is 318 import rewrites, and the number barely moves with granularity
+
+ng-packagr requires a cross-entry-point import to go through the package's public specifier rather than
+a relative path. `src/lib` currently holds **318 cross-group import statements** (249 runtime,
+69 type-only). How many need rewriting depends on where the boundaries fall:
+
+| Partition | Entry points | Imports to rewrite |
+| --- | --- | --- |
+| **P1 — one per component** | 77 | **318** (249 runtime + 69 type-only) |
+| P2 — six semantic clusters | 6 | 265 |
+| P3 — three layers | 3 | 257 |
+
+**Only 19% separates the finest partition from the coarsest**, because most cross-group imports point at
+core-ish modules (`icons`, `core`, `field-message`) that cross a boundary under every partition. So
+coarse clustering saves almost nothing on the refactor while giving up the whole eager/lazy win measured
+in "Three follow-up measurements" §1.
+
+### Semantic clustering is also structurally worse
+
+A six-cluster attempt (`core`, `services`, `shell`, `fields`, `data`, `display`) contains a **real
+cycle**, `data → fields → display → data`:
+
+- `pagination → select` (data → fields)
+- `autocomplete → tag`, `multi-select → tag`, `multi-select → badge` (fields → display)
+- `empty-state → loading-overlay` (display → data)
+
+Every one of those edges is a legitimate component-composes-component relationship — components do not
+respect semantic categories. ng-packagr forbids cycles between entry points, so any semantic clustering
+has to be de-cycled first. **Per-component has no such problem** — the whole graph has only the two
+trivial sibling cycles (`radio ↔ radio-group`, `time-columns ↔ time-picker`).
+
+Put together: per-component costs 53 more import rewrites than three layers, needs no partition design,
+needs no cycle-breaking, and is the only granularity that delivers the win for an eager-shell consumer.
+It is also what Angular Material and `@angular/cdk` do.
+
+### What happens if a rewrite is missed
+
+Tested in the fixture by replacing one public specifier with a relative path across an entry-point
+boundary:
+
+```
+✔ Built probelib/core
+✔ Built probelib/services
+✖ Compiling with Angular sources in partial compilation mode.
+  Cannot destructure property 'pos' of 'file.referencedFiles[index]' as it is undefined.
+```
+
+The build **fails**, which is the good outcome: it does not silently bundle the same source into two
+FESMs, which would give two class identities and a DI container resolving two different services.
+Restoring the specifier makes it build again, so the causal link is confirmed by control. The bad part
+is the diagnostic — an internal TypeScript error with nothing naming the cause. **Budget for that:** a
+missed rewrite reads as a broken toolchain, not as a missed rewrite.
+
+### Cost checklist for the eventual A3
+
+- ~75 nested `ng-package.json` files (two lines each) plus a `public-api.ts` per folder
+- 318 import rewrites, mechanical but easy to get subtly wrong — see the diagnostic above
+- root `public-api.ts` becomes a pure re-export facade (measured twice as costing consumers nothing)
+- `ds-docs` needs a path mapping per entry point in its tsconfig, since it compiles the library from source
+- the tools that scan `src/lib` — `extract-component-api.mjs`, `extract-tokens.mjs`,
+  `class-surface-diff.mjs`, `changelog-lint.mjs` — need checking against the new layout
+- the two sibling cycles must be co-located in their entry points
