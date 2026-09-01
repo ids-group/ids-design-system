@@ -16,8 +16,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the change: 0px on all twelve banner shapes and all eight toast shapes.
 
   It is `align-self` on the icon rather than `align-items` on the row, so the close button and the
-  action buttons keep the positions they had. `--banner-ic-mt` is **removed** — it existed only to nudge
-  the icon down by one border-width under the old rule, and nothing reads it now.
+  action buttons keep the positions they had — measured: `align-items` would move the close button
+  10.95px in the default `layout-stacked` banner. `--banner-ic-mt` is **removed**; it existed only to
+  nudge the icon down by one border-width under the old rule.
+
+  `ds-alert` follows, for the same reason: it carried the same nudge inlined as
+  `var(--border-width-default)` rather than through the token, so the sweep missed it and the two
+  components placed their icons 22.8px apart on the same content.
+
+  **Known limit.** The icon centres on the flex LINE, which equals the message block only while the
+  message is the tallest thing in the row. A one-line toast with a close button is 0.53px off, and with
+  a projected `[actions]` button 6–14px off depending on its size. `align-items: center` would be
+  unconditional but moves the close button, which is the trade above.
 
 ### Fixed
 

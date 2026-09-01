@@ -51,7 +51,7 @@
     color: var(--info-text);
     align-items: flex-start;
   }
-  .banner .icon { flex-shrink: 0; width: 20px; height: 20px; color: inherit; margin-top: var(--banner-ic-mt); }
+  .banner .icon { flex-shrink: 0; width: 20px; height: 20px; color: inherit; margin-top: 1px; /* was var(--banner-ic-mt), deleted with the rule it served */ }
   .banner .body { flex: 1; min-width: 0; }
   .banner .title { font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans); color: var(--text-primary); margin: 0; }
   .banner .text { display: block; font-size: var(--font-size-s); }
@@ -73,7 +73,7 @@
     align-items: flex-start;
     max-width: 22rem;
   }
-  .toast .icon { flex-shrink: 0; width: 20px; height: 20px; color: var(--info); margin-top: var(--banner-ic-mt); }
+  .toast .icon { flex-shrink: 0; width: 20px; height: 20px; color: var(--info); margin-top: 1px; /* was var(--banner-ic-mt), deleted with the rule it served */ }
   .toast .text { font-size: var(--font-size-s); }
   .b .toast { align-items: center; }
   .b .toast .icon { margin-top: 0; }
