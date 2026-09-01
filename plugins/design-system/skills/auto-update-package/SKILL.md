@@ -128,7 +128,7 @@ instead of guessing. Version-exactness decides WHERE:
 
 From the moment the chain is computed, maintain a small JSON ledger at
 `<scratchpad>/ds-update-ledger.json`:
-`{ branch, chain, perVersion: { "<V>": { items: { "<id>": "applied | not-applicable | needsReview
+`{ branch, chain, perVersion: { "<V>": { items: { "<id>": "applied | not-applicable | locator-dead | needsReview
 | rechecked" }, touchedFiles: [], attempts, committed } } }`. Update it at every step boundary
 (plan done / apply wave done / bumped / verified / re-checked / committed). Session limits and
 interruptions DO happen mid-run — the ledger turns an improvised handoff into a deterministic
@@ -223,7 +223,16 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
    root — passing each MigrationItem **verbatim** (`old` / `searchHints` / `map` / `surface` /
    `detect` as the planner emitted them; the same no-paraphrase rule as step 3). Collect per-item
-   `path:line` hits. Zero-hit items are not-applicable — record and drop. **Exception:** zero hits
+   `path:line` hits **and record every item's hit count** (ledger + final report). **Classify a
+   zero before dropping it — "not in this repo" and "this locator matches nothing anywhere" are
+   different claims:**
+   - **not-applicable** — the broad locators show the consumer simply doesn't use the feature (some
+     hint matched the surrounding feature, or the component itself is absent); record the reason.
+   - **LOCATOR-DEAD** — `old`, every `detect` shape AND every `searchHint` returned zero hits
+     repo-wide, all surfaces. That is evidence about the MANIFEST, not the consumer — an item naming
+     a token that never existed passed every prior upgrade exactly this way. Record it separately
+     (never inside the not-applicable total) and carry the whole set into the Phase C report.
+   **Exception:** zero hits
    prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
    removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
    finder couldn't locate the insertion site; resolve the site yourself from the `note` (step 3
@@ -336,8 +345,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
    and re-verify before green — do not trust the finder's file set as complete. **Include the items
    dropped at step 2 as zero-hit:** for those the re-check doubles as an independent not-applicability
-   confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" item
-   re-enters it into the pipeline at step 3. If any item returns
+   confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" or
+   "locator-dead" item re-enters it into the pipeline at step 3, and a locator-dead verdict the
+   re-check confirms stays locator-dead — never re-filed as not-applicable. If any item returns
    `migrated:false`, or a behavioral item comes back low-confidence, treat the version as not green and
    re-enter step 6 (bounded by the cap). Only items still unresolved when the cap is hit become
    manual-review.
@@ -363,7 +373,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 ## Phase C — Final report
 
 - Per target: versions completed + committed (from→to); items **auto-applied** (mechanical AND
-  behavioral); items not-applicable.
+  behavioral); items not-applicable — **every item with its hit count**.
+- **Locator-dead — evidence about the manifests, not this consumer:** the items where every locator
+  matched nothing repo-wide, with version and id. One can be a consumer quirk; several in one chain
+  mean the manifests are wrong — say explicitly that this list should be filed back to the
+  design-system repo, and never fold it into the not-applicable total.
 - **Informational (FYI, no action):** documented changes needing no consumer code edit (from the
   plan's `informational`) — listed so the human is aware, NOT a to-do.
 - **Applied — human should eyeball:** behavioral edits that were applied but whose correctness is

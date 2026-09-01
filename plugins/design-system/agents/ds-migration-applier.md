@@ -40,10 +40,15 @@ do; you execute it.
     attribute, rebind the whole attribute accordingly; if a method/field supplies old values, remap
     the literals it returns and its type annotation. Any binding you cannot confidently resolve →
     leave it, record `needsReview`.
-  - **`scss-api`**: update the `@use` path / `namespace.symbol` per `old`→`new` in the stylesheet.
+  - **`scss-api`**: `old` present in your file → update the `@use` path / `namespace.symbol` per
+    `old`→`new`. `old` absent or matching nothing → it was an ANCHOR, not a target: INSERT `new` at
+    the location the item's `action`/`note` describes (an à-la-carte consumer can lack the very line
+    a path-swap reading would look for, and skipping is how such an item silently does nothing).
+    Report which mode you used (`modes` in the output).
   - **`code-add`**: insert the snippet from `new` at the location `note` describes — but ONLY if
     THIS file is that location (e.g. the app config, the global styles entry, the relevant usage).
-    If you're not sure this is the right file, record `needsReview` instead of guessing.
+    If you're not sure this is the right file, record `needsReview` instead of guessing. Same
+    missing-`old` rule as `scss-api`: no match means insert, not skip; report the mode.
   - **`removed-api`** and **`behavior`**: these need judgement, not a find/replace — but you ATTEMPT
     them. Follow the migration the `note`
     describes and make the real code change — e.g. swap a removed API for its documented replacement,
@@ -75,4 +80,8 @@ do; you execute it.
 
 Return ONLY a fenced ```json block — one object per file (an array when you were given a batch):
 
-[ { "file": "<path>", "applied": ["<item-id>"], "needsReview": [ { "id": "<item-id>", "why": "<reason>" } ] } ]
+[ { "file": "<path>", "applied": ["<item-id>"], "modes": { "<scss-api-or-code-add-id>": "replaced | inserted" },
+    "needsReview": [ { "id": "<item-id>", "why": "<reason>" } ] } ]
+
+`modes` appears only when the file carried `scss-api` / `code-add` items — it says whether each was
+a replacement at a matched site or an insertion at the described location.

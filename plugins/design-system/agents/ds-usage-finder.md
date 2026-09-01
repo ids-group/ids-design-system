@@ -16,20 +16,26 @@ comes from the item; don't assume anything about particular components.
   have no `old` (e.g. `code-add`) — then `searchHints` is the only signal: locate the insertion
   site(s) it names, or report `[]` if that site doesn't exist in this consumer.
 - Search `*.html`, `*.ts`, `*.scss`, `*.css`. Skip `node_modules`, `dist`, build output, `.git`.
-- **`surface` says WHICH of those artifacts to search; `detect` says what the code looks like
-  there.** An item carrying `surface: "typescript"` (or `"style"` / `"config"`) is about the
-  consumer's OWN code, which routinely names nothing of ours: search `.ts` (or `.scss`, or the app
-  config) for the `detect` shapes, treat those as the primary locator, and do NOT element-scope them
-  — there is no element to scope to. `surface: "none"` means no consumer code changes: report `[]`.
+- **`surface` RANKS the search — it never restricts it.** Search ALL artifact classes for every
+  item; a hit outside the declared surface is reported with `outOfSurface: true`, not skipped
+  (0.4.0's `ds-button-variant-axis-split` declared `surface: "template"` while its own `action` was
+  a TypeScript retype — the whitelist reading left the field holding the break unsearched). `detect`
+  says what the code looks like on the declared surface: for `typescript` / `style` / `config` items
+  treat the `detect` shapes as the primary locator and do NOT element-scope them — there is no
+  element to scope to. `surface: "none"` means no consumer code changes — still run the locators;
+  a hit anywhere contradicts the manifest and must be reported, never suppressed.
   0.7.1's `table-sortkey-non-null-when-unsorted` is why this exists — its target was
   `ds-table[sortKey]`, which appears in no consumer template, while the code that breaks reads
   `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` in a store file. Searching
   templates for `ds-table` there finds every table and none of the defect.
-- **A behavioural item's `[]` does not mean the same as a rename's `[]`.** For a rename, zero hits
-  means the old name is absent and the item is genuinely not applicable. For a `behavior` /
-  `removed-api` item whose surface is not the template, zero hits can also mean the shapes did not
-  match how THIS consumer spells it — report `[]` as usual and add `"searched": ["<globs covered>"]`
-  under that item id, so the orchestrator sends it to a semantic pass instead of writing it off.
+- **Every zero-hit item returns the `{ "hits": [], "searched": [...] }` form** — never a bare `[]` —
+  so the orchestrator can classify the zero instead of trusting it: a rename whose broad hints
+  matched the surrounding feature is *not applicable*; an item where `old`, every `detect` shape and
+  every `searchHint` matched NOTHING repo-wide is *locator-dead* — a claim about the manifest, not
+  the consumer (that is how an item naming a token that never existed passed every upgrade
+  silently). For a `behavior` / `removed-api` item whose surface is not the template, zero hits can
+  also just mean the shapes did not match how THIS consumer spells it — the orchestrator sends those
+  to a semantic pass instead of writing them off.
 - **Be exhaustive.** Enumerate EVERY match under the source root, not just the first few — including
   usages inside inline `template:` / `styles:` strings in `.ts` files. A file you miss silently
   reduces coverage for the whole version; don't stop early or sample.
@@ -55,12 +61,13 @@ comes from the item; don't assume anything about particular components.
 Return ONLY a fenced ```json block mapping each item id to a list of hits:
 
 { "<item-id>": [ { "loc": "<path:line>", "match": "<exact matched text>", "el": "<enclosing element or null>" },
-                 { "loc": "<path:line>", "match": "<binding text>", "el": "<element>", "dynamic": true } ],
-  "<item-id-2>": [],
-  "<behavioural-item-id>": { "hits": [], "searched": ["projects/**/*.ts"] } }
+                 { "loc": "<path:line>", "match": "<binding text>", "el": "<element>", "dynamic": true },
+                 { "loc": "<path:line>", "match": "<text>", "el": null, "outOfSurface": true } ],
+  "<zero-hit-item-id>": { "hits": [], "searched": ["projects/**/*.ts", "projects/**/*.html", "projects/**/*.scss"] } }
 
 `loc` is `path:line`; `match` is the exact matched text; `el` is the enclosing element (so the
 orchestrator can drop non-target hits) or null when the item isn't element-scoped; `dynamic: true`
-marks property bindings. An empty array means the item is not applicable to this repo — except on a
-behavioural item, where the `{ "hits": [], "searched": [...] }` form says "nothing matched THESE
-shapes in THESE files", which is a weaker claim and the orchestrator treats it as one.
+marks property bindings; `outOfSurface: true` marks a hit outside the item's declared `surface`.
+Zero hits ALWAYS use the `{ "hits": [], "searched": [...] }` form — it says "nothing matched THESE
+shapes in THESE files", a weaker claim than "not applicable", and classifying it is the
+orchestrator's job, not yours.

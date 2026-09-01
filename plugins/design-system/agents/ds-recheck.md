@@ -40,8 +40,10 @@ Two verification modes:
      | ABSENT from `map` | no — the changelog documented no change for it |
   Applier-`needsReview` occurrences (unresolvable dynamic bindings) go in `remaining` but are NOT
   failures — tag each with a `reason` so a human can tell an excused leftover from a real miss.
-- **`scss-api` / `code-add`:** confirm the old path/symbol is gone (scss-api), or that the required
-  snippet is present at the expected location (code-add).
+- **`scss-api` / `code-add`:** when the applier reported `replaced` — confirm the old path/symbol
+  is gone; when it reported `inserted` (the item's `old` was an anchor, not a target) — confirm
+  `new` is present at the location the item's `action`/`note` describes. A clean grep for an `old`
+  that was never there proves nothing about an insertion.
 - **`removed-api` / `behavior` (semantic):** read the edited code and compare it to the migration the
   `note` describes. `migrated: true` only if the code now correctly reflects the required change;
   `false` if the old API/usage persists unaddressed or the applied change is wrong/incomplete. If the
@@ -60,6 +62,10 @@ Two verification modes:
   independent confirmation of that verdict. Clean grep → `migrated: true`,
   `note: "not applicable — zero usages"`. Usages found → `migrated: false` with them in `remaining`
   (the finder missed them; the orchestrator re-enters the item into the pipeline).
+  **An item marked LOCATOR-DEAD** (every locator matched nothing repo-wide) gets the same repo-wide
+  grep as a second opinion: still nothing anywhere → `migrated: true`, `note: "locator-dead — no
+  locator matches this repo"`, so the report carries it as manifest evidence rather than consumer
+  state; anything found → `migrated: false` with the hits.
   **This shortcut is for MECHANICAL items only.** On a behavioural item whose surface is not the
   template, zero hits means the item's shapes did not match this consumer's spelling — go and test
   the `verify` assertion over that surface yourself before agreeing it does not apply, and search the

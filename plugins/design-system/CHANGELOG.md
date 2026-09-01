@@ -4,6 +4,30 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.6.0 — 2026-09-01
+
+Three validation gaps closed, each grounded in a manifest defect the plugin could not distinguish
+from success (found by the 2026-08-31 manifest audit).
+
+### Added
+- **LOCATOR-DEAD classification.** A zero-hit item is classified before it is dropped: broad
+  locators show the feature absent → not-applicable; `old` + every `detect` shape + every
+  `searchHint` match nothing repo-wide → locator-dead — evidence about the MANIFEST, reported as
+  its own Phase C section ("file this back to the design-system repo"), never folded into
+  not-applicable. Per-item hit counts now go to the ledger and the final report; the finder returns
+  `{ hits: [], searched: [...] }` on every zero (a bare `[]` no longer exists); the re-checker
+  confirms locator-dead with its own repo-wide grep.
+- **`scss-api` / `code-add` insertion mode.** A missing or unmatched `old` is an ANCHOR, not a
+  reason to skip: the applier inserts `new` at the location `action`/`note` describes and reports
+  `replaced` vs `inserted` per item (`modes` in its output); the re-checker verifies presence at
+  the described location instead of grepping for an `old` that was never there.
+
+### Changed
+- **`surface` ranks the search, it no longer restricts it.** The finder searches ALL artifact
+  classes for every item, flags hits outside the declared surface with `outOfSurface: true`, and
+  still runs locators on `surface: "none"` items (a hit there contradicts the manifest and is
+  reported). An under-declared surface previously excluded the very file holding the break.
+
 ## 1.5.0 — 2026-08-21
 
 ### Added
