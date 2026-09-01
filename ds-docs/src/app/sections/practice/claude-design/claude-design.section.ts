@@ -23,7 +23,7 @@ const CHAIN: readonly Step[] = [
   },
   {
     command: 'node .design-sync/elements/tools/gen.mjs',
-    does: 'Reads every component AST and emits the custom-element registrations plus one typed React wrapper per component. 85 elements, 625 inputs and outputs. Nothing here is hand-maintained.',
+    does: 'Reads every component AST and emits the custom-element registrations plus one typed React wrapper per component. 85 elements, 630 inputs and outputs. Nothing here is hand-maintained.',
   },
   {
     command: 'ng build ds-elements',

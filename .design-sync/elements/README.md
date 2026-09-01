@@ -28,7 +28,7 @@ is no second implementation to drift from.
 
 ```sh
 node .design-sync/tools/bootstrap.mjs                  # esbuild + react into .ds-sync
-node .design-sync/elements/tools/gen.mjs               # 85 elements, 625 inputs/outputs
+node .design-sync/elements/tools/gen.mjs               # 85 elements, 630 inputs/outputs
 ng build ds-elements                                   # Angular AOT (the slow step)
 node .design-sync/elements/tools/build-bundle.mjs      # bundle + demo
 npx serve .design-sync/elements/demo                   # open index.html
@@ -96,7 +96,7 @@ files, all mechanical. Bringing each one back to *correct* was not:
 | manual work to make it correct | a re-port of 53 components | `node gen.mjs` |
 
 `gen.mjs` picked the month up on its own: 81 elements / 518 inputs-outputs became
-**85 / 625**, `ng build ds-elements` is green, and the bundle builds. The port's
+**85 / 630**, `ng build ds-elements` is green, and the bundle builds. The port's
 own build is *also* green — `build-css.mjs` emits 85/85 blocks and
 `build-bindings.mjs` produces a bundle — which is the point: nothing in the port's
 toolchain can tell that what it just built ships an API the DS no longer has. Only
@@ -178,7 +178,7 @@ one web search for the symptom returned #24536 on the first page.
 
 ## Verdict
 
-The generation half was always the win: 625 inputs/outputs across 85 components come out of the
+The generation half was always the win: 630 inputs/outputs across 85 components come out of the
 AST with their real types, and there is no second implementation to keep in sync — the parity
 gate the hand-port needs has nothing to guard here. **The runtime half is no longer blocked.**
 Projection, inputs and nested composition all work; the remaining limits are the six attribute
