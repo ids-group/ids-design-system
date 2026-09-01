@@ -149,10 +149,16 @@ absent from the generated surface entirely. Fifteen of them:
 
 Most are template-slot markers for the picker family (`dsOptionTemplate`,
 `dsPanelHeaderTemplate`, …) and are meaningless without an Angular template
-anyway, so a design tool has no use for them. **`[dsTooltip]` is the one that
-hurts** — it is a real feature a design would want, and the React port has it
-because a port can reimplement a directive as a component. Covering it on this
-route needs a host component wrapping the directive.
+anyway, so a design tool has no use for them. **`[dsTooltip]` was called the one that hurts; on a second look it does not.** A tooltip is
+revealed on hover, and a static design card has no hover — `NOTES.md` already records the same
+thing about `ds-description-list`'s hover-revealed copy button being invisible in captures. So
+the design agent gains almost nothing from it. Searched for a way to register a directive as a
+custom element (2026-09-01): there is none — `createCustomElement` takes components only. The
+available shape is a thin component whose `hostDirectives` re-expose the directive's inputs,
+which would now work end to end because host-directive inputs reach the element (§1, defect B).
+**Not built:** it would either add a public component to the library for a design-tool-only need,
+or add a design-sync-local component for a feature that cannot be seen in a static card. Revisit
+only if the design host ever renders interactive cards.
 
 `[dsProjectionDropped]` is dev-only and never ships a node in production.
 
