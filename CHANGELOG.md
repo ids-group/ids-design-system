@@ -111,8 +111,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ### Changed
 
 - **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
-  `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent` and `TableComponent` all
-  gained members for the inputs and outputs above, and `DsPanelHeaderTemplateDirective`,
+  `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent`, `TableComponent` and
+  `LoadingOverlayComponent` all gained members for the inputs and outputs above, and `DsPanelHeaderTemplateDirective`,
   `DsPanelFooterTemplateDirective` and `DsGroupLabelTemplateDirective` are new classes.
   Subclassing a DS component is unsupported but consumers do it, and a
   member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
