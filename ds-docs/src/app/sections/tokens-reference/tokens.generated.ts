@@ -1878,7 +1878,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-app-layout-rail-shadow",
         "value": "var(--ds-elevation-modal)",
-        "notes": "Rail elevation while it is an overlay below the lg breakpoint (defaults to --shadow-modal)."
+        "notes": "Rail elevation while it is an overlay below the lg breakpoint (defaults to --ds-elevation-modal)."
       },
       {
         "name": "--ds-app-layout-scrim-color",
@@ -2220,7 +2220,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-banner-body-font-size",
         "value": "var(--font-size-s)",
-        "notes": "Size of the banner's projected body text (default --font-size-s, matching the title). Declared rather than inherited on purpose: the body used to take the page's size, so a 16px context rendered it LARGER than its own 14px title."
+        "notes": "Size of the banner's projected body text (default --font-size-s, matching the title). Declared rather than inherited, so a 16px page context cannot render the body larger than its own title."
       },
       {
         "name": "--ds-banner-close-icon-color",
@@ -2501,7 +2501,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-control-focus-shadow-error",
         "value": "—",
-        "notes": "Focus ring shadow for controls in error state (defaults to --focus-ring-error)."
+        "notes": "Focus ring shadow for controls in error state (defaults to --focus-field-error)."
       },
       {
         "name": "--btn-focus-z",
@@ -3037,7 +3037,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-drawer-shadow",
         "value": "var(--ds-elevation-modal)",
-        "notes": "Drawer panel elevation shadow (defaults to --shadow-modal)."
+        "notes": "Drawer panel elevation shadow (defaults to --ds-elevation-modal)."
       },
       {
         "name": "--ds-drawer-divider",
@@ -3154,27 +3154,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-option-radius",
         "value": "var(--ds-radius-inner)",
-        "notes": ""
+        "notes": "Option row corner (defaults to --ds-radius-inner)."
       },
       {
         "name": "--ds-option-row-gap",
         "value": "2px",
-        "notes": ""
+        "notes": "Gap between option rows, not inside one (default 2px)."
       },
       {
         "name": "--ds-option-bg-color-active",
         "value": "var(--surface-secondary)",
-        "notes": ""
+        "notes": "Option row fill under the keyboard cursor and the pointer (default --surface-secondary)."
       },
       {
         "name": "--ds-dropdown-panel-bg-color",
         "value": "var(--surface-overlay)",
-        "notes": ""
+        "notes": "Connected dropdown panel fill (defaults to --surface-overlay)."
       },
       {
         "name": "--ds-dropdown-panel-maxh",
         "value": "320px",
-        "notes": ""
+        "notes": "Connected dropdown panel height before it scrolls (default 320px). The option list inside stops sooner, at --picker-maxh."
       },
       {
         "name": "--ds-dropdown-panel-minw",
@@ -3758,7 +3758,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-divider-spacing",
         "value": "0px",
-        "notes": "Air above and below a ds-menu-divider. Default 0, and 0 means FLUSH: the divider cancels the menu's own row gap, so the items touch the line rather than sitting a row's width away from it. Set this only when you want the boundary to breathe more than the rows do — it is the one knob that can desync the divider from the row rhythm, which is exactly the defect 0.8.0 removed (a separated group read as a hole). For an airier menu overall, --ds-menu-gap is the better lever: it spaces every row evenly and cannot open a gap only at the boundary."
+        "notes": "Air above and below a ds-menu-divider. Default 0 means FLUSH: the divider cancels the menu's row gap, so items touch the line. Set it only to make the boundary breathe more than the rows — it is the one knob that can desync the divider from the row rhythm. For an airier menu, --ds-menu-gap spaces every row evenly."
       },
       {
         "name": "--ds-menu-item-label-color",
@@ -3813,7 +3813,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-item-description-font-size",
         "value": "var(--font-size-2xs)",
-        "notes": "Type size of that second line (default --font-size-xs)."
+        "notes": "Type size of that second line (default --font-size-2xs)."
       },
       {
         "name": "--ds-menu-item-description-max-width",
@@ -4172,12 +4172,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-option-gap",
         "value": "var(--space-2)",
-        "notes": ""
+        "notes": "Gap between an option row's check, icon and label (default --space-2)."
       },
       {
         "name": "--ds-option-padding",
         "value": "var(--space-2) var(--space-2-5)",
-        "notes": ""
+        "notes": "Option row inset (default --space-2 --space-2-5)."
       }
     ]
   },
@@ -4508,7 +4508,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-popover-shadow",
         "value": "var(--ds-elevation-overlay)",
-        "notes": "Popover drop shadow (defaults to --shadow-popover)."
+        "notes": "Popover drop shadow (defaults to --ds-elevation-overlay)."
       },
       {
         "name": "--ds-popover-padding",
@@ -4751,7 +4751,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-segmented-selected-shadow",
         "value": "var(--ds-elevation-raised)",
-        "notes": "Selected segment shadow (defaults to --shadow-card)."
+        "notes": "Selected segment shadow (defaults to --ds-elevation-raised)."
       },
       {
         "name": "--ds-segmented-btn-border",
@@ -5395,477 +5395,477 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-t-display-font-weight",
         "value": "var(--font-weight-extrabold)",
-        "notes": "Per-axis override for the `.t-display` utility's font weight."
+        "notes": "`.t-display` font weight."
       },
       {
         "name": "--ds-t-display-font-size",
         "value": "var(--font-size-display)",
-        "notes": "Per-axis override for the `.t-display` utility's font size."
+        "notes": "`.t-display` font size — the largest heading, above h1."
       },
       {
         "name": "--ds-t-display-line-height",
         "value": "var(--line-height-tight)",
-        "notes": "Per-axis override for the `.t-display` utility's line height."
+        "notes": "`.t-display` line height."
       },
       {
         "name": "--ds-t-display-font-family",
         "value": "var(--font-display)",
-        "notes": "Per-axis override for the `.t-display` utility's font family."
+        "notes": "`.t-display` font family."
       },
       {
         "name": "--ds-t-display-letter-spacing",
         "value": "var(--letter-spacing-tight)",
-        "notes": "Per-axis override for the `.t-display` utility's letter spacing."
+        "notes": "`.t-display` letter spacing."
       },
       {
         "name": "--ds-t-h1-font-weight",
         "value": "var(--font-weight-extrabold)",
-        "notes": "Per-axis override for the `.t-h1` utility's font weight."
+        "notes": "`.t-h1` font weight."
       },
       {
         "name": "--ds-t-h1-font-size",
         "value": "var(--font-size-h1)",
-        "notes": "Per-axis override for the `.t-h1` utility's font size."
+        "notes": "`.t-h1` font size."
       },
       {
         "name": "--ds-t-h1-line-height",
         "value": "var(--line-height-tight)",
-        "notes": "Per-axis override for the `.t-h1` utility's line height."
+        "notes": "`.t-h1` line height."
       },
       {
         "name": "--ds-t-h1-font-family",
         "value": "var(--font-heading)",
-        "notes": "Per-axis override for the `.t-h1` utility's font family."
+        "notes": "`.t-h1` font family."
       },
       {
         "name": "--ds-t-h1-letter-spacing",
         "value": "var(--letter-spacing-tight)",
-        "notes": "Per-axis override for the `.t-h1` utility's letter spacing."
+        "notes": "`.t-h1` letter spacing."
       },
       {
         "name": "--ds-t-h2-font-weight",
         "value": "var(--font-weight-extrabold)",
-        "notes": "Per-axis override for the `.t-h2` utility's font weight."
+        "notes": "`.t-h2` font weight."
       },
       {
         "name": "--ds-t-h2-font-size",
         "value": "var(--font-size-h2)",
-        "notes": "Per-axis override for the `.t-h2` utility's font size."
+        "notes": "`.t-h2` font size."
       },
       {
         "name": "--ds-t-h2-line-height",
         "value": "var(--line-height-snug)",
-        "notes": "Per-axis override for the `.t-h2` utility's line height."
+        "notes": "`.t-h2` line height."
       },
       {
         "name": "--ds-t-h2-font-family",
         "value": "var(--font-heading)",
-        "notes": "Per-axis override for the `.t-h2` utility's font family."
+        "notes": "`.t-h2` font family."
       },
       {
         "name": "--ds-t-h2-letter-spacing",
         "value": "var(--letter-spacing-snug)",
-        "notes": "Per-axis override for the `.t-h2` utility's letter spacing."
+        "notes": "`.t-h2` letter spacing."
       },
       {
         "name": "--ds-t-h3-font-weight",
         "value": "var(--font-weight-extrabold)",
-        "notes": "Per-axis override for the `.t-h3` utility's font weight."
+        "notes": "`.t-h3` font weight."
       },
       {
         "name": "--ds-t-h3-font-size",
         "value": "var(--font-size-h3)",
-        "notes": "Per-axis override for the `.t-h3` utility's font size."
+        "notes": "`.t-h3` font size."
       },
       {
         "name": "--ds-t-h3-line-height",
         "value": "var(--line-height-snug)",
-        "notes": "Per-axis override for the `.t-h3` utility's line height."
+        "notes": "`.t-h3` line height."
       },
       {
         "name": "--ds-t-h3-font-family",
         "value": "var(--font-heading)",
-        "notes": "Per-axis override for the `.t-h3` utility's font family."
+        "notes": "`.t-h3` font family."
       },
       {
         "name": "--ds-t-h3-letter-spacing",
         "value": "var(--letter-spacing-snug)",
-        "notes": "Per-axis override for the `.t-h3` utility's letter spacing."
+        "notes": "`.t-h3` letter spacing."
       },
       {
         "name": "--ds-t-h4-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": "Per-axis override for the `.t-h4` utility's font weight."
+        "notes": "`.t-h4` font weight."
       },
       {
         "name": "--ds-t-h4-font-size",
         "value": "var(--font-size-h4)",
-        "notes": "Per-axis override for the `.t-h4` utility's font size."
+        "notes": "`.t-h4` font size."
       },
       {
         "name": "--ds-t-h4-line-height",
         "value": "var(--line-height-snug)",
-        "notes": "Per-axis override for the `.t-h4` utility's line height."
+        "notes": "`.t-h4` line height."
       },
       {
         "name": "--ds-t-h4-font-family",
         "value": "var(--font-heading)",
-        "notes": "Per-axis override for the `.t-h4` utility's font family."
+        "notes": "`.t-h4` font family."
       },
       {
         "name": "--ds-t-h5-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": "Per-axis override for the `.t-h5` utility's font weight."
+        "notes": "`.t-h5` font weight."
       },
       {
         "name": "--ds-t-h5-font-size",
         "value": "var(--font-size-h5)",
-        "notes": "Per-axis override for the `.t-h5` utility's font size."
+        "notes": "`.t-h5` font size."
       },
       {
         "name": "--ds-t-h5-line-height",
         "value": "var(--line-height-snug)",
-        "notes": "Per-axis override for the `.t-h5` utility's line height."
+        "notes": "`.t-h5` line height."
       },
       {
         "name": "--ds-t-h5-font-family",
         "value": "var(--font-heading)",
-        "notes": "Per-axis override for the `.t-h5` utility's font family."
+        "notes": "`.t-h5` font family."
       },
       {
         "name": "--ds-t-card-title-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": "Per-axis override for the `.t-card-title` utility's font weight."
+        "notes": "`.t-card-title` font weight."
       },
       {
         "name": "--ds-t-card-title-font-size",
         "value": "var(--card-title-fs)",
-        "notes": "Per-axis override for the `.t-card-title` utility's font size."
+        "notes": "`.t-card-title` font size — the heading inside a card."
       },
       {
         "name": "--ds-t-card-title-line-height",
         "value": "var(--line-height-snug)",
-        "notes": "Per-axis override for the `.t-card-title` utility's line height."
+        "notes": "`.t-card-title` line height."
       },
       {
         "name": "--ds-t-card-title-font-family",
         "value": "var(--font-heading)",
-        "notes": "Per-axis override for the `.t-card-title` utility's font family."
+        "notes": "`.t-card-title` font family."
       },
       {
         "name": "--ds-t-card-title-color",
         "value": "var(--text-primary)",
-        "notes": "Per-axis override for the `.t-card-title` utility's color."
+        "notes": "`.t-card-title` text colour."
       },
       {
         "name": "--ds-t-l-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Per-axis override for the `.t-l` utility's font weight."
+        "notes": "`.t-l` font weight."
       },
       {
         "name": "--ds-t-l-font-size",
         "value": "var(--font-size-l)",
-        "notes": "Per-axis override for the `.t-l` utility's font size."
+        "notes": "`.t-l` font size — body text, large."
       },
       {
         "name": "--ds-t-l-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-l` utility's line height."
+        "notes": "`.t-l` line height."
       },
       {
         "name": "--ds-t-l-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-l` utility's font family."
+        "notes": "`.t-l` font family."
       },
       {
         "name": "--ds-t-l-bold-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": "Per-axis override for the `.t-l-bold` utility's font weight."
+        "notes": "`.t-l-bold` font weight."
       },
       {
         "name": "--ds-t-l-bold-font-size",
         "value": "var(--font-size-l)",
-        "notes": "Per-axis override for the `.t-l-bold` utility's font size."
+        "notes": "`.t-l-bold` font size — body text, large and bold."
       },
       {
         "name": "--ds-t-l-bold-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-l-bold` utility's line height."
+        "notes": "`.t-l-bold` line height."
       },
       {
         "name": "--ds-t-l-bold-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-l-bold` utility's font family."
+        "notes": "`.t-l-bold` font family."
       },
       {
         "name": "--ds-t-m-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Per-axis override for the `.t-m` utility's font weight."
+        "notes": "`.t-m` font weight."
       },
       {
         "name": "--ds-t-m-font-size",
         "value": "var(--font-size-m)",
-        "notes": "Per-axis override for the `.t-m` utility's font size."
+        "notes": "`.t-m` font size — body text, the default size."
       },
       {
         "name": "--ds-t-m-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-m` utility's line height."
+        "notes": "`.t-m` line height."
       },
       {
         "name": "--ds-t-m-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-m` utility's font family."
+        "notes": "`.t-m` font family."
       },
       {
         "name": "--ds-t-m-bold-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": "Per-axis override for the `.t-m-bold` utility's font weight."
+        "notes": "`.t-m-bold` font weight."
       },
       {
         "name": "--ds-t-m-bold-font-size",
         "value": "var(--font-size-m)",
-        "notes": "Per-axis override for the `.t-m-bold` utility's font size."
+        "notes": "`.t-m-bold` font size — body text, bold."
       },
       {
         "name": "--ds-t-m-bold-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-m-bold` utility's line height."
+        "notes": "`.t-m-bold` line height."
       },
       {
         "name": "--ds-t-m-bold-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-m-bold` utility's font family."
+        "notes": "`.t-m-bold` font family."
       },
       {
         "name": "--ds-t-s-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Per-axis override for the `.t-s` utility's font weight."
+        "notes": "`.t-s` font weight."
       },
       {
         "name": "--ds-t-s-font-size",
         "value": "var(--font-size-s)",
-        "notes": "Per-axis override for the `.t-s` utility's font size."
+        "notes": "`.t-s` font size — body text, small."
       },
       {
         "name": "--ds-t-s-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-s` utility's line height."
+        "notes": "`.t-s` line height."
       },
       {
         "name": "--ds-t-s-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-s` utility's font family."
+        "notes": "`.t-s` font family."
       },
       {
         "name": "--ds-t-s-bold-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": "Per-axis override for the `.t-s-bold` utility's font weight."
+        "notes": "`.t-s-bold` font weight."
       },
       {
         "name": "--ds-t-s-bold-font-size",
         "value": "var(--font-size-s)",
-        "notes": "Per-axis override for the `.t-s-bold` utility's font size."
+        "notes": "`.t-s-bold` font size — body text, small and bold."
       },
       {
         "name": "--ds-t-s-bold-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-s-bold` utility's line height."
+        "notes": "`.t-s-bold` line height."
       },
       {
         "name": "--ds-t-s-bold-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-s-bold` utility's font family."
+        "notes": "`.t-s-bold` font family."
       },
       {
         "name": "--ds-t-xs-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Per-axis override for the `.t-xs` utility's font weight."
+        "notes": "`.t-xs` font weight."
       },
       {
         "name": "--ds-t-xs-font-size",
         "value": "var(--font-size-xs)",
-        "notes": "Per-axis override for the `.t-xs` utility's font size."
+        "notes": "`.t-xs` font size — body text, extra small."
       },
       {
         "name": "--ds-t-xs-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-xs` utility's line height."
+        "notes": "`.t-xs` line height."
       },
       {
         "name": "--ds-t-xs-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-xs` utility's font family."
+        "notes": "`.t-xs` font family."
       },
       {
         "name": "--ds-t-xs-bold-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": "Per-axis override for the `.t-xs-bold` utility's font weight."
+        "notes": "`.t-xs-bold` font weight."
       },
       {
         "name": "--ds-t-xs-bold-font-size",
         "value": "var(--font-size-xs)",
-        "notes": "Per-axis override for the `.t-xs-bold` utility's font size."
+        "notes": "`.t-xs-bold` font size — body text, extra small and bold."
       },
       {
         "name": "--ds-t-xs-bold-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-xs-bold` utility's line height."
+        "notes": "`.t-xs-bold` line height."
       },
       {
         "name": "--ds-t-xs-bold-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-xs-bold` utility's font family."
+        "notes": "`.t-xs-bold` font family."
       },
       {
         "name": "--ds-t-overline-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": "Per-axis override for the `.t-overline` utility's font weight."
+        "notes": "`.t-overline` font weight."
       },
       {
         "name": "--ds-t-overline-font-size",
         "value": "var(--font-size-2xs)",
-        "notes": "Per-axis override for the `.t-overline` utility's font size."
+        "notes": "`.t-overline` font size — the small uppercase label above a heading."
       },
       {
         "name": "--ds-t-overline-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-overline` utility's line height."
+        "notes": "`.t-overline` line height."
       },
       {
         "name": "--ds-t-overline-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-overline` utility's font family."
+        "notes": "`.t-overline` font family."
       },
       {
         "name": "--ds-t-overline-letter-spacing",
         "value": "var(--letter-spacing-wider)",
-        "notes": "Per-axis override for the `.t-overline` utility's letter spacing."
+        "notes": "`.t-overline` letter spacing."
       },
       {
         "name": "--ds-t-overline-text-transform",
         "value": "uppercase",
-        "notes": "Per-axis override for the `.t-overline` utility's text transform."
+        "notes": "`.t-overline` text transform."
       },
       {
         "name": "--ds-t-overline-color",
         "value": "var(--text-tertiary)",
-        "notes": "Per-axis override for the `.t-overline` utility's color."
+        "notes": "`.t-overline` text colour."
       },
       {
         "name": "--ds-t-caption-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Per-axis override for the `.t-caption` utility's font weight."
+        "notes": "`.t-caption` font weight."
       },
       {
         "name": "--ds-t-caption-font-size",
         "value": "var(--font-size-xs)",
-        "notes": "Per-axis override for the `.t-caption` utility's font size."
+        "notes": "`.t-caption` font size — small print under a field or a figure."
       },
       {
         "name": "--ds-t-caption-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-caption` utility's line height."
+        "notes": "`.t-caption` line height."
       },
       {
         "name": "--ds-t-caption-font-family",
         "value": "var(--font-sans)",
-        "notes": "Per-axis override for the `.t-caption` utility's font family."
+        "notes": "`.t-caption` font family."
       },
       {
         "name": "--ds-t-caption-color",
         "value": "var(--text-tertiary)",
-        "notes": "Per-axis override for the `.t-caption` utility's color."
+        "notes": "`.t-caption` text colour."
       },
       {
         "name": "--ds-t-mono-font-weight",
         "value": "var(--font-weight-medium)",
-        "notes": "Per-axis override for the `.t-mono` utility's font weight."
+        "notes": "`.t-mono` font weight."
       },
       {
         "name": "--ds-t-mono-font-size",
         "value": "var(--font-size-mono)",
-        "notes": "Per-axis override for the `.t-mono` utility's font size."
+        "notes": "`.t-mono` font size — monospaced text."
       },
       {
         "name": "--ds-t-mono-line-height",
         "value": "var(--line-height-base)",
-        "notes": "Per-axis override for the `.t-mono` utility's line height."
+        "notes": "`.t-mono` line height."
       },
       {
         "name": "--ds-t-mono-font-family",
         "value": "var(--font-mono)",
-        "notes": "Per-axis override for the `.t-mono` utility's font family."
+        "notes": "`.t-mono` font family."
       },
       {
         "name": "--ds-t-mono-inline-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Per-axis override for the `.t-mono-inline` utility's font weight."
+        "notes": "`.t-mono-inline` font weight."
       },
       {
         "name": "--ds-t-mono-inline-font-size",
         "value": "var(--font-size-mono)",
-        "notes": "Per-axis override for the `.t-mono-inline` utility's font size."
+        "notes": "`.t-mono-inline` font size — a monospaced run inside a sentence."
       },
       {
         "name": "--ds-t-mono-inline-line-height",
         "value": "1",
-        "notes": "Per-axis override for the `.t-mono-inline` utility's line height."
+        "notes": "`.t-mono-inline` line height."
       },
       {
         "name": "--ds-t-mono-inline-font-family",
         "value": "var(--font-mono)",
-        "notes": "Per-axis override for the `.t-mono-inline` utility's font family."
+        "notes": "`.t-mono-inline` font family."
       },
       {
         "name": "--ds-t-mono-inline-color",
         "value": "var(--text-primary)",
-        "notes": "Per-axis override for the `.t-mono-inline` utility's color."
+        "notes": "`.t-mono-inline` text colour."
       },
       {
         "name": "--ds-t-mono-inline-bg-color",
         "value": "var(--surface-secondary)",
-        "notes": "Per-axis override for the `.t-mono-inline` utility's background color."
+        "notes": "`.t-mono-inline` background."
       },
       {
         "name": "--ds-t-mono-inline-radius",
         "value": "var(--ds-radius-inner)",
-        "notes": "Per-axis override for the `.t-mono-inline` utility's radius."
+        "notes": "`.t-mono-inline` corner radius."
       },
       {
         "name": "--ds-t-mono-block-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Per-axis override for the `.t-mono-block` utility's font weight."
+        "notes": "`.t-mono-block` font weight."
       },
       {
         "name": "--ds-t-mono-block-font-size",
         "value": "var(--font-size-mono)",
-        "notes": "Per-axis override for the `.t-mono-block` utility's font size."
+        "notes": "`.t-mono-block` font size — a monospaced block, its own box."
       },
       {
         "name": "--ds-t-mono-block-line-height",
         "value": "var(--line-height-loose)",
-        "notes": "Per-axis override for the `.t-mono-block` utility's line height."
+        "notes": "`.t-mono-block` line height."
       },
       {
         "name": "--ds-t-mono-block-font-family",
         "value": "var(--font-mono)",
-        "notes": "Per-axis override for the `.t-mono-block` utility's font family."
+        "notes": "`.t-mono-block` font family."
       },
       {
         "name": "--ds-t-mono-block-bg-color",
         "value": "var(--surface-secondary)",
-        "notes": "Per-axis override for the `.t-mono-block` utility's background color."
+        "notes": "`.t-mono-block` background."
       },
       {
         "name": "--ds-t-mono-block-border-color",
         "value": "var(--border-divider)",
-        "notes": "Per-axis override for the `.t-mono-block` utility's border color."
+        "notes": "`.t-mono-block` border colour."
       },
       {
         "name": "--ds-t-mono-block-radius",
         "value": "var(--ds-radius-control)",
-        "notes": "Per-axis override for the `.t-mono-block` utility's radius."
+        "notes": "`.t-mono-block` corner radius."
       }
     ]
   },
