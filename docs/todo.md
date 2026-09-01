@@ -22,20 +22,27 @@
 
 ## Decks awaiting a verdict (re-audited 2026-09-01)
 
-Seven decks carry `ds-deck-status: open`. The two picker decks closed — every question in them is
-answered and they moved to `presentations/implemented/`.
+**Eight** decks carry `ds-deck-status: open` — counted on disk, not from this list, which had missed
+`basic-advanced-split` and then `banner-toast-icon-alignment`. The two picker decks closed: every
+question in them is answered and they moved to `presentations/implemented/`.
 
-**Three have a backlog twin waiting on the same answer, so answering one closes two lines.** That is
+**The rank is now the filename.** An open deck is `<rank>-<slug>.html`, ranked by what answering it
+unblocks, so the folder listing is the queue — see `presentations/README.md`. Ranks are renumbered
+when the queue changes; a stale one is never kept to preserve a link.
+
+**Four have a backlog twin waiting on the same answer, so answering one closes two lines.** That is
 what makes these the cheapest thing on the board.
 
-| Deck | Asks | Twin |
-| --- | --- | --- |
-| `color-engine-derivation` + `color-engine-relative` | One source token per role, derived. Two decks, one question. | the P2 colour-engine decision |
-| `interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
-| `select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
-| `public-surface-verdicts` | What to cut from the public surface, what to keep. | — |
-| `migration-manifest-audit` | 23 findings against the shipped manifests. Partly overtaken: the class-collision half became a gate on 2026-09-01. | — |
-| `packaging-entry-points` | MBP-133 — one entry point, and the four ways out. | the P2 ask about keeping the DS out of a consumer's initial bundle |
+| # | Deck | Asks | Twin |
+| --- | --- | --- | --- |
+| 1 | `1-banner-toast-icon-alignment` | Does the icon align to the first line of text (A, shipping today) or centre on the whole message block (B)? Six cases, live tokens; the two rules agree on one line and end up 27px apart at title + three lines. | the P3 line below — and screens 30/32, validated and ready to fix |
+| 2 | `2-color-engine-derivation` | One source token per role, derived. Two decks, one question. | the P2 colour-engine decision |
+| 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
+| 4 | `4-interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
+| 5 | `5-packaging-entry-points` | MBP-133 — one entry point, and the ways out. **Corrected 2026-09-01: option B is not buildable, and the recommendation is now D.** | the P2 ask about keeping the DS out of a consumer's initial bundle |
+| 6 | `6-basic-advanced-split` | Whether the package splits into `basic` + `advanced`, priced against the alternatives. | the P2 ask about splitting the package |
+| 7 | `7-migration-manifest-audit` | All 23 findings are fixed; what is open is the tail — ten format practices marked *Adopt* and never ratified. Three of the thirteen shipped on their own (`action`, `appliesWhen`, `exports["./migrations/*"]`). | the P3 line below |
+| 8 | `8-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
 
 ---
 
@@ -46,12 +53,21 @@ what makes these the cheapest thing on the board.
 **Bugs — something shipped misbehaves**
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
+- P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
+- P2 · `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px regardless of density
+- P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
+  of 100 cannot see one group of three collapse
+- P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
 
 **Asks — a consumer or Stas asked for it**
 
 - P2 · **One entry point for the whole library** — a consumer cannot keep the DS out of their initial bundle; secondary entry points would fix it (MBP-133, deck attached)
+- P2 · **No page-level design approach for an agent** — radii, composition and page patterns are unwritten; `design-system.md` answers "what value", not "where does it go"
+- P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
-- P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
+- P3 · A token named in prose is never checked against the tokens that exist — a removed one survived in two docs for months
+- P3 · `todo.md`'s index no longer accounts for its body — 44 lines against 58 items, and the gap needs a per-section reconciliation
+- P3 · Three edges left open on `ds-table` row expansion — an inert expand-all on an empty page, the lazy label, and a column header whose name flips
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
 
@@ -59,15 +75,16 @@ what makes these the cheapest thing on the board.
 
 Ordered by what each unblocks. The top four each hold a deck or a whole lane hostage.
 
-- P2 · **Seven decks have no verdict**; three have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
+- P2 · **Six decks have no verdict**; three have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
 - P2 · **Single-source colour engine** — one token per role, derived. Two decks argue it; the warning-contrast bug is downstream of the same palette question
 - P2 · **prettier vs eslint on HTML** — they want opposite things, so `lint:all` can never be green. Every branch pays this until a config wins
 - P2 · **`.ds-interactive`** — global state-interaction contract, agreed in principle, prototype before spec
 - P2 · **Theme recipe vs hand-tuned picks** — does state derivation follow the theme's mix-to-black recipe, or the drawn ramp? Blocks the two above
 - P2 · **`ds-number-stepper` and `ds-dropzone` are outside the field-message system** — bring them in, or say they are not fields
-- P3 · **Ten manifest-format practices** the audit marked *Adopt* and nobody ratified
+- P3 · **Ten manifest-format practices** the audit marked *Adopt* and nobody ratified — re-counted 2026-09-01, three of the original thirteen have since shipped
 - P3 · **Three deferred DEFAULT changes** held back by the release policy
 - P3 · **Does a release note owe a WHY**, or only a what-and-what-to-do
+- P3 · **Where the banner and toast icon sits** — first line of text (A, shipping) or centred on the message block (B); deck `1-banner-toast-icon-alignment`, and screens 30/32 are validated and waiting only on this
 - P3 · **ds-docs still writes BEM modifiers as `--suffix`** — a state should be its own `is-*` class
 - P3 · **Three signal-forms contract members** are unimplemented, all blocked on a LOOK rather than wiring
 - P3 · **Shared picker internals** — surveyed, and the recommendation is NOT to build until a fourth list picker appears
@@ -145,17 +162,27 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**34 open: 1 P1, 9 P2, 24 P3** — counted from the index line by line. Ten are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **22 items — 1 Bug, 5 Asks and 16
-Decisions**.
+**42 open: 1 P1, 12 P2, 29 P3** — counted from the index by script, not incremented from the last
+figure, which is how three summaries in this file had drifted apart by 2026-09-01. Ten are *Parked*
+awaiting a first consumer ask and two are Records, and the one P1 is a settled decision kept so it
+is not re-litigated, so the live board is **29 items — 5 Bugs, 9 Asks and 15 Decisions**.
+
+**Every block is ordered P2 before P3**, with one deliberate exception: the Angular 22 line sits last
+in *Decisions* under a P1 tag because it is DECIDED, not pending — the tag keeps it out of both
+counts, and the position keeps it out of the way.
 
 **Four items had lived in the body with no index line**, so the board never counted them and nobody
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds one, measured:** the warning status pair at 4.42:1 where AA asks 4.5. It reaches
-nine components plus `_status.scss` and `_field-state.scss` — eleven files counted — so one token
-step fixes all of them, which makes it the cheapest real win left.
+**`# Bugs` holds five.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
+counted — so one token step fixes all of them. The other five arrived on 2026-09-01 and four were
+filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
+already reads. In cost order after the token step — `--ds-table-head-h` declared
+nowhere so the scrim's inset is always its 40px fallback, one export leaving the table's live
+region stuck on "Export ready" forever, then the two cosmetic ones. The sixth, the resize handle's
+unenforced `aria-valuemax`, was closed the same day it was filed.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Fourteen of the nineteen live items
 are Decisions, and seven decks are open against them. Nothing below is blocked on effort.
@@ -203,7 +230,7 @@ too (when to move, and re-verifying the signal-forms work against a release whos
 exactly there), but the blocking half is not a preference.
 
 **One decision still has a deck waiting and nothing else blocking it:** packaging MBP-133
-(`presentations/packaging-entry-points.html` — deferred by decision on 08-21, deck for when it is picked
+(`presentations/5-packaging-entry-points.html` — deferred by decision on 08-21, deck for when it is picked
 up). The per-state glyph in `ds-field-message` was the other, and it is decided: Stas read the deck,
 picked C, and improved it into a default where every state switches on its own.
 
@@ -231,22 +258,400 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
+- [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
+
+
+- [ ] **[P2] `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px.** The table passes `[insetTop]="'var(--ds-table-head-h, 40px)'"` to `ds-loading-overlay` to keep the header uncovered during a refresh, and that string is the ONLY occurrence of the token in the whole repo — nothing ever sets it, so the fallback always wins. A header shorter than 40px (`density="compact"`, `ultra`) leaves a strip of the first row uncovered; a header taller than 40px (a wrapped label, or a filter row) gets partly covered, which contradicts the reason the inset exists — and now also contradicts the `inert` boundary, since `<tbody>` is what goes inert while a partly-covered header stays operable underneath a scrim. Decide which it is: declare the token from the real header height (a measurement, or a value per density), or drop the token and measure the `<thead>`. As it stands it reads like a public hook and is not one.
+
+
+- [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. Derived from the template, NOT measured in a browser: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+
 
 # Asks — a consumer or Stas asked for it
 
 Requests, not defects. Ordered by who is blocked.
 
+## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
+
+Priority set by Stas: **dead code out of the bundle first, prototype UI simplification second.** Every
+number below is measured; three records carry the method — **`packaging-diagnosis.md`** (what is
+actually wrong, and why the service framing was misleading), `packaging-chunking-audit.md` (the
+investigation, its fixtures and the §10/§11 measurements) and `basic-advanced-split-audit.md`
+(component weight). This section sequences the existing items rather than duplicating them.
+
+**A1/A2 and A3 are not substitutes — read `packaging-diagnosis.md` before treating either as
+optional.** Tree-shaking (what is RETAINED) and chunk placement (WHERE the retained code lands) are
+orthogonal problems that share a name. A1/A2 reduce retention: -18.9 KB for an app using no grid
+features. A3 fixes placement: -108 KB off a consumer's initial bundle. **No internal refactor can do
+A3's job** — placement is decided per module, ng-packagr emits one module, and rollup inlines
+internal dynamic imports, so a library cannot create a chunk boundary inside its own entry point.
+Conversely A3 does not shrink the table by a byte.
+
+| Measured | Value |
+| --- | --- |
+| unused components cost a consumer | 18.2 KB gzip |
+| `ds-table` marginal cost, all of it its own code | 31.4 KB gzip |
+| ablating the grid features from `ds-table` | **-18.9 KB gzip (-61%)** |
+| `DS_CONFIG` flag can remove | **0 bytes** - proved: the flags were already `false` and the bytes still shipped |
+| chunk placement, on a layered fixture | eager chunk 118 011 -> 85 800 B, no tree-shaking penalty |
+| **how big the placement prize is for THIS library** | **unmeasured** - the 632 kB / 88% figure is mm-broker's, never reproduced |
+
+That last row is why the order below starts where it does. `@if` in a template removes RENDERING, not
+CODE: each branch compiles to its own embedded-template function referenced from the component's
+`ɵcmp`, so it ships whichever way the condition goes. A directive in a consumer's `imports` is the byte
+switch; `DS_CONFIG` is the behaviour switch. They compose, they are not alternatives, and only the
+first one moves bytes.
+
+**And the part that keeps getting mis-told: it is not the services.** Measured 2026-09-01, same probe,
+four different eager anchors in the app root — `provideDsTheme()` 192 392 B gzip, `provideDsConfig({})`
+192 342 B, one `<ds-button>` in the shell 192 244 B, `inject(ToastService)` 194 763 B. **All four within
+2.5 KB of each other**, all with 11 of 11 lazy-only heavy components in the initial bundle, against a
+DS-free floor of 59 019 B. A type-only import anchors nothing (+15 B). And `provideDsTheme()` is in the
+documented setup every consumer copies into `app.config.ts`, so **every** app already has the anchor —
+the service was just the one somebody noticed. Full table and every tested hypothesis in
+`packaging-diagnosis.md`.
+
+- [x] **[P2] A0 - DONE 2026-09-01. Measured chunk placement against the real library and tested the
+  graph. Both answers are in `packaging-chunking-audit.md` §11.** One `inject(ToastService)` moves
+  **576 239 B raw / 135 744 B gzip** out of the lazy chunk into the initial bundle and collapses the
+  lazy chunk to 189 bytes - the initial grows **4.2x**, and all eleven heavy components land in a chunk
+  `main` statically imports. This reproduces the consumer's report independently (577 kB of a 755 kB
+  initial, 76%, against their claimed 88%), so §2's "not reproducible" line is superseded. The
+  services closure builds at 86 775 B gzip against the probe's 59 019 B DS-free floor, so the fix takes
+  the DS's share of the initial bundle from **135.7 KB gzip to 27.8 KB, -80%**. And the graph
+  partitions. **CORRECTED 2026-09-01: there are THREE cycles, not two.** This item's original count
+  excluded type-only edges, and a later test proved ng-packagr treats an erased `import type` across an
+  entry-point boundary as a dependency exactly like a runtime one. With them included the SCCs are
+  `radio` <-> `radio-group`, `time-columns` <-> `time-picker`, and a third of size four:
+  **`components/card`, `config`, `core`, `icons`** — caused entirely by type imports OUT of
+  `ds-config.ts` (`CardElevation`/`CardPadding`, `DsSize`, `IconName`) reaching back into modules that
+  depend on it. See `packaging-diagnosis.md` « Thirteen open questions » item 3 for the full edge list
+  and the fix. A computed `core` seed of 12 groups closes over exactly itself; the services close over
+  11; **64** component groups form the top layer. **CORRECTED 2026-09-01: this said 55.** The
+  complement was computed from the runtime edge map, which omits the eleven groups with no runtime edge
+  either way (`divider`, `layout`, `list`, `page-footer`, `page-header`, `progress`, `status-dot`,
+  `topbar`, `avatar-group`, `button-group`, `theme`) — 77 on disk minus a 13-group core is 64. The
+  core seed is 13, not 12: the four-way SCC was accepted rather than broken, so `components/card` is in
+  it. `theme` appearing in that no-edge list independently confirms it can be its own free entry point.
+  **A3 is unblocked and is worth ~5.7x the table work.** Original scope, for the record: Gates A3, touches no component, so it cannot collide with in-flight table work. Two
+  halves. (a) A probe app with an eager `ToastService` import and a lazy route holding heavy
+  components, built against the real `dist/ds` - the existing ladder plus one lazy route. Gives the
+  placement prize for OUR library instead of a synthetic fixture's ratio. (b) The import graph of
+  `src/lib`: does it split into acyclic layers (`core <- services <- components`, or finer)?
+  ng-packagr forbids cycles between entry points, which is exactly what killed option B. Favourable at
+  the top level - nothing in `core/`, `icons/`, `overlay/`, `theme/` imports a component at runtime,
+  and the one edge (`config/ds-config.ts`) is an erased `import type` - but 95 folders have never been
+  checked. **If (b) says no, A3 dies and the whole budget goes to the table.**
+
+- [ ] **[P2] A1 - build the seam and ONE directive, and measure what the seam itself costs.** The
+  ablation gives a **floor of 12.1 KB**, but the seam is not free: template slots, the empty
+  composition, the service. Real landing is somewhere between 12.1 and 31.4 KB, and A1 says where -
+  before we commit to five directives. Start with `DsTableExport`: no markup in the header, no shared
+  width logic, just a status contribution and a public method. **Fresh branch from `dev`**, not a
+  continuation of `probe/table-feature-directives`: that ablation was deliberately crude (it simplified
+  `filteredData`, deleted shared helpers) and those simplifications must not be inherited. Keep it as
+  the reference for what has to move, and as the size target.
+
+  **The seam, designed 2026-09-01.** All four collisions the ablation hit are one pattern: *the table
+  owns a derived value and an optional feature wants to contribute an input to that derivation.*
+  `clipWidth`/`fitsContent` serve truncate AND resize; `orderedColumns`/`visibleColumns` are the
+  computed chain the picker writes to; `filteredData` folds set filters into the substring search;
+  `statusMessage` folds export state into the live region. So the seam is a **contribution registry**,
+  not a method move - a per-instance internal service the table provides and the directives inject:
+
+  ```ts
+  @Injectable() // providers: [DsTableLayout] on the table itself
+  export class DsTableLayout<T> {
+    readonly columnTransforms = signal<readonly ColumnTransform<T>[]>([]); // order, visibility, width
+    readonly rowFilters = signal<readonly RowFilter<T>[]>([]);
+    readonly statusParts = signal<readonly Signal<string | null>[]>([]);
+    readonly headerAdornments = signal<readonly HeaderAdornment[]>([]);
+  }
+  ```
+
+  `visibleColumns` becomes `columns()` piped through `columnTransforms()` - empty means identity, which
+  is exactly the ablated behaviour that already compiles and measures at 12.1 KB. `filteredData`
+  composes `rowFilters()`; `statusMessage` joins `statusParts()`. Width resolution moves into the seam
+  as one `resolvedWidth(col)` the table always calls, so neither resize nor truncate owns it. **The
+  table never names a feature** - no `if (resizable)` anywhere. **Two genuinely hard bits:** (1) a
+  directive cannot inject markup, and the filter button, resize handle and picker popover ARE markup -
+  the table keeps tiny `@if (headerAdornments().length)` slots rendering an `ng-template` the directive
+  supplies, and the residual slot cost has to be MEASURED, not assumed; (2) `clipWidth`/`fitsContent`
+  are only untangled by the width move above.
+
+- [ ] **[P3] A2 - the remaining directives, after A1 prices the seam.** `DsTableResizable`,
+  `DsTableReorderable` (with the picker and the `@angular/cdk/drag-drop` import),
+  `DsTableColumnFilters`, `DsTablePersistLayout`. Three questions the ablation left open: does
+  `truncate` stay in the base table, and do row actions and inline cell editing come out too? Both are
+  equally advanced and were left IN, which is why 18.9 KB is a floor and not a ceiling.
+
+- [ ] **[P2] A3 - layered entry points. GATE PASSED (A0), and it is now the biggest item on this board: ≈108 KB gzip off a consumer's initial bundle.** Option D from
+  `packaging-chunking-audit.md` §7, whose headline cost is now known to be false: §10 measured
+  `facade` and `deep` consumer variants as byte-identical down to the chunk hash, so the root stays a
+  pure re-export facade and **no consumer changes an import**. The refactor is internal. **The partition, computed in A0:** `core` (**13** groups - `config`, `core`, `icons`, `overlay`, `theme`, the loose `components/*.ts` directives, `button`, `field-message`, `field-group`, `spinner`, `menu`, `popover`, and `card` since the four-way SCC was accepted) <- `services` (`toast`, `modal`) <- `components` (**64** groups). Co-location constraints: the two sibling cycles plus that accepted SCC. **Answered by A3+: the top layer must be per-component, not one entry.**
+
+- [ ] **[P3] B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag —
+  measured 2026-09-01.** `DS_CONFIG` cannot remove a byte (runtime DI value, nothing to fold), so its job
+  is library-wide UI simplification on the components that always ship: calmer defaults, fewer states,
+  simpler affordances on fields, buttons, sidenav. `resolveWithConfig` already exists, so that part is
+  small. **But the earlier claim that NO flag can remove bytes was too broad** — see the new item below.
+
+- [ ] **[P2] Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured.**
+  Stas's idea (configure earlier than DI: `angular.json` / `package.json` / tsconfig rather than
+  `DS_CONFIG`) is viable. `@angular/build:application` has TWO first-class options for it: **`define`**
+  («replaced ... in any JavaScript or TypeScript code **including libraries**») and **`conditions`**
+  (custom `exports` resolution conditions). Fixture `.claude/local/define-probe/`: a 500-line advanced
+  branch behind a flag, in an ng-packagr-published FESM — `full` 123 498 B raw / 34 957 gz with 500
+  markers, `define: { dsPrototype: "true" }` **99 550 B raw / 32 969 gz with 0 markers**. The branch is
+  gone from a FESM compiled before the consumer's build ran.
+
+  **The guard MUST be inline on the branch.** First attempt used a module-level
+  `const ADVANCED = typeof dsPrototype === 'undefined' || !dsPrototype` and saved NOTHING (500 markers in
+  both configs) — `define` had applied (identifier 2 -> 0 occurrences) but esbuild did not propagate the
+  constant through module scope into the `if`. Inline `if (typeof dsPrototype === 'undefined' ||
+  !dsPrototype)` works completely. The `typeof` form is required, not stylistic: a consumer who never
+  sets `define` leaves the identifier undefined and a bare `if (dsPrototype)` would throw. This is the
+  `ngDevMode` idiom. **Caveats before shipping:** the public API does not change, so binding
+  `resizableColumns` in prototype mode compiles and silently does nothing (needs its own dev warning);
+  two configs mean two bundles from one source, so CI must build both; `define` is a textual
+  substitution, so a typo silently means «not set» and the flag needs a test proving the branch really
+  disappears. `conditions` (serve a different FESM per condition) is the cleaner other half and stays
+  unexplored — it needs two published builds and only makes sense after A3.
+
+  **Division of labour, now that the tools overlap:** a whole unused component -> entry points (A3); a
+  separable feature of a component you DO use -> an opt-in directive (A1/A2, seam overhead a fixed
+  923 B); a branch inside code you must ship with no seam to hang it on -> `define`. Do not do both for
+  the same feature.
+
+- [ ] **[P2] FREE 1.6 KB gzip: dev warnings ship to production and should not.** `devWarn` guards itself
+  with `isDevMode()`, a **function call** esbuild cannot fold, so all 14 call sites and their message
+  closures reach production bundles. Measured on `probe/devwarn`, control on the same build: prototype
+  kit + table **191 988 -> 190 398 B gzip (-1 590 B)**; one `<ds-button>` **62 733 -> 61 906 B (-827 B)**.
+  **No consumer configuration needed** — the installed builder already adds `'ngDevMode': 'false'` to
+  esbuild's `define` whenever script optimization is on
+  (`@angular/build/src/tools/esbuild/application-code-bundle.js:465`). Rewrite each site as
+  `ngDevMode && devWarn(() => ...)` and the whole statement folds away, closure included. Fourteen
+  one-token edits; removes dead weight, not capability. Needs `declare const ngDevMode` visible to the
+  lib tsconfig.
+
+- [ ] **[P2] A3+ — the top layer MUST be per-component, measured 2026-09-01, not a preference.**
+  A single `components` entry helps only a consumer whose eager root touches nothing outside `core` and
+  `services`. An eager **app shell** does touch the component layer — that is what `ds-app-layout`,
+  `ds-sidenav` and `ds-topbar` are FOR — and one `components` entry then pulls the whole retained
+  component layer back into the initial bundle. Fixture at `.claude/local/granularity-probe/`, same
+  payload both shapes, consumed through the root facade, eager `alpha` + lazy routes using `beta` and
+  `gamma`:
+
+  | Library shape | Initial | beta (lazy) | gamma (lazy) | Lazy chunks |
+  | --- | --- | --- | --- | --- |
+  | one `components` entry | 178 538 B | **500 markers** | **500** | 101 B, 101 B — stubs |
+  | one entry per component | **125 651 B** | **0** | **0** | 26 819 B, 26 318 B — real |
+
+  **-52 887 B, -30%** on a fixture where the eager component is a third of the payload; a real shell is
+  a handful of components out of 55, so the ratio is far more lopsided. Angular Material publishes one
+  entry point per component for exactly this reason, and the APF rule is «entrypoints for the smallest
+  sets of logically connected code possible»; `@angular/cdk` does the same and we already consume it
+  that way (`overlay`, `portal`, `drag-drop` are three specifiers).
+
+  **SIZED 2026-09-01, and per-component is NOT the expensive option.** ng-packagr requires a
+  cross-entry import to go through the public specifier, and `src/lib` holds **318 cross-group import
+  statements** today (249 runtime + 69 type-only). Rewrites needed: **per-component 318, six semantic
+  clusters 265, three layers 257** — only **19%** apart, because most cross-group imports point at
+  core-ish modules (`icons`, `core`, `field-message`) that cross a boundary under any partition. Coarse
+  clustering therefore saves almost nothing on the refactor and gives up the whole eager/lazy win.
+
+  **And semantic clustering is structurally worse.** A six-cluster attempt has a real cycle
+  `data -> fields -> display -> data`: `pagination -> select`, `autocomplete -> tag`,
+  `multi-select -> tag`/`badge`, `empty-state -> loading-overlay`. Every edge is a legitimate
+  composition — components do not respect semantic categories — and ng-packagr forbids cycles
+  between entry points, so any clustering must be de-cycled first. Per-component has only the two
+  trivial sibling cycles. **Verdict: go per-component.**
+
+  **A missed rewrite fails the build with a useless message, tested:** swapping one public specifier for
+  a relative path across a boundary gives `Cannot destructure property 'pos' of
+  'file.referencedFiles[index]' as it is undefined`, with nothing naming the cause. The good news is it
+  FAILS rather than silently bundling the same source into two FESMs, which would give two class
+  identities and DI resolving two different services. Restoring the specifier builds again — causal
+  link confirmed by control.
+
+  **Cost checklist:** ~75 nested `ng-package.json` (2 lines each) + a `public-api.ts` per folder; 318
+  import rewrites; root `public-api.ts` becomes a pure facade (measured twice as costing consumers
+  nothing); `ds-docs` needs a tsconfig path mapping per entry point since it compiles from source; check
+  `extract-component-api.mjs`, `extract-tokens.mjs`, `class-surface-diff.mjs` and `changelog-lint.mjs`
+  against the new layout; co-locate the two sibling cycles. Secondary entry points are NOT deprecated
+  (ng-packagr `docs/secondary-entrypoints.md` on `main`, plus a Feb 2026 guide). Full analysis:
+  `packaging-diagnosis.md` « Do we have to split? ».
+
+- [x] **[P2] A3-pre — DECLINED 2026-09-01, measured: the cycle costs 593 B gzip, the fix costs 40
+  import rewrites.** The four-way SCC (`components/card`, `config`, `core`, `icons`) is real, and every
+  edge out of `ds-config.ts` that creates it is a TYPE import. The minimum cut was priced: move
+  `ds-config.ts` (11 importers), `icons.data.ts` (27) and card's two type aliases (2) into `core` —
+  **40 import statements**, plus moving a component's public types into the bottom layer, plus conflict
+  risk against the active parallel lane.
+
+  **What the cycle actually costs is almost nothing.** `config`, `core` and `icons` were always going to
+  share the `core` entry point, so the ONLY consequence of leaving the SCC intact is that `ds-card`
+  ships with them. Measured: core seed (button, icon, spinner, field-group, popover, menu, menu-item)
+  **84 430 B gzip**; the same seed plus `CardComponent` **85 023 B** — **593 B**. And `card` is a common
+  component most consumers use anyway. **Decision: accept the SCC, put `card` in the core entry.** Do
+  not re-open without a new measurement.
+
+  **Still worth having, and independent of the cycle:** `theme` as its own entry point.
+  `provide-ds-theme.ts` imports only `@angular/core` and `@angular/common`, so it is a true leaf, and
+  `provideDsTheme()` — the anchor in every consumer's documented setup — becomes nearly zero-cost.
+  Fold that into A3 rather than a separate item.
+
+- [ ] **[P3] Make the PORTALED overlay stylesheets opt-in — ~1.6 KB gzip, and that is the whole prize.**
+  **CORRECTED 2026-09-01: an earlier version of this item claimed ~1.8 KB could move into component SCSS.
+  It cannot.** Checked what the globally-forwarded partials actually define: `link` (533 B gz),
+  `page-grid` (312 B) and `layout-utils` (184 B) are **public utility classes** — part of the API, they
+  stay; `scrollbar` (297 B) styles `html` and `::-webkit-scrollbar`, document level, impossible to scope;
+  `skeleton-shimmer` (207 B) is deliberately ONE `:root` animation so every skeleton stays in lock-step;
+  `surface-motion` (192 B) is `@keyframes`, and emulated encapsulation renames keyframes, which would
+  break cross-component reference. Only `icon-base` could move, and it is 92 bytes. **The real lever is
+  `dropdown-overlay` (1 043 B) + `overlay-motion` (458 B) + `toast-overlay` (91 B) = ~1.6 KB gzip, made
+  opt-in** (`@use 'styles/dropdown-overlay'`), which pays only a consumer with no pickers, toasts or
+  modals. Also verified: no double-shipping — `press` (20 stylesheets), `text-clip` (10) and `chip-row`
+  (2) are mixins components `@use` and are correctly NOT forwarded by `ds.scss`.
+
+- [x] **[P2] Entry-point boundary guard — BUILT 2026-09-01, shipped OFF until A3 flips it.**
+  `eslint-rules/rules/entry-point-boundary.mjs` + `ds/entry-point-boundary` in the plugin, wired in
+  `eslint.config.mjs` scoped to `src/lib/**/*.ts` at **`'off'`**. It flags a relative import whose
+  target lies in a different entry-point group, names the public specifier to use instead, and covers
+  `import type` too — an erased import is still an entry-point dependency and fails the same way.
+  Co-location allowances are the three accepted SCCs (`radio`/`radio-group`,
+  `time-columns`/`time-picker`, and `card`/`config`/`core`/`icons`).
+
+  **Watched it go red, which was the point: 307 violations.** Close to the 318 static count — the
+  difference is exactly the imports now inside the accepted SCCs. **81% of them point at just four
+  targets:** `components-root` 92, `core` 60, `icons` 57, `components/field-message` 15. So A3's rewrite
+  is four bulk replacements plus roughly fifty individual reviews, not 318 separate decisions. Heaviest
+  importers: `multi-select` 27, `autocomplete` 25, `select` 24, `modal` 13, `input` 11, `table` 11.
+
+  **Why OFF and not warn:** 307 warnings would drown the existing lint output. `npm run lint` is
+  unchanged (verified exit 0). **Flip it to `'error'` in the same commit that finishes A3's rewrites** —
+  after that it is the thing that stops a missed one from surfacing as an unrelated-looking ng-packagr
+  crash. Probe config for running it at error before then: `.claude/local/eslint.entrypoint-probe.mjs`
+  (gitignored).
+
+- [ ] **[P3] A curated `prototype` entry point, once A3 exists.** One extra entry re-exporting a light,
+  opinionated set answers Mikhail's original basic/advanced ask at zero cost: no second package, no
+  mirror, nothing duplicated, and `ds-table` stays one component. Propose it when A3 lands, not before.
+
+- [ ] **[P3] A bundle-size gate in CI.** The ladder at `.claude/local/bundle-probe/` is already the
+  measurement; running it as a check stops this regressing silently, which is how the current state
+  arose. Also check whether `/design-system:auto-update-package` migrations can express a symbol moving
+  between entry points — nothing to do while the root stays a facade, but needed before any entry
+  point becomes the only path to a symbol.
+
+- [ ] **[P2] DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
+  changes an import».** Measured 2026-09-01: a `@defer` block whose component is imported from the root
+  facade defers **nothing** — one `main.js`, no chunks, both deferred components in the initial bundle
+  (153 764 B). Imported from deep specifiers: initial **123 467 B**, four files, only the eager component
+  eagerly. Known Angular issue angular/angular#52554 — a component imported from a barrel gets no lazy
+  chunk because the bundler treats the barrel as one module. The facade IS free for route-level laziness
+  (`loadComponent` / `await import()` in a separate file), measured four times byte-identical. **Write
+  this into the consumer docs before anyone hits it.**
+
+- [x] **[P2] A1's open question answered: the seam costs a FIXED 923 B gzip.** Fixture
+  `.claude/local/seam-probe2/`. Feature 1.6 KB gz: bare 32 965 / mono 34 592 / seam-off **33 888**.
+  Feature scaled 4x to 5.9 KB gz: bare 32 965 / mono 38 901 / seam-off **33 888** — byte-identical, so
+  the overhead is fixed (the service, its `providers` entry, the composition point, the module boundary)
+  while recovery scales 1:1 with the feature. For the real table, 18.9 KB of features against one
+  registry (~1-2.5 KB) means **the seam keeps ~87-95% of the prize**. Honest trade: a consumer who DOES
+  use the feature pays ~1 KB more than today. **A1 is worth building.**
+
+- [x] **[P3] Ceiling on the directive split: bounded, not measured.** Extending the ablation to row
+  actions and inline editing was abandoned as not worth the effort — the first ablation took the table
+  from 31.4 to 12.1 KB, and both features live inside that remaining 12.1 KB, so **18.9 KB is the floor
+  and 31.0 KB the hard ceiling**. Sorting, selection, pagination, loading, sticky header and cell
+  rendering all stay. Precision changes no decision; do not re-open.
+
+- [x] **[P3] Two risks checked and dismissed 2026-09-01.** (a) **Name collisions in a 77-way facade:**
+  none — 131 exported declarations, the only repeat is `DsConfig` (interface + token in one file), and
+  the current root already `export *`s everything and compiles. (b) **Angular 22:** the `probe/angular-22`
+  branch (`7de133dc`) touches `bun.lock`, `package.json`, three tsconfigs and one signal-forms probe —
+  nothing about packaging, entry points or the FESM layout.
+
+- [x] **[P3] Splitting the icon map — DECLINED 2026-09-01 (measured, not judged).** `ICONS` is one
+  const map of 115 icons, so any icon retains all of them. Cut to 9 icons on `probe/icons-map` and
+  re-measured: `ds-button` 62 733 -> **60 211 B gzip**. **The whole icon set is 2 522 B gzip** — SVG
+  path strings compress to almost nothing. Per-icon exports would break `IconName = keyof typeof ICONS`
+  and `provideDsIcons` for at most ~2.3 kB. Do not re-open without a new measurement.
+
+- [x] **[P2] The eager-component case DOES NOT overturn A3 — checked 2026-09-01.**
+  `packaging-chunking-audit.md` §7 named «a consumer whose EAGER root needs a component rather than a
+  service» as D's trigger. Measured: an eager shell (`app-layout` + `sidenav` + `topbar` +
+  `page-header`) costs **201 283 B gzip** today and closes over only **9 of 77 groups** (+`tooltip`),
+  which builds standalone at **101 108 B gzip**. So an eager-shell consumer stands to save ~98 kB gzip
+  against an eager-service consumer's ~108 kB — but ONLY with per-component entries, per A3+ above.
+  Shell and services together close over 16 of 77 groups.
+
+- [ ] **[P2] `ds-button`'s field-message line costs 11.0 KB gzip — 35% of the button, ABLATION DONE
+  2026-09-01.** `ButtonComponent extends DsMessageBase` and imports `FieldMessageComponent`,
+  `resolveFieldMessage` and `trimmedText` so a button can render a hint/warning/error line under itself.
+  Ablated on `probe/button-field-message` (worktree `C:\wt-ds-table-split`, commit `2c1dbdb7`), control
+  re-measured on the same build:
+
+  | | JS gzip | over bare Angular |
+  | --- | --- | --- |
+  | bare Angular app | 30 646 B | — |
+  | `+ ds-divider` (entry cost) | 35 997 B | +5 351 B |
+  | `+ ds-button` today | **62 733 B** | **+32 087 B** |
+  | `+ ds-button` without field-message | **51 438 B** | **+20 792 B** |
+
+  **11 295 B gzip**, paid by every consumer that renders one button, whether or not they ever bind
+  `hint`, `warning` or `error`. **Entry points do not fix this** — even per-component entries keep
+  `button -> field-message` as a static edge, so the 11 kB arrives with any button. Two ways out: drop
+  the feature from `ds-button`, or move it behind an opt-in directive — **the same seam pattern as
+  the table**, so it belongs in the A1/A2 lane, not A3. Design decision, not a defect.
+
+**Not doing, and why.** basic/advanced as two packages: smaller prize than A1/A2, and it buys a second
+table to keep in sync forever. `ids-charts`: a real candidate the day it needs a third-party renderer,
+not before - a package split is justified by an EXTERNAL runtime dependency, never by component count.
+DS-vs-UI-kit packages: parked until a consumer wants the tokens WITHOUT the components; today the
+`exports` map already serves them.
+
+**Scheduling constraint.** A1 and A2 refactor `table.component.{ts,html,scss}` - the same three files a
+parallel lane has been changing all week (row expansion, resize-handle ARIA, comment pass). Either run
+A0 first, which touches none of it, or wait for that lane to land.
+
+## Agent-facing docs — the rules an agent needs to prototype a page, and an md layout it can navigate
+
+- [ ] **[P2] There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01).** `design-system.md` covers spacing, type, size, colour, motion, content and overrides, and it answers "what value do I use" well. It does not answer **"where does this go on the page"**, which is the whole question when an agent is prototyping a screen rather than styling one control. Concretely missing:
+  - **Corner radii have no rule at all.** The only mention in `design-system.md` is line 304, in passing, about radius travelling as a ROLE when a host overrides it. Nothing says which radius belongs to which surface class, or how radii nest (an inner element inside a rounded container).
+  - **No composition guidance.** Where the page heading sits, where primary vs secondary actions go, when content belongs in a card and when it does not, where filters live relative to the data they filter, where supporting information goes.
+  - **No pattern catalogue.** Which page patterns the DS actually supports (list + filters, detail, form, dashboard, empty/error), what each is made of, and how to tell which one a given screen is.
+  - **No method for measuring a pattern** — how to check a composition against the grid and the spacing scale instead of eyeballing it.
+  The deliverable is a file an agent reads before it lays out a screen, in the same voice as `design-system.md`: rules with reasons, not a style tour. It ships in the package (`tools/build-schematics.mjs` copies the root `.md` files into `dist/ds`), so it reaches consumers' agents too.
+  **One item in the dictated list needs confirming before it is written up:** "где должен быть фильм" is almost certainly a speech-to-text slip for **фильтр** (filter) — that reading fits the surrounding list of buttons/cards/information/heading. Confirm before treating it as a real requirement.
+
+- [ ] **[P2] `components.md` is a 591-line, 60 KB monolith with six top-level sections — an agent loads the whole thing to answer one question (Stas, 2026-09-01).** Measured 2026-09-01: `design-system.md` is 316 lines / 16.6 KB, `components.md` is **591 lines / 60.2 KB** across only **6** `##` sections, so there is no unit smaller than "a sixth of the file" to load. Both are copied into `dist/ds` by `tools/build-schematics.mjs`, so the cost is paid by every consumer's agent as well as ours.
+  **Ask:** design an md ARCHITECTURE for the whole design system — an index that routes, and leaf files small enough that reading one is cheap — so an agent can find the rule for one component without paying for all of them. Points to settle when it is designed: how the split is addressed (per component, per area, or per question), what stays in the root files as the always-loaded core, how the index stays correct as components are added (a generated index, like the token and component-API extractors already do, rather than a hand-kept one), and what the package ships versus what stays in-repo.
+  **Precedent already in the repo:** `tools/extract-tokens.mjs` and `tools/extract-component-api.mjs` generate documentation from source at prebuild — whatever architecture is chosen should be generated the same way wherever it can be, so it cannot drift.
+## DS-docs
+
+- [ ] **[P3] ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01).**
+  The house lint rule `ds/template/element-content-newline` moves the content of an inline `<code>` onto
+  its own line, so `</code>.` becomes a collapsed newline plus the period and the browser renders
+  `--radius-pill-value .` — measured in the radius section's own lede, which predates this note, so it
+  affects every section that puts punctuation after a code span. **Not a local defect:** fixing it in one
+  section would fight the lint rule and make that section inconsistent with the other sixty. The fix is
+  either a rule exemption for inline `<code>` or a CSS-level one; either way it is a single change for the
+  whole site. Low priority — it is one space — but it is in every paragraph that names a token.
+
 ## Component feature gaps
 
 
 - [ ] **[P2] One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle (2026-08-03, Stas — mm-broker MBP-133 review).** _(Re-counted 2026-08-05: **85** exported `*Component` classes plus 9 directives (re-counted 2026-08-10; was 83 + 8 on 08-05), by `grep -rho 'export class .*Component' src/lib | sort -u`. The item said 73; the figure does not change the argument, but it is now stated with its method so nobody re-counts.)_ `ng-package.json` declares a single `entryFile`, so the package ships as one 1.25 MB `fesm2022` module behind a single `"."` export. `sideEffects: false` is set and tree-shaking works fine — unused components are dropped — but **chunking cannot happen**: esbuild splits by module, so it can never place two DS symbols in two different chunks. Measured in mm-broker: the app's eager composition root binds `NotificationService` to a toast implementation, that one runtime import of `ToastService` pins the whole retained DS graph into a chunk statically imported by `main`, and the result is **632 kB — about 88% of a 720 kB initial bundle** — even though every feature route is lazy and the only eagerly-needed symbol is one service. The consumer has no lever: the root is the only specifier, and moving the provider to a lazy route does not help because interceptors and the `ErrorHandler` resolve from the root injector. **Ask:** secondary entry points (ng-packagr supports a nested `ng-package.json` per folder). Even a coarse split would fix it — a services/overlay entry point carrying `ToastService`, `ModalService` and `BodyScrollLockService` separately from the component layer, so an eager root can import the service and leave 70-odd components lazy. Per-component entry points would be ideal but are a bigger change; the services split is the one that unblocks consumers. **Explicit non-goal:** nothing about the public API surface needs to change — same symbols, same names, just reachable through narrower specifiers. **RE-AUDITED 2026-08-03 → read `packaging-chunking-audit.md` before actioning this item; three claims above are wrong.** The mechanism is confirmed by controlled esbuild fixtures, but: this was never filed upstream (it is the consumer's own backlog item, with a consumer-side fix); "the consumer has no lever" is false (a dynamic `import()` keeps `main` clean — it just costs tree-shaking, measured +50%); and the 07-27 "tree-shaking already works" verdict is NOT overturned — placement and tree-shaking are orthogonal and both findings stand. The audit also merges this item with the "Packaging — secondary entry points" section below, which duplicates it with the opposite verdict.
-  **DEFERRED by Stas 2026-08-21, with a deck instead of a build — `presentations/packaging-entry-points.html`.**
+  **DEFERRED by Stas 2026-08-21, with a deck instead of a build — `presentations/5-packaging-entry-points.html`.**
   It draws the mechanism (one FESM is one module, so placement cannot happen), the three esbuild fixtures
   as bars scaled to their measured sizes, the grep counts that isolate the cause, and all four options
-  with what each costs in placement AND tree-shaking. Recommendation on the deck is B (one services entry
-  point) and only B: the sole option measured to fix placement without losing tree-shaking, and a major
-  either way, so it sequences with the breaking batch. The deck also names what would overturn that — a
-  consumer whose EAGER root needs a component rather than a service, which is D's case.
+  with what each costs in placement AND tree-shaking. **The deck's recommendation was rewritten
+  2026-09-01 to match the correction recorded below**: it used to say B and only B, which is the one
+  option that turned out not to be buildable, so the page now marks B dead and recommends D — layered,
+  not per-component, at the three-layer cut A0 measured. Read the rest of the page for the mechanism and
+  the numbers, which still hold.
 
   **DECIDED 2026-08-05: option B from `packaging-chunking-audit.md` §7 — one services entry point, root `public-api.ts` kept as a facade.** It is the only option the fixtures measured as fixing chunk PLACEMENT without losing tree-shaking, and it is non-breaking: same symbols, same names, no cross-entry deep-import refactor across 73 folders. **Two things to get right when building it, both found while deciding:** (1) the entry point is NOT as narrow as its name — `ToastService` imports `ToastRegionComponent` and `ModalService` imports `ModalConfirmComponent`, so the entry necessarily carries those components and their own deps; that still fixes the reported problem, because the ~70 components the app touches only from lazy routes stop being pinned into `main`, but the eager cost is the toast+modal graph rather than three classes. (2) The secondary entry must OWN the source and the root must re-export FROM it — if both entries export the same source, a consumer importing from both gets two class identities and DI silently resolves two different services. **CORRECTED 2026-08-05, before anyone builds it: option B is NOT implementable as the audit describes it, and the audit is wrong on this point because it measured synthetic fixtures rather than the real import graph.** Followed the actual chain: `ToastService` → `ToastRegionComponent` → `ToastComponent` → `IconComponent` + `SpinnerComponent`; `ModalService` → `ModalConfirmComponent` → `ButtonComponent` + `ModalCardComponent` → `IconComponent`. So a services entry point must OWN button, icon, icons.data, spinner, toast and modal-card — and every other component needs those same leaves, so the ROOT would have to import them from the services entry. ng-packagr forbids cycles between entry points, so there is no arrangement where a small services entry sits beside an unchanged root. What that shape actually is: a LAYERED set of entries — `core` (icon, button, spinner, overlay primitives) ← `services` ← `components` — which is the audit's option D, described there as a separate large refactor, and it changes how every consumer imports. **So the live choice is A, C or D — not B. Described 2026-08-05 at Stas's request and DELIBERATELY LEFT OPEN: nothing here is urgent (no consumer is blocked, only sub-optimally chunked), and each option's cost lands somewhere different.**
 
@@ -256,7 +661,22 @@ Requests, not defects. Ordered by who is blocked.
 
 **Two traps recorded while deciding, so they are not re-derived:** (1) the secondary entry must OWN its source and the root must re-export FROM it — if both export the same source a consumer importing from both gets two class identities and DI silently resolves two different services; (2) the audit's fixtures were synthetic, which is exactly how it concluded B was viable, so validate any future claim against the real import graph.
 
-- [ ] **[P3] `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).** Base row expansion ALREADY SHIPS — `expandableRows` + two-way `expandedIds` `model<Set<string>>` (multiple + programmatic), `rowExpandTemplate`, expander button/chevron/`expandedColspan`, docs demo (`table.section.html:574-600`). So this is **deltas only, not a build**: (a) optional **single-expand mode** (only one row open at a time — today it's always multi via the Set); (b) **expand-all / collapse-all** header toggle (the header expand-col is currently just a spacer); (c) optional dedicated `(rowExpand)`/`(rowCollapse)` outputs (the `expandedIds` model already covers change-tracking, so this is sugar). All small; do only on a consumer ask — the core feature is at parity. **GATE HELD 2026-08-25 (Stas), asked explicitly:** none of the three remaining asks blocks anyone, so all three stay behind their own gate rather than being built speculatively.
+**MEASURED 2026-09-01 — option D is cheaper than it was written down as; read `packaging-chunking-audit.md` §10.** The open question from the audit's §8 (does ng-packagr's secondary-entry-point output survive the Angular application builder?) is answered: yes. A real three-entry library (`core` leaf, `services` and `heavy` importing it by public specifier, root a pure re-export facade) built by ng-packagr and consumed by `@angular/build:application` moved the heavy payload out of the eager chunk — **118 011 B → 85 800 B statically imported by `main`**, heavy payload into its own 32 121 B on-demand chunk — with a **38-byte** total-size difference, i.e. no tree-shaking penalty (nothing like C's +50%). The control (single entry point, today's shape) reproduced the failure exactly: 600 payload markers in the eager chunk, lazy chunk collapsed to 100 B. **The finding that changes the cost model: `facade` and `deep` consumer variants are byte-identical down to the chunk hash** — a consumer keeps importing from the ROOT specifier and still gets correct placement, so D's headline cost («changes how every consumer imports») is not real when the root stays a pure facade. The refactor becomes internal. **Still untested:** whether the real 95 component folders partition without cycles — favourable at the top level (nothing in `core/`, `icons/`, `overlay/`, `theme/` imports a component at runtime; the one edge, `config/ds-config.ts:4`, is an erased `import type`; `toast/` and `modal/` need only button, spinner, icon), but a full partition has not been attempted. Fixture: `.claude/local/entrypoint-probe/` (gitignored).
+
+- [ ] **[P2] Split the package into `basic` + `advanced` (Mikhail, carried over from an earlier ask; re-raised 2026-08-30).** The proposal: prototypes install a light kit, production apps add a heavy one, `ds-table` swapped for an `ids-data-grid`. **AUDITED 2026-09-01 → read `basic-advanced-split-audit.md` before actioning. Both premises are measurably false.** (1) Bundle: on 0.11.1, going from the 44 components a prototype uses to all 96 costs **18 KB gzip**; the whole library is 179 KB gzip; entry cost is 5.6 KB; `ds-table`'s MARGINAL cost beside the rest of the kit is **32 KB gzip**, not the 118 KB it measures alone. (2) Capability: every feature named for `ids-data-grid` — column resize, filters, visibility, order, CSV export, inline edit, sticky h-scrollbar, truncate+popover, selection-safe row click — **already ships in `ds-table`**, most since 0.6.3. So a split would move shipped features into a second package and double the release pipeline to save ≤32 KB. (Breaking consumers is NOT part of the case against it — see the memory rule; shipped features are free to move.) **The one shape that survives the numbers** is intra-component, not intra-package: move the table's opt-in behaviours into separately-importable directives (`DsTableResizable`, `DsTableExport`, …) so the heavy parts tree-shake per feature — one component, one docs page, no mirror to keep in sync. Unmeasured; ceiling on the saving is 32 KB. **A separate package is justified by an external runtime dependency, never by component count** — which makes `ids-charts` a real candidate the day it needs a third-party renderer, and `ids-advanced` not one. Decision is Stas's; nothing is blocked.
+
+- [ ] **[P2] Measure the table's opt-in behaviours as separately-importable directives (Stas, 2026-09-01: «затести и померяй»).** The one shape from the basic/advanced proposal that survives the numbers (`basic-advanced-split-audit.md` §7). Today every opt-in feature's code ships whether or not its `input(false)` is set, so `ds-table`'s **32 KB gzip marginal cost** is paid in full by a prototype that uses none of them. Candidates to extract: `DsTableResizable` (`resizableColumns`+`columnWidths`), `DsTableReorderable` (`reorderableColumns`+`columnOrder`+`hiddenKeys`), `DsTableExport` (`exportButton`/`exportFilename`/`exportFetcher`), `DsTableColumnFilters` (`columnFilters`+`HeaderFilterDirective`), `DsTablePersistLayout` (`persistLayout`+`storageKey`). **ABLATION DONE 2026-09-01 — the prize is real: 18.9 KB gzip.** Branch `probe/table-feature-directives`, worktree `C:\wt-ds-table-split`, built from `dev` at `5783c830`; full record in `basic-advanced-split-audit.md` §9. Deleting resize + reorder/picker + column filters + CSV export + layout persistence + truncate-popover (1 063 source lines across .ts/.html/.scss) took `ds-table`'s marginal cost from **31 428 B → 12 125 B gzip, −61%**. That is MORE than the whole basic/advanced package split targets (18.2 KB), inside one component, with nothing to mirror. And it is a FLOOR, not a ceiling — row actions and inline cell editing are equally advanced and were left in. **The catch the ablation exposed, and the actual design work:** the features are not cleanly separable today — `clipWidth`/`fitsContent` serve both truncate and resize, `orderedColumns`/`visibleColumns` are the same computed chain the picker writes to, `filteredData` folds set filters into the substring search, `statusMessage` folds export state into the live region. So the split needs a seam — most likely a small internal layout/state service the directives write into and the table reads — not a method-by-method move. Next: design that seam, then build `DsTableResizable` / `DsTableReorderable` / `DsTableExport` / `DsTableColumnFilters` / `DsTablePersistLayout` against it.
+
+- [ ] **[P3] Split «design system» from «UI kit» as two packages (Mikhail, 2026-08-30).** His words: «Можете тогда вообще ui kit и дизайн систему на разные пакеты разнести?» — the UI kit being the whole component library, and the design system being the rules, tokens, themes and guides. **Partly true already:** tokens and themes ship as SCSS assets under `styles/*` and `themes/*` behind their own `exports` entries, and the rules/guides live in the deployed docs site rather than in the package. So the question to study is narrow: is there a real consumer who wants the tokens WITHOUT the components (a non-Angular app, a Figma/CSS-only pipeline, another framework), and does that consumer exist today? If yes, a tokens-only package is cheap and has no mirror-maintenance problem — unlike the basic/advanced table split, nothing is duplicated. If no, the current `exports` map already covers it. **Interacts with the entry-point work above:** a layered `core ← services ← components` partition and a tokens-only package are the same question asked twice, and should be designed together rather than separately.
+
+- [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
+
+
+- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-01: 44 index lines against 58 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
+
+- [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure.
+
+- [ ] **[P3] Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect.** (a) On a page with no rows the expand-all chevron still renders and its label reads "Expand all rows", while clicking it does nothing — the handler early-returns. This is an exact clone of what the select-all checkbox next to it does on an empty page, so it was left for symmetry; breaking the symmetry needs a disabled state on `.expand-btn`, which the shared icon-button chrome has no styling for. (b) Under `lazy` (no `pageSize`, `total` set) `expandAllLabel` omits " on this page" because it keys on `pageSize()`, while expand-all only reaches the rows that have arrived. Inside the already-declared-unsupported `virtualScroll` + `expandableRows` combination. (c) The expander column's `<th>` had no accessible name and now takes one from the expand-all button — which FLIPS between "Expand all rows" and "Collapse all rows", so in table-navigation mode every body cell in that column inherits a changing column name. The `select-col` `<th>` sets the precedent of naming itself from its control, but with a STABLE name. Fixing it means an `aria-label` on the `<th>` naming the column, which is a pattern the component does not use anywhere else.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form. **GATE HELD 2026-08-25 (Stas), asked explicitly.**
 
@@ -309,7 +729,7 @@ Requests, not defects. Ordered by who is blocked.
   **Re-measured 2026-08-31**, running the three in the order prettier → stylelint → eslint with eslint last: prettier rewrote 112 files in its own scope, stylelint had nothing to say, and `eslint --fix` reverted 111 of the 112. Net change was 8 files of whitespace inside inline elements, which Angular discards — so the tree has been in eslint's shape all along and `npm run format` is red at 111 either way.
   **Not urgent, not cosmetic:** nothing ships wrong today, but a permanently red gate is how a real finding gets missed — which is the same failure mode as the report-only PR lint.
 
-- [ ] **[P3] Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/migration-manifest-audit.html`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
+- [ ] **[P3] Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/7-migration-manifest-audit.html`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
   **Three of the thirteen are already settled and are NOT part of this item:** the instruction/rationale split shipped as `action` (the prose-split pass, 2026-08-25); package reachability shipped — `package.json` already exports `"./migrations/*"`; and `schemaVersion` was **rejected** in the prose-split session along with `author`, `place`, `outcome`, `unchanged` and `source`.
   **The ten, with what each would cost, verified as absent today** (grep: none of these keys or checks exists in `tools/migration-lint.mjs` or `migrations/AUTHORING.md`):
   (1) **precondition guard** — a no-op check each runbook opens with, so an item cannot half-apply (OpenRewrite `Preconditions.check`, Nx agentic runbooks); (2) **`replaceIn` polarity** — CDK's `CssTokenUpgradeData` defaults to ALL files and narrows, ours is a whitelist that silently excludes, which is a wrong-by-default surface; (3) **executable verification** — Polaris ships a literal alternation `RegExp` per token group, where our `verify` is prose; (4) **runtime signal ids** — Vue/Ember collect what actually fired per app, and `devWarn` already exists here, so this is wiring rather than a mechanism; (5) **escalation marker** — Next.js codemods write a comment that breaks the build until removed (adopt the comment half only); (6) **explicit "no replacement"** — ESLint's `replacedBy` may be an empty array to SAY there is none, and 0 of 22 manifests would fail the check; (7) **`deprecatedIn`** — one half of ESLint `deprecatedSince` / Ember RFC 0649 `since`; the `availableUntil` half was rejected; (8) **provenance link** — CDK makes the PR link a required member; adopt it optional and lint it only on `unreleased`; (9) **`ng-update` requirements key** — the hard pre-flight the Angular CLI enforces (adopt the key, NOT a port to real schematics); (10) **dry-run hit counts** — jscodeshift prints per-file outcomes and Next.js warns that a wrong path reports 0 rather than failing; this one lands in the plugin, not the lint.
@@ -380,9 +800,9 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
   **Cheap now that the base exists:** `extends DsFieldBase` plus a `resolveFieldMessage` call, a `ds-field-message` in the template, and the label block — the same shape all fourteen already share.
   **Cheaper again since 2026-08-25:** the base was split into `DsMessageBase` (the message half) and `DsFieldBase` (that plus `errors`/`invalid`/`touched`) so `ds-button` could take the message line, and `ds-button` is now the worked example of wiring the message half into a component that was never a field. Both of these hold a value, so both want the full `DsFieldBase` — but the pattern, the resolver call and the template shape are all demonstrated now rather than described.
 
-- [ ] **[P2] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-07-24** (`_semantic.scss:91-93` channels; `:111-112` hover/pressed already `color-mix`; halos `:209-229`; gray tint `_base-palette.scss:41`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; **UNBLOCKS the `ds-color`/`--accent-*` indirection**. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: `presentations/color-engine-relative.html`.
+- [ ] **[P2] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-07-24** (`_semantic.scss:91-93` channels; `:111-112` hover/pressed already `color-mix`; halos `:209-229`; gray tint `_base-palette.scss:41`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; **UNBLOCKS the `ds-color`/`--accent-*` indirection**. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: `presentations/3-color-engine-relative.html`.
 
-- [ ] **[P2] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking user verdicts B1–B5** (live demo `presentations/interaction-formula.html`): (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item/table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` slot; (B5) pressed step for success/warning buttons. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
+- [ ] **[P2] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking user verdicts B1–B5** (live demo `presentations/4-interaction-formula.html`): (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item/table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` slot; (B5) pressed step for success/warning buttons. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
 
 - [ ] **[P2] Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe (**verified `button.component.scss:34-38`, `_semantic.scss:111-112`, 2026-07-24**). If the single-source-colour calibration replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix off the resolved bg) diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. **This is a concrete instance of the single-source item's open question (b); resolve it inside that spec, not separately.**
 
@@ -434,7 +854,7 @@ Stas said keep it in the backlog. Left untouched on purpose.
 
 ## Component feature gaps
 
-- [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed).** Deck: `presentations/select-native-multi.html` — three variants live, comparison matrix and sources; it is the prepared answer if a consumer ever pulls on this. Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
+- [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed).** Deck: `presentations/8-select-native-multi.html` — three variants live, comparison matrix and sources; it is the prepared answer if a consumer ever pulls on this. Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
   **The soft version of the ask does not survive either:** the moment a hypothetical `ds-select multi` is made usable it has to open a checkbox list, i.e. it becomes `ds-multi-select`, and the only genuine difference left is chips-in-trigger vs an "N selected" summary. If a consumer ever wants the compact trigger, the honest answer is an input (`[triggerDisplay]="'summary'"`) on the existing component, not a second component and a fork in the docs. The one case where nativeness would really matter — a plain HTTP form POST with no JS — is solved by a hidden `<select multiple>` inside `ds-multi-select`, not by changing the UI.
 
 ### Found while porting the design-sync React bindings (2026-07-28, re-verified 2026-09-01)
@@ -534,6 +954,52 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 **Pile two — genuine gaps, verified against `dev` today.** _(BOTH are now CLOSED and archived: the region padding, Option A on 08-07 and Option B — `[dividers]` — on 08-10; the status treatment on 08-12, as `status: DsStatus` with the tinted header. See the batch record above and `done.md`.)_
 
 ---
+
+## `changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)
+
+
+
+- [ ] **[P3] The gate's own floor does not catch the failure it was written for.** Before it can
+
+  check anything, `changelog-lint` builds the list of published artefacts from two resolvers, and
+
+  both degrade quietly: `publishedFiles()` filters through `existsSync`, and `shippedSources()`
+
+  reads `assets ?? []` out of `ng-package.json`. Rename a directory, or rename that key, and the
+
+  list simply gets shorter — the gate checks what it found, prints `OK`, and never opens the rest.
+
+  A leak in an unopened file ships.
+
+
+
+  **Measured 2026-09-01.** The sweep is 320 files, and it is three groups, not one: **30**
+
+  documents, **36** assets from `src/lib/styles` + `src/lib/themes`, **254** TypeScript sources
+
+  under `src/lib`. Dropping the `assets` key costs the 36 and leaves **284** — which clears the
+
+  floor of 100 with room to spare. **The floor is green for exactly the collapse it exists to
+
+  catch**, because a single total cannot see one group of three go to zero.
+
+
+
+  **Two ways out, and the smaller one may be enough.** (a) A committed census per group in
+
+  `tools/surface-baseline.json`: fewer than last time fails and names the group, more is normal
+
+  growth, and `tools/changelog-release.mjs` rewrites the numbers at the cut so they land in the
+
+  release commit rather than dirtying an unrelated branch. (b) Just assert that every directory
+
+  named in `ng-package.json` `assets` yields at least one file — three lines, catches this exact
+
+  scenario, no numbers to maintain. **Nothing has broken yet**; this is a guard against a future
+
+  rename, which is why it is parked rather than open.
+
+
 
 ## Board history — the 08-10 actualization, kept for the release-gate reasoning
 

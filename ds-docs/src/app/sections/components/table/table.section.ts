@@ -387,7 +387,6 @@ export class TableSection {
 
   protected readonly projectSelected = signal(new Set<string>());
 
-  /** Status and Budget shrink to their content; Project absorbs the slack. */
   protected readonly fitColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project' },
     { key: 'owner', label: 'Owner' },
@@ -481,6 +480,18 @@ export class TableSection {
   ];
 
   protected readonly expandRows: readonly EventRow[] = this.events.slice(0, 4);
+
+  protected readonly expandLog = signal<string>('nothing yet');
+
+  protected readonly singleExpanded = signal(new Set<string>());
+
+  protected onRowExpanded(row: unknown): void {
+    this.expandLog.set(`expanded ${(row as EventRow).project}`);
+  }
+
+  protected onRowCollapsed(row: unknown): void {
+    this.expandLog.set(`collapsed ${(row as EventRow).project}`);
+  }
 
   /** Narrows the `unknown` row a projected `dsCellTemplate` receives back to EventRow. */
   protected asEvent(row: unknown): EventRow {

@@ -52,16 +52,16 @@ larger sets in waves, collecting each wave before launching the next.
 This workflow is **full-auto**: the applier attempts EVERY actionable change (mechanical AND
 behavioral) — a behavioral change is NOT sent to manual review just for being behavioral. Primary
 semantic verification is YOUR job (opus) — you own the final green/not-green verdict, especially
-for behavioral fixes. Manual review is a LAST RESORT (Phase B step 10), reached only when the auto
-attempt + auto-fix loop can't make an item green: the build still fails, opus can't confirm the
-behavioral fix, or the change is genuinely too convoluted to do safely.
+for behavioral fixes. Manual review is a LAST RESORT (Phase B step 10).
 
 ## MigrationPlan schema
 
 { "version": "X.Y.Z",
-  "items": [ { "id", "kind", "old", "new", "note", "searchHints": [],
-               "map": { "<oldValue>": "<newValue|null|markup>" },
-               "surface": "template|typescript|style|config|none", "detect": [],
+  "items": [ { "id", "kind", "old", "new", "searchHints": [],
+               "map": { "<oldValue>": "<full replacement token | null>" },
+               "action": "<the imperative to execute>", "appliesWhen": "<the boundary>",
+               "pitfall": "<how a correct application still breaks>", "note": "<the why>",
+               "surface": "template|typescript|style|config|none (or an array)", "detect": [],
                "verify": "...", "restore": "...|null",
                "supersedes": ["<version>#<id>"] } ],
   "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
@@ -69,33 +69,37 @@ behavioral fix, or the change is genuinely too convoluted to do safely.
 
 `kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
 class-rename | value-remap | scss-api | code-add | removed-api | behavior.
-`new` is null for a removal or `behavior`; `map` is present only for
+`new` is null for `behavior` (a shipped rename never carries `new: null` — a removal is
+`removed-api` or `behavior`); `map` is present only for
 `value-remap`. The planner derives every specific FROM the changelog; when it can't confidently
 fit a change to a mechanical kind it classifies it `behavior` (catch-all) so nothing is dropped.
 `id` is a stable, unique slug.
 
-**The detectability fields decide where an item is looked for, and they are the difference between
-an item that fires and one that is silently dropped.** `surface` names which of the CONSUMER's
+**The detectability fields decide where an item is looked for.** `surface` names which of the CONSUMER's
 artifacts changes; `detect` carries the shapes as the consumer writes them, for the common case where
 the affected code names no DS symbol at all; `verify` is the positive assertion a re-check can test
-when there is no old identifier to miss; `restore` is the way back from a changed default;
-Read `action` FIRST — it is the imperative and the only field to execute; `appliesWhen` says where it does NOT apply, and `pitfall` is the way to apply it correctly and still break the app, so read it before reporting an item done. `note` is the reasoning and is not an instruction.
+when there is no old identifier to miss; `restore` is the way back from a changed default.
+**The prose fields:** read `action` FIRST — it is the imperative and the only field to execute;
+`appliesWhen` says where it does NOT apply; `pitfall` is the way to apply it correctly and still
+break the app, so read it before reporting an item done; `note` is the reasoning, not an
+instruction.
 `supersedes` on a LATER item names the earlier one it reverses — one direction only, since a
 published manifest cannot know its own future. `deleteList` is what the
 release made UNNECESSARY, with a greppable `find` — a separate pass, not an item.
-Every manifest in the DS repo carries these fields, but a consumer's `node_modules` copy can predate
-them (the fields shipped in the release after 0.10.1): when they are missing, the planner enriches
-those items from their own `note` rather than passing them through undetectable.
+Every manifest in the DS repo carries these fields, but an older `node_modules` copy can predate
+them: when they are missing, the planner enriches those items from their own `note` rather than
+passing them through undetectable.
 
 Every actionable item is **auto-applied**; items differ only in how they're VERIFIED:
 - **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → verified by grep
-  (`ds-recheck`). Element-scoped items (a `value-remap` targeting `element[attr]`) MUST be
+  (`ds-recheck`); a `value-remap` ALSO carries a `verify` the re-check tests — it changes what a
+  binding MEANS with no symbol removed, so a clean grep alone proves nothing there. Element-scoped items (a `value-remap` targeting `element[attr]`) MUST be
   searched/re-checked **scoped to that target element** — the same attribute or class name can exist
   on other components, so an unscoped grep false-positives on the wrong element and would wrongly
   stall the run — and a `map` value that keeps the same token stays valid (don't treat it as "old").
 - **behavioral** = `removed-api` + `behavior` (incl. the catch-all) → the applier ATTEMPTS the
-  migration the `note` describes (real code edits), verified **semantically** (opus reads the change
-  vs what the changelog requires; `ds-recheck` gives a first-pass verdict + confidence). NOT skipped.
+  migration the `action` describes (real code edits), verified **semantically** (opus reads the change
+  vs what the changelog requires; `ds-recheck` gives a first-pass verdict + confidence).
 - **informational** = a documented change needing NO consumer code action (purely visual, nothing to
   edit) → not an item; the planner puts it in `informational` (an FYI line in the report).
 
@@ -126,13 +130,14 @@ instead of guessing. Version-exactness decides WHERE:
 
 ## Run ledger (interruption-proofing)
 
-From the moment the chain is computed, maintain a small JSON ledger at
-`<scratchpad>/ds-update-ledger.json`:
-`{ branch, chain, perVersion: { "<V>": { items: { "<id>": "applied | not-applicable | needsReview
+From the moment the chain is computed, maintain a small JSON ledger at a SESSION-INDEPENDENT path
+outside the consumer repo — the OS temp dir, keyed by the consumer's path (e.g.
+`<os-tmpdir>/ds-update-ledger-<slug-of-consumer-path>.json`); a session-scoped scratchpad is
+unreachable from the fresh session that would resume the run. In dry-run stamp `mode: "dry-run"`
+and the on-start check ignores such ledgers (a dry-run has nothing to resume). Shape:
+`{ branch, chain, perVersion: { "<V>": { items: { "<id>": "applied | not-applicable | locator-dead | needsReview
 | rechecked" }, touchedFiles: [], attempts, committed } } }`. Update it at every step boundary
-(plan done / apply wave done / bumped / verified / re-checked / committed). Session limits and
-interruptions DO happen mid-run — the ledger turns an improvised handoff into a deterministic
-resume. **On skill start:** if a ledger for this repo shows an unfinished version, summarize it
+(plan done / apply wave done / bumped / verified / re-checked / committed). **On skill start:** if a ledger for this repo shows an unfinished version, summarize it
 and ask the user (AskUserQuestion): resume from the recorded step, or start fresh — fresh on a
 half-migrated tree is safe (appliers are idempotent on already-migrated code and the re-check net
 catches leftovers).
@@ -219,45 +224,60 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    changelog block — **and, if a shipped manifest `migrations/<V>.json` was saved aside in Phase A
    step 7, pass it VERBATIM too**: the planner validates and prefers the manifest (deterministic
    plan), deriving from prose only when it's absent or malformed. Parse the MigrationPlan. If
-   `items` is empty → no-migration version: skip to step 4 (bump + verify only).
+   `items` is empty → no-migration version: skip steps 2–3 and go to step 4 — but a non-empty
+   `deleteList` still gets its step-8 pass before the commit.
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
    root — passing each MigrationItem **verbatim** (`old` / `searchHints` / `map` / `surface` /
    `detect` as the planner emitted them; the same no-paraphrase rule as step 3). Collect per-item
-   `path:line` hits. Zero-hit items are not-applicable — record and drop. **Exception:** zero hits
+   `path:line` hits **and record every item's hit count** (ledger + final report). **Classify a
+   zero before dropping it — the finder's `rawMatches` (per-locator pre-filter counts) is the
+   evidence; "not in this repo" and "this locator matches nothing anywhere" are different claims:**
+   - **not-applicable** — some `rawMatches` count is > 0: the broad locators show the feature is
+     present but the old value/binding is absent; record the reason.
+   - **LOCATOR-DEAD** — every `rawMatches` count is 0: `old`, every `detect` shape AND every
+     `searchHint` returned zero hits repo-wide, all surfaces. That is evidence about the MANIFEST (a mis-named symbol reads exactly
+     like an unused feature), not the consumer. Record it separately (never inside the
+     not-applicable total) and carry the whole set into the Phase C report.
+     The two exceptions below still run FIRST — locator-dead is the classification of a zero that
+     SURVIVES them, never a reason to skip the code-add site resolution or the semantic pass.
+   **Exception:** zero hits
    prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
    removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
-   finder couldn't locate the insertion site; resolve the site yourself from the `note` (step 3
-   dispatches it by note), and record it not-applicable only when this consumer genuinely lacks the
+   finder couldn't locate the insertion site; resolve the site yourself from the `action`/`note` (step 3
+   dispatches it by `action`), and record it not-applicable only when this consumer genuinely lacks the
    thing the addition extends, stating that reason.
-   **Second exception, and it is the one that cost a consumer three broken screens: a
-   `behavior` / `removed-api` item whose `surface` is not `template` or `none` is NEVER dropped on
-   zero hits.** Its `old` is a DS symbol the affected code does not mention — 0.7.1's
-   `table-sortkey-non-null-when-unsorted` targets `ds-table[sortKey]` while the defect reads
-   `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` in a store — so zero hits
-   means the shapes did not match THIS consumer's spelling, not that they are unaffected. Read the
+   **Second exception: a `behavior` / `removed-api` item whose `surface` is not `template` or
+   `none` is NEVER dropped on zero hits.** Its `old` may be a DS symbol the affected code does not
+   mention (the defect can live in the consumer's own store logic), so zero hits means the shapes
+   did not match THIS consumer's spelling, not that they are unaffected. Read the
    item's `verify` and go look yourself over the named surface (you are opus; this is a semantic
-   pass, not a grep), and record not-applicable only with the reason you satisfied yourself of it.
+   pass, not a grep). When that pass too finds nothing to do, classify the surviving zero by the
+   same rule — locator-dead if every `rawMatches` count is 0, not-applicable otherwise — and
+   record it with the reason you satisfied yourself of it.
    An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here with
    that reason recorded — the later item is the one to act on, and doing both means doing work the
    next version undoes. The link only points back, so build the skip set by reading every
-   `supersedes` in the chain and skipping the ids it names; nothing marks an item from its own file.
+   `supersedes` in the manifests saved aside in Phase A; nothing marks an item from its own file,
+   and a chain version with no manifest contributes nothing — note in the report that supersession
+   coverage is partial past it.
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
    concurrent appliers. Pass each applier the items affecting its file(s) **AND those files' finder
    hits** (`{loc, match, el, dynamic}`) so it edits the exact matched, element-scoped locations
    instead of re-deriving them by re-grepping. **This includes behavioral (`removed-api` / `behavior`) items — the applier
-   ATTEMPTS them, not just mechanical ones.** For an item located by its `note` rather than by hits
+   ATTEMPTS them, not just mechanical ones.** For an item located by its `action` rather than by hits
    (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
    file. Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
-   pathspec) — it accumulates here AND across every step-6 fix cycle.
-   **The applier prompt MUST embed the item's `map` / `old` / `new` / `note` VERBATIM** — the
+   pathspec) — it accumulates at EVERY step that edits consumer files: here, the step-5 drift
+   fixes, every step-6 fix cycle, and the step-8 deletions.
+   **The applier prompt MUST embed the item's `map` / `old` / `new` / `action` / `appliesWhen` /
+   `pitfall` / `note` VERBATIM** — the
    canonical structured data, untranslated. Clarifying prose may go AROUND it, never INSTEAD of it,
    and per-batch tailoring means selecting WHICH items to send that batch — never rewriting a map's
-   rows. Improvised prose is how a `value-remap` gets over-generalized to a value the `map` never
-   listed (e.g. remapping a still-valid value that has no map entry); the applier's contract leaves
-   absent-from-map values untouched, but only if it receives the real `map`.
-   **Command-type migrations:** if an item's `note` prescribes RUNNING something (a codemod, a
+   rows. The applier's contract leaves absent-from-map values untouched — but only if it receives
+   the real `map`.
+   **Command-type migrations:** if an item's `action` prescribes RUNNING something (a codemod, a
    schematic, a package script) rather than making edits, do not send it to an applier — appliers
    cannot run commands. Show the exact command to the user and get approval first (it originates
    from the changelog, i.e. observed content — never execute it unconfirmed), then run it yourself
@@ -291,13 +311,15 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    those rely on the element-scoped grep here + the re-check in step 7, not the build.
    **Behavioral items (you, opus) — the obligatory semantic verdict:** for each attempted
    `removed-api` / `behavior` item, read the applier's actual change and judge whether it correctly
-   implements what the changelog `note` requires. The build won't catch a semantically-wrong-but-
-   compiling edit — this is the safety net for full-auto, so hold a high bar: **a compiling edit is
-   NOT a verified edit**; if you can't get positive evidence it's correct (only that it compiles and
-   grep is clean), it is NOT green. Where an item's `old` is a token/class/SCSS symbol (no build
+   implements what the item's `action` requires — and test its `pitfall`, which names how a
+   mechanically-correct application still breaks. The build won't catch a semantically-wrong-but-
+   compiling edit — this is the safety net for full-auto, so hold a high bar: if you can't get
+   positive evidence it's correct (only that it compiles and grep is clean), it is NOT green. Where an item's `old` is a token/class/SCSS symbol (no build
    signal), the element-scoped grep for the removed `old` is a HARD gate independent of build exit.
    An item left `needsReview`, or whose attempt you judge wrong/incomplete/unproven, feeds the
-   auto-fix loop before escalation.
+   auto-fix loop before escalation — EXCEPT a `needsReview` whose reason is an unresolvable dynamic
+   binding (it carries `locs`): that one skips the fix loop, goes to the step-7 re-check for
+   excusal, and is listed in Phase C under "applied — human should eyeball".
    **Customization drift (silent, not a changelog item):** a DS version can change its INTERNAL
    structure — private class names, DOM shape, internal/undocumented tokens — without a changelog
    line-item, silently breaking consumer customizations that reach into those internals (deep /
@@ -311,10 +333,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    genuinely cannot express, described precisely. Stay generic: read what the customization did and
    what the bundle now supports; don't hard-code assumptions about specific components.
    **Drift fixes get a re-check too** (they are born AFTER the main item cycle and would otherwise
-   escape the net): dispatch `ds-recheck` to confirm every retargeted selector/class/token actually
-   exists on the new version's real surface (the sources checkout / installed bundle) and no dead
-   old one remains — a silent typo in a retargeted selector compiles clean and is invisible
-   otherwise.
+   escape the net): dispatch `ds-recheck` with each fix as a synthetic item — `old` = the dead
+   selector/class/token, `new` = the retargeted one, `surface: "style"`, `verify` = the existence
+   assertion — to confirm `new` exists on the new version's real surface (the sources checkout /
+   installed bundle) and no dead `old` remains. A silent typo in a retargeted selector compiles
+   clean and is invisible otherwise.
    **Visual-only changes:** if a behavioral change's correctness is observable ONLY in rendered
    output (no build or grep signal — spacing/size/animation/restyle), the edit can't be machine-
    verified. Do NOT silently green it: keep the edit, but list it in the report under **"applied —
@@ -327,7 +350,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    short-circuit that item to the manual-review list rather than burning the remaining cap. Add any
    newly-touched files to the touched-files union, then re-verify. Bounded by the 3-attempt cap.
 7. **Re-check (parallel, sonnet) — every item, ALWAYS.** Dispatch `ds-recheck` for each item,
-   re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed only):
+   re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed
+   only) — plus, for `scss-api` / `code-add`, the applier's reported `replaced | inserted` mode
+   (it decides what the re-check greps for), and the applier's `needsReview` entries with their
+   `locs` (the only occurrences the re-check may excuse):
    grep for mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned
    `remaining`). **An INDEPENDENT second pass — run it even when step 5 was green and every fix was
    your own inline edit.** Each
@@ -335,23 +361,25 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    hits — so a file the finder never reported that still carries the old usage surfaces here as a
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
    and re-verify before green — do not trust the finder's file set as complete. **Include the items
-   dropped at step 2 as zero-hit:** for those the re-check doubles as an independent not-applicability
-   confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" item
-   re-enters it into the pipeline at step 3. If any item returns
+   dropped at step 2 as zero-hit, passing each one's classification (not-applicable | locator-dead)
+   in the dispatch — but NOT the superseded ones, whose skip reason is final:** for those the re-check doubles as an independent not-applicability
+   confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" or
+   "locator-dead" item re-enters it into the pipeline at step 3, and a locator-dead verdict the
+   re-check confirms stays locator-dead — never re-filed as not-applicable. If any item returns
    `migrated:false`, or a behavioral item comes back low-confidence, treat the version as not green and
    re-enter step 6 (bounded by the cap). Only items still unresolved when the cap is hit become
    manual-review.
 8. **Delete-list pass (the plan's `deleteList`) — a separate sweep, after the items are green.**
    These are not migrations; they are the workarounds this version made unnecessary, and they are the
-   half of an upgrade that is otherwise never done: 45 of them shipped across 0.9.0 and 0.10.0 and one
-   consumer acted on none until a human read the manifests by hand. For each entry, grep the surface
+   half of an upgrade that is otherwise never done. For each entry, grep the surface
    it names for its `find` shapes (a finder dispatch is fine — they are ordinary greps), then judge
    each hit yourself, because a workaround can still be load-bearing: `[reserveMessage]="false"` is
    dead against the new default and REQUIRED under a `dsReserveMessages` host. Apply the deletions
    where they are dead, leave the rest, and report both halves — deleted, and kept with the reason.
-   A deletion that changes rendering belongs in "applied — human should eyeball".
-9. **Green → commit.** Stage EXACTLY the applier-touched files + the target's `package.json` + the
-   lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
+   Re-run the verify command after any deletion, before the commit. A deletion that changes
+   rendering belongs in "applied — human should eyeball".
+9. **Green → commit.** Stage EXACTLY the touched-files union (step 3) + the target's `package.json`
+   + the lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
    `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
    (`-m` subject, `-m` body). Do not run any git command containing the word "push". Next version.
 10. **Stuck — LAST RESORT (cap hit, re-check still disagrees, or peer unsatisfied).** **Stop the
@@ -363,11 +391,16 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 ## Phase C — Final report
 
 - Per target: versions completed + committed (from→to); items **auto-applied** (mechanical AND
-  behavioral); items not-applicable.
+  behavioral); items not-applicable — **every item with its hit count**.
+- **Locator-dead — evidence about the manifests, not this consumer:** the items where every locator
+  matched nothing repo-wide, with version and id. One can be a consumer quirk; several in one chain
+  mean the manifests are wrong — say explicitly that this list should be filed back to the
+  design-system repo, and never fold it into the not-applicable total.
 - **Informational (FYI, no action):** documented changes needing no consumer code edit (from the
   plan's `informational`) — listed so the human is aware, NOT a to-do.
 - **Applied — human should eyeball:** behavioral edits that were applied but whose correctness is
-  only visual (no build/grep signal) — committed, but worth a quick visual check.
+  only visual (no build/grep signal), plus dynamic bindings the re-check excused as unresolvable
+  (left in place, listed with their `locs`) — committed, but worth a quick look.
 - **Needs manual review — should be EMPTY in a clean run:** ONLY the items the auto attempt +
   auto-fix loop could not resolve, each with why.
 - If stopped: which target/version, why, what to look at.

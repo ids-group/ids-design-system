@@ -66,10 +66,14 @@ export class ToastSection {
       .catch(() => this.promiseRunning.set(false));
   }
 
+  // Keeps counting across presses, so a second press is visibly five NEW toasts.
+  private queuedCount = 0;
+
   fireMaxVisible(): void {
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 0; i < 5; i++) {
+      this.queuedCount += 1;
       this.toast.show({
-        body: `Queued notification #${i}`,
+        body: `Queued notification #${this.queuedCount}`,
         variant: 'info',
         durationMs: 4000,
       });

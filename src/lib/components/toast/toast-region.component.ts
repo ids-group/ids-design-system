@@ -1,4 +1,5 @@
-import { Component, ViewEncapsulation, input, signal } from '@angular/core';
+import { Component, ViewEncapsulation, inject, input, signal } from '@angular/core';
+import { DS_TOAST_POSITION, DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
@@ -26,13 +27,49 @@ export class ToastRegionComponent {
   protected readonly leaving = signal<ReadonlySet<number>>(new Set());
 
   private readonly pendingQueue: ToastEntry[] = [];
+  private readonly timers = new Map<number, number>();
+
+  private readonly position = inject(DS_TOAST_POSITION, { optional: true });
+
+  /** Newest goes NEAREST the anchor, so the toast that just fired appears where the
+   *  stack is pinned rather than at the far end of a list the reader has to hunt
+   *  down. DOM order is the visual order, so this also keeps the reading order. */
+  private readonly newestFirst =
+    (this.position ?? DS_TOAST_POSITION_DEFAULT).verticalPosition === 'top';
 
   add(entry: ToastEntry): void {
     const limit = this.maxVisible();
     if (limit > 0 && this.visibleEntries().length >= limit) {
       this.pendingQueue.push(entry);
-    } else {
-      this.visibleEntries.update((existing) => [...existing, entry]);
+
+      return;
+    }
+
+    this.show(entry);
+  }
+
+  private show(entry: ToastEntry): void {
+    this.visibleEntries.update((existing) =>
+      this.newestFirst ? [entry, ...existing] : [...existing, entry],
+    );
+    this.startCountdown(entry);
+  }
+
+  private startCountdown(entry: ToastEntry): void {
+    if (entry.durationMs <= 0) {
+      return;
+    }
+    this.timers.set(
+      entry.id,
+      window.setTimeout(() => this.remove(entry.id), entry.durationMs),
+    );
+  }
+
+  private clearCountdown(id: number): void {
+    const timer = this.timers.get(id);
+    if (timer !== undefined) {
+      window.clearTimeout(timer);
+      this.timers.delete(id);
     }
   }
 
@@ -63,6 +100,13 @@ export class ToastRegionComponent {
   }
 
   remove(id: number): void {
+    this.clearCountdown(id);
+    const queueIndex = this.pendingQueue.findIndex((entry) => entry.id === id);
+    if (queueIndex !== -1) {
+      this.pendingQueue.splice(queueIndex, 1);
+
+      return;
+    }
     if (this.leaving().has(id)) {
       return;
     }
@@ -86,6 +130,8 @@ export class ToastRegionComponent {
   }
 
   clear(): void {
+    this.timers.forEach((timer) => window.clearTimeout(timer));
+    this.timers.clear();
     this.visibleEntries.set([]);
     this.leaving.set(new Set());
     this.pendingQueue.length = 0;
@@ -99,7 +145,6 @@ export class ToastRegionComponent {
     if (limit > 0 && this.visibleEntries().length >= limit) {
       return;
     }
-    const next = this.pendingQueue.shift()!;
-    this.visibleEntries.update((existing) => [...existing, next]);
+    this.show(this.pendingQueue.shift()!);
   }
 }

@@ -162,6 +162,7 @@ export const NAV: NavGroup[] = [
     title: 'Patterns',
     path: 'patterns',
     items: [
+      { label: 'Page composition', anchor: 'pattern-page-composition' },
       { label: 'Activity', anchor: 'pattern-activity' },
       { label: 'Empty states', anchor: 'pattern-empty-state' },
       { label: 'Filter Bar', anchor: 'pattern-filter-bar' },
@@ -177,6 +178,7 @@ export const NAV: NavGroup[] = [
       { label: "Do / Don't", anchor: 'practice-do-dont' },
       { label: 'Token Discipline', anchor: 'practice-token-discipline' },
       { label: 'Signal Forms', anchor: 'practice-signal-forms' },
+      { label: 'Claude Design sync', anchor: 'practice-claude-design' },
     ],
   },
   {

@@ -45,7 +45,7 @@
     width: 268px; padding: var(--space-1);
     border: 1px solid var(--border-default); border-radius: var(--ds-radius-panel);
     background-image: linear-gradient(#FFFFFF, #FFFFFF);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-card);
   }
   .option {
     display: flex; align-items: center; gap: var(--space-2);
@@ -67,7 +67,7 @@
 
   /* The magnifier crops rather than overflows, so a narrow window degrades to a
      smaller window onto the same specimen instead of a horizontal scrollbar. */
-  .mag { overflow: hidden; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); background-image: linear-gradient(#FFFFFF, #FFFFFF); }
+  .mag { overflow: hidden; border: 1px solid var(--border-subtitle); border-radius: var(--radius-sm); background-image: linear-gradient(#FFFFFF, #FFFFFF); }
   .mag > .strip { transform-origin: left top; transform: scale(4); }
 
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); align-items: start; }

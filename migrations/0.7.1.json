@@ -3,9 +3,9 @@
   "items": [
     {
       "id": "surface-motion-partial-a-la-carte",
-      "kind": "scss-api",
-      "old": "@use '@ids-group-ltd/ids-design-system/styles/overlay-motion';",
-      "new": "@use '@ids-group-ltd/ids-design-system/styles/surface-motion';\n@use '@ids-group-ltd/ids-design-system/styles/overlay-motion';",
+      "kind": "code-add",
+      "old": null,
+      "new": "@use '@ids-group-ltd/ids-design-system/styles/surface-motion';",
       "action": "Add `@use '@ids-group-ltd/ids-design-system/styles/surface-motion';` to your styles entry, beside `styles/overlay-motion`. If you have no overlay-motion line, put it beside whatever DS partials you do `@use`. Order does not matter.",
       "appliesWhen": "Only à-la-carte consumers who `@use` DS partials individually. `styles/ds` forwards it, so its users need nothing at all.",
       "pitfall": "Missing it fails SILENTLY — no error, no warning. The keyframes simply do not exist, and modal, drawer, bottom-sheet, toast, banner, alert, loading-overlay and the overlay panels all render with no entrance animation. Write the package-qualified specifier too: a bare `styles/…` does not resolve in a consumer build.",

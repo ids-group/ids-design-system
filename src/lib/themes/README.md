@@ -6,7 +6,7 @@ Colour is layered in three concerns: a **base palette** (theme-independent primi
 
 | Layer                         | Lives in                                       | Examples                                                                                                     | Applied at                                   |
 | ----------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
-| **Base palette** (primitives) | `themes/_base-palette.scss`                    | `--blue-600`, `--cool-gray-*`, `--brand-gray-*`, `--red-h/s/l`, `--static-white`, fonts, `--shadow-tint-h/s` | `:root` (theme-independent)                  |
+| **Base palette** (primitives) | `themes/_base-palette.scss`                    | `--blue-600`, `--cool-gray-*`, `--brand-gray-*`, `--red-h/s/l`, `--static-ink`, fonts, `--shadow-tint-h/s` | `:root` (theme-independent)                  |
 | **Theme** (role map)          | `themes/_semantic.scss` + `themes/<t>/_*.scss` | `--primary`, `--surface-canvas`, `--text-primary`, the `--neutral-*` slot, `--focus-ring`                    | `:root` (light) / `:root[data-theme='dark']` |
 | **Component / scale**         | `styles/_tokens.scss`, `*.component.scss`      | `--space-*`, `--radius-*`, `--ds-button-bg-color`, `--duration-fast`                                         | `:root` (theme-independent)                  |
 
@@ -14,7 +14,7 @@ Colour is layered in three concerns: a **base palette** (theme-independent primi
 
 ## Files
 
-- **`_base-palette.scss`** — theme-independent primitives at `:root`: hue ramps (`--blue/red/green/yellow/sky/orange-*`) + HSL channels, `--cool-gray-*` / `--brand-gray-*` ramps, `--static-white` / `--static-ink` (never flip), `--shadow-tint-h/s`, font families. Shared by every theme.
+- **`_base-palette.scss`** — theme-independent primitives at `:root`: hue ramps (`--blue/red/green/yellow/sky/orange-*`) + HSL channels, `--cool-gray-*` / `--brand-gray-*` ramps, `--static-ink` (never flips), `--shadow-tint-h/s`, font families. Shared by every theme.
 - **`_semantic.scss`** — `@mixin roles`: the semantic role map (surfaces, text, icons, borders, primary/secondary/tertiary families, status, status-pills, focus). Structure is identical across themes; values resolve through each theme's own `--neutral-*` ramp. Holds the **light-default** values.
 - **`light/_palette.scss` + `light/_theme.scss`** — `@mixin palette` (the `--neutral-*` slot = cool-gray + `--shadow-tint-l: 7%`) and `@mixin theme` (`palette` + `semantic.roles`). Light is the **default** skin and needs no extra overrides.
 - **`dark/_palette.scss` + `dark/_theme.scss`** — `@mixin palette` (dark neutral ramp + `--shadow-tint-l: 95%`) and `@mixin theme` (`palette` + `semantic.roles` + the value overrides that genuinely differ on dark: tint surfaces, on-tint text, hover/pressed mixed toward white, scrim, focus-halo alpha, chart tokens).
@@ -54,7 +54,7 @@ export const appConfig: ApplicationConfig = {
 
 It sets `data-theme` from `prefers-color-scheme` at startup and keeps it in sync as the OS changes; a manual `data-theme="dark"` still wins.
 
-On-fill text uses theme-stable `--static-white` / `--static-ink` so it doesn't flip with the neutrals.
+On-fill text is the literal `white`, or the theme-stable `--static-ink` where the fill is light, so neither flips with the neutrals.
 
 **Known limitation — `data-neutrals="brand"` + dark:** the brand-gray (hue-derived) neutral switch is a **light-theme feature**. The dark block ships its own neutral ramp and is declared last, so on `data-theme="dark"` the dark neutrals win and the brand-gray tint is ignored. (Benign — renders correct dark, just not brand-tinted neutrals.)
 

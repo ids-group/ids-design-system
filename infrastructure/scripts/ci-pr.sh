@@ -7,8 +7,12 @@
 #
 # build          -> fails the step if the library or docs don't compile
 # migration-lint -> fails the step; migrations/ has no debt to carry
+# agent-catalogue -> fails the step; docs/agent/ is generated from components.md and must
+#                   be committed in sync with it
 # changelog-lint -> fails the step; the published changelog and manifests must name
 #                   nothing a reader outside this repo cannot open
+# docblock-drift -> fails the step; a doc separated from its symbol is printed under
+#                   the wrong name in the published API table
 # surface        -> fails the step when the @angular/elements route's hand-maintained
 #                   list drifts from src/lib (see .design-sync/MANUAL-SURFACE.md)
 # parity         -> REPORT-ONLY while the React port is parked: the elements route is the
@@ -35,6 +39,11 @@ node tools/migration-lint.mjs
 echo "===== migration-lint selftest ====="
 node tools/migration-lint-selftest.mjs
 
+# Before anything regenerates it: the agent catalogue is derived from components.md, so a
+# commit that edits the source without regenerating leaves the shipped leaves lying.
+echo "===== agent catalogue ====="
+node tools/split-agent-catalogue.mjs --check
+
 echo "===== delete-table parity ====="
 node tools/check-delete-tables.mjs
 
@@ -47,6 +56,13 @@ node tools/changelog-lint.mjs
 
 echo "===== changelog-lint selftest ====="
 node tools/changelog-lint-selftest.mjs
+
+# A doc comment that a later insertion pushed off its symbol keeps compiling and
+# keeps linting clean, and `extract-component-api` prints it under whatever member
+# now follows it — so the published API table documents the wrong thing while the
+# member it was written for shows up bare. Three of these were already in the tree.
+echo "===== docblock drift ====="
+node tools/check-docblock-drift.mjs
 
 log_dir="$(mktemp -d)"
 

@@ -4,12 +4,21 @@
   title="Radius"
 >
   <span lede>
-    Five-stop scale (0 / sm / md / lg / 2xl) plus pill. The xl stop (16px) is
-    reserved for large containers — viewport and scanner frames. Cards, modals,
-    drawers, toasts and empty-state icons all use
+    Five-stop scale (0 / sm / md / lg / 2xl) plus pill — but reach for a ROLE, not a
+    stop:
     <code class="t-mono-inline">
-      --radius-lg
-    </code>.
+      --ds-radius-inner
+    </code>,
+    <code class="t-mono-inline">
+      --ds-radius-control
+    </code>,
+    <code class="t-mono-inline">
+      --ds-radius-panel
+    </code> and
+    <code class="t-mono-inline">
+      --ds-radius-pill
+    </code> are what components actually resolve, and they nest in that order. Retheming
+    corners means moving the four roles, not editing components.
     <code class="t-mono-inline">
       --radius-pill
     </code> is themable via
@@ -47,6 +56,110 @@
       </div>
     }
   </div>
+
+  <h3 class="block-title t-h4">
+    Roles — reach for one of these, not for a stop
+  </h3>
+
+  <p class="block-desc t-s">
+    Four role tokens carry every corner in the library; the scale above is what they
+    resolve to. Using a stop directly says "this corner belongs to no role", which is
+    almost never true. Occurrence counts are measured across the library.
+  </p>
+
+  <div class="radius-role-table">
+    <div class="radius-role-row radius-radius-role-row--head">
+      <div class="t-overline">
+        Role
+      </div>
+
+      <div class="t-overline">
+        Resolves to
+      </div>
+
+      <div class="t-overline">
+        Uses
+      </div>
+
+      <div class="t-overline">
+        What it is for
+      </div>
+    </div>
+
+    @for (role of roles; track role.token) {
+      <div class="radius-role-row">
+        <div
+          class="radius-role-swatch"
+          [style.borderRadius]="'var(' + role.token + ')'"
+        >
+          <code class="t-mono-inline">
+            {{ role.token }}
+          </code>
+        </div>
+
+        <code class="t-mono-inline radius-role-resolves">
+          {{ role.resolves }}
+        </code>
+
+        <div class="t-s radius-role-uses">
+          {{ role.uses }}
+        </div>
+
+        <div class="t-s radius-role-desc">
+          {{ role.desc }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
+    Nesting: inner &lt; control &lt; panel, and never equal
+  </h3>
+
+  <p class="block-desc t-s">
+    A rounded thing inside a rounded thing needs a SMALLER radius, or the inner corner
+    appears to bulge out of the outer one. The two stages below are the same markup with
+    one token changed — the left one is correct, the right one gives the child the
+    parent's radius.
+  </p>
+
+  <div class="nest-pair">
+    <div class="nest-cell">
+      <div class="nest-panel">
+        <div class="nest-child nest-child--correct">
+          <span class="t-xs">
+            Field in a card
+          </span>
+        </div>
+      </div>
+
+      <div class="applied-cell-label">
+        panel 12px · child 8px — correct
+      </div>
+    </div>
+
+    <div class="nest-cell">
+      <div class="nest-panel">
+        <div class="nest-child nest-child--wrong">
+          <span class="t-xs">
+            Field in a card
+          </span>
+        </div>
+      </div>
+
+      <div class="applied-cell-label">
+        panel 12px · child 12px — the corner bulges
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    The optical rule when the roles do not cover a value: inner radius = outer radius
+    minus the padding between them. A 12px panel with 8px of padding wants an 8px child.
+    And <code class="t-mono-inline">--radius-flat</code> is a statement, not a zero — it
+    exists so "deliberately square" reads differently from "nobody set a radius", which is
+    what the middle of a button group and an in-range calendar day rely on.
+  </p>
 
   <h3 class="block-title t-h4">
     Applied

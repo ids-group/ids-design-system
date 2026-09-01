@@ -4,6 +4,53 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.6.0 — 2026-09-01
+
+Three validation gaps closed, each grounded in a manifest defect the plugin could not distinguish
+from success (found by the 2026-08-31 manifest audit).
+
+### Added
+- **LOCATOR-DEAD classification.** A zero-hit item is classified before it is dropped: broad
+  locators show the feature absent → not-applicable; `old` + every `detect` shape + every
+  `searchHint` match nothing repo-wide → locator-dead — evidence about the MANIFEST, reported as
+  its own Phase C section ("file this back to the design-system repo"), never folded into
+  not-applicable. Per-item hit counts now go to the ledger and the final report; the finder returns
+  `{ hits: [], searched: [...] }` on every zero (a bare `[]` no longer exists); the re-checker
+  confirms locator-dead with its own repo-wide grep.
+- **`scss-api` / `code-add` insertion mode.** A missing or unmatched `old` is an ANCHOR, not a
+  reason to skip: the applier inserts `new` at the location `action`/`note` describes and reports
+  `replaced` vs `inserted` per item (`modes` in its output); the re-checker verifies presence at
+  the described location instead of grepping for an `old` that was never there.
+
+### Changed
+- **Executor-simulation + regression pass.** The unresolvable-dynamic-binding path is now one road
+  (skip the fix loop → re-check excusal → "human should eyeball" with `locs`); the finder reports
+  per-locator `rawMatches` so the not-applicable/locator-dead call has evidence; superseded items
+  stay out of the re-check dispatch; an empty-`items` version still runs its `deleteList` pass; the
+  touched-files union covers drift fixes and deletions, and deletions re-verify before commit; the
+  ledger moved to a session-independent path (dry-run stamps itself and is never offered as a
+  resume); `verify` on `value-remap` is now required upstream too; `supersedes` is never fabricated
+  from prose; `no-op` joined the applier's `modes`; residual `note`-era wording swept.
+- **Adversarial review pass over the whole skill + agents.** Correctness: the re-check excuses only
+  occurrences the applier named in `needsReview.locs` (the excuse data now exists and is forwarded);
+  a `value-remap`'s `verify` is tested, and an old token standing inside its full replacement no
+  longer fails the item; drift fixes are dispatched as synthetic items; the planner accepts
+  detect-only and locator-less `behavior` items instead of discarding the whole manifest, repairs a
+  single defective item in place, never emits rename+`new: null`, and gains Grep/Glob; the finder
+  filters non-target hits itself; the locator-dead/not-applicable mark travels into the re-check
+  dispatch; `surface: "none"` is exempt from the semantic pass on both sides. Archaeology: dated
+  war stories and duplicate slogans cut throughout — rules now stand on their constraints.
+- **Field model synced with the manifests' current contract.** `action` is the imperative and the
+  only field the applier executes ("None, unless …" whose condition is unmet = applied-as-no-op);
+  `appliesWhen` bounds where an edit may land; `pitfall` is tested by the orchestrator's semantic
+  verdict and the re-checker; `note` is the why, playing the `action` role only on an old
+  un-enriched manifest item. The planner emits and enriches all four, `supersededBy` is gone from
+  the schema (the link points backward only), and `surface` may be an array.
+- **`surface` ranks the search, it no longer restricts it.** The finder searches ALL artifact
+  classes for every item, flags hits outside the declared surface with `outOfSurface: true`, and
+  still runs locators on `surface: "none"` items (a hit there contradicts the manifest and is
+  reported). An under-declared surface previously excluded the very file holding the break.
+
 ## 1.5.0 — 2026-08-21
 
 ### Added

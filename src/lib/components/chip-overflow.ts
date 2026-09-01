@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 
 /**
- * How many chips fit one line of a trigger, measured rather than guessed.
+ * @fileoverview How many chips fit one line of a trigger, measured rather than
+ * guessed.
  *
  * INVARIANT: nothing here may measure something the cut itself changes, or the
  * measurement feeds back into its own input and the split never settles — a hung
@@ -20,8 +21,6 @@ import {
  * the trigger. `enabled` gates the whole thing because measuring forces layout.
  */
 
-/** Room held for "+N more", in em so a retuned type scale carries. Measured at
- *  4.5em wide with three digits; 5em keeps a chip from being dropped for a pixel. */
 /**
  * The content width of the element the trigger sits in, or null when there is no
  * usable one — a detached node, or a parent that hugs its content too, in which
@@ -43,6 +42,8 @@ function hostContentWidth(host: HTMLElement | null): number | null {
   );
 }
 
+/** Room held for "+N more", in em so a retuned type scale carries. Measured at
+ *  4.5em wide with three digits; 5em keeps a chip from being dropped for a pixel. */
 const MARKER_RESERVE_EM = 5;
 
 /** What a sibling of the chip row costs the chips. One that can grow gives back

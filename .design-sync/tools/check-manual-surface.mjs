@@ -147,6 +147,31 @@ for (const tag of [...componentTags].sort()) {
   }
 }
 
+// A component with no preview gets no card in the design tool — it ships invisible.
+// The exceptions are real and deliberate: a child component appears inside its parent's
+// preview and has none of its own. They are listed rather than inferred, so adding a
+// component cannot quietly join them.
+const PREVIEW_EXEMPT = new Set([
+  'AccordionItem', 'CalendarDay', 'DescriptionItem', 'ListItem', 'MenuItem',
+  'SidenavGroup', 'SidenavItem', 'Tab', 'TimeColumns',
+  'TimelineItem', 'TooltipPanel',
+]);
+const previewNames = new Set(
+  readdirSync(join(repo, '.design-sync', 'previews'))
+    .filter((name) => name.endsWith('.tsx'))
+    .map((name) => name.slice(0, -4)),
+);
+for (const tag of [...componentTags].sort()) {
+  const name = pascalOfTag(tag);
+  if (previewNames.has(name) || PREVIEW_EXEMPT.has(name)) continue;
+  errors.push(`✗ ${tag} has no .design-sync/previews/${name}.tsx — it would upload with no card at all. Write one, or add it to PREVIEW_EXEMPT with a reason if it only ever appears inside a parent`);
+}
+for (const name of [...PREVIEW_EXEMPT].sort()) {
+  if (previewNames.has(name)) {
+    errors.push(`✗ ${name} is on PREVIEW_EXEMPT but a preview exists — drop it from the list`);
+  }
+}
+
 // Matched as a backticked token, not a bare substring: `badge` would otherwise
 // be satisfied by the word "title-badge" appearing anywhere in the prose.
 const docs = readFileSync(join(repo, '.design-sync', 'MANUAL-SURFACE.md'), 'utf8');
@@ -159,6 +184,6 @@ for (const entry of conditionalProjection) {
 
 for (const error of errors) console.log(error);
 console.log(
-  `${errors.length ? '✗' : '✓'} manual surface: ${conditionalProjection.length} conditional-projection template(s), ${attributeDirectives.length} attribute directive(s), ${componentTags.size} components all documented, ${errors.length} problem(s)`,
+  `${errors.length ? '✗' : '✓'} manual surface: ${conditionalProjection.length} conditional-projection template(s), ${attributeDirectives.length} attribute directive(s), ${componentTags.size} components documented, ${previewNames.size} previews, ${errors.length} problem(s)`,
 );
 process.exit(errors.length ? 1 : 0);

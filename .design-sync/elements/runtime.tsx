@@ -16,15 +16,19 @@ export interface DsHostProps {
  * the same pass, so the element sees its inputs before Angular's first change
  * detection for that view.
  */
-export function useDsElement(
+export function useDsElement<Props extends object>(
   tag: string,
-  props: Record<string, unknown>,
+  componentProps: Props,
   forwarded: React.ForwardedRef<HTMLElement>,
   inputNames: readonly string[],
   events: ReadonlyArray<readonly [string, string]>,
 ): React.ReactElement {
+  // Each generated wrapper passes its own `<Name>Props`, which has no index
+  // signature — so the parameter is generic and indexed through one cast here
+  // rather than widened at 85 call sites.
+  const props = componentProps as Record<string, unknown>;
   const ref = React.useRef<HTMLElement | null>(null);
-  const { children, className, style } = props as DsHostProps;
+  const { children, className, style } = componentProps as DsHostProps;
 
   React.useImperativeHandle(forwarded, () => ref.current as HTMLElement);
 

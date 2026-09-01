@@ -79,6 +79,21 @@ function typeDependencies(typeText) {
     .filter((name) => !AMBIENT_TYPES.has(name));
 }
 
+/** Names in a type expression that are actually TYPE references. `typeDependencies`
+ *  scans bare identifiers, so it also catches parameter names and object-literal keys
+ *  (`(row: T) => string`, `{ $implicit: unknown }`). Harmless when collecting imports —
+ *  an unknown name is simply skipped — but fatal when deciding to widen, because a
+ *  parameter name would condemn the whole type. Binding positions are exactly the ones
+ *  followed by a colon, so they are deleted before the scan — and so are string
+ *  literals, whose contents (`'sm' | 'md'`) the identifier scan would otherwise read
+ *  as type names. */
+function typeReferences(typeText) {
+  return typeDependencies(
+    typeText
+      .replace(/'[^']*'|"[^"]*"/g, ' ')
+      .replace(/[A-Za-z_$][\w$]*\s*:/g, ' '),
+  );
+}
 function decoratorMeta(classNode, decoratorName) {
   for (const decorator of ts.getDecorators?.(classNode) ?? []) {
     const call = decorator.expression;
@@ -146,17 +161,27 @@ function hostDirectiveApi(meta, directiveApi) {
 
 // Where every exported type in the library lives, so the generated props can
 // import the DS's real vocabulary instead of restating it as `unknown`.
+// A component can type an input with a file-LOCAL alias that is never exported
+// (ds-slider's `SliderValue`). typeIndex only holds exports, so such a name has no
+// import and the emitted .d.ts references an undefined type — invisible until
+// something type-checks the wrappers, which nothing did until 2026-09-01.
+const localTypeText = new Map();
 const typeIndex = new Map();
 for (const file of walk(join(repo, 'src/lib'), '.ts').sort()) {
-  if (file.endsWith('.spec.ts')) continue;
+  // `.d.ts` also ends with `.ts`, so a declaration left in the tree by a stray tsc run
+  // gets indexed as a source and its import path keeps a `.d` suffix. Measured 2026-09-01.
+  if (file.endsWith('.spec.ts') || file.endsWith('.d.ts')) continue;
   const importPath = `../../../${relative(repo, file).replace(/\\/g, '/').replace(/\.ts$/, '')}`;
   parse(file).forEachChild((node) => {
     const exported = node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
-    if (!exported) return;
     const isType = ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node)
       || ts.isEnumDeclaration(node);
-    if (isType && node.name && !typeIndex.has(node.name.text)) {
+    if (exported && isType && node.name && !typeIndex.has(node.name.text)) {
       typeIndex.set(node.name.text, importPath);
+    }
+    if (!exported && ts.isTypeAliasDeclaration(node) && node.name
+        && !localTypeText.has(node.name.text)) {
+      localTypeText.set(node.name.text, node.type.getText());
     }
   });
 }
@@ -324,6 +349,46 @@ export const ${component.name} = React.forwardRef<HTMLElement, ${component.name}
 `;
 }
 
+// Angular-only types (TemplateRef) carry nothing a React caller can use, and an
+// unresolvable name would emit a broken declaration, so both are widened. Reported
+// rather than silent: a widened prop is a real loss of contract for the agent.
+const WIDENED_TO_UNKNOWN = new Set(['TemplateRef', 'ElementRef', 'Signal', 'WritableSignal']);
+const widened = [];
+for (const component of components) {
+  for (const entry of component.api) {
+    const unresolved = typeReferences(entry.type)
+      .filter((name) => !typeIndex.has(name));
+    if (!unresolved.length) continue;
+
+    // A file-local alias can be inlined verbatim, which is better than an import:
+      // the agent reads the real shape. Only when the alias is not itself generic,
+    // since substituting an identifier inside a generic leaves the arguments behind.
+    const inlinable = unresolved.filter(
+      (name) => localTypeText.has(name) && !WIDENED_TO_UNKNOWN.has(name)
+        && !new RegExp(name + '\s*<').test(entry.type),
+    );
+    for (const name of inlinable) {
+      entry.type = entry.type.replace(
+        new RegExp('\\b' + name + '\\b', 'g'),
+        '(' + localTypeText.get(name) + ')',
+      );
+    }
+
+    // Anything still unresolvable makes the WHOLE type unknown. Substituting the
+    // identifier alone produced `unknown<unknown>` and clobbered same-named
+    // properties; these are Angular-only handles a React caller cannot use anyway.
+    const stillUnresolved = typeReferences(entry.type)
+      .filter((name) => !typeIndex.has(name) && !localTypeText.has(name));
+    if (stillUnresolved.length) {
+      widened.push(component.name + '.' + entry.name + ' (' + stillUnresolved.join(', ') + ')');
+      entry.type = 'unknown';
+    }
+  }
+}
+if (widened.length) {
+  console.log('· ' + widened.length + ' prop(s) widened to unknown — no importable type:');
+  for (const note of widened) console.log('    ' + note);
+}
 const byModule = new Map();
 for (const component of components) {
   for (const { type } of component.api) {

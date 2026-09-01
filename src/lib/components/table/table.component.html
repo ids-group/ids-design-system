@@ -16,25 +16,29 @@
   }
 </div>
 
-<div
-  #scrollWrap
-  class="scroll-wrap"
-  [class.scroll-y]="maxHeight()"
-  [style.max-height]="maxHeight()"
+<!-- Wraps the SCROLL CONTAINER, not the table inside it: the scrim is
+     `position: absolute; inset: 0`, so from in there it is sized to one viewport of
+     the table and scrolls away with the content. -->
+<ds-loading-overlay
+  [loading]="isOverlayLoading()"
+  [blur]="true"
+  [insetTop]="'var(--ds-table-head-h, 40px)'"
+  [inertContent]="false"
 >
   <div
-    class="visually-hidden"
-    role="status"
-    aria-live="polite"
+    #scrollWrap
+    class="scroll-wrap"
+    [class.scroll-y]="maxHeight()"
+    [style.max-height]="maxHeight()"
   >
-    {{ statusMessage() }}
-  </div>
+    <div
+      class="visually-hidden"
+      role="status"
+      aria-live="polite"
+    >
+      {{ statusMessage() }}
+    </div>
 
-  <ds-loading-overlay
-    [loading]="isOverlayLoading()"
-    [blur]="true"
-    [insetTop]="'var(--ds-table-head-h, 40px)'"
-  >
     <table
       [class]="tableClasses()"
       [style.--_table-virtual-row-h]="virtualRowHeight()"
@@ -73,6 +77,21 @@
               class="expand-col"
               [class.pin-expand]="stickyFirstColumn()"
             >
+              @if (expandAllVisible()) {
+                <button
+                  type="button"
+                  class="expand-btn"
+                  [attr.aria-label]="expandAllLabel()"
+                  (click)="onToggleExpandAll()"
+                >
+                  <ds-icon
+                    class="expand-chev"
+                    name="chevronRight"
+                    [class.is-expanded]="allExpanded()"
+                    [size]="16"
+                  />
+                </button>
+              }
             </th>
           }
 
@@ -140,13 +159,19 @@
               }
 
               @if (resizableColumns()) {
+                @let range = resizeRange(col);
+
                 <span
                   class="col-resize"
                   role="separator"
                   tabindex="0"
                   aria-orientation="vertical"
                   [attr.aria-label]="'Resize ' + col.label"
-                  [attr.aria-valuenow]="columnWidth(col)"
+                  [attr.aria-valuenow]="range?.now ?? null"
+                  [attr.aria-valuemin]="range?.min ?? null"
+                  [attr.aria-valuemax]="range?.max ?? null"
+                  (focus)="onResizeFocus(col, $event)"
+                  (blur)="onResizeBlur()"
                   (pointerdown)="onResizeStart(col, $event)"
                   (pointermove)="onResizeMove($event)"
                   (pointerup)="onResizeEnd()"
@@ -187,7 +212,12 @@
         </tr>
       </thead>
 
-      <tbody>
+      <!-- Matches what the scrim covers, which is everything below the header:
+           a row keeps its tabindex and its Enter handler otherwise, so a keyboard
+           user could open a row whose data is mid-replacement while the pointer
+           was stopped by the scrim. The header stays live on purpose — re-sorting
+           is what puts the scrim up in the first place. -->
+      <tbody [attr.inert]="isOverlayLoading() ? '' : null">
         @if (isSkeletonLoading()) {
           @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
             <ng-container
@@ -424,8 +454,8 @@
         }
       </tbody>
     </table>
-  </ds-loading-overlay>
-</div>
+  </div>
+</ds-loading-overlay>
 
 @if (stickyScrollbarResolved()) {
   <div
@@ -532,6 +562,17 @@
     panelRole="dialog"
     panelLabel="Column visibility"
   >
+    <ng-container [ngTemplateOutlet]="columnPanel"></ng-container>
+  </ds-popover>
+
+  <ds-bottom-sheet
+    title="Columns"
+    [(open)]="columnSheetOpen"
+  >
+    <ng-container [ngTemplateOutlet]="columnPanel"></ng-container>
+  </ds-bottom-sheet>
+
+  <ng-template #columnPanel>
     <div
       class="col-picker"
       cdkDropList
@@ -571,6 +612,43 @@
             />
             {{ col.label }}
           </label>
+
+          @if (resizableColumns()) {
+            <span class="col-width">
+              <button
+                type="button"
+                class="col-width-btn"
+                [attr.aria-label]="'Narrow ' + col.label"
+                (click)="onColumnWidthStep(col, -resizeStep)"
+              >
+                <ds-icon
+                  name="minus"
+                  [size]="14"
+                />
+              </button>
+
+              <button
+                type="button"
+                class="col-width-btn"
+                [attr.aria-label]="'Widen ' + col.label"
+                (click)="onColumnWidthStep(col, resizeStep)"
+              >
+                <ds-icon
+                  name="plus"
+                  [size]="14"
+                />
+              </button>
+
+              <button
+                type="button"
+                class="col-width-btn col-width-auto"
+                [attr.aria-label]="'Fit ' + col.label + ' to its content'"
+                (click)="onColumnWidthStep(col, 'auto')"
+              >
+                Fit
+              </button>
+            </span>
+          }
 
           @if (reorderableColumns()) {
             <span class="col-move">
@@ -612,7 +690,7 @@
         Reset to default
       </button>
     </div>
-  </ds-popover>
+  </ng-template>
 }
 
 @if (hasRowActions()) {
