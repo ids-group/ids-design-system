@@ -8,6 +8,7 @@
 // compilation and the partial-Ivy linker, which plain esbuild cannot do.
 import { createRequire } from 'node:module';
 import { copyFileSync, existsSync, mkdirSync, statSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -54,10 +55,20 @@ await esbuild.build({
   logLevel: 'warning',
 });
 
+// Declarations are the contract the design agent reads — the live project carries a
+// .d.ts per component and the port emitted them via tsc. This route emitted none until
+// 2026-09-01, so every prop reached the agent untyped. Resolved from the lockfile, not
+// via npx, for the reason recorded in tools/build-schematics.mjs.
+const tsc = createRequire(import.meta.url).resolve('typescript/bin/tsc');
+execFileSync(process.execPath, [tsc, '-p', join(elements, 'tsconfig.types.json')], {
+  cwd: repo,
+  stdio: 'inherit',
+});
+
 const styles = join(elements, 'dist/browser/styles.css');
 copyFileSync(styles, join(elements, 'demo/dist/styles.css'));
 
 console.error(
   `✓ ds-bundle.js ${kb(bundlePath)} (react external) · angular main.js ${kb(ngOutput)}`
-  + ` · styles.css ${kb(styles)} · demo ${kb(demoPath)}`,
+  + ` · styles.css ${kb(styles)} · demo ${kb(demoPath)} · d.ts emitted`,
 );
