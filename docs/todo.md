@@ -509,14 +509,25 @@ the service was just the one somebody noticed. Full table and every tested hypot
   modals. Also verified: no double-shipping — `press` (20 stylesheets), `text-clip` (10) and `chip-row`
   (2) are mixins components `@use` and are correctly NOT forwarded by `ds.scss`.
 
-- [ ] **[P2] Guard the entry-point boundary with a lint rule, before doing A3 — not after.** A missed
-  import rewrite fails the build with `Cannot destructure property 'pos' of
-  'file.referencedFiles[index]'` and nothing naming the cause, which is the single worst execution risk
-  in A3. Two well-precedented options already in this repo: extend `sheriff.config.ts` (today scoped to
-  `ds-docs/src/**` and explicitly NOT `src/lib`) with one module per component folder, whose deep-import
-  prevention is exactly this guard; or add a rule to the local plugin in `eslint-rules/` (three custom
-  rules already live there) forbidding a relative import that crosses a component-folder boundary.
-  **Build the guard first and watch it go red on a deliberate violation** — a green gate proves nothing.
+- [x] **[P2] Entry-point boundary guard — BUILT 2026-09-01, shipped OFF until A3 flips it.**
+  `eslint-rules/rules/entry-point-boundary.mjs` + `ds/entry-point-boundary` in the plugin, wired in
+  `eslint.config.mjs` scoped to `src/lib/**/*.ts` at **`'off'`**. It flags a relative import whose
+  target lies in a different entry-point group, names the public specifier to use instead, and covers
+  `import type` too — an erased import is still an entry-point dependency and fails the same way.
+  Co-location allowances are the three accepted SCCs (`radio`/`radio-group`,
+  `time-columns`/`time-picker`, and `card`/`config`/`core`/`icons`).
+
+  **Watched it go red, which was the point: 307 violations.** Close to the 318 static count — the
+  difference is exactly the imports now inside the accepted SCCs. **81% of them point at just four
+  targets:** `components-root` 92, `core` 60, `icons` 57, `components/field-message` 15. So A3's rewrite
+  is four bulk replacements plus roughly fifty individual reviews, not 318 separate decisions. Heaviest
+  importers: `multi-select` 27, `autocomplete` 25, `select` 24, `modal` 13, `input` 11, `table` 11.
+
+  **Why OFF and not warn:** 307 warnings would drown the existing lint output. `npm run lint` is
+  unchanged (verified exit 0). **Flip it to `'error'` in the same commit that finishes A3's rewrites** —
+  after that it is the thing that stops a missed one from surfacing as an unrelated-looking ng-packagr
+  crash. Probe config for running it at error before then: `.claude/local/eslint.entrypoint-probe.mjs`
+  (gitignored).
 
 - [ ] **[P3] A curated `prototype` entry point, once A3 exists.** One extra entry re-exporting a light,
   opinionated set answers Mikhail's original basic/advanced ask at zero cost: no second package, no

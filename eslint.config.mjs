@@ -121,6 +121,17 @@ export default defineConfig(
       curly: 'error',
     },
   },
+  // Entry-point boundary inside the published library. OFF until per-component entry
+  // points land (docs/todo.md → A3): it reports every existing cross-folder relative
+  // import, and that count IS the size of that refactor. Flip to 'error' in the same
+  // commit that finishes the rewrites — after that it is what stops a missed one from
+  // surfacing as an unrelated-looking ng-packagr crash.
+  {
+    files: ['src/lib/**/*.ts'],
+    rules: {
+      'ds/entry-point-boundary': 'off',
+    },
+  },
   // Sheriff module boundaries — scoped to the ds-docs showcase only (NOT src/lib).
   // Sections can't import each other; see sheriff.config.ts. Encapsulation relaxed
   // so existing deep relative imports into shared/layout keep working.
