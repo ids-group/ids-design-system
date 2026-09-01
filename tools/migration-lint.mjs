@@ -1,8 +1,7 @@
 //
 // Every migrations/<version>.json, checked against the contract in
-// migrations/README.md. It exists because NOTHING validated these files: a
-// manifest could ship malformed, or — the case that actually cost a consumer a
-// day — well-formed and undetectable.
+// migrations/README.md. A manifest could ship malformed, or — the case that
+// actually cost a consumer a day — well-formed and undetectable.
 //
 // Two shapes get through a find/apply/recheck loop in silence, and the rules below
 // exist for them:
@@ -192,7 +191,6 @@ for (const [name, manifest] of manifests) {
       at('M017', 'no searchHints — nothing can locate this');
     }
 
-    // --- detectability ------------------------------------------------------
     const surfaces = [item.surface ?? []].flat();
     if (item.surface === undefined) {
       at('M020', 'no `surface` — say where the consumer\'s code changes');
@@ -289,7 +287,6 @@ for (const [name, manifest] of manifests) {
     }
   }
 
-  // --- delete list ----------------------------------------------------------
   // Prose delete-list entries are the older form and stay readable; the array
   // is what a tool can act on, which is why 24 of them in 0.10.0 were found by
   // a human reading all 63 informational strings and not by the loop.
@@ -322,10 +319,10 @@ for (const [name, manifest] of manifests) {
     seenDeleteIds.add(entry.id);
   }
 
-  // Second person plus one of these verbs is an instruction to delete consumer code, and prose
-  // is not executed: 0.9.0 shipped five of them, four with no row to run. Requiring the sentence
-  // to name its row is what makes the pair machine-checkable — a shape test alone passes as soon
-  // as the file holds any unrelated `deleteList` entry.
+  // A sentence telling the consumer to delete something is prose, and prose is not executed:
+  // 0.9.0 shipped five of them, four with no row to run. Requiring the sentence to name its row
+  // is what makes the pair machine-checkable — a shape test alone passes as soon as the file
+  // holds any unrelated `deleteList` entry.
   // Two patterns, not one: a phrasing that names WHAT goes needs no subject, and requiring one
   // is what kept every third-person spelling from ever matching.
   const DELETE_SELF =

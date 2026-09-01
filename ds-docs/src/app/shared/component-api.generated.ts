@@ -223,7 +223,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name`, which every auth screen in an app answers identically. Each field resolves on its own, so `brand=\"\"` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row."
+        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=\"\"` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row."
       },
       {
         "name": "logoLetter",
@@ -281,7 +281,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'none'",
         "required": false,
-        "description": "Announce the card as the page's `main` landmark. The card holds the whole content of an auth screen and `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set this to `'main'` on a standalone auth page. It is opt-in because the layout is also embedded inside pages that already own a `main`, and two `main`s is its own violation."
+        "description": "Announce the card as the page's `main` landmark. `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set `'main'` on a standalone auth page. Opt-in because the layout is also embedded inside pages that already own a `main`, and two `main`s is its own violation."
       }
     ],
     "outputs": []
@@ -1895,7 +1895,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "new Date().getFullYear() - 100",
         "required": false,
-        "description": "Bounds for the year dropdown in the calendar header."
+        "description": "Lower bound for the year dropdown in the calendar header."
       },
       {
         "name": "maxYear",
@@ -1985,7 +1985,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Allow masked manual typing. When false the trigger is a button (calendar-only)."
+        "description": "Allow masked manual typing. When false the field is read-only and a date can only be picked from the calendar."
       }
     ],
     "outputs": []

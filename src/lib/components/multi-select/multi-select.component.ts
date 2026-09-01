@@ -134,9 +134,8 @@ export class MultiSelectComponent
       if (raw === null || raw === undefined) {
         return null;
       }
-      // A bare attribute is Angular's '' and means true here as it does through
-      // booleanAttribute everywhere else — leaving it "unset" made
-      // `<ds-multi-select searchable>` unable to override a config that said false.
+      // A bare attribute arrives as '' and has to beat the config default, which
+      // treating it as "unset" would not.
       if (raw === '') {
         return true;
       }
@@ -339,7 +338,6 @@ export class MultiSelectComponent
     flattenDsOptions(this.options()),
   );
 
-  // Selected options in the source order, so chip order is stable.
   protected readonly selectedOptions = computed<MultiSelectOption[]>(() => {
     const selected = this.value();
 
@@ -350,17 +348,12 @@ export class MultiSelectComponent
 
   private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
   private readonly showsEveryChip = computed(() => this.chipsMode() === 'all');
-  /** True for BOTH `'fit'` and a number: a number is a ceiling, not a promise —
-   *  "at most N" — so the row still measures and shows only what the trigger is
-   *  wide enough for. Without that, a phone-width trigger honoured the count and
-   *  wrapped the text input onto a second line, which is the one thing the cap
-   *  exists to prevent. */
+  /** True for BOTH `'fit'` and a number: a number is a ceiling, not a promise, so
+   *  the row still measures and shows only what the trigger is wide enough for. */
   protected readonly fitsChipsToWidth = computed(() => !this.showsEveryChip());
   /** How many chips the row is ASKED to render before measuring: everything for
-   *  `'fit'`, the ceiling for a number. It has to be the ceiling and not the
-   *  selection, because the measurement caches chip widths from a render that
-   *  holds them all — with a numeric cap that render never happens, the cache
-   *  never fills, and the fit fell back to "show them all" without a word. */
+   *  `'fit'`, the ceiling for a number. It must be the ceiling and not the selection —
+   *  the width cache only fills from a render that holds every chip. */
   private readonly chipBudget = computed(() => {
     const max = this.chipsMode();
     const total = this.selectedOptions().length;
@@ -458,7 +451,6 @@ export class MultiSelectComponent
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
-  // Select-all reflects the currently filter-matching, enabled options.
   private enabledFiltered(): MultiSelectOption[] {
     return this.filteredOptions().filter((option) => !option.disabled);
   }
@@ -562,18 +554,15 @@ export class MultiSelectComponent
     event.stopPropagation();
     this.clear();
     this.markTouched();
-    // The button that ran this is being destroyed with the chips, so focus would
-    // fall to <body>. The public clear() below leaves focus alone on purpose.
+    // The button that ran this is destroyed with the chips, so focus would fall
+    // to <body>.
     this.trigger().nativeElement.focus();
   }
 
   /**
    * Empties the selection from outside — a "reset filters" button, a form the app
-   * clears itself. `ds-autocomplete` has had this; the other two had only the
-   * in-trigger button.
-   *
-   * Deliberately does NOT move focus: the caller may be navigating away, and
-   * stealing focus back into a field they just left is worse than leaving it.
+   * clears itself. Deliberately does NOT move focus: the caller may be navigating
+   * away.
    */
   clear(): void {
     this.value.set([]);
@@ -585,8 +574,8 @@ export class MultiSelectComponent
 
   protected removeValue(value: string): void {
     this.value.set(this.value().filter((entry) => entry !== value));
-    // The close button that ran this is being destroyed with its chip, so focus
-    // would land on <body> and the next removal would need a tab from the top.
+    // The close button that ran this is destroyed with its chip, so focus would
+    // fall to <body>.
     this.trigger().nativeElement.focus();
   }
 
@@ -654,10 +643,8 @@ export class MultiSelectComponent
     if (this.isDisabled()) {
       return;
     }
-    // With no filter row there is nowhere else for these to land, so the trigger
-    // runs the same handler the input would have — and it has to get first refusal
-    // on Enter, or Enter would toggle the panel shut instead of picking the active
-    // row and there would be no keyboard way to select at all.
+    // With no filter row the trigger runs the input's handler, and must take Enter
+    // first — otherwise Enter toggles the panel instead of picking the active row.
     if (this.open() && !this.showsSearch()) {
       this.onSearchKeydown(event);
 

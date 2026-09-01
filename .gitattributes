@@ -10,3 +10,9 @@
 # this every build:docs reports 60 modified files that differ only in line endings — and
 # that churn sweeps into whichever commit runs next.
 docs/agent/** text eol=lf
+
+# docs/todo.md was stored verbatim as CRLF (git read it as binary) and picked up 23
+# doubled carriage returns from a tool writing CRLF into an already-CRLF file.
+# Pinning eol=lf keeps it LF in the worktree too, so no conversion step is left to
+# double, and the file diffs and merges like every other doc.
+docs/todo.md text eol=lf

@@ -13,18 +13,19 @@ import {
  *
  * INVARIANT: nothing here may measure something the cut itself changes, or the
  * measurement feeds back into its own input and the split never settles — a hung
- * page, not a wrong number. Hence the space comes off the TRIGGER, never the row,
- * and the "+N more" marker gets a fixed reserve rather than a measurement.
+ * page, not a wrong number. Hence the budget comes off the trigger's PARENT
+ * content box (the trigger's own width is the fallback for when there is no usable
+ * parent), never the row, and the "+N more" marker gets a fixed reserve rather
+ * than a measurement.
  *
- * The caller owes two things, both enforced by the `chip-row` style block: chips
- * carry `data-chip`, and they sit in a row of their own that is a direct child of
- * the trigger. `enabled` gates the whole thing because measuring forces layout.
+ * The caller owes two things: chips carry `data-chip`, and they sit in a row of
+ * their own that is a direct child of the trigger. `enabled` gates the whole thing
+ * because measuring forces layout.
  */
 
 /**
- * The content width of the element the trigger sits in, or null when there is no
- * usable one — a detached node, or a parent that hugs its content too, in which
- * case it carries the same feedback and measuring it would buy nothing.
+ * Null when there is no usable parent — a detached node, or one that hugs its
+ * content too, which carries the same feedback loop the trigger does.
  */
 function hostContentWidth(host: HTMLElement | null): number | null {
   if (!host || host.clientWidth === 0) {
@@ -60,10 +61,7 @@ export function chipFit(
   count: Signal<number>,
   chipRow: Signal<ElementRef<HTMLElement> | undefined>,
   enabled: Signal<boolean>,
-  /** The whole selection, which `count` may already cap. The last chip may spend
-   *  the marker's room only when there is genuinely nothing left to announce —
-   *  with a numeric cap there always is, and letting it spend anyway clipped the
-   *  "+N more" text itself. */
+  /** The whole selection, which `count` may already cap. */
   selectionSize: Signal<number> = count,
 ): Signal<number> {
   const available = signal(0);
@@ -74,9 +72,8 @@ export function chipFit(
   /** `count` at that render, so a stale cache is never trusted. */
   const measuredFor = signal(-1);
   /** Geometry the last measure ran against, to skip one that would repeat it.
-   *  Each forces layout: before this guard and `enabled` existed, a single docs
-   *  page load measured 214 times across seven pickers that were all on the
-   *  wrapping default. */
+   *  Each forces layout: without this guard a single docs page load measured 214
+   *  times across seven pickers. */
   let lastWidth = -1;
   let lastCount = -1;
 
@@ -86,12 +83,11 @@ export function chipFit(
       return;
     }
 
-    // The INVARIANT at the top of this file, made concrete: a trigger that hugs
-    // its content (`width: fit-content`, which both compact modes set) has a width
-    // decided by the chips this cut removes, so reading it feeds the result back
-    // into its own input. The parent's content box is the space actually
-    // available and does not move when the chips do. For a `fill` trigger the two
-    // are the same number, so nothing changes there.
+    // A trigger that hugs its content (`width: fit-content`, which both compact
+    // modes set) has a width decided by the chips this cut removes, so reading it
+    // feeds the result back into its own input. The parent's content box is the
+    // space actually available and does not move when the chips do; for a `fill`
+    // trigger the two are the same number.
     const host = trigger.parentElement;
     const budget = hostContentWidth(host) ?? trigger.clientWidth;
 

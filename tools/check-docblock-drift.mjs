@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 // Does every `/** */` still sit on the member it describes?
 //
-// Three times now a docblock has been separated from its symbol by a later insertion: a new
-// member landed between the two, and the doc silently became the NEW member's — while the one
-// it was written for was left bare. `TableSortMode` lost its doc to `TableFilterMode` that way,
-// and `ariaSort` lost its to `rowKey`. Nothing catches it: both files compile, both lint clean,
-// and the generated API table happily prints the wrong description under the wrong name.
+// A member inserted between a doc and its symbol silently makes the doc the NEW member's and
+// leaves the old one bare. Nothing else catches it: both compile, both lint clean, and the
+// generated API table prints the wrong description under the wrong name.
 //
 // The shape is always the same and is exactly checkable: a doc comment whose next non-blank line
 // opens ANOTHER doc comment. A doc documents one symbol, so a doc directly above a doc means the

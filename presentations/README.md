@@ -7,18 +7,19 @@ Open any `*.html` directly in a browser — they link the shared `ds.css`.
 
 An `open` deck is named `<rank>-<slug>.html`, ranked 1..N by what answering it unblocks — so `ls`,
 the file explorer and the editor's tree all show the queue in priority order without opening
-anything. Ranked 2026-09-01:
+anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-banner-toast-icon-alignment` | in flight — two validated screen findings (30/32) are ready to fix and waiting only on A vs B |
-| 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
-| 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
-| 4 | `4-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
-| 5 | `5-packaging-entry-points` | a consumer IS blocked on bundle size, and the measured prize is -80% of the DS's share of their initial bundle |
-| 6 | `6-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
-| 7 | `7-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
-| 8 | `8-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+| 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
+| 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
+| 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
+| 4 | `4-packaging-entry-points` | a consumer IS blocked on bundle size, and the measured prize is -80% of the DS's share of their initial bundle |
+| 5 | `5-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
+| 6 | `6-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
+| 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+| 8 | `8-entry-point-shape` | which layout A3 actually builds — three real ng-packagr builds behind it |
+| 9 | `9-opt-in-seam` | 31.5 KB of opt-in surface, three ways to cut it, nothing blocking |
 
 **A `tool` is not in the queue and takes no number** (`backlog-board.html`,
 `overlay-guard-check.html`). Unprefixed, they sort below the ranked decks, which is where a utility
@@ -121,13 +122,27 @@ that reported everything broken could not pass the suite.
 
 `overlay-guard-check.html` drives the docs app instead of illustrating a decision: it iframes five
 component pages in turn, presses each overlay trigger, then presses the one place inside the host that
-is not the trigger, and prints the pane count and `aria-expanded` before and after. Run it headless —
-`chrome --headless=new --virtual-time-budget=120000 --dump-dom
-http://localhost:4298/decks/overlay-guard-check.html`
-— and read the `<pre id="out">` block. **It has to run in a VISIBLE frame:** a background tab clamps
-timers and never finishes a leave animation, so the same probe reads false there. Keep it: it is the
-regression test for the outside-pointer guard, and reverting one component to `host.contains` is how you
-check the harness still detects the defect.
+is not the trigger, and prints the pane count and `aria-expanded` before and after.
+
+**It drives the docs app over relative paths, so it has to be served from the same origin as the docs.**
+There is no `/decks/` route — nothing maps `presentations/` into the served tree — so copy the file next
+to the built docs and open it there:
+
+```bash
+npm run build:docs
+cp presentations/overlay-guard-check.html dist/ds-docs/browser/
+# serve dist/ds-docs/browser on any port, then:
+chrome --headless=new --disable-gpu --virtual-time-budget=120000 \
+  --user-data-dir=<a scratch dir> --dump-dom http://localhost:<port>/overlay-guard-check.html
+```
+
+Read the `<pre id="out">` block out of the dumped DOM. **Headless renders; the automation tab does
+not** — measured 2026-09-01 on an unrelated probe, where a tab reported body heights of 276px and 383px
+for boxes that are really 42px and 60px. A background tab is worse still: it clamps timers and never
+finishes a leave animation, so "is the panel in the DOM" and "did the timer fire" both read false.
+
+Keep it: it is the regression test for the outside-pointer guard, and reverting one component to
+`host.contains` is how you check the harness still detects the defect.
 
 ## ds.css is generated from the design system
 

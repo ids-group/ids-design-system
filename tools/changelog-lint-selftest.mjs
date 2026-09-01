@@ -70,8 +70,6 @@ try {
   );
   if (!wrapCaught) dead.push('C005-wrapped');
 
-  // Every multi-word token can land with the break inside it, and the client names are the
-  // ones that matter.
   const wrapped = {
     C001: '- The fix came out of a Kit\r\n  Movement screen, and the ports saw it too.\r\n',
     C002: '- The clipped label is fixed (MBP-\r\n  245), so descenders survive.\r\n',
@@ -193,7 +191,6 @@ try {
   );
   if (!farAway) dead.push('C010-proximity');
 
-  // A brand name reaches a file in four spellings, and CLIENTS must catch all of them.
   for (const spelling of [
     'brand-manage-my',
     '[data-brand="manage-my"]',
@@ -249,7 +246,6 @@ try {
   );
   if (!compactQuiet) dead.push('C010-compact-manifest');
 
-  // Neither of these may fire: a gate that flags them teaches authors to ignore it.
   const relaxed = [
     [
       'C005 generic script',

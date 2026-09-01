@@ -2261,11 +2261,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--banner-bar-w",
         "value": "4px",
         "notes": "Banner left accent bar width (4px)."
-      },
-      {
-        "name": "--banner-ic-mt",
-        "value": "var(--border-width-default)",
-        "notes": "Banner icon top offset (matches default border width)."
       }
     ]
   },

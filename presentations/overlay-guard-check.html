@@ -14,8 +14,8 @@
 <script>
   // Why an iframe instead of driving the docs tab directly: a BACKGROUND tab clamps
   // timers and never finishes a leave animation, so both "is the panel in the DOM"
-  // and "did the timer fire" read wrong there. Here the frame is visible, same-origin
-  // (both are localhost:4298), so it can be driven and read from this page.
+  // and "did the timer fire" read wrong there. The frame is visible and same-origin —
+  // hence the relative paths below, and hence serving this file from the docs origin.
   const CASES = [
     { name: 'ds-select', path: '/components/select', host: 'ds-select', trigger: '.dropdown' },
     { name: 'ds-multi-select', path: '/components/multi-select', host: 'ds-multi-select', trigger: '.field-trigger' },
