@@ -238,16 +238,13 @@
   </details>
 
     <div class="row" style="border-left:4px solid var(--accent,#c47);padding-left:1rem">
-    <div class="head"><span class="id">‼</span><span class="q">Что осталось решить — пять строк, все в секции 9</span><span class="aud both">оба</span></div>
-    <p class="why">Всё остальное в этой деке отвечено и свёрнуто в аккордеон: 38 строк, разворачиваются кликом.
-      Открытыми оставлены только <b>G3–G7</b> — пять изменений, которые я внёс в гейт <b>сам</b>, без твоего решения:
-      блокирует ли он и PR, и релиз; окно ±60 символов вокруг имени; шаблоны имён людей вместо списка;
-      порог в 100 артефактов; список из десяти родовых имён скриптов.</p>
-    <p class="why"><b>Ничего из этого не горит.</b> Все пять работают и дают 0 ошибок на 320 артефактах.
-      Вопрос в том, оставляем ли мы их такими навсегда.</p>
-    <p class="note verdict"><b>с момента написания деки</b> — гейт получил ещё правило <b>C012</b>
-      (порядок секций в блоке релиза) и вырос с 304 артефактов до 320; из публичного API убраны
-      шесть внутренних помощников. Ни одно из этого не меняет вопросы ниже.</p>
+    <div class="head"><span class="id">✓</span><span class="q">Вопросов не осталось — все 43 строки отвечены</span><span class="aud both">оба</span></div>
+    <p class="why">Каждая строка свёрнута в аккордеон и разворачивается кликом: над выбором стоит
+      вердикт, выбранный вариант отмечен. Последними, 2026-09-01, закрылись <b>G3–G7</b> — пять
+      изменений, которые я внёс в гейт сам; все пять оставлены как есть.</p>
+    <p class="note verdict"><b>единственное, что осталось работой</b> — G6. Порог в 100 артефактов
+      остаётся, но по дороге выяснилось, что он не ловит тот обвал, ради которого написан. Заведено
+      в <code>docs/todo.md</code> как P3.</p>
   </div>
 
   <h2><span class="n">1</span> Конфиденциальность — здесь я уверен, но спрашиваю всё равно</h2>
@@ -631,8 +628,9 @@
     поменял в гейте <b>сам</b>, после того как адверсальное ревью пробило его фикстурами. Каждый
     пункт менял поведение, поэтому каждый твой.</p>
 
-  <div class="row">
-    <div class="head"><span class="id">G3</span><span class="q">Гейт теперь блокирует и PR, и релиз. Так и оставить?</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">G3</span><span class="q">Гейт теперь блокирует и PR, и релиз. Так и оставить?</span><span class="aud both">оба</span></div></summary>
+    <p class="note verdict"><b>подтверждено</b> — остаётся блокирующим и в PR, и в релизе. Кода не меняли.</p>
     <p class="why"><b>Что изменилось.</b> Ревьюер заметил, что <code>changelog-lint</code> стоял
       в PR-гейте и в <code>lint:all</code>, но <b>не</b> в <code>tools/preflight.mjs</code> — то есть
       на релизном пути его не было вообще. Релиз, срезанный с ветки, где PR-гейт не прогонялся,
@@ -641,14 +639,15 @@
       ложного срабатывания. Два таких я уже убрал: <code>npm run lint</code> и hex-цвет
       <code>#1a2b3c4d</code>, который читался как хеш коммита.</p>
     <div class="choice">
-      <label><input type="radio" name="G3" data-id="G3-both" checked><span>Блокирующим везде<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G3" data-id="G3-both" checked checked><span>Блокирующим везде<span class="did"> — так сделано сейчас<span class="did"> — так и остаётся</span></span></span></label>
       <label><input type="radio" name="G3" data-id="G3-release-only"><span>Только релиз, PR — отчётом</span></label>
       <label><input type="radio" name="G3" data-id="G3-report"><span>Везде отчётом, нигде не блокирует</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row">
-    <div class="head"><span class="id">G4</span><span class="q">Слово «internal» теперь должно стоять рядом с именем, а не где-то в абзаце</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">G4</span><span class="q">Слово «internal» теперь должно стоять рядом с именем, а не где-то в абзаце</span><span class="aud both">оба</span></div></summary>
+    <p class="note verdict"><b>подтверждено</b> — окно ±60 символов остаётся, шесть переписанных мест тоже.</p>
     <p class="why"><b>Что было сломано.</b> Правило про неэкспортируемые имена молчало, если слово
       «internal» встречалось <b>где угодно в пределах 800 символов</b>. В CHANGELOG таких слов 27,
       а строки по ~100 символов — значит каждое снимало правило примерно с восьми строк в обе
@@ -665,14 +664,15 @@
   «…**That internal base's own surface is unchanged**…»
   «…reaches either directly or through the internal `DsControlValueAccessor`…»</pre>
     <div class="choice">
-      <label><input type="radio" name="G4" data-id="G4-tight" checked><span>Оставить ±60<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G4" data-id="G4-tight" checked checked><span>Оставить ±60<span class="did"> — так сделано сейчас<span class="did"> — так и остаётся</span></span></span></label>
       <label><input type="radio" name="G4" data-id="G4-sentence"><span>Требовать в том же предложении, а не по символам</span></label>
       <label><input type="radio" name="G4" data-id="G4-wide"><span>Вернуть широкое окно — переписывать тексты дороже</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row">
-    <div class="head"><span class="id">G5</span><span class="q">Правило про имена людей теперь ловит форму, а не список</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">G5</span><span class="q">Правило про имена людей теперь ловит форму, а не список</span><span class="aud both">оба</span></div></summary>
+    <p class="note verdict"><b>подтверждено</b> — шаблоны остаются как есть. Список исключений заведём, когда «Reported by Chrome» впервые уронит гейт, а не заранее.</p>
     <p class="why"><b>Почему.</b> В списке было два имени — твоё и Мишино. «Ask Alex Park» проходило
       насквозь, хотя CONTRIBUTING запрещает <b>любое</b> имя. Я добавил два шаблона:
       «Found/Reported/Raised/Spotted/Noticed/Flagged/Requested by &lt;Имя&gt;» и «Ask &lt;Имя&gt; &lt;Фамилия&gt;».</p>
@@ -680,14 +680,15 @@
       «Reported by Chrome», «Flagged by Lighthouse», «Requested by Angular». Такое будет ругаться
       ложно. Сейчас в файлах таких мест нет, но в следующем релизе легко появится.</p>
     <div class="choice">
-      <label><input type="radio" name="G5" data-id="G5-keep" checked><span>Оставить шаблоны<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G5" data-id="G5-keep" checked checked><span>Оставить шаблоны<span class="did"> — так сделано сейчас<span class="did"> — так и остаётся</span></span></span></label>
       <label><input type="radio" name="G5" data-id="G5-allowlist"><span>Оставить, но завести список исключений (Chrome, Lighthouse, Angular…)</span></label>
       <label><input type="radio" name="G5" data-id="G5-names-only"><span>Вернуть только список имён — меньше шума</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row">
-    <div class="head"><span class="id">G6</span><span class="q">Порог: гейт падает, если нашёл меньше 100 артефактов вместо 304</span><span class="aud dev">разработчику</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">G6</span><span class="q">Порог: гейт падает, если нашёл меньше 100 артефактов вместо 304</span><span class="aud dev">разработчику</span></div></summary>
+    <p class="note verdict"><b>отложено в бэклог</b> — порог 100 остаётся. По дороге выяснилось, что он не ловит тот самый обвал: свип — это 30 документов + 36 ассетов + 254 исходника, и потеря всех 36 оставляет 284, то есть зелёный. Дыра и два способа её закрыть описаны в <code>docs/todo.md</code>.</p>
     <p class="why"><b>Зачем вообще.</b> Оба резолвера деградировали молча:
       <code>publishedFiles()</code> фильтрует по <code>existsSync</code>, а
       <code>shippedSources()</code> читает <code>assets ?? []</code> из <code>ng-package.json</code>.
@@ -696,14 +697,15 @@
     <p class="why"><b>Число 100 я взял сам</b> при тогдашних 304 артефактах — сейчас их 320. Оно ловит обвал, но не дрейф: если
       тихо отвалится половина исходников, гейт этого не заметит.</p>
     <div class="choice">
-      <label><input type="radio" name="G6" data-id="G6-100" checked><span>Оставить 100<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G6" data-id="G6-100" checked checked><span>Оставить 100<span class="did"> — так сделано сейчас<span class="did"> — так и остаётся</span></span></span></label>
       <label><input type="radio" name="G6" data-id="G6-pin"><span>Зафиксировать точное число и обновлять руками — ловит и дрейф</span></label>
       <label><input type="radio" name="G6" data-id="G6-none"><span>Убрать порог</span></label>
     </div>
-  </div>
+  </details>
 
-  <div class="row">
-    <div class="head"><span class="id">G7</span><span class="q">Десять родовых имён скриптов исключены из правила про «наши» команды</span><span class="aud dev">разработчику</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">G7</span><span class="q">Десять родовых имён скриптов исключены из правила про «наши» команды</span><span class="aud dev">разработчику</span></div></summary>
+    <p class="note verdict"><b>подтверждено</b> — исключения по первому сегменту остаются, <code>build:lib</code> проходит, <code>changelog-lint</code> ловится.</p>
     <p class="why"><b>Что было.</b> Правило брало <b>все</b> ключи из <code>package.json</code>
       scripts, включая <code>lint</code>, <code>build</code>, <code>test</code>, <code>format</code>.
       Совет «run <code>npm run lint</code> afterwards» — который у консюмера работает — гейт называл
@@ -714,11 +716,11 @@
       serve, clean</code> — и по первому сегменту, так что <code>build:lib</code> тоже проходит.
       <code>class-surface</code>, <code>changelog-lint</code> и прочие наши — ловятся.</p>
     <div class="choice">
-      <label><input type="radio" name="G7" data-id="G7-generic" checked><span>Оставить список исключений<span class="did"> — так сделано сейчас</span></span></label>
+      <label><input type="radio" name="G7" data-id="G7-generic" checked checked><span>Оставить список исключений<span class="did"> — так сделано сейчас<span class="did"> — так и остаётся</span></span></span></label>
       <label><input type="radio" name="G7" data-id="G7-exact"><span>Не по первому сегменту, а точным совпадением (тогда build:lib ругается)</span></label>
       <label><input type="radio" name="G7" data-id="G7-all"><span>Ловить все скрипты как раньше</span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">10</span> Что надо знать, решать нечего</h2>
 
