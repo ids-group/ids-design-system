@@ -1,0 +1,342 @@
+<meta charset="utf-8">
+<title>basic + advanced — what the split would actually buy</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="docs/basic-advanced-split-audit.md - docs/todo.md [P2] split the package: recorded 2026-09-01, decision deferred">
+<link rel="stylesheet" href="ds.css">
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0; padding: var(--space-6);
+    background: var(--surface-default); color: var(--text-primary);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+  main { max-width: 1180px; margin: 0 auto; }
+  h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-2); }
+  h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-8) 0 var(--space-2); }
+  h3 { font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-snug) var(--font-sans); margin: var(--space-5) 0 var(--space-2); }
+  p { max-width: 84ch; color: var(--text-secondary); }
+  b { color: var(--text-primary); }
+  code { font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono); }
+  .note { border-left: 3px solid var(--primary); padding-left: var(--space-3); margin: var(--space-4) 0; }
+  .verdict { border: 1px solid var(--primary); border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
+  .verdict p { max-width: none; }
+
+  /* Bar fills are the judged artefact — inline gradients so a force-dark browser
+     cannot repaint a measurement. */
+  .bars { display: grid; gap: var(--space-3); margin: var(--space-4) 0; max-width: 860px; }
+  .bar-row { display: grid; grid-template-columns: 30ch 1fr 11ch; gap: var(--space-3); align-items: center; }
+  .bar-row > .name { font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .bar-row > .num { font: var(--font-weight-bold) var(--font-size-xs) / 1.4 var(--font-mono); text-align: right; }
+  .track {
+    position: relative; height: 22px; border-radius: var(--radius-sm);
+    background-image: linear-gradient(#eef1f6, #eef1f6);
+    overflow: hidden;
+  }
+  .fill { position: absolute; inset: 0 auto 0 0; }
+  .fill.base { background-image: linear-gradient(#8a93a5, #8a93a5); }
+  .fill.proto { background-image: linear-gradient(#22a33a, #22a33a); }
+  .fill.table { background-image: linear-gradient(#f4a63a, #f4a63a); }
+  .fill.whole { background-image: linear-gradient(#db1f1f, #db1f1f); }
+  .legend { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-2); font: var(--font-weight-regular) var(--font-size-2xs) / 1.6 var(--font-mono); color: var(--text-tertiary); }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+
+  .headline { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: var(--space-5) 0; }
+  .headline > div { border: 1px solid var(--border-default); border-radius: var(--ds-radius-panel); padding: var(--space-4); }
+  .headline .fig { font: var(--font-weight-extrabold) var(--font-size-h4) / 1.1 var(--font-mono); color: var(--text-primary); display: block; }
+  .headline .cap { font: var(--font-weight-regular) var(--font-size-2xs) / 1.6 var(--font-sans); color: var(--text-secondary); display: block; margin-top: var(--space-2); }
+
+  table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
+  th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
+  thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
+  tbody th { width: 26ch; font-weight: var(--font-weight-semibold); }
+  td, tbody th { font-size: var(--font-size-xs); line-height: 1.6; }
+  .yes { color: #156822; font-weight: var(--font-weight-bold); }
+  .no { color: #ba1717; font-weight: var(--font-weight-bold); }
+  ul { max-width: 84ch; color: var(--text-secondary); }
+  li { margin-bottom: var(--space-2); }
+  .foot { margin-top: var(--space-8); padding-top: var(--space-4); border-top: 1px solid var(--border-default); font-size: var(--font-size-2xs); color: var(--text-tertiary); }
+  .foot p { max-width: none; color: var(--text-tertiary); }
+  @media print {
+    body { padding: var(--space-4); }
+    h2 { break-after: avoid; }
+    .headline, .bars, table, .verdict, .note { break-inside: avoid; }
+  }
+</style>
+
+<main>
+  <h1>basic + advanced — what the split would actually buy</h1>
+
+  <p>
+    The proposal: prototypes install a light kit, production apps add a heavy one, and
+    <code>ds-table</code> is swapped for an <code>ids-data-grid</code>. The stated reason is bundle
+    weight — a prototype should not drag in a large library of complex components.
+  </p>
+
+  <p>
+    <b>Nobody had measured it.</b> Every number below is a real production build of
+    <code>dist/ds</code> <b>0.11.1</b> through a throwaway consumer workspace: same builder as a real
+    app, optimization on, gzip. Method and reproduction in
+    <code>docs/basic-advanced-split-audit.md</code>. Nothing here is an estimate.
+  </p>
+
+  <div class="verdict">
+    <p>
+      <b>Both premises fail.</b> Going from the 44 components a prototype actually uses to
+      <b>all 96</b> costs <b>18&nbsp;KB gzip</b> — that is the entire size of the problem the split is
+      meant to solve. And every feature named for <code>ids-data-grid</code> <b>already ships in
+      <code>ds-table</code></b>, most of it since 0.6.3. A split would not add capability; it would
+      move shipped features into a second package and buy at most 32 KB for a table we then have to
+      maintain twice.
+    </p>
+  </div>
+
+  <h2>The ladder</h2>
+
+  <p>
+    Each rung is a full production build differing only in what is imported. Bar width is gzipped JS
+    over the baseline of a bare Angular app (30.6&nbsp;KB), scaled to the largest.
+  </p>
+
+  <div class="bars">
+    <div class="bar-row">
+      <span class="name">one <code>ds-divider</code> — entry cost</span>
+      <span class="track"><span class="fill base" style="width:3.1%"></span></span>
+      <span class="num">+5.6 KB</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">one <code>ds-button</code></span>
+      <span class="track"><span class="fill base" style="width:17.9%"></span></span>
+      <span class="num">+32.1 KB</span>
+    </div>
+    <div class="bar-row">
+      <span class="name"><code>ds-table</code> alone (misleading)</span>
+      <span class="track"><span class="fill table" style="width:66.1%"></span></span>
+      <span class="num">+118.3 KB</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">prototype kit — 43 components</span>
+      <span class="track"><span class="fill proto" style="width:71.9%"></span></span>
+      <span class="num">+128.8 KB</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">prototype kit <b>+ table</b></span>
+      <span class="track"><span class="fill proto" style="width:89.8%"></span></span>
+      <span class="num">+160.8 KB</span>
+    </div>
+    <div class="bar-row">
+      <span class="name"><b>all 96 declarables</b></span>
+      <span class="track"><span class="fill whole" style="width:100%"></span></span>
+      <span class="num">+179.0 KB</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="swatch" style="background-image:linear-gradient(#8a93a5,#8a93a5)"></span>floor — what importing the library costs at all</span>
+    <span><span class="swatch" style="background-image:linear-gradient(#22a33a,#22a33a)"></span>what a prototype really uses</span>
+    <span><span class="swatch" style="background-image:linear-gradient(#f4a63a,#f4a63a)"></span>the table, measured in isolation</span>
+    <span><span class="swatch" style="background-image:linear-gradient(#db1f1f,#db1f1f)"></span>the ceiling — every component retained</span>
+  </div>
+
+  <h2>The three numbers that decide it</h2>
+
+  <div class="headline">
+    <div>
+      <span class="fig">5.6 KB</span>
+      <span class="cap"><b>Entry cost.</b> Importing the library and using one trivial component. There is no fat always-shipped runtime.</span>
+    </div>
+    <div>
+      <span class="fig">18.2 KB</span>
+      <span class="cap"><b>The whole problem.</b> What the 52 components a prototype never touches cost it today. Tree-shaking already removes them.</span>
+    </div>
+    <div>
+      <span class="fig">32.0 KB</span>
+      <span class="cap"><b>The table's real price</b> beside the rest of the kit — not the 118.3 KB it shows alone. Best case for the split, and only for an app with no table.</span>
+    </div>
+  </div>
+
+  <p>
+    The isolation figure is <b>3.7× too high</b> because it bills the table for
+    <code>ds-button</code>, <code>ds-menu</code>, <code>ds-popover</code>, <code>ds-pagination</code>,
+    <code>ds-skeleton</code>, <code>ds-loading-overlay</code> and the icon set — which the rest of the
+    app was paying for anyway. That is the number the whole proposal rests on, and it is an artefact of
+    measuring one part in isolation.
+  </p>
+
+  <div class="note">
+    <p>
+      <b>Styles tree-shake too.</b> Every build above emitted <b>0 bytes of CSS</b>: Angular inlines
+      component styles into the component definition, so they are dropped with the component. The only
+      fixed style cost is the global sheet — tokens, palette, theme activation, typography, resets —
+      at <b>10.3&nbsp;KB gzip</b>, which every consumer pays and no packaging change reduces.
+    </p>
+  </div>
+
+  <h2>Why it works: the preconditions are all met</h2>
+
+  <ul>
+    <li><code>"sideEffects": false</code> is set, in the repo and in the published package.</li>
+    <li>ng-packagr emits one ESM module; the Angular compiler marks every definition
+        <code>/*#__PURE__*/</code>, so an unreferenced class is dead code.</li>
+    <li><b>No third-party runtime dependency</b> beyond <code>tslib</code>. <code>@angular/cdk</code> is
+        a peer, and only <code>overlay</code>, <code>portal</code> and one <code>drag-drop</code> import
+        are used.</li>
+    <li>Every optional table behaviour is an <code>input(false)</code> — nothing is on by default.</li>
+  </ul>
+
+  <h2>The <code>ids-data-grid</code> wish list is already <code>ds-table</code></h2>
+
+  <p>Verified in source on 0.11.1. Column resize landed in 0.6.3.</p>
+
+  <table>
+    <thead>
+      <tr><th>Asked for</th><th>Already shipped</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>resize columns</th><td class="yes">✓ <code>resizableColumns</code> + <code>columnWidths</code> — <code>table.component.ts:283,286</code></td></tr>
+      <tr><th>column filters</th><td class="yes">✓ <code>columnFilters</code> <code>:275</code>, <code>filterQuery</code> <code>:272</code>, <code>HeaderFilterDirective</code></td></tr>
+      <tr><th>column visibility &amp; order</th><td class="yes">✓ <code>hiddenKeys</code> <code>:280</code>, <code>reorderableColumns</code> <code>:288</code>, <code>columnOrder</code> <code>:292</code></td></tr>
+      <tr><th>exports</th><td class="yes">✓ <code>exportButton</code> <code>:306</code>, <code>exportFilename</code> <code>:308</code>, <code>exportFetcher</code> <code>:318</code></td></tr>
+      <tr><th>inline editing</th><td class="yes">✓ <code>TableColumn.editable</code> (<code>table.types.ts:72</code>), <code>cellEdited</code> <code>:442</code></td></tr>
+      <tr><th>row click opens the row</th><td class="yes">✓ <code>rowInteractive</code> <code>:263</code> + <code>rowClicked</code></td></tr>
+      <tr><th>three-dot row menu</th><td class="yes">✓ <code>rowActions</code> <code>:437</code> + <code>TableRowActionEvent</code></td></tr>
+      <tr><th>horizontal scrollbar always visible</th><td class="yes">✓ <code>stickyScrollbar</code> <code>:337</code>, resolver <code>:393</code>, host class <code>:142</code></td></tr>
+      <tr><th>long text → ellipsis, click → popover</th><td class="yes">✓ <code>TableColumn.truncate</code> (<code>table.types.ts:50</code>), <code>cellTextPopover</code> <code>:1352</code>, handler <code>:1355</code></td></tr>
+      <tr><th>text selection must not fire the row click</th><td class="yes">✓ <code>window.getSelection()</code> captured <code>:1830</code>, compared <code>:1839</code>, click gated <code>:1849</code></td></tr>
+      <tr><th>— and beyond the list</th><td class="yes">✓ <code>persistLayout</code> + <code>storageKey</code>, sorting, pagination, row expansion</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    <code>ds-table</code> carries <b>62 inputs and outputs</b> in 76&nbsp;KB of TypeScript, and every
+    one of these features is documented in <code>ds-docs</code>. <b>It is the data grid.</b>
+  </p>
+
+  <h2>What the split would cost</h2>
+
+  <ul>
+    <li><b>Two tables to keep in lockstep.</b> An advanced table cannot be a clean subclass — it needs
+        the base table's layout machinery, its SCSS, its popover/menu/pagination internals. This is the
+        divergence risk already raised in the thread.</li>
+    <li><b>A swap at the worst possible moment.</b> "swap table for data grid" turns prototype →
+        production into a template rewrite that has to be redone by hand every time a prototype
+        graduates — the one step where the design is supposed to survive untouched.</li>
+    <li><b>A doubled release pipeline</b> (cut → publish → deploy-docs), a doubled version matrix, and a
+        docs site explaining two tables that look identical.</li>
+    <li><b class="no">Return: ≤32 KB gzip</b>, and only for apps with no table at all.</li>
+  </ul>
+
+  <p>
+    <b>Not on that list: breaking current consumers.</b> This library ships breaking changes freely, and
+    a feature sitting in the wrong place is always allowed to move. The case against the split is the
+    duplicate-maintenance burden and the size of the prize — nothing else.
+  </p>
+
+  <h2>The packaging problem we do have is a different one</h2>
+
+  <p>
+    <code>docs/packaging-chunking-audit.md</code>: one entry point means one module, and a module is the
+    bundler's atom. The moment an <em>eager</em> graph touches one DS symbol — a root provider binding to
+    <code>ToastService</code>, say — the chunk carrying every DS symbol the app uses <em>anywhere</em>
+    becomes a static import of <code>main</code>. mm-broker measured <b>632 kB, 88% of a 720 kB initial
+    bundle</b>, in an app where every feature route is lazy.
+  </p>
+
+  <p>
+    Tree-shaking and chunk placement are orthogonal, and only placement is broken. <b>A basic/advanced
+    split does not fix it</b> — <code>ids-basic</code> would be one entry point behaving exactly the same
+    way. The fix is layered entry points, tracked separately and deliberately deferred; nothing is
+    blocked on it.
+  </p>
+
+  <h2>What survives from the idea</h2>
+
+  <p>
+    The instinct — "the prototype should not carry grid machinery it never switches on" — is sound. It
+    just does not need a second package. The table's opt-in behaviours can move into separately
+    importable directives:
+  </p>
+
+  <ul>
+    <li><code>DsTableResizable</code>, <code>DsTableReorderable</code>, <code>DsTableExport</code>,
+        <code>DsTableColumnFilters</code>, <code>DsTablePersistLayout</code> — imported only where used.</li>
+    <li><b>One component, one docs page, no mirror to keep in sync</b>, and the heavy parts tree-shake
+        per feature instead of per package.</li>
+  </ul>
+
+  <p>
+    <b>Measured, not assumed.</b> The data-grid features were deleted from <code>ds-table</code> on a probe
+    branch — 1 063 source lines across <code>.ts</code>, <code>.html</code> and <code>.scss</code> — and the
+    same ladder re-run on the rebuilt library.
+  </p>
+
+  <div class="bars">
+    <div class="bar-row">
+      <span class="name"><code>ds-table</code> today</span>
+      <span class="track"><span class="fill whole" style="width:100%"></span></span>
+      <span class="num">31 428 B</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">with the grid features split out</span>
+      <span class="track"><span class="fill proto" style="width:38.6%"></span></span>
+      <span class="num">12 125 B</span>
+    </div>
+  </div>
+
+  <div class="headline">
+    <div>
+      <span class="fig">−18.9 KB</span>
+      <span class="cap"><b>Saved per app that uses none of them</b> — gzipped, marginal, same build. A 61% cut to the table's own weight.</span>
+    </div>
+    <div>
+      <span class="fig">&gt; 18.2 KB</span>
+      <span class="cap"><b>More than the whole package split targets</b> — and it costs one refactor instead of a second package and a permanent mirror.</span>
+    </div>
+    <div>
+      <span class="fig">floor</span>
+      <span class="cap"><b>Not a ceiling.</b> Row actions and inline cell editing are equally advanced and were left in; extracting them pushes it higher.</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <p>
+      <b>The catch the ablation exposed.</b> The features are not cleanly separable today:
+      <code>clipWidth</code>/<code>fitsContent</code> serve both truncate and resize,
+      <code>orderedColumns</code>/<code>visibleColumns</code> are the computed chain the picker writes to,
+      <code>filteredData</code> folds the set filters into the substring search, and
+      <code>statusMessage</code> folds export state into the live region. The split needs a <b>seam</b> —
+      most likely a small internal layout/state service the directives write into and the table reads —
+      not a method-by-method move. That design work is the real cost, and it is bounded and one-off.
+    </p>
+  </div>
+
+  <h2>When a separate package <em>is</em> justified</h2>
+
+  <p>
+    Not by component count, and not by the weight of first-party code — by an <b>external runtime
+    dependency</b>. A charting package pulling a charting library, or a grid pulling ag-grid, adds weight
+    tree-shaking cannot claw back and a peer-dependency surface the design system should not own.
+  </p>
+
+  <table>
+    <thead><tr><th>Candidate</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><th><code>ids-charts</code></th><td class="yes">✓ Real candidate — the day it needs a third-party renderer. <code>styles/_tokens-charts.scss</code> already exists.</td></tr>
+      <tr><th><code>ids-data-grid</code> / <code>ids-advanced</code></th><td class="no">✗ No external dependency to isolate, and the features already ship. Costs a mirror, buys ≤32 KB.</td></tr>
+      <tr><th>ui-kit split from "design system"</th><td>Already true in practice: tokens and themes ship as SCSS under <code>styles/*</code> and <code>themes/*</code>; the rules and guides live in the docs site, not in the package.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="foot">
+    <p>
+      <b>Not verified.</b> Whether this library's 95 component folders partition into acyclic entry points
+      — the ng-packagr pipeline itself is no longer in doubt, measured 2026-09-01. Whether extracting row
+      actions and inline editing too pushes the directive saving past 18.9 KB. No consumer repo was
+      rebuilt; all figures are from this repo's probes — the ladder against <code>dist/ds</code> 0.11.1,
+      the ablation against <code>dev</code> at <code>5783c830</code>.
+    </p>
+    <p>
+      Full method, per-rung byte counts and reproduction steps: <code>docs/basic-advanced-split-audit.md</code>.
+      Backlog item: <code>docs/todo.md</code> → [P2] split the package into basic + advanced.
+    </p>
+  </div>
+</main>
