@@ -61,6 +61,28 @@
       ],
       "verify": "The app builds with no TS2415 or TS2416 naming LoadingOverlayComponent.",
       "restore": null
+    },
+    {
+      "id": "toast-region-subclass-members-grew",
+      "kind": "behavior",
+      "old": "class MyToastRegion extends ToastRegionComponent",
+      "new": null,
+      "action": "Nothing unless you subclass ToastRegionComponent and declare a member of those names: rename yours, or add `override` if you meant to replace ours.",
+      "note": "ToastRegionComponent gained `timers`, `position` and `newestFirst`: the auto-dismiss countdown moved into the region, because only it knows when a toast became visible — started in the service, a toast queued behind `maxVisible` expired without ever being shown. `newestFirst` puts the newest toast nearest the anchor.",
+      "appliesWhen": "Only a class that extends ToastRegionComponent.",
+      "pitfall": "`durationMs` is now a required field on `ToastEntry`; a hand-built entry passed straight to `add()` will not compile without it.",
+      "searchHints": [
+        "extends ToastRegionComponent",
+        "ToastRegionComponent",
+        "timers",
+        "newestFirst"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends ToastRegionComponent"
+      ],
+      "verify": "Build your app: no TS4114 or TS2415 against a class extending ToastRegionComponent.",
+      "restore": null
     }
   ],
   "informational": [
