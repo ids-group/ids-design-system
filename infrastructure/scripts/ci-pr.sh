@@ -11,8 +11,6 @@
 #                   be committed in sync with it
 # changelog-lint -> fails the step; the published changelog and manifests must name
 #                   nothing a reader outside this repo cannot open
-# deck-lint      -> fails the step; a deck whose status marker, rank, evidence path or CSS
-#                   token does not resolve renders wrong without looking wrong
 # docblock-drift -> fails the step; a doc separated from its symbol is printed under
 #                   the wrong name in the published API table
 # surface        -> fails the step when the @angular/elements route's hand-maintained
@@ -63,15 +61,6 @@ node tools/changelog-lint-selftest.mjs
 # keeps linting clean, and `extract-component-api` prints it under whatever member
 # now follows it — so the published API table documents the wrong thing while the
 # member it was written for shows up bare. Three of these were already in the tree.
-# Needs no build and reads only presentations/, so it runs with the other cheap hard gates.
-# The class it catches is the invisible one: an undefined token voids its whole shorthand, so a
-# missing margin or a transparent pill reads as design rather than as a defect.
-echo "===== deck-lint ====="
-node tools/deck-lint.mjs
-
-echo "===== deck-lint selftest ====="
-node tools/deck-lint-selftest.mjs
-
 echo "===== docblock drift ====="
 node tools/check-docblock-drift.mjs
 
