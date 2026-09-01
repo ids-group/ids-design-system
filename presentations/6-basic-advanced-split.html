@@ -69,22 +69,27 @@
   <h1>basic + advanced — what the split would actually buy</h1>
 
   <div class="stale">
-    <h2>Stale, 2026-09-01: the verdict is recorded, the deck is behind it</h2>
+    <h2>Refreshed 2026-09-01 — the verdict held, five later passes sharpened it</h2>
     <p>
-      Flagged by the author of the measurements this page rests on. The page predates <b>five later
-      research passes</b>, so read the numbers here as the state of the question when it was written, not
-      as current: chunk placement measured at <b>136 KB gzip</b>; <b>per-component</b> granularity turning
-      out to be what actually moves bytes, rather than a coarse layer split; the <b>seam overhead</b>
-      being fixed rather than proportional; <code>@defer</code> needing the <b>deep specifier</b>
-      (<a href="https://github.com/angular/angular/issues/52554">angular/angular#52554</a>); and a
-      <b>build-time define flag</b> stripping library code where <code>DS_CONFIG</code> strips none.
+      The page's own conclusion is unchanged: <b>two packages is the wrong shape</b>, and the numbers
+      below still say why. What later work changed is the context around it, and the two items worth
+      carrying into any reading of this page are:
     </p>
-    <p>
-      Current sources: <code>docs/packaging-diagnosis.md</code>,
-      <code>docs/packaging-chunking-audit.md</code>, and the sequenced plan in <code>docs/todo.md</code>.
-      The deck's own comparison of component weight, in
-      <code>docs/basic-advanced-split-audit.md</code>, is unaffected. This note is a placeholder and will
-      be overwritten when the page is rebuilt.
+    <ul>
+      <li><b>The bigger prize was somewhere else entirely.</b> One eager <code>inject(ToastService)</code>
+        puts <b>135 744 B gzip</b> of the library into a consumer's initial bundle — 5.7&times; what the
+        table's whole directive split is worth. That is chunk placement, not component weight, and it is
+        deck&nbsp;5.</li>
+      <li><b>Breaking consumers is not a cost here.</b> Recorded after this page was written: shipped
+        features are free to move. So every "it would break people" argument is struck from the case
+        against the split — what remains, and what still decides it, is the permanent mirror.</li>
+    </ul>
+    <p style="margin-bottom:0">
+      Also since: the seam overhead is a fixed <b>923 B</b> rather than proportional, so the directive
+      split keeps ~87&ndash;95% of its prize (deck&nbsp;10); the CSS claim in this page's own "what
+      survives" section was <b>wrong</b> and is corrected below; and the top layer of any entry-point
+      split must be <b>per-component</b>. Current sources: <code>docs/packaging-diagnosis.md</code>,
+      <code>docs/packaging-chunking-audit.md</code>, <code>docs/todo.md</code>.
     </p>
   </div>
 
