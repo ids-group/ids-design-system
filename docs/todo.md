@@ -442,16 +442,18 @@ the service was just the one somebody noticed. Full table and every tested hypot
   imports only `@angular/core` and `@angular/common`, so `provideDsTheme()` — the anchor in every
   consumer's documented setup — becomes nearly zero-cost. `config` cannot be free; it is in the SCC.
 
-- [ ] **[P3] Move the component-specific third of `styles/ds.scss` out of the global sheet.** Measured
-  2026-09-01: the sheet is 58 293 B min / 10 282 B gzip, of which component-ish partials are
-  **11 703 B min / 3 409 B gzip** — so a consumer rendering one button ships 3.4 kB gzip of dropdown,
-  toast and skeleton CSS. About **1.8 kB** (`link`, `page-grid`, `scrollbar`, `surface-motion`,
-  `layout-utils`, `skeleton-shimmer`, `icon-base`) can move into the components' own SCSS, where it
-  inlines into the component definition and tree-shakes with it. The other **~1.6 kB**
-  (`dropdown-overlay` 1 043 B, `overlay-motion` 458 B, `toast-overlay`) styles PORTALED panels that
-  render outside the component's DOM, so they cannot be component-scoped — make those **opt-in global
-  imports** instead (`@use 'styles/dropdown-overlay'`), so only a consumer using pickers pays. Pairs
-  naturally with A3.
+- [ ] **[P3] Make the PORTALED overlay stylesheets opt-in — ~1.6 KB gzip, and that is the whole prize.**
+  **CORRECTED 2026-09-01: an earlier version of this item claimed ~1.8 KB could move into component SCSS.
+  It cannot.** Checked what the globally-forwarded partials actually define: `link` (533 B gz),
+  `page-grid` (312 B) and `layout-utils` (184 B) are **public utility classes** — part of the API, they
+  stay; `scrollbar` (297 B) styles `html` and `::-webkit-scrollbar`, document level, impossible to scope;
+  `skeleton-shimmer` (207 B) is deliberately ONE `:root` animation so every skeleton stays in lock-step;
+  `surface-motion` (192 B) is `@keyframes`, and emulated encapsulation renames keyframes, which would
+  break cross-component reference. Only `icon-base` could move, and it is 92 bytes. **The real lever is
+  `dropdown-overlay` (1 043 B) + `overlay-motion` (458 B) + `toast-overlay` (91 B) = ~1.6 KB gzip, made
+  opt-in** (`@use 'styles/dropdown-overlay'`), which pays only a consumer with no pickers, toasts or
+  modals. Also verified: no double-shipping — `press` (20 stylesheets), `text-clip` (10) and `chip-row`
+  (2) are mixins components `@use` and are correctly NOT forwarded by `ds.scss`.
 
 - [ ] **[P2] Guard the entry-point boundary with a lint rule, before doing A3 — not after.** A missed
   import rewrite fails the build with `Cannot destructure property 'pos' of
@@ -471,6 +473,35 @@ the service was just the one somebody noticed. Full table and every tested hypot
   arose. Also check whether `/design-system:auto-update-package` migrations can express a symbol moving
   between entry points — nothing to do while the root stays a facade, but needed before any entry
   point becomes the only path to a symbol.
+
+- [ ] **[P2] DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
+  changes an import».** Measured 2026-09-01: a `@defer` block whose component is imported from the root
+  facade defers **nothing** — one `main.js`, no chunks, both deferred components in the initial bundle
+  (153 764 B). Imported from deep specifiers: initial **123 467 B**, four files, only the eager component
+  eagerly. Known Angular issue angular/angular#52554 — a component imported from a barrel gets no lazy
+  chunk because the bundler treats the barrel as one module. The facade IS free for route-level laziness
+  (`loadComponent` / `await import()` in a separate file), measured four times byte-identical. **Write
+  this into the consumer docs before anyone hits it.**
+
+- [x] **[P2] A1's open question answered: the seam costs a FIXED 923 B gzip.** Fixture
+  `.claude/local/seam-probe2/`. Feature 1.6 KB gz: bare 32 965 / mono 34 592 / seam-off **33 888**.
+  Feature scaled 4x to 5.9 KB gz: bare 32 965 / mono 38 901 / seam-off **33 888** — byte-identical, so
+  the overhead is fixed (the service, its `providers` entry, the composition point, the module boundary)
+  while recovery scales 1:1 with the feature. For the real table, 18.9 KB of features against one
+  registry (~1-2.5 KB) means **the seam keeps ~87-95% of the prize**. Honest trade: a consumer who DOES
+  use the feature pays ~1 KB more than today. **A1 is worth building.**
+
+- [x] **[P3] Ceiling on the directive split: bounded, not measured.** Extending the ablation to row
+  actions and inline editing was abandoned as not worth the effort — the first ablation took the table
+  from 31.4 to 12.1 KB, and both features live inside that remaining 12.1 KB, so **18.9 KB is the floor
+  and 31.0 KB the hard ceiling**. Sorting, selection, pagination, loading, sticky header and cell
+  rendering all stay. Precision changes no decision; do not re-open.
+
+- [x] **[P3] Two risks checked and dismissed 2026-09-01.** (a) **Name collisions in a 77-way facade:**
+  none — 131 exported declarations, the only repeat is `DsConfig` (interface + token in one file), and
+  the current root already `export *`s everything and compiles. (b) **Angular 22:** the `probe/angular-22`
+  branch (`7de133dc`) touches `bun.lock`, `package.json`, three tsconfigs and one signal-forms probe —
+  nothing about packaging, entry points or the FESM layout.
 
 - [x] **[P3] Splitting the icon map — DECLINED 2026-09-01 (measured, not judged).** `ICONS` is one
   const map of 115 icons, so any icon retains all of them. Cut to 9 icons on `probe/icons-map` and

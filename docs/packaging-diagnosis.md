@@ -462,3 +462,90 @@ state arose in the first place.
 symbol between entry points, the migration format has to say so. Nothing to do while the root stays a
 facade — every symbol is still importable from the root — but worth checking before any entry point
 becomes the *only* path to a symbol.
+
+## Six residual questions, closed (2026-09-01)
+
+The last pass over what was still open. Two of these **correct earlier entries in this document** and
+one found the single exception to "no consumer changes an import".
+
+### C. Is the component-specific CSS shipped twice? No — and this CORRECTS item 8 above
+
+Item 8 claimed ~1.8 kB gzip of the global sheet could "move into the components' own SCSS". Checked
+what those partials actually define, and that is wrong for almost all of them:
+
+| Partial | gzip | What it is | Can it move? |
+| --- | --- | --- | --- |
+| `link` | 533 | the **public** `.link` helper class for inline anchors in prose, documented as consumer API | no — it is API |
+| `page-grid` | 312 | the **public** `.page-grid` class | no |
+| `layout-utils` | 184 | the **public** `.grid-2` family | no |
+| `scrollbar` | 297 | styles `html` and `::-webkit-scrollbar` — document level | impossible |
+| `skeleton-shimmer` | 207 | deliberately one `:root` animation so every skeleton stays in lock-step | no, by design |
+| `surface-motion` | 192 | `@keyframes ds-fade-in` / `ds-scale-in`; emulated encapsulation renames keyframes, which would break cross-component reference | no |
+| `dropdown-overlay` | 1 043 | portaled panels, rendered outside the component's DOM | opt-in only |
+| `overlay-motion` + `toast-overlay` | 549 | same | opt-in only |
+| `icon-base` | 92 | `.icon` used inside components | yes, but 92 bytes |
+
+**So the real lever is only making the portaled group (~1.6 kB gzip) opt-in**, and even that pays only
+a consumer with no pickers, toasts or modals — rare. The prize is a third of what item 8 reported.
+
+**No double-shipping**, which was the other thing worth checking: `press` (used by 20 component
+stylesheets), `text-clip` (10) and `chip-row` (2) are mixin libraries that components `@use`, and they
+are **not** forwarded by `ds.scss`. That pattern is already correct.
+
+### H. Name collisions in a 77-way facade? None
+
+131 exported declarations in the published `.d.ts`; the only repeated name is `DsConfig`, which is an
+interface and an injection token in the same file — normal TypeScript, not a conflict. The current root
+already does `export *` from every module and compiles, so the facade at 77 entry points carries
+exactly the names it carries today. Closed by construction.
+
+### B. The ceiling on the directive split: 18.9 kB < X < 31.0 kB, bounded rather than measured
+
+Extending the ablation to row actions and inline cell editing was attempted on a throwaway branch and
+abandoned after several rounds of imprecise line-range edits. It is not needed: the first ablation took
+`ds-table`'s marginal cost from **31.4 kB to 12.1 kB**, and row actions and inline editing live inside
+that remaining 12.1 kB. So the maximum additional saving is 12.1 kB and the realistic figure is a
+fraction of it — sorting, selection, pagination, loading, sticky header and cell rendering all stay.
+**18.9 kB is the floor, 31.0 kB the hard ceiling.** Precision here changes no decision.
+
+### A. What the seam itself costs: a FIXED 923 B gzip
+
+The open question behind A1 — does the contribution-registry seam eat the prize? Fixture at
+`.claude/local/seam-probe2/`: a component owning a derived value, a per-instance registry service, and
+one optional feature in three shapes — inline behind an input (today), behind a separately importable
+directive, and deleted outright (the ablation floor).
+
+| Feature size | `bare` (deleted) | `mono` (inline, input off) | `seam_off` (directive not imported) | Overhead | Recovered |
+| --- | --- | --- | --- | --- | --- |
+| 1.6 kB gzip | 32 965 B | 34 592 B | **33 888 B** | **923 B** | 704 B |
+| 5.9 kB gzip | 32 965 B | 38 901 B | **33 888 B** | **923 B** | **5 013 B** |
+
+`seam_off` is **byte-identical at both feature sizes**. The overhead is fixed — the service, its
+`providers` entry, the composition point and the extra module boundary — while recovery scales 1:1 with
+the feature. For the real table, 18.9 kB of features against one registry (a few contribution kinds in
+one service, call it 1–2.5 kB) means **the seam keeps ~87–95% of the prize**. The honest trade: a
+consumer who *does* use the feature pays about 1 kB more than today (`seam_on − mono` = 987 B).
+
+### F. `@defer` through the facade does not defer — the one exception to "no consumer changes an import"
+
+| `@defer` block, component imported from | Initial | Total | JS files | In the initial bundle |
+| --- | --- | --- | --- | --- |
+| **the root facade** | 153 764 B | 153 764 B | **1** | the eager one **and both deferred ones** |
+| **deep specifiers** | **123 467 B** | 154 617 B | 4 | **only the eager one** |
+
+Through the facade, nothing defers at all — a single `main.js`, no chunks. This is a known Angular
+issue, [angular/angular#52554](https://github.com/angular/angular/issues/52554): a component imported
+from a barrel gets no lazy chunk, because the bundler treats the barrel as one module and keeps its
+exports together. The fix is to import from the component's own specifier.
+
+**Consequence for A3's documentation.** The facade is free for *route-level* laziness — a separate file
+behind `loadComponent` or `await import()`, measured four times, byte-identical. It is **not** free for
+`@defer` inside an eagerly-loaded template. Consumer guidance after A3 has to say: **use the deep
+specifier inside a `@defer` block.** That is the only place the "no consumer changes an import" claim
+has an exception, and it should be in the docs before anyone hits it.
+
+### E. Angular 22 changes none of the assumptions
+
+The `probe/angular-22` branch (`7de133dc`, "what it takes to build this library on 22.1.3") touches
+`bun.lock`, `package.json`, three tsconfigs and one signal-forms probe file. Nothing about packaging,
+entry points or the FESM layout. Nothing to revisit.
