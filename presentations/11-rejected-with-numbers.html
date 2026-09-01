@@ -1,0 +1,213 @@
+<meta charset="utf-8">
+<title>Rejected, and the number that rejected it</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="docs/todo.md - docs/packaging-diagnosis.md - docs/basic-advanced-split-audit.md">
+<link rel="stylesheet" href="ds.css">
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0; padding: var(--space-6);
+    background: var(--surface-default); color: var(--text-primary);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+  main { max-width: 1180px; margin: 0 auto; }
+  h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-2); }
+  h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-8) 0 var(--space-2); }
+  p { max-width: 84ch; color: var(--text-secondary); }
+  b { color: var(--text-primary); }
+  code { font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono); }
+  .ask { border: 1px solid var(--primary); border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
+  .ask p { max-width: none; }
+
+  .card { border: 1px solid var(--border-default); border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-4) 0; }
+  .card.reversed { border-color: var(--primary); border-width: var(--border-width-strong); }
+  .card h3 { font: var(--font-weight-bold) var(--font-size-s) / 1.3 var(--font-sans); margin: 0 0 var(--space-2); }
+  .badge { display: inline-block; font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-mono); padding: 4px 8px; border-radius: var(--radius-sm); margin-bottom: var(--space-2); }
+  .badge.no { background-image: linear-gradient(#fde8e8, #fde8e8); color: #8a1111; }
+  .badge.flip { background-image: linear-gradient(#e6f4ea, #e6f4ea); color: #156822; }
+  .grid { display: grid; grid-template-columns: 15ch 1fr; gap: var(--space-2) var(--space-4); margin-top: var(--space-3); }
+  .grid > dt { font: var(--font-weight-semibold) var(--font-size-xs) / 1.5 var(--font-sans); color: var(--text-primary); }
+  .grid > dd { margin: 0; font-size: var(--font-size-xs); line-height: 1.6; color: var(--text-secondary); }
+  .num { font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-mono); color: var(--text-primary); }
+
+  table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
+  th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; font-size: var(--font-size-xs); line-height: 1.6; }
+  thead th { background: var(--surface-secondary); font-weight: var(--font-weight-bold); }
+  .foot { margin-top: var(--space-8); padding-top: var(--space-4); border-top: 1px solid var(--border-default); font-size: var(--font-size-2xs); color: var(--text-tertiary); }
+  .foot p { max-width: none; color: var(--text-tertiary); }
+  @media print {
+    body { padding: var(--space-4); }
+    h2 { break-after: avoid; }
+    .card, table, .ask { break-inside: avoid; }
+  }
+</style>
+
+<main>
+  <h1>Rejected, and the number that rejected it</h1>
+
+  <p>
+    Six ideas were investigated and not built. Each card carries what it would have bought, what it
+    would have cost, and <b>the condition under which it should be reopened</b> — so a rejection can be
+    argued with against a figure rather than against a summary.
+  </p>
+
+  <div class="ask">
+    <p style="margin-bottom:0">
+      <b>One of the six has already been reversed by exactly that argument.</b> A3-pre was declined at
+      "40 import rewrites for 593 bytes". Challenged on the grounds that effort is not a reason, it was
+      recomputed properly: <b>the minimum cut is 14 rewrites</b>, and the case for doing it was never
+      the bytes. It is now on the build list. The rest of this page invites the same treatment.
+    </p>
+  </div>
+
+  <div class="card reversed">
+    <span class="badge flip">REVERSED 2026-09-02 — now on the build list</span>
+    <h3>De-cycle the core, so <code>ds-card</code> is not stuck in the bottom layer</h3>
+    <dl class="grid">
+      <dt>Would buy</dt>
+      <dd><span class="num">593 B gzip</span> — and, the part that actually matters, it removes a
+        layering inversion: <code>ds-config.ts</code> type-imports <code>CardElevation</code> and
+        <code>CardPadding</code> from a <b>component</b>, so the config knows about something that
+        depends on it.</dd>
+      <dt>Was priced at</dt>
+      <dd>40 import rewrites — <b>wrong, and it was my figure.</b> It assumed
+        <code>icons.data.ts</code> (28 importers) had to move.</dd>
+      <dt>Actually costs</dt>
+      <dd><span class="num">14 import rewrites</span>: <code>config/ds-config.ts</code> → <code>core</code>
+        (11) and <code>components/card/card.types.ts</code> → <code>core</code> (3). Found by searching
+        every subset of candidate moves for the cheapest one that breaks the cycle. What remains is
+        <code>core ↔ icons</code>, which costs nothing — <code>icons</code> has in-degree 38 and was
+        always going to live in <code>core</code>.</dd>
+      <dt>Verdict</dt>
+      <dd><b>Do it</b>, as the first commit of the entry-point work, so the layering fix is reviewable
+        apart from the 307 mechanical rewrites.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <span class="badge no">REJECTED</span>
+    <h3>basic + advanced as two npm packages</h3>
+    <dl class="grid">
+      <dt>Would buy</dt>
+      <dd><span class="num">18 KB gzip</span> — the whole cost of the 52 components a prototype never
+        touches. The entire library is 179 KB gzip; the entry cost is 5.6 KB.</dd>
+      <dt>Would cost</dt>
+      <dd>a second <code>ds-table</code> to keep in sync forever, a doubled release pipeline, and a
+        template rewrite every time a prototype graduates to production.</dd>
+      <dt>Reopen if</dt>
+      <dd>a component ever needs an <b>external runtime dependency</b> — a charting renderer, for
+        instance. That, not component count, is what justifies a separate package.
+        <code>ids-charts</code> qualifies the day it needs one.</dd>
+      <dt>Corroboration</dt>
+      <dd><b>AG Grid 33 went the other way</b>: 25 npm packages collapsed into 2, tree-shaking inside
+        one package, grids up to 40% smaller. The biggest data-grid vendor moved away from
+        package-per-feature.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <span class="badge no">REJECTED</span>
+    <h3>Semantic clustering of entry points, instead of one per component</h3>
+    <dl class="grid">
+      <dt>Would buy</dt>
+      <dd>6 entry points instead of 77, and <span class="num">53</span> fewer import rewrites (265
+        against 318) — <b>19%</b>.</dd>
+      <dt>Would cost</dt>
+      <dd>almost all of the prize. Re-tested properly after a challenge: a cluster graph is made acyclic
+        by merging its strongly-connected components, and <code>data</code>, <code>fields</code>,
+        <code>display</code> and <code>shell</code> all merge into one.</dd>
+      <dt>What it becomes</dt>
+      <dd><span class="num">3 clusters</span>, one holding <b>60 of the 77 groups</b>. That is the
+        three-layer partition again, already measured as giving an eager-shell consumer roughly nothing.
+        A lazy route using <code>ds-table</code> would drag <b>59 sibling groups</b>.</dd>
+      <dt>Why it cannot be fixed</dt>
+      <dd>the cycle is made of real edges — <code>pagination → select</code>,
+        <code>autocomplete → tag</code>, <code>multi-select → badge</code>,
+        <code>empty-state → loading-overlay</code>. Components compose across semantic categories, so
+        the categories do not match the dependency graph. A different set of categories would meet the
+        same edges.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <span class="badge no">REJECTED</span>
+    <h3>Split the icon map so unused icons drop</h3>
+    <dl class="grid">
+      <dt>Would buy</dt>
+      <dd><span class="num">≤ 2 522 B gzip</span> — measured by cutting the map from 115 icons to 9 and
+        rebuilding: <code>ds-button</code> went 62 733 → 60 211 B gzip. That is the <b>whole</b> icon
+        set; SVG path strings compress to almost nothing.</dd>
+      <dt>Would cost</dt>
+      <dd>two public APIs. <code>IconName = keyof typeof ICONS</code> is derived from the map, and
+        <code>provideDsIcons</code> merges into it — both break — plus every by-name icon reference
+        needs a different mechanism.</dd>
+      <dt>Reopen if</dt>
+      <dd>the set grows to roughly 500 icons. At about 22 B gzip per icon that would be ~11 KB, which
+        changes the answer. Also reopen if we ever ship illustrations rather than 24×24 paths.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <span class="badge no">NOT REJECTED — already used, just has no work left</span>
+    <h3>A build-time <code>define</code> flag beyond dev warnings</h3>
+    <dl class="grid">
+      <dt>It works</dt>
+      <dd>measured: a 500-line branch removed from a published FESM, 123 498 → 99 550 B raw. <b>We
+        already use it</b> — the dev-warning fix is exactly this, and it shipped
+        <span class="num">1 590 B gzip</span>.</dd>
+      <dt>Why not more</dt>
+      <dd>nothing is left for it. Its niche is code that must ship but can be branched away with no seam
+        to hang it on. Of 144 boolean flags in the library, nearly all are instance state
+        (<code>disabled</code>, <code>loading</code>, <code>required</code>); everything substantial is
+        a <b>feature</b>, and features are better served by a directive — no build flag, no two bundles,
+        no silent no-op. The last cross-cutting candidate, <code>staticPreview</code>, is one boolean
+        and about eight early returns: tens of bytes.</dd>
+      <dt>What it costs if used anyway</dt>
+      <dd>two bundles from one source, so CI must build both; the public API does not change, so a
+        consumer can bind a flag that silently does nothing; and <code>define</code> is a textual
+        substitution, so a typo means "not set" with no error.</dd>
+      <dt>Reopen if</dt>
+      <dd>substantial cross-cutting code appears that cannot be a directive — heavy runtime assertions,
+        an accessibility debug layer.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <span class="badge no">REJECTED</span>
+    <h3>Ship the portaled CSS inside the code, the way AG Grid does</h3>
+    <dl class="grid">
+      <dt>Would buy</dt>
+      <dd><span class="num">1 592 B gzip</span> arriving with the feature instead of needing a
+        consumer-side opt-in import — no <code>styles.scss</code> change for anyone.</dd>
+      <dt>Would cost</dt>
+      <dd>a Content Security Policy bill on every consumer. Angular injects styles as runtime
+        <code>&lt;style&gt;</code> tags; a strict CSP needed <code>unsafe-inline</code> before Angular 16
+        and nonces after, and under SSR the static build-time tags carry no nonce so a strict CSP blocks
+        them. A consumer has no control over how a library handles its styling.</dd>
+      <dt>Reopen if</dt>
+      <dd>the portaled CSS grows well past 1.6 KB, or Angular gains a supported way for a library to
+        register global styles that participates in the app's nonce.</dd>
+    </dl>
+  </div>
+
+  <h2>What is still open, for contrast</h2>
+
+  <table>
+    <thead><tr><th>Question</th><th>Where to decide it</th></tr></thead>
+    <tbody>
+      <tr><td>entry-point shape — A / B / C / E</td><td>deck 8</td></tr>
+      <tr><td>the three opt-in choices, and which API shape</td><td>deck 9</td></tr>
+      <tr><td>version handling — only if the shape is B or C</td><td>deck 8</td></tr>
+    </tbody>
+  </table>
+
+  <div class="foot">
+    <p>
+      Every figure here is from a build or a graph computation, not an estimate. Sources:
+      <code>docs/todo.md</code>, <code>docs/packaging-diagnosis.md</code>,
+      <code>docs/basic-advanced-split-audit.md</code>. Fixtures under <code>.claude/local/</code>:
+      <code>bundle-probe</code>, <code>scale-probe</code>, <code>shape-probe</code>,
+      <code>seam-probe2</code>, <code>define-probe</code>, <code>granularity-probe</code>.
+    </p>
+  </div>
+</main>
