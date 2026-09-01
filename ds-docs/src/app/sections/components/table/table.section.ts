@@ -387,7 +387,6 @@ export class TableSection {
 
   protected readonly projectSelected = signal(new Set<string>());
 
-  /** Status and Budget shrink to their content; Project absorbs the slack. */
   protected readonly fitColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project' },
     { key: 'owner', label: 'Owner' },

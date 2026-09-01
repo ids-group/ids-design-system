@@ -9,8 +9,6 @@ import type {
  *  maps this onto the enter direction, so the panel moves in FROM the trigger. */
 export type DsOverlayPlacement = 'top' | 'bottom' | 'left' | 'right';
 
-/** Public enter-motion tokens read by every `ds-overlay-pane`
- *  (styles/_overlay-motion.scss). */
 /**
  * The theme's role layer, forwarded onto every portaled pane alongside whatever
  * tokens the component names for itself.
@@ -32,6 +30,8 @@ const ROLE_TOKENS = [
   '--ds-elevation-modal',
 ] as const;
 
+/** Public enter-motion tokens read by every `ds-overlay-pane`
+ *  (styles/_overlay-motion.scss). */
 const OVERLAY_MOTION_TOKENS = [
   '--ds-overlay-enter-keyframes',
   '--ds-overlay-enter-duration',

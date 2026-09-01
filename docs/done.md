@@ -4,6 +4,41 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## A docblock cannot lose its symbol any more (2026-09-01)
+
+- [x] **DONE 2026-09-01 — the comment sweep over `ds-table` turned up a defect worth a gate, so
+  it got one.** A doc comment separated from its symbol by a later insertion keeps compiling and
+  keeps linting clean, and `extract-component-api` then prints it under whatever member now
+  follows it — the published API table documents the wrong thing while the member it was written
+  for shows up bare. It had happened three times before anyone noticed a pattern.
+
+  The shape is exactly checkable: a doc comment whose next non-blank line opens ANOTHER doc
+  comment. A doc documents one symbol, so a doc directly above a doc means the first one lost its
+  subject. `tools/check-docblock-drift.mjs` fails on that and prints the orphan's first line, and
+  it runs as a hard gate in `ci-pr.sh` alongside the other published-surface checks, in
+  `lint:all`, and as `npm run check-docblock-drift`.
+
+  On its first run over 367 files it found two more nobody knew about: `MARKER_RESERVE_EM`'s doc
+  stranded eleven lines above it in `chip-overflow.ts` (so the magic `5` sat unexplained), and
+  `OVERLAY_MOTION_TOKENS`' doc sitting on `ROLE_TOKENS` instead. Both moved back. A deliberate
+  module-level note is not drift and must not be forced onto a symbol, so `@fileoverview` (or
+  `@module`) exempts a block — `chip-overflow.ts`'s invariant note now carries the tag.
+
+  Watched it go red before trusting it green: a control file with a stacked pair fails, a control
+  with `@fileoverview` passes, and the three real cases are what it caught first.
+
+  The sweep itself: **fourteen comments cut** as restatement of the selector or name directly
+  beneath them, **five rewritten**, and **one moved rather than cut** — the note that
+  `:nth-child` cannot see past windowing was floating ten lines from the `.zebra` rules it
+  guards, and its twin lives in the `.ts`, so cutting it would have left the stylesheet with
+  nothing to stop someone folding the two rules into one and silently killing virtual zebra. Two
+  more shed their provenance: where a value "came from a consumer's comparator" is archaeology,
+  while what breaks without it is the constraint. Nothing public lost a description — the table's
+  docs come straight from its JSDoc with no editorial fallback, so the extractor still reports 0
+  undescribed props.
+
+---
+
 ## `ds-table` row expansion has its three edges (2026-09-01)
 
 - [x] **DONE 2026-09-01 — the gate was lifted, and all three deltas are in.** The base feature had

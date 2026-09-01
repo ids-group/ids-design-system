@@ -1,9 +1,6 @@
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
 
-/* `.table.skeleton-mode` is the row-level loading flag — named distinctly so it
-   does not shadow the global `.skeleton` cell-shimmer class. */
-
 // Positioned to contain the absolute `.visually-hidden` nodes below; without it they resolve against
 // the initial containing block and grow the consuming PAGE's root scroller into a second scrollbar.
 :host {
@@ -11,15 +8,12 @@
   position: relative;
 }
 
-// Visually-hidden but screen-reader-available (table caption + loading status).
 .visually-hidden {
   @include visually-hidden.visually-hidden;
 }
 
-/* Opt-in outer frame via `[bordered]="true"` — gives standalone tables
-   (data-ingest preview, segmentation preview, offers tab, summary tab) a
-   defined edge. Tables flush inside `<ds-card padding="none">` stay clean
-   without it. */
+/* Opt-in outer frame via `[bordered]="true"`. Off by default so a table flush
+   inside `<ds-card padding="none">` does not double-border. */
 :host(.bordered) .scroll-wrap {
   border: var(--border-width-default) solid var(--_table-border);
   border-radius: var(--_table-radius);
@@ -381,8 +375,6 @@
     }
   }
 
-  /* Shared icon-button chrome — expand chevron (tbody), expand-all toggle
-     (thead), row kebab (tbody) and the column-picker trigger (thead). */
   .expand-btn,
   .row-actions-btn,
   .col-picker-btn {
@@ -419,16 +411,15 @@
     --table-head-pad-y: var(--space-2);
   }
 
-  /* :nth-child cannot see past windowing — a rendered row's parity depends on its
-     ABSOLUTE index, and the spacer rows are children too. Virtual mode gets the
-     parity from a class instead. */
-
   /* A readability floor: below this the columns stop shrinking and the wrap's
      horizontal scroller takes over instead. Defaults to 0, so nothing changes
      until a consumer sets one — a table with few columns should still be free to
      be narrow. */
   min-width: var(--_table-min-width);
 
+  /* :nth-child cannot see past windowing — a rendered row's parity depends on its
+     ABSOLUTE index, and the spacer rows are children too, so virtual mode takes
+     the parity from a class and these two rules cannot be folded into one. */
   &.zebra:not(.virtual) tbody tr:nth-child(odd) td {
     background-color: var(--_table-row-stripe-bg-color);
   }
@@ -647,7 +638,6 @@
   margin-top: 0;
 }
 
-/* Inline editing (opt-in `column.editable`). */
 .editable-cell {
   cursor: text;
 }
@@ -703,8 +693,6 @@
     position: sticky;
     left: 0;
     z-index: var(--table-sticky-col-z);
-
-    /* Opaque so rows scrolling underneath don't bleed through. */
     background-color: var(--_table-bg-color);
   }
 
@@ -735,12 +723,10 @@
   }
 }
 
-/* When the select column is also present, offset the first data column past it. */
 :host(.pinned.selectable) .pin-first {
   left: var(--_table-select-w);
 }
 
-/* Stick the expand column when stickyFirstColumn is active. */
 :host(.pinned.expandable) {
   --_table-expand-w: var(--ds-table-expand-col-w, var(--space-10));
 
@@ -772,13 +758,11 @@
     background-color: var(--_table-row-pressed-bg-color);
   }
 
-  /* pin-first must skip past the expand column. */
   .pin-first {
     left: var(--_table-expand-w);
   }
 }
 
-/* select + expand both present: pin-first skips both columns. */
 :host(.pinned.selectable.expandable) {
   .pin-expand {
     left: var(--_table-select-w);
@@ -789,7 +773,6 @@
   }
 }
 
-/* Pagination footer — separates the paginator from the last table row. */
 .pagination-footer {
   /* Inset by the CELLS' padding so the summary lines up with the column text.
      Spelled as the public hook, not `--_table-cell-pad-x`: that resolver is declared
@@ -799,7 +782,6 @@
   border-top: var(--border-width-default) solid var(--ds-table-divider, var(--border-divider));
 }
 
-/* Bulk action bar */
 .bulk-bar {
   position: sticky;
   bottom: var(--bulk-bar-offset);

@@ -61,9 +61,8 @@ const VIRTUAL_FALLBACK_HEIGHT = 720;
 // blank space before the next range lands.
 const VIRTUAL_OVERSCAN = 6;
 
-/** Rendered values that read as "no data", matched case-insensitively. The list
- *  is wider than the empty string because consumers render placeholders; these
- *  are the ones a consumer had to enumerate before `sortValue` existed. */
+/** Rendered values that read as "no data", matched case-insensitively. Wider
+ *  than the empty string because consumers render placeholders. */
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
 
 /** Normalises "no data" to a single `null`, so the comparator has one blank
@@ -102,9 +101,8 @@ function compareSortValues(
   }
 
   // `sensitivity: 'base'` so "Ångström" sorts next to "Angstrom" and casing does
-  // not split a column into two runs. Taken from a consumer's own comparator, which is
-  // also where BLANK_CELL above came from — without it a column whose `sortValue` returns
-  // strings reorders when an app moves off its own comparator onto this one.
+  // not split a column into two runs — without it a string `sortValue` column
+  // reorders when an app moves off its own comparator onto this one.
   return firstText.localeCompare(secondText, undefined, {
     numeric: true,
     sensitivity: 'base',
@@ -964,9 +962,9 @@ export class TableComponent<T extends object> {
     this.resizeState = null;
   }
 
-  /** Current rendered width, for the keyboard path and the handle's
-   *  `aria-valuenow`. Falls back to the DOM when the column was auto-sized and
-   *  has neither an override nor a declared width. */
+  /** Current rendered width for the keyboard resize path. Falls back to the DOM
+   *  when the column was auto-sized and has neither an override nor a declared
+   *  width. */
   protected resolvedColumnWidth(
     col: TableColumn<T>,
     from?: HTMLElement,
@@ -1125,7 +1123,8 @@ export class TableComponent<T extends object> {
     return this.sortedData().slice(start, start + size);
   });
 
-  /** Rows actually rendered: paged when paginating, else sorted/raw data. */
+  /** The full display set — paged when paginating, else sorted/raw data.
+   *  Virtual mode windows this further; `rowSlots` is what the loop walks. */
   protected readonly displayData = computed<readonly T[]>(() =>
     this.pageSize() !== null ? this.pagedData() : this.sortedData(),
   );
@@ -1240,7 +1239,6 @@ export class TableComponent<T extends object> {
     };
   });
 
-  /** The rows the template actually renders. */
   protected readonly windowData = computed<readonly T[]>(() => {
     const window = this.virtualWindow();
     const data = this.displayData();
@@ -1329,7 +1327,8 @@ export class TableComponent<T extends object> {
     Array(this.skeletonRows()).fill(0),
   );
 
-  /** Total colspan for the expanded-row panel: data cols + optional select/expand/actions cols. */
+  /** Colspan of a full-width row (expansion panel, empty state): data cols +
+   *  optional select/expand/actions cols. */
   protected readonly expandedColspan = computed(() => {
     let count = this.visibleColumns().length;
     if (this.selectable()) {
@@ -1419,7 +1418,6 @@ export class TableComponent<T extends object> {
   protected readonly hscrollNeeded = signal(false);
   private readonly scrollTop = signal(0);
   private readonly viewportHeight = signal(0);
-  // Range last handed to (lazyLoad), so an unanswered request is not re-sent.
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
