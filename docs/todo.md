@@ -68,6 +68,7 @@ Ordered by what each unblocks. The top four each hold a deck or a whole lane hos
 - P2 · **Theme recipe vs hand-tuned picks** — does state derivation follow the theme's mix-to-black recipe, or the drawn ramp? Blocks the two above
 - P2 · **`ds-number-stepper` and `ds-dropzone` are outside the field-message system** — bring them in, or say they are not fields
 - P3 · **Ten manifest-format practices** the audit marked *Adopt* and nobody ratified — re-counted 2026-09-01, three of the original thirteen have since shipped
+- P3 · **`0.11.0` and `0.11.1` have never been audited** — the manifest audit covered 22 files up to `0.10.3`; there are 24 now. One reader checked the 16 newer items by the audit's own criteria on 2026-09-01 and found no tier-1 defect, which is not the assurance the other 22 carry
 - P3 · **Three deferred DEFAULT changes** held back by the release policy
 - P3 · **Does a release note owe a WHY**, or only a what-and-what-to-do
 - P3 · **ds-docs still writes BEM modifiers as `--suffix`** — a state should be its own `is-*` class

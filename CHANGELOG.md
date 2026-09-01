@@ -119,6 +119,26 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   if you meant to replace ours — the compiler enumerates every collision, so building after the
   upgrade is the whole check.
 
+### Fixed
+
+- **Three published migration manifests were corrected, and a repo that upgraded across 0.4.0, 0.7.1
+  or 0.9.0 may be holding the result.** All three failed the same way — by finding nothing — so the
+  tooling reported success and there is no error to search for.
+  **`0.7.1#surface-motion-partial-a-la-carte` did nothing for the consumers it was written for.** It
+  was filed as a path swap keyed on an `@use` of `styles/overlay-motion`, a line an à-la-carte
+  consumer need not have, while its own instruction said to add the partial beside whatever DS
+  partials you do use. It is an insertion now. Missing it is silent: the shared entrance keyframes
+  do not exist, and modal, drawer, bottom-sheet, toast, banner, alert, loading-overlay and every
+  overlay panel render with no entrance animation.
+  **`0.4.0#ds-button-variant-axis-split` was searched in templates only** — it declared
+  `surface: "template"` while its own instruction says to retype the field behind a dynamic
+  `[variant]`. A TypeScript field still holding a colour, and a stylesheet selecting on
+  `[variant="secondary"]`, were both out of scope of the search. It declares style and TypeScript now.
+  **`0.9.0#exported-class-members-grew` named the wrong classes.** `ButtonComponent`,
+  `DatePickerComponent` and `SearchComponent` each gained `inGroup` and were missing from the list,
+  and `AuthLayoutComponent` was on it although it did not exist at 0.8.0 — it is a new export, which
+  shadows a local name rather than colliding with a member of yours.
+
 ## 0.11.1 — 2026-08-31
 
 ### Added
@@ -1348,7 +1368,7 @@ None of this is required — skipping it leaves working code that is merely redu
 
 - **Two migration manifests were corrected and three more were written**, so re-read them if you
   subclass a DS component or upgrade across a version you skipped. `0.9.0`'s named no member collisions
-  at all — the note that now fills the gap lists **fifteen** classes whose member surface had grown, plus
+  at all — the note that now fills the gap lists **seventeen** classes whose member surface had grown, plus
   four newly exported symbols that can shadow a local name — and `0.8.0`'s missed the private
   `saveLayout` that actually stopped a build (`restoreLayout` went in beside it). **`0.6.1`, `0.6.2` and
   `0.9.1` had no manifest at all**, and now every released version carries one: the auto-update planner

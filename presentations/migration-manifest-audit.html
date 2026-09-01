@@ -219,6 +219,7 @@
     white-space: nowrap;
   }
   .adopt { background: var(--success-subtitle); color: var(--success); }
+  .done-tag.recheck { background: var(--warning-subtitle); color: var(--warning); display: block; margin-top: var(--space-2); white-space: normal; }
   .landed { background: var(--primary-subtitle); color: var(--primary); }
   .reject { background: var(--error-subtitle); color: var(--error); }
 
@@ -347,6 +348,7 @@
         </div>
         <div class="fix"><b>Fix</b>Package-qualify both, reclassify to <code>code-add</code> with <code>old: null</code>, copying its twin <code>0.4.0#styles-tokens-a-la-carte-needs-breakpoints</code>.</div>
               <span class="done-tag">Fixed — 257a271c</span>
+              <span class="done-tag recheck">Re-checked 2026-09-01 — only half had been done. The specifiers were qualified; the item stayed <code>scss-api</code> with a non-null <code>old</code>, which the applier contract reads as a path swap — so it no-opped for the à-la-carte consumer with no <code>overlay-motion</code> line, the very reader its own <code>action</code> addresses. Now <code>code-add</code> / <code>old: null</code>.</span>
       </li>
 
       <li class="finding">
@@ -403,6 +405,7 @@
         </div>
         <div class="fix"><b>Fix</b><code>surface: ["template","style","typescript"]</code> — its own neighbour <code>status-dot-status-retype</code> already does this. Same shape on <code>0.5.1#progress-variant-remap</code> and <code>0.4.0#ds-button-variant-axis-split</code>.</div>
               <span class="done-tag">Fixed — 257a271c</span>
+              <span class="done-tag recheck">Re-checked 2026-09-01 — two of the three had it. <code>0.4.0#ds-button-variant-axis-split</code> was still <code>surface: "template"</code> while its own <code>action</code> says “retype it”. A sweep of all 204 items for type-changing prose against a surface without <code>typescript</code> returns that one item and no other; it now carries all three.</span>
       </li>
     </ol>
   </section>
@@ -465,6 +468,7 @@
         </div>
         <div class="fix"><b>Fix</b>Recount from the tool, then correct the manifest, both CHANGELOG copies and AUTHORING.md together.</div>
               <span class="done-tag">Fixed — 257a271c</span>
+              <span class="done-tag recheck">Re-checked 2026-09-01 — the recount was never carried through. The false count left the manifest, but the class list still omitted <code>ButtonComponent</code>, <code>DatePickerComponent</code> and <code>SearchComponent</code>, still listed <code>AuthLayoutComponent</code> — absent from <code>v0.8.0</code> entirely — and both prose copies still carried a wrong number. The tool says 16 files, and <code>control-value-accessor.ts</code> holds two classes: <b>seventeen</b>.</span>
       </li>
 
       <li class="finding">
@@ -520,6 +524,7 @@
         </div>
         <div class="fix"><b>Fix</b>Lift the second-person test out of the conjunction and widen the subject.</div>
               <span class="done-tag">Fixed — e1edfd74</span>
+              <span class="done-tag recheck">Re-checked 2026-09-01 — the subject was widened and the conjunction was left, so the third-person alternatives added here could never satisfy it — the widening was dead code. Measured on nine realistic phrasings: six escaped. Split into <code>DELETE_SELF</code> and <code>DELETE_BY_SUBJECT</code>; six of nine now caught, zero new errors across 24 manifests.</span>
       </li>
 
       <li class="finding">
@@ -567,6 +572,7 @@
         </div>
         <div class="fix"><b>Fix</b>Mutate toward realistic authoring mistakes, not toward whatever makes the regex match.</div>
               <span class="done-tag">Fixed — e1edfd74</span>
+              <span class="done-tag recheck">Re-checked 2026-09-01 — M023 and M029 were fixed; <code>M001</code> still had no mutation at all — the only one of thirty-five — and M034’s still exercised the citation half only, leaving finding 13’s scope widening unproven. Two cases added: a manifest that does not parse, and a third-person delete instruction inside an item <code>pitfall</code>.</span>
       </li>
 
       <li class="finding">
@@ -641,6 +647,16 @@
       <strong>Three of the thirteen have shipped since — checked against the code on 2026-09-01,
       not against this page.</strong> The other ten are still unratified, and they are the whole of
       what this deck is still open for: <code>docs/todo.md</code> carries them as one P3 line.
+    </p>
+    <p>
+      <strong>The findings above were re-verified by hand the same day</strong>, against the
+      manifests, the lint, the plugin contract and the source at each tag. Eighteen held.
+      <strong>Five carried a “Fixed” tag that the code did not support</strong> — 02, 06, 10, 14 and
+      18, each now marked in place and each now actually fixed. Two things this page cannot know
+      about itself: its scope line reads <em>22 manifests · 186 items</em> and the folder now holds
+      <strong>24 and 204</strong>, so <code>0.11.0</code> and <code>0.11.1</code> have never had an
+      adversarial pass — one reader checked them by these criteria and found no tier-1 defect, which
+      is not the same assurance the other 22 have.
     </p>
     <div class="scroller">
       <table>

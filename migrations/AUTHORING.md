@@ -289,7 +289,7 @@ between the last tag and HEAD (`[base] [head]` overrides both ends) and prints i
 gained/lost member names AND changed types — annotated fields, `input`/`model`/`output`
 initializers, exported interface members, type aliases and `extends` clauses. Twice the names list
 was assembled by reading the diff and twice it was wrong in a way a consumer found first (0.8.0's
-private `saveLayout`, 0.9.0's sixteen grown classes); the type diff exists because 0.10.0 then
+private `saveLayout`, 0.9.0's seventeen grown classes); the type diff exists because 0.10.0 then
 shipped two widenings the same way. What it still cannot see, so check by hand: a member whose
 BEHAVIOR changed under an unchanged signature (`TableComponent.isStriped()` went window-relative
 to absolute), and a CLASS member that moved to a base class (interface members that move get a
