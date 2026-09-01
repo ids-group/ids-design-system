@@ -162,6 +162,7 @@ export const NAV: NavGroup[] = [
     title: 'Patterns',
     path: 'patterns',
     items: [
+      { label: 'Page composition', anchor: 'pattern-page-composition' },
       { label: 'Activity', anchor: 'pattern-activity' },
       { label: 'Empty states', anchor: 'pattern-empty-state' },
       { label: 'Filter Bar', anchor: 'pattern-filter-bar' },

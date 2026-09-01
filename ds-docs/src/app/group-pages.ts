@@ -94,6 +94,7 @@ import { ActivitySection } from './sections/patterns/activity/activity.section';
 import { EmptyStateSection } from './sections/patterns/empty-state/empty-state.section';
 import { FilterBarSection as PatternsFilterBarSection } from './sections/patterns/filter-bar/filter-bar.section';
 import { FormLayoutSection } from './sections/patterns/form-layout/form-layout.section';
+import { PageCompositionSection } from './sections/patterns/page-composition/page-composition.section';
 import { PageHeaderSection as PatternsPageHeaderSection } from './sections/patterns/page-header/page-header.section';
 
 import { DoDontSection } from './sections/practice/do-dont/do-dont.section';
@@ -245,6 +246,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     path: 'patterns',
     title: 'Patterns',
     sections: [
+      PageCompositionSection,
       ActivitySection,
       EmptyStateSection,
       PatternsFilterBarSection,
