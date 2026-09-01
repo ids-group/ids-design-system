@@ -40,7 +40,7 @@ export interface SidenavProps {
 /** Vertical navigation rail — port of `ds-sidenav`. The host carries
  *  `.sidenav` (+ `.collapsed`) — the class the item/group collapsed styles
  *  key off — so keep items/groups inside this component when using
- *  `collapsed`. Compose inside `AppShell`'s `sidenav` prop. */
+ *  `collapsed`. Compose inside `AppLayout`'s `sidenav` prop. */
 export function Sidenav({
   collapsed = false,
   brand = '',

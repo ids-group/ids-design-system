@@ -46,11 +46,11 @@
         "src/lib/components/alert/alert.component.html": "fcd26becfa71"
       }
     },
-    "AppShell": {
-      "tag": "ds-app-shell",
+    "AppLayout": {
+      "tag": "ds-app-layout",
       "sources": {
-        "src/lib/components/app-shell/app-shell.component.ts": "a95e0d96d0e0",
-        "src/lib/components/app-shell/app-shell.component.html": "b32d1d2c4f1e"
+        "src/lib/components/app-layout/app-layout.component.ts": "3294c7d0e682",
+        "src/lib/components/app-layout/app-layout.component.html": "b32d1d2c4f1e"
       }
     },
     "Autocomplete": {
@@ -63,7 +63,7 @@
     "Avatar": {
       "tag": "ds-avatar",
       "sources": {
-        "src/lib/components/avatar/avatar.component.ts": "9585f69d842c",
+        "src/lib/components/avatar/avatar.component.ts": "015786e934fa",
         "src/lib/components/avatar/avatar.component.html": "7ee2badb0518"
       }
     },

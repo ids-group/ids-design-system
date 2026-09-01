@@ -7,7 +7,7 @@ Vertical navigation rail — port of `ds-sidenav`. Flex column with a brand row 
 - Brand row: `brand="MyAdmin"` renders a letter-mark tile + wordmark; `logoLetter="A"` overrides the tile glyph; `brandSlot` injects a custom logo node (the `[brand]` slot); `brandName` replaces the plain wordmark text with custom markup (the `[dsBrandName]` slot — tile still comes from `brand`/`logoLetter`). No brand at all → the row collapses via `:empty`.
 - Items/groups read the collapsed state via context — they must be inside the `Sidenav` subtree (arbitrary wrappers in between are fine).
 - Width/colors themeable via `--ds-sidenav-width`, `--ds-sidenav-width-collapsed`, `--ds-sidenav-bg-color`, `--ds-sidenav-mark-bg-color`.
-- Tall component — it expects a full-height rail (natural home: `AppShell`'s `sidenav` prop).
+- Tall component — it expects a full-height rail (natural home: `AppLayout`'s `sidenav` prop).
 
 ```tsx
 <Sidenav brand="IDS Fleet" collapsed={isCollapsed}>

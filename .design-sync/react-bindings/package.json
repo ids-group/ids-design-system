@@ -1,6 +1,6 @@
 {
   "name": "@ids-group-ltd/ids-design-system",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "React bindings over the IDS Design System's real compiled CSS — generated for claude.ai/design by design-sync. The Angular library in this repo is the source of truth; each binding mirrors its component's template markup and class vocabulary 1:1.",
   "private": true,
   "type": "module",

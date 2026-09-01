@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cx, host } from '../lib/util';
 import { Icon, type IconName } from '../lib/Icon';
+import { avatarTint } from '../generated/avatar-tint';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg';
 export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy';
@@ -30,6 +31,12 @@ export interface AvatarProps {
   status?: AvatarStatus | null;
   /** Icon rendered when there is no imageUrl and no initials. */
   fallbackIcon?: IconName | null;
+  /** Seed for a deterministic tint (e.g. an email or name) used when no explicit
+   *  `tint` is set — the same seed always yields the same colour. */
+  seed?: string | null;
+  /** Hue arcs `[start, end]` (0–360°) the seeded tint must avoid, e.g. a brand
+   *  hue: `[[310, 360], [0, 20]]`. Only applies when `seed` drives the tint. */
+  avoidHues?: readonly (readonly [number, number])[];
 }
 
 /** User avatar — port of `ds-avatar`. Shows an image, initials, or a fallback
@@ -43,14 +50,18 @@ export function Avatar({
   tint = null,
   status = null,
   fallbackIcon = null,
+  seed = null,
+  avoidHues = [],
 }: AvatarProps) {
-  const tintStyle =
-    tint && tint !== 'neutral'
-      ? {
-          ['--ds-avatar-bg-color' as string]: tint.bg,
-          ['--ds-avatar-label-color' as string]: tint.fg,
-        }
-      : undefined;
+  // Precedence has to match the component's `tintStyle` computed, not read well.
+  const resolved =
+    tint && tint !== 'neutral' ? tint : seed ? avatarTint(seed, { avoidHues }) : null;
+  const tintStyle = resolved
+    ? {
+        ['--ds-avatar-bg-color' as string]: resolved.bg,
+        ['--ds-avatar-label-color' as string]: resolved.fg,
+      }
+    : undefined;
 
   return host(
     'ds-avatar',

@@ -180,6 +180,16 @@ for (const [selector, component] of [...angularComponents].sort()) {
   }
 }
 
+// The loop above only walks components that still exist, so a binding left
+// pointing at a renamed or deleted one slips through it — and that binding
+// renders a tag nothing will ever upgrade.
+const upstreamNames = new Set([...angularComponents.values()].map((component) => component.name));
+for (const [name, binding] of bindingComponents) {
+  if (upstreamNames.has(name) || !(name in recorded)) continue;
+  errors.push(`${name}: no ds-* component matches it any more (${binding.file})`
+    + ' — the upstream component was renamed or removed; re-port and drop the stale entry');
+}
+
 // ── 2. API coverage ───────────────────────────────────────────────────────
 const capitalize = (name) => `${name[0].toUpperCase()}${name.slice(1)}`;
 
