@@ -30,44 +30,24 @@
   </p>
 
   <h3 class="block-title t-h4">
-    Two routes, and why the generated one won
+    Why the components are generated, not ported
   </h3>
 
-  <div class="cd-routes">
-    <div class="cd-route">
-      <div class="t-s-bold">
-        Route A — hand-written React port
-      </div>
+  <p class="block-desc t-s">
+    The first attempt re-implemented every component in React over the compiled CSS — around
+    11 000 hand-written lines. It was correct when written and needed a parity gate, because
+    nothing else can tell that a template has moved on. One month of upstream drift cost it
+    <strong>213 divergences</strong>: 53 components with changed sources, 122 missing props, 6
+    components with no counterpart at all. It was deleted on 2026-09-01.
+  </p>
 
-      <p class="t-s cd-muted">
-        Around 11 000 lines re-implementing the components in React over the library's
-        compiled CSS. Correct when written, and it needs a parity gate because nothing else
-        can tell that a template moved on. <strong>Parked:</strong> one month of upstream
-        drift cost it 213 divergences — 53 components with changed sources, 122 missing
-        props, 6 components with no counterpart at all.
-      </p>
-    </div>
-
-    <div class="cd-route cd-route--chosen">
-      <div class="t-s-bold">
-        Route B — Angular Elements, generated
-      </div>
-
-      <p class="t-s cd-muted">
-        Every component registers as a custom element and the React layer is generated from
-        the AST. There is no second implementation, so there is nothing to drift.
-        <strong>
-          The same month of upstream cost it nothing:
-        </strong> one
-        <code class="t-mono-inline">
-          gen.mjs
-        </code> run and the surface grew from 81 elements
-        to 85 on its own. Costs about 135 KB gzip more over the wire — a fixed price while
-        the library keeps growing.
-      </p>
-    </div>
-  </div>
-
+  <p class="block-desc t-s">
+    What replaced it registers every component as a custom element and generates the React layer
+    from the AST. There is no second implementation, so there is nothing to drift: the same month of
+    upstream cost it one <code class="t-mono-inline">gen.mjs</code> run, and the surface grew from 81
+    elements to 85 on its own. The price is about <strong>135 KB gzip</strong> more over the wire for
+    the Angular runtime — fixed, while the library keeps growing.
+  </p>
   <h3 class="block-title t-h4">
     The commands, in order
   </h3>

@@ -10,9 +10,9 @@ _vendor/react.js → _vendor/react-dom.js → _ds_bundle.js → _preview/<Name>.
 
 and renders `React.createElement(window.IdsDs.<Component>)`. So the contract is:
 **expose React components on `window.IdsDs`; React arrives separately as a
-global.** Both routes in this repo satisfy it — the hand-port emits those
-components directly, the elements route emits wrappers around real custom
-elements. Nothing inspects what else is inside the bundle.
+global.** The elements route emits wrappers around real custom elements, and nothing
+inspects what else is inside the bundle — which is why an Angular runtime can
+ride along inside it.
 
 Project: **IDS Design System**, `455f9a87-1a6e-4b1d-a0e7-cf47ed772e63`
 (`PROJECT_TYPE_DESIGN_SYSTEM` — immutable at creation; a regular project can
@@ -32,24 +32,11 @@ so an `^18` types pin fails the declaration emit.
 `/design-login` authorizes the `DesignSync` tool. Read methods answer without a
 permission prompt once it is granted; writes prompt.
 
-> **Route B is the chosen one since 2026-09-01.** Route A (the hand-written port) is parked:
-> intact, correct against 0.7.0, 213 divergences against 0.11.1, and its gate is report-only.
-> It stays the fallback if the elements bundle is ever rejected by the design host.
-
-## Route A — the hand-written React port
-
-```sh
-node .design-sync/tools/build-css.mjs        # ds.scss + every component sheet, re-scoped onto ds-* tags
-node .design-sync/tools/build-bindings.mjs   # esbuild bundle + tsc declarations
-bun run check:design-sync                    # parity gate — MUST be green before publishing
-```
-
-`build-css.mjs` and `build-bindings.mjs` both succeed over a stale binding layer,
-so a green build here proves nothing about correctness. `check-parity.mjs` is the
-only thing that does. After a deliberate re-port, `--bless` to re-record the
-hashes; blessing without reading the diff defeats the mechanism.
-
-## Route B — the `@angular/elements` bundle
+> **The hand-written React port was deleted on 2026-09-01.** It was correct against 0.7.0 and 213
+> divergences behind 0.11.1, and nobody was re-porting it, so it stopped being a fallback and became
+> 11 000 lines of misleading code. `git log -- .design-sync/react-bindings` recovers it if it is ever
+> wanted. Its parity gate went with it — there is no second implementation left to guard.
+## The build chain
 
 ```sh
 node .design-sync/elements/tools/gen.mjs             # reads the AST → registrations + typed wrappers
@@ -67,7 +54,7 @@ Proof page: serve `.design-sync/elements/demo` over http (never `file://`) and
 open it in a real browser tab — a background or headless tab freezes transitions
 and reports stale layout, which has faked bugs here before.
 
-## `config.json` points at route B (switched 2026-09-01)
+## `config.json` (switched to the elements bundle 2026-09-01)
 
 ```jsonc
 "entry":    ".design-sync/elements/dist/ds-bundle.js"
@@ -77,8 +64,8 @@ and reports stale layout, which has faked bugs here before.
 ```
 
 **How the base was settled, rather than guessed.** `entry` is cwd-relative; `cssEntry` and
-`docsDir` resolve against the nearest `package.json` above it. Under route A that was
-`.design-sync/react-bindings/`, which is why `dist/ds-all.css` and `../docs` worked. So
+`docsDir` resolve against the nearest `package.json` above it. Under the deleted port that was
+`.design-sync/react-bindings/`, which is why its own `dist/ds-all.css` and `../docs` worked. So
 `.design-sync/elements/` was given its own `package.json` — same depth, same shape — and both
 relative paths keep their meaning: `dist/browser/styles.css` and `../docs` resolve to the files
 that exist. All three paths verified present on disk after a full build.
@@ -123,7 +110,7 @@ delete_files { planId, paths }
 
 ## What lives remotely, and what this repo commits
 
-The repo commits **sync inputs only** — `react-bindings/`, `previews/`, `docs/`,
+The repo commits **sync inputs only** — `previews/`, `docs/`,
 `elements/`, `tools/`, `config.json`, `conventions.md`. Everything with a `_`
 prefix in the project is an **output the publish step generates**:
 `_ds_bundle.js`, `_ds_bundle.css`, `_ds_manifest.json`, `_ds_sync.json`,

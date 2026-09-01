@@ -15,10 +15,6 @@
 #                   the wrong name in the published API table
 # surface        -> fails the step when the @angular/elements route's hand-maintained
 #                   list drifts from src/lib (see .design-sync/MANUAL-SURFACE.md)
-# parity         -> REPORT-ONLY while the React port is parked: the elements route is the
-#                   chosen one, so nobody is re-porting the bindings and the gate reports
-#                   213 known divergences. It still runs, because the number is the
-#                   measurement that justifies the choice
 # lint           -> report-only (prettier/stylelint/eslint), never fails the step
 #                   while the repo carries pre-existing lint debt
 set -e
@@ -70,7 +66,6 @@ echo "Building (lib -> docs) and linting in parallel..."
 # ds-docs needs the built dist/ds, so build is ordered inside its own subshell;
 # the artifact checks fail loud if a build silently produced nothing.
 ( bun run build:lib && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
-bun run check:design-sync               > "$log_dir/parity.log"    2>&1 &  pid_parity=$!
 bun run check:manual-surface            > "$log_dir/surface.log"   2>&1 &  pid_surface=$!
 bun run format                          > "$log_dir/format.log"    2>&1 &  pid_format=$!
 bun run lint:styles                     > "$log_dir/stylelint.log" 2>&1 &  pid_styles=$!
@@ -78,10 +73,6 @@ bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_e
 
 build_failed=0
 wait "$pid_build" || build_failed=1
-
-# Not gated — see the header. Waited on so its log is printed and its exit status is known.
-parity_failed=0
-wait "$pid_parity" || parity_failed=1
 
 surface_failed=0
 wait "$pid_surface" || surface_failed=1
@@ -91,7 +82,7 @@ wait "$pid_format" || lint_failed=1
 wait "$pid_styles" || lint_failed=1
 wait "$pid_eslint" || lint_failed=1
 
-for name in build parity surface format stylelint eslint; do
+for name in build surface format stylelint eslint; do
   echo "===== $name ====="
   cat "$log_dir/$name.log"
 done
@@ -108,11 +99,6 @@ if [ "$build_failed" -ne 0 ]; then
 fi
 echo "Build passed"
 
-if [ "$parity_failed" -ne 0 ]; then
-  echo "design-sync parity reports drift in the PARKED React port (report-only, not failing the build)"
-else
-  echo "design-sync parity passed"
-fi
 
 if [ "$surface_failed" -ne 0 ]; then
   echo "manual-surface check failed"

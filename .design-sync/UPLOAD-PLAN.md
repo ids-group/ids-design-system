@@ -40,7 +40,7 @@ Each carded component needs its four remote files: `<Name>.jsx`, `<Name>.d.ts`,
 - `components/navigation/AppShell/**` and `_preview/AppShell.js` — renamed to `AppLayout`
   (breaking, `e282b99`). The remote still carries the pre-rename name.
 - `components/overlays/Tooltip/**` and `_preview/Tooltip.js` — `dsTooltip` is a DIRECTIVE. The
-  React port could reimplement it as a component; the elements route cannot register a
+  deleted React port could reimplement it as a component; the elements route cannot register a
   directive, so it correctly has no counterpart. See `MANUAL-SURFACE.md` §2 for why this is not
   worth closing (a tooltip is hover-revealed and a static card has no hover).
 

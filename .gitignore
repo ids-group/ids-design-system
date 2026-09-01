@@ -84,15 +84,12 @@ Anton_local
 
 # design-sync (claude.ai/design) — staged scripts, build output, machine state.
 # The durable set (.design-sync/ everything else: config, NOTES, conventions,
-# tools/, react-bindings/, previews/, docs/) IS committed.
+# tools/, elements/, previews/, docs/) IS committed.
 /.ds-sync/
 /ds-bundle/
 /.design-sync/.cache/
 /.design-sync/learnings/
 /.design-sync/node_modules
-/.design-sync/react-bindings/dist/
-/.design-sync/react-bindings/src/lib/icons.gen.ts
-/.design-sync/react-bindings/src/generated/
 
 # design-sync elements experiment: generated wrappers + Angular/esbuild output.
 /.design-sync/elements/gen/

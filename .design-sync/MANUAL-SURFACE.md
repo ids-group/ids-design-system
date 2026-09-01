@@ -172,7 +172,7 @@ need an input-based open state before a design can use them.
 ## Keeping this honest
 
 Run `bun run check:manual-surface` (wired into `infrastructure/scripts/ci-pr.sh`
-next to the parity gate). It fails when a new component starts projecting inside
+in `ci-pr.sh`). It fails when a new component starts projecting inside
 a control-flow block, when a new attribute directive appears, when a recorded
 entry disappears, or when a recorded component is not mentioned in this file.
 Triage first, edit this file, then `--bless`.

@@ -1,4 +1,11 @@
 # design-sync notes — @ids-group-ltd/ids-design-system
+> **The React port these notes describe was deleted on 2026-09-01** — the elements route replaced it,
+> and `git log -- .design-sync/react-bindings` recovers the code. This file is kept because much of it
+> is route-independent and was paid for: the preview conventions, the upstream defects the porting pass
+> surfaced, the toolchain pins, and the render-warning triage all still apply. Anything naming
+> `react-bindings/`, `build-css.mjs`, `build-bindings.mjs` or the parity gate is history, not
+> instruction.
+
 
 - **Target project:** "IDS Design System" (455f9a87-1a6e-4b1d-a0e7-cf47ed772e63), created 2026-07-24. First sync ran the incremental path (project created empty this run).
 - **Package manager: bun** (`bun install --frozen-lockfile`). Both `bun.lock` and `package-lock.json` exist; bun is authoritative — CI (`infrastructure/scripts/_setup.sh`) uses bun because `npm ci` fails under alpine/musl on `@emnapi/*` optional deps. Node 22 in CI.
