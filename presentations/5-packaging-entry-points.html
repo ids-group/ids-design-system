@@ -78,20 +78,42 @@
     <p>
       <b>What replaced it.</b> A0 measured chunk placement against the real library instead of a synthetic
       fixture (<code>docs/packaging-chunking-audit.md</code> §11, <code>docs/packaging-diagnosis.md</code>).
-      One <code>inject(ToastService)</code> moves <b>135 744 B gzip</b> out of the lazy chunk into the
-      initial bundle and collapses the lazy chunk to 189 bytes. Fixing placement takes the DS's share of a
-      consumer's initial bundle from <b>135.7 KB gzip to 27.8 KB — −80%</b>. The import graph
-      <b>does partition</b>: three cycles, all nameable and all fixable —
-      <code>radio</code>↔<code>radio-group</code>, <code>time-columns</code>↔<code>time-picker</code>, and
-      a four-way one (<code>components/card</code>, <code>config</code>, <code>core</code>,
-      <code>icons</code>) caused entirely by type-only imports out of <code>ds-config.ts</code>.
-      A layered split — this page's option D, priced here as “a refactor nobody has asked for” — is the
-      live one, and it is sequenced in <code>docs/todo.md</code> as A3.
+      One <code>inject(ToastService)</code> adds <b>135 744 B gzip to the initial bundle</b>, against a
+      DS-free floor of 59 019 B, and collapses the lazy chunk from 566 761 to <b>189 bytes raw</b>. The
+      import graph <b>does partition</b>: a <b>13-group core</b> that closes over itself, the services
+      closing over 11, and a <b>64-group</b> component layer on top.
     </p>
     <p>
-      <b>One number on this page is superseded.</b> The consumer's <b>632 kB / 88%</b> was never
-      reproducible as written; the independent reproduction is <b>577 kB of a 755 kB initial, 76%</b>.
-      Same defect, different arithmetic.
+      <b>The saving depends on the SHAPE, and this is the trap.</b> The <b>−80%</b> figure is the
+      eager-<em>services</em> case AND it needs <b>per-component</b> entry points. A three-layer
+      core/services/components split does not deliver it: an eager app shell touches the component layer
+      and pulls the whole retained layer straight back into the initial bundle. Measured on a purpose-built
+      fixture — one <code>components</code> entry gives <b>178 538 B</b> initial with both lazy-only
+      components inside it; per-component entries give <b>125 651 B</b> with neither. For an eager-shell
+      consumer the honest number is <b>142.3 → 42.1 KB gzip, −70%</b>.
+    </p>
+    <p>
+      <b>Three cycles, and one of them is a constraint rather than work.</b>
+      <code>radio</code>↔<code>radio-group</code> and
+      <code>time-columns</code>↔<code>time-picker</code> are sibling cycles. The four-way one
+      (<code>components/card</code>, <code>config</code>, <code>core</code>, <code>icons</code>) was
+      <b>priced and declined</b> — 593 B gzip to leave it alone against 40 import rewrites to break it
+      (A3-pre DECLINED, <code>d6b52890</code>). So <code>ds-card</code> simply lives in the core entry.
+    </p>
+    <p>
+      <b>D is cheaper than §7 says.</b> Keeping the root as a pure re-export facade means
+      <b>no consumer changes an import</b> — measured byte-identical down to the chunk hash at 61 entry
+      points. One exception a consumer must be told about: a <code>@defer</code> block whose component is
+      imported through the facade defers nothing at all
+      (<a href="https://github.com/angular/angular/issues/52554">angular/angular#52554</a>), so inside
+      <code>@defer</code> the deep specifier is required.
+    </p>
+    <p>
+      <b>One claim on this page is superseded — the reproducibility one, not the figures.</b> The audit's
+      §2 line said the consumer's report was not reproducible from artifacts on disk. It has since been
+      independently reproduced on our own library, same order of magnitude: <b>577 kB of a 755 kB
+      initial, 76%</b>. Their <b>632 kB / 88%</b> remains their number for their app, which has a
+      different component set.
     </p>
   </div>
 
@@ -217,18 +239,20 @@ neverUsed-payload    0     &larr; tree-shaking works</pre>
   </table>
 
   <div class="ask">
-    <p><b>Recommendation, rewritten 2026-09-01: D, layered rather than per-component.</b> The original
-      text recommended B; B is not buildable, and the paragraph below replaces it.</p>
+    <p><b>Recommendation, rewritten 2026-09-01: D, and the top layer must be PER-COMPONENT.</b> The
+      original text recommended B; B is not buildable. A first rewrite of this block said “layered rather
+      than per-component”, and that was wrong in the expensive direction — it is corrected here.</p>
     <ul>
       <li>With B gone the live choice is A (nothing) or D. C keeps its own disqualifier — it loses tree-shaking, measured at +50% on the deferred chunk, and every consumer has to rediscover it.</li>
-      <li>D is no longer priced as “85 component folders”. The graph partitions into a <code>core</code> seed of 12 groups that closes over itself, 11 services, and 55 component groups — so the first useful cut is <b>three layers, not 85 entries</b>, and the three cycles blocking it are named and small.</li>
-      <li>The prize is measured against this library rather than a fixture: <b>135.7 KB gzip → 27.8 KB, −80%</b> of the DS's share of a consumer's initial bundle.</li>
-      <li>Still a <b>major</b>, so it sequences with the breaking batch rather than shipping alone — unchanged from the original reasoning, and the only part of it that survived.</li>
+      <li><b>Three layers is not enough.</b> A single <code>components</code> entry leaves an eager shell pulling the whole retained component layer back in: 178 538 B initial with both lazy-only components inside it, against 125 651 B per-component with neither. The layering (13-group core ← services ← 64 components) is the structure; the per-component split is what actually moves the bytes.</li>
+      <li>D is no longer priced as “85 component folders that move every consumer's imports”. A root kept as a pure re-export facade is <b>byte-identical at 61 entry points</b>, so <b>no consumer changes an import</b> — except inside <code>@defer</code>, which needs the deep specifier.</li>
+      <li>The prize, stated against the shape that delivers it: <b>−80%</b> for the eager-services case with per-component entries, <b>−70%</b> (142.3 → 42.1 KB gzip) for an eager-shell consumer.</li>
+      <li>Because the facade holds, this is <b>no longer a major</b> for the ordinary consumer — which removes the reason the original recommendation gave for sequencing it with the breaking batch.</li>
     </ul>
     <p>
-      <b>What would change this:</b> the layered cut measuring worse than the fixture predicts, or the
-      four-way <code>ds-config.ts</code> cycle turning out not to be fixable by moving the type-only
-      imports. Both are answerable by building A3, which is why A3 comes before the verdict now.
+      <b>What would change this:</b> a measurement of the real per-component cut coming in worse than the
+      fixture predicts. The four-way <code>ds-config.ts</code> cycle is no longer a risk — it was priced
+      and declined, and <code>ds-card</code> lives in the core entry as a result.
     </p>
   </div>
 </main>

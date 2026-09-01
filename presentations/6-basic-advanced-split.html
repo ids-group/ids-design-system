@@ -61,10 +61,32 @@
     h2 { break-after: avoid; }
     .headline, .bars, table, .verdict, .note { break-inside: avoid; }
   }
+  .stale { border: 2px solid #b8860b; border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
+  .stale > h2 { margin-top: 0; color: #8a6508; }
 </style>
 
 <main>
   <h1>basic + advanced — what the split would actually buy</h1>
+
+  <div class="stale">
+    <h2>Stale, 2026-09-01: the verdict is recorded, the deck is behind it</h2>
+    <p>
+      Flagged by the author of the measurements this page rests on. The page predates <b>five later
+      research passes</b>, so read the numbers here as the state of the question when it was written, not
+      as current: chunk placement measured at <b>136 KB gzip</b>; <b>per-component</b> granularity turning
+      out to be what actually moves bytes, rather than a coarse layer split; the <b>seam overhead</b>
+      being fixed rather than proportional; <code>@defer</code> needing the <b>deep specifier</b>
+      (<a href="https://github.com/angular/angular/issues/52554">angular/angular#52554</a>); and a
+      <b>build-time define flag</b> stripping library code where <code>DS_CONFIG</code> strips none.
+    </p>
+    <p>
+      Current sources: <code>docs/packaging-diagnosis.md</code>,
+      <code>docs/packaging-chunking-audit.md</code>, and the sequenced plan in <code>docs/todo.md</code>.
+      The deck's own comparison of component weight, in
+      <code>docs/basic-advanced-split-audit.md</code>, is unaffected. This note is a placeholder and will
+      be overwritten when the page is rebuilt.
+    </p>
+  </div>
 
   <p>
     The proposal: prototypes install a light kit, production apps add a heavy one, and
