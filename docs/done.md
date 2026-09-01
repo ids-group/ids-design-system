@@ -4,6 +4,52 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The scrim stopped the mouse and not the keyboard (2026-09-01)
+
+- [x] **DONE 2026-09-01 — the tail led somewhere real, one component over.** Stas asked why
+  `skeleton-mode` had gone unreachable while the rest of the loading behaviour survived: unified
+  away, or broken and then quietly deleted? Reading the history settled it — and then pointed at a
+  live defect the old rule had been trying to prevent.
+
+  **The verdict on `skeleton-mode`: unified away, correctly, and half of it never worked at all.**
+  The rule had two halves. `tbody tr:hover td { background: transparent }` was genuinely load-bearing
+  until `e0e67356`, because the hover tint was ungated then — `tr:hover td` painted every row in
+  the body, skeleton rows included. That commit moved every hover visual behind `.clickable`, which
+  a skeleton row (a bare `<tr>`) never receives, so the suppression became unnecessary and was
+  deleted with the cause. The second half, `tbody tr.clickable { cursor: default }`, was dead from
+  the first commit: skeleton rows and `[class.clickable]` rows have always been mutually exclusive
+  `@if`/`@else` branches, so the selector could not match. Nothing regressed; a rule was removed
+  and its switch was not.
+
+  **What the rule was FOR, though, is unmet in the other loading mode — and that is now fixed.**
+  `loading="overlay"` keeps the real rows and paints a scrim over them. Measured: the scrim's
+  `pointer-events` is `auto`, so a pointer aimed at a control inside a row lands on `DIV.scrim`
+  and the control cannot be clicked. Focus is not stopped at all — nothing is `inert`, a row's
+  `tabindex` depends only on `rowInteractive()`, and neither `onRowClick` nor `onRowKey` reads
+  the loading state. So a keyboard user could open a row the mouse could not even reach, while its
+  data was being replaced. That is the same asymmetry `onResizeKey`'s docblock already names from
+  the other side.
+
+  `inert` is the fix, because it is the only mechanism that stops pointer and keyboard together and
+  removes the covered controls from the accessibility tree. Two decisions shaped where it went:
+
+  - **Not on the host.** An inert host loses its own `aria-busy`, and the reader is then told
+    nothing about why the content went quiet. It goes on a wrapper around the projection, styled
+    `display: contents` so it generates no box — verified layout-neutral (table 911px, wrap
+    scrollWidth 911px, unchanged) and verified to still propagate, which was the actual risk:
+    `inert` is a subtree property, not a layout one, and a focus probe under a
+    `display: contents` wrapper is refused.
+  - **On by default, with `inertContent="false"` for a partially covered scrim.** `ds-table`
+    passes it and marks `<tbody>` itself, because its scrim starts below the header — sorting and
+    filtering during a refresh must keep working, and a blanket flag would have taken the header
+    with it. Measured after the change: focus refused in the body, still allowed in the header,
+    `aria-busy` intact, and an idle overlay untouched.
+
+  `empty-state` gets the fix for free — it projects an `[actions]` slot straight under a
+  fully-covering scrim, which was the second instance of the same bug.
+
+---
+
 ## Three dead branches in `ds-table`, and none of them wanted deleting first (2026-09-01)
 
 - [x] **DONE 2026-09-01 — each one was traced to what it used to do before anything was removed.**

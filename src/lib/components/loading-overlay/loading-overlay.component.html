@@ -1,4 +1,9 @@
-<ng-content></ng-content>
+<div
+  class="content"
+  [attr.inert]="loading() && inertContent() ? '' : null"
+>
+  <ng-content></ng-content>
+</div>
 
 @if (loading()) {
   <div

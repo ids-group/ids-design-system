@@ -96,7 +96,9 @@
     "ds-table emits (rowExpanded) and (rowCollapsed), expand-all included. Neither fires for a collapse the host writes into expandedIds itself, nor for an id whose row is not in data().",
     "ds-table announces \"N rows expanded\" in its live region from two rows up; a single expander already says so through its own aria-expanded.",
     "ds-table no longer puts `skeleton-mode` on its host element. Nothing in the library styled it: the rule it switched on suppressed a row hover that used to reach every row, and that hover now needs `.clickable`, which a skeleton row never has. Only a consumer reaching in through ::ng-deep would notice.",
-    "The column-resize handle now carries aria-valuemin and aria-valuemax alongside aria-valuenow, all in px, while it has focus. A focusable role=\"separator\" is a range widget, so a bare pixel value was being announced against ARIA's implicit 0-100."
+    "The column-resize handle now carries aria-valuemin and aria-valuemax alongside aria-valuenow, all in px, while it has focus. A focusable role=\"separator\" is a range widget, so a bare pixel value was being announced against ARIA's implicit 0-100.",
+    "ds-loading-overlay now marks the content it covers `inert` while loading, so the keyboard cannot reach what the scrim already hides from the pointer. Anything focusable behind the scrim stops being tabbable and leaves the accessibility tree until loading ends; `aria-busy` on the host is unaffected.",
+    "inertContent=\"false\" on ds-loading-overlay turns that off, for a scrim that covers only part of its content — the consumer then owns marking the covered subtree. ds-table does this: its scrim starts below the header, and only `<tbody>` goes inert, so sorting and filtering during a refresh still work."
   ],
   "deleteList": []
 }

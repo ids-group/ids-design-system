@@ -34,6 +34,7 @@
     [loading]="isOverlayLoading()"
     [blur]="true"
     [insetTop]="'var(--ds-table-head-h, 40px)'"
+    [inertContent]="false"
   >
     <table
       [class]="tableClasses()"
@@ -208,7 +209,12 @@
         </tr>
       </thead>
 
-      <tbody>
+      <!-- Matches what the scrim covers, which is everything below the header:
+           a row keeps its tabindex and its Enter handler otherwise, so a keyboard
+           user could open a row whose data is mid-replacement while the pointer
+           was stopped by the scrim. The header stays live on purpose — re-sorting
+           is what puts the scrim up in the first place. -->
+      <tbody [attr.inert]="isOverlayLoading() ? '' : null">
         @if (isSkeletonLoading()) {
           @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
             <ng-container

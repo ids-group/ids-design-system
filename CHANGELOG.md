@@ -121,6 +121,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A loading scrim stopped the pointer and let the keyboard walk straight under it.**
+  `ds-loading-overlay` paints an absolutely positioned scrim over its content, which intercepts
+  every pointer event — so a control behind it could not be clicked, and looked unavailable. Nothing
+  stopped focus: Tab reached the same control, Enter activated it, and `ds-table` with
+  `rowInteractive` would emit `(rowClicked)` for a row whose data the host was in the middle of
+  replacing. Neither `onRowClick` nor `onRowKey` consulted the loading state, and a row's
+  `tabindex` never did either. The overlay now marks the content it covers `inert` while loading,
+  which is the one mechanism that stops pointer and keyboard together and takes the covered controls
+  out of the accessibility tree; `aria-busy` stays on the host, so a reader is still told why.
+  `inertContent="false"` turns it off for a scrim that covers only PART of its content, and the
+  consumer then marks the covered subtree itself — `ds-table` does this, because its scrim starts
+  below the header and re-sorting during a refresh is exactly what puts the scrim up.
+
 - **Three published migration manifests were corrected, and a repo that upgraded across 0.4.0, 0.7.1
   or 0.9.0 may be holding the result.** All three failed the same way — by finding nothing — so the
   tooling reported success and there is no error to search for.
