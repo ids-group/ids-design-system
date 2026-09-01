@@ -322,3 +322,143 @@ missed rewrite reads as a broken toolchain, not as a missed rewrite.
 - the tools that scan `src/lib` — `extract-component-api.mjs`, `extract-tokens.mjs`,
   `class-surface-diff.mjs`, `changelog-lint.mjs` — need checking against the new layout
 - the two sibling cycles must be co-located in their entry points
+
+## Thirteen open questions, investigated (2026-09-01)
+
+A brainstorm produced a list of pitfalls, bottlenecks and candidate solutions; each was then measured
+or researched. Two results **correct earlier conclusions in this repo** — they are marked.
+
+### Tier 1 — could reshape the plan
+
+**1. Does the root facade stay free at scale? YES.** Previously measured at 3–4 entry points only.
+Fixture `.claude/local/scale-probe/`: 61 entry points (60 components + core), root `public-api.ts`
+re-exporting all of them, an app with one eager component and two lazy routes.
+
+| Consumer imports | Initial | Total | JS files | In the initial bundle |
+| --- | --- | --- | --- | --- |
+| **root facade** | 114 436 B | 269 452 B | 4 | only the eager component |
+| **deep specifiers** | 114 436 B | 269 452 B | 4 | only the eager component |
+
+Byte-identical, down to the chunk hash `chunk-24W5R2VQ.js`. The 49 unused components are gone
+entirely. **"No consumer changes an import" now holds at 61 entry points, not just 3.**
+
+**2. Can `theme` and `config` be zero-cost entry points? `theme` yes, `config` no.**
+`provide-ds-theme.ts` imports only `@angular/core` and `@angular/common` — a true leaf, so
+`provideDsTheme()`, the anchor sitting in every consumer's documented setup, becomes nearly free.
+`ds-config.ts` cannot: it sits in a strongly-connected component with `core` and `icons` — see 3.
+
+**3. Do type-only cross-entry imports need rewriting? YES — and this CORRECTS §11(b) of
+`packaging-chunking-audit.md`.** Tested: a relative, `import type`-only import across an entry-point
+boundary fails exactly like a runtime one, with the same
+`Cannot destructure property 'pos' of 'file.referencedFiles[index]'`. ng-packagr treats an erased
+import as an entry-point dependency, so the refactor is **318 rewrites, not 249**.
+
+The consequence is larger than the count. The A0(b) cycle analysis excluded type-only edges and
+reported two trivial cycles. **Re-run with them included, there is a third SCC of size four:**
+
+```
+components/card, config, core, icons
+
+config/ds-config.ts               -> components/card/card.types.ts  (type: CardElevation, CardPadding)
+config/ds-config.ts               -> core/size.ts                   (type: DsSize)
+config/ds-config.ts               -> icons/icons.data.ts            (type: IconName)
+core/config-defaults.ts           -> config/ds-config.ts
+components/card/card.component.ts -> core/config-defaults.ts
+core/option.ts                    -> icons/icons.data.ts
+icons/icon.component.ts           -> core/config-defaults.ts
+```
+
+Every edge *out of* `ds-config.ts` is a type import, so the cycle exists because the config reaches
+back into the modules that depend on it — not because of any runtime need. `components/card` is
+dragged into the core by a single type import.
+
+**The fix is cheap and improves the design regardless:** a leaf `types` module owning `IconName`,
+`DsSize`, `CardElevation` and `CardPadding`, plus splitting `icons.data` (the map) from
+`icons/icon.component`. Then `types` and `icons-data` are leaves, `config -> types + icons-data`,
+`core -> config`, `icon.component -> core`, and `card` becomes an ordinary leaf component with its
+own entry point.
+
+### Tier 2 — costs and dev-loop risks
+
+**4. Build time: a non-issue.** The same 61 components built two ways — **61 entry points 9 s**,
+single entry point **5 s**. Each entry is tiny, so ngc is fast on it. Our real library builds
+single-entry in ~7 s, so expect low teens at 77 entries.
+
+**5. The `ds-docs` dev loop needs a generated paths map.** `tsconfig.json` currently maps
+`"ds": ["./src/public-api.ts"]`. After the split the facade re-exports public specifiers, which must
+resolve to *source* during docs development — one `paths` entry per entry point, ~77 of them. Every
+`from 'ds'` in `ds-docs` keeps working through the facade, so no docs import changes. Generate the map
+from disk, the way `tokens.generated.ts` and `component-api.generated.ts` already are, so it cannot
+drift from the folder layout.
+
+**6. Chunk explosion and duplication: neither.** Eight lazy routes with deliberately overlapping
+component sets (route *i* uses components *3i…3i+5*; union 27 of 60):
+
+| Library shape | Initial | Total | JS files | Components in the initial bundle |
+| --- | --- | --- | --- | --- |
+| one entry point | **517 674 B** | 518 827 B | 10 | **all 27** |
+| one entry per component | **115 345 B** | 520 039 B | 18 | **1** |
+
+**Initial −78%. Total within 1 212 B — 0.2%.** The same bytes are redistributed across 18 files
+instead of concentrated in one eager chunk; there is no duplication penalty. 10 → 18 files for eight
+routes is not the "chunk explosion" the esbuild issue describes, and over HTTP/2 the file count does
+not matter.
+
+### Tier 3 — independent wins, priced
+
+**7. Splitting the icon map: NOT worth it.** `ICONS` is one const map of 115 icons. Cut to 9 on
+`probe/icons-map` and re-measured: `ds-button` 62 733 → **60 211 B gzip**. **The entire icon set is
+2 522 B gzip** — SVG path strings compress to almost nothing. Per-icon exports would break
+`IconName = keyof typeof ICONS` and `provideDsIcons` for at most ~2.3 kB. Hypothesis closed.
+
+**8. A third of the global stylesheet is component-specific.** `styles/ds.scss` compiles to
+58 293 B min / 10 282 B gzip; the component-ish partials are **11 703 B min / 3 409 B gzip** of it.
+
+| Partial | min | gzip | |
+| --- | --- | --- | --- |
+| `dropdown-overlay` | 4 346 | **1 043** | portaled panels: select, autocomplete, date-picker, menu |
+| `overlay-motion` | 1 829 | 458 | portaled |
+| `link` | 1 685 | 533 | |
+| `page-grid` | 1 079 | 312 | |
+| `scrollbar` | 774 | 297 | |
+| `surface-motion` | 751 | 192 | |
+| `layout-utils` | 706 | 184 | |
+| `skeleton-shimmer` | 337 | 207 | |
+| `icon-base` + `toast-overlay` | 196 | 183 | portaled |
+
+A consumer rendering one button ships 3.4 kB gzip of dropdown, toast and skeleton CSS. About
+**1.8 kB** of it (`link`, `page-grid`, `scrollbar`, `surface-motion`, `layout-utils`,
+`skeleton-shimmer`, `icon-base`) could move into the components' own SCSS, where it inlines into the
+component definition and tree-shakes with it. The remaining **~1.6 kB** styles portaled panels, which
+render outside the component's DOM and so cannot be component-scoped — but those can become **opt-in
+global imports** (`@use 'styles/dropdown-overlay'`), so only a consumer using pickers pays.
+
+**9. `@angular/cdk/overlay` is 17.3 kB gzip — about a third of the post-A3 eager cost.** Measured
+alone: 159 434 B raw / 48 375 B gzip against bare Angular's 92 686 / 30 646. The services closure
+measures 56 129 B gzip over bare Angular, so CDK is **~32%** of it. CDK already ships per-feature
+entry points and is a peer dependency, so there is nothing to optimise — this is the floor A3 lands on.
+
+### Tier 4 — guardrails and solutions worth adopting
+
+**10. The cryptic build failure can become a lint error.** `sheriff.config.ts` already exists, scoped
+to `ds-docs/src/**` and explicitly *not* to `src/lib`. Sheriff's deep-import prevention is exactly the
+guard needed: declare each component folder a module, and any import into another module's internals
+is flagged. Independently, `eslint-rules/` already hosts a local plugin with three custom rules, so a
+targeted "no relative import crossing a component-folder boundary" rule is a small, well-precedented
+alternative. Either turns the worst execution risk — a missed rewrite reading as a broken toolchain —
+into a checked rule. Angular's guidance confirms the constraint: imports crossing entry-point
+boundaries must be specified by package name or the library build can fail.
+
+**11. A curated `prototype` entry point.** Once entry points exist, one extra entry re-exporting a
+light, opinionated set answers the original basic/advanced ask at zero cost — no second package, no
+mirror, nothing duplicated. Worth proposing when A3 lands.
+
+**12. A bundle-size gate in CI.** The ladder in `.claude/local/bundle-probe/` is already the
+measurement; running it as a check would stop this regressing silently, which is how the current
+state arose in the first place.
+
+**13. The auto-update plugin may need to express import-path moves.**
+`/design-system:auto-update-package` rewrites consumer code across versions. If a later change moves a
+symbol between entry points, the migration format has to say so. Nothing to do while the root stays a
+facade — every symbol is still importable from the root — but worth checking before any entry point
+becomes the *only* path to a symbol.

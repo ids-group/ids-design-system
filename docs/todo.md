@@ -316,9 +316,15 @@ the service was just the one somebody noticed. Full table and every tested hypot
   initial, 76%, against their claimed 88%), so §2's "not reproducible" line is superseded. The
   services closure builds at 86 775 B gzip against the probe's 59 019 B DS-free floor, so the fix takes
   the DS's share of the initial bundle from **135.7 KB gzip to 27.8 KB, -80%**. And the graph
-  partitions: 77 groups, **exactly two cycles** (`radio` <-> `radio-group`, `time-columns` <->
-  `time-picker`), both sibling pairs that belong together anyway. A computed `core` seed of 12 groups
-  closes over exactly itself; the services close over 11; 55 component groups form the top layer.
+  partitions. **CORRECTED 2026-09-01: there are THREE cycles, not two.** This item's original count
+  excluded type-only edges, and a later test proved ng-packagr treats an erased `import type` across an
+  entry-point boundary as a dependency exactly like a runtime one. With them included the SCCs are
+  `radio` <-> `radio-group`, `time-columns` <-> `time-picker`, and a third of size four:
+  **`components/card`, `config`, `core`, `icons`** — caused entirely by type imports OUT of
+  `ds-config.ts` (`CardElevation`/`CardPadding`, `DsSize`, `IconName`) reaching back into modules that
+  depend on it. See `packaging-diagnosis.md` « Thirteen open questions » item 3 for the full edge list
+  and the fix. A computed `core` seed of 12 groups closes over exactly itself; the services close over
+  11; 55 component groups form the top layer.
   **A3 is unblocked and is worth ~5.7x the table work.** Original scope, for the record: Gates A3, touches no component, so it cannot collide with in-flight table work. Two
   halves. (a) A probe app with an eager `ToastService` import and a lazy route holding heavy
   components, built against the real `dist/ds` - the existing ladder plus one lazy route. Gives the
@@ -428,6 +434,53 @@ the service was just the one somebody noticed. Full table and every tested hypot
   against the new layout; co-locate the two sibling cycles. Secondary entry points are NOT deprecated
   (ng-packagr `docs/secondary-entrypoints.md` on `main`, plus a Feb 2026 guide). Full analysis:
   `packaging-diagnosis.md` « Do we have to split? ».
+
+- [ ] **[P2] A3-pre — de-cycle the core before splitting: a leaf `types` module, and `icons.data` split
+  from `icons/icon.component`.** Prerequisite for A3, and an improvement on its own. `ds-config.ts`
+  type-imports `CardElevation`/`CardPadding` from `components/card`, `DsSize` from `core` and `IconName`
+  from `icons`, while `core` and `icons` both depend on `config` — a four-way cycle that drags an
+  ordinary component (`card`) into the core. Move those four types into a leaf `types` module and split
+  the `ICONS` map from the icon component; then `types` and `icons-data` are leaves,
+  `config -> types + icons-data`, `core -> config`, `icon.component -> core`, and `card` becomes an
+  ordinary leaf with its own entry point. **Also unlocks a free `theme` entry:** `provide-ds-theme.ts`
+  imports only `@angular/core` and `@angular/common`, so `provideDsTheme()` — the anchor in every
+  consumer's documented setup — becomes nearly zero-cost. `config` cannot be free; it is in the SCC.
+
+- [ ] **[P3] Move the component-specific third of `styles/ds.scss` out of the global sheet.** Measured
+  2026-09-01: the sheet is 58 293 B min / 10 282 B gzip, of which component-ish partials are
+  **11 703 B min / 3 409 B gzip** — so a consumer rendering one button ships 3.4 kB gzip of dropdown,
+  toast and skeleton CSS. About **1.8 kB** (`link`, `page-grid`, `scrollbar`, `surface-motion`,
+  `layout-utils`, `skeleton-shimmer`, `icon-base`) can move into the components' own SCSS, where it
+  inlines into the component definition and tree-shakes with it. The other **~1.6 kB**
+  (`dropdown-overlay` 1 043 B, `overlay-motion` 458 B, `toast-overlay`) styles PORTALED panels that
+  render outside the component's DOM, so they cannot be component-scoped — make those **opt-in global
+  imports** instead (`@use 'styles/dropdown-overlay'`), so only a consumer using pickers pays. Pairs
+  naturally with A3.
+
+- [ ] **[P2] Guard the entry-point boundary with a lint rule, before doing A3 — not after.** A missed
+  import rewrite fails the build with `Cannot destructure property 'pos' of
+  'file.referencedFiles[index]'` and nothing naming the cause, which is the single worst execution risk
+  in A3. Two well-precedented options already in this repo: extend `sheriff.config.ts` (today scoped to
+  `ds-docs/src/**` and explicitly NOT `src/lib`) with one module per component folder, whose deep-import
+  prevention is exactly this guard; or add a rule to the local plugin in `eslint-rules/` (three custom
+  rules already live there) forbidding a relative import that crosses a component-folder boundary.
+  **Build the guard first and watch it go red on a deliberate violation** — a green gate proves nothing.
+
+- [ ] **[P3] A curated `prototype` entry point, once A3 exists.** One extra entry re-exporting a light,
+  opinionated set answers Mikhail's original basic/advanced ask at zero cost: no second package, no
+  mirror, nothing duplicated, and `ds-table` stays one component. Propose it when A3 lands, not before.
+
+- [ ] **[P3] A bundle-size gate in CI.** The ladder at `.claude/local/bundle-probe/` is already the
+  measurement; running it as a check stops this regressing silently, which is how the current state
+  arose. Also check whether `/design-system:auto-update-package` migrations can express a symbol moving
+  between entry points — nothing to do while the root stays a facade, but needed before any entry
+  point becomes the only path to a symbol.
+
+- [x] **[P3] Splitting the icon map — DECLINED 2026-09-01 (measured, not judged).** `ICONS` is one
+  const map of 115 icons, so any icon retains all of them. Cut to 9 icons on `probe/icons-map` and
+  re-measured: `ds-button` 62 733 -> **60 211 B gzip**. **The whole icon set is 2 522 B gzip** — SVG
+  path strings compress to almost nothing. Per-icon exports would break `IconName = keyof typeof ICONS`
+  and `provideDsIcons` for at most ~2.3 kB. Do not re-open without a new measurement.
 
 - [x] **[P2] The eager-component case DOES NOT overturn A3 — checked 2026-09-01.**
   `packaging-chunking-audit.md` §7 named «a consumer whose EAGER root needs a component rather than a
