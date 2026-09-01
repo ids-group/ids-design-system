@@ -477,16 +477,24 @@ the service was just the one somebody noticed. Full table and every tested hypot
   (ng-packagr `docs/secondary-entrypoints.md` on `main`, plus a Feb 2026 guide). Full analysis:
   `packaging-diagnosis.md` « Do we have to split? ».
 
-- [ ] **[P2] A3-pre — de-cycle the core before splitting: a leaf `types` module, and `icons.data` split
-  from `icons/icon.component`.** Prerequisite for A3, and an improvement on its own. `ds-config.ts`
-  type-imports `CardElevation`/`CardPadding` from `components/card`, `DsSize` from `core` and `IconName`
-  from `icons`, while `core` and `icons` both depend on `config` — a four-way cycle that drags an
-  ordinary component (`card`) into the core. Move those four types into a leaf `types` module and split
-  the `ICONS` map from the icon component; then `types` and `icons-data` are leaves,
-  `config -> types + icons-data`, `core -> config`, `icon.component -> core`, and `card` becomes an
-  ordinary leaf with its own entry point. **Also unlocks a free `theme` entry:** `provide-ds-theme.ts`
-  imports only `@angular/core` and `@angular/common`, so `provideDsTheme()` — the anchor in every
-  consumer's documented setup — becomes nearly zero-cost. `config` cannot be free; it is in the SCC.
+- [x] **[P2] A3-pre — DECLINED 2026-09-01, measured: the cycle costs 593 B gzip, the fix costs 40
+  import rewrites.** The four-way SCC (`components/card`, `config`, `core`, `icons`) is real, and every
+  edge out of `ds-config.ts` that creates it is a TYPE import. The minimum cut was priced: move
+  `ds-config.ts` (11 importers), `icons.data.ts` (27) and card's two type aliases (2) into `core` —
+  **40 import statements**, plus moving a component's public types into the bottom layer, plus conflict
+  risk against the active parallel lane.
+
+  **What the cycle actually costs is almost nothing.** `config`, `core` and `icons` were always going to
+  share the `core` entry point, so the ONLY consequence of leaving the SCC intact is that `ds-card`
+  ships with them. Measured: core seed (button, icon, spinner, field-group, popover, menu, menu-item)
+  **84 430 B gzip**; the same seed plus `CardComponent` **85 023 B** — **593 B**. And `card` is a common
+  component most consumers use anyway. **Decision: accept the SCC, put `card` in the core entry.** Do
+  not re-open without a new measurement.
+
+  **Still worth having, and independent of the cycle:** `theme` as its own entry point.
+  `provide-ds-theme.ts` imports only `@angular/core` and `@angular/common`, so it is a true leaf, and
+  `provideDsTheme()` — the anchor in every consumer's documented setup — becomes nearly zero-cost.
+  Fold that into A3 rather than a separate item.
 
 - [ ] **[P3] Make the PORTALED overlay stylesheets opt-in — ~1.6 KB gzip, and that is the whole prize.**
   **CORRECTED 2026-09-01: an earlier version of this item claimed ~1.8 KB could move into component SCSS.
