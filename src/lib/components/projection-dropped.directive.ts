@@ -7,21 +7,23 @@ import {
 } from '@angular/core';
 
 /**
- * Dev-only guard for a component whose caption comes from a `[label]` input and
- * that therefore projects nothing, so `<ds-switch>Some text</ds-switch>` renders
- * no caption at all — silently, with no compile-time signal. Put it on a probe
- * around the component's only `<ng-content>`, gated on dev mode so production
- * renders no extra node:
+ * Dev-only guard for a component that DROPS whatever is projected into it, so the
+ * author gets a warning instead of silence — there is no compile-time signal for
+ * content a component chooses to ignore. Put it on a probe around the
+ * `<ng-content>`, gated on dev mode so production renders no extra node:
  *
  * ```html
  * @if (devMode) {
- *   <span dsProjectionDropped="ds-switch"><ng-content></ng-content></span>
+ *   <span dsProjectionDropped="ds-filter-bar"><ng-content></ng-content></span>
  * }
  * ```
  *
- * NOT projection support: the probe exists only so the warning can see that
- * content was passed, and the directive hides it. Real projection for the field
- * family is still open.
+ * It is NOT projection support: the probe exists so the warning can see that
+ * content arrived, and then hides it.
+ *
+ * `ds-filter-bar` is the only host today. The field family used to be the reason
+ * this exists, and is not any more — `ds-checkbox`, `ds-radio` and `ds-switch`
+ * render a projected caption since 0.8.0 and dropped the probe with that release.
  *
  * `reason` replaces the default `[label]` wording for a host that drops content
  * for a different reason — `ds-filter-bar` drops anything that carries neither of

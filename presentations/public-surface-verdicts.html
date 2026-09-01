@@ -237,6 +237,19 @@
     </div>
   </details>
 
+    <div class="row" style="border-left:4px solid var(--accent,#c47);padding-left:1rem">
+    <div class="head"><span class="id">‼</span><span class="q">Что осталось решить — пять строк, все в секции 9</span><span class="aud both">оба</span></div>
+    <p class="why">Всё остальное в этой деке отвечено и свёрнуто в аккордеон: 38 строк, разворачиваются кликом.
+      Открытыми оставлены только <b>G3–G7</b> — пять изменений, которые я внёс в гейт <b>сам</b>, без твоего решения:
+      блокирует ли он и PR, и релиз; окно ±60 символов вокруг имени; шаблоны имён людей вместо списка;
+      порог в 100 артефактов; список из десяти родовых имён скриптов.</p>
+    <p class="why"><b>Ничего из этого не горит.</b> Все пять работают и дают 0 ошибок на 320 артефактах.
+      Вопрос в том, оставляем ли мы их такими навсегда.</p>
+    <p class="note verdict"><b>с момента написания деки</b> — гейт получил ещё правило <b>C012</b>
+      (порядок секций в блоке релиза) и вырос с 304 артефактов до 320; из публичного API убраны
+      шесть внутренних помощников. Ни одно из этого не меняет вопросы ниже.</p>
+  </div>
+
   <h2><span class="n">1</span> Конфиденциальность — здесь я уверен, но спрашиваю всё равно</h2>
   <p class="sub">Пакет публикуется на registry.npmjs.org с <code>access: "public"</code>, CHANGELOG едет
     внутри тарбола и рендерится на docs-сайте. Каждый консюмер читает про остальных.</p>
@@ -490,8 +503,8 @@
     </div>
   </details>
 
-  <div class="row">
-    <div class="head"><span class="id">X5</span><span class="q">Объяснения внутренней архитектуры</span><span class="aud human">проза</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">X5</span><span class="q">Объяснения внутренней архитектуры</span><span class="aud human">проза</span></div></summary>
     <p class="note revisit"><b>вернуться</b> — ОСТАВЛЕНО. Открытый вопрос под этим записан в docs/todo.md: обязана ли запись объяснять ПОЧЕМУ (ds-search потерял message-входы), или довольно сказать что изменилось и что делать. Формат сам резервирует под это поле `note` («what is LEFT: the why»), то есть объяснять законно, но место у него одно. Решать с очередным релизом в руках, не в вакууме.</p>
     <pre><b>Объяснение внутренней архитектуры</b>
 
@@ -510,7 +523,7 @@
       <label><input type="radio" name="X5" data-id="X5" checked><span>Удалять<span class="did"> — сделано</span></span></label>
       <label><input type="radio" name="X5" data-id="X5-keep"><span>Оставлять — помогает понять, почему API такой</span></label>
     </div>
-  </div>
+  </details>
 
   <h2><span class="n">7</span> Комментарии в исходниках</h2>
   <p class="sub"><code>styles/</code> и <code>themes/</code> копируются в тарбол дословно; комментарий из
@@ -680,7 +693,7 @@
       <code>shippedSources()</code> читает <code>assets ?? []</code> из <code>ng-package.json</code>.
       Переименуй ключ — и весь свип сжимается до четырёх документов или до нуля, а гейт продолжает
       печатать <b>OK</b>. Зелёная строка была единственным доказательством и ничего не доказывала.</p>
-    <p class="why"><b>Число 100 я взял сам</b> при текущих 304. Оно ловит обвал, но не дрейф: если
+    <p class="why"><b>Число 100 я взял сам</b> при тогдашних 304 артефактах — сейчас их 320. Оно ловит обвал, но не дрейф: если
       тихо отвалится половина исходников, гейт этого не заметит.</p>
     <div class="choice">
       <label><input type="radio" name="G6" data-id="G6-100" checked><span>Оставить 100<span class="did"> — так сделано сейчас</span></span></label>
@@ -709,8 +722,8 @@
 
   <h2><span class="n">10</span> Что надо знать, решать нечего</h2>
 
-  <div class="row">
-    <div class="head"><span class="id">F1</span><span class="q">Четыре находки этой итерации</span><span class="aud both">оба</span></div>
+  <details class="row done">
+    <summary><div class="head"><span class="id">F1</span><span class="q">Четыре находки этой итерации</span><span class="aud both">оба</span></div></summary>
     <p class="why"><b>1. Ничего не доехало до npm.</b> Ты сбросил <code>dev</code> и форс-пушнул до
       свипа, релиз не резался, ветка не публиковалась. Всё, что нашли оба раунда ревью, жило только
       в ветке — у консюмеров нулевой эффект.</p>
@@ -730,7 +743,7 @@
       <label><input type="radio" name="F1" data-id="F1-ack"><span>Понял</span></label>
       <label><input type="radio" name="F1" data-id="F1-ask"><span>Есть вопрос — отвечу в чате</span></label>
     </div>
-  </div>
+  </details>
 
   <div class="bar">
     <button id="copy">Скопировать ответы</button>
