@@ -138,6 +138,32 @@ looks defective:
   discard work; these trade a false negative for the same. When in doubt, name the surface widely and
   let the semantic pass narrow it.
 
+## Correcting a PUBLISHED manifest: read the tag, not HEAD
+
+A released `<version>.json` is a claim about one boundary — what existed at the tag before it, and
+what exists at its own tag. HEAD is evidence for neither half, and every way of being wrong reads as
+a pass: a symbol removed two releases later is absent from HEAD, one that never existed is also
+absent, and one re-introduced since is present although the removal was correct.
+
+```bash
+git archive v<version> src/lib | tar -xO      # the tree at the release
+git archive v<prev>     src/lib | tar -xO     # and at the one before it
+git diff v<prev>..v<version> -- src/lib       # or the boundary directly
+```
+
+`old` must be PRESENT at `v<prev>` and ABSENT at `v<version>`; `new` must be PRESENT at
+`v<version>`. Match on a word boundary — `--x-warn` is a prefix of `--x-warning`, and a substring
+test will tell you the old token survived its own rename.
+
+Two shapes this catches that nothing else does. **A name that never existed**: it is absent from
+HEAD exactly like a correctly removed one, so the item passes every review and finds nothing in a
+consumer's code forever. **A family renamed one member at a time**: naming one token when eight
+moved leaves the other seven undocumented, and the search that would have found them was spent on
+the one you named.
+
+Only `unreleased.json` is written and checked against HEAD, because HEAD is the version it
+describes.
+
 ## Supersession: name the item you reverse
 
 A default flipped in one release and flipped back in the next reads as two independent instructions,

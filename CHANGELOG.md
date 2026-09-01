@@ -152,6 +152,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   and `AuthLayoutComponent` was on it although it did not exist at 0.8.0 — it is a new export, which
   shadows a local name rather than colliding with a member of yours.
 
+- **The 0.2.0 token rename was documented under a name this library never had, so eight tokens
+  went unfound.** 0.2.0 renamed the semantic tint tokens from `-subtle` to `-subtitle` across
+  `border`, `error`, `info`, `primary`, `secondary`, `success`, `tertiary` and `warning`. Its
+  manifest item described the change as `--surface-subtle` → `--surface-subtitle`, and neither of
+  those has ever existed here — so an upgrade that ran the item searched for a token you could not
+  have had, reported nothing to do, and left all eight in place. Nothing errors: a
+  `var(--primary-subtle)` that no longer resolves falls back to nothing, and the element simply
+  loses its tint. Search your stylesheets for `-subtle` inside a custom-property name.
+- **`themes/README.md` still listed `--static-white`**, removed at 0.5.1, as a shipped primitive.
+  On-fill text is the literal `white`, or `--static-ink` where the fill is light.
+
 ## 0.11.1 — 2026-08-31
 
 ### Added

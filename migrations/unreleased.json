@@ -73,6 +73,30 @@
       ],
       "verify": "Your styles entry names `styles/surface-motion` or `styles/ds`; no TypeScript field still typed to a ds-button `variant` value carries a colour; no subclass of ButtonComponent, DatePickerComponent or SearchComponent declares `inGroup` without `override`.",
       "restore": null
+    },
+    {
+      "id": "subtle-token-rename-was-documented-under-a-name-that-never-existed",
+      "kind": "token-rename",
+      "old": "--<role>-subtle",
+      "new": "--<role>-subtitle",
+      "action": "Search your stylesheets for `-subtle` inside a custom-property name and rename the suffix to `-subtitle` on all eight: `--border-subtle`, `--error-subtle`, `--info-subtle`, `--primary-subtle`, `--secondary-subtle`, `--success-subtle`, `--tertiary-subtle`, `--warning-subtle`.",
+      "appliesWhen": "Only a repo that upgraded across 0.2.0 and overrode or read one of the eight. A first upgrade from this release forward reads the corrected file.",
+      "pitfall": "Nothing errors and nothing warns: a `var(--primary-subtle)` that no longer resolves falls back to nothing, so the element loses its tint and keeps rendering. The 0.2.0 item searched for a token this library never had, so a clean report from it means the search happened, not that you were clear.",
+      "note": "0.2.0 renamed the eight semantic tint tokens from `-subtle` to `-subtitle`. Its manifest item described the rename with a token that is not one of them, so the search it drove could only ever come back empty.",
+      "searchHints": [
+        "-subtle",
+        "--border-subtle",
+        "--error-subtle",
+        "--info-subtle",
+        "--primary-subtle",
+        "--secondary-subtle",
+        "--success-subtle",
+        "--tertiary-subtle",
+        "--warning-subtle"
+      ],
+      "surface": "style",
+      "verify": "No stylesheet of yours reads a `--*-subtle` custom property, and every tint that was styled through one still paints.",
+      "restore": null
     }
   ],
   "informational": [
