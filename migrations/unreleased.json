@@ -22,7 +22,8 @@
     }
   ],
   "informational": [
-    "The banner, toast and alert icon now centres on the message block instead of aligning to the first line of text. Nothing to change: it is a visual default, applied by the components themselves. One-line messages look identical either way, which covers most toasts; the difference grows with the text, and was 12px at two lines and 21px at three."
+    "The banner, toast and alert icon now centres on the message block instead of aligning to the first line of text. Nothing to change: it is a visual default, applied by the components themselves. One-line messages look identical either way, which covers most toasts; the difference grows with the text, and was 12px at two lines and 21px at three.",
+    "ToastService.promise() and any toast with an `action` changed their dismissal timing. A settled promise toast now counts its 4s/6s from when it becomes visible rather than from when the promise resolved, so one queued behind `maxVisible` is no longer removed before it is shown. A toast with an `action` no longer auto-dismisses at all and is always dismissible, because the region is last in tab order and the button was unreachable within the old five seconds. Hovering or focusing the region pauses every countdown. Nothing to change in consumer code; if you relied on an action toast disappearing on its own, dismiss it from the action handler."
   ],
   "deleteList": []
 }

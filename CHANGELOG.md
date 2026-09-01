@@ -42,6 +42,27 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   pointer also carries a fallback now, so a role that goes missing in future degrades to the
   family's base colour instead of disappearing, and `check-color-families` fails the build on it.
 
+### Fixed
+
+- **`ToastService.promise()` could destroy its own result.** It ran the settled toast's
+  auto-dismiss on a wall-clock timer started when the promise resolved, not when the toast became
+  visible — the one thing the rest of the timer work had already moved into the region. With a
+  `maxVisible` cap set, a promise that settled while its toast was still queued had the result spliced
+  out of the queue before anyone saw it: the user saved, it succeeded, and no toast appeared at all.
+  The settled duration is now handed to the region with the content, so it starts on promotion.
+
+- **A toast carrying an `action` no longer auto-dismisses.** The overlay is the last child of `body`,
+  so the region is dead last in tab order; a keyboard user cannot cross a real page in the five
+  seconds the button was alive. An `action` toast now waits, and is always dismissible.
+
+- **Hovering or focusing the region pauses every countdown**, resuming when the pointer or focus
+  leaves. A toast being read is not a toast that has been read.
+
+- **Nothing that cannot expire can also be unclosable.** A `loading` toast was created with
+  `dismissible: false` and no duration, so a promise that never settled held its slot for the life of
+  the page — with a cap of 3, three hung requests blocked the whole channel, including the error
+  toasts that would have explained the hang.
+
 ## 0.11.2 — 2026-09-01
 
 ### Added
