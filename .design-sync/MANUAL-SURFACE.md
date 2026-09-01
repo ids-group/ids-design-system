@@ -21,11 +21,22 @@ unexplained entry is an excuse, not a record.
 sits inside an `@if` whose condition is false — the nodes are consumed and never
 placed. Opening the block afterwards renders an empty shell.
 
-**What makes an entry broken is not the pattern, it is whether the gate is false
-at upgrade time.** Sixteen templates match the pattern; three of them are gated on
-`rendered()`, which is false until the overlay opens, and those three are the real
-blocker. The rest gate on an input whose falsy default puts `<ng-content>` in the
-live branch, so their children survive the upgrade.
+**The rule, established by measurement 2026-09-01 and not by reading:** the branch
+holding `<ng-content>` must be the one that is LIVE when the view is created. An
+embedded view is fine — what matters is whether it is instantiated at creation.
+Probed six components in a real browser with `document.createElement` + `innerHTML`
+(no React involved at all):
+
+| component | where `<ng-content>` sits | children survive |
+|---|---|---|
+| `card` | root | ✅ |
+| `alert` | root | ✅ |
+| `badge` | `@else` of `@if (count() !== null)` — live by default | ✅ |
+| `checkbox` | `@else` of `@if (label())` — live by default | ✅ |
+| `switch` | `@else` of `@if (label())` — live by default | ✅ |
+| `stat` | `@if (delta())` — **false** by default | ❌ |
+
+So sixteen templates match the pattern and four are broken, not three.
 
 ### Broken — gate is false at upgrade, projection is the only content path
 
@@ -34,6 +45,7 @@ live branch, so their children survive the upgrade.
 | `modal` | `rendered()` | **CONFIRMED BROKEN.** Measured 2026-09-01 in a real Chrome tab against the elements demo: closed `<ds-modal>` has `childNodes.length === 1` and `innerHTML === '<!---->'`; opening it renders 966 chars of Angular DOM with `textContent === ''` — a blank card |
 | `drawer` | `rendered()` | Same construction as `modal`, not separately measured |
 | `bottom-sheet` | `rendered()` | Same construction as `modal`, not separately measured |
+| `stat` | `delta()` | **CONFIRMED BROKEN** by the probe above. Was listed as benign in this file until 2026-09-01 — that classification was wrong |
 
 **Two fixes were tried and neither worked** (2026-09-01, both reverted):
 
@@ -56,7 +68,34 @@ detached) would fix it. Tested with react/react-dom 19.2.8 — `"19.2.8"` verifi
 present in the built demo bundle — and the result is identical. `.ds-sync` was
 restored to the pinned 18.3.1.
 
-**Root cause is therefore still open.** Do not write an override for these three
+**What the root-cause session established (2026-09-01, all measured in a real tab):**
+
+- **React is not involved.** The same failure reproduces with plain
+  `document.createElement('ds-modal')` + `innerHTML` + `appendChild`, no React on the
+  path at all. Every earlier theory about wrapper timing is dead.
+- **`rendered` is a `signal(false)` set inside an `effect`** (`modal.component.ts:69`),
+  and effects run after the first change detection — so the gate is false when the view
+  is created, always.
+- **`staticPreview` is not registered on the custom element.** Read off the live
+  registration: `customElements.get('ds-modal').prototype` carries `open`, `size`,
+  `status`, `title`, `subtitle`, `dividers`, `closeOnBackdrop`, `persistent` — and no
+  `staticPreview`. It is a host-directive input, and `@angular/elements` builds its
+  property list from the component's own inputs. `elements/README.md` claims the
+  generator picks these up; it does so for the React wrapper only, so setting
+  `staticPreview` on an element has always been a no-op expando. **This is a generator
+  gap and is fixable in `gen.mjs`/`main.ts` without touching any component.**
+- **No input can make a gate true at view creation.** `@angular/elements` applies
+  initial input values *after* creating the component, so `open = true` before
+  `appendChild` does not help — verified.
+- **Modal is not fixed even by an unconditional gate.** Forcing `@if (true)` and
+  rebuilding the whole chain still renders an empty card, while `ds-card`/`ds-alert`
+  (root-level projection) keep their children in the same build. So modal carries a
+  second cause on top of the gate, and it is not yet found.
+
+**Root cause is therefore PARTLY open.** The class of defect is understood and the
+benign/broken split is now measured rather than assumed; what remains unexplained is
+why `modal` specifically fails even with its gate removed.
+**Root cause is therefore partly open.** Do not write an override for these three
 before it is found: the fix that looks obvious has already failed twice, and an
 override built on a guess is a second implementation with none of the parity
 tooling that guards Misha's port.
@@ -69,7 +108,7 @@ the `@else`. `badge` is the worked example: `@if (count() !== null) { … } @els
 live and the children are claimed correctly.
 
 `auth-layout` · `badge` · `checkbox` · `dropzone` · `filter-bar` · `menu-item` ·
-`radio` · `sidenav` · `sidenav-group` · `sidenav-item` · `stat` · `switch` ·
+`radio` · `sidenav` · `sidenav-group` · `sidenav-item` · `switch` ·
 `table`
 
 `checkbox`, `radio` and `switch` are the `[label]`-input family that
