@@ -25,9 +25,12 @@ bun install --frozen-lockfile              # repo deps
 node .design-sync/tools/bootstrap.mjs      # esbuild, sass, react 18.3.1 + @types/react 19 into .ds-sync
 ```
 
-React runtime 18.3.1 with types 19 is deliberate: 18.3.1 is what the custom-element
-event wiring is written against, but `inert` never landed in `@types/react` 18.3.x,
-so an `^18` types pin fails the declaration emit.
+React runtime 18.3.1 with types 19 is deliberate. 18.3.1 is what the design host itself
+vendors — read from the project's `_vendor/react.js` on 2026-09-01, a React 18.3.1
+development build — so the demo page exercises the same React the cards will run on.
+That matters: on React 18 the wrapper can only assign inputs in a layout effect, after
+the element has connected. The types are 19 because `inert` never landed in
+`@types/react` 18.3.x, so an `^18` types pin fails the declaration emit.
 
 `/design-login` authorizes the `DesignSync` tool. Read methods answer without a
 permission prompt once it is granted; writes prompt.
@@ -41,7 +44,7 @@ permission prompt once it is granted; writes prompt.
 ```sh
 node .design-sync/elements/tools/gen.mjs             # reads the AST → registrations + typed wrappers
 CI=true npx ng build ds-elements                     # AOT + Ivy linker (the slow step, ~8 s)
-node .design-sync/elements/tools/build-bundle.mjs    # → dist/ds-bundle.js (IIFE, window.IdsDs, react external)
+node .design-sync/elements/tools/build-bundle.mjs    # → dist/ds-bundle.js (IIFE, window.IdsDs, react from window)
 bun run check:manual-surface                         # watch-list + doc coverage — see MANUAL-SURFACE.md
 ```
 

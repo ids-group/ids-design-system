@@ -64,11 +64,20 @@ the model context.
 
 ## Before uploading
 
-- `config.json` now points at route B (`.design-sync/elements/dist/ds-bundle.js`). The route-A
-  port is parked, so an upload publishes the elements bundle — which is the intent, but it has
-  never been through the design host.
+- `config.json` points at `.design-sync/elements/dist/ds-bundle.js`. The React port was deleted,
+  so there is one route and an upload publishes the elements bundle. The bundle has been proved
+  to LOAD in a local copy of the host's four-script chain (React 18.3.1 from `_vendor`, the
+  bundle, then a preview) — `window.IdsDs` resolves and overlay previews render their projected
+  content. The upload itself has still never run.
 - Run the full chain first: `gen.mjs` → `ng build ds-elements` → `build-bundle.mjs`. The last
-  step also emits `dist/types/**/*.d.ts`, which is where the per-component `.d.ts` comes from.
+  step also emits declarations, but NOT in the remote's shape: it produces one aggregate
+  `dist/types/.design-sync/elements/gen/wrappers.d.ts` carrying all 85 `<Name>Props`, whereas the
+  project stores a `<Name>.d.ts` per component. Whoever runs the upload has to slice it or accept
+  one shared declaration file — this is not solved.
+- **Fonts.** `styles.css` inlines `@font-face` pointing at `./media/*.woff2`, and the project
+  already carries `fonts/` from the port's upload. Either upload `dist/browser/media/**` beside
+  the CSS or rewrite those URLs to `fonts/`; uploading the CSS alone leaves every face 404 and the
+  cards render in a fallback font. Measured 2026-09-01 against the local host copy.
 - Previews must set their state as INITIAL props, never toggle it after mount — see
   `COMMANDS.md`. A modal preview passes `staticPreview`; a table preview showing
   `[bulk-actions]` passes `selectedIds`.

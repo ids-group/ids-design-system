@@ -1,6 +1,6 @@
-// Stages the deps `buildCmd` needs into .ds-sync/ (gitignored) and links them
-// where the binding package's tsc can resolve them, so a fresh clone can run
-// the sync build without anyone remembering what to install.
+// Stages the deps `buildCmd` needs into .ds-sync/ (gitignored) and links them where
+// the elements package's tsc can resolve them, so a fresh clone can run the sync
+// build without anyone remembering what to install.
 //
 //   node .design-sync/tools/bootstrap.mjs
 //
@@ -15,11 +15,12 @@ import { fileURLToPath } from 'node:url';
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const stage = join(repo, '.ds-sync');
 
-// react/react-dom are pinned to 18.3.1: React <19 sets `on*` props on custom
-// elements as properties rather than listeners, which is what the bindings'
-// event wiring is written against. The TYPES are 19.x on purpose — the bindings
-// use `inert` (accordion panel, collapsed sidenav), which @types/react 18.3.x
-// never added, so an `^18` types pin fails the declaration emit.
+// react/react-dom are pinned to 18.3.1 because that is what the design host vendors
+// as `_vendor/react.js` (read from the live project, 2026-09-01). Matching it keeps the
+// demo page on the same React the cards run on — on 18 the wrapper can only assign
+// inputs in a layout effect, after the element connects. The TYPES are 19.x on purpose:
+// `inert` (accordion panel, collapsed sidenav) never landed in @types/react 18.3.x, so
+// an `^18` types pin fails the declaration emit.
 const PINS = [
   'esbuild',
   'sass',
@@ -43,8 +44,8 @@ execFileSync('npm', ['install', '--no-audit', '--no-fund', ...PINS], {
   shell: true,
 });
 
-// build-bindings runs tsc with cwd = react-bindings/; node/tsc resolution walks
-// up from there, so react + its types have to be reachable at .design-sync/.
+// The declaration emit runs tsc over `.design-sync/elements/*`; node/tsc resolution
+// walks up from there, so react + its types have to be reachable at .design-sync/.
 const link = join(repo, '.design-sync', 'node_modules');
 if (existsSync(link)) {
   console.error('✓ .design-sync/node_modules already linked');

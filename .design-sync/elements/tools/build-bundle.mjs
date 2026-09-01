@@ -25,6 +25,26 @@ if (!existsSync(ngOutput)) {
 
 const kb = (path) => `${(statSync(path).size / 1024).toFixed(0)} KB`;
 
+// The host loads `_vendor/react.js` as a classic script, so React is a GLOBAL there —
+// there is no module loader and no `require`. Marking react `external` in an IIFE makes
+// esbuild emit its dynamic-require shim instead, which throws "Dynamic require of
+// "react" is not supported" before `window.IdsDs` is ever assigned. Measured against a
+// local copy of the host's four-script chain on 2026-09-01: the bundle did not load at
+// all. So resolve the react specifiers to the globals the host actually provides.
+const reactGlobals = {
+  name: 'react-globals',
+  setup(build) {
+    build.onResolve({ filter: /^react(-dom)?(\/.*)?$/ }, (args) => ({
+      path: args.path,
+      namespace: 'react-global',
+    }));
+    build.onLoad({ filter: /.*/, namespace: 'react-global' }, (args) => ({
+      contents: `module.exports = window.${args.path.startsWith('react-dom') ? 'ReactDOM' : 'React'};`,
+      loader: 'js',
+    }));
+  },
+};
+
 // ── the bundle the design app would consume ───────────────────────────────
 const bundlePath = join(elements, 'dist/ds-bundle.js');
 await esbuild.build({
@@ -34,7 +54,7 @@ await esbuild.build({
   globalName: 'IdsDs',
   platform: 'browser',
   jsx: 'automatic',
-  external: ['react', 'react-dom', 'react/jsx-runtime'],
+  plugins: [reactGlobals],
   minify: true,
   outfile: bundlePath,
   logLevel: 'warning',
@@ -69,6 +89,6 @@ const styles = join(elements, 'dist/browser/styles.css');
 copyFileSync(styles, join(elements, 'demo/dist/styles.css'));
 
 console.error(
-  `✓ ds-bundle.js ${kb(bundlePath)} (react external) · angular main.js ${kb(ngOutput)}`
+  `✓ ds-bundle.js ${kb(bundlePath)} (react from window) · angular main.js ${kb(ngOutput)}`
   + ` · styles.css ${kb(styles)} · demo ${kb(demoPath)} · d.ts emitted`,
 );

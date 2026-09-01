@@ -1,9 +1,10 @@
-# design-sync via `@angular/elements` — the alternative to hand-porting
+# design-sync via `@angular/elements`
 
-The committed sync (`.design-sync/react-bindings/`) re-implements 63 Angular
-components as React, because `/design-sync` is React-only. This branch tests the
-other route: **ship the real components** as custom elements and let a
-*generated* React layer be the only thing in between.
+`/design-sync` is React-only, so something has to stand between the design agent
+and an Angular library. Until 2026-09-01 that was a hand-written React port of 63
+components; it was deleted, and this is what replaced it: **ship the real
+components** as custom elements and let a *generated* React layer be the only
+thing in between.
 
 ```
 src/lib/**/*.component.ts
@@ -14,15 +15,15 @@ src/lib/**/*.component.ts
         ├── ng build ds-elements ──► dist/browser/main.js  AOT templates + Ivy linker
         │                           dist/browser/styles.css  ds.scss + per-component styles
         │
-        └── tools/build-bundle.mjs ─► dist/ds-bundle.js  IIFE, window.IdsDs, react external
+        └── tools/build-bundle.mjs ─► dist/ds-bundle.js  IIFE, window.IdsDs, react from window
                                       demo/dist/demo.js  same + React, for the proof page
 ```
 
 Nothing in the chain is hand-maintained: `gen.mjs` reads the components' AST and
 emits both the registration list and the wrappers, so a new component, a renamed
-input or a changed union appears in the bundle on the next build. The parity gate
-that the hand-port needs (`check-parity.mjs`) has nothing to guard here — there
-is no second implementation to drift from.
+input or a changed union appears in the bundle on the next build. There is no
+second implementation to drift from, which is why the port's parity gate went
+away with it rather than being carried over.
 
 ## Build
 
@@ -51,9 +52,9 @@ runtime waits on `customElements.whenDefined`), and named content slots keep
 working because Angular projects light-DOM children — `<div actions="">` lands in
 `<ng-content select="[actions]">` unchanged.
 
-## What this buys over the port
+## What this bought over the port
 
-| | hand-written React port | this |
+| | the deleted React port | this |
 |---|---|---|
 | source of truth | a second implementation, re-ported by hand | the shipped component |
 | drift | possible, needs `check-parity.mjs` to catch it | structurally impossible |
@@ -173,7 +174,7 @@ one web search for the symptom returned #24536 on the first page.
   `_vendor/react-dom.js`, `_ds_bundle.js`, `_preview/<Name>.js` as classic scripts, and the
   compiled preview does `window.IdsDs.<Component>` with `React` taken from a global. React is
   vendored as a separate file and is NOT expected inside the DS bundle — which is exactly what
-  `build-bundle.mjs` emits (IIFE, `window.IdsDs`, react external). So nothing inspects the
+  `build-bundle.mjs` emits (IIFE, `window.IdsDs`, react from window). So nothing inspects the
   framework riding along; what remains untested is only the upload itself. See `../COMMANDS.md`.
 
 ## Verdict
@@ -181,8 +182,8 @@ one web search for the symptom returned #24536 on the first page.
 The generation half was always the win: 630 inputs/outputs across 85 components come out of the
 AST with their real types, and there is no second implementation to keep in sync — the parity
 gate the hand-port needs has nothing to guard here. **The runtime half is no longer blocked.**
-Projection, inputs and nested composition all work; the remaining limits are the six attribute
-directives (of which only `dsTooltip` hurts), the imperative overlay APIs, and the untested
+Projection, inputs and nested composition all work; the remaining limits are the fifteen attribute
+directives (of which only `dsTooltip` hurts, and a static card has no hover), the imperative overlay APIs, and the untested
 question of whether claude.ai/design accepts a bundle with a framework inside it — the contract
 itself is satisfied, since it asks only for React components on `window.IdsDs` with React
 supplied externally.
