@@ -3,8 +3,8 @@
   "shape": "package",
   "pkg": "@ids-group-ltd/ids-design-system",
   "globalName": "IdsDs",
-  "entry": ".design-sync/react-bindings/dist/index.js",
-  "cssEntry": "dist/ds-all.css",
+  "entry": ".design-sync/elements/dist/ds-bundle.js",
+  "cssEntry": "dist/browser/styles.css",
   "docsDir": "../docs",
   "readmeHeader": ".design-sync/conventions.md",
   "overrides": {
@@ -38,5 +38,5 @@
     "AppLayout": { "cardMode": "column", "primaryStory": "FullShell" },
     "Topbar": { "cardMode": "column" }
   },
-  "buildCmd": "node .design-sync/tools/build-css.mjs && node .design-sync/tools/build-bindings.mjs"
+  "buildCmd": "node .design-sync/elements/tools/gen.mjs && npx ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
 }

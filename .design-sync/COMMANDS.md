@@ -67,28 +67,37 @@ Proof page: serve `.design-sync/elements/demo` over http (never `file://`) and
 open it in a real browser tab — a background or headless tab freezes transitions
 and reports stale layout, which has faked bugs here before.
 
-## Switching `config.json` to route B — NOT done yet, deliberately
-
-`config.json` still points at the port, because the values below could not be verified without
-running an actual upload, and a wrong path here fails silently:
+## `config.json` points at route B (switched 2026-09-01)
 
 ```jsonc
-// current (route A)                                  // route B
-"entry":    ".design-sync/react-bindings/dist/index.js"  → ".design-sync/elements/dist/ds-bundle.js"
-"cssEntry": "dist/ds-all.css"                            → the elements build's styles.css
-"buildCmd": "…build-css.mjs && …build-bindings.mjs"      → "node .design-sync/elements/tools/gen.mjs && ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
+"entry":    ".design-sync/elements/dist/ds-bundle.js"
+"cssEntry": "dist/browser/styles.css"
+"docsDir":  "../docs"
+"buildCmd": "node .design-sync/elements/tools/gen.mjs && npx ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
 ```
 
-**The unknown to settle first:** `cssEntry` and `docsDir` are resolved relative to the entry's
-own package directory (NOTES.md records them as "package-relative to `react-bindings/`"), while
-`entry` is cwd-relative. Moving `entry` therefore moves the base for the other two, and
-`docsDir: "../docs"` would stop resolving to `.design-sync/docs/`. Confirm the base with one
-`list_files` round trip before switching, or move the elements bundle next to the existing entry
-so the base does not change.
+**How the base was settled, rather than guessed.** `entry` is cwd-relative; `cssEntry` and
+`docsDir` resolve against the nearest `package.json` above it. Under route A that was
+`.design-sync/react-bindings/`, which is why `dist/ds-all.css` and `../docs` worked. So
+`.design-sync/elements/` was given its own `package.json` — same depth, same shape — and both
+relative paths keep their meaning: `dist/browser/styles.css` and `../docs` resolve to the files
+that exist. All three paths verified present on disk after a full build.
 
-Until it is switched, a sync publishes the parked port. That is the safe default: it is
-internally consistent at 0.7.0, and it is better than publishing a bundle whose docs and CSS
-resolved to nothing.
+`check-manual-surface.mjs` fails if that `package.json` goes missing or its version drifts from
+the root — it is load-bearing for path resolution and nothing else would notice.
+
+## Writing a preview: pass state as an initial prop
+
+**Never toggle a gate after mount.** A slot behind an `@if` works — nested DS components
+included — as long as the gate is true when the element connects; Angular Elements applies
+initial inputs in the same microtask, so nothing is detached. Toggle it later and the projected
+wrapper survives while the custom elements inside it are destroyed
+([angular/angular#38962](https://github.com/angular/angular/issues/38962), ~10 ms). Concretely:
+
+- an overlay preview sets `staticPreview` (or `open`) at creation, not on a click;
+- a `ds-table` preview that shows `[bulk-actions]` passes `selectedIds` at creation;
+- previews render with their props set, so this is satisfied by construction — it only bites an
+  interactive composition.
 ## Publishing
 
 Read first, then lock the plan, then write — the tool enforces that order and

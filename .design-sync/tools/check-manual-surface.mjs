@@ -12,7 +12,7 @@
 //      element upgrades in the closed state (see MANUAL-SURFACE.md)
 //   2. attribute directives — a directive has no tag, so @angular/elements has
 //      nothing to register and it is absent from the generated surface
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -108,6 +108,21 @@ for (const [key, label] of [
     if (!after.has(entry)) {
       errors.push(`✗ GONE ${label}: ${entry} — its MANUAL-SURFACE.md entry is now stale, delete it, then --bless`);
     }
+  }
+}
+
+// The elements bundle is a package dir purely so config.json's cssEntry and docsDir keep
+// resolving against it the way they did against react-bindings/ — the skill reads them
+// relative to the nearest package.json above `entry`. Its version is therefore load-bearing
+// for nothing except honesty, which is exactly why it drifts unnoticed. Gate it.
+const rootVersion = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf8')).version;
+const elementsPackage = join(repo, '.design-sync', 'elements', 'package.json');
+if (!existsSync(elementsPackage)) {
+  errors.push('✗ .design-sync/elements/package.json is missing — config.json resolves cssEntry and docsDir against it, and without it they resolve somewhere else silently');
+} else {
+  const elementsVersion = JSON.parse(readFileSync(elementsPackage, 'utf8')).version;
+  if (elementsVersion !== rootVersion) {
+    errors.push(`✗ .design-sync/elements/package.json says ${elementsVersion}, the DS ships ${rootVersion} — sync it`);
   }
 }
 

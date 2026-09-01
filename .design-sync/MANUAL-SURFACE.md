@@ -78,6 +78,33 @@ Spot checks that now pass and previously did not: `ds-modal` (`title` + `[body]`
 `ds-x-popover` with `staticPreview`, `ds-card` containing a registered `ds-checkbox`,
 `ds-alert` `[actions]` containing a registered `ds-x-button`.
 
+### The one rule that governs every slot (measured 2026-09-01)
+
+**A slot works — including nested DS components inside it — as long as its gate is true by the
+time the element connects.** Angular Elements applies initial input values immediately after
+creating the component, inside the same microtask, so a gate driven by an initial prop is live
+before anything is detached. Measured on `ds-modal` with a nested `ds-checkbox` in `[body]`:
+
+| construction | plain markup | nested registered element |
+|---|---|---|
+| `staticPreview` set at creation | ✅ | ✅ |
+| `open` set at creation | ✅ | ✅ |
+| closed at creation, `open` set later | ✅ | ❌ |
+
+Only the third row loses anything, and only the custom elements in it — the projected wrapper
+and its plain markup survive. The mechanism is
+[angular/angular#38962](https://github.com/angular/angular/issues/38962): a detached Angular
+element has its component destroyed after ~10 ms and its node removed. Toggling a gate long
+after upgrade is exactly that detach.
+
+**So the contract for a preview is: pass the state as an initial prop, never toggle it after
+mount.** A static design preview always satisfies this, because it renders with its props set.
+
+`ds-table` `[bulk-actions]` was the one case that looked unfixable, because a selection normally
+happens after mount. It obeys the same rule: with `selectedIds` passed as an initial prop the
+bulk bar renders and the nested `ds-x-button` inside it survives — verified. Selecting a row
+through the UI afterwards renders the bar and its plain content, and drops the nested component.
+
 ### What the manifest list means now
 
 `manual-surface.json` records the 16 templates whose `<ng-content>` sits inside a control-flow

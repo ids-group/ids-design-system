@@ -148,6 +148,12 @@ before `appendChild`, and React 19's detached-property assignment. All measured,
 one web search for the symptom returned #24536 on the first page.
 ## Other limitations, verified
 
+- **A gate toggled long after upgrade drops the custom elements in its slot.** The projected
+  wrapper and its plain markup survive; a `<ds-checkbox>` inside it does not
+  ([angular/angular#38962](https://github.com/angular/angular/issues/38962) — a detached element
+  loses its component after ~10 ms). Pass the gate's state as an initial prop and everything
+  works, nested components included; a preview does that by construction. See
+  `../MANUAL-SURFACE.md` for the measured table.
 - **Imperative APIs don't cross the boundary.** Angular's element strategy
   publishes inputs and outputs, not methods, so `popover.toggle(trigger)` — how
   the DS opens a popover — is unreachable. Trigger-driven overlays need an
