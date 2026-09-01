@@ -4,6 +4,7 @@
 // `ng build ds` regenerates dist/ds), so the collection ships with the package.
 import { execSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 
 const distPkgPath = 'dist/ds/package.json';
 if (!existsSync(distPkgPath)) {
@@ -20,7 +21,13 @@ const distSchematics = 'dist/ds/schematics';
 rmSync(distSchematics, { recursive: true, force: true });
 
 console.log('▶ Compiling schematics (tsc)…');
-execSync('npx tsc -p schematics/tsconfig.json', { stdio: 'inherit' });
+// Resolved, not `npx tsc`: bun writes only `tsc.exe`/`tsc.bunx` into
+// node_modules/.bin on Windows, so npx finds no local shim and falls through to
+// a globally installed TypeScript — 7.0.2 here, which rejects this tsconfig's
+// `moduleResolution: "node"`. The lockfile pins the package; only resolving the
+// binary from it pins what actually runs.
+const tscBin = createRequire(import.meta.url).resolve('typescript/bin/tsc');
+execSync(`node "${tscBin}" -p schematics/tsconfig.json`, { stdio: 'inherit' });
 
 console.log('▶ Copying collection.json and schemas…');
 cpSync('schematics/collection.json', `${distSchematics}/collection.json`);
