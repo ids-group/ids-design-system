@@ -93,3 +93,9 @@ Anton_local
 /.design-sync/react-bindings/dist/
 /.design-sync/react-bindings/src/lib/icons.gen.ts
 /.design-sync/react-bindings/src/generated/
+
+# design-sync elements experiment: generated wrappers + Angular/esbuild output.
+/.design-sync/elements/gen/
+/.design-sync/elements/dist/
+/.design-sync/elements/demo/dist/
+/out-tsc/

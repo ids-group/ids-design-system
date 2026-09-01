@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/ds-elements",
+    "types": [],
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["main.ts", "gen/elements.ts"]
+}
