@@ -122,13 +122,27 @@ that reported everything broken could not pass the suite.
 
 `overlay-guard-check.html` drives the docs app instead of illustrating a decision: it iframes five
 component pages in turn, presses each overlay trigger, then presses the one place inside the host that
-is not the trigger, and prints the pane count and `aria-expanded` before and after. Run it headless —
-`chrome --headless=new --virtual-time-budget=120000 --dump-dom
-http://localhost:4298/decks/overlay-guard-check.html`
-— and read the `<pre id="out">` block. **It has to run in a VISIBLE frame:** a background tab clamps
-timers and never finishes a leave animation, so the same probe reads false there. Keep it: it is the
-regression test for the outside-pointer guard, and reverting one component to `host.contains` is how you
-check the harness still detects the defect.
+is not the trigger, and prints the pane count and `aria-expanded` before and after.
+
+**It drives the docs app over relative paths, so it has to be served from the same origin as the docs.**
+There is no `/decks/` route — nothing maps `presentations/` into the served tree — so copy the file next
+to the built docs and open it there:
+
+```bash
+npm run build:docs
+cp presentations/overlay-guard-check.html dist/ds-docs/browser/
+# serve dist/ds-docs/browser on any port, then:
+chrome --headless=new --disable-gpu --virtual-time-budget=120000 \
+  --user-data-dir=<a scratch dir> --dump-dom http://localhost:<port>/overlay-guard-check.html
+```
+
+Read the `<pre id="out">` block out of the dumped DOM. **Headless renders; the automation tab does
+not** — measured 2026-09-01 on an unrelated probe, where a tab reported body heights of 276px and 383px
+for boxes that are really 42px and 60px. A background tab is worse still: it clamps timers and never
+finishes a leave animation, so "is the panel in the DOM" and "did the timer fire" both read false.
+
+Keep it: it is the regression test for the outside-pointer guard, and reverting one component to
+`host.contains` is how you check the harness still detects the defect.
 
 ## ds.css is generated from the design system
 
