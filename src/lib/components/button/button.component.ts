@@ -197,17 +197,19 @@ export class ButtonComponent extends DsMessageBase {
 
   constructor() {
     super();
-    devWarn(() => {
-      const variant = this.variant();
-      if (variant === 'text') {
-        return '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.';
-      }
-      const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      devWarn(() => {
+        const variant = this.variant();
+        if (variant === 'text') {
+          return '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.';
+        }
+        const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
 
-      return reason
-        ? `[ds-button] color="${this.color()}" variant="${variant}" is a UX-discouraged combination — it renders, but ${reason}.`
-        : null;
-    });
+        return reason
+          ? `[ds-button] color="${this.color()}" variant="${variant}" is a UX-discouraged combination — it renders, but ${reason}.`
+          : null;
+      });
+    }
   }
 
   protected onClick(event: MouseEvent): void {

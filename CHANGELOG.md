@@ -121,6 +121,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   upgrade is the whole check.
 
 ### Fixed
+- **Dev-mode warnings no longer ship to production bundles.** They were guarded by
+  `isDevMode()`, which is a function CALL — a bundler cannot prove the branch dead, so all fourteen
+  warning sites and their message closures reached production builds. Each site is now guarded inline
+  with `typeof ngDevMode === 'undefined' || ngDevMode`, which `@angular/build` folds away whenever
+  script optimization is on, closures included. **Measured: 1 590 B gzip off an app using most of the
+  library, 827 B of it off a single `<ds-button>`.** Nothing changes for you — no API, no behaviour,
+  and the warnings still fire in development builds exactly as before.
+
 
 - **A loading scrim stopped the pointer and let the keyboard walk straight under it.**
   `ds-loading-overlay` paints an absolutely positioned scrim over its content, which intercepts
