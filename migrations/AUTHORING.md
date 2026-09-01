@@ -154,6 +154,9 @@ git log main --oneline                        # main takes release commits only
 
 `main` is the shortcut: it advances only when a release is cut, so its log IS the version list and a diff between two of its commits IS one version's change set. Nothing else in the history needs filtering out.
 
+Rewrite the item in place, as the final instruction. **Never add an item saying an earlier one
+was wrong** — the consumer wants what to do, and a corrected file already tells them.
+
 `old` must be PRESENT at `v<prev>` and ABSENT at `v<version>`; `new` must be PRESENT at
 `v<version>`. Match on a word boundary — `--x-warn` is a prefix of `--x-warning`, and a substring
 test will tell you the old token survived its own rename.

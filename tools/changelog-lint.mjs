@@ -139,6 +139,19 @@ const INSIDER_PROSE = [
   'the backlog',
 ];
 
+// Whole-entry shapes, not stray words: each of these can only be the start of a sentence
+// about us repairing our own files.
+const OUR_RECORD = [
+  'manifests were corrected',
+  'manifest was corrected',
+  'manifests are corrected',
+  'published manifests corrected',
+  'corrected in migrations',
+  're-run these items',
+  'an earlier note of ours',
+  'this item\u2019s earlier text',
+];
+
 const PEOPLE = ['Stas', 'Misha'];
 
 // A release block runs Breaking, Added, Changed, Removed, Fixed, DELETE. Ranked by slot rather
@@ -581,6 +594,19 @@ for (const { full, label: file, isSource } of targets) {
       `names \`${m[1]}\`, which this library does not declare — check the spelling, or name the symbol that exists`,
     (m) => !KNOWN_SYMBOLS.has(m[1]),
   );
+
+  // C014 — an entry whose SUBJECT is our own bookkeeping. The ban on decision archaeology reads
+  // as a rule about prose inside an entry, and three releases in a row still shipped a whole
+  // entry announcing that we had corrected a manifest. A consumer executes these files; that we
+  // repaired one is not a change to their code.
+  for (const phrase of OUR_RECORD) {
+    scanFlat(
+      new RegExp(loose(phrase), 'gi'),
+      'C014',
+      () =>
+        `reports our own record-keeping ("${phrase}") — correct the file so it reads as though it were always right, and say nothing`,
+    );
+  }
 
   for (const [name, where] of PRIVATE_SYMBOLS) {
     scanFlat(

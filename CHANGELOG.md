@@ -134,40 +134,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   consumer then marks the covered subtree itself — `ds-table` does this, because its scrim starts
   below the header and re-sorting during a refresh is exactly what puts the scrim up.
 
-- **Four published migration manifests were corrected, and a repo that upgraded across 0.4.0, 0.7.1,
-  0.9.0 or 0.11.1 may be holding the result.** All four failed the same way — by finding nothing — so
-  the tooling reported success and there is no error to search for.
-  **`0.7.1#surface-motion-partial-a-la-carte` did nothing for the consumers it was written for.** It
-  was filed as a path swap keyed on an `@use` of `styles/overlay-motion`, a line an à-la-carte
-  consumer need not have, while its own instruction said to add the partial beside whatever DS
-  partials you do use. It is an insertion now. Missing it is silent: the shared entrance keyframes
-  do not exist, and modal, drawer, bottom-sheet, toast, banner, alert, loading-overlay and every
-  overlay panel render with no entrance animation.
-  **`0.4.0#ds-button-variant-axis-split` was searched in templates only** — it declared
-  `surface: "template"` while its own instruction says to retype the field behind a dynamic
-  `[variant]`. A TypeScript field still holding a colour, and a stylesheet selecting on
-  `[variant="secondary"]`, were both out of scope of the search. It declares style and TypeScript now.
-  **`0.9.0#exported-class-members-grew` named the wrong classes.** `ButtonComponent`,
-  `DatePickerComponent` and `SearchComponent` each gained `inGroup` and were missing from the list,
-  and `AuthLayoutComponent` was on it although it did not exist at 0.8.0 — it is a new export, which
-  shadows a local name rather than colliding with a member of yours.
-  **`0.11.1` named one of the seven symbols it newly exported.** `DsTriggerDisplay` and the five
-  picker template directives — `DsChipTemplateDirective`, `DsCreateTemplateDirective`,
-  `DsEmptyTemplateDirective`, `DsOptionTemplateDirective`, `DsPickerTriggerDirective` — reach you
-  through the package root and can shadow a local name of the same spelling. They are new names,
-  not changed ones, so nothing of yours breaks unless you already had one.
-
-- **The 0.2.0 token rename was documented under a name this library never had, so eight tokens
-  went unfound.** 0.2.0 renamed the semantic tint tokens from `-subtle` to `-subtitle` across
-  `border`, `error`, `info`, `primary`, `secondary`, `success`, `tertiary` and `warning`. Its
-  manifest item described the change as `--surface-subtle` → `--surface-subtitle`, and neither of
-  those has ever existed here — so an upgrade that ran the item searched for a token you could not
-  have had, reported nothing to do, and left all eight in place. Nothing errors: a
-  `var(--primary-subtle)` that no longer resolves falls back to nothing, and the element simply
-  loses its tint. Search your stylesheets for `-subtle` inside a custom-property name.
-- **`themes/README.md` still listed `--static-white`**, removed at 0.5.1, as a shipped primitive.
-  On-fill text is the literal `white`, or `--static-ink` where the fill is light.
-
 ## 0.11.1 — 2026-08-31
 
 ### Added
@@ -406,26 +372,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-select` accepts a `readonly` options array**, which the other two already did, and tracks
   its top-level items by index rather than by label, which is not unique.
 
-
-- **Four published migration manifests were corrected, and a repo that upgraded before today may
-  be holding the result.** These files are executed: your upgrade tooling read them, acted and
-  reported done, so a defect in one is a defect in your codebase.
-  **`0.5.1#progress-variant-remap` certified the wrong component.** Its `verify` was the text
-  belonging to the badge item beside it, checking that chips render in their status colours — so
-  a `ds-progress` still binding `variant="warn"` or `variant="indeterminate"`, or TypeScript
-  still naming a removed `ProgressVariant` member, passed the check and shipped.
-  **Two items named too few locators to be found.**
-  `0.9.0#search-height-joins-field-scale` searched only `--ds-search-height`, so a short search
-  row pinned through `--hit-min` instead was never flagged; `0.10.1#fields-shared-base-class-members`
-  searched the bare base names, so a subclass written `extends` one of the internal field bases
-  went unfound and its `success` collision surfaced only at build.
-  **`0.10.1` also gained a delete row it never carried** — a modal body torn down on `(closed)`,
-  or held behind the open flag, purely so a re-opened `ds-date-picker` starts clean. The picker
-  clears itself now, and the teardown never fired reliably: re-opening inside the leave animation
-  cancels the close, so `closed` never comes.
-  `0.11.0#exported-class-members-grew` pointed its `detect` and `verify` at a base no consumer can
-  extend; corrected, with no consequence for anyone.
-  Re-run those items if your last upgrade crossed those versions.
 
 ### What you can now DELETE
 
@@ -1394,17 +1340,6 @@ None of this is required — skipping it leaves working code that is merely redu
   `ds-select` and `ds-autocomplete`. `ds-multi-select`'s panel hardcodes `--radius-md` and is reached by
   neither this token nor `--ds-radius-panel` — so only `--radius-md` itself moves it, and that moves
   buttons, fields and tooltips with it.
-
-- **Two migration manifests were corrected and three more were written**, so re-read them if you
-  subclass a DS component or upgrade across a version you skipped. `0.9.0`'s named no member collisions
-  at all — the note that now fills the gap lists **seventeen** classes whose member surface had grown, plus
-  four newly exported symbols that can shadow a local name — and `0.8.0`'s missed the private
-  `saveLayout` that actually stopped a build (`restoreLayout` went in beside it). **`0.6.1`, `0.6.2` and
-  `0.9.1` had no manifest at all**, and now every released version carries one: the auto-update planner
-  prefers a manifest and otherwise re-derives the plan from changelog prose on every run, which is what
-  an upgrade crossing those three used to do. `0.6.2`'s holds something actionable that no
-  machine-readable file had ever stated — a `ds-bottom-sheet` with nothing focusable inside it stopped
-  closing on Escape — which is exactly the kind a "just fixes" patch is assumed not to have.
 
 - **`ds-avatar` takes a `name`, and the rule that reads it is replaceable.** One binding now does both
   jobs a caller used to wire by hand: it derives the initials and seeds the tint. **The tint hashes the

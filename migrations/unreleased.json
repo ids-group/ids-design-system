@@ -44,61 +44,6 @@
       "restore": null
     },
     {
-      "id": "published-manifest-shapes-corrected",
-      "kind": "behavior",
-      "old": "@use '@ids-group-ltd/ids-design-system/styles/surface-motion';",
-      "new": null,
-      "action": "Re-run three items your tooling has already reported done. 0.7.1#surface-motion-partial-a-la-carte: if you `@use` DS partials individually, confirm `styles/surface-motion` is among them and add it if not. 0.4.0#ds-button-variant-axis-split: search your TypeScript for a field or type that still holds a ds-button `variant` value, and your stylesheets for a `[variant=\"secondary\"]`-style selector. 0.9.0#exported-class-members-grew: if you subclass ButtonComponent, DatePickerComponent or SearchComponent, check for a member of yours named `inGroup`.",
-      "appliesWhen": "Only a repo that already upgraded across 0.4.0, 0.7.1 or 0.9.0. A first upgrade from this release forward reads the corrected files and needs nothing extra.",
-      "pitfall": "All three failed by finding NOTHING rather than by finding the wrong thing, so the tooling reported success either way and there is no error to search for. The surface-motion one is the quiet one: the keyframes simply do not exist and every DS surface renders with no entrance animation.",
-      "note": "Four published manifests carried a machine-readable half that contradicted their own prose. 0.7.1's surface-motion item was a `scss-api` path swap keyed on an `overlay-motion` line an a-la-carte consumer need not have, so it did nothing for the reader its `action` addressed; it is a `code-add` with `old: null` now. 0.4.0's button variant split declared `surface: \"template\"` while its action says to retype a field, so the finder opened no `.ts`; it declares all three now. 0.9.0's grown-class note missed three classes and listed one that did not exist at 0.8.0. 0.11.1 named one of the seven symbols it newly exported.",
-      "searchHints": [
-        "styles/surface-motion",
-        "styles/overlay-motion",
-        "ds-button",
-        "variant=",
-        "extends ButtonComponent",
-        "extends DatePickerComponent",
-        "extends SearchComponent"
-      ],
-      "surface": [
-        "style",
-        "template",
-        "typescript"
-      ],
-      "detect": [
-        "@use '@ids-group-ltd/ids-design-system/styles/",
-        "[variant]=",
-        "inGroup"
-      ],
-      "verify": "Your styles entry names `styles/surface-motion` or `styles/ds`; no TypeScript field still typed to a ds-button `variant` value carries a colour; no subclass of ButtonComponent, DatePickerComponent or SearchComponent declares `inGroup` without `override`.",
-      "restore": null
-    },
-    {
-      "id": "subtle-tokens-renamed-to-subtitle",
-      "kind": "token-rename",
-      "old": "--<role>-subtle",
-      "new": "--<role>-subtitle",
-      "action": "Search your stylesheets for `-subtle` inside a custom-property name and rename the suffix to `-subtitle` on all eight: `--border-subtle`, `--error-subtle`, `--info-subtle`, `--primary-subtle`, `--secondary-subtle`, `--success-subtle`, `--tertiary-subtle`, `--warning-subtle`.",
-      "appliesWhen": "Only a repo that upgraded across 0.2.0 and overrode or read one of the eight. A first upgrade from this release forward reads the corrected file.",
-      "pitfall": "Nothing errors and nothing warns: a `var(--primary-subtle)` that no longer resolves falls back to nothing, so the element loses its tint and keeps rendering. The 0.2.0 item searched for a token this library never had, so a clean report from it means the search happened, not that you were clear.",
-      "note": "0.2.0 renamed the eight semantic tint tokens from `-subtle` to `-subtitle`. Its manifest item described the rename with a token that is not one of them, so the search it drove could only ever come back empty.",
-      "searchHints": [
-        "-subtle",
-        "--border-subtle",
-        "--error-subtle",
-        "--info-subtle",
-        "--primary-subtle",
-        "--secondary-subtle",
-        "--success-subtle",
-        "--tertiary-subtle",
-        "--warning-subtle"
-      ],
-      "surface": "style",
-      "verify": "No stylesheet of yours reads a `--*-subtle` custom property, and every tint that was styled through one still paints.",
-      "restore": null
-    },
-    {
       "id": "loading-overlay-subclass-members-grew",
       "kind": "behavior",
       "old": "class MyOverlay extends LoadingOverlayComponent",
@@ -141,7 +86,8 @@
     "ds-table no longer puts `skeleton-mode` on its host element. Nothing in the library styled it: the rule it switched on suppressed a row hover that used to reach every row, and that hover now needs `.clickable`, which a skeleton row never has. Only a consumer reaching in through ::ng-deep would notice.",
     "The column-resize handle now carries aria-valuemin and aria-valuemax alongside aria-valuenow, all in px, while it has focus. A focusable role=\"separator\" is a range widget, so a bare pixel value was being announced against ARIA's implicit 0-100.",
     "ds-loading-overlay now marks the content it covers `inert` while loading, so the keyboard cannot reach what the scrim already hides from the pointer. Anything focusable behind the scrim stops being tabbable and leaves the accessibility tree until loading ends; `aria-busy` on the host is unaffected.",
-    "inertContent=\"false\" on ds-loading-overlay turns that off, for a scrim that covers only part of its content — the consumer then owns marking the covered subtree. ds-table does this: its scrim starts below the header, and only `<tbody>` goes inert, so sorting and filtering during a refresh still work."
+    "inertContent=\"false\" on ds-loading-overlay turns that off, for a scrim that covers only part of its content — the consumer then owns marking the covered subtree. ds-table does this: its scrim starts below the header, and only `<tbody>` goes inert, so sorting and filtering during a refresh still work.",
+    "ds-table's column resize now stops at the width of the scroll viewport, on both the pointer and the keyboard path. It was unbounded before. The bound exists so the handle's aria-valuemax is true — a focusable role=\"separator\" is a range widget, and it had been announcing a ceiling nothing applied."
   ],
   "deleteList": []
 }

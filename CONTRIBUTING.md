@@ -127,6 +127,11 @@ judgment half is yours.
   reader cannot import it. Naming one is allowed only where the text also says it is
   internal — a subclasser meets these names in their own compiler errors.
 - **An internal rule id** (`M0…`), a commit hash, or `HEAD`.
+- **A correction to one of our own records, as an entry of its own.** A manifest says what a
+  consumer changes in THEIR code; a changelog says what changed in the library. Neither reports
+  that we fixed a manifest, rewrote a note, or re-ran our own items. Correct the file so it reads
+  as though it had always been right, and ship that — the reader wants the current instruction, not
+  its history. Three releases in a row carried an entry of this shape before it was named here.
 - **Decision archaeology.** How we chose, what we first believed, which alternative we
   rejected, that an earlier note of ours was wrong, that a note was added after the release.
   The line: describing the DEFECT is what a release note is for and stays — "an override
