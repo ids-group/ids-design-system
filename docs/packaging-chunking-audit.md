@@ -227,3 +227,46 @@ are ours to act on and are folded into `todo.md`; the rest are the consumer's.
 `(pageChange)` bindings on `<ids-data-table>` are valid and do fire: `ds-table` declares `page`
 as `model<number>(1)` (`table.component.ts:168`), whose implicit output is exactly
 `pageChange`. (b) Their lockfile is not mispinned; only the on-disk install is stale.
+
+## 10. §8 answered — measured 2026-09-01
+
+The one thing §8 left open ("whether ng-packagr's secondary-entry-point output preserves the
+measured variant-B behaviour end-to-end through the Angular application builder") was tested with
+a real ng-packagr build feeding a real `@angular/build:application` build. **It does — and the
+result is better than option D was credited for.**
+
+Fixture: a three-entry library (`core` leaf; `services` and `heavy` both importing `probelib/core`
+by its public specifier) plus a root entry that is a pure facade — `export * from 'probelib/core'`
+and the same for the other two, no source of its own. ng-packagr built all four entry points in
+dependency order without complaint and emitted four separate FESM modules (root facade: 185 B) with
+a correct `exports` map. Consumer: an eager root injecting `ProbeService`, a `await import()` of a
+lazy module using `HeavyComponent` (600 grep-marked payload lines).
+
+| Variant | Library shape | Consumer imports from | `main.js` | Chunk `main` statically imports | Heavy payload in the eager chunk |
+|---|---|---|---|---|---|
+| **ctl** | one entry point (today) | root | 12 689 B | **118 011 B** | **600 markers** |
+| **facade** | layered entries + facade root | **root specifier** | 12 917 B | 85 800 B | **0** |
+| **deep** | layered entries + facade root | deep specifiers | 12 917 B | 85 800 B | **0** |
+
+- **The control goes red.** `ctl` reproduces the reported mechanism exactly: the lazy chunk shrinks
+  to 100 B because it re-imports the components from the chunk `main` already pulled.
+- **Eager cost drops 118 011 → 85 800 B** — the heavy payload moves into its own 32 121 B on-demand
+  chunk.
+- **No tree-shaking penalty.** Total emitted JS is 130 800 B (ctl) vs 130 838 B (facade) — 38 bytes
+  apart, nothing like variant C's +50%.
+- **`facade` and `deep` are byte-identical, down to the chunk hash `chunk-D7RWOFTZ.js`.** This is the
+  finding that matters: **a consumer keeps importing from the root specifier and still gets correct
+  placement.** Option D's headline cost in §7 — "changes how every consumer imports" — is not real
+  when the root is kept as a pure re-export facade. The refactor is internal to the library.
+
+**What this does NOT prove.** Only that the pipeline and the facade shape work. Whether *this*
+library partitions into acyclic entry points is a separate question — ng-packagr forbids cycles
+between entry points, which is what killed option B. The top-level edges look favourable: nothing in
+`core/`, `icons/`, `overlay/` or `theme/` imports a component at runtime, and the single edge that
+exists — `config/ds-config.ts:4` importing `CardElevation`/`CardPadding` — is an `import type`, so it
+is erased and carries no runtime dependency. The `services` layer needs only button, spinner and icon
+(`toast/` and `modal/` import nothing else from `../`). A full partition of all 95 component folders
+has not been attempted.
+
+Fixture: `.claude/local/entrypoint-probe/` (gitignored) — `lib/` layered, `lib-single/` control,
+`app/scenarios/{ctl,facade,deep}.ts`.
