@@ -20,7 +20,7 @@ const check = process.argv.includes('--check');
 
 const source = readFileSync(SOURCE, 'utf8').replace(/\r\n/g, '\n');
 
-/** `### Group` / `#### Entry` blocks, in order, with the group each entry belongs to. */
+/** Entries in order, each carrying the `###` group that preceded it. */
 function parseBlocks(text) {
   const lines = text.split('\n');
   const blocks = [];
@@ -104,20 +104,6 @@ const duplicates = leaves
 if (duplicates.length) {
   console.error(`✗ two entries map to the same leaf: ${[...new Set(duplicates)].join(', ')}`);
   process.exit(1);
-}
-
-/** The non-entry prose: everything before the first `####` under a `##`. */
-function sectionPreamble(text, sectionTitle) {
-  const start = text.indexOf(`\n## ${sectionTitle}\n`);
-  if (start < 0) return '';
-  const rest = text.slice(start + 1);
-  const end = Math.min(
-    ...['\n## ', '\n#### '].map((marker) => {
-      const at = rest.indexOf(marker, 1);
-      return at < 0 ? rest.length : at;
-    }),
-  );
-  return rest.slice(0, end).replace(/^## .+\n/, '').trim();
 }
 
 const files = new Map();
