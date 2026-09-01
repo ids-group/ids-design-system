@@ -37,11 +37,10 @@ const decksIn = (dir) =>
 
 // A token reference only has to resolve when nothing else can supply it: a fallback
 // keeps the declaration alive (that is the deck-local override-slot idiom), the deck
-// may declare it, and a generated deck sets its own from script. What is left is a
-// name the browser cannot resolve to anything, which kills the whole declaration.
+// may declare it, a generated deck sets its own from script, and a name inside a CSS
+// comment is documentation rather than a reference. What is left is a name the browser
+// cannot resolve to anything, which kills the whole declaration.
 function unresolvableTokens(html, stylesheet) {
-  // CSS comments go too: a comment naming a retired token is documentation, not a
-  // reference the browser will try to resolve.
   const prose = html
     .replace(/<pre[\s\S]*?<\/pre>/g, '')
     .replace(/<code[\s\S]*?<\/code>/g, '')
