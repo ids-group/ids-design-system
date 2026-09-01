@@ -246,10 +246,18 @@ function privateSymbols() {
     if (name.length >= 5 && !publicNames.has(name)) hidden.set(name, where);
   }
 
-  return { private: hidden, publicCount: publicNames.size };
+  return {
+    private: hidden,
+    publicCount: publicNames.size,
+    known: new Set([...ours.keys(), ...publicNames]),
+  };
 }
 
-const { private: PRIVATE_SYMBOLS, publicCount } = privateSymbols();
+const {
+  private: PRIVATE_SYMBOLS,
+  publicCount,
+  known: KNOWN_SYMBOLS,
+} = privateSymbols();
 
 // A consumer has its own `lint` and `test`; only the repo-specific names are unreachable
 // for the reader.
@@ -560,6 +568,19 @@ for (const { full, label: file, isSource } of targets) {
         `uses insider phrasing "${phrase}" — describe the change, not our process`,
     );
   }
+
+  // C013 — a name that resolves to nothing at all. C010 walks the symbols that exist and are
+  // not exported, so it cannot see one that was never declared: `DsListCursor` reached
+  // `## Unreleased` described as exported, and the module declares `DsListCursorList` and four
+  // functions. Only our own `Ds*` prefix is resolved — Angular and TypeScript names are all
+  // over this prose and are not ours to account for.
+  scanFlat(
+    /`(Ds[A-Z][A-Za-z0-9_]+)`/g,
+    'C013',
+    (m) =>
+      `names \`${m[1]}\`, which this library does not declare — check the spelling, or name the symbol that exists`,
+    (m) => !KNOWN_SYMBOLS.has(m[1]),
+  );
 
   for (const [name, where] of PRIVATE_SYMBOLS) {
     scanFlat(

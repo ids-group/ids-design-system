@@ -113,7 +113,7 @@ try {
     ['C004 substring', '- Both representations stay in step automatically.'],
     [
       'C010 public type',
-      '- `DsStatus` and `DsButtonColor` are exported for your own maps.',
+      '- `DsStatus` and `DsControlWidth` are exported for your own maps.',
     ],
     [
       'C010 named internal',
@@ -283,6 +283,25 @@ try {
       `${caught ? 'fires ' : 'DEAD  '} C003 on a name not in the list`,
     );
   }
+
+  // C013 — a name that resolves to nothing. C010 walks the symbols that exist and are not
+  // exported, so it could never see one that was never declared.
+  const PHANTOM =
+    '# Fixture\n\n## Unreleased\n\n### Added\n\n- **A.** One helper, `DsListCursor`, exported for you.\n';
+  // The mirror: a name that DOES resolve must not trip C013 (C010 may still speak, which is
+  // why this asserts on the code and not on a clean run).
+  const REAL =
+    '# Fixture\n\n## Unreleased\n\n### Added\n\n- **A.** The internal `DsControlValueAccessor` base is unchanged.\n';
+
+  writeFileSync(FIXTURE_PATH, PHANTOM);
+  const phantomCaught = run(FIXTURE).includes('  C013  ');
+  console.log(`${phantomCaught ? 'fires ' : 'DEAD  '} C013 on a symbol nothing declares`);
+  if (!phantomCaught) dead.push('C013');
+
+  writeFileSync(FIXTURE_PATH, REAL);
+  const realQuiet = !run(FIXTURE).includes('  C013  ');
+  console.log(`${realQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol that resolves`);
+  if (!realQuiet) dead.push('C013 false positive on a real symbol');
 
   // C012 — the section order, which arrived wrong twice in two days before anything checked it.
   const WRONG_ORDER =

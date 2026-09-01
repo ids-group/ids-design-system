@@ -683,8 +683,34 @@
       searched for a token the consumer could not have and reported nothing to do.
       <strong><code>themes/README.md</code> still advertised <code>--static-white</code></strong>,
       removed at 0.5.1, three times — and that README ships verbatim as a package asset.
-      The rule is now in <code>migrations/AUTHORING.md</code>: only <code>unreleased.json</code> is
-      checked against HEAD, because HEAD is the version it describes.
+      The rule is now in <code>CONTRIBUTING.md</code> and <code>migrations/AUTHORING.md</code>:
+      only <code>unreleased.json</code> and <code>## Unreleased</code> are checked against HEAD,
+      because HEAD is the version they describe. <code>main</code> takes release commits only, so
+      its log is the version list and a diff between two of its commits is one version&rsquo;s
+      change set.
+    </p>
+    <p>
+      <strong>Every edit made to a historical artefact since 0.11.1 was then re-walked by hand</strong>,
+      each against its own boundary rather than against the source in front of me. Four released
+      manifests had been touched — 0.2.0, 0.4.0, 0.7.1, 0.9.0 — and all four hold: eight
+      <code>-subtle</code> tokens at <code>v0.1.0</code> become eight <code>-subtitle</code> at
+      <code>v0.2.0</code> with no survivor; <code>ds-button</code> really does split one input into
+      <code>color</code> + <code>variant</code> at <code>v0.4.0</code>;
+      <code>_surface-motion.scss</code> is new at <code>v0.7.1</code> and <code>styles/ds.scss</code>
+      forwards it, so the item&rsquo;s <code>appliesWhen</code> is right; exactly seventeen exported
+      classes gained a member at <code>v0.9.0</code>, and nothing named in the note failed to grow.
+      <strong>The single edit inside a released CHANGELOG block was also checked and stands</strong>:
+      the 0.10.0 block said the 0.9.0 note listed <em>fifteen</em> classes, and the note as shipped in
+      that tarball named sixteen and carried no count at all &mdash; so the number was never true of
+      anything, and replacing it corrects a falsehood rather than rewriting history.
+    </p>
+    <p>
+      <strong>The re-walk found one more defect, in <code>## Unreleased</code>.</strong> It advertised
+      <code>DsListCursor</code> as &ldquo;exported for anyone building a list control of their
+      own&rdquo;. No such symbol exists &mdash; the module declares <code>DsListCursorList</code> and
+      four functions &mdash; and the module itself had just left <code>public-api.ts</code>. Both
+      halves of one sentence were false, and <code>changelog-lint</code> passed it, which is a gate
+      gap in its own right.
     </p>
     <div class="scroller">
       <table>
