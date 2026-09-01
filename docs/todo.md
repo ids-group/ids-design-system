@@ -22,7 +22,7 @@
 
 ## Decks awaiting a verdict (re-audited 2026-09-01)
 
-Seven decks carry `ds-deck-status: open`. The two picker decks closed — every question in them is
+Six decks carry `ds-deck-status: open`. The two picker decks closed — every question in them is
 answered and they moved to `presentations/implemented/`.
 
 **Three have a backlog twin waiting on the same answer, so answering one closes two lines.** That is
@@ -33,7 +33,6 @@ what makes these the cheapest thing on the board.
 | `color-engine-derivation` + `color-engine-relative` | One source token per role, derived. Two decks, one question. | the P2 colour-engine decision |
 | `interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
 | `select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
-| `public-surface-verdicts` | What to cut from the public surface, what to keep. | — |
 | `migration-manifest-audit` | 23 findings against the shipped manifests. Partly overtaken: the class-collision half became a gate on 2026-09-01. | — |
 | `packaging-entry-points` | MBP-133 — one entry point, and the four ways out. | the P2 ask about keeping the DS out of a consumer's initial bundle |
 
@@ -61,7 +60,7 @@ what makes these the cheapest thing on the board.
 
 Ordered by what each unblocks. The top four each hold a deck or a whole lane hostage.
 
-- P2 · **Seven decks have no verdict**; three have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
+- P2 · **Six decks have no verdict**; three have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
 - P2 · **Single-source colour engine** — one token per role, derived. Two decks argue it; the warning-contrast bug is downstream of the same palette question
 - P2 · **prettier vs eslint on HTML** — they want opposite things, so `lint:all` can never be green. Every branch pays this until a config wins
 - P2 · **`.ds-interactive`** — global state-interaction contract, agreed in principle, prototype before spec

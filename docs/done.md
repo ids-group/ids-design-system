@@ -4,6 +4,31 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The published surface is swept, and a gate keeps it swept (2026-09-01)
+
+- [x] **DONE 2026-09-01 — 43 verdicts, and the rules they encode now run on every PR and every
+  release.** A local deck link in `CHANGELOG.md` opened the question of what may appear in text a
+  consumer reads. The answer is in `CONTRIBUTING.md` → *Never in a published artefact*: no client
+  names, no tracker keys, no paths into our tree, no people, no account of how we decided. The sweep
+  applied it to the changelog, all 22 migration manifests, `design-system.md`, `components.md` and
+  every comment that ships — `src/lib/styles` and `src/lib/themes` are copied verbatim, and a `.ts`
+  comment reaches the FESM bundle with its JSDoc in the `.d.ts`.
+
+  **The gate is `tools/changelog-lint.mjs`,** twelve rules over 320 artefacts, in `lint:all` and in
+  `tools/preflight.mjs` so a release cannot skip it. `changelog-lint-selftest.mjs` proves each rule
+  still fires — a linter nobody has watched fail is a linter that passes because it is broken.
+
+  **Adversarial review found four holes in the gate itself**, all fixed and all now fixtures: an
+  ±400-character window that disarmed the class-name rule over a tenth of the changelog, an exemption
+  keyed on a value rather than its position, two client names in no list, and no floor at all.
+
+  **Manifests are held to a different bar than the changelog** (M1): a locator that lets an agent find
+  the code stays, even when it names something a consumer cannot import, because the alternative is a
+  migration that cannot be applied.
+
+  **One thing is decided but deliberately not built** — see `todo.md`: the floor cannot see one of the
+  three file groups collapse.
+
 ## The picker lane closed end to end (2026-09-01)
 
 - [x] **DONE 2026-09-01 — both decks are answered, and the last measurement defect is fixed.** What
