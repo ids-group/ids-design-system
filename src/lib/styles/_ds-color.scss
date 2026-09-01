@@ -1,3 +1,7 @@
+@use 'sass:list';
+
+$families: secondary, tertiary, error, success, warning;
+
 // Scoped accent recolour. A `ds-color="<family>"` attribute — on a zone
 // container, on a component host, or applied via the ds.color() mixin in
 // consumer config — flips the --accent-* pointer family to another brand/status
@@ -33,11 +37,19 @@
 
 /// Recolour the DS accent for a type or scope from consumer SCSS, e.g.
 /// `ds-switch { @include ds.color(secondary); }`.
+///
+/// A name outside $families is refused rather than emitted. Without this the mixin accepts any
+/// string and writes `--accent: var(--<whatever>)`, which is guaranteed-invalid — so every rule
+/// reading the accent resets to `unset` and the subtree renders as body text, with nothing in the
+/// console. That is the failure `check-color-families.mjs` exists to prevent, and it is the one
+/// form of it no CSS-side check can see: a consumer's `@include` never reaches our compiled output.
 @mixin color($family) {
+  @if not list.index($families, $family) {
+    @error 'ds.color(): unknown family "#{$family}". Available: #{$families}.';
+  }
+
   @include family-vars($family);
 }
-
-$families: secondary, tertiary, error, success, warning;
 
 @each $family in $families {
   [ds-color='#{$family}'] {
