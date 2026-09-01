@@ -11,6 +11,8 @@
 #                   nothing a reader outside this repo cannot open
 # docblock-drift -> fails the step; a doc separated from its symbol is printed under
 #                   the wrong name in the published API table
+# colour-families -> fails the step; a ds-color family missing one of the roles the
+#                   accent pointers read renders as body text, silently
 # lint           -> report-only (prettier/stylelint/eslint), never fails the step
 #                   while the repo carries pre-existing lint debt
 set -e
@@ -30,6 +32,12 @@ node tools/migration-lint.mjs
 
 echo "===== migration-lint selftest ====="
 node tools/migration-lint-selftest.mjs
+
+# Every family ds-color offers must define every role the accent pointers read. A role
+# that is missing is invalid at computed-value time, so the label renders as body text
+# with nothing in the console — three shipped that way from the day ds-color landed.
+echo "===== colour families ====="
+node tools/check-color-families.mjs
 
 echo "===== delete-table parity ====="
 node tools/check-delete-tables.mjs

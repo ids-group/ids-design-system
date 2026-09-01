@@ -7,18 +7,28 @@
 // per instance. With no attribute, --accent-* stays the primary family (see
 // themes/_semantic.scss), so the default theme is unchanged.
 
+// Every pointer carries a fallback to a role the family is guaranteed to have.
+// A missing role is not a wrong colour, it is a GUARANTEED-INVALID value: the whole
+// declaration reading it becomes invalid at computed-value time and resets to `unset`,
+// so a label rendered as body text with nothing in the console. That is how
+// --error/success/warning-strong stayed broken from the day ds-color shipped. The
+// fallback cannot come from @property either: its initial-value may not contain var(),
+// so registering these would mean hard-coding a literal per token in the theme layer,
+// and two of the pointers are box-shadow lists rather than colours. Measured both,
+// 2026-09-02. check-color-families.mjs still fails the build on a missing role — this
+// only decides what a consumer sees if one ever slips past it.
 @mixin family-vars($family) {
   --accent: var(--#{$family});
-  --accent-hover: var(--#{$family}-hover);
-  --accent-pressed: var(--#{$family}-pressed);
-  --accent-strong: var(--#{$family}-strong);
-  --accent-subtitle: var(--#{$family}-subtitle);
-  --accent-muted: var(--#{$family}-muted);
-  --accent-muted-strong: var(--#{$family}-muted-strong);
-  --accent-on: var(--#{$family}-on);
-  --accent-focus-ring: var(--focus-ring-#{$family});
-  --accent-focus-field: var(--focus-field-#{$family});
-  --accent-surface-tint: var(--#{$family}-subtitle);
+  --accent-hover: var(--#{$family}-hover, var(--#{$family}));
+  --accent-pressed: var(--#{$family}-pressed, var(--#{$family}));
+  --accent-strong: var(--#{$family}-strong, var(--#{$family}));
+  --accent-subtitle: var(--#{$family}-subtitle, var(--#{$family}-muted));
+  --accent-muted: var(--#{$family}-muted, var(--surface-muted));
+  --accent-muted-strong: var(--#{$family}-muted-strong, var(--#{$family}-muted));
+  --accent-on: var(--#{$family}-on, var(--text-on-primary));
+  --accent-focus-ring: var(--focus-ring-#{$family}, var(--focus-ring));
+  --accent-focus-field: var(--focus-field-#{$family}, var(--focus-field));
+  --accent-surface-tint: var(--#{$family}-subtitle, var(--#{$family}-muted));
 }
 
 /// Recolour the DS accent for a type or scope from consumer SCSS, e.g.

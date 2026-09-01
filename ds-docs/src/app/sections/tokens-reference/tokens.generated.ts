@@ -160,7 +160,7 @@ export const SEMANTIC_ERROR: readonly ColourRow[] = [
   },
   {
     "name": "--error-strong",
-    "value": "var(--error-text)",
+    "value": "var(--red-600)",
     "notes": "Darker danger for text on error tints — what --accent-strong becomes under ds-color=\"error\"."
   },
   {
@@ -214,7 +214,7 @@ export const SEMANTIC_SUCCESS: readonly ColourRow[] = [
   },
   {
     "name": "--success-strong",
-    "value": "var(--success-text)",
+    "value": "var(--green-700)",
     "notes": "Darker success for text on success tints — what --accent-strong becomes under ds-color=\"success\"."
   },
   {
@@ -268,7 +268,7 @@ export const SEMANTIC_WARNING: readonly ColourRow[] = [
   },
   {
     "name": "--warning-strong",
-    "value": "var(--warning-text)",
+    "value": "var(--yellow-700)",
     "notes": "Darker warning for text on warning tints — what --accent-strong becomes under ds-color=\"warning\"."
   },
   {

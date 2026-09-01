@@ -27,8 +27,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   reads `--accent-strong` (selected list rows and tree rows, the active sidenav item and its rail,
   the active tab pill, avatar initials, the active tag, dropzone text, the toast icon) fell back to
   plain body text inside a status zone. `--error-strong`, `--success-strong` and `--warning-strong`
-  now resolve to that family's `-text` colour, which is the same on-tint role and already tuned for
-  contrast in both themes.
+  are now defined — as ramp picks, like every other tuned status role — and land on the same value
+  their family's `-text` already had, so nothing that was rendering correctly changes. Every accent
+  pointer also carries a fallback now, so a role that goes missing in future degrades to the
+  family's base colour instead of disappearing, and `check-color-families` fails the build on it.
 
 ## 0.11.2 — 2026-09-01
 

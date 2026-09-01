@@ -66,21 +66,21 @@
   --success-muted-strong: hsl(132deg 30% 28%);
   --success-border:       hsl(132deg 30% 28%);
   --success-text:         hsl(132deg 55% 62%);
-  --success-strong:       var(--success-text);
+  --success-strong:       hsl(132deg 55% 62%);
 
   --warning-subtitle:     hsl(45deg 42% 14%);
   --warning-muted:        hsl(45deg 38% 22%);
   --warning-muted-strong: hsl(45deg 35% 30%);
   --warning-border:       hsl(45deg 35% 30%);
   --warning-text:         hsl(45deg 90% 62%);
-  --warning-strong:       var(--warning-text);
+  --warning-strong:       hsl(45deg 90% 62%);
 
   --error-subtitle:       hsl(0deg 45% 16%);
   --error-muted:          hsl(0deg 40% 24%);
   --error-muted-strong:   hsl(0deg 38% 32%);
   --error-border:         hsl(0deg 38% 32%);
   --error-text:           hsl(0deg 85% 74%);
-  --error-strong:         var(--error-text);
+  --error-strong:         hsl(0deg 85% 74%);
 
   --info-subtitle:        hsl(217deg 45% 16%);
   --info-muted:           hsl(217deg 40% 24%);

@@ -20,13 +20,30 @@ rendered `rgb(22, 26, 40)` — body text — on a pale status tint. After: error
 success `rgb(21, 104, 34)`, warning `rgb(138, 116, 0)`, and in dark
 `rgb(245, 132, 132)` / `rgb(105, 211, 126)` / `rgb(245, 202, 71)`.
 
-**Fixed by aliasing, not by inventing a colour:** `--<status>-strong: var(--<status>-text)`.
-`-strong` is the family's readable on-tint colour, which for a status family is exactly what `-text`
-already is — the brand families have no `-text` and carry that role as `-strong`. So the value is one
-the palette had already tuned. Contrast on the family's own `-muted` surface: light 5.5 / 5.8 / 4.3,
-dark 5.1 / 5.8 / 6.3. The light warning pair at 4.3 is inherited, not introduced — it is the same
-`--warning-text` already shipping, and it is downstream of the colour-engine question in `todo.md`;
-the existing `secondary` pair sits at 2.9.
+**Fixed without inventing a colour: a ramp pick, like every other tuned status role.** The first
+attempt aliased `-strong` to the family's `-text`, which lands on the right value but reaches
+SIDEWAYS — role to role inside one tier. `_semantic.scss` says in its own comment that roles whose
+contrast target is tuned rather than procedural are ramp picks, and the wider practice is that a
+token references the tier below it and never its own. So light takes `--red-600` / `--green-700` /
+`--yellow-700` and dark takes the same hsl literals its neighbours use. Same rendered value as
+`-text` today, verified token by token in both themes — but anchored separately on purpose: `-text`
+is body copy and `-strong` is an accent (the sidenav rail, the active tab pill), so re-tuning one
+must not move the other.
+
+Contrast on the family's own `-muted` surface: light 5.5 / 5.8 / 4.3, dark 5.1 / 5.8 / 6.3. The
+light warning pair at 4.3 is inherited, not introduced — it is the value `--warning-text` already
+ships, downstream of the colour-engine question in `todo.md`; the shipping `secondary` pair sits
+at 2.9.
+
+**Two layers keep the class from returning.** `tools/check-color-families.mjs` reads `$families` and
+the roles `family-vars` dereferences straight out of `_ds-color.scss`, compiles the stylesheet, and
+fails if any family × role does not resolve in either theme block — so adding a family or a pointer
+extends the check instead of outgrowing it. Watched red on a control (one definition removed → one
+named failure) before it was believed. And every pointer in `family-vars` now carries a `var()`
+fallback to a role the family is guaranteed to have, so a miss that ever gets past the gate degrades
+to the family's base colour rather than vanishing. `@property` was measured for that job and
+rejected: its `initial-value` may not contain `var()`, so it would mean hard-coding a literal per
+token in the theme layer, and two of the pointers are box-shadow lists rather than colours.
 
 The same item's smaller cousin went with it: `accordion-item.component.scss` painted a disabled
 chevron with `var(--icon-disabled)`, a token defined nowhere. The declaration was invalid, so the
@@ -49,7 +66,11 @@ override went with it, and so did the `.icon { margin-top: 0 }` that `compact` n
 old nudge.
 
 `--banner-ic-mt` is **removed** from `_tokens.scss` — one border-width of optical bump that only
-existed to serve the old rule. It was read from exactly one place. The token reference regenerated.
+existed to serve the old rule. **Corrected 2026-09-02: it was read from THREE places, not one** — the
+banner stylesheet and twice inside the A/B deck, which kept resolving off a `presentations/ds.css` that
+had not been regenerated. `build:deck-css` was run and the deck's two reads inlined; `deck-lint` went
+red on the regenerated CSS exactly as it was built to, which is the first time that gate has caught
+something on its own.
 
 **Verified in a browser that actually renders, with a control.** The first three measurements came
 from the automation tab and were nonsense — body heights of 276px and 383px where the real ones are
