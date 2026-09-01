@@ -399,10 +399,36 @@ the service was just the one somebody noticed. Full table and every tested hypot
   a handful of components out of 55, so the ratio is far more lopsided. Angular Material publishes one
   entry point per component for exactly this reason, and the APF rule is «entrypoints for the smallest
   sets of logically connected code possible»; `@angular/cdk` does the same and we already consume it
-  that way (`overlay`, `portal`, `drag-drop` are three specifiers). Minimum viable shape if
-  per-component is too big a step: give the SHELL components their own entry, separate from the heavy
-  ones. Secondary entry points are NOT deprecated (ng-packagr `docs/secondary-entrypoints.md` on
-  `main`, plus a Feb 2026 guide).
+  that way (`overlay`, `portal`, `drag-drop` are three specifiers).
+
+  **SIZED 2026-09-01, and per-component is NOT the expensive option.** ng-packagr requires a
+  cross-entry import to go through the public specifier, and `src/lib` holds **318 cross-group import
+  statements** today (249 runtime + 69 type-only). Rewrites needed: **per-component 318, six semantic
+  clusters 265, three layers 257** — only **19%** apart, because most cross-group imports point at
+  core-ish modules (`icons`, `core`, `field-message`) that cross a boundary under any partition. Coarse
+  clustering therefore saves almost nothing on the refactor and gives up the whole eager/lazy win.
+
+  **And semantic clustering is structurally worse.** A six-cluster attempt has a real cycle
+  `data -> fields -> display -> data`: `pagination -> select`, `autocomplete -> tag`,
+  `multi-select -> tag`/`badge`, `empty-state -> loading-overlay`. Every edge is a legitimate
+  composition — components do not respect semantic categories — and ng-packagr forbids cycles
+  between entry points, so any clustering must be de-cycled first. Per-component has only the two
+  trivial sibling cycles. **Verdict: go per-component.**
+
+  **A missed rewrite fails the build with a useless message, tested:** swapping one public specifier for
+  a relative path across a boundary gives `Cannot destructure property 'pos' of
+  'file.referencedFiles[index]' as it is undefined`, with nothing naming the cause. The good news is it
+  FAILS rather than silently bundling the same source into two FESMs, which would give two class
+  identities and DI resolving two different services. Restoring the specifier builds again — causal
+  link confirmed by control.
+
+  **Cost checklist:** ~75 nested `ng-package.json` (2 lines each) + a `public-api.ts` per folder; 318
+  import rewrites; root `public-api.ts` becomes a pure facade (measured twice as costing consumers
+  nothing); `ds-docs` needs a tsconfig path mapping per entry point since it compiles from source; check
+  `extract-component-api.mjs`, `extract-tokens.mjs`, `class-surface-diff.mjs` and `changelog-lint.mjs`
+  against the new layout; co-locate the two sibling cycles. Secondary entry points are NOT deprecated
+  (ng-packagr `docs/secondary-entrypoints.md` on `main`, plus a Feb 2026 guide). Full analysis:
+  `packaging-diagnosis.md` « Do we have to split? ».
 
 - [x] **[P2] The eager-component case DOES NOT overturn A3 — checked 2026-09-01.**
   `packaging-chunking-audit.md` §7 named «a consumer whose EAGER root needs a component rather than a
