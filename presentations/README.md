@@ -3,6 +3,32 @@
 Standalone, single-file HTML decks (design decisions, comparisons, status pages).
 Open any `*.html` directly in a browser — they link the shared `ds.css`.
 
+## The filename carries the rank, so the folder listing IS the queue
+
+An `open` deck is named `<rank>-<slug>.html`, ranked 1..N by what answering it unblocks — so `ls`,
+the file explorer and the editor's tree all show the queue in priority order without opening
+anything. Ranked 2026-09-01:
+
+| # | Deck | Answering it unblocks |
+| --- | --- | --- |
+| 1 | `1-banner-toast-icon-alignment` | in flight — two validated screen findings (30/32) are ready to fix and waiting only on A vs B |
+| 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
+| 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
+| 4 | `4-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
+| 5 | `5-packaging-entry-points` | a consumer IS blocked on bundle size, and the measured prize is -80% of the DS's share of their initial bundle |
+| 6 | `6-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
+| 7 | `7-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
+| 8 | `8-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+
+**A `tool` is not in the queue and takes no number** (`backlog-board.html`,
+`overlay-guard-check.html`). Unprefixed, they sort below the ranked decks, which is where a utility
+belongs.
+
+**Ranks are renumbered when the queue changes** — a closed deck moves to `implemented/` and takes its
+number with it, and the rest close the gap. The number is the rank and nothing else: it is not an id,
+so never keep a stale one to preserve a link. There is deliberately no `ds-deck-rank` meta — one more
+marker is one more thing to drift, and the filename cannot drift from itself.
+
 ## A deck declares its own status, and that is what moves it
 
 A settled decision must not sit here looking like an open question. Every deck carries its status in
@@ -65,9 +91,13 @@ grep -l 'content="implemented"' presentations/*.html            # claims it, sti
 grep -L 'content="implemented"' presentations/implemented/*.html # moved without the marker
 grep -L 'ds-deck-evidence' presentations/implemented/*.html      # marked, nothing to check
 grep -l 'href="ds\.css"' presentations/implemented/*.html        # path not fixed on the move
+grep -L 'ds-deck-status' presentations/*.html                    # no marker at all
+grep -l 'content="open"' presentations/[!0-9]*.html              # open, but not ranked
 ```
 
-All four print nothing when the folder is honest.
+All six print nothing when the folder is honest. The last two are the ones a new deck fails: it is
+written, committed, and neither marked nor ranked — which is how `banner-toast-icon-alignment`
+spent its first day invisible to both the folder and `docs/todo.md`.
 
 ## One deck is a test harness, not a deck
 

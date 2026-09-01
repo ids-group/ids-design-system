@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <title>MBP-133 — one entry point, and the four ways out</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/todo.md - one entry point (P2): deferred 2026-08-21, live choice A/C/D">
+<meta name="ds-deck-evidence" content="docs/todo.md - one entry point (P2): deferred 2026-08-21; option B ruled out and the verdict rewritten 2026-09-01 against docs/packaging-diagnosis.md, live choice A/D">
 <link rel="stylesheet" href="ds.css">
 <style>
   :root { color-scheme: light; }
@@ -51,6 +51,10 @@
   tbody th { width: 20ch; font-weight: var(--font-weight-semibold); }
   .yes { color: #156822; font-weight: var(--font-weight-bold); }
   .no { color: #ba1717; font-weight: var(--font-weight-bold); }
+
+  .correction { border: 2px solid #ba1717; border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
+  .correction > h2 { margin-top: 0; color: #ba1717; }
+  tbody tr.dead th, tbody tr.dead td { background-image: linear-gradient(#fbf0f0, #fbf0f0); }
 </style>
 
 <main>
@@ -61,6 +65,35 @@
     from <code>docs/packaging-chunking-audit.md</code> — measured, either in the consumer's build or in
     controlled esbuild 0.27.3 fixtures. Nothing on this page is an estimate.
   </p>
+
+  <div class="correction">
+    <h2>Correction, 2026-09-01: this deck's recommendation is dead</h2>
+    <p>
+      The page below recommends <b>“B, and only B”</b>. <b>Option B is not buildable.</b> ng-packagr
+      forbids cycles between entry points, and a services entry point has to own
+      <code>button</code>/<code>icon</code>/<code>spinner</code>, which every other component also needs —
+      so the cycle is structural, not an accident of the current imports. Read the rest of the page as
+      the mechanism and the measurements, which still hold; do not read the verdict.
+    </p>
+    <p>
+      <b>What replaced it.</b> A0 measured chunk placement against the real library instead of a synthetic
+      fixture (<code>docs/packaging-chunking-audit.md</code> §11, <code>docs/packaging-diagnosis.md</code>).
+      One <code>inject(ToastService)</code> moves <b>135 744 B gzip</b> out of the lazy chunk into the
+      initial bundle and collapses the lazy chunk to 189 bytes. Fixing placement takes the DS's share of a
+      consumer's initial bundle from <b>135.7 KB gzip to 27.8 KB — −80%</b>. The import graph
+      <b>does partition</b>: three cycles, all nameable and all fixable —
+      <code>radio</code>↔<code>radio-group</code>, <code>time-columns</code>↔<code>time-picker</code>, and
+      a four-way one (<code>components/card</code>, <code>config</code>, <code>core</code>,
+      <code>icons</code>) caused entirely by type-only imports out of <code>ds-config.ts</code>.
+      A layered split — this page's option D, priced here as “a refactor nobody has asked for” — is the
+      live one, and it is sequenced in <code>docs/todo.md</code> as A3.
+    </p>
+    <p>
+      <b>One number on this page is superseded.</b> The consumer's <b>632 kB / 88%</b> was never
+      reproducible as written; the independent reproduction is <b>577 kB of a 755 kB initial, 76%</b>.
+      Same defect, different arithmetic.
+    </p>
+  </div>
 
   <h2>The mechanism, in one paragraph</h2>
 
@@ -159,12 +192,12 @@ neverUsed-payload    0     &larr; tree-shaking works</pre>
         <td class="yes">yes</td>
         <td>Defensible: their routes are all lazy anyway, so the chunk arrives with the first route. But every consumer rediscovers it, and the DS keeps a 1.25 MB single module.</td>
       </tr>
-      <tr>
-        <th>B · one services entry point</th>
+      <tr class="dead">
+        <th>B · one services entry point<br /><span class="no">NOT BUILDABLE (2026-09-01)</span></th>
         <td>A second <code>ng-package.json</code> for <code>ToastService</code>, <code>ModalService</code>, <code>BodyScrollLockService</code>; root <code>public-api.ts</code> stays as a facade.</td>
-        <td class="yes">yes</td>
-        <td class="yes">yes</td>
-        <td>Import paths change for anyone reaching those services directly — <b>a major</b>. No cross-entry deep-import refactor across the component folders, which is what makes it the cheap one.</td>
+        <td class="no">n/a</td>
+        <td class="no">n/a</td>
+        <td><b>Ruled out.</b> ng-packagr forbids cycles between entry points, and the services entry has to own <code>button</code>/<code>icon</code>/<code>spinner</code>, which the component entry needs too. The cheapness was the illusion: there is no split here that does not cycle.</td>
       </tr>
       <tr>
         <th>C · leave it to consumers</th>
@@ -184,16 +217,18 @@ neverUsed-payload    0     &larr; tree-shaking works</pre>
   </table>
 
   <div class="ask">
-    <p><b>Recommendation when this is picked up: B, and only B.</b></p>
+    <p><b>Recommendation, rewritten 2026-09-01: D, layered rather than per-component.</b> The original
+      text recommended B; B is not buildable, and the paragraph below replaces it.</p>
     <ul>
-      <li>It is the only option measured to fix placement without losing tree-shaking — C loses it, A fixes nothing.</li>
-      <li>The public API surface does not change: same symbols, same names, narrower specifiers. That keeps the migration to one find-and-replace per consumer.</li>
-      <li>It is a <b>major</b> either way, so it sequences with the other members of the breaking batch rather than shipping alone.</li>
-      <li>D is not wrong, it is just B plus a refactor nobody has asked for. If B turns out to be too coarse in practice, D is still available afterwards.</li>
+      <li>With B gone the live choice is A (nothing) or D. C keeps its own disqualifier — it loses tree-shaking, measured at +50% on the deferred chunk, and every consumer has to rediscover it.</li>
+      <li>D is no longer priced as “85 component folders”. The graph partitions into a <code>core</code> seed of 12 groups that closes over itself, 11 services, and 55 component groups — so the first useful cut is <b>three layers, not 85 entries</b>, and the three cycles blocking it are named and small.</li>
+      <li>The prize is measured against this library rather than a fixture: <b>135.7 KB gzip → 27.8 KB, −80%</b> of the DS's share of a consumer's initial bundle.</li>
+      <li>Still a <b>major</b>, so it sequences with the breaking batch rather than shipping alone — unchanged from the original reasoning, and the only part of it that survived.</li>
     </ul>
     <p>
-      <b>What would change the recommendation:</b> a consumer whose eager root needs a COMPONENT rather
-      than a service. B does nothing for that case, and it would be the argument for D.
+      <b>What would change this:</b> the layered cut measuring worse than the fixture predicts, or the
+      four-way <code>ds-config.ts</code> cycle turning out not to be fixable by moving the type-only
+      imports. Both are answerable by building A3, which is why A3 comes before the verdict now.
     </p>
   </div>
 </main>
