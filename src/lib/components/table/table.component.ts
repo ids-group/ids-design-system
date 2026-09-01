@@ -9,6 +9,7 @@ import {
   computed,
   contentChildren,
   effect,
+  DestroyRef,
   inject,
   input,
   linkedSignal,
@@ -34,6 +35,7 @@ import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { LoadingOverlayComponent } from '../loading-overlay/loading-overlay.component';
 import { PopoverComponent } from '../popover/popover.component';
+import { BottomSheetComponent } from '../bottom-sheet/bottom-sheet.component';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuItemComponent } from '../menu/menu-item.component';
 import { CellTemplateDirective } from './cell-template.directive';
@@ -120,6 +122,7 @@ function compareSortValues(
     PaginationComponent,
     LoadingOverlayComponent,
     PopoverComponent,
+    BottomSheetComponent,
     MenuComponent,
     MenuItemComponent,
     CdkDropList,
@@ -800,6 +803,7 @@ export class TableComponent<T extends object> {
   }
 
   private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly editInput =
     viewChild<ElementRef<HTMLInputElement>>('editInput');
   protected readonly editingCell = signal<{
@@ -1049,40 +1053,69 @@ export class TableComponent<T extends object> {
    */
   protected onResizeKey(col: TableColumn<T>, event: KeyboardEvent): void {
     const target = event.target as HTMLElement;
-    const header = target.closest('th');
+    const step = TableComponent.RESIZE_STEP;
+    const page = TableComponent.RESIZE_PAGE;
+    const delta: number | 'auto' | null =
+      event.key === 'ArrowLeft'
+        ? -step
+        : event.key === 'ArrowRight'
+          ? step
+          : event.key === 'PageDown'
+            ? -page
+            : event.key === 'PageUp'
+              ? page
+              : event.key === 'Home'
+                ? 'auto'
+                : null;
+    if (delta === null) {
+      return;
+    }
+    event.preventDefault();
+    this.stepColumnWidth(col, delta, target.closest('th'));
+  }
+
+  /**
+   * One column-width step, from wherever it was asked for: the handle's own
+   * keyboard, or the width controls in the column panel.
+   *
+   * `'auto'` hands the column back to automatic sizing. The header cell is
+   * passed when the caller has it — the panel does not, so it is looked up by
+   * `data-col-key`, and the measurement matters: stepping an auto-sized column
+   * has to start from what it currently RENDERS, not from the minimum.
+   */
+  private stepColumnWidth(
+    col: TableColumn<T>,
+    delta: number | 'auto',
+    from: HTMLElement | null,
+  ): void {
+    const header = from ?? this.headerCellFor(col);
     if (header) {
       this.lockMeasuredWidths(header);
     }
-    const current = this.resolvedColumnWidth(col, target);
-    let next: number | null = current;
-    switch (event.key) {
-      case 'ArrowLeft':
-        next = current - TableComponent.RESIZE_STEP;
-        break;
-      case 'ArrowRight':
-        next = current + TableComponent.RESIZE_STEP;
-        break;
-      case 'PageDown':
-        next = current - TableComponent.RESIZE_PAGE;
-        break;
-      case 'PageUp':
-        next = current + TableComponent.RESIZE_PAGE;
-        break;
-      case 'Home':
-        next = null;
-        break;
-      default:
-        return;
-    }
-    event.preventDefault();
     const widths = new Map(this.columnWidths());
-    if (next === null) {
+    if (delta === 'auto') {
       widths.delete(col.key);
     } else {
-      widths.set(col.key, this.clampColumnWidth(Math.round(next)));
+      const current = this.resolvedColumnWidth(col, header ?? undefined);
+      widths.set(col.key, this.clampColumnWidth(Math.round(current + delta)));
     }
     this.columnWidths.set(widths);
   }
+
+  private headerCellFor(col: TableColumn<T>): HTMLElement | null {
+    return this.scrollWrap().nativeElement.querySelector<HTMLElement>(
+      `th[data-col-key="${CSS.escape(col.key)}"]`,
+    );
+  }
+
+  protected onColumnWidthStep(
+    col: TableColumn<T>,
+    delta: number | 'auto',
+  ): void {
+    this.stepColumnWidth(col, delta, null);
+  }
+
+  protected readonly resizeStep = TableComponent.RESIZE_STEP;
 
   /** Client-side filter over the full data set — combines the `filterQuery`
    *  substring search with any per-column set filters. Sorting and pagination
@@ -1409,11 +1442,26 @@ export class TableComponent<T extends object> {
     'columnPickerPopover',
   );
 
-  protected readonly columnPickerOpened = computed(
-    () => this.columnPickerPopover()?.opened() ?? false,
+  protected readonly columnSheetOpen = signal(false);
+
+  private readonly coarsePointerState = signal(false);
+
+  /** Whether the column panel opens as a sheet and the drag handle stands down.
+   *  Keyed on the pointer, not the viewport — see `_table.scss`'s matching query. */
+  protected readonly coarsePointer = this.coarsePointerState.asReadonly();
+
+  protected readonly columnPickerOpened = computed(() =>
+    this.coarsePointer()
+      ? this.columnSheetOpen()
+      : (this.columnPickerPopover()?.opened() ?? false),
   );
 
   protected onColumnPickerClick(event: Event): void {
+    if (this.coarsePointer()) {
+      this.columnSheetOpen.set(true);
+
+      return;
+    }
     this.columnPickerPopover()?.toggle(event.currentTarget as HTMLElement);
   }
 
@@ -1475,6 +1523,7 @@ export class TableComponent<T extends object> {
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
+    this.watchPointer();
     // One effect for both halves, because the restore CANNOT run in the
     // constructor: input signals are not set yet there, so storageKey() is still
     // '' and the restore silently no-ops. The first run with a usable key
@@ -2171,4 +2220,16 @@ export class TableComponent<T extends object> {
 
     return widths[Math.abs(hash) % widths.length] ?? '70%';
   }
+
+  private watchPointer(): void {
+    if (typeof window === 'undefined' || !window.matchMedia) {
+      return;
+    }
+    const coarse = window.matchMedia('(hover: none) and (pointer: coarse)');
+    const sync = (): void => this.coarsePointerState.set(coarse.matches);
+    sync();
+    coarse.addEventListener('change', sync);
+    this.destroyRef.onDestroy(() => coarse.removeEventListener('change', sync));
+  }
+
 }
