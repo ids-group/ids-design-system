@@ -4,6 +4,30 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The resize handle's announced ceiling is now a real one (2026-09-01)
+
+- [x] **DONE 2026-09-01 — filed and closed the same day, because it was a regression from that
+  morning's own fix.** Giving the column-resize handle an ARIA range replaced one defect with a
+  smaller one: `aria-valuemax` reported the scroll viewport's width, while NEITHER resize path
+  applied a maximum — both only ever ran `Math.max(MIN_COLUMN_WIDTH, …)`. So a screen-reader user
+  was told "maximum 911" and could keep pressing past it. Announcing a bound nothing enforces is
+  worse than announcing none.
+
+  **The ceiling is now the scroll viewport, and it is enforced.** A column wider than the viewport
+  can never be seen whole, and long text already has its own affordance here — `truncate` clips it
+  and the clip popover shows the rest — so stopping at the edge costs nothing a reader wanted.
+  Both paths go through one `clampColumnWidth()`, and the value ANNOUNCED and the value ENFORCED
+  now come from the same `columnWidthCeiling()`: two separate expressions is exactly how they came
+  to disagree in the first place.
+
+  Proven on the failing case rather than the happy one: sixty PageUp presses, 64px each, is 3840px
+  of intent against a 911px viewport. `aria-valuenow` stops at 911, `aria-valuemax` reads 911,
+  the rendered `<th>` measures 911, `aria-valuemin` stays 48, and the console is clean. Before
+  the clamp the same sixty presses would have walked straight past the number the handle was
+  announcing.
+
+---
+
 ## The scrim stopped the mouse and not the keyboard (2026-09-01)
 
 - [x] **DONE 2026-09-01 — the tail led somewhere real, one component over.** Stas asked why

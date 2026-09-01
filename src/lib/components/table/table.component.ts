@@ -946,8 +946,7 @@ export class TableComponent<T extends object> {
     if (!this.resizeState) {
       return;
     }
-    const width = Math.max(
-      TableComponent.MIN_COLUMN_WIDTH,
+    const width = this.clampColumnWidth(
       this.resizeState.startWidth + (event.clientX - this.resizeState.startX),
     );
     const next = new Map(this.columnWidths());
@@ -965,16 +964,37 @@ export class TableComponent<T extends object> {
     max: number;
   } | null>(null);
 
+  /**
+   * The widest a single column may be dragged: the scroll viewport.
+   *
+   * A column wider than the viewport can never be seen whole, and long text has
+   * its own affordance here — `truncate` clips it and the clip popover shows the
+   * rest — so nothing is lost by stopping at the edge. The ceiling exists at all
+   * because `aria-valuemax` has to be TRUE: a focusable `role="separator"` is a
+   * range widget, and announcing a bound that neither resize path applies is
+   * worse than announcing none.
+   */
+  private columnWidthCeiling(): number {
+    return Math.max(
+      TableComponent.MIN_COLUMN_WIDTH,
+      this.scrollWrap().nativeElement.clientWidth,
+    );
+  }
+
+  private clampColumnWidth(width: number): number {
+    return Math.min(
+      this.columnWidthCeiling(),
+      Math.max(TableComponent.MIN_COLUMN_WIDTH, width),
+    );
+  }
+
   protected onResizeFocus(col: TableColumn<T>, event: FocusEvent): void {
     const target = event.target as HTMLElement;
 
     this.resizeFocus.set({
       key: col.key,
       measured: this.resolvedColumnWidth(col, target),
-      max: Math.max(
-        TableComponent.MIN_COLUMN_WIDTH,
-        target.closest('.scroll-wrap')?.clientWidth ?? 0,
-      ),
+      max: this.columnWidthCeiling(),
     });
   }
 
@@ -1059,10 +1079,7 @@ export class TableComponent<T extends object> {
     if (next === null) {
       widths.delete(col.key);
     } else {
-      widths.set(
-        col.key,
-        Math.max(TableComponent.MIN_COLUMN_WIDTH, Math.round(next)),
-      );
+      widths.set(col.key, this.clampColumnWidth(Math.round(next)));
     }
     this.columnWidths.set(widths);
   }

@@ -48,7 +48,6 @@ what makes these the cheapest thing on the board.
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
-- P2 · The resize handle announces an `aria-valuemax` that nothing enforces — no max clamp exists on either path (mine, 2026-09-01)
 - P2 · `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px regardless of density
 - P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
   of 100 cannot see one group of three collapse
@@ -156,10 +155,10 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**44 open: 1 P1, 14 P2, 29 P3** — counted from the index by script, not incremented from the last
+**42 open: 1 P1, 12 P2, 29 P3** — counted from the index by script, not incremented from the last
 figure, which is how three summaries in this file had drifted apart by 2026-09-01. Ten are *Parked*
 awaiting a first consumer ask and two are Records, and the one P1 is a settled decision kept so it
-is not re-litigated, so the live board is **31 items — 6 Bugs, 9 Asks and 16 Decisions**.
+is not re-litigated, so the live board is **29 items — 5 Bugs, 9 Asks and 15 Decisions**.
 
 **Every block is ordered P2 before P3**, with one deliberate exception: the Angular 22 line sits last
 in *Decisions* under a P1 tag because it is DECIDED, not pending — the tag keeps it out of both
@@ -169,14 +168,14 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+**`# Bugs` holds five.** The cheapest real win is still the warning status pair at 4.42:1 where AA
 asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
 counted — so one token step fixes all of them. The other five arrived on 2026-09-01 and four were
 filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
-already reads. In cost order after the token step — the resize handle's unenforced `aria-valuemax`
-(a clamp, or drop the attribute), `--ds-table-head-h` declared nowhere so the scrim's inset is
-always its 40px fallback, one export leaving the table's live region stuck on "Export ready"
-forever, then the two cosmetic ones.
+already reads. In cost order after the token step — `--ds-table-head-h` declared
+nowhere so the scrim's inset is always its 40px fallback, one export leaving the table's live
+region stuck on "Export ready" forever, then the two cosmetic ones. The sixth, the resize handle's
+unenforced `aria-valuemax`, was closed the same day it was filed.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Fourteen of the nineteen live items
 are Decisions, and seven decks are open against them. Nothing below is blocked on effort.
@@ -253,9 +252,6 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
 - [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
-
-
-- [ ] **[P2] The column-resize handle announces a maximum width that nothing enforces — introduced 2026-09-01, in the same change that gave it a range at all.** `resizeRange()` reports `aria-valuemax` as the scroll wrap's `clientWidth`, but there is NO maximum clamp anywhere: both the pointer path and the keyboard path only ever apply `Math.max(MIN_COLUMN_WIDTH, …)`, so a column grows without bound and a screen-reader user told "maximum 911" can keep pressing ArrowRight straight past it. Verified by reading both clamps; the only `Math.min` calls in the component belong to the virtual window and to client paging. Two ways out, and they are not equivalent: **clamp the resize** to the wrap width so the announced ceiling becomes true (changes behaviour — a column wider than the viewport stops being reachable, which is arguably right since it cannot be read anyway), or **drop `aria-valuemax`** and accept that a focusable `role="separator"` then falls back to ARIA's implicit 0–100, which is the defect the range was added to fix. Clamping is the better shape; it needs a decision because it removes something a pointer user can do today.
 
 
 - [ ] **[P2] `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px.** The table passes `[insetTop]="'var(--ds-table-head-h, 40px)'"` to `ds-loading-overlay` to keep the header uncovered during a refresh, and that string is the ONLY occurrence of the token in the whole repo — nothing ever sets it, so the fallback always wins. A header shorter than 40px (`density="compact"`, `ultra`) leaves a strip of the first row uncovered; a header taller than 40px (a wrapped label, or a filter row) gets partly covered, which contradicts the reason the inset exists — and now also contradicts the `inert` boundary, since `<tbody>` is what goes inert while a partly-covered header stays operable underneath a scrim. Decide which it is: declare the token from the real header height (a measurement, or a value per density), or drop the token and measure the `<thead>`. As it stands it reads like a public hook and is not one.
