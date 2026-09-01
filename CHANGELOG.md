@@ -63,8 +63,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **`Home` and `End` on every picker.** They existed on `ds-select` alone, while ten other components
   in the library already had them. The index arithmetic all three had written out separately — next,
-  previous, first, last, skipping disabled and wrapping — is now one helper, `DsListCursor`, exported
-  for anyone building a list control of their own.
+  previous, first, last, skipping disabled and wrapping — is one shared helper now, so the three
+  behave identically. It is internal: nothing new is exported.
 
 - **`compareWith` on `ds-autocomplete`.** The component is generic over its value type but compared
   with `===`, which is reference identity: a re-fetch that returned equal data as new objects silently

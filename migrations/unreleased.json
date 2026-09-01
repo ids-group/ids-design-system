@@ -75,7 +75,7 @@
       "restore": null
     },
     {
-      "id": "subtle-token-rename-was-documented-under-a-name-that-never-existed",
+      "id": "subtle-tokens-renamed-to-subtitle",
       "kind": "token-rename",
       "old": "--<role>-subtle",
       "new": "--<role>-subtitle",

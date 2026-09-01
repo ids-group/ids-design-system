@@ -149,7 +149,10 @@ absent, and one re-introduced since is present although the removal was correct.
 git archive v<version> src/lib | tar -xO      # the tree at the release
 git archive v<prev>     src/lib | tar -xO     # and at the one before it
 git diff v<prev>..v<version> -- src/lib       # or the boundary directly
+git log main --oneline                        # main takes release commits only
 ```
+
+`main` is the shortcut: it advances only when a release is cut, so its log IS the version list and a diff between two of its commits IS one version's change set. Nothing else in the history needs filtering out.
 
 `old` must be PRESENT at `v<prev>` and ABSENT at `v<version>`; `new` must be PRESENT at
 `v<version>`. Match on a word boundary — `--x-warn` is a prefix of `--x-warning`, and a substring

@@ -76,6 +76,30 @@ npm run publish:manual
 Pre-releases: `npm run release:beta` bumps to `x.y.z-beta.N`; the matching tag
 publishes under the `next` dist-tag (never `latest`).
 
+## A claim about a past release is checked against that release
+
+`migrations/<version>.json` and every `## <version>` block in `CHANGELOG.md` describe ONE version
+boundary: what existed at the release before it, and what exists at it. **Today's source is evidence
+for neither half**, and all three ways of being wrong read as a pass — a symbol removed two releases
+later is absent from HEAD, one that never existed is also absent, and one re-introduced since is
+present although the removal was correct.
+
+```bash
+git log main --oneline                        # main takes release commits only, so its log is the version list
+git diff v<prev>..v<version> -- src/lib       # one version's change set
+git archive v<version> src/lib | tar -xO      # the whole tree at a release, to grep
+```
+
+An `old` name must be PRESENT at the predecessor tag and ABSENT at the version's own; a `new` name
+must be PRESENT at the version's own. Match on a word boundary: `--x-warn` is a prefix of
+`--x-warning`, so a substring test reports that the old token survived its own rename.
+
+**Only `## Unreleased` and `migrations/unreleased.json` are checked against HEAD**, because HEAD is
+the version they describe.
+
+Manifest-specific guidance, including the two failure shapes this catches that nothing else does, is
+in `migrations/AUTHORING.md` under "Correcting a PUBLISHED manifest".
+
 ## Never in a published artefact
 
 `CHANGELOG.md`, `README.md`, `design-system.md`, `components.md` and `migrations/` are
