@@ -243,8 +243,18 @@ Requests, not defects. Ordered by who is blocked.
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
 Priority set by Stas: **dead code out of the bundle first, prototype UI simplification second.** Every
-number below is measured; the two audits carry the method — `basic-advanced-split-audit.md` and
-`packaging-chunking-audit.md`. This section sequences the existing items rather than duplicating them.
+number below is measured; three records carry the method — **`packaging-diagnosis.md`** (what is
+actually wrong, and why the service framing was misleading), `packaging-chunking-audit.md` (the
+investigation, its fixtures and the §10/§11 measurements) and `basic-advanced-split-audit.md`
+(component weight). This section sequences the existing items rather than duplicating them.
+
+**A1/A2 and A3 are not substitutes — read `packaging-diagnosis.md` before treating either as
+optional.** Tree-shaking (what is RETAINED) and chunk placement (WHERE the retained code lands) are
+orthogonal problems that share a name. A1/A2 reduce retention: -18.9 KB for an app using no grid
+features. A3 fixes placement: -108 KB off a consumer's initial bundle. **No internal refactor can do
+A3's job** — placement is decided per module, ng-packagr emits one module, and rollup inlines
+internal dynamic imports, so a library cannot create a chunk boundary inside its own entry point.
+Conversely A3 does not shrink the table by a byte.
 
 | Measured | Value |
 | --- | --- |
@@ -260,6 +270,15 @@ CODE: each branch compiles to its own embedded-template function referenced from
 `ɵcmp`, so it ships whichever way the condition goes. A directive in a consumer's `imports` is the byte
 switch; `DS_CONFIG` is the behaviour switch. They compose, they are not alternatives, and only the
 first one moves bytes.
+
+**And the part that keeps getting mis-told: it is not the services.** Measured 2026-09-01, same probe,
+four different eager anchors in the app root — `provideDsTheme()` 192 392 B gzip, `provideDsConfig({})`
+192 342 B, one `<ds-button>` in the shell 192 244 B, `inject(ToastService)` 194 763 B. **All four within
+2.5 KB of each other**, all with 11 of 11 lazy-only heavy components in the initial bundle, against a
+DS-free floor of 59 019 B. A type-only import anchors nothing (+15 B). And `provideDsTheme()` is in the
+documented setup every consumer copies into `app.config.ts`, so **every** app already has the anchor —
+the service was just the one somebody noticed. Full table and every tested hypothesis in
+`packaging-diagnosis.md`.
 
 - [x] **[P2] A0 - DONE 2026-09-01. Measured chunk placement against the real library and tested the
   graph. Both answers are in `packaging-chunking-audit.md` §11.** One `inject(ToastService)` moves
@@ -333,6 +352,25 @@ first one moves bytes.
   On the table it is nearly pointless after A2 (do not want resize? do not import the directive), so the
   real job is **library-wide** on the components that always ship: calmer defaults, fewer states,
   simpler affordances on fields, buttons, sidenav. `resolveWithConfig` already exists, so this is small.
+
+- [ ] **[P3] A3+ — decide the top layer's granularity: one `components` entry point, or one per
+  component (Material's model).** The Angular Package Format's own rule is «entrypoints for the smallest
+  sets of logically connected code possible», and Angular Material publishes one entry point per
+  component for exactly this reason; `@angular/cdk` does too, which we already consume that way
+  (`overlay`, `portal`, `drag-drop` are three separate specifiers). Our graph nearly allows per-component
+  entries already — only `radio`/`radio-group` and `time-columns`/`time-picker` must be co-located.
+  Per-component is the lowest possible eager cost and the largest refactor; a single `components` entry
+  already delivers the measured -80%. **Decide this WITH A3, not after** — it is the same boundary
+  decision made once. Secondary entry points are NOT deprecated (ng-packagr `docs/secondary-entrypoints.md`
+  on `main`, and a Feb 2026 guide, both current).
+
+- [ ] **[P3] Why does one `<ds-button>` cost 32.1 KB gzip?** `ButtonComponent extends DsMessageBase` and
+  imports `FieldMessageComponent`, `field-errors` and `nextControlId` (`button.component.ts:19-26,62,78`)
+  so a button can render a validation message inside a field group — which makes the cheapest
+  component in the library reach into the field system. **Unmeasured:** how much of the 32.1 KB is that
+  field-message closure versus icons, config and the shared component runtime. A targeted ablation
+  answers it. RETENTION question, independent of A3, blocks nothing — do not call it a defect
+  before the ablation.
 
 **Not doing, and why.** basic/advanced as two packages: smaller prize than A1/A2, and it buys a second
 table to keep in sync forever. `ids-charts`: a real candidate the day it needs a third-party renderer,
