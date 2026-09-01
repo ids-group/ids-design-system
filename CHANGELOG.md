@@ -50,9 +50,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `ds-autocomplete` is deliberately excluded: its trigger IS a text field, so typing there is the
   filter and a jump would fight it.
 
-- **`disabledReason` on an option.** A disabled row said it could not be picked and never why. The
-  reason reaches the row through `aria-describedby` and is visually hidden — the row already looks
-  disabled; the text is for whoever cannot see that.
+- **`disabledReason` on an option, rendered by `ds-select`.** A disabled row said it could not be
+  picked and never why. On `ds-select` the reason reaches the row through `aria-describedby` and is
+  visually hidden — the row already looks disabled; the text is for whoever cannot see that. The
+  field is on the shared `DsOption`, so `SelectOption`, `MultiSelectOption` and `AutocompleteOption`
+  all accept it and it type-checks on all three pickers; `ds-multi-select` and `ds-autocomplete` do
+  not yet render it, so a reason set there is carried and not shown.
 
 
 - **The keyboard cursor keeps its row in view.** On a list longer than the panel the arrows walked the
@@ -131,6 +134,36 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   if you meant to replace ours — the compiler enumerates every collision, so building after the
   upgrade is the whole check.
 
+- **BREAKING for code that CONSTRUCTS a `ToastEntry`: `durationMs` is now a required
+  `readonly number`.** The field did not exist on the type before, so it arrives required rather
+  than widened: an object literal typed as `ToastEntry` — a test double, a hand-rolled region, a
+  store that holds toasts — stops compiling until it carries one. The entry has to know its own
+  duration now that the countdown belongs to the region rather than the service.
+  `ToastOptions.durationMs` is untouched — still optional, still `5000` by default, still `0` for a
+  loading toast — so a caller of `ToastService` writes nothing new.
+
+- **BREAKING visually where a stack of toasts is part of the page: the newest toast enters at the
+  top of a top-anchored region.** Every toast was appended, so in a region resolving to a top
+  position — the default — the newest one landed at the BOTTOM of the stack, furthest from the
+  corner the stack grows out of, and the thing that had just happened was the last one you read. A
+  top position prepends now; a bottom position still appends. Either way the newest toast is the one
+  nearest the screen edge the region is anchored to.
+
+- **`ds-select`'s option list caps 40px shorter.** The list's `max-height` was declared in
+  `ds-multi-select`'s own stylesheet; it sits in the shared panel partial now, so it reaches
+  `ds-select` and `ds-autocomplete` too. `ds-select`'s list was previously bounded only by the panel
+  cap `--ds-dropdown-panel-maxh` (320px) and now stops at `--picker-maxh` (280px) — roughly one
+  option row — which is the height the other two panels already used. `ds-autocomplete` had pinned
+  its panel to that value itself and does not move. Set `--picker-maxh` to take the height back, on
+  the panel where only that select should change or globally where all three should follow; the
+  panel cap is unchanged and is simply no longer what decides where a `ds-select` list stops.
+
+- **`skeleton-mode` is gone from the inner `<table>` element of `ds-table` — only matters if you
+  reach in with `::ng-deep`.** The class was bound on that element, not the host, and nothing in the
+  library ever painted it, so a rule keyed on it was the only thing giving it meaning. If you have
+  one, key it off a class of your own on the host instead; if you do not, nothing about the rendered
+  table changes.
+
 ### Fixed
 - **Dev-mode warnings no longer ship to production bundles.** They were guarded by
   `isDevMode()`, which is a function CALL — a bundler cannot prove the branch dead, so all fourteen
@@ -153,6 +186,42 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `inertContent="false"` turns it off for a scrim that covers only PART of its content, and the
   consumer then marks the covered subtree itself — `ds-table` does this, because its scrim starts
   below the header and re-sorting during a refresh is exactly what puts the scrim up.
+
+- **A toast queued behind `maxVisible` expired while it was still waiting.** The auto-dismiss
+  countdown started when `ToastService` was called, not when the toast reached the screen, so a
+  burst past the cap retired toasts that had never been visible — the more you fired at once, the
+  fewer were read, and the ones lost were the ones at the back. The countdown starts when the region
+  shows the toast now, promotion out of the queue included, so a queued toast gets its full duration
+  on screen. One gap remains: `ToastService.promise()` runs its own timers, so a promise toast held
+  behind the cap can still be removed before it is shown.
+
+- **Dismissing a toast that was still queued promoted a different one instead of removing it.** The
+  id belonged to an entry that had not become visible yet, so the entry stayed in the queue and
+  another toast was pulled forward: the one you dismissed still appeared later, and one you had not
+  touched was hurried on screen ahead of its turn. A queued id is spliced out of the queue now and
+  nothing is promoted in its place.
+
+- **A column resize handle announced no position and no limits.** The handle is a `role="separator"`,
+  which a screen reader presents as a slider, but an auto-sized column carried no `aria-valuenow` at
+  all — the user was handed a control with no current value and no way to hear how far it could go in
+  either direction. While the handle holds focus it now carries a measured `aria-valuenow` in px,
+  `aria-valuemin` of `48` and an `aria-valuemax` of the scroll viewport's width, which is the same
+  ceiling the drag, the arrow keys and the column-panel buttons clamp at. All three are present only
+  while the handle is focused.
+
+- **A table's loading scrim slid off the table as it scrolled sideways.** `ds-loading-overlay` sat
+  inside the scroll container, and the scrim is `position: absolute; inset: 0` — so it was sized to a
+  single viewport of the table and then travelled with the content: at 400px of horizontal scroll it
+  sat 400px to the left of where it was needed, and every column the scroll had revealed was left
+  uncovered. The overlay wraps the scroll container now, so the scrim covers what is on screen at any
+  scroll offset.
+
+- **A compact trigger showed one chip where several fitted.** `triggerDisplay="count"` and
+  `"labels"` make the trigger hug its content, so the width the chip fit measured was decided by the
+  chips it was about to cut — each pass shrank its own input and the split settled on one. The fit
+  reads the space AVAILABLE now, the trigger's parent, which no cut can move. `ds-autocomplete` gets
+  the same correction since both pickers measure through one helper, and a `width="fill"` trigger is
+  unaffected because there the two numbers are identical.
 
 ## 0.11.1 — 2026-08-31
 
