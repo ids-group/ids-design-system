@@ -226,6 +226,7 @@
   "--ds-banner-bar": "Left bar colour.",
   "--ds-banner-bar-width": "Left bar width.",
   "--ds-banner-bg-color": "Banner fill (default = info).",
+  "--ds-banner-body-font-size": "Size of the banner's projected body text (default --font-size-s, matching the title). Declared rather than inherited on purpose: the body used to take the page's size, so a 16px context rendered it LARGER than its own 14px title.",
   "--ds-banner-close-icon-color": "Close icon.",
   "--ds-banner-close-icon-color-hover": "Close icon hover.",
   "--ds-banner-enter-duration": "Banner entrance duration (default --duration-base).",
@@ -367,8 +368,8 @@
   "--ds-drawer-shadow": "Drawer panel elevation shadow (defaults to --shadow-modal).",
   "--ds-drawer-title-color": "Drawer title text colour (defaults to inherited colour).",
   "--ds-drawer-width": "Drawer panel width (defaults to --drawer-w-sm).",
-  "--ds-dropdown-panel-minw": "Lower bound for the connected dropdown panel behind ds-select and ds-multi-select. Only bites in `width=\"content\"`, where the pane is auto-sized and the trigger is merely its floor; in `fill` the component pins the pane to the trigger and there is nothing left to bound. Forwarded onto the portaled pane, so a host-scoped value reaches it.",
   "--ds-dropdown-panel-maxw": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Same `content`-only caveat as --ds-dropdown-panel-minw.",
+  "--ds-dropdown-panel-minw": "Lower bound for the connected dropdown panel behind ds-select and ds-multi-select. Only bites in `width=\"content\"`, where the pane is auto-sized and the trigger is merely its floor; in `fill` the component pins the pane to the trigger and there is nothing left to bound. Forwarded onto the portaled pane, so a host-scoped value reaches it.",
   "--ds-dropdown-panel-radius": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it.",
   "--ds-dropzone-bg-color": "Default fill.",
   "--ds-dropzone-bg-color-active": "Drag-active fill.",
@@ -551,7 +552,12 @@
   "--ds-number-stepper-border-color": "Number stepper field border (defaults to --border-default).",
   "--ds-number-stepper-focus-shadow": "Number stepper focus ring (defaults to --ds-field-focus-shadow).",
   "--ds-number-stepper-step-bg-color-active": "Number stepper increment/decrement button fill when pressed (defaults to --accent-muted).",
+  "--ds-option-bg-color-active": "Option row fill under the keyboard cursor and the pointer (default --surface-secondary). One value for both, because a list walked by arrow keys and a list under a mouse are the same row state to a reader. --ds-multi-select-option-bg-color-active still works and aliases onto this.",
   "--ds-option-check-color": "The check glyph on a selected row (default --primary).",
+  "--ds-option-gap": "Space between an option row's own parts — its check mark, icon and label (default --space-2). Reaches every picker panel through the shared partial, so the select-all row of ds-multi-select lines up with the options beneath it. Scope it with a selector to move one picker.",
+  "--ds-option-padding": "Inset of an option row (default --space-2 --space-2-5). The knob for a denser panel: before it existed the only way to tighten a list was to re-declare the row, which is how a second copy of the panel ended up inside a component.",
+  "--ds-option-radius": "Corner of an option row (defaults to the --ds-radius-inner role). Rounds the hover and selected fills; the panel's own corner is --ds-dropdown-panel-radius and moves separately.",
+  "--ds-option-row-gap": "Vertical space between option rows (default 2px). Distinct from --ds-option-gap, which is the space INSIDE a row — this one is what separates one row from the next.",
   "--ds-option-selected-bg-color": "Fill of the selected row in a dropdown panel (default --primary-subtitle). Panel-level: one partial paints select, autocomplete and multi-select alike.",
   "--ds-option-selected-bg-color-hover": "Fill of the selected row while hovered or keyboard-active (default --primary-muted).",
   "--ds-option-selected-label-color": "Label and icon colour of the selected row (default --primary-strong).",
@@ -1294,6 +1300,5 @@
   "--yellow-50": "Yellow ramp — stop 50.",
   "--yellow-500": "Yellow ramp — stop 500.",
   "--yellow-600": "Yellow ramp — stop 600.",
-  "--yellow-700": "Yellow ramp — stop 700.",
-  "--ds-banner-body-font-size": "Size of the banner's projected body text (default --font-size-s, matching the title). Declared rather than inherited on purpose: the body used to take the page's size, so a 16px context rendered it LARGER than its own 14px title."
+  "--yellow-700": "Yellow ramp — stop 700."
 }

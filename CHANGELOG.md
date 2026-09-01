@@ -8,6 +8,221 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`PageUp` and `PageDown`.** Ten rows a press, which is the native `<select>` step and the APG
+  listbox example’s — a fixed number rather than a measured screenful, so the jump is the same
+  wherever the panel happens to be clipped. No picker had these.
+
+- **`clear()` on `ds-select` and `ds-multi-select`.** `ds-autocomplete` has had it; the other two
+  offered only the in-trigger button, so an app with its own “reset filters” had to write the empty
+  value by hand and guess what empty means for that control. It does NOT move focus, deliberately:
+  the caller may be navigating away.
+
+
+- **Panel header and footer slots.** The panel was a closed box between the filter row and the
+  options: "3 of 40 selected", a "clear all" button, a hint or a link under the list had nowhere to
+  go. `dsPanelHeaderTemplate` and `dsPanelFooterTemplate` fill a strip above and below, with
+  `count`, `total` and `query` in context. Both sit OUTSIDE the `listbox`, so nothing you put there
+  is counted as an option or breaks a reader's "N of M" position, and neither scrolls with the list —
+  the panel clips and the list is the scroller.
+
+- **`dsGroupLabelTemplate`.** A group heading rendered its text and nothing else, so a count, a team
+  glyph or a second line was impossible. The heading ELEMENT stays the library's — it keeps the id the
+  group's `aria-labelledby` points at — and only its contents are yours.
+
+- **The option row's geometry is tokens.** `--ds-option-gap`, `--ds-option-padding`,
+  `--ds-option-radius` and `--ds-option-row-gap`, plus `--ds-option-bg-color-active` for the
+  hover/keyboard fill. A denser panel meant re-declaring the row before, which is exactly how a second
+  copy of the panel ended up inside a component.
+
+- **`searchPlaceholder` on `ds-autocomplete`.** Its `placeholder` was doing two jobs — the
+  empty-field caption and the hint for typing over a settled value. `ds-multi-select` already
+  separated them; now the name means one thing on both. Empty by default, so nothing moves.
+
+- **The result count is announced.** A reader typed into the filter and heard nothing: no live region
+  existed in any picker. One is created per picker now, outside the listbox and empty at first — a
+  region created together with its text is the case screen readers reliably do not announce.
+
+- **Type-ahead on `ds-select` and `ds-multi-select`.** Typing "ba" jumps to the first option starting
+  with "ba", the way a native `<select>` does, and repeating one letter cycles through the options
+  beginning with it. On a closed `ds-select` the jump commits, matching the native control.
+  `ds-autocomplete` is deliberately excluded: its trigger IS a text field, so typing there is the
+  filter and a jump would fight it.
+
+- **`disabledReason` on an option, rendered by `ds-select`.** A disabled row said it could not be
+  picked and never why. On `ds-select` the reason reaches the row through `aria-describedby` and is
+  visually hidden — the row already looks disabled; the text is for whoever cannot see that. The
+  field is on the shared `DsOption`, so `SelectOption`, `MultiSelectOption` and `AutocompleteOption`
+  all accept it and it type-checks on all three pickers; `ds-multi-select` and `ds-autocomplete` do
+  not yet render it, so a reason set there is carried and not shown.
+
+
+- **The keyboard cursor keeps its row in view.** On a list longer than the panel the arrows walked the
+  cursor out of sight — the reader pressed down and could not see where they were. All three pickers
+  scroll the active row into view now, on by default; `scrollActiveIntoView="false"` gives the scroll
+  position back to you. It uses `block: 'nearest'`, so a row that is already visible does not move and
+  the mouse is never fought.
+
+- **`Home` and `End` on every picker.** They existed on `ds-select` alone, while ten other components
+  in the library already had them. The index arithmetic all three had written out separately — next,
+  previous, first, last, skipping disabled and wrapping — is one shared helper now, so the three
+  behave identically. It is internal: nothing new is exported.
+
+- **`compareWith` on `ds-autocomplete`.** The component is generic over its value type but compared
+  with `===`, which is reference identity: a re-fetch that returned equal data as new objects silently
+  dropped the selection. Pass a comparator keyed on what identifies the value —
+  `[compareWith]="(a, b) => a?.id === b?.id"`. The default is unchanged, so string and number values
+  behave exactly as before. `ds-select` and `ds-multi-select` key on `string` and do not need it.
+
+- **`loading`.** While options were being fetched the panel said "No matches", which is a lie the
+  consumer had no way to correct. It shows a spinner instead now, and the listbox reports
+  `aria-busy`. Spelled `booleanAttribute` to match `ds-button`, `ds-input` and `ds-loading-overlay`.
+
+- **`opened` and `closed`.** There was no way to know a panel had opened, so a picker whose options
+  are fetched on demand had nowhere to start the request. `closed` is the name eight other components
+  already use; `opened` is its missing pair. They fire on the transition, not on every write, so
+  closing by Escape emits once rather than twice.
+
+- **`filterWith` and `filterChange` — one input for both server-side search and a custom match.**
+  The query matcher was hardcoded to a case-insensitive substring of `label`: matching a second field,
+  ignoring diacritics or scoring fuzzily was impossible, and so was letting a server do the filtering.
+  `filterWith` takes a predicate for the first and the literal `'none'` for the second, where every
+  option handed in is rendered and `filterChange` reports what was typed. One input rather than two,
+  because they are one decision: who decides what the query matches.
+
+- **`name`, `readOnly` and `clearable` on `ds-multi-select` and `ds-autocomplete`.** The last three
+  form-contract members that were `ds-select`'s alone. `name` reaches seven other controls in the
+  library, so the two pickers were the outliers; `readOnly` takes focus without opening, and carries
+  the same `readonly` binding alias `ds-select` has for signal forms; `clearable` uses the same button
+  and the same accessible name as `ds-select`'s.
+
+
+- **`ds-table` row expansion: one-at-a-time, expand-all, and events.** The base feature shipped
+  already; these are the three edges it was missing. `expandMode="single"` collapses the open row
+  when another expander is clicked, so a detail panel cannot stack up down the page — enforced when
+  the user clicks, not on the binding, because `expandedIds` is the host's model to write and
+  rewriting it underneath would be the table arguing with its own consumer. `expandAllToggle` puts
+  a chevron in the expander column header, page-scoped when paginating exactly as select-all is.
+  `(rowExpanded)` and `(rowCollapsed)` name the row as it opens and closes, expand-all included,
+  which is where panel content gets lazy-loaded; a collapse the host writes into `expandedIds`
+  itself stays silent, and so does an id whose row is no longer in `data()` — an event carries a
+  row, and there is none to carry. Opening two rows or more now also reaches the table's live
+  region, which a full page of panels appearing from one keypress previously did not.
+
+
+- **Column resizing works on a touch device, where the drag handle never could.** The handle
+  paints its line on `:hover` and `:focus-visible`; a coarse pointer produces neither, so it was
+  invisible — while `touch-action: none` still took the horizontal swipe that scrolls the table,
+  leaving a dead 8px strip at the right edge of every header. Under
+  `(hover: none) and (pointer: coarse)` the handle now stands down and width moves into the column
+  panel: each row carries −, + and Fit next to its visibility and order controls, and the panel
+  opens as a `ds-bottom-sheet` rather than a popover. The buttons render on desktop as well, where
+  the handle remains the primary route. All three routes share one step, so drag, arrow keys and
+  buttons move a column by the same amount, and all three clamp at the scroll viewport.
+
+
+### Changed
+
+- **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
+  `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent`, `TableComponent`,
+  `LoadingOverlayComponent` and `ToastRegionComponent` all gained members for the inputs and outputs
+  above, and `DsPanelHeaderTemplateDirective`,
+  `DsPanelFooterTemplateDirective` and `DsGroupLabelTemplateDirective` are new classes.
+  Subclassing a DS component is unsupported but consumers do it, and a
+  member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
+  if you meant to replace ours — the compiler enumerates every collision, so building after the
+  upgrade is the whole check.
+
+- **BREAKING for code that CONSTRUCTS a `ToastEntry`: `durationMs` is now a required
+  `readonly number`.** The field did not exist on the type before, so it arrives required rather
+  than widened: an object literal typed as `ToastEntry` — a test double, a hand-rolled region, a
+  store that holds toasts — stops compiling until it carries one. The entry has to know its own
+  duration now that the countdown belongs to the region rather than the service.
+  `ToastOptions.durationMs` is untouched — still optional, still `5000` by default, still `0` for a
+  loading toast — so a caller of `ToastService` writes nothing new.
+
+- **BREAKING visually where a stack of toasts is part of the page: the newest toast enters at the
+  top of a top-anchored region.** Every toast was appended, so in a region resolving to a top
+  position — the default — the newest one landed at the BOTTOM of the stack, furthest from the
+  corner the stack grows out of, and the thing that had just happened was the last one you read. A
+  top position prepends now; a bottom position still appends. Either way the newest toast is the one
+  nearest the screen edge the region is anchored to.
+
+- **`ds-select`'s option list caps 40px shorter.** The list's `max-height` was declared in
+  `ds-multi-select`'s own stylesheet; it sits in the shared panel partial now, so it reaches
+  `ds-select` and `ds-autocomplete` too. `ds-select`'s list was previously bounded only by the panel
+  cap `--ds-dropdown-panel-maxh` (320px) and now stops at `--picker-maxh` (280px) — roughly one
+  option row — which is the height the other two panels already used. `ds-autocomplete` had pinned
+  its panel to that value itself and does not move. Set `--picker-maxh` to take the height back, on
+  the panel where only that select should change or globally where all three should follow; the
+  panel cap is unchanged and is simply no longer what decides where a `ds-select` list stops.
+
+- **`skeleton-mode` is gone from the inner `<table>` element of `ds-table` — only matters if you
+  reach in with `::ng-deep`.** The class was bound on that element, not the host, and nothing in the
+  library ever painted it, so a rule keyed on it was the only thing giving it meaning. If you have
+  one, key it off a class of your own on the host instead; if you do not, nothing about the rendered
+  table changes.
+
+### Fixed
+- **Dev-mode warnings no longer ship to production bundles.** They were guarded by
+  `isDevMode()`, which is a function CALL — a bundler cannot prove the branch dead, so all fourteen
+  warning sites and their message closures reached production builds. Each site is now guarded inline
+  with `typeof ngDevMode === 'undefined' || ngDevMode`, which `@angular/build` folds away whenever
+  script optimization is on, closures included. **Measured: 1 590 B gzip off an app using most of the
+  library, 827 B of it off a single `<ds-button>`.** Nothing changes for you — no API, no behaviour,
+  and the warnings still fire in development builds exactly as before.
+
+
+- **A loading scrim stopped the pointer and let the keyboard walk straight under it.**
+  `ds-loading-overlay` paints an absolutely positioned scrim over its content, which intercepts
+  every pointer event — so a control behind it could not be clicked, and looked unavailable. Nothing
+  stopped focus: Tab reached the same control, Enter activated it, and `ds-table` with
+  `rowInteractive` would emit `(rowClicked)` for a row whose data the host was in the middle of
+  replacing. Neither `onRowClick` nor `onRowKey` consulted the loading state, and a row's
+  `tabindex` never did either. The overlay now marks the content it covers `inert` while loading,
+  which is the one mechanism that stops pointer and keyboard together and takes the covered controls
+  out of the accessibility tree; `aria-busy` stays on the host, so a reader is still told why.
+  `inertContent="false"` turns it off for a scrim that covers only PART of its content, and the
+  consumer then marks the covered subtree itself — `ds-table` does this, because its scrim starts
+  below the header and re-sorting during a refresh is exactly what puts the scrim up.
+
+- **A toast queued behind `maxVisible` expired while it was still waiting.** The auto-dismiss
+  countdown started when `ToastService` was called, not when the toast reached the screen, so a
+  burst past the cap retired toasts that had never been visible — the more you fired at once, the
+  fewer were read, and the ones lost were the ones at the back. The countdown starts when the region
+  shows the toast now, promotion out of the queue included, so a queued toast gets its full duration
+  on screen. One gap remains: `ToastService.promise()` runs its own timers, so a promise toast held
+  behind the cap can still be removed before it is shown.
+
+- **Dismissing a toast that was still queued promoted a different one instead of removing it.** The
+  id belonged to an entry that had not become visible yet, so the entry stayed in the queue and
+  another toast was pulled forward: the one you dismissed still appeared later, and one you had not
+  touched was hurried on screen ahead of its turn. A queued id is spliced out of the queue now and
+  nothing is promoted in its place.
+
+- **A column resize handle announced no position and no limits.** The handle is a `role="separator"`,
+  which a screen reader presents as a slider, but an auto-sized column carried no `aria-valuenow` at
+  all — the user was handed a control with no current value and no way to hear how far it could go in
+  either direction. While the handle holds focus it now carries a measured `aria-valuenow` in px,
+  `aria-valuemin` of `48` and an `aria-valuemax` of the scroll viewport's width, which is the same
+  ceiling the drag, the arrow keys and the column-panel buttons clamp at. All three are present only
+  while the handle is focused.
+
+- **A table's loading scrim slid off the table as it scrolled sideways.** `ds-loading-overlay` sat
+  inside the scroll container, and the scrim is `position: absolute; inset: 0` — so it was sized to a
+  single viewport of the table and then travelled with the content: at 400px of horizontal scroll it
+  sat 400px to the left of where it was needed, and every column the scroll had revealed was left
+  uncovered. The overlay wraps the scroll container now, so the scrim covers what is on screen at any
+  scroll offset.
+
+- **A compact trigger showed one chip where several fitted.** `triggerDisplay="count"` and
+  `"labels"` make the trigger hug its content, so the width the chip fit measured was decided by the
+  chips it was about to cut — each pass shrank its own input and the split settled on one. The fit
+  reads the space AVAILABLE now, the trigger's parent, which no cut can move. `ds-autocomplete` gets
+  the same correction since both pickers measure through one helper, and a `width="fill"` trigger is
+  unaffected because there the two numbers are identical.
+
 ## 0.11.1 — 2026-08-31
 
 ### Added
@@ -198,6 +413,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A compact trigger showed one chip where several fitted.** `triggerDisplay="count"` and
+  `"labels"` make the trigger hug its content, so the width the chip fit measured was decided by the
+  chips it was about to cut — each pass shrank its own input and the split settled on one. The fit
+  reads the space AVAILABLE now (the trigger's parent), which no cut can move. `ds-autocomplete` gets
+  the same correction, since both pickers measure through one helper, and a `width="fill"` trigger is
+  unaffected because there the two numbers are identical.
+
+
 - **With the filter row hidden, there was no keyboard way to pick an option.** `Enter` and `Space`
   were consumed by the trigger before the panel's own handler saw them, so the panel toggled shut
   instead of selecting the active row: open, arrow down, Enter, nothing chosen. The trigger delegates
@@ -238,26 +461,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-select` accepts a `readonly` options array**, which the other two already did, and tracks
   its top-level items by index rather than by label, which is not unique.
 
-
-- **Four published migration manifests were corrected, and a repo that upgraded before today may
-  be holding the result.** These files are executed: your upgrade tooling read them, acted and
-  reported done, so a defect in one is a defect in your codebase.
-  **`0.5.1#progress-variant-remap` certified the wrong component.** Its `verify` was the text
-  belonging to the badge item beside it, checking that chips render in their status colours — so
-  a `ds-progress` still binding `variant="warn"` or `variant="indeterminate"`, or TypeScript
-  still naming a removed `ProgressVariant` member, passed the check and shipped.
-  **Two items named too few locators to be found.**
-  `0.9.0#search-height-joins-field-scale` searched only `--ds-search-height`, so a short search
-  row pinned through `--hit-min` instead was never flagged; `0.10.1#fields-shared-base-class-members`
-  searched the bare base names, so a subclass written `extends` one of the internal field bases
-  went unfound and its `success` collision surfaced only at build.
-  **`0.10.1` also gained a delete row it never carried** — a modal body torn down on `(closed)`,
-  or held behind the open flag, purely so a re-opened `ds-date-picker` starts clean. The picker
-  clears itself now, and the teardown never fired reliably: re-opening inside the leave animation
-  cancels the close, so `closed` never comes.
-  `0.11.0#exported-class-members-grew` pointed its `detect` and `verify` at a base no consumer can
-  extend; corrected, with no consequence for anyone.
-  Re-run those items if your last upgrade crossed those versions.
 
 ### What you can now DELETE
 
@@ -1226,17 +1429,6 @@ None of this is required — skipping it leaves working code that is merely redu
   `ds-select` and `ds-autocomplete`. `ds-multi-select`'s panel hardcodes `--radius-md` and is reached by
   neither this token nor `--ds-radius-panel` — so only `--radius-md` itself moves it, and that moves
   buttons, fields and tooltips with it.
-
-- **Two migration manifests were corrected and three more were written**, so re-read them if you
-  subclass a DS component or upgrade across a version you skipped. `0.9.0`'s named no member collisions
-  at all — the note that now fills the gap lists **fifteen** classes whose member surface had grown, plus
-  four newly exported symbols that can shadow a local name — and `0.8.0`'s missed the private
-  `saveLayout` that actually stopped a build (`restoreLayout` went in beside it). **`0.6.1`, `0.6.2` and
-  `0.9.1` had no manifest at all**, and now every released version carries one: the auto-update planner
-  prefers a manifest and otherwise re-derives the plan from changelog prose on every run, which is what
-  an upgrade crossing those three used to do. `0.6.2`'s holds something actionable that no
-  machine-readable file had ever stated — a `ds-bottom-sheet` with nothing focusable inside it stopped
-  closing on Escape — which is exactly the kind a "just fixes" patch is assumed not to have.
 
 - **`ds-avatar` takes a `name`, and the rule that reads it is replaceable.** One binding now does both
   jobs a caller used to wire by hand: it derives the initials and seeds the tint. **The tint hashes the

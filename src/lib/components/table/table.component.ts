@@ -9,6 +9,7 @@ import {
   computed,
   contentChildren,
   effect,
+  DestroyRef,
   inject,
   input,
   linkedSignal,
@@ -34,6 +35,7 @@ import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { LoadingOverlayComponent } from '../loading-overlay/loading-overlay.component';
 import { PopoverComponent } from '../popover/popover.component';
+import { BottomSheetComponent } from '../bottom-sheet/bottom-sheet.component';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuItemComponent } from '../menu/menu-item.component';
 import { CellTemplateDirective } from './cell-template.directive';
@@ -45,6 +47,7 @@ import type {
   TableColumn,
   TableRowAction,
   TableRowActionEvent,
+  TableExpandMode,
   TableFilterMode,
   TableSortMode,
 } from './table.types';
@@ -60,9 +63,8 @@ const VIRTUAL_FALLBACK_HEIGHT = 720;
 // blank space before the next range lands.
 const VIRTUAL_OVERSCAN = 6;
 
-/** Rendered values that read as "no data", matched case-insensitively. The list
- *  is wider than the empty string because consumers render placeholders; these
- *  are the ones a consumer had to enumerate before `sortValue` existed. */
+/** Rendered values that read as "no data", matched case-insensitively. Wider
+ *  than the empty string because consumers render placeholders. */
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
 
 /** Normalises "no data" to a single `null`, so the comparator has one blank
@@ -101,9 +103,8 @@ function compareSortValues(
   }
 
   // `sensitivity: 'base'` so "Ångström" sorts next to "Angstrom" and casing does
-  // not split a column into two runs. Taken from a consumer's own comparator, which is
-  // also where BLANK_CELL above came from — without it a column whose `sortValue` returns
-  // strings reorders when an app moves off its own comparator onto this one.
+  // not split a column into two runs — without it a string `sortValue` column
+  // reorders when an app moves off its own comparator onto this one.
   return firstText.localeCompare(secondText, undefined, {
     numeric: true,
     sensitivity: 'base',
@@ -121,6 +122,7 @@ function compareSortValues(
     PaginationComponent,
     LoadingOverlayComponent,
     PopoverComponent,
+    BottomSheetComponent,
     MenuComponent,
     MenuItemComponent,
     CdkDropList,
@@ -460,6 +462,27 @@ export class TableComponent<T extends object> {
   /** Two-way set of currently expanded row ids. */
   readonly expandedIds = model<Set<string>>(new Set<string>());
 
+  /** `'single'` collapses the open row when another expander is clicked.
+   *  Enforced on interaction only: a set seeded with several ids is left alone
+   *  (and warned about in dev) rather than silently rewritten under the host. */
+  readonly expandMode = input<TableExpandMode>('multiple');
+
+  /** Renders an expand-all/collapse-all chevron in the expander column header,
+   *  page-scoped when paginating, like select-all. Suppressed under
+   *  `expandMode="single"`, which it would contradict. */
+  readonly expandAllToggle = input(false, { transform: booleanAttribute });
+
+  /** Fires with the row when an expander opens it — including each row opened
+   *  by expand-all, so a host lazy-loading panel content sees every one. */
+  readonly rowExpanded = output<T>();
+
+  /** Fires with the row when an expander closes it, the row auto-closed by
+   *  `expandMode="single"` included. It carries a row, so it cannot speak for an
+   *  id whose row is no longer in `data()` — under server-side paging that id is
+   *  cleared silently. `expandedIds` is the complete signal; this one is the
+   *  convenient one. */
+  readonly rowCollapsed = output<T>();
+
   /** Template rendered inside an expanded row's panel.
    *  Context: `$implicit` = row, `row` = row. */
   readonly rowExpandTemplate = input<TemplateRef<{
@@ -493,9 +516,6 @@ export class TableComponent<T extends object> {
 
   protected readonly tableClasses = computed(() => {
     const parts = ['table'];
-    if (this.loadingMode() === 'skeleton') {
-      parts.push('skeleton-mode');
-    }
     if (this.stickyHeader()) {
       parts.push('sticky-header');
     }
@@ -783,6 +803,7 @@ export class TableComponent<T extends object> {
   }
 
   private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly editInput =
     viewChild<ElementRef<HTMLInputElement>>('editInput');
   protected readonly editingCell = signal<{
@@ -929,8 +950,7 @@ export class TableComponent<T extends object> {
     if (!this.resizeState) {
       return;
     }
-    const width = Math.max(
-      TableComponent.MIN_COLUMN_WIDTH,
+    const width = this.clampColumnWidth(
       this.resizeState.startWidth + (event.clientX - this.resizeState.startX),
     );
     const next = new Map(this.columnWidths());
@@ -942,9 +962,77 @@ export class TableComponent<T extends object> {
     this.resizeState = null;
   }
 
-  /** Current rendered width, for the keyboard path and the handle's
-   *  `aria-valuenow`. Falls back to the DOM when the column was auto-sized and
-   *  has neither an override nor a declared width. */
+  private readonly resizeFocus = signal<{
+    key: string;
+    measured: number;
+    max: number;
+  } | null>(null);
+
+  /**
+   * The widest a single column may be dragged: the scroll viewport.
+   *
+   * A column wider than the viewport can never be seen whole, and long text has
+   * its own affordance here — `truncate` clips it and the clip popover shows the
+   * rest — so nothing is lost by stopping at the edge. The ceiling exists at all
+   * because `aria-valuemax` has to be TRUE: a focusable `role="separator"` is a
+   * range widget, and announcing a bound that neither resize path applies is
+   * worse than announcing none.
+   */
+  private columnWidthCeiling(): number {
+    return Math.max(
+      TableComponent.MIN_COLUMN_WIDTH,
+      this.scrollWrap().nativeElement.clientWidth,
+    );
+  }
+
+  private clampColumnWidth(width: number): number {
+    return Math.min(
+      this.columnWidthCeiling(),
+      Math.max(TableComponent.MIN_COLUMN_WIDTH, width),
+    );
+  }
+
+  protected onResizeFocus(col: TableColumn<T>, event: FocusEvent): void {
+    const target = event.target as HTMLElement;
+
+    this.resizeFocus.set({
+      key: col.key,
+      measured: this.resolvedColumnWidth(col, target),
+      max: this.columnWidthCeiling(),
+    });
+  }
+
+  protected onResizeBlur(): void {
+    this.resizeFocus.set(null);
+  }
+
+  /**
+   * The separator's range, and only while it holds focus — that is when a range
+   * widget is announced, and an auto-sized column has no width to report until
+   * something measures one. Measuring on every change detection to fill an
+   * attribute nothing is reading would force layout once per resizable column.
+   *
+   * `now` prefers `columnWidth`, which the first arrow key makes known and keeps
+   * live; the focus measurement only covers the moment before that.
+   */
+  protected resizeRange(
+    col: TableColumn<T>,
+  ): { now: number; min: number; max: number } | null {
+    const focused = this.resizeFocus();
+    if (focused?.key !== col.key) {
+      return null;
+    }
+
+    return {
+      now: this.columnWidth(col) ?? focused.measured,
+      min: TableComponent.MIN_COLUMN_WIDTH,
+      max: focused.max,
+    };
+  }
+
+  /** Current rendered width for the keyboard resize path. Falls back to the DOM
+   *  when the column was auto-sized and has neither an override nor a declared
+   *  width. */
   protected resolvedColumnWidth(
     col: TableColumn<T>,
     from?: HTMLElement,
@@ -965,43 +1053,69 @@ export class TableComponent<T extends object> {
    */
   protected onResizeKey(col: TableColumn<T>, event: KeyboardEvent): void {
     const target = event.target as HTMLElement;
-    const header = target.closest('th');
+    const step = TableComponent.RESIZE_STEP;
+    const page = TableComponent.RESIZE_PAGE;
+    const delta: number | 'auto' | null =
+      event.key === 'ArrowLeft'
+        ? -step
+        : event.key === 'ArrowRight'
+          ? step
+          : event.key === 'PageDown'
+            ? -page
+            : event.key === 'PageUp'
+              ? page
+              : event.key === 'Home'
+                ? 'auto'
+                : null;
+    if (delta === null) {
+      return;
+    }
+    event.preventDefault();
+    this.stepColumnWidth(col, delta, target.closest('th'));
+  }
+
+  /**
+   * One column-width step, from wherever it was asked for: the handle's own
+   * keyboard, or the width controls in the column panel.
+   *
+   * `'auto'` hands the column back to automatic sizing. The header cell is
+   * passed when the caller has it — the panel does not, so it is looked up by
+   * `data-col-key`, and the measurement matters: stepping an auto-sized column
+   * has to start from what it currently RENDERS, not from the minimum.
+   */
+  private stepColumnWidth(
+    col: TableColumn<T>,
+    delta: number | 'auto',
+    from: HTMLElement | null,
+  ): void {
+    const header = from ?? this.headerCellFor(col);
     if (header) {
       this.lockMeasuredWidths(header);
     }
-    const current = this.resolvedColumnWidth(col, target);
-    let next: number | null = current;
-    switch (event.key) {
-      case 'ArrowLeft':
-        next = current - TableComponent.RESIZE_STEP;
-        break;
-      case 'ArrowRight':
-        next = current + TableComponent.RESIZE_STEP;
-        break;
-      case 'PageDown':
-        next = current - TableComponent.RESIZE_PAGE;
-        break;
-      case 'PageUp':
-        next = current + TableComponent.RESIZE_PAGE;
-        break;
-      case 'Home':
-        next = null;
-        break;
-      default:
-        return;
-    }
-    event.preventDefault();
     const widths = new Map(this.columnWidths());
-    if (next === null) {
+    if (delta === 'auto') {
       widths.delete(col.key);
     } else {
-      widths.set(
-        col.key,
-        Math.max(TableComponent.MIN_COLUMN_WIDTH, Math.round(next)),
-      );
+      const current = this.resolvedColumnWidth(col, header ?? undefined);
+      widths.set(col.key, this.clampColumnWidth(Math.round(current + delta)));
     }
     this.columnWidths.set(widths);
   }
+
+  private headerCellFor(col: TableColumn<T>): HTMLElement | null {
+    return this.scrollWrap().nativeElement.querySelector<HTMLElement>(
+      `th[data-col-key="${CSS.escape(col.key)}"]`,
+    );
+  }
+
+  protected onColumnWidthStep(
+    col: TableColumn<T>,
+    delta: number | 'auto',
+  ): void {
+    this.stepColumnWidth(col, delta, null);
+  }
+
+  protected readonly resizeStep = TableComponent.RESIZE_STEP;
 
   /** Client-side filter over the full data set — combines the `filterQuery`
    *  substring search with any per-column set filters. Sorting and pagination
@@ -1103,7 +1217,8 @@ export class TableComponent<T extends object> {
     return this.sortedData().slice(start, start + size);
   });
 
-  /** Rows actually rendered: paged when paginating, else sorted/raw data. */
+  /** The full display set — paged when paginating, else sorted/raw data.
+   *  Virtual mode windows this further; `rowSlots` is what the loop walks. */
   protected readonly displayData = computed<readonly T[]>(() =>
     this.pageSize() !== null ? this.pagedData() : this.sortedData(),
   );
@@ -1126,9 +1241,27 @@ export class TableComponent<T extends object> {
     if (exportState) {
       return exportState;
     }
-    const parts = [this.sortMessage(), this.rangeMessage()].filter(Boolean);
+    const parts = [
+      this.sortMessage(),
+      this.rangeMessage(),
+      this.expansionMessage(),
+    ].filter(Boolean);
 
     return parts.join('. ');
+  });
+
+  /** Only from two rows up: a single expander announces itself through its own
+   *  `aria-expanded`, and repeating that here would say everything twice. */
+  private readonly expansionMessage = computed<string>(() => {
+    const open = this.expandedIds();
+    if (open.size < 2) {
+      return '';
+    }
+    const onPage = this.displayData().filter((row) =>
+      open.has(this.rowKey(row)),
+    ).length;
+
+    return onPage < 2 ? '' : `${onPage} rows expanded`;
   });
 
   private readonly sortMessage = computed<string>(() => {
@@ -1200,14 +1333,6 @@ export class TableComponent<T extends object> {
     };
   });
 
-  /** The rows the template actually renders. */
-  protected readonly windowData = computed<readonly T[]>(() => {
-    const window = this.virtualWindow();
-    const data = this.displayData();
-
-    return window ? data.slice(window.start, window.end) : data;
-  });
-
   /**
    * What the row loop walks: each slot carries its ABSOLUTE index, and a `null`
    * row is a gap the host has not filled yet.
@@ -1263,11 +1388,34 @@ export class TableComponent<T extends object> {
       : 'Select all rows',
   );
 
+  protected readonly allExpanded = computed(() => {
+    const data = this.displayData();
+    if (data.length === 0) {
+      return false;
+    }
+    const open = this.expandedIds();
+
+    return data.every((row) => open.has(this.rowKey(row)));
+  });
+
+  protected readonly expandAllVisible = computed(
+    () => this.expandAllToggle() && this.expandMode() !== 'single',
+  );
+
+  protected readonly expandAllLabel = computed(() => {
+    const scope = this.pageSize() !== null ? ' on this page' : '';
+
+    return this.allExpanded()
+      ? `Collapse all rows${scope}`
+      : `Expand all rows${scope}`;
+  });
+
   protected readonly skeletonArray = computed(() =>
     Array(this.skeletonRows()).fill(0),
   );
 
-  /** Total colspan for the expanded-row panel: data cols + optional select/expand/actions cols. */
+  /** Colspan of a full-width row (expansion panel, empty state): data cols +
+   *  optional select/expand/actions cols. */
   protected readonly expandedColspan = computed(() => {
     let count = this.visibleColumns().length;
     if (this.selectable()) {
@@ -1294,11 +1442,26 @@ export class TableComponent<T extends object> {
     'columnPickerPopover',
   );
 
-  protected readonly columnPickerOpened = computed(
-    () => this.columnPickerPopover()?.opened() ?? false,
+  protected readonly columnSheetOpen = signal(false);
+
+  private readonly coarsePointerState = signal(false);
+
+  /** Whether the column panel opens as a sheet and the drag handle stands down.
+   *  Keyed on the pointer, not the viewport — see `_table.scss`'s matching query. */
+  protected readonly coarsePointer = this.coarsePointerState.asReadonly();
+
+  protected readonly columnPickerOpened = computed(() =>
+    this.coarsePointer()
+      ? this.columnSheetOpen()
+      : (this.columnPickerPopover()?.opened() ?? false),
   );
 
   protected onColumnPickerClick(event: Event): void {
+    if (this.coarsePointer()) {
+      this.columnSheetOpen.set(true);
+
+      return;
+    }
     this.columnPickerPopover()?.toggle(event.currentTarget as HTMLElement);
   }
 
@@ -1357,10 +1520,10 @@ export class TableComponent<T extends object> {
   protected readonly hscrollNeeded = signal(false);
   private readonly scrollTop = signal(0);
   private readonly viewportHeight = signal(0);
-  // Range last handed to (lazyLoad), so an unanswered request is not re-sent.
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
+    this.watchPointer();
     // One effect for both halves, because the restore CANNOT run in the
     // constructor: input signals are not set yet there, so storageKey() is still
     // '' and the restore silently no-ops. The first run with a usable key
@@ -1386,23 +1549,25 @@ export class TableComponent<T extends object> {
     // most of them. A table holding ALL its rows is the exception, and `total`
     // unbound is how it says so — so that is where the reminder goes. Only when
     // the mode was never DECLARED.
-    devWarn(() =>
-      this.sortMode() === null &&
-      this.total() === null &&
-      this.columns().some((col) => col.sortable)
-        ? '[ds-table] sortable columns default to sortMode="server", so a header click only emits (sortChange) and the table reorders nothing itself. This table binds no `total`, which usually means it holds every row — declare sortMode="client" to sort them in place.'
-        : null,
-    );
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      devWarn(() =>
+        this.sortMode() === null &&
+        this.total() === null &&
+        this.columns().some((col) => col.sortable)
+          ? '[ds-table] sortable columns default to sortMode="server", so a header click only emits (sortChange) and the table reorders nothing itself. This table binds no `total`, which usually means it holds every row — declare sortMode="client" to sort them in place.'
+          : null,
+      );
 
-    // Same trap one column over: a header filter defaults to the server too, so
-    // the checklist tracks a selection and runs no local pass.
-    devWarn(() =>
-      this.filterMode() === null &&
-      this.total() === null &&
-      this.columns().some((col) => col.filter === 'set')
-        ? '[ds-table] a header filter defaults to filterMode="server", so ticking a value only updates `columnFilters` and filters nothing locally. This table binds no `total`, which usually means it holds every row — declare filterMode="client" to filter them in place.'
-        : null,
-    );
+      // Same trap one column over: a header filter defaults to the server too, so
+      // the checklist tracks a selection and runs no local pass.
+      devWarn(() =>
+        this.filterMode() === null &&
+        this.total() === null &&
+        this.columns().some((col) => col.filter === 'set')
+          ? '[ds-table] a header filter defaults to filterMode="server", so ticking a value only updates `columnFilters` and filters nothing locally. This table binds no `total`, which usually means it holds every row — declare filterMode="client" to filter them in place.'
+          : null,
+      );
+    }
 
     // Virtual mode's two measurements. Only wired while virtualizing, so a
     // normal table pays for neither the scroll listener nor the observer.
@@ -1452,36 +1617,53 @@ export class TableComponent<T extends object> {
       this.lazyLoad.emit({ first, rows });
     });
 
-    devWarn(() =>
-      this.lazy() && !this.virtualScroll()
-        ? '[ds-table] lazy needs virtualScroll: without a window there is no range to fetch, so every gap in `data` renders a skeleton row and (lazyLoad) never narrows. Set virtualScroll (and maxHeight), or hand the table its rows outright.'
-        : null,
-    );
-    devWarn(() =>
-      this.lazy() && this.total() === null
-        ? '[ds-table] lazy needs `total`: the scroller is sized from the rows that EXIST, and without it the spacers collapse to the slice that has arrived — the scrollbar then lies about the length of the list.'
-        : null,
-    );
-    devWarn(() =>
-      this.lazy() && this.sortMode() === 'client'
-        ? '[ds-table] lazy with sortMode="client" sorts only the rows that happen to have arrived, which is a different order every time a window loads. The server owns the order here — drop sortMode or declare "server".'
-        : null,
-    );
-    devWarn(() =>
-      this.virtualScroll() && !this.maxHeight()
-        ? '[ds-table] virtualScroll needs maxHeight — without a bounded scroller there is no viewport to window against, so every row renders and nothing is virtualized. Set maxHeight (e.g. "480px").'
-        : null,
-    );
-    devWarn(() =>
-      this.virtualScroll() && this.expandableRows()
-        ? '[ds-table] virtualScroll and expandableRows do not combine: an expanded row is taller than virtualRowSize, and every offset after it would be wrong. The expander renders but the panel is suppressed — move the detail into a modal or a drawer, or drop virtualScroll.'
-        : null,
-    );
-    devWarn(() =>
-      this.virtualScroll() && this.pageSize() !== null
-        ? '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.'
-        : null,
-    );
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      devWarn(() =>
+        this.lazy() && !this.virtualScroll()
+          ? '[ds-table] lazy needs virtualScroll: without a window there is no range to fetch, so every gap in `data` renders a skeleton row and (lazyLoad) never narrows. Set virtualScroll (and maxHeight), or hand the table its rows outright.'
+          : null,
+      );
+      devWarn(() =>
+        this.lazy() && this.total() === null
+          ? '[ds-table] lazy needs `total`: the scroller is sized from the rows that EXIST, and without it the spacers collapse to the slice that has arrived — the scrollbar then lies about the length of the list.'
+          : null,
+      );
+      devWarn(() =>
+        this.lazy() && this.sortMode() === 'client'
+          ? '[ds-table] lazy with sortMode="client" sorts only the rows that happen to have arrived, which is a different order every time a window loads. The server owns the order here — drop sortMode or declare "server".'
+          : null,
+      );
+      devWarn(() =>
+        this.virtualScroll() && !this.maxHeight()
+          ? '[ds-table] virtualScroll needs maxHeight — without a bounded scroller there is no viewport to window against, so every row renders and nothing is virtualized. Set maxHeight (e.g. "480px").'
+          : null,
+      );
+      devWarn(() =>
+        this.virtualScroll() && this.expandableRows()
+          ? '[ds-table] virtualScroll and expandableRows do not combine: an expanded row is taller than virtualRowSize, and every offset after it would be wrong. The expander renders but the panel is suppressed — move the detail into a modal or a drawer, or drop virtualScroll.'
+          : null,
+      );
+      devWarn(() =>
+        this.expandAllToggle() && this.expandMode() === 'single'
+          ? '[ds-table] expandAllToggle contradicts expandMode="single" — expanding every row is the one thing single mode exists to prevent. The header toggle is suppressed; drop one of the two.'
+          : null,
+      );
+      devWarn(() =>
+        this.expandAllToggle() && !this.expandableRows()
+          ? '[ds-table] expandAllToggle needs expandableRows — without it there is no expander column to put the toggle in, so it renders nothing. Set expandableRows.'
+          : null,
+      );
+      devWarn(() =>
+        this.expandMode() === 'single' && this.expandedIds().size > 1
+          ? '[ds-table] expandMode="single" was given expandedIds holding several rows. A two-way model is the host\'s to write, so it is left as passed rather than rewritten — the next expander click collapses back to one.'
+          : null,
+      );
+      devWarn(() =>
+        this.virtualScroll() && this.pageSize() !== null
+          ? '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.'
+          : null,
+      );
+    }
 
     // Wire the proxy whenever it exists (stickyScrollbar on). Assigning an
     // equal scrollLeft fires no scroll event, so the two mirrors can't loop.
@@ -1684,13 +1866,63 @@ export class TableComponent<T extends object> {
 
   protected onToggleExpand(row: T, event: Event): void {
     event.stopPropagation();
-    const next = new Set<string>(this.expandedIds());
-    if (next.has(this.rowKey(row))) {
-      next.delete(this.rowKey(row));
-    } else {
-      next.add(this.rowKey(row));
+    const key = this.rowKey(row);
+    const open = this.expandedIds();
+
+    if (open.has(key)) {
+      const next = new Set<string>(open);
+      next.delete(key);
+      this.expandedIds.set(next);
+      this.rowCollapsed.emit(row);
+
+      return;
     }
+
+    if (this.expandMode() === 'single') {
+      // `data()` rather than `displayData()` so a row left open on another page
+      // is reported too — but an event carries a row, so an id whose row is not
+      // loaded at all is dropped without one. Documented on `rowCollapsed`.
+      const closing =
+        open.size > 0
+          ? this.data().filter((other) => open.has(this.rowKey(other)))
+          : [];
+      this.expandedIds.set(new Set<string>([key]));
+      closing.forEach((other) => this.rowCollapsed.emit(other));
+      this.rowExpanded.emit(row);
+
+      return;
+    }
+
+    const next = new Set<string>(open);
+    next.add(key);
     this.expandedIds.set(next);
+    this.rowExpanded.emit(row);
+  }
+
+  protected onToggleExpandAll(): void {
+    const rows = this.displayData();
+    const open = this.expandedIds();
+    const collapsing = this.allExpanded();
+    const changed = rows.filter(
+      (row) => open.has(this.rowKey(row)) === collapsing,
+    );
+    if (changed.length === 0) {
+      return;
+    }
+
+    const next = new Set<string>(open);
+    rows.forEach((row) => {
+      if (collapsing) {
+        next.delete(this.rowKey(row));
+      } else {
+        next.add(this.rowKey(row));
+      }
+    });
+    this.expandedIds.set(next);
+
+    changed.forEach((row) =>
+      collapsing ? this.rowCollapsed.emit(row) : this.rowExpanded.emit(row),
+    );
   }
 
   protected isSelected(row: T): boolean {
@@ -1756,7 +1988,6 @@ export class TableComponent<T extends object> {
     return first ? this.cellValue(row, first) : '';
   }
 
-  /** `aria-sort` value for a header: only meaningful on sortable columns. */
   /** Row identity — the `rowId` accessor when given, else `row.id`. Public so a
    *  host reading `selectedIds`/`expandedIds` can compute the same keys. */
   rowKey(row: T): string {
@@ -1773,6 +2004,7 @@ export class TableComponent<T extends object> {
     return !!col.sortable && this.sortModeResolved() !== 'none';
   }
 
+  /** `aria-sort` value for a header: only meaningful on sortable columns. */
   protected ariaSort(
     col: TableColumn<T>,
   ): 'ascending' | 'descending' | 'none' | null {
@@ -1988,4 +2220,16 @@ export class TableComponent<T extends object> {
 
     return widths[Math.abs(hash) % widths.length] ?? '70%';
   }
+
+  private watchPointer(): void {
+    if (typeof window === 'undefined' || !window.matchMedia) {
+      return;
+    }
+    const coarse = window.matchMedia('(hover: none) and (pointer: coarse)');
+    const sync = (): void => this.coarsePointerState.set(coarse.matches);
+    sync();
+    coarse.addEventListener('change', sync);
+    this.destroyRef.onDestroy(() => coarse.removeEventListener('change', sync));
+  }
+
 }

@@ -468,4 +468,126 @@
       [options]="roleIconOptions"
     />
   </div>
+
+  <h3 class="block-title t-h4">
+    Type-ahead, and the cursor staying in view
+  </h3>
+
+  <p class="block-desc t-s">
+    Typing a letter on the closed trigger jumps to the first option starting with
+    it and commits, the way a native
+    <code class="t-mono-inline">
+      &lt;select&gt;
+    </code> does; repeating the letter
+    cycles. With the panel open the same keys move the cursor, and the active row
+    scrolls itself into view — try
+    <kbd>
+      ArrowDown
+    </kbd> through this list, which is longer than the panel.
+    <code class="t-mono-inline">
+      scrollActiveIntoView="false"
+    </code> hands the scroll
+    position back to you.
+  </p>
+
+  <p class="block-desc t-s">
+    <kbd>
+      PageDown
+    </kbd> and <kbd>PageUp</kbd> move ten rows — the native
+    <code class="t-mono-inline">
+      &lt;select&gt;
+    </code> step, a fixed number rather than a measured
+    screenful so the jump does not change with the panel's height.
+    <kbd>
+      Home
+    </kbd> and <kbd>End</kbd> go to the first and last option a reader can
+    actually pick, skipping a disabled one.
+  </p>
+
+  <p class="block-desc t-s">
+    The scroll follows the KEYBOARD only. The rows set the active row on hover too,
+    and scrolling for that would pull a half-visible row up under the pointer while
+    you were reading with the mouse — try hovering the bottom row here: nothing
+    jumps.
+  </p>
+
+  <div class="demo-panel">
+    <div class="select-demo">
+      <ds-select
+        label="Country"
+        [options]="countryOptions"
+        [(value)]="country"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    A panel footer, and a reason an option is off
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsPanelFooterTemplate
+    </code> puts a strip under the options,
+    outside the listbox so it is not counted as one. An option's
+    <code class="t-mono-inline">
+      disabledReason
+    </code> is announced through
+    <code class="t-mono-inline">
+      aria-describedby
+    </code> — the row already looks disabled, the
+    sentence is for whoever cannot see it.
+  </p>
+
+  <div class="demo-panel">
+    <div class="select-demo">
+      <ds-select
+        label="Plan"
+        [options]="planOptions"
+        [(value)]="plan"
+      >
+        <ng-template dsPanelFooterTemplate>
+          <span class="t-s">
+            Contact sales for the enterprise plan
+          </span>
+        </ng-template>
+      </ds-select>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Clearing from outside
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      clear()
+    </code> empties the value from a template reference — a
+    "reset filters" button, a form the app clears itself. All three pickers have it
+    now;
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code> was the only one before, so an app
+    with its own reset had to write the empty value by hand and guess what empty
+    means for each control. It deliberately does not move focus.
+  </p>
+
+  <div class="demo-panel">
+    <div class="select-demo">
+      <ds-select
+        #resettable
+        label="Plan"
+        [options]="planOptions"
+        [(value)]="resetPlan"
+      />
+    </div>
+
+    <ds-button
+      size="sm"
+      fill="ghost"
+      (clicked)="resettable.clear()"
+    >
+      Reset
+    </ds-button>
+  </div>
 </docs-section>

@@ -109,7 +109,7 @@
   color-scheme: light;
   /* Neutral family slot — semantic pointer at the active gray ramp from the
      palette. Default: hand-drawn cool-gray. <html data-neutrals="brand">
-     (ds-docs tweaks panel) repoints it at the brand-derived brand-gray ramp,
+     repoints it at the brand-derived brand-gray ramp,
      where --primary-h re-tints every gray. Roles below consume --neutral-*
      so the family switch never touches them. */
   --neutral-0: var(--cool-gray-0);
@@ -187,7 +187,7 @@
   --icon-muted: var(--neutral-400);
   --icon-on-primary: white;
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
+     (themes/_base-palette.scss) ships the concrete ramps + HSL channels. This
      is the one place that maps semantic roles onto a concrete palette. A brand
      re-skins by overriding either the palette (--blue-*, --red-*) or these
      role tokens directly.
@@ -221,7 +221,7 @@
   --primary-on: white;
   /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
      kept distinct from --primary so the brand slots read apart. Override
-     --secondary-h/s/l per-brand (or via the tweaks panel) to reskin it —
+     --secondary-h/s/l per-brand to reskin it —
      --secondary recomposes automatically. Hover/pressed derive from --secondary
      so any hue change propagates. */
   --secondary-h: var(--orange-h);
@@ -469,7 +469,7 @@
   --icon-muted: var(--neutral-400);
   --icon-on-primary: white;
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
+     (themes/_base-palette.scss) ships the concrete ramps + HSL channels. This
      is the one place that maps semantic roles onto a concrete palette. A brand
      re-skins by overriding either the palette (--blue-*, --red-*) or these
      role tokens directly.
@@ -503,7 +503,7 @@
   --primary-on: white;
   /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
      kept distinct from --primary so the brand slots read apart. Override
-     --secondary-h/s/l per-brand (or via the tweaks panel) to reskin it —
+     --secondary-h/s/l per-brand to reskin it —
      --secondary recomposes automatically. Hover/pressed derive from --secondary
      so any hue change propagates. */
   --secondary-h: var(--orange-h);
@@ -825,7 +825,8 @@
      The alpha values stay constant across themes — only the
      hue/saturation/lightness become configurable.
      ============================================================ */
-  /* --shadow-tint-h/s/l live in themes/light/_palette.scss — palette-level
+  /* --shadow-tint-h/s live in themes/_base-palette.scss and -l in each theme's
+     _palette.scss — palette-level
      so dark palettes can override --shadow-tint-l → ~95% for soft light glows. */
   --shadow-1: 0 1px 2px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
@@ -1286,7 +1287,7 @@
   }
 }
 /* ============================================================
-   Density tiers — applied by Tweaks panel via [data-density]
+   Density tiers — set [data-density] on <html> or any container
    ============================================================ */
 [data-density=ultra-compact] {
   /* Power-user / tradesperson tier: financial dashboards, log viewers,
@@ -1294,7 +1295,7 @@
      and WCAG 2.5.8 (24px minimum) margins — acceptable only when:
        (a) the screen is keyboard-first, (b) input is mouse/keys not
        touch, (c) accidental-tap risk is low, (d) the user opted in.
-     Do not enable for mobile / field-ops layouts. */
+     Do not enable for mobile or touch-first layouts. */
   --hit-cozy: 24px;
   --hit-min: 24px;
   --check-size: 14px;
@@ -1383,9 +1384,7 @@
   --chart-seq-5: var(--blue-700);
   --chart-seq-6: var(--blue-900);
   /* DIVERGENT — red ← neutral → green
-     Values taken verbatim from the source design prototype
-     (CLAUDE_DESIGN_DS/patterns.css) so the Excess/Shortage matrix
-     matches the reference one-for-one. Explicit HSL keeps the ramp
+     Explicit HSL keeps the ramp
      independent of palette retunes — re-skinning brand/red/green
      should not shift the dataviz colour story. */
   --chart-div--3: hsl(0deg 70% 40%); /* large negative (worst) */
@@ -2083,34 +2082,51 @@ html {
      picker's corner is not a thing a design system should encourage, but moving
      every panel — modal, popover, date picker — to reach the dropdowns is too
      blunt. This is the middle lever, and `--ds-radius-panel` stays its default so
-     an untouched theme is unchanged. 0.9.0's notes promised a per-component
-     `--ds-select-panel-radius`, which never existed; this is what they meant. */
+     an untouched theme is unchanged. */
   --_dropdown-panel-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
+  /* Only bite in `content` width mode, where the pane is auto-sized: in `fill` the
+     component pins the pane to the trigger and there is nothing left to bound. */
+  --_option-gap: var(--ds-option-gap, var(--space-2));
+  --_option-padding: var(--ds-option-padding, var(--space-2) var(--space-2-5));
+  --_option-radius: var(--ds-option-radius, var(--ds-radius-inner));
+  --_option-row-gap: var(--ds-option-row-gap, 2px);
+  --_option-bg-color-active: var(--ds-option-bg-color-active, var(--surface-secondary));
+  --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
+  --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
+  --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
+  --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
 }
 .ds-dropdown-panel .dropdown-panel {
   width: 100%;
-  background: var(--surface-overlay);
+  background: var(--_dropdown-panel-bg-color);
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--_dropdown-panel-radius);
   box-shadow: var(--shadow-popover);
   padding: var(--space-1);
-  max-height: 320px;
-  overflow-y: auto;
+  min-width: var(--_dropdown-panel-minw);
+  max-width: var(--_dropdown-panel-maxw);
+  max-height: var(--_dropdown-panel-maxh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   z-index: var(--layer-popover);
 }
 .ds-dropdown-panel .dropdown-list {
+  max-height: var(--picker-maxh);
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  min-height: 0;
+  overflow-y: auto;
+  gap: var(--_option-row-gap);
 }
 .ds-dropdown-panel .optgroup {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--_option-row-gap);
 }
 .ds-dropdown-panel .optgroup-label {
   display: block;
@@ -2129,20 +2145,25 @@ html {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--_option-row-gap);
+}
+.ds-dropdown-panel .empty {
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-tertiary);
+  text-align: center;
 }
 .ds-dropdown-panel .option {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--_option-gap);
   width: 100%;
-  padding: var(--space-2) var(--space-2-5);
+  padding: var(--_option-padding);
   border: 0;
   background: transparent;
   font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
   cursor: pointer;
-  border-radius: var(--ds-radius-inner);
+  border-radius: var(--_option-radius);
   text-align: left;
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
@@ -2157,21 +2178,36 @@ html {
      overflow, and where the line box is tighter than the glyph box that overflow
      eats the glyph. Mulish measures 1.257em, so --line-height-flat (1) and -tight
      (1.1) are both under it and shave EVERY label, not only the ones with
-     descenders (MBP-245). `text-overflow` reads any non-`visible` overflow, so the
+     descenders. `text-overflow` reads any non-`visible` overflow, so the
      ellipsis still applies under `clip`. */
   overflow: clip;
   overflow-clip-margin: var(--space-1);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.ds-dropdown-panel .option .option-reason {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .ds-dropdown-panel .option .option-check {
   color: var(--_option-check-color);
   flex: 0 0 auto;
 }
-.ds-dropdown-panel .option:hover:not(.is-disabled, .is-selected), .ds-dropdown-panel .option.is-active:not(.is-disabled, .is-selected) {
-  background: var(--surface-secondary);
+.ds-dropdown-panel .option:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
 }
-.ds-dropdown-panel .option:active:not(.is-disabled) {
+.ds-dropdown-panel .option:hover:not(.is-disabled, .is-selected, :disabled), .ds-dropdown-panel .option.is-active:not(.is-disabled, .is-selected, :disabled) {
+  background: var(--_option-bg-color-active);
+}
+.ds-dropdown-panel .option:active:not(.is-disabled, :disabled) {
   background: var(--surface-muted);
 }
 .ds-dropdown-panel .option:focus-visible {

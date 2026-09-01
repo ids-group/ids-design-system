@@ -30,28 +30,27 @@ export class ToastService {
   show(opts: ToastOptions): ToastRef {
     this.ensureRegion();
     const id = this.nextId++;
+    const variant = opts.variant ?? 'info';
+    // Loading toasts never auto-dismiss (0 = indefinite).
+    const durationMs =
+      variant === 'loading' ? 0 : (opts.durationMs ?? 5000);
     const entry: ToastEntry = {
       id,
       title: opts.title,
       body: opts.body,
-      variant: opts.variant ?? 'info',
+      variant,
       dismissible: opts.dismissible ?? true,
       action: opts.action,
+      durationMs,
     };
+    // The region runs the countdown, because only it knows when the toast became
+    // visible — started here, one queued behind `maxVisible` expires unseen.
     this.regionRef!.instance.add(entry);
 
-    const ref: ToastRef = {
+    return {
       id,
       dismiss: () => this.regionRef?.instance.remove(id),
     };
-
-    const duration = opts.durationMs ?? 5000;
-    // Loading toasts never auto-dismiss (duration 0 means indefinite).
-    if (duration > 0 && opts.variant !== 'loading') {
-      window.setTimeout(() => ref.dismiss(), duration);
-    }
-
-    return ref;
   }
 
   /** Show a loading toast for the duration of `promise`. Resolves/rejects are

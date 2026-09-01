@@ -139,7 +139,34 @@ const INSIDER_PROSE = [
   'the backlog',
 ];
 
+// Whole-entry shapes, not stray words: each of these can only be the start of a sentence
+// about us repairing our own files.
+const OUR_RECORD = [
+  'manifests were corrected',
+  'manifest was corrected',
+  'manifests are corrected',
+  'published manifests corrected',
+  'corrected in migrations',
+  're-run these items',
+  'an earlier note of ours',
+  'this item\u2019s earlier text',
+];
+
 const PEOPLE = ['Stas', 'Misha'];
+
+// A release block runs Breaking, Added, Changed, Removed, Fixed, DELETE. Ranked by slot rather
+// than by heading, so a release that spells its breaking half `Changed (breaking, visual)` still
+// lands in the Breaking slot.
+const SECTION_SLOTS = [
+  [/^breaking|\(breaking/i, 0],
+  [/^added$/i, 1],
+  [/^changed$/i, 2],
+  [/^(removed|deprecated)$/i, 3],
+  [/^fixed$/i, 4],
+  [/^what you can now delete$/i, 5],
+];
+const SECTION_ORDER =
+  'Breaking → Added → Changed → Removed → Fixed → What you can now DELETE';
 
 // Symbols a module exports but the package root never surfaces: naming one tells a reader
 // to import something the package cannot give them. Resolved from the export graph, not a
@@ -232,10 +259,18 @@ function privateSymbols() {
     if (name.length >= 5 && !publicNames.has(name)) hidden.set(name, where);
   }
 
-  return { private: hidden, publicCount: publicNames.size };
+  return {
+    private: hidden,
+    publicCount: publicNames.size,
+    known: new Set([...ours.keys(), ...publicNames]),
+  };
 }
 
-const { private: PRIVATE_SYMBOLS, publicCount } = privateSymbols();
+const {
+  private: PRIVATE_SYMBOLS,
+  publicCount,
+  known: KNOWN_SYMBOLS,
+} = privateSymbols();
 
 // A consumer has its own `lint` and `test`; only the repo-specific names are unreachable
 // for the reader.
@@ -547,6 +582,32 @@ for (const { full, label: file, isSource } of targets) {
     );
   }
 
+  // C013 — a name that resolves to nothing at all. C010 walks the symbols that exist and are
+  // not exported, so it cannot see one that was never declared: `DsListCursor` reached
+  // `## Unreleased` described as exported, and the module declares `DsListCursorList` and four
+  // functions. Only our own `Ds*` prefix is resolved — Angular and TypeScript names are all
+  // over this prose and are not ours to account for.
+  scanFlat(
+    /`(Ds[A-Z][A-Za-z0-9_]+)`/g,
+    'C013',
+    (m) =>
+      `names \`${m[1]}\`, which this library does not declare — check the spelling, or name the symbol that exists`,
+    (m) => !KNOWN_SYMBOLS.has(m[1]),
+  );
+
+  // C014 — an entry whose SUBJECT is our own bookkeeping. The ban on decision archaeology reads
+  // as a rule about prose inside an entry, and three releases in a row still shipped a whole
+  // entry announcing that we had corrected a manifest. A consumer executes these files; that we
+  // repaired one is not a change to their code.
+  for (const phrase of OUR_RECORD) {
+    scanFlat(
+      new RegExp(loose(phrase), 'gi'),
+      'C014',
+      () =>
+        `reports our own record-keeping ("${phrase}") — correct the file so it reads as though it were always right, and say nothing`,
+    );
+  }
+
   for (const [name, where] of PRIVATE_SYMBOLS) {
     scanFlat(
       new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'),
@@ -562,6 +623,51 @@ for (const { full, label: file, isSource } of targets) {
           flat.slice(Math.max(0, m.index - 60), m.index + name.length + 60),
         ),
     );
+  }
+
+  // C012 — section order. Only for a file that actually looks like a changelog, so the rule
+  // stays silent on a digest or a manifest that happens to carry `###` headings.
+  if (lines.some((line) => /^## (Unreleased|\d+\.\d+\.\d+)/.test(line))) {
+    let release = null;
+    let seen = [];
+    const checkOrder = () => {
+      for (let i = 1; i < seen.length; i++) {
+        if (seen[i][1] < seen[i - 1][1]) {
+          report(
+            file,
+            seen[i][2],
+            'C012',
+            `in ${release}, "### ${seen[i][0]}" comes after "### ${seen[i - 1][0]}" — the order is ` +
+              SECTION_ORDER,
+          );
+          break;
+        }
+      }
+    };
+    lines.forEach((line, index) => {
+      if (line.startsWith('## ')) {
+        if (release) checkOrder();
+        release = line.slice(3).split(' — ')[0].trim();
+        seen = [];
+
+        return;
+      }
+      if (!release || !line.startsWith('### ')) return;
+      const heading = line.slice(4).trim();
+      const slot = SECTION_SLOTS.find(([pattern]) => pattern.test(heading));
+      if (!slot) {
+        report(
+          file,
+          index + 1,
+          'C012',
+          `unknown section "### ${heading}" in ${release}`,
+        );
+
+        return;
+      }
+      seen.push([heading, slot[1], index + 1]);
+    });
+    if (release) checkOrder();
   }
 }
 

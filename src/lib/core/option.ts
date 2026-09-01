@@ -12,6 +12,10 @@ export interface DsOption<T = string> {
   value: T;
   label: string;
   disabled?: boolean;
+  /** Why this option cannot be picked. Reaches the row as `aria-describedby`, so a
+   *  reader hears the reason instead of only meeting a dead row. Ignored unless
+   *  `disabled` is set. */
+  disabledReason?: string;
   /** Rendered before the label at 16px by every picker's option row. */
   icon?: IconName;
 }

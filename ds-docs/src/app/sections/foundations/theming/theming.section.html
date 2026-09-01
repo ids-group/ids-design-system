@@ -77,11 +77,8 @@
       :root
     </code>: hue ramps + HSL channels,
     <code class="t-mono-inline">
-      --static-white
-    </code> /
-    <code class="t-mono-inline">
       --static-ink
-    </code> (never flip), fonts.
+    </code> (never flips), fonts.
     <br />
 
     <strong>
@@ -153,12 +150,14 @@
     </code> fully
     <em>
       replaces
-    </em> light rather than delta-patching it. On-fill text uses
-    theme-stable <code class="t-mono-inline"> --static-white </code> /
+    </em> light rather than delta-patching it. On-fill text is the literal
+    <code class="t-mono-inline">
+      white
+    </code>, or the theme-stable
     <code class="t-mono-inline">
       --static-ink
-    </code> so it keeps correct
-    contrast across themes.
+    </code> where the fill is light, so
+    neither flips with the neutrals.
   </p>
 
   <pre class="t-mono-block">{{ activationSnippet }}</pre>

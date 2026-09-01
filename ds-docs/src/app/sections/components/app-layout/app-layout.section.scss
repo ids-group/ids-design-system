@@ -15,3 +15,11 @@
   color: var(--text-secondary);
 }
 
+
+/* The two demos differ only in WHERE the topbar starts, and a bare ds-topbar
+   paints nothing — so both read as the same picture. Tint it and draw its lower
+   edge, which is what makes `content` vs `full` visible at a glance. */
+.layout-demo ds-topbar {
+  background: var(--surface-secondary);
+  border-bottom: var(--border-width-default) solid var(--border-divider);
+}

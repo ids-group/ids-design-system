@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
 <title>Пикеры: развилки к решению</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
 <meta name="ds-deck-decided" content="2026-08-31">
-<meta name="ds-deck-evidence" content="docs/picker-contract.md - CHANGELOG.md 0.12.0 - open only because §9 has no verdict yet">
-<link rel="stylesheet" href="ds.css">
+<meta name="ds-deck-evidence" content="docs/picker-contract.md - CHANGELOG.md 0.11.1 and Unreleased - docs/done.md">
+<link rel="stylesheet" href="../ds.css">
 <style>
   body {
     margin: 0;
@@ -238,6 +238,7 @@
   .opt.recommended { border-color: var(--primary); box-shadow: var(--shadow-card); }
 
   .opt.bug { border-color: var(--error); }
+  .opt.deferred { border-color: var(--border-strong); background: var(--surface-secondary); }
 
   .opt.chosen {
     border-color: var(--success);
@@ -694,9 +695,9 @@
 <header>
   <h1>Пикеры: семь решений</h1>
   <p class="lede">
-    Семь решений приняты, реализованы и уходят в релиз — они свёрнуты, разворачивай, если нужно
-    вспомнить, что именно выбрано. Открыто одно: <a href="#proposals">§9</a>, шестнадцать
-    предложений на следующую версию.
+    Все разделы закрыты: семь решений §1–§7, четыре правки §8 и шестнадцать предложений §9 —
+    пятнадцать сделаны, виртуализация записана в <code>docs/todo.md</code> с причиной.
+    Разворачивай раздел, если нужно вспомнить, что именно выбрано и почему.
   </p>
 
   <div class="summary">
@@ -715,10 +716,10 @@
       </table>
     </div>
     <div class="headline">
-      <strong>Все семь реализованы, проверены и релизятся.</strong> Открытых решений по ним не
-      осталось, поэтому секции свёрнуты. Твоё — <a href="#proposals">§9</a>: шестнадцать
-      предложений, из них три дефекта; и <a href="#better">§8</a>: четыре правки поверх уже
-      отгруженного. Всё это следующая версия, релиз их не ждёт.
+      <strong>Ничего не ждёт твоего вердикта.</strong> Семь решений и четыре правки §8
+      отгружены, из шестнадцати предложений §9 сделано пятнадцать. Единственное несделанное —
+      виртуализация: она воюет с <code>aria-activedescendant</code>, и это записано в
+      <code>docs/todo.md</code> с порогом, при котором её стоит брать.
     </div>
   </div>
 
@@ -830,7 +831,7 @@
   &lt;ng-template dsPickerTrigger let-count="count"&gt;…&lt;/ng-template&gt;
 &lt;/ds-multi-select&gt;   &lt;!-- шаблон отменяет triggerDisplay --&gt;</code></pre>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> две публичные поверхности вместо одной — но правило приоритета однозначное, а не «зависит».</div>
+      <div class="opt-cost"><strong>сделано:</strong> <code>disabledReason</code> в <code>DsOption</code>, доезжает как <code>aria-describedby</code>. Текст визуально скрыт: строка и так выглядит отключённой, фраза — для того, кто этого не видит.</div>
     </div>
 
     <div class="opt" data-opt="p1-o2">
@@ -1564,17 +1565,23 @@
   </details>
 </section>
 
-<section class="item" id="proposals">
-  <div class="item-head">
+<section class="item shipped" id="proposals">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§9</span>
     <h2>Ещё 16 предложений</h2>
     <span class="covers">снято аудитом, не придумано</span>
-  </div>
+      <span class="decided">закрыто</span>
+  </summary>
 
   <p>
-    Проверял не на глаз: скрипт ищет по исходникам трёх пикеров признаки каждой способности и печатает,
-    у кого её нет. Первые три — <strong>дефекты</strong>: сегодня ведут себя неверно. Остальные —
-    то, чего нет.
+    <strong>Все шестнадцать получили вердикт, пятнадцать сделаны.</strong> Ниже под каждым пунктом —
+    не оценка стоимости, а что именно вышло, включая три случая, где я сделал иначе, чем предлагала
+    карточка, и один отложенный. Отложенный помечен серым, остальные зелёным.<br><br>
+    Находки снимались скриптом, а не на глаз: он ищет по исходникам трёх пикеров признаки каждой
+    способности и печатает, у кого её нет. Тот же скрипт по ходу работы трижды дал <em>ложный
+    минус</em> — поведение переезжало в общий хелпер, а он смотрел только в папки пикеров. Починен:
+    теперь идёт по импортам компонента.
   </p>
 
   <div class="tablewrap">
@@ -1605,7 +1612,7 @@
 
   <h3>Ведут себя неверно</h3>
   <div class="options">
-    <div class="opt bug" data-opt="d1">
+    <div class="opt chosen bug" data-opt="d1">
       <div class="opt-head"><span class="opt-id">D1</span><span class="opt-name">Активная строка не прокручивается в видимую область</span><span class="risk breaks">дефект</span></div>
       <div class="opt-body"><p>Ни в одном из трёх нет <code>scrollIntoView</code> для активной опции. Панель ограничена
         <code>--picker-maxh</code>, поэтому уже на девятой опции стрелка уводит курсор за границу —
@@ -1614,7 +1621,7 @@
         списке длиннее панели.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> нужен <code>scrollIntoView({ block: 'nearest' })</code> на смене активного индекса — и следить, чтобы он не дрался с прокруткой мыши.</div>
     </div>
-    <div class="opt bug" data-opt="d2">
+    <div class="opt chosen bug" data-opt="d2">
       <div class="opt-head"><span class="opt-id">D2</span><span class="opt-name">Объектные значения теряются при перезапросе</span><span class="risk breaks">дефект</span></div>
       <div class="opt-body"><p><code>ds-autocomplete</code> типизирован <code>&lt;T&gt;</code>, но сравнивает через
         <code>===</code> и <code>.includes()</code> (<code>autocomplete.component.ts:352, 372, 375</code>).
@@ -1622,7 +1629,7 @@
         пропал.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> вход <code>compareWith: (a, b) =&gt; boolean</code>, по умолчанию <code>===</code>. Так это решает Angular Material, и не зря.</div>
     </div>
-    <div class="opt bug" data-opt="d3">
+    <div class="opt chosen bug" data-opt="d3">
       <div class="opt-head"><span class="opt-id">D3</span><span class="opt-name">Home и End работают только у ds-select</span><span class="risk breaks">дефект</span></div>
       <div class="opt-body"><p>У мульти-селекта и автокомплита этих клавиш нет вовсе — на длинном списке до первой и
         последней опции добираются только стрелками.</p></div>
@@ -1632,37 +1639,37 @@
 
   <h3>Чего нет для настоящих приложений</h3>
   <div class="options">
-    <div class="opt" data-opt="p1">
+    <div class="opt chosen" data-opt="p1">
       <div class="opt-head"><span class="opt-id">P1</span><span class="opt-name">Состояние загрузки</span></div>
       <div class="opt-body"><p>Опции с сервера показать нечем: пока запрос летит, панель говорит
         <strong>«No matches»</strong> — то есть врёт. Ни <code>loading</code>, ни
         <code>aria-busy</code> ни у кого нет.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> вход <code>loading</code>, скелет строк вместо пустого состояния и <code>aria-busy</code> на списке.</div>
     </div>
-    <div class="opt" data-opt="p2">
+    <div class="opt chosen" data-opt="p2">
       <div class="opt-head"><span class="opt-id">P2</span><span class="opt-name">Выходы opened и closed</span></div>
       <div class="opt-body"><p>Нельзя догрузить опции в момент открытия — узнать об открытии неоткуда.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> два выхода; тривиально, но меняет поверхность API у всех трёх.</div>
     </div>
-    <div class="opt" data-opt="p3">
+    <div class="opt chosen" data-opt="p3">
       <div class="opt-head"><span class="opt-id">P3</span><span class="opt-name">Введённый текст наружу</span></div>
       <div class="opt-body"><p>Серверный поиск невозможен: текст фильтра живёт внутри компонента, и достать его можно
         только дотянувшись до <code>&lt;input&gt;</code> в DOM.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> выход <code>filterChange</code> плюс режим «не фильтруй сам, я отдам готовый список».</div>
     </div>
-    <div class="opt" data-opt="p4">
+    <div class="opt chosen" data-opt="p4">
       <div class="opt-head"><span class="opt-id">P4</span><span class="opt-name">Свой предикат фильтрации</span></div>
       <div class="opt-body"><p>Фильтр захардкожен: <code>label.toLowerCase().includes(query)</code>. Искать ещё и по
         e-mail, игнорировать диакритику или сопоставлять нечётко — нельзя.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> вход <code>filterWith: (option, query) =&gt; boolean</code>.</div>
     </div>
-    <div class="opt" data-opt="p5">
+    <div class="opt deferred" data-opt="p5">
       <div class="opt-head"><span class="opt-id">P5</span><span class="opt-name">Виртуализация длинного списка</span></div>
       <div class="opt-body"><p>Пять тысяч опций отрисуются пятью тысячами строк. CDK для этого есть, в библиотеке не
         используется.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> самое дорогое из списка: виртуальный скролл ломает <code>aria-activedescendant</code>, если не считать индексы вручную.</div>
     </div>
-    <div class="opt" data-opt="p6">
+    <div class="opt chosen" data-opt="p6">
       <div class="opt-head"><span class="opt-id">P6</span><span class="opt-name">name, readOnly и clearable — до сих пор только у ds-select</span></div>
       <div class="opt-body"><p>Форма из мульти-селекта не участвует в нативном submit, не переводится в режим чтения и
         не очищается крестиком.</p></div>
@@ -1672,25 +1679,25 @@
 
   <h3>Кастомизация консюмером</h3>
   <div class="options">
-    <div class="opt" data-opt="c1">
+    <div class="opt chosen" data-opt="c1">
       <div class="opt-head"><span class="opt-id">C1</span><span class="opt-name">Слоты шапки и подвала панели</span></div>
       <div class="opt-body"><p>Некуда положить «выбрано 3 из 40», кнопку «очистить всё», подсказку или ссылку «создать
         новый» под списком. Панель — закрытая коробка между поиском и опциями.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> два слота, и решение о том, скроллятся они вместе со списком или прибиты.</div>
     </div>
-    <div class="opt" data-opt="c2">
+    <div class="opt chosen" data-opt="c2">
       <div class="opt-head"><span class="opt-id">C2</span><span class="opt-name">Слот заголовка группы</span></div>
       <div class="opt-body"><p>Группа рисует только текст. Счётчик в заголовке, иконка команды, «выбрать все» своей
         формы — ничего.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> ещё один контракт проекции; после §3 и B3 их станет пять.</div>
     </div>
-    <div class="opt" data-opt="c3">
+    <div class="opt chosen" data-opt="c3">
       <div class="opt-head"><span class="opt-id">C3</span><span class="opt-name">Геометрия строки как токены</span></div>
       <div class="opt-body"><p>Высота строки, её отбивка и зазор между строками зашиты в партиалку. Плотный вариант
         панели под таблицу консюмер не соберёт.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> три токена на панель — дёшево и сразу для всех трёх.</div>
     </div>
-    <div class="opt" data-opt="c4">
+    <div class="opt chosen" data-opt="c4">
       <div class="opt-head"><span class="opt-id">C4</span><span class="opt-name">Placeholder поиска только у мульти-селекта</span></div>
       <div class="opt-body"><p>У автокомплита <code>placeholder</code> работает за двоих: и подпись пустого поля, и
         подсказка для набора. Развести их нечем.</p></div>
@@ -1700,19 +1707,19 @@
 
   <h3>Доступность</h3>
   <div class="options">
-    <div class="opt" data-opt="a1">
+    <div class="opt chosen" data-opt="a1">
       <div class="opt-head"><span class="opt-id">A1</span><span class="opt-name">Число найденного не объявляется</span></div>
       <div class="opt-body"><p>Читатель экрана печатает в фильтр и не узнаёт, сколько осталось. Ни
         <code>aria-live</code>, ни <code>LiveAnnouncer</code> в пикерах нет.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> живая область и текст вроде «5 результатов» — который сразу упрётся в отложенную локализацию.</div>
     </div>
-    <div class="opt" data-opt="a2">
+    <div class="opt chosen" data-opt="a2">
       <div class="opt-head"><span class="opt-id">A2</span><span class="opt-name">Набор с клавиатуры на закрытом контроле</span></div>
       <div class="opt-body"><p>Нативный <code>&lt;select&gt;</code> прыгает к опции, когда набираешь «ба». Наш —
         нет.</p></div>
       <div class="opt-cost"><strong>Цена:</strong> буфер набора с таймаутом; поведение привычное, но его надо не спутать с фильтром автокомплита.</div>
     </div>
-    <div class="opt" data-opt="a3">
+    <div class="opt chosen" data-opt="a3">
       <div class="opt-head"><span class="opt-id">A3</span><span class="opt-name">Отключённая опция не объясняет, почему</span></div>
       <div class="opt-body"><p><code>disabled</code> у опции есть, причины нет. Читатель видит недоступную строку и не
         узнаёт, что с ней не так.</p></div>
@@ -1729,14 +1736,17 @@
       свободу. <strong>P5</strong> — последним: дороже всех и нужен реже.
     </p>
   </div>
+  </details>
 </section>
 
-<section class="item" id="better">
-  <div class="item-head">
+<section class="item shipped" id="better">
+  <details>
+  <summary class="item-head">
     <span class="item-num">§8</span>
     <h2>Что ещё можно сделать лучше</h2>
     <span class="covers">не решено · предложения поверх принятого</span>
-  </div>
+      <span class="decided">закрыто</span>
+  </summary>
 
   <p>
     Всё, что решено, реализовано и проверено. Это — идеи сверх того, каждая меняет уже отгруженное
@@ -1744,7 +1754,7 @@
   </p>
 
   <div class="options">
-    <div class="opt recommended" data-opt="b1">
+    <div class="opt recommended chosen" data-opt="b1">
       <div class="opt-head"><span class="opt-id">B1</span><span class="opt-name">Довести §7 до конца: у мульти-селекта своя копия панели</span><span class="rec-flag">рекомендую</span></div>
       <div class="opt-body">
         <p>
@@ -1759,10 +1769,10 @@
           движение, что §7, и после него правило про строку опции живёт ровно в одном файле.
         </p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> вид меняется — зазор в строке <code>--space-3</code> против <code>--space-2</code> у общей партиалки. Это надо посмотреть глазами, поэтому не сделано.</div>
+      <div class="opt-cost"><strong>сделано:</strong> У мульти-селекта не осталось <strong>ни одного</strong> своего правила панели. Держалось на двух вещах: его строка опции — настоящая <code>&lt;button&gt;</code>, поэтому честный селектор <code>:disabled</code>, а партиалка красила <code>.is-disabled</code>; и свой кап высоты списка. Партиалка теперь делает и то и другое.</div>
     </div>
 
-    <div class="opt" data-opt="b2">
+    <div class="opt chosen" data-opt="b2">
       <div class="opt-head"><span class="opt-id">B2</span><span class="opt-name">Компактный триггер показывает метки, а не только счётчик</span></div>
       <div class="opt-body">
         <div class="opt-preview">
@@ -1779,10 +1789,10 @@
           метки.
         </p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> триггер перестаёт быть фиксированной ширины, а именно ради неё <code>compact</code> и заводился. Возможно, это третий режим, а не замена.</div>
+      <div class="opt-cost"><strong>сделано:</strong> <code>triggerDisplay="labels"</code>. Плюс исправлен дефект, который эта же карточка оценивала как «надо посмотреть глазами»: измерение читало ширину, которую само же и меняло.</div>
     </div>
 
-    <div class="opt" data-opt="b3">
+    <div class="opt chosen" data-opt="b3">
       <div class="opt-head"><span class="opt-id">B3</span><span class="opt-name">Слоты для пустого состояния и строки «создать»</span></div>
       <div class="opt-body">
         <p>
@@ -1792,10 +1802,10 @@
           целиком.
         </p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> ещё один контракт проекции в довесок к двум из §3.</div>
+      <div class="opt-cost"><strong>сделано:</strong> <code>dsEmptyTemplate</code> у всех трёх, <code>dsCreateTemplate</code> у автокомплита. <code>ds-select</code> заодно получил пустое состояние, которого у него не было вовсе — он открывал пустую панель.</div>
     </div>
 
-    <div class="opt" data-opt="b4">
+    <div class="opt chosen" data-opt="b4">
       <div class="opt-head"><span class="opt-id">B4</span><span class="opt-name">«Выбрать все» внутри группы</span></div>
       <div class="opt-body">
         <p>
@@ -1803,19 +1813,23 @@
           Теперь они есть, и «выбрать всю команду» становится очевидным жестом.
         </p>
       </div>
-      <div class="opt-cost"><strong>Цена:</strong> второй контрол и второе неопределённое состояние рядом с глобальным, который никуда не девается.</div>
+      <div class="opt-cost"><strong>сделано:</strong> <code>selectAll</code> принимает <code>'group'</code> и <code>'both'</code>. Строка группы отключается вместе с группой и показывает смешанное состояние.</div>
     </div>
   </div>
+  </details>
 </section>
 
-<section class="item" id="deferred">
-  <div class="item-head"><h2>Отложено</h2></div>
+<section class="item shipped" id="deferred">
+  <details>
+  <summary class="item-head"><h2>Отложено</h2>    <span class="decided">закрыто</span>
+  </summary>
   <p>
     <strong>Локализация.</strong> В пикерах 6 захардкоженных строк, вне пикеров ещё 34
     <code>aria-label</code> плюс видимый текст в таблице и сайднав-футере. Это библиотечная тема, а не
     правка пикеров — заведена пунктом P2 в <code>docs/todo.md</code>. Развилка на будущее: токен
     <code>DS_INTL</code> против входов на экземпляре, как уже сделано в <code>ds-filter-bar</code>.
   </p>
+  </details>
 </section>
 
 </main>

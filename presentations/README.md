@@ -3,6 +3,32 @@
 Standalone, single-file HTML decks (design decisions, comparisons, status pages).
 Open any `*.html` directly in a browser — they link the shared `ds.css`.
 
+## The filename carries the rank, so the folder listing IS the queue
+
+An `open` deck is named `<rank>-<slug>.html`, ranked 1..N by what answering it unblocks — so `ls`,
+the file explorer and the editor's tree all show the queue in priority order without opening
+anything. Ranked 2026-09-01:
+
+| # | Deck | Answering it unblocks |
+| --- | --- | --- |
+| 1 | `1-banner-toast-icon-alignment` | in flight — two validated screen findings (30/32) are ready to fix and waiting only on A vs B |
+| 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
+| 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
+| 4 | `4-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
+| 5 | `5-packaging-entry-points` | a consumer IS blocked on bundle size, and the measured prize is -80% of the DS's share of their initial bundle |
+| 6 | `6-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
+| 7 | `7-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
+| 8 | `8-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+
+**A `tool` is not in the queue and takes no number** (`backlog-board.html`,
+`overlay-guard-check.html`). Unprefixed, they sort below the ranked decks, which is where a utility
+belongs.
+
+**Ranks are renumbered when the queue changes** — a closed deck moves to `implemented/` and takes its
+number with it, and the rest close the gap. The number is the rank and nothing else: it is not an id,
+so never keep a stale one to preserve a link. There is deliberately no `ds-deck-rank` meta — one more
+marker is one more thing to drift, and the filename cannot drift from itself.
+
 ## A deck declares its own status, and that is what moves it
 
 A settled decision must not sit here looking like an open question. Every deck carries its status in
@@ -61,13 +87,35 @@ A deck in `implemented/` sits one directory deeper, so `href="ds.css"` has to be
 ### Find the drift
 
 ```bash
-grep -l 'content="implemented"' presentations/*.html            # claims it, still at root
-grep -L 'content="implemented"' presentations/implemented/*.html # moved without the marker
-grep -L 'ds-deck-evidence' presentations/implemented/*.html      # marked, nothing to check
-grep -l 'href="ds\.css"' presentations/implemented/*.html        # path not fixed on the move
+npm run deck-lint              # every rule below, over both folders
+npm run deck-lint:selftest     # and does each rule still fire? see the note under D012
 ```
 
-All four print nothing when the folder is honest.
+`deck-lint` replaces the hand-run greps that used to live here, because a check nobody runs is not a
+check. It is in `lint:all`, and every rule is a defect that actually shipped:
+
+| | Fires when |
+| --- | --- |
+| D001/D002 | no `ds-deck-status`, or a value outside `open`/`implemented`/`tool` |
+| D003/D004 | `implemented` sitting at root, or a non-`implemented` deck inside `implemented/` |
+| D005 | `implemented` with no `ds-deck-evidence` — which this README already treats as `open` |
+| D006/D009 | an `open` deck with no rank prefix, or a `tool` carrying one |
+| D007/D008 | two decks claiming one rank, or ranks that are not a contiguous 1..N |
+| D010/D011 | `ds.css` linked at the wrong depth — the sans-serif-fallback bug |
+| D012 | `var(--token)` that resolves to nothing: no fallback, undeclared here, absent from `ds.css` |
+| D013 | `ds-deck-evidence` citing a path that does not exist |
+| D015 | no `<title>`, so the tab and every listing show a filename |
+
+**D012 is the one with real blood on it.** On 2026-09-01 ten decks referenced four tokens the DS does
+not define — `--space-7`, `--border-subtle` (missed by the `subtle`→`subtitle` rename), `--shadow-md`
+and `--shadow-lg`. None had a usable fallback, so each voided its whole shorthand: five `h2` margins,
+two borders and a shadow were never applied, and three status pills in `new-components.html` rendered
+transparent. Nothing looked broken enough to notice.
+
+The selftest exists because a rule that cannot match is invisible — the lint stays green either way.
+It writes one throwaway deck per rule (never mutating a real one; this checkout is shared), asserts
+the code fires, and ends with a **negative control**: a valid deck that must stay green, so a linter
+that reported everything broken could not pass the suite.
 
 ## One deck is a test harness, not a deck
 

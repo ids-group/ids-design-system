@@ -1,16 +1,4 @@
 /**
- * Who sorts a `ds-table`.
- *
- * - `'server'` (default) — the table only emits `sortChange`; the host reorders.
- * - `'client'` — the table reorders `data()` itself, for a table holding every row.
- * - `'none'` — nothing sorts, and `sortable` columns render no affordance rather
- *   than a control that does nothing.
- *
- * Replaces the boolean `clientSort`, which could not express `'none'`: a column
- * marked `sortable` on a table with no sorting drew a live-looking header that
- * did nothing, and no type or dev check could catch it.
- */
-/**
  * Who applies the header filters.
  *
  * `'server'` (the default when unset) means the host does it: the table tracks
@@ -23,7 +11,23 @@
  */
 export type TableFilterMode = 'client' | 'server' | 'none';
 
+/**
+ * Who sorts a `ds-table`.
+ *
+ * - `'server'` (default) — the table only emits `sortChange`; the host reorders.
+ * - `'client'` — the table reorders `data()` itself, for a table holding every row.
+ * - `'none'` — nothing sorts, and `sortable` columns render no affordance rather
+ *   than a control that does nothing.
+ *
+ * Replaces the boolean `clientSort`, which could not express `'none'`: a column
+ * marked `sortable` on a table with no sorting drew a live-looking header that
+ * did nothing, and no type or dev check could catch it.
+ */
 export type TableSortMode = 'client' | 'server' | 'none';
+
+/** `'single'` closes the open row when another is expanded; `'multiple'` (default)
+ *  leaves every expanded row open. */
+export type TableExpandMode = 'multiple' | 'single';
 
 import type { IconName } from '../../icons/icons.data';
 

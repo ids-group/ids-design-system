@@ -48,13 +48,25 @@
     {
       "id": "surface-subtle-token-rename",
       "kind": "token-rename",
-      "old": "--surface-subtle",
-      "new": "--surface-subtitle",
-      "action": "Replace `--surface-subtle` with `--surface-subtitle`.",
+      "old": "--<role>-subtle",
+      "new": "--<role>-subtitle",
+      "action": "Rename the suffix on all eight: `--border-subtle`, `--error-subtle`, `--info-subtle`, `--primary-subtle`, `--secondary-subtle`, `--success-subtle`, `--tertiary-subtle`, `--warning-subtle` each become `--<role>-subtitle`. A plain search-and-replace of `-subtle` to `-subtitle` inside a custom-property name does the whole set.",
+      "appliesWhen": "Only a stylesheet or template of yours that reads one of the eight by name. A consumer who never overrode a subtle token has nothing to do.",
+      "pitfall": "The old names do not error and do not warn — a `var(--primary-subtle)` that no longer resolves falls back to nothing, so the element loses its tint and keeps rendering. Only looking at the screen finds it.",
+      "note": "Eight semantic tint tokens changed suffix: the `-subtle` family became `-subtitle` across border, error, info, primary, secondary, success, tertiary and warning. There is no `--surface-subtle` in this library and there never was.",
       "searchHints": [
-        "--surface-subtle"
+        "-subtle",
+        "--border-subtle",
+        "--error-subtle",
+        "--info-subtle",
+        "--primary-subtle",
+        "--secondary-subtle",
+        "--success-subtle",
+        "--tertiary-subtle",
+        "--warning-subtle"
       ],
-      "surface": "style"
+      "surface": "style",
+      "verify": "No stylesheet of yours reads a `--*-subtle` custom property any more, and every tint that was styled through one still paints."
     },
     {
       "id": "success-subtle-token-rename",

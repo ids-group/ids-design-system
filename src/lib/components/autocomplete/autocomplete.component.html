@@ -105,6 +105,8 @@
     [attr.aria-labelledby]="label() ? labelId : null"
     [attr.aria-label]="resolvedAriaLabel()"
     [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-readonly]="isReadOnly() ? 'true' : null"
+    [attr.name]="name()"
     [attr.aria-invalid]="invalidResolved() ? 'true' : null"
     [attr.aria-describedby]="hintId()"
     [disabled]="isDisabled()"
@@ -119,6 +121,25 @@
   <span class="addon-slot suffix">
     <ng-content select="[dsAutocompleteSuffix]"></ng-content>
   </span>
+
+  @if (
+      clearable() &&
+      hasSingleValue() &&
+      !isDisabled() &&
+      !isReadOnly()
+    ) {
+    <button
+      type="button"
+      class="clear-btn"
+      aria-label="Clear selection"
+      (click)="clearValue($event)"
+    >
+      <ds-icon
+        name="x"
+        [size]="14"
+      />
+    </button>
+  }
 
   @if (showChevron()) {
     <ds-icon
@@ -141,9 +162,23 @@
 
 <ng-template #panel>
   <div class="dropdown-panel">
+    @if (panelHeaderTemplate(); as tpl) {
+      <div class="panel-header">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: filteredOptions().length,
+            total: allOptions().length,
+            query: query(),
+          }"
+        />
+      </div>
+    }
+
     <ul
       class="dropdown-list"
       role="listbox"
+      [attr.aria-busy]="loading() ? 'true' : null"
       [id]="listboxId"
       [attr.aria-multiselectable]="multiple() ? 'true' : null"
     >
@@ -158,7 +193,18 @@
               class="optgroup-label"
               [class.is-first]="itemIdx === 0"
             >
-              {{ item.label }}
+              @if (groupLabelTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{
+                    $implicit: item,
+                    group: item,
+                    count: item.options.length,
+                  }"
+                />
+              } @else {
+                {{ item.label }}
+              }
             </span>
 
             @for (option of item.options; track option.value) {
@@ -172,6 +218,7 @@
                 [attr.aria-disabled]="option.disabled ? 'true' : null"
                 (click)="onPick(option)"
                 (mouseenter)="
+                  cursorFromKeyboard.set(false);
                   option.disabled || activeIndex.set(flatIndexOf(option))
                 "
               >
@@ -234,7 +281,8 @@
             [attr.aria-disabled]="option.disabled ? 'true' : null"
             (click)="onPick(option)"
             (mouseenter)="
-              option.disabled || activeIndex.set(flatIndexOf(option))
+              cursorFromKeyboard.set(false);
+                  option.disabled || activeIndex.set(flatIndexOf(option))
             "
           >
             @if (multiple()) {
@@ -284,7 +332,14 @@
         }
       }
 
-      @if (filteredOptions().length === 0 && !showCreateRow()) {
+      @if (loading()) {
+        <li
+          class="empty t-s"
+          role="presentation"
+        >
+          <ds-spinner size="sm" />
+        </li>
+      } @else if (filteredOptions().length === 0 && !showCreateRow()) {
         <li
           class="empty t-s"
           role="presentation"
@@ -309,7 +364,10 @@
           [class.is-active]="activeIndex() === visibleOptions().length"
           [attr.aria-selected]="false"
           (click)="onCreateNew()"
-          (mouseenter)="activeIndex.set(visibleOptions().length)"
+          (mouseenter)="
+            cursorFromKeyboard.set(false);
+            activeIndex.set(visibleOptions().length)
+          "
         >
           <ds-icon
             name="plus"
@@ -333,5 +391,19 @@
         </li>
       }
     </ul>
+
+    @if (panelFooterTemplate(); as tpl) {
+      <div class="panel-footer">
+        <ng-container
+          [ngTemplateOutlet]="tpl"
+          [ngTemplateOutletContext]="{
+            count: filteredOptions().length,
+            total: allOptions().length,
+            query: query(),
+          }"
+        />
+      </div>
+    }
+
   </div>
 </ng-template>
