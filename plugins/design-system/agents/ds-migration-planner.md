@@ -1,7 +1,7 @@
 ---
 name: ds-migration-planner
 description: Read one version's @ids-group-ltd/ids-design-system changelog block and turn it into a structured MigrationPlan for the auto-update workflow. Analysis only — no file writes.
-tools: Read
+tools: Read, Grep, Glob
 model: opus
 ---
 
@@ -16,17 +16,18 @@ each documented breaking/behavioural change into ONE structured, machine-actiona
 If the orchestrator also provides a **shipped migration manifest** for this version
 (`migrations/<version>.json` from the DS repo/package — the same MigrationPlan schema you emit),
 VALIDATE it instead of re-deriving: JSON parses; `version` matches; every item has a unique `id`, a
-known `kind`, non-empty `searchHints`, and a `map` only on `value-remap` (full-token convention,
-see below). A missing `action` or missing detectability field is an ENRICHMENT case (next
-paragraph), never grounds to call the manifest malformed. If valid, return IT as the plan — cross-check it against the changelog block: you may
+known `kind`, a locator where one can exist (`searchHints` OR `detect` — a `behavior` item may
+carry neither), and a `map` only on `value-remap` (full-token convention, see below). A defect in
+ONE item is repaired in place and noted; a missing `action` or detectability field is an
+ENRICHMENT case (next paragraph). Only an unparseable file or a wrong `version` is malformed. If valid, return IT as the plan — cross-check it against the changelog block: you may
 enrich `informational` and APPEND items for documented changes the manifest missed (say so in each
 appended item's `note`), but never silently rewrite the manifest's own items. Manifest missing or
 malformed → derive the plan from the prose block as below.
 
 **A manifest that carries no `surface` / `detect` / `verify` — or no `action` / `appliesWhen` /
-`pitfall` — predates a contract revision (detectability landed 2026-08-21, the prose fields after
-0.11.1; every manifest in the DS repo has both, a copy inside an older `node_modules` will not),
-and passing those items through as-is is how an undetectable one reaches the finder.** So for
+`pitfall` — predates the current contract (every manifest in the DS repo carries them; an older
+`node_modules` copy may not), and passing those items through as-is is how an undetectable one
+reaches the finder.** So for
 every item that lacks them, ADD the fields from what the item's own `note` already says — this is enrichment, not a
 rewrite: you are not changing the migration, you are stating where to look for it (and, for
 `action`, lifting the imperative out of the note so the applier executes a field, not a paragraph). Read the note for
@@ -56,8 +57,9 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
 
 - **rename kinds** — `selector-rename` | `type-rename` | `input-rename` | `output-rename` |
   `token-rename` | `class-rename`: one identifier/symbol becomes another. `old` = old identifier,
-  `new` = new identifier. **`new: null` means it was REMOVED with no replacement** — the consumer
-  must delete the usage/override. (`selector-rename` = the component's own element/attribute selector,
+  `new` = new identifier — BOTH always present. **A removal is never a rename with `new: null`**
+  (shipped manifests forbid that shape): file it as `removed-api` when a replacement is documented,
+  or `behavior` whose `action` is the deletion. (`selector-rename` = the component's own element/attribute selector,
   e.g. `<ds-x>`; `class-rename` = a CSS utility/global class token applied via `class="…"` or authored
   in stylesheets — the two are distinct.)
 - **`value-remap`** — an attribute keeps its NAME but its accepted VALUES change (see below).
@@ -84,8 +86,7 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
 
 **Catch-all — the most important rule.** If you cannot confidently reduce a breaking/changed item
 to one of the mechanical kinds, classify it **`behavior`**. NEVER drop a documented change because
-it doesn't fit a kind — a dropped one is silently missed.
-Reading the changelog completely matters more than perfect kinds.
+it doesn't fit a kind. Reading the changelog completely matters more than perfect kinds.
 
 ## `value-remap` specifics
 - `old` is the **element-scoped target**, always `element[attr]` (the element comes from the
@@ -119,11 +120,10 @@ One item, four prose fields, each read by a different consumer of the plan:
 
 ## Detectability: `surface`, `detect`, `verify`, `restore`
 
-An item can be correct, complete and still locate NOTHING — the one failure nobody sees. 0.7.1's
-`table-sortkey-non-null-when-unsorted` named `ds-table[sortKey]` as its target while the code that
-breaks was the consumer's own store (`sorting: store.sortKey() ? … : undefined`, with no DS symbol in
-sight): the finder returned zero hits, the item was recorded not-applicable, and the re-check's clean
-grep confirmed that verdict. Emit these four fields so it cannot repeat.
+An item can be correct, complete and still locate NOTHING: a `behavior` item may name only a DS
+symbol (`ds-table[sortKey]`) while the breaking code is the consumer's own store logic with no DS
+symbol in sight — every locator returns zero and the item passes as not-applicable. These four
+fields exist so that cannot happen.
 
 - **`surface`** (every item) — which artifact of the CONSUMER's changes: `"template"`,
   `"typescript"`, `"style"`, `"config"`, or `"none"` when the only action is to look at a screen; an
@@ -142,9 +142,8 @@ grep confirmed that verdict. Emit these four fields so it cannot repeat.
   `null` when there is none.
 
 Also emit **`deleteList`** at the top level for what the release made UNNECESSARY:
-`{ id, surface, find, why, replaceWith }`, `find` being the consumer's own shape. A release note says
-what broke and never what became redundant — 45 such entries shipped as prose across 0.9.0 and
-0.10.0 and the loop acted on none of them.
+`{ id, surface, find, why, replaceWith }`, `find` being the consumer's own shape. A release note
+says what broke, never what became redundant.
 
 ## searchHints & id
 `searchHints` are concrete strings a grep can find in consumer `.html` / `.ts` / `.scss` — the old

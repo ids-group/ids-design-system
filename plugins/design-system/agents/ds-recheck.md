@@ -38,8 +38,15 @@ Two verification modes:
      | renamed / moved / `null` (dropped) | yes — require **0** occurrences |
      | maps to itself (same token) | no — still valid |
      | ABSENT from `map` | no — the changelog documented no change for it |
-  Applier-`needsReview` occurrences (unresolvable dynamic bindings) go in `remaining` but are NOT
-  failures — tag each with a `reason` so a human can tell an excused leftover from a real miss.
+
+  A "moved" replacement can itself contain the old token (`outline` → `color="neutral"
+  variant="outline"`): an occurrence standing inside the full replacement is migrated, not old —
+  count only occurrences NOT accompanied by the rest of the replacement.
+  An occurrence at a `loc` named by the applier's forwarded `needsReview` entries (an unresolvable
+  dynamic binding) goes in `remaining` as `excused-dynamic-binding`, not a failure; every other
+  leftover is a `real-miss`. No forwarded `locs` = nothing is excused.
+  **Then test the item's `verify` assertion like a behavioural one** — a remap changes what a
+  binding MEANS with no symbol removed, so the clean grep alone proves nothing.
 - **`scss-api` / `code-add`:** when the applier reported `replaced` — confirm the old path/symbol
   is gone; when it reported `inserted` (the item's `old` was an anchor, not a target) — confirm
   `new` is present at the location the item's `action`/`note` describes. A clean grep for an `old`
@@ -55,9 +62,7 @@ Two verification modes:
   item carries a `verify` sentence, that sentence IS the check: search the surface it names and judge
   it directly (*"every place that turns (sortChange) into a query gates on the direction, not the
   key"* → read every such place and look). A behavioural item has no old identifier whose
-  disappearance means anything, so "grep for `old` came back clean" is not evidence — reporting
-  `migrated: true` on that basis is exactly how 0.7.1's sortKey item passed three times in one
-  consumer while three screens stayed broken. No `verify` on the item and no way to construct one
+  disappearance means anything, so "grep for `old` came back clean" is not evidence. No `verify` on the item and no way to construct one
   from the `note` → `confidence: "low"`, and say in `note` that the item is unverifiable as written.
 - **Not-applicable items** (the finder reported zero hits, so nothing was applied): your grep is the
   independent confirmation of that verdict. Clean grep → `migrated: true`,
@@ -68,7 +73,8 @@ Two verification modes:
   locator matches this repo"`, so the report carries it as manifest evidence rather than consumer
   state; anything found → `migrated: false` with the hits.
   **This shortcut is for MECHANICAL items only.** On a behavioural item whose surface is not the
-  template, zero hits means the item's shapes did not match this consumer's spelling — go and test
+  template (and not `none` — a `none` item changes no code), zero hits means the item's shapes did
+  not match this consumer's spelling — go and test
   the `verify` assertion over that surface yourself before agreeing it does not apply, and search the
   consumer's own vocabulary (their store, their query builder, their theme) rather than our API name.
 - **Verifying against the real API:** don't rely on the `note` alone — verify the edit against V's
@@ -77,9 +83,11 @@ Two verification modes:
   `types/*.d.ts` = public API, `fesm2022/` = internals, `themes/` + `styles/` = SCSS tokens — at
   re-check time it holds V). Both read-only.
 - **Customization-drift fixes** (the orchestrator retargeted consumer deep-selectors/tokens onto the
-  new version's internals): mechanical existence check — confirm every NEW selector/class/token in
-  the fix actually exists on V's real surface (grep the sources checkout / installed bundle for the
-  class or token name) and no dead OLD one remains in the consumer. A typo in a retargeted selector
+  new version's internals): the orchestrator sends each fix as a synthetic item — `old` = the dead
+  selector/class/token, `new` = the retargeted one, `surface: "style"`, `verify` = the existence
+  assertion. Mechanical existence check over exactly those: confirm `new` exists on V's real surface
+  (grep the sources checkout / installed bundle for the class or token name) and no dead `old`
+  remains in the consumer. A typo in a retargeted selector
   compiles clean — your grep is the only thing that catches it.
 - Do NOT edit anything.
 

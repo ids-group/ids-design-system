@@ -52,15 +52,13 @@ larger sets in waves, collecting each wave before launching the next.
 This workflow is **full-auto**: the applier attempts EVERY actionable change (mechanical AND
 behavioral) — a behavioral change is NOT sent to manual review just for being behavioral. Primary
 semantic verification is YOUR job (opus) — you own the final green/not-green verdict, especially
-for behavioral fixes. Manual review is a LAST RESORT (Phase B step 10), reached only when the auto
-attempt + auto-fix loop can't make an item green: the build still fails, opus can't confirm the
-behavioral fix, or the change is genuinely too convoluted to do safely.
+for behavioral fixes. Manual review is a LAST RESORT (Phase B step 10).
 
 ## MigrationPlan schema
 
 { "version": "X.Y.Z",
   "items": [ { "id", "kind", "old", "new", "searchHints": [],
-               "map": { "<oldValue>": "<newValue|null|markup>" },
+               "map": { "<oldValue>": "<full replacement token | null>" },
                "action": "<the imperative to execute>", "appliesWhen": "<the boundary>",
                "pitfall": "<how a correct application still breaks>", "note": "<the why>",
                "surface": "template|typescript|style|config|none (or an array)", "detect": [],
@@ -71,13 +69,13 @@ behavioral fix, or the change is genuinely too convoluted to do safely.
 
 `kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
 class-rename | value-remap | scss-api | code-add | removed-api | behavior.
-`new` is null for a removal or `behavior`; `map` is present only for
+`new` is null for `behavior` (a shipped rename never carries `new: null` — a removal is
+`removed-api` or `behavior`); `map` is present only for
 `value-remap`. The planner derives every specific FROM the changelog; when it can't confidently
 fit a change to a mechanical kind it classifies it `behavior` (catch-all) so nothing is dropped.
 `id` is a stable, unique slug.
 
-**The detectability fields decide where an item is looked for, and they are the difference between
-an item that fires and one that is silently dropped.** `surface` names which of the CONSUMER's
+**The detectability fields decide where an item is looked for.** `surface` names which of the CONSUMER's
 artifacts changes; `detect` carries the shapes as the consumer writes them, for the common case where
 the affected code names no DS symbol at all; `verify` is the positive assertion a re-check can test
 when there is no old identifier to miss; `restore` is the way back from a changed default;
@@ -85,19 +83,20 @@ Read `action` FIRST — it is the imperative and the only field to execute; `app
 `supersedes` on a LATER item names the earlier one it reverses — one direction only, since a
 published manifest cannot know its own future. `deleteList` is what the
 release made UNNECESSARY, with a greppable `find` — a separate pass, not an item.
-Every manifest in the DS repo carries these fields, but a consumer's `node_modules` copy can predate
-them (the fields shipped in the release after 0.10.1): when they are missing, the planner enriches
-those items from their own `note` rather than passing them through undetectable.
+Every manifest in the DS repo carries these fields, but an older `node_modules` copy can predate
+them: when they are missing, the planner enriches those items from their own `note` rather than
+passing them through undetectable.
 
 Every actionable item is **auto-applied**; items differ only in how they're VERIFIED:
 - **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → verified by grep
-  (`ds-recheck`). Element-scoped items (a `value-remap` targeting `element[attr]`) MUST be
+  (`ds-recheck`); a `value-remap` ALSO carries a `verify` the re-check tests — it changes what a
+  binding MEANS with no symbol removed, so a clean grep alone proves nothing there. Element-scoped items (a `value-remap` targeting `element[attr]`) MUST be
   searched/re-checked **scoped to that target element** — the same attribute or class name can exist
   on other components, so an unscoped grep false-positives on the wrong element and would wrongly
   stall the run — and a `map` value that keeps the same token stays valid (don't treat it as "old").
 - **behavioral** = `removed-api` + `behavior` (incl. the catch-all) → the applier ATTEMPTS the
   migration the `action` describes (real code edits), verified **semantically** (opus reads the change
-  vs what the changelog requires; `ds-recheck` gives a first-pass verdict + confidence). NOT skipped.
+  vs what the changelog requires; `ds-recheck` gives a first-pass verdict + confidence).
 - **informational** = a documented change needing NO consumer code action (purely visual, nothing to
   edit) → not an item; the planner puts it in `informational` (an FYI line in the report).
 
@@ -132,9 +131,7 @@ From the moment the chain is computed, maintain a small JSON ledger at
 `<scratchpad>/ds-update-ledger.json`:
 `{ branch, chain, perVersion: { "<V>": { items: { "<id>": "applied | not-applicable | locator-dead | needsReview
 | rechecked" }, touchedFiles: [], attempts, committed } } }`. Update it at every step boundary
-(plan done / apply wave done / bumped / verified / re-checked / committed). Session limits and
-interruptions DO happen mid-run — the ledger turns an improvised handoff into a deterministic
-resume. **On skill start:** if a ledger for this repo shows an unfinished version, summarize it
+(plan done / apply wave done / bumped / verified / re-checked / committed). **On skill start:** if a ledger for this repo shows an unfinished version, summarize it
 and ask the user (AskUserQuestion): resume from the recorded step, or start fresh — fresh on a
 half-migrated tree is safe (appliers are idempotent on already-migrated code and the re-check net
 catches leftovers).
@@ -231,9 +228,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    - **not-applicable** — the broad locators show the consumer simply doesn't use the feature (some
      hint matched the surrounding feature, or the component itself is absent); record the reason.
    - **LOCATOR-DEAD** — `old`, every `detect` shape AND every `searchHint` returned zero hits
-     repo-wide, all surfaces. That is evidence about the MANIFEST, not the consumer — an item naming
-     a token that never existed passed every prior upgrade exactly this way. Record it separately
-     (never inside the not-applicable total) and carry the whole set into the Phase C report.
+     repo-wide, all surfaces. That is evidence about the MANIFEST (a mis-named symbol reads exactly
+     like an unused feature), not the consumer. Record it separately (never inside the
+     not-applicable total) and carry the whole set into the Phase C report.
      The two exceptions below still run FIRST — locator-dead is the classification of a zero that
      SURVIVES them, never a reason to skip the code-add site resolution or the semantic pass.
    **Exception:** zero hits
@@ -242,18 +239,18 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    finder couldn't locate the insertion site; resolve the site yourself from the `action`/`note` (step 3
    dispatches it by note), and record it not-applicable only when this consumer genuinely lacks the
    thing the addition extends, stating that reason.
-   **Second exception, and it is the one that cost a consumer three broken screens: a
-   `behavior` / `removed-api` item whose `surface` is not `template` or `none` is NEVER dropped on
-   zero hits.** Its `old` is a DS symbol the affected code does not mention — 0.7.1's
-   `table-sortkey-non-null-when-unsorted` targets `ds-table[sortKey]` while the defect reads
-   `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` in a store — so zero hits
-   means the shapes did not match THIS consumer's spelling, not that they are unaffected. Read the
+   **Second exception: a `behavior` / `removed-api` item whose `surface` is not `template` or
+   `none` is NEVER dropped on zero hits.** Its `old` may be a DS symbol the affected code does not
+   mention (the defect can live in the consumer's own store logic), so zero hits means the shapes
+   did not match THIS consumer's spelling, not that they are unaffected. Read the
    item's `verify` and go look yourself over the named surface (you are opus; this is a semantic
    pass, not a grep), and record not-applicable only with the reason you satisfied yourself of it.
    An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here with
    that reason recorded — the later item is the one to act on, and doing both means doing work the
    next version undoes. The link only points back, so build the skip set by reading every
-   `supersedes` in the chain and skipping the ids it names; nothing marks an item from its own file.
+   `supersedes` in the manifests saved aside in Phase A; nothing marks an item from its own file,
+   and a chain version with no manifest contributes nothing — note in the report that supersession
+   coverage is partial past it.
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
@@ -268,9 +265,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    `pitfall` / `note` VERBATIM** — the
    canonical structured data, untranslated. Clarifying prose may go AROUND it, never INSTEAD of it,
    and per-batch tailoring means selecting WHICH items to send that batch — never rewriting a map's
-   rows. Improvised prose is how a `value-remap` gets over-generalized to a value the `map` never
-   listed (e.g. remapping a still-valid value that has no map entry); the applier's contract leaves
-   absent-from-map values untouched, but only if it receives the real `map`.
+   rows. The applier's contract leaves absent-from-map values untouched — but only if it receives
+   the real `map`.
    **Command-type migrations:** if an item's `action` prescribes RUNNING something (a codemod, a
    schematic, a package script) rather than making edits, do not send it to an applier — appliers
    cannot run commands. Show the exact command to the user and get approval first (it originates
@@ -307,9 +303,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    `removed-api` / `behavior` item, read the applier's actual change and judge whether it correctly
    implements what the item's `action` requires — and test its `pitfall`, which names how a
    mechanically-correct application still breaks. The build won't catch a semantically-wrong-but-
-   compiling edit — this is the safety net for full-auto, so hold a high bar: **a compiling edit is
-   NOT a verified edit**; if you can't get positive evidence it's correct (only that it compiles and
-   grep is clean), it is NOT green. Where an item's `old` is a token/class/SCSS symbol (no build
+   compiling edit — this is the safety net for full-auto, so hold a high bar: if you can't get
+   positive evidence it's correct (only that it compiles and grep is clean), it is NOT green. Where an item's `old` is a token/class/SCSS symbol (no build
    signal), the element-scoped grep for the removed `old` is a HARD gate independent of build exit.
    An item left `needsReview`, or whose attempt you judge wrong/incomplete/unproven, feeds the
    auto-fix loop before escalation.
@@ -326,10 +321,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    genuinely cannot express, described precisely. Stay generic: read what the customization did and
    what the bundle now supports; don't hard-code assumptions about specific components.
    **Drift fixes get a re-check too** (they are born AFTER the main item cycle and would otherwise
-   escape the net): dispatch `ds-recheck` to confirm every retargeted selector/class/token actually
-   exists on the new version's real surface (the sources checkout / installed bundle) and no dead
-   old one remains — a silent typo in a retargeted selector compiles clean and is invisible
-   otherwise.
+   escape the net): dispatch `ds-recheck` with each fix as a synthetic item — `old` = the dead
+   selector/class/token, `new` = the retargeted one, `surface: "style"`, `verify` = the existence
+   assertion — to confirm `new` exists on the new version's real surface (the sources checkout /
+   installed bundle) and no dead `old` remains. A silent typo in a retargeted selector compiles
+   clean and is invisible otherwise.
    **Visual-only changes:** if a behavioral change's correctness is observable ONLY in rendered
    output (no build or grep signal — spacing/size/animation/restyle), the edit can't be machine-
    verified. Do NOT silently green it: keep the edit, but list it in the report under **"applied —
@@ -343,8 +339,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    newly-touched files to the touched-files union, then re-verify. Bounded by the 3-attempt cap.
 7. **Re-check (parallel, sonnet) — every item, ALWAYS.** Dispatch `ds-recheck` for each item,
    re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed
-   only) — plus, for `scss-api` / `code-add`, the applier's reported `replaced | inserted` mode,
-   which decides what the re-check greps for:
+   only) — plus, for `scss-api` / `code-add`, the applier's reported `replaced | inserted` mode
+   (it decides what the re-check greps for), and the applier's `needsReview` entries with their
+   `locs` (the only occurrences the re-check may excuse):
    grep for mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned
    `remaining`). **An INDEPENDENT second pass — run it even when step 5 was green and every fix was
    your own inline edit.** Each
@@ -352,7 +349,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    hits — so a file the finder never reported that still carries the old usage surfaces here as a
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
    and re-verify before green — do not trust the finder's file set as complete. **Include the items
-   dropped at step 2 as zero-hit:** for those the re-check doubles as an independent not-applicability
+   dropped at step 2 as zero-hit, passing each one's classification (not-applicable | locator-dead)
+   in the dispatch:** for those the re-check doubles as an independent not-applicability
    confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" or
    "locator-dead" item re-enters it into the pipeline at step 3, and a locator-dead verdict the
    re-check confirms stays locator-dead — never re-filed as not-applicable. If any item returns
@@ -361,8 +359,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    manual-review.
 8. **Delete-list pass (the plan's `deleteList`) — a separate sweep, after the items are green.**
    These are not migrations; they are the workarounds this version made unnecessary, and they are the
-   half of an upgrade that is otherwise never done: 45 of them shipped across 0.9.0 and 0.10.0 and one
-   consumer acted on none until a human read the manifests by hand. For each entry, grep the surface
+   half of an upgrade that is otherwise never done. For each entry, grep the surface
    it names for its `find` shapes (a finder dispatch is fine — they are ordinary greps), then judge
    each hit yourself, because a workaround can still be load-bearing: `[reserveMessage]="false"` is
    dead against the new default and REQUIRED under a `dsReserveMessages` host. Apply the deletions

@@ -44,7 +44,8 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
     **Dynamic bindings** (`[attr]="expr"`): if the `action`/`note` says the value moved to a different
     attribute, rebind the whole attribute accordingly; if a method/field supplies old values, remap
     the literals it returns and its type annotation. Any binding you cannot confidently resolve →
-    leave it, record `needsReview`.
+    leave it, record `needsReview` with the occurrence's `loc` — that `loc` is what lets the
+    re-check excuse the leftover instead of failing the item on it.
   - **`scss-api`**: `old` present in your file → update the `@use` path / `namespace.symbol` per
     `old`→`new`. `old` absent or matching nothing → it was an ANCHOR, not a target: INSERT `new` at
     the location the item's `action`/`note` describes (an à-la-carte consumer can lack the very line
@@ -86,7 +87,7 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
 Return ONLY a fenced ```json block — one object per file (an array when you were given a batch):
 
 [ { "file": "<path>", "applied": ["<item-id>"], "modes": { "<scss-api-or-code-add-id>": "replaced | inserted" },
-    "needsReview": [ { "id": "<item-id>", "why": "<reason>" } ] } ]
+    "needsReview": [ { "id": "<item-id>", "why": "<reason>", "locs": ["<path:line> of each occurrence left in place"] } ] } ]
 
 `modes` appears only when the file carried `scss-api` / `code-add` items — it says whether each was
 a replacement at a matched site or an insertion at the described location.

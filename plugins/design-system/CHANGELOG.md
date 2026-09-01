@@ -23,6 +23,15 @@ from success (found by the 2026-08-31 manifest audit).
   the described location instead of grepping for an `old` that was never there.
 
 ### Changed
+- **Adversarial review pass over the whole skill + agents.** Correctness: the re-check excuses only
+  occurrences the applier named in `needsReview.locs` (the excuse data now exists and is forwarded);
+  a `value-remap`'s `verify` is tested, and an old token standing inside its full replacement no
+  longer fails the item; drift fixes are dispatched as synthetic items; the planner accepts
+  detect-only and locator-less `behavior` items instead of discarding the whole manifest, repairs a
+  single defective item in place, never emits rename+`new: null`, and gains Grep/Glob; the finder
+  filters non-target hits itself; the locator-dead/not-applicable mark travels into the re-check
+  dispatch; `surface: "none"` is exempt from the semantic pass on both sides. Archaeology: dated
+  war stories and duplicate slogans cut throughout — rules now stand on their constraints.
 - **Field model synced with the manifests' current contract.** `action` is the imperative and the
   only field the applier executes ("None, unless …" whose condition is unmet = applied-as-no-op);
   `appliesWhen` bounds where an edit may land; `pitfall` is tested by the orchestrator's semantic
