@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Migration manifest audit — 23 findings</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="audit closed 23/23; the What-the-format-is-missing adopts are open - docs/todo.md">
+<meta name="ds-deck-evidence" content="audit closed 23/23; 3 of the 13 adopts have since shipped, 10 open - migrations/README.md - docs/todo.md">
 <link rel="stylesheet" href="ds.css">
 <style>
   :root { color-scheme: light; }
@@ -219,6 +219,7 @@
     white-space: nowrap;
   }
   .adopt { background: var(--success-subtitle); color: var(--success); }
+  .landed { background: var(--primary-subtitle); color: var(--primary); }
   .reject { background: var(--error-subtitle); color: var(--error); }
 
   /* ── actions ──────────────────────────────────────────────── */
@@ -636,13 +637,18 @@
       Every row came from a primary source — official docs or repository source, not blog summaries.
       The verdict column is a judgement about <em>this</em> repo, not about the practice.
     </p>
+    <p>
+      <strong>Three of the thirteen have shipped since — checked against the code on 2026-09-01,
+      not against this page.</strong> The other ten are still unratified, and they are the whole of
+      what this deck is still open for: <code>docs/todo.md</code> carries them as one P3 line.
+    </p>
     <div class="scroller">
       <table>
         <thead>
           <tr><th>Practice</th><th>Where it comes from</th><th>Verdict here</th></tr>
         </thead>
         <tbody>
-          <tr><td>Precondition guard</td><td>OpenRewrite <code>Preconditions.check</code>; Nx requires each agentic runbook to open with a no-op guard</td><td><span class="verdict adopt">Adopt</span></td></tr>
+          <tr><td>Precondition guard</td><td>OpenRewrite <code>Preconditions.check</code>; Nx requires each agentic runbook to open with a no-op guard</td><td><span class="verdict landed">Shipped</span> — <code>appliesWhen</code>, documented in <code>migrations/README.md</code></td></tr>
           <tr><td><code>replaceIn</code> polarity</td><td>CDK’s <code>CssTokenUpgradeData</code> defaults to <em>all</em> files and narrows; our <code>surface</code> is a whitelist that silently excludes</td><td><span class="verdict adopt">Adopt polarity</span></td></tr>
           <tr><td>Executable verification</td><td>Polaris ships a literal alternation RegExp per token group for post-migration validation</td><td><span class="verdict adopt">Adopt</span></td></tr>
           <tr><td>Runtime signal ids</td><td>Vue’s ID-keyed compat warnings; Ember collects what actually fired per app</td><td><span class="verdict adopt">Adopt</span> — <code>devWarn</code> already exists</td></tr>
@@ -651,11 +657,11 @@
           <tr><td><code>deprecatedIn</code></td><td>ESLint <code>deprecatedSince</code>; Ember RFC 0649 <code>since</code></td><td><span class="verdict adopt">Adopt one half</span>; reject <code>availableUntil</code></td></tr>
           <tr><td>Deprecation window</td><td>SemVer §7 makes a minor carrying the deprecation mandatory before removal; Carbon runs a v10→v12 window</td><td><span class="verdict reject">Reject pre-1.0</span></td></tr>
           <tr><td>Value-change as a kind</td><td>Adobe’s token-diff-generator treats <em>updated</em> as distinct from added/deleted/renamed</td><td><span class="verdict reject">Rejected</span> — measured after the prose split: <strong>4</strong> candidates, and all four already carry <code>restore</code>, which M024 demands. A new kind adds a label and no check.</td></tr>
-          <tr><td>Instruction split from rationale</td><td>Conventional Commits’ description / body / footers; position-in-context research</td><td><span class="verdict adopt">Adopt an <code>action</code> field</span> — 20 notes exceed 200 words</td></tr>
+          <tr><td>Instruction split from rationale</td><td>Conventional Commits’ description / body / footers; position-in-context research</td><td><span class="verdict landed">Shipped</span> — <code>action</code>, with <code>pitfall</code> carrying the trap the note used to bury</td></tr>
           <tr><td>Provenance link</td><td>CDK makes the PR link a required member of its change record</td><td><span class="verdict adopt">Adopt optional</span>, lint only on unreleased</td></tr>
           <tr><td><code>schemaVersion</code></td><td>Flutter’s <code>fix_data.yaml</code> mandates <code>version: 1</code></td><td><span class="verdict adopt">Adopt</span></td></tr>
           <tr><td>Array-valued <code>new</code></td><td>Primer’s <code>deprecated.json</code> maps one token to several, or null</td><td><span class="verdict reject">Rejected</span> — <strong>0</strong> of 78 renames have more than one candidate. The one real case (the three <code>-fg</code> suffixes) is a menu, not a mapping: the consumer must look up which, and <code>action</code> says so.</td></tr>
-          <tr><td>Package reachability</td><td>Primer publishes deprecation data so a stylelint plugin can read it</td><td><span class="verdict adopt">Adopt one line</span> — today <code>ERR_PACKAGE_PATH_NOT_EXPORTED</code></td></tr>
+          <tr><td>Package reachability</td><td>Primer publishes deprecation data so a stylelint plugin can read it</td><td><span class="verdict landed">Shipped</span> — <code>exports["./migrations/*"]</code></td></tr>
           <tr><td><code>ng-update</code> requirements</td><td>A hard pre-flight the Angular CLI enforces</td><td><span class="verdict adopt">Adopt the key</span>; reject porting to real schematics</td></tr>
           <tr><td>Dry-run hit counts</td><td>jscodeshift prints per-file outcomes; Next.js warns a wrong path reports <code>0 ok</code> rather than failing</td><td><span class="verdict adopt">Adopt in the plugin</span></td></tr>
           <tr><td>Confidence axis</td><td>ESLint’s <code>fixable</code> / <code>hasSuggestions</code></td><td><span class="verdict reject">Reject</span> — already carried twice</td></tr>
