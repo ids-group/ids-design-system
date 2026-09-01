@@ -36,11 +36,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the brand families did. The declaration was invalid at computed-value time, so every label that
   reads `--accent-strong` (selected list rows and tree rows, the active sidenav item and its rail,
   the active tab pill, avatar initials, the active tag, dropzone text, the toast icon) fell back to
-  plain body text inside a status zone. `--error-strong`, `--success-strong` and `--warning-strong`
-  are now defined — as ramp picks, like every other tuned status role — and land on the same value
-  their family's `-text` already had, so nothing that was rendering correctly changes. Every accent
-  pointer also carries a fallback now, so a role that goes missing in future degrades to the
-  family's base colour instead of disappearing, and `check-color-families` fails the build on it.
+  plain body text inside a status zone. No new token was needed: a status family already carries its
+  readable on-tint colour as `-text`, so `--accent-strong` now asks for `-strong` first and `-text`
+  second, and the brand families keep answering it as `-strong` because they have no `-text`. Every
+  accent pointer also ends in a fallback to the family's base colour, so a role that goes missing in
+  future degrades instead of disappearing, and `check-color-families` fails the build on it.
 
 ### Fixed
 

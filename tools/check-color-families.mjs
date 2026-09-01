@@ -6,9 +6,9 @@
 // A role that is missing does not render a wrong colour: the pointer resolves to a
 // guaranteed-invalid value, so every declaration reading it is invalid at computed-value
 // time and resets to `unset`. A selected list row, an active sidenav rail and an active
-// tab pill just render as body text, with nothing in the console. `--error-strong`,
-// `--success-strong` and `--warning-strong` were missing from the day `ds-color`
-// shipped and nobody saw it.
+// tab pill just render as body text, with nothing in the console. `--accent-strong` went
+// unresolved under `ds-color="error|success|warning"` from the day `ds-color` shipped —
+// two months, three families, no report.
 //
 // The contract is READ from `_ds-color.scss` — the `$families` list and the roles the
 // `family-vars` mixin dereferences — so adding a family or a pointer there extends this
@@ -34,14 +34,24 @@ if (!mixin) {
   process.exit(1);
 }
 
-// Only the FIRST var() of each declaration is the role being demanded; a second one is
-// this check's own safety net (the fallback), and demanding it too would be circular.
-const required = new Set();
+// A pointer is a CHAIN, not one name: `var(--x-strong, var(--x-text, var(--x)))` says the
+// role may be expressed under any of those names, so demanding the FIRST would force a
+// family to duplicate a role it already carries under its own name.
+//
+// The LAST link is not one of those names, it is the crash barrier — the thing that keeps
+// a miss from rendering as body text. Satisfying a role through the barrier is still a
+// miss (the accent would silently become the family's flat base colour), so a multi-link
+// chain must be answered before its last link. A single-link pointer has no barrier and
+// the one name is the requirement.
+const chains = [];
 for (const line of mixin[1].split('\n')) {
-  const first = /var\(\s*(--[a-z0-9-]*#\{\$family\}[a-z0-9-]*)/.exec(line);
-  if (first) required.add(first[1]);
+  const links = [...line.matchAll(/var\(\s*(--[a-z0-9-]*#\{\$family\}[a-z0-9-]*|--[a-z0-9-]+)/g)]
+    .map((match) => match[1]);
+  if (!links.some((link) => link.includes('#{$family}'))) continue;
+  const pointer = /^\s*(--[a-z0-9-]+)\s*:/.exec(line)?.[1] ?? '(unnamed)';
+  chains.push({ pointer, names: links.length > 1 ? links.slice(0, -1) : links });
 }
-if (!required.size) {
+if (!chains.length) {
   console.error('check-color-families: family-vars dereferences no per-family role — the parse is wrong.');
   process.exit(1);
 }
@@ -90,9 +100,10 @@ if (blocks.size !== themeSelectors.size) {
 const problems = [];
 for (const [theme, declared] of blocks) {
   for (const family of families) {
-    for (const pattern of required) {
-      const token = pattern.replace('#{$family}', family);
-      if (!declared.has(token)) problems.push(`✗ ${theme}: ds-color="${family}" reads ${token}, which no theme block declares`);
+    for (const chain of chains) {
+      const names = chain.names.map((link) => link.replace('#{$family}', family));
+      if (names.some((name) => declared.has(name))) continue;
+      problems.push(`✗ ${theme}: ds-color="${family}" leaves ${chain.pointer} unresolved — no ${names.join(' or ')}`);
     }
   }
 }
@@ -103,8 +114,7 @@ if (problems.length) {
   process.exit(1);
 }
 
-const roles = required.size;
 console.log(
   `check-color-families: OK — ${families.length} famil${families.length === 1 ? 'y' : 'ies'}`
-  + ` × ${roles} role${roles === 1 ? '' : 's'} resolve in ${blocks.size} theme blocks.`,
+  + ` × ${chains.length} pointer${chains.length === 1 ? '' : 's'} resolve in ${blocks.size} theme blocks.`,
 );

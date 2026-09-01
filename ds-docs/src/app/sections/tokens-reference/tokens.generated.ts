@@ -159,11 +159,6 @@ export const SEMANTIC_ERROR: readonly ColourRow[] = [
     "notes": "Body text on danger surfaces."
   },
   {
-    "name": "--error-strong",
-    "value": "var(--red-600)",
-    "notes": "Darker danger for text on error tints — what --accent-strong becomes under ds-color=\"error\"."
-  },
-  {
     "name": "--error-on",
     "value": "var(--text-on-error)",
     "notes": "Text/icon colour on error-filled surfaces.",
@@ -213,11 +208,6 @@ export const SEMANTIC_SUCCESS: readonly ColourRow[] = [
     "notes": "Success fill, pressed state (darkened toward black)."
   },
   {
-    "name": "--success-strong",
-    "value": "var(--green-700)",
-    "notes": "Darker success for text on success tints — what --accent-strong becomes under ds-color=\"success\"."
-  },
-  {
     "name": "--success-on",
     "value": "var(--text-on-success)",
     "notes": "Text/icon colour on success-filled surfaces.",
@@ -265,11 +255,6 @@ export const SEMANTIC_WARNING: readonly ColourRow[] = [
     "name": "--warning-pressed",
     "value": "color-mix(in srgb, var(--warning) 76%, black)",
     "notes": "Warning fill, pressed state (darkened toward black)."
-  },
-  {
-    "name": "--warning-strong",
-    "value": "var(--yellow-700)",
-    "notes": "Darker warning for text on warning tints — what --accent-strong becomes under ds-color=\"warning\"."
   },
   {
     "name": "--warning-on",

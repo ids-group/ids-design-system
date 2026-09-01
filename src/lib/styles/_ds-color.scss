@@ -21,7 +21,7 @@
   --accent: var(--#{$family});
   --accent-hover: var(--#{$family}-hover, var(--#{$family}));
   --accent-pressed: var(--#{$family}-pressed, var(--#{$family}));
-  --accent-strong: var(--#{$family}-strong, var(--#{$family}));
+  --accent-strong: var(--#{$family}-strong, var(--#{$family}-text, var(--#{$family})));
   --accent-subtitle: var(--#{$family}-subtitle, var(--#{$family}-muted));
   --accent-muted: var(--#{$family}-muted, var(--surface-muted));
   --accent-muted-strong: var(--#{$family}-muted-strong, var(--#{$family}-muted));

@@ -20,15 +20,17 @@ rendered `rgb(22, 26, 40)` — body text — on a pale status tint. After: error
 success `rgb(21, 104, 34)`, warning `rgb(138, 116, 0)`, and in dark
 `rgb(245, 132, 132)` / `rgb(105, 211, 126)` / `rgb(245, 202, 71)`.
 
-**Fixed without inventing a colour: a ramp pick, like every other tuned status role.** The first
-attempt aliased `-strong` to the family's `-text`, which lands on the right value but reaches
-SIDEWAYS — role to role inside one tier. `_semantic.scss` says in its own comment that roles whose
-contrast target is tuned rather than procedural are ramp picks, and the wider practice is that a
-token references the tier below it and never its own. So light takes `--red-600` / `--green-700` /
-`--yellow-700` and dark takes the same hsl literals its neighbours use. Same rendered value as
-`-text` today, verified token by token in both themes — but anchored separately on purpose: `-text`
-is body copy and `-strong` is an accent (the sidenav rail, the active tab pill), so re-tuning one
-must not move the other.
+**Fixed by adding no token at all.** Two attempts were wrong first, and both are worth recording.
+Aliasing `--error-strong: var(--error-text)` lands on the right value but reaches SIDEWAYS, role to
+role inside one tier. Re-anchoring it to the ramp fixes the direction and leaves three tokens whose
+value duplicates `-text` in both themes — in dark as a repeated literal, with nothing tying them
+together.
+
+The asymmetry is the answer: the brand families carry the readable on-tint colour as `-strong` and
+have no `-text`; the status families carry the same role as `-text` and had no `-strong`. It is ONE
+role under two names, so the pointer asks for both — `var(--<f>-strong, var(--<f>-text, var(--<f>)))`
+— and no `--<status>-strong` exists. Verified in both themes: the status zones resolve to exactly
+the values the `-text` tokens hold, contrast unchanged.
 
 Contrast on the family's own `-muted` surface: light 5.5 / 5.8 / 4.3, dark 5.1 / 5.8 / 6.3. The
 light warning pair at 4.3 is inherited, not introduced — it is the value `--warning-text` already
@@ -38,8 +40,11 @@ at 2.9.
 **Two layers keep the class from returning.** `tools/check-color-families.mjs` reads `$families` and
 the roles `family-vars` dereferences straight out of `_ds-color.scss`, compiles the stylesheet, and
 fails if any family × role does not resolve in either theme block — so adding a family or a pointer
-extends the check instead of outgrowing it. Watched red on a control (one definition removed → one
-named failure) before it was believed. And every pointer in `family-vars` now carries a `var()`
+extends the check instead of outgrowing it. It reads a pointer as a CHAIN and demands an answer
+before the last link, because the last link is the crash barrier — resolving through it is still a
+miss, just a quiet one. Watched red on two controls (drop `--error-text`, drop `--success-subtitle`)
+before it was believed; the first control passed under the looser first draft, which is what
+produced the rule. And every pointer in `family-vars` now carries a `var()`
 fallback to a role the family is guaranteed to have, so a miss that ever gets past the gate degrades
 to the family's base colour rather than vanishing. `@property` was measured for that job and
 rejected: its `initial-value` may not contain `var()`, so it would mean hard-coding a literal per
