@@ -54,6 +54,17 @@
   overflow: hidden;
 }
 
+/* A coarse pointer never produces `:hover` or `:focus-visible`, so the handle's
+   line is never painted and the control is invisible — while `touch-action: none`
+   still takes the horizontal swipe that scrolls the table, leaving a dead 8px
+   strip at every header's right edge. The width controls in the column panel are
+   the touch path; this one stands down. Matches `coarsePointer` in the .ts. */
+@media (hover: none) and (pointer: coarse) {
+  .col-resize {
+    display: none;
+  }
+}
+
 .col-resize {
   position: absolute;
   inset-block: 0;
@@ -515,11 +526,25 @@
   }
 }
 
+.col-width {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  margin-left: auto;
+}
+
+.col-width-auto {
+  width: auto;
+  padding-inline: var(--space-2);
+  font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+}
+
 .col-move {
   display: inline-flex;
   gap: var(--space-1);
 }
 
+.col-width-btn,
 .col-move-btn {
   display: inline-flex;
   padding: 0;

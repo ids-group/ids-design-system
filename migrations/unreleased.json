@@ -130,7 +130,8 @@
     "The column-resize handle now carries aria-valuemin and aria-valuemax alongside aria-valuenow, all in px, while it has focus. A focusable role=\"separator\" is a range widget, so a bare pixel value was being announced against ARIA's implicit 0-100.",
     "ds-loading-overlay now marks the content it covers `inert` while loading, so the keyboard cannot reach what the scrim already hides from the pointer. Anything focusable behind the scrim stops being tabbable and leaves the accessibility tree until loading ends; `aria-busy` on the host is unaffected.",
     "inertContent=\"false\" on ds-loading-overlay turns that off, for a scrim that covers only part of its content — the consumer then owns marking the covered subtree. ds-table does this: its scrim starts below the header, and only `<tbody>` goes inert, so sorting and filtering during a refresh still work.",
-    "ds-table's column resize now stops at the width of the scroll viewport, on both the pointer and the keyboard path. It was unbounded before. The bound exists so the handle's aria-valuemax is true — a focusable role=\"separator\" is a range widget, and it had been announcing a ceiling nothing applied."
+    "ds-table's column resize now stops at the width of the scroll viewport, on both the pointer and the keyboard path. It was unbounded before. The bound exists so the handle's aria-valuemax is true — a focusable role=\"separator\" is a range widget, and it had been announcing a ceiling nothing applied.",
+    "ds-table hides its column-resize handle under `(hover: none) and (pointer: coarse)` and puts −/+/Fit width controls in the column panel instead, which opens as a ds-bottom-sheet there. Nothing to change in a consumer app; a screenshot test taken on a touch profile will differ."
   ],
   "deleteList": []
 }

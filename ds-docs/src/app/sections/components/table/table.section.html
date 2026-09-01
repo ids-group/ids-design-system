@@ -1350,6 +1350,28 @@
     [resizableColumns]="true"
   />
 
+  <p class="block-desc t-s">
+    <strong>
+      On a touch device the same table works differently, and deliberately.
+    </strong> The drag handle paints its line on
+    <code class="t-mono-inline">
+      :hover
+    </code> and
+    <code class="t-mono-inline">
+      :focus-visible
+    </code>, neither of which a coarse pointer produces — so it was an invisible
+    8px strip at each header's right edge that still swallowed the horizontal
+    swipe used to scroll the table. It now stands down, and width moves into the
+    column panel: every row gets − / + / Fit alongside its visibility and order
+    controls, and the panel itself opens as a
+    <code class="t-mono-inline">
+      ds-bottom-sheet
+    </code> instead of a popover. The
+    steps are the handle's own keyboard steps, so all three routes — drag,
+    arrows, buttons — change width by the same amount. The buttons show on
+    desktop too; there the handle stays the primary way.
+  </p>
+
   <h3 class="block-title t-h4">
     Toolbar slot · the export button anywhere
   </h3>

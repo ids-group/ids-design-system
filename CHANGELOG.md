@@ -108,6 +108,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   region, which a full page of panels appearing from one keypress previously did not.
 
 
+- **Column resizing works on a touch device, where the drag handle never could.** The handle
+  paints its line on `:hover` and `:focus-visible`; a coarse pointer produces neither, so it was
+  invisible — while `touch-action: none` still took the horizontal swipe that scrolls the table,
+  leaving a dead 8px strip at the right edge of every header. Under
+  `(hover: none) and (pointer: coarse)` the handle now stands down and width moves into the column
+  panel: each row carries −, + and Fit next to its visibility and order controls, and the panel
+  opens as a `ds-bottom-sheet` rather than a popover. The buttons render on desktop as well, where
+  the handle remains the primary route. All three routes share one step, so drag, arrow keys and
+  buttons move a column by the same amount, and all three clamp at the scroll viewport.
+
+
 ### Changed
 
 - **Exported class member surface grew — only matters if you SUBCLASS a DS component.**

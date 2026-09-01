@@ -562,6 +562,17 @@
     panelRole="dialog"
     panelLabel="Column visibility"
   >
+    <ng-container [ngTemplateOutlet]="columnPanel"></ng-container>
+  </ds-popover>
+
+  <ds-bottom-sheet
+    title="Columns"
+    [(open)]="columnSheetOpen"
+  >
+    <ng-container [ngTemplateOutlet]="columnPanel"></ng-container>
+  </ds-bottom-sheet>
+
+  <ng-template #columnPanel>
     <div
       class="col-picker"
       cdkDropList
@@ -601,6 +612,43 @@
             />
             {{ col.label }}
           </label>
+
+          @if (resizableColumns()) {
+            <span class="col-width">
+              <button
+                type="button"
+                class="col-width-btn"
+                [attr.aria-label]="'Narrow ' + col.label"
+                (click)="onColumnWidthStep(col, -resizeStep)"
+              >
+                <ds-icon
+                  name="minus"
+                  [size]="14"
+                />
+              </button>
+
+              <button
+                type="button"
+                class="col-width-btn"
+                [attr.aria-label]="'Widen ' + col.label"
+                (click)="onColumnWidthStep(col, resizeStep)"
+              >
+                <ds-icon
+                  name="plus"
+                  [size]="14"
+                />
+              </button>
+
+              <button
+                type="button"
+                class="col-width-btn col-width-auto"
+                [attr.aria-label]="'Fit ' + col.label + ' to its content'"
+                (click)="onColumnWidthStep(col, 'auto')"
+              >
+                Fit
+              </button>
+            </span>
+          }
 
           @if (reorderableColumns()) {
             <span class="col-move">
@@ -642,7 +690,7 @@
         Reset to default
       </button>
     </div>
-  </ds-popover>
+  </ng-template>
 }
 
 @if (hasRowActions()) {
