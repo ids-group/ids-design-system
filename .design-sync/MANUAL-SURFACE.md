@@ -120,6 +120,47 @@ behaviour rather than a new defect.
 Only `modal` has been driven in a real tab. Re-triage any entry whose gate changes
 to something true-by-default.
 
+## 1a. SOLVED — nested custom elements (2026-09-01)
+
+**The overlay blocker is fixed, and the fix is entirely in the generator.** Root cause:
+[angular/angular#24536](https://github.com/angular/angular/issues/24536) — a custom element
+nested inside another custom element's template loses both its projected content and its
+inputs. `ds-modal`'s template renders `<ds-modal-card>`, which `gen.mjs` also registered, so
+the inner element re-bootstrapped and took the card's bindings and projection with it. That
+is why `title` arrived empty and the card rendered blank, and why every earlier theory
+(React timing, React 19, the `@if` gate, named selectors) failed to explain it.
+
+**The fix, per upstream's own advice — do not nest them.** `gen.mjs` now scans every
+`*.component.html` and `*.component.ts` under `src/lib` for `<ds-…` tags. A component used
+inside another component's template registers under an alias — `ds-x-<name>` — that no
+template mentions, so Angular renders it as an ordinary component there. **31 of 85** take
+an alias. The React wrapper emits the alias tag, so `<Modal>`, `<Button>` and every other
+wrapper are unchanged for a caller and the tag never surfaces in a preview or a design.
+
+Verified in a real tab, pure DOM, no React on the path:
+
+| case | result |
+|---|---|
+| `ds-modal` — `title` input + `[body]` slot | ✅ `T-OK MARK-BODY` |
+| `ds-drawer` — `[drawer-body]` | ✅ `MARK-DRAWER` |
+| `ds-bottom-sheet` — default slot | ✅ `MARK-SHEET` |
+| `ds-card` containing a registered `ds-checkbox` | ✅ `NESTED` |
+| `ds-alert` `[actions]` containing a registered `ds-x-button` | ✅ `TXTBTN` |
+
+Angular's own component styles are attribute-scoped, not tag-scoped, so the alias costs no
+CSS. `build-css.mjs` is unaffected — it serves the React port, which does not use aliases.
+
+### What the fix does NOT cover, measured after it landed
+
+- **`ds-stat` still renders nothing** — its `<ng-content>` sits behind `@if (delta())`, false
+  when the view is created, and no input can be true by then because `@angular/elements`
+  applies initial inputs *after* creating the component. Same for any future component whose
+  projection is gated on a falsy-default input.
+- **A registered element nested inside a CLOSED overlay's slot is still dropped.** Plain
+  markup survives — `<p>PLAIN-P</p>` projects fine into a modal opened after upgrade — but a
+  `<ds-checkbox>` in the same slot disappears from the DOM entirely. Hoisting the projection
+  into a top-level `<ng-template>` + `ngTemplateOutlet` was tried again after this fix and
+  still does not recover it; reverted. This is the remaining upstream item.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
