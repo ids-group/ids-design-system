@@ -462,7 +462,8 @@ the service was just the one somebody noticed. Full table and every tested hypot
 
   **SIZED 2026-09-01, and per-component is NOT the expensive option.** ng-packagr requires a
   cross-entry import to go through the public specifier, and `src/lib` holds **318 cross-group import
-  statements** today (258 runtime + 60 type-only). Rewrites needed: **per-component 318, six semantic
+  statements** today (250 runtime + 70 type-only; `node tools/entry-point-graph.mjs` reports 320
+  counting the two `export … from` crossings, and 319/76 groups after A3-pre). Rewrites needed: **per-component 318, six semantic
   clusters 265, three layers 257** — only **19%** apart, because most cross-group imports point at
   core-ish modules (`icons`, `core`, `field-message`) that cross a boundary under any partition. Coarse
   clustering therefore saves almost nothing on the refactor and gives up the whole eager/lazy win.

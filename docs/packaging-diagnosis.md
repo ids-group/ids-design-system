@@ -271,12 +271,14 @@ complete:
 ### The refactor is 318 import rewrites, and the number barely moves with granularity
 
 ng-packagr requires a cross-entry-point import to go through the package's public specifier rather than
-a relative path. `src/lib` currently holds **318 cross-group import statements** (258 runtime,
+a relative path. **Recount it rather than trusting any figure here: `node tools/entry-point-graph.mjs`.** The tool was added 2026-09-02 because this number had already been recomputed by hand three times and come out different twice. At the commit before A3-pre it reports **320 cross-group statements (250 runtime, 70 type-only) over 77 groups**; after A3-pre, **319 (249 + 70) over 76**. The 318 recorded here counted imports only, excluding the two `export … from` crossings the shipped lint rule does count.
+
+`src/lib` holds **318 cross-group import statements** (250 runtime,
 69 type-only). How many need rewriting depends on where the boundaries fall:
 
 | Partition | Entry points | Imports to rewrite |
 | --- | --- | --- |
-| **P1 — one per component** | 77 | **318** (258 runtime + 60 type-only) |
+| **P1 — one per component** | 77 | **318** (250 runtime + 70 type-only; 320 counting exports) |
 | P2 — six semantic clusters | 6 | 265 |
 | P3 — three layers | 3 | 257 |
 
