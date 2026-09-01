@@ -11,8 +11,10 @@
 #                   nothing a reader outside this repo cannot open
 # surface        -> fails the step when the @angular/elements route's hand-maintained
 #                   list drifts from src/lib (see .design-sync/MANUAL-SURFACE.md)
-# parity         -> fails the step if the design-sync React bindings drifted from
-#                   the Angular sources they port (no pre-existing debt to carry)
+# parity         -> REPORT-ONLY while the React port is parked: the elements route is the
+#                   chosen one, so nobody is re-porting the bindings and the gate reports
+#                   213 known divergences. It still runs, because the number is the
+#                   measurement that justifies the choice
 # lint           -> report-only (prettier/stylelint/eslint), never fails the step
 #                   while the repo carries pre-existing lint debt
 set -e
@@ -61,6 +63,7 @@ bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_e
 build_failed=0
 wait "$pid_build" || build_failed=1
 
+# Not gated — see the header. Waited on so its log is printed and its exit status is known.
 parity_failed=0
 wait "$pid_parity" || parity_failed=1
 
@@ -90,10 +93,10 @@ fi
 echo "Build passed"
 
 if [ "$parity_failed" -ne 0 ]; then
-  echo "design-sync parity failed"
-  exit 1
+  echo "design-sync parity reports drift in the PARKED React port (report-only, not failing the build)"
+else
+  echo "design-sync parity passed"
 fi
-echo "design-sync parity passed"
 
 if [ "$surface_failed" -ne 0 ]; then
   echo "manual-surface check failed"

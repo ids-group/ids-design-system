@@ -111,6 +111,27 @@ for (const [key, label] of [
   }
 }
 
+// Every registered component needs a usage doc: the design agent reads these, and a
+// component that ships without one is invisible to it. Previews are deliberately not
+// gated — a child component (ListItem, Tab, MenuItem) appears inside its parent's
+// preview and has none of its own.
+const pascalOfTag = (tag) => tag.replace(/^ds-/, '').replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
+const componentTags = new Set();
+for (const file of walk(join(repo, 'src', 'lib'), '.component.ts')) {
+  const match = /selector:\s*'(ds-[a-z0-9-]+)'/.exec(readFileSync(file, 'utf8'));
+  if (match) componentTags.add(match[1]);
+}
+const docNames = new Set(
+  readdirSync(join(repo, '.design-sync', 'docs'))
+    .filter((name) => name.endsWith('.md'))
+    .map((name) => name.slice(0, -3)),
+);
+for (const tag of [...componentTags].sort()) {
+  if (!docNames.has(pascalOfTag(tag))) {
+    errors.push(`✗ ${tag} has no .design-sync/docs/${pascalOfTag(tag)}.md — the design agent reads these, so an undocumented component is unusable to it`);
+  }
+}
+
 // Matched as a backticked token, not a bare substring: `badge` would otherwise
 // be satisfied by the word "title-badge" appearing anywhere in the prose.
 const docs = readFileSync(join(repo, '.design-sync', 'MANUAL-SURFACE.md'), 'utf8');
@@ -123,6 +144,6 @@ for (const entry of conditionalProjection) {
 
 for (const error of errors) console.log(error);
 console.log(
-  `${errors.length ? '✗' : '✓'} manual surface: ${conditionalProjection.length} conditional-projection template(s), ${attributeDirectives.length} attribute directive(s), ${errors.length} problem(s)`,
+  `${errors.length ? '✗' : '✓'} manual surface: ${conditionalProjection.length} conditional-projection template(s), ${attributeDirectives.length} attribute directive(s), ${componentTags.size} components all documented, ${errors.length} problem(s)`,
 );
 process.exit(errors.length ? 1 : 0);

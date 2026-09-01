@@ -118,62 +118,67 @@ Against the demo page, real browser, not a headless approximation:
 - `ds-table` renders selection checkboxes and sortable headers from a `data`
   array passed as a property (an attribute would have stringified it).
 
-## The blocker found while verifying
+## The blocker, and how it was closed
 
-**A component whose `<ng-content>` sits inside a conditional loses its projected
-children.** `modal.component.html` wraps everything — including the `[body]`,
-`[impact]` and `[actions]` slots — in `@if (rendered() || preview.staticPreview())`. When
-the element upgrades in the closed state, Angular creates the view, finds no
-projection slots, and the light DOM React handed it is **discarded from the DOM
-permanently**; opening the dialog afterwards renders an empty card.
+**Both causes were generator defects. No component was changed.** Full detail, with the
+measurements, in `../MANUAL-SURFACE.md` §1.
 
-Tested on React 18.3.1 and 19.2.8 — identical. (19 was worth testing because it
-assigns unknown props as *properties* on a detached element, i.e. before
-`connectedCallback`; that fixes input timing, not projection.)
+1. **Nested custom elements** — [angular/angular#24536](https://github.com/angular/angular/issues/24536).
+   A custom element inside another custom element's template loses its projected content *and*
+   its inputs. `ds-modal` renders `<ds-modal-card>`, which was also registered. `gen.mjs` now
+   registers a component used inside another component's template under an alias, `ds-x-<name>`,
+   which no template mentions — 31 of 85. The React wrapper emits the alias, so callers are
+   unaffected.
+2. **Host-directive inputs were never on the element.** `createCustomElement` reads the
+   component's own inputs only, so `staticPreview` — re-exposed via `hostDirectives` — had no
+   accessor and every write became a plain expando. `gen.mjs` now emits `HOST_INPUTS` and
+   `defineDsElements` defines a forwarding accessor per entry.
 
-The fix is upstream and cheap, and the DS already knows the pattern — see the
-comment at the top of `popover.component.html`: hold the projection in a
-top-level `<ng-template #content><ng-content /></ng-template>` and stamp it with
-`ngTemplateOutlet` inside the branches. Popover does this and keeps its children.
-Modal, drawer and bottom-sheet don't.
+With (2) in place the card renders at view creation, the projection is placed immediately and
+nothing is detached — which is also what stopped registered elements inside a slot from being
+destroyed by [angular/angular#38962](https://github.com/angular/angular/issues/38962) (a
+detached Angular element loses its component after ~10 ms and its node is removed).
 
-**Still open on 0.11.1 (checked 2026-09-01).** `modal.component.html:1`,
-`drawer.component.html:1` and `bottom-sheet.component.html:1` all still open with
-`@if (rendered() …)` and hold their `<ng-content>` inside it; `popover.component.html`
-still carries the top-level `<ng-template #content>` and the comment explaining why.
-Nothing in the month's work touched this either way.
+**What did not work, recorded so nobody repeats it:** hoisting projection into a top-level
+`<ng-template>` + `ngTemplateOutlet` (twice — before and after fix 1), widening the `@if` to
+include `open()`, forcing the gate to `@if (true)`, setting inputs as properties or attributes
+before `appendChild`, and React 19's detached-property assignment. All measured, all reverted.
 
-Until then, `staticPreview` is the way in: it makes the card render at view
-creation, so the slots exist when the light DOM is claimed. The generator now
-picks up host-directive inputs (`hostDirectives: [{directive: DsStaticPreview,
-inputs: ['staticPreview']}]`), so the prop exists on the wrapper — the demo panel
-that uses it is built but was not re-checked in the browser (the extension
-dropped), so treat that one as expected-to-work rather than verified.
-
+**The lesson, and it is the cheap one:** four self-generated hypotheses cost several rounds;
+one web search for the symptom returned #24536 on the first page.
 ## Other limitations, verified
 
 - **Imperative APIs don't cross the boundary.** Angular's element strategy
   publishes inputs and outputs, not methods, so `popover.toggle(trigger)` — how
   the DS opens a popover — is unreachable. Trigger-driven overlays need an
   input-based open state to be usable from a design.
-- **Attribute directives have no element to register.** `dsTooltip`,
-  `dsCellTemplate`, `[dsBrandName]`, `dsStaticPreview` and the CVA base are
-  directives; the six of them are simply absent from the generated surface.
-  `Tooltip` is the one that hurts — the React port has it because a port can
-  reimplement a directive as a component.
+- **Attribute directives have no element to register.** Fifteen of them today (re-counted
+  2026-09-01; the figure was 6 when this file was written) — mostly template-slot markers for
+  the picker family, which are meaningless without an Angular template anyway. **`dsTooltip` is
+  the one that hurts:** a real feature a design would want, and the React port has it because a
+  port can reimplement a directive as a component. Covering it here needs a host component
+  wrapping the directive. Note `dsStaticPreview` is NO LONGER in this bucket — its input is now
+  published on the element (see fix 2 above); the directive itself is still not registrable, but
+  nothing needs it to be.
 - **`@angular/elements` is a new dependency** (first-party, locked to the Angular
   major already in use, dev-only — but still a dependency the DS repo didn't have).
-- **Runtime acceptance is unproven.** The bundle satisfies the documented
-  contract (one IIFE assigning React components to `window.IdsDs`), but nobody
-  has run a bundle with a framework inside it through claude.ai/design, and
-  `anthropics/claude-code#71523` shows the skill assumes React all the way down.
+- **Upload is untested, but the contract is now known and satisfied.** Read off the live
+  project 2026-09-01: a preview card is a plain HTML page loading `_vendor/react.js`,
+  `_vendor/react-dom.js`, `_ds_bundle.js`, `_preview/<Name>.js` as classic scripts, and the
+  compiled preview does `window.IdsDs.<Component>` with `React` taken from a global. React is
+  vendored as a separate file and is NOT expected inside the DS bundle — which is exactly what
+  `build-bundle.mjs` emits (IIFE, `window.IdsDs`, react external). So nothing inspects the
+  framework riding along; what remains untested is only the upload itself. See `../COMMANDS.md`.
 
 ## Verdict
 
-The generation half is a clear win: 625 inputs/outputs across 85 components come
-out of the AST with their real types, and there is no second implementation to
-keep in sync — the parity gate the port needs has nothing to guard here. The
-runtime half is blocked on three upstream changes (hoist projection out of the
-conditionals, add input-driven open state to popover/menu, wrap `dsTooltip` in a
-host component) plus an unknown about the design app's tolerance for a non-React
-bundle. None of those is hard; none of them is free either.
+The generation half was always the win: 625 inputs/outputs across 85 components come out of the
+AST with their real types, and there is no second implementation to keep in sync — the parity
+gate the hand-port needs has nothing to guard here. **The runtime half is no longer blocked.**
+Projection, inputs and nested composition all work; the remaining limits are the six attribute
+directives (of which only `dsTooltip` hurts), the imperative overlay APIs, and the untested
+question of whether claude.ai/design accepts a bundle with a framework inside it — the contract
+itself is satisfied, since it asks only for React components on `window.IdsDs` with React
+supplied externally.
+
+Costs, re-measured at 0.11.1: **+135 KB gzip** over the port, the same delta as at 0.7.0.

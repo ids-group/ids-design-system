@@ -185,7 +185,8 @@ for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
     // A generic component's own type parameters can't cross into a non-generic
     // React wrapper — widen them rather than emit unbound names.
     const typeParams = (node.typeParameters ?? []).map((param) => param.name.text);
-    const api = [...classApi(node), ...hostDirectiveApi(meta, directiveApi)].map((entry) => {
+    const hostApi = hostDirectiveApi(meta, directiveApi);
+    const api = [...classApi(node), ...hostApi].map((entry) => {
       let type = entry.type;
       for (const param of typeParams) {
         type = type.replace(new RegExp(`\\b${param}\\b`, 'g'), 'any');
@@ -199,6 +200,7 @@ for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
       name: pascalOf(selector),
       importPath: `../../../${relative(repo, file).replace(/\\/g, '/').replace(/\.ts$/, '')}`,
       api,
+      hostInputs: hostApi.map((entry) => entry.name),
     });
   });
 }
@@ -235,6 +237,16 @@ import { createCustomElement } from '@angular/elements';
 import { provideZonelessChangeDetection } from '@angular/core';
 ${components.map((c) => `import { ${c.className} } from '${c.importPath}';`).join('\n')}
 
+/** Inputs a component re-exposes through hostDirectives. createCustomElement builds
+ *  its property list from the component's OWN inputs only, so without this the
+ *  accessor never exists and a write lands as a plain expando — which is how
+ *  staticPreview silently did nothing on every element. */
+const HOST_INPUTS: Record<string, readonly string[]> = {
+${components
+  .filter((c) => c.hostInputs.length)
+  .map((c) => `  '${c.tag}': ${JSON.stringify(c.hostInputs)},`)
+  .join('\n')}
+};
 const REGISTRY: Array<[string, unknown]> = [
 ${components.map((c) => `  ['${c.tag}', ${c.className}],`).join('\n')}
 ];
@@ -249,10 +261,21 @@ export function defineDsElements(): Promise<void> {
   }).then((appRef) => {
     for (const [tag, component] of REGISTRY) {
       if (customElements.get(tag)) continue;
-      customElements.define(
-        tag,
-        createCustomElement(component as never, { injector: appRef.injector }),
-      );
+      const ElementClass = createCustomElement(component as never, {
+        injector: appRef.injector,
+      });
+      for (const name of HOST_INPUTS[tag] ?? []) {
+        Object.defineProperty(ElementClass.prototype, name, {
+          configurable: true,
+          get(this: { ngElementStrategy?: { getInputValue(n: string): unknown } }) {
+            return this.ngElementStrategy?.getInputValue(name);
+          },
+          set(this: { ngElementStrategy?: { setInputValue(n: string, v: unknown): void } }, value: unknown) {
+            this.ngElementStrategy?.setInputValue(name, value);
+          },
+        });
+      }
+      customElements.define(tag, ElementClass);
     }
   });
 

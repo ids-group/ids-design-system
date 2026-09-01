@@ -13,154 +13,102 @@ recorded here. After triaging a new entry, add it below and re-record with
 `--bless`. The gate also fails on an entry this file never mentions: an
 unexplained entry is an excuse, not a record.
 
-## 1. Projection inside a control-flow block
+## 1. Projection through the element boundary — SOLVED
 
-`@angular/elements` hands the host element's light DOM to Angular as
-`projectableNodes` when the view is created in `connectedCallback`. If the
-`<ng-content>` that would receive them does not exist at that moment — because it
-sits inside an `@if` whose condition is false — the nodes are consumed and never
-placed. Opening the block afterwards renders an empty shell.
+Two generator defects, both fixed 2026-09-01, **no component was changed**. Everything below
+was measured in a real Chrome tab with `document.createElement` + `innerHTML` + `appendChild`,
+so React is not on the path.
 
-**The rule, established by measurement 2026-09-01 and not by reading:** the branch
-holding `<ng-content>` must be the one that is LIVE when the view is created. An
-embedded view is fine — what matters is whether it is instantiated at creation.
-Probed six components in a real browser with `document.createElement` + `innerHTML`
-(no React involved at all):
+### Defect A — nested custom elements
 
-| component | where `<ng-content>` sits | children survive |
+[angular/angular#24536](https://github.com/angular/angular/issues/24536): a custom element
+nested inside another custom element's template loses **both** its projected content and its
+inputs. `ds-modal`'s template renders `<ds-modal-card>`, which the generator also registered,
+so the inner element re-bootstrapped and took the card's bindings and projection with it. That
+one fact explains the empty card, the empty `title`, and why four earlier hypotheses (React
+wrapper timing, React 19, hoisting `<ng-content>` into an `<ng-template>`, widening the `@if`)
+all failed.
+
+**Fix, per upstream's own advice — do not nest them.** `gen.mjs` scans every
+`*.component.html` and `*.component.ts` under `src/lib` for `<ds-…` tags; a component used
+inside another component's template registers under an alias, `ds-x-<name>`, that no template
+mentions, so Angular renders it as an ordinary component there. **31 of 85** take an alias.
+The React wrapper emits the alias, so `<Modal>` and `<Button>` are unchanged for a caller and
+the tag never surfaces in a preview or a design. Angular's component styles are
+attribute-scoped, so the alias costs no CSS.
+
+### Defect B — host-directive inputs were never registered
+
+`createCustomElement` builds its property list from the component's **own** inputs, so an
+input re-exposed through `hostDirectives` had no accessor at all and a write landed as a plain
+expando. Read off the live registration before the fix: `ds-modal`'s prototype carried `open`,
+`size`, `status`, `title`, `subtitle`, `dividers`, `closeOnBackdrop`, `persistent` — and no
+`staticPreview`. So `staticPreview`, the documented way to render an overlay statically, had
+**never** worked on any element; `elements/README.md` claimed the generator picked these up,
+and it did — for the React wrapper only.
+
+**Fix:** `gen.mjs` emits a `HOST_INPUTS` map and `defineDsElements` defines a forwarding
+accessor per entry before `customElements.define`. Three components have such inputs today:
+`ds-modal`, `ds-x-popover`, `ds-x-select`, all `staticPreview`.
+
+This is what closed the last symptom. With `staticPreview` reaching the component, the card
+renders at view creation, the projection is placed immediately, nothing is detached — and so
+**registered elements nested inside a slot survive**, which they did not before. The mechanism
+they were dying of is [angular/angular#38962](https://github.com/angular/angular/issues/38962):
+a detached Angular element has its component destroyed after ~10 ms and its DOM node removed.
+
+### Verified — full slot sweep
+
+Every component with projection was probed with its real slot names, extracted from its own
+template rather than guessed: **44 components, 36 green on the first pass.** All eight
+remainders were then driven with the inputs their slots depend on:
+
+| component | slot | verdict |
 |---|---|---|
-| `card` | root | ✅ |
-| `alert` | root | ✅ |
-| `badge` | `@else` of `@if (count() !== null)` — live by default | ✅ |
-| `checkbox` | `@else` of `@if (label())` — live by default | ✅ |
-| `switch` | `@else` of `@if (label())` — live by default | ✅ |
-| `stat` | `@if (delta())` — **false** by default | ❌ |
+| `stat` | `[delta]` | ✅ works with the `delta` input set — the first sweep passed unnamed content to a component that has only named slots |
+| `table` | `[empty]` | ✅ works with an empty `data` array |
+| `table` | `[bulk-actions]` | inconclusive — needs the real selection API, no evidence of a defect |
+| `sidenav`, `auth-layout` | `[dsBrandName]` | by design — gated on a `contentChild` query for the **directive**, and a directive cannot be applied through an element boundary (see §2) |
+| `sidenav-item` | unnamed | by design — the template's own first comment says there is deliberately no default `<ng-content>` |
+| `filter-bar` | unnamed | by design — it drops anything carrying neither slot attribute, and `dsProjectionDropped` warns about it at runtime |
+| `tab` | unnamed | by design — `tab.component.html` is only `<ng-template #content><ng-content /></ng-template>`, stamped by `ds-tabs`; standalone it renders nothing |
 
-So sixteen templates match the pattern and four are broken, not three.
+Spot checks that now pass and previously did not: `ds-modal` (`title` + `[body]` + a nested
+`ds-checkbox` + a nested `ds-x-button`), `ds-drawer` `[drawer-body]`, `ds-bottom-sheet`,
+`ds-x-popover` with `staticPreview`, `ds-card` containing a registered `ds-checkbox`,
+`ds-alert` `[actions]` containing a registered `ds-x-button`.
 
-### Broken — gate is false at upgrade, projection is the only content path
+### What the manifest list means now
+
+`manual-surface.json` records the 16 templates whose `<ng-content>` sits inside a control-flow
+block. **That is a watch-list, not a defect list** — all 16 are green today. It exists because
+the two defects above were invisible until someone looked, and a new component that gates its
+projection deserves the same look. `check-manual-surface.mjs` fails when the list changes so
+the look actually happens.
+
+The sixteen, each with the gate its `<ng-content>` sits behind:
 
 | component | gate | status |
 |---|---|---|
-| `modal` | `rendered()` | **CONFIRMED BROKEN.** Measured 2026-09-01 in a real Chrome tab against the elements demo: closed `<ds-modal>` has `childNodes.length === 1` and `innerHTML === '<!---->'`; opening it renders 966 chars of Angular DOM with `textContent === ''` — a blank card |
-| `drawer` | `rendered()` | Same construction as `modal`, not separately measured |
-| `bottom-sheet` | `rendered()` | Same construction as `modal`, not separately measured |
-| `stat` | `delta()` | **CONFIRMED BROKEN** by the probe above. Was listed as benign in this file until 2026-09-01 — that classification was wrong |
+| `modal` | `rendered()` | overlay; ✅ via staticPreview and via open |
+| `drawer` | `rendered()` | overlay; ✅ |
+| `bottom-sheet` | `rendered()` | overlay; ✅ |
+| `auth-layout` | `letterGlyph()` | ✅ |
+| `badge` | `count()` | projection in the live @else; ✅ |
+| `checkbox` | `label()` | projection in the live @else; ✅ |
+| `radio` | `label()` | projection in the live @else; ✅ |
+| `switch` | `label()` | projection in the live @else; ✅ |
+| `dropzone` | `files()` | ✅ |
+| `menu-item` | `icon()` | ✅ |
+| `sidenav` | `brandRoute()` | [dsBrandName] is directive-gated — see the sweep above |
+| `sidenav-group` | `expandable()` | ✅ with label + expandable set |
+| `sidenav-item` | `routerLink()` | no default slot by design |
+| `stat` | `delta()` | ✅ with the delta input set |
+| `table` | `exportButton()` | [empty] ✅; [bulk-actions] inconclusive |
+| `filter-bar` | `collapsed()` | drops unslotted content by design |
 
-**Two fixes were tried and neither worked** (2026-09-01, both reverted):
-
-- **Hoisting projection into a top-level `<ng-template>` + `ngTemplateOutlet`**,
-  the pattern `popover.component.html` uses deliberately and documents in its own
-  comment. Applied to all five of modal's slots, `NgTemplateOutlet` added to
-  `imports`, full chain rebuilt. Light DOM retention improved (`childCount` 1 → 6)
-  but those are the template anchors — the children were still consumed and the
-  opened card was still empty. The template is a blueprint: an `<ng-content>`
-  inside one is not instantiated until the outlet stamps it, which is still inside
-  the `@if`.
-- **`staticPreview`**, named in `elements/README.md` as the interim way in. The
-  demo's `<ds-modal staticPreview>` renders `0×0` with no children — measured on
-  pristine sources, so this is not a side effect of the first attempt.
-
-**And it is not input timing.** `runtime.tsx` falls back to effect-only property
-assignment below React 19, so the hypothesis was that inputs land after
-`connectedCallback` and React 19 (which assigns properties while the element is
-detached) would fix it. Tested with react/react-dom 19.2.8 — `"19.2.8"` verified
-present in the built demo bundle — and the result is identical. `.ds-sync` was
-restored to the pinned 18.3.1.
-
-**What the root-cause session established (2026-09-01, all measured in a real tab):**
-
-- **React is not involved.** The same failure reproduces with plain
-  `document.createElement('ds-modal')` + `innerHTML` + `appendChild`, no React on the
-  path at all. Every earlier theory about wrapper timing is dead.
-- **`rendered` is a `signal(false)` set inside an `effect`** (`modal.component.ts:69`),
-  and effects run after the first change detection — so the gate is false when the view
-  is created, always.
-- **`staticPreview` is not registered on the custom element.** Read off the live
-  registration: `customElements.get('ds-modal').prototype` carries `open`, `size`,
-  `status`, `title`, `subtitle`, `dividers`, `closeOnBackdrop`, `persistent` — and no
-  `staticPreview`. It is a host-directive input, and `@angular/elements` builds its
-  property list from the component's own inputs. `elements/README.md` claims the
-  generator picks these up; it does so for the React wrapper only, so setting
-  `staticPreview` on an element has always been a no-op expando. **This is a generator
-  gap and is fixable in `gen.mjs`/`main.ts` without touching any component.**
-- **No input can make a gate true at view creation.** `@angular/elements` applies
-  initial input values *after* creating the component, so `open = true` before
-  `appendChild` does not help — verified.
-- **Modal is not fixed even by an unconditional gate.** Forcing `@if (true)` and
-  rebuilding the whole chain still renders an empty card, while `ds-card`/`ds-alert`
-  (root-level projection) keep their children in the same build. So modal carries a
-  second cause on top of the gate, and it is not yet found.
-
-**Root cause is therefore PARTLY open.** The class of defect is understood and the
-benign/broken split is now measured rather than assumed; what remains unexplained is
-why `modal` specifically fails even with its gate removed.
-**Root cause is therefore partly open.** Do not write an override for these three
-before it is found: the fix that looks obvious has already failed twice, and an
-override built on a guess is a second implementation with none of the parity
-tooling that guards Misha's port.
-
-### Triaged benign — `<ng-content>` sits in the branch that is live at upgrade
-
-Each of these gates on an input that is falsy by default, with the projection in
-the `@else`. `badge` is the worked example: `@if (count() !== null) { … } @else {
-<ng-content> }` — a `<ds-badge>` upgrades with no `count`, so the `@else` branch is
-live and the children are claimed correctly.
-
-`auth-layout` · `badge` · `checkbox` · `dropzone` · `filter-bar` · `menu-item` ·
-`radio` · `sidenav` · `sidenav-group` · `sidenav-item` · `switch` ·
-`table`
-
-`checkbox`, `radio` and `switch` are the `[label]`-input family that
-`dsProjectionDropped` already warns about at runtime — passing children there
-renders nothing in plain Angular too, so the elements route inherits a documented
-behaviour rather than a new defect.
-
-**Benign here means "not broken by the upgrade", not "verified in the browser".**
-Only `modal` has been driven in a real tab. Re-triage any entry whose gate changes
-to something true-by-default.
-
-## 1a. SOLVED — nested custom elements (2026-09-01)
-
-**The overlay blocker is fixed, and the fix is entirely in the generator.** Root cause:
-[angular/angular#24536](https://github.com/angular/angular/issues/24536) — a custom element
-nested inside another custom element's template loses both its projected content and its
-inputs. `ds-modal`'s template renders `<ds-modal-card>`, which `gen.mjs` also registered, so
-the inner element re-bootstrapped and took the card's bindings and projection with it. That
-is why `title` arrived empty and the card rendered blank, and why every earlier theory
-(React timing, React 19, the `@if` gate, named selectors) failed to explain it.
-
-**The fix, per upstream's own advice — do not nest them.** `gen.mjs` now scans every
-`*.component.html` and `*.component.ts` under `src/lib` for `<ds-…` tags. A component used
-inside another component's template registers under an alias — `ds-x-<name>` — that no
-template mentions, so Angular renders it as an ordinary component there. **31 of 85** take
-an alias. The React wrapper emits the alias tag, so `<Modal>`, `<Button>` and every other
-wrapper are unchanged for a caller and the tag never surfaces in a preview or a design.
-
-Verified in a real tab, pure DOM, no React on the path:
-
-| case | result |
-|---|---|
-| `ds-modal` — `title` input + `[body]` slot | ✅ `T-OK MARK-BODY` |
-| `ds-drawer` — `[drawer-body]` | ✅ `MARK-DRAWER` |
-| `ds-bottom-sheet` — default slot | ✅ `MARK-SHEET` |
-| `ds-card` containing a registered `ds-checkbox` | ✅ `NESTED` |
-| `ds-alert` `[actions]` containing a registered `ds-x-button` | ✅ `TXTBTN` |
-
-Angular's own component styles are attribute-scoped, not tag-scoped, so the alias costs no
-CSS. `build-css.mjs` is unaffected — it serves the React port, which does not use aliases.
-
-### What the fix does NOT cover, measured after it landed
-
-- **`ds-stat` still renders nothing** — its `<ng-content>` sits behind `@if (delta())`, false
-  when the view is created, and no input can be true by then because `@angular/elements`
-  applies initial inputs *after* creating the component. Same for any future component whose
-  projection is gated on a falsy-default input.
-- **A registered element nested inside a CLOSED overlay's slot is still dropped.** Plain
-  markup survives — `<p>PLAIN-P</p>` projects fine into a modal opened after upgrade — but a
-  `<ds-checkbox>` in the same slot disappears from the DOM entirely. Hoisting the projection
-  into a top-level `<ng-template>` + `ngTemplateOutlet` was tried again after this fix and
-  still does not recover it; reverted. This is the remaining upstream item.
+`ds-modal-card` also has projection but does not appear here: its slots are at root level,
+outside any block, and it is one of the 31 that register under an alias.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is

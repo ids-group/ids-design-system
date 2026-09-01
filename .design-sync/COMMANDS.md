@@ -32,6 +32,10 @@ so an `^18` types pin fails the declaration emit.
 `/design-login` authorizes the `DesignSync` tool. Read methods answer without a
 permission prompt once it is granted; writes prompt.
 
+> **Route B is the chosen one since 2026-09-01.** Route A (the hand-written port) is parked:
+> intact, correct against 0.7.0, 213 divergences against 0.11.1, and its gate is report-only.
+> It stays the fallback if the elements bundle is ever rejected by the design host.
+
 ## Route A — the hand-written React port
 
 ```sh
@@ -51,7 +55,7 @@ hashes; blessing without reading the diff defeats the mechanism.
 node .design-sync/elements/tools/gen.mjs             # reads the AST → registrations + typed wrappers
 CI=true npx ng build ds-elements                     # AOT + Ivy linker (the slow step, ~8 s)
 node .design-sync/elements/tools/build-bundle.mjs    # → dist/ds-bundle.js (IIFE, window.IdsDs, react external)
-bun run check:manual-surface                         # the hand-maintained list — see MANUAL-SURFACE.md
+bun run check:manual-surface                         # watch-list + doc coverage — see MANUAL-SURFACE.md
 ```
 
 Nothing here is hand-maintained, so there is no parity gate to run: `gen.mjs`
@@ -63,6 +67,28 @@ Proof page: serve `.design-sync/elements/demo` over http (never `file://`) and
 open it in a real browser tab — a background or headless tab freezes transitions
 and reports stale layout, which has faked bugs here before.
 
+## Switching `config.json` to route B — NOT done yet, deliberately
+
+`config.json` still points at the port, because the values below could not be verified without
+running an actual upload, and a wrong path here fails silently:
+
+```jsonc
+// current (route A)                                  // route B
+"entry":    ".design-sync/react-bindings/dist/index.js"  → ".design-sync/elements/dist/ds-bundle.js"
+"cssEntry": "dist/ds-all.css"                            → the elements build's styles.css
+"buildCmd": "…build-css.mjs && …build-bindings.mjs"      → "node .design-sync/elements/tools/gen.mjs && ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
+```
+
+**The unknown to settle first:** `cssEntry` and `docsDir` are resolved relative to the entry's
+own package directory (NOTES.md records them as "package-relative to `react-bindings/`"), while
+`entry` is cwd-relative. Moving `entry` therefore moves the base for the other two, and
+`docsDir: "../docs"` would stop resolving to `.design-sync/docs/`. Confirm the base with one
+`list_files` round trip before switching, or move the elements bundle next to the existing entry
+so the base does not change.
+
+Until it is switched, a sync publishes the parked port. That is the safe default: it is
+internally consistent at 0.7.0, and it is better than publishing a bundle whose docs and CSS
+resolved to nothing.
 ## Publishing
 
 Read first, then lock the plan, then write — the tool enforces that order and

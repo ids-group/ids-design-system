@@ -73,6 +73,13 @@
   `build-bindings.mjs` produces `dist/index.js` — both green. A green build here means the generated
   halves regenerated, not that the hand-written half is right. Only `bun run check:design-sync`
   separates the two.
+- **2026-09-01, the React port is PARKED and its gate is report-only.** The `@angular/elements`
+  route was chosen after two generator fixes closed the overlay blocker (see
+  `../MANUAL-SURFACE.md` §1), so nobody is re-porting these bindings. `check-parity.mjs` still
+  runs in `ci-pr.sh` and still reports its 213 divergences — the number is the measurement that
+  justified the choice — but it no longer fails the step. **Nothing here was deleted:** the port
+  is intact and correct against 0.7.0, and it stays the fallback if the elements bundle is ever
+  rejected by the design host. Re-gating it means re-porting first.
 ## Re-sync risks (watch-list for the next run)
 - Binding-only props (list above) must survive any re-port from upstream.
 - `icons.gen.ts` regenerates from `icons.data.ts` on every build-bindings run — no drift, but new icon names only appear after a rebuild.
