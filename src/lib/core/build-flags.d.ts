@@ -6,13 +6,16 @@
  *
  * `devWarn`'s own `isDevMode()` check cannot do that: it is a function CALL, so esbuild
  * cannot prove the branch dead, and every message closure ships to production. Measured
- * 2026-09-01: 1 590 B gzip across the 14 call sites, 827 B of it on `ds-button` alone.
+ * 2026-09-01: 1 590 B gzip across the 13 call sites, 827 B of it on `ds-button` alone.
  *
  * Two rules, both load-bearing:
- * - The guard must sit INLINE on the branch. Behind an intermediate `const` the fold does
- *   not happen — esbuild substitutes the identifier but will not propagate the constant
- *   through module scope.
- * - It must be the `typeof` form. A development build does NOT define the identifier, so a
- *   bare `ngDevMode && …` depends on `@angular/core` having initialised the global first.
+ * - The guard must sit INLINE on the branch. esbuild inlines a top-level `const` whose
+ *   post-`define` initializer folds to a primitive ONLY when the module declaring it has no
+ *   `import` statement at all — measured 2026-09-02 across seven shapes. Every Angular
+ *   component module imports `@angular/core`, so behind a `const` the initializer folds to
+ *   `!1` and the branch survives referencing it, shipping the whole body.
+ * - It must be the `typeof` form. This one is not about folding — the bare inline form folds
+ *   identically. A development build does NOT define the identifier, so `ngDevMode && …`
+ *   emits an undeclared free identifier and throws unless `@angular/core` initialised the
+ *   global first.
  */
-declare const ngDevMode: boolean | object | undefined;
