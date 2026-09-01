@@ -7,18 +7,19 @@ Open any `*.html` directly in a browser — they link the shared `ds.css`.
 
 An `open` deck is named `<rank>-<slug>.html`, ranked 1..N by what answering it unblocks — so `ls`,
 the file explorer and the editor's tree all show the queue in priority order without opening
-anything. Ranked 2026-09-01:
+anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-banner-toast-icon-alignment` | in flight — two validated screen findings (30/32) are ready to fix and waiting only on A vs B |
-| 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
-| 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
-| 4 | `4-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
-| 5 | `5-packaging-entry-points` | a consumer IS blocked on bundle size, and the measured prize is -80% of the DS's share of their initial bundle |
-| 6 | `6-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
-| 7 | `7-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
-| 8 | `8-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+| 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
+| 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
+| 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
+| 4 | `4-packaging-entry-points` | a consumer IS blocked on bundle size, and the measured prize is -80% of the DS's share of their initial bundle |
+| 5 | `5-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
+| 6 | `6-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
+| 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+| 8 | `8-entry-point-shape` | which layout A3 actually builds — three real ng-packagr builds behind it |
+| 9 | `9-opt-in-seam` | 31.5 KB of opt-in surface, three ways to cut it, nothing blocking |
 
 **A `tool` is not in the queue and takes no number** (`backlog-board.html`,
 `overlay-guard-check.html`). Unprefixed, they sort below the ranked decks, which is where a utility

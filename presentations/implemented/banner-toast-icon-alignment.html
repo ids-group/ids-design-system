@@ -4,9 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Banner &amp; toast icon alignment — A vs B</title>
-<meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/todo.md - banner and toast icon alignment (P3): A/B built 2026-09-01, verdict outstanding; blocks screens 30/32">
-<link rel="stylesheet" href="./ds.css" />
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-01">
+<meta name="ds-deck-evidence" content="B shipped - src/lib/components/banner/banner.component.scss .icon align-self:center - src/lib/components/toast/toast.component.scss - docs/done.md">
+<link rel="stylesheet" href="../ds.css" />
 <meta name="color-scheme" content="light" />
 <style>
   :root { color-scheme: only light; }
@@ -86,6 +87,14 @@
 <body>
 
 <h1>Banner &amp; toast — where does the icon sit?</h1>
+
+<p class="lede" style="border-left:3px solid var(--success);padding-left:var(--space-3)">
+  <b>Decided 2026-09-01: B, centred on the block.</b> Shipped as <code>align-self: center</code> on the
+  icon in both components — on the icon rather than <code>align-items</code> on the row, so the close
+  button and the action buttons keep the positions they had. Verified in a rendering browser: all twelve
+  banners and all eight toasts measure <b>0px</b> from the body's centre, against <b>−11px</b> for the
+  same probe with the old <code>flex-start</code> rule forced back.
+</p>
 <p class="lede">
   Same content, same tokens, two rules. <b>A</b> is what ships today: the icon aligns to the
   <b>first line</b> of text. <b>B</b> centres it on the whole message block.
