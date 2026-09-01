@@ -132,14 +132,17 @@ for (const dir of [DECKS, ARCHIVE]) {
         'an open deck is <rank>-<slug>.html — the folder listing is the priority queue.',
       );
     }
-    if (status === 'tool' && rank !== undefined) {
+    if (archived && rank !== undefined) {
       fail(
         'D009',
         where,
-        'a tool is not in the decision queue, so it takes no rank prefix.',
+        'an archived deck keeps no rank — the number is a queue position, and this one has left the queue.',
       );
     }
-    if (!archived && status === 'open' && rank !== undefined) {
+    // A `tool` may carry a rank or not: `overlay-guard-check` is ranked because there
+    // is a point at which it wants running, `backlog-board` is not because it is read
+    // whenever. Either way a rank that exists joins the one contiguous run.
+    if (!archived && rank !== undefined) {
       const clash = ranks.get(rank);
       if (clash)
         fail('D007', where, `rank ${rank} is already taken by ${clash}.`);
