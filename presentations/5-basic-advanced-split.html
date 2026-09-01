@@ -77,16 +77,18 @@
     </p>
     <ul>
       <li><b>The bigger prize was somewhere else entirely.</b> One eager <code>inject(ToastService)</code>
-        puts <b>135 744 B gzip</b> of the library into a consumer's initial bundle — 5.7&times; what the
-        table's whole directive split is worth. That is chunk placement, not component weight, and it is
-        deck&nbsp;5.</li>
+        puts <b>135 744 B gzip</b> of the library into a consumer's initial bundle — <b>7.0&times;</b> what
+        the table's whole directive split is worth. (An earlier draft said 5.7&times;, which is the ratio of
+        the NET entry-point saving to the split, not of this gross figure; corrected 2026-09-02, and that
+        net ratio is now <b>4.2&times;</b>.) That is chunk placement, not component weight, and it is
+        deck&nbsp;4.</li>
       <li><b>Breaking consumers is not a cost here.</b> Recorded after this page was written: shipped
         features are free to move. So every "it would break people" argument is struck from the case
         against the split — what remains, and what still decides it, is the permanent mirror.</li>
     </ul>
     <p style="margin-bottom:0">
       Also since: the seam overhead is a fixed <b>923 B</b> rather than proportional, so the directive
-      split keeps ~87&ndash;95% of its prize (deck&nbsp;10); the CSS claim in this page's own "what
+      split keeps ~87&ndash;95% of its prize (deck&nbsp;9); the CSS claim in this page's own "what
       survives" section was <b>wrong</b> and is corrected below; and the top layer of any entry-point
       split must be <b>per-component</b>. Current sources: <code>docs/packaging-diagnosis.md</code>,
       <code>docs/packaging-chunking-audit.md</code>, <code>docs/todo.md</code>.
@@ -207,7 +209,8 @@
     <li><b>No third-party runtime dependency</b> beyond <code>tslib</code>. <code>@angular/cdk</code> is
         a peer, and only <code>overlay</code>, <code>portal</code> and one <code>drag-drop</code> import
         are used.</li>
-    <li>Every optional table behaviour is an <code>input(false)</code> — nothing is on by default.</li>
+    <li>Nothing is on by default — though not all of them are <code>input(false)</code>: six use
+      <code>input&lt;boolean | null&gt;(null)</code> or <code>model()</code>, and resolve to off anyway.</li>
   </ul>
 
   <h2>The <code>ids-data-grid</code> wish list is already <code>ds-table</code></h2>
@@ -355,7 +358,7 @@
 
   <div class="foot">
     <p>
-      <b>Not verified.</b> Whether this library's 95 component folders partition into acyclic entry points
+      <b>Not verified.</b> Whether this library's 71 component folders partition into acyclic entry points
       — the ng-packagr pipeline itself is no longer in doubt, measured 2026-09-01. Whether extracting row
       actions and inline editing too pushes the directive saving past 18.9 KB. No consumer repo was
       rebuilt; all figures are from this repo's probes — the ladder against <code>dist/ds</code> 0.11.1,

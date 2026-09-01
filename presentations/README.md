@@ -14,7 +14,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
-| 4 | `4-packaging-entry-points` | a consumer IS blocked on bundle size, and the measured prize is -80% of the DS's share of their initial bundle |
+| 4 | `4-packaging-entry-points` | a consumer IS blocked on bundle size, and the modelled prize is about -59% of the DS's share of their initial bundle |
 | 5 | `5-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
 | 6 | `6-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
 | 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |

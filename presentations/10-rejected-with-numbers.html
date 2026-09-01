@@ -98,10 +98,10 @@
       <dd>a component ever needs an <b>external runtime dependency</b> — a charting renderer, for
         instance. That, not component count, is what justifies a separate package.
         <code>ids-charts</code> qualifies the day it needs one.</dd>
-      <dt>Corroboration</dt>
+      <dt>Corroboration <span style="font-weight:400">(reported by the vendor, not measured here)</span></dt>
       <dd><b>AG Grid 33 went the other way</b>: 25 npm packages collapsed into 2, tree-shaking inside
-        one package, grids up to 40% smaller. The biggest data-grid vendor moved away from
-        package-per-feature.</dd>
+        one package, grids <i>reported</i> up to 40% smaller. The biggest data-grid vendor moved away from
+        package-per-feature. No source is cited for the 40% anywhere in this repo.</dd>
     </dl>
   </div>
 
@@ -111,7 +111,7 @@
     <dl class="grid">
       <dt>Would buy</dt>
       <dd>6 entry points instead of 77, and <span class="num">53</span> fewer import rewrites (265
-        against 318) — <b>19%</b>.</dd>
+        against 318) — <b>16.7%</b>.</dd>
       <dt>Would cost</dt>
       <dd>almost all of the prize. Re-tested properly after a challenge: a cluster graph is made acyclic
         by merging its strongly-connected components, and <code>data</code>, <code>fields</code>,
@@ -134,7 +134,7 @@
     <h3>Split the icon map so unused icons drop</h3>
     <dl class="grid">
       <dt>Would buy</dt>
-      <dd><span class="num">≤ 2 522 B gzip</span> — measured by cutting the map from 115 icons to 9 and
+      <dd><span class="num">≤ 2 522 B gzip</span> — measured by cutting the map from 86 icons to 9 and
         rebuilding: <code>ds-button</code> went 62 733 → 60 211 B gzip. That is the <b>whole</b> icon
         set; SVG path strings compress to almost nothing.</dd>
       <dt>Would cost</dt>
@@ -177,7 +177,7 @@
     <h3>Ship the portaled CSS inside the code, the way AG Grid does</h3>
     <dl class="grid">
       <dt>Would buy</dt>
-      <dd><span class="num">1 592 B gzip</span> arriving with the feature instead of needing a
+      <dd><span class="num">1 055 B gzip</span> arriving with the feature instead of needing a
         consumer-side opt-in import — no <code>styles.scss</code> change for anyone.</dd>
       <dt>Would cost</dt>
       <dd>a Content Security Policy bill on every consumer. Angular injects styles as runtime

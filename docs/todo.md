@@ -318,8 +318,12 @@ the service was just the one somebody noticed. Full table and every tested hypot
   lazy chunk to 189 bytes - the initial grows **4.2x**, and all eleven heavy components land in a chunk
   `main` statically imports. This reproduces the consumer's report independently (577 kB of a 755 kB
   initial, 76%, against their claimed 88%), so §2's "not reproducible" line is superseded. The
-  services closure builds at 86 775 B gzip against the probe's 59 019 B DS-free floor, so the fix takes
-  the DS's share of the initial bundle from **135.7 KB gzip to 27.8 KB, -80%**. And the graph
+  services closure builds at 86 775 B gzip. **CORRECTED 2026-09-02: that figure was subtracted from the
+  59 019 B floor, which belongs to a DIFFERENT app shape** - `placement_after_a3.ts` has no lazy route,
+  so its matched control is `baseline.ts` at 30 646 B. Against its own control the closure is 56 129 B,
+  so the fix takes the DS's share of the initial bundle from **135.7 KB gzip to ~50-56 KB, about -59%**,
+  and the post-A3 figure is a MODEL - the like-for-like control cannot be built until entry points
+  exist. Full derivation in `packaging-chunking-audit.md` §11(a). And the graph
   partitions. **CORRECTED 2026-09-01: there are THREE cycles, not two.** This item's original count
   excluded type-only edges, and a later test proved ng-packagr treats an erased `import type` across an
   entry-point boundary as a dependency exactly like a runtime one. With them included the SCCs are
@@ -332,9 +336,10 @@ the service was just the one somebody noticed. Full table and every tested hypot
   complement was computed from the runtime edge map, which omits the eleven groups with no runtime edge
   either way (`divider`, `layout`, `list`, `page-footer`, `page-header`, `progress`, `status-dot`,
   `topbar`, `avatar-group`, `button-group`, `theme`) — 77 on disk minus a 13-group core is 64. The
-  core seed is 13, not 12: the four-way SCC was accepted rather than broken, so `components/card` is in
-  it. `theme` appearing in that no-edge list independently confirms it can be its own free entry point.
-  **A3 is unblocked and is worth ~5.7x the table work.** Original scope, for the record: Gates A3, touches no component, so it cannot collide with in-flight table work. Two
+  core seed is 13, not 12: the four-way SCC was accepted rather than broken, so `components/card` was in
+  it. **SUPERSEDED 2026-09-02 by A3-pre** (`bff7efbc`): the cycle is broken, `config` is gone as a group
+  (77 -> 76), and `card` is now an ordinary leaf. See the A3-pre item below. `theme` appearing in that no-edge list independently confirms it can be its own free entry point.
+  **A3 is unblocked and is worth ~4.2x the table work** (5.7x here until 2026-09-02; see the correction above). Original scope, for the record: Gates A3, touches no component, so it cannot collide with in-flight table work. Two
   halves. (a) A probe app with an eager `ToastService` import and a lazy route holding heavy
   components, built against the real `dist/ds` - the existing ladder plus one lazy route. Gives the
   placement prize for OUR library instead of a synthetic fixture's ratio. (b) The import graph of
@@ -424,9 +429,10 @@ the service was just the one somebody noticed. Full table and every tested hypot
   923 B); a branch inside code you must ship with no seam to hang it on -> `define`. Do not do both for
   the same feature.
 
-- [ ] **[P2] FREE 1.6 KB gzip: dev warnings ship to production and should not.** `devWarn` guards itself
-  with `isDevMode()`, a **function call** esbuild cannot fold, so all 14 call sites and their message
-  closures reach production bundles. Measured on `probe/devwarn`, control on the same build: prototype
+- [x] **[P2] SHIPPED 2026-09-01 in `d8eb81c0` (v0.11.2). FREE 1.6 KB gzip: dev warnings shipped to
+  production and no longer do.** `devWarn` guarded itself with `isDevMode()`, a **function call**
+  esbuild cannot fold, so all **13** call sites (button 1, stat 1, table 11 — the 14 first recorded
+  here counted the definition) and their message closures reached production bundles. Measured on `probe/devwarn`, control on the same build: prototype
   kit + table **191 988 -> 190 398 B gzip (-1 590 B)**; one `<ds-button>` **62 733 -> 61 906 B (-827 B)**.
   **No consumer configuration needed** — the installed builder already adds `'ngDevMode': 'false'` to
   esbuild's `define` whenever script optimization is on
@@ -456,7 +462,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
 
   **SIZED 2026-09-01, and per-component is NOT the expensive option.** ng-packagr requires a
   cross-entry import to go through the public specifier, and `src/lib` holds **318 cross-group import
-  statements** today (249 runtime + 69 type-only). Rewrites needed: **per-component 318, six semantic
+  statements** today (258 runtime + 60 type-only). Rewrites needed: **per-component 318, six semantic
   clusters 265, three layers 257** — only **19%** apart, because most cross-group imports point at
   core-ish modules (`icons`, `core`, `field-message`) that cross a boundary under any partition. Coarse
   clustering therefore saves almost nothing on the refactor and gives up the whole eager/lazy win.
@@ -501,13 +507,25 @@ the service was just the one somebody noticed. Full table and every tested hypot
   nothing); `ds-docs` needs a tsconfig path mapping per entry point since it compiles from source; check
   `extract-component-api.mjs`, `extract-tokens.mjs`, `class-surface-diff.mjs` and `changelog-lint.mjs`
   against the new layout; co-locate the two sibling cycles. Secondary entry points are NOT deprecated
-  (ng-packagr `docs/secondary-entrypoints.md` on `main`, plus a Feb 2026 guide). Full analysis:
+  (ng-packagr `docs/secondary-entrypoints.md` on `main`; the "Feb 2026 guide" once cited alongside it
+  is withdrawn — never named, never linked). Full analysis:
   `packaging-diagnosis.md` « Do we have to split? ».
 
-- [ ] **[P2] A3-pre — DO IT. Reversed 2026-09-02: the minimum cut is 14 import rewrites, not 40.**
-  The earlier decline rested on my own inflated figure. Recomputed by searching every subset of
-  candidate moves for the cheapest one that breaks the four-way SCC (`components/card`, `config`,
-  `core`, `icons`):
+- [x] **[P2] A3-pre — DONE 2026-09-02 in `bff7efbc`. Reversed from DECLINED, and the cost was wrong
+  twice.** The decline rested on an inflated 40. The reversal then published **14**, which is the
+  cost of moving `ds-config.ts` ALONE — a move that leaves `components/card` inside a three-way SCC
+  and does not achieve the goal. Recomputed 2026-09-02 by re-running Tarjan under each candidate cut:
+
+  | cut | statements | non-trivial SCCs left |
+  | --- | --- | --- |
+  | **the plan as executed** — `ds-config` AND `card.types` → `core` | **17** (+1 in `public-api.ts`) | `core+icons` |
+  | `card.types` → `core` alone | **4** | `config+core+icons` |
+  | `ds-config` → `core` alone | 14 | **`card+core+icons` — card still trapped** |
+
+  The 4-statement cut achieves both stated goals (kills the layering inversion, makes `card` a leaf);
+  the other 13 buy only the disappearance of the `config` group, 77 → 76. The full plan was chosen.
+  Verified: `npm run build:lib` and `npm run lint` clean, public type surface identical at 126
+  declarations. Original derivation:
 
   | move | import statements to rewrite |
   | --- | --- |
@@ -555,11 +573,15 @@ the service was just the one somebody noticed. Full table and every tested hypot
   Co-location allowances are the three accepted SCCs (`radio`/`radio-group`,
   `time-columns`/`time-picker`, and `card`/`config`/`core`/`icons`).
 
-  **Watched it go red, which was the point: 307 violations.** Close to the 318 static count — the
-  difference is exactly the imports now inside the accepted SCCs. **81% of them point at just four
-  targets:** `components-root` 92, `core` 60, `icons` 57, `components/field-message` 15. So A3's rewrite
+  **Watched it go red, which was the point: 307 violations** under the rule's shipped defaults (the
+  three accepted SCCs). Close to the 318 static count — the difference is exactly the imports inside
+  those SCCs. **CORRECTED 2026-09-02: the breakdown below is from a DIFFERENT run** — the probe config
+  that co-locates the whole 13-group core, which reports 277, not 307. Both runs were reproduced; the
+  81% holds under either (224/277 = 80.9%, 248/307 = 80.5%), but the four counts belong to the 277 run:
+  **81% of them point at just four targets:** `components-root` 92, `core` 60, `icons` 57,
+  `components/field-message` 15 — and under the 307 run those are 99 / 68 / 64 / 17. So A3's rewrite
   is four bulk replacements plus roughly fifty individual reviews, not 318 separate decisions. Heaviest
-  importers: `multi-select` 27, `autocomplete` 25, `select` 24, `modal` 13, `input` 11, `table` 11.
+  importers: `multi-select` 27, `autocomplete` 25, `select` 24, `modal` 13, `input` 11, `table` 12.
 
   **Why OFF and not warn:** 307 warnings would drown the existing lint output. `npm run lint` is
   unchanged (verified exit 0). **Flip it to `'error'` in the same commit that finishes A3's rewrites** —
@@ -607,7 +629,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
   nothing about packaging, entry points or the FESM layout.
 
 - [x] **[P3] Splitting the icon map — DECLINED 2026-09-01 (measured, not judged).** `ICONS` is one
-  const map of 115 icons, so any icon retains all of them. Cut to 9 icons on `probe/icons-map` and
+  const map of 86 icons (115 was a typo), so any icon retains all of them. Cut to 9 icons on `probe/icons-map` and
   re-measured: `ds-button` 62 733 -> **60 211 B gzip**. **The whole icon set is 2 522 B gzip** — SVG
   path strings compress to almost nothing. Per-icon exports would break `IconName = keyof typeof ICONS`
   and `provideDsIcons` for at most ~2.3 kB. Do not re-open without a new measurement.
@@ -616,8 +638,11 @@ the service was just the one somebody noticed. Full table and every tested hypot
   `packaging-chunking-audit.md` §7 named «a consumer whose EAGER root needs a component rather than a
   service» as D's trigger. Measured: an eager shell (`app-layout` + `sidenav` + `topbar` +
   `page-header`) costs **201 283 B gzip** today and closes over only **9 of 77 groups** (+`tooltip`),
-  which builds standalone at **101 108 B gzip**. So an eager-shell consumer stands to save ~98 kB gzip
-  against an eager-service consumer's ~108 kB — but ONLY with per-component entries, per A3+ above.
+  which builds standalone at **101 108 B gzip**. **CORRECTED 2026-09-02: the ~98 kB first recorded here
+  subtracted the 59 019 B lazy-route floor from `shell_closure.ts`, which has no lazy route.** Against
+  its own control the closure is 101 108 - 30 646 = 70 462 B, so the modelled post-A3 initial is
+  ~129 kB and an eager-shell consumer saves **~72 kB gzip, about -50%**, against an eager-service
+  consumer's ~80 kB — but ONLY with per-component entries, per A3+ above.
   Shell and services together close over 16 of 77 groups.
 
 - [ ] **[P2] `ds-button`'s field-message line costs 11.0 KB gzip — 35% of the button, ABLATION DONE
@@ -675,7 +700,7 @@ A0 first, which touches none of it, or wait for that lane to land.
   not per-component, at the three-layer cut A0 measured. Read the rest of the page for the mechanism and
   the numbers, which still hold.
 
-  **DECIDED 2026-08-05: option B from `packaging-chunking-audit.md` §7 — one services entry point, root `public-api.ts` kept as a facade.** It is the only option the fixtures measured as fixing chunk PLACEMENT without losing tree-shaking, and it is non-breaking: same symbols, same names, no cross-entry deep-import refactor across 73 folders. **Two things to get right when building it, both found while deciding:** (1) the entry point is NOT as narrow as its name — `ToastService` imports `ToastRegionComponent` and `ModalService` imports `ModalConfirmComponent`, so the entry necessarily carries those components and their own deps; that still fixes the reported problem, because the ~70 components the app touches only from lazy routes stop being pinned into `main`, but the eager cost is the toast+modal graph rather than three classes. (2) The secondary entry must OWN the source and the root must re-export FROM it — if both entries export the same source, a consumer importing from both gets two class identities and DI silently resolves two different services. **CORRECTED 2026-08-05, before anyone builds it: option B is NOT implementable as the audit describes it, and the audit is wrong on this point because it measured synthetic fixtures rather than the real import graph.** Followed the actual chain: `ToastService` → `ToastRegionComponent` → `ToastComponent` → `IconComponent` + `SpinnerComponent`; `ModalService` → `ModalConfirmComponent` → `ButtonComponent` + `ModalCardComponent` → `IconComponent`. So a services entry point must OWN button, icon, icons.data, spinner, toast and modal-card — and every other component needs those same leaves, so the ROOT would have to import them from the services entry. ng-packagr forbids cycles between entry points, so there is no arrangement where a small services entry sits beside an unchanged root. What that shape actually is: a LAYERED set of entries — `core` (icon, button, spinner, overlay primitives) ← `services` ← `components` — which is the audit's option D, described there as a separate large refactor, and it changes how every consumer imports. **So the live choice is A, C or D — not B. Described 2026-08-05 at Stas's request and DELIBERATELY LEFT OPEN: nothing here is urgent (no consumer is blocked, only sub-optimally chunked), and each option's cost lands somewhere different.**
+  **DECIDED 2026-08-05: option B from `packaging-chunking-audit.md` §7 — one services entry point, root `public-api.ts` kept as a facade.** It is the only option the fixtures measured as fixing chunk PLACEMENT without losing tree-shaking, and it is non-breaking: same symbols, same names, no cross-entry deep-import refactor across 71 folders. **Two things to get right when building it, both found while deciding:** (1) the entry point is NOT as narrow as its name — `ToastService` imports `ToastRegionComponent` and `ModalService` imports `ModalConfirmComponent`, so the entry necessarily carries those components and their own deps; that still fixes the reported problem, because the ~70 components the app touches only from lazy routes stop being pinned into `main`, but the eager cost is the toast+modal graph rather than three classes. (2) The secondary entry must OWN the source and the root must re-export FROM it — if both entries export the same source, a consumer importing from both gets two class identities and DI silently resolves two different services. **CORRECTED 2026-08-05, before anyone builds it: option B is NOT implementable as the audit describes it, and the audit is wrong on this point because it measured synthetic fixtures rather than the real import graph.** Followed the actual chain: `ToastService` → `ToastRegionComponent` → `ToastComponent` → `IconComponent` + `SpinnerComponent`; `ModalService` → `ModalConfirmComponent` → `ButtonComponent` + `ModalCardComponent` → `IconComponent`. So a services entry point must OWN button, icon, icons.data, spinner, toast and modal-card — and every other component needs those same leaves, so the ROOT would have to import them from the services entry. ng-packagr forbids cycles between entry points, so there is no arrangement where a small services entry sits beside an unchanged root. What that shape actually is: a LAYERED set of entries — `core` (icon, button, spinner, overlay primitives) ← `services` ← `components` — which is the audit's option D, described there as a separate large refactor, and it changes how every consumer imports. **So the live choice is A, C or D — not B. Described 2026-08-05 at Stas's request and DELIBERATELY LEFT OPEN: nothing here is urgent (no consumer is blocked, only sub-optimally chunked), and each option's cost lands somewhere different.**
 
 - **A — do nothing.** Every feature route in the consumer is already lazy, so the DS chunk arrives with the first route rather than before it; what the 632 kB measurement really shows is that one eager `ToastService` import pulls the retained graph into `main` instead of into route 1. Cost: zero. What stays wrong: a cold first paint carries components the first screen does not use. Closing on A means recording that trade as accepted, since the numbers will resurface in the next consumer audit.
 - **C — consumer-side dynamic `import()`.** The consumer's composition root imports the service lazily, which keeps `main` clean with no DS change at all. Measured to cost ~50% of the tree-shaking win (the dynamic specifier defeats static analysis, so more of the graph is retained). Also NOT ours to make: the fix lives in the consumer's repo, and per the scope rule this repo does not plan changes there — so choosing C means closing the DS item and letting the consumer decide.
@@ -683,7 +708,7 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 **Two traps recorded while deciding, so they are not re-derived:** (1) the secondary entry must OWN its source and the root must re-export FROM it — if both export the same source a consumer importing from both gets two class identities and DI silently resolves two different services; (2) the audit's fixtures were synthetic, which is exactly how it concluded B was viable, so validate any future claim against the real import graph.
 
-**MEASURED 2026-09-01 — option D is cheaper than it was written down as; read `packaging-chunking-audit.md` §10.** The open question from the audit's §8 (does ng-packagr's secondary-entry-point output survive the Angular application builder?) is answered: yes. A real three-entry library (`core` leaf, `services` and `heavy` importing it by public specifier, root a pure re-export facade) built by ng-packagr and consumed by `@angular/build:application` moved the heavy payload out of the eager chunk — **118 011 B → 85 800 B statically imported by `main`**, heavy payload into its own 32 121 B on-demand chunk — with a **38-byte** total-size difference, i.e. no tree-shaking penalty (nothing like C's +50%). The control (single entry point, today's shape) reproduced the failure exactly: 600 payload markers in the eager chunk, lazy chunk collapsed to 100 B. **The finding that changes the cost model: `facade` and `deep` consumer variants are byte-identical down to the chunk hash** — a consumer keeps importing from the ROOT specifier and still gets correct placement, so D's headline cost («changes how every consumer imports») is not real when the root stays a pure facade. The refactor becomes internal. **Still untested:** whether the real 95 component folders partition without cycles — favourable at the top level (nothing in `core/`, `icons/`, `overlay/`, `theme/` imports a component at runtime; the one edge, `config/ds-config.ts:4`, is an erased `import type`; `toast/` and `modal/` need only button, spinner, icon), but a full partition has not been attempted. Fixture: `.claude/local/entrypoint-probe/` (gitignored).
+**MEASURED 2026-09-01 — option D is cheaper than it was written down as; read `packaging-chunking-audit.md` §10.** The open question from the audit's §8 (does ng-packagr's secondary-entry-point output survive the Angular application builder?) is answered: yes. A real three-entry library (`core` leaf, `services` and `heavy` importing it by public specifier, root a pure re-export facade) built by ng-packagr and consumed by `@angular/build:application` moved the heavy payload out of the eager chunk — **118 011 B → 85 800 B statically imported by `main`**, heavy payload into its own 32 121 B on-demand chunk — with a **38-byte** total-size difference, i.e. no tree-shaking penalty (nothing like C's +50%). The control (single entry point, today's shape) reproduced the failure exactly: 600 payload markers in the eager chunk, lazy chunk collapsed to 100 B. **The finding that changes the cost model: `facade` and `deep` consumer variants are byte-identical down to the chunk hash** — a consumer keeps importing from the ROOT specifier and still gets correct placement, so D's headline cost («changes how every consumer imports») is not real when the root stays a pure facade. The refactor becomes internal. **Still untested:** whether the real 71 component folders partition without cycles — favourable at the top level (nothing in `core/`, `icons/`, `overlay/`, `theme/` imports a component at runtime; the one edge, `config/ds-config.ts:4`, is an erased `import type`; `toast/` and `modal/` need only button, spinner, icon), but a full partition has not been attempted. Fixture: `.claude/local/entrypoint-probe/` (gitignored).
 
 - [ ] **[P2] Split the package into `basic` + `advanced` (Mikhail, carried over from an earlier ask; re-raised 2026-08-30).** The proposal: prototypes install a light kit, production apps add a heavy one, `ds-table` swapped for an `ids-data-grid`. **AUDITED 2026-09-01 → read `basic-advanced-split-audit.md` before actioning. Both premises are measurably false.** (1) Bundle: on 0.11.1, going from the 44 components a prototype uses to all 96 costs **18 KB gzip**; the whole library is 179 KB gzip; entry cost is 5.6 KB; `ds-table`'s MARGINAL cost beside the rest of the kit is **32 KB gzip**, not the 118 KB it measures alone. (2) Capability: every feature named for `ids-data-grid` — column resize, filters, visibility, order, CSV export, inline edit, sticky h-scrollbar, truncate+popover, selection-safe row click — **already ships in `ds-table`**, most since 0.6.3. So a split would move shipped features into a second package and double the release pipeline to save ≤32 KB. (Breaking consumers is NOT part of the case against it — see the memory rule; shipped features are free to move.) **The one shape that survives the numbers** is intra-component, not intra-package: move the table's opt-in behaviours into separately-importable directives (`DsTableResizable`, `DsTableExport`, …) so the heavy parts tree-shake per feature — one component, one docs page, no mirror to keep in sync. Unmeasured; ceiling on the saving is 32 KB. **A separate package is justified by an external runtime dependency, never by component count** — which makes `ids-charts` a real candidate the day it needs a third-party renderer, and `ids-advanced` not one. Decision is Stas's; nothing is blocked.
 

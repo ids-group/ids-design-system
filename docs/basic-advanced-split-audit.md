@@ -79,7 +79,12 @@ future change does not silently break them:
   `ɵɵdefineComponent` and friends `/*#__PURE__*/`, so an unreferenced class is dead code.
 - The library has **no** third-party runtime dependency beyond `tslib`. `@angular/cdk` is a
   peer, and only `overlay`, `portal` and one `drag-drop` import are used.
-- Every optional table behaviour is an `input(false)` — nothing is on by default.
+- Nothing is on by default. (The shorthand here was "every optional table behaviour is an
+  `input(false)`", which is **false** and corrected 2026-09-02: six take other forms — `bordered` and
+  `stickyScrollbar` are `input<boolean | null>(null)`, `hiddenKeys` and `columnOrder` are
+  `model<… | null>(null)`, `columnFilters` and `columnWidths` are `model<Map>(new Map())`. All six
+  still resolve to off: `null` becomes `false` through `resolveWithConfig`, and an empty map hides,
+  reorders and filters nothing. The argument does not depend on the form.)
 
 ## 3. Everything proposed for `ids-data-grid` already ships in `ds-table`
 
@@ -155,7 +160,7 @@ build, moved the heavy payload out of the eager chunk (118 011 B → 85 800 B) w
 penalty — **and the consumer kept importing from the root specifier while getting the same result,
 byte for byte**. Keeping the root as a pure re-export facade removes D's headline cost ("changes how
 every consumer imports"); the refactor becomes internal to the library. Whether *this* library's
-95 component folders actually partition without cycles is still untested.
+71 component folders actually partition without cycles is still untested.
 
 The decision stays open and nothing is blocked on it. It is recorded here only to make the point
 that matters for *this* proposal: **the basic/advanced split addresses none of it.**
@@ -178,7 +183,7 @@ By that criterion `ids-charts` is a real candidate the day it needs a third-part
   unmeasured, and the ceiling on the saving is 32 KB. This is the only shape in which the
   "light table / heavy grid" idea survives the numbers: one component, one docs page, no
   mirror to keep in sync, and the heavy parts tree-shaken per feature rather than per package.
-- Whether this library's 95 component folders partition into acyclic entry points. The pipeline
+- Whether this library's 71 component folders partition into acyclic entry points. The pipeline
   itself is no longer in doubt — see `packaging-chunking-audit.md` §10.
 - No consumer repo was rebuilt; all figures here are from this repo's probe.
 
