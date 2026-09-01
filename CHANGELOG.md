@@ -95,13 +95,26 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   and the same accessible name as `ds-select`'s.
 
 
+- **`ds-table` row expansion: one-at-a-time, expand-all, and events.** The base feature shipped
+  already; these are the three edges it was missing. `expandMode="single"` collapses the open row
+  when another expander is clicked, so a detail panel cannot stack up down the page — enforced when
+  the user clicks, not on the binding, because `expandedIds` is the host's model to write and
+  rewriting it underneath would be the table arguing with its own consumer. `expandAllToggle` puts
+  a chevron in the expander column header, page-scoped when paginating exactly as select-all is.
+  `(rowExpanded)` and `(rowCollapsed)` name the row as it opens and closes, expand-all included,
+  which is where panel content gets lazy-loaded; a collapse the host writes into `expandedIds`
+  itself stays silent, and so does an id whose row is no longer in `data()` — an event carries a
+  row, and there is none to carry. Opening two rows or more now also reaches the table's live
+  region, which a full page of panels appearing from one keypress previously did not.
+
+
 ### Changed
 
 - **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
-  `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` all gained members for the
-  inputs and outputs above, and `DsPanelHeaderTemplateDirective`, `DsPanelFooterTemplateDirective` and
-  `DsGroupLabelTemplateDirective` are new classes. Also for the
-  inputs and outputs above. Subclassing a DS component is unsupported but consumers do it, and a
+  `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent` and `TableComponent` all
+  gained members for the inputs and outputs above, and `DsPanelHeaderTemplateDirective`,
+  `DsPanelFooterTemplateDirective` and `DsGroupLabelTemplateDirective` are new classes.
+  Subclassing a DS component is unsupported but consumers do it, and a
   member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
   if you meant to replace ours — the compiler enumerates every collision, so building after the
   upgrade is the whole check.

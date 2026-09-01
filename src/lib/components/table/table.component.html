@@ -73,6 +73,21 @@
               class="expand-col"
               [class.pin-expand]="stickyFirstColumn()"
             >
+              @if (expandAllVisible()) {
+                <button
+                  type="button"
+                  class="expand-btn"
+                  [attr.aria-label]="expandAllLabel()"
+                  (click)="onToggleExpandAll()"
+                >
+                  <ds-icon
+                    class="expand-chev"
+                    name="chevronRight"
+                    [class.is-expanded]="allExpanded()"
+                    [size]="16"
+                  />
+                </button>
+              }
             </th>
           }
 

@@ -482,6 +482,18 @@ export class TableSection {
 
   protected readonly expandRows: readonly EventRow[] = this.events.slice(0, 4);
 
+  protected readonly expandLog = signal<string>('nothing yet');
+
+  protected readonly singleExpanded = signal(new Set<string>());
+
+  protected onRowExpanded(row: unknown): void {
+    this.expandLog.set(`expanded ${(row as EventRow).project}`);
+  }
+
+  protected onRowCollapsed(row: unknown): void {
+    this.expandLog.set(`collapsed ${(row as EventRow).project}`);
+  }
+
   /** Narrows the `unknown` row a projected `dsCellTemplate` receives back to EventRow. */
   protected asEvent(row: unknown): EventRow {
     return row as EventRow;

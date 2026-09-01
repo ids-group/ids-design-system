@@ -6822,6 +6822,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way set of currently expanded row ids."
       },
       {
+        "name": "expandMode",
+        "kind": "input",
+        "type": "TableExpandMode",
+        "union": [
+          "multiple",
+          "single"
+        ],
+        "default": "'multiple'",
+        "required": false,
+        "description": "`'single'` collapses the open row when another expander is clicked. Enforced on interaction only: a set seeded with several ids is left alone (and warned about in dev) rather than silently rewritten under the host."
+      },
+      {
+        "name": "expandAllToggle",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Renders an expand-all/collapse-all chevron in the expander column header, page-scoped when paginating, like select-all. Suppressed under `expandMode=\"single\"`, which it would contradict."
+      },
+      {
         "name": "rowExpandTemplate",
         "kind": "input",
         "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
@@ -6906,6 +6927,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires when an `editable` cell is committed (Enter or blur) with the new value."
+      },
+      {
+        "name": "rowExpanded",
+        "kind": "output",
+        "type": "T",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires with the row when an expander opens it — including each row opened by expand-all, so a host lazy-loading panel content sees every one."
+      },
+      {
+        "name": "rowCollapsed",
+        "kind": "output",
+        "type": "T",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires with the row when an expander closes it, the row auto-closed by `expandMode=\"single\"` included. It carries a row, so it cannot speak for an id whose row is no longer in `data()` — under server-side paging that id is cleared silently. `expandedIds` is the complete signal; this one is the convenient one."
       }
     ]
   },

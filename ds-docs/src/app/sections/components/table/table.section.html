@@ -883,13 +883,36 @@
     </code>.
   </p>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [expandAllToggle]="true"
+    </code> puts an
+    expand-all chevron in the column header — page-scoped when paginating, the
+    same way select-all is.
+    <code class="t-mono-inline">
+      (rowExpanded)
+    </code> and
+    <code class="t-mono-inline">
+      (rowCollapsed)
+    </code> report each row as it
+    opens or closes, expand-all included, which is where panel content gets
+    lazy-loaded. Writing
+    <code class="t-mono-inline">
+      expandedIds
+    </code> yourself stays silent — you
+    already know.
+  </p>
+
   <ds-table
     caption="Events"
     [data]="expandRows"
     [columns]="expandColumns"
     [expandableRows]="true"
+    [expandAllToggle]="true"
     [rowExpandTemplate]="rowExpand"
     [stickyHeader]="false"
+    (rowExpanded)="onRowExpanded($event)"
+    (rowCollapsed)="onRowCollapsed($event)"
   >
     <ng-template
       let-row
@@ -923,6 +946,46 @@
       </span>
     </div>
   </ng-template>
+
+  <p class="block-desc t-s">
+    Last event: {{ expandLog() }}
+  </p>
+
+  <h3 class="block-title t-h4">
+    One row at a time
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      expandMode="single"
+    </code> closes the open row
+    when another expander is clicked, so the table never grows past one panel.
+    It is enforced on interaction, not on the binding: an
+    <code class="t-mono-inline">
+      expandedIds
+    </code> set you seed with several
+    ids is left as passed — it is your model to write — and dev mode says so.
+  </p>
+
+  <ds-table
+    caption="Events"
+    expandMode="single"
+    [data]="expandRows"
+    [columns]="expandColumns"
+    [expandableRows]="true"
+    [rowExpandTemplate]="rowExpand"
+    [stickyHeader]="false"
+    [(expandedIds)]="singleExpanded"
+  >
+    <ng-template
+      let-row
+      dsCellTemplate="project"
+    >
+      <span class="t-s-bold">
+        {{ asEvent(row).project }}
+      </span>
+    </ng-template>
+  </ds-table>
 
   <h3 class="block-title t-h4">
     Clickable rows · drawer detail

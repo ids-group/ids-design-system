@@ -350,19 +350,6 @@
       width: var(--space-10);
     }
 
-    .expand-chev {
-      display: block;
-      transition: transform var(--duration-base) var(--ease-standard);
-
-      @media (prefers-reduced-motion: reduce) {
-        transition: none;
-      }
-
-      &.is-expanded {
-        transform: rotate(90deg);
-      }
-    }
-
     .expand-panel-cell {
       padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
     }
@@ -379,8 +366,23 @@
     }
   }
 
-  /* Shared icon-button chrome — expand chevron (tbody), row kebab (tbody)
-     and the column-picker trigger (thead). */
+  /* Hoisted out of `tbody`: the expand-all toggle wears the same chevron in
+     `thead`, and a tbody-scoped rule left it stuck pointing right. */
+  .expand-chev {
+    display: block;
+    transition: transform var(--duration-base) var(--ease-standard);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &.is-expanded {
+      transform: rotate(90deg);
+    }
+  }
+
+  /* Shared icon-button chrome — expand chevron (tbody), expand-all toggle
+     (thead), row kebab (tbody) and the column-picker trigger (thead). */
   .expand-btn,
   .row-actions-btn,
   .col-picker-btn {

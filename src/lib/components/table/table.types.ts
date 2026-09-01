@@ -25,6 +25,10 @@ export type TableFilterMode = 'client' | 'server' | 'none';
 
 export type TableSortMode = 'client' | 'server' | 'none';
 
+/** `'single'` closes the open row when another is expanded; `'multiple'` (default)
+ *  leaves every expanded row open. */
+export type TableExpandMode = 'multiple' | 'single';
+
 import type { IconName } from '../../icons/icons.data';
 
 export interface TableColumn<T = unknown> {

@@ -4,6 +4,47 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-table` row expansion has its three edges (2026-09-01)
+
+- [x] **DONE 2026-09-01 — the gate was lifted, and all three deltas are in.** The base feature had
+  been at parity since it shipped; what was missing were the edges around it, held behind a gate
+  since 2026-08-25 on the grounds that nobody was blocked. Stas lifted it, so they were built as
+  one piece.
+
+  **`expandMode="single"`** collapses the open row when another expander is clicked. Enforced on
+  the click, NOT on the binding: `expandedIds` is a two-way model the host owns, and a component
+  that rewrites its consumer's model on the way in is a component arguing with its own API. A set
+  seeded with several ids is therefore left exactly as passed, and a dev warning says so.
+
+  **`expandAllToggle`** puts a chevron in the expander column header — page-scoped when
+  paginating, which is what select-all already does, so the two controls in that header row mean
+  the same thing by "all". It is suppressed under `expandMode="single"`, because expanding every
+  row is the one thing single mode exists to prevent; a dev warning explains the suppression
+  rather than leaving a control that silently is not there.
+
+  **`(rowExpanded)` / `(rowCollapsed)`** name the row as it opens and closes, expand-all
+  included — that is where a host lazy-loads panel content, so an expand-all that stayed quiet
+  would hand back a page of empty panels. Named in the past participle per the API convention; the
+  backlog item had asked for `(rowExpand)`/`(rowCollapse)`, which the convention overrides.
+
+  **What the events deliberately do NOT cover**, because an event carries a row and there is not
+  always one to carry: a collapse the host writes into `expandedIds` itself (it already knows),
+  and an id whose row is no longer in `data()` under server-side paging. The adversarial review
+  caught the first draft claiming the opposite in both a comment and the public JSDoc — the
+  behaviour was always this, the documentation was the lie. `expandedIds` is the complete signal.
+
+  Three more came out of that same review and are fixed: the single-mode branch emitted the expand
+  BEFORE the collapse, which inverts the causal order and breaks the naive host that writes one
+  "currently open row" field; a full page of panels appearing from one keypress announced nothing
+  to a screen reader, so from two rows up the table's existing live region now carries "N rows
+  expanded"; and an expand-all that changed nothing still wrote a fresh `Set` through the two-way
+  binding. Verified in a real Chromium over CDP, not in a headless approximation of one: 0 → 4
+  panels and back, the header chevron rotating (which is what proves the SCSS hoist out of
+  `tbody` reached `thead`), single mode holding at exactly one panel across clicks, and both
+  outputs reaching the docs demo's readout.
+
+---
+
 ## The published surface is swept, and a gate keeps it swept (2026-09-01)
 
 - [x] **DONE 2026-09-01 — 43 verdicts, and the rules they encode now run on every PR and every

@@ -45,6 +45,7 @@ import type {
   TableColumn,
   TableRowAction,
   TableRowActionEvent,
+  TableExpandMode,
   TableFilterMode,
   TableSortMode,
 } from './table.types';
@@ -459,6 +460,27 @@ export class TableComponent<T extends object> {
 
   /** Two-way set of currently expanded row ids. */
   readonly expandedIds = model<Set<string>>(new Set<string>());
+
+  /** `'single'` collapses the open row when another expander is clicked.
+   *  Enforced on interaction only: a set seeded with several ids is left alone
+   *  (and warned about in dev) rather than silently rewritten under the host. */
+  readonly expandMode = input<TableExpandMode>('multiple');
+
+  /** Renders an expand-all/collapse-all chevron in the expander column header,
+   *  page-scoped when paginating, like select-all. Suppressed under
+   *  `expandMode="single"`, which it would contradict. */
+  readonly expandAllToggle = input(false, { transform: booleanAttribute });
+
+  /** Fires with the row when an expander opens it — including each row opened
+   *  by expand-all, so a host lazy-loading panel content sees every one. */
+  readonly rowExpanded = output<T>();
+
+  /** Fires with the row when an expander closes it, the row auto-closed by
+   *  `expandMode="single"` included. It carries a row, so it cannot speak for an
+   *  id whose row is no longer in `data()` — under server-side paging that id is
+   *  cleared silently. `expandedIds` is the complete signal; this one is the
+   *  convenient one. */
+  readonly rowCollapsed = output<T>();
 
   /** Template rendered inside an expanded row's panel.
    *  Context: `$implicit` = row, `row` = row. */
@@ -1126,9 +1148,27 @@ export class TableComponent<T extends object> {
     if (exportState) {
       return exportState;
     }
-    const parts = [this.sortMessage(), this.rangeMessage()].filter(Boolean);
+    const parts = [
+      this.sortMessage(),
+      this.rangeMessage(),
+      this.expansionMessage(),
+    ].filter(Boolean);
 
     return parts.join('. ');
+  });
+
+  /** Only from two rows up: a single expander announces itself through its own
+   *  `aria-expanded`, and repeating that here would say everything twice. */
+  private readonly expansionMessage = computed<string>(() => {
+    const open = this.expandedIds();
+    if (open.size < 2) {
+      return '';
+    }
+    const onPage = this.displayData().filter((row) =>
+      open.has(this.rowKey(row)),
+    ).length;
+
+    return onPage < 2 ? '' : `${onPage} rows expanded`;
   });
 
   private readonly sortMessage = computed<string>(() => {
@@ -1262,6 +1302,28 @@ export class TableComponent<T extends object> {
       ? 'Select all rows on this page'
       : 'Select all rows',
   );
+
+  protected readonly allExpanded = computed(() => {
+    const data = this.displayData();
+    if (data.length === 0) {
+      return false;
+    }
+    const open = this.expandedIds();
+
+    return data.every((row) => open.has(this.rowKey(row)));
+  });
+
+  protected readonly expandAllVisible = computed(
+    () => this.expandAllToggle() && this.expandMode() !== 'single',
+  );
+
+  protected readonly expandAllLabel = computed(() => {
+    const scope = this.pageSize() !== null ? ' on this page' : '';
+
+    return this.allExpanded()
+      ? `Collapse all rows${scope}`
+      : `Expand all rows${scope}`;
+  });
 
   protected readonly skeletonArray = computed(() =>
     Array(this.skeletonRows()).fill(0),
@@ -1478,6 +1540,21 @@ export class TableComponent<T extends object> {
         : null,
     );
     devWarn(() =>
+      this.expandAllToggle() && this.expandMode() === 'single'
+        ? '[ds-table] expandAllToggle contradicts expandMode="single" — expanding every row is the one thing single mode exists to prevent. The header toggle is suppressed; drop one of the two.'
+        : null,
+    );
+    devWarn(() =>
+      this.expandAllToggle() && !this.expandableRows()
+        ? '[ds-table] expandAllToggle needs expandableRows — without it there is no expander column to put the toggle in, so it renders nothing. Set expandableRows.'
+        : null,
+    );
+    devWarn(() =>
+      this.expandMode() === 'single' && this.expandedIds().size > 1
+        ? '[ds-table] expandMode="single" was given expandedIds holding several rows. A two-way model is the host\'s to write, so it is left as passed rather than rewritten — the next expander click collapses back to one.'
+        : null,
+    );
+    devWarn(() =>
       this.virtualScroll() && this.pageSize() !== null
         ? '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.'
         : null,
@@ -1684,13 +1761,63 @@ export class TableComponent<T extends object> {
 
   protected onToggleExpand(row: T, event: Event): void {
     event.stopPropagation();
-    const next = new Set<string>(this.expandedIds());
-    if (next.has(this.rowKey(row))) {
-      next.delete(this.rowKey(row));
-    } else {
-      next.add(this.rowKey(row));
+    const key = this.rowKey(row);
+    const open = this.expandedIds();
+
+    if (open.has(key)) {
+      const next = new Set<string>(open);
+      next.delete(key);
+      this.expandedIds.set(next);
+      this.rowCollapsed.emit(row);
+
+      return;
     }
+
+    if (this.expandMode() === 'single') {
+      // `data()` rather than `displayData()` so a row left open on another page
+      // is reported too — but an event carries a row, so an id whose row is not
+      // loaded at all is dropped without one. Documented on `rowCollapsed`.
+      const closing =
+        open.size > 0
+          ? this.data().filter((other) => open.has(this.rowKey(other)))
+          : [];
+      this.expandedIds.set(new Set<string>([key]));
+      closing.forEach((other) => this.rowCollapsed.emit(other));
+      this.rowExpanded.emit(row);
+
+      return;
+    }
+
+    const next = new Set<string>(open);
+    next.add(key);
     this.expandedIds.set(next);
+    this.rowExpanded.emit(row);
+  }
+
+  protected onToggleExpandAll(): void {
+    const rows = this.displayData();
+    const open = this.expandedIds();
+    const collapsing = this.allExpanded();
+    const changed = rows.filter(
+      (row) => open.has(this.rowKey(row)) === collapsing,
+    );
+    if (changed.length === 0) {
+      return;
+    }
+
+    const next = new Set<string>(open);
+    rows.forEach((row) => {
+      if (collapsing) {
+        next.delete(this.rowKey(row));
+      } else {
+        next.add(this.rowKey(row));
+      }
+    });
+    this.expandedIds.set(next);
+
+    changed.forEach((row) =>
+      collapsing ? this.rowCollapsed.emit(row) : this.rowExpanded.emit(row),
+    );
   }
 
   protected isSelected(row: T): boolean {
@@ -1756,7 +1883,6 @@ export class TableComponent<T extends object> {
     return first ? this.cellValue(row, first) : '';
   }
 
-  /** `aria-sort` value for a header: only meaningful on sortable columns. */
   /** Row identity — the `rowId` accessor when given, else `row.id`. Public so a
    *  host reading `selectedIds`/`expandedIds` can compute the same keys. */
   rowKey(row: T): string {
@@ -1773,6 +1899,7 @@ export class TableComponent<T extends object> {
     return !!col.sortable && this.sortModeResolved() !== 'none';
   }
 
+  /** `aria-sort` value for a header: only meaningful on sortable columns. */
   protected ariaSort(
     col: TableColumn<T>,
   ): 'ascending' | 'descending' | 'none' | null {
