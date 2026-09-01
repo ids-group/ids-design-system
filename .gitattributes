@@ -5,3 +5,8 @@
 # Generated docs data is emitted with LF by the extractors; pin eol=lf so it
 # doesn't churn to CRLF on every build under core.autocrlf.
 *.generated.ts text eol=lf
+
+# Same reason for the agent catalogue: split-agent-catalogue.mjs writes LF, so without
+# this every build:docs reports 60 modified files that differ only in line endings — and
+# that churn sweeps into whichever commit runs next.
+docs/agent/** text eol=lf
