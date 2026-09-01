@@ -98,6 +98,37 @@ const leaves = blocks.map((block) => {
   };
 });
 
+// A catalogue entry for a component that no longer exists is worse than a missing one: it
+// teaches an API that is not there. `<ds-dropdown>` sat here for months after
+// `refactor(select)!: absorb ds-dropdown into ds-select` deleted the component.
+const sourceFiles = (dir, out = []) => {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) sourceFiles(path, out);
+    else if (entry.name.endsWith('.ts') && !entry.name.endsWith('.d.ts')) out.push(path);
+  }
+  return out;
+};
+const liveTags = new Set();
+for (const file of sourceFiles(join(repo, 'src', 'lib'))) {
+  const text = readFileSync(file, 'utf8');
+  for (const match of text.matchAll(/selector:\s*'(ds-[a-z0-9-]+)'/g)) liveTags.add(match[1]);
+  for (const match of text.matchAll(/selector:\s*'\[(ds[A-Za-z]+)\]'/g)) liveTags.add('[' + match[1] + ']');
+}
+const stale = [];
+for (const leaf of leaves) {
+  const named = [...leaf.heading.matchAll(/<(ds-[a-z0-9-]+)>/g)].map((m) => m[1]);
+  for (const tag of named) {
+    if (!liveTags.has(tag)) stale.push(`${tag} (${leaf.path})`);
+  }
+}
+if (stale.length) {
+  console.error(`✗ components.md documents ${stale.length} component(s) that no longer exist:`);
+  for (const entry of stale) console.error(`    ${entry}`);
+  console.error('  delete the entry — a doc for a removed component teaches an API that is not there');
+  process.exit(1);
+}
+
 const duplicates = leaves
   .map((leaf) => leaf.path)
   .filter((path, index, all) => all.indexOf(path) !== index);

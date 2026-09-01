@@ -428,13 +428,6 @@ Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / 
 #### `<ds-menu>` + `<ds-menu-item>` — `MenuComponent`, `MenuItemComponent`
 Menu is a container. Item inputs: `icon: IconName | null = null`, `disabled: boolean = false`, `danger: boolean = false`. Output: `(pressed): MouseEvent`. Content: label text; supports `[icon]` content slot for custom icons.
 
-#### `<ds-dropdown>` — `DropdownComponent`
-Trigger button + CDK overlay panel combo.
-Inputs: `value: model<string> = ''`, `options: DropdownOption[]` (`{ label, value, disabled?, icon? }`), `placeholder: string = 'Select…'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `error: boolean = false`, `name: string | null = null`
-Selection is communicated via the `value` model. Keyboard: ArrowUp/Down, Enter/Space, Home/End, Escape.
-
----
-
 ### Tables
 
 #### `<ds-table>` — `TableComponent<T extends { id: string }>`

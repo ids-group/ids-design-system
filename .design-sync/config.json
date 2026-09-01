@@ -26,7 +26,6 @@
     "Menu": { "cardMode": "column" },
     "Stepper": { "cardMode": "column" },
     "Tabs": { "cardMode": "column" },
-    "Tooltip": { "cardMode": "column" },
     "PageHeader": { "cardMode": "column" },
     "PageFooter": { "cardMode": "column" },
     "DatePicker": { "cardMode": "column" },

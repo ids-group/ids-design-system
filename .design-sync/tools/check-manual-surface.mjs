@@ -172,6 +172,30 @@ for (const name of [...PREVIEW_EXEMPT].sort()) {
   }
 }
 
+// Both directions, because only one of them was checked until 2026-09-01 and two orphans sat
+// there unnoticed: a doc and a preview for `Tooltip`, which is a DIRECTIVE and can therefore
+// never have a card. A doc for something that does not exist is worse than a missing one — it
+// teaches the design agent an API it will not find.
+const liveNames = new Set([...componentTags].map(pascalOfTag));
+for (const name of [...docNames].sort()) {
+  if (!liveNames.has(name)) {
+    errors.push(`✗ .design-sync/docs/${name}.md documents no live component — delete it, or the design agent is taught an API that does not exist`);
+  }
+}
+for (const name of [...previewNames].sort()) {
+  if (!liveNames.has(name)) {
+    errors.push(`✗ .design-sync/previews/${name}.tsx previews no live component — delete it`);
+  }
+}
+const overrideNames = Object.keys(
+  JSON.parse(readFileSync(join(repo, '.design-sync', 'config.json'), 'utf8')).overrides ?? {},
+);
+for (const name of overrideNames.sort()) {
+  if (!liveNames.has(name)) {
+    errors.push(`✗ config.json overrides "${name}", which is no live component — drop the key`);
+  }
+}
+
 // Matched as a backticked token, not a bare substring: `badge` would otherwise
 // be satisfied by the word "title-badge" appearing anywhere in the prose.
 const docs = readFileSync(join(repo, '.design-sync', 'MANUAL-SURFACE.md'), 'utf8');

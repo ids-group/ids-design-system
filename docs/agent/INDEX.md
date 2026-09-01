@@ -79,7 +79,6 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-popover> — PopoverComponent](overlays/ds-popover.md) — Floating panel anchored to a trigger via CDK overlay. Input: align: 'start' | 'end' = 'start' — controls overl
 - [[dsTooltip] — TooltipDirective](overlays/ds-tooltip.md) — Attribute directive. Apply to any focusable element.
 - [<ds-menu> + <ds-menu-item> — MenuComponent, MenuItemComponent](overlays/ds-menu.md) — Menu is a container. Item inputs: icon: IconName | null = null, disabled: boolean = false, danger: boolean = f
-- [<ds-dropdown> — DropdownComponent](overlays/ds-dropdown.md) — Trigger button + CDK overlay panel combo.
 
 ## platform
 
