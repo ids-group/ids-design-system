@@ -22,7 +22,7 @@
 
 ## Decks awaiting a verdict (re-audited 2026-09-01)
 
-**Nine** decks carry `ds-deck-status: open`, and one ranked tool sits behind them — counted on disk, not from this list, which had missed
+**Ten** decks carry `ds-deck-status: open` — counted on disk, not from this list, which had missed
 `basic-advanced-split` and then `banner-toast-icon-alignment`. The two picker decks closed: every
 question in them is answered and they moved to `presentations/implemented/`.
 
@@ -44,7 +44,7 @@ what makes these the cheapest thing on the board.
 | 7 | `7-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
 | 8 | `8-entry-point-shape` | Which entry-point layout A3 builds — three real ng-packagr builds, not a fixture. | the P2 ask about keeping the DS out of a consumer's initial bundle |
 | 9 | `9-opt-in-seam` | 31.5 KB behind an opt-in seam, three choices, no blockers found. | the P2 ask about splitting the package |
-| 10 | `10-overlay-guard-check` | Not a decision — the regression harness for the outside-pointer guard. Ranked last because it is RUN rather than read, and only after touching an overlay. | — |
+| 10 | `10-rejected-with-numbers` | Every idea this backlog has rejected, with the measurement that rejected it and what would reopen it. | the Parked and Records sections |
 
 ---
 

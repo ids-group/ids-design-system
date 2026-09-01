@@ -20,12 +20,12 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
 | 8 | `8-entry-point-shape` | which layout A3 actually builds — three real ng-packagr builds behind it |
 | 9 | `9-opt-in-seam` | 31.5 KB of opt-in surface, three ways to cut it, nothing blocking |
-| 10 | `10-overlay-guard-check` | nothing to decide — RUN it, after touching any overlay's outside-pointer guard |
+| 10 | `10-rejected-with-numbers` | every idea this backlog has rejected, with the measurement that rejected it and what would reopen it |
 
-**A `tool` takes a number only if there is a moment it wants your attention.**
-`10-overlay-guard-check.html` has one — run it after touching an overlay's outside-pointer guard — so
-it sits at the end of the queue. `backlog-board.html` has none: it is read whenever, so it stays
-unnumbered and sorts below everything.
+**A `tool` here takes no number.** `backlog-board.html` is the only one left — it is read whenever
+rather than at a moment, so it stays unnumbered and sorts below the queue. A tool that is RUN rather
+than read does not belong in this folder at all: `tools/overlay-guard-harness.html` moved out on
+2026-09-02 for exactly that reason.
 
 **Ranks are renumbered when the queue changes** — a closed deck moves to `implemented/` and takes its
 number with it, and the rest close the gap. The number is the rank and nothing else: it is not an id,
@@ -47,7 +47,7 @@ its `<head>`, immediately after the `<title>`, and the folder follows from it:
 | --- | --- | --- |
 | `open` | a verdict is still needed, or is given and not built | `presentations/` |
 | `implemented` | decided AND in the shipped code - or the question dissolved | `presentations/implemented/` |
-| `tool` | not a decision at all: a test harness, a status board | `presentations/`, always |
+| `tool` | not a decision at all — a status board that is read rather than answered | `presentations/`, always |
 
 `ds-deck-evidence` is REQUIRED on `implemented`, and it is the whole point of the marker: a `file:line`
 or the `done.md` / `CHANGELOG.md` entry a reader can open in one click. **An `implemented` marker with
@@ -120,31 +120,11 @@ It writes one throwaway deck per rule (never mutating a real one; this checkout 
 the code fires, and ends with a **negative control**: a valid deck that must stay green, so a linter
 that reported everything broken could not pass the suite.
 
-## One deck is a test harness, not a deck
+## What is NOT here
 
-`10-overlay-guard-check.html` drives the docs app instead of illustrating a decision: it iframes five
-component pages in turn, presses each overlay trigger, then presses the one place inside the host that
-is not the trigger, and prints the pane count and `aria-expanded` before and after.
-
-**It drives the docs app over relative paths, so it has to be served from the same origin as the docs.**
-There is no `/decks/` route — nothing maps `presentations/` into the served tree — so copy the file next
-to the built docs and open it there:
-
-```bash
-npm run build:docs
-cp presentations/10-overlay-guard-check.html dist/ds-docs/browser/
-# serve dist/ds-docs/browser on any port, then:
-chrome --headless=new --disable-gpu --virtual-time-budget=120000 \
-  --user-data-dir=<a scratch dir> --dump-dom http://localhost:<port>/10-overlay-guard-check.html
-```
-
-Read the `<pre id="out">` block out of the dumped DOM. **Headless renders; the automation tab does
-not** — measured 2026-09-01 on an unrelated probe, where a tab reported body heights of 276px and 383px
-for boxes that are really 42px and 60px. A background tab is worse still: it clamps timers and never
-finishes a leave animation, so "is the panel in the DOM" and "did the timer fire" both read false.
-
-Keep it: it is the regression test for the outside-pointer guard, and reverting one component to
-`host.contains` is how you check the harness still detects the defect.
+`tools/overlay-guard-harness.html` used to sit in this folder. It is a regression TEST — it drives the
+docs app in an iframe rather than illustrating a decision, and it is run, not read. It moved to
+`tools/` on 2026-09-02; its instructions moved with it, into the page itself.
 
 ## ds.css is generated from the design system
 

@@ -141,9 +141,9 @@ for (const dir of [DECKS, ARCHIVE]) {
         'an archived deck keeps no rank — the number is a queue position, and this one has left the queue.',
       );
     }
-    // A `tool` may carry a rank or not: `overlay-guard-check` is ranked because there
-    // is a point at which it wants running, `backlog-board` is not because it is read
-    // whenever. Either way a rank that exists joins the one contiguous run.
+    // A `tool` may carry a rank or not — `backlog-board` does not, because it is read
+    // whenever rather than at a moment. Either way a rank that exists joins the one
+    // contiguous run, so a gap means a rename somebody left half-done.
     if (!archived && rank !== undefined) {
       const clash = ranks.get(rank);
       if (clash)
