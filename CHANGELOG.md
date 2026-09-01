@@ -8,6 +8,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **The banner and toast icon now centres on the message block**, where it used to align to the first
+  line of text. The two rules agree on a one-line message — which is most toasts — and diverge as the
+  text grows: the icon sat 12px above the block centre at two lines and 21px at three. Measured after
+  the change: 0px on all twelve banner shapes and all eight toast shapes.
+
+  It is `align-self` on the icon rather than `align-items` on the row, so the close button and the
+  action buttons keep the positions they had. `--banner-ic-mt` is **removed** — it existed only to nudge
+  the icon down by one border-width under the old rule, and nothing reads it now.
+
 ## 0.11.2 — 2026-09-01
 
 ### Added

@@ -22,7 +22,6 @@
   "--badge-pad-x": "Badge horizontal padding (10px).",
   "--badge-pad-y": "Badge vertical padding (4px).",
   "--banner-bar-w": "Banner left accent bar width (4px).",
-  "--banner-ic-mt": "Banner icon top offset (matches default border width).",
   "--binpack-bay-h": "Bin-pack layout bay height (var(--hit-touch)).",
   "--blue-100": "Blue ramp — stop 100.",
   "--blue-200": "Blue ramp — stop 200.",

@@ -4,6 +4,31 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The banner and toast icon centres on the message block (2026-09-01)
+
+Stas picked **B** off `presentations/implemented/banner-toast-icon-alignment.html`, which drew both
+rules over six cases with live tokens. A aligned the icon to the first LINE of text — fine at one line,
+and drifting as the text grew: 12px above the block centre at two lines, 21px at three, 27px at
+title + three.
+
+**Shipped as `align-self: center` on the icon, not `align-items: center` on the row.** The row also
+holds the close button and, in `layout-row`, the action buttons; flipping the container would have
+moved those too, and only the icon was judged. `layout-row`'s `.icon { align-self: flex-start }`
+override went with it, and so did the `.icon { margin-top: 0 }` that `compact` needed to cancel the
+old nudge.
+
+`--banner-ic-mt` is **removed** from `_tokens.scss` — one border-width of optical bump that only
+existed to serve the old rule. It was read from exactly one place. The token reference regenerated.
+
+**Verified in a browser that actually renders, with a control.** The first three measurements came
+from the automation tab and were nonsense — body heights of 276px and 383px where the real ones are
+42px and 60px, and offsets of -158px. That tab does not lay out, which is a trap worth remembering.
+Re-run headless against the built docs: **0px from the body centre on all twelve banners and all
+eight toasts**, and the control — the same probe with `align-self: flex-start` forced back — reads
+**-11px**, so the probe measures what it claims to.
+
+Closes screens 30/32 from the 08-13 batch.
+
 ## The resize handle's announced ceiling is now a real one (2026-09-01)
 
 - [x] **DONE 2026-09-01 — filed and closed the same day, because it was a regression from that

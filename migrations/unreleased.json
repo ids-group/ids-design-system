@@ -1,0 +1,28 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "banner-icon-top-offset-token-removed",
+      "kind": "removed-api",
+      "old": "--banner-ic-mt",
+      "new": null,
+      "appliesWhen": "You set --banner-ic-mt anywhere. It is a global geometry token, not a --ds-* component hook, so an app that only overrides --ds-banner-* is unaffected.",
+      "pitfall": "Deleting the override is the whole fix, but only because the icon no longer needs nudging: it is now centred on the message block rather than aligned to the first line. If you had raised the value to line the icon up with a taller first line, that adjustment is now working against the new rule and will push the icon off centre.",
+      "searchHints": [
+        "banner-ic-mt"
+      ],
+      "surface": "style",
+      "detect": [
+        "--banner-ic-mt"
+      ],
+      "verify": "A ds-banner with two or more lines of body text shows its icon vertically centred on the text block, and no rule in your app references --banner-ic-mt.",
+      "restore": "align-self: flex-start on the banner's .icon reproduces the old first-line alignment, if you need it while migrating.",
+      "note": "The token was one border-width of optical bump, and it existed only to serve the first-line alignment rule. With the icon centred on the block there is nothing left for it to correct, and it was read from exactly one declaration.",
+      "action": "Delete any --banner-ic-mt declaration. There is no replacement token."
+    }
+  ],
+  "informational": [
+    "The banner and toast icon now centres on the message block instead of aligning to the first line of text. Nothing to change: it is a visual default, applied by the components themselves. One-line messages look identical either way, which covers most toasts; the difference grows with the text, and was 12px at two lines and 21px at three. If you deliberately want the old alignment, set `align-self: flex-start` on the icon."
+  ],
+  "deleteList": []
+}
