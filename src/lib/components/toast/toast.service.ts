@@ -43,9 +43,8 @@ export class ToastService {
       action: opts.action,
       durationMs,
     };
-    // The region runs the countdown, because only it knows when the toast actually
-    // became visible: started here, a toast queued behind `maxVisible` expired
-    // unseen — the cap looked like it worked and silently dropped the rest.
+    // The region runs the countdown, because only it knows when the toast became
+    // visible — started here, one queued behind `maxVisible` expires unseen.
     this.regionRef!.instance.add(entry);
 
     return {

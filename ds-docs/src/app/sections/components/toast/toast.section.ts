@@ -66,8 +66,7 @@ export class ToastSection {
       .catch(() => this.promiseRunning.set(false));
   }
 
-  // Keeps counting across presses: restarting at #1 every time made a second press
-  // look like the same five toasts rather than five new ones behind the cap.
+  // Keeps counting across presses, so a second press is visibly five NEW toasts.
   private queuedCount = 0;
 
   fireMaxVisible(): void {

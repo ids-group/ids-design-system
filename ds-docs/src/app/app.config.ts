@@ -14,8 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
 
-    // Without a cap the region is unlimited, and the section that fires five at once
-    // could bury the page under them — which is also why the cap demo showed nothing.
+    // The region is unlimited without this, and the toast section fires five at once.
     { provide: DS_TOAST_CONFIG, useValue: { maxVisible: 3 } },
   ],
 };

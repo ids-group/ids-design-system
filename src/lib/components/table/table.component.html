@@ -16,10 +16,9 @@
   }
 </div>
 
-<!-- The overlay wraps the SCROLL CONTAINER, not the table inside it. Its scrim is
-     `position: absolute; inset: 0`, so from inside the container it was sized to one
-     viewport of the table and slid away with the content: measured at scrollLeft 400
-     the scrim sat at -400px, leaving the newly revealed columns uncovered. -->
+<!-- Wraps the SCROLL CONTAINER, not the table inside it: the scrim is
+     `position: absolute; inset: 0`, so from in there it is sized to one viewport of
+     the table and scrolls away with the content. -->
 <ds-loading-overlay
   [loading]="isOverlayLoading()"
   [blur]="true"
