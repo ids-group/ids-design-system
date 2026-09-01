@@ -54,6 +54,8 @@ what makes these the cheapest thing on the board.
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
+- P2 · **No page-level design approach for an agent** — radii, composition and page patterns are unwritten; `design-system.md` answers "what value", not "where does it go"
+- P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 
 **Decisions — waiting on Stas, not on work**
 
@@ -236,6 +238,19 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 
 Requests, not defects. Ordered by who is blocked.
 
+## Agent-facing docs — the rules an agent needs to prototype a page, and an md layout it can navigate
+
+- [ ] **[P2] There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01).** `design-system.md` covers spacing, type, size, colour, motion, content and overrides, and it answers "what value do I use" well. It does not answer **"where does this go on the page"**, which is the whole question when an agent is prototyping a screen rather than styling one control. Concretely missing:
+  - **Corner radii have no rule at all.** The only mention in `design-system.md` is line 304, in passing, about radius travelling as a ROLE when a host overrides it. Nothing says which radius belongs to which surface class, or how radii nest (an inner element inside a rounded container).
+  - **No composition guidance.** Where the page heading sits, where primary vs secondary actions go, when content belongs in a card and when it does not, where filters live relative to the data they filter, where supporting information goes.
+  - **No pattern catalogue.** Which page patterns the DS actually supports (list + filters, detail, form, dashboard, empty/error), what each is made of, and how to tell which one a given screen is.
+  - **No method for measuring a pattern** — how to check a composition against the grid and the spacing scale instead of eyeballing it.
+  The deliverable is a file an agent reads before it lays out a screen, in the same voice as `design-system.md`: rules with reasons, not a style tour. It ships in the package (`tools/build-schematics.mjs` copies the root `.md` files into `dist/ds`), so it reaches consumers' agents too.
+  **One item in the dictated list needs confirming before it is written up:** "где должен быть фильм" is almost certainly a speech-to-text slip for **фильтр** (filter) — that reading fits the surrounding list of buttons/cards/information/heading. Confirm before treating it as a real requirement.
+
+- [ ] **[P2] `components.md` is a 591-line, 60 KB monolith with six top-level sections — an agent loads the whole thing to answer one question (Stas, 2026-09-01).** Measured 2026-09-01: `design-system.md` is 316 lines / 16.6 KB, `components.md` is **591 lines / 60.2 KB** across only **6** `##` sections, so there is no unit smaller than "a sixth of the file" to load. Both are copied into `dist/ds` by `tools/build-schematics.mjs`, so the cost is paid by every consumer's agent as well as ours.
+  **Ask:** design an md ARCHITECTURE for the whole design system — an index that routes, and leaf files small enough that reading one is cheap — so an agent can find the rule for one component without paying for all of them. Points to settle when it is designed: how the split is addressed (per component, per area, or per question), what stays in the root files as the always-loaded core, how the index stays correct as components are added (a generated index, like the token and component-API extractors already do, rather than a hand-kept one), and what the package ships versus what stays in-repo.
+  **Precedent already in the repo:** `tools/extract-tokens.mjs` and `tools/extract-component-api.mjs` generate documentation from source at prebuild — whatever architecture is chosen should be generated the same way wherever it can be, so it cannot drift.
 ## Component feature gaps
 
 
