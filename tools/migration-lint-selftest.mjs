@@ -73,6 +73,37 @@ for (const [code, mutate] of Object.entries(mutations)) {
   if (!fired) dead.push(code);
   console.log(`${fired ? 'fires ' : 'DEAD  '} ${code}`);
 }
+// Two cases the map above cannot express: one whose input is not valid JSON, and a second
+// angle on a rule whose first mutation proves only half of what it now does.
+const extraCases = [
+  {
+    label: 'M001 on a manifest that does not parse',
+    code: 'M001',
+    raw: '{ "version": "0.9.0", "items": [ }',
+  },
+  {
+    label: 'M034 on a third-person delete instruction in an item pitfall',
+    code: 'M034',
+    mutate: (m) => {
+      const item = m.items.find((x) => x.pitfall);
+      item.pitfall = `${item.pitfall} That override can now be removed.`;
+    },
+  },
+];
+
+for (const { label, code, mutate, raw: text } of extraCases) {
+  if (text) {
+    writeFileSync(F, text);
+  } else {
+    const m = JSON.parse(readFileSync(BAK, 'utf8'));
+    mutate(m);
+    writeFileSync(F, JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n');
+  }
+  const fired = run().includes(`  ${code}  `);
+  if (!fired) dead.push(label);
+  console.log(`${fired ? 'fires ' : 'DEAD  '} ${label}`);
+}
+
 copyFileSync(BAK, F);
 if (dead.length) process.exitCode = 1;
 console.log(`\n${dead.length ? 'RULES THAT DID NOT FIRE: ' + dead.join(', ') : 'every rule fired'}`);

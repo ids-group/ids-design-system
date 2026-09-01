@@ -29,4 +29,17 @@ export class LoadingOverlayComponent {
   readonly spinnerSize = input<DsSize>('md');
   /** Offset the scrim top edge — useful when a sticky header should stay uncovered. */
   readonly insetTop = input<string>('0');
+
+  /**
+   * Whether the projected content goes `inert` while the scrim is up. On by
+   * default, because a scrim that only stops the POINTER is the bug this exists
+   * to prevent: focus walks straight under it, and a keyboard user activates a
+   * control the mouse cannot even reach.
+   *
+   * Turn it off only when the scrim covers part of the content (`insetTop`), and
+   * then mark the covered subtree `inert` yourself — a blanket flag would take
+   * the uncovered part with it. `ds-table` does exactly that: the scrim starts
+   * below the header, so sorting during a refresh stays possible.
+   */
+  readonly inertContent = input(true, { transform: booleanAttribute });
 }

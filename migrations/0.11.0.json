@@ -72,51 +72,6 @@
       ]
     },
     {
-      "id": "published-manifests-corrected",
-      "kind": "behavior",
-      "old": "A repo whose last @ids-group-ltd/ids-design-system upgrade ran before this release and crossed 0.2.0, 0.5.1, 0.7.1, 0.8.0, 0.9.0 or 0.10.0",
-      "new": null,
-      "action": "Re-run these items, now corrected in migrations/<version>.json: 0.2.0#surface-subtle-token-rename, 0.5.1#progress-variant-remap, 0.5.1#badge-variant-to-status-rename, 0.7.1#surface-motion-partial-a-la-carte, 0.7.1#modal-title-flex-moved-to-heading, 0.8.0#table-client-sort-replaced-by-sort-mode, 0.9.0#input-signal-types-widened-by-transforms, 0.10.0#input-floating-removed, 0.10.0#modal-confirm-error-tone-paints-a-badge. Nothing else in those files changed meaning.",
-      "appliesWhen": "Only for a repo that already stepped through one of those six versions. A first-time consumer, or one whose upgrade runs from here on, reads the corrected files and needs none of this. The defects are independent - crossing 0.7.1 says nothing about 0.9.0.",
-      "pitfall": "Two of these UNDO work rather than adding it. 0.7.1 filed the modal `.title` as a rename to `.heading`; no rename ever happened, so a repo that renamed it on our word must put it back - `.title` still paints the heading text. And 0.7.1 handed out bare `styles/…` @use specifiers that resolve only inside this library's own source tree: the line looks right and fails at build from an app. The 0.8.0 one is the silent case - an unset sortMode was documented as resolving to server when it resolves to client, so a server-paged table passes every check while sorting only the rows already on screen.",
-      "note": "Each listed item was corrected against the code of its own release: three changes that had no item, two wrong instructions, one verify that certified a bug, and three items whose surface named too few file types.",
-      "surface": [
-        "style",
-        "template",
-        "typescript"
-      ],
-      "verify": "No `--surface-subtle` remains in any stylesheet. No bare `@use 'styles/…'` of a design-system partial remains - each is package-qualified. Every ds-table that binds [total] declares sortMode=\"server\" explicitly. No `variant` remains on ds-badge or ds-progress in any file type. No stylesheet sets --field-h-floating, --field-floating-label-fs, --field-floating-label-lh, --field-floating-label-top or --field-floating-pad-t. The app builds with no TS2322 naming InputSignal and no TS2416 on a class extending a DS field.",
-      "searchHints": [
-        "--surface-subtle",
-        "@use 'styles/surface-motion'",
-        "@use 'styles/overlay-motion'",
-        ".heading",
-        "sortMode",
-        "[total]",
-        "variant",
-        "--field-h-floating",
-        "--field-floating-label-fs",
-        "--field-floating-pad-t",
-        "InputSignal<",
-        "ds-badge",
-        "ds-progress",
-        "ds-modal-card",
-        "floating"
-      ],
-      "detect": [
-        "--surface-subtle",
-        "@use 'styles/surface-motion'",
-        "@use 'styles/overlay-motion'",
-        "--field-h-floating",
-        "--field-floating-label-fs",
-        "--field-floating-label-lh",
-        "--field-floating-label-top",
-        "--field-floating-pad-t",
-        "InputSignal<",
-        "ds-modal-card ::ng-deep .heading"
-      ]
-    },
-    {
       "id": "sidenav-item-without-destination-is-a-button",
       "kind": "behavior",
       "old": "ds-sidenav-item",

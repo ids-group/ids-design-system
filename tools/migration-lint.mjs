@@ -326,8 +326,12 @@ for (const [name, manifest] of manifests) {
   // is not executed: 0.9.0 shipped five of them, four with no row to run. Requiring the sentence
   // to name its row is what makes the pair machine-checkable — a shape test alone passes as soon
   // as the file holds any unrelated `deleteList` entry.
-  const DELETE_SHAPE =
-    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround|it) can go\b|\b(?:you|consumers?|apps?|callers?) (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b|\bdelete that\b|\bremove it\b|\bcan now be removed\b|\bno longer needed\b/i;
+  // Two patterns, not one: a phrasing that names WHAT goes needs no subject, and requiring one
+  // is what kept every third-person spelling from ever matching.
+  const DELETE_SELF =
+    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround) can go\b|\bcan now be removed\b|\b(?:is|are) no longer needed\b|\bdelete that\b|\bremove it\b/i;
+  const DELETE_BY_SUBJECT =
+    /\b(?:you|consumers?|apps?|callers?) (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b/i;
   const DELETE_MARKER = /\(DELETE-LIST\)|DELETE-LIST MATERIAL|^DELETE-LIST/;
   const knownDeleteIds = new Set((manifest.deleteList ?? []).map((entry) => entry.id));
   const deleteProse = [
@@ -340,8 +344,7 @@ for (const [name, manifest] of manifests) {
     const sentences = String(line).split(/(?<=\.)\s+/);
     const guilty = sentences.find(
       (one) =>
-        DELETE_MARKER.test(one) ||
-        (DELETE_SHAPE.test(one) && /\b(?:you(?:r|rs)?|consumers?|apps?|callers?)\b/i.test(one)),
+        DELETE_MARKER.test(one) || DELETE_SELF.test(one) || DELETE_BY_SUBJECT.test(one),
     );
     if (!guilty) continue;
     const cited = String(line).match(/\(delete list: ([a-z0-9-]+)\)/);

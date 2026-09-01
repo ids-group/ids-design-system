@@ -67,11 +67,18 @@
       "old": "class MySelect extends SelectComponent, class MyMultiSelect extends MultiSelectComponent, class MyAutocomplete extends AutocompleteComponent",
       "new": null,
       "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-…>` elements need nothing.",
-      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
+      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does. Separately, seven symbols are newly exported and can shadow a local name of the same spelling rather than collide with a member: `DsControlWidth`, `DsTriggerDisplay`, `DsChipTemplateDirective`, `DsCreateTemplateDirective`, `DsEmptyTemplateDirective`, `DsOptionTemplateDirective`, `DsPickerTriggerDirective`. Those are new names, not changed ones — nothing of yours breaks unless you already had one.",
       "searchHints": [
         "extends SelectComponent",
         "extends MultiSelectComponent",
-        "extends AutocompleteComponent"
+        "extends AutocompleteComponent",
+        "DsControlWidth",
+        "DsTriggerDisplay",
+        "DsChipTemplateDirective",
+        "DsCreateTemplateDirective",
+        "DsEmptyTemplateDirective",
+        "DsOptionTemplateDirective",
+        "DsPickerTriggerDirective"
       ],
       "surface": "typescript",
       "detect": [
@@ -166,39 +173,6 @@
       ],
       "verify": "The trigger still shows a caption and a count badge.",
       "restore": null
-    },
-    {
-      "id": "published-manifest-corrections",
-      "kind": "behavior",
-      "old": "a repo upgraded through 0.5.1, 0.9.0 or 0.10.1 before this release",
-      "new": null,
-      "surface": [
-        "template",
-        "typescript",
-        "style"
-      ],
-      "action": "Re-run three items whose earlier text could not do its job. 0.5.1#progress-variant-remap: search for `variant=\"warn\"` and `variant=\"indeterminate\"` on ds-progress and for `ProgressVariant` in TypeScript, and finish that remap — the colour vocabulary is `default | success | warning | error` and the indeterminate state is the bare `indeterminate` attribute. 0.9.0#search-height-joins-field-scale: search for `--hit-min` and drop the pin where it was set only to shorten a ds-search row. 0.10.1: search for `(closed)` on a modal whose body holds a ds-date-picker and keep the body mounted instead.",
-      "appliesWhen": "Only if your last upgrade ran BEFORE this release and crossed 0.5.1, 0.9.0 or 0.10.1. A first-time consumer, or one whose upgrade runs from here on, reads the corrected files and needs none of this. The three are independent — crossing 0.5.1 says nothing about 0.10.1.",
-      "pitfall": "The 0.5.1 one is the silent case: its old check inspected ds-badge chips and the status registry, so it passed on a ds-progress that was never migrated. A clean upgrade report from that run proves nothing about ds-progress, so search rather than trusting it. The other two leave redundant code, not broken code — a `--hit-min` pin set deliberately for density is not this, so read each hit before deleting it.",
-      "note": "These manifests are executed by an upgrade tool, so a wrong verify or a locator that finds nothing lands in the consumer repo as an unapplied migration that reported success.",
-      "searchHints": [
-        "variant=\"warn\"",
-        "variant=\"indeterminate\"",
-        "ProgressVariant",
-        "--hit-min",
-        "ds-progress",
-        "(closed)"
-      ],
-      "detect": [
-        "variant=\"warn\"",
-        "variant=\"indeterminate\"",
-        "ProgressVariant",
-        "--hit-min",
-        "@if (open())"
-      ],
-      "verify": "No ds-progress binds `variant=\"warn\"` or `variant=\"indeterminate\"` and nothing is typed against a removed ProgressVariant member; no `--hit-min` pin exists whose only purpose was a shorter ds-search row; no modal body is torn down on `(closed)` to reset a ds-date-picker.",
-      "restore": null,
-      "supersedes": null
     },
     {
       "id": "autocomplete-options-element-type-widened",

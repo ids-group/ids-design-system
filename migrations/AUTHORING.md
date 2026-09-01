@@ -138,6 +138,38 @@ looks defective:
   discard work; these trade a false negative for the same. When in doubt, name the surface widely and
   let the semantic pass narrow it.
 
+## Correcting a PUBLISHED manifest: read the tag, not HEAD
+
+A released `<version>.json` is a claim about one boundary — what existed at the tag before it, and
+what exists at its own tag. HEAD is evidence for neither half, and every way of being wrong reads as
+a pass: a symbol removed two releases later is absent from HEAD, one that never existed is also
+absent, and one re-introduced since is present although the removal was correct.
+
+```bash
+git archive v<version> src/lib | tar -xO      # the tree at the release
+git archive v<prev>     src/lib | tar -xO     # and at the one before it
+git diff v<prev>..v<version> -- src/lib       # or the boundary directly
+git log main --oneline                        # main takes release commits only
+```
+
+`main` is the shortcut: it advances only when a release is cut, so its log IS the version list and a diff between two of its commits IS one version's change set. Nothing else in the history needs filtering out.
+
+Rewrite the item in place, as the final instruction. **Never add an item saying an earlier one
+was wrong** — the consumer wants what to do, and a corrected file already tells them.
+
+`old` must be PRESENT at `v<prev>` and ABSENT at `v<version>`; `new` must be PRESENT at
+`v<version>`. Match on a word boundary — `--x-warn` is a prefix of `--x-warning`, and a substring
+test will tell you the old token survived its own rename.
+
+Two shapes this catches that nothing else does. **A name that never existed**: it is absent from
+HEAD exactly like a correctly removed one, so the item passes every review and finds nothing in a
+consumer's code forever. **A family renamed one member at a time**: naming one token when eight
+moved leaves the other seven undocumented, and the search that would have found them was spent on
+the one you named.
+
+Only `unreleased.json` is written and checked against HEAD, because HEAD is the version it
+describes.
+
 ## Supersession: name the item you reverse
 
 A default flipped in one release and flipped back in the next reads as two independent instructions,
@@ -289,7 +321,7 @@ between the last tag and HEAD (`[base] [head]` overrides both ends) and prints i
 gained/lost member names AND changed types — annotated fields, `input`/`model`/`output`
 initializers, exported interface members, type aliases and `extends` clauses. Twice the names list
 was assembled by reading the diff and twice it was wrong in a way a consumer found first (0.8.0's
-private `saveLayout`, 0.9.0's sixteen grown classes); the type diff exists because 0.10.0 then
+private `saveLayout`, 0.9.0's seventeen grown classes); the type diff exists because 0.10.0 then
 shipped two widenings the same way. What it still cannot see, so check by hand: a member whose
 BEHAVIOR changed under an unchanged signature (`TableComponent.isStriped()` went window-relative
 to absolute), and a CLASS member that moved to a base class (interface members that move get a

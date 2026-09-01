@@ -4,6 +4,220 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The resize handle's announced ceiling is now a real one (2026-09-01)
+
+- [x] **DONE 2026-09-01 — filed and closed the same day, because it was a regression from that
+  morning's own fix.** Giving the column-resize handle an ARIA range replaced one defect with a
+  smaller one: `aria-valuemax` reported the scroll viewport's width, while NEITHER resize path
+  applied a maximum — both only ever ran `Math.max(MIN_COLUMN_WIDTH, …)`. So a screen-reader user
+  was told "maximum 911" and could keep pressing past it. Announcing a bound nothing enforces is
+  worse than announcing none.
+
+  **The ceiling is now the scroll viewport, and it is enforced.** A column wider than the viewport
+  can never be seen whole, and long text already has its own affordance here — `truncate` clips it
+  and the clip popover shows the rest — so stopping at the edge costs nothing a reader wanted.
+  Both paths go through one `clampColumnWidth()`, and the value ANNOUNCED and the value ENFORCED
+  now come from the same `columnWidthCeiling()`: two separate expressions is exactly how they came
+  to disagree in the first place.
+
+  Proven on the failing case rather than the happy one: sixty PageUp presses, 64px each, is 3840px
+  of intent against a 911px viewport. `aria-valuenow` stops at 911, `aria-valuemax` reads 911,
+  the rendered `<th>` measures 911, `aria-valuemin` stays 48, and the console is clean. Before
+  the clamp the same sixty presses would have walked straight past the number the handle was
+  announcing.
+
+---
+
+## The scrim stopped the mouse and not the keyboard (2026-09-01)
+
+- [x] **DONE 2026-09-01 — the tail led somewhere real, one component over.** Stas asked why
+  `skeleton-mode` had gone unreachable while the rest of the loading behaviour survived: unified
+  away, or broken and then quietly deleted? Reading the history settled it — and then pointed at a
+  live defect the old rule had been trying to prevent.
+
+  **The verdict on `skeleton-mode`: unified away, correctly, and half of it never worked at all.**
+  The rule had two halves. `tbody tr:hover td { background: transparent }` was genuinely load-bearing
+  until `e0e67356`, because the hover tint was ungated then — `tr:hover td` painted every row in
+  the body, skeleton rows included. That commit moved every hover visual behind `.clickable`, which
+  a skeleton row (a bare `<tr>`) never receives, so the suppression became unnecessary and was
+  deleted with the cause. The second half, `tbody tr.clickable { cursor: default }`, was dead from
+  the first commit: skeleton rows and `[class.clickable]` rows have always been mutually exclusive
+  `@if`/`@else` branches, so the selector could not match. Nothing regressed; a rule was removed
+  and its switch was not.
+
+  **What the rule was FOR, though, is unmet in the other loading mode — and that is now fixed.**
+  `loading="overlay"` keeps the real rows and paints a scrim over them. Measured: the scrim's
+  `pointer-events` is `auto`, so a pointer aimed at a control inside a row lands on `DIV.scrim`
+  and the control cannot be clicked. Focus is not stopped at all — nothing is `inert`, a row's
+  `tabindex` depends only on `rowInteractive()`, and neither `onRowClick` nor `onRowKey` reads
+  the loading state. So a keyboard user could open a row the mouse could not even reach, while its
+  data was being replaced. That is the same asymmetry `onResizeKey`'s docblock already names from
+  the other side.
+
+  `inert` is the fix, because it is the only mechanism that stops pointer and keyboard together and
+  removes the covered controls from the accessibility tree. Two decisions shaped where it went:
+
+  - **Not on the host.** An inert host loses its own `aria-busy`, and the reader is then told
+    nothing about why the content went quiet. It goes on a wrapper around the projection, styled
+    `display: contents` so it generates no box — verified layout-neutral (table 911px, wrap
+    scrollWidth 911px, unchanged) and verified to still propagate, which was the actual risk:
+    `inert` is a subtree property, not a layout one, and a focus probe under a
+    `display: contents` wrapper is refused.
+  - **On by default, with `inertContent="false"` for a partially covered scrim.** `ds-table`
+    passes it and marks `<tbody>` itself, because its scrim starts below the header — sorting and
+    filtering during a refresh must keep working, and a blanket flag would have taken the header
+    with it. Measured after the change: focus refused in the body, still allowed in the header,
+    `aria-busy` intact, and an idle overlay untouched.
+
+  `empty-state` gets the fix for free — it projects an `[actions]` slot straight under a
+  fully-covering scrim, which was the second instance of the same bug.
+
+---
+
+## Three dead branches in `ds-table`, and none of them wanted deleting first (2026-09-01)
+
+- [x] **DONE 2026-09-01 — each one was traced to what it used to do before anything was removed.**
+  Stas's instruction on finding them was the right one: check whether the duplicate halves differ,
+  merge them if they do, and end at one reachable solution rather than a smaller pile of code.
+  That changed the answer in one of the three.
+
+  **`windowData` vs `rowSlots` — the merge was already done, in the wrong direction.** Both walk
+  the same window over the same `displayData()`. `rowSlots` adds the absolute index every
+  downstream consumer needs, and normalises a lazy gap to `null`; `windowData` used
+  `Array.slice`, which PRESERVES holes, so it could hand back `undefined` typed as `T` — verified
+  on a sparse array rather than assumed. So `rowSlots` strictly subsumes it and is also the safer
+  of the two: there was nothing to merge back, and `windowData` went. Virtual scrolling was then
+  re-measured in Chromium — the window still moves (16 → 22 rendered rows, two spacers) and the
+  rows still carry their text.
+
+  **`skeleton-mode` — the rule it switched on became unnecessary, and only the switch survived.**
+  Found by reading history rather than by guessing: the class gated a block that suppressed a row
+  hover tint and pointer cursor on skeleton rows, and it was deleted in `e0e67356` — the commit
+  that moved every hover visual behind `.clickable`. A skeleton row is a bare `<tr>` that never
+  gets `.clickable`, so the tint can no longer reach it and the suppression has nothing left to
+  do. Every other class `tableClasses()` emits drives a real selector; this one drove none. Gone,
+  with a migration note, because it was observable on the host.
+
+  **The resize handle's ARIA — this one was FIXED, not removed.** A focusable
+  `role="separator"` is a range widget, and the handle bound `aria-valuenow` to
+  `columnWidth(col)`, which is `null` for an auto-sized column that has never been dragged — so
+  the attribute was simply absent, while `resolvedColumnWidth()` sat unused with exactly the DOM
+  fallback needed. It also carried no `aria-valuemin`/`aria-valuemax`, so a value in pixels was
+  being announced against ARIA's implicit 0–100. All three now travel together, in pixels, and
+  only while the handle holds focus: that is when a range widget is announced, and measuring the
+  wrap on every change detection to fill an attribute nothing is reading would force layout once
+  per resizable column. `now` prefers `columnWidth`, which the first arrow key makes known and
+  keeps live. Measured: 172 / 48 / 911 on focus, 188 after one ArrowRight, all three cleared on
+  blur, and no other handle on the page affected.
+
+  A note for the next time this is measured: `element.focus()` in headless Chrome does not
+  dispatch a focus event when the page has no window focus, so the first run reported the
+  attributes still absent and the fix looked dead. Dispatching `FocusEvent('focus')` is what
+  showed it working. A harness that cannot focus will happily report working code as broken.
+
+---
+
+## A docblock cannot lose its symbol any more (2026-09-01)
+
+- [x] **DONE 2026-09-01 — the comment sweep over `ds-table` turned up a defect worth a gate, so
+  it got one.** A doc comment separated from its symbol by a later insertion keeps compiling and
+  keeps linting clean, and `extract-component-api` then prints it under whatever member now
+  follows it — the published API table documents the wrong thing while the member it was written
+  for shows up bare. It had happened three times before anyone noticed a pattern.
+
+  The shape is exactly checkable: a doc comment whose next non-blank line opens ANOTHER doc
+  comment. A doc documents one symbol, so a doc directly above a doc means the first one lost its
+  subject. `tools/check-docblock-drift.mjs` fails on that and prints the orphan's first line, and
+  it runs as a hard gate in `ci-pr.sh` alongside the other published-surface checks, in
+  `lint:all`, and as `npm run check-docblock-drift`.
+
+  On its first run over 367 files it found two more nobody knew about: `MARKER_RESERVE_EM`'s doc
+  stranded eleven lines above it in `chip-overflow.ts` (so the magic `5` sat unexplained), and
+  `OVERLAY_MOTION_TOKENS`' doc sitting on `ROLE_TOKENS` instead. Both moved back. A deliberate
+  module-level note is not drift and must not be forced onto a symbol, so `@fileoverview` (or
+  `@module`) exempts a block — `chip-overflow.ts`'s invariant note now carries the tag.
+
+  Watched it go red before trusting it green: a control file with a stacked pair fails, a control
+  with `@fileoverview` passes, and the three real cases are what it caught first.
+
+  The sweep itself: **fourteen comments cut** as restatement of the selector or name directly
+  beneath them, **five rewritten**, and **one moved rather than cut** — the note that
+  `:nth-child` cannot see past windowing was floating ten lines from the `.zebra` rules it
+  guards, and its twin lives in the `.ts`, so cutting it would have left the stylesheet with
+  nothing to stop someone folding the two rules into one and silently killing virtual zebra. Two
+  more shed their provenance: where a value "came from a consumer's comparator" is archaeology,
+  while what breaks without it is the constraint. Nothing public lost a description — the table's
+  docs come straight from its JSDoc with no editorial fallback, so the extractor still reports 0
+  undescribed props.
+
+---
+
+## `ds-table` row expansion has its three edges (2026-09-01)
+
+- [x] **DONE 2026-09-01 — the gate was lifted, and all three deltas are in.** The base feature had
+  been at parity since it shipped; what was missing were the edges around it, held behind a gate
+  since 2026-08-25 on the grounds that nobody was blocked. Stas lifted it, so they were built as
+  one piece.
+
+  **`expandMode="single"`** collapses the open row when another expander is clicked. Enforced on
+  the click, NOT on the binding: `expandedIds` is a two-way model the host owns, and a component
+  that rewrites its consumer's model on the way in is a component arguing with its own API. A set
+  seeded with several ids is therefore left exactly as passed, and a dev warning says so.
+
+  **`expandAllToggle`** puts a chevron in the expander column header — page-scoped when
+  paginating, which is what select-all already does, so the two controls in that header row mean
+  the same thing by "all". It is suppressed under `expandMode="single"`, because expanding every
+  row is the one thing single mode exists to prevent; a dev warning explains the suppression
+  rather than leaving a control that silently is not there.
+
+  **`(rowExpanded)` / `(rowCollapsed)`** name the row as it opens and closes, expand-all
+  included — that is where a host lazy-loads panel content, so an expand-all that stayed quiet
+  would hand back a page of empty panels. Named in the past participle per the API convention; the
+  backlog item had asked for `(rowExpand)`/`(rowCollapse)`, which the convention overrides.
+
+  **What the events deliberately do NOT cover**, because an event carries a row and there is not
+  always one to carry: a collapse the host writes into `expandedIds` itself (it already knows),
+  and an id whose row is no longer in `data()` under server-side paging. The adversarial review
+  caught the first draft claiming the opposite in both a comment and the public JSDoc — the
+  behaviour was always this, the documentation was the lie. `expandedIds` is the complete signal.
+
+  Three more came out of that same review and are fixed: the single-mode branch emitted the expand
+  BEFORE the collapse, which inverts the causal order and breaks the naive host that writes one
+  "currently open row" field; a full page of panels appearing from one keypress announced nothing
+  to a screen reader, so from two rows up the table's existing live region now carries "N rows
+  expanded"; and an expand-all that changed nothing still wrote a fresh `Set` through the two-way
+  binding. Verified in a real Chromium over CDP, not in a headless approximation of one: 0 → 4
+  panels and back, the header chevron rotating (which is what proves the SCSS hoist out of
+  `tbody` reached `thead`), single mode holding at exactly one panel across clicks, and both
+  outputs reaching the docs demo's readout.
+
+---
+
+## The published surface is swept, and a gate keeps it swept (2026-09-01)
+
+- [x] **DONE 2026-09-01 — 43 verdicts, and the rules they encode now run on every PR and every
+  release.** A local deck link in `CHANGELOG.md` opened the question of what may appear in text a
+  consumer reads. The answer is in `CONTRIBUTING.md` → *Never in a published artefact*: no client
+  names, no tracker keys, no paths into our tree, no people, no account of how we decided. The sweep
+  applied it to the changelog, all 22 migration manifests, `design-system.md`, `components.md` and
+  every comment that ships — `src/lib/styles` and `src/lib/themes` are copied verbatim, and a `.ts`
+  comment reaches the FESM bundle with its JSDoc in the `.d.ts`.
+
+  **The gate is `tools/changelog-lint.mjs`,** twelve rules over 320 artefacts, in `lint:all` and in
+  `tools/preflight.mjs` so a release cannot skip it. `changelog-lint-selftest.mjs` proves each rule
+  still fires — a linter nobody has watched fail is a linter that passes because it is broken.
+
+  **Adversarial review found four holes in the gate itself**, all fixed and all now fixtures: an
+  ±400-character window that disarmed the class-name rule over a tenth of the changelog, an exemption
+  keyed on a value rather than its position, two client names in no list, and no floor at all.
+
+  **Manifests are held to a different bar than the changelog** (M1): a locator that lets an agent find
+  the code stays, even when it names something a consumer cannot import, because the alternative is a
+  migration that cannot be applied.
+
+  **One thing is decided but deliberately not built** — see `todo.md`: the floor cannot see one of the
+  three file groups collapse.
+
 ## The picker lane closed end to end (2026-09-01)
 
 - [x] **DONE 2026-09-01 — both decks are answered, and the last measurement defect is fixed.** What
