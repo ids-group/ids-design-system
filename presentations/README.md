@@ -87,17 +87,35 @@ A deck in `implemented/` sits one directory deeper, so `href="ds.css"` has to be
 ### Find the drift
 
 ```bash
-grep -l 'content="implemented"' presentations/*.html            # claims it, still at root
-grep -L 'content="implemented"' presentations/implemented/*.html # moved without the marker
-grep -L 'ds-deck-evidence' presentations/implemented/*.html      # marked, nothing to check
-grep -l 'href="ds\.css"' presentations/implemented/*.html        # path not fixed on the move
-grep -L 'ds-deck-status' presentations/*.html                    # no marker at all
-grep -l 'content="open"' presentations/[!0-9]*.html              # open, but not ranked
+npm run deck-lint              # every rule below, over both folders
+npm run deck-lint:selftest     # and does each rule still fire? see the note under D012
 ```
 
-All six print nothing when the folder is honest. The last two are the ones a new deck fails: it is
-written, committed, and neither marked nor ranked — which is how `banner-toast-icon-alignment`
-spent its first day invisible to both the folder and `docs/todo.md`.
+`deck-lint` replaces the hand-run greps that used to live here, because a check nobody runs is not a
+check. It is in `lint:all`, and every rule is a defect that actually shipped:
+
+| | Fires when |
+| --- | --- |
+| D001/D002 | no `ds-deck-status`, or a value outside `open`/`implemented`/`tool` |
+| D003/D004 | `implemented` sitting at root, or a non-`implemented` deck inside `implemented/` |
+| D005 | `implemented` with no `ds-deck-evidence` — which this README already treats as `open` |
+| D006/D009 | an `open` deck with no rank prefix, or a `tool` carrying one |
+| D007/D008 | two decks claiming one rank, or ranks that are not a contiguous 1..N |
+| D010/D011 | `ds.css` linked at the wrong depth — the sans-serif-fallback bug |
+| D012 | `var(--token)` that resolves to nothing: no fallback, undeclared here, absent from `ds.css` |
+| D013 | `ds-deck-evidence` citing a path that does not exist |
+| D015 | no `<title>`, so the tab and every listing show a filename |
+
+**D012 is the one with real blood on it.** On 2026-09-01 ten decks referenced four tokens the DS does
+not define — `--space-7`, `--border-subtle` (missed by the `subtle`→`subtitle` rename), `--shadow-md`
+and `--shadow-lg`. None had a usable fallback, so each voided its whole shorthand: five `h2` margins,
+two borders and a shadow were never applied, and three status pills in `new-components.html` rendered
+transparent. Nothing looked broken enough to notice.
+
+The selftest exists because a rule that cannot match is invisible — the lint stays green either way.
+It writes one throwaway deck per rule (never mutating a real one; this checkout is shared), asserts
+the code fires, and ends with a **negative control**: a valid deck that must stay green, so a linter
+that reported everything broken could not pass the suite.
 
 ## One deck is a test harness, not a deck
 
