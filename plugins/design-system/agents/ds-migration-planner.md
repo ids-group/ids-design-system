@@ -33,10 +33,12 @@ rewrite: you are not changing the migration, you are stating where to look for i
 `action`, lifting the imperative out of the note so the applier executes a field, not a paragraph). Read the note for
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
 a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()`
-is null" is handing you both `surface: "typescript"` and two `detect` strings. A top-level `deleteList` is DATA, not something to reconstruct: every published manifest carries
-it as `{ id, surface, find, why, replaceWith }` rows, so read them and run each `find`. Build one
-from prose only when planning a version that ships no manifest at all, taking the `find` from
-whatever consumer-side shape the sentence names.
+is null" is handing you both `surface: "typescript"` and two `detect` strings.
+A top-level `deleteList` is DATA, not something to reconstruct: every published manifest carries
+it as `{ id, surface, find, why, replaceWith }` rows — pass them through verbatim (the
+orchestrator's delete-list pass runs each `find`, not you). Build one from prose only when
+planning a version that ships no manifest at all, taking the `find` from whatever consumer-side
+shape the sentence names.
 
 ## What to read
 - **Decide actionability by CONTENT, not by section name.** An entry is actionable when it documents
@@ -71,7 +73,7 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
   usage"). There is no `old`, so put the string that locates the insertion site(s) in `searchHints`
   (the target selector, the `@use` line, the config token) — that's the finder's only signal here.
 - **`removed-api`** — an API removed WITH a documented replacement path; put the migration the
-  changelog describes in `note` (may be mechanical or need judgement).
+  changelog describes in `action` (may be mechanical or need judgement).
 - **`behavior`** — a change that needs a consumer code edit but not a simple find/replace (an
   element that must now be wrapped, an attribute that became a projected slot, a changed event
   payload, a changed default the consumer relied on, etc.). `new: null`. **Put the CONCRETE
@@ -135,9 +137,11 @@ fields exist so that cannot happen.
   `"orderBy: sortKey"`, `"sortKey() ?"`, `"?? config.control?.size"`, `"protected clear("`. If every
   locator you can think of is a DS symbol while the affected code lives in their TypeScript, the item
   is not detectable yet — say so in the `note` instead of shipping a locator that cannot fire.
-- **`verify`** (required on `behavior` / `removed-api`) — the positive assertion a re-checker can
-  test, because here no absent symbol proves anything: *"every place that turns (sortChange) into a
-  query gates on the direction, not the key"*.
+- **`verify`** (required on `behavior` / `removed-api` / `value-remap`) — the positive assertion a
+  re-checker can test, because here no absent symbol proves anything: *"every place that turns
+  (sortChange) into a query gates on the direction, not the key"*. A `value-remap` needs it too —
+  it changes what a binding MEANS with no symbol removed, so the re-check's grep alone proves
+  nothing there.
 - **`restore`** (on a changed default) — the literal snippet that brings the old behaviour back, or
   `null` when there is none.
 
@@ -172,8 +176,11 @@ Return ONLY a fenced ```json block:
 }
 
 `map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `surface` is
-on every item; `detect` and `verify` on every behavioural one (see above); `restore` wherever a
-default moved; `supersedes` on the LATER item where it reverses an earlier one's
-guidance, as `<version>#<id>`; there is no `supersededBy` — the link never points forward. `informational` is consumed directly by the orchestrator for
+on every item; `detect` on every behavioural one and `verify` on every behavioural one AND every
+`value-remap` (see above); `restore` wherever a default moved. `supersedes` (`<version>#<id>`, on
+the LATER item that reverses an earlier one) is carried through from the shipped manifest, or
+emitted from prose ONLY when the block itself names the exact earlier version and change — you
+cannot see earlier plans, so never fabricate the reference; omit the field when unsure. There is
+no `supersededBy` — the link never points forward. `informational` is consumed directly by the orchestrator for
 the final report (no other subagent reads it), and `deleteList` drives its own pass. No preamble, no
 prose outside the JSON block.

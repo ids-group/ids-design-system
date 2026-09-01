@@ -23,6 +23,14 @@ from success (found by the 2026-08-31 manifest audit).
   the described location instead of grepping for an `old` that was never there.
 
 ### Changed
+- **Executor-simulation + regression pass.** The unresolvable-dynamic-binding path is now one road
+  (skip the fix loop → re-check excusal → "human should eyeball" with `locs`); the finder reports
+  per-locator `rawMatches` so the not-applicable/locator-dead call has evidence; superseded items
+  stay out of the re-check dispatch; an empty-`items` version still runs its `deleteList` pass; the
+  touched-files union covers drift fixes and deletions, and deletions re-verify before commit; the
+  ledger moved to a session-independent path (dry-run stamps itself and is never offered as a
+  resume); `verify` on `value-remap` is now required upstream too; `supersedes` is never fabricated
+  from prose; `no-op` joined the applier's `modes`; residual `note`-era wording swept.
 - **Adversarial review pass over the whole skill + agents.** Correctness: the re-check excuses only
   occurrences the applier named in `needsReview.locs` (the excuse data now exists and is forwarded);
   a `value-remap`'s `verify` is tested, and an old token standing inside its full replacement no

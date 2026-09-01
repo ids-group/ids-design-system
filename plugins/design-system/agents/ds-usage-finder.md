@@ -6,8 +6,8 @@ model: sonnet
 ---
 
 You are the usage finder for the `/design-system:auto-update-package` workflow. You are given one
-or more MigrationItems (each with `id`, `kind`, `old`, `searchHints`, and — for value-remaps — a
-`map`) plus the consumer's source roots. Find every place the OLD API appears. Everything specific
+or more MigrationItems (each with `id`, `kind`, `old`, `searchHints`, `surface`, `detect`, and —
+for value-remaps — a `map`) plus the consumer's source roots. Find every place the OLD API appears. Everything specific
 comes from the item; don't assume anything about particular components.
 
 ## What to do
@@ -58,10 +58,14 @@ Return ONLY a fenced ```json block mapping each item id to a list of hits:
 { "<item-id>": [ { "loc": "<path:line>", "match": "<exact matched text>", "el": "<enclosing element or null>" },
                  { "loc": "<path:line>", "match": "<binding text>", "el": "<element>", "dynamic": true },
                  { "loc": "<path:line>", "match": "<text>", "el": null, "outOfSurface": true } ],
-  "<zero-hit-item-id>": { "hits": [], "searched": ["projects/**/*.ts", "projects/**/*.html", "projects/**/*.scss"] } }
+  "<zero-hit-item-id>": { "hits": [], "searched": ["projects/**/*.ts", "projects/**/*.html", "projects/**/*.scss"],
+                          "rawMatches": { "<each locator string>": <match count BEFORE element-scoping/filtering> } } }
 
 `loc` is `path:line`; `match` is the exact matched text; `el` is the enclosing element (recorded so
 the scoping is auditable — non-target hits are already filtered out, see above) or null when the
 item isn't element-scoped; `dynamic: true` marks property bindings; `outOfSurface: true` marks a
 hit outside the item's declared `surface`.
-Zero hits ALWAYS use the `{ "hits": [], "searched": [...] }` form.
+Zero hits ALWAYS use the `{ "hits": [], "searched": [...], "rawMatches": {...} }` form —
+`rawMatches` carries each locator's pre-filter match count, which is what lets the orchestrator
+tell "the feature is present but the old value isn't" (some counts > 0) from "no locator matches
+this repo at all" (all zeros → locator-dead).

@@ -22,7 +22,8 @@ Two verification modes:
 - Search the target source (`*.html`, `*.ts`, `*.scss`, `*.css`; skip `node_modules`, `dist`,
   `.git`) for the item's `old` and every `searchHint`.
 - **Rename kind:** complete only if the OLD identifier count is **0** and (when `new` is non-null)
-  the new identifier appears where expected; `new: null` (removal) is complete when the old is gone.
+  the new identifier appears where expected; `new: null` (a shape only an un-enriched old-manifest
+  item carries) is complete when the old is gone.
   Respect token boundaries — a longer identifier that merely CONTAINS `old` (e.g. `foo-bar` for a
   `foo` rename) is NOT a remaining usage.
 - **`value-remap`:** complete only when none of the **removed** old values still appear — subject to
@@ -72,9 +73,9 @@ Two verification modes:
   grep as a second opinion: still nothing anywhere → `migrated: true`, `note: "locator-dead — no
   locator matches this repo"`, so the report carries it as manifest evidence rather than consumer
   state; anything found → `migrated: false` with the hits.
-  **This shortcut is for MECHANICAL items only.** On a behavioural item whose surface is not the
-  template (and not `none` — a `none` item changes no code), zero hits means the item's shapes did
-  not match this consumer's spelling — go and test
+  **This shortcut covers mechanical items AND behavioural items whose surface is `template` or
+  `none`.** On a behavioural item whose surface is anything else, zero hits means the item's shapes
+  did not match this consumer's spelling — go and test
   the `verify` assertion over that surface yourself before agreeing it does not apply, and search the
   consumer's own vocabulary (their store, their query builder, their theme) rather than our API name.
 - **Verifying against the real API:** don't rely on the `note` alone — verify the edit against V's

@@ -78,8 +78,11 @@ fit a change to a mechanical kind it classifies it `behavior` (catch-all) so not
 **The detectability fields decide where an item is looked for.** `surface` names which of the CONSUMER's
 artifacts changes; `detect` carries the shapes as the consumer writes them, for the common case where
 the affected code names no DS symbol at all; `verify` is the positive assertion a re-check can test
-when there is no old identifier to miss; `restore` is the way back from a changed default;
-Read `action` FIRST — it is the imperative and the only field to execute; `appliesWhen` says where it does NOT apply, and `pitfall` is the way to apply it correctly and still break the app, so read it before reporting an item done. `note` is the reasoning and is not an instruction.
+when there is no old identifier to miss; `restore` is the way back from a changed default.
+**The prose fields:** read `action` FIRST — it is the imperative and the only field to execute;
+`appliesWhen` says where it does NOT apply; `pitfall` is the way to apply it correctly and still
+break the app, so read it before reporting an item done; `note` is the reasoning, not an
+instruction.
 `supersedes` on a LATER item names the earlier one it reverses — one direction only, since a
 published manifest cannot know its own future. `deleteList` is what the
 release made UNNECESSARY, with a greppable `find` — a separate pass, not an item.
@@ -127,8 +130,11 @@ instead of guessing. Version-exactness decides WHERE:
 
 ## Run ledger (interruption-proofing)
 
-From the moment the chain is computed, maintain a small JSON ledger at
-`<scratchpad>/ds-update-ledger.json`:
+From the moment the chain is computed, maintain a small JSON ledger at a SESSION-INDEPENDENT path
+outside the consumer repo — the OS temp dir, keyed by the consumer's path (e.g.
+`<os-tmpdir>/ds-update-ledger-<slug-of-consumer-path>.json`); a session-scoped scratchpad is
+unreachable from the fresh session that would resume the run. In dry-run stamp `mode: "dry-run"`
+and the on-start check ignores such ledgers (a dry-run has nothing to resume). Shape:
 `{ branch, chain, perVersion: { "<V>": { items: { "<id>": "applied | not-applicable | locator-dead | needsReview
 | rechecked" }, touchedFiles: [], attempts, committed } } }`. Update it at every step boundary
 (plan done / apply wave done / bumped / verified / re-checked / committed). **On skill start:** if a ledger for this repo shows an unfinished version, summarize it
@@ -218,17 +224,18 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    changelog block — **and, if a shipped manifest `migrations/<V>.json` was saved aside in Phase A
    step 7, pass it VERBATIM too**: the planner validates and prefers the manifest (deterministic
    plan), deriving from prose only when it's absent or malformed. Parse the MigrationPlan. If
-   `items` is empty → no-migration version: skip to step 4 (bump + verify only).
+   `items` is empty → no-migration version: skip steps 2–3 and go to step 4 — but a non-empty
+   `deleteList` still gets its step-8 pass before the commit.
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
    root — passing each MigrationItem **verbatim** (`old` / `searchHints` / `map` / `surface` /
    `detect` as the planner emitted them; the same no-paraphrase rule as step 3). Collect per-item
    `path:line` hits **and record every item's hit count** (ledger + final report). **Classify a
-   zero before dropping it — "not in this repo" and "this locator matches nothing anywhere" are
-   different claims:**
-   - **not-applicable** — the broad locators show the consumer simply doesn't use the feature (some
-     hint matched the surrounding feature, or the component itself is absent); record the reason.
-   - **LOCATOR-DEAD** — `old`, every `detect` shape AND every `searchHint` returned zero hits
-     repo-wide, all surfaces. That is evidence about the MANIFEST (a mis-named symbol reads exactly
+   zero before dropping it — the finder's `rawMatches` (per-locator pre-filter counts) is the
+   evidence; "not in this repo" and "this locator matches nothing anywhere" are different claims:**
+   - **not-applicable** — some `rawMatches` count is > 0: the broad locators show the feature is
+     present but the old value/binding is absent; record the reason.
+   - **LOCATOR-DEAD** — every `rawMatches` count is 0: `old`, every `detect` shape AND every
+     `searchHint` returned zero hits repo-wide, all surfaces. That is evidence about the MANIFEST (a mis-named symbol reads exactly
      like an unused feature), not the consumer. Record it separately (never inside the
      not-applicable total) and carry the whole set into the Phase C report.
      The two exceptions below still run FIRST — locator-dead is the classification of a zero that
@@ -237,14 +244,16 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
    removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
    finder couldn't locate the insertion site; resolve the site yourself from the `action`/`note` (step 3
-   dispatches it by note), and record it not-applicable only when this consumer genuinely lacks the
+   dispatches it by `action`), and record it not-applicable only when this consumer genuinely lacks the
    thing the addition extends, stating that reason.
    **Second exception: a `behavior` / `removed-api` item whose `surface` is not `template` or
    `none` is NEVER dropped on zero hits.** Its `old` may be a DS symbol the affected code does not
    mention (the defect can live in the consumer's own store logic), so zero hits means the shapes
    did not match THIS consumer's spelling, not that they are unaffected. Read the
    item's `verify` and go look yourself over the named surface (you are opus; this is a semantic
-   pass, not a grep), and record not-applicable only with the reason you satisfied yourself of it.
+   pass, not a grep). When that pass too finds nothing to do, classify the surviving zero by the
+   same rule — locator-dead if every `rawMatches` count is 0, not-applicable otherwise — and
+   record it with the reason you satisfied yourself of it.
    An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here with
    that reason recorded — the later item is the one to act on, and doing both means doing work the
    next version undoes. The link only points back, so build the skip set by reading every
@@ -260,7 +269,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    ATTEMPTS them, not just mechanical ones.** For an item located by its `action` rather than by hits
    (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
    file. Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
-   pathspec) — it accumulates here AND across every step-6 fix cycle.
+   pathspec) — it accumulates at EVERY step that edits consumer files: here, the step-5 drift
+   fixes, every step-6 fix cycle, and the step-8 deletions.
    **The applier prompt MUST embed the item's `map` / `old` / `new` / `action` / `appliesWhen` /
    `pitfall` / `note` VERBATIM** — the
    canonical structured data, untranslated. Clarifying prose may go AROUND it, never INSTEAD of it,
@@ -307,7 +317,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    positive evidence it's correct (only that it compiles and grep is clean), it is NOT green. Where an item's `old` is a token/class/SCSS symbol (no build
    signal), the element-scoped grep for the removed `old` is a HARD gate independent of build exit.
    An item left `needsReview`, or whose attempt you judge wrong/incomplete/unproven, feeds the
-   auto-fix loop before escalation.
+   auto-fix loop before escalation — EXCEPT a `needsReview` whose reason is an unresolvable dynamic
+   binding (it carries `locs`): that one skips the fix loop, goes to the step-7 re-check for
+   excusal, and is listed in Phase C under "applied — human should eyeball".
    **Customization drift (silent, not a changelog item):** a DS version can change its INTERNAL
    structure — private class names, DOM shape, internal/undocumented tokens — without a changelog
    line-item, silently breaking consumer customizations that reach into those internals (deep /
@@ -350,7 +362,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
    and re-verify before green — do not trust the finder's file set as complete. **Include the items
    dropped at step 2 as zero-hit, passing each one's classification (not-applicable | locator-dead)
-   in the dispatch:** for those the re-check doubles as an independent not-applicability
+   in the dispatch — but NOT the superseded ones, whose skip reason is final:** for those the re-check doubles as an independent not-applicability
    confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" or
    "locator-dead" item re-enters it into the pipeline at step 3, and a locator-dead verdict the
    re-check confirms stays locator-dead — never re-filed as not-applicable. If any item returns
@@ -364,9 +376,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    each hit yourself, because a workaround can still be load-bearing: `[reserveMessage]="false"` is
    dead against the new default and REQUIRED under a `dsReserveMessages` host. Apply the deletions
    where they are dead, leave the rest, and report both halves — deleted, and kept with the reason.
-   A deletion that changes rendering belongs in "applied — human should eyeball".
-9. **Green → commit.** Stage EXACTLY the applier-touched files + the target's `package.json` + the
-   lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
+   Re-run the verify command after any deletion, before the commit. A deletion that changes
+   rendering belongs in "applied — human should eyeball".
+9. **Green → commit.** Stage EXACTLY the touched-files union (step 3) + the target's `package.json`
+   + the lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
    `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
    (`-m` subject, `-m` body). Do not run any git command containing the word "push". Next version.
 10. **Stuck — LAST RESORT (cap hit, re-check still disagrees, or peer unsatisfied).** **Stop the
@@ -386,7 +399,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - **Informational (FYI, no action):** documented changes needing no consumer code edit (from the
   plan's `informational`) — listed so the human is aware, NOT a to-do.
 - **Applied — human should eyeball:** behavioral edits that were applied but whose correctness is
-  only visual (no build/grep signal) — committed, but worth a quick visual check.
+  only visual (no build/grep signal), plus dynamic bindings the re-check excused as unresolvable
+  (left in place, listed with their `locs`) — committed, but worth a quick look.
 - **Needs manual review — should be EMPTY in a clean run:** ONLY the items the auto attempt +
   auto-fix loop could not resolve, each with why.
 - If stopped: which target/version, why, what to look at.

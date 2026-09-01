@@ -15,7 +15,7 @@ finder prevents). Apply each item precisely to YOUR files only.
 Everything specific comes from the item and the hits — the changelog decided WHAT to do; you
 execute it. **Read the item's fields in this order: `action` is the imperative and the ONLY field
 you execute (an `action` of "None, unless …" whose condition this file does not meet = nothing to
-edit — report it applied-as-no-op, not `needsReview`); `appliesWhen` is the boundary — a hit
+edit — list it in `applied` with `modes["<id>"] = "no-op"`, not in `needsReview`); `appliesWhen` is the boundary — a hit
 outside it gets no edit; `pitfall` is how a correct application still breaks — check it before
 reporting applied; `note` is the why, not an instruction.** An old manifest item may carry only
 `note` — then it plays the `action` role.
@@ -28,8 +28,9 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
     `token-rename` / `class-rename`): replace `old` with `new` at every usage, respecting word/token
     boundaries so you don't corrupt a longer identifier that merely CONTAINS `old` (a `foo` rename
     must not touch `foo-bar`; a token/class prefix must be replaced in every full suffixed name,
-    since `-` is not a regex word boundary — match full names). **If `new` is null the API was
-    removed** — delete the usage/override; if deleting isn't safe standalone, record `needsReview`.
+    since `-` is not a regex word boundary — match full names). Defensive branch — the shape only
+    reaches you from an un-enriched old-manifest item: **if `new` is null the API was removed** —
+    delete the usage/override; if deleting isn't safe standalone, record `needsReview`.
   - **`value-remap`** (has a `map`): only the attribute's VALUES change, and only on the item's
     target element. `map` is the CLOSED set of documented changes — decide every matched occurrence
     by its own lookup, never by pattern-similarity to a value that IS listed:
@@ -89,5 +90,6 @@ Return ONLY a fenced ```json block — one object per file (an array when you we
 [ { "file": "<path>", "applied": ["<item-id>"], "modes": { "<scss-api-or-code-add-id>": "replaced | inserted" },
     "needsReview": [ { "id": "<item-id>", "why": "<reason>", "locs": ["<path:line> of each occurrence left in place"] } ] } ]
 
-`modes` appears only when the file carried `scss-api` / `code-add` items — it says whether each was
-a replacement at a matched site or an insertion at the described location.
+`modes` says, per item id: `replaced` (edit at a matched site) / `inserted` (snippet placed at the
+described location — `scss-api` / `code-add` only) / `no-op` (an `action` of "None, unless …"
+whose condition this file did not meet).
