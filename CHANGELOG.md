@@ -19,6 +19,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   action buttons keep the positions they had. `--banner-ic-mt` is **removed** — it existed only to nudge
   the icon down by one border-width under the old rule, and nothing reads it now.
 
+### Fixed
+
+- **`ds-color="error"`, `="success"` and `="warning"` lost their accent colour.** Those zones map
+  `--accent-strong` onto `--<family>-strong`, and the three status families never defined it — only
+  the brand families did. The declaration was invalid at computed-value time, so every label that
+  reads `--accent-strong` (selected list rows and tree rows, the active sidenav item and its rail,
+  the active tab pill, avatar initials, the active tag, dropzone text, the toast icon) fell back to
+  plain body text inside a status zone. `--error-strong`, `--success-strong` and `--warning-strong`
+  now resolve to that family's `-text` colour, which is the same on-tint role and already tuned for
+  contrast in both themes.
+
 ## 0.11.2 — 2026-09-01
 
 ### Added

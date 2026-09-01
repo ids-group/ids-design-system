@@ -4,6 +4,37 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Status `ds-color` zones get their accent colour back (2026-09-01)
+
+`_ds-color.scss` maps `--accent-strong: var(--<family>-strong)` for every family it offers —
+`secondary, tertiary, error, success, warning` — but only the three brand families ever defined
+`-strong`. Inside `ds-color="error|success|warning"` the declaration was invalid at computed-value
+time, so the sixteen component tokens that read `--accent-strong` fell through to inherited body
+text: selected list and tree rows, the active sidenav item and its rail, the active tab pill, avatar
+and avatar-group initials, the active tag, dropzone active text, the toast icon, the date-picker
+range label, the split-button hover fill, and the button/icon-button `--c-strong`.
+
+**Measured before and after** on a probe page with the compiled theme, one `<div ds-color="...">`
+per family. Before: `--accent-strong` computed EMPTY for the three status families and the label
+rendered `rgb(22, 26, 40)` — body text — on a pale status tint. After: error `rgb(186, 23, 23)`,
+success `rgb(21, 104, 34)`, warning `rgb(138, 116, 0)`, and in dark
+`rgb(245, 132, 132)` / `rgb(105, 211, 126)` / `rgb(245, 202, 71)`.
+
+**Fixed by aliasing, not by inventing a colour:** `--<status>-strong: var(--<status>-text)`.
+`-strong` is the family's readable on-tint colour, which for a status family is exactly what `-text`
+already is — the brand families have no `-text` and carry that role as `-strong`. So the value is one
+the palette had already tuned. Contrast on the family's own `-muted` surface: light 5.5 / 5.8 / 4.3,
+dark 5.1 / 5.8 / 6.3. The light warning pair at 4.3 is inherited, not introduced — it is the same
+`--warning-text` already shipping, and it is downstream of the colour-engine question in `todo.md`;
+the existing `secondary` pair sits at 2.9.
+
+The same item's smaller cousin went with it: `accordion-item.component.scss` painted a disabled
+chevron with `var(--icon-disabled)`, a token defined nowhere. The declaration was invalid, so the
+chevron inherited `--text-disabled` from the button and looked right by accident. Now it says
+`--text-disabled`, which is what it was already rendering.
+
+---
+
 ## The banner and toast icon centres on the message block (2026-09-01)
 
 Stas picked **B** off `presentations/implemented/banner-toast-icon-alignment.html`, which drew both

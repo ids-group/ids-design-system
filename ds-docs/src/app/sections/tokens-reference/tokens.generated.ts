@@ -159,6 +159,11 @@ export const SEMANTIC_ERROR: readonly ColourRow[] = [
     "notes": "Body text on danger surfaces."
   },
   {
+    "name": "--error-strong",
+    "value": "var(--error-text)",
+    "notes": "Darker danger for text on error tints — what --accent-strong becomes under ds-color=\"error\"."
+  },
+  {
     "name": "--error-on",
     "value": "var(--text-on-error)",
     "notes": "Text/icon colour on error-filled surfaces.",
@@ -208,6 +213,11 @@ export const SEMANTIC_SUCCESS: readonly ColourRow[] = [
     "notes": "Success fill, pressed state (darkened toward black)."
   },
   {
+    "name": "--success-strong",
+    "value": "var(--success-text)",
+    "notes": "Darker success for text on success tints — what --accent-strong becomes under ds-color=\"success\"."
+  },
+  {
     "name": "--success-on",
     "value": "var(--text-on-success)",
     "notes": "Text/icon colour on success-filled surfaces.",
@@ -255,6 +265,11 @@ export const SEMANTIC_WARNING: readonly ColourRow[] = [
     "name": "--warning-pressed",
     "value": "color-mix(in srgb, var(--warning) 76%, black)",
     "notes": "Warning fill, pressed state (darkened toward black)."
+  },
+  {
+    "name": "--warning-strong",
+    "value": "var(--warning-text)",
+    "notes": "Darker warning for text on warning tints — what --accent-strong becomes under ds-color=\"warning\"."
   },
   {
     "name": "--warning-on",
@@ -479,28 +494,28 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   },
   {
     "name": "--focus-ring",
-    "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
+    "value": "0 0 0 2px var(--focus-ring-inner),\n    0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
     "notes": "Default two-layer focus ring shadow (inner ring + outer glow)."
   },
   {
     "name": "--focus-ring-inverted",
-    "value": "0 0 0 2px var(--neutral-900),\r\n    0 0 0 4px var(--blue-300)",
+    "value": "0 0 0 2px var(--neutral-900),\n    0 0 0 4px var(--blue-300)",
     "notes": "Focus ring shadow for dark/inverted surfaces.",
     "inverted": true
   },
   {
     "name": "--focus-ring-error",
-    "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
+    "value": "0 0 0 2px var(--focus-ring-inner),\n    0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
     "notes": "Focus ring shadow for invalid/error controls."
   },
   {
     "name": "--focus-ring-inset",
-    "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
+    "value": "inset 0 0 0 2px var(--focus-ring-inner),\n    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
     "notes": "The focus ring drawn INSIDE the border box, for a subtree under data-focus=\"inset\". Same two rings and colours as --focus-ring; only the direction differs, so an overflow:hidden ancestor cannot clip it away."
   },
   {
     "name": "--focus-ring-inset-error",
-    "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
+    "value": "inset 0 0 0 2px var(--focus-ring-inner),\n    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
     "notes": "The inset ring in the error colour, for a field that is invalid while focused under data-focus=\"inset\"."
   },
   {
@@ -520,22 +535,22 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   },
   {
     "name": "--focus-ring-secondary",
-    "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%)",
+    "value": "0 0 0 2px var(--focus-ring-inner),\n    0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%)",
     "notes": "Focus ring shadow tinted with the secondary colour."
   },
   {
     "name": "--focus-ring-tertiary",
-    "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l) / 100%)",
+    "value": "0 0 0 2px var(--focus-ring-inner),\n    0 0 0 4px hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l) / 100%)",
     "notes": "Focus ring shadow tinted with the tertiary colour."
   },
   {
     "name": "--focus-ring-success",
-    "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--success-h) var(--success-s) var(--success-l) / 100%)",
+    "value": "0 0 0 2px var(--focus-ring-inner),\n    0 0 0 4px hsl(var(--success-h) var(--success-s) var(--success-l) / 100%)",
     "notes": "Focus ring shadow tinted with the success colour."
   },
   {
     "name": "--focus-ring-warning",
-    "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / 100%)",
+    "value": "0 0 0 2px var(--focus-ring-inner),\n    0 0 0 4px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / 100%)",
     "notes": "Focus ring shadow tinted with the warning colour."
   },
   {

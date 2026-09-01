@@ -185,10 +185,15 @@
   --error-border:     var(--red-200);
   --error-text:       var(--red-600);
 
-  /* -pressed (success/warning) + -on aliases — added for the --accent-* pointer
-     family so every ds-color family resolves --accent-pressed / --accent-on. */
+  /* -pressed (success/warning), -strong and -on aliases — added for the --accent-*
+     pointer family so every ds-color family resolves --accent-pressed / -strong / -on.
+     -strong is the readable on-tint colour of the family, which for a status family is
+     what -text already is; the brand families have no -text and carry it as -strong. */
   --success-pressed:  color-mix(in srgb, var(--success) 76%, black);
   --warning-pressed:  color-mix(in srgb, var(--warning) 76%, black);
+  --error-strong:     var(--error-text);
+  --success-strong:   var(--success-text);
+  --warning-strong:   var(--warning-text);
   --error-on:         var(--text-on-error);
   --success-on:       var(--text-on-success);
   --warning-on:       var(--text-on-warning);
