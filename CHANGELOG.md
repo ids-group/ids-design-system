@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.11.2 — 2026-09-01
+
 ### Added
 
 - **`PageUp` and `PageDown`.** Ten rows a press, which is the native `<select>` step and the APG
