@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "0.11.2",
   "items": [
     {
       "id": "picker-subclass-members-grew",
@@ -68,7 +68,7 @@
       "old": "class MyToastRegion extends ToastRegionComponent",
       "new": null,
       "action": "Nothing unless you subclass ToastRegionComponent and declare a member of those names: rename yours, or add `override` if you meant to replace ours.",
-      "note": "ToastRegionComponent gained `timers`, `position` and `newestFirst`: the auto-dismiss countdown moved into the region, because only it knows when a toast became visible — started in the service, a toast queued behind `maxVisible` expired without ever being shown. `newestFirst` puts the newest toast nearest the anchor.",
+      "note": "ToastRegionComponent gained six members: the fields `timers`, `position` and `newestFirst`, and the methods `show`, `startCountdown` and `clearCountdown`. The auto-dismiss countdown moved into the region, because only it knows when a toast became visible — started in the service, a toast queued behind `maxVisible` expired without ever being shown. `newestFirst` puts the newest toast nearest the anchor.",
       "appliesWhen": "Only a class that extends ToastRegionComponent.",
       "pitfall": "`durationMs` is now a required field on `ToastEntry`. That reaches further than subclassing, so it is its own item — see `toast-entry-duration-required`.",
       "searchHints": [
@@ -90,7 +90,7 @@
       "old": null,
       "new": "durationMs: 5000",
       "action": "Add `durationMs` to every hand-built `ToastEntry`: the auto-dismiss delay in ms, or `0` for indefinite. `ToastService.show()` and its variants are unaffected — they take `ToastOptions`, where `durationMs` stays optional and defaults to 5000 (0 for `loading`).",
-      "note": "The field moved from optional to required because the countdown moved out of the service and into the region: only the region knows when a toast became VISIBLE, and started in the service a toast queued behind `maxVisible` expired while still waiting. An entry now has to carry its own delay. `ToastEntry` is exported and `ToastRegionComponent.add()` is public, so this is reachable without subclassing anything.",
+      "note": "`ToastEntry` gained a required `durationMs: number`. The region reads it to start the countdown when the toast becomes visible, so the field has to be on the entry rather than held in the service. `ToastOptions.durationMs` is untouched — still optional, still 5000 by default, still 0 for a loading toast — so a caller of `ToastService` needs nothing.",
       "appliesWhen": "You reference the `ToastEntry` type — annotating a variable, building one to pass to `add()`, or mapping your own model onto it. Callers of `ToastService` need nothing.",
       "pitfall": "The break is a compile error at the construction site, not at `add()`, so a search for `add(` finds nothing. And `0` is not the same as leaving it out: it means indefinite, so a toast written that way never dismisses itself.",
       "searchHints": [
@@ -104,6 +104,25 @@
       ],
       "verify": "The app builds with no TS2741 or TS2739 naming `durationMs` on `ToastEntry`.",
       "restore": null
+    },
+    {
+      "id": "select-option-list-caps-at-picker-maxh",
+      "kind": "behavior",
+      "old": "--ds-dropdown-panel-maxh",
+      "new": null,
+      "action": "If a ds-select has to show more than 280px of options, set `--picker-maxh` to the height you want — on the panel where only that select should change, or globally where the other two pickers should follow it.",
+      "appliesWhen": "Only ds-select, and only where the list was long enough to reach the old 320px. ds-autocomplete and ds-multi-select already capped at this value and do not move.",
+      "pitfall": "`--ds-dropdown-panel-maxh` still reads 320px and still caps the PANEL. It is the list INSIDE that stops 40px sooner now, so raising the panel knob on its own changes nothing you can see.",
+      "note": "The option list's own max-height moved into the shared panel partial, so ds-select caps its list at `--picker-maxh` (280px) where it previously ran to the panel's `--ds-dropdown-panel-maxh` (320px).",
+      "searchHints": [
+        "ds-dropdown-panel-maxh",
+        "picker-maxh",
+        "<ds-select",
+        "max-height"
+      ],
+      "surface": "style",
+      "verify": "Open a ds-select with more options than fit: the list scrolls at the height you set, and one left alone shows 280px of rows.",
+      "restore": "--picker-maxh: 320px"
     }
   ],
   "informational": [
@@ -116,7 +135,7 @@
     "The option row is tokenised: --ds-option-gap, --ds-option-padding, --ds-option-radius, --ds-option-row-gap, --ds-option-bg-color-active.",
     "ds-multi-select no longer carries its own panel rules at all; --ds-multi-select-option-bg-color-active is an alias of the shared --ds-option-bg-color-active and still works.",
     "The select-all row now reads the option row's gap and padding, so it lines up with the options below it; it was one step wider before.",
-    "DsOption gained disabledReason, announced through aria-describedby on a disabled row.",
+    "DsOption gained disabledReason, so it type-checks on all three pickers. ds-select renders it today, announced through aria-describedby on the disabled row; ds-multi-select and ds-autocomplete accept the field and do not yet show it.",
     "Type-ahead is on ds-select and ds-multi-select, not ds-autocomplete, whose trigger is a text field.",
     "PageUp and PageDown move the cursor ten rows on all three pickers; none had them.",
     "clear() is public on all three pickers now; it empties the value and does not move focus.",
@@ -126,12 +145,14 @@
     "ds-table takes expandAllToggle to put an expand-all chevron in the expander column header; it is page-scoped when paginating, like select-all, and is suppressed under expandMode=\"single\".",
     "ds-table emits (rowExpanded) and (rowCollapsed), expand-all included. Neither fires for a collapse the host writes into expandedIds itself, nor for an id whose row is not in data().",
     "ds-table announces \"N rows expanded\" in its live region from two rows up; a single expander already says so through its own aria-expanded.",
-    "ds-table no longer puts `skeleton-mode` on its host element. Nothing in the library styled it: the rule it switched on suppressed a row hover that used to reach every row, and that hover now needs `.clickable`, which a skeleton row never has. Only a consumer reaching in through ::ng-deep would notice.",
+    "ds-table no longer puts `skeleton-mode` on its inner `<table>` element. Nothing in the library styled it: the rule it switched on suppressed a row hover that used to reach every row, and that hover now needs `.clickable`, which a skeleton row never has. Only a consumer reaching in through ::ng-deep would notice.",
     "The column-resize handle now carries aria-valuemin and aria-valuemax alongside aria-valuenow, all in px, while it has focus. A focusable role=\"separator\" is a range widget, so a bare pixel value was being announced against ARIA's implicit 0-100.",
     "ds-loading-overlay now marks the content it covers `inert` while loading, so the keyboard cannot reach what the scrim already hides from the pointer. Anything focusable behind the scrim stops being tabbable and leaves the accessibility tree until loading ends; `aria-busy` on the host is unaffected.",
     "inertContent=\"false\" on ds-loading-overlay turns that off, for a scrim that covers only part of its content — the consumer then owns marking the covered subtree. ds-table does this: its scrim starts below the header, and only `<tbody>` goes inert, so sorting and filtering during a refresh still work.",
     "ds-table's column resize now stops at the width of the scroll viewport, on both the pointer and the keyboard path. It was unbounded before. The bound exists so the handle's aria-valuemax is true — a focusable role=\"separator\" is a range widget, and it had been announcing a ceiling nothing applied.",
-    "ds-table hides its column-resize handle under `(hover: none) and (pointer: coarse)` and puts −/+/Fit width controls in the column panel instead, which opens as a ds-bottom-sheet there. Nothing to change in a consumer app; a screenshot test taken on a touch profile will differ."
+    "ds-table hides its column-resize handle under `(hover: none) and (pointer: coarse)` and puts −/+/Fit width controls in the column panel instead, which opens as a ds-bottom-sheet there. Nothing to change in a consumer app; a screenshot test taken on a touch profile will differ.",
+    "A ds-table loading scrim used to be sized to one viewport of the table and travelled with the content, so horizontal scrolling left the revealed columns uncovered. The overlay wraps the scroll container now and the scrim covers what is on screen at any offset. NO ACTION.",
+    "maxVisibleChips=\"fit\" on ds-multi-select and ds-autocomplete under-showed chips on a trigger that hugs its content: the width it measured was decided by the chips it was about to cut. It reads the space available now. A width=\"fill\" trigger is unaffected. NO ACTION."
   ],
   "deleteList": []
 }
