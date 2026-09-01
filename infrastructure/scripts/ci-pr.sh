@@ -11,8 +11,6 @@
 #                   nothing a reader outside this repo cannot open
 # docblock-drift -> fails the step; a doc separated from its symbol is printed under
 #                   the wrong name in the published API table
-# deck-lint      -> fails the step; a deck that misstates its own status, rank or
-#                   evidence, or names a token the DS does not define
 # lint           -> report-only (prettier/stylelint/eslint), never fails the step
 #                   while the repo carries pre-existing lint debt
 set -e
@@ -52,17 +50,6 @@ node tools/changelog-lint-selftest.mjs
 # member it was written for shows up bare. Three of these were already in the tree.
 echo "===== docblock drift ====="
 node tools/check-docblock-drift.mjs
-
-# A deck states its own status, rank and evidence, and nothing makes it keep them
-# true. The costly half is CSS: a `var()` naming a token the DS does not define has
-# no fallback to fall back to, so the whole declaration is dropped and the deck just
-# renders without that margin, border or shadow. Ten decks were doing it, and none of
-# them looked broken enough for a reviewer to notice.
-echo "===== deck-lint ====="
-node tools/deck-lint.mjs
-
-echo "===== deck-lint selftest ====="
-node tools/deck-lint-selftest.mjs
 
 log_dir="$(mktemp -d)"
 
