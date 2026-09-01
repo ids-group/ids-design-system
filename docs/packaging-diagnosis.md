@@ -150,7 +150,7 @@ Secondary entry points are **not deprecated** and remain the recommended mechani
 | **A — nothing** | consumers with all-lazy routes get the DS with route 1 rather than before it | zero | 135.7 kB gzip |
 | **C — consumer-side `await import()` / `@defer`** | the consumer's eager root imports the DS lazily | none for us; costs the consumer ~50% of tree-shaking (the dynamic specifier becomes an entry point, so unused exports can no longer be dropped — measured, §3 variant C) and must be rediscovered by every consumer | ~0 eager, larger total |
 | **B — one narrow services entry point** | ~~a `services` entry beside an unchanged root~~ | **impossible** — refuted 2026-08-05: the services' closure includes button, icon, spinner, modal-card, which every other component also needs, so the root would import from the services entry and ng-packagr forbids cycles between entry points | — |
-| **D — layered entry points** | `core (12 groups) ← services (toast, modal) ← components (55 groups)`, root kept as a pure re-export facade | one internal refactor. **No consumer changes an import** — §10 measured `facade` and `deep` consumer variants as byte-identical down to the chunk hash | **27.8 kB gzip, −80%** |
+| **D — layered entry points** | `core (13 groups, incl. card) ← services (toast, modal) ← components (64 groups)`, root kept as a pure re-export facade | one internal refactor. **No consumer changes an import** — §10 measured `facade` and `deep` consumer variants as byte-identical down to the chunk hash | **27.8 kB gzip, −80%** |
 | **D+ — per-component entry points** (Material's model) | maximum granularity | larger refactor; the graph nearly allows it already — only the two sibling cycles must be co-located | lowest possible |
 
 **D is the recommendation, and A0 has now cleared its two unknowns:** the pipeline works end-to-end
@@ -173,7 +173,7 @@ block D.
 - No consumer repo was rebuilt. The probe models the all-routes-lazy shape; a consumer whose **eager**
   root needs a component rather than a service pays the same today and would still pay more than the
   services closure after D.
-- Whether the 55-group top layer wants to be one entry point or many.
+- ~~Whether the top layer wants to be one entry point or many.~~ **Answered below: per-component.**
 - Whether `ds-docs` itself would benefit; it is a single eager app, so probably not, and it is not a
   reason to do or skip D.
 

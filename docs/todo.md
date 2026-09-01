@@ -327,7 +327,12 @@ the service was just the one somebody noticed. Full table and every tested hypot
   `ds-config.ts` (`CardElevation`/`CardPadding`, `DsSize`, `IconName`) reaching back into modules that
   depend on it. See `packaging-diagnosis.md` « Thirteen open questions » item 3 for the full edge list
   and the fix. A computed `core` seed of 12 groups closes over exactly itself; the services close over
-  11; 55 component groups form the top layer.
+  11; **64** component groups form the top layer. **CORRECTED 2026-09-01: this said 55.** The
+  complement was computed from the runtime edge map, which omits the eleven groups with no runtime edge
+  either way (`divider`, `layout`, `list`, `page-footer`, `page-header`, `progress`, `status-dot`,
+  `topbar`, `avatar-group`, `button-group`, `theme`) — 77 on disk minus a 13-group core is 64. The
+  core seed is 13, not 12: the four-way SCC was accepted rather than broken, so `components/card` is in
+  it. `theme` appearing in that no-edge list independently confirms it can be its own free entry point.
   **A3 is unblocked and is worth ~5.7x the table work.** Original scope, for the record: Gates A3, touches no component, so it cannot collide with in-flight table work. Two
   halves. (a) A probe app with an eager `ToastService` import and a lazy route holding heavy
   components, built against the real `dist/ds` - the existing ladder plus one lazy route. Gives the
@@ -383,7 +388,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
 - [ ] **[P2] A3 - layered entry points. GATE PASSED (A0), and it is now the biggest item on this board: ≈108 KB gzip off a consumer's initial bundle.** Option D from
   `packaging-chunking-audit.md` §7, whose headline cost is now known to be false: §10 measured
   `facade` and `deep` consumer variants as byte-identical down to the chunk hash, so the root stays a
-  pure re-export facade and **no consumer changes an import**. The refactor is internal. **The partition, computed in A0:** `core` (12 groups - `config`, `core`, `icons`, `overlay`, `theme`, the loose `components/*.ts` directives, `button`, `field-message`, `field-group`, `spinner`, `menu`, `popover`; closure = itself, nothing extra pulled in) <- `services` (`toast`, `modal`) <- `components` (55 groups). The only co-location constraints are the two sibling cycles. Open design call: does the 55-group top layer want to be one entry point or many?
+  pure re-export facade and **no consumer changes an import**. The refactor is internal. **The partition, computed in A0:** `core` (**13** groups - `config`, `core`, `icons`, `overlay`, `theme`, the loose `components/*.ts` directives, `button`, `field-message`, `field-group`, `spinner`, `menu`, `popover`, and `card` since the four-way SCC was accepted) <- `services` (`toast`, `modal`) <- `components` (**64** groups). Co-location constraints: the two sibling cycles plus that accepted SCC. **Answered by A3+: the top layer must be per-component, not one entry.**
 
 - [ ] **[P3] B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag —
   measured 2026-09-01.** `DS_CONFIG` cannot remove a byte (runtime DI value, nothing to fold), so its job

@@ -335,10 +335,10 @@ both erased: `core -> icons` and `config -> components/card` are type-only (the 
 `spinner`, `menu`, `popover` has a transitive closure of **exactly itself — 12 groups, nothing pulled
 in beyond the seed.** The three services (`ToastService`, `ModalService`, `BodyScrollLockService`)
 close over **11 groups**: that core minus `theme`/`menu`/`popover`, plus `toast` and `modal`. The
-remaining **55 component groups** form the top layer.
+remaining **64 component groups** form the top layer. **CORRECTED 2026-09-01: this said 55, which was wrong** — the complement was computed from the runtime edge map, which omits the eleven groups that have no runtime edge in either direction (`divider`, `layout`, `list`, `page-footer`, `page-header`, `progress`, `status-dot`, `topbar`, `avatar-group`, `button-group`, `theme`). 77 groups on disk minus the 13-group core is 64. The core seed is 13, not 12, because the four-way SCC was later accepted rather than broken, so `components/card` sits in it.
 
 ```
-core (12 groups)  <-  services (toast, modal)  <-  components (55 groups)
+core (13 groups, incl. card)  <-  services (toast, modal)  <-  components (64 groups)
 ```
 
 Root `public-api.ts` stays a pure re-export facade, so — per §10 — no consumer changes an import.
@@ -349,4 +349,4 @@ Root `public-api.ts` stays a pure re-export facade, so — per §10 — no consu
   the three services, so it already includes whatever the closure actually drags.
 - No consumer repo was rebuilt. The probe models the mm-broker shape; a consumer whose *eager* root
   needs a component rather than a service pays more, and that is the case §7 named as D's trigger.
-- Whether the 55-group top layer wants to be one entry point or many is a separate design call.
+- Whether the 64-group top layer wants to be one entry point or many is a separate design call. **Answered 2026-09-01: it must be per-component** — see `packaging-diagnosis.md` « Three follow-up measurements » item 1.
