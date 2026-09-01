@@ -22,8 +22,9 @@
 
 ## Decks awaiting a verdict (re-audited 2026-09-01)
 
-Six decks carry `ds-deck-status: open`. The two picker decks closed — every question in them is
-answered and they moved to `presentations/implemented/`.
+Seven decks carry `ds-deck-status: open` — counted on disk, not from this list, which had missed
+`basic-advanced-split`. The two picker decks closed: every question in them is answered and they
+moved to `presentations/implemented/`.
 
 **Three have a backlog twin waiting on the same answer, so answering one closes two lines.** That is
 what makes these the cheapest thing on the board.
@@ -34,6 +35,7 @@ what makes these the cheapest thing on the board.
 | `interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
 | `select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
 | `migration-manifest-audit` | All 23 findings are fixed; what is open is the tail — ten format practices marked *Adopt* and never ratified. Three of the thirteen shipped on their own (`action`, `appliesWhen`, `exports["./migrations/*"]`). | the P3 line below |
+| `basic-advanced-split` | Whether the package splits into `basic` + `advanced`, priced against the alternatives. | the P2 ask about splitting the package |
 | `packaging-entry-points` | MBP-133 — one entry point, and the four ways out. | the P2 ask about keeping the DS out of a consumer's initial bundle |
 
 ---
@@ -45,24 +47,24 @@ what makes these the cheapest thing on the board.
 **Bugs — something shipped misbehaves**
 
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
+- P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
+- P2 · The resize handle announces an `aria-valuemax` that nothing enforces — no max clamp exists on either path (mine, 2026-09-01)
+- P2 · `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px regardless of density
 - P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
   of 100 cannot see one group of three collapse
+- P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
 
 **Asks — a consumer or Stas asked for it**
 
 - P2 · **One entry point for the whole library** — a consumer cannot keep the DS out of their initial bundle; secondary entry points would fix it (MBP-133, deck attached)
-- P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
-- P2 · The resize handle announces an `aria-valuemax` that nothing enforces — no max clamp exists on either path (mine, 2026-09-01)
-- P2 · `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px regardless of density
+- P2 · **No page-level design approach for an agent** — radii, composition and page patterns are unwritten; `design-system.md` answers "what value", not "where does it go"
+- P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
 - P3 · A token named in prose is never checked against the tokens that exist — a removed one survived in two docs for months
-- P3 · `todo.md`'s index no longer accounts for its body — 41 lines against 55 items, and the gap needs a per-section reconciliation
-- P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
+- P3 · `todo.md`'s index no longer accounts for its body — 44 lines against 58 items, and the gap needs a per-section reconciliation
 - P3 · Three edges left open on `ds-table` row expansion — an inert expand-all on an empty page, the lazy label, and a column header whose name flips
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
-- P2 · **No page-level design approach for an agent** — radii, composition and page patterns are unwritten; `design-system.md` answers "what value", not "where does it go"
-- P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 
 **Decisions — waiting on Stas, not on work**
 
@@ -155,17 +157,27 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**34 open: 1 P1, 9 P2, 24 P3** — counted from the index line by line. Ten are *Parked* awaiting a
-first consumer ask and two are Records, so the live board is **22 items — 1 Bug, 5 Asks and 16
-Decisions**.
+**44 open: 1 P1, 14 P2, 29 P3** — counted from the index by script, not incremented from the last
+figure, which is how three summaries in this file had drifted apart by 2026-09-01. Ten are *Parked*
+awaiting a first consumer ask and two are Records, and the one P1 is a settled decision kept so it
+is not re-litigated, so the live board is **31 items — 6 Bugs, 9 Asks and 16 Decisions**.
+
+**Every block is ordered P2 before P3**, with one deliberate exception: the Angular 22 line sits last
+in *Decisions* under a P1 tag because it is DECIDED, not pending — the tag keeps it out of both
+counts, and the position keeps it out of the way.
 
 **Four items had lived in the body with no index line**, so the board never counted them and nobody
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds one, measured:** the warning status pair at 4.42:1 where AA asks 4.5. It reaches
-nine components plus `_status.scss` and `_field-state.scss` — eleven files counted — so one token
-step fixes all of them, which makes it the cheapest real win left.
+**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
+counted — so one token step fixes all of them. The other five arrived on 2026-09-01 and four were
+filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
+already reads. In cost order after the token step — the resize handle's unenforced `aria-valuemax`
+(a clamp, or drop the attribute), `--ds-table-head-h` declared nowhere so the scrim's inset is
+always its 40px fallback, one export leaving the table's live region stuck on "Export ready"
+forever, then the two cosmetic ones.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Fourteen of the nineteen live items
 are Decisions, and seven decks are open against them. Nothing below is blocked on effort.
@@ -241,6 +253,17 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
+- [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
+
+
+- [ ] **[P2] The column-resize handle announces a maximum width that nothing enforces — introduced 2026-09-01, in the same change that gave it a range at all.** `resizeRange()` reports `aria-valuemax` as the scroll wrap's `clientWidth`, but there is NO maximum clamp anywhere: both the pointer path and the keyboard path only ever apply `Math.max(MIN_COLUMN_WIDTH, …)`, so a column grows without bound and a screen-reader user told "maximum 911" can keep pressing ArrowRight straight past it. Verified by reading both clamps; the only `Math.min` calls in the component belong to the virtual window and to client paging. Two ways out, and they are not equivalent: **clamp the resize** to the wrap width so the announced ceiling becomes true (changes behaviour — a column wider than the viewport stops being reachable, which is arguably right since it cannot be read anyway), or **drop `aria-valuemax`** and accept that a focusable `role="separator"` then falls back to ARIA's implicit 0–100, which is the defect the range was added to fix. Clamping is the better shape; it needs a decision because it removes something a pointer user can do today.
+
+
+- [ ] **[P2] `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px.** The table passes `[insetTop]="'var(--ds-table-head-h, 40px)'"` to `ds-loading-overlay` to keep the header uncovered during a refresh, and that string is the ONLY occurrence of the token in the whole repo — nothing ever sets it, so the fallback always wins. A header shorter than 40px (`density="compact"`, `ultra`) leaves a strip of the first row uncovered; a header taller than 40px (a wrapped label, or a filter row) gets partly covered, which contradicts the reason the inset exists — and now also contradicts the `inert` boundary, since `<tbody>` is what goes inert while a partly-covered header stays operable underneath a scrim. Decide which it is: declare the token from the real header height (a measurement, or a value per density), or drop the token and measure the `<thead>`. As it stands it reads like a public hook and is not one.
+
+
+- [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. Derived from the template, NOT measured in a browser: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+
 
 # Asks — a consumer or Stas asked for it
 
@@ -359,24 +382,54 @@ the service was just the one somebody noticed. Full table and every tested hypot
   real job is **library-wide** on the components that always ship: calmer defaults, fewer states,
   simpler affordances on fields, buttons, sidenav. `resolveWithConfig` already exists, so this is small.
 
-- [ ] **[P3] A3+ — decide the top layer's granularity: one `components` entry point, or one per
-  component (Material's model).** The Angular Package Format's own rule is «entrypoints for the smallest
-  sets of logically connected code possible», and Angular Material publishes one entry point per
-  component for exactly this reason; `@angular/cdk` does too, which we already consume that way
-  (`overlay`, `portal`, `drag-drop` are three separate specifiers). Our graph nearly allows per-component
-  entries already — only `radio`/`radio-group` and `time-columns`/`time-picker` must be co-located.
-  Per-component is the lowest possible eager cost and the largest refactor; a single `components` entry
-  already delivers the measured -80%. **Decide this WITH A3, not after** — it is the same boundary
-  decision made once. Secondary entry points are NOT deprecated (ng-packagr `docs/secondary-entrypoints.md`
-  on `main`, and a Feb 2026 guide, both current).
+- [ ] **[P2] A3+ — the top layer MUST be per-component, measured 2026-09-01, not a preference.**
+  A single `components` entry helps only a consumer whose eager root touches nothing outside `core` and
+  `services`. An eager **app shell** does touch the component layer — that is what `ds-app-layout`,
+  `ds-sidenav` and `ds-topbar` are FOR — and one `components` entry then pulls the whole retained
+  component layer back into the initial bundle. Fixture at `.claude/local/granularity-probe/`, same
+  payload both shapes, consumed through the root facade, eager `alpha` + lazy routes using `beta` and
+  `gamma`:
 
-- [ ] **[P3] Why does one `<ds-button>` cost 32.1 KB gzip?** `ButtonComponent extends DsMessageBase` and
-  imports `FieldMessageComponent`, `field-errors` and `nextControlId` (`button.component.ts:19-26,62,78`)
-  so a button can render a validation message inside a field group — which makes the cheapest
-  component in the library reach into the field system. **Unmeasured:** how much of the 32.1 KB is that
-  field-message closure versus icons, config and the shared component runtime. A targeted ablation
-  answers it. RETENTION question, independent of A3, blocks nothing — do not call it a defect
-  before the ablation.
+  | Library shape | Initial | beta (lazy) | gamma (lazy) | Lazy chunks |
+  | --- | --- | --- | --- | --- |
+  | one `components` entry | 178 538 B | **500 markers** | **500** | 101 B, 101 B — stubs |
+  | one entry per component | **125 651 B** | **0** | **0** | 26 819 B, 26 318 B — real |
+
+  **-52 887 B, -30%** on a fixture where the eager component is a third of the payload; a real shell is
+  a handful of components out of 55, so the ratio is far more lopsided. Angular Material publishes one
+  entry point per component for exactly this reason, and the APF rule is «entrypoints for the smallest
+  sets of logically connected code possible»; `@angular/cdk` does the same and we already consume it
+  that way (`overlay`, `portal`, `drag-drop` are three specifiers). Minimum viable shape if
+  per-component is too big a step: give the SHELL components their own entry, separate from the heavy
+  ones. Secondary entry points are NOT deprecated (ng-packagr `docs/secondary-entrypoints.md` on
+  `main`, plus a Feb 2026 guide).
+
+- [x] **[P2] The eager-component case DOES NOT overturn A3 — checked 2026-09-01.**
+  `packaging-chunking-audit.md` §7 named «a consumer whose EAGER root needs a component rather than a
+  service» as D's trigger. Measured: an eager shell (`app-layout` + `sidenav` + `topbar` +
+  `page-header`) costs **201 283 B gzip** today and closes over only **9 of 77 groups** (+`tooltip`),
+  which builds standalone at **101 108 B gzip**. So an eager-shell consumer stands to save ~98 kB gzip
+  against an eager-service consumer's ~108 kB — but ONLY with per-component entries, per A3+ above.
+  Shell and services together close over 16 of 77 groups.
+
+- [ ] **[P2] `ds-button`'s field-message line costs 11.0 KB gzip — 35% of the button, ABLATION DONE
+  2026-09-01.** `ButtonComponent extends DsMessageBase` and imports `FieldMessageComponent`,
+  `resolveFieldMessage` and `trimmedText` so a button can render a hint/warning/error line under itself.
+  Ablated on `probe/button-field-message` (worktree `C:\wt-ds-table-split`, commit `2c1dbdb7`), control
+  re-measured on the same build:
+
+  | | JS gzip | over bare Angular |
+  | --- | --- | --- |
+  | bare Angular app | 30 646 B | — |
+  | `+ ds-divider` (entry cost) | 35 997 B | +5 351 B |
+  | `+ ds-button` today | **62 733 B** | **+32 087 B** |
+  | `+ ds-button` without field-message | **51 438 B** | **+20 792 B** |
+
+  **11 295 B gzip**, paid by every consumer that renders one button, whether or not they ever bind
+  `hint`, `warning` or `error`. **Entry points do not fix this** — even per-component entries keep
+  `button -> field-message` as a static edge, so the 11 kB arrives with any button. Two ways out: drop
+  the feature from `ds-button`, or move it behind an opt-in directive — **the same seam pattern as
+  the table**, so it belongs in the A1/A2 lane, not A3. Design decision, not a defect.
 
 **Not doing, and why.** basic/advanced as two packages: smaller prize than A1/A2, and it buys a second
 table to keep in sync forever. `ids-charts`: a real candidate the day it needs a third-party renderer,
@@ -432,15 +485,7 @@ A0 first, which touches none of it, or wait for that lane to land.
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
 
-- [ ] **[P2] The column-resize handle announces a maximum width that nothing enforces — introduced 2026-09-01, in the same change that gave it a range at all.** `resizeRange()` reports `aria-valuemax` as the scroll wrap's `clientWidth`, but there is NO maximum clamp anywhere: both the pointer path and the keyboard path only ever apply `Math.max(MIN_COLUMN_WIDTH, …)`, so a column grows without bound and a screen-reader user told "maximum 911" can keep pressing ArrowRight straight past it. Verified by reading both clamps; the only `Math.min` calls in the component belong to the virtual window and to client paging. Two ways out, and they are not equivalent: **clamp the resize** to the wrap width so the announced ceiling becomes true (changes behaviour — a column wider than the viewport stops being reachable, which is arguably right since it cannot be read anyway), or **drop `aria-valuemax`** and accept that a focusable `role="separator"` then falls back to ARIA's implicit 0–100, which is the defect the range was added to fix. Clamping is the better shape; it needs a decision because it removes something a pointer user can do today.
-
-- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-01: 41 index lines against 55 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
-
-- [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. Derived from the template, NOT measured in a browser: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
-
-- [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
-
-- [ ] **[P2] `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px.** The table passes `[insetTop]="'var(--ds-table-head-h, 40px)'"` to `ds-loading-overlay` to keep the header uncovered during a refresh, and that string is the ONLY occurrence of the token in the whole repo — nothing ever sets it, so the fallback always wins. A header shorter than 40px (`density="compact"`, `ultra`) leaves a strip of the first row uncovered; a header taller than 40px (a wrapped label, or a filter row) gets partly covered, which contradicts the reason the inset exists — and now also contradicts the `inert` boundary, since `<tbody>` is what goes inert while a partly-covered header stays operable underneath a scrim. Decide which it is: declare the token from the real header height (a measurement, or a value per density), or drop the token and measure the `<thead>`. As it stands it reads like a public hook and is not one.
+- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-01: 44 index lines against 58 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
 
 - [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure.
 

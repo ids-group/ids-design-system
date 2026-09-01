@@ -12,8 +12,13 @@ usages appear in them, and **those files' finder hits** for the items (`{loc, ma
 `loc`, change the `match`, and treat `dynamic: true` hits as property bindings (see value-remap).
 Do NOT re-derive matches by re-grepping (that reintroduces the wrong-element false-positive the
 finder prevents). Apply each item precisely to YOUR files only.
-Everything specific comes from the item, its `note`, and the hits — the changelog decided WHAT to
-do; you execute it.
+Everything specific comes from the item and the hits — the changelog decided WHAT to do; you
+execute it. **Read the item's fields in this order: `action` is the imperative and the ONLY field
+you execute (an `action` of "None, unless …" whose condition this file does not meet = nothing to
+edit — report it applied-as-no-op, not `needsReview`); `appliesWhen` is the boundary — a hit
+outside it gets no edit; `pitfall` is how a correct application still breaks — check it before
+reporting applied; `note` is the why, not an instruction.** An old manifest item may carry only
+`note` — then it plays the `action` role.
 
 ## Rules
 
@@ -36,7 +41,7 @@ do; you execute it.
     | maps to itself (same token) | leave untouched — still valid |
     | ABSENT from `map` | leave untouched — the changelog documented no change for it; never guess |
 
-    **Dynamic bindings** (`[attr]="expr"`): if the `note` says the value moved to a different
+    **Dynamic bindings** (`[attr]="expr"`): if the `action`/`note` says the value moved to a different
     attribute, rebind the whole attribute accordingly; if a method/field supplies old values, remap
     the literals it returns and its type annotation. Any binding you cannot confidently resolve →
     leave it, record `needsReview`.
@@ -45,18 +50,18 @@ do; you execute it.
     the location the item's `action`/`note` describes (an à-la-carte consumer can lack the very line
     a path-swap reading would look for, and skipping is how such an item silently does nothing).
     Report which mode you used (`modes` in the output).
-  - **`code-add`**: insert the snippet from `new` at the location `note` describes — but ONLY if
+  - **`code-add`**: insert the snippet from `new` at the location `action`/`note` describes — but ONLY if
     THIS file is that location (e.g. the app config, the global styles entry, the relevant usage).
     If you're not sure this is the right file, record `needsReview` instead of guessing. Same
     missing-`old` rule as `scss-api`: no match means insert, not skip; report the mode.
   - **`removed-api`** and **`behavior`**: these need judgement, not a find/replace — but you ATTEMPT
-    them. Follow the migration the `note`
+    them. Follow the migration the `action`
     describes and make the real code change — e.g. swap a removed API for its documented replacement,
     wrap an element in a newly-required container, restructure an attribute into a projected slot,
     update an event handler whose payload changed, or pin a changed default the consumer relied on.
     Make your best correct effort, keeping the change minimal and idiomatic.
     Record `needsReview` ONLY as a last resort: the change is genuinely too ambiguous or intertwined
-    to do safely, OR the `note` describes no concrete consumer action (a purely visual/informational
+    to do safely, OR the `action`/`note` describes no concrete consumer action (a purely visual/informational
     change with nothing to edit — say exactly that in `why`; do NOT invent an edit for it).
 - Keep the diff minimal; follow the file's existing formatting.
 - **Several items on the same line/tag** (e.g. a selector rename plus a value remap hitting the same

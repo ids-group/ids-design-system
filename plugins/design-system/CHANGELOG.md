@@ -23,6 +23,12 @@ from success (found by the 2026-08-31 manifest audit).
   the described location instead of grepping for an `old` that was never there.
 
 ### Changed
+- **Field model synced with the manifests' current contract.** `action` is the imperative and the
+  only field the applier executes ("None, unless …" whose condition is unmet = applied-as-no-op);
+  `appliesWhen` bounds where an edit may land; `pitfall` is tested by the orchestrator's semantic
+  verdict and the re-checker; `note` is the why, playing the `action` role only on an old
+  un-enriched manifest item. The planner emits and enriches all four, `supersededBy` is gone from
+  the schema (the link points backward only), and `surface` may be an array.
 - **`surface` ranks the search, it no longer restricts it.** The finder searches ALL artifact
   classes for every item, flags hits outside the declared surface with `outOfSurface: true`, and
   still runs locators on `surface: "none"` items (a hit there contradicts the manifest and is

@@ -17,16 +17,19 @@ If the orchestrator also provides a **shipped migration manifest** for this vers
 (`migrations/<version>.json` from the DS repo/package — the same MigrationPlan schema you emit),
 VALIDATE it instead of re-deriving: JSON parses; `version` matches; every item has a unique `id`, a
 known `kind`, non-empty `searchHints`, and a `map` only on `value-remap` (full-token convention,
-see below). If valid, return IT as the plan — cross-check it against the changelog block: you may
+see below). A missing `action` or missing detectability field is an ENRICHMENT case (next
+paragraph), never grounds to call the manifest malformed. If valid, return IT as the plan — cross-check it against the changelog block: you may
 enrich `informational` and APPEND items for documented changes the manifest missed (say so in each
 appended item's `note`), but never silently rewrite the manifest's own items. Manifest missing or
 malformed → derive the plan from the prose block as below.
 
-**A manifest that carries no `surface` / `detect` / `verify` predates the contract (the fields landed
-2026-08-21 and every manifest in the DS repo has them; a copy inside an older `node_modules` will
-not), and passing those items through as-is is how an undetectable one reaches the finder.** So for
+**A manifest that carries no `surface` / `detect` / `verify` — or no `action` / `appliesWhen` /
+`pitfall` — predates a contract revision (detectability landed 2026-08-21, the prose fields after
+0.11.1; every manifest in the DS repo has both, a copy inside an older `node_modules` will not),
+and passing those items through as-is is how an undetectable one reaches the finder.** So for
 every item that lacks them, ADD the fields from what the item's own `note` already says — this is enrichment, not a
-rewrite: you are not changing the migration, you are stating where to look for it. Read the note for
+rewrite: you are not changing the migration, you are stating where to look for it (and, for
+`action`, lifting the imperative out of the note so the applier executes a field, not a paragraph). Read the note for
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
 a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()`
 is null" is handing you both `surface: "typescript"` and two `detect` strings. A top-level `deleteList` is DATA, not something to reconstruct: every published manifest carries
@@ -62,7 +65,7 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
   (breaks consumer stylesheet compilation). `old`/`new` = the import path or `namespace.symbol`.
 - **`code-add`** — the version now REQUIRES new consumer code that didn't exist before (a newly
   required import, a bootstrap provider, a newly-required input). Put the exact snippet in `new` and
-  say WHERE it goes in `note` (e.g. "app config providers", "global styles entry", "every `<x>`
+  say WHERE it goes in `action` (e.g. "app config providers", "global styles entry", "every `<x>`
   usage"). There is no `old`, so put the string that locates the insertion site(s) in `searchHints`
   (the target selector, the `@use` line, the config token) — that's the finder's only signal here.
 - **`removed-api`** — an API removed WITH a documented replacement path; put the migration the
@@ -70,10 +73,10 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
 - **`behavior`** — a change that needs a consumer code edit but not a simple find/replace (an
   element that must now be wrapped, an attribute that became a projected slot, a changed event
   payload, a changed default the consumer relied on, etc.). `new: null`. **Put the CONCRETE
-  migration steps the changelog describes in `note`** — this workflow is full-auto, so the applier
-  will ATTEMPT them; the more actionable your `note`, the better it succeeds. If the changelog
+  migration steps the changelog describes in `action`** — this workflow is full-auto, so the applier
+  will ATTEMPT them; the more actionable your `action`, the better it succeeds. If the changelog
   prescribes RUNNING something (a codemod, schematic, script) rather than editing, quote the exact
-  command in `note` and say explicitly that it is a command — the orchestrator runs those itself
+  command in `action` and say explicitly that it is a command — the orchestrator runs those itself
   (with user approval), never the applier.
 - **No consumer action?** If a documented breaking/changed item needs NO code edit from the consumer
   (purely visual — e.g. a new press animation or a restyle), do NOT make it an item — list it in
@@ -99,6 +102,20 @@ Reading the changelog completely matters more than perfect kinds.
       leave such values untouched. Only enumerate values the changelog actually addresses.
 - If the changelog says values move to a different attribute, note that DYNAMIC bindings
   (`[attr]="expr"`) resolving to those values must be rebound too — flag it in `note`.
+
+## The prose fields: `action`, `appliesWhen`, `pitfall`, `note`
+
+One item, four prose fields, each read by a different consumer of the plan:
+
+- **`action`** — the imperative alone, on EVERY item; the only field the applier executes.
+  "None, unless …" is a legitimate action — write the condition that changes it.
+- **`appliesWhen`** — the boundary: which components, which bindings, and above all what is NOT
+  affected, so an item can be ruled out without searching.
+- **`pitfall`** — how to apply the item mechanically correctly and still ship a broken app; the
+  re-checker and orchestrator test it. If applying cannot go quietly wrong, omit it — never
+  invent one.
+- **`note`** — the WHY that remains once those three are filled. Keep it short; structure typed
+  into a note as ALL-CAPS markers means a field above was not filled.
 
 ## Detectability: `surface`, `detect`, `verify`, `restore`
 
@@ -144,9 +161,11 @@ Return ONLY a fenced ```json block:
 
 {
   "version": "<the version>",
-  "items": [ { "id", "kind", "old", "new", "note", "searchHints": [],
+  "items": [ { "id", "kind", "old", "new", "searchHints": [],
                "map": { "<oldValue>": "<replacement token | null>" },
-               "surface": "template | typescript | style | config | none",
+               "action": "<imperative>", "appliesWhen": "<boundary>",
+               "pitfall": "<how it still breaks>", "note": "<the why>",
+               "surface": "template | typescript | style | config | none (or an array)",
                "detect": [], "verify": "<positive assertion>", "restore": "<snippet | null>",
                "supersedes": ["<version>#<id>"] } ],
   "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],

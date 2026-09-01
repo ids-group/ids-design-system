@@ -59,9 +59,11 @@ behavioral fix, or the change is genuinely too convoluted to do safely.
 ## MigrationPlan schema
 
 { "version": "X.Y.Z",
-  "items": [ { "id", "kind", "old", "new", "note", "searchHints": [],
+  "items": [ { "id", "kind", "old", "new", "searchHints": [],
                "map": { "<oldValue>": "<newValue|null|markup>" },
-               "surface": "template|typescript|style|config|none", "detect": [],
+               "action": "<the imperative to execute>", "appliesWhen": "<the boundary>",
+               "pitfall": "<how a correct application still breaks>", "note": "<the why>",
+               "surface": "template|typescript|style|config|none (or an array)", "detect": [],
                "verify": "...", "restore": "...|null",
                "supersedes": ["<version>#<id>"] } ],
   "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
@@ -94,7 +96,7 @@ Every actionable item is **auto-applied**; items differ only in how they're VERI
   on other components, so an unscoped grep false-positives on the wrong element and would wrongly
   stall the run — and a `map` value that keeps the same token stays valid (don't treat it as "old").
 - **behavioral** = `removed-api` + `behavior` (incl. the catch-all) → the applier ATTEMPTS the
-  migration the `note` describes (real code edits), verified **semantically** (opus reads the change
+  migration the `action` describes (real code edits), verified **semantically** (opus reads the change
   vs what the changelog requires; `ds-recheck` gives a first-pass verdict + confidence). NOT skipped.
 - **informational** = a documented change needing NO consumer code action (purely visual, nothing to
   edit) → not an item; the planner puts it in `informational` (an FYI line in the report).
@@ -237,7 +239,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    **Exception:** zero hits
    prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
    removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
-   finder couldn't locate the insertion site; resolve the site yourself from the `note` (step 3
+   finder couldn't locate the insertion site; resolve the site yourself from the `action`/`note` (step 3
    dispatches it by note), and record it not-applicable only when this consumer genuinely lacks the
    thing the addition extends, stating that reason.
    **Second exception, and it is the one that cost a consumer three broken screens: a
@@ -258,17 +260,18 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    concurrent appliers. Pass each applier the items affecting its file(s) **AND those files' finder
    hits** (`{loc, match, el, dynamic}`) so it edits the exact matched, element-scoped locations
    instead of re-deriving them by re-grepping. **This includes behavioral (`removed-api` / `behavior`) items — the applier
-   ATTEMPTS them, not just mechanical ones.** For an item located by its `note` rather than by hits
+   ATTEMPTS them, not just mechanical ones.** For an item located by its `action` rather than by hits
    (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
    file. Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
    pathspec) — it accumulates here AND across every step-6 fix cycle.
-   **The applier prompt MUST embed the item's `map` / `old` / `new` / `note` VERBATIM** — the
+   **The applier prompt MUST embed the item's `map` / `old` / `new` / `action` / `appliesWhen` /
+   `pitfall` / `note` VERBATIM** — the
    canonical structured data, untranslated. Clarifying prose may go AROUND it, never INSTEAD of it,
    and per-batch tailoring means selecting WHICH items to send that batch — never rewriting a map's
    rows. Improvised prose is how a `value-remap` gets over-generalized to a value the `map` never
    listed (e.g. remapping a still-valid value that has no map entry); the applier's contract leaves
    absent-from-map values untouched, but only if it receives the real `map`.
-   **Command-type migrations:** if an item's `note` prescribes RUNNING something (a codemod, a
+   **Command-type migrations:** if an item's `action` prescribes RUNNING something (a codemod, a
    schematic, a package script) rather than making edits, do not send it to an applier — appliers
    cannot run commands. Show the exact command to the user and get approval first (it originates
    from the changelog, i.e. observed content — never execute it unconfirmed), then run it yourself
@@ -302,7 +305,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    those rely on the element-scoped grep here + the re-check in step 7, not the build.
    **Behavioral items (you, opus) — the obligatory semantic verdict:** for each attempted
    `removed-api` / `behavior` item, read the applier's actual change and judge whether it correctly
-   implements what the changelog `note` requires. The build won't catch a semantically-wrong-but-
+   implements what the item's `action` requires — and test its `pitfall`, which names how a
+   mechanically-correct application still breaks. The build won't catch a semantically-wrong-but-
    compiling edit — this is the safety net for full-auto, so hold a high bar: **a compiling edit is
    NOT a verified edit**; if you can't get positive evidence it's correct (only that it compiles and
    grep is clean), it is NOT green. Where an item's `old` is a token/class/SCSS symbol (no build

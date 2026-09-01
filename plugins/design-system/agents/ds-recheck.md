@@ -14,7 +14,7 @@ Two verification modes:
 - **Mechanical** (rename kinds, `value-remap`, `scss-api`, `code-add`) → verify by **grep** (below).
 - **Behavioral** (`removed-api`, `behavior`) → the applier now ATTEMPTS these (full-auto), so verify
   them **semantically**: read the edited code and judge whether it correctly implements the migration
-  the item's `note` describes. Report a `confidence`; the opus orchestrator makes the final call and
+  the item's `action` describes. Report a `confidence`; the opus orchestrator makes the final call and
   escalates low-confidence/failed items to manual review as a last resort.
 
 ## What to do
@@ -45,9 +45,10 @@ Two verification modes:
   `new` is present at the location the item's `action`/`note` describes. A clean grep for an `old`
   that was never there proves nothing about an insertion.
 - **`removed-api` / `behavior` (semantic):** read the edited code and compare it to the migration the
-  `note` describes. `migrated: true` only if the code now correctly reflects the required change;
+  `action` describes — and test the `pitfall`, which names how a mechanically-correct application
+  still breaks. `migrated: true` only if the code now correctly reflects the required change;
   `false` if the old API/usage persists unaddressed or the applied change is wrong/incomplete. If the
-  `note` describes NO consumer action (purely visual/informational), return `migrated: true` with
+  `action`/`note` describes NO consumer action (purely visual/informational), return `migrated: true` with
   `note: "no consumer action required"`. Always set `confidence` (high/medium/low) — the orchestrator
   escalates low-confidence and failed items.
 - **`verify` is the assertion you must test, and its absence of a symbol proves nothing.** When the

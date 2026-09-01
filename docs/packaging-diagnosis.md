@@ -176,3 +176,72 @@ block D.
 - Whether the 55-group top layer wants to be one entry point or many.
 - Whether `ds-docs` itself would benefit; it is a single eager app, so probably not, and it is not a
   reason to do or skip D.
+
+## Three follow-up measurements (2026-09-01, same probe)
+
+Asked for after the diagnosis landed. All three change something in the plan.
+
+### 1. Granularity: one `components` entry is not enough
+
+The three-layer partition (`core <- services <- components`) helps only a consumer whose eager root
+touches nothing outside `core` and `services`. An eager **app shell** does touch the component layer —
+that is what `ds-app-layout`, `ds-sidenav` and `ds-topbar` are for — and with a single `components`
+entry that pulls the whole retained component layer back into the initial bundle.
+
+Measured with a purpose-built fixture at `.claude/local/granularity-probe/`: a library in two shapes,
+identical payload, consumed through the **root facade** both times. The app has an eager component
+(`alpha`) and two lazy routes using `beta` and `gamma`.
+
+| Library shape | Initial | `alpha` (eager) | `beta` (lazy A) | `gamma` (lazy B) | Lazy chunks |
+| --- | --- | --- | --- | --- | --- |
+| `core` + **one `components` entry** | 178 538 B | 500 markers | **500** | **500** | 101 B, 101 B — stubs |
+| `core` + **one entry per component** | **125 651 B** | 500 markers | **0** | **0** | 26 819 B, 26 318 B — real |
+
+With one `components` entry the eager component drags **both** lazy-only components into the initial
+bundle and the lazy chunks collapse to 101-byte stubs. Per-component entries keep each in its own
+chunk. **−52 887 B, −30%** on a fixture where the eager component is a third of the payload; in the
+real library a shell is a handful of components out of 55, so the ratio is far more lopsided.
+
+**Consequence for A3: the top layer has to be per-component (Angular Material's model), or at minimum
+the shell components need an entry of their own, separate from the heavy ones.** A single `components`
+entry would deliver the measured −80% for an eager-service consumer and roughly nothing for an
+eager-shell consumer.
+
+### 2. The eager-component case does not argue against D — it argues for finer granularity
+
+`packaging-chunking-audit.md` §7 named "a consumer whose EAGER root needs a component rather than a
+service" as what would overturn option D. Measured, it does not.
+
+| Eager anchor | Initial gzip today | Closure | Groups |
+| --- | --- | --- | --- |
+| the three services | 194 763 B | `core` + `services` | 11 of 77 |
+| **an app shell** (`app-layout` + `sidenav` + `topbar` + `page-header`) | **201 283 B** | + `tooltip` | **9 of 77** |
+
+The shell's closure is nine groups, five of them (`app-layout`, `sidenav`, `topbar`, `page-header`,
+`tooltip`) outside the proposed `core`. Built on its own that closure is **101 108 B gzip**, so an
+eager-shell consumer stands to save ~98 kB gzip — nearly the ~108 kB an eager-service consumer saves.
+The catch is measurement 1: that saving is only reachable with per-component entries. Shell and
+services together close over **16 of 77 groups**.
+
+### 3. What one `<ds-button>` costs, and why
+
+`ButtonComponent extends DsMessageBase` and imports `FieldMessageComponent`, `resolveFieldMessage` and
+`trimmedText` so a button can render a hint/warning/error line under itself. Ablated on
+`probe/button-field-message` (worktree `C:\wt-ds-table-split`), control re-measured on the same build:
+
+| | JS raw | JS gzip | over bare Angular |
+| --- | --- | --- | --- |
+| bare Angular app | 92 686 B | 30 646 B | — |
+| `+ ds-divider` (entry cost) | 107 723 B | 35 997 B | +5 351 B |
+| **`+ ds-button` today** | 200 941 B | **62 733 B** | **+32 087 B** |
+| **`+ ds-button` without field-message** | 158 610 B | **51 438 B** | **+20 792 B** |
+
+**The field-message coupling is 11 295 B gzip — 35% of the button's cost**, paid by every consumer that
+renders a single button, whether or not they ever bind `hint`, `warning` or `error`. The remaining
+~20.8 kB is the entry cost plus icons, config, core and the button's own code.
+
+**Entry points do not fix this one.** Even per-component entries keep `button -> field-message` as a
+static edge, so the 11 kB arrives with any button. The only two ways out are to drop the feature from
+`ds-button`, or to move it behind an opt-in directive — **the same seam pattern as the table**
+(`basic-advanced-split-audit.md` §9). That is a design decision, not a defect, and it belongs in the
+same lane as A1/A2 rather than in A3.
