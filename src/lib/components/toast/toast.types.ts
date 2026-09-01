@@ -26,6 +26,10 @@ export interface ToastEntry {
   readonly variant: ToastVariant;
   readonly dismissible: boolean;
   readonly action?: ToastAction;
+  /** Auto-dismiss delay, counted from the moment the toast becomes VISIBLE — a
+   *  queued toast must not expire while it is still waiting behind the cap.
+   *  0 = indefinite. */
+  readonly durationMs: number;
 }
 
 export interface ToastPromiseMessages {

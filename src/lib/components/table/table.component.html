@@ -16,26 +16,30 @@
   }
 </div>
 
-<div
-  #scrollWrap
-  class="scroll-wrap"
-  [class.scroll-y]="maxHeight()"
-  [style.max-height]="maxHeight()"
+<!-- The overlay wraps the SCROLL CONTAINER, not the table inside it. Its scrim is
+     `position: absolute; inset: 0`, so from inside the container it was sized to one
+     viewport of the table and slid away with the content: measured at scrollLeft 400
+     the scrim sat at -400px, leaving the newly revealed columns uncovered. -->
+<ds-loading-overlay
+  [loading]="isOverlayLoading()"
+  [blur]="true"
+  [insetTop]="'var(--ds-table-head-h, 40px)'"
+  [inertContent]="false"
 >
   <div
-    class="visually-hidden"
-    role="status"
-    aria-live="polite"
+    #scrollWrap
+    class="scroll-wrap"
+    [class.scroll-y]="maxHeight()"
+    [style.max-height]="maxHeight()"
   >
-    {{ statusMessage() }}
-  </div>
+    <div
+      class="visually-hidden"
+      role="status"
+      aria-live="polite"
+    >
+      {{ statusMessage() }}
+    </div>
 
-  <ds-loading-overlay
-    [loading]="isOverlayLoading()"
-    [blur]="true"
-    [insetTop]="'var(--ds-table-head-h, 40px)'"
-    [inertContent]="false"
-  >
     <table
       [class]="tableClasses()"
       [style.--_table-virtual-row-h]="virtualRowHeight()"
@@ -451,8 +455,8 @@
         }
       </tbody>
     </table>
-  </ds-loading-overlay>
-</div>
+  </div>
+</ds-loading-overlay>
 
 @if (stickyScrollbarResolved()) {
   <div
