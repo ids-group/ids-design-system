@@ -549,3 +549,114 @@ has an exception, and it should be in the docs before anyone hits it.
 The `probe/angular-22` branch (`7de133dc`, "what it takes to build this library on 22.1.3") touches
 `bun.lock`, `package.json`, three tsconfigs and one signal-forms probe file. Nothing about packaging,
 entry points or the FESM layout. Nothing to revisit.
+
+## A build-time flag CAN remove bytes — measured 2026-09-01
+
+> Raised by Stas: *"может стоит не прокидывать конфиг билда в DS-конфиг, а делать это раньше —
+> условно в package.json или angular.json или tsconfig, или создать ещё один JSON-конфиг"*.
+>
+> **This CORRECTS the table in "Do we have to split?" above**, which listed
+> `DS_CONFIG.prototype: true` as removing **0 bytes**. That row is right about `DS_CONFIG` — a
+> runtime DI value cannot be folded — but the conclusion does not generalise to every flag. A
+> **build-time** flag set in the consumer's `angular.json` does remove bytes, from an already
+> published FESM.
+
+### Both mechanisms are first-class `angular.json` options
+
+From the installed `@angular/build:application` schema:
+
+| Option | What the schema says |
+| --- | --- |
+| `define` | "Defines global identifiers that will be replaced with a specified constant value when found in any JavaScript or TypeScript code **including libraries**. The value will be used directly." |
+| `conditions` | "Custom package resolution conditions used to resolve conditional exports/imports. Defaults to `['module', 'development'/'production']`." |
+
+So a consumer configures this in a build config file, not through DI — exactly the shape asked for.
+`define` is the byte lever; `conditions` would let `package.json` `exports` serve a *different FESM*
+per condition, which is a larger design and only sensible once entry points exist.
+
+### `define` works, and it reaches the published FESM
+
+Fixture `.claude/local/define-probe/`: a library built by ng-packagr with an advanced branch of 500
+grep-marked lines behind a build flag, consumed by an app with three `angular.json` configurations
+that differ only in `define`.
+
+| Configuration | Raw | gzip | Advanced markers in the bundle |
+| --- | --- | --- | --- |
+| `full` — no `define` | 123 498 B | 34 957 B | 500 |
+| `prototype` — `define: { dsPrototype: "true" }` | **99 550 B** | **32 969 B** | **0** |
+
+**−23 948 B raw / −1 988 B gzip**, and the branch is gone from a FESM that was compiled and published
+before the consumer's build ran.
+
+### The detail that decides whether it works at all
+
+**The guard must sit directly on the branch.** The first attempt put it behind a module-level constant:
+
+```ts
+const ADVANCED = typeof dsPrototype === 'undefined' || !dsPrototype;
+// ...
+if (ADVANCED) { /* heavy */ }
+```
+
+That produced **500 markers in every configuration** — no saving. `define` had applied (the identifier
+`dsPrototype` went from 2 occurrences to 0 in the output), but esbuild did not propagate the resulting
+constant through the module-scope `const` into the `if`; the emitted code was `return jf && (…)` with
+`jf` a live variable. Moving the guard inline fixed it completely:
+
+```ts
+if (typeof dsPrototype === 'undefined' || !dsPrototype) { /* heavy */ }
+```
+
+The `typeof` form is required, not stylistic: a consumer who never sets `define` leaves the identifier
+undefined, and a bare `if (dsPrototype)` would throw. This is precisely the `ngDevMode` idiom.
+
+### A free win available today: dev warnings cost 1.6 kB gzip in production
+
+`devWarn` guards itself with `isDevMode()` — a **function call**, which esbuild cannot fold, so the
+call sites and their message closures ship to production. Measured by stripping all 14 call sites on
+`probe/devwarn`, control re-measured on the same build:
+
+| Rung | With `devWarn` | Stripped | Saving |
+| --- | --- | --- | --- |
+| prototype kit + `ds-table` | 191 988 B gzip | 190 398 B gzip | **1 590 B** |
+| one `<ds-button>` | 62 733 B gzip | 61 906 B gzip | **827 B** |
+
+**And this one needs no consumer configuration at all.** The installed builder already adds
+`'ngDevMode': 'false'` to esbuild's `define` whenever script optimization is on — 
+`@angular/build/src/tools/esbuild/application-code-bundle.js:465`. So rewriting each call site as
+
+```ts
+ngDevMode && devWarn(() => …);
+```
+
+folds the whole statement away in every consumer's production build, dropping the closure with it.
+Fourteen one-token edits for 1.6 kB gzip, and it removes dead weight rather than capability.
+
+### Where a `define` flag earns its place, and where it does not
+
+The byte-removal roles now overlap, so it is worth being exact about which tool does what:
+
+| Kind of code | Right tool |
+| --- | --- |
+| a whole component the app never uses | **entry points** (A3) — already free via tree-shaking, entry points fix its *placement* |
+| a separable feature of a component the app does use | **an opt-in directive** (A1/A2) — measured seam overhead a fixed 923 B |
+| a branch *inside* code the app must ship, with no seam to hang it on | **`define`** — dev warnings, assertions, showcase-only APIs, a coarse `prototype` mode |
+
+So `define` does not replace A1–A3; it covers the cross-cutting remainder they cannot reach. Angular
+uses it for exactly that (`ngDevMode`).
+
+### Caveats to settle before shipping a `prototype` define flag
+
+- **The public API does not change.** In prototype mode a consumer can still bind `resizableColumns`
+  and it will compile and silently do nothing. That is a footgun and needs its own dev warning —
+  itself behind the flag.
+- **Two configurations, two bundles, one source.** A defect that reproduces only in prototype mode is
+  harder to chase, and CI would need to build both to catch it.
+- **`define` values are textual substitutions.** A typo in the identifier silently means "not set",
+  with no error — so the flag name wants a test that proves the branch actually disappears.
+- **Retrofitting is per-branch work.** Every advanced branch needs its own inline guard, which is the
+  same enumeration effort as the directive split without needing a seam. Decide per feature which of
+  the two it gets, rather than doing both.
+- **`conditions` is the other half of the idea and stays unexplored.** Serving a different FESM per
+  resolution condition is cleaner than sprinkling guards, but it means publishing two builds of the
+  library and only makes sense after A3.

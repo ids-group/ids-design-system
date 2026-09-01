@@ -378,10 +378,49 @@ the service was just the one somebody noticed. Full table and every tested hypot
   `facade` and `deep` consumer variants as byte-identical down to the chunk hash, so the root stays a
   pure re-export facade and **no consumer changes an import**. The refactor is internal. **The partition, computed in A0:** `core` (12 groups - `config`, `core`, `icons`, `overlay`, `theme`, the loose `components/*.ts` directives, `button`, `field-message`, `field-group`, `spinner`, `menu`, `popover`; closure = itself, nothing extra pulled in) <- `services` (`toast`, `modal`) <- `components` (55 groups). The only co-location constraints are the two sibling cycles. Open design call: does the 55-group top layer want to be one entry point or many?
 
-- [ ] **[P3] B1 - `DS_CONFIG.prototype: true`, phase two, and honestly scoped.** Behaviour, not bytes.
-  On the table it is nearly pointless after A2 (do not want resize? do not import the directive), so the
-  real job is **library-wide** on the components that always ship: calmer defaults, fewer states,
-  simpler affordances on fields, buttons, sidenav. `resolveWithConfig` already exists, so this is small.
+- [ ] **[P3] B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag —
+  measured 2026-09-01.** `DS_CONFIG` cannot remove a byte (runtime DI value, nothing to fold), so its job
+  is library-wide UI simplification on the components that always ship: calmer defaults, fewer states,
+  simpler affordances on fields, buttons, sidenav. `resolveWithConfig` already exists, so that part is
+  small. **But the earlier claim that NO flag can remove bytes was too broad** — see the new item below.
+
+- [ ] **[P2] Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured.**
+  Stas's idea (configure earlier than DI: `angular.json` / `package.json` / tsconfig rather than
+  `DS_CONFIG`) is viable. `@angular/build:application` has TWO first-class options for it: **`define`**
+  («replaced ... in any JavaScript or TypeScript code **including libraries**») and **`conditions`**
+  (custom `exports` resolution conditions). Fixture `.claude/local/define-probe/`: a 500-line advanced
+  branch behind a flag, in an ng-packagr-published FESM — `full` 123 498 B raw / 34 957 gz with 500
+  markers, `define: { dsPrototype: "true" }` **99 550 B raw / 32 969 gz with 0 markers**. The branch is
+  gone from a FESM compiled before the consumer's build ran.
+
+  **The guard MUST be inline on the branch.** First attempt used a module-level
+  `const ADVANCED = typeof dsPrototype === 'undefined' || !dsPrototype` and saved NOTHING (500 markers in
+  both configs) — `define` had applied (identifier 2 -> 0 occurrences) but esbuild did not propagate the
+  constant through module scope into the `if`. Inline `if (typeof dsPrototype === 'undefined' ||
+  !dsPrototype)` works completely. The `typeof` form is required, not stylistic: a consumer who never
+  sets `define` leaves the identifier undefined and a bare `if (dsPrototype)` would throw. This is the
+  `ngDevMode` idiom. **Caveats before shipping:** the public API does not change, so binding
+  `resizableColumns` in prototype mode compiles and silently does nothing (needs its own dev warning);
+  two configs mean two bundles from one source, so CI must build both; `define` is a textual
+  substitution, so a typo silently means «not set» and the flag needs a test proving the branch really
+  disappears. `conditions` (serve a different FESM per condition) is the cleaner other half and stays
+  unexplored — it needs two published builds and only makes sense after A3.
+
+  **Division of labour, now that the tools overlap:** a whole unused component -> entry points (A3); a
+  separable feature of a component you DO use -> an opt-in directive (A1/A2, seam overhead a fixed
+  923 B); a branch inside code you must ship with no seam to hang it on -> `define`. Do not do both for
+  the same feature.
+
+- [ ] **[P2] FREE 1.6 KB gzip: dev warnings ship to production and should not.** `devWarn` guards itself
+  with `isDevMode()`, a **function call** esbuild cannot fold, so all 14 call sites and their message
+  closures reach production bundles. Measured on `probe/devwarn`, control on the same build: prototype
+  kit + table **191 988 -> 190 398 B gzip (-1 590 B)**; one `<ds-button>` **62 733 -> 61 906 B (-827 B)**.
+  **No consumer configuration needed** — the installed builder already adds `'ngDevMode': 'false'` to
+  esbuild's `define` whenever script optimization is on
+  (`@angular/build/src/tools/esbuild/application-code-bundle.js:465`). Rewrite each site as
+  `ngDevMode && devWarn(() => ...)` and the whole statement folds away, closure included. Fourteen
+  one-token edits; removes dead weight, not capability. Needs `declare const ngDevMode` visible to the
+  lib tsconfig.
 
 - [ ] **[P2] A3+ — the top layer MUST be per-component, measured 2026-09-01, not a preference.**
   A single `components` entry helps only a consumer whose eager root touches nothing outside `core` and
