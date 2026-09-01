@@ -219,6 +219,14 @@
     white-space: nowrap;
   }
   .adopt { background: var(--success-subtitle); color: var(--success); }
+  .tier-fold > summary { cursor: pointer; list-style: none; }
+  .tier-fold > summary::-webkit-details-marker { display: none; }
+  .tier-fold > summary h3 { display: inline; }
+  .tier-fold > summary::before { content: '▸ '; color: var(--text-tertiary); }
+  .tier-fold[open] > summary::before { content: '▾ '; }
+  .still-open { border-left: 4px solid var(--warning); padding-left: var(--space-4); }
+  .pending { display: flex; flex-direction: column; gap: var(--space-3); }
+  .pending li { color: var(--text-secondary); }
   .done-tag.recheck { background: var(--warning-subtitle); color: var(--warning); display: block; margin-top: var(--space-2); white-space: normal; }
   .landed { background: var(--primary-subtitle); color: var(--primary); }
   .reject { background: var(--error-subtitle); color: var(--error); }
@@ -289,7 +297,49 @@
     <div><dt>Silent breaks</dt><dd>6</dd></div>
     <div><dt>Gate defects</dt><dd>11</dd></div>
     <div class="is-fixed"><dt>Fixed</dt><dd>23</dd></div>
+    <div class="is-open"><dt>Still open</dt><dd>8</dd></div>
   </dl>
+
+  <section class="still-open">
+    <h2>Still open — eight format practices, and nothing else</h2>
+    <p>
+      Every one of the 23 findings is fixed and folded below, and <code>0.11.0</code> and
+      <code>0.11.1</code> have been audited against their own boundaries since. What the deck still
+      asks for is the tail: practices its research marked <em>Adopt</em> that nobody has ratified.
+      Five of the original thirteen have shipped on their own — <code>appliesWhen</code>,
+      <code>action</code>, the <code>migrations</code> export, and two that went out with the
+      auto-update plugin. These eight have not.
+    </p>
+    <ol class="pending">
+      <li><b>Executable verification.</b> <code>verify</code> is prose in all 24 manifests. Polaris
+        ships a literal alternation RegExp per token group, so the check runs rather than being
+        read.</li>
+      <li><b>Runtime signal ids.</b> Vue keys its compat warnings by id and Ember collects which
+        ones actually fired. Our <code>devWarn</code> messages exist; nothing ties a manifest item
+        to the warning that proves the item applies.</li>
+      <li><b>Escalation marker.</b> Next.js codemods leave a comment that breaks the build until a
+        human removes it. Only the comment half is worth taking — a migration that cannot finish
+        should say so in the code, not only in a report.</li>
+      <li><b>Explicit “no replacement”.</b> ESLint lets <code>replacedBy</code> be an empty array to
+        state that there is none. We omit the field instead, so “nothing replaces this” and “the
+        author forgot” read identically.</li>
+      <li><b><code>deprecatedIn</code>.</b> The version that first deprecated a thing, separate from
+        the one that removed it. Adopt that half; <code>availableUntil</code> is rejected — a file
+        cannot know its own future.</li>
+      <li><b>Provenance link.</b> CDK makes the PR link a required member of its change record.
+        Optional here, and linted only on <code>unreleased.json</code>, since a released manifest
+        would be pointing at a repository the reader cannot open.</li>
+      <li><b><code>schemaVersion</code>.</b> Flutter’s <code>fix_data.yaml</code> mandates one. Ours
+        has changed shape four times with nothing in the file to say which shape it is.</li>
+      <li><b><code>ng-update</code> requirements key.</b> A hard pre-flight the Angular CLI already
+        enforces. Adopt the key; porting the whole thing to real schematics is rejected.</li>
+    </ol>
+    <p class="note">
+      Five were rejected outright with the measurement that rejected them, and those are in the
+      table at the foot of this page: the deprecation window, value-change as a kind, array-valued
+      <code>new</code>, a confidence axis, and a per-item docs URL.
+    </p>
+  </section>
 
   <section>
     <h2>The honest verdict</h2>
@@ -318,7 +368,8 @@
 
   <section class="t1">
     <h2>What is broken now</h2>
-    <h3><span class="tier">Tier 1</span> An agent obeying the manifest damages the consumer’s code</h3>
+    <details class="tier-fold">
+      <summary><h3><span class="tier">Tier 1</span> An agent obeying the manifest damages the consumer’s code</h3></summary>
 
     <ol class="ledger">
       <li class="finding">
@@ -408,10 +459,12 @@
               <span class="done-tag recheck">Re-checked 2026-09-01 — two of the three had it. <code>0.4.0#ds-button-variant-axis-split</code> was still <code>surface: "template"</code> while its own <code>action</code> says “retype it”. A sweep of all 204 items for type-changing prose against a surface without <code>typescript</code> returns that one item and no other; it now carries all three.</span>
       </li>
     </ol>
+    </details>
   </section>
 
   <section class="t2">
-    <h3><span class="tier">Tier 2</span> A real break with nothing in the manifest to find it</h3>
+    <details class="tier-fold">
+      <summary><h3><span class="tier">Tier 2</span> A real break with nothing in the manifest to find it</h3></summary>
 
     <ol class="ledger">
       <li class="finding">
@@ -496,10 +549,12 @@
               <span class="done-tag">Fixed — 257a271c</span>
       </li>
     </ol>
+    </details>
   </section>
 
   <section class="t3">
-    <h3><span class="tier">Tier 3</span> The gate is decorative where it matters most</h3>
+    <details class="tier-fold">
+      <summary><h3><span class="tier">Tier 3</span> The gate is decorative where it matters most</h3></summary>
 
     <ol class="ledger">
       <li class="finding">
@@ -635,6 +690,7 @@
               <span class="done-tag">Fixed — 29325882</span>
       </li>
     </ol>
+    </details>
   </section>
 
   <section>
@@ -719,7 +775,7 @@
         </thead>
         <tbody>
           <tr><td>Precondition guard</td><td>OpenRewrite <code>Preconditions.check</code>; Nx requires each agentic runbook to open with a no-op guard</td><td><span class="verdict landed">Shipped</span> — <code>appliesWhen</code>, documented in <code>migrations/README.md</code></td></tr>
-          <tr><td><code>replaceIn</code> polarity</td><td>CDK’s <code>CssTokenUpgradeData</code> defaults to <em>all</em> files and narrows; our <code>surface</code> is a whitelist that silently excludes</td><td><span class="verdict adopt">Adopt polarity</span></td></tr>
+          <tr><td><code>replaceIn</code> polarity</td><td>CDK’s <code>CssTokenUpgradeData</code> defaults to <em>all</em> files and narrows; our <code>surface</code> is a whitelist that silently excludes</td><td><span class="verdict landed">Shipped</span> — the finder searches every surface and ranks by the declared one, flagging an out-of-surface hit instead of not looking</td></tr>
           <tr><td>Executable verification</td><td>Polaris ships a literal alternation RegExp per token group for post-migration validation</td><td><span class="verdict adopt">Adopt</span></td></tr>
           <tr><td>Runtime signal ids</td><td>Vue’s ID-keyed compat warnings; Ember collects what actually fired per app</td><td><span class="verdict adopt">Adopt</span> — <code>devWarn</code> already exists</td></tr>
           <tr><td>Escalation marker</td><td>Next.js codemods write comments that break the build until removed</td><td><span class="verdict adopt">Adopt the comment half</span></td></tr>
@@ -733,7 +789,7 @@
           <tr><td>Array-valued <code>new</code></td><td>Primer’s <code>deprecated.json</code> maps one token to several, or null</td><td><span class="verdict reject">Rejected</span> — <strong>0</strong> of 78 renames have more than one candidate. The one real case (the three <code>-fg</code> suffixes) is a menu, not a mapping: the consumer must look up which, and <code>action</code> says so.</td></tr>
           <tr><td>Package reachability</td><td>Primer publishes deprecation data so a stylelint plugin can read it</td><td><span class="verdict landed">Shipped</span> — <code>exports["./migrations/*"]</code></td></tr>
           <tr><td><code>ng-update</code> requirements</td><td>A hard pre-flight the Angular CLI enforces</td><td><span class="verdict adopt">Adopt the key</span>; reject porting to real schematics</td></tr>
-          <tr><td>Dry-run hit counts</td><td>jscodeshift prints per-file outcomes; Next.js warns a wrong path reports <code>0 ok</code> rather than failing</td><td><span class="verdict adopt">Adopt in the plugin</span></td></tr>
+          <tr><td>Dry-run hit counts</td><td>jscodeshift prints per-file outcomes; Next.js warns a wrong path reports <code>0 ok</code> rather than failing</td><td><span class="verdict landed">Shipped</span> — a zero-hit item is classified rather than dropped, and per-item counts reach the run report</td></tr>
           <tr><td>Confidence axis</td><td>ESLint’s <code>fixable</code> / <code>hasSuggestions</code></td><td><span class="verdict reject">Reject</span> — already carried twice</td></tr>
           <tr><td>Per-item docs URL</td><td>Common in hand-written upgrade guides</td><td><span class="verdict reject">Reject</span> — tried and retired the same day</td></tr>
         </tbody>
