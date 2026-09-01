@@ -40,9 +40,12 @@ const decksIn = (dir) =>
 // may declare it, and a generated deck sets its own from script. What is left is a
 // name the browser cannot resolve to anything, which kills the whole declaration.
 function unresolvableTokens(html, stylesheet) {
+  // CSS comments go too: a comment naming a retired token is documentation, not a
+  // reference the browser will try to resolve.
   const prose = html
     .replace(/<pre[\s\S]*?<\/pre>/g, '')
-    .replace(/<code[\s\S]*?<\/code>/g, '');
+    .replace(/<code[\s\S]*?<\/code>/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
   const scripted = new Set(
     [...html.matchAll(/setProperty\(\s*['"](--[a-z0-9-]+)/g)].map(
       ([, token]) => token,
