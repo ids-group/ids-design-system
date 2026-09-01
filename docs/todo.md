@@ -239,6 +239,110 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 
 Requests, not defects. Ordered by who is blocked.
 
+## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
+
+Priority set by Stas: **dead code out of the bundle first, prototype UI simplification second.** Every
+number below is measured; the two audits carry the method — `basic-advanced-split-audit.md` and
+`packaging-chunking-audit.md`. This section sequences the existing items rather than duplicating them.
+
+| Measured | Value |
+| --- | --- |
+| unused components cost a consumer | 18.2 KB gzip |
+| `ds-table` marginal cost, all of it its own code | 31.4 KB gzip |
+| ablating the grid features from `ds-table` | **-18.9 KB gzip (-61%)** |
+| `DS_CONFIG` flag can remove | **0 bytes** - proved: the flags were already `false` and the bytes still shipped |
+| chunk placement, on a layered fixture | eager chunk 118 011 -> 85 800 B, no tree-shaking penalty |
+| **how big the placement prize is for THIS library** | **unmeasured** - the 632 kB / 88% figure is mm-broker's, never reproduced |
+
+That last row is why the order below starts where it does. `@if` in a template removes RENDERING, not
+CODE: each branch compiles to its own embedded-template function referenced from the component's
+`ɵcmp`, so it ships whichever way the condition goes. A directive in a consumer's `imports` is the byte
+switch; `DS_CONFIG` is the behaviour switch. They compose, they are not alternatives, and only the
+first one moves bytes.
+
+- [x] **[P2] A0 - DONE 2026-09-01. Measured chunk placement against the real library and tested the
+  graph. Both answers are in `packaging-chunking-audit.md` §11.** One `inject(ToastService)` moves
+  **576 239 B raw / 135 744 B gzip** out of the lazy chunk into the initial bundle and collapses the
+  lazy chunk to 189 bytes - the initial grows **4.2x**, and all eleven heavy components land in a chunk
+  `main` statically imports. This reproduces the consumer's report independently (577 kB of a 755 kB
+  initial, 76%, against their claimed 88%), so §2's "not reproducible" line is superseded. The
+  services closure builds at 86 775 B gzip against the probe's 59 019 B DS-free floor, so the fix takes
+  the DS's share of the initial bundle from **135.7 KB gzip to 27.8 KB, -80%**. And the graph
+  partitions: 77 groups, **exactly two cycles** (`radio` <-> `radio-group`, `time-columns` <->
+  `time-picker`), both sibling pairs that belong together anyway. A computed `core` seed of 12 groups
+  closes over exactly itself; the services close over 11; 55 component groups form the top layer.
+  **A3 is unblocked and is worth ~5.7x the table work.** Original scope, for the record: Gates A3, touches no component, so it cannot collide with in-flight table work. Two
+  halves. (a) A probe app with an eager `ToastService` import and a lazy route holding heavy
+  components, built against the real `dist/ds` - the existing ladder plus one lazy route. Gives the
+  placement prize for OUR library instead of a synthetic fixture's ratio. (b) The import graph of
+  `src/lib`: does it split into acyclic layers (`core <- services <- components`, or finer)?
+  ng-packagr forbids cycles between entry points, which is exactly what killed option B. Favourable at
+  the top level - nothing in `core/`, `icons/`, `overlay/`, `theme/` imports a component at runtime,
+  and the one edge (`config/ds-config.ts`) is an erased `import type` - but 95 folders have never been
+  checked. **If (b) says no, A3 dies and the whole budget goes to the table.**
+
+- [ ] **[P2] A1 - build the seam and ONE directive, and measure what the seam itself costs.** The
+  ablation gives a **floor of 12.1 KB**, but the seam is not free: template slots, the empty
+  composition, the service. Real landing is somewhere between 12.1 and 31.4 KB, and A1 says where -
+  before we commit to five directives. Start with `DsTableExport`: no markup in the header, no shared
+  width logic, just a status contribution and a public method. **Fresh branch from `dev`**, not a
+  continuation of `probe/table-feature-directives`: that ablation was deliberately crude (it simplified
+  `filteredData`, deleted shared helpers) and those simplifications must not be inherited. Keep it as
+  the reference for what has to move, and as the size target.
+
+  **The seam, designed 2026-09-01.** All four collisions the ablation hit are one pattern: *the table
+  owns a derived value and an optional feature wants to contribute an input to that derivation.*
+  `clipWidth`/`fitsContent` serve truncate AND resize; `orderedColumns`/`visibleColumns` are the
+  computed chain the picker writes to; `filteredData` folds set filters into the substring search;
+  `statusMessage` folds export state into the live region. So the seam is a **contribution registry**,
+  not a method move - a per-instance internal service the table provides and the directives inject:
+
+  ```ts
+  @Injectable() // providers: [DsTableLayout] on the table itself
+  export class DsTableLayout<T> {
+    readonly columnTransforms = signal<readonly ColumnTransform<T>[]>([]); // order, visibility, width
+    readonly rowFilters = signal<readonly RowFilter<T>[]>([]);
+    readonly statusParts = signal<readonly Signal<string | null>[]>([]);
+    readonly headerAdornments = signal<readonly HeaderAdornment[]>([]);
+  }
+  ```
+
+  `visibleColumns` becomes `columns()` piped through `columnTransforms()` - empty means identity, which
+  is exactly the ablated behaviour that already compiles and measures at 12.1 KB. `filteredData`
+  composes `rowFilters()`; `statusMessage` joins `statusParts()`. Width resolution moves into the seam
+  as one `resolvedWidth(col)` the table always calls, so neither resize nor truncate owns it. **The
+  table never names a feature** - no `if (resizable)` anywhere. **Two genuinely hard bits:** (1) a
+  directive cannot inject markup, and the filter button, resize handle and picker popover ARE markup -
+  the table keeps tiny `@if (headerAdornments().length)` slots rendering an `ng-template` the directive
+  supplies, and the residual slot cost has to be MEASURED, not assumed; (2) `clipWidth`/`fitsContent`
+  are only untangled by the width move above.
+
+- [ ] **[P3] A2 - the remaining directives, after A1 prices the seam.** `DsTableResizable`,
+  `DsTableReorderable` (with the picker and the `@angular/cdk/drag-drop` import),
+  `DsTableColumnFilters`, `DsTablePersistLayout`. Three questions the ablation left open: does
+  `truncate` stay in the base table, and do row actions and inline cell editing come out too? Both are
+  equally advanced and were left IN, which is why 18.9 KB is a floor and not a ceiling.
+
+- [ ] **[P2] A3 - layered entry points. GATE PASSED (A0), and it is now the biggest item on this board: ≈108 KB gzip off a consumer's initial bundle.** Option D from
+  `packaging-chunking-audit.md` §7, whose headline cost is now known to be false: §10 measured
+  `facade` and `deep` consumer variants as byte-identical down to the chunk hash, so the root stays a
+  pure re-export facade and **no consumer changes an import**. The refactor is internal. **The partition, computed in A0:** `core` (12 groups - `config`, `core`, `icons`, `overlay`, `theme`, the loose `components/*.ts` directives, `button`, `field-message`, `field-group`, `spinner`, `menu`, `popover`; closure = itself, nothing extra pulled in) <- `services` (`toast`, `modal`) <- `components` (55 groups). The only co-location constraints are the two sibling cycles. Open design call: does the 55-group top layer want to be one entry point or many?
+
+- [ ] **[P3] B1 - `DS_CONFIG.prototype: true`, phase two, and honestly scoped.** Behaviour, not bytes.
+  On the table it is nearly pointless after A2 (do not want resize? do not import the directive), so the
+  real job is **library-wide** on the components that always ship: calmer defaults, fewer states,
+  simpler affordances on fields, buttons, sidenav. `resolveWithConfig` already exists, so this is small.
+
+**Not doing, and why.** basic/advanced as two packages: smaller prize than A1/A2, and it buys a second
+table to keep in sync forever. `ids-charts`: a real candidate the day it needs a third-party renderer,
+not before - a package split is justified by an EXTERNAL runtime dependency, never by component count.
+DS-vs-UI-kit packages: parked until a consumer wants the tokens WITHOUT the components; today the
+`exports` map already serves them.
+
+**Scheduling constraint.** A1 and A2 refactor `table.component.{ts,html,scss}` - the same three files a
+parallel lane has been changing all week (row expansion, resize-handle ARIA, comment pass). Either run
+A0 first, which touches none of it, or wait for that lane to land.
+
 ## Agent-facing docs — the rules an agent needs to prototype a page, and an md layout it can navigate
 
 - [ ] **[P2] There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01).** `design-system.md` covers spacing, type, size, colour, motion, content and overrides, and it answers "what value do I use" well. It does not answer **"where does this go on the page"**, which is the whole question when an agent is prototyping a screen rather than styling one control. Concretely missing:

@@ -270,3 +270,83 @@ has not been attempted.
 
 Fixture: `.claude/local/entrypoint-probe/` (gitignored) — `lib/` layered, `lib-single/` control,
 `app/scenarios/{ctl,facade,deep}.ts`.
+
+## 11. A0 — the prize measured against this library, and the graph that gates it
+
+Everything above priced the *mechanism*. The audit's own §8 left the size of the prize for THIS
+library unmeasured, and §2 recorded the consumer's 631 966 B / 720 kB figures as second-hand and not
+reproducible from artefacts on disk. Both gaps are now closed. Measured 2026-09-01 against
+`dist/ds` 0.11.1 with the probe app at `.claude/local/bundle-probe/`.
+
+### (a) What one eager service import costs the initial bundle
+
+Probe shape is the mm-broker shape: every feature route lazy, one eager DS symbol. The lazy route
+holds eleven heavy components (table, date-picker, time-picker, multi-select, autocomplete,
+color-picker, tree, stepper, dropzone, slider, otp-input); "initial" is `main.js` plus every chunk it
+statically imports.
+
+| Scenario | Initial raw | Initial gzip | Lazy chunk | Heavy components in the initial bundle |
+|---|---|---|---|---|
+| no eager DS symbol at all | 178 723 B | 59 019 B | 566 761 B | **0 of 11** |
+| **eager `inject(ToastService)`** | **754 962 B** | **194 763 B** | **189 B** | **11 of 11** |
+| services closure only (the post-fix shape) | 298 575 B | 86 775 B | — | 0 of 11 |
+
+**One `inject(ToastService)` moves 576 239 B raw / 135 744 B gzip out of the lazy chunk and into the
+initial bundle, and collapses the lazy chunk to 189 bytes.** The initial bundle grows 4.2×. Every one
+of the eleven heavy components lands in a chunk `main` statically imports even though only the lazy
+route uses them.
+
+**This reproduces the consumer's report independently.** Their figure was ~88% of a 720 kB initial;
+ours is 577 kB of a 755 kB initial — 76% on a different component set. The mechanism and the order of
+magnitude both hold, so §2's "not reproducible from artifacts on disk" is now superseded: it was not
+reproducible *there*, but it reproduces cleanly here.
+
+**What the fix is worth.** After a `services` entry point the eager cost is its closure, measured at
+86 775 B gzip against the same probe's 59 019 B DS-free floor — so the DS's contribution to the
+initial bundle falls from **135.7 KB gzip to 27.8 KB gzip, −80%**. For scale, the table's directive
+split (`basic-advanced-split-audit.md` §9) is worth 18.9 KB gzip. **A3 is worth roughly 5.7× the
+table work**, which reorders the plan in `todo.md`.
+
+### (b) Does the graph partition? Yes — two trivial cycles, both already siblings
+
+77 groups over 254 files (`components/<name>` per folder, plus `core`, `icons`, `overlay`, `config`,
+`theme` and the loose `components/*.ts` directives). Runtime edges only — `import type` and
+`{ type X }` are erased and were excluded, which matters because two of the interesting edges are
+type-only.
+
+**Strongly-connected components larger than one: exactly two.**
+
+```
+components/radio        <-> components/radio-group
+components/time-columns <-> components/time-picker
+```
+
+Both are sibling pairs that would live in the same entry point anyway, so **nothing blocks a layered
+partition** — and per-component entry points are nearly reachable too, which is more granularity than
+option D needs.
+
+The lower layers are already a clean chain: `overlay`, `config` and `theme` import nothing outside
+themselves, `core -> config`, `icons -> core`. The two edges that would have looked like problems are
+both erased: `core -> icons` and `config -> components/card` are type-only (the latter is
+`CardElevation`/`CardPadding` in `ds-config.ts`).
+
+**A concrete partition, computed rather than guessed.** A `core` seed of `config`, `core`, `icons`,
+`overlay`, `theme`, the loose `components/*.ts` directives, `button`, `field-message`, `field-group`,
+`spinner`, `menu`, `popover` has a transitive closure of **exactly itself — 12 groups, nothing pulled
+in beyond the seed.** The three services (`ToastService`, `ModalService`, `BodyScrollLockService`)
+close over **11 groups**: that core minus `theme`/`menu`/`popover`, plus `toast` and `modal`. The
+remaining **55 component groups** form the top layer.
+
+```
+core (12 groups)  <-  services (toast, modal)  <-  components (55 groups)
+```
+
+Root `public-api.ts` stays a pure re-export facade, so — per §10 — no consumer changes an import.
+
+### Not verified
+
+- The closure figures are group-level, from the static import graph; the 86 775 B is a real build of
+  the three services, so it already includes whatever the closure actually drags.
+- No consumer repo was rebuilt. The probe models the mm-broker shape; a consumer whose *eager* root
+  needs a component rather than a service pays more, and that is the case §7 named as D's trigger.
+- Whether the 55-group top layer wants to be one entry point or many is a separate design call.
