@@ -236,6 +236,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
   `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent`, `TableComponent`,
+  `LoadingOverlayComponent` and `ToastRegionComponent` all gained members for the inputs and outputs
+  above, and `DsPanelHeaderTemplateDirective`,
+  `DsPanelFooterTemplateDirective` and `DsGroupLabelTemplateDirective` are new classes.
+  Subclassing a DS component is unsupported but consumers do it, and a
+  member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
+  if you meant to replace ours — the compiler enumerates every collision, so building after the
+  upgrade is the whole check.
 - **BREAKING for code that CONSTRUCTS a `ToastEntry`: `durationMs` is now a required
   `readonly number`.** The field did not exist on the type before, so it arrives required rather
   than widened: an object literal typed as `ToastEntry` — a test double, a hand-rolled region, a
