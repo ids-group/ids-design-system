@@ -481,7 +481,7 @@ export class SelectComponent
         return;
       }
       // A native <select> commits as you type without opening, so the value changes under
-      // the closed trigger. Has to be handled here: this branch returns.
+      // the closed trigger.
       if (this.handleTypeAhead(key)) {
         event.preventDefault();
         this.pickActive();

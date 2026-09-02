@@ -28,7 +28,7 @@ export class ToastComponent {
   readonly variant = input<ToastVariant>('info');
   /** Optional bold heading above the message. */
   readonly title = input<string>('');
-  /** Body text of the toast — the same field `ToastOptions.body` carries. */
+  /** The same field `ToastOptions.body` carries, so a specimen and a raised toast agree. */
   readonly body = input<string>('');
   /** Show a close button that emits `closed`. */
   readonly dismissible = input(false, { transform: booleanAttribute });

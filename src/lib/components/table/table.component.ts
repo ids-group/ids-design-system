@@ -1202,11 +1202,9 @@ export class TableComponent<T extends object> {
       return 'Loading…';
     }
     const events = this.eventMessages();
-    // The export line holds the region only until the events line has something NEW to say,
-    // then yields it back. Compared against a snapshot instead of clearing the status,
-    // because this is a computed and a computed cannot write. That also settles how long
-    // "Export failed" survives: until the reader does something that speaks, not a guessed
-    // number of milliseconds.
+    // The export line holds the region until the events line has something NEW to say, so
+    // "Export failed" survives until the reader moves on rather than for a guessed interval.
+    // Compared against a snapshot rather than cleared, because a computed cannot write.
     if (this.exportStatus() && events === this.eventsAtExport()) {
       return this.exportStatus();
     }
@@ -1491,11 +1489,10 @@ export class TableComponent<T extends object> {
   constructor() {
     this.watchPointer();
 
-    // The scrim starts below the header, so it needs the header's height. Measured and not
-    // summed from the padding and line-height: `vertical-align: middle` on the inline-flex
-    // label extends the line box past the strut by a font-metric amount no calc() can carry,
-    // and a sum is blind to a taller control in the header. Re-measured per loading episode,
-    // which is when the value is read.
+    // The scrim starts below the header, so it needs the header's height. Measured, not summed
+    // from padding and line-height: `vertical-align: middle` on the inline-flex label extends
+    // the line box past the strut by a font-metric amount no calc() can carry, and a sum is
+    // blind to a taller control in the header.
     effect(() => {
       if (!this.isOverlayLoading()) {
         return;

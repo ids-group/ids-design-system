@@ -63,8 +63,6 @@ export class DocsSectionComponent {
 
     return keys;
   });
-  /** The services this section documents: every one declared in the anchor's own
-   *  folder, plus the explicit `serviceKeys` extras. */
   protected readonly serviceNames = computed(() => {
     if (!this.api()) {
       return [];

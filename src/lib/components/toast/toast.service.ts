@@ -95,9 +95,7 @@ export class ToastService {
       durationMs: 0,
     });
 
-    // The duration goes to the region for the reason given on `add()` above: run from
-    // here it burns down while the toast is still queued, and the result is spliced out
-    // of the queue unseen.
+    // The duration goes to the region, for the reason given on `add()` above.
     source.then(
       (value) => {
         const successBody =
@@ -173,9 +171,8 @@ export class ToastService {
     this.regionRef = this.overlayRef.attach(
       new ComponentPortal(ToastRegionComponent),
     );
-    // A configured 0 is forwarded, not skipped: since the region's own default became
-    // a cap, 0 is the only way left to ask for an uncapped stack, and swallowing it
-    // would silently hand that consumer the default instead.
+    // `>= 0`, not truthiness: 0 is the only way to ask for an uncapped stack, so it has
+    // to reach the region rather than read as "unset".
     const maxVisible = this.toastConfig?.maxVisible;
     if (typeof maxVisible === 'number' && maxVisible >= 0) {
       this.regionRef.setInput('maxVisible', maxVisible);
@@ -187,8 +184,8 @@ export class ToastService {
    *  every overlay host `popover="manual"`, and the browser's top layer paints in the
    *  order things were shown, ignoring z-index. Re-showing the host is the only lever.
    *
-   *  Scrimmed overlays only — the published scale puts `--layer-tooltip` above the
-   *  toast, so raising over a tooltip would contradict our own documentation. */
+   *  Scrimmed overlays only: the published layer scale puts `--layer-tooltip` above the
+   *  toast. */
   private keepAboveScrims(): void {
     const host = this.overlayRef?.hostElement;
     const container = host?.parentElement;
@@ -213,7 +210,7 @@ export class ToastService {
         host.hidePopover();
         host.showPopover();
       } catch {
-        // no-empty needs a body: the host may not be showing, and that is fine
+        // The host may not be showing, and hidePopover() throws when it is not.
       }
     });
     this.scrimWatcher.observe(container, { childList: true, subtree: true });

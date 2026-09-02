@@ -72,11 +72,7 @@ export interface DsConfig {
      *  `right` / `top` / `var(--space-6)`, so naming one key keeps the other two. */
     position?: Partial<DsToastPosition>;
     /** Maximum number of toasts visible at once. Extras are queued and shown as
-     *  earlier ones dismiss. Default `5`; `0` means unlimited.
-     *
-     *  A cap exists by default because an uncapped stack is worse than any of the
-     *  systems this component is measured against — Material shows ONE snackbar and
-     *  dismisses the previous, Carbon and Halstack both stack but expect a ceiling. */
+     *  earlier ones dismiss. Default `5`; `0` means unlimited. */
     maxVisible?: number;
   };
   picker?: {

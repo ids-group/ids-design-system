@@ -28,15 +28,10 @@ import {
  * or one whose own width DEPENDS on the trigger — which would feed the cut back into its own
  * input.
  *
- * That last one is asked of layout rather than derived from styles. No readable style answers it:
- * `getComputedStyle().width` is a used pixel value, so the `fit-content` a consumer wrote is not
- * readable back, and the ways a box becomes shrink-to-fit (inline-level, float, absolute without
- * both insets, a row flex item that cannot grow, a grid item not stretched) would each need their
- * own test. Pinning the trigger to zero and re-reading the host tests the thing itself: a host
- * sized by its own parent does not move, one sized by its content collapses.
- *
- * Costs a second forced layout, which is why `enabled` gates all of this and why the caller skips
- * a measure whose geometry has not changed.
+ * That last one is asked of layout, not read off a style: `getComputedStyle().width` is a used
+ * pixel value, so the `fit-content` a consumer wrote is not readable back. Pinning the trigger to
+ * zero and re-reading the host tests it directly — a host sized by its own parent does not move,
+ * one sized by its content collapses — at the cost of a second forced layout.
  */
 function hostContentWidth(
   host: HTMLElement | null,

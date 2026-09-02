@@ -44,14 +44,10 @@ export class BannerComponent {
 
   /** Announce this banner to a screen reader when it appears.
    *
-   *  Off by default, and that is the safe direction: these components are placed as
-   *  page furniture as often as they are raised in response to something, and an
-   *  `alert` region fires on INSERTION — so a static "maintenance on Sunday" strip
-   *  interrupted the reader on every client-side route change into the page. MDN says
-   *  it outright: do not use `alert` on content the user has not interacted with.
-   *
-   *  Turn it on for a banner the app raises in response to an event. For anything
-   *  transient prefer `ToastService`, which owns a live region built for the purpose. */
+   *  Off by default: an `alert` region fires on INSERTION, so a banner that is page
+   *  furniture would interrupt the reader on every route into the page. Turn it on for
+   *  one the app raises in response to an event; for anything transient prefer
+   *  `ToastService`, which owns a live region built for the purpose. */
   readonly announce = input(false, { transform: booleanAttribute });
 
   @HostBinding('attr.role')

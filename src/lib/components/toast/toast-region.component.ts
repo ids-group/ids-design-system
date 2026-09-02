@@ -14,17 +14,13 @@ import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
-// Only the floor, for when the element cannot be measured. The real value is READ
-// from the leaving node: the leave duration is a public token, so hardcoding it pulled
-// the node mid-fade when a consumer slowed it and left an invisible toast holding its
-// slot when they sped it up.
+// Only the floor: see leaveDuration(), which reads the real length off the node.
 const LEAVE_FALLBACK_MS = 180;
 
 // A toast whose clock ran out while the pointer was over it should not vanish the
 // instant the pointer leaves — the reader gets this much to see it go.
 const MIN_RESUME_MS = 600;
 
-// Material shows one snackbar at a time; five is this library's compromise.
 const DEFAULT_MAX_VISIBLE = 5;
 
 @Component({
@@ -68,15 +64,12 @@ export class ToastRegionComponent {
         ? `<ds-toast-region> maxVisible is ${this.maxVisible()}; a negative cap means unlimited, which is what 0 says. Pass 0 if that is the intent.`
         : null,
     );
-    // Raising the cap at runtime used to promote nothing until the next dismissal,
-    // because promotion only ran from the leave timer.
     effect(() => {
       this.maxVisible();
       this.drainQueue();
     });
-    // Every timer here outlives the view unless cancelled, and fires into a destroyed
-    // component: harmless in an app that never tears the root down, a stream of
-    // "N timers still in the queue" in a consumer's fakeAsync tests.
+    // An uncancelled timer fires into a destroyed component: invisible in an app that
+    // never tears the root down, a stream of "N timers still in the queue" under fakeAsync.
     inject(DestroyRef).onDestroy(() => {
       this.timers.forEach((timer) => window.clearTimeout(timer));
       this.leaveTimers.forEach((timer) => window.clearTimeout(timer));
@@ -112,12 +105,9 @@ export class ToastRegionComponent {
     this.slideNeighbours(before);
   }
 
-  /** FLIP: the insert has already moved the neighbours, so each is put back with a
-   *  transform and released to 0 with a transition.
-   *
-   *  Positioning the stack absolutely instead — the usual recipe — collapses the region
-   *  to zero height, and it lives in a CDK pane sized to its content, so that takes the
-   *  hit area with it. */
+  /** FLIP, rather than the usual absolute stack: absolute positioning collapses the region
+   *  to zero height, and it lives in a CDK pane sized to its content, so the hit area goes
+   *  with it. */
   private slideNeighbours(before: Map<number, number>): void {
     if (!before.size) {
       return;
@@ -204,7 +194,6 @@ export class ToastRegionComponent {
     this.startedAt.delete(id);
   }
 
-  /** A toast holding the pointer or the keyboard is being read, so its clock stops. */
   protected onHover(entered: boolean): void {
     this.hovered = entered;
     this.syncPause();
@@ -290,9 +279,7 @@ export class ToastRegionComponent {
   }
 
   remove(id: number): void {
-    // A stale `ToastRef.dismiss()` — the toast already gone — otherwise ran the whole
-    // leave path on an id nothing holds: two change-detection passes and an orphan
-    // timer, for a filter that matches nothing.
+    // A `ToastRef` outlives its toast, so dismiss() can arrive for an id nothing holds.
     const isVisible = this.visibleEntries().some((entry) => entry.id === id);
     const queueIndex = this.pendingQueue.findIndex((entry) => entry.id === id);
     if (!isVisible && queueIndex === -1) {
