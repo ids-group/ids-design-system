@@ -1,19 +1,23 @@
 import {
+  DestroyRef,
   ElementRef,
   Component,
   ViewEncapsulation,
+  effect,
   inject,
   input,
   signal,
 } from '@angular/core';
+import { devWarn } from '../../core/dev-warning';
 import { DS_TOAST_POSITION, DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
-// Must match the leave transition in toast.component.scss, which a consumer can
-// retune via --ds-toast-leave-duration — raise that and the node is pulled from the
-// DOM mid-fade, lower it and an invisible toast holds its slot until this elapses.
-const LEAVE_DURATION_MS = 180;
+// Only the floor, for when the element cannot be measured. The real value is READ
+// from the leaving node: the leave duration is a public token, so hardcoding it pulled
+// the node mid-fade when a consumer slowed it and left an invisible toast holding its
+// slot when they sped it up.
+const LEAVE_FALLBACK_MS = 180;
 
 // A toast whose clock ran out while the pointer was over it should not vanish the
 // instant the pointer leaves — the reader gets this much to see it go.
@@ -48,6 +52,7 @@ export class ToastRegionComponent {
 
   private readonly pendingQueue: ToastEntry[] = [];
   private readonly timers = new Map<number, number>();
+  private readonly leaveTimers = new Map<number, number>();
   private readonly remaining = new Map<number, number>();
   private readonly startedAt = new Map<number, number>();
   private hovered = false;
@@ -55,6 +60,29 @@ export class ToastRegionComponent {
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly position = inject(DS_TOAST_POSITION, { optional: true });
+
+  constructor() {
+    devWarn(() =>
+      this.maxVisible() < 0
+        ? `<ds-toast-region> maxVisible is ${this.maxVisible()}; a negative cap means unlimited, which is what 0 says. Pass 0 if that is the intent.`
+        : null,
+    );
+    // Raising the cap at runtime used to promote nothing until the next dismissal,
+    // because promotion only ran from the leave timer.
+    effect(() => {
+      this.maxVisible();
+      this.drainQueue();
+    });
+    // Every timer here outlives the view unless cancelled, and fires into a destroyed
+    // component: harmless in an app that never tears the root down, a stream of
+    // "N timers still in the queue" in a consumer's fakeAsync tests.
+    inject(DestroyRef).onDestroy(() => {
+      this.timers.forEach((timer) => window.clearTimeout(timer));
+      this.leaveTimers.forEach((timer) => window.clearTimeout(timer));
+      this.timers.clear();
+      this.leaveTimers.clear();
+    });
+  }
 
   /** Newest goes NEAREST the anchor, so the toast that just fired appears where the
    *  stack is pinned rather than at the far end of a list the reader has to hunt
@@ -146,7 +174,7 @@ export class ToastRegionComponent {
       return;
     }
     this.remaining.set(id, remaining);
-    // A toast can be armed with no user event anywhere near it — promoteFromQueue runs from a
+    // A toast can be armed with no user event anywhere near it — drainQueue runs from a
     // timeout — so this has to bank rather than trust that a pause event will follow.
     if (this.hovered || this.focusWithin) {
       this.startedAt.delete(id);
@@ -260,8 +288,16 @@ export class ToastRegionComponent {
   }
 
   remove(id: number): void {
-    this.clearCountdown(id);
+    // A stale `ToastRef.dismiss()` — the toast already gone — otherwise ran the whole
+    // leave path on an id nothing holds: two change-detection passes and an orphan
+    // timer, for a filter that matches nothing.
+    const isVisible = this.visibleEntries().some((entry) => entry.id === id);
     const queueIndex = this.pendingQueue.findIndex((entry) => entry.id === id);
+    if (!isVisible && queueIndex === -1) {
+      return;
+    }
+
+    this.clearCountdown(id);
     if (queueIndex !== -1) {
       this.pendingQueue.splice(queueIndex, 1);
 
@@ -271,18 +307,38 @@ export class ToastRegionComponent {
       return;
     }
     this.leaving.update((set) => new Set(set).add(id));
-    setTimeout(() => {
-      this.visibleEntries.update((existing) =>
-        existing.filter((entry) => entry.id !== id),
-      );
-      this.leaving.update((set) => {
-        const next = new Set(set);
-        next.delete(id);
+    this.leaveTimers.set(
+      id,
+      window.setTimeout(() => {
+        this.leaveTimers.delete(id);
+        this.visibleEntries.update((existing) =>
+          existing.filter((entry) => entry.id !== id),
+        );
+        this.leaving.update((set) => {
+          const next = new Set(set);
+          next.delete(id);
 
-        return next;
-      });
-      this.promoteFromQueue();
-    }, LEAVE_DURATION_MS);
+          return next;
+        });
+        this.drainQueue();
+      }, this.leaveDuration(id)),
+    );
+  }
+
+  /** The leave transition is a public token, so its length is whatever the consumer
+   *  set — read it off the node rather than assuming. Reduced motion zeroes it, which
+   *  is why the floor applies only when there is nothing to measure. */
+  private leaveDuration(id: number): number {
+    const node = this.toastNodes().get(id);
+    if (!node) {
+      return LEAVE_FALLBACK_MS;
+    }
+    const declared = getComputedStyle(node)
+      .transitionDuration.split(',')
+      .map((part) => parseFloat(part) * 1000)
+      .filter((ms) => !Number.isNaN(ms));
+
+    return declared.length ? Math.max(...declared) : LEAVE_FALLBACK_MS;
   }
 
   protected isLeaving(id: number): boolean {
@@ -291,7 +347,9 @@ export class ToastRegionComponent {
 
   clear(): void {
     this.timers.forEach((timer) => window.clearTimeout(timer));
+    this.leaveTimers.forEach((timer) => window.clearTimeout(timer));
     this.timers.clear();
+    this.leaveTimers.clear();
     this.remaining.clear();
     this.startedAt.clear();
     this.visibleEntries.set([]);
@@ -299,14 +357,13 @@ export class ToastRegionComponent {
     this.pendingQueue.length = 0;
   }
 
-  private promoteFromQueue(): void {
-    if (!this.pendingQueue.length) {
-      return;
+  private drainQueue(): void {
+    while (this.pendingQueue.length) {
+      const limit = this.maxVisible();
+      if (limit > 0 && this.visibleEntries().length >= limit) {
+        return;
+      }
+      this.show(this.pendingQueue.shift()!);
     }
-    const limit = this.maxVisible();
-    if (limit > 0 && this.visibleEntries().length >= limit) {
-      return;
-    }
-    this.show(this.pendingQueue.shift()!);
   }
 }

@@ -3,9 +3,12 @@
      <ds-toast> is therefore silent to a reader — it is a specimen, not an event. -->
 <div [class]="classes()">
   @if (isLoading()) {
+    <!-- aria-hidden because ds-spinner is a role="status" of its own: the message is
+         announced by ToastService, and a nested live region would speak twice. -->
     <ds-spinner
       class="icon"
       size="sm"
+      aria-hidden="true"
     />
   } @else {
     <ds-icon

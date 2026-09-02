@@ -1,4 +1,4 @@
-import { ComponentRef, Injectable, inject } from '@angular/core';
+import { ComponentRef, DestroyRef, Injectable, inject } from '@angular/core';
 import {
   Overlay,
   OverlayRef,
@@ -39,6 +39,17 @@ export class ToastService {
   private pendingAnnouncements: string[] = [];
   private pendingAssertive = false;
   private announceTimer: number | undefined;
+  private scrimWatcher: MutationObserver | null = null;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.announceTimer);
+      this.scrimWatcher?.disconnect();
+      this.overlayRef?.dispose();
+      this.overlayRef = null;
+      this.regionRef = null;
+    });
+  }
 
   show(opts: ToastOptions): ToastRef {
     this.ensureRegion();
@@ -78,7 +89,10 @@ export class ToastService {
    *  Returns `source` itself, so the caller still owns rejection handling — an
    *  un-`catch`ed call produces an unhandled rejection exactly as it would without a
    *  toast. */
-  promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T> {
+  promise<T>(
+    source: Promise<T>,
+    messages: ToastPromiseMessages<T>,
+  ): Promise<T> {
     const ref = this.show({
       body: messages.loading,
       variant: 'loading',
@@ -185,7 +199,7 @@ export class ToastService {
     if (!host || !container || typeof host.showPopover !== 'function') {
       return;
     }
-    new MutationObserver((records) => {
+    this.scrimWatcher = new MutationObserver((records) => {
       const scrimAppeared = records.some((record) =>
         [...record.addedNodes].some(
           (node) =>
@@ -205,7 +219,8 @@ export class ToastService {
       } catch {
         // no-empty needs a body: the host may not be showing, and that is fine
       }
-    }).observe(container, { childList: true, subtree: true });
+    });
+    this.scrimWatcher.observe(container, { childList: true, subtree: true });
   }
 
   private buildPositionStrategy(): GlobalPositionStrategy {

@@ -28,13 +28,13 @@ export interface ToastEntry {
   readonly action?: ToastAction;
   /** Auto-dismiss delay, counted from the moment the toast becomes VISIBLE — a
    *  queued toast must not expire while it is still waiting behind the cap.
-   *  0 = indefinite. */
+   *  `0`, and any negative, means it never expires. */
   readonly durationMs: number;
 }
 
-export interface ToastPromiseMessages {
+export interface ToastPromiseMessages<T = unknown> {
   readonly loading: string;
-  readonly success: string | ((value: unknown) => string);
+  readonly success: string | ((value: T) => string);
   readonly error: string | ((reason: unknown) => string);
 }
 

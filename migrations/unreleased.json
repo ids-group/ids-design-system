@@ -1,6 +1,26 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "toast-promise-messages-generic",
+      "kind": "type-rename",
+      "old": "ToastPromiseMessages",
+      "new": "ToastPromiseMessages<T>",
+      "appliesWhen": "You name the type explicitly, e.g. in a variable or a helper that builds the messages object. Calling toast.promise(p, {...}) inline needs no change - T is inferred.",
+      "pitfall": "The parameter defaults to unknown, so an un-parameterised annotation still compiles - and still hands your success callback `unknown`, which is the defect. Passing the type is what fixes it, not the compile.",
+      "searchHints": [
+        "ToastPromiseMessages"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "ToastPromiseMessages"
+      ],
+      "verify": "A success callback receives the resolved value with its real type: toast.promise(loadOrder(), { success: (order) => `Saved #${order.id}` }) compiles without a cast.",
+      "restore": null,
+      "note": "promise<T> declared a type parameter and then threw it away, because the messages interface hardcoded unknown. Every call site that wanted the resolved value had to cast.",
+      "action": "Annotate as ToastPromiseMessages<T> where you name the type; inline object literals need no change."
+    }
+  ],
   "informational": [
     "Typing on a closed ds-select now commits the type-ahead jump, as a native <select> does. The path existed but was unreachable, so nothing that worked before changes. NO ACTION.",
     "A chip row's guard against a parent that hugs its content was unreachable and is removed; the measurement is unchanged. NO ACTION.",

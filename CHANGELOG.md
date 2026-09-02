@@ -24,6 +24,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Eight defects the two-wave review confirmed and nobody had acted on.** The toast region and its
+  service never tore anything down, so every pending timer fired into a destroyed component — harmless
+  in a long-lived app, a stream of "N timers still in the queue" in a consumer's `fakeAsync` tests. The
+  180 ms leave timer was untracked and survived `dismissAll()`. `remove()` had no existence guard, so a
+  stale `ToastRef.dismiss()` ran the whole leave path on an id nothing held. `LEAVE_DURATION_MS` was
+  hardcoded against `--ds-toast-leave-duration`, a public token: the leave length is now READ off the
+  node, measured at 964 ms with the token set to 900, where it used to be 180 whatever the consumer
+  asked for. Raising `maxVisible` at runtime promoted nothing until the next dismissal; promotion is a
+  drain loop now. A negative `maxVisible` said the opposite of what it did and warns in dev. The
+  spinner inside a `loading` toast carried its own `role="status"`, which — now that announcements have
+  moved to the announcer — was the only live node left in there, so it is `aria-hidden`. And
+  `ToastPromiseMessages` is generic, so `promise<T>` stops discarding `T` and a `success` callback
+  receives the resolved value instead of `unknown`.
+
+
 - **A modal, drawer, confirm or bottom sheet opened after a toast covered it and swallowed its action
   button.** `--layer-toast: 1500` could not prevent it and never could: CDK 21 gives every overlay host
   `popover="manual"` and calls `showPopover()`, so hosts live in the browser's top layer, which paints
