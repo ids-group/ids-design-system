@@ -7827,7 +7827,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'info'",
         "required": false,
-        "description": "Severity — drives colour, the default icon/spinner and the ARIA role/live."
+        "description": "Severity — drives colour and the default icon or spinner."
       },
       {
         "name": "title",
