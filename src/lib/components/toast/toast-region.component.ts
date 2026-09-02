@@ -1,4 +1,5 @@
 import {
+  ElementRef,
   Component,
   ViewEncapsulation,
   inject,
@@ -26,10 +27,10 @@ const MIN_RESUME_MS = 600;
   host: {
     role: 'region',
     'aria-label': 'Notifications',
-    '(mouseenter)': 'pauseAll()',
-    '(mouseleave)': 'resumeAll()',
-    '(focusin)': 'pauseAll()',
-    '(focusout)': 'resumeAll()',
+    '(mouseenter)': 'onHover(true)',
+    '(mouseleave)': 'onHover(false)',
+    '(focusin)': 'onFocusWithin(true)',
+    '(focusout)': 'onFocusWithin($event)',
   },
 })
 export class ToastRegionComponent {
@@ -44,8 +45,10 @@ export class ToastRegionComponent {
   private readonly timers = new Map<number, number>();
   private readonly remaining = new Map<number, number>();
   private readonly startedAt = new Map<number, number>();
-  private paused = false;
+  private hovered = false;
+  private focusWithin = false;
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly position = inject(DS_TOAST_POSITION, { optional: true });
 
   /** Newest goes NEAREST the anchor, so the toast that just fired appears where the
@@ -77,7 +80,16 @@ export class ToastRegionComponent {
       return;
     }
     this.remaining.set(id, remaining);
+    // A toast can be armed with no user event anywhere near it — promoteFromQueue runs from a
+    // timeout — so this has to bank rather than trust that a pause event will follow.
+    if (this.hovered || this.focusWithin) {
+      this.startedAt.delete(id);
+
+      return;
+    }
     this.startedAt.set(id, Date.now());
+    const existing = this.timers.get(id);
+    if (existing !== undefined) window.clearTimeout(existing);
     this.timers.set(
       id,
       window.setTimeout(() => this.remove(id), remaining),
@@ -98,11 +110,36 @@ export class ToastRegionComponent {
    *  clock stops. Without this the only control for an `action` can be destroyed
    *  while the user is reaching for it — and the region sits last in tab order, so
    *  reaching it takes longer than the default five seconds on any real page. */
-  protected pauseAll(): void {
-    if (this.paused) {
+  protected onHover(entered: boolean): void {
+    this.hovered = entered;
+    this.syncPause();
+  }
+
+  // `focusout` bubbles, so it also fires when focus moves BETWEEN elements inside the region —
+  // tabbing from the action to the close button. Without the containment check that reads as
+  // leaving, and every round trip re-floors the remainder at MIN_RESUME_MS.
+  protected onFocusWithin(event: FocusEvent | true): void {
+    this.focusWithin =
+      event === true ||
+      (event.relatedTarget instanceof Node &&
+        this.host.nativeElement.contains(event.relatedTarget));
+    this.syncPause();
+  }
+
+  private syncPause(): void {
+    const shouldPause = this.hovered || this.focusWithin;
+    if (shouldPause === this.paused) {
       return;
     }
-    this.paused = true;
+    if (shouldPause) this.pauseAll();
+    else this.resumeAll();
+  }
+
+  private get paused(): boolean {
+    return this.timers.size === 0 && this.remaining.size > 0;
+  }
+
+  private pauseAll(): void {
     const now = Date.now();
     for (const [id, timer] of this.timers) {
       window.clearTimeout(timer);
@@ -113,11 +150,7 @@ export class ToastRegionComponent {
     this.timers.clear();
   }
 
-  protected resumeAll(): void {
-    if (!this.paused) {
-      return;
-    }
-    this.paused = false;
+  private resumeAll(): void {
     for (const [id, left] of [...this.remaining]) {
       this.arm(id, left);
     }
@@ -196,7 +229,6 @@ export class ToastRegionComponent {
     this.timers.clear();
     this.remaining.clear();
     this.startedAt.clear();
-    this.paused = false;
     this.visibleEntries.set([]);
     this.leaving.set(new Set());
     this.pendingQueue.length = 0;
