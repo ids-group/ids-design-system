@@ -65,10 +65,16 @@ function cardHtml({ name, group, viewport, mode, primary }) {
     body{margin:0;padding:24px;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
     /* auto-fit (not auto-fill): empty tracks collapse, so a 1-2 story card
        fills the width instead of stranding stories in a half-width left
-       column beside phantom empty columns */
-    .ds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;align-items:start}
+       column beside phantom empty columns.
+       The 400px minimum is measured, not chosen: at 320 the grid took three columns of the 1200
+       and every one of Stat's three stories overflowed its cell. 400 gives two columns and zero
+       overflow across the set. */
+    .ds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px;align-items:start}
     .ds-grid.ds-col{grid-template-columns:1fr}
-    .ds-cell{border:1px solid #e5e7eb;border-radius:8px;padding:12px;min-width:0;overflow:hidden;transform:translateZ(0)}
+    /* min-width:0 so a grid item can shrink below its content, but NOT overflow:hidden — that
+       silently cut the third tile off Stat's SIZES row mid-number. A story wider than its cell
+       scrolls inside it instead of disappearing. */
+    .ds-cell{border:1px solid #e5e7eb;border-radius:8px;padding:12px;min-width:0;overflow-x:auto;transform:translateZ(0)}
     .ds-cell>h4{margin:0 0 8px;font:600 12px system-ui;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
     .ds-single{transform:translateZ(0)}
   </style>
