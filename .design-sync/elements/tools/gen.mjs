@@ -425,7 +425,6 @@ ${sections.map((s) => `  ['${s.tag}', ${s.localName}],`).join('\n')}
 
 let app: Promise<{ injector: Injector }> | null = null;
 
-/** One ApplicationRef for the page, whichever registry asked for it first. */
 function application(): Promise<{ injector: Injector }> {
   // A router with no routes, because two docs sections link out with routerLink and RouterLink
   // injects the Router whether or not anything navigates. Without it those two throw at construction

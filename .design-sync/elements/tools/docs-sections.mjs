@@ -16,7 +16,6 @@ const ts = createRequire(join(repo, 'package.json'))('typescript');
 
 const REGISTRY_FILE = join(repo, 'ds-docs', 'src', 'app', 'group-pages.ts');
 
-/** `./sections/components/button/button.section` → `components/button`. */
 const slugOf = (importPath) =>
   importPath.replace(/^\.\/sections\//, '').replace(/\/[^/]+$/, '');
 
