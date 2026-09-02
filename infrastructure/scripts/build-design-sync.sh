@@ -108,11 +108,19 @@ rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
 grep -q 'url("./' .design-sync/upload/fonts/fonts.css || { echo "fonts.css still points outside its own directory"; exit 1; }
 echo "Self-contained: $faces face(s), React vendored, styles.css and README generated"
 
-# Every component gets a card now, so the count IS the component count — a card with no showcase
-# behind it can no longer exist, because build-cards refuses to write one (and check-manual-surface
-# fails the PR before that). Eleven components shipped cardless under the previous design.
+# A component publishes one card per documented block, so cards outnumber components — but every
+# component must still have at least one, and a declaration beside it. Eleven shipped with no card
+# at all under the design before last.
 cards=$(find .design-sync/upload/components -name '*.html' | wc -l)
 declarations=$(find .design-sync/upload/components -name '*.d.ts' | wc -l)
-[ "$cards" = "$declarations" ] || { echo "Card/declaration mismatch: $cards card(s) against $declarations declaration(s)"; exit 1; }
+cardless=0
+for decl in $(find .design-sync/upload/components -name '*.d.ts'); do
+  dir=$(dirname "$decl")
+  if [ -z "$(find "$dir" -name '*.html' -print -quit)" ]; then
+    echo "No card for $(basename "$dir")"
+    cardless=$((cardless + 1))
+  fi
+done
+[ "$cardless" = "0" ] || { echo "$cardless component(s) would ship with no card at all"; exit 1; }
 sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html | sort -u | wc -l)
-echo "Upload artefacts: $cards card(s) over $sections ds-docs section(s)"
+echo "Upload artefacts: $cards card(s) for $declarations component(s) over $sections ds-docs section(s)"
