@@ -84,6 +84,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Six connected-panel tokens did nothing when scoped to one picker.** `--ds-option-padding`,
+  `-gap`, `-radius`, `-row-gap`, `--ds-option-bg-color-active` and `--ds-dropdown-panel-maxh` are read
+  on the panel, which the CDK portals outside the component, so they only ever resolved from a global
+  declaration: `ds-select { --ds-option-padding: … }` was silently ignored while
+  `ds-select { --ds-option-selected-bg-color: … }` beside it worked, because that one was on the
+  forwarded list and these were not. They join the shared list every connected picker forwards, so the
+  family behaves one way. `--ds-dropdown-panel-maxh` was also the one token `ds-autocomplete` forwarded
+  and its two siblings did not. Nothing moves unless you had written one of these on an element, where
+  it now takes effect — if you reached for a global declaration because the scoped one did nothing, the
+  scoped one is the narrower fix.
+
 - **`ds-split-button`'s hover left its label unreadable inside a status zone.** The hover background defaulted to the family's readable ON-TINT colour — the one meant for text on light surfaces — and this was the only place in the library using it as a background, so the label landed at 1.87:1 on `success` in dark and 2.46:1 on `error`. It now defaults to `--accent-hover`, the family base mixed toward black in light and white in dark, so the hover follows the rest state instead of jumping to another hue: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31. `--ds-split-button-bg-hover-color` still overrides it.
 
   This does not close the whole problem. The label colour on a family's solid background already falls below 4.5:1 at REST for `success` (3.30) and `secondary` (3.31), in both themes and on every solid button — a palette question, not this component's.

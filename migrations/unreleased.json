@@ -231,7 +231,8 @@
     "Typing on a closed ds-select now commits the type-ahead jump, as a native <select> does. The path existed but was unreachable, so nothing that worked before changes. NO ACTION.",
     "A chip row's guard against a parent that hugs its content was unreachable and is removed; the measurement is unchanged. NO ACTION.",
     "A queued toast is not lost: it appears as an earlier one dismisses. The stack also animates when a toast is added rather than jumping, and --ds-toast-shift-duration and --ds-toast-shift-easing tune that. NO ACTION.",
-    "Info, success and loading toasts raised through ToastService are now announced at all, where before only error and warning were. NO ACTION."
+    "Info, success and loading toasts raised through ToastService are now announced at all, where before only error and warning were. NO ACTION.",
+    "Six tokens the connected panel reads - --ds-option-padding, -gap, -radius, -row-gap, --ds-option-bg-color-active and --ds-dropdown-panel-maxh - now take effect when scoped to one picker (ds-select { ... }), where before only a global declaration reached them. The panel is portaled outside the component, so a host-scoped value arrives only if the token is on the forwarded list, and these six were not; --ds-dropdown-panel-maxh reached ds-autocomplete and neither of its siblings. NO ACTION, and nothing moves on its own: it changes only where such a declaration is already written on an element and was being ignored. If you widened one to a global rule because the scoped form did nothing, the scoped form is now the narrower way to say it."
   ],
   "deleteList": []
 }
