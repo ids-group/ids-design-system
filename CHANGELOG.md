@@ -68,7 +68,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `slideNeighbours`, `toastNodes`, `measureTops` and `leaveDuration`, and **renamed
   `promoteFromQueue` to `drainQueue`**; an override of the old name now runs never, so move it.
   `ToastService` gained `announcer`, `pendingAnnouncements`, `pendingAssertive`, `announceTimer`,
-  `scrimWatcher`, `announce` and `keepAboveScrims`. `TableComponent` gained `eventsAtExport`,
+  `scrimWatcher`, `announce` and `keepAboveScrims`, and **lost `position`** with the token it
+  read. `TableComponent` gained `eventsAtExport`,
   `eventMessages`, `tableHead`, `hostElement` and `announceExport`; its inputs, outputs, models
   and exported types are unchanged. `BannerComponent` and `AlertComponent` each gained
   `announce`, and their `ariaRole` and `ariaLive` now return `null` as well — a subclass that
