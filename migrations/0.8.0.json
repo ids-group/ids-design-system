@@ -158,9 +158,9 @@
       "kind": "behavior",
       "old": "ds-time-picker",
       "new": null,
-      "action": "None unless you want the old 8px corner: `ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }`. The hook is forwarded onto the portaled overlay pane, so a per-instance override does reach the panel.",
+      "action": "NOTHING you can configure in this version — the `--ds-time-picker-panel-radius` hook shipped INERT, so setting it has no effect and the restore recipe this entry originally carried did nothing. If the square corner matters, take 0.10.3, where the panel finally draws the 12px it was meant to.",
       "appliesWhen": "The open dropdown only. The trigger radius is unchanged and still resolves through `--ds-time-picker-trigger-radius`.",
-      "note": "The panel drew the CONTROL radius (8px) and draws the panel role now (12px). It was the last floating panel in the library still doing so, and it rendered different corners beside its own sibling ds-date-picker in the same form.",
+      "note": "INTENDED: the panel drew the CONTROL radius (8px) and should draw the panel role (12px) — it was the last floating panel in the library on the control radius, and it rendered a different corner beside its own sibling ds-date-picker in the same form. WHAT ACTUALLY SHIPPED in 0.8.0: the rule read `var(--_time-picker-panel-radius)`, a private token declared on `:host`, and the CDK portals this panel out of that host — so the `var()` never resolved and `border-radius` fell back to its initial `0`. The panel rendered SQUARE, neither the old 8px nor the intended 12px, and the public hook was forwarded onto the pane but read by no rule, hence inert. It stayed that way through 0.10.2; corrected in 0.10.3 (`portaled-panel-focus-indicator`), which moved the rule onto the public token.",
       "searchHints": [
         "ds-time-picker",
         "--ds-time-picker-panel-radius",
@@ -169,8 +169,8 @@
         "time-picker"
       ],
       "surface": "style",
-      "restore": "ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }",
-      "verify": "A time picker beside a date picker draws the same corner, or the app pins the old 8px deliberately."
+      "restore": "No token-based restore exists in this version, the hook being inert. Stopgap only: `.time-panel.time-panel { border-radius: var(--radius-md); }` in a GLOBAL stylesheet. Two things make that shape necessary — the panel is portaled out of the component, so scoping the rule under `ds-time-picker` cannot match it; and emulated encapsulation shims the DS rule to `.time-panel[_ngcontent-…]` at (0,2,0), which a single `.time-panel` at (0,1,0) loses to, hence the doubled class. Drop the override on 0.10.3, which its own entry also tells you to do.",
+      "verify": "Open the time picker on this version and the panel has SQUARE corners. That is the defect itself, not a misconfiguration, and no token setting changes it. On 0.10.3+ the same panel draws the rounded corner ds-date-picker's calendar already had."
     },
     {
       "id": "focus-partial-needs-use-line",
