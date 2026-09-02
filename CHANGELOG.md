@@ -3030,7 +3030,7 @@ genuine gap worth reporting.
   trigger's radius is untouched.
   — **Correction: this shipped BROKEN, and the text above is the intent only.** The rule read a private
   `:host` token that the portaled panel cannot see, so `border-radius` fell back to its initial `0`: the
-  panel rendered SQUARE, and the hook — with the restore recipe above — did nothing. Fixed in 0.10.3.
+  panel rendered SQUARE, and the hook — with the restore recipe above — did nothing.
 - **A path change that only mirrors the reader's position no longer resets the content scroll.** A docs shell whose scroll spy rewrites `/area/section` as the user scrolls hit a loop: the rewrite looked like a page change, the layout scrolled to top, the spy saw the first section again and rewrote the path back. Such a navigation must now carry `state: { dsSamePage: true }`, which the layout skips for both the scroll reset and the rail close. Read from `Router.lastSuccessfulNavigation()` — `getCurrentNavigation()` is already cleared when `NavigationEnd` reaches a subscriber.
 - **Closing the rail by NAVIGATING no longer pulls focus back to the burger.** Restoring focus to the trigger is right for a dismissal — Escape, the scrim — and wrong for a link: the reader activated it, so focus belongs wherever the router put it, and handing it back announced "Open navigation" instead of the page they asked for. Dismissal keeps the restore; the navigation and breakpoint paths now clear `railOpen` directly. The breakpoint path had also depended on `compact` being written one line earlier to avoid focusing a trigger that is hidden on desktop — that ordering trap is gone with it.
 - **A closed compact `ds-app-layout` rail no longer holds focus behind the screen.** Below the
