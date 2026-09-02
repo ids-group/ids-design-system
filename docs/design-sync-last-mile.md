@@ -54,10 +54,36 @@ agent reading our declarations cannot discover that a modal takes an `impact` bl
 `subtext` would silently render nothing against a current bundle: not because the prop was removed,
 but because the elements route never had one.
 
-**Fix:** parse `ng-content select="[x]"` per template in `gen.mjs`, emit one optional
-`React.ReactNode` prop per slot, and render it as a child wrapped in an element carrying that
-attribute. The templates are the source of truth, so this stays as drift-proof as the rest of the
-route. This is the one change that makes the generated surface at least as good as the port's.
+**DONE** (`fc117ef8`): the generator reads `ng-content select="[x]"` per template and emits one
+`React.ReactNode` prop per slot, rendered as a `display: contents` wrapper carrying the attribute —
+neither a block nor an inline element is right everywhere, and a `div` inside `[dsButtonSubtext]`
+would break the button's own line box. 55 slots across 26 components, six renamed where an input
+already held the name: a component taking `brand` as a string and `[brand]` as markup now offers
+`brand` and `brandContent`. Each doc names the attribute and, where the slot sits behind an `@if`,
+the input that opens it.
+
+Verified in a real browser against the built bundle: six slots claimed by the right internal element
+(`alert` → `.a-actions`, `table` → `.toolbar-slot`, `stat` → `.value`, `button` → `.subtext-slot`,
+`list-item` → `.leading`, `page-header` → `.actions`). The attribute is emitted lowercased on
+purpose — React warns on any other case, HTML lowercases it regardless, and attribute names match
+case-insensitively, so `[dsStatValue]` still claims a node carrying `dsstatvalue`.
+
+### P8 — an input-gated slot cannot work on the React the host vendors
+
+Measured with the same probe: `<Modal staticPreview actions={…}>` renders nothing at all on **React
+18.3.1**, the version in the project's `_vendor/react.js`. The element's `staticPreview` never
+arrives — React 18 can only assign a custom element's properties from a layout effect, after
+`connectedCallback`, by which point Angular has created the view and discarded the light DOM. React
+19 assigns them while the element is still detached, which is why the same case works there.
+
+So the slots behind an input-gated `@if` — Modal's and ModalCard's five each, `sidenav`'s
+`[dsBrandName]` — are unreachable in the design host today. The doc comment naming the opening input
+is necessary but not sufficient.
+
+The narrow fix worth trying: on React 18, put PRIMITIVE inputs (string, number, boolean) into the
+initial `createElement` props so they land as attributes before connect, leaving objects and arrays
+to the effect where they would otherwise stringify. `staticPreview` and `open` are booleans, so that
+covers the gates that matter. Not attempted.
 
 ### P2 — the per-prop documentation is dropped
 
@@ -66,8 +92,9 @@ Every Angular input carries a `/** */` describing it — `CardComponent.elevatio
 `CardProps` in the generated wrappers is three bare lines. The port's declarations carried a
 description per prop.
 
-**Fix:** carry the leading doc comment from each input/output into the generated interface.
-Mechanical — the comment sits immediately above the declaration `gen.mjs` already reads.
+**DONE** (`fc117ef8`): every input's and output's own doc comment is carried into the generated
+interface, flattened to one line. A host-directive input takes the comment from the directive that
+declares it.
 
 ### P3 — `@replaces` is gone, so the adherence lint cannot be regenerated
 
@@ -147,12 +174,11 @@ the bundle is replaced.
 
 ## Order of work
 
-1. **P1** — slots in `gen.mjs`. Until this lands, a re-sync is a regression in what the agent can
-   build, however current the bundle is.
-2. **P2** — carry the input docs.
-3. **P4** — `build-cards.mjs` for previews, card HTML, `.jsx`, `.prompt.md`, `_ds_sync.json`.
-4. **P3** — the `replaces` mapping as data, and the oxlint config generated from it.
-5. **P5** — `viewport` as data.
+1. ~~**P1** — slots in `gen.mjs`~~ · ~~**P2** — the input docs~~ — both in `fc117ef8`.
+2. **P4** — `build-cards.mjs` for previews, card HTML, `.jsx`, `.prompt.md`, `_ds_sync.json`.
+3. **P3** — the `replaces` mapping as data, and the oxlint config generated from it.
+4. **P5** — `viewport` as data.
+5. **P8** — primitive inputs as initial attributes, so an input-gated slot works on React 18.
 6. **P6** — the doc-versus-API gate.
 7. **P7** — wire generation into `after-release`; publishing stays manual.
 
