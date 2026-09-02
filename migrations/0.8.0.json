@@ -154,13 +154,13 @@
       "verify": "Every menu that uses ds-menu-divider reads as intended with the line taking one row's place instead of adding a second gap."
     },
     {
-      "id": "time-picker-panel-radius-now-panel-role",
+      "id": "time-picker-panel-lost-its-radius",
       "kind": "behavior",
       "old": "ds-time-picker",
       "new": null,
       "action": "Nothing to configure: `--ds-time-picker-panel-radius` is inert here, so setting it has no effect. Take the square panel, or override it from your own global CSS as `restore` shows.",
       "appliesWhen": "The open dropdown only. The trigger radius is unchanged and still resolves through `--ds-time-picker-trigger-radius`.",
-      "note": "INTENDED: move the panel off the CONTROL radius (8px) onto the panel role, since it was the last floating panel on the control radius and drew a different corner from its own sibling ds-date-picker in the same form. WHAT SHIPPED: the rule reads a private token declared on `:host`, which the portaled panel cannot see, so `border-radius` falls back to its initial `0` and the panel renders SQUARE — neither the old 8px nor the intended 12px. The public hook is forwarded onto the pane but read by no rule, so it changes nothing.",
+      "note": "The panel renders SQUARE. It had drawn the CONTROL radius (8px), out of step with every other floating surface; the move onto the panel role reads a private token declared on `:host`, which the portaled panel cannot see, so `border-radius` falls back to its initial `0` — neither the old 8px nor the 12px intended. The new `--ds-time-picker-panel-radius` hook is forwarded onto the pane but read by no rule, so it changes nothing.",
       "pitfall": "A private `--_*` token declared on `:host` does not reach a panel the CDK portals out of that host, and an unresolvable `var()` silently becomes the property's initial value — `0` for a radius. Read the PUBLIC `--ds-*` token at the use site instead.",
       "searchHints": [
         "ds-time-picker",

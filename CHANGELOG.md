@@ -2983,6 +2983,13 @@ genuine gap worth reporting.
 - **Fields no longer expose a `protected messageState`;** the resolved `message` (text + state) and
   `invalidResolved` replace it. Only reachable by subclassing a field component, which is not a
   supported extension point, but noted for parity with the class-member changes in 0.7.0.
+- **The `ds-time-picker` panel lost its corner radius.** It had drawn `--radius-md` (8px) while every
+  other floating surface — menus, popovers, cards, `ds-date-picker`'s own calendar — resolves the panel
+  role. The move onto that role reads a private `:host` token, which a CDK-portaled panel cannot see, so
+  `border-radius` resolves to its initial `0` and the panel renders SQUARE. The new
+  `--ds-time-picker-panel-radius` hook is inert for the same reason. Force the corner back with a global
+  `.time-panel.time-panel { border-radius: var(--radius-md); }` — a rule scoped under `ds-time-picker`
+  cannot reach the portaled panel. The trigger's radius is untouched.
 
 ### Fixed
 
@@ -3018,19 +3025,6 @@ genuine gap worth reporting.
   layout's open rail instead of beneath it. The host now sets `isolation: isolate`, giving each
   `ds-app-layout` its own stacking context — the same fix `ds-drawer` already carries. Nothing changes
   for a full-viewport shell with no layout embedded inside it.
-- **The `ds-time-picker` panel drew the CONTROL radius, so it did not match the date picker beside it.**
-  Its dropdown was the one floating panel left on `--radius-md` (8px) while every other surface — menus,
-  popovers, cards, modals, and `ds-date-picker`'s own calendar — resolves the panel role. Two pickers in
-  one form therefore rendered different corners. The panel now reads
-  `var(--ds-time-picker-panel-radius, var(--ds-radius-panel))`, and the new hook is
-  FORWARDED onto the portaled pane — a token declared without being forwarded is dead for per-instance
-  overrides, which is exactly the `--ds-overlay-enter-scale` bug fixed elsewhere in this release. It was
-  also the only property on that element without a hook, since fill, border and shadow all had one.
-  Restore the old corner with `ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }`; the
-  trigger's radius is untouched.
-  — **Correction: this shipped BROKEN, and the text above is the intent only.** The rule read a private
-  `:host` token that the portaled panel cannot see, so `border-radius` fell back to its initial `0`: the
-  panel rendered SQUARE, and the hook — with the restore recipe above — did nothing.
 - **A path change that only mirrors the reader's position no longer resets the content scroll.** A docs shell whose scroll spy rewrites `/area/section` as the user scrolls hit a loop: the rewrite looked like a page change, the layout scrolled to top, the spy saw the first section again and rewrote the path back. Such a navigation must now carry `state: { dsSamePage: true }`, which the layout skips for both the scroll reset and the rail close. Read from `Router.lastSuccessfulNavigation()` — `getCurrentNavigation()` is already cleared when `NavigationEnd` reaches a subscriber.
 - **Closing the rail by NAVIGATING no longer pulls focus back to the burger.** Restoring focus to the trigger is right for a dismissal — Escape, the scrim — and wrong for a link: the reader activated it, so focus belongs wherever the router put it, and handing it back announced "Open navigation" instead of the page they asked for. Dismissal keeps the restore; the navigation and breakpoint paths now clear `railOpen` directly. The breakpoint path had also depended on `compact` being written one line earlier to avoid focusing a trigger that is hidden on desktop — that ordering trap is gone with it.
 - **A closed compact `ds-app-layout` rail no longer holds focus behind the screen.** Below the
