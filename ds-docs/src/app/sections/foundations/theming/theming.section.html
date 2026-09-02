@@ -289,24 +289,25 @@
       -panel
     </code> squares
     <strong>
-      every
-    </strong> rounded surface. It used to leave five behind —
-    thirty-three small affordances read
-    <code class="t-mono-inline">
-      --radius-sm
-    </code> directly, and the shared
-    dropdown panel read <code class="t-mono-inline"> --radius-md </code>; both
-    now resolve their role.
+      most
+    </strong> rounded surfaces, and it is worth knowing which ones it does not.
+    Thirty-one declarations across nineteen components still read the scale
+    directly rather than a role — the menu panel, the toast, split-button and
+    button-group segment corners, the sidenav footer, the colour-picker swatches
+    and a dozen others. Zeroing the three roles leaves those at their scale
+    value. <code class="t-mono-inline"> --radius-pill </code> is out of scope by
+    design: switch tracks, avatars and status dots are round by shape, not by
+    style.
   </p>
 
   <p class="block-desc t-s">
     <strong>
-      Zeroing the SCALE instead is the blunter option, and it reaches one more
-      thing:
+      Zeroing the SCALE instead is the blunter option, and it reaches
+      everything the roles miss:
     </strong>
-    the focus-ring radii, which deliberately follow the scale rather than a role
-    — a ring traces a box, it is not a surface a brand designs. Use it if you
-    want square focus rings too.
+    those thirty-one declarations, plus the focus-ring radii, which deliberately
+    follow the scale rather than a role — a ring traces a box, it is not a
+    surface a brand designs. Use it if you want the corners squared everywhere.
   </p>
 
   <p class="block-desc t-s">

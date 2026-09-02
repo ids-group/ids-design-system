@@ -11,16 +11,13 @@ $families: secondary, tertiary, error, success, warning;
 // per instance. With no attribute, --accent-* stays the primary family (see
 // themes/_semantic.scss), so the default theme is unchanged.
 
-// Every pointer carries a fallback to a role the family is guaranteed to have.
-// A missing role is not a wrong colour, it is a GUARANTEED-INVALID value: the whole
-// declaration reading it becomes invalid at computed-value time and resets to `unset`,
-// so a label rendered as body text with nothing in the console. That is how
-// --error/success/warning-strong stayed broken from the day ds-color shipped. The
-// fallback cannot come from @property either: its initial-value may not contain var(),
-// so registering these would mean hard-coding a literal per token in the theme layer,
-// and two of the pointers are box-shadow lists rather than colours. Measured both,
-// 2026-09-02. check-color-families.mjs still fails the build on a missing role — this
-// only decides what a consumer sees if one ever slips past it.
+// Each pointer ends in a fallback, because a role a family does not define is not a wrong
+// colour: it is a GUARANTEED-INVALID value, so every declaration reading the pointer becomes
+// invalid at computed-value time and resets to `unset` — a label rendered as body text, a fill
+// rendered transparent, and nothing in the console either way. Where the fallback leads differs
+// by pointer and is deliberate: -hover, -pressed and -strong fall back to the family's own base
+// colour, the tint pointers to the family's -muted, and -on and the two focus pointers to the
+// theme-wide role, since no family-shaped answer exists for them.
 @mixin family-vars($family) {
   --accent: var(--#{$family});
   --accent-hover: var(--#{$family}-hover, var(--#{$family}));

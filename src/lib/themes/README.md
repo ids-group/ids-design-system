@@ -69,13 +69,44 @@ On-fill text is the literal `white`, or the theme-stable `--static-ink` where th
 ### Option B — à la carte (advanced, opt-in global side-effects)
 
 ```scss
+@use 'styles/breakpoints' as bp;
 @use 'themes/base-palette';
 @use 'styles/theme-activation'; // light at :root + dark at [data-theme='dark']
 @use 'styles/tokens';
+@use 'styles/tokens-charts';
 @use 'styles/fonts';
 @use 'styles/reset';
-// …
+@use 'styles/typography';
+@use 'styles/link';
+@use 'styles/focus';
+@use 'styles/ds-color';
+@use 'styles/layout-utils';
+@use 'styles/page-grid';
+@use 'styles/scrollbar';
+@use 'styles/icon-base';
+@use 'styles/dropdown-overlay';
+@use 'styles/toast-overlay';
+@use 'styles/surface-motion';
+@use 'styles/overlay-motion';
+@use 'styles/skeleton-shimmer';
+
+@include bp.emit-vars; // REQUIRED, and not implied by the @use above
 ```
+
+That is the whole list `styles/ds` forwards — it is written out rather than trailed off, because
+the parts that are easy to leave out are the ones that fail silently:
+
+- **`bp.emit-vars` is a separate call.** `@use 'styles/breakpoints'` alone emits nothing; the mixin
+  is what writes `--bp-*`. Without it `ds-container` reads `var(--bp-sm|md|lg)` with no fallback, so
+  `max-width` is invalid at computed-value time and `size="sm|md|lg"` silently goes full-bleed. The
+  default `size="xl"` resolves from `tokens` and looks fine, which is what makes the omission hard
+  to spot.
+- **`ds-color`** is what defines the `[ds-color="…"]` zones. Leave it out and the accent never
+  recolours — no error, just the primary palette everywhere.
+- **`focus`** carries the focus-ring roles; without it interactive elements lose their ring.
+- **`dropdown-overlay` and `toast-overlay`** style panels that portal to `document.body`, which is
+  why they cannot live in a component's own stylesheet. Omitting them renders every dropdown,
+  picker panel and toast unstyled.
 
 `base-palette` + `theme-activation` must come BEFORE `tokens` so role aliases resolve. The theme `_palette` / `_theme` files expose **mixins** — don't `@use` them directly; `theme-activation` applies them.
 

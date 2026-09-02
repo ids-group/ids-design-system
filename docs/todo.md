@@ -54,6 +54,7 @@ what makes these the cheapest thing on the board.
 
 **Bugs — something shipped misbehaves**
 
+- P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
 - P2 · `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px regardless of density
@@ -68,7 +69,7 @@ what makes these the cheapest thing on the board.
 - P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
 - P3 · A token named in prose is never checked against the tokens that exist — a removed one survived in two docs for months
-- P3 · `todo.md`'s index no longer accounts for its body — 44 lines against 58 items, and the gap needs a per-section reconciliation
+- P3 · `todo.md`'s index no longer accounts for its body — 43 lines against 64 items, and the gap needs a per-section reconciliation
 - P3 · Three edges left open on `ds-table` row expansion — an inert expand-all on an empty page, the lazy label, and a column header whose name flips
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
@@ -77,7 +78,7 @@ what makes these the cheapest thing on the board.
 
 Ordered by what each unblocks. The top four each hold a deck or a whole lane hostage.
 
-- P2 · **Six decks have no verdict**; three have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
+- P2 · **Ten decks have no verdict**; four have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
 - P2 · **Single-source colour engine** — one token per role, derived. Two decks argue it; the warning-contrast bug is downstream of the same palette question
 - P2 · **prettier vs eslint on HTML** — they want opposite things, so `lint:all` can never be green. Every branch pays this until a config wins
 - P2 · **`.ds-interactive`** — global state-interaction contract, agreed in principle, prototype before spec
@@ -163,10 +164,11 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**42 open: 1 P1, 12 P2, 29 P3** — counted from the index by script, not incremented from the last
-figure, which is how three summaries in this file had drifted apart by 2026-09-01. Ten are *Parked*
-awaiting a first consumer ask and two are Records, and the one P1 is a settled decision kept so it
-is not re-litigated, so the live board is **29 items — 5 Bugs, 9 Asks and 15 Decisions**.
+**43 open: 1 P1, 14 P2, 28 P3** — counted from the index by script, not incremented from the last
+figure, which is how three summaries in this file had drifted apart by 2026-09-01, and drifted again
+by 2026-09-02. Ten are *Parked* awaiting a first consumer ask and two are Records, and the one P1 is
+a settled decision kept so it is not re-litigated, so the live board is **31 items — 6 Bugs, 9 Asks
+and 16 Decisions**.
 
 **Every block is ordered P2 before P3**, with one deliberate exception: the Angular 22 line sits last
 in *Decisions* under a P1 tag because it is DECIDED, not pending — the tag keeps it out of both
@@ -176,17 +178,17 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds five.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
 asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
-counted — so one token step fixes all of them. The other five arrived on 2026-09-01 and four were
+counted — so one token step fixes all of them. Four of the others arrived on 2026-09-01 and were
 filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
 already reads. In cost order after the token step — `--ds-table-head-h` declared
 nowhere so the scrim's inset is always its 40px fallback, one export leaving the table's live
 region stuck on "Export ready" forever, then the two cosmetic ones. The sixth, the resize handle's
 unenforced `aria-valuemax`, was closed the same day it was filed.
 
-**The board is not waiting on hands, it is waiting on verdicts.** Fourteen of the nineteen live items
-are Decisions, and seven decks are open against them. Nothing below is blocked on effort.
+**The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-one live
+items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
 
 **What came off this round:** the whole picker lane. Seven decisions, four follow-up changes, sixteen
 proposals (fifteen built), 43 review findings and five blockers — all closed, both decks moved to
@@ -699,7 +701,7 @@ A0 first, which touches none of it, or wait for that lane to land.
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
 
-- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-01: 44 index lines against 58 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
+- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-02: 43 index lines against 64 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
 
 - [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure.
 
