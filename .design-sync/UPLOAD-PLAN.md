@@ -69,7 +69,10 @@ the model context.
   to LOAD in a local copy of the host's four-script chain (React 18.3.1 from `_vendor`, the
   bundle, then a preview) — `window.IdsDs` resolves and overlay previews render their projected
   content. The upload itself has still never run.
-- Run the full chain first: `gen.mjs` → `ng build ds-elements` → `build-bundle.mjs`.
+- Run the full chain first: `gen.mjs` → `ng build ds-elements` → `build-bundle.mjs`. `gen/` and
+  `dist/` are gitignored, so the chain has to run in whichever account performs the upload — a
+  build from another checkout does not travel. `bootstrap.mjs` first if `.ds-sync` is absent, and
+  `bun install` if `node_modules` predates the `@angular/elements` dependency.
 - **Fonts are handled — upload `dist/ds-bundle.css`, not `dist/browser/styles.css`.** Angular emits
   the faces as `./media/*.woff2`, which is correct beside its own output and wrong in the project,
   where the eight files already sit at `fonts/` from the July upload. `build-bundle.mjs` writes an

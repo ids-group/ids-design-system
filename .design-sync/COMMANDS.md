@@ -132,4 +132,8 @@ design and is not evidence that anything drifted.
 
 Last updated 2026-07-31, so it is one month behind: **79 components against 85**,
 `AppShell` under its pre-rename name, `sourceKeys` from before the
-`AppShell` → `AppLayout` break. A re-sync has to go out with whichever route wins.
+`AppShell` → `AppLayout` break. A re-sync has to go out.
+
+The route is settled: asked on 2026-09-02 how he updates the design system, Misha answered that he
+does it through the CLI, so the generated bundle is what he consumes and the upload is the delivery
+path — not a hand-assembled project built through the web interface.
