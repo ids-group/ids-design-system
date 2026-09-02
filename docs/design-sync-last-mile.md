@@ -7,15 +7,29 @@ Misha confirmed he updates the design system **through the CLI**, so the generat
 artefact he consumes and the upload is the delivery path. The build chain works and the bundle is
 proven to load. What is missing is everything between the bundle and a published project.
 
-## The skill is not obtainable
+## Why the machinery is repo code
 
-`/design-sync` exists on neither account, in no plugin, and in no marketplace cache — searched
-`~/.claude` and `~/.claude-acc2` by name, and `installed_plugins.json`'s ten entries. The only hits
-anywhere are this repo's own documents. The `DesignSync` tool's description references the skill, so
-it is presumably bundled with builds we do not have.
+`/design-sync` is a first-party BUILT-IN, not a missing package — searching `~/.claude`,
+`~/.claude-acc2` and every marketplace cache could never have found it, and concluding from that
+search that it "does not exist" was wrong. Verified in the 218 MB binary at `~/.local/bin/claude`:
+`design-sync` and `design-login` appear 18 times each. What is NOT in the binary is the skill's
+BODY — `ds-shim`, `react-shim`, `keyRecipe`, `sourceKeys` and `_ds_sync` all return zero — so it is
+delivered by entitlement, and no session here can invoke it.
 
-It also could not be wired into a pipeline if we had it: a skill is instructions for a model, and
-CI runs a shell. **The last mile has to become code in this repo.**
+That is the honest reason the machinery had to become repo code: not that the skill is imaginary,
+but that neither of these sessions is entitled to run it, and a design system cannot depend on an
+entitlement nobody in the team has.
+
+The authorization is per PROFILE, which is why the upload only started working after an account
+switch: `designOauth` with `user:design:read` + `user:design:write` sits in
+`~/.claude/.credentials.json` and is absent from `~/.claude-acc2/.credentials.json`. One
+interactive `/design-login` grants it on a profile that lacks it.
+
+And the transport is plain HTTP, not something only a model can drive: `POST /v1/design/mcp`,
+`GET`/`POST /v1/design/grants`, `/v1/design/consent`, and `POST /v1/oauth/token` with
+`grant_type=refresh_token` are all in the binary. So "a skill cannot run in a shell" is NOT why the
+upload stays out of the pipeline — see P7 for the reason that actually holds. The full transport
+write-up is in `.design-sync/COMMANDS.md` § "Why the upload is not in the pipeline".
 
 ## What the published surface loses on the elements route
 
@@ -198,7 +212,13 @@ The gate can fail to report; it will not invent a prop.
 ### P7 — CI cannot publish, by design
 
 `finalize_plan` is a permission gate bound to the user's claude.ai login, and it shows the exact
-write/delete list for approval. A pipeline cannot hold that approval. So CI's job is to GENERATE and
+write/delete list for approval. A pipeline cannot hold that approval.
+
+The precise reason is the GRANT, not the gate: a hosted Bitbucket runner has no claude.ai
+authorization and cannot obtain one — the container is ephemeral, `/design-login` "cannot run in
+this non-interactive session", and without it the tool refuses a Bedrock, Vertex or third-party
+provider. A headless or SDK run on a machine that has already done an interactive `/design-login`
+DOES reuse it, so local automation is possible even though hosted CI is not. So CI's job is to GENERATE and
 to fail when the artefacts drift; the upload stays a local step with a human approving the path
 list. Not a defect — a boundary the design has to accept.
 
