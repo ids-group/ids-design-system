@@ -384,7 +384,8 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
       measured per loading episode instead.
 
 
-- [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. Derived from the template, NOT measured in a browser: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+- [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. MEASURED 2026-09-02 in a real browser against the compiled styles: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+  **The numbers.** Four shimmer rows under `zebra`: rows 1 and 3 resolve to `rgb(241 244 249)`, rows 2 and 4 to `rgba(0 0 0 / 0)` — two distinct backgrounds, the same split a data table gets, where the stripe is the point. So it reproduces; what is still open is only whether the stripe SHOULD reach a placeholder.
 
 
 # Asks — a consumer or Stas asked for it
