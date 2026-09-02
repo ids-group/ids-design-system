@@ -4,6 +4,21 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The release gate on the toast class surface is green (2026-09-02)
+
+`check-class-surface-entry` was RED on `ToastRegionComponent`, `ToastComponent` and
+`ToastService` — three classes whose member surface moved since v0.11.1 — and it blocks the
+release cut. Re-run against HEAD it passes: all eight classes with a moved surface are named
+in `## Unreleased` AND carried by a `detect`, the three toast ones by
+`toast-table-subclass-members-moved`.
+
+**The item's own advice is what closed it: re-run the gate rather than trusting the list.** It
+was written while the toast work still had uncommitted files, so the surface it measured was
+half-written. The `DsConfig` move later changed `ToastService`'s fields again and the existing
+`detect` still covers it, which is the point of naming a class rather than its members.
+
+---
+
 ## Toasts announce, pause, slide and cap (2026-09-02)
 
 **One wave-2 accusation, from the review that produced this work, was itself false.** Reviewing the `ToastService.promise()` finding, wave 2 wrote that *"five wave-1 agents rediscovered a documented known gap and none of them said so — that is the shared blind spot."* Two of the five named it explicitly and one verified it: the timers axis wrote *"already acknowledged in `CHANGELOG.md:219-220`"* and the API axis *"`CHANGELOG.md:220-221` self-discloses the remaining hole … Verified true"*. The finding wave 2 made stands; its accusation about the other agents does not. Kept because it is the clearest reason the second wave needs validating too, rather than being treated as the tie-breaker.

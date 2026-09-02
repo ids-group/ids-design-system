@@ -110,7 +110,6 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 - P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
 - P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
-- P2 · `check-class-surface-entry` is RED on three toast classes and the session that owned them has closed — it blocks the release cut
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
   of 100 cannot see one group of three collapse
@@ -315,8 +314,6 @@ rather than re-reading our own API.
 # Bugs — something shipped misbehaves
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
-
-- [ ] **[P2] `check-class-surface-entry` is RED and the session that owns the change has closed.** Measured 2026-09-02, verbatim: three classes whose member surface moved since v0.11.1 are not named in any `detect` in `migrations/unreleased.json` — `components/toast/toast-region.component.ts — ToastRegionComponent`, `components/toast/toast.component.ts — ToastComponent`, `components/toast/toast.service.ts — ToastService`. It blocks the release cut. `toast-region-subclass-members-grew` already exists and covered the region once, so the region has grown AGAIN since that entry was written, and the component and the service are new to the list. The owning session wrote the first entry (`2e888b55`) and is no longer reachable, so nobody is holding this. Whoever picks it up: the three existing `*-subclass-members-grew` items are the template, `detect` is what the consumer's updater greps and the prose is not, and the toast work still had uncommitted files at the time of writing — so re-run the gate rather than trusting this list.
 
 - [ ] **[P2] The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold.** `src/lib/styles/_status.scss:54` pairs `bg: var(--warning-subtitle)` with `text: var(--warning-text)`. Resolved in the default theme that is `#8A7400` on `#FFFBEA`, which computes to **4.42:1** by the WCAG relative-luminance formula — under AA for text below 18.66px/700. **It is the only status pair that fails:** error measures **5.92**, success **6.42** and primary **6.16** on their own subtitle backgrounds, so this is one colour out of step, not a palette-wide problem.
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.

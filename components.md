@@ -595,6 +595,14 @@ The `toast` section resolves **once, at the root injector**, when the service is
 
 On first `show()` the service lazily creates a CDK overlay and mounts a `<ds-toast-region>` into it. **Do not place `<ds-toast-region>` yourself** — the service only ever talks to the instance it created, so a hand-placed one is an invisible empty box that never receives a toast, with no warning. It appears in the generated API table only because the extractor lists every exported component.
 
+#### `BodyScrollLockService`
+
+`@Injectable({ providedIn: 'root' })`. Ref-counted lock on `document.body` scroll, shared by every overlay that covers the viewport — `ds-modal`, `ds-drawer`, `ds-bottom-sheet` all take one. Exported for an app that builds its own viewport-covering overlay.
+- `lock(): void` — the FIRST call saves the current `body` overflow and hides it.
+- `unlock(): void` — only the LAST one restores it, so closing one overlay cannot re-enable page scroll under another still open above it.
+
+Calls must be paired: one `unlock()` per `lock()`. An unmatched `unlock()` is a no-op rather than an error, so a leaked `lock()` leaves the page unscrollable with nothing to show why.
+
 ---
 
 ## Migration tips

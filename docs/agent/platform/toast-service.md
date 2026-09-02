@@ -15,5 +15,3 @@ Defaults come from `provideDsConfig({ toast: … })`:
 The `toast` section resolves **once, at the root injector**, when the service is first used — unlike every other section, which a `Route` or a component can narrow. `ToastService` is `providedIn: 'root'`, so a route-level `provideDsConfig` never reaches it, and the position cannot change after the first `show()`.
 
 On first `show()` the service lazily creates a CDK overlay and mounts a `<ds-toast-region>` into it. **Do not place `<ds-toast-region>` yourself** — the service only ever talks to the instance it created, so a hand-placed one is an invisible empty box that never receives a toast, with no warning. It appears in the generated API table only because the extractor lists every exported component.
-
----
