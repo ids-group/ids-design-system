@@ -52,9 +52,10 @@ node .design-sync/tools/check-previews.mjs
 # Everything the upload publishes, built here so a broken generator fails the release rather than
 # the person running the upload. The publish itself cannot run in a pipeline: finalize_plan is a
 # permission gate bound to a claude.ai login and shows the path list for approval.
+# One command, because build-cards wipes the tree it owns and does not write the adherence config:
+# running it alone DELETES that file, and the two have to stay in this order.
 echo "Building the upload artefacts..."
-node .design-sync/tools/build-cards.mjs
-node .design-sync/tools/build-adherence.mjs
+bun run build:upload
 
 # The tree is COMMITTED, so a stale copy in the repo is the failure to catch: the build above just
 # regenerated it from source, and git is the comparator. Same idiom as `split-agent-catalogue
@@ -63,9 +64,8 @@ if [ -n "$(git status --porcelain .design-sync/upload)" ]; then
   echo "The committed upload tree is stale — this build regenerated different files:"
   git status --porcelain .design-sync/upload
   echo ""
-  echo "Run 'node .design-sync/tools/build-cards.mjs && node .design-sync/tools/build-adherence.mjs'"
-  echo "and commit .design-sync/upload. It is what a publish uploads, so a stale copy publishes"
-  echo "the previous release's contract."
+  echo "Run 'npm run build:upload' and commit .design-sync/upload — it is what a publish"
+  echo "sends, so a stale copy publishes the previous release's contract."
   exit 1
 fi
 echo "Committed upload tree matches the build"
