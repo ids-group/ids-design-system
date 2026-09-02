@@ -3028,12 +3028,9 @@ genuine gap worth reporting.
   also the only property on that element without a hook, since fill, border and shadow all had one.
   Restore the old corner with `ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }`; the
   trigger's radius is untouched.
-  — **Correction: this shipped BROKEN, and everything above it describes the intent only.** The rule was
-  written as `var(--_time-picker-panel-radius)` — a private token declared on `:host` — and the CDK
-  portals this panel out of that host, so the `var()` never resolved and `border-radius` fell back to its
-  initial `0`. In 0.8.0 the panel therefore rendered SQUARE: neither the old 8px nor the intended 12px.
-  The hook was inert for the same reason, so the restore recipe above did nothing either. It stayed that
-  way through 0.10.2 and was fixed in 0.10.3 by reading the PUBLIC token at the use site.
+  — **Correction: this shipped BROKEN, and the text above is the intent only.** The rule read a private
+  `:host` token that the portaled panel cannot see, so `border-radius` fell back to its initial `0`: the
+  panel rendered SQUARE, and the hook — with the restore recipe above — did nothing. Fixed in 0.10.3.
 - **A path change that only mirrors the reader's position no longer resets the content scroll.** A docs shell whose scroll spy rewrites `/area/section` as the user scrolls hit a loop: the rewrite looked like a page change, the layout scrolled to top, the spy saw the first section again and rewrote the path back. Such a navigation must now carry `state: { dsSamePage: true }`, which the layout skips for both the scroll reset and the rail close. Read from `Router.lastSuccessfulNavigation()` — `getCurrentNavigation()` is already cleared when `NavigationEnd` reaches a subscriber.
 - **Closing the rail by NAVIGATING no longer pulls focus back to the burger.** Restoring focus to the trigger is right for a dismissal — Escape, the scrim — and wrong for a link: the reader activated it, so focus belongs wherever the router put it, and handing it back announced "Open navigation" instead of the page they asked for. Dismissal keeps the restore; the navigation and breakpoint paths now clear `railOpen` directly. The breakpoint path had also depended on `compact` being written one line earlier to avoid focusing a trigger that is hidden on desktop — that ordering trap is gone with it.
 - **A closed compact `ds-app-layout` rail no longer holds focus behind the screen.** Below the
