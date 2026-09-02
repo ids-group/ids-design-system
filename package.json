@@ -69,7 +69,7 @@
     "release:minor": "npm version minor -m \"release: %s\"",
     "release:patch": "npm version patch -m \"release: %s\"",
     "start": "npm run dev:docs",
-    "version": "node tools/changelog-release.mjs",
+    "version": "node tools/changelog-release.mjs && npm run build:upload && git add .design-sync/upload",
     "watch": "ng build ds --watch --configuration development"
   },
   "peerDependencies": {

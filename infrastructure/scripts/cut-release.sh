@@ -70,8 +70,17 @@ git merge --no-edit --no-ff origin/dev || {
 setup_bun
 install_deps
 
+# The upload tree is committed and has to be current AT THE TAG, so it is rebuilt as part of the
+# release. The slow half goes here rather than in the version hook for one reason: preflight refuses
+# to bump a dirty tree, and everything `build:elements` writes is gitignored — gen/, dist/, the demo
+# — so the tree stays clean through it. Only `build:upload` touches tracked files, and the version
+# hook is where that belongs.
+echo "cut-release: rebuilding the Claude Design bundle for the release commit..."
+node .design-sync/tools/bootstrap.mjs
+CI=true npm run build:elements
+
 # Bump: runs the preversion preflight (branch/clean/ancestor/changelog) + the
-# version hook (CHANGELOG stamp + migration promote + git add) + commit + tag.
+# version hook (CHANGELOG stamp + migration promote + upload rebuild + git add) + commit + tag.
 if [ "$level" = "beta" ]; then
   npm version prerelease --preid=beta -m "release: %s"
 else
