@@ -12,7 +12,6 @@
 // value there is worse than a stale one: a hash that happens to match makes the next skill-driven
 // sync SKIP a file that did change. `_ds_manifest.json` is not ours either — the app compiles it
 // from the `@dsCard` markers in each card.
-import { createRequire } from 'node:module';
 import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,13 +22,33 @@ const repo = resolve(syncDir, '..');
 const elements = join(syncDir, 'elements');
 const OUT = join(syncDir, 'upload');
 
-const require_ = createRequire(join(syncDir, 'node_modules', 'package.json'));
-const esbuild = require_('esbuild');
-
 const config = JSON.parse(readFileSync(join(syncDir, 'config.json'), 'utf8'));
 const viewports = JSON.parse(readFileSync(join(syncDir, 'viewports.json'), 'utf8'));
 const surface = JSON.parse(readFileSync(join(elements, 'gen', 'surface.json'), 'utf8'));
 const byName = new Map(surface.components.map((component) => [component.name, component]));
+const sections = JSON.parse(readFileSync(join(elements, 'gen', 'sections.json'), 'utf8')).sections;
+const sectionBySlug = new Map(sections.map((section) => [section.slug, section]));
+
+const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+
+/** The ds-docs section that documents this component — the card's whole body.
+ *
+ *  Most resolve by name: `Input` is documented by `components/input`. The rest are sub-components
+ *  documented alongside their parent (`MenuItem` inside Menu) or by a foundation page (`Divider`
+ *  under Borders), which no rule can derive — those are the hand-kept `sections` map in config.json. */
+function sectionFor(name) {
+  const slug = config.sections?.[name] ?? `components/${kebab(name)}`;
+  const section = sectionBySlug.get(slug);
+  if (!section) {
+    throw new Error(
+      `${name} resolves to the ds-docs section "${slug}", which GROUP_PAGES does not register.\n`
+        + `Either add a section for it in ds-docs, or point config.json's \`sections\` at the one `
+        + `that documents it.`,
+    );
+  }
+
+  return section;
+}
 
 // `category: Forms & inputs` in a doc's front matter is `forms-inputs` on the remote, which is also
 // the `@dsCard group`. Verified against all eight groups the live project already carries.
@@ -45,9 +64,12 @@ function readDoc(name) {
   return { group: groupOf(category), body: raw.slice(front[0].length).trimStart() };
 }
 
-/** The card page, byte-compatible with what the project already serves. Only the five values below
- *  differ between two cards — everything else is fixed, so it lives here once. */
-function cardHtml({ name, group, viewport, mode, primary }) {
+/** The card page: the ds-docs section for this component, and nothing else.
+ *
+ *  There is no React on this page and no per-card script. A hand-written preview per component was
+ *  the previous design and the showcase drifted from the components it showed, because a specimen
+ *  nobody opens is a specimen nobody checks. The docs site is looked at every day. */
+function cardHtml({ name, group, tag, viewport }) {
   const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''} -->`;
 
   return `${marker}
@@ -57,67 +79,24 @@ function cardHtml({ name, group, viewport, mode, primary }) {
      while the page keeps its own background. Measured on the live cards: a light page whose tonal
      buttons came out dark navy with white labels and whose outline labels went invisible. -->
 <html data-theme="light"><head><meta charset="utf-8">
+  <title>${name}</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
   <style>
     /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
        all, because the components followed the theme and the page did not. */
-    body{margin:0;padding:24px;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* auto-fit (not auto-fill): empty tracks collapse, so a 1-2 story card
-       fills the width instead of stranding stories in a half-width left
-       column beside phantom empty columns.
-       The 400px minimum is measured, not chosen: at 320 the grid took three columns of the 1200
-       and every one of Stat's three stories overflowed its cell. 400 gives two columns and zero
-       overflow across the set. */
-    .ds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px;align-items:start}
-    .ds-grid.ds-col{grid-template-columns:1fr}
-    /* min-width:0 so a grid item can shrink below its content, but NOT overflow:hidden — that
-       silently cut the third tile off Stat's SIZES row mid-number. A story wider than its cell
-       scrolls inside it instead of disappearing. */
-    .ds-cell{border:1px solid #e5e7eb;border-radius:8px;padding:12px;min-width:0;overflow-x:auto;transform:translateZ(0)}
-    .ds-cell>h4{margin:0 0 8px;font:600 12px system-ui;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
-    .ds-single{transform:translateZ(0)}
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
+       for a capped, padded column stretches edge to edge without it, and every demo that relies on
+       wrapping wraps at the wrong width. */
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
   </style>
 </head><body>
-  <div class="ds-grid" id="g"></div>
-  <script src="../../../_vendor/react.js"></script>
-  <script src="../../../_vendor/react-dom.js"></script>
+  <div class="ds-page"><${tag}></${tag}></div>
+  <!-- Sections only: a section renders DS components as Angular components, and registering those
+       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
+  <script>window.__dsSectionsOnly = true</script>
   <script src="../../../_ds_bundle.js"></script>
-  <script src="../../../_preview/${name}.js"></script>
-  <script>
-    var h=React.createElement, g=document.getElementById('g');
-    var E=[]; for (var k in (window.__dsPreview||{})) {
-      if (typeof window.__dsPreview[k]==='function' && /^[A-Z]/.test(k)) E.push(k);
-    }
-    window.__dsCells=E.slice();
-    var q=null; try{q=new URLSearchParams(location.search).get('story')}catch(e){}
-    var MODE=${JSON.stringify(mode)};
-    window.__dsMode=MODE;
-    var PRIMARY=${JSON.stringify(primary)};
-    if(MODE==='column'){
-      g.className+=' ds-col';
-      // primaryStory renders first — it's what shows above the product's fold.
-      var cpi=PRIMARY?E.indexOf(PRIMARY):-1;
-      if(cpi>0){E.splice(cpi,1);E.unshift(PRIMARY)}
-    }
-    function mount(id,key){try{ReactDOM.createRoot(document.getElementById(id)).render(h(window.__dsPreview[key]))}catch(e){document.getElementById(id).textContent='⚠ '+(e&&e.message||e)}}
-    var pick=null;
-    if(q){for(var j=0;j<E.length;j++){if(E[j]===q||E[j].toLowerCase()===q.toLowerCase()){pick=E[j];break}}}
-    else if(MODE==='single'&&E.length){pick=E.indexOf(PRIMARY)>=0?PRIMARY:E[0]}
-    if(q&&!pick){g.textContent='⚠ no export named '+q}
-    else if(pick){
-      var s=document.createElement('div'); s.className='ds-single'; s.id='r0';
-      if(!q)document.body.style.padding='0';
-      g.parentNode.replaceChild(s,g); mount('r0',pick);
-    } else {
-      for(var i=0;i<E.length;i++){
-        var cell=document.createElement('section'); cell.className='ds-cell';
-        cell.innerHTML='<h4>'+E[i]+'</h4><div id="r'+i+'"></div>'; g.appendChild(cell);
-        mount('r'+i,E[i]);
-      }
-      if(E.length===0){g.textContent='⚠ no PascalCase exports in _preview/${name}.js'}
-    }
-  </script>
 </body></html>
 `;
 }
@@ -190,59 +169,14 @@ function declarationType(inlined) {
   return inlined;
 }
 
-async function buildPreview(name, outFile) {
-  await esbuild.build({
-    entryPoints: [join(syncDir, 'previews', `${name}.tsx`)],
-    outfile: outFile,
-    bundle: true,
-    format: 'iife',
-    globalName: '__dsPreview',
-    platform: 'browser',
-    target: 'es2019',
-    jsx: 'transform',
-    jsxFactory: 'React.createElement',
-    jsxFragment: 'React.Fragment',
-    logLevel: 'silent',
-    plugins: [
-      {
-        name: 'design-host-globals',
-        setup(build) {
-          // The host loads React and the bundle as classic scripts before the preview, so both are
-          // globals by the time this file runs. Resolving them to `window.*` is what makes a
-          // preview independent of how the bundle was built.
-          build.onResolve({ filter: /^react$/ }, () => ({ path: 'react', namespace: 'host' }));
-          build.onResolve({ filter: /^@ids-group-ltd\/ids-design-system$/ }, () => ({
-            path: 'ds',
-            namespace: 'host',
-          }));
-          build.onLoad({ filter: /.*/, namespace: 'host' }, (args) => ({
-            contents:
-              args.path === 'react'
-                ? 'module.exports = window.React;'
-                : 'module.exports = window.IdsDs;',
-            loader: 'js',
-          }));
-        },
-      },
-    ],
-  });
-}
-
 rmSync(OUT, { recursive: true, force: true });
-mkdirSync(join(OUT, '_preview'), { recursive: true });
-
-const previewNames = new Set(
-  readdirSync(join(syncDir, 'previews'))
-    .filter((file) => file.endsWith('.tsx'))
-    .map((file) => file.replace(/\.tsx$/, '')),
-);
+mkdirSync(OUT, { recursive: true });
 
 const written = [];
-const skipped = [];
 for (const name of [...byName.keys()].sort()) {
   const component = byName.get(name);
   const { group, body } = readDoc(name);
-  const override = config.overrides?.[name] ?? {};
+  const section = sectionFor(name);
   const dir = join(OUT, 'components', group, name);
   mkdirSync(dir, { recursive: true });
 
@@ -264,25 +198,19 @@ for (const name of [...byName.keys()].sort()) {
   );
   writeFileSync(join(dir, `${name}.prompt.md`), `# ${name}\n\n${body}`);
 
-  if (previewNames.has(name)) {
-    writeFileSync(
-      join(dir, `${name}.html`),
-      cardHtml({
-        name,
-        group,
-        viewport: viewports.heights[name] ? `${viewports.width}x${viewports.heights[name]}` : null,
-        mode: override.cardMode ?? 'grid',
-        primary: override.primaryStory ?? '',
-      }),
-    );
-    await buildPreview(name, join(OUT, '_preview', `${name}.js`));
-    written.push(name);
-  } else {
-    // No preview means no card: the pane builds its index from the `@dsCard` marker, so writing the
-    // page without a preview to mount would publish a card that renders a warning. The declaration
-    // and the prompt still go out — an agent composing a parent needs them.
-    skipped.push(name);
-  }
+  // The height is per SECTION, not per component: several components share one, and the card is
+  // that section. Sub-components inherit their parent's measurement for the same reason.
+  const height = viewports.heights[section.slug];
+  writeFileSync(
+    join(dir, `${name}.html`),
+    cardHtml({
+      name,
+      group,
+      tag: section.tag,
+      viewport: height ? `${viewports.width}x${height}` : null,
+    }),
+  );
+  written.push(name);
 }
 
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
@@ -339,9 +267,8 @@ writeFileSync(
   readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8'),
 );
 
+const distinctSections = new Set([...byName.keys()].map((name) => sectionFor(name).slug));
 console.log(
-  `✓ ${written.length} card(s) + ${byName.size} declaration(s) into ${OUT.replace(repo, '.')}`
+  `✓ ${written.length} card(s) over ${distinctSections.size} ds-docs section(s)`
+    + ` + ${byName.size} declaration(s) into ${OUT.replace(repo, '.')}`,
 );
-if (skipped.length) {
-  console.log(`· ${skipped.length} without a preview, so no card: ${skipped.join(', ')}`);
-}

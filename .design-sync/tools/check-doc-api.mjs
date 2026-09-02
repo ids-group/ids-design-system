@@ -71,13 +71,6 @@ for (const file of readdirSync(join(syncDir, 'docs')).filter((name) => name.ends
   }
 }
 
-// The previews matter more than the docs: they are COMPILED into the cards, and esbuild does not
-// type-check, so a prop the component dropped renders an empty card in silence rather than failing
-// the build. Several were written against the deleted React port and still pass its API.
-for (const file of readdirSync(join(syncDir, 'previews')).filter((name) => name.endsWith('.tsx'))) {
-  scan(`previews/${file}`, readFileSync(join(syncDir, 'previews', file), 'utf8'));
-}
-
 if (problems.length) {
   console.error(`check-doc-api: ${problems.length} claim(s) the surface does not support:`);
   for (const problem of [...new Set(problems)].sort()) console.error(`  ${problem}`);

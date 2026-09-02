@@ -147,34 +147,26 @@ for (const tag of [...componentTags].sort()) {
   }
 }
 
-// A component with no preview gets no card in the design tool — it ships invisible.
-// The exceptions are real and deliberate: a child component appears inside its parent's
-// preview and has none of its own. They are listed rather than inferred, so adding a
-// component cannot quietly join them.
-// ModalConfirm and ToastRegion are the other kind of exception: neither can be populated from a
-// card. ModalConfirm declares no inputs at all and reads its content from an injected
-// MODAL_CONFIRM_DATA token, so ModalService.confirm() is the only thing that can build one.
-// ToastRegion takes only `maxVisible` and gets its entries from ToastService inside the app, so a
-// preview can render nothing but an empty region. Both old previews passed props the components
-// never had — six and two — and both cards rendered blank.
-const PREVIEW_EXEMPT = new Set([
-  'AccordionItem', 'CalendarDay', 'DescriptionItem', 'ListItem', 'MenuItem',
-  'ModalConfirm', 'SidenavGroup', 'SidenavItem', 'Tab', 'TimeColumns',
-  'TimelineItem', 'ToastRegion', 'TooltipPanel',
-]);
-const previewNames = new Set(
-  readdirSync(join(repo, '.design-sync', 'previews'))
-    .filter((name) => name.endsWith('.tsx'))
-    .map((name) => name.slice(0, -4)),
+// A component whose card has no ds-docs section behind it ships invisible. Most resolve by name;
+// the rest are the hand-kept `sections` map in config.json, which is where a sub-component points at
+// the section documenting its parent. Checked here so the failure lands on a PR rather than on the
+// person running the release build.
+const sectionSlugs = new Set(
+  JSON.parse(readFileSync(join(repo, '.design-sync', 'elements', 'gen', 'sections.json'), 'utf8'))
+    .sections.map((section) => section.slug),
 );
+const sectionMap = JSON.parse(
+  readFileSync(join(repo, '.design-sync', 'config.json'), 'utf8'),
+).sections ?? {};
 for (const tag of [...componentTags].sort()) {
   const name = pascalOfTag(tag);
-  if (previewNames.has(name) || PREVIEW_EXEMPT.has(name)) continue;
-  errors.push(`✗ ${tag} has no .design-sync/previews/${name}.tsx — it would upload with no card at all. Write one, or add it to PREVIEW_EXEMPT with a reason if it only ever appears inside a parent`);
+  const slug = sectionMap[name] ?? `components/${tag.replace(/^ds-/, '')}`;
+  if (sectionSlugs.has(slug)) continue;
+  errors.push(`✗ ${tag} resolves to the ds-docs section "${slug}", which GROUP_PAGES does not register — its card would be empty. Add a section in ds-docs, or point config.json's \`sections\` at the one that documents it`);
 }
-for (const name of [...PREVIEW_EXEMPT].sort()) {
-  if (previewNames.has(name)) {
-    errors.push(`✗ ${name} is on PREVIEW_EXEMPT but a preview exists — drop it from the list`);
+for (const [name, slug] of Object.entries(sectionMap).sort()) {
+  if (!sectionSlugs.has(slug)) {
+    errors.push(`✗ config.json maps ${name} to the ds-docs section "${slug}", which does not exist`);
   }
 }
 
@@ -188,9 +180,9 @@ for (const name of [...docNames].sort()) {
     errors.push(`✗ .design-sync/docs/${name}.md documents no live component — delete it, or the design agent is taught an API that does not exist`);
   }
 }
-for (const name of [...previewNames].sort()) {
+for (const name of Object.keys(sectionMap).sort()) {
   if (!liveNames.has(name)) {
-    errors.push(`✗ .design-sync/previews/${name}.tsx previews no live component — delete it`);
+    errors.push(`✗ config.json's \`sections\` maps "${name}", which is no live component — drop the key`);
   }
 }
 const overrideNames = Object.keys(
@@ -214,6 +206,6 @@ for (const entry of conditionalProjection) {
 
 for (const error of errors) console.log(error);
 console.log(
-  `${errors.length ? '✗' : '✓'} manual surface: ${conditionalProjection.length} conditional-projection template(s), ${attributeDirectives.length} attribute directive(s), ${componentTags.size} components documented, ${previewNames.size} previews, ${errors.length} problem(s)`,
+  `${errors.length ? '✗' : '✓'} manual surface: ${conditionalProjection.length} conditional-projection template(s), ${attributeDirectives.length} attribute directive(s), ${componentTags.size} components documented, ${sectionSlugs.size} ds-docs section(s), ${errors.length} problem(s)`,
 );
 process.exit(errors.length ? 1 : 0);

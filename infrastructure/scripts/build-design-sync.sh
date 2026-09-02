@@ -36,18 +36,11 @@ grep -q 'url("fonts/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bun
 echo "Checking the hand-maintained surface..."
 bun run check:manual-surface
 
-# The docs and previews ship as the agent's instructions and as the cards themselves, and esbuild
-# does not type-check a preview — so a prop the component dropped renders an empty card in silence.
-# Twenty of these were sitting in the tree, six of them in a single preview written for the deleted
-# React port.
-echo "Checking the docs and previews against the real surface..."
+# The docs ship as the agent's instructions, so a prop that no longer exists is executed rather than
+# read. Twenty of these were sitting in the tree. The showcase itself needs no such gate any more:
+# it IS the ds-docs sections, which the Angular build type-checks.
+echo "Checking the docs against the real surface..."
 node .design-sync/tools/check-doc-api.mjs
-
-# The type-level half, and the one that actually holds: names alone cannot see a wrong TYPE, and
-# esbuild compiles a preview without checking anything. Run against the real wrappers it found 45
-# errors in 19 previews, one of which crashed Angular by handing a React function to a TemplateRef.
-echo "Type-checking the previews against the generated wrappers..."
-node .design-sync/tools/check-previews.mjs
 
 # Everything the upload publishes, built here so a broken generator fails the release rather than
 # the person running the upload. The publish itself cannot run in a pipeline: finalize_plan is a
@@ -84,7 +77,11 @@ rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
 grep -q 'url("./' .design-sync/upload/fonts/fonts.css || { echo "fonts.css still points outside its own directory"; exit 1; }
 echo "Self-contained: $faces face(s), React vendored, styles.css and README generated"
 
+# Every component gets a card now, so the count IS the component count — a card with no showcase
+# behind it can no longer exist, because build-cards refuses to write one (and check-manual-surface
+# fails the PR before that). Eleven components shipped cardless under the previous design.
 cards=$(find .design-sync/upload/components -name '*.html' | wc -l)
-previews=$(find .design-sync/upload/_preview -name '*.js' | wc -l)
-[ "$cards" = "$previews" ] || { echo "Card/preview mismatch: $cards card(s) against $previews preview(s) - a card whose preview script is missing renders a warning, which is how nine of them shipped"; exit 1; }
-echo "Upload artefacts: $cards card(s), $previews preview(s)"
+declarations=$(find .design-sync/upload/components -name '*.d.ts' | wc -l)
+[ "$cards" = "$declarations" ] || { echo "Card/declaration mismatch: $cards card(s) against $declarations declaration(s)"; exit 1; }
+sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html | sort -u | wc -l)
+echo "Upload artefacts: $cards card(s) over $sections ds-docs section(s)"

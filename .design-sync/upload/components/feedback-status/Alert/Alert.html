@@ -1,69 +1,26 @@
-<!-- @dsCard group="feedback-status" viewport="1200x930" -->
+<!-- @dsCard group="feedback-status" viewport="1200x2067" -->
 <!doctype html>
 <!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
      automatic OS branch, so a host that sets it on this document flips every component's tokens
      while the page keeps its own background. Measured on the live cards: a light page whose tonal
      buttons came out dark navy with white labels and whose outline labels went invisible. -->
 <html data-theme="light"><head><meta charset="utf-8">
+  <title>Alert</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
   <style>
     /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
        all, because the components followed the theme and the page did not. */
-    body{margin:0;padding:24px;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* auto-fit (not auto-fill): empty tracks collapse, so a 1-2 story card
-       fills the width instead of stranding stories in a half-width left
-       column beside phantom empty columns.
-       The 400px minimum is measured, not chosen: at 320 the grid took three columns of the 1200
-       and every one of Stat's three stories overflowed its cell. 400 gives two columns and zero
-       overflow across the set. */
-    .ds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px;align-items:start}
-    .ds-grid.ds-col{grid-template-columns:1fr}
-    /* min-width:0 so a grid item can shrink below its content, but NOT overflow:hidden — that
-       silently cut the third tile off Stat's SIZES row mid-number. A story wider than its cell
-       scrolls inside it instead of disappearing. */
-    .ds-cell{border:1px solid #e5e7eb;border-radius:8px;padding:12px;min-width:0;overflow-x:auto;transform:translateZ(0)}
-    .ds-cell>h4{margin:0 0 8px;font:600 12px system-ui;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
-    .ds-single{transform:translateZ(0)}
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
+       for a capped, padded column stretches edge to edge without it, and every demo that relies on
+       wrapping wraps at the wrong width. */
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
   </style>
 </head><body>
-  <div class="ds-grid" id="g"></div>
-  <script src="../../../_vendor/react.js"></script>
-  <script src="../../../_vendor/react-dom.js"></script>
+  <div class="ds-page"><ds-docs-components-alert></ds-docs-components-alert></div>
+  <!-- Sections only: a section renders DS components as Angular components, and registering those
+       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
+  <script>window.__dsSectionsOnly = true</script>
   <script src="../../../_ds_bundle.js"></script>
-  <script src="../../../_preview/Alert.js"></script>
-  <script>
-    var h=React.createElement, g=document.getElementById('g');
-    var E=[]; for (var k in (window.__dsPreview||{})) {
-      if (typeof window.__dsPreview[k]==='function' && /^[A-Z]/.test(k)) E.push(k);
-    }
-    window.__dsCells=E.slice();
-    var q=null; try{q=new URLSearchParams(location.search).get('story')}catch(e){}
-    var MODE="column";
-    window.__dsMode=MODE;
-    var PRIMARY="";
-    if(MODE==='column'){
-      g.className+=' ds-col';
-      // primaryStory renders first — it's what shows above the product's fold.
-      var cpi=PRIMARY?E.indexOf(PRIMARY):-1;
-      if(cpi>0){E.splice(cpi,1);E.unshift(PRIMARY)}
-    }
-    function mount(id,key){try{ReactDOM.createRoot(document.getElementById(id)).render(h(window.__dsPreview[key]))}catch(e){document.getElementById(id).textContent='⚠ '+(e&&e.message||e)}}
-    var pick=null;
-    if(q){for(var j=0;j<E.length;j++){if(E[j]===q||E[j].toLowerCase()===q.toLowerCase()){pick=E[j];break}}}
-    else if(MODE==='single'&&E.length){pick=E.indexOf(PRIMARY)>=0?PRIMARY:E[0]}
-    if(q&&!pick){g.textContent='⚠ no export named '+q}
-    else if(pick){
-      var s=document.createElement('div'); s.className='ds-single'; s.id='r0';
-      if(!q)document.body.style.padding='0';
-      g.parentNode.replaceChild(s,g); mount('r0',pick);
-    } else {
-      for(var i=0;i<E.length;i++){
-        var cell=document.createElement('section'); cell.className='ds-cell';
-        cell.innerHTML='<h4>'+E[i]+'</h4><div id="r'+i+'"></div>'; g.appendChild(cell);
-        mount('r'+i,E[i]);
-      }
-      if(E.length===0){g.textContent='⚠ no PascalCase exports in _preview/Alert.js'}
-    }
-  </script>
 </body></html>

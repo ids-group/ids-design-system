@@ -7,129 +7,44 @@
   "cssEntry": "dist/ds-bundle.css",
   "docsDir": "../docs",
   "readmeHeader": ".design-sync/conventions.md",
+  "sections": {
+    "AccordionItem": "components/accordion",
+    "AvatarGroup": "components/avatar",
+    "ButtonGroup": "components/button",
+    "CalendarDay": "components/date-picker",
+    "Container": "components/layout-primitives",
+    "DescriptionItem": "components/description-list",
+    "Divider": "foundations/borders",
+    "FieldMessage": "components/input",
+    "Inline": "components/layout-primitives",
+    "ListItem": "components/list",
+    "MenuDivider": "components/menu",
+    "MenuItem": "components/menu",
+    "ModalCard": "components/modal",
+    "ModalConfirm": "components/modal",
+    "RadioGroup": "components/radio",
+    "SidenavFooter": "components/sidenav",
+    "SidenavGroup": "components/sidenav",
+    "SidenavItem": "components/sidenav",
+    "Stack": "components/layout-primitives",
+    "Tab": "components/tabs",
+    "TimeColumns": "components/time-picker",
+    "TimelineItem": "components/timeline",
+    "ToastRegion": "components/toast",
+    "ToggleButton": "components/button",
+    "TooltipPanel": "components/tooltip"
+  },
   "overrides": {
-    "Button": {
-      "replaces": ["button"]
-    },
-    "Checkbox": {
-      "replaces": ["input[type=checkbox]"]
-    },
-    "Input": {
-      "replaces": ["input"]
-    },
-    "List": {
-      "replaces": ["ul"]
-    },
-    "Radio": {
-      "replaces": ["input[type=radio]"]
-    },
-    "Select": {
-      "replaces": ["select"]
-    },
-    "Icon": {
-      "cardMode": "column"
-    },
-    "EmptyState": {
-      "cardMode": "column"
-    },
-    "LoadingOverlay": {
-      "cardMode": "column"
-    },
-    "Progress": {
-      "cardMode": "column"
-    },
-    "RadioGroup": {
-      "cardMode": "column"
-    },
-    "Search": {
-      "cardMode": "column"
-    },
-    "Textarea": {
-      "cardMode": "column",
-      "replaces": ["textarea"]
-    },
-    "Table": {
-      "cardMode": "column",
-      "replaces": ["table"]
-    },
-    "Timeline": {
-      "cardMode": "column"
-    },
-    "Alert": {
-      "cardMode": "column"
-    },
-    "Banner": {
-      "cardMode": "column"
-    },
-    "Autocomplete": {
-      "cardMode": "column"
-    },
-    "MultiSelect": {
-      "cardMode": "column"
-    },
-    "OtpInput": {
-      "cardMode": "column"
-    },
-    "Slider": {
-      "cardMode": "column",
-      "replaces": ["input[type=range]"]
-    },
-    "Menu": {
-      "cardMode": "column"
-    },
-    "Stepper": {
-      "cardMode": "column"
-    },
-    "Tabs": {
-      "cardMode": "column"
-    },
-    "PageHeader": {
-      "cardMode": "column"
-    },
-    "PageFooter": {
-      "cardMode": "column"
-    },
-    "DatePicker": {
-      "cardMode": "column"
-    },
-    "TimePicker": {
-      "cardMode": "column"
-    },
-    "Modal": {
-      "cardMode": "column",
-      "replaces": ["dialog"]
-    },
-    "ModalCard": {
-      "cardMode": "column"
-    },
-    "ModalConfirm": {
-      "cardMode": "column"
-    },
-    "Drawer": {
-      "cardMode": "column"
-    },
-    "AppLayout": {
-      "cardMode": "column",
-      "primaryStory": "FullShell"
-    },
-    "Topbar": {
-      "cardMode": "column"
-    },
-    "AuthLayout": {
-      "cardMode": "column"
-    },
-    "FieldGroup": {
-      "cardMode": "column"
-    },
-    "FieldMessage": {
-      "cardMode": "column"
-    },
-    "FilterBar": {
-      "cardMode": "column"
-    },
-    "PasswordRules": {
-      "cardMode": "column"
-    }
+    "Button": { "replaces": ["button"] },
+    "Checkbox": { "replaces": ["input[type=checkbox]"] },
+    "Input": { "replaces": ["input"] },
+    "List": { "replaces": ["ul"] },
+    "Modal": { "replaces": ["dialog"] },
+    "Radio": { "replaces": ["input[type=radio]"] },
+    "Select": { "replaces": ["select"] },
+    "Slider": { "replaces": ["input[type=range]"] },
+    "Table": { "replaces": ["table"] },
+    "Textarea": { "replaces": ["textarea"] }
   },
   "buildCmd": "node .design-sync/elements/tools/gen.mjs && npx ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
 }

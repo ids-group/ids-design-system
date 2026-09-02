@@ -25,6 +25,10 @@
             "message": "Use <List> from the design system instead of <ul>."
           },
           {
+            "element": "dialog",
+            "message": "Use <Modal> from the design system instead of <dialog>."
+          },
+          {
             "element": "input",
             "message": "Use <Radio> from the design system instead of <input[type=radio]>."
           },
@@ -33,20 +37,16 @@
             "message": "Use <Select> from the design system instead of <select>."
           },
           {
-            "element": "textarea",
-            "message": "Use <Textarea> from the design system instead of <textarea>."
+            "element": "input",
+            "message": "Use <Slider> from the design system instead of <input[type=range]>."
           },
           {
             "element": "table",
             "message": "Use <Table> from the design system instead of <table>."
           },
           {
-            "element": "input",
-            "message": "Use <Slider> from the design system instead of <input[type=range]>."
-          },
-          {
-            "element": "dialog",
-            "message": "Use <Modal> from the design system instead of <dialog>."
+            "element": "textarea",
+            "message": "Use <Textarea> from the design system instead of <textarea>."
           }
         ]
       }
@@ -793,6 +793,14 @@
       }
     },
     "tokens": [
+      "--_date-picker-day-disabled-label-color",
+      "--_date-picker-day-hover-bg-color",
+      "--_date-picker-day-range-bg-color",
+      "--_date-picker-day-range-label-color",
+      "--_date-picker-day-selected-bg-color",
+      "--_date-picker-day-selected-bg-color-hover",
+      "--_date-picker-day-selected-label-color",
+      "--_date-picker-day-today-label-color",
       "--_dropdown-panel-bg-color",
       "--_dropdown-panel-maxh",
       "--_dropdown-panel-maxw",
@@ -824,6 +832,8 @@
       "--_overlay-enter-origin",
       "--_overlay-leave-duration",
       "--_overlay-leave-easing",
+      "--_scroll-wrap-bg-color",
+      "--_scroll-wrap-radius",
       "--accent",
       "--accent-focus-field",
       "--accent-focus-ring",
@@ -983,13 +993,25 @@
       "--date-picker-nav-size",
       "--date-picker-w",
       "--dl-spec-label-w",
+      "--docs-scroll-wrap-bg-color",
+      "--docs-scroll-wrap-radius",
       "--dodont-stage-minh",
       "--drawer-w-lg",
       "--drawer-w-md",
       "--drawer-w-sm",
+      "--ds-badge-bg-color",
+      "--ds-badge-label-color",
       "--ds-container-pad",
       "--ds-control-focus-shadow",
       "--ds-control-focus-shadow-error",
+      "--ds-date-picker-day-disabled-label-color",
+      "--ds-date-picker-day-hover-bg-color",
+      "--ds-date-picker-day-range-bg-color",
+      "--ds-date-picker-day-range-label-color",
+      "--ds-date-picker-day-selected-bg-color",
+      "--ds-date-picker-day-selected-bg-color-hover",
+      "--ds-date-picker-day-selected-label-color",
+      "--ds-date-picker-day-today-label-color",
       "--ds-dropdown-panel-bg-color",
       "--ds-dropdown-panel-maxh",
       "--ds-dropdown-panel-maxw",
@@ -1035,6 +1057,7 @@
       "--ds-radius-inner",
       "--ds-radius-panel",
       "--ds-radius-pill",
+      "--ds-status-dot-color",
       "--ds-t-caption-color",
       "--ds-t-caption-font-family",
       "--ds-t-caption-font-size",
@@ -2255,6 +2278,19 @@
       "--bp-lg": "length",
       "--bp-xl": "length",
       "--bp-2xl": "length",
+      "--_date-picker-day-hover-bg-color": "other",
+      "--_date-picker-day-today-label-color": "other",
+      "--_date-picker-day-selected-bg-color": "other",
+      "--_date-picker-day-selected-label-color": "other",
+      "--_date-picker-day-range-bg-color": "other",
+      "--_date-picker-day-range-label-color": "other",
+      "--_date-picker-day-selected-bg-color-hover": "other",
+      "--_date-picker-day-disabled-label-color": "other",
+      "--_scroll-wrap-bg-color": "other",
+      "--_scroll-wrap-radius": "other",
+      "--ds-badge-bg-color": "other",
+      "--ds-badge-label-color": "other",
+      "--ds-status-dot-color": "other",
       "--ds-t-display-font-weight": "other",
       "--ds-t-display-font-size": "length",
       "--ds-t-display-line-height": "length",
@@ -2382,7 +2418,17 @@
       "--ds-overlay-enter-offset": "other",
       "--ds-overlay-enter-scale": "other",
       "--ds-overlay-leave-duration": "other",
-      "--ds-overlay-leave-easing": "other"
+      "--ds-overlay-leave-easing": "other",
+      "--ds-date-picker-day-hover-bg-color": "color",
+      "--ds-date-picker-day-today-label-color": "color",
+      "--ds-date-picker-day-selected-bg-color": "color",
+      "--ds-date-picker-day-selected-label-color": "color",
+      "--ds-date-picker-day-range-bg-color": "color",
+      "--ds-date-picker-day-range-label-color": "color",
+      "--ds-date-picker-day-selected-bg-color-hover": "other",
+      "--ds-date-picker-day-disabled-label-color": "color",
+      "--docs-scroll-wrap-bg-color": "color",
+      "--docs-scroll-wrap-radius": "length"
     },
     "fontFamilies": [
       "JetBrains Mono",
