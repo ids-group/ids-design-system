@@ -174,26 +174,17 @@ for (const [name, slug] of Object.entries(sectionMap).sort()) {
 // the tall unreadable shape this design exists to avoid — the pane fits a card's declared viewport
 // into a fixed tile, so height is zoom. Reported, not failed: giving such a part a block of its own
 // is a ds-docs authoring decision, not something a build can invent.
-const wholeChapter = new Map();
-for (const tag of [...componentTags].sort()) {
-  const name = pascalOfTag(tag);
-  const slug = sectionMap[name] ?? `components/${tag.replace(/^ds-/, '')}`;
-  const template = join(
-    repo, 'ds-docs/src/app/sections', slug, `${slug.split('/').pop()}.section.html`,
-  );
-  let html = '';
-  try {
-    html = readFileSync(template, 'utf8');
-  } catch { /* a section with no template of its own cannot mark anything */ }
-  const own = tag.replace(/^ds-/, '');
-  const marks = new Set([...html.matchAll(/data-for="([^"]+)"/g)].map((match) => match[1]));
-  const blocks = (html.match(/class="block-title/g) ?? []).length;
-  if (marks.has(own)) continue;
-  if (slug === `components/${own}` && blocks) continue;
-  wholeChapter.set(name, slug);
-}
-for (const [name, slug] of wholeChapter) {
-  console.log(`· ${name} has no block of its own in ${slug} — its card is the whole chapter, which the pane renders zoomed out`);
+// The pane fits a card's declared viewport into a fixed tile, so height IS zoom: a card much taller
+// than the rest is rendered proportionally smaller and stops being readable. Measured, not guessed
+// — `viewports.json` is what the markers carry. Reported rather than failed: the fix is to give the
+// component a block of its own in ds-docs, which is authoring, not building.
+const TALL = 3000;
+const heights = JSON.parse(
+  readFileSync(join(repo, '.design-sync', 'viewports.json'), 'utf8'),
+).heights;
+const tall = Object.entries(heights).filter(([, height]) => height > TALL);
+for (const [card, height] of tall.sort((a, b) => b[1] - a[1])) {
+  console.log(`· ${card} is ${height}px — over ${TALL}px the pane shows it too small to read; give that component a block of its own in ds-docs`);
 }
 
 // Both directions, because only one of them was checked until 2026-09-01 and two orphans sat

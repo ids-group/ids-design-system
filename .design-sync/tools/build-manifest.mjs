@@ -36,13 +36,23 @@ const posix = (path) => relative(OUT, path).split('\\').join('/');
 // ── cards ────────────────────────────────────────────────────────────────
 // From the marker each card carries, not from a second list: the marker is what the app itself
 // parses, so reading it here keeps the index and the page from ever disagreeing.
+// In the order build-cards decided, which is the reading order of the docs site — groups, then
+// chapters, then blocks within a chapter. Walking the tree instead yields alphabetical, and a
+// chapter's cards then appear in an order nobody wrote.
+const order = JSON.parse(
+  readFileSync(join(elements, 'gen', 'cards.json'), 'utf8'),
+).cards;
 const cards = [];
-for (const file of walk(join(OUT, 'components')).filter((f) => f.endsWith('.html')).sort()) {
-  const marker = readFileSync(file, 'utf8').match(/<!--\s*@dsCard([^>]*?)-->/);
+for (const path of order) {
+  const marker = readFileSync(join(OUT, path), 'utf8').match(/<!--\s*@dsCard([^>]*?)-->/);
   if (!marker) continue;
   const group = marker[1].match(/group="([^"]*)"/)?.[1];
   const viewport = marker[1].match(/viewport="([^"]*)"/)?.[1];
-  cards.push(viewport ? { path: posix(file), group, viewport } : { path: posix(file), group });
+  cards.push(viewport ? { path, group, viewport } : { path, group });
+}
+const onDisk = walk(join(OUT, 'components')).filter((file) => file.endsWith('.html')).length;
+if (cards.length !== onDisk) {
+  throw new Error(`cards.json lists ${cards.length} card(s) against ${onDisk} on disk`);
 }
 
 // From the emitted `.jsx` files, not from a card: a component publishes one card per documented

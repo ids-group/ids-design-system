@@ -167,8 +167,13 @@ function cardsFor(name) {
   const owner = marks.has(own) ? own : (primary ? '' : null);
   if (owner === null || !blocks.length) return [{ file: name, owns: null, index: -1, title: '' }];
 
-  const mine = blocks.filter((block) => block.owner === owner);
-  if (!mine.length) return [{ file: name, owns: null, index: -1, title: '' }];
+  // `position` is the block's place in the WHOLE chapter, which is the order the docs site reads
+  // in; `index` is its place among the blocks this component owns, which is what the card's own
+  // slicer counts.
+  const mine = blocks
+    .map((block, position) => ({ ...block, position }))
+    .filter((block) => block.owner === owner);
+  if (!mine.length) return [{ file: name, owns: null, index: -1, position: -1, title: '' }];
 
   const seen = new Map();
 
@@ -188,6 +193,7 @@ function cardsFor(name) {
       file: suffix ? `${name}-${suffix}` : name,
       owns: owner,
       index,
+      position: block.position,
       title: block.title,
     };
   });
@@ -411,9 +417,33 @@ for (const name of [...byName.keys()].sort()) {
         apiKey: card.index <= 0 ? apiKeyBySelector.get(component.selector) ?? '' : null,
       }),
     );
-    written.push(card.file);
+    written.push({ file: card.file, path: `components/${group}/${name}/${card.file}.html` });
   }
 }
+
+// The order the pane should show them in: the reading order of the docs site — groups as
+// GROUP_PAGES lists them, chapters within a group, blocks within a chapter. Written for
+// build-manifest, because walking the built tree only ever yields alphabetical, which put Button's
+// "Color × variant" nowhere near the top of the Buttons chapter where it opens.
+const sectionOrder = new Map(sections.map((section, index) => [section.slug, index]));
+const ordered = [];
+for (const name of byName.keys()) {
+  const section = sectionFor(name);
+  const group = groupOf(section);
+  for (const card of cardsFor(name)) {
+    ordered.push({
+      path: `components/${group}/${name}/${card.file}.html`,
+      section: sectionOrder.get(section.slug) ?? Number.MAX_SAFE_INTEGER,
+      block: card.position < 0 ? Number.MAX_SAFE_INTEGER : card.position,
+      name,
+    });
+  }
+}
+ordered.sort((a, b) => a.section - b.section || a.block - b.block || a.name.localeCompare(b.name));
+writeFileSync(
+  join(elements, 'gen', 'cards.json'),
+  `${JSON.stringify({ generatedBy: 'build-cards.mjs', cards: ordered.map((entry) => entry.path) }, null, 2)}\n`,
+);
 
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
 const bundleCss = readFileSync(join(elements, 'dist', 'ds-bundle.css'), 'utf8');

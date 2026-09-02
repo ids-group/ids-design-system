@@ -1,11 +1,11 @@
-<!-- @dsCard group="overlays" viewport="1200x1398" -->
+<!-- @dsCard group="overlays" viewport="1200x933" -->
 <!doctype html>
 <!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
      automatic OS branch, so a host that sets it on this document flips every component's tokens
      while the page keeps its own background. Measured on the live cards: a light page whose tonal
      buttons came out dark navy with white labels and whose outline labels went invisible. -->
 <html data-theme="light"><head><meta charset="utf-8">
-  <title>Modal</title>
+  <title>ModalCard</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
   <style>
@@ -31,8 +31,8 @@
        — heading, lede, API tables — and is never touched, so a part's card still says which chapter
        it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
     (function () {
-      var OWNS = "";
-      var INDEX = 6;
+      var OWNS = "modal-card";
+      var INDEX = 3;
       var KEY = null;
       var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
       var API = '[data-key]';

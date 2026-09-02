@@ -45,9 +45,15 @@ blocks belong to the chapter's own. The API table goes on a component's FIRST
 card only: on Table that is one table instead of thirty-five copies.
 
 A component whose chapter marks no block for it falls back to one whole-chapter
-card — the tall shape this design exists to avoid. Four do: `ModalCard`,
-`PasswordRules`, `SidenavFooter` and `TimeColumns`, because ds-docs demonstrates
-none of them on its own. `check-manual-surface` prints all four on every run.
+card — the tall shape this design exists to avoid. `check-manual-surface` reports
+by measured HEIGHT rather than by markup, because height is the actual risk: any
+card over 3000px is named on every run.
+
+Cards are listed in the manifest in the READING order of the docs site — groups
+as GROUP_PAGES lists them, chapters within a group, blocks within a chapter.
+`build-cards` writes that order to `elements/gen/cards.json` and `build-manifest`
+follows it; walking the built tree instead yields alphabetical, which put the
+Buttons chapter's opening block in the middle of its own group.
 
 The card's **group** is the ds-docs group page that renders its section, not a
 `category` in the doc's front matter. Those were two hand-kept opinions and they
