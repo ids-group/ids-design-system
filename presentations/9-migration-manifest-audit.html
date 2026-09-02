@@ -1,821 +1,167 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Migration manifest audit — 23 findings</title>
+<title>Аудит миграционных манифестов — что осталось решить</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="audit closed 23/23; 3 of the 13 adopts have since shipped, 10 open - migrations/README.md - docs/todo.md">
+<meta name="ds-deck-evidence" content="migrations/*.json - tools/migration-lint.mjs - migrations/AUTHORING.md - все 23 находки исправлены, открыты восемь практик формата (docs/todo.md, одна строка P3)">
 <link rel="stylesheet" href="ds.css">
-<style>
-  :root { color-scheme: light; }
+<link rel="stylesheet" href="deck.css">
 
-  body {
-    margin: 0;
-    padding: var(--space-6) var(--space-5) var(--space-10);
-    background: var(--surface-secondary);
-    color: var(--text-primary);
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  }
-
-  main {
-    max-width: 1020px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-  }
-
-  /* ── masthead ─────────────────────────────────────────────── */
-  .mast { display: flex; flex-direction: column; gap: var(--space-3); }
-
-  .kicker {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-1) var(--space-4);
-    font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-flat) var(--font-mono);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-  }
-
-  h1 {
-    font: var(--font-weight-extrabold) var(--font-size-h2) / var(--line-height-tight) var(--font-sans);
-    margin: 0;
-    text-wrap: balance;
-  }
-
-  .standfirst {
-    font-size: var(--font-size-m);
-    color: var(--text-secondary);
-    max-width: 62ch;
-    margin: 0;
-  }
-
-  /* ── tally ────────────────────────────────────────────────── */
-  .tally {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--border-width-default);
-    background: var(--border-divider);
-    border: var(--border-width-default) solid var(--border-divider);
-    border-radius: var(--ds-radius-panel);
-    overflow: hidden;
-    margin: 0;
-  }
-  .tally > div { background: var(--surface-default); padding: var(--space-3) var(--space-4); }
-  .tally dt {
-    font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-flat) var(--font-mono);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    margin: 0 0 var(--space-1);
-  }
-  .tally dd {
-    margin: 0;
-    font: var(--font-weight-bold) var(--font-size-h3) / 1 var(--font-sans);
-    font-variant-numeric: tabular-nums;
-  }
-  .tally .is-open dd { color: var(--error); }
-  .tally .is-fixed dd { color: var(--success); }
-
-  /* ── sections ─────────────────────────────────────────────── */
-  section { display: flex; flex-direction: column; gap: var(--space-4); }
-
-  h2 {
-    margin: 0;
-    padding-bottom: var(--space-2);
-    border-bottom: var(--border-width-strong) solid var(--text-primary);
-    font: var(--font-weight-bold) var(--font-size-h4) / var(--line-height-tight) var(--font-sans);
-    text-wrap: balance;
-  }
-
-  h3 {
-    margin: var(--space-2) 0 0;
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-  }
-
-  .tier {
-    font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-flat) var(--font-mono);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--ds-radius-inner);
-  }
-  .t1 .tier { background: var(--error-subtitle); color: var(--error); }
-  .t2 .tier { background: var(--warning-subtitle); color: var(--warning); }
-  .t3 .tier { background: var(--surface-muted); color: var(--text-secondary); }
-
-  p { margin: 0; max-width: 62ch; }
-  p + p { margin-top: var(--space-3); }
-
-  /* ── ledger ───────────────────────────────────────────────── */
-  .ledger { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
-
-  .finding {
-    background: var(--surface-default);
-    border: var(--border-width-default) solid var(--border-divider);
-    border-left: 3px solid var(--stripe);
-    border-radius: var(--ds-radius-control);
-    padding: var(--space-3) var(--space-4);
-    display: grid;
-    grid-template-columns: 2rem 1fr;
-    gap: 2px var(--space-3);
-  }
-  .t1 .finding { --stripe: var(--error); }
-  .t2 .finding { --stripe: var(--warning); }
-  .t3 .finding { --stripe: var(--border-strong); }
-
-  .num {
-    font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-base) var(--font-mono);
-    color: var(--text-tertiary);
-    font-variant-numeric: tabular-nums;
-    padding-top: 2px;
-  }
-
-  .where {
-    grid-column: 2;
-    font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-mono);
-    color: var(--accent);
-    overflow-wrap: anywhere;
-    margin-bottom: 2px;
-  }
-
-  .what { grid-column: 2; color: var(--text-secondary); }
-  .what strong { color: var(--text-primary); font-weight: var(--font-weight-semibold); }
-
-  .fix {
-    grid-column: 2;
-    margin-top: var(--space-2);
-    padding-top: var(--space-2);
-    border-top: var(--border-width-default) dashed var(--border-divider);
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-  }
-  .fix b {
-    font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    margin-right: var(--space-2);
-  }
-
-  .done-tag {
-    grid-column: 2;
-    justify-self: start;
-    margin-top: var(--space-2);
-    font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    background: var(--success-subtitle);
-    color: var(--success);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--ds-radius-inner);
-  }
-
-  code {
-    font-family: var(--font-mono);
-    font-size: 0.92em;
-    background: var(--surface-secondary);
-    padding: 0 var(--space-1);
-    border-radius: var(--ds-radius-inner);
-    overflow-wrap: anywhere;
-  }
-
-  /* ── table ────────────────────────────────────────────────── */
-  .scroller {
-    overflow-x: auto;
-    border: var(--border-width-default) solid var(--border-divider);
-    border-radius: var(--ds-radius-panel);
-  }
-  table { border-collapse: collapse; width: 100%; min-width: 640px; background: var(--surface-default); }
-  th, td {
-    text-align: left;
-    padding: var(--space-2) var(--space-3);
-    border-bottom: var(--border-width-default) solid var(--border-divider);
-    vertical-align: top;
-  }
-  th {
-    background: var(--surface-secondary);
-    font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-flat) var(--font-mono);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    white-space: nowrap;
-  }
-  td { color: var(--text-secondary); }
-  td:first-child { color: var(--text-primary); font-weight: var(--font-weight-medium); white-space: nowrap; }
-  tbody tr:last-child td { border-bottom: 0; }
-
-  .verdict {
-    font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--ds-radius-inner);
-    white-space: nowrap;
-  }
-  .adopt { background: var(--success-subtitle); color: var(--success); }
-  .tier-fold > summary { cursor: pointer; list-style: none; }
-  .tier-fold > summary::-webkit-details-marker { display: none; }
-  .tier-fold > summary h3 { display: inline; }
-  .tier-fold > summary::before { content: '▸ '; color: var(--text-tertiary); }
-  .tier-fold[open] > summary::before { content: '▾ '; }
-  .still-open { border-left: 4px solid var(--warning); padding-left: var(--space-4); }
-  .pending { display: flex; flex-direction: column; gap: var(--space-3); }
-  .pending li { color: var(--text-secondary); }
-  .done-tag.recheck { background: var(--warning-subtitle); color: var(--warning); display: block; margin-top: var(--space-2); white-space: normal; }
-  .landed { background: var(--primary-subtitle); color: var(--primary); }
-  .reject { background: var(--error-subtitle); color: var(--error); }
-
-  /* ── actions ──────────────────────────────────────────────── */
-  .actions { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); counter-reset: act; }
-  .actions li {
-    position: relative;
-    background: var(--surface-default);
-    border: var(--border-width-default) solid var(--border-divider);
-    border-radius: var(--ds-radius-control);
-    padding: var(--space-3) var(--space-4) var(--space-3) var(--space-8);
-    color: var(--text-secondary);
-  }
-  .actions li::before {
-    counter-increment: act;
-    content: counter(act);
-    position: absolute;
-    left: var(--space-4);
-    top: var(--space-3);
-    font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-base) var(--font-mono);
-    color: var(--accent);
-    font-variant-numeric: tabular-nums;
-  }
-  .kind {
-    display: inline-block;
-    margin-left: var(--space-2);
-    padding: 0 var(--space-2);
-    border: var(--border-width-default) solid var(--border-default);
-    border-radius: var(--ds-radius-inner);
-    font: var(--font-weight-medium) var(--font-size-xs) / 1.6 var(--font-mono);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    vertical-align: 1px;
-  }
-
-  footer {
-    border-top: var(--border-width-default) solid var(--border-divider);
-    padding-top: var(--space-4);
-    font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-mono);
-    color: var(--text-tertiary);
-  }
-</style>
-
-<body>
 <main>
-
-  <header class="mast">
-    <div class="kicker">
-      <span>ids-design-system</span>
-      <span>22 manifests · 186 items</span>
-      <span>0.5.0 → 0.10.3</span>
-      <span>2026-08-25</span>
+  <header class="masthead">
+    <div class="chips">
+      <span class="chip is-open">нужен вердикт</span>
+      <span class="chip is-done">23 из 23 исправлено</span>
+      <span class="chip">24 манифеста · 208 пунктов</span>
+      <span class="chip is-accent">обновлено 2026-09-02</span>
     </div>
-    <h1>Migration manifest audit</h1>
-    <p class="standfirst">
-      Forty agents read every published manifest, the lint that guards them and the plugin that
-      executes them, then tried to refute their own findings. Twenty-four survived. Every one was re-verified
-      against the shipped code before it was touched — five had wrong evidence and one would have
-      destroyed two legitimate entries. All twenty-three are now fixed.
+    <h1>Аудит миграционных манифестов — что осталось решить</h1>
+    <p class="lede">
+      <b>Все находки закрыты. Дека открыта ровно ради одного:</b> восемь практик формата, которые
+      исследование пометило как «взять», и никто их не ратифицировал. Решать надо
+      <b>какие из восьми, если вообще</b> — каждая взята из первоисточника, поэтому все восемь
+      защитимы, и взять все восемь — отдельный проект по тулингу, за который никто не тянет.
     </p>
   </header>
 
-  <dl class="tally">
-    <div><dt>Findings</dt><dd>23</dd></div>
-    <div class="is-open"><dt>Damage code</dt><dd>6</dd></div>
-    <div><dt>Silent breaks</dt><dd>6</dd></div>
-    <div><dt>Gate defects</dt><dd>11</dd></div>
-    <div class="is-fixed"><dt>Fixed</dt><dd>23</dd></div>
-    <div class="is-open"><dt>Still open</dt><dd>8</dd></div>
-  </dl>
+  <h2>Решение: восемь практик</h2>
 
-  <section class="still-open">
-    <h2>Still open — eight format practices, and nothing else</h2>
-    <p>
-      Every one of the 23 findings is fixed and folded below, and <code>0.11.0</code> and
-      <code>0.11.1</code> have been audited against their own boundaries since. What the deck still
-      asks for is the tail: practices its research marked <em>Adopt</em> that nobody has ratified.
-      Five of the original thirteen have shipped on their own — <code>appliesWhen</code>,
-      <code>action</code>, the <code>migrations</code> export, and two that went out with the
-      auto-update plugin. These eight have not.
-    </p>
-    <ol class="pending">
-      <li><b>Executable verification.</b> <code>verify</code> is prose in all 24 manifests. Polaris
-        ships a literal alternation RegExp per token group, so the check runs rather than being
-        read.</li>
-      <li><b>Runtime signal ids.</b> Vue keys its compat warnings by id and Ember collects which
-        ones actually fired. Our <code>devWarn</code> messages exist; nothing ties a manifest item
-        to the warning that proves the item applies.</li>
-      <li><b>Escalation marker.</b> Next.js codemods leave a comment that breaks the build until a
-        human removes it. Only the comment half is worth taking — a migration that cannot finish
-        should say so in the code, not only in a report.</li>
-      <li><b>Explicit “no replacement”.</b> ESLint lets <code>replacedBy</code> be an empty array to
-        state that there is none. We omit the field instead, so “nothing replaces this” and “the
-        author forgot” read identically.</li>
-      <li><b><code>deprecatedIn</code>.</b> The version that first deprecated a thing, separate from
-        the one that removed it. Adopt that half; <code>availableUntil</code> is rejected — a file
-        cannot know its own future.</li>
-      <li><b>Provenance link.</b> CDK makes the PR link a required member of its change record.
-        Optional here, and linted only on <code>unreleased.json</code>, since a released manifest
-        would be pointing at a repository the reader cannot open.</li>
-      <li><b><code>schemaVersion</code>.</b> Flutter’s <code>fix_data.yaml</code> mandates one. Ours
-        has changed shape four times with nothing in the file to say which shape it is.</li>
-      <li><b><code>ng-update</code> requirements key.</b> A hard pre-flight the Angular CLI already
-        enforces. Adopt the key; porting the whole thing to real schematics is rejected.</li>
-    </ol>
-    <p class="note">
-      Five were rejected outright with the measurement that rejected them, and those are in the
-      table at the foot of this page: the deprecation window, value-change as a kind, array-valued
-      <code>new</code>, a confidence axis, and a per-item docs URL.
-    </p>
-  </section>
+  <table>
+    <thead>
+      <tr><th>Практика</th><th>Откуда</th><th>Что даёт здесь</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Исполняемая проверка</th>
+        <td>Polaris: литеральный alternation-RegExp на группу токенов</td>
+        <td><code>verify</code> сейчас — проза во всех 24 манифестах. Стала бы проверкой, которая <b>выполняется</b>, а не читается.</td>
+      </tr>
+      <tr>
+        <th>Рантайм-идентификаторы сигналов</th>
+        <td>Vue: compat-варнинги по id; Ember собирает, какие сработали</td>
+        <td>Наши <code>devWarn</code> уже есть. Ничто не связывает пункт манифеста с варнингом, который доказывает, что пункт применим.</td>
+      </tr>
+      <tr>
+        <th>Маркер эскалации</th>
+        <td>Next.js: кодмод оставляет комментарий, ломающий сборку, пока человек его не уберёт</td>
+        <td>Берём только половину с комментарием: миграция, которая не может завершиться, должна сказать это <b>в коде</b>, а не только в отчёте.</td>
+      </tr>
+      <tr>
+        <th>Явное «замены нет»</th>
+        <td>ESLint: <code>replacedBy</code> может быть пустым массивом</td>
+        <td>Мы просто опускаем поле, поэтому «ничего не заменяет» и «автор забыл» читаются одинаково. <b>0 из 22 сломались бы.</b></td>
+      </tr>
+      <tr>
+        <th><code>deprecatedIn</code></th>
+        <td>ESLint <code>deprecatedSince</code>; Ember RFC 0649 <code>since</code></td>
+        <td>Версия, в которой вещь объявили устаревшей, отдельно от той, где удалили. <b>Только эта половина</b> — <code>availableUntil</code> отклонён: файл не может знать своё будущее.</td>
+      </tr>
+      <tr>
+        <th>Ссылка на происхождение</th>
+        <td>CDK: ссылка на PR — обязательный член записи об изменении</td>
+        <td>У нас опциональной и линтить <b>только в <code>unreleased.json</code></b>: выпущенный манифест указывал бы на репозиторий, который читатель не откроет.</td>
+      </tr>
+      <tr>
+        <th><code>schemaVersion</code></th>
+        <td>Flutter <code>fix_data.yaml</code> требует <code>version: 1</code></td>
+        <td>Наша форма менялась <b>четыре раза</b>, и в файле нет ничего, что сказало бы, какая она.</td>
+      </tr>
+      <tr>
+        <th>Ключ <code>requirements</code> для ng-update</th>
+        <td>жёсткий пре-флайт, который Angular CLI уже исполняет</td>
+        <td>Берём ключ. Портирование всего на настоящие schematics — <b>отклонено</b>.</td>
+      </tr>
+    </tbody>
+  </table>
 
-  <section>
-    <h2>The honest verdict</h2>
-    <p>
-      On <strong>format</strong> this is ahead of the field. Nothing in Angular CDK's
-      <code>VersionChanges</code>, Nx's <code>migrations.json</code>, Primer's
-      <code>deprecated.json</code> or Polaris's migration guide carries the equivalent of
-      <code>detect</code> + <code>verify</code> + <code>deleteList</code> plus a per-version freeze
-      rule. The “what you can now delete” half is genuinely novel — the industry documents what
-      broke, not what became redundant.
-    </p>
-    <p>
-      What is missing is everyone else's <strong>enforcement posture</strong>. The rest of the
-      ecosystem gates on a declared marker — ESLint <code>meta.deprecated</code>, Vue
-      <code>DeprecationTypes</code>, Ember deprecation ids, OpenRewrite <code>Preconditions</code> —
-      or on executable code. Here the contract rests on 306 lines of bespoke regex whose three
-      judgment rules cannot fire on the exact cases they are named after, and on a selftest that
-      manufactures the only input that makes them fire.
-    </p>
-    <p>
-      The result: 186 items where the format is excellent and the data is not. Five shipped items
-      instruct a consumer to make an edit that is wrong or regressive. Four class-member entries are
-      miscounted or incomplete. The release gate is green on all of it.
-    </p>
-  </section>
+  <p>
+    Пять из первоначальных тринадцати уехали сами: <code>appliesWhen</code>, <code>action</code>,
+    экспорт <code>migrations</code> и ещё две — вместе с плагином авто-обновления.
+  </p>
 
-  <section class="t1">
-    <h2>What is broken now</h2>
-    <details class="tier-fold">
-      <summary><h3><span class="tier">Tier 1</span> An agent obeying the manifest damages the consumer’s code</h3></summary>
+  <h2>Отклонено — и цифра, которая отклонила</h2>
 
-    <ol class="ledger">
-      <li class="finding">
-        <span class="num">01</span>
-        <div class="where">migrations/0.7.1.json#modal-title-flex-moved-to-heading</div>
-        <div class="what">
-          Filed <code>kind: "class-rename"</code>, <code>"ds-modal-card .title"</code> →
-          <code>".heading"</code> — but <strong><code>.title</code> was never renamed</strong>.
-          v0.7.1 still emits <code>&lt;h2 class="title"&gt;</code>; only <code>flex: 1</code> moved to
-          a new wrapper. The applier dispatches rename kinds to “replace <code>old</code> with
-          <code>new</code> at every usage”, so a consumer’s <code>.title</code> rule gets rewritten to
-          a class it was never about.
-        </div>
-        <div class="fix"><b>Fix</b><code>kind: "behavior"</code>, <code>new: null</code>, drop the false rename from <code>old</code>, add the <code>verify</code> M022 then demands.</div>
-        <span class="done-tag">Verified &amp; fixed — 30ae2f0c</span>
-      </li>
+  <table>
+    <thead><tr><th>Практика</th><th>Почему нет</th></tr></thead>
+    <tbody>
+      <tr><th>Окно депрекации</th><td>SemVer §7 требует минорную с депрекацией до удаления; Carbon держит окно v10→v12. <b>Отклонено до 1.0.</b></td></tr>
+      <tr><th>Смена значения как отдельный <code>kind</code></th><td><b>4 кандидата, и у всех четырёх уже есть <code>restore</code></b>, которого требует M024. Новый kind добавляет ярлык и ноль проверок.</td></tr>
+      <tr><th><code>new</code> массивом</th><td><b>0 из 78 переименований</b> имеют больше одного кандидата. Единственный настоящий случай (три суффикса <code>-fg</code>) — это меню, а не отображение: потребитель обязан выбрать, и <code>action</code> так и говорит.</td></tr>
+      <tr><th>Ось уверенности</th><td>отклонена</td></tr>
+      <tr><th>URL документации на пункт</th><td>отклонён</td></tr>
+    </tbody>
+  </table>
 
-      <li class="finding">
-        <span class="num">02</span>
-        <div class="where">migrations/0.7.1.json#surface-motion-partial-a-la-carte</div>
-        <div class="what">
-          <code>old</code>/<code>new</code> carry the in-repo load path
-          (<code>@use 'styles/surface-motion';</code>) that resolves only because
-          <code>angular.json</code> gives ds-docs <code>includePaths: ["src/lib"]</code>. An external
-          consumer writes the package-qualified specifier, so <code>old</code> never matches and the
-          item is dropped as not-applicable — or <code>new</code> is inserted and Sass fails.
-        </div>
-        <div class="fix"><b>Fix</b>Package-qualify both, reclassify to <code>code-add</code> with <code>old: null</code>, copying its twin <code>0.4.0#styles-tokens-a-la-carte-needs-breakpoints</code>.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-              <span class="done-tag recheck">Re-checked 2026-09-01 — only half had been done. The specifiers were qualified; the item stayed <code>scss-api</code> with a non-null <code>old</code>, which the applier contract reads as a path swap — so it no-opped for the à-la-carte consumer with no <code>overlay-motion</code> line, the very reader its own <code>action</code> addresses. Now <code>code-add</code> / <code>old: null</code>.</span>
-      </li>
+  <h2>Честный вердикт</h2>
 
-      <li class="finding">
-        <span class="num">03</span>
-        <div class="where">migrations/0.10.2.json#double-focus-ring-workaround</div>
-        <div class="what">
-          <code>find: ["box-shadow: none"]</code> with no exclusion, while 0.10.2’s own sibling item
-          names the five shells it actually fixed — <code>ds-input</code> and <code>ds-textarea</code>
-          were <strong>not</strong> among them until 0.10.3. The same bare find also matches the rule
-          <code>0.10.0#universal-focus-ring-base-rule</code> explicitly told consumers to write.
-        </div>
-        <div class="fix"><b>Fix</b>Put the exclusion in <code>why</code>. No forward reference to 0.10.3 — a manifest cannot know its own future.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">04</span>
-        <div class="where">migrations/0.8.0.json#table-client-sort-replaced-by-sort-mode</div>
-        <div class="what">
-          The <code>verify</code> said an unset <code>sortMode</code> resolves to
-          <strong>server</strong>. The item’s own note, the CHANGELOG and the shipped code
-          (<code>sortMode() ?? 'client'</code>) all say <strong>client</strong>. An agent stepping a
-          consumer to 0.8.0 certified exactly the failure the note warns about: a server-paged table
-          re-sorts the page it is showing, and the rows look sorted while the server order is
-          unchanged.
-        </div>
-        <div class="fix"><b>Fix</b>Rewrite the verify to 0.8.0’s own truth: a server-paged table must declare <code>sortMode="server"</code> explicitly.</div>
-        <span class="done-tag">Verified &amp; fixed — 30ae2f0c</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">05</span>
-        <div class="where">migrations/0.10.2.json — the two chip remaps</div>
-        <div class="what">
-          Both declare <code>supersedes: ["0.10.0#chips-cap-by-width-by-default"]</code> only, which
-          leaves <code>0.10.0#max-visible-chips-zero-inverted</code>’s decision rule — “replace every
-          0 with the binding <code>[maxVisibleChips]="null"</code>” — standing as current guidance.
-          After <code>maxVisibleChips() ?? 'fit'</code> that produces the opposite of its stated
-          intent.
-        </div>
-        <div class="fix"><b>Fix</b>Add that one id to both <code>supersedes</code> arrays — not <code>max-visible-chips-number-is-a-ceiling</code>, whose guidance is unchanged.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">06</span>
-        <div class="where">migrations/0.5.1.json#badge-variant-to-status-rename</div>
-        <div class="what">
-          <code>surface: "template"</code> on an item whose own note calls the migration “THREE
-          coupled steps” — the other two being a <code>styles/status</code> Sass include and a
-          <code>DsStatusRegistry</code> augmentation. <code>input-rename</code> sits outside M022’s
-          behavioural set, so no <code>verify</code> is required and none exists. The failure is
-          silent grey chips.
-        </div>
-        <div class="fix"><b>Fix</b><code>surface: ["template","style","typescript"]</code> — its own neighbour <code>status-dot-status-retype</code> already does this. Same shape on <code>0.5.1#progress-variant-remap</code> and <code>0.4.0#ds-button-variant-axis-split</code>.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-              <span class="done-tag recheck">Re-checked 2026-09-01 — two of the three had it. <code>0.4.0#ds-button-variant-axis-split</code> was still <code>surface: "template"</code> while its own <code>action</code> says “retype it”. A sweep of all 204 items for type-changing prose against a surface without <code>typescript</code> returns that one item and no other; it now carries all three.</span>
-      </li>
-    </ol>
-    </details>
-  </section>
-
-  <section class="t2">
-    <details class="tier-fold">
-      <summary><h3><span class="tier">Tier 2</span> A real break with nothing in the manifest to find it</h3></summary>
-
-    <ol class="ledger">
-      <li class="finding">
-        <span class="num">07</span>
-        <div class="where">migrations/0.9.0.json — no item at all</div>
-        <div class="what">
-          Six members on three exported classes widened <code>InputSignal</code> →
-          <code>InputSignalWithTransform</code> (<code>InputComponent.min/max/maxLength</code>,
-          <code>TextareaComponent.maxLength</code>, <code>NumberStepperComponent.min/max</code>). The
-          widening rule was back-applied to 0.10.0 and 0.10.2 and never to 0.9.0; 0.9.1 has zero
-          items, so a consumer walking forward never meets it.
-        </div>
-        <div class="fix"><b>Fix</b>One <code>behavior</code> item, <code>surface: "typescript"</code>. The break is TS2322 on explicit annotations and TS2416 on overrides — <em>not</em> readers.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">08</span>
-        <div class="where">migrations/0.10.0.json — ModalService.confirm</div>
-        <div class="what">
-          <code>confirm({ tone: 'error' })</code> now opens with a red error badge that no consumer
-          input can suppress. The CHANGELOG calls it out in bold; the manifest never mentions
-          <code>ModalService</code>.
-        </div>
-        <div class="fix"><b>Fix</b><code>behavior</code> item, <code>surface: "typescript"</code>, <code>detect: ["confirm({", "tone: 'error'", "ModalService"]</code>, <code>restore: null</code>.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">09</span>
-        <div class="where">migrations/0.10.2.json#exported-class-members-grew</div>
-        <div class="what">
-          Lists <code>SearchComponent (disabled, isDisabled)</code> against the ten the changelog
-          names. The eight missing — <code>writeValue</code>, <code>registerOnChange</code>,
-          <code>registerOnTouched</code>, <code>setDisabledState</code>, <code>markTouched</code>,
-          <code>formDisabled</code>, <code>hidden</code>, <code>bridge</code> — appear nowhere, so a
-          TS4114 on any of them has no manifest hit. The same note also claims
-          <code>SearchComponent.focus()</code> gained <code>override</code>; the shipped file has no
-          <code>override</code> and no base class.
-        </div>
-        <div class="fix"><b>Fix</b>Both, and put the names in <code>searchHints</code> as <code>messageIcon</code> already is.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">10</span>
-        <div class="where">migrations/0.9.0.json#exported-class-members-grew</div>
-        <div class="what">
-          Enumerates fifteen classes. <code>class-surface-diff v0.8.0 v0.9.0</code> says
-          <code>ButtonComponent</code>, <code>DatePickerComponent</code> and
-          <code>SearchComponent</code> also gained <code>inGroup</code>, and
-          <code>AuthLayoutComponent</code> did not exist at v0.8.0 — it is a new export, not a grown
-          class. The count is wrong in five places and neither “fifteen” nor “sixteen” is right.
-        </div>
-        <div class="fix"><b>Fix</b>Recount from the tool, then correct the manifest, both CHANGELOG copies and AUTHORING.md together.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-              <span class="done-tag recheck">Re-checked 2026-09-01 — the recount was never carried through. The false count left the manifest, but the class list still omitted <code>ButtonComponent</code>, <code>DatePickerComponent</code> and <code>SearchComponent</code>, still listed <code>AuthLayoutComponent</code> — absent from <code>v0.8.0</code> entirely — and both prose copies still carried a wrong number. The tool says 16 files, and <code>control-value-accessor.ts</code> holds two classes: <b>seventeen</b>.</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">11</span>
-        <div class="where">migrations/0.10.0.json#input-floating-removed</div>
-        <div class="what">
-          <code>surface: "template"</code> while five removed tokens — <code>--field-h-floating</code>,
-          <code>--field-floating-label-fs/-lh/-top</code>, <code>--field-floating-pad-t</code>, all
-          publicly documented — live in stylesheets. <code>verify</code> tests only the attribute, and
-          the note ends “<code>; DELETE-LIST.</code>” naming no row among the 25 in that file.
-        </div>
-        <div class="fix"><b>Fix</b><code>surface: ["template","style"]</code>, extend the verify, add the row with all five names.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">12</span>
-        <div class="where">migrations/0.9.0.json — self-contradiction</div>
-        <div class="what">
-          <code>table-sort-filter-mode-default-server</code> says <code>filterMode</code> defaults to
-          <code>'server'</code> with a per-table action. <code>informational[21]</code> in the same
-          file says the default is <code>"client"</code> and there is no action.
-        </div>
-        <div class="fix"><b>Fix</b>Delete the stale informational clause.</div>
-              <span class="done-tag">Fixed — 257a271c</span>
-      </li>
-    </ol>
-    </details>
-  </section>
-
-  <section class="t3">
-    <details class="tier-fold">
-      <summary><h3><span class="tier">Tier 3</span> The gate is decorative where it matters most</h3></summary>
-
-    <ol class="ledger">
-      <li class="finding">
-        <span class="num">13</span>
-        <div class="where">tools/migration-lint.mjs — M034 scope</div>
-        <div class="what">
-          M034 iterates <code>manifest.informational</code> only, so the <strong>founding failure
-          mode</strong> — a delete instruction at word 150 of an item <code>note</code> — is
-          unlinted. <code>0.10.3.json</code> trips M034’s own predicate verbatim inside a note and is
-          uncited.
-        </div>
-        <div class="fix"><b>Fix</b>Scan <code>item.note</code> as well. Back-fill the rows first, or the lint fails on main.</div>
-              <span class="done-tag">Fixed — e1edfd74</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">14</span>
-        <div class="where">tools/migration-lint.mjs — DELETE_SHAPE</div>
-        <div class="what">
-          A closed verb list ANDed with a second-person test, so third-person and off-list spellings
-          escape: “Consumers can drop …” in 0.7.1 is a delete instruction the rule cannot see.
-        </div>
-        <div class="fix"><b>Fix</b>Lift the second-person test out of the conjunction and widen the subject.</div>
-              <span class="done-tag">Fixed — e1edfd74</span>
-              <span class="done-tag recheck">Re-checked 2026-09-01 — the subject was widened and the conjunction was left, so the third-person alternatives added here could never satisfy it — the widening was dead code. Measured on nine realistic phrasings: six escaped. Split into <code>DELETE_SELF</code> and <code>DELETE_BY_SUBJECT</code>; six of nine now caught, zero new errors across 24 manifests.</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">15</span>
-        <div class="where">tools/migration-lint.mjs — M023</div>
-        <div class="what">
-          <code>locators.every(isDsSymbol)</code> is false the moment one locator is a bare
-          identifier — i.e. always, for an input or output name. Reconstructing the sortKey item as it
-          shipped leaves M023 silent on the very case it was written for.
-        </div>
-        <div class="fix"><b>Fix</b>Swap the heuristic for a requirement: behavioural item + typescript/config surface ⇒ non-empty <code>detect</code>.</div>
-              <span class="done-tag">Fixed — e1edfd74</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">16</span>
-        <div class="where">tools/migration-lint.mjs — DEFAULT_CHANGE</div>
-        <div class="what">
-          Misses the phrasing AUTHORING.md itself prescribes — “was X, now Y”. Ten items carry a
-          <code>restore</code> the rule cannot see.
-        </div>
-        <div class="fix"><b>Fix</b>Add the prescribed phrasing to the pattern; it is already the house style.</div>
-              <span class="done-tag">Fixed — e1edfd74</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">17</span>
-        <div class="where">tools/migration-lint.mjs — M022 scope</div>
-        <div class="what">
-          The behavioural set excludes <code>value-remap</code>, so 0.10.2’s two chip remaps ship with
-          no <code>verify</code> despite a template + typescript surface and a note admitting the
-          break reaches “any expression, field or constant”.
-        </div>
-        <div class="fix"><b>Fix</b>Add <code>value-remap</code> to the set, back-filling the two verifies first.</div>
-              <span class="done-tag">Fixed — e1edfd74</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">18</span>
-        <div class="where">tools/migration-lint-selftest.mjs</div>
-        <div class="what">
-          The M023 and M029 mutations construct inputs <strong>no author would write</strong>, so they
-          prove the rule fires without proving it fires on real data. M034’s mutation exercises the
-          citation half only, and M001 has no mutation at all.
-        </div>
-        <div class="fix"><b>Fix</b>Mutate toward realistic authoring mistakes, not toward whatever makes the regex match.</div>
-              <span class="done-tag">Fixed — e1edfd74</span>
-              <span class="done-tag recheck">Re-checked 2026-09-01 — M023 and M029 were fixed; <code>M001</code> still had no mutation at all — the only one of thirty-five — and M034’s still exercised the citation half only, leaving finding 13’s scope widening unproven. Two cases added: a manifest that does not parse, and a third-person delete instruction inside an item <code>pitfall</code>.</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">19</span>
-        <div class="where">tools/migration-lint.mjs — deleteList rules</div>
-        <div class="what">
-          <code>replaceWith</code> is never checked; <code>entry.id</code> gets neither the kebab
-          check nor the duplicate check that items get — and <code>knownDeleteIds</code>, which M034’s
-          citations resolve against, is built from those unvalidated ids.
-        </div>
-        <div class="fix"><b>Fix</b>Three one-line rules, all green on main today.</div>
-              <span class="done-tag">Fixed — e1edfd74</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">20</span>
-        <div class="where">migrations/AUTHORING.md · plugin SKILL.md · ds-migration-planner.md</div>
-        <div class="what">
-          All still instructed authors to write <code>supersededBy</code>, which M028 rejects outright
-          and README.md denies exists. Worse: the plugin’s supersession skip keyed off that field, so
-          <strong>it could never fire</strong> — an agent walking a long chain applied instructions a
-          later release had already reversed. The data, the lint and the README were fixed; these four
-          files were not.
-        </div>
-        <div class="fix"><b>Fix</b>Contract now teaches the one-way link; the plugin builds its skip set from every <code>supersedes</code> in the chain.</div>
-        <span class="done-tag">Verified &amp; fixed — 30ae2f0c</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">21</span>
-        <div class="where">Delete-row parity — README.md requires two copies</div>
-        <div class="what">
-          22 rows across 8 of the 10 versions that have a <code>deleteList</code> have no
-          “What you can now DELETE” table in the CHANGELOG.
-        </div>
-        <div class="fix"><b>Fix</b>Not by generating — a hand-written table legitimately merges related entries, so parity by row COUNT reports phantom gaps. <code>tools/check-delete-tables.mjs</code> asserts each entry has a row carrying one of its <code>find</code> shapes verbatim, and runs in the PR gate and the preflight. Seven entries had no row; four were mine, from this back-fill.</div>
-              <span class="done-tag">Fixed — 29325882</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">22</span>
-        <div class="where">CHANGELOG.md — two 0.10.1 changes inside the 0.10.0 block</div>
-        <div class="what">
-          Not present in <code>git show v0.10.0:CHANGELOG.md</code>, duplicating the canonical copies
-          further up, and one of them contradicts a third entry.
-        </div>
-        <div class="fix"><b>Fix</b>Delete the duplicates; keep the canonical pair.</div>
-              <span class="done-tag">Fixed — 29325882</span>
-      </li>
-
-      <li class="finding">
-        <span class="num">23</span>
-        <div class="where">tools/build-schematics.mjs — unfiltered copy</div>
-        <div class="what">
-          <code>cpSync('migrations', …)</code> ships <strong>every</strong> tarball with
-          <code>unreleased.json</code> — describing changes that are not in that package — plus
-          <code>AUTHORING.md</code>, which a consumer cannot act on.
-        </div>
-        <div class="fix"><b>Fix</b>Filter the copy to published <code>&lt;version&gt;.json</code> files.</div>
-              <span class="done-tag">Fixed — 29325882</span>
-      </li>
-    </ol>
-    </details>
-  </section>
-
-  <section>
-    <h2>What the format is missing</h2>
-    <p>
-      Every row came from a primary source — official docs or repository source, not blog summaries.
-      The verdict column is a judgement about <em>this</em> repo, not about the practice.
-    </p>
-    <p>
-      <strong>Three of the thirteen have shipped since — checked against the code on 2026-09-01,
-      not against this page.</strong> The other ten are still unratified, and they are the whole of
-      what this deck is still open for: <code>docs/todo.md</code> carries them as one P3 line.
-    </p>
-    <p>
-      <strong>The findings above were re-verified by hand the same day</strong>, against the
-      manifests, the lint, the plugin contract and the source at each tag. Eighteen held.
-      <strong>Five carried a “Fixed” tag that the code did not support</strong> — 02, 06, 10, 14 and
-      18, each now marked in place and each now actually fixed. Two things this page cannot know
-      about itself: its scope line reads <em>22 manifests · 186 items</em> and the folder now holds
-      <strong>24 and 204</strong>.
-    </p>
-    <p>
-      <strong><code>0.11.0</code> and <code>0.11.1</code> were audited on 2026-09-01</strong>, each
-      against its own boundary — <code>v0.10.3..v0.11.0</code> and <code>v0.11.0..v0.11.1</code>.
-      Every <code>old</code> name is present at the predecessor tag and gone at its own; every
-      <code>new</code> name is present; no declared custom property was removed at either boundary
-      without an item; and both grown-class notes match <code>class-surface-diff</code> exactly —
-      0.11.0 enumerates all seventeen members, 0.11.1 describes the shape and says why a list could
-      not stay current. <strong>No tier-1 or tier-2 defect.</strong> One cosmetic gap, recorded and
-      deliberately not fixed: three of the five new template directives are named in the CHANGELOG
-      but not in the manifest, where 0.9.0 put new exports in its <code>pitfall</code>; correcting a
-      released file for a wildcard-import shadowing risk costs a migration note worth more than the
-      defect.
-    </p>
-    <p>
-      <strong>Reading a released manifest against HEAD is itself the bug</strong>, and it hid two
-      defects from the original audit. A manifest describes ONE boundary, and today's source is
-      evidence for neither side of it: a symbol removed two releases later is absent from HEAD, one
-      that never existed is also absent, and one re-added since is present although the removal was
-      correct. Diffing the tree at each tag instead found both.
-      <strong><code>0.2.0#surface-subtle-token-rename</code> renamed a token this library never
-      had.</strong> Eight semantic tints moved from <code>-subtle</code> to <code>-subtitle</code> —
-      border, error, info, primary, secondary, success, tertiary, warning — and the item named
-      <code>--surface-subtle</code>, which existed only in the docs app at 0.1.0, to
-      <code>--surface-subtitle</code>, which has never existed anywhere. Every upgrade that ran it
-      searched for a token the consumer could not have and reported nothing to do.
-      <strong><code>themes/README.md</code> still advertised <code>--static-white</code></strong>,
-      removed at 0.5.1, three times — and that README ships verbatim as a package asset.
-      The rule is now in <code>CONTRIBUTING.md</code> and <code>migrations/AUTHORING.md</code>:
-      only <code>unreleased.json</code> and <code>## Unreleased</code> are checked against HEAD,
-      because HEAD is the version they describe. <code>main</code> takes release commits only, so
-      its log is the version list and a diff between two of its commits is one version&rsquo;s
-      change set.
-    </p>
-    <p>
-      <strong>Every edit made to a historical artefact since 0.11.1 was then re-walked by hand</strong>,
-      each against its own boundary rather than against the source in front of me. Four released
-      manifests had been touched — 0.2.0, 0.4.0, 0.7.1, 0.9.0 — and all four hold: eight
-      <code>-subtle</code> tokens at <code>v0.1.0</code> become eight <code>-subtitle</code> at
-      <code>v0.2.0</code> with no survivor; <code>ds-button</code> really does split one input into
-      <code>color</code> + <code>variant</code> at <code>v0.4.0</code>;
-      <code>_surface-motion.scss</code> is new at <code>v0.7.1</code> and <code>styles/ds.scss</code>
-      forwards it, so the item&rsquo;s <code>appliesWhen</code> is right; exactly seventeen exported
-      classes gained a member at <code>v0.9.0</code>, and nothing named in the note failed to grow.
-      <strong>The single edit inside a released CHANGELOG block was also checked and stands</strong>:
-      the 0.10.0 block said the 0.9.0 note listed <em>fifteen</em> classes, and the note as shipped in
-      that tarball named sixteen and carried no count at all &mdash; so the number was never true of
-      anything, and replacing it corrects a falsehood rather than rewriting history.
-    </p>
-    <p>
-      <strong>The re-walk found one more defect, in <code>## Unreleased</code>.</strong> It advertised
-      <code>DsListCursor</code> as &ldquo;exported for anyone building a list control of their
-      own&rdquo;. No such symbol exists &mdash; the module declares <code>DsListCursorList</code> and
-      four functions &mdash; and the module itself had just left <code>public-api.ts</code>. Both
-      halves of one sentence were false, and <code>changelog-lint</code> passed it, which is a gate
-      gap in its own right.
-    </p>
-    <div class="scroller">
-      <table>
-        <thead>
-          <tr><th>Practice</th><th>Where it comes from</th><th>Verdict here</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Precondition guard</td><td>OpenRewrite <code>Preconditions.check</code>; Nx requires each agentic runbook to open with a no-op guard</td><td><span class="verdict landed">Shipped</span> — <code>appliesWhen</code>, documented in <code>migrations/README.md</code></td></tr>
-          <tr><td><code>replaceIn</code> polarity</td><td>CDK’s <code>CssTokenUpgradeData</code> defaults to <em>all</em> files and narrows; our <code>surface</code> is a whitelist that silently excludes</td><td><span class="verdict landed">Shipped</span> — the finder searches every surface and ranks by the declared one, flagging an out-of-surface hit instead of not looking</td></tr>
-          <tr><td>Executable verification</td><td>Polaris ships a literal alternation RegExp per token group for post-migration validation</td><td><span class="verdict adopt">Adopt</span></td></tr>
-          <tr><td>Runtime signal ids</td><td>Vue’s ID-keyed compat warnings; Ember collects what actually fired per app</td><td><span class="verdict adopt">Adopt</span> — <code>devWarn</code> already exists</td></tr>
-          <tr><td>Escalation marker</td><td>Next.js codemods write comments that break the build until removed</td><td><span class="verdict adopt">Adopt the comment half</span></td></tr>
-          <tr><td>Explicit “no replacement”</td><td>ESLint’s <code>replacedBy</code> may be an empty array to state there is none</td><td><span class="verdict adopt">Adopt</span> — 0 of 22 would fail</td></tr>
-          <tr><td><code>deprecatedIn</code></td><td>ESLint <code>deprecatedSince</code>; Ember RFC 0649 <code>since</code></td><td><span class="verdict adopt">Adopt one half</span>; reject <code>availableUntil</code></td></tr>
-          <tr><td>Deprecation window</td><td>SemVer §7 makes a minor carrying the deprecation mandatory before removal; Carbon runs a v10→v12 window</td><td><span class="verdict reject">Reject pre-1.0</span></td></tr>
-          <tr><td>Value-change as a kind</td><td>Adobe’s token-diff-generator treats <em>updated</em> as distinct from added/deleted/renamed</td><td><span class="verdict reject">Rejected</span> — measured after the prose split: <strong>4</strong> candidates, and all four already carry <code>restore</code>, which M024 demands. A new kind adds a label and no check.</td></tr>
-          <tr><td>Instruction split from rationale</td><td>Conventional Commits’ description / body / footers; position-in-context research</td><td><span class="verdict landed">Shipped</span> — <code>action</code>, with <code>pitfall</code> carrying the trap the note used to bury</td></tr>
-          <tr><td>Provenance link</td><td>CDK makes the PR link a required member of its change record</td><td><span class="verdict adopt">Adopt optional</span>, lint only on unreleased</td></tr>
-          <tr><td><code>schemaVersion</code></td><td>Flutter’s <code>fix_data.yaml</code> mandates <code>version: 1</code></td><td><span class="verdict adopt">Adopt</span></td></tr>
-          <tr><td>Array-valued <code>new</code></td><td>Primer’s <code>deprecated.json</code> maps one token to several, or null</td><td><span class="verdict reject">Rejected</span> — <strong>0</strong> of 78 renames have more than one candidate. The one real case (the three <code>-fg</code> suffixes) is a menu, not a mapping: the consumer must look up which, and <code>action</code> says so.</td></tr>
-          <tr><td>Package reachability</td><td>Primer publishes deprecation data so a stylelint plugin can read it</td><td><span class="verdict landed">Shipped</span> — <code>exports["./migrations/*"]</code></td></tr>
-          <tr><td><code>ng-update</code> requirements</td><td>A hard pre-flight the Angular CLI enforces</td><td><span class="verdict adopt">Adopt the key</span>; reject porting to real schematics</td></tr>
-          <tr><td>Dry-run hit counts</td><td>jscodeshift prints per-file outcomes; Next.js warns a wrong path reports <code>0 ok</code> rather than failing</td><td><span class="verdict landed">Shipped</span> — a zero-hit item is classified rather than dropped, and per-item counts reach the run report</td></tr>
-          <tr><td>Confidence axis</td><td>ESLint’s <code>fixable</code> / <code>hasSuggestions</code></td><td><span class="verdict reject">Reject</span> — already carried twice</td></tr>
-          <tr><td>Per-item docs URL</td><td>Common in hand-written upgrade guides</td><td><span class="verdict reject">Reject</span> — tried and retired the same day</td></tr>
-        </tbody>
-      </table>
+  <div class="kpis">
+    <div class="kpi">
+      <span class="n is-good">впереди рынка</span>
+      <span class="k">по формату: <code>detect</code> + <code>verify</code> + <code>deleteList</code> и правило заморозки на версию</span>
     </div>
+    <div class="kpi">
+      <span class="n is-bad">позади рынка</span>
+      <span class="k">по принуждению: контракт держится на 306 строках регэкспов</span>
+    </div>
+  </div>
+
+  <ul class="facts">
+    <li><b>Половина «что теперь можно удалить» — по-настоящему новая.</b> Индустрия документирует, что сломалось, а не что стало лишним. Ни у Angular CDK <code>VersionChanges</code>, ни у Nx <code>migrations.json</code>, ни у Primer <code>deprecated.json</code>, ни у гайда Polaris эквивалента нет.</li>
+    <li><b>Не хватает чужой позиции принуждения.</b> Остальная экосистема опирается на объявленный маркер (<code>meta.deprecated</code> у ESLint, <code>DeprecationTypes</code> у Vue, id депрекаций Ember, <code>Preconditions</code> у OpenRewrite) или на исполняемый код.</li>
+    <li><b>Итог аудита:</b> формат отличный, данные — нет. Пять отгруженных пунктов советовали потребителю правку, которая неверна или вредна; четыре записи о членах классов посчитаны неправильно. Релизный гейт был зелёным на всём этом.</li>
+  </ul>
+
+  <h2>Что было сломано и как закрыто</h2>
+
+  <p>
+    Сорок агентов прочитали каждый опубликованный манифест, линт, который их сторожит, и плагин,
+    который их исполняет, затем попытались опровергнуть собственные находки. Выжили двадцать четыре.
+    Каждую перепроверили против отгруженного кода перед правкой — <b>у пяти доказательства оказались
+    неверными, одна уничтожила бы две законные записи</b>. Исправлены все 23.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th class="num">Ярус</th><th>Что это было</th><th class="num">Шт.</th><th>Закрыто в</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th class="num">1</th>
+        <td><b>Агент, слушаясь манифеста, портит код потребителя.</b> Ложное переименование класса, которого не было; путь загрузки Sass, работающий только внутри репозитория; <code>find</code> без исключения, ловящий правило, которое сам же и советовал написать; <code>verify</code>, сертифицирующий ровно тот отказ, о котором предупреждает соседняя заметка.</td>
+        <td class="num">6</td>
+        <td><code>30ae2f0c</code><br /><code>257a271c</code></td>
+      </tr>
+      <tr>
+        <th class="num">2</th>
+        <td><b>Настоящая поломка, и в манифесте нечем её найти.</b> Шесть членов на трёх классах расширились с <code>InputSignal</code> до <code>InputSignalWithTransform</code> без единого пункта; <code>ModalService.confirm</code> начал открываться с красным бейджем, которого не подавить; списки выросших классов посчитаны неверно в пяти местах.</td>
+        <td class="num">6</td>
+        <td><code>257a271c</code></td>
+      </tr>
+      <tr>
+        <th class="num">3</th>
+        <td><b>Гейт декоративен там, где важнее всего.</b> M034 читал только <code>informational</code>, мимо заметок; закрытый список глаголов пропускал третье лицо; M023 молчал ровно на том случае, ради которого написан; селф-тест конструировал входы, которых автор не напишет.</td>
+        <td class="num">11</td>
+        <td><code>e1edfd74</code><br /><code>29325882</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <section class="panel verdict">
+    <h3 style="margin-top:0">Что аудит понял про себя</h3>
+    <ul class="facts">
+      <li><b>Читать выпущенный манифест против HEAD — это и есть баг</b>, и он скрыл две находки. Манифест описывает ОДНУ границу, а сегодняшний исходник не доказательство ни для одной её стороны: символ, удалённый двумя релизами позже, в HEAD отсутствует; тот, которого не было никогда, тоже отсутствует; а возвращённый присутствует, хотя удаление было верным. Диффы по тегам нашли обе находки.</li>
+      <li><b><code>0.2.0#surface-subtle-token-rename</code> переименовывал токен, которого в библиотеке никогда не было.</b> Восемь семантических оттенков переехали <code>-subtle</code> → <code>-subtitle</code>, а пункт назвал <code>--surface-subtle</code> (он существовал только в docs-приложении на 0.1.0) в <code>--surface-subtitle</code>, которого не было нигде и никогда. Каждое обновление, прогнавшее этот пункт, искало токен, которого у потребителя быть не могло.</li>
+      <li><b>Правило теперь в <code>CONTRIBUTING.md</code> и <code>migrations/AUTHORING.md</code>:</b> против HEAD проверяются только <code>unreleased.json</code> и <code>## Unreleased</code>, потому что HEAD — это и есть версия, которую они описывают.</li>
+      <li>0.11.0 и 0.11.1 отревизованы 2026-09-01, каждая против своей границы. <b>Ни одного дефекта яруса 1 или 2.</b> Один косметический пробел записан и намеренно не исправлен: правка выпущенного файла ради риска затенения при wildcard-импорте стоит миграционной заметки дороже самого дефекта.</li>
+    </ul>
   </section>
 
-  <section>
-    <h2>What to do next</h2>
-    <ol class="actions">
-      <li>Fix the six instructions that damage code.<span class="kind">Data · 4 manifests</span> <strong>Done</strong> — all six.</li>
-      <li>Back-fill the four missing or wrong items.<span class="kind">Data · 4 manifests</span> <strong>Done.</strong> The 0.9.0 signal widening, the 0.10.0 <code>ModalService.confirm</code> badge, the eight <code>SearchComponent</code> names, the class count.</li>
-      <li>Un-break the authoring contract and the plugin’s supersession path.<span class="kind">Contract · 4 files</span> <strong>Done.</strong></li>
-      <li>Delete-table parity is a gate.<span class="kind">Tooling · 9 blocks</span> <strong>Done</strong> — 76 entries, all reachable; an absent <code>deleteList</code> key is now M037 rather than an ambiguity.</li>
-      <li>Ship the four lint rules that are green on main today.<span class="kind">Lint · 11 manifests</span> <strong>Done</strong> — M035, M036, M037. <code>deleteList</code> required, <code>replaceWith</code> non-empty, delete-row id kebab and unique.</li>
-      <li>Rebuild M034 properly — back-fill first.<span class="kind">Data then lint · 6 manifests</span> <strong>Done.</strong> Scan <code>item.note</code>, lift the second-person test out of the verb conjunction.</li>
-      <li>Replace the two heuristics that cannot fire.<span class="kind">Contract + lint · 3 items</span> <strong>Done.</strong> M023’s every-locator test, and <code>DEFAULT_CHANGE</code> against the phrasing the contract itself prescribes.</li>
-    </ol>
-  </section>
-
-  <footer>
-    40 agents · 0 errors · 0 empty returns · 118 findings reported · 24 survived adversarial refutation · 23 fixed · 30 lint rules mutation-tested<br>
-    Web research covered ng-update schematics, jscodeshift and Next.js codemods, Keep a Changelog and SemVer, and agent-readable repository conventions.<br>
-    Every finding was re-verified by hand before it was taken on. Corrected during validation: #03 (two locators, not one), #08 (ModalService is mentioned, just not for this), #11 (the tokens are not in the public reference), #21 (5 rows across 4 versions, not 22 across 8), #22 (misfiled, not duplicated — the prescribed delete would have lost both entries).
-  </footer>
-
+  <p class="src">
+    Источники: <code>migrations/*.json</code>, <code>tools/migration-lint.mjs</code>,
+    <code>migrations/AUTHORING.md</code>, <code>migrations/README.md</code>. Каждая строка таблицы
+    практик взята из первоисточника — официальной документации или исходников репозитория, не из
+    пересказов в блогах; колонка вердикта — суждение об <b>этом</b> репозитории, а не о практике.
+    Открытый хвост держится в <code>docs/todo.md</code> одной строкой P3.
+  </p>
 </main>
-</body>
-</html>
