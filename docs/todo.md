@@ -58,6 +58,7 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 
 **Bugs — something shipped misbehaves**
 
+- P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either
 - P2 · `package-lock.json` is three patches behind `bun.lock` across the Angular set — `npm ci` no longer resolves; delete it or bump the set
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5

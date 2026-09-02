@@ -54,10 +54,16 @@ function show(ref, path) {
 // `readonly x = this.y.z` and every literal, and those collide in a subclass just the
 // same. `readonly` is illegal in an object literal, so class depth plus the keyword
 // is enough to be sure this is a member.
+// KNOWN GAP: anchored on `readonly`, so a plain `private hovered = false` is not seen and a
+// subclass colliding with one gets no warning. Widening this to any assignment matches ordinary
+// statements in a module-level function body, and a false positive here blocks a release cut —
+// closing it properly needs parsing, not a wider pattern. Tracked in docs/todo.md.
 const FIELD =
   /^ {2}((?:protected |public |private )?)readonly (\w+)(\s*:[^=\n]+)? = /gm;
+// `get ` is matched here rather than in FIELD: a getter is a member and collides like one, and
+// `get name(` never matched `name(` because of the space.
 const METHOD =
-  /^ {2}((?:protected |public |private )?)(?:override )?(?:async )?(\w+)\(/gm;
+  /^ {2}((?:protected |public |private )?)(?:override )?(?:async )?(?:get |set )?(\w+)\(/gm;
 const NOT_A_MEMBER = new Set([
   'constructor',
   'if',
