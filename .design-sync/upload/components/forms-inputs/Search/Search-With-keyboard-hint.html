@@ -55,8 +55,6 @@
           var starts = marked !== null || node.matches('h3.block-title');
           if (marked !== null) owner = marked;
           else if (node.matches('h3.block-title')) owner = '';
-          // Counted per owner, so INDEX means "the Nth block this component owns" — the same thing
-          // the generator counted in the template.
           if (starts && owner === OWNS) ordinal += 1;
           if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
         }

@@ -167,23 +167,20 @@ function cardsFor(name) {
   const owner = marks.has(own) ? own : (primary ? '' : null);
   if (owner === null || !blocks.length) return [{ file: name, owns: null, index: -1, title: '' }];
 
-  // `position` is the block's place in the WHOLE chapter, which is the order the docs site reads
-  // in; `index` is its place among the blocks this component owns, which is what the card's own
-  // slicer counts.
   const mine = blocks
-    .map((block, position) => ({ ...block, position }))
+    .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => block.owner === owner);
-  if (!mine.length) return [{ file: name, owns: null, index: -1, position: -1, title: '' }];
+  if (!mine.length) return [{ file: name, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
 
   const seen = new Map();
 
-  return mine.map((block, index) => {
+  return mine.map((block, ownedIndex) => {
     // A block with no heading of its own is a grouped set of demos (Menu's item states); the
     // component's own name is the best label there is, and it needs an ordinal only if there
     // are several.
     const base = block.title
       ? blockSlug(block.title)
-      : (mine.length > 1 ? `states-${index + 1}` : '');
+      : (mine.length > 1 ? `states-${ownedIndex + 1}` : '');
     const key = base || name;
     const count = (seen.get(key) ?? 0) + 1;
     seen.set(key, count);
@@ -192,8 +189,8 @@ function cardsFor(name) {
     return {
       file: suffix ? `${name}-${suffix}` : name,
       owns: owner,
-      index,
-      position: block.position,
+      ownedIndex,
+      chapterPosition: block.chapterPosition,
       title: block.title,
     };
   });
@@ -220,7 +217,7 @@ function readDoc(name) {
  *  There is no React on this page and no per-card script. A hand-written preview per component was
  *  the previous design and the showcase drifted from the components it showed, because a specimen
  *  nobody opens is a specimen nobody checks. The docs site is looked at every day. */
-function cardHtml({ name, group, tag, viewport, owns, index, apiKey }) {
+function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey }) {
   const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''} -->`;
 
   return `${marker}
@@ -257,7 +254,7 @@ ${owns === null ? '' : `  <script>
        it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
     (function () {
       var OWNS = ${JSON.stringify(owns)};
-      var INDEX = ${JSON.stringify(index)};
+      var INDEX = ${JSON.stringify(ownedIndex)};
       var KEY = ${JSON.stringify(apiKey)};
       var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
       var API = '[data-key]';
@@ -280,8 +277,6 @@ ${owns === null ? '' : `  <script>
           var starts = marked !== null || node.matches('h3.block-title');
           if (marked !== null) owner = marked;
           else if (node.matches('h3.block-title')) owner = '';
-          // Counted per owner, so INDEX means "the Nth block this component owns" — the same thing
-          // the generator counted in the template.
           if (starts && owner === OWNS) ordinal += 1;
           if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
         }
@@ -411,10 +406,10 @@ for (const name of [...byName.keys()].sort()) {
         tag: section.tag,
         viewport: height ? `${viewports.width}x${height}` : null,
         owns: card.owns,
-        index: card.index,
+        ownedIndex: card.ownedIndex,
         // Only the first card of a component carries the API table. On Table that is the difference
         // between one table and thirty-five copies of it.
-        apiKey: card.index <= 0 ? apiKeyBySelector.get(component.selector) ?? '' : null,
+        apiKey: card.ownedIndex <= 0 ? apiKeyBySelector.get(component.selector) ?? '' : null,
       }),
     );
     written.push({ file: card.file, path: `components/${group}/${name}/${card.file}.html` });
@@ -434,7 +429,7 @@ for (const name of byName.keys()) {
     ordered.push({
       path: `components/${group}/${name}/${card.file}.html`,
       section: sectionOrder.get(section.slug) ?? Number.MAX_SAFE_INTEGER,
-      block: card.position < 0 ? Number.MAX_SAFE_INTEGER : card.position,
+      block: card.chapterPosition < 0 ? Number.MAX_SAFE_INTEGER : card.chapterPosition,
       name,
     });
   }
