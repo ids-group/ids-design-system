@@ -4,6 +4,20 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Toasts announce, pause, slide and cap (2026-09-02)
+
+Four changes on the notification lane, all measured. Kept because three of them rest on platform facts that are not obvious from the code and that an "obvious" later fix would undo.
+
+**A screen reader was told nothing, for three of five variants.** `aria-live` sat on each toast, and a live region has to exist BEFORE its text arrives — a node created with its message already inside it is the one case NVDA and JAWS reliably do not announce; the region host was `role="region"`, a landmark. Announcements now go through the CDK `LiveAnnouncer`, whose region is built at service construction. SC 4.1.3 (AA).
+
+**Serialising a burst cannot work, and this is the fact worth keeping.** The first implementation chained announcements on the promise `announce()` returns. Measured: of five messages, ONE arrived. The chain was not at fault — it spaced them by ~100ms exactly as intended. `LiveAnnouncer.announce()` clears its region synchronously, writes the text on a 100ms timeout, and resolves its promise INSIDE that callback; the next call in the chain therefore clears the text in the same millisecond, before a MutationObserver can see it, let alone a reader. Awaiting the promise cannot fix it, because it resolves before the write has been observed. Coalescing a burst into one region change is the only shape that survives — not a preference.
+
+**The stack slid instead of jumping.** Inserting a toast moves its flex neighbours in one frame. FLIP: each is put back with a transform and released to 0 with a transition. Measured frame by frame: -75.19px on the first frame easing to `none`, against a layout delta of exactly 75px. Sonner's documented recipe positions the stack absolutely instead; that collapses the region to zero height, and it lives in a CDK pane sized to its content, so it would take the hit area with it.
+
+**`maxVisible` defaults to 5**, where an uncapped stack was more permissive than Material (one at a time), Carbon or Halstack. Eight fired leaves five on screen. A configured `0` is now forwarded rather than skipped — with a real default it is the only way left to ask for no cap.
+
+**Also: `promise()` was destroying its own result.** It ran the settled toast's dismissal on a wall-clock timer started when the promise resolved, so a promise settling behind the cap had its result spliced out of the queue before anyone saw it. And an `action` toast now never auto-dismisses: the region is the last child of `body`, so a keyboard user cannot cross a page to reach that button inside five seconds.
+
 ## The toast stays above a scrim opened after it (2026-09-02)
 
 `--layer-toast: 1500` against `--layer-modal: 1300` was never going to decide this, and the rule that tried is dead code. CDK 21 gives every overlay host `popover="manual"` and calls `showPopover()`, so hosts sit in the browser **top layer**, which paints in the order things were shown and ignores z-index and stacking contexts outright. A `confirm()` opened after a toast was therefore always in front, and its scrim swallowed the toast's action button.
