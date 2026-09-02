@@ -33,25 +33,25 @@ definitions:
     npm:
       key:
         files:
-          - package-lock.json
+          - bun.lock
       path: ~/.npm
     bun-bin:
       path: ~/.bun/bin
     bun-cache:
       key:
         files:
-          - package-lock.json
+          - bun.lock
       path: ~/.bun/install/cache
     angular:
       key:
         files:
-          - package-lock.json
+          - bun.lock
           - angular.json
       path: .angular/cache
     dist-ds:
       key:
         files:
-          - package-lock.json
+          - bun.lock
           - tsconfig.lib.prod.json
           - src/**
       path: dist/ds
@@ -115,21 +115,33 @@ pipelines:
     release-patch:
       - step:
           name: Release (patch)
+          caches:
+            - bun-bin
+            - bun-cache
           script:
             - sh infrastructure/scripts/cut-release.sh patch
     release-minor:
       - step:
           name: Release (minor)
+          caches:
+            - bun-bin
+            - bun-cache
           script:
             - sh infrastructure/scripts/cut-release.sh minor
     release-major:
       - step:
           name: Release (major)
+          caches:
+            - bun-bin
+            - bun-cache
           script:
             - sh infrastructure/scripts/cut-release.sh major
     release-beta:
       - step:
           name: Release (beta prerelease)
+          caches:
+            - bun-bin
+            - bun-cache
           script:
             - sh infrastructure/scripts/cut-release.sh beta
 

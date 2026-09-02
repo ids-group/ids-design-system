@@ -58,12 +58,12 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 
 **Bugs — something shipped misbehaves**
 
+- P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
 - P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either
 - P2 · `package-lock.json` is three patches behind `bun.lock` across the Angular set — `npm ci` no longer resolves; delete it or bump the set
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
-- P2 · `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px regardless of density
 - P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
   of 100 cannot see one group of three collapse
 - P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
@@ -184,14 +184,14 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds seven.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
 asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
 counted — so one token step fixes all of them. Four of the others arrived on 2026-09-01 and were
 filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
-already reads. In cost order after the token step — `--ds-table-head-h` declared
-nowhere so the scrim's inset is always its 40px fallback, one export leaving the table's live
-region stuck on "Export ready" forever, then the two cosmetic ones. The sixth, the resize handle's
-unenforced `aria-valuemax`, was closed the same day it was filed.
+already reads. In cost order after the token step — one export leaving the table's live
+region stuck on "Export ready" forever, then the two cosmetic ones. Two are already closed: the
+resize handle's unenforced `aria-valuemax` the same day it was filed, and the loading scrim's
+top edge, which now measures the header instead of assuming 40px.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
 items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
@@ -279,7 +279,16 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 - [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
 
 
-- [ ] **[P2] `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px.** The table passes `[insetTop]="'var(--ds-table-head-h, 40px)'"` to `ds-loading-overlay` to keep the header uncovered during a refresh, and that string is the ONLY occurrence of the token in the whole repo — nothing ever sets it, so the fallback always wins. A header shorter than 40px (`density="compact"`, `ultra`) leaves a strip of the first row uncovered; a header taller than 40px (a wrapped label, or a filter row) gets partly covered, which contradicts the reason the inset exists — and now also contradicts the `inert` boundary, since `<tbody>` is what goes inert while a partly-covered header stays operable underneath a scrim. Decide which it is: declare the token from the real header height (a measurement, or a value per density), or drop the token and measure the `<thead>`. As it stands it reads like a public hook and is not one.
+- [x] **[P2] The loading scrim's top edge assumed a 40px header.** MEASURED against the 
+      compiled styles: the header cell is 42.89px at the default density and 26.89px at 
+      `[data-density="ultra-compact"]`, so the scrim cut 2.89px into the header normally and 
+      started 13.11px too low under that density, leaving the first body row uncovered.
+      `--ds-table-head-h`, the name the template read, was declared nowhere, so it could only
+      resolve to its fallback; it still overrides the measurement, which is the default under
+      it now. A calc() is rejected by the same measurement — summing the parts is a
+      constant 1.09px short, because `vertical-align: middle` on the inline-flex label 
+      extends the line box by a font-metric amount CSS cannot express. The header is 
+      measured per loading episode instead.
 
 
 - [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. Derived from the template, NOT measured in a browser: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
