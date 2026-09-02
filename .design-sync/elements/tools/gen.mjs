@@ -247,6 +247,7 @@ function hostDirectiveApi(meta, directiveApi) {
 // import and the emitted .d.ts references an undefined type — invisible until
 // something type-checks the wrappers, which nothing did until 2026-09-01.
 const localTypeText = new Map();
+const aliasText = new Map();
 const typeIndex = new Map();
 for (const file of walk(join(repo, 'src/lib'), '.ts').sort()) {
   // `.d.ts` also ends with `.ts`, so a declaration left in the tree by a stray tsc run
@@ -259,6 +260,11 @@ for (const file of walk(join(repo, 'src/lib'), '.ts').sort()) {
       || ts.isEnumDeclaration(node);
     if (exported && isType && node.name && !typeIndex.has(node.name.text)) {
       typeIndex.set(node.name.text, importPath);
+    }
+    // The alias TEXT as well as its module: the upload declarations cannot import from the library,
+    // so `color?: ButtonColor` has to go out as the union it stands for or as nothing useful at all.
+    if (exported && ts.isTypeAliasDeclaration(node) && node.name && !aliasText.has(node.name.text)) {
+      aliasText.set(node.name.text, node.type.getText());
     }
     if (!exported && ts.isTypeAliasDeclaration(node) && node.name
         && !localTypeText.has(node.name.text)) {
@@ -546,6 +552,59 @@ writeFileSync(
   join(OUT, 'index.ts'),
   `${header('public surface — wrappers only, see the note in tools/gen.mjs')}export * from './wrappers';
 `,
+);
+
+/** A type with every library alias substituted by the text it stands for, so a declaration that
+ *  cannot import anything still names the real union. Recursion is bounded because an alias chain
+ *  in this library is at most a few links, and a cycle would otherwise expand forever. */
+function inlineAliases(type, depth = 0) {
+  if (depth > 4) return type;
+  let expanded = type;
+  for (const name of new Set(typeReferences(type))) {
+    const text = aliasText.get(name) ?? localTypeText.get(name);
+    if (!text) continue;
+    expanded = expanded.replace(new RegExp(`\\b${name}\\b`, 'g'), `(${text})`);
+  }
+  if (expanded !== type) return inlineAliases(expanded, depth + 1);
+
+  // `keyof typeof ICONS` is the one alias whose text names a VALUE, so substitution cannot reach
+  // it. The names come from the registry itself, which is what the icon prop actually accepts.
+  return expanded
+    .replace(/keyof typeof ICONS/g, iconNameUnion)
+    .replace(/\s+/g, ' ')
+    .replace(/\(\s*\|\s*/g, '(')
+    .trim();
+}
+
+// Every key of the icon registry, so an agent reading the declaration can see the real names rather
+// than a type it has no way to resolve.
+const iconNameUnion = (() => {
+  const source = readFileSync(join(repo, 'src/lib/icons/icons.data.ts'), 'utf8');
+  const body = source.slice(source.indexOf('export const ICONS'));
+  const names = [...body.matchAll(/^\s{2}([A-Za-z][\w]*):/gm)].map((match) => match[1]);
+
+  return names.length ? names.map((name) => `'${name}'`).join(' | ') : 'string';
+})();
+
+// The same surface as a data file, because the upload artefacts are built from it and re-parsing
+// wrappers.tsx to recover what this pass already knows is how the two drift apart.
+writeFileSync(
+  join(OUT, 'surface.json'),
+  `${JSON.stringify(
+    {
+      generatedBy: '.design-sync/elements/tools/gen.mjs',
+      components: components.map((component) => ({
+        name: component.name,
+        tag: component.tag,
+        selector: component.selector,
+        className: component.className,
+        api: component.api.map((entry) => ({ ...entry, inlined: inlineAliases(entry.type) })),
+        slots: component.slots,
+      })),
+    },
+    null,
+    2,
+  )}\n`,
 );
 
 if (renamedSlots.length) {
