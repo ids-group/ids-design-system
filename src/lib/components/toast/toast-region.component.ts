@@ -89,7 +89,9 @@ export class ToastRegionComponent {
     }
     this.startedAt.set(id, Date.now());
     const existing = this.timers.get(id);
-    if (existing !== undefined) window.clearTimeout(existing);
+    if (existing !== undefined) {
+      window.clearTimeout(existing);
+    }
     this.timers.set(
       id,
       window.setTimeout(() => this.remove(id), remaining),
@@ -131,8 +133,11 @@ export class ToastRegionComponent {
     if (shouldPause === this.paused) {
       return;
     }
-    if (shouldPause) this.pauseAll();
-    else this.resumeAll();
+    if (shouldPause) {
+      this.pauseAll();
+    } else {
+      this.resumeAll();
+    }
   }
 
   private get paused(): boolean {
