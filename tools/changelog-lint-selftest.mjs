@@ -280,6 +280,23 @@ try {
     );
   }
 
+  // C012, the repeat half — a section opened twice ranks EQUAL, so the order test cannot see it.
+  const REPEATED_SECTION =
+    '# Fixture\n\n## Unreleased\n\n### Fixed\n\n- **A.** x\n\n### Fixed\n\n- **B.** y\n';
+  // 0.9.0's real shape: two breaking headings, one slot, both deliberate.
+  const TWO_BREAKING_HALVES =
+    '# Fixture\n\n## 0.9.0 — 2026-01-01\n\n### Changed (breaking, behaviour)\n\n- **A.** x\n\n### Changed (breaking, visual)\n\n- **B.** y\n';
+
+  writeFileSync(FIXTURE_PATH, REPEATED_SECTION);
+  const repeatCaught = run(FIXTURE).includes('  C012  ');
+  console.log(`${repeatCaught ? 'fires ' : 'DEAD  '} C012 on a section opened twice`);
+  if (!repeatCaught) dead.push('C012 repeat');
+
+  writeFileSync(FIXTURE_PATH, TWO_BREAKING_HALVES);
+  const halvesQuiet = !run(FIXTURE).includes('  C012  ');
+  console.log(`${halvesQuiet ? 'quiet ' : 'FALSE+'} C012 on two breaking halves in one slot`);
+  if (!halvesQuiet) dead.push('C012 false positive on the split breaking half');
+
   // C014 — an entry announcing that we repaired one of our own files. Three releases in a row
   // shipped one before the rule existed.
   const OUR_RECORD_ENTRY =

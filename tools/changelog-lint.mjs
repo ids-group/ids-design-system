@@ -628,6 +628,23 @@ for (const { full, label: file, isSource } of targets) {
     let release = null;
     let seen = [];
     const checkOrder = () => {
+      // A repeat ranks EQUAL, so the order test below cannot see it. Keyed on the HEADING and
+      // not the slot, because 0.9.0 deliberately splits its breaking half into
+      // `(breaking, behaviour)` and `(breaking, visual)` — two names, one slot, both wanted.
+      const bySlot = new Map();
+      for (const [heading, , line] of seen) {
+        if (bySlot.has(heading)) {
+          report(
+            file,
+            line,
+            'C012',
+            `in ${release}, "### ${heading}" opens a section already opened at line ` +
+              `${bySlot.get(heading)} — one list per section, or a reader cannot tell what the split means`,
+          );
+          break;
+        }
+        bySlot.set(heading, line);
+      }
       for (let i = 1; i < seen.length; i++) {
         if (seen[i][1] < seen[i - 1][1]) {
           report(
