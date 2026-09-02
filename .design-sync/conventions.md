@@ -1,6 +1,6 @@
 # IDS Design System — build conventions
 
-React bindings over the IDS Group Angular design system's real compiled CSS. Components render `ds-*` host elements (e.g. `<ds-button>`) carrying the library's exact markup — **never hand-write DS internals** like `<button class="button md">`; always use the exported component.
+Generated React wrappers over the IDS Group Angular design system's real components, registered as custom elements. Each wrapper renders a `ds-*` host element (e.g. `<ds-button>`) that Angular upgrades, so what you see is the shipped component, not a copy of its markup — **never hand-write DS internals** like `<button class="button md">`; always use the exported component.
 
 ## Handing off to Angular
 
@@ -29,13 +29,13 @@ Token-based CSS custom properties — **no utility-class framework**. Components
 - Prefer the layout primitives `Stack`, `Inline`, `Container` over ad-hoc flex wrappers where they fit.
 
 ## Component conventions
-- **Controlled-with-fallback state:** pass a state prop alone (`value`, `open`, `pressed`, `expanded`) to seed it statically; add the matching `on*Change` callback for controlled behavior. Overlays (Modal/Drawer/BottomSheet/Select/Menu/Popover/Tooltip) render their open state **inline — no portals**; Modal additionally has `staticPreview` for embedding a modal in-flow (mockups).
+- **Controlled-with-fallback state:** pass a state prop alone (`value`, `open`, `pressed`, `expanded`) to seed it statically; add the matching `on*Change` callback for controlled behavior. Overlays (Modal/Drawer/BottomSheet/Select/Menu/Popover) use the real CDK overlay: an open panel is PORTALED to `document.body`, not rendered in place, so do not compose a card around one and expect it to flow. Modal has `staticPreview`, which is the way to embed one in-flow for a mockup. There is no `Tooltip` component — the tooltip is an attribute directive with no element to render.
 - **Statuses ship empty by design:** `Badge`/`StatusDot` `status` keys color nothing until you wire them — set `--ds-badge-bg-color`/`--ds-badge-label-color`/`--ds-status-dot-color` on a wrapper or via `[data-status="…"]` CSS.
-- Icons: `<Icon name="truck" size={20}/>` — 85 built-in stroke names (see Icon.prompt.md); `currentColor`.
+- Icons: `<Icon name="truck" size={20}/>` — 86 built-in stroke names (see Icon.prompt.md); `currentColor`.
 - Events use DS names: `onPressed` (Button family), `onClosed` (dismissibles), `onValueChange` (inputs). Dismissible components never hide themselves — the parent removes them.
 
 ## Where the truth lives
-Read `styles.css` → `_ds_bundle.css` (token definitions at the top; per-component blocks labeled `/* ── <name>.component.scss (ds-<name>) ── */`), each component's `<Name>.d.ts` for the exact API, and `<Name>.prompt.md` for usage.
+Read `_ds_bundle.css` for the tokens and the component rules — it is Angular's own compiled output, so a component's rules are keyed by its `ds-*` tag rather than by a labelled block. Then each component's `<Name>.d.ts` for the exact API, and `<Name>.prompt.md` for usage.
 
 ## Example
 ```tsx

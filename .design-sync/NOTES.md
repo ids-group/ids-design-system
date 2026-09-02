@@ -15,7 +15,11 @@
 - Repo has its own extraction tooling worth reusing: `tools/extract-tokens.mjs`, `tools/extract-component-api.mjs` (both run via `bun run extract-docs`).
 - User history: originally asked to sync from the stale snapshot dir name (`ids-ds-snaphshot`); after a `git pull` redirected to the Angular repo as primary source (2026-07-24). 66 component dirs in `src/lib/components/` on main @ v0.6.2.
 
-## Architecture of this sync (first run, 2026-07-24)
+## Architecture of this sync (first run, 2026-07-24) — SUPERSEDED, kept as a record
+
+> Everything in this section describes the deleted React port: the bindings, `build-css.mjs`, the
+> `no portals` rule and the `react-bindings/`-relative `entry`/`cssEntry` bases. The live shape is
+> in `COMMANDS.md`. Read this for how it worked, never for what to do.
 - **React binding layer** at `.design-sync/react-bindings/` (durable, committed): thin React components rendering the exact Angular template markup/classes, host tags included (`ds-button` etc. as real custom elements). Built by `.design-sync/tools/build-bindings.mjs` (esbuild bundle + tsc declarations; regenerates `src/lib/icons.gen.ts` from the repo's icons.data.ts, and mirrors the DS's framework-free util modules — `color-picker.utils.ts`, `date.util.ts`, `time.util.ts` — into the gitignored `src/generated/`, so the bindings run the DS's own colour/date-mask/time logic instead of a copy of it). The public prop TYPES stay declared in the bindings: they are the contract the design agent reads out of `<Name>.d.ts`, and keeping them local is what lets the parity gate compare them against upstream.
 - **CSS** built by `.design-sync/tools/build-css.mjs`: compiles `ds.scss` (global layer, verbatim) + every `*.component.scss` re-scoped from Angular emulated encapsulation onto the `ds-*` host tag (`:host`→tag, `:host-context(X)`→`X tag`, `::ng-deep`→descendant pass-through, everything else descendant-prefixed). Output `.design-sync/react-bindings/dist/ds-all.css` + fonts copied next to it. Inline-styles components are found by scanning each `*.component.ts` (today: accordion, tab as a single-quoted string, icon with ViewEncapsulation.None → unscoped).
 - **No portals** in bindings: overlay/panel content renders inline inside the host tag (re-scoped CSS only matches host descendants). Previews show open states inline.
@@ -80,13 +84,15 @@
   `build-bindings.mjs` produces `dist/index.js` — both green. A green build here means the generated
   halves regenerated, not that the hand-written half is right. Only `bun run check:design-sync`
   separates the two.
-- **2026-09-01, the React port is PARKED and its gate is report-only.** The `@angular/elements`
-  route was chosen after two generator fixes closed the overlay blocker (see
-  `../MANUAL-SURFACE.md` §1), so nobody is re-porting these bindings. `check-parity.mjs` still
-  runs in `ci-pr.sh` and still reports its 213 divergences — the number is the measurement that
-  justified the choice — but it no longer fails the step. **Nothing here was deleted:** the port
-  is intact and correct against 0.7.0, and it stays the fallback if the elements bundle is ever
-  rejected by the design host. Re-gating it means re-porting first.
+- **2026-09-01, the React port and its gate were DELETED.** The `@angular/elements` route was
+  chosen after two generator fixes closed the overlay blocker (see `../MANUAL-SURFACE.md` §1), and
+  the port went with `5a2115c4` / `c69bab61` — `react-bindings/`, `build-css.mjs`,
+  `build-bindings.mjs`, `check-parity.mjs` and `parity.json`, 73 files. It was correct against
+  0.7.0 and 213 divergences behind 0.11.x, so as a fallback it would have needed 53 components
+  re-ported before it could be used: it misled rather than insured. `git log --
+  .design-sync/react-bindings` returns all of it. **Everything below this line about the port, the
+  parity gate or `check:design-sync` is a record of how it worked, not a description of this
+  tree.**
 ## Re-sync risks (watch-list for the next run)
 - Binding-only props (list above) must survive any re-port from upstream.
 - `icons.gen.ts` regenerates from `icons.data.ts` on every build-bindings run — no drift, but new icon names only appear after a rebuild.

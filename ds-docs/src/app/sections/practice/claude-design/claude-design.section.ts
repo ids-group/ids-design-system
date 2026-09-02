@@ -31,7 +31,7 @@ const CHAIN: readonly Step[] = [
   },
   {
     command: 'node .design-sync/elements/tools/build-bundle.mjs',
-    does: 'Wraps it into dist/ds-bundle.js — one IIFE assigning every wrapper to window.IdsDs, React external — and emits the .d.ts tree the design agent reads.',
+    does: 'Wraps it into dist/ds-bundle.js — one IIFE assigning every wrapper to window.IdsDs, taking React from the global the host supplies — plus dist/ds-bundle.css, the upload copy of the stylesheet with its font URLs pointed at the fonts the project already carries. It also type-checks the generated wrappers.',
   },
   {
     command: 'bun run check:manual-surface',

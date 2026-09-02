@@ -15,8 +15,10 @@ src/lib/**/*.component.ts
         ├── ng build ds-elements ──► dist/browser/main.js  AOT templates + Ivy linker
         │                           dist/browser/styles.css  ds.scss + per-component styles
         │
-        └── tools/build-bundle.mjs ─► dist/ds-bundle.js  IIFE, window.IdsDs, react from window
-                                      demo/dist/demo.js  same + React, for the proof page
+        └── tools/build-bundle.mjs ─► dist/ds-bundle.js   IIFE, window.IdsDs, react from window
+                                      dist/ds-bundle.css  the upload copy: font URLs → fonts/
+                                      dist/types/**       the wrappers, type-checked
+                                      demo/dist/demo.js   same + React, for the proof page
 ```
 
 Nothing in the chain is hand-maintained: `gen.mjs` reads the components' AST and
@@ -71,8 +73,8 @@ month of upstream into both branches. Gzip is `gzip -9` over the built files.
 
 | | React port | this branch |
 |---|---|---|
-| JS, minified | 251 KB raw / **51 KB gzip** | 1049 KB raw / **259 KB gzip** |
-| CSS | 450 KB raw / **83 KB gzip** | 56 KB raw / **10 KB gzip** |
+| JS, minified | 251 KB raw / **51 KB gzip** | 1052 KB raw / **259 KB gzip** |
+| CSS | 450 KB raw / **83 KB gzip** | 57 KB raw / **10 KB gzip** |
 | total over the wire | **134 KB gzip** | **269 KB gzip** |
 | hand-written component code | ~11 000 lines | 0 (+ 90 lines of `runtime.tsx`) |
 | build | esbuild + tsc, seconds | `ng build` 7.8 s + esbuild |
@@ -161,10 +163,10 @@ one web search for the symptom returned #24536 on the first page.
   input-based open state to be usable from a design.
 - **Attribute directives have no element to register.** Fifteen of them today (re-counted
   2026-09-01; the figure was 6 when this file was written) — mostly template-slot markers for
-  the picker family, which are meaningless without an Angular template anyway. **`dsTooltip` is
-  the one that hurts:** a real feature a design would want, and the React port has it because a
-  port can reimplement a directive as a component. Covering it here needs a host component
-  wrapping the directive. Note `dsStaticPreview` is NO LONGER in this bucket — its input is now
+  the picker family, which are meaningless without an Angular template anyway. **`dsTooltip` was called the one that hurts; on a
+  second look it does not** — a tooltip is hover-revealed, and a static design card has no hover,
+  so an agent gets nothing from it either way (`../MANUAL-SURFACE.md` §2). Covering it at all would
+  need a host component wrapping the directive. Note `dsStaticPreview` is NO LONGER in this bucket — its input is now
   published on the element (see fix 2 above); the directive itself is still not registrable, but
   nothing needs it to be.
 - **`@angular/elements` is a new dependency** (first-party, locked to the Angular

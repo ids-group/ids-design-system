@@ -60,7 +60,7 @@ a detached Angular element has its component destroyed after ~10 ms and its DOM 
 ### Verified — full slot sweep
 
 Every component with projection was probed with its real slot names, extracted from its own
-template rather than guessed: **44 components, 36 green on the first pass.** All eight
+template rather than guessed: **44 templates, 36 green on the first pass.** All eight
 remainders were then driven with the inputs their slots depend on:
 
 | component | slot | verdict |

@@ -22,7 +22,7 @@ never be turned into one).
 
 ```sh
 bun install --frozen-lockfile              # repo deps
-node .design-sync/tools/bootstrap.mjs      # esbuild, sass, react 18.3.1 + @types/react 19 into .ds-sync
+node .design-sync/tools/bootstrap.mjs      # esbuild, sass, postcss, react + react-dom 18.3.1, @types/react(-dom) 19 into .ds-sync
 ```
 
 React runtime 18.3.1 with types 19 is deliberate. 18.3.1 is what the design host itself
