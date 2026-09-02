@@ -9,10 +9,15 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 `_ds-color.scss` maps `--accent-strong: var(--<family>-strong)` for every family it offers —
 `secondary, tertiary, error, success, warning` — but only the three brand families ever defined
 `-strong`. Inside `ds-color="error|success|warning"` the declaration was invalid at computed-value
-time, so the sixteen component tokens that read `--accent-strong` fell through to inherited body
-text: selected list and tree rows, the active sidenav item and its rail, the active tab pill, avatar
-and avatar-group initials, the active tag, dropzone active text, the toast icon, the date-picker
-range label, the split-button hover fill, and the button/icon-button `--c-strong`.
+time, so the sixteen sites that read `--accent-strong` reset to `unset`: selected list and tree
+rows, the active sidenav item and its rail, the active tab pill, avatar and avatar-group initials,
+the active tag, dropzone active text, the toast's ACTION label (the icon reads `--accent`, not
+`-strong`), the date-picker range label, the selected toggle button, the split-button hover fill,
+and the button/icon-button `--c-strong`. Sixteen READ SITES across fifteen components, under
+thirteen distinct token names — one of the sixteen is a bare `color:` declaration, not a token.
+**The mechanism differs by property.** `color` inherits, so text fell through to the inherited body
+colour. The split-button hover FILL and the sidenav RAIL are `background` and `box-shadow`, which
+inherit nothing — those two did not turn into body text, they vanished.
 
 **Measured before and after** on a probe page with the compiled theme, one `<div ds-color="...">`
 per family. Before: `--accent-strong` computed EMPTY for the three status families and the label
@@ -44,11 +49,14 @@ extends the check instead of outgrowing it. It reads a pointer as a CHAIN and de
 before the last link, because the last link is the crash barrier — resolving through it is still a
 miss, just a quiet one. Watched red on two controls (drop `--error-text`, drop `--success-subtitle`)
 before it was believed; the first control passed under the looser first draft, which is what
-produced the rule. And every pointer in `family-vars` now carries a `var()`
-fallback to a role the family is guaranteed to have, so a miss that ever gets past the gate degrades
-to the family's base colour rather than vanishing. `@property` was measured for that job and
-rejected: its `initial-value` may not contain `var()`, so it would mean hard-coding a literal per
-token in the theme layer, and two of the pointers are box-shadow lists rather than colours.
+produced the rule. And every pointer in `family-vars` now ends in a fallback — but not all to the
+same place, and the first write-up of this said otherwise. `-hover`, `-pressed` and `-strong` fall
+back to the family's own base colour; `-subtitle`, `-muted-strong` and `-surface-tint` to the
+family's `-muted`; `-muted`, `-on` and the two focus pointers to a theme-wide role, because no
+family-shaped answer exists for them; and `--accent` has no fallback at all, being the base itself.
+`@property` was measured for that job and rejected: its `initial-value` may not contain `var()`, so
+it would mean hard-coding a literal per token in the theme layer, and two of the pointers are
+box-shadow lists rather than colours.
 
 The same item's smaller cousin went with it: `accordion-item.component.scss` painted a disabled
 chevron with `var(--icon-disabled)`, a token defined nowhere. The declaration was invalid, so the

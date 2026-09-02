@@ -97,4 +97,24 @@ try {
   );
 }
 
+// Two more the PR gate calls hard and this one did not run, which is the same hole the changelog
+// checks above were added to close: the PR gate is manual, so a release can be cut from a branch
+// where neither ever fired. Left out deliberately: deck-lint, whose subject is internal decks that
+// never reach the package.
+try {
+  execSync('node tools/check-color-families.mjs', { stdio: 'inherit' });
+} catch {
+  fail(
+    'a ds-color family cannot resolve a role its accent pointers read, so that zone renders as body text (errors above).',
+  );
+}
+
+try {
+  execSync('node tools/check-docblock-drift.mjs', { stdio: 'inherit' });
+} catch {
+  fail(
+    'a doc comment has drifted off its symbol, so the published API table documents the wrong member (errors above).',
+  );
+}
+
 console.log('preflight: all checks passed.');

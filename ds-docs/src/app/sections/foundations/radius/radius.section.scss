@@ -19,6 +19,90 @@
     .token-px { margin-top: var(--space-1); }
     .token-desc { color: var(--text-secondary); line-height: 1.5; }
 
+
+    /* ---------- Roles table ---------- */
+    .radius-role-table {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+    }
+    .radius-role-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 1.1fr) minmax(120px, 0.7fr) 56px minmax(220px, 2fr);
+      gap: var(--space-4);
+      align-items: center;
+
+      @media (width < 1024px) {
+        grid-template-columns: 1fr;
+        gap: var(--space-1);
+        padding-bottom: var(--space-3);
+        border-bottom: var(--border-width-default) solid var(--border-default);
+      }
+    }
+    .radius-radius-role-row--head {
+      color: var(--text-secondary);
+
+      @media (width < 1024px) {
+        display: none;
+      }
+    }
+    .radius-role-swatch {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-tint);
+      border: var(--border-width-default) solid var(--border-strong);
+    }
+    .radius-role-uses {
+      font-variant-numeric: tabular-nums;
+      color: var(--text-secondary);
+    }
+    .radius-role-resolves,
+    .radius-role-desc {
+      color: var(--text-secondary);
+    }
+
+
+    /* ---------- Nesting: correct vs equal-radius ---------- */
+    .nest-pair {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      margin-top: var(--space-4);
+    }
+    .nest-cell {
+      display: grid;
+      gap: var(--space-2);
+      justify-items: start;
+    }
+    .nest-panel {
+      /* Small on purpose. The defect is a few pixels of corner, so a wide box hides it:
+         the tile is sized until the corner is a large share of what the eye sees. */
+      width: 152px;
+      height: 152px;
+      display: grid;
+      padding: var(--space-2);
+      background: var(--surface-tint);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--ds-radius-panel);
+    }
+    .nest-child {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: var(--space-2);
+      background: var(--surface-default);
+      border: var(--border-width-strong) solid var(--primary);
+    }
+    .nest-child--correct {
+      border-radius: var(--ds-radius-control);
+    }
+    .nest-child--wrong {
+      border-radius: var(--ds-radius-panel);
+    }
+
     /* ---------- Applied examples grid ---------- */
     .applied-grid {
       display: grid;

@@ -33,14 +33,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **`ds-color="error"`, `="success"` and `="warning"` lost their accent colour.** Those zones map
   `--accent-strong` onto `--<family>-strong`, and the three status families never defined it — only
-  the brand families did. The declaration was invalid at computed-value time, so every label that
-  reads `--accent-strong` (selected list rows and tree rows, the active sidenav item and its rail,
-  the active tab pill, avatar initials, the active tag, dropzone text, the toast icon) fell back to
-  plain body text inside a status zone. No new token was needed: a status family already carries its
-  readable on-tint colour as `-text`, so `--accent-strong` now asks for `-strong` first and `-text`
-  second, and the brand families keep answering it as `-strong` because they have no `-text`. Every
-  accent pointer also ends in a fallback to the family's base colour, so a role that goes missing in
-  future degrades instead of disappearing, and `check-color-families` fails the build on it.
+  the brand families did. The declaration was invalid at computed-value time, so inside a status
+  zone the sixteen places that read `--accent-strong` reset to `unset`: selected list and tree rows,
+  the active sidenav item and its rail, the active tab pill, avatar and avatar-group initials, the
+  active tag, dropzone text, the date-picker range label, the toast's action label, the selected
+  toggle button, the split-button hover fill, and the tonal, ghost, outline and link variants of
+  `ds-button` and `ds-icon-button`. Text there fell through to the inherited body colour; the fill
+  and the rail, which inherit nothing, disappeared.
+
+  No new token was needed: a status family already carries its readable on-tint colour as `-text`,
+  so `--accent-strong` now asks for `-strong` first and `-text` second, and the brand families keep
+  answering it as `-strong` because they have no `-text`. Each pointer also ends in a fallback — to
+  the family's base for `-hover`, `-pressed` and `-strong`, to its `-muted` for the tint pointers,
+  and to the theme-wide role for `-on` and the two focus pointers — so a role that goes missing in
+  future degrades instead of disappearing.
 
 ### Fixed
 
