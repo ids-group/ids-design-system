@@ -1,18 +1,29 @@
 # Runbook — building and publishing to Claude Design
 
 What Claude Design does with this: a design-system project holds our real
-library, and its agent builds screens out of it. Not "in the style of" — a
-preview card is a plain HTML page that loads four classic scripts in order,
+library, and its agent builds screens out of it. Not "in the style of" — the
+agent's code renders `React.createElement(window.IdsDs.<Component>)`, with
+React arriving separately as a global. So the contract is: **expose React
+components on `window.IdsDs`; React arrives separately as a global.** The
+elements route emits wrappers around real custom elements, and nothing inspects
+what else is inside the bundle — which is why an Angular runtime can ride along
+inside it.
+
+A **card** is the other half, and it holds no React at all. It is a plain HTML
+page with one element in it:
 
 ```
-_vendor/react.js → _vendor/react-dom.js → _ds_bundle.js → _preview/<Name>.js
+<script>window.__dsSectionsOnly = true</script>
+<script src="_ds_bundle.js"></script>
+…
+<div class="ds-page"><ds-docs-components-button></ds-docs-components-button></div>
 ```
 
-and renders `React.createElement(window.IdsDs.<Component>)`. So the contract is:
-**expose React components on `window.IdsDs`; React arrives separately as a
-global.** The elements route emits wrappers around real custom elements, and nothing
-inspects what else is inside the bundle — which is why an Angular runtime can
-ride along inside it.
+That element is the ds-docs section documenting the component — the same page
+the design system's own site serves. So the showcase has ONE source, and it is
+the one people look at every day. The flag is load-bearing: a section renders DS
+components as ANGULAR components, and registering those same tags as custom
+elements upgrades every host a second time.
 
 Project: **IDS Design System**, `455f9a87-1a6e-4b1d-a0e7-cf47ed772e63`
 (`PROJECT_TYPE_DESIGN_SYSTEM` — immutable at creation; a regular project can
@@ -80,7 +91,7 @@ files already sit at `fonts/`. `build-bundle.mjs` writes the upload copy with th
 `check-manual-surface.mjs` fails if that `package.json` goes missing or its version drifts from
 the root — it is load-bearing for path resolution and nothing else would notice.
 
-## Writing a preview: pass state as an initial prop
+## Composing with the wrappers: pass state as an initial prop
 
 **Never toggle a gate after mount.** A slot behind an `@if` works — nested DS components
 included — as long as the gate is true when the element connects; Angular Elements applies
@@ -88,10 +99,12 @@ initial inputs in the same microtask, so nothing is detached. Toggle it later an
 wrapper survives while the custom elements inside it are destroyed
 ([angular/angular#38962](https://github.com/angular/angular/issues/38962), ~10 ms). Concretely:
 
-- an overlay preview sets `staticPreview` (or `open`) at creation, not on a click;
-- a `ds-table` preview that shows `[bulk-actions]` passes `selectedIds` at creation;
-- previews render with their props set, so this is satisfied by construction — it only bites an
-  interactive composition.
+- an overlay sets `staticPreview` (or `open`) at creation, not on a click;
+- a `ds-table` that shows `[bulk-actions]` passes `selectedIds` at creation.
+
+This is a constraint on the AGENT's compositions, not on the cards: a card is an Angular section,
+where the ordinary change-detection rules apply and none of this bites.
+
 ## Publishing
 
 Read first, then lock the plan, then write — the tool enforces that order and
@@ -109,20 +122,20 @@ delete_files { planId, paths }
 - Max 256 files per call — split larger bundles across several `write_files`
   calls under the same `planId`.
 - `register_assets` is **legacy**. The Design System pane builds its card index
-  from each preview HTML's first-line `<!-- @dsCard group="…" -->` comment,
-  compiled into `_ds_manifest.json`. Only hand-authored projects without those
-  markers need explicit registration.
+  from each card's first-line `<!-- @dsCard group="…" -->` comment, compiled
+  into `_ds_manifest.json`. Only hand-authored projects without those markers
+  need explicit registration.
 - Never wholesale-replace: sync one component at a time and diff against
   `list_files` first.
 
 ## What lives remotely, and what this repo commits
 
-The repo commits **sync inputs only** — `previews/`, `docs/`,
-`elements/`, `tools/`, `config.json`, `conventions.md`. Everything with a `_`
-prefix in the project is an **output the publish step generates**:
-`_ds_bundle.js`, `_ds_bundle.css`, `_ds_manifest.json`, `_ds_sync.json`,
-`_preview/*.js`, `_vendor/react*.js`. Their absence from this directory is by
-design and is not evidence that anything drifted.
+The repo commits the sync inputs — `docs/`, `elements/`, `tools/`,
+`config.json`, `viewports.json`, `conventions.md` — **and** the built tree at
+`upload/`, so a release commit carries exactly what a publish sends and CI can
+fail on a stale copy. `_ds_manifest.json` and `_ds_sync.json` are the only files
+in the project this repo does not hold: the app compiles the first from the
+`@dsCard` markers, and the second is the skill's own sync bookkeeping.
 
 `_ds_sync.json` is the incremental-sync bookkeeping: `styleSha`, per-component
 `renderHashes` and `sourceKeys`, `sourceHashes` per uploaded file, `keyRecipe`,

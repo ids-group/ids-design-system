@@ -170,10 +170,11 @@ per prop, the icon union trimmed to 15 names plus `string & {}` the way the port
 tool's `report_validate` takes `total`/`bad`/`thin`/`variantsIdentical`/`iterations` from a
 `.render-check.json`, so the skill ran a measure-and-iterate loop over rendered cards.
 
-**DONE** (`f33f67a4`): all 36 measured heights were recovered from the live `_ds_manifest.json` and
-carried in `.design-sync/viewports.json` — 34 of them, minus `AppShell` and `Tooltip`, which are
-being deleted. A component absent from the file gets the pane's default, so `AppLayout` and the
-other seven new ones need measuring once. The render-check loop is not reimplemented.
+**DONE** (`f33f67a4`, re-done for the ds-docs showcase): `viewports.json` now carries a measured
+height per ds-docs SECTION — 63 of them, keyed by slug because several components share a section.
+Measured by mounting every `ds-docs-*` tag inside the card's own `.ds-page` rules and reading
+`offsetHeight`; the same numbers come back in an 848px frame and a 2848px one, so nothing needs a
+declared height. The render-check loop is not reimplemented.
 
 ### P6 — nothing gates the agent-facing docs against the real API
 
@@ -247,14 +248,19 @@ component with no preview, and CI now asserts the two counts match.
 Everything above is done — P1 and P2 in `fc117ef8`, P4 in `6111d746`, P3 in `5d18f76b`, and P5, P6,
 P7 plus the inherited-input fix in `f33f67a4`.
 
+Then the showcase itself was replaced: a card is the ds-docs section documenting the component, not
+a hand-written React preview. That removes the drift the previews kept producing — 20 dead props,
+45 type errors, nine cards that rendered a warning — and gives all 85 components a card instead of
+72, for +160 KB gzip in the bundle. `GROUP_PAGES` is read as data, so a section added to the docs
+site needs no second registration. All 63 section heights re-measured, and verified
+frame-independent.
+
 What is left is not code:
 
-1. **Measure the eight new components' card heights** and add them to `viewports.json`. Until then
-   those cards take the pane's default and may clip.
-2. **Run the upload.** `list_files` first, then a `finalize_plan` naming the writes, the three
-   deletions and the nine dead `.html` pages, then `write_files` from `.design-sync/upload/`. It
-   has never run, and the project is Misha's.
-3. **Run the first `after-release` pipeline** - the only proof the chain works on alpine rather
+1. **Run the upload.** `list_files` first, then a `finalize_plan` naming the writes and the
+   deletions, then `write_files` from `.design-sync/upload/`. The project is Misha's and
+   `delete_files` is owner-only, so the 72 orphaned `_preview/*.js` need him.
+2. **Run the first `after-release` pipeline** - the only proof the chain works on alpine rather
    than on this machine.
 
 A repo-local skill carrying the publish procedure is worth writing regardless, so no future session
