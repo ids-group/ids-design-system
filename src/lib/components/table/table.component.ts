@@ -1473,6 +1473,8 @@ export class TableComponent<T extends object> {
     viewChild.required<ElementRef<HTMLElement>>('scrollWrap');
   private readonly hscrollProxy =
     viewChild<ElementRef<HTMLElement>>('hscrollProxy');
+  private readonly tableHead = viewChild<ElementRef<HTMLElement>>('tableHead');
+  private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly hscrollContentWidth = signal(0);
   protected readonly hscrollNeeded = signal(false);
   private readonly scrollTop = signal(0);
@@ -1481,6 +1483,25 @@ export class TableComponent<T extends object> {
 
   constructor() {
     this.watchPointer();
+
+    // The scrim starts below the header, so it needs the header's height. Measured and not
+    // summed from the padding and line-height: `vertical-align: middle` on the inline-flex
+    // label extends the line box past the strut by a font-metric amount no calc() can carry,
+    // and a sum is blind to a taller control in the header. Re-measured per loading episode,
+    // which is when the value is read.
+    effect(() => {
+      if (!this.isOverlayLoading()) {
+        return;
+      }
+      const head = this.tableHead()?.nativeElement;
+      if (!head) {
+        return;
+      }
+      this.hostElement.nativeElement.style.setProperty(
+        '--_table-head-h',
+        `${head.getBoundingClientRect().height}px`,
+      );
+    });
     // One effect for both halves, because the restore CANNOT run in the
     // constructor: input signals are not set yet there, so storageKey() is still
     // '' and the restore silently no-ops. The first run with a usable key

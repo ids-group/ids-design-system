@@ -14,6 +14,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   an open panel: the closed branch of the key handler returned before reaching it, so a letter
   pressed on a collapsed trigger neither jumped nor committed. It commits now, which is what a
   native `<select>` does and what 0.11.2 said this already did.
+- **A `ds-table` loading scrim covered the top of the first row, or overlapped the header.**
+  Its top edge assumed a 40px header. The header is 42.89px at the default density and
+  26.89px under `[data-density="ultra-compact"]`, so it cut 2.89px into the header normally
+  and started 13.11px too low under that density, where the first row showed through it. The
+  header is measured now, so the edge lands on it at every density and at any header font size
+  you set. `--ds-table-head-h` still overrides it if you set that, which you should no longer
+  need to.
+
 ## 0.11.3 — 2026-09-02
 
 ### Breaking
