@@ -70,6 +70,20 @@ echo "Committed upload tree matches the build"
 
 [ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
 [ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }
+
+# The project must hold nothing this repo cannot rebuild. Everything in this loop was left over
+# from a hand-made upload until now, which is why a font could not be added and a wipe-and-reupload
+# was unsafe: half the tree had no source.
+for f in styles.css README.md _vendor/react.js _vendor/react-dom.js fonts/fonts.css; do
+  [ -f ".design-sync/upload/$f" ] || { echo "Expected artifact missing: .design-sync/upload/$f"; exit 1; }
+done
+faces=$(find .design-sync/upload/fonts -name '*.woff2' | wc -l)
+rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
+[ "$faces" = "$rules" ] || { echo "Font mismatch: $faces face file(s) against $rules @font-face rule(s) - the missing side 404s silently"; exit 1; }
+# fonts.css lives INSIDE fonts/, so the bundle's `fonts/` prefix has to be rewritten one level down.
+grep -q 'url("./' .design-sync/upload/fonts/fonts.css || { echo "fonts.css still points outside its own directory"; exit 1; }
+echo "Self-contained: $faces face(s), React vendored, styles.css and README generated"
+
 cards=$(find .design-sync/upload/components -name '*.html' | wc -l)
 previews=$(find .design-sync/upload/_preview -name '*.js' | wc -l)
 [ "$cards" = "$previews" ] || { echo "Card/preview mismatch: $cards card(s) against $previews preview(s) - a card whose preview script is missing renders a warning, which is how nine of them shipped"; exit 1; }

@@ -280,7 +280,58 @@ for (const name of [...byName.keys()].sort()) {
 }
 
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
-cpSync(join(elements, 'dist', 'ds-bundle.css'), join(OUT, '_ds_bundle.css'));
+const bundleCss = readFileSync(join(elements, 'dist', 'ds-bundle.css'), 'utf8');
+writeFileSync(join(OUT, '_ds_bundle.css'), bundleCss);
+
+// Everything below used to be left over from a hand-made upload in July, which meant the project
+// depended on files nothing in this repo could rebuild: a font could not be added, React could not
+// be pinned, and a wipe-and-reupload was unsafe because half the tree had no source.
+mkdirSync(join(OUT, 'fonts'), { recursive: true });
+const faces = readdirSync(join(elements, 'dist', 'browser', 'media'))
+  .filter((file) => file.endsWith('.woff2'));
+if (!faces.length) {
+  throw new Error('no .woff2 in dist/browser/media — the Angular build did not emit the faces.');
+}
+for (const face of faces) {
+  cpSync(join(elements, 'dist', 'browser', 'media', face), join(OUT, 'fonts', face));
+}
+
+// The @font-face rules already ship inside the bundle, pointing at `fonts/`. fonts.css exists
+// because styles.css imports it, and it sits INSIDE that directory — so the same rules need their
+// URLs rewritten one level down or every face 404s from here.
+const fontFaces = bundleCss.match(/@font-face\s*\{[^}]*\}/g) ?? [];
+if (fontFaces.length < faces.length) {
+  throw new Error(
+    `${faces.length} face file(s) but ${fontFaces.length} @font-face rule(s) in the bundle`
+    + ' — one of the two is out of step.',
+  );
+}
+writeFileSync(
+  join(OUT, 'fonts', 'fonts.css'),
+  `${fontFaces.join('\n').replace(/url\("fonts\//g, 'url("./')}\n`,
+);
+
+// The stylesheet the cards link first. Reproduced rather than reinvented: this is what the project
+// already served, so the load order the pane relies on does not change.
+writeFileSync(join(OUT, 'styles.css'), '@import "./fonts/fonts.css";\n@import "./_ds_bundle.css";\n');
+
+// The React the cards load as a classic script. Shipping it is the point: the host's copy is
+// outside our control, and the wrappers are compiled against a known version — 18.3.1 is what
+// bootstrap.mjs installs and what the demo page is proved against.
+mkdirSync(join(OUT, '_vendor'), { recursive: true });
+const vendored = [
+  ['react', 'umd/react.production.min.js', 'react.js'],
+  ['react-dom', 'umd/react-dom.production.min.js', 'react-dom.js'],
+];
+for (const [pkg, file, target] of vendored) {
+  cpSync(join(syncDir, 'node_modules', pkg, file), join(OUT, '_vendor', target));
+}
+
+// The project's own README, from the same conventions file the agent reads.
+writeFileSync(
+  join(OUT, 'README.md'),
+  readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8'),
+);
 
 console.log(
   `✓ ${written.length} card(s) + ${byName.size} declaration(s) into ${OUT.replace(repo, '.')}`

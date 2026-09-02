@@ -80,7 +80,7 @@ node .design-sync/tools/bootstrap.mjs
 CI=true npm run build:elements
 
 # Bump: runs the preversion preflight (branch/clean/ancestor/changelog) + the
-# version hook (CHANGELOG stamp + migration promote + upload rebuild + git add) + commit + tag.
+# version hook (tools/prepare-release-commit.mjs) + commit + tag.
 if [ "$level" = "beta" ]; then
   npm version prerelease --preid=beta -m "release: %s"
 else
