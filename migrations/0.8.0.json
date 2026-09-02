@@ -161,7 +161,7 @@
       "action": "None, unless a square dropdown is unacceptable — then apply `restore`.",
       "appliesWhen": "The open dropdown only. The trigger radius is unchanged and still resolves through `--ds-time-picker-trigger-radius`.",
       "note": "The panel renders square, where it drew an 8px corner before. Its rule reads a private token declared on `:host` and the CDK portals the panel out of that host, so the `var()` does not resolve and `border-radius` takes its initial `0`. The public `--ds-time-picker-panel-radius` hook is forwarded onto the pane but read by no rule, so setting it changes nothing.",
-      "pitfall": "The obvious override does nothing, and does it silently. `ds-time-picker { --ds-time-picker-panel-radius: … }` cannot reach the panel at all, the panel being portaled out of that element; and a single `.time-panel { border-radius: … }` loses to the component's own rule, which view encapsulation shims to `.time-panel[_ngcontent-…]`. Only a global rule with the class doubled out-ranks it, which is why `restore` is written that way.",
+      "pitfall": "The obvious override does nothing, and does it silently. `ds-time-picker { --ds-time-picker-panel-radius: … }` cannot reach the panel at all, the panel being portaled out of that element. A single `.time-panel { border-radius: … }` loses to the component’s own rule, which view encapsulation shims to `.time-panel[_ngcontent-…]`; DOUBLING the class only ties with it, at two classes each, and a tie goes to whichever comes later — the component’s styles, injected when it first renders. Three of the class out-ranks it outright, which is why `restore` is written that way.",
       "searchHints": [
         "ds-time-picker",
         "--ds-time-picker-panel-radius",
@@ -170,7 +170,7 @@
         "time-picker"
       ],
       "surface": "style",
-      "restore": "`.time-panel.time-panel { border-radius: var(--radius-md); }`, in a global stylesheet.",
+      "restore": "`.time-panel.time-panel.time-panel { border-radius: var(--radius-md); }`, in a global stylesheet.",
       "verify": "Open the time picker: the panel draws square corners, or the 8px corner if you applied `restore`."
     },
     {

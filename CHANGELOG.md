@@ -2984,12 +2984,13 @@ genuine gap worth reporting.
   `invalidResolved` replace it. Only reachable by subclassing a field component, which is not a
   supported extension point, but noted for parity with the class-member changes in 0.7.0.
 - **The `ds-time-picker` panel lost its corner radius.** It had drawn `--radius-md` (8px) while every
-  other floating surface — menus, popovers, cards, `ds-date-picker`'s own calendar — resolves the panel
+  other floating surface — popovers, cards, modals and `ds-date-picker`'s own calendar — resolves the panel
   role. The move onto that role reads a private `:host` token, which a CDK-portaled panel cannot see, so
   `border-radius` resolves to its initial `0` and the panel renders SQUARE. The new
   `--ds-time-picker-panel-radius` hook is inert for the same reason. Force the corner back with a global
-  `.time-panel.time-panel { border-radius: var(--radius-md); }` — a rule scoped under `ds-time-picker`
-  cannot reach the portaled panel. The trigger's radius is untouched.
+  `.time-panel.time-panel.time-panel { border-radius: var(--radius-md); }` — three of the class,
+  because two only ties with the component’s own shimmed rule and the tie goes to whichever comes
+  later. A rule scoped under `ds-time-picker` cannot reach the portaled panel at all. The trigger's radius is untouched.
 
 ### Fixed
 
