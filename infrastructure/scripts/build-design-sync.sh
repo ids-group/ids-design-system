@@ -1,0 +1,37 @@
+#!/bin/sh
+# Build the Claude Design bundle: generated custom-element registrations + React
+# wrappers, the Angular AOT output they upgrade into, and the IIFE that assigns
+# them to window.IdsDs.
+#
+# Runs in the after-release pipeline rather than on a PR because it is the slow
+# half (a second full Angular build) and nothing on a PR consumes it. It is here
+# at all because until this step existed no pipeline built the bundle: it shipped
+# a react `external` that throws before window.IdsDs is assigned, and no green
+# build anywhere could see it.
+set -e
+
+cd "$(dirname "$0")/../.."
+. infrastructure/scripts/_setup.sh
+
+setup_bun
+install_deps
+
+# esbuild + sass + the React the wrapper types compile against, into .ds-sync.
+echo "Bootstrapping design-sync deps..."
+node .design-sync/tools/bootstrap.mjs
+
+echo "Building design-sync bundle..."
+CI=true bun run build:elements
+
+[ -f .design-sync/elements/dist/ds-bundle.js ] || { echo "Expected artifact missing: .design-sync/elements/dist/ds-bundle.js"; exit 1; }
+
+# The bundle is useless to the design host without its stylesheet, and the file that ships is the
+# REWRITTEN copy named by config.json's cssEntry — not Angular's own styles.css, whose `./media/`
+# font URLs resolve to nothing in the project. Assert the copy, and assert the rewrite actually
+# happened: a silent no-op there leaves a byte-identical file and 404s every face.
+[ -f .design-sync/elements/dist/ds-bundle.css ] || { echo "Expected artifact missing: .design-sync/elements/dist/ds-bundle.css (the file cssEntry names)"; exit 1; }
+grep -q 'url("fonts/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bundle.css carries no fonts/ URL - the rewrite did not run"; exit 1; }
+! grep -q './media/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bundle.css still points at ./media/ - the rewrite was incomplete"; exit 1; }
+
+echo "Checking the hand-maintained surface..."
+bun run check:manual-surface

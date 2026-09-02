@@ -101,8 +101,7 @@ export class SelectComponent
   /** Flat options or option groups rendered in the dropdown panel. */
   readonly options = input<readonly SelectItem[]>([]);
   /** Public panel tokens forwarded onto the portaled overlay pane on open, so a
-   *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it. Without this the
-   *  tokens can only be set globally: the pane is portaled out of this component. */
+   *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-minw',
@@ -151,8 +150,6 @@ export class SelectComponent
    * by NAME — a `readonly()` rule was reaching nothing before this existed.
    */
   readonly readonlyBinding = input(false, {
-    // The alias IS the point: signal forms binds by name, and the contract
-    // spells it `readonly` where the DS spells it `readOnly`.
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'readonly',
     transform: booleanAttribute,
@@ -230,7 +227,6 @@ export class SelectComponent
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
 
-  /** Effective disabled — own `disabled` input OR the reactive-forms state. */
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
   );
@@ -246,9 +242,8 @@ export class SelectComponent
 
   private overlayRef: OverlayRef | null = null;
 
-  // Flattened list of selectable options paired with the parent-group `disabled`
-  // state, so keyboard nav and selection ignore group-header labels and respect
-  // group-level disable. Index of an entry here corresponds to `activeIndex`.
+  // An entry's index here IS `activeIndex` — group headers are not entries, so
+  // keyboard nav never lands on one.
   protected readonly flatOptions = computed<
     { option: SelectOption; groupDisabled: boolean }[]
   >(() => {
@@ -335,8 +330,6 @@ export class SelectComponent
     return isSelectOptionGroup(item);
   }
 
-  // Resolve the flat-index for a given option so click/hover/selection
-  // map back to the same indices keyboard nav uses (no double bookkeeping).
   protected flatIndexOf(opt: SelectOption): number {
     return this.flatOptions().findIndex(({ option }) => option === opt);
   }
@@ -387,8 +380,6 @@ export class SelectComponent
       (target) => this.trigger().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
-    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
-    // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
@@ -417,8 +408,6 @@ export class SelectComponent
   }
 
   ngOnDestroy(): void {
-    // Host torn down while open → close() never runs. Dispose the overlay so
-    // its pane and event subscriptions don't leak.
     this.overlayRef?.dispose();
     this.overlayRef = null;
   }
@@ -440,9 +429,7 @@ export class SelectComponent
 
   /**
    * Empties the selection from outside — a "reset filters" button, a form the app
-   * clears itself. `ds-autocomplete` has had this; the other two had only the
-   * in-trigger button, so an app with its own reset had to write the empty value
-   * by hand and guess what "empty" is for this control.
+   * clears itself.
    *
    * Deliberately does NOT move focus: the caller may be navigating away, and
    * stealing focus back into a field they just left is worse than leaving it.

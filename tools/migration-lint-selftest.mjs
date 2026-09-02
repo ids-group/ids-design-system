@@ -4,8 +4,9 @@
 // `^DELETE-LIST` while every manifest wrote the marker mid-line.
 //
 // Each entry breaks one real manifest the way its rule forbids, runs the lint, and
-// asserts that code appears. The manifest is restored after every case and again at
-// the end; a crash leaves the backup at the path below.
+// asserts that code appears. Every case starts from a fresh copy of the backup, but the
+// manifest itself is only restored at the end; a crash leaves it mutated, with the backup
+// at the path below.
 //
 //   node tools/migration-lint-selftest.mjs
 import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';

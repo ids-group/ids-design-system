@@ -1,10 +1,21 @@
-import { Component, ViewEncapsulation, inject, input, signal } from '@angular/core';
+import {
+  ElementRef,
+  Component,
+  ViewEncapsulation,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { DS_TOAST_POSITION, DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
 // Must match the leave transition on :host in toast.component.scss (--duration-base).
 const LEAVE_DURATION_MS = 180;
+
+// A toast whose clock ran out while the pointer was over it should not vanish the
+// instant the pointer leaves — the reader gets this much to see it go.
+const MIN_RESUME_MS = 600;
 
 @Component({
   selector: 'ds-toast-region',
@@ -16,6 +27,10 @@ const LEAVE_DURATION_MS = 180;
   host: {
     role: 'region',
     'aria-label': 'Notifications',
+    '(mouseenter)': 'onHover(true)',
+    '(mouseleave)': 'onHover(false)',
+    '(focusin)': 'onFocusWithin(true)',
+    '(focusout)': 'onFocusWithin($event)',
   },
 })
 export class ToastRegionComponent {
@@ -28,7 +43,12 @@ export class ToastRegionComponent {
 
   private readonly pendingQueue: ToastEntry[] = [];
   private readonly timers = new Map<number, number>();
+  private readonly remaining = new Map<number, number>();
+  private readonly startedAt = new Map<number, number>();
+  private hovered = false;
+  private focusWithin = false;
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly position = inject(DS_TOAST_POSITION, { optional: true });
 
   /** Newest goes NEAREST the anchor, so the toast that just fired appears where the
@@ -52,16 +72,27 @@ export class ToastRegionComponent {
     this.visibleEntries.update((existing) =>
       this.newestFirst ? [entry, ...existing] : [...existing, entry],
     );
-    this.startCountdown(entry);
+    this.arm(entry.id, entry.durationMs);
   }
 
-  private startCountdown(entry: ToastEntry): void {
-    if (entry.durationMs <= 0) {
+  private arm(id: number, remaining: number): void {
+    if (remaining <= 0) {
       return;
     }
+    this.remaining.set(id, remaining);
+    // A toast can be armed with no user event anywhere near it — promoteFromQueue runs from a
+    // timeout — so this has to bank rather than trust that a pause event will follow.
+    if (this.hovered || this.focusWithin) {
+      this.startedAt.delete(id);
+
+      return;
+    }
+    this.startedAt.set(id, Date.now());
+    const existing = this.timers.get(id);
+    if (existing !== undefined) window.clearTimeout(existing);
     this.timers.set(
-      entry.id,
-      window.setTimeout(() => this.remove(entry.id), entry.durationMs),
+      id,
+      window.setTimeout(() => this.remove(id), remaining),
     );
   }
 
@@ -71,13 +102,73 @@ export class ToastRegionComponent {
       window.clearTimeout(timer);
       this.timers.delete(id);
     }
+    this.remaining.delete(id);
+    this.startedAt.delete(id);
   }
 
-  /** Replace fields of an already-visible or queued toast in place. */
+  /** A toast holding the pointer or the keyboard is being read or acted on, so its
+   *  clock stops. Without this the only control for an `action` can be destroyed
+   *  while the user is reaching for it — and the region sits last in tab order, so
+   *  reaching it takes longer than the default five seconds on any real page. */
+  protected onHover(entered: boolean): void {
+    this.hovered = entered;
+    this.syncPause();
+  }
+
+  // `focusout` bubbles, so it also fires when focus moves BETWEEN elements inside the region —
+  // tabbing from the action to the close button. Without the containment check that reads as
+  // leaving, and every round trip re-floors the remainder at MIN_RESUME_MS.
+  protected onFocusWithin(event: FocusEvent | true): void {
+    this.focusWithin =
+      event === true ||
+      (event.relatedTarget instanceof Node &&
+        this.host.nativeElement.contains(event.relatedTarget));
+    this.syncPause();
+  }
+
+  private syncPause(): void {
+    const shouldPause = this.hovered || this.focusWithin;
+    if (shouldPause === this.paused) {
+      return;
+    }
+    if (shouldPause) this.pauseAll();
+    else this.resumeAll();
+  }
+
+  private get paused(): boolean {
+    return this.timers.size === 0 && this.remaining.size > 0;
+  }
+
+  private pauseAll(): void {
+    const now = Date.now();
+    for (const [id, timer] of this.timers) {
+      window.clearTimeout(timer);
+      const left =
+        (this.remaining.get(id) ?? 0) - (now - (this.startedAt.get(id) ?? now));
+      this.remaining.set(id, Math.max(left, MIN_RESUME_MS));
+    }
+    this.timers.clear();
+  }
+
+  private resumeAll(): void {
+    for (const [id, left] of [...this.remaining]) {
+      this.arm(id, left);
+    }
+  }
+
+  /** Replace fields of an already-visible or queued toast in place.
+   *
+   *  Patching `durationMs` restarts the clock, and for a QUEUED toast it only takes
+   *  effect on promotion — which is the whole point: `promise()` patches a loading
+   *  toast (duration 0) into a settled one, and if that toast is still behind the cap
+   *  its new duration must not start burning down while it is invisible. */
   update(
     id: number,
     patch: Partial<
-      Pick<ToastEntry, 'body' | 'title' | 'variant' | 'dismissible' | 'action'>
+      Pick<
+        ToastEntry,
+        'body' | 'title' | 'variant' | 'dismissible' | 'action' | 'durationMs'
+      >
     >,
   ): void {
     const inVisible = this.visibleEntries().some((entry) => entry.id === id);
@@ -87,6 +178,10 @@ export class ToastRegionComponent {
           entry.id === id ? { ...entry, ...patch } : entry,
         ),
       );
+      if (patch.durationMs !== undefined) {
+        this.clearCountdown(id);
+        this.arm(id, patch.durationMs);
+      }
 
       return;
     }
@@ -132,6 +227,8 @@ export class ToastRegionComponent {
   clear(): void {
     this.timers.forEach((timer) => window.clearTimeout(timer));
     this.timers.clear();
+    this.remaining.clear();
+    this.startedAt.clear();
     this.visibleEntries.set([]);
     this.leaving.set(new Set());
     this.pendingQueue.length = 0;

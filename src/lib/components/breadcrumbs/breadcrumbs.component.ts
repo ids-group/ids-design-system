@@ -7,7 +7,7 @@ import {
   numberAttribute,
   output,
 } from '@angular/core';
-import { DS_CONFIG } from '../../config/ds-config';
+import { DS_CONFIG } from '../../core/ds-config';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import { BreadcrumbsService } from './breadcrumbs.service';

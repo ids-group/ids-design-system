@@ -5,7 +5,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import type { CardElevation, CardPadding } from './card.types';
+import type { CardElevation, CardPadding } from '../../core/card.types';
 import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({

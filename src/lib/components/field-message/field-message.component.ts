@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import { DS_CONFIG } from '../../config/ds-config';
+import { DS_CONFIG } from '../../core/ds-config';
 
 export type FieldMessageState = 'default' | 'error' | 'warning' | 'success';
 

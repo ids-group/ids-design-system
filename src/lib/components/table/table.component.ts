@@ -82,8 +82,7 @@ function sortableOf(
   return value;
 }
 
-/** Both sides are known non-blank here. Dates and numbers compare numerically;
- *  anything else falls back to text, where `numeric: true` keeps "item 10" after
+/** Both sides are known non-blank here. `numeric: true` keeps "item 10" after
  *  "item 9" instead of before it. */
 function compareSortValues(
   first: string | number | Date,
@@ -103,8 +102,7 @@ function compareSortValues(
   }
 
   // `sensitivity: 'base'` so "Ångström" sorts next to "Angstrom" and casing does
-  // not split a column into two runs — without it a string `sortValue` column
-  // reorders when an app moves off its own comparator onto this one.
+  // not split a column into two runs.
   return firstText.localeCompare(secondText, undefined, {
     numeric: true,
     sensitivity: 'base',
@@ -556,8 +554,6 @@ export class TableComponent<T extends object> {
       ),
   );
 
-  /** Columns in the user-controlled order — `columnOrder` first (dropping
-   *  unknown keys), then any declared column the order omitted. */
   protected readonly orderedColumns = computed<readonly TableColumn<T>[]>(
     () => {
       const order = this.columnOrder();
@@ -585,21 +581,18 @@ export class TableComponent<T extends object> {
     },
   );
 
-  /** Columns actually rendered — reordered, then hidden ones skipped. */
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
     this.orderedColumns().filter(
       (col) => !this.effectiveHiddenKeys().has(col.key),
     ),
   );
 
-  /** Columns the user may toggle — drives the header column picker. */
   protected readonly hideableColumns = computed<readonly TableColumn<T>[]>(() =>
     this.columns().filter((col) => col.hideable),
   );
   protected readonly hasColumnPicker = computed(
     () => this.hideableColumns().length > 0 || this.reorderableColumns(),
   );
-  /** The trailing utility column hosts the picker button and/or row kebabs. */
   protected readonly hasUtilityColumn = computed(
     () => this.hasRowActions() || this.hasColumnPicker(),
   );
@@ -667,15 +660,12 @@ export class TableComponent<T extends object> {
     return map;
   });
 
-  /** The projected filter for a column, when the host supplied one. */
   protected headerFilterFor(
     col: TableColumn<T>,
   ): HeaderFilterDirective | undefined {
     return this.headerFilterByKey().get(col.key);
   }
 
-  /** A projected filter makes the column filterable on its own — the host does
-   *  not also have to mark it `filter: 'set'` to get the header button. */
   protected hasColumnFilter(col: TableColumn<T>): boolean {
     if (this.filterModeResolved() === 'none') {
       return false;
@@ -684,7 +674,6 @@ export class TableComponent<T extends object> {
     return col.filter === 'set' || !!this.headerFilterFor(col);
   }
 
-  /** A column is "actively filtered" when at least one of its values is unchecked. */
   protected isColumnFiltered(col: TableColumn<T>): boolean {
     // A projected filter owns its own criterion, so only the host can say
     // whether it is set; the table still draws the highlight.
@@ -697,7 +686,6 @@ export class TableComponent<T extends object> {
     return !!allowed && allowed.size < this.optionsFor(col).length;
   }
 
-  /** The checklist's domain: what the host declared, else what is in hand. */
   private optionsFor(col: TableColumn<T>): readonly string[] {
     const supplied = this.columnFilterOptions().get(col.key);
     if (supplied) {
@@ -711,7 +699,6 @@ export class TableComponent<T extends object> {
     return [...seen].sort((a, b) => a.localeCompare(b));
   }
 
-  /** Distinct values of the open column, narrowed by the popover search box. */
   protected readonly filterValues = computed<readonly string[]>(() => {
     const col = this.filterColumn();
     if (!col) {
@@ -778,8 +765,6 @@ export class TableComponent<T extends object> {
     this.columnFilters.set(next);
   }
 
-  /** Context handed to a projected header filter. Rebuilt per open, which is
-   *  cheap and keeps `close` bound to the popover that is actually showing. */
   protected headerFilterContext(col: TableColumn<T>): {
     $implicit: unknown;
     column: unknown;
@@ -861,9 +846,8 @@ export class TableComponent<T extends object> {
     startWidth: number;
   } | null = null;
 
-  /** Resolved pixel width for a column: a drag override wins, else `column.width`
-   *  when that is a number. `'content'` is not a pixel value — it is carried by a
-   *  class instead, see `fitsContent`. */
+  /** `'content'` is not a pixel value — it is carried by a class instead, see
+   *  `fitsContent`. */
   protected columnWidth(col: TableColumn<T>): number | null {
     const dragged = this.columnWidths().get(col.key);
     if (dragged !== undefined) {
@@ -915,8 +899,7 @@ export class TableComponent<T extends object> {
    * drag changes one column and leaves the others where they were — the
    * auto-sized geometry is kept rather than lost at the first grab.
    *
-   * Runs only while something is unmeasured, so a second drag is untouched, and
-   * it reads the header row that is actually on screen rather than assuming a
+   * Reads the header row that is actually on screen rather than assuming a
    * column order.
    */
   private lockMeasuredWidths(from: HTMLElement): void {
@@ -1030,9 +1013,6 @@ export class TableComponent<T extends object> {
     };
   }
 
-  /** Current rendered width for the keyboard resize path. Falls back to the DOM
-   *  when the column was auto-sized and has neither an override nor a declared
-   *  width. */
   protected resolvedColumnWidth(
     col: TableColumn<T>,
     from?: HTMLElement,
@@ -1045,12 +1025,6 @@ export class TableComponent<T extends object> {
     return from?.closest('th')?.offsetWidth ?? TableComponent.MIN_COLUMN_WIDTH;
   }
 
-  /**
-   * Keyboard resizing. A drag handle that only answers to a pointer makes a
-   * resizable column unusable without a mouse, which is an a11y gap rather than
-   * a missing nicety — hence Arrow for fine steps, PageUp/PageDown for coarse
-   * ones and Home to hand the column back to automatic sizing.
-   */
   protected onResizeKey(col: TableColumn<T>, event: KeyboardEvent): void {
     const target = event.target as HTMLElement;
     const step = TableComponent.RESIZE_STEP;
@@ -1075,13 +1049,10 @@ export class TableComponent<T extends object> {
   }
 
   /**
-   * One column-width step, from wherever it was asked for: the handle's own
-   * keyboard, or the width controls in the column panel.
-   *
-   * `'auto'` hands the column back to automatic sizing. The header cell is
-   * passed when the caller has it — the panel does not, so it is looked up by
-   * `data-col-key`, and the measurement matters: stepping an auto-sized column
-   * has to start from what it currently RENDERS, not from the minimum.
+   * The header cell is passed when the caller has it — the column panel does
+   * not, so it is looked up by `data-col-key`, and the measurement matters:
+   * stepping an auto-sized column has to start from what it currently RENDERS,
+   * not from the minimum.
    */
   private stepColumnWidth(
     col: TableColumn<T>,
@@ -1117,9 +1088,6 @@ export class TableComponent<T extends object> {
 
   protected readonly resizeStep = TableComponent.RESIZE_STEP;
 
-  /** Client-side filter over the full data set — combines the `filterQuery`
-   *  substring search with any per-column set filters. Sorting and pagination
-   *  run on the filtered rows. */
   protected readonly filteredData = computed<readonly T[]>(() => {
     const query = this.filterQuery().trim().toLowerCase();
     // In 'server' mode the host has already filtered; running the set filters
@@ -1163,7 +1131,6 @@ export class TableComponent<T extends object> {
     });
   });
 
-  /** Client-side sort over the filtered data set — only in `'client'` mode. */
   protected readonly sortedData = computed<readonly T[]>(() => {
     const rows = this.filteredData();
     if (this.sortModeResolved() !== 'client') {
@@ -1205,7 +1172,6 @@ export class TableComponent<T extends object> {
     });
   });
 
-  /** Current page's slice of the sorted rows, when paginating. */
   protected readonly pagedData = computed<readonly T[]>(() => {
     const size = this.pageSize();
     // Server-side paging (`total` set): the host already sliced to one page.
@@ -1217,8 +1183,7 @@ export class TableComponent<T extends object> {
     return this.sortedData().slice(start, start + size);
   });
 
-  /** The full display set — paged when paginating, else sorted/raw data.
-   *  Virtual mode windows this further; `rowSlots` is what the loop walks. */
+  /** Virtual mode windows this further; `rowSlots` is what the loop walks. */
   protected readonly displayData = computed<readonly T[]>(() =>
     this.pageSize() !== null ? this.pagedData() : this.sortedData(),
   );
@@ -1226,9 +1191,7 @@ export class TableComponent<T extends object> {
   /**
    * The single live-region line. Loading wins while it lasts — a sort
    * announcement over rows that are being replaced tells the reader about a
-   * state they cannot inspect yet. Otherwise it carries the sort state and the
-   * row range, which are the two things a sighted user reads off the header and
-   * the pager and a screen-reader user was told nothing about.
+   * state they cannot inspect yet.
    *
    * `aria-live="polite"` does not announce a region's INITIAL content, so the
    * unsorted first render is silent; only real changes speak.
@@ -1310,7 +1273,6 @@ export class TableComponent<T extends object> {
       : this.displayData().length,
   );
 
-  /** `null` when not virtualizing — the row loop then walks `displayData()` whole. */
   protected readonly virtualWindow = computed(() => {
     if (!this.virtualizing()) {
       return null;
@@ -1381,7 +1343,6 @@ export class TableComponent<T extends object> {
     return data.some((row) => sel.has(this.rowKey(row))) && !this.allSelected();
   });
 
-  /** Select-all is page-scoped only when paginating. */
   protected readonly selectAllLabel = computed(() =>
     this.pageSize() !== null
       ? 'Select all rows on this page'
@@ -1414,8 +1375,6 @@ export class TableComponent<T extends object> {
     Array(this.skeletonRows()).fill(0),
   );
 
-  /** Colspan of a full-width row (expansion panel, empty state): data cols +
-   *  optional select/expand/actions cols. */
   protected readonly expandedColspan = computed(() => {
     let count = this.visibleColumns().length;
     if (this.selectable()) {
@@ -1434,7 +1393,6 @@ export class TableComponent<T extends object> {
   protected readonly hasRowActions = computed(
     () => this.rowActions().length > 0,
   );
-  /** Row whose kebab menu is open — drives the per-row `disabled` predicates. */
   protected readonly menuRow = signal<T | null>(null);
   private readonly rowMenuPopover =
     viewChild<PopoverComponent>('rowMenuPopover');
@@ -1447,7 +1405,8 @@ export class TableComponent<T extends object> {
   private readonly coarsePointerState = signal(false);
 
   /** Whether the column panel opens as a sheet and the drag handle stands down.
-   *  Keyed on the pointer, not the viewport — see `_table.scss`'s matching query. */
+   *  Keyed on the pointer, not the viewport — see the matching media query in
+   *  `table.component.scss`. */
   protected readonly coarsePointer = this.coarsePointerState.asReadonly();
 
   protected readonly columnPickerOpened = computed(() =>
@@ -1472,8 +1431,6 @@ export class TableComponent<T extends object> {
     viewChild<PopoverComponent>('cellTextPopover');
   protected readonly cellPopoverText = signal('');
 
-  /** Click on a `truncate` cell: when the text is actually clipped, show the
-   *  full value in a popover; otherwise let the click fall through to the row. */
   protected onCellClipClick(row: T, col: TableColumn<T>, event: Event): void {
     const element = event.currentTarget as HTMLElement;
     if (!TableComponent.isClipped(element)) {
@@ -1545,10 +1502,8 @@ export class TableComponent<T extends object> {
       this.saveLayout(key, order, widths, hidden);
     });
 
-    // The default is 'server', which is right for the paged tables that make up
-    // most of them. A table holding ALL its rows is the exception, and `total`
-    // unbound is how it says so — so that is where the reminder goes. Only when
-    // the mode was never DECLARED.
+    // A table holding ALL its rows is the exception, and `total` unbound is how
+    // it says so — so that is where the reminder goes.
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       devWarn(() =>
         this.sortMode() === null &&
@@ -1558,8 +1513,6 @@ export class TableComponent<T extends object> {
           : null,
       );
 
-      // Same trap one column over: a header filter defaults to the server too, so
-      // the checklist tracks a selection and runs no local pass.
       devWarn(() =>
         this.filterMode() === null &&
         this.total() === null &&
@@ -1569,8 +1522,6 @@ export class TableComponent<T extends object> {
       );
     }
 
-    // Virtual mode's two measurements. Only wired while virtualizing, so a
-    // normal table pays for neither the scroll listener nor the observer.
     effect((onCleanup) => {
       if (!this.virtualizing()) {
         return;
@@ -1665,8 +1616,8 @@ export class TableComponent<T extends object> {
       );
     }
 
-    // Wire the proxy whenever it exists (stickyScrollbar on). Assigning an
-    // equal scrollLeft fires no scroll event, so the two mirrors can't loop.
+    // Assigning an equal scrollLeft fires no scroll event, so the two mirrors
+    // can't loop.
     effect((onCleanup) => {
       const proxy = this.hscrollProxy()?.nativeElement;
       if (!proxy) {
@@ -1683,6 +1634,8 @@ export class TableComponent<T extends object> {
       proxy.addEventListener('scroll', fromProxy, { passive: true });
       const measure = (): void => {
         this.hscrollContentWidth.set(wrap.scrollWidth);
+        // Both are rounded integers, so a fractional layout width makes an
+        // unscrollable wrap report one px more than it holds.
         this.hscrollNeeded.set(wrap.scrollWidth > wrap.clientWidth + 1);
       };
       // The wrap's own box never changes with content — watch the table too
@@ -1981,7 +1934,6 @@ export class TableComponent<T extends object> {
     this.rowClicked.emit(row);
   }
 
-  /** Accessible name for an interactive row, taken from the first visible column. */
   protected rowAriaLabel(row: T): string {
     const first = this.visibleColumns()[0];
 
@@ -1999,12 +1951,10 @@ export class TableComponent<T extends object> {
     return String((row as { id?: unknown }).id ?? '');
   }
 
-  /** Whether this column's header is an actual sort control right now. */
   protected sortableCol(col: TableColumn<T>): boolean {
     return !!col.sortable && this.sortModeResolved() !== 'none';
   }
 
-  /** `aria-sort` value for a header: only meaningful on sortable columns. */
   protected ariaSort(
     col: TableColumn<T>,
   ): 'ascending' | 'descending' | 'none' | null {
@@ -2183,8 +2133,6 @@ export class TableComponent<T extends object> {
       }
       this.exportStatusState.set('Export ready');
     } catch (error) {
-      // Swallowing this is what made a failed export indistinguishable from a
-      // slow one: the button re-enabled and no file ever arrived.
       this.exportStatusState.set('Export failed');
       this.exportFailed.emit(error);
     } finally {
@@ -2209,7 +2157,7 @@ export class TableComponent<T extends object> {
   }
 
   /** Deterministic per-cell width so skeleton rows look organic but stable
-   *  across re-renders. Mixes column key + row index into one of five widths. */
+   *  across re-renders. */
   protected skeletonWidth(col: TableColumn<T>, rowIndex: number): string {
     const seed = `${col.key}-${rowIndex}`;
     let hash = 0;

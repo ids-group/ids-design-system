@@ -4,6 +4,96 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Status `ds-color` zones get their accent colour back (2026-09-01)
+
+`_ds-color.scss` maps `--accent-strong: var(--<family>-strong)` for every family it offers —
+`secondary, tertiary, error, success, warning` — but only the three brand families ever defined
+`-strong`. Inside `ds-color="error|success|warning"` the declaration was invalid at computed-value
+time, so the sixteen sites that read `--accent-strong` reset to `unset`: selected list and tree
+rows, the active sidenav item and its rail, the active tab pill, avatar and avatar-group initials,
+the active tag, dropzone active text, the toast's ACTION label (the icon reads `--accent`, not
+`-strong`), the date-picker range label, the selected toggle button, the split-button hover fill,
+and the button/icon-button `--c-strong`. Sixteen READ SITES across fifteen components, under
+thirteen distinct token names — one of the sixteen is a bare `color:` declaration, not a token.
+**The mechanism differs by property.** `color` inherits, so text fell through to the inherited body
+colour. The split-button hover FILL and the sidenav RAIL are `background` and `box-shadow`, which
+inherit nothing — those two did not turn into body text, they vanished.
+
+**Measured before and after** on a probe page with the compiled theme, one `<div ds-color="...">`
+per family. Before: `--accent-strong` computed EMPTY for the three status families and the label
+rendered `rgb(22, 26, 40)` — body text — on a pale status tint. After: error `rgb(186, 23, 23)`,
+success `rgb(21, 104, 34)`, warning `rgb(138, 116, 0)`, and in dark
+`rgb(245, 132, 132)` / `rgb(105, 211, 126)` / `rgb(245, 202, 71)`.
+
+**Fixed by adding no token at all.** Two attempts were wrong first, and both are worth recording.
+Aliasing `--error-strong: var(--error-text)` lands on the right value but reaches SIDEWAYS, role to
+role inside one tier. Re-anchoring it to the ramp fixes the direction and leaves three tokens whose
+value duplicates `-text` in both themes — in dark as a repeated literal, with nothing tying them
+together.
+
+The asymmetry is the answer: the brand families carry the readable on-tint colour as `-strong` and
+have no `-text`; the status families carry the same role as `-text` and had no `-strong`. It is ONE
+role under two names, so the pointer asks for both — `var(--<f>-strong, var(--<f>-text, var(--<f>)))`
+— and no `--<status>-strong` exists. Verified in both themes: the status zones resolve to exactly
+the values the `-text` tokens hold, contrast unchanged.
+
+Contrast on the family's own `-muted` surface: light 5.5 / 5.8 / 4.3, dark 5.1 / 5.8 / 6.3. The
+light warning pair at 4.3 is inherited, not introduced — it is the value `--warning-text` already
+ships, downstream of the colour-engine question in `todo.md`; the shipping `secondary` pair sits
+at 2.9.
+
+**Two layers keep the class from returning.** `tools/check-color-families.mjs` reads `$families` and
+the roles `family-vars` dereferences straight out of `_ds-color.scss`, compiles the stylesheet, and
+fails if any family × role does not resolve in either theme block — so adding a family or a pointer
+extends the check instead of outgrowing it. It reads a pointer as a CHAIN and demands an answer
+before the last link, because the last link is the crash barrier — resolving through it is still a
+miss, just a quiet one. Watched red on two controls (drop `--error-text`, drop `--success-subtitle`)
+before it was believed; the first control passed under the looser first draft, which is what
+produced the rule. And every pointer in `family-vars` now ends in a fallback — but not all to the
+same place, and the first write-up of this said otherwise. `-hover`, `-pressed` and `-strong` fall
+back to the family's own base colour; `-subtitle`, `-muted-strong` and `-surface-tint` to the
+family's `-muted`; `-muted`, `-on` and the two focus pointers to a theme-wide role, because no
+family-shaped answer exists for them; and `--accent` has no fallback at all, being the base itself.
+`@property` was measured for that job and rejected: its `initial-value` may not contain `var()`, so
+it would mean hard-coding a literal per token in the theme layer, and two of the pointers are
+box-shadow lists rather than colours.
+
+The same item's smaller cousin went with it: `accordion-item.component.scss` painted a disabled
+chevron with `var(--icon-disabled)`, a token defined nowhere. The declaration was invalid, so the
+chevron inherited `--text-disabled` from the button and looked right by accident. Now it says
+`--text-disabled`, which is what it was already rendering.
+
+---
+
+## The banner and toast icon centres on the message block (2026-09-01)
+
+Stas picked **B** off `presentations/implemented/banner-toast-icon-alignment.html`, which drew both
+rules over six cases with live tokens. A aligned the icon to the first LINE of text — fine at one line,
+and drifting as the text grew: 12px above the block centre at two lines, 21px at three, 27px at
+title + three.
+
+**Shipped as `align-self: center` on the icon, not `align-items: center` on the row.** The row also
+holds the close button and, in `layout-row`, the action buttons; flipping the container would have
+moved those too, and only the icon was judged. `layout-row`'s `.icon { align-self: flex-start }`
+override went with it, and so did the `.icon { margin-top: 0 }` that `compact` needed to cancel the
+old nudge.
+
+`--banner-ic-mt` is **removed** from `_tokens.scss` — one border-width of optical bump that only
+existed to serve the old rule. **Corrected 2026-09-02: it was read from THREE places, not one** — the
+banner stylesheet and twice inside the A/B deck, which kept resolving off a `presentations/ds.css` that
+had not been regenerated. `build:deck-css` was run and the deck's two reads inlined; `deck-lint` went
+red on the regenerated CSS exactly as it was built to, which is the first time that gate has caught
+something on its own.
+
+**Verified in a browser that actually renders, with a control.** The first three measurements came
+from the automation tab and were nonsense — body heights of 276px and 383px where the real ones are
+42px and 60px, and offsets of -158px. That tab does not lay out, which is a trap worth remembering.
+Re-run headless against the built docs: **0px from the body centre on all twelve banners and all
+eight toasts**, and the control — the same probe with `align-self: flex-start` forced back — reads
+**-11px**, so the probe measures what it claims to.
+
+Closes screens 30/32 from the 08-13 batch.
+
 ## The resize handle's announced ceiling is now a real one (2026-09-01)
 
 - [x] **DONE 2026-09-01 — filed and closed the same day, because it was a regression from that
@@ -1270,7 +1360,7 @@ Highest: each one is wrong in code a consumer already has.
   the generated stat token description says an unwrapped phrase value is "clipped" when `.stat` sets
   no `overflow` and it actually escapes the tile.
 
-- [x] **DONE 2026-08-21 — all five follow `ds-date-picker`: the guard tests the trigger, not the host.** The open question the item held — "is label-click-keeps-the-panel-open something anyone relies on" — was already answered by shipping that fix on the date picker in 0.10.1, so the siblings follow rather than diverge. `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-color-picker` each own a single `#trigger` viewChild and now test it; `ds-time-picker` has THREE trigger boxes (single, range start, range end) and tests whichever are present, so a range picker keeps both of its own boxes exempt. **Verified end to end on 2026-08-21, all five, with a control experiment** — `presentations/overlay-guard-check.html`, driven headless. **Why a harness rather than the open docs tab:** the tab was a BACKGROUND tab, and Chrome clamps timers and runs no animations there, so both "is the pane still in the DOM" and "did the timer fire" read wrong — which is exactly what made the first attempt look flaky. The harness iframes each component page (same origin, so it can drive and read it), presses the trigger, then presses the one place inside the host that is NOT the trigger, and records two independent signals: the trigger's `aria-expanded` and the pane count in the overlay container. **Result: 10 opens, 10 dismissals, both signals agreeing every time.** **Finding along the way:** only `ds-select` and `ds-time-picker` have a `label` input at all, so for the other three the reachable outside-the-trigger area is the message row — the harness looks for a label, then a rendered message row, then any strip the layout leaves beside the trigger, which is the consumer geometry MBP-225 described. **The control run is what makes the pass mean anything:** reverting `ds-select` alone to `host.contains` took it to **0 of 3** dismissals while the other four stayed at 2/2, then restoring it went back to 2/2. So the harness detects the defect, and the predicate change is what fixes it. Worst case if one is wrong is a dismiss that used to be swallowed — the direction the fix wants. 
+- [x] **DONE 2026-08-21 — all five follow `ds-date-picker`: the guard tests the trigger, not the host.** The open question the item held — "is label-click-keeps-the-panel-open something anyone relies on" — was already answered by shipping that fix on the date picker in 0.10.1, so the siblings follow rather than diverge. `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-color-picker` each own a single `#trigger` viewChild and now test it; `ds-time-picker` has THREE trigger boxes (single, range start, range end) and tests whichever are present, so a range picker keeps both of its own boxes exempt. **Verified end to end on 2026-08-21, all five, with a control experiment** — `tools/overlay-guard-harness.html`, driven headless. **Why a harness rather than the open docs tab:** the tab was a BACKGROUND tab, and Chrome clamps timers and runs no animations there, so both "is the pane still in the DOM" and "did the timer fire" read wrong — which is exactly what made the first attempt look flaky. The harness iframes each component page (same origin, so it can drive and read it), presses the trigger, then presses the one place inside the host that is NOT the trigger, and records two independent signals: the trigger's `aria-expanded` and the pane count in the overlay container. **Result: 10 opens, 10 dismissals, both signals agreeing every time.** **Finding along the way:** only `ds-select` and `ds-time-picker` have a `label` input at all, so for the other three the reachable outside-the-trigger area is the message row — the harness looks for a label, then a rendered message row, then any strip the layout leaves beside the trigger, which is the consumer geometry MBP-225 described. **The control run is what makes the pass mean anything:** reverting `ds-select` alone to `host.contains` took it to **0 of 3** dismissals while the other four stayed at 2/2, then restoring it went back to 2/2. So the harness detects the defect, and the predicate change is what fixes it. Worst case if one is wrong is a dismiss that used to be swallowed — the direction the fix wants. 
   ORIGINAL: [P3] Five more overlays treat the whole host as "the trigger" in their outside-click guard.**
   `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all
   pass `(target) => this.host.nativeElement.contains(target)` to `closeOnOutsidePointer`, the same

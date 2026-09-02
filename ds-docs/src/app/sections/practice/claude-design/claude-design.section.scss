@@ -1,0 +1,84 @@
+    /* Section styles in ds-docs are global, so every class here carries a cd- prefix —
+       unprefixed names have already collided twice across sections. */
+
+    .cd-chain {
+      margin-top: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      overflow-x: auto;
+      background: var(--surface-tint);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--ds-radius-control);
+    }
+
+    .cd-steps {
+      display: grid;
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+    }
+    .cd-step {
+      display: grid;
+      grid-template-columns: minmax(240px, 0.9fr) minmax(280px, 2fr);
+      gap: var(--space-4);
+      align-items: start;
+      padding-bottom: var(--space-3);
+      border-bottom: var(--border-width-default) solid var(--border-default);
+
+      @media (width < 1024px) {
+        grid-template-columns: 1fr;
+        gap: var(--space-2);
+      }
+    }
+    .cd-cmd {
+      justify-self: start;
+      overflow-wrap: anywhere;
+    }
+
+    .cd-table {
+      display: grid;
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+    }
+    .cd-row {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 96px minmax(260px, 1.8fr);
+      gap: var(--space-4);
+      align-items: start;
+      padding-bottom: var(--space-3);
+      border-bottom: var(--border-width-default) solid var(--border-default);
+
+      @media (width < 1024px) {
+        grid-template-columns: 1fr;
+        gap: var(--space-2);
+      }
+    }
+    .cd-tag {
+      justify-self: start;
+      padding: var(--space-0-5) var(--space-2);
+      font: var(--font-weight-semibold) var(--font-size-2xs) / var(--line-height-flat) var(--font-sans);
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-wider);
+      border-radius: var(--ds-radius-pill);
+    }
+    .cd-tag--input {
+      background-color: var(--success-subtitle);
+      color: var(--success-text);
+    }
+    .cd-tag--generated {
+      background-color: var(--neutral-150);
+      color: var(--neutral-700);
+    }
+    .cd-tag--remote {
+      background-color: var(--warning-subtitle);
+      color: var(--warning-text);
+    }
+
+    .cd-list {
+      display: grid;
+      gap: var(--space-3);
+      margin: var(--space-4) 0 0;
+      padding-left: var(--space-6);
+      max-width: var(--col-cap-text);
+    }
+    .cd-muted {
+      color: var(--text-secondary);
+    }

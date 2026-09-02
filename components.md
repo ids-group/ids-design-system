@@ -2,6 +2,12 @@
 
 > Index of the design system components, global helpers, tokens and icons. Use it as a single reference when migrating UI to DS.
 >
+> **If you are an agent, read `docs/agent/INDEX.md` instead of this file.** The same content
+> is generated there as an index plus one leaf per entry, so answering a question about one
+> component costs ~1.6 KB and the index, not the 58 KB of this catalogue. This file stays the
+> single place a human edits — the leaves are derived from it and a CI gate fails when they
+> drift.
+>
 > **This file is the WHAT — the inventory.** For the HOW (which spacing between what,
 > which type role where, how a page is composed) see `design-system.md`, which carries
 > the rules this catalogue deliberately does not.
@@ -293,14 +299,21 @@ Content slot: `[actions]` — CTA buttons / links.
 
 #### `<ds-banner>` — `BannerComponent`
 Inputs: `variant: 'info' | 'success' | 'warning' | 'severe' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default), `compact: boolean = false`, `layout: 'stacked' | 'row' = 'stacked'`, `accentRail: boolean = true`
-Output: `(dismissed): void`
+Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 - `layout="stacked"` (default): actions wrap onto a new line, indented under the body. Use for multi-line messages or multiple CTAs.
 - `layout="row"`: actions sit at the right edge, vertically centred with the body. Use for one-line messages with a single trailing CTA.
 
+#### `<ds-alert>` — `AlertComponent`
+Inline message, `ds-banner`'s smaller twin — same anatomy, sized for placement inside a form or a card rather than across a page.
+Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
+Output: `(closed): void`
+Content slots: default (body text), `[actions]` (trailing CTAs)
+
 #### `<ds-toast>` — `ToastComponent`
-Inputs: `variant: 'info' | 'success' | 'warning' | 'error' = 'info'`, `title: string = ''`, `message: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
-Output: `(dismissed): void`
+Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'loading' = 'info'`, `title: string = ''`, `message: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default), `action: ToastAction | null = null` (`{ label, handler }` — renders a trailing button)
+Output: `(closed): void`
+Content slots: default (body text, an alternative to `message`), `[actions]` (trailing CTAs). Neither is reachable through `ToastService`, which renders from `ToastOptions` — they are for a `<ds-toast>` you place yourself.
 
 The companion `<ds-toast-region>` lives inside the `ToastService` (see Services) — it is auto-mounted via a CDK overlay on first `toast.show()`, so consumers do **not** need to place `<ds-toast-region>` anywhere in their markup. Render `<ds-toast>` directly only for static specimens.
 
@@ -367,7 +380,7 @@ Inputs: `steps: readonly string[] = []`, `current: number = 0`. Horizontal step 
 
 #### `<ds-pagination>` — `PaginationComponent`
 Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`
-Outputs: `(pageChange): number`, `(pageSizeChange): number`
+Outputs: `(currentPageChange): number`, `(pageSizeChange): number`
 
 #### `<ds-divider>` — `DividerComponent`
 Inputs: `variant: 'default' | 'strong' | 'vertical' | 'label' = 'default'`, `spacing: 'none' | 'sm' | 'md' | 'lg' = 'md'`
@@ -422,18 +435,13 @@ Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / 
 #### `<ds-menu>` + `<ds-menu-item>` — `MenuComponent`, `MenuItemComponent`
 Menu is a container. Item inputs: `icon: IconName | null = null`, `disabled: boolean = false`, `danger: boolean = false`. Output: `(pressed): MouseEvent`. Content: label text; supports `[icon]` content slot for custom icons.
 
-#### `<ds-dropdown>` — `DropdownComponent`
-Trigger button + CDK overlay panel combo.
-Inputs: `value: model<string> = ''`, `options: DropdownOption[]` (`{ label, value, disabled?, icon? }`), `placeholder: string = 'Select…'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `error: boolean = false`, `name: string | null = null`
-Selection is communicated via the `value` model. Keyboard: ArrowUp/Down, Enter/Space, Home/End, Escape.
-
 ---
 
 ### Tables
 
 #### `<ds-table>` — `TableComponent<T extends { id: string }>`
 Inputs: `data: required readonly T[]`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean = false` (opt-in outer border + radius; off by default so tables flush inside `<ds-card padding="none">` don't double-border), `loading: false | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `selectedIds: model<Set<string>>`, `sortKey: model<string | null>`, `sortDir: model<SortDir>` (`'asc' | 'desc' | null`), `skeletonRows: number = 5`
-Outputs: `(rowClick): T`, `(sortChange): SortChangeEvent` (`{ key, dir }`)
+Outputs: `(rowClicked): T`, `(sortChange): SortChangeEvent` (`{ key, dir }`)
 Column shape: `{ key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (row: T) => string }`
 Opening a row: give one column `link: (row) => <route target> | null` and its value renders as a real `<a>` — visible without hovering, in the tab order as a link, and Ctrl/Cmd-clickable, none of which a clickable `<tr>` can do. `null` for a row leaves that cell as plain text, so a partly-reachable list stays one column; external URLs go through a `[dsCellTemplate]` instead, since `link` takes Angular route targets only. It composes with `rowInteractive` (the link stops its click from reaching the row), but the two together cost **two tab stops per row** — on a long list prefer the link alone. `interactive: true` only tints a cell on row hover, which a keyboard or touch user never sees; prefer `link` wherever the row actually leads somewhere.
 Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
@@ -575,10 +583,17 @@ this.crumbs.clear();
 
 #### `ToastService`
 `@Injectable({ providedIn: 'root' })`. Inject and call:
-- `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error', dismissible?, durationMs? = 5000 }`. Returns `{ id, dismiss() }`.
+- `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error' | 'loading', dismissible?, icon?, action?: ToastAction, durationMs? = 5000 }`. Returns `{ id, dismiss() }`. `durationMs: 0` (and any negative) means it never auto-dismisses, and it is counted from the moment the toast becomes VISIBLE, not from the call — a toast queued behind `maxVisible` keeps its full time on screen. A `loading` toast is forced to 0 and discards a supplied `durationMs`.
+- `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), counted from the moment it becomes visible and not overridable; `dismissAll()` cancels it like any other.
 - `dismissAll(): void`
 
-On first `show()` the service lazily creates a CDK overlay and mounts a `<ds-toast-region>` into it. **Consumers do not need to add a region element to their template** — the service handles mounting itself.
+Defaults are set with two injection tokens, NOT through `provideDsConfig`:
+- `DS_TOAST_CONFIG` — `{ maxVisible?: number }`. Unset or `0` means unlimited; extras queue and appear as earlier ones dismiss.
+- `DS_TOAST_POSITION` — `{ horizontalPosition?: 'left' | 'center' | 'right', verticalPosition?: 'top' | 'bottom', offset?: string }`. Defaults to `right` / `top` / `var(--space-6)`.
+
+Both resolve **once, at the root injector**, when the service is first used. Providing either on a `Route` or a component has no effect, and the position cannot change after the first `show()`.
+
+On first `show()` the service lazily creates a CDK overlay and mounts a `<ds-toast-region>` into it. **Do not place `<ds-toast-region>` yourself** — the service only ever talks to the instance it created, so a hand-placed one is an invisible empty box that never receives a toast, with no warning. It appears in the generated API table only because the extractor lists every exported component.
 
 ---
 

@@ -32,7 +32,11 @@ try {
     stdio: 'ignore',
   });
 } catch {
-  fail("local 'main' is behind or diverged from 'origin/main' — pull first.");
+  fail(
+    "could not establish that 'origin/main' is reachable from HEAD. Either local 'main' is " +
+      "behind or diverged — pull — or the ref is not there at all, which a pull will not fix: " +
+      'check the remote name and that a fetch has run.',
+  );
 }
 
 const changelog = readFileSync('CHANGELOG.md', 'utf8').replace(/\r\n/g, '\n');
@@ -45,10 +49,19 @@ if (!hasEntry)
   fail("'## Unreleased' is empty — add release notes before releasing.");
 
 try {
+  // First, because every check below is one of these files: a gate that does not parse
+  // cannot report anything.
+  execSync('node tools/check-tools-parse.mjs', { stdio: 'inherit' });
+} catch {
+  fail('a script in tools/ does not parse — the file and the error are above.');
+}
+
+try {
   execSync('node tools/check-class-surface-entry.mjs', { stdio: 'inherit' });
 } catch {
   fail(
-    'the `## Unreleased` class-collision entry is behind the code (classes named above).',
+    'the class-surface entry check did not pass — read its output above. If it named classes, ' +
+      'the `## Unreleased` entry is behind the code; if it named none, it could not run.',
   );
 }
 
@@ -58,7 +71,9 @@ try {
   execSync('node tools/migration-lint-selftest.mjs', { stdio: 'inherit' });
 } catch {
   fail(
-    'a migration-lint rule can no longer fire — the lint below would pass on data it should reject.',
+    'the migration-lint selftest did not pass — read its output above. A rule that can no ' +
+      'longer fire means the lint below would pass on data it should reject; a selftest ' +
+      'that could not run means nothing has been proved either way.',
   );
 }
 
@@ -66,7 +81,10 @@ try {
   execSync('node tools/migration-lint.mjs', { stdio: 'inherit' });
   execSync('node tools/check-delete-tables.mjs', { stdio: 'inherit' });
 } catch {
-  fail('migrations/ failed the manifest lint (errors above).');
+  fail(
+    'the manifest lint or the delete-table parity check did not pass — the output above says ' +
+      'which. They are two different checks and only one of them ran second.',
+  );
 }
 
 // The PR gate runs this too, but a release can be cut from a branch whose gate never ran,
@@ -75,7 +93,9 @@ try {
   execSync('node tools/changelog-lint-selftest.mjs', { stdio: 'inherit' });
 } catch {
   fail(
-    'a changelog-lint rule can no longer fire — the lint below would pass on text it should reject.',
+    'the changelog-lint selftest did not pass — read its output above. A rule that can no ' +
+      'longer fire means the lint below would pass on text it should reject; a selftest ' +
+      'that could not run means nothing has been proved either way.',
   );
 }
 
@@ -83,7 +103,9 @@ try {
   execSync('node tools/changelog-lint.mjs', { stdio: 'inherit' });
 } catch {
   fail(
-    'a published artefact names something the reader cannot reach (errors above).',
+    'changelog-lint did not pass — read the rule it names above. Its fifteen rules cover ' +
+      'unreachable names, internal references, section order and more, so the rule id is the ' +
+      'diagnosis, not this line.',
   );
 }
 
@@ -94,6 +116,28 @@ try {
 } catch {
   fail(
     'a ringed shell does not silence the base focus indicator (errors above).',
+  );
+}
+
+// Two more the PR gate calls hard and this one did not run, which is the same hole the changelog
+// checks above were added to close: the PR gate is manual, so a release can be cut from a branch
+// where neither ever fired. Left out deliberately: deck-lint, whose subject is internal decks that
+// never reach the package.
+try {
+  execSync('node tools/check-color-families.mjs', { stdio: 'inherit' });
+} catch {
+  fail(
+    'the colour-family check did not pass — read its own output above: it reports either a ' +
+      'family that cannot resolve a role its accent pointers read, or that it could not run ' +
+      'at all.',
+  );
+}
+
+try {
+  execSync('node tools/check-docblock-drift.mjs', { stdio: 'inherit' });
+} catch {
+  fail(
+    'a doc comment has drifted off its symbol, so the published API table documents the wrong member (errors above).',
   );
 }
 

@@ -18,10 +18,6 @@ export type TableFilterMode = 'client' | 'server' | 'none';
  * - `'client'` — the table reorders `data()` itself, for a table holding every row.
  * - `'none'` — nothing sorts, and `sortable` columns render no affordance rather
  *   than a control that does nothing.
- *
- * Replaces the boolean `clientSort`, which could not express `'none'`: a column
- * marked `sortable` on a table with no sorting drew a live-looking header that
- * did nothing, and no type or dev check could catch it.
  */
 export type TableSortMode = 'client' | 'server' | 'none';
 

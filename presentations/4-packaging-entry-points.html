@@ -1,0 +1,202 @@
+<meta charset="utf-8">
+<title>Одна entry point — и четыре выхода</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="docs/packaging-diagnosis.md - docs/packaging-chunking-audit.md - решение отложено 2026-08-21, вариант B снят как несобираемый, живой выбор A/D">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+
+<main>
+  <header class="masthead">
+    <div class="chips">
+      <span class="chip is-open">нужен вердикт</span>
+      <span class="chip">MBP-133</span>
+      <span class="chip is-accent">обновлено 2026-09-02</span>
+    </div>
+    <h1>Одна entry point — и четыре выхода</h1>
+    <p class="lede">
+      У библиотеки один <code>entryFile</code>, значит один FESM-модуль на все 71 папку компонентов. Модуль —
+      это атом бандлера: он не может положить половину модуля в один чанк, а половину в другой.
+      Поэтому любой eager-символ тянет в стартовый бандл <b>всё, что приложение использует хоть
+      где-нибудь</b>, включая компоненты только для ленивых роутов.
+    </p>
+  </header>
+
+  <section class="panel verdict">
+    <h2 style="margin-top:0">Вердикт</h2>
+    <p>
+      <b>Вариант D — по одной entry point на компонент, корень остаётся чистым фасадом.</b>
+      Трёх слоёв недостаточно: eager-шелл трогает компонентный слой и затягивает его целиком обратно.
+    </p>
+    <ul class="facts">
+      <li><b>B не собирается.</b> ng-packagr запрещает циклы между entry points, а services-точка обязана владеть <code>button</code>/<code>icon</code>/<code>spinner</code>, которые нужны и всем остальным.</li>
+      <li><b>C теряет tree-shaking.</b> Динамический импорт делает модуль entry point'ом — неиспользуемые экспорты больше не выбрасываются: <b>+50%</b> на отложенном чанке.</li>
+      <li><b>A защитимо, но каждый потребитель открывает проблему заново</b>, а библиотека остаётся одним модулем в 1.73 МБ.</li>
+    </ul>
+  </section>
+
+  <h2>Механизм</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <span class="n is-bad">+135 744 B</span>
+      <span class="k">gzip в стартовый бандл от одного <code>inject(ToastService)</code></span>
+    </div>
+    <div class="kpi">
+      <span class="n">566 761 → 189 B</span>
+      <span class="k">ленивый чанк схлопывается почти в ноль</span>
+    </div>
+    <div class="kpi">
+      <span class="n">11 из 11</span>
+      <span class="k">тяжёлых компонентов оказываются в стартовом бандле</span>
+    </div>
+    <div class="kpi">
+      <span class="n is-good">15 B</span>
+      <span class="k">стоит <code>import type</code> — типы не якорят</span>
+    </div>
+  </div>
+
+  <p>
+    <b>Не важно, какой именно символ импортирован eager-но.</b> Провайдер темы, провайдер конфига,
+    один <code>&lt;ds-button&gt;</code> и <code>inject(ToastService)</code> дают результат в пределах
+    <b>2 519 B</b> друг от друга — все четыре якорят один и тот же модуль.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Якорь в eager-корне</th><th class="num">Initial gzip</th><th class="num">Ленивый чанк</th><th>Тяжёлых в initial</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>ничего из DS</th><td class="num">59 019</td><td class="num">566 761</td><td class="yes">0 из 11</td></tr>
+      <tr><th><code>import type { DsStatus }</code></th><td class="num">59 034</td><td class="num">566 761</td><td class="yes">0 из 11</td></tr>
+      <tr><th><code>provideDsTheme()</code></th><td class="num">192 392</td><td class="num">189</td><td class="no">11 из 11</td></tr>
+      <tr><th><code>provideDsConfig({})</code></th><td class="num">192 342</td><td class="num">189</td><td class="no">11 из 11</td></tr>
+      <tr><th>один <code>&lt;ds-button&gt;</code></th><td class="num">192 244</td><td class="num">189</td><td class="no">11 из 11</td></tr>
+      <tr><th><code>inject(ToastService)</code></th><td class="num">194 763</td><td class="num">189</td><td class="no">11 из 11</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    Отсюда два следствия. <b>Сервис никогда не был причиной</b> — это просто якорь, который заметили.
+    И <b>внутренний рефакторинг не сдвинет ни байта</b>, пока entry point одна: размещение решается
+    per-модуль, а модуль один.
+  </p>
+
+  <h2>Tree-shaking работает — сломано размещение</h2>
+
+  <table>
+    <thead>
+      <tr><th>Что это</th><th>На какой вопрос отвечает</th><th>Статус</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Tree-shaking</th>
+        <td>удаляется ли код, на который никто не ссылается?</td>
+        <td class="yes">работает — вход стоит 5,6 КБ gzip; 52 неиспользуемых компонента добавили бы 18,2 КБ</td>
+      </tr>
+      <tr>
+        <th>Размещение по чанкам</th>
+        <td>из того кода, что ИСПОЛЬЗУЕТСЯ — попадёт он в стартовый чанк или в поздний?</td>
+        <td class="no">сломано — один eager-символ кладёт в стартовый чанк всё</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Граф разбивается</h2>
+
+  <p>
+    <b>76 групп</b> (после того как 2026-09-02 разорвали четырёхсторонний цикл). Три
+    сильно связные компоненты, и все три — соседи, которым и положено ехать вместе:
+    <code>radio ↔ radio-group</code>, <code>time-columns ↔ time-picker</code>,
+    <code>core ↔ icons</code>. Считается на месте: <code>node tools/entry-point-graph.mjs</code>.
+  </p>
+
+  <pre><code>core (13 групп)  ←  services (toast, modal)  ←  components (62 группы)</code></pre>
+
+  <h2>Четыре варианта</h2>
+
+  <table>
+    <thead>
+      <tr><th>Вариант</th><th>Что делаем</th><th>Размещение</th><th>Tree-shaking</th><th>Цена</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>A · ничего</th>
+        <td>потребитель двигает свой провайдер или живёт с этим</td>
+        <td class="no">нет</td>
+        <td class="yes">да</td>
+        <td>Роуты и так ленивые, чанк приедет с первым роутом. Но каждый потребитель открывает это заново.</td>
+      </tr>
+      <tr class="dead">
+        <th>B · одна services-точка</th>
+        <td>отдельная <code>ng-package.json</code> для трёх сервисов</td>
+        <td class="no">—</td>
+        <td class="no">—</td>
+        <td><b>Не собирается.</b> Цикл структурный, а не случайный.</td>
+      </tr>
+      <tr>
+        <th>C · на стороне потребителя</th>
+        <td><code>await import()</code> в eager-корне</td>
+        <td class="yes">да</td>
+        <td class="no">нет</td>
+        <td>+50% на отложенном чанке, измерено. И это надо переоткрывать в каждом проекте.</td>
+      </tr>
+      <tr class="pick">
+        <th>D · по точке на компонент</th>
+        <td>одна entry point на компонент, корень — фасад</td>
+        <td class="yes">да</td>
+        <td class="yes">да</td>
+        <td><b>Рекомендация.</b> Рефакторинг на 71 папку компонентов, но <b>потребитель не меняет ни одного импорта</b>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Приз</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <span class="n is-good">≈ −59%</span>
+      <span class="k">доля DS в стартовом бандле: 135,7 → ~56 КБ gzip, случай eager-сервиса</span>
+    </div>
+    <div class="kpi">
+      <span class="n is-good">≈ −50%</span>
+      <span class="k">142,3 → 70,5 КБ gzip, случай eager-шелла</span>
+    </div>
+    <div class="kpi">
+      <span class="n">≈ 4,2×</span>
+      <span class="k">во столько раз A3 весомее, чем весь директивный сплит таблицы</span>
+    </div>
+  </div>
+
+  <p>
+    <b>Обе цифры — МОДЕЛЬ, не замер.</b> Контроль «сервисы eager + ленивый роут на месте» нельзя
+    собрать, пока entry point одна: <code>inject(ToastService)</code> тянет всё — это и есть проблема.
+    Диапазон по сырым байтам: 383 233 против 763 989, то есть −50%.
+  </p>
+
+  <h2>Фасад: потребитель не меняет импорты</h2>
+
+  <p>
+    Измерено на 61 entry point: варианты <b>facade</b> и <b>deep</b> дают <b>побайтово одинаковый</b>
+    результат вплоть до хеша чанка. Одно исключение, о котором потребителя надо предупредить:
+    <code>@defer</code> с компонентом, импортированным через фасад, <b>не откладывает ничего</b> —
+    <a href="https://github.com/angular/angular/issues/52554">angular/angular#52554</a>. Внутри
+    <code>@defer</code> нужен глубокий специфер.
+  </p>
+
+  <section class="panel verdict is-done">
+    <h3 style="margin-top:0"><code>moduleResolution: "node"</code> — НЕ ломается</h3>
+    <p>
+      Раньше здесь стояло «не проверено», а в диагностике — «измеренное ломающее изменение». Ни то,
+      ни другое: <b>ng-packagr сам эмитит node10-заглушку на каждую entry point</b>
+      (<code>{"module": "…", "typings": "…"}</code> в папке точки). Проверено резолвером TypeScript
+      5.9.3 с падающим негативным контролем. <code>typesVersions</code> нужен <b>только варианту E</b>
+      — коротким алиасам после сборки, у которых нет папки на диске.
+    </p>
+  </section>
+
+  <p class="src">
+    Источники: <code>docs/packaging-diagnosis.md</code>, <code>docs/packaging-chunking-audit.md</code>,
+    <code>tools/entry-point-graph.mjs</code>. Форма раскладки — дека 6, opt-in-шов — дека 7,
+    отклонённые идеи — дека 8.
+  </p>
+</main>

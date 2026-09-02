@@ -354,7 +354,6 @@ export class AutocompleteComponent<T = unknown>
     return isDsOptionGroup(item);
   }
 
-  /** Whether to show the "Create «text»" row at the bottom of the panel. */
   protected readonly showCreateRow = computed<boolean>(() => {
     if (!this.allowCreate()) {
       return false;
@@ -370,7 +369,6 @@ export class AutocompleteComponent<T = unknown>
     );
   });
 
-  /** Flat list of visible options used for keyboard navigation index. */
   protected readonly visibleOptions = computed<
     readonly AutocompleteOption<T>[]
   >(() => this.filteredOptions());
@@ -395,14 +393,13 @@ export class AutocompleteComponent<T = unknown>
 
   private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
   private readonly showsEveryChip = computed(() => this.chipsMode() === 'all');
-  /** True for BOTH `'fit'` and a number: a number is a ceiling ("at most N"), not a
-   *  promise, so the row still measures and shows only what the width allows. */
+  /** True for a number as well as `'fit'`: a number is a ceiling, not a promise,
+   *  so the row still measures. */
   protected readonly fitsChipsToWidth = computed(() => !this.showsEveryChip());
-  /** How many chips the row is ASKED to render before measuring: everything for
-   *  `'fit'`, the ceiling for a number. It has to be the ceiling and not the
-   *  selection, because the measurement caches chip widths from a render that
-   *  holds them all — with a numeric cap that render never happens, the cache
-   *  never fills, and the fit fell back to "show them all" without a word. */
+  /** How many chips the row is ASKED to render before measuring. It has to be the
+   *  ceiling and not the selection: the measurement caches chip widths from a
+   *  render that holds them all, so with a numeric cap that render never happens,
+   *  the cache never fills, and the fit silently falls back to showing them all. */
   private readonly chipBudget = computed(() => {
     const max = this.chipsMode();
     const total = this.selectedTags().length;
@@ -498,24 +495,22 @@ export class AutocompleteComponent<T = unknown>
     return parts.join(' ');
   }
 
-  /** First option a reader can actually act on — -1 when the list is empty or
-   *  every option is disabled. */
+  /** -1 when nothing is pickable and there is no create row to fall back on. */
   private firstEnabledIndex(): number {
     const index = this.visibleOptions().findIndex((option) => !option.disabled);
     if (index >= 0) {
       return index;
     }
 
-    // With nothing pickable, the create row IS the list, and leaving the cursor at
-    // -1 meant Enter fell through allowCreate's primary flow: type a new name, press
-    // Enter, nothing happens until an ArrowDown nobody knows to press.
+    // With nothing pickable the create row IS the list; a -1 cursor would leave
+    // Enter doing nothing after typing a new name, until an ArrowDown nobody knows
+    // to press.
     return this.showCreateRow() ? this.visibleOptions().length : -1;
   }
 
-  /** Arrow keys step OVER a disabled option rather than landing on it — an active
-   *  row Enter refuses to act on is a dead end the reader has to guess their way
-   *  out of. `step` is +1/-1; the create row (past the last option) is always
-   *  reachable. Returns -1 when every option is disabled. */
+  /** Steps OVER a disabled option rather than landing on it. `step` is +1/-1; the
+   *  create row (past the last option) is always reachable, and -1 comes back when
+   *  every option is disabled. */
   private nextEnabledIndex(from: number, step: number, slots: number): number {
     if (!slots) {
       return -1;
@@ -532,7 +527,6 @@ export class AutocompleteComponent<T = unknown>
     return -1;
   }
 
-  /** Flat index of the given option within the visible (filtered) list. */
   protected flatIndexOf(option: AutocompleteOption<T>): number {
     return this.visibleOptions().findIndex((opt) => opt === option);
   }
@@ -607,7 +601,6 @@ export class AutocompleteComponent<T = unknown>
       return;
     }
     const visibleCount = this.visibleOptions().length;
-    // Create row adds one extra navigable slot at the end.
     const totalSlots = visibleCount + (this.showCreateRow() ? 1 : 0);
     switch (event.key) {
       case 'ArrowDown':
@@ -711,8 +704,6 @@ export class AutocompleteComponent<T = unknown>
       this.overlay,
       triggerElement,
     );
-    // Content-width trigger can be narrow — let the panel size to its options
-    // with the trigger as the floor; fill mode keeps the exact trigger width.
     const triggerWidth = triggerElement.getBoundingClientRect().width;
     if (this.width() === 'content') {
       overlayConfig.minWidth = triggerWidth;
@@ -735,8 +726,6 @@ export class AutocompleteComponent<T = unknown>
       (target) => this.trigger().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
-    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
-    // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
@@ -761,11 +750,10 @@ export class AutocompleteComponent<T = unknown>
     this.overlayRef = null;
     this.setOpen(false);
     this.activeIndex.set(-1);
-    // Here rather than in onPick, which is only half the paths: dismissing after
-    // typing over a settled value strands the text the same way. The input
-    // collapses to zero width whenever a label is on display, so anything left in
-    // `query` goes INVISIBLE while it still narrows the next open. Empty in multi
-    // mode, where the input never collapses and the text stays honest.
+    // The input collapses to zero width whenever a label is on display, so
+    // anything left in `query` goes INVISIBLE while it still narrows the next
+    // open. Never in multi mode, where the input keeps its width and the text
+    // stays honest.
     if (this.displayLabel()) {
       this.query.set('');
     }
@@ -783,9 +771,7 @@ export class AutocompleteComponent<T = unknown>
    *
    * `value.set(null)` alone is not enough from outside: the typed query is
    * component state with no input bound to it, so the text stays on screen after
-   * the value goes. That gap is why a host reaching for "reset after navigating"
-   * ends up querying the inner `<input>` and dispatching a synthetic `input`
-   * event.
+   * the value goes.
    *
    * Deliberately does NOT move focus — the caller may be navigating away, and
    * stealing focus back into a field they just left is worse than leaving it.
@@ -799,8 +785,6 @@ export class AutocompleteComponent<T = unknown>
   }
 
   ngOnDestroy(): void {
-    // Host torn down while open → close() never runs. Dispose the overlay so
-    // its pane and event subscriptions don't leak.
     this.overlayRef?.dispose();
     this.overlayRef = null;
   }

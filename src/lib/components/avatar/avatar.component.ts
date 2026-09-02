@@ -9,7 +9,7 @@ import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import { avatarTint, initialsFrom } from './avatar-tint';
 import type { AvatarSize, AvatarStatus } from './avatar.types';
-import { DS_CONFIG } from '../../config/ds-config';
+import { DS_CONFIG } from '../../core/ds-config';
 
 const STATUS_ARIA_LABELS: Record<AvatarStatus, string> = {
   online: 'Online',

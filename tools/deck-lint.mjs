@@ -37,12 +37,14 @@ const decksIn = (dir) =>
 
 // A token reference only has to resolve when nothing else can supply it: a fallback
 // keeps the declaration alive (that is the deck-local override-slot idiom), the deck
-// may declare it, and a generated deck sets its own from script. What is left is a
-// name the browser cannot resolve to anything, which kills the whole declaration.
+// may declare it, a generated deck sets its own from script, and a name inside a CSS
+// comment is documentation rather than a reference. What is left is a name the browser
+// cannot resolve to anything, which kills the whole declaration.
 function unresolvableTokens(html, stylesheet) {
   const prose = html
     .replace(/<pre[\s\S]*?<\/pre>/g, '')
-    .replace(/<code[\s\S]*?<\/code>/g, '');
+    .replace(/<code[\s\S]*?<\/code>/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
   const scripted = new Set(
     [...html.matchAll(/setProperty\(\s*['"](--[a-z0-9-]+)/g)].map(
       ([, token]) => token,
@@ -132,14 +134,17 @@ for (const dir of [DECKS, ARCHIVE]) {
         'an open deck is <rank>-<slug>.html — the folder listing is the priority queue.',
       );
     }
-    if (status === 'tool' && rank !== undefined) {
+    if (archived && rank !== undefined) {
       fail(
         'D009',
         where,
-        'a tool is not in the decision queue, so it takes no rank prefix.',
+        'an archived deck keeps no rank — the number is a queue position, and this one has left the queue.',
       );
     }
-    if (!archived && status === 'open' && rank !== undefined) {
+    // A `tool` may carry a rank or not — `backlog-board` does not, because it is read
+    // whenever rather than at a moment. Either way a rank that exists joins the one
+    // contiguous run, so a gap means a rename somebody left half-done.
+    if (!archived && rank !== undefined) {
       const clash = ranks.get(rank);
       if (clash)
         fail('D007', where, `rank ${rank} is already taken by ${clash}.`);

@@ -4,11 +4,14 @@
 # file only wires images, caches, and triggers.
 #
 # Branch model: develop on `dev` (default); `main` is release-only. A release merges
-# dev->main, tags vX.Y.Z, publishes, then auto-deploys the docs. Triggers:
-#   tags v*           -> build + publish to npm, then trigger deploy-docs (3rd stage)
+# dev->main, tags vX.Y.Z, publishes, then rebuilds what is generated from source.
+# Triggers:
+#   tags v*           -> build + publish to npm, then trigger after-release (3rd stage)
 #   custom release-*  -> cut a release from `dev` (merge dev->main, bump, tag, push)
 #   custom validate   -> on-demand build (gate) + lint (report-only)
-#   custom deploy-docs -> deploy the ds-docs showcase to the IDS prototypes CDN
+#   custom after-release -> rebuild everything generated from source: deploy the
+#                       ds-docs showcase to the IDS prototypes CDN, build the Claude
+#                       Design bundle
 #
 # Publish auth: a Secured repository variable NPM_TOKEN — an npm granular access
 # token with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
@@ -20,8 +23,8 @@
 #
 # Release flow (one-click): Pipelines -> Run pipeline -> branch `dev` -> release-*.
 # cut-release.sh merges dev->main, bumps, tags, pushes main + tag, back-syncs dev.
-# The tag runs the v* pipeline (publish -> trigger-docs-deploy), which starts the
-# deploy-docs pipeline over the REST API. Three runs: release, publish, deploy-docs.
+# The tag runs the v* pipeline (publish -> trigger-after-release), which starts the
+# after-release pipeline over the REST API. Three runs: release, publish, after-release.
 
 image: node:22-alpine
 
@@ -30,25 +33,25 @@ definitions:
     npm:
       key:
         files:
-          - package-lock.json
+          - bun.lock
       path: ~/.npm
     bun-bin:
       path: ~/.bun/bin
     bun-cache:
       key:
         files:
-          - package-lock.json
+          - bun.lock
       path: ~/.bun/install/cache
     angular:
       key:
         files:
-          - package-lock.json
+          - bun.lock
           - angular.json
       path: .angular/cache
     dist-ds:
       key:
         files:
-          - package-lock.json
+          - bun.lock
           - tsconfig.lib.prod.json
           - src/**
       path: dist/ds
@@ -79,7 +82,7 @@ pipelines:
           script:
             - sh infrastructure/scripts/build-lib.sh
             - sh infrastructure/scripts/publish.sh
-            - sh infrastructure/scripts/trigger-docs-deploy.sh
+            - sh infrastructure/scripts/trigger-after-release.sh
 
   custom:
     # PR validation, run on demand (Bitbucket UI "Run pipeline" or API) rather
@@ -102,40 +105,62 @@ pipelines:
     # branch dev -> pick the level). cut-release.sh merges dev->main, bumps the version,
     # stamps the CHANGELOG, commits, tags, and pushes main + the vX.Y.Z tag, then
     # back-syncs dev. It does NOT publish: the pushed tag triggers the `tags: v*`
-    # pipeline above, which is the single publisher and in turn starts deploy-docs.
+    # pipeline above, which is the single publisher and in turn starts after-release.
     # So a one-click release shows three runs — this one, `Publish to npm`, then
-    # `deploy-docs` (skipped for beta prereleases). Requires Secured variable
+    # `after-release` (skipped for beta prereleases). Requires Secured variable
     # RELEASE_TOKEN (repository:write, to push main) and DOCS_DEPLOY_TOKEN
-    # (pipeline:write, to start deploy-docs); NPM_TOKEN is used by the v* publish
+    # (pipeline:write, to start after-release); NPM_TOKEN is used by the v* publish
     # step. Fill `## Unreleased` on dev first — preflight enforces it. No caches:
     # cut-release runs no install/build.
     release-patch:
       - step:
           name: Release (patch)
+          caches:
+            - bun-bin
+            - bun-cache
           script:
             - sh infrastructure/scripts/cut-release.sh patch
     release-minor:
       - step:
           name: Release (minor)
+          caches:
+            - bun-bin
+            - bun-cache
           script:
             - sh infrastructure/scripts/cut-release.sh minor
     release-major:
       - step:
           name: Release (major)
+          caches:
+            - bun-bin
+            - bun-cache
           script:
             - sh infrastructure/scripts/cut-release.sh major
     release-beta:
       - step:
           name: Release (beta prerelease)
+          caches:
+            - bun-bin
+            - bun-cache
           script:
             - sh infrastructure/scripts/cut-release.sh beta
 
-    # Manual deploy of the ds-docs showcase to the IDS prototypes CDN, mirroring
-    # the pinkmoon prototype deploy: shared bucket ids-prototypes + CloudFront
-    # E1P3IR95745IWV in eu-west-2, served under /ids-ds/ alongside /pm-admin and
-    # /pm-field. Requires the same Secured repository variables pinkmoon uses:
+    # Everything that is REGENERATED from source after a release, in one pipeline:
+    # the ds-docs showcase (built, deployed to the IDS prototypes CDN) and the Claude
+    # Design bundle. Started automatically by the v* tag pipeline, and runnable by hand
+    # from the UI. Deliberately not folded into cut-release.sh: that script pushes main
+    # halfway through, so it must stay a git-and-node step that cannot fail on an
+    # install or a build, and generated output has no business entering a release commit
+    # unreviewed.
+    #
+    # Docs deploy mirrors the pinkmoon prototype deploy: shared bucket ids-prototypes +
+    # CloudFront E1P3IR95745IWV in eu-west-2, served under /ids-ds/ alongside /pm-admin
+    # and /pm-field. Requires the same Secured repository variables pinkmoon uses:
     # IDS_DOCKER_AWS_ACCESS_KEY_ID, IDS_DOCKER_AWS_SECRET_ACCESS_KEY.
-    deploy-docs:
+    #
+    # The design-sync step is last on purpose: it is the slow half and nothing else
+    # waits on it, so a failure there leaves the published docs already deployed.
+    after-release:
       - step:
           <<: *build
           name: Build ds-docs showcase
@@ -182,3 +207,14 @@ pipelines:
               aws cloudfront create-invalidation
               --distribution-id $PROTO_CF_DISTRIBUTION_ID
               --paths "/ids-ds/index.html" "/ids-ds/CHANGELOG.md" "/ids-ds/favicon.ico" "/ids-ds/favicon.svg" "/ids-ds/apple-touch-icon.png"
+      - step:
+          name: Build Claude Design bundle
+          caches:
+            - npm
+            - bun-bin
+            - bun-cache
+            - angular
+          artifacts:
+            - .design-sync/elements/dist/**
+          script:
+            - sh infrastructure/scripts/build-design-sync.sh

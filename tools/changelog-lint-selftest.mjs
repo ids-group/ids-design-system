@@ -70,8 +70,6 @@ try {
   );
   if (!wrapCaught) dead.push('C005-wrapped');
 
-  // Every multi-word token can land with the break inside it, and the client names are the
-  // ones that matter.
   const wrapped = {
     C001: '- The fix came out of a Kit\r\n  Movement screen, and the ports saw it too.\r\n',
     C002: '- The clipped label is fixed (MBP-\r\n  245), so descenders survive.\r\n',
@@ -193,7 +191,6 @@ try {
   );
   if (!farAway) dead.push('C010-proximity');
 
-  // A brand name reaches a file in four spellings, and CLIENTS must catch all of them.
   for (const spelling of [
     'brand-manage-my',
     '[data-brand="manage-my"]',
@@ -249,7 +246,6 @@ try {
   );
   if (!compactQuiet) dead.push('C010-compact-manifest');
 
-  // Neither of these may fire: a gate that flags them teaches authors to ignore it.
   const relaxed = [
     [
       'C005 generic script',
@@ -283,6 +279,23 @@ try {
       `${caught ? 'fires ' : 'DEAD  '} C003 on a name not in the list`,
     );
   }
+
+  // C012, the repeat half — a section opened twice ranks EQUAL, so the order test cannot see it.
+  const REPEATED_SECTION =
+    '# Fixture\n\n## Unreleased\n\n### Fixed\n\n- **A.** x\n\n### Fixed\n\n- **B.** y\n';
+  // 0.9.0's real shape: two breaking headings, one slot, both deliberate.
+  const TWO_BREAKING_HALVES =
+    '# Fixture\n\n## 0.9.0 — 2026-01-01\n\n### Changed (breaking, behaviour)\n\n- **A.** x\n\n### Changed (breaking, visual)\n\n- **B.** y\n';
+
+  writeFileSync(FIXTURE_PATH, REPEATED_SECTION);
+  const repeatCaught = run(FIXTURE).includes('  C012  ');
+  console.log(`${repeatCaught ? 'fires ' : 'DEAD  '} C012 on a section opened twice`);
+  if (!repeatCaught) dead.push('C012 repeat');
+
+  writeFileSync(FIXTURE_PATH, TWO_BREAKING_HALVES);
+  const halvesQuiet = !run(FIXTURE).includes('  C012  ');
+  console.log(`${halvesQuiet ? 'quiet ' : 'FALSE+'} C012 on two breaking halves in one slot`);
+  if (!halvesQuiet) dead.push('C012 false positive on the split breaking half');
 
   // C014 — an entry announcing that we repaired one of our own files. Three releases in a row
   // shipped one before the rule existed.

@@ -18,6 +18,10 @@ import type {
   ToastRef,
 } from './toast.types';
 
+// An error stays longer than a success: it usually needs reading, and often acting on.
+const SETTLED_SUCCESS_MS = 4000;
+const SETTLED_ERROR_MS = 6000;
+
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private readonly overlay = inject(Overlay);
@@ -31,15 +35,19 @@ export class ToastService {
     this.ensureRegion();
     const id = this.nextId++;
     const variant = opts.variant ?? 'info';
-    // Loading toasts never auto-dismiss (0 = indefinite).
+    // Loading toasts never auto-dismiss (0 = indefinite). Nor does one carrying an
+    // `action`: that button is the only way to take the action, the region sits last
+    // in tab order, and a keyboard user cannot reach it inside five seconds.
     const durationMs =
-      variant === 'loading' ? 0 : (opts.durationMs ?? 5000);
+      variant === 'loading' || opts.action ? 0 : (opts.durationMs ?? 5000);
     const entry: ToastEntry = {
       id,
       title: opts.title,
       body: opts.body,
       variant,
-      dismissible: opts.dismissible ?? true,
+      // Nothing that cannot expire may also be unclosable, or it holds a slot for the
+      // life of the page — which is how a hung promise blocked the whole region.
+      dismissible: durationMs > 0 ? (opts.dismissible ?? true) : true,
       action: opts.action,
       durationMs,
     };
@@ -53,16 +61,24 @@ export class ToastService {
     };
   }
 
-  /** Show a loading toast for the duration of `promise`. Resolves/rejects are
-   *  reflected in-place (same toast, no stack-up) as success/error variants. */
+  /** Show a loading toast for the duration of `source`. Resolution and rejection are
+   *  reflected in-place (same toast, no stack-up) as success/error variants, each with
+   *  its own auto-dismiss delay.
+   *
+   *  Returns `source` itself, so the caller still owns rejection handling — an
+   *  un-`catch`ed call produces an unhandled rejection exactly as it would without a
+   *  toast. */
   promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T> {
     const ref = this.show({
       body: messages.loading,
       variant: 'loading',
-      dismissible: false,
       durationMs: 0,
     });
 
+    // The settled duration is handed to the REGION rather than run here, because only
+    // the region knows when the toast becomes visible. Run from here it burned down
+    // while the toast was still queued behind `maxVisible`, and the result was spliced
+    // out of the queue before anyone saw it.
     source.then(
       (value) => {
         const successBody =
@@ -73,8 +89,8 @@ export class ToastService {
           body: successBody,
           variant: 'success',
           dismissible: true,
+          durationMs: SETTLED_SUCCESS_MS,
         });
-        window.setTimeout(() => ref.dismiss(), 4000);
       },
       (reason: unknown) => {
         const errorBody =
@@ -85,8 +101,8 @@ export class ToastService {
           body: errorBody,
           variant: 'error',
           dismissible: true,
+          durationMs: SETTLED_ERROR_MS,
         });
-        window.setTimeout(() => ref.dismiss(), 6000);
       },
     );
 

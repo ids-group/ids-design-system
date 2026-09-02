@@ -1,0 +1,212 @@
+<docs-section
+  anchor="pattern-page-composition"
+  eyebrow="Patterns"
+  title="Page composition"
+>
+  <span lede>
+    The individual patterns below each answer one screen. This one answers the layer above:
+    which region holds what, in which order, and how to tell whether a composition is right
+    before anyone reviews it. The grid itself — tiers, spans, the canonical splits — is in
+    Foundations &rarr; Layout.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Four regions, and three of them are components
+  </h3>
+
+  <p class="block-desc t-s">
+    Nothing on a page sits outside one of these. The sidenav is reserved OUTSIDE the page
+    grid; the topbar is global, not per-page. Both are drawn dashed here for that reason.
+  </p>
+
+  <div class="pc-regions">
+    <div class="pc-region pc-region--chrome">
+      <code class="t-mono-inline">
+        ds-sidenav
+      </code>
+
+      <span class="t-xs pc-note">
+        rail reserved first, outside the grid
+      </span>
+    </div>
+
+    <div class="pc-column">
+      <div class="pc-region pc-region--chrome">
+        <code class="t-mono-inline">
+          ds-topbar
+        </code>
+
+        <span class="t-xs pc-note">
+          global
+        </span>
+      </div>
+
+      <div class="pc-region">
+        <code class="t-mono-inline">
+          ds-page-header
+        </code>
+
+        <span class="t-xs pc-note">
+          breadcrumbs · title · meta · actions · tabs
+        </span>
+      </div>
+
+      <div class="pc-region">
+        <code class="t-mono-inline">
+          ds-filter-bar
+        </code>
+
+        <span class="t-xs pc-note">
+          only if the page has data to filter
+        </span>
+      </div>
+
+      <div class="pc-region pc-region--content">
+        <span class="t-s">
+          the content, on <code class="t-mono-inline">.page-grid</code>
+        </span>
+      </div>
+
+      <div class="pc-region">
+        <code class="t-mono-inline">
+          ds-page-footer
+        </code>
+
+        <span class="t-xs pc-note">
+          optional
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    The header slots are a reading order, not a set
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [breadcrumbs]
+    </code> above the title,
+    <code class="t-mono-inline">
+      [title-badge]
+    </code> beside it,
+    <code class="t-mono-inline">
+      [meta]
+    </code> under it,
+    <code class="t-mono-inline">
+      [actions]
+    </code> right-aligned on the title line,
+    <code class="t-mono-inline">
+      [tabs]
+    </code> last so the tab row sits on the header's bottom
+    edge. Putting page actions anywhere else — a floating button, a row above the header —
+    breaks the one place a user has learned to look.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Three placement rules that settle most arguments
+  </h3>
+
+  <ul class="pc-list t-s">
+    <li>
+      <strong>
+        Filters sit directly above the data they filter
+      </strong> — between the header
+      and the content, full width, with no wrapper that could clip the overflow popover. Not
+      in a sidebar, not inside the table's own card. The 9+3 split is what a genuine filter
+      RAIL is for, and it is reserved, not the default.
+    </li>
+
+    <li>
+      <strong>
+        One primary per region, once
+      </strong> — one in the page header, one per card,
+      one in a modal's actions. A second primary in the same region makes neither primary.
+      Secondary work takes <code class="t-mono-inline">outline</code>, dismissive work takes
+      <code class="t-mono-inline">
+        ghost
+      </code>.
+    </li>
+
+    <li>
+      <strong>
+        Supporting information goes under, never beside
+      </strong> — hints, counts and
+      timestamps sit under the thing they describe at
+      <code class="t-mono-inline">
+        --space-1
+      </code>. Beside is reserved for actions. Never a
+      tooltip: it is hover-only, so it cannot carry anything the user needs in order to act.
+    </li>
+  </ul>
+
+  <h3 class="block-title t-h4">
+    When content belongs in a card
+  </h3>
+
+  <p class="block-desc t-s">
+    A card earns its border when what is inside is a UNIT that could be moved, collapsed or
+    repeated — a record summary, a KPI tile, one form section. It does not earn one for "this
+    page has content": a full-width table already has its own frame, and a card around it
+    double-borders. The default is no card; reach for one when the boundary means something.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Five page shapes
+  </h3>
+
+  <p class="block-desc t-s">
+    Naming which one you are building settles most placement questions before they come up.
+  </p>
+
+  <div class="pc-table">
+    <div class="pc-row pc-row--head">
+      <div class="t-overline">
+        Pattern
+      </div>
+
+      <div class="t-overline">
+        Made of
+      </div>
+
+      <div class="t-overline">
+        Easy to miss
+      </div>
+    </div>
+
+    @for (pattern of patterns; track pattern.name) {
+      <div class="pc-row">
+        <div class="t-s-bold">
+          {{ pattern.name }}
+        </div>
+
+        <div class="t-s pc-muted">
+          {{ pattern.madeOf }}
+        </div>
+
+        <div class="t-s pc-muted">
+          {{ pattern.missed }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
+    Checking a composition, instead of eyeballing it
+  </h3>
+
+  <p class="block-desc t-s">
+    In the order that catches the most.
+  </p>
+
+  <ol class="pc-list t-s">
+    @for (check of checks; track check.rule) {
+      <li>
+        <strong>
+          {{ check.rule }}.
+        </strong>
+        {{ check.how }}
+      </li>
+    }
+  </ol>
+</docs-section>

@@ -7,22 +7,31 @@ Open any `*.html` directly in a browser — they link the shared `ds.css`.
 
 An `open` deck is named `<rank>-<slug>.html`, ranked 1..N by what answering it unblocks — so `ls`,
 the file explorer and the editor's tree all show the queue in priority order without opening
-anything. Ranked 2026-09-01:
+anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-banner-toast-icon-alignment` | in flight — two validated screen findings (30/32) are ready to fix and waiting only on A vs B |
-| 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
-| 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
-| 4 | `4-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
-| 5 | `5-packaging-entry-points` | a consumer IS blocked on bundle size, and the measured prize is -80% of the DS's share of their initial bundle |
-| 6 | `6-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
-| 7 | `7-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
-| 8 | `8-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+| 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
+| 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
+| 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
+| 4 | `4-packaging-entry-points` | a consumer IS blocked on bundle size, and the modelled prize is about -59% of the DS's share of their initial bundle |
+| 5 | `5-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
+| 6 | `6-entry-point-shape` | which layout A3 actually builds — four real ng-packagr builds behind it |
+| 7 | `7-opt-in-seam` | ~31 KB of opt-in surface, three ways to cut it, nothing blocking |
+| 8 | `8-rejected-with-numbers` | every idea this backlog has rejected, with the measurement that rejected it and what would reopen it |
+| 9 | `9-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
+| 10 | `10-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
 
-**A `tool` is not in the queue and takes no number** (`backlog-board.html`,
-`overlay-guard-check.html`). Unprefixed, they sort below the ranked decks, which is where a utility
-belongs.
+**Ranks 4-8 are one lane and are kept contiguous** — packaging, read in that order: the mechanism,
+the split question, the layout, the opt-in seam, then what was rejected and why. Scattering them
+across the queue made the reader jump 4, 5, 8, 9, 10 for one argument. Those five are written in
+Russian and share `deck.css`, which sits beside `ds.css` and carries the shell all five use; the
+other decks keep their own inline styles.
+
+**A `tool` here takes no number.** `backlog-board.html` is the only one left — it is read whenever
+rather than at a moment, so it stays unnumbered and sorts below the queue. A tool that is RUN rather
+than read does not belong in this folder at all: `tools/overlay-guard-harness.html` moved out on
+2026-09-02 for exactly that reason.
 
 **Ranks are renumbered when the queue changes** — a closed deck moves to `implemented/` and takes its
 number with it, and the rest close the gap. The number is the rank and nothing else: it is not an id,
@@ -44,7 +53,7 @@ its `<head>`, immediately after the `<title>`, and the folder follows from it:
 | --- | --- | --- |
 | `open` | a verdict is still needed, or is given and not built | `presentations/` |
 | `implemented` | decided AND in the shipped code - or the question dissolved | `presentations/implemented/` |
-| `tool` | not a decision at all: a test harness, a status board | `presentations/`, always |
+| `tool` | not a decision at all — a status board that is read rather than answered | `presentations/`, always |
 
 `ds-deck-evidence` is REQUIRED on `implemented`, and it is the whole point of the marker: a `file:line`
 or the `done.md` / `CHANGELOG.md` entry a reader can open in one click. **An `implemented` marker with
@@ -99,7 +108,7 @@ check. It is in `lint:all`, and every rule is a defect that actually shipped:
 | D001/D002 | no `ds-deck-status`, or a value outside `open`/`implemented`/`tool` |
 | D003/D004 | `implemented` sitting at root, or a non-`implemented` deck inside `implemented/` |
 | D005 | `implemented` with no `ds-deck-evidence` — which this README already treats as `open` |
-| D006/D009 | an `open` deck with no rank prefix, or a `tool` carrying one |
+| D006/D009 | an `open` deck with no rank prefix, or an archived deck still carrying one |
 | D007/D008 | two decks claiming one rank, or ranks that are not a contiguous 1..N |
 | D010/D011 | `ds.css` linked at the wrong depth — the sans-serif-fallback bug |
 | D012 | `var(--token)` that resolves to nothing: no fallback, undeclared here, absent from `ds.css` |
@@ -117,17 +126,11 @@ It writes one throwaway deck per rule (never mutating a real one; this checkout 
 the code fires, and ends with a **negative control**: a valid deck that must stay green, so a linter
 that reported everything broken could not pass the suite.
 
-## One deck is a test harness, not a deck
+## What is NOT here
 
-`overlay-guard-check.html` drives the docs app instead of illustrating a decision: it iframes five
-component pages in turn, presses each overlay trigger, then presses the one place inside the host that
-is not the trigger, and prints the pane count and `aria-expanded` before and after. Run it headless —
-`chrome --headless=new --virtual-time-budget=120000 --dump-dom
-http://localhost:4298/decks/overlay-guard-check.html`
-— and read the `<pre id="out">` block. **It has to run in a VISIBLE frame:** a background tab clamps
-timers and never finishes a leave animation, so the same probe reads false there. Keep it: it is the
-regression test for the outside-pointer guard, and reverting one component to `host.contains` is how you
-check the harness still detects the defect.
+`tools/overlay-guard-harness.html` used to sit in this folder. It is a regression TEST — it drives the
+docs app in an iframe rather than illustrating a decision, and it is run, not read. It moved to
+`tools/` on 2026-09-02; its instructions moved with it, into the page itself.
 
 ## ds.css is generated from the design system
 

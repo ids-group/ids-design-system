@@ -113,8 +113,8 @@
     &.info    { background-color: var(--info-subtitle);    color: var(--info); }
   }
 
-  // Owns the flex slot the title used to hold, so an optional eyebrow stacks
-  // ABOVE the title instead of beside it.
+  // The flex slot lives here, not on .title, so an eyebrow stacks ABOVE the
+  // title instead of beside it.
   .heading {
     flex: 1;
     min-width: 0;

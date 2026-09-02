@@ -7,10 +7,16 @@
 #
 # build          -> fails the step if the library or docs don't compile
 # migration-lint -> fails the step; migrations/ has no debt to carry
+# agent-catalogue -> fails the step; docs/agent/ is generated from components.md and must
+#                   be committed in sync with it
 # changelog-lint -> fails the step; the published changelog and manifests must name
 #                   nothing a reader outside this repo cannot open
 # docblock-drift -> fails the step; a doc separated from its symbol is printed under
 #                   the wrong name in the published API table
+# surface        -> fails the step when the @angular/elements route's hand-maintained
+#                   list drifts from src/lib (see .design-sync/MANUAL-SURFACE.md)
+# colour-families -> fails the step; a ds-color family missing one of the roles the
+#                   accent pointers read renders as body text, silently
 # lint           -> report-only (prettier/stylelint/eslint), never fails the step
 #                   while the repo carries pre-existing lint debt
 set -e
@@ -31,7 +37,19 @@ node tools/migration-lint.mjs
 echo "===== migration-lint selftest ====="
 node tools/migration-lint-selftest.mjs
 
+# Before anything regenerates it: the agent catalogue is derived from components.md, so a
+# commit that edits the source without regenerating leaves the shipped leaves lying.
+echo "===== agent catalogue ====="
+node tools/split-agent-catalogue.mjs --check
+
+# Every family ds-color offers must define every role the accent pointers read. A role
+# that is missing is invalid at computed-value time, so the label renders as body text
+# with nothing in the console, which is how three families shipped broken.
+echo "===== colour families ====="
+node tools/check-color-families.mjs
+
 echo "===== delete-table parity ====="
+node tools/check-tools-parse.mjs
 node tools/check-delete-tables.mjs
 
 # Same class of gate, same argument: CHANGELOG.md and the manifests are copied into
@@ -57,6 +75,7 @@ echo "Building (lib -> docs) and linting in parallel..."
 # ds-docs needs the built dist/ds, so build is ordered inside its own subshell;
 # the artifact checks fail loud if a build silently produced nothing.
 ( bun run build:lib && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
+bun run check:manual-surface            > "$log_dir/surface.log"   2>&1 &  pid_surface=$!
 bun run format                          > "$log_dir/format.log"    2>&1 &  pid_format=$!
 bun run lint:styles                     > "$log_dir/stylelint.log" 2>&1 &  pid_styles=$!
 bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_eslint=$!
@@ -64,12 +83,15 @@ bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_e
 build_failed=0
 wait "$pid_build" || build_failed=1
 
+surface_failed=0
+wait "$pid_surface" || surface_failed=1
+
 lint_failed=0
 wait "$pid_format" || lint_failed=1
 wait "$pid_styles" || lint_failed=1
 wait "$pid_eslint" || lint_failed=1
 
-for name in build format stylelint eslint; do
+for name in build surface format stylelint eslint; do
   echo "===== $name ====="
   cat "$log_dir/$name.log"
 done
@@ -85,3 +107,10 @@ if [ "$build_failed" -ne 0 ]; then
   exit 1
 fi
 echo "Build passed"
+
+
+if [ "$surface_failed" -ne 0 ]; then
+  echo "manual-surface check failed"
+  exit 1
+fi
+echo "manual surface passed"

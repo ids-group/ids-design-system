@@ -7,7 +7,7 @@ import {
   input,
 } from '@angular/core';
 import { CardComponent } from '../card/card.component';
-import type { CardElevation, CardPadding } from '../card/card.types';
+import type { CardElevation, CardPadding } from '../../core/card.types';
 import { BrandNameDirective } from '../sidenav/brand-name.directive';
 import { resolveBrandValue } from '../brand-defaults';
 
@@ -16,10 +16,8 @@ import { resolveBrandValue } from '../brand-defaults';
  * MFA — and the counterpart to `ds-app-layout`, which only ever covers the
  * screens behind the login.
  *
- * Brand row, tagline, card and support footer are the same four parts in every
- * consumer that has hand-rolled this. What a hand-rolled version gets wrong is the full-height
- * box: they nest a `100vh` wrapper inside a `100dvh` one and scroll a page whose
- * content fits. Here the host is the only one, and it also carries the safe-area
+ * The host is the ONLY full-height box — nesting a `100vh` wrapper inside a
+ * `100dvh` one scrolls a page whose content fits — and it carries the safe-area
  * insets a notched phone in landscape needs.
  *
  * The brand row takes the same CONTRACT as `ds-sidenav` — a `brand` string gets a
@@ -56,10 +54,9 @@ import { resolveBrandValue } from '../brand-defaults';
 export class AuthLayoutComponent {
   /** Wordmark beside the letter-mark tile. For a logo image/SVG, project it into
    *  the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`.
-   *  Unset falls back to `DS_CONFIG.brand.name`, which every auth screen in an app
-   *  answers identically. Each field resolves on its own, so `brand=""` drops the wordmark
-   *  but a `logoLetter` in the config still paints its tile; clear both to give one
-   *  screen no brand row. */
+   *  Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so
+   *  `brand=""` drops the wordmark but a `logoLetter` in the config still paints its
+   *  tile; clear both to give one screen no brand row. */
   readonly brand = input<string | null>(null);
   /** Letter-mark glyph when it differs from the brand's first letter (e.g. an
    *  "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`;
@@ -78,15 +75,13 @@ export class AuthLayoutComponent {
   readonly cardElevation = input<CardElevation>('raised');
   /** Card padding, passed through to `ds-card`. `md` tightens a short form. */
   readonly cardPadding = input<CardPadding>('lg');
-  /** Announce the card as the page's `main` landmark. The card holds the whole
-   *  content of an auth screen and `ds-card` renders an `<article>`, which is NOT
-   *  a landmark, so by default a screen-reader user has nothing to jump to — set
-   *  this to `'main'` on a standalone auth page. It is opt-in because the layout
-   *  is also embedded inside pages that already own a `main`, and two `main`s is its
-   *  own violation. */
+  /** Announce the card as the page's `main` landmark. `ds-card` renders an
+   *  `<article>`, which is NOT a landmark, so by default a screen-reader user has
+   *  nothing to jump to — set `'main'` on a standalone auth page. Opt-in because
+   *  the layout is also embedded inside pages that already own a `main`, and two
+   *  `main`s is its own violation. */
   readonly landmark = input<'main' | 'none'>('none');
 
-  /** Projected `[dsBrandName]` wordmark markup, when the consumer provides one. */
   protected readonly brandNameRef = contentChild(BrandNameDirective);
   protected readonly hasBrandName = computed(() => !!this.brandNameRef());
 

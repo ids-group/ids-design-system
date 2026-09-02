@@ -1,0 +1,376 @@
+/* Shared shell for the packaging decks (ranks 4-8). Loaded after ds.css.
+   Measured fills are inline linear-gradients rather than background-color because a
+   force-dark browser repaints flat colours and would silently alter a judged artefact. */
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  padding: var(--space-6) var(--space-5) var(--space-10);
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+}
+
+main {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* ---- masthead ---------------------------------------------------------- */
+
+.masthead {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-6);
+  margin-bottom: var(--space-6);
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--ds-radius-panel);
+  border-top: 4px solid var(--accent);
+}
+
+.masthead h1 {
+  margin: 0;
+  font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans);
+}
+
+.masthead .lede {
+  margin: 0;
+  max-width: 90ch;
+  color: var(--text-secondary);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  font: var(--font-weight-semibold) var(--font-size-2xs) / 1.6 var(--font-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}
+
+.chip.is-open {
+  background: var(--warning-subtitle);
+  color: var(--warning-text);
+}
+.chip.is-done {
+  background: var(--success-subtitle);
+  color: var(--success-text);
+}
+.chip.is-dead {
+  background: var(--error-subtitle);
+  color: var(--error-text);
+}
+.chip.is-accent {
+  background: var(--accent-subtitle);
+  color: var(--accent-strong);
+}
+
+/* ---- flow -------------------------------------------------------------- */
+
+h2 {
+  margin: var(--space-8) 0 var(--space-3);
+  font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
+}
+
+h3 {
+  margin: var(--space-5) 0 var(--space-2);
+  font: var(--font-weight-semibold) var(--font-size-m) / var(--line-height-snug) var(--font-sans);
+}
+
+p {
+  max-width: 90ch;
+  color: var(--text-secondary);
+}
+
+b,
+strong {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+code {
+  font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono);
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+}
+
+a {
+  color: var(--accent-strong);
+}
+
+pre {
+  margin: var(--space-3) 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-inverted);
+  color: var(--text-inverted);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  font: var(--font-weight-regular) var(--font-size-xs) / 1.7 var(--font-mono);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* ---- the panel every section sits in ----------------------------------- */
+
+.panel {
+  padding: var(--space-5) var(--space-6);
+  margin: var(--space-4) 0;
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--ds-radius-panel);
+}
+
+.panel > :first-child {
+  margin-top: 0;
+}
+.panel > :last-child {
+  margin-bottom: 0;
+}
+
+.verdict {
+  border-left: 4px solid var(--accent);
+}
+.verdict.is-dead {
+  border-left-color: var(--error);
+}
+.verdict.is-done {
+  border-left-color: var(--success);
+}
+
+/* ---- the number cards -------------------------------------------------- */
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.kpi {
+  padding: var(--space-4);
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--radius-lg);
+}
+
+.kpi .n {
+  display: block;
+  font: var(--font-weight-extrabold) var(--font-size-h4) / 1.1 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.kpi .n.is-good {
+  color: var(--success-text);
+}
+.kpi .n.is-bad {
+  color: var(--error-text);
+}
+
+.kpi .k {
+  display: block;
+  margin-top: var(--space-1);
+  font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-snug) var(--font-sans);
+  color: var(--text-secondary);
+}
+
+/* ---- tables ------------------------------------------------------------ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-4) 0;
+  font-size: var(--font-size-xs);
+}
+
+thead th {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 2px solid var(--border-strong);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+tbody th {
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  vertical-align: top;
+}
+
+tbody th,
+tbody td {
+  padding: var(--space-3);
+  border-bottom: var(--border-width-default) solid var(--border-divider);
+  vertical-align: top;
+  color: var(--text-secondary);
+}
+
+tbody tr:last-child th,
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+td.num,
+th.num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.yes {
+  color: var(--success-text);
+  font-weight: var(--font-weight-semibold);
+}
+.no {
+  color: var(--error-text);
+  font-weight: var(--font-weight-semibold);
+}
+.dead th,
+.dead td {
+  opacity: 0.55;
+  text-decoration-color: var(--border-default);
+}
+.pick {
+  background: var(--accent-surface-tint);
+}
+
+/* ---- bars -------------------------------------------------------------- */
+
+.bars {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(14ch, 22ch) 1fr minmax(11ch, 13ch);
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.bar-row > .name {
+  font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans);
+  color: var(--text-primary);
+}
+
+.bar-row > .num {
+  font: var(--font-weight-bold) var(--font-size-xs) / 1.4 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text-primary);
+}
+
+.track {
+  position: relative;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  background-image: linear-gradient(#e8ecf2, #e8ecf2);
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--radius-sm);
+}
+
+.fill.eager {
+  background-image: linear-gradient(#db1f1f, #db1f1f);
+}
+.fill.lazy {
+  background-image: linear-gradient(#22a33a, #22a33a);
+}
+.fill.bloated {
+  background-image: linear-gradient(#f4d43a, #f4d43a);
+}
+.fill.neutral {
+  background-image: linear-gradient(#5b6b8c, #5b6b8c);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: var(--space-3) 0;
+  font-size: var(--font-size-2xs);
+  color: var(--text-secondary);
+}
+
+.legend .swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin-right: 6px;
+  vertical-align: -1px;
+}
+
+/* ---- lists ------------------------------------------------------------- */
+
+ul,
+ol {
+  max-width: 90ch;
+  color: var(--text-secondary);
+  padding-left: var(--space-5);
+}
+
+li {
+  margin-bottom: var(--space-2);
+}
+
+.facts {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0;
+}
+
+.facts li {
+  padding-left: var(--space-6);
+  position: relative;
+}
+
+.facts li::before {
+  content: '\2014';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: var(--font-weight-bold);
+}
+
+.src {
+  margin-top: var(--space-8);
+  padding-top: var(--space-3);
+  border-top: var(--border-width-default) solid var(--border-divider);
+  font-size: var(--font-size-2xs);
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 720px) {
+  .bar-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+  .bar-row > .num {
+    text-align: left;
+  }
+}

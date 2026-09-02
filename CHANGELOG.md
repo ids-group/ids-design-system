@@ -8,6 +8,122 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`ds.color()` now refuses a family it does not know, and that stops your Sass build.**
+  `@include ds.color(brand)` used to compile and emit eleven `--accent-*` pointers at values that
+  could never resolve, so a zone painted itself with `unset` and the mistake looked like a theming
+  problem. It `@error`s now, naming the five families it takes: `secondary`, `tertiary`, `error`,
+  `success`, `warning`. Anything else fails the build at the `@include`. The `ds-color="…"`
+  attribute is untouched — no Sass runs for it.
+
+### Changed
+
+- **The banner and toast icon now centres on the message block**, where most shapes aligned it to
+  the first line of text. The two rules agree on a one-line message — which is most toasts — and
+  diverge as the text grows: the icon sat some 12px above the block centre at two lines and 21px at
+  three. A `compact` banner was already centred and does not move.
+
+  It is `align-self` on the icon rather than `align-items` on the row, so the close button and the
+  action buttons keep the positions they had. `--banner-ic-mt` is **removed**; it existed only to
+  nudge the icon down by one border-width under the old rule.
+
+  `ds-alert` follows, for the same reason: it carried the same nudge inlined as
+  `var(--border-width-default)` rather than through the token.
+
+  **Known limit.** The icon centres on the flex LINE, which equals the message block only while the
+  message is the tallest thing in the row. A one-line toast with a close button is 0.53px off, and with
+  a projected `[actions]` button 6–14px off depending on its size. `align-items: center` would be
+  unconditional but moves the close button, which is the trade above.
+
+- **`ToastRegionComponent`'s member surface moved again — only matters if you SUBCLASS it.** The
+  timer and pause work gained `arm`, `focusWithin`, `host`, `hovered`, `onFocusWithin`, `onHover`,
+  `paused`, `pauseAll`, `remaining`, `resumeAll`, `startedAt` and `syncPause`, and **lost
+  `startCountdown`**: a countdown is armed when a toast becomes visible and re-armed from what is
+  left when a pause ends, where before the region started one timer per toast. Every one is a
+  `private` or `protected` internal — none is public API, none is a signal, and there is no
+  replacement to call for `startCountdown`, so an override of it should simply go. A member of
+  yours sharing one of those names still stops the build, because `private` collides with TS2415
+  exactly as a public name does. `host` is the one most likely to clash.
+  Rename yours — `override` is not a way out for ten of the twelve, because a member whose base
+  declaration is `private` rejects it with the same TS2415 as a plain redeclaration, and that
+  includes `host`. Only the two `protected` ones, `onHover` and `onFocusWithin`, accept it. The
+  compiler enumerates every
+  collision, so building after the upgrade is the whole check.
+
+  Worth flagging for anyone who followed 0.11.2's note: `startCountdown` was announced there as a
+  member the region had just gained, so an `override startCountdown` added one release ago now
+  overrides nothing and silently never runs. There is no public replacement to call — the countdown
+  is the region's own business now. Delete the override.
+
+- **`components.md` documented a component that does not exist and four events that never fired.**
+  It carried a `<ds-dropdown>` entry through nine releases; that component was absorbed into
+  `<ds-select>` and an import written from the document fails to compile. Four documented event
+  names were never identifiers here: `ds-banner` and `ds-toast` emit `(closed)`, not `(dismissed)`;
+  `ds-pagination` emits `(currentPageChange)`, not `(pageChange)`; `ds-table` emits `(rowClicked)`,
+  not `(rowClick)`. An unknown event binding registers a DOM listener and never fires, so those
+  four handlers were silently dead with nothing in the console. `<ds-alert>` was missing from the
+  document entirely and is now in it, `'neutral'` variant included.
+
+### Fixed
+
+- **`ds-color="error"`, `="success"` and `="warning"` lost their accent colour.** Those zones map
+  `--accent-strong` onto `--<family>-strong`, and the three status families never defined it — only
+  the brand families did. The declaration was invalid at computed-value time, so inside a status
+  zone every place that reads `--accent-strong` reset to `unset`: selected list and tree rows,
+  the active sidenav item and its rail, the active tab pill, avatar and avatar-group initials, the
+  active tag, dropzone text, the date-picker range label, the toast's action label, the selected
+  toggle button, the split-button hover fill, the `tonal`, `ghost`, `outline` and `text` variants
+  of `ds-button`, and the `tonal` variant of `ds-icon-button`. Text there fell through to the
+  inherited body colour; the fill
+  and the rail, which inherit nothing, disappeared.
+
+  No new token was needed: a status family already carries its readable on-tint colour as `-text`,
+  so `--accent-strong` now asks for `-strong` first and `-text` second, and the brand families keep
+  answering it as `-strong` because they have no `-text`. Each pointer also ends in a fallback — to
+  the family's base for `-hover`, `-pressed` and `-strong`, to its `-muted` for the tint pointers,
+  and to the theme-wide role for `-on` and the two focus pointers — so a role that goes missing in
+  future degrades instead of disappearing.
+
+- **`ToastService.promise()` could destroy its own result.** It ran the settled toast's
+  auto-dismiss on a wall-clock timer started when the promise resolved, not when the toast became
+  visible — the one thing the rest of the timer work had already moved into the region. With a
+  `maxVisible` cap set, a promise that settled while its toast was still queued had the result spliced
+  out of the queue before anyone saw it: the user saved, it succeeded, and no toast appeared at all.
+  The settled duration is now handed to the region with the content, so it starts on promotion.
+
+- **A toast carrying an `action` no longer auto-dismisses.** The overlay is the last child of `body`,
+  so the region is dead last in tab order; a keyboard user cannot cross a real page in the five
+  seconds the button was alive. An `action` toast now waits, and is always dismissible. Note that
+  a `durationMs` you pass alongside an `action` is discarded — the toast waits regardless — and
+  `dismissible: false` is discarded on any toast that cannot expire, not only on a `loading` one.
+
+- **Hovering or focusing the region pauses every countdown**, resuming when the pointer or focus
+  leaves. A toast being read is not a toast that has been read. The pause is derived from both
+  sources rather than latched, so tabbing out of a region the pointer is still over does not
+  resume, moving focus between the action and the close button is not a leave, and a toast that
+  becomes visible under a stationary pointer — a burst past the cap, or a promise settling — is
+  banked rather than counted. A toast paused with almost nothing left resumes with at least 600ms, so
+  one hovered with
+  almost nothing left does not vanish as the pointer leaves.
+
+- **A disabled accordion item's chevron did not look disabled.** It asked for a colour token this
+  library does not define, so the declaration was invalid at computed-value time and the chevron
+  inherited whatever colour surrounded it — while the label beside it greyed correctly. It reads the
+  disabled text colour now, like the label.
+
+- **The `ds-banner` close button had no accessible name.** It announced as a bare "button", where
+  the same control on `ds-toast` and `ds-alert` already said "Dismiss". It says it now.
+
+- **A long unbroken word in a toast overflowed the pill.** A URL or an id with no break
+  opportunity ran past the rounded edge instead of wrapping inside it.
+
+- **Nothing that cannot expire can also be unclosable.** The rule is now that any toast with no
+  duration is dismissible, whatever you asked for — a `loading` variant, one carrying an `action`,
+  or an explicit `durationMs: 0`. A `loading` toast was created with `dismissible: false` and no
+  duration, so a promise that never settled held its slot for the life of the page — with a cap of 3, three hung requests blocked the whole channel, including the error
+  toasts that would have explained the hang.
+
 ## 0.11.2 — 2026-09-01
 
 ### Added
@@ -168,13 +284,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 - **Dev-mode warnings no longer ship to production bundles.** They were guarded by
-  `isDevMode()`, which is a function CALL — a bundler cannot prove the branch dead, so all fourteen
+  `isDevMode()`, which is a function CALL — a bundler cannot prove the branch dead, so all thirteen
   warning sites and their message closures reached production builds. Each site is now guarded inline
   with `typeof ngDevMode === 'undefined' || ngDevMode`, which `@angular/build` folds away whenever
   script optimization is on, closures included. **Measured: 1 590 B gzip off an app using most of the
   library, 827 B of it off a single `<ds-button>`.** Nothing changes for you — no API, no behaviour,
   and the warnings still fire in development builds exactly as before.
-
 
 - **A loading scrim stopped the pointer and let the keyboard walk straight under it.**
   `ds-loading-overlay` paints an absolutely positioned scrim over its content, which intercepts
