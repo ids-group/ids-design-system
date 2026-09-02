@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.11.3 — 2026-09-02
+
 ### Breaking
 
 - **`ds.color()` now refuses a family it does not know, and that stops your Sass build.**
