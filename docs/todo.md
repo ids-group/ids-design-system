@@ -594,6 +594,59 @@ the service was just the one somebody noticed. Full table and every tested hypot
   crash. Probe config for running it at error before then: `.claude/local/eslint.entrypoint-probe.mjs`
   (gitignored).
 
+- [ ] **[P2] The boundary guard cannot be flipped to `'error'` as it shipped — five defects found by
+  the two-wave review, 2026-09-02. All of them belong WITH A3, not before it.**
+  Nothing here is urgent while the rule is `'off'` (`npm run lint` reports 0 from it, verified), and
+  nothing here changes a shipped API. But every one fires on the day someone follows the instruction
+  above, so the flip commit has to carry them.
+  1. **The defaults are CYCLES, not the entry-point partition.** `DEFAULT_CO_LOCATED` holds the SCCs;
+     the rule's semantics are entry-point membership. At `'error'` with the defaults it reports **31**
+     imports that live inside one planned entry point, and "fixing" one means writing a
+     self-referential entry-point import. `coLocated` must be supplied — and `eslint.config.mjs` and
+     the flip instruction above must say so. **No correct configuration exists anywhere today**: the
+     gitignored probe config is a 2026-09-01 snapshot and is also stale after A3-pre.
+  2. **`publicSpecifier()` maps a GROUP to a slug, not to an entry point.** 99 of 308 messages name
+     `@ids-group-ltd/ids-design-system/components-root`, a specifier that cannot exist. Worse, the
+     suggestion is derived from the group, so **~204 of 277 are wrong even with the right
+     configuration** — every message pointing into a merged entry names a member instead of the entry.
+     The co-location sets need a name. Not destructive: `meta` declares no `fixable`, so nothing
+     auto-applies — it is a misleading string during exactly the refactor it exists to guide.
+  3. **`ImportExpression` is unchecked**, so a dynamic `await import('../x/y')` is invisible. Zero
+     instances today. NOT for the `@defer` reason once written down here: `@defer` is template syntax
+     lowered by the compiler and never appears in the `.ts` ESLint parses. The real risk is a human
+     reaching for dynamic import during A3, which is when it is most likely.
+  4. **The rule FAILS OPEN on any unresolvable specifier** — a typo, a `.json`, a future `.mts`, a
+     path alias all report clean. A boundary guard whose failure mode is "pass" is defeatable by a
+     typo. `TSImportType` and `TSImportEqualsDeclaration` are unhandled for the same reason.
+  5. **An import escaping `src/lib` is silently allowed.** Once the root is a facade, a file in a
+     secondary entry importing `src/public-api.ts` is exactly the cycle ng-packagr rejects, and this
+     rule would not see it. None exist today.
+
+  **Also, and separately from A3:** none of the four `ds/` eslint rules has a `RuleTester` suite, and
+  every defect above is a two-line case. `node:test` is built in; the repo already ships selftests for
+  `migration-lint`, `changelog-lint` and `deck-lint`, so only the ESLint rules are unguarded.
+
+- [ ] **[P3] Re-run `attw` with the tool actually installed, or drop the claim.** `packaging-diagnosis.md`
+  carried a node10 grid presented as measured; `@arethetypeswrong/cli` is not in `package.json`, is not
+  installed, and no output was ever saved. **The claim is withdrawn** (2026-09-02): re-derived with
+  TypeScript 5.9.3's own resolver against the `shape-probe` packages in a real `node_modules`, with a
+  failing negative control, a plain multi-entry build resolves green under node10 — ng-packagr emits a
+  compatibility stub per entry point. `typesVersions` is needed **only for option E's short aliases**.
+  What is still untested: those stubs carry `module` + `typings` but no `main`, so a node10 `require()`
+  would fail — irrelevant for an Angular ESM library, and it is the one row `attw` would have covered.
+  Worth adding `attw --pack ./dist/ds` to the release gate regardless; today's package passes, so it
+  starts green.
+
+- [ ] **[P3] Six things the bundle fixtures do NOT establish, recorded 2026-09-02 rather than left for
+  the next reader to rediscover.** Full text in `packaging-chunking-audit.md` — "What the fixtures do
+  NOT establish". None overturns a conclusion; together they bound what the numbers may be used for.
+  No probe records which library build it ran against, and `src/lib` changed five times inside the
+  0.11.1 window; no probe exercises the `exports` map (all resolve through tsconfig `paths`);
+  "initial" is computed by grepping `main.js` only, so a chunk imported by another eager chunk is
+  missed; gzip is taken over the concatenation rather than per file; recorded gzip does not reproduce
+  exactly and no gzip version is recorded; and "0 bytes of CSS" is a control that cannot fail. **The
+  graph numbers are no longer in this class** — `tools/entry-point-graph.mjs` computes them on demand.
+
 - [ ] **[P3] A curated `prototype` entry point, once A3 exists.** One extra entry re-exporting a light,
   opinionated set answers Mikhail's original basic/advanced ask at zero cost: no second package, no
   mirror, nothing duplicated, and `ds-table` stays one component. Propose it when A3 lands, not before.
