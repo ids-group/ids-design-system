@@ -340,6 +340,8 @@ for them to be in. `Lazy chunk: —` is the tell that it is a different experime
 
 ### What the fixtures do NOT establish — recorded 2026-09-02
 
+*(Found by the adversarial review; full record and evidence in `docs/two-wave-review.md`.)*
+
 An adversarial pass over the measurement method found six gaps that no number here closes. They do
 not overturn any conclusion; they bound what the numbers can be used for.
 
