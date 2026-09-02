@@ -105,6 +105,7 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 
 **Bugs — something shipped misbehaves**
 
+- P3 · **`changelog-lint`'s C013 fires on a removed symbol its own exemption should cover** — measured 2026-09-02: `` `DsToastConfig` interface is removed`` put the word 14 chars past the match and the ±70 window still did not exempt it; a reword cleared the gate without explaining it
 - P2 · **The table's bulk-actions bar paints its buttons the colour of the bar** — the rule styled a `.button` CLASS and stopped reaching anything when the button became a component; fixed on `feat/design-sync-last-mile`, unmerged
 - P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
 - P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either

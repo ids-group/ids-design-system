@@ -50,8 +50,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `DS_TOAST_CONFIG` and `DS_TOAST_POSITION` were the only configuration in the library that did not
   go through `DsConfig` — thirteen other areas already did — so an app set everything in one call and
   then remembered two bare `InjectionToken` providers for toasts. They are now
-  `provideDsConfig({ toast: { maxVisible, position } })`, and the `DsToastConfig` interface is
-  removed with its token.
+  `provideDsConfig({ toast: { maxVisible, position } })`. `DsToastConfig` is removed with the
+  token it typed.
   `position` is PARTIAL and merged field by field over `right` / `top` / `var(--space-6)`: the old
   token's type required all three fields, so moving the stack to the bottom meant restating the other
   two. `DS_TOAST_POSITION_DEFAULT` is unchanged and still exported. One caveat, and it is not new:
