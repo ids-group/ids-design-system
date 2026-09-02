@@ -65,9 +65,9 @@ what makes these the cheapest thing on the board.
 
 **Asks — a consumer or Stas asked for it**
 
+- P2 · **An md ARCHITECTURE for the whole design system, cross-linked like a graph** — entry point → area → component → field, so an agent reads one leaf instead of a monolith. RESEARCH FIRST, then a plan, then Stas's go-ahead — NEXT UP
 - P2 · **One entry point for the whole library** — a consumer cannot keep the DS out of their initial bundle; secondary entry points would fix it (MBP-133, deck attached)
 - P2 · **No page-level design approach for an agent** — radii, composition and page patterns are unwritten; `design-system.md` answers "what value", not "where does it go"
-- P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
 - P3 · A token named in prose is never checked against the tokens that exist — a removed one survived in two docs for months
 - P3 · `todo.md`'s index no longer accounts for its body — 44 lines against 65 items, and the gap needs a per-section reconciliation
@@ -663,6 +663,14 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 ## Agent-facing docs — the rules an agent needs to prototype a page, and an md layout it can navigate
 
+- [ ] **[P2] An md ARCHITECTURE for the whole design system — cross-linked like a graph, not a pile of files (Stas, 2026-09-01, re-scoped 2026-09-02). NEXT UP, and the first step is RESEARCH, not code.**
+  **What already shipped, so nobody re-solves it:** `components.md` was a 591-line, 60.2 KB monolith with six `##` sections, so there was no unit smaller than a sixth of the file to load. `tools/split-agent-catalogue.mjs` now generates `docs/agent/` from it — an index plus one leaf per component, 60 files, a 9.8 KB index and a ~1.6 KB leaf — and a `--check` gate fails the build when the leaves drift from the source. That closed the COST of the monolith for one file.
+  **What it did not close, and this item is about:** the split is flat and one-directional. A leaf cannot say "this is the same field as that one", an area cannot point at the components it contains, and nothing links a component to the token roles it reads. `design-system.md` (316 lines / 16.6 KB) is still a separate monolith with no route into the leaves. An agent that lands on `ds-input` cannot walk from there to the field-message rules, the status vocabulary, or the sibling controls.
+  **Ask:** design the whole md layout as a graph — a single entry point that routes, then area → component → field, with cross-links between leaves the way an Obsidian vault links notes, so an agent reaches one fact by following edges rather than by loading a file that might contain it.
+  **The sequence Stas asked for, and it is not negotiable:** research the practice first (how other design systems and agent-facing docs do this, what actually works), then ask him 10-20 questions, then a written plan, possibly a deck — and only after his explicit go-ahead does anything get implemented. He parked it on 2026-09-01 until the Claude Design work was finished; that work is finished.
+  **Points to settle when it is designed:** how the split is addressed (per component, per area, or per question); what stays in the root files as the always-loaded core; how a link is expressed so it survives both a generator and a human reader; how the index and the edges stay correct as components are added; and what the package ships versus what stays in-repo.
+  **Precedent already in the repo:** `tools/extract-tokens.mjs`, `tools/extract-component-api.mjs` and `tools/split-agent-catalogue.mjs` all generate documentation from source at prebuild, each with a `--check` gate. Whatever architecture is chosen should be generated the same way wherever it can be, so it cannot drift.
+
 - [ ] **[P2] There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01).** `design-system.md` covers spacing, type, size, colour, motion, content and overrides, and it answers "what value do I use" well. It does not answer **"where does this go on the page"**, which is the whole question when an agent is prototyping a screen rather than styling one control. Concretely missing:
   - **Corner radii have no rule at all.** The only mention in `design-system.md` is line 304, in passing, about radius travelling as a ROLE when a host overrides it. Nothing says which radius belongs to which surface class, or how radii nest (an inner element inside a rounded container).
   - **No composition guidance.** Where the page heading sits, where primary vs secondary actions go, when content belongs in a card and when it does not, where filters live relative to the data they filter, where supporting information goes.
@@ -671,9 +679,6 @@ A0 first, which touches none of it, or wait for that lane to land.
   The deliverable is a file an agent reads before it lays out a screen, in the same voice as `design-system.md`: rules with reasons, not a style tour. It ships in the package (`tools/build-schematics.mjs` copies the root `.md` files into `dist/ds`), so it reaches consumers' agents too.
   **One item in the dictated list needs confirming before it is written up:** "где должен быть фильм" is almost certainly a speech-to-text slip for **фильтр** (filter) — that reading fits the surrounding list of buttons/cards/information/heading. Confirm before treating it as a real requirement.
 
-- [ ] **[P2] `components.md` is a 591-line, 60 KB monolith with six top-level sections — an agent loads the whole thing to answer one question (Stas, 2026-09-01).** Measured 2026-09-01: `design-system.md` is 316 lines / 16.6 KB, `components.md` is **591 lines / 60.2 KB** across only **6** `##` sections, so there is no unit smaller than "a sixth of the file" to load. Both are copied into `dist/ds` by `tools/build-schematics.mjs`, so the cost is paid by every consumer's agent as well as ours.
-  **Ask:** design an md ARCHITECTURE for the whole design system — an index that routes, and leaf files small enough that reading one is cheap — so an agent can find the rule for one component without paying for all of them. Points to settle when it is designed: how the split is addressed (per component, per area, or per question), what stays in the root files as the always-loaded core, how the index stays correct as components are added (a generated index, like the token and component-API extractors already do, rather than a hand-kept one), and what the package ships versus what stays in-repo.
-  **Precedent already in the repo:** `tools/extract-tokens.mjs` and `tools/extract-component-api.mjs` generate documentation from source at prebuild — whatever architecture is chosen should be generated the same way wherever it can be, so it cannot drift.
 ## Component feature gaps
 
 
