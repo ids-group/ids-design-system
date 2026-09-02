@@ -948,6 +948,8 @@
   "--ds-toast-focus-shadow": "Toast focus ring shadow (defaults to --ds-control-focus-shadow).",
   "--ds-toast-icon-color": "Toast leading icon colour (defaults to --accent, per severity).",
   "--ds-toast-leave-duration": "Toast dismiss duration — a transition, not an animation (default --duration-base).",
+  "--ds-toast-shift-duration": "How long a toast takes to slide to its new place when one is added or removed above it — a re-stack, not a dismissal (default --duration-fast).",
+  "--ds-toast-shift-easing": "Easing for that slide (default --ease-standard).",
   "--ds-toast-leave-easing": "Toast dismiss easing (default --ease-standard).",
   "--ds-toast-max-width": "Toast maximum width (default --toast-maxw) — a per-instance hook over the global geometry token.",
   "--ds-toast-min-width": "Toast minimum width (default --toast-minw) — a per-instance hook over the global geometry token.",

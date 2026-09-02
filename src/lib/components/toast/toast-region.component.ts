@@ -17,6 +17,10 @@ const LEAVE_DURATION_MS = 180;
 // instant the pointer leaves — the reader gets this much to see it go.
 const MIN_RESUME_MS = 600;
 
+// An uncapped stack can cover the viewport. Material's answer is one at a time; five
+// is the compromise this library takes, and a consumer can still lift it.
+const DEFAULT_MAX_VISIBLE = 5;
+
 @Component({
   selector: 'ds-toast-region',
   standalone: true,
@@ -35,8 +39,8 @@ const MIN_RESUME_MS = 600;
 })
 export class ToastRegionComponent {
   /** Cap on concurrently visible toasts. Extras are queued and shown as
-   *  earlier ones dismiss. 0 = unlimited (default). */
-  readonly maxVisible = input<number>(0);
+   *  earlier ones dismiss. `0` = unlimited. */
+  readonly maxVisible = input<number>(DEFAULT_MAX_VISIBLE);
 
   protected readonly visibleEntries = signal<readonly ToastEntry[]>([]);
   protected readonly leaving = signal<ReadonlySet<number>>(new Set());
@@ -69,10 +73,72 @@ export class ToastRegionComponent {
   }
 
   private show(entry: ToastEntry): void {
+    const before = this.measureTops();
     this.visibleEntries.update((existing) =>
       this.newestFirst ? [entry, ...existing] : [...existing, entry],
     );
     this.arm(entry.id, entry.durationMs);
+    this.slideNeighbours(before);
+  }
+
+  /** FLIP, because the alternative is worse here. A new toast is inserted into a flex
+   *  column, so the browser has already MOVED its neighbours by the time we run: they
+   *  jump. Rather than lift the stack out of the document — which would collapse the
+   *  region to zero height and, since it lives in a CDK overlay pane sized to its
+   *  content, take the hit area with it — each neighbour is put back where it was with
+   *  a transform, then released to 0 with a transition. Compositor-only, and a second
+   *  toast arriving mid-slide retargets the same transition instead of fighting it. */
+  private slideNeighbours(before: Map<number, number>): void {
+    if (!before.size) {
+      return;
+    }
+    requestAnimationFrame(() => {
+      const nodes = this.toastNodes();
+      const deltas: [HTMLElement, number][] = [];
+      for (const [id, node] of nodes) {
+        const previousTop = before.get(id);
+        if (previousTop === undefined) {
+          continue;
+        }
+        const delta = previousTop - node.getBoundingClientRect().top;
+        if (delta) {
+          deltas.push([node, delta]);
+        }
+      }
+      for (const [node, delta] of deltas) {
+        node.style.setProperty('--_toast-shift', `${delta}px`);
+        node.classList.add('shifting');
+      }
+      requestAnimationFrame(() => {
+        for (const [node] of deltas) {
+          node.classList.remove('shifting');
+          node.style.removeProperty('--_toast-shift');
+        }
+      });
+    });
+  }
+
+  private toastNodes(): Map<number, HTMLElement> {
+    const nodes = new Map<number, HTMLElement>();
+    const elements =
+      this.host.nativeElement.querySelectorAll<HTMLElement>('ds-toast');
+    this.visibleEntries().forEach((entry, index) => {
+      const node = elements[index];
+      if (node) {
+        nodes.set(entry.id, node);
+      }
+    });
+
+    return nodes;
+  }
+
+  private measureTops(): Map<number, number> {
+    const tops = new Map<number, number>();
+    for (const [id, node] of this.toastNodes()) {
+      tops.set(id, node.getBoundingClientRect().top);
+    }
+
+    return tops;
   }
 
   private arm(id: number, remaining: number): void {

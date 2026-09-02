@@ -6,17 +6,32 @@
 :host {
   --_toast-leave-duration: var(--ds-toast-leave-duration, var(--duration-base));
   --_toast-leave-easing: var(--ds-toast-leave-easing, var(--ease-standard));
+  --_toast-shift-duration: var(--ds-toast-shift-duration, var(--duration-fast));
+  --_toast-shift-easing: var(--ds-toast-shift-easing, var(--ease-standard));
 
   display: block;
+  transition:
+    opacity var(--_toast-leave-duration) var(--_toast-leave-easing),
+    transform var(--_toast-shift-duration) var(--_toast-shift-easing);
+}
+
+/* Leaving owns both properties, so it restates the transform timing rather than
+   inheriting the shift's — a dismissal and a re-stack are different motions. */
+:host(.leaving) {
+  opacity: 0;
+  transform: translateY(calc(var(--space-2) * -1));
+  pointer-events: none;
   transition:
     opacity var(--_toast-leave-duration) var(--_toast-leave-easing),
     transform var(--_toast-leave-duration) var(--_toast-leave-easing);
 }
 
-:host(.leaving) {
-  opacity: 0;
-  transform: translateY(calc(var(--space-2) * -1));
-  pointer-events: none;
+/* The inverted half of the region's FLIP: the element is put back where it was, with
+   the transition suppressed so the jump-back is not itself animated. Releasing the
+   class lets the `:host` transition above carry it to 0. */
+:host(.shifting) {
+  transform: translateY(var(--_toast-shift, 0));
+  transition: none;
 }
 
 .toast {

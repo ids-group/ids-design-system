@@ -8,6 +8,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **`maxVisible` defaults to 5 instead of unlimited.** An uncapped stack was more permissive than any
+  system this component is measured against — Material shows one snackbar and dismisses the previous,
+  Carbon and Halstack stack but expect a ceiling. `DS_TOAST_CONFIG` still sets it, and `0` still means
+  no cap; a configured `0` is now forwarded rather than skipped, since it is the only way left to ask
+  for one.
+
+- **The stack no longer jumps when a toast is added.** Its neighbours are put back where they were
+  with a `transform` and released, so the re-stack runs on the compositor instead of the browser
+  moving them all in one frame. Two new tokens tune it: `--ds-toast-shift-duration` (default
+  `--duration-fast`) and `--ds-toast-shift-easing`. A dismissal keeps its own, longer timing — a
+  re-stack and a leave are different motions.
+
 ### Fixed
 
 - **Typing on a CLOSED `ds-select` did nothing.** Type-ahead landed with the jump wired only for
@@ -27,6 +41,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   page change and bulk expansion was swallowed. The export line now holds the region only until
   one of those lines has something new to say, so "Export failed" still stands until the reader
   moves on, and everything after it is announced again.
+
+- **A screen reader was told nothing about a toast, for three of the five variants.** `aria-live` sat
+  on each toast, and a live region has to exist in the DOM *before* its text arrives — a node created
+  with its message already inside it is the one case NVDA and JAWS reliably do not announce. The
+  region host was `role="region"`, a landmark, not a live region. Announcements now go through the CDK
+  `LiveAnnouncer`, whose region is built once at service construction and only has its text replaced.
+  `error` and `warning` announce assertively, the rest politely. WCAG 2.2 SC 4.1.3.
+
+  A burst is coalesced into one announcement rather than queued, and that is forced rather than
+  chosen: `announce()` clears its region synchronously and writes on a 100ms timeout, resolving its
+  promise inside that callback — so even a strictly serialised chain loses all but the last message.
+  Measured: five announcements each landed and were cleared again in the same millisecond.
+
+  A `<ds-toast>` you place yourself is now silent to a reader. It is a specimen, not an event; use
+  `ToastService` for anything that should be announced.
 
 ## 0.11.3 — 2026-09-02
 

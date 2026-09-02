@@ -3,7 +3,9 @@
   "items": [],
   "informational": [
     "Typing on a closed ds-select now commits the type-ahead jump, as a native <select> does. The path existed but was unreachable, so nothing that worked before changes. NO ACTION.",
-    "A chip row's guard against a parent that hugs its content was unreachable and is removed; the measurement is unchanged. NO ACTION."
+    "A chip row's guard against a parent that hugs its content was unreachable and is removed; the measurement is unchanged. NO ACTION.",
+    "ToastService now shows at most 5 toasts at once by default, where it was previously unlimited. Extras queue and appear as earlier ones dismiss, so nothing is lost. Set DS_TOAST_CONFIG maxVisible to any other number, or 0 for no cap. The stack also animates when a toast is added rather than jumping; --ds-toast-shift-duration and --ds-toast-shift-easing tune that.",
+    "Toast announcements moved off the visual toast and onto the CDK LiveAnnouncer, so info, success and loading toasts are now announced at all — previously only error and warning were, and only by luck. Nothing to change if you use ToastService. If you render <ds-toast> directly it no longer carries role or aria-live and is silent to a screen reader: that markup is a specimen, and anything that should be announced should go through the service."
   ],
   "deleteList": []
 }

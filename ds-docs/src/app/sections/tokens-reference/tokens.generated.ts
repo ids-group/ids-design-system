@@ -6507,6 +6507,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Toast dismiss easing (default --ease-standard)."
       },
       {
+        "name": "--ds-toast-shift-duration",
+        "value": "var(--duration-fast)",
+        "notes": "How long a toast takes to slide to its new place when one is added or removed above it — a re-stack, not a dismissal (default --duration-fast)."
+      },
+      {
+        "name": "--ds-toast-shift-easing",
+        "value": "var(--ease-standard)",
+        "notes": "Easing for that slide (default --ease-standard)."
+      },
+      {
         "name": "--ds-toast-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Base surface fill."

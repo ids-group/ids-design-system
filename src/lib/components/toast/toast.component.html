@@ -1,9 +1,10 @@
-<div
-  aria-atomic="true"
-  [class]="classes()"
-  [attr.role]="role()"
-  [attr.aria-live]="role() === 'alert' ? 'assertive' : 'polite'"
->
+<!-- No role or aria-live here on purpose. A live region has to exist in the DOM BEFORE
+     its text arrives, and a toast is created WITH its message — so these attributes
+     announced nothing for the three polite variants. ToastService speaks through the
+     CDK LiveAnnouncer instead, whose region is built once at construction. A static
+     <ds-toast> placed by hand is therefore silent to a reader by design: it is a
+     specimen, not an event. -->
+<div [class]="classes()">
   @if (isLoading()) {
     <ds-spinner
       class="icon"

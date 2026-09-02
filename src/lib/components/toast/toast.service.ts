@@ -5,6 +5,7 @@ import {
   GlobalPositionStrategy,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ToastRegionComponent } from './toast-region.component';
 import {
   DS_TOAST_CONFIG,
@@ -13,6 +14,7 @@ import {
 } from './toast.config';
 import type {
   ToastEntry,
+  ToastVariant,
   ToastOptions,
   ToastPromiseMessages,
   ToastRef,
@@ -22,14 +24,23 @@ import type {
 const SETTLED_SUCCESS_MS = 4000;
 const SETTLED_ERROR_MS = 6000;
 
+// Long enough to gather a synchronous burst into one announcement, short enough that a
+// single toast is not perceptibly late. It only has to outlast the loop that fires the
+// burst, not any human interval.
+const ANNOUNCE_COALESCE_MS = 120;
+
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private readonly overlay = inject(Overlay);
   private readonly position = inject(DS_TOAST_POSITION, { optional: true });
   private readonly toastConfig = inject(DS_TOAST_CONFIG, { optional: true });
+  private readonly announcer = inject(LiveAnnouncer);
   private overlayRef: OverlayRef | null = null;
   private regionRef: ComponentRef<ToastRegionComponent> | null = null;
   private nextId = 1;
+  private pendingAnnouncements: string[] = [];
+  private pendingAssertive = false;
+  private announceTimer: number | undefined;
 
   show(opts: ToastOptions): ToastRef {
     this.ensureRegion();
@@ -54,6 +65,7 @@ export class ToastService {
     // The region runs the countdown, because only it knows when the toast became
     // visible — started here, one queued behind `maxVisible` expires unseen.
     this.regionRef!.instance.add(entry);
+    this.announce(variant, entry.body, entry.title);
 
     return {
       id,
@@ -91,6 +103,7 @@ export class ToastService {
           dismissible: true,
           durationMs: SETTLED_SUCCESS_MS,
         });
+        this.announce('success', successBody);
       },
       (reason: unknown) => {
         const errorBody =
@@ -103,10 +116,44 @@ export class ToastService {
           dismissible: true,
           durationMs: SETTLED_ERROR_MS,
         });
+        this.announce('error', errorBody);
       },
     );
 
     return source;
+  }
+
+  /** A toast is a status message, so a reader has to be told about it without being
+   *  moved. The announcement does NOT ride the visual toast: `aria-live` on an element
+   *  created together with its text announces nothing in NVDA or JAWS, which is three
+   *  of the five variants. The CDK announcer's region is built once, at construction,
+   *  and only its text changes — the shape screen readers actually fire on.
+   *
+   *  A burst is COALESCED into one announcement rather than queued, and that is not a
+   *  preference. `LiveAnnouncer.announce()` clears the region synchronously and writes
+   *  the text on a 100ms timeout, resolving its promise inside that callback — so even
+   *  a strictly serialised chain loses everything but the last message: measured, each
+   *  of five landed and was cleared again in the same millisecond, before a
+   *  MutationObserver could see it, let alone a reader. Awaiting the promise cannot fix
+   *  that, because it resolves before the write has been observed. One region change
+   *  carrying every message is the only shape that survives. */
+  private announce(variant: ToastVariant, body: string, title?: string): void {
+    const spoken = [title, body].filter(Boolean).join('. ');
+    if (!spoken) {
+      return;
+    }
+    this.pendingAnnouncements.push(spoken);
+    if (variant === 'error' || variant === 'warning') {
+      this.pendingAssertive = true;
+    }
+    clearTimeout(this.announceTimer);
+    this.announceTimer = window.setTimeout(() => {
+      const message = this.pendingAnnouncements.join('. ');
+      const politeness = this.pendingAssertive ? 'assertive' : 'polite';
+      this.pendingAnnouncements = [];
+      this.pendingAssertive = false;
+      this.announcer.announce(message, politeness);
+    }, ANNOUNCE_COALESCE_MS);
   }
 
   dismissAll(): void {
@@ -125,8 +172,11 @@ export class ToastService {
     this.regionRef = this.overlayRef.attach(
       new ComponentPortal(ToastRegionComponent),
     );
+    // A configured 0 is forwarded, not skipped: since the region's own default became
+    // a cap, 0 is the only way left to ask for an uncapped stack, and swallowing it
+    // would silently hand that consumer the default instead.
     const maxVisible = this.toastConfig?.maxVisible;
-    if (maxVisible && maxVisible > 0) {
+    if (typeof maxVisible === 'number' && maxVisible >= 0) {
       this.regionRef.setInput('maxVisible', maxVisible);
     }
   }

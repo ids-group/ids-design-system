@@ -2857,7 +2857,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "inputMode",
         "kind": "input",
-        "type": "| 'none'\r\n    | 'text'\r\n    | 'decimal'\r\n    | 'numeric'\r\n    | 'tel'\r\n    | 'search'\r\n    | 'email'\r\n    | 'url'\r\n    | null",
+        "type": "| 'none'\n    | 'text'\n    | 'decimal'\n    | 'numeric'\n    | 'tel'\n    | 'search'\n    | 'email'\n    | 'url'\n    | null",
         "union": [
           "none",
           "text",
@@ -6485,7 +6485,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "(label: string, dir: SortDir) => string",
         "union": null,
-        "default": "(label, dir) =>\r\n      dir\r\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\r\n        : `Sorting cleared`",
+        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
         "required": false,
         "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
       },
@@ -6854,7 +6854,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "rowExpandTemplate",
         "kind": "input",
-        "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
+        "type": "TemplateRef<{\n    $implicit: unknown;\n    row: unknown;\n  }> | null",
         "union": null,
         "default": "null",
         "required": false,
@@ -7827,7 +7827,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'info'",
         "required": false,
-        "description": "Severity — drives colour, the default icon/spinner and the ARIA role/live."
+        "description": "Severity — drives colour and the default icon or spinner."
       },
       {
         "name": "title",
@@ -7902,9 +7902,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "DEFAULT_MAX_VISIBLE",
         "required": false,
-        "description": "Cap on concurrently visible toasts. Extras are queued and shown as earlier ones dismiss. 0 = unlimited (default)."
+        "description": "Cap on concurrently visible toasts. Extras are queued and shown as earlier ones dismiss. `0` = unlimited."
       }
     ],
     "outputs": []
