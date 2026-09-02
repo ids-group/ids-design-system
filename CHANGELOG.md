@@ -8,6 +8,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Fixed
+
+- **Typing on a CLOSED `ds-select` did nothing.** Type-ahead landed with the jump wired only for
+  an open panel: the closed branch of the key handler returned before reaching it, so a letter
+  pressed on a collapsed trigger neither jumped nor committed. It commits now, which is what a
+  native `<select>` does and what 0.11.2 said this already did.
 ## 0.11.3 — 2026-09-02
 
 ### Breaking

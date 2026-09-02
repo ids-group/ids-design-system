@@ -1,0 +1,9 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    "Typing on a closed ds-select now commits the type-ahead jump, as a native <select> does. The path existed but was unreachable, so nothing that worked before changes. NO ACTION.",
+    "A chip row's guard against a parent that hugs its content was unreachable and is removed; the measurement is unchanged. NO ACTION."
+  ],
+  "deleteList": []
+}
