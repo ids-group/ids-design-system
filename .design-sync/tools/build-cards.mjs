@@ -273,9 +273,8 @@ for (const name of [...byName.keys()].sort()) {
   }
 }
 
-// Retirements, which have to be WRITTEN rather than deleted: `delete_files` works only for the
-// project owner, so a collaborator's only way to stop a stale card claiming to be a component is to
-// replace it with a page that says what happened. See retired.json.
+// `delete_files` works only for the project OWNER, so overwriting is the only way to retire an
+// entry from here. retired.json carries the reasoning.
 const retired = JSON.parse(readFileSync(join(syncDir, 'retired.json'), 'utf8'));
 
 // A component name written as `<Menu>` is a tag to the parser, and an unknown element renders
@@ -302,8 +301,9 @@ function noticePage({ headline, detail }) {
 `;
 }
 
-// A card whose preview script still resolves a missing export prints a raw error. Replacing the
-// script with one that renders the notice keeps the page honest even before the owner deletes it.
+// The notice page above loads no script, so this is not for it: the OLD preview survives on the
+// remote and other surfaces may still load it, and left alone it resolves an export the bundle
+// dropped and prints a raw error.
 const noticePreview = ({ headline, detail }) => `var __dsPreview = (function () {
   function Retired() {
     return React.createElement(
