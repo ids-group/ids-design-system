@@ -49,6 +49,7 @@ echo "===== colour families ====="
 node tools/check-color-families.mjs
 
 echo "===== delete-table parity ====="
+node tools/check-tools-parse.mjs
 node tools/check-delete-tables.mjs
 
 # Same class of gate, same argument: CHANGELOG.md and the manifests are copied into

@@ -16,8 +16,9 @@
 # Fill the `## Unreleased` CHANGELOG section before running; preflight (the
 # preversion hook) fails the pipeline early otherwise.
 #
-# No bun install or build here: `npm version` and its node-only hooks (preflight,
-# changelog stamp) need just git + node, both already in the image (+ apk git).
+# Installs but does not build. `npm version` runs preflight, and one of preflight's ten
+# gates compiles the Sass to read the colour roles out of the compiled CSS — the other
+# nine need only node built-ins. The step's bun caches keep that install warm.
 set -e
 
 level="$1"
@@ -63,6 +64,11 @@ git merge --no-edit --no-ff origin/dev || {
   echo "cut-release: merge of origin/dev into main conflicts — resolve on dev first."
   exit 1
 }
+
+# Sourced, not executed: setup_bun exports PATH into this shell.
+. infrastructure/scripts/_setup.sh
+setup_bun
+install_deps
 
 # Bump: runs the preversion preflight (branch/clean/ancestor/changelog) + the
 # version hook (CHANGELOG stamp + migration promote + git add) + commit + tag.

@@ -59,12 +59,11 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 **Bugs — something shipped misbehaves**
 
 - P2 · **A `confirm()` opened after a toast covers it and swallows its action button**, and the whole `--layer-*` scale above 1000 is decorative for overlays. MEASURED 2026-09-02 in headless Chrome, 12 scenarios with three opposite-answer control pairs. CDK 21 sets `usePopover: true` by default, so every overlay host enters the browser TOP LAYER, where paint order is the order of `showPopover()` and z-index does not apply at all. Consequences: `_toast-overlay.scss`'s lift to `--layer-toast` is **dead code** for every consumer on default CDK; `--layer-tooltip: 1600`, documented at `z-index.section.ts:47-51` as "must sit above toasts", is **inert**, because it is set on content INSIDE `.cdk-overlay-pane`, itself a stacking context — same for `--layer-popover` and the dropdown panel's. Of the seven values above 1000 only the toast lift targets an overlay HOST. **Stas decided 2026-09-02: the toast stays above the modal scrim, as the scale promises.** The mechanism follows from the above — re-issue `showPopover()` on the toast host when another overlay opens — but the hook is UNVALIDATED: three probe attempts failed to reproduce the scene, so treat this as not started. First reproduce toast-then-confirm by hand, then establish that a re-raise costs neither a flicker nor the focus. `usePopover` is public on `OverlayConfig`, so a per-overlay lever exists. Do NOT "fix" this by adding z-index: that is what the dead rule already tried.
+- P2 · **The Angular set is pinned inside the range of two high advisories** — 21.2.17 against a fix in 21.2.19, and `@angular/elements`' exact peer is what blocks the move
+- P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
 - P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either
-- P2 · `package-lock.json` is three patches behind `bun.lock` across the Angular set — `npm ci` no longer resolves; delete it or bump the set
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
-- P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
-- P2 · `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px regardless of density
 - P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
   of 100 cannot see one group of three collapse
 - P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
@@ -185,14 +184,16 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds seven.** The cheapest real win is still the warning status pair at 4.42:1 where AA
-asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
-counted — so one token step fixes all of them. Four of the others arrived on 2026-09-01 and were
-filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
-already reads. In cost order after the token step — `--ds-table-head-h` declared
-nowhere so the scrim's inset is always its 40px fallback, one export leaving the table's live
-region stuck on "Export ready" forever, then the two cosmetic ones. The sixth, the resize handle's
-unenforced `aria-valuemax`, was closed the same day it was filed.
+**`# Bugs` holds seven** (counted 2026-09-02). The cheapest real win is still the warning status
+pair at 4.42:1 where AA asks 4.5: it reaches nine components plus `_status.scss` and
+`_field-state.scss` — eleven files counted — so one token step fixes all of them. Four of the
+others arrived on 2026-09-01 and were filed under *Asks* first, which was wrong: nobody asked for
+them, they are wrong in code a consumer already reads. After the token step what is left is the
+split-button hover at 1.87:1, the Angular set sitting inside two high advisories, and the two
+cosmetic ones. Four are already closed: the resize handle's unenforced `aria-valuemax` the same
+day it was filed, the loading scrim's top edge, which now measures the header instead of assuming
+40px, the export status, which no longer holds the live region once anything else has something to
+say, and the two lockfiles, now level on every package either tool resolves freely.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
 items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
@@ -268,19 +269,42 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
-- [ ] **[P2] `package-lock.json` has drifted three patches behind `bun.lock` across the whole Angular set, and `npm ci` no longer resolves — MEASURED 2026-09-02.** `infrastructure/scripts/README.md` says the file is kept for npm and Dependabot consumers, but it pins `@angular/core@21.2.14`, `@angular/cdk@21.2.12` and `@angular/cli@21.2.12` while the installed tree is `21.2.17` / `21.2.14` / `21.2.15`. `npm install --package-lock-only` fails outright: `@angular/elements@21.2.17` peers on `@angular/core@21.2.17` exactly, and the lock offers 21.2.14.
-  **It cannot be regenerated in isolation.** Doing so lets npm re-resolve every Angular package against `^21.2.0`, which lands on whatever is latest that day and diverges from `bun.lock` — and bun is what CI installs with (`_setup.sh`: `npm ci` fails under alpine/musl on the `@emnapi` optional deps). The two answers are to delete the file and move the five Bitbucket cache keys onto `bun.lock`, or to bump the whole Angular set to one version and regenerate both locks. Stas 2026-09-02: recorded, neither done.
-  **Not currently harmful:** `@angular/elements` is pinned to `21.2.17`, the version its peer requires against the installed core, so bun's tree is self-consistent and every build is green. What is lost is any consumer or bot that reads `package-lock.json`.
+- [ ] **[P2] The Angular set sits at 21.2.17, inside the range of two high advisories.** `npm audit` names *Angular i18n: XSS via event-handler attributes* and *Cache-Key Ambiguity in HttpTransferCache* against `@angular/core`, `@angular/common` and `@angular/compiler`, both `>=21.0.0-next.0 <21.2.19`.
+  **No consumer inherits this through us.** Angular is a peerDependency and the only runtime dependency the package declares is `tslib`, so the consumer's own resolution decides. The exposure is our own builds and the ds-docs site deployed to the CDN.
+  **`@angular/elements` is what blocks the fix.** It is pinned to exactly `21.2.17` and its peer demands `@angular/core@21.2.17`, so moving the set to 21.2.19 means unpinning it first — and that pin is currently what keeps `package-lock.json` and `bun.lock` in agreement.
+  **The other 64 advisories are build-toolchain only** (tar, undici, hono, vite, esbuild, postcss, browserslist, js-yaml, nanoid, brace-expansion and more): 30 vulnerabilities at the top level, 1 critical, and none of them ships.
+
+- [x] **[P2] `package-lock.json` had drifted from `bun.lock`, and `npm ci` no longer resolved.** Regenerated 2026-09-02 with `npm install --package-lock-only` on a deleted lock, which leaves bun's `node_modules` untouched — 101 packages disagreed, 13 of them `@angular`; 5 disagree now and none is `@angular`.
+  **The prediction in this item was wrong, and the reason matters.** It said regeneration would land on "whatever is latest that day and diverge from `bun.lock`". It converged instead, because `@angular/elements@21.2.17` peers on `@angular/core@21.2.17` EXACTLY: npm has no freedom inside `^21.2.0` and is forced onto the version bun already had. The pin filed here as merely "not currently harmful" is what makes both locks agree.
+  **What is left is not drift.** The five are `@emnapi/core`, `@emnapi/runtime`, `@emnapi/wasi-threads`, `@napi-rs/wasm-runtime` and `@tybys/wasm-util` — the optional-peer family `_setup.sh` names as the reason `npm ci` breaks under musl, so npm and bun resolve them differently by design.
 
 - [ ] **[P2] `ds-split-button` paints its hover with a TEXT colour, and inside a status zone the label goes unreadable — MEASURED 2026-09-02.** `split-button.component.scss:7` defaults `--_split-button-bg-hover-color` to `var(--accent-strong)` while `:6` keeps the label on `var(--accent-on)`. `--accent-strong` is the family's readable ON-TINT colour — its own token description says "text on light surfaces" — and this is the **only** place in the library that uses it as a background; every other component hovers with `-hover`. In dark, `ds-color="success"` resolves it to `hsl(132deg 55% 62%)` and the white label lands at **1.87:1**; error is **2.46**, and in light warning is **3.78**. Reachable with the component's own default, `variant="primary"`.
   **This is a regression, not an inherited defect.** Before `--accent-strong` resolved for status families, that background was invalid-at-computed-value-time and computed to `transparent`, so the label sat on the page: illegible in light (1.00) and legible in dark (18.6). Making the pointer resolve fixed the three light cells and broke the three dark ones. Six cells, three each way.
   **The fix that was measured and not applied:** default the hover to `var(--accent-hover)`, which is the family base mixed 88% toward black in light and white in dark — so the hover follows the rest state instead of jumping to another colour. Contrast then tracks rest almost exactly: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31, against rest values of 4.83, 3.30 and 11.81. Deferred by Stas 2026-09-02: recorded rather than shipped.
   **It does not close the whole problem, and must not be sold as if it does.** `--accent-on` on the family's solid `--accent` already fails at REST for two families — success **3.30**, secondary **3.31** — in both themes, on every solid button, not only this one. That is a palette question of the same family as the warning-pair item above, and it predates all of this.
 
-- [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
+- [x] **[P2] One export silenced `ds-table`'s live region for the rest of the page's life.**
+      Of the three shapes filed, the winner is the export line YIELDING once the events line
+      has something new to say. A timeout guesses how long a message takes to read and can
+      truncate it; making the export line lowest-priority buries "Export ready" under a stale
+      sort line, so it might never be heard. Implemented by snapshotting the events line at
+      announce time and comparing, not by clearing a signal — `statusMessage` is a computed
+      and a computed cannot write. That also settles the board's condition that "Export
+      failed" survive long enough to read: it stands until the reader does something that
+      speaks. `exportStatusState` now has exactly ONE setter, which a probe asserts, because
+      a second one added later would reintroduce the defect silently.
 
 
-- [ ] **[P2] `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px.** The table passes `[insetTop]="'var(--ds-table-head-h, 40px)'"` to `ds-loading-overlay` to keep the header uncovered during a refresh, and that string is the ONLY occurrence of the token in the whole repo — nothing ever sets it, so the fallback always wins. A header shorter than 40px (`density="compact"`, `ultra`) leaves a strip of the first row uncovered; a header taller than 40px (a wrapped label, or a filter row) gets partly covered, which contradicts the reason the inset exists — and now also contradicts the `inert` boundary, since `<tbody>` is what goes inert while a partly-covered header stays operable underneath a scrim. Decide which it is: declare the token from the real header height (a measurement, or a value per density), or drop the token and measure the `<thead>`. As it stands it reads like a public hook and is not one.
+- [x] **[P2] The loading scrim's top edge assumed a 40px header.** MEASURED against the 
+      compiled styles: the header cell is 42.89px at the default density and 26.89px at 
+      `[data-density="ultra-compact"]`, so the scrim cut 2.89px into the header normally and 
+      started 13.11px too low under that density, leaving the first body row uncovered.
+      `--ds-table-head-h`, the name the template read, was declared nowhere, so it could only
+      resolve to its fallback; it still overrides the measurement, which is the default under
+      it now. A calc() is rejected by the same measurement — summing the parts is a
+      constant 1.09px short, because `vertical-align: middle` on the inline-flex label 
+      extends the line box by a font-metric amount CSS cannot express. The header is 
+      measured per loading episode instead.
 
 
 - [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. Derived from the template, NOT measured in a browser: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.

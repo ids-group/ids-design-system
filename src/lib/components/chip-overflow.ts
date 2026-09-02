@@ -24,15 +24,21 @@ import {
  */
 
 /**
- * Null when there is no usable parent — a detached node, or one that hugs its
- * content too, which carries the same feedback loop the trigger does.
+ * Null when there is no usable parent — a detached node, or an inline one, which has no
+ * content box to read.
+ *
+ * KNOWN GAP: a parent that hugs its content carries the same feedback loop the trigger does,
+ * and this does not catch it. `getComputedStyle` reports a used pixel value, so the
+ * `fit-content` a consumer wrote is not readable back; and measurement cannot tell that parent
+ * from a `fill` trigger, because in both the content box equals the trigger's width. A test on
+ * that equality would reject the ordinary case and drop a chip. Tracked in docs/todo.md.
  */
 function hostContentWidth(host: HTMLElement | null): number | null {
   if (!host || host.clientWidth === 0) {
     return null;
   }
   const styles = getComputedStyle(host);
-  if (styles.width === 'fit-content' || styles.display === 'inline') {
+  if (styles.display === 'inline') {
     return null;
   }
 
