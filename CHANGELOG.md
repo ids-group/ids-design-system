@@ -79,6 +79,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A screen reader was told nothing about a toast, for three of the five variants.** `aria-live` sat
+  on each toast, and a live region has to exist in the DOM *before* its text arrives — a node created
+  with its message already inside it is the one case NVDA and JAWS reliably do not announce. The
+  region host was `role="region"`, a landmark, not a live region. Announcements now go through the CDK
+  `LiveAnnouncer`, whose region is built once at service construction and only has its text replaced.
+  `error` and `warning` announce assertively, the rest politely. WCAG 2.2 SC 4.1.3.
+
+  A burst is coalesced into one announcement rather than queued, and that is forced rather than
+  chosen: `announce()` clears its region synchronously and writes on a 100ms timeout, resolving its
+  promise inside that callback — so even a strictly serialised chain loses all but the last message.
+  Measured: five announcements each landed and were cleared again in the same millisecond.
+
+  A `<ds-toast>` you place yourself is now silent to a reader. It is a specimen, not an event; use
+  `ToastService` for anything that should be announced.
+
+
 - **`ds-color="error"`, `="success"` and `="warning"` lost their accent colour.** Those zones map
   `--accent-strong` onto `--<family>-strong`, and the three status families never defined it — only
   the brand families did. The declaration was invalid at computed-value time, so inside a status

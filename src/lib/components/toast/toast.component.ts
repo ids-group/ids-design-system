@@ -24,7 +24,7 @@ import type { ToastAction, ToastVariant } from './toast.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ToastComponent {
-  /** Severity — drives colour, the default icon/spinner and the ARIA role/live. */
+  /** Severity — drives colour and the default icon or spinner. */
   readonly variant = input<ToastVariant>('info');
   /** Optional bold heading above the message. */
   readonly title = input<string>('');
@@ -47,13 +47,6 @@ export class ToastComponent {
   }
 
   protected readonly classes = computed(() => `toast ${this.variant()}`);
-
-  /** Errors/warnings interrupt (assertive); info/success wait their turn. */
-  protected readonly role = computed<'alert' | 'status'>(() =>
-    this.variant() === 'error' || this.variant() === 'warning'
-      ? 'alert'
-      : 'status',
-  );
 
   protected readonly defaultIcon = computed<IconName>(() => {
     switch (this.variant()) {
