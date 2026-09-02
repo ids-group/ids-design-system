@@ -68,7 +68,6 @@ export const OpenCalendar = () => (
     label="Dispatch date"
     hint="Bookable slots: 3–27 March."
     value={MAR(12)}
-    month={MARCH_2026}
     minDate={MAR(3)}
     maxDate={MAR(27)}
     open
@@ -82,7 +81,6 @@ export const OpenRange = () => (
     mode="range"
     label="Delivery window"
     value={[MAR(9), MAR(20)]}
-    month={MARCH_2026}
     open
     dateFormat="DD/MM/YYYY"
   />
@@ -94,7 +92,6 @@ export const OpenPresets = () => (
     mode="range"
     label="Reporting period"
     value={[MAR(9), MAR(15)]}
-    month={MARCH_2026}
     presets={reportingPresets}
     open
     dateFormat="DD/MM/YYYY"

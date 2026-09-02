@@ -7,11 +7,11 @@ export const GroupedActions = () => (
   <div style={{ width: 224 }}>
     <Menu>
       <MenuItem icon="users">Profile settings</MenuItem>
-      <MenuItem icon="settings" tabbable={false}>Preferences</MenuItem>
+      <MenuItem icon="settings">Preferences</MenuItem>
       <MenuDivider />
-      <MenuItem icon="bell" tabbable={false}>Notifications</MenuItem>
+      <MenuItem icon="bell">Notifications</MenuItem>
       <MenuDivider />
-      <MenuItem icon="x" error tabbable={false}>Sign out</MenuItem>
+      <MenuItem icon="x" error>Sign out</MenuItem>
     </Menu>
   </div>
 );

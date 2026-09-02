@@ -100,7 +100,6 @@ export const SearchOpen = () => (
       userRole="Fleet coordinator"
       searchProvider={searchProvider}
       searchOpen
-      query="depot"
     />
   </div>
 );

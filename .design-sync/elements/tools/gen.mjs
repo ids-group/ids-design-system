@@ -275,12 +275,35 @@ for (const file of walk(join(repo, 'src/lib'), '.ts').sort()) {
 
 // Directive API is indexed first — components re-expose part of it via hostDirectives.
 const directiveApi = new Map();
+// Every class, decorated or not, with what it declares and what it extends. Angular publishes an
+// INHERITED input on the element exactly like an own one, so a component that reads `classApi`
+// alone loses the whole shared field API — `hint`, `error`, `warning`, `errors`, `invalid`,
+// `touched` and `reserveMessage` live on an internal base and reach fifteen field components by
+// inheritance. The docs used them and the elements did accept them; only the wrappers denied it.
+const classes = new Map();
 for (const file of walk(join(repo, 'src/lib'), '.ts').sort()) {
   parse(file).forEachChild((node) => {
     if (!ts.isClassDeclaration(node) || !node.name) return;
+    const base = node.heritageClauses
+      ?.find((clause) => clause.token === ts.SyntaxKind.ExtendsKeyword)
+      ?.types[0]?.expression.getText();
+    classes.set(node.name.text, { api: classApi(node), base });
     if (decoratorMeta(node, 'Directive') === undefined) return;
     directiveApi.set(node.name.text, classApi(node));
   });
+}
+
+/** A class's API including everything it inherits. An own member of the same name wins, which is
+ *  what the compiler does too. */
+function inheritedApi(className, seen = new Set()) {
+  if (!className || seen.has(className)) return [];
+  seen.add(className);
+  const entry = classes.get(className);
+  if (!entry) return [];
+  const inherited = inheritedApi(entry.base, seen);
+  const own = new Set(entry.api.map((member) => member.name));
+
+  return [...inherited.filter((member) => !own.has(member.name)), ...entry.api];
 }
 
 const components = [];
@@ -299,7 +322,7 @@ for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
     // React wrapper — widen them rather than emit unbound names.
     const typeParams = (node.typeParameters ?? []).map((param) => param.name.text);
     const hostApi = hostDirectiveApi(meta, directiveApi);
-    const api = [...classApi(node), ...hostApi].map((entry) => {
+    const api = [...inheritedApi(node.name.text), ...hostApi].map((entry) => {
       let type = entry.type;
       for (const param of typeParams) {
         type = type.replace(new RegExp(`\\b${param}\\b`, 'g'), 'any');

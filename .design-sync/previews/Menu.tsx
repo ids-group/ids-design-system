@@ -24,10 +24,10 @@ export const Canonical = () => (
   <div style={{ width: 224 }}>
     <Menu>
       <MenuItem icon="users">Profile settings</MenuItem>
-      <MenuItem icon="settings" tabbable={false}>Preferences</MenuItem>
-      <MenuItem icon="bell" tabbable={false}>Notifications</MenuItem>
+      <MenuItem icon="settings">Preferences</MenuItem>
+      <MenuItem icon="bell">Notifications</MenuItem>
       <MenuDivider />
-      <MenuItem icon="x" error tabbable={false}>Sign out</MenuItem>
+      <MenuItem icon="x" error>Sign out</MenuItem>
     </Menu>
   </div>
 );
@@ -40,16 +40,16 @@ export const WithShortcuts = () => (
         Rename route
         <Shortcut keys="F2" />
       </MenuItem>
-      <MenuItem icon="copy" tabbable={false}>
+      <MenuItem icon="copy">
         Duplicate
         <Shortcut keys="Ctrl+D" />
       </MenuItem>
-      <MenuItem icon="download" tabbable={false}>
+      <MenuItem icon="download">
         Export manifest
         <Shortcut keys="Ctrl+E" />
       </MenuItem>
       <MenuDivider />
-      <MenuItem icon="trash" error tabbable={false}>
+      <MenuItem icon="trash" error>
         Delete route
         <Shortcut keys="Del" />
       </MenuItem>
@@ -62,10 +62,10 @@ export const States = () => (
   <div style={{ width: 224 }}>
     <Menu>
       <MenuItem icon="edit">Rename</MenuItem>
-      <MenuItem icon="copy" disabled tabbable={false}>Duplicate</MenuItem>
-      <MenuItem icon="download" tabbable={false}>Export</MenuItem>
+      <MenuItem icon="copy" disabled>Duplicate</MenuItem>
+      <MenuItem icon="download">Export</MenuItem>
       <MenuDivider />
-      <MenuItem icon="trash" error tabbable={false}>Delete job</MenuItem>
+      <MenuItem icon="trash" error>Delete job</MenuItem>
     </Menu>
   </div>
 );
@@ -79,21 +79,20 @@ export const SubmenuOpen = () => (
         <MenuItem icon="edit">Rename</MenuItem>
         <MenuItem
           icon="copy"
-          tabbable={false}
           submenuOpen
           submenu={
             <Menu>
               <MenuItem>PDF</MenuItem>
-              <MenuItem tabbable={false}>CSV</MenuItem>
-              <MenuItem tabbable={false}>Excel (.xlsx)</MenuItem>
+              <MenuItem>CSV</MenuItem>
+              <MenuItem>Excel (.xlsx)</MenuItem>
             </Menu>
           }
         >
           Export as
         </MenuItem>
-        <MenuItem icon="download" tabbable={false}>Download</MenuItem>
+        <MenuItem icon="download">Download</MenuItem>
         <MenuDivider />
-        <MenuItem icon="x" error tabbable={false}>Delete</MenuItem>
+        <MenuItem icon="x" error>Delete</MenuItem>
       </Menu>
     </div>
   </div>
@@ -110,10 +109,10 @@ export const InPopover = () => (
       <div style={{ width: 224 }}>
         <Menu>
           <MenuItem icon="users">Profile settings</MenuItem>
-          <MenuItem icon="settings" tabbable={false}>Preferences</MenuItem>
-          <MenuItem icon="bell" tabbable={false}>Notifications</MenuItem>
+          <MenuItem icon="settings">Preferences</MenuItem>
+          <MenuItem icon="bell">Notifications</MenuItem>
           <MenuDivider />
-          <MenuItem icon="x" error tabbable={false}>Sign out</MenuItem>
+          <MenuItem icon="x" error>Sign out</MenuItem>
         </Menu>
       </div>
     </Popover>

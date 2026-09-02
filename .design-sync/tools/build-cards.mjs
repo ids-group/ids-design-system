@@ -27,6 +27,7 @@ const require_ = createRequire(join(syncDir, 'node_modules', 'package.json'));
 const esbuild = require_('esbuild');
 
 const config = JSON.parse(readFileSync(join(syncDir, 'config.json'), 'utf8'));
+const viewports = JSON.parse(readFileSync(join(syncDir, 'viewports.json'), 'utf8'));
 const surface = JSON.parse(readFileSync(join(elements, 'gen', 'surface.json'), 'utf8'));
 const byName = new Map(surface.components.map((component) => [component.name, component]));
 
@@ -257,7 +258,7 @@ for (const name of [...byName.keys()].sort()) {
       cardHtml({
         name,
         group,
-        viewport: override.viewport ?? null,
+        viewport: viewports.heights[name] ? `${viewports.width}x${viewports.heights[name]}` : null,
         mode: override.cardMode ?? 'grid',
         primary: override.primaryStory ?? '',
       }),

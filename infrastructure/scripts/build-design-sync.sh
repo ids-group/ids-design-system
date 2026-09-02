@@ -35,3 +35,24 @@ grep -q 'url("fonts/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bun
 
 echo "Checking the hand-maintained surface..."
 bun run check:manual-surface
+
+# The docs and previews ship as the agent's instructions and as the cards themselves, and esbuild
+# does not type-check a preview — so a prop the component dropped renders an empty card in silence.
+# Twenty of these were sitting in the tree, six of them in a single preview written for the deleted
+# React port.
+echo "Checking the docs and previews against the real surface..."
+node .design-sync/tools/check-doc-api.mjs
+
+# Everything the upload publishes, built here so a broken generator fails the release rather than
+# the person running the upload. The publish itself cannot run in a pipeline: finalize_plan is a
+# permission gate bound to a claude.ai login and shows the path list for approval.
+echo "Building the upload artefacts..."
+node .design-sync/tools/build-cards.mjs
+node .design-sync/tools/build-adherence.mjs
+
+[ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
+[ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }
+cards=$(find .design-sync/upload/components -name '*.html' | wc -l)
+previews=$(find .design-sync/upload/_preview -name '*.js' | wc -l)
+[ "$cards" = "$previews" ] || { echo "Card/preview mismatch: $cards card(s) against $previews preview(s) - a card whose preview script is missing renders a warning, which is how nine of them shipped"; exit 1; }
+echo "Upload artefacts: $cards card(s), $previews preview(s)"

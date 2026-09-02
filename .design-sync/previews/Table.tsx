@@ -54,7 +54,7 @@ export const Shipments = () => (
     caption="Active shipments"
     data={shipments}
     columns={shipmentColumns}
-    cellTemplates={cellTemplates}
+    cellTemplateMap={cellTemplates}
     selectable
     selectedIds={new Set(['s1', 's4'])}
     sortKey="ref"
@@ -101,7 +101,7 @@ export const Paginated = () => (
     caption="Shipment backlog"
     data={backlog}
     columns={backlogColumns}
-    cellTemplates={cellTemplates}
+    cellTemplateMap={cellTemplates}
     pageSize={5}
     clientSort
     bordered

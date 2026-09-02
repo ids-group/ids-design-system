@@ -151,9 +151,13 @@ for (const tag of [...componentTags].sort()) {
 // The exceptions are real and deliberate: a child component appears inside its parent's
 // preview and has none of its own. They are listed rather than inferred, so adding a
 // component cannot quietly join them.
+// ModalConfirm is the other kind of exception: it declares no inputs at all and reads its content
+// from an injected MODAL_CONFIRM_DATA token, so ModalService.confirm() is the only thing that can
+// build one. There is nothing declarative to preview — its old preview passed six props the
+// component never had, and the card rendered an empty dialog.
 const PREVIEW_EXEMPT = new Set([
   'AccordionItem', 'CalendarDay', 'DescriptionItem', 'ListItem', 'MenuItem',
-  'SidenavGroup', 'SidenavItem', 'Tab', 'TimeColumns',
+  'ModalConfirm', 'SidenavGroup', 'SidenavItem', 'Tab', 'TimeColumns',
   'TimelineItem', 'TooltipPanel',
 ]);
 const previewNames = new Set(

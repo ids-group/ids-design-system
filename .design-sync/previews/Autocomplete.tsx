@@ -84,7 +84,7 @@ export const OpenFiltered = () => (
   <div style={col}>
     <div>
       <span style={fieldLabel}>Service level</span>
-      <Autocomplete placeholder="Search services…" allowCreate query="Next day" open options={services} />
+      <Autocomplete placeholder="Search services…" allowCreate options={services} />
     </div>
   </div>
 );
@@ -94,7 +94,7 @@ export const OpenGrouped = () => (
   <div style={col}>
     <div>
       <span style={fieldLabel}>Destination depot</span>
-      <Autocomplete placeholder="Search depots…" value="bhx" open optionGroups={depotGroups} />
+      <Autocomplete placeholder="Search depots…" value="bhx" options={depotGroups} />
     </div>
   </div>
 );

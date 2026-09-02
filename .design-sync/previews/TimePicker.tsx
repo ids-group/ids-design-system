@@ -32,7 +32,6 @@ export const OpenSingle = () => (
       ariaLabel="Departure time"
       value="14:30"
       hint="Trunk departs Manchester Trafford."
-      openSegment="single"
     />
   </div>
 );
@@ -45,7 +44,6 @@ export const OpenTwelveHour = () => (
       format="12h"
       value="14:30"
       minuteStep={5}
-      openSegment="single"
     />
   </div>
 );
@@ -59,7 +57,6 @@ export const OpenRange = () => (
       value={['08:00', '16:30']}
       minuteStep={15}
       hint="Shift end cannot precede the start."
-      openSegment="end"
     />
   </div>
 );
