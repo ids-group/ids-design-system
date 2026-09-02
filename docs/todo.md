@@ -54,6 +54,7 @@ what makes these the cheapest thing on the board.
 
 **Bugs — something shipped misbehaves**
 
+- P2 · `package-lock.json` is three patches behind `bun.lock` across the Angular set — `npm ci` no longer resolves; delete it or bump the set
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
@@ -69,7 +70,7 @@ what makes these the cheapest thing on the board.
 - P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
 - P3 · A token named in prose is never checked against the tokens that exist — a removed one survived in two docs for months
-- P3 · `todo.md`'s index no longer accounts for its body — 43 lines against 64 items, and the gap needs a per-section reconciliation
+- P3 · `todo.md`'s index no longer accounts for its body — 44 lines against 65 items, and the gap needs a per-section reconciliation
 - P3 · Three edges left open on `ds-table` row expansion — an inert expand-all on an empty page, the lazy label, and a column header whose name flips
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
@@ -164,10 +165,10 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**43 open: 1 P1, 14 P2, 28 P3** — counted from the index by script, not incremented from the last
+**44 open: 1 P1, 15 P2, 28 P3** — counted from the index by script, not incremented from the last
 figure, which is how three summaries in this file had drifted apart by 2026-09-01, and drifted again
 by 2026-09-02. Ten are *Parked* awaiting a first consumer ask and two are Records, and the one P1 is
-a settled decision kept so it is not re-litigated, so the live board is **31 items — 6 Bugs, 9 Asks
+a settled decision kept so it is not re-litigated, so the live board is **32 items — 7 Bugs, 9 Asks
 and 16 Decisions**.
 
 **Every block is ordered P2 before P3**, with one deliberate exception: the Angular 22 line sits last
@@ -178,7 +179,7 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+**`# Bugs` holds seven.** The cheapest real win is still the warning status pair at 4.42:1 where AA
 asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
 counted — so one token step fixes all of them. Four of the others arrived on 2026-09-01 and were
 filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
@@ -187,7 +188,7 @@ nowhere so the scrim's inset is always its 40px fallback, one export leaving the
 region stuck on "Export ready" forever, then the two cosmetic ones. The sixth, the resize handle's
 unenforced `aria-valuemax`, was closed the same day it was filed.
 
-**The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-one live
+**The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
 items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
 
 **What came off this round:** the whole picker lane. Seven decisions, four follow-up changes, sixteen
@@ -261,6 +262,10 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
+- [ ] **[P2] `package-lock.json` has drifted three patches behind `bun.lock` across the whole Angular set, and `npm ci` no longer resolves — MEASURED 2026-09-02.** `infrastructure/scripts/README.md` says the file is kept for npm and Dependabot consumers, but it pins `@angular/core@21.2.14`, `@angular/cdk@21.2.12` and `@angular/cli@21.2.12` while the installed tree is `21.2.17` / `21.2.14` / `21.2.15`. `npm install --package-lock-only` fails outright: `@angular/elements@21.2.17` peers on `@angular/core@21.2.17` exactly, and the lock offers 21.2.14.
+  **It cannot be regenerated in isolation.** Doing so lets npm re-resolve every Angular package against `^21.2.0`, which lands on whatever is latest that day and diverges from `bun.lock` — and bun is what CI installs with (`_setup.sh`: `npm ci` fails under alpine/musl on the `@emnapi` optional deps). The two answers are to delete the file and move the five Bitbucket cache keys onto `bun.lock`, or to bump the whole Angular set to one version and regenerate both locks. Stas 2026-09-02: recorded, neither done.
+  **Not currently harmful:** `@angular/elements` is pinned to `21.2.17`, the version its peer requires against the installed core, so bun's tree is self-consistent and every build is green. What is lost is any consumer or bot that reads `package-lock.json`.
+
 - [ ] **[P2] `ds-split-button` paints its hover with a TEXT colour, and inside a status zone the label goes unreadable — MEASURED 2026-09-02.** `split-button.component.scss:7` defaults `--_split-button-bg-hover-color` to `var(--accent-strong)` while `:6` keeps the label on `var(--accent-on)`. `--accent-strong` is the family's readable ON-TINT colour — its own token description says "text on light surfaces" — and this is the **only** place in the library that uses it as a background; every other component hovers with `-hover`. In dark, `ds-color="success"` resolves it to `hsl(132deg 55% 62%)` and the white label lands at **1.87:1**; error is **2.46**, and in light warning is **3.78**. Reachable with the component's own default, `variant="primary"`.
   **This is a regression, not an inherited defect.** Before `--accent-strong` resolved for status families, that background was invalid-at-computed-value-time and computed to `transparent`, so the label sat on the page: illegible in light (1.00) and legible in dark (18.6). Making the pointer resolve fixed the three light cells and broke the three dark ones. Six cells, three each way.
   **The fix that was measured and not applied:** default the hover to `var(--accent-hover)`, which is the family base mixed 88% toward black in light and white in dark — so the hover follows the rest state instead of jumping to another colour. Contrast then tracks rest almost exactly: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31, against rest values of 4.83, 3.30 and 11.81. Deferred by Stas 2026-09-02: recorded rather than shipped.
@@ -701,7 +706,7 @@ A0 first, which touches none of it, or wait for that lane to land.
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
 
-- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-02: 43 index lines against 64 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
+- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-02: 44 index lines against 65 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
 
 - [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure.
 
