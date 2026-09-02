@@ -597,7 +597,7 @@ On first `show()` the service lazily creates a CDK overlay and mounts a `<ds-toa
 
 #### `BodyScrollLockService`
 
-`@Injectable({ providedIn: 'root' })`. Ref-counted lock on `document.body` scroll, shared by every overlay that covers the viewport — `ds-modal`, `ds-drawer`, `ds-bottom-sheet` all take one. Exported for an app that builds its own viewport-covering overlay.
+`@Injectable({ providedIn: 'root' })`. Ref-counted lock on `document.body` scroll, shared by every overlay that covers the viewport — `ds-modal`, `ds-drawer`, `ds-bottom-sheet` all take one. Exported since 0.7.0 so a consumer's own full-screen overlay can participate in the same lock instead of fighting it.
 - `lock(): void` — the FIRST call saves the current `body` overflow and hides it.
 - `unlock(): void` — only the LAST one restores it, so closing one overlay cannot re-enable page scroll under another still open above it.
 
