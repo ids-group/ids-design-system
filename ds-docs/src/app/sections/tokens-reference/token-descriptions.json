@@ -703,7 +703,7 @@
   "--ds-spinner-color": "Spinner spinning arc colour (defaults to --accent).",
   "--ds-spinner-track-color": "Spinner background track colour.",
   "--ds-split-button-bg-color": "Split button surface fill (defaults to --accent).",
-  "--ds-split-button-bg-hover-color": "Split button hover fill (defaults to --accent-strong).",
+  "--ds-split-button-bg-hover-color": "Split button hover fill (defaults to --accent-hover). Not --accent-strong: that is the on-tint colour for text on a light surface, and as a fill it leaves the label unreadable.",
   "--ds-split-button-divider-color": "Split button divider between main and caret segments.",
   "--ds-split-button-outline-bg-color": "Fill of the outlined split button. Transparent by default, so it adopts the surface it sits on.",
   "--ds-split-button-outline-border-color": "Outline split button border colour.",

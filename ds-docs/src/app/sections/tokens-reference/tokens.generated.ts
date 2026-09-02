@@ -5160,7 +5160,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-split-button-bg-hover-color",
         "value": "var(--accent-hover)",
-        "notes": "Split button hover fill (defaults to --accent-strong)."
+        "notes": "Split button hover fill (defaults to --accent-hover). Not --accent-strong: that is the on-tint colour for text on a light surface, and as a fill it leaves the label unreadable."
       },
       {
         "name": "--ds-split-button-divider-color",
