@@ -2988,9 +2988,10 @@ genuine gap worth reporting.
   role. The move onto that role reads a private `:host` token, which a CDK-portaled panel cannot see, so
   `border-radius` resolves to its initial `0` and the panel renders SQUARE. The new
   `--ds-time-picker-panel-radius` hook is inert for the same reason. Force the corner back with a global
-  `.time-panel.time-panel.time-panel { border-radius: var(--radius-md); }` — three of the class,
-  because two only ties with the component’s own shimmed rule and the tie goes to whichever comes
-  later. A rule scoped under `ds-time-picker` cannot reach the portaled panel at all. The trigger's radius is untouched.
+  `.cdk-overlay-container { --_time-picker-panel-radius: var(--radius-md); }`. It declares the
+  private token the panel already reads on an ancestor the panel DOES have, so it inherits down;
+  fighting the component’s own rule with a selector is not needed. A rule scoped under
+  `ds-time-picker` cannot reach the portaled panel at all. The trigger's radius is untouched.
 
 ### Fixed
 
