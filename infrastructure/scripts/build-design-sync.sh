@@ -69,7 +69,8 @@ echo "Committed upload tree matches the build"
 # how a stale copy written by the retired CLI kept showing 79 components, AppShell among them,
 # after the tree had moved on to 85.
 [ -f .design-sync/upload/_ds_manifest.json ] || { echo "Expected artifact missing: .design-sync/upload/_ds_manifest.json"; exit 1; }
-indexed=$(grep -c '"path":' .design-sync/upload/_ds_manifest.json)
+# `"path"` alone also matches brandFonts, which is how this first reported 316 against 314.
+indexed=$(grep -c '"path": "components/' .design-sync/upload/_ds_manifest.json)
 pages=$(find .design-sync/upload/components -name '*.html' | wc -l)
 [ "$indexed" = "$pages" ] || { echo "Manifest indexes $indexed card(s) against $pages page(s) in the tree"; exit 1; }
 echo "Manifest indexes all $indexed card(s)"
