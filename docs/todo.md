@@ -634,7 +634,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
   (gitignored).
 
 - [ ] **[P2] The boundary guard cannot be flipped to `'error'` as it shipped — five defects found by
-  the two-wave review, 2026-09-02 (`docs/two-wave-review.md`). All of them belong WITH A3, not
+  the two-wave review, 2026-09-02 (`docs/packaging-record-review-2026-09-02.md`). All of them belong WITH A3, not
   before it.**
   Nothing here is urgent while the rule is `'off'` (`npm run lint` reports 0 from it, verified), and
   nothing here changes a shipped API. But every one fires on the day someone follows the instruction

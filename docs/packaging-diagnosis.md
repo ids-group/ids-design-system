@@ -13,7 +13,7 @@
 > §10/§11 measurements) and `basic-advanced-split-audit.md` (the component-weight side).
 >
 > **Every figure below went through an adversarial review on 2026-09-02 and some of them changed —
-> `docs/two-wave-review.md` carries the evidence for each correction, and also for the five proposed
+> `docs/packaging-record-review-2026-09-02.md` carries the evidence for each correction, and also for the five proposed
 > corrections that did NOT survive.** The dated "CORRECTED"/"WITHDRAWN" blocks in this file are its
 > output.
 

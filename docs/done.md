@@ -6,6 +6,9 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ## Toasts announce, pause, slide and cap (2026-09-02)
 
+**One wave-2 accusation, from the review that produced this work, was itself false.** Reviewing the `ToastService.promise()` finding, wave 2 wrote that *"five wave-1 agents rediscovered a documented known gap and none of them said so — that is the shared blind spot."* Two of the five named it explicitly and one verified it: the timers axis wrote *"already acknowledged in `CHANGELOG.md:219-220`"* and the API axis *"`CHANGELOG.md:220-221` self-discloses the remaining hole … Verified true"*. The finding wave 2 made stands; its accusation about the other agents does not. Kept because it is the clearest reason the second wave needs validating too, rather than being treated as the tie-breaker.
+
+
 Four changes on the notification lane, all measured. Kept because three of them rest on platform facts that are not obvious from the code and that an "obvious" later fix would undo.
 
 **A screen reader was told nothing, for three of five variants.** `aria-live` sat on each toast, and a live region has to exist BEFORE its text arrives — a node created with its message already inside it is the one case NVDA and JAWS reliably do not announce; the region host was `role="region"`, a landmark. Announcements now go through the CDK `LiveAnnouncer`, whose region is built at service construction. SC 4.1.3 (AA).

@@ -2156,9 +2156,3 @@ number. This is the exact failure the two waves exist to catch, and it still got
 - `ImportExpression` / fail-open hardening - same
 - re-running attw with the tool installed
 - a `RuleTester` suite for the four ds rules
-
-## One wave-2 accusation was itself false
-
-Wave 2, reviewing the `ToastService.promise()` finding, wrote that *"five wave-1 agents rediscovered a documented known gap and none of them said so — that is the shared blind spot."* **Not true, and both counter-quotes are in wave 1's own output.** The timers axis wrote *"this is already acknowledged in `CHANGELOG.md:219-220` … so it is a known gap rather than a discovery"*, and the API axis wrote *"`CHANGELOG.md:220-221` self-discloses the remaining hole … Verified true"*. Two of the five named it explicitly and one verified it.
-
-The finding wave 2 made still stands. Its accusation about the other agents does not — it had not read the reports it was attacking closely enough. Recorded because a reader of this ledger would otherwise take that sentence at face value, and because it is the clearest example here of why the second wave needs validating too rather than being treated as the tie-breaker.
