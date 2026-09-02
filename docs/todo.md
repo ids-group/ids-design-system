@@ -58,6 +58,7 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 
 **Bugs — something shipped misbehaves**
 
+- P2 · **The table's bulk-actions bar paints its buttons the colour of the bar** — the rule styled a `.button` CLASS and stopped reaching anything when the button became a component; fixed on `feat/design-sync-last-mile`, unmerged
 - P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
 - P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
@@ -183,14 +184,14 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds seven** (counted 2026-09-02). The cheapest real win is still the warning status
-pair at 4.42:1 where AA asks 4.5: it reaches nine components plus `_status.scss` and
+**`# Bugs` holds seven** (counted 2026-09-02, twice). The cheapest real win is still the warning
+status pair at 4.42:1 where AA asks 4.5: it reaches nine components plus `_status.scss` and
 `_field-state.scss` — eleven files counted — so one token step fixes all of them. Four of the
 others arrived on 2026-09-01 and were filed under *Asks* first, which was wrong: nobody asked for
 them, they are wrong in code a consumer already reads. After the token step what is left is the
-split-button hover at 1.87:1, the confirm() that covers a toast, and the two cosmetic ones. Five
-are already closed: the resize handle's unenforced `aria-valuemax` the same day it was filed, the
-loading scrim's top edge, which now measures the header instead of assuming 40px, the export
+split-button hover at 1.87:1, the table's bulk-actions bar at 1.00:1, and the two cosmetic ones.
+Five are already closed: the resize handle's unenforced `aria-valuemax` the same day it was filed,
+the loading scrim's top edge, which now measures the header instead of assuming 40px, the export
 status, which no longer holds the live region once anything else has something to say, the two
 lockfiles, now level on every package either tool resolves freely, and the Angular set, moved off
 21.2.17 and out of the range of two high advisories.
