@@ -16,11 +16,17 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
 | 4 | `4-packaging-entry-points` | a consumer IS blocked on bundle size, and the modelled prize is about -59% of the DS's share of their initial bundle |
 | 5 | `5-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
-| 6 | `6-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
-| 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
-| 8 | `8-entry-point-shape` | which layout A3 actually builds — three real ng-packagr builds behind it |
-| 9 | `9-opt-in-seam` | 31.5 KB of opt-in surface, three ways to cut it, nothing blocking |
-| 10 | `10-rejected-with-numbers` | every idea this backlog has rejected, with the measurement that rejected it and what would reopen it |
+| 6 | `6-entry-point-shape` | which layout A3 actually builds — four real ng-packagr builds behind it |
+| 7 | `7-opt-in-seam` | ~31 KB of opt-in surface, three ways to cut it, nothing blocking |
+| 8 | `8-rejected-with-numbers` | every idea this backlog has rejected, with the measurement that rejected it and what would reopen it |
+| 9 | `9-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
+| 10 | `10-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+
+**Ranks 4-8 are one lane and are kept contiguous** — packaging, read in that order: the mechanism,
+the split question, the layout, the opt-in seam, then what was rejected and why. Scattering them
+across the queue made the reader jump 4, 5, 8, 9, 10 for one argument. Those five are written in
+Russian and share `deck.css`, which sits beside `ds.css` and carries the shell all five use; the
+other decks keep their own inline styles.
 
 **A `tool` here takes no number.** `backlog-board.html` is the only one left — it is read whenever
 rather than at a moment, so it stays unnumbered and sorts below the queue. A tool that is RUN rather

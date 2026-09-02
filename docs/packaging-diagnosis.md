@@ -807,7 +807,7 @@ real argument against copying AG Grid here, and it should be weighed rather than
 > fail. Irrelevant for an Angular ESM library consumed by a bundler, and it is the row `attw` would
 > have covered.
 >
-> The original section is kept below, struck, because deck 4 and deck 8 both cite it.
+> The original section is kept below, struck, because deck 4 and deck 6 both cite it.
 
 ### ~~`@arethetypeswrong/cli` answers the caveat that was open on three decks~~ (WITHDRAWN)
 
@@ -831,7 +831,7 @@ consumers get.
 ~~So **A3 as planned would break a consumer on legacy `moduleResolution: "node"`**~~ — **withdrawn, see
 the box above.** The mechanism described is real *if* the per-entry-point directory stubs are absent;
 ng-packagr emits them, so they are not. And the "caveat carried on decks 5 and 9" is itself wrong:
-`grep untested` finds it only on deck 4 and deck 8. Decks 5 and 9 never carried it.
+`grep untested` finds it only on deck 4 and deck 6. Decks 5 and 7 never carried it.
 
 **And it is fully fixed by a generated `typesVersions` map:**
 
