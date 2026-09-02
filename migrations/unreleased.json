@@ -145,7 +145,7 @@
     "ds-banner's close button gained aria-label=\"Dismiss\", which ds-toast and ds-alert already carried. NO ACTION.",
     "A toast body now wraps an unbroken token instead of overflowing the pill. NO ACTION.",
     "The toast region's hover/focus pause is derived from both sources rather than latched, so tabbing out of a region the pointer still covers does not resume, focus moving inside it is not a leave, and a toast that becomes visible while paused is banked rather than counted. A resumed toast always gets at least 600ms. NO ACTION.",
-    "ds-config and the card types moved inside the library. Every symbol still reaches the package root unchanged and no import path of yours can have named the old location. NO ACTION."
+    "ds-config and the card types moved inside the library. Every symbol still reaches the package root unchanged, and no import path of yours could have named the old location: there is one entry point and no subpath resolves into lib/. NO ACTION."
   ],
   "deleteList": []
 }
