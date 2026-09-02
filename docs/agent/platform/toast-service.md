@@ -5,7 +5,7 @@ Section: Services
 
 `@Injectable({ providedIn: 'root' })`. Inject and call:
 - `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error' | 'loading', dismissible?, icon?, action?: ToastAction, durationMs? = 5000 }`. Returns `{ id, dismiss() }`. `durationMs: 0` (and any negative) means it never auto-dismisses, and it is counted from the moment the toast becomes VISIBLE, not from the call — a toast queued behind `maxVisible` keeps its full time on screen. A `loading` toast is forced to 0 and discards a supplied `durationMs`.
-- `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a non-dismissible `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), which cannot be overridden and which `dismissAll()` does not cancel.
+- `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), counted from the moment it becomes visible and not overridable; `dismissAll()` cancels it like any other.
 - `dismissAll(): void`
 
 Defaults are set with two injection tokens, NOT through `provideDsConfig`:
