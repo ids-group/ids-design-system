@@ -35,12 +35,15 @@ Probe: a throwaway Angular 21 workspace resolving `@ids-group-ltd/ids-design-sys
 runtime array so the compiler cannot drop them. Scenario sources are generated, not
 hand-written, so the "everything" rung is exhaustive by construction.
 
+**Units: KB here means ÷1000 throughout.** Earlier drafts mixed ÷1000 and ÷1024 inside single
+comparisons (18.9 KiB against 18.2 kB, most visibly); every figure in this document is now SI.
+
 | Rung | JS raw | JS gzip | Δ gzip vs bare Angular |
 |---|---|---|---|
 | Bare Angular app, no DS | 92 686 B | 30 646 B | — |
 | `+ ds-divider` (cheapest declarable) | 108 243 B | 36 215 B | **+5.6 KB** |
 | `+ ds-button` | 200 941 B | 62 733 B | +32.1 KB |
-| `+ ds-table` | 543 124 B | 148 882 B | +118.3 KB |
+| `+ ds-table` | 543 124 B | 148 882 B | +118.2 KB |
 | Prototype kit — 43 components, no table | 645 558 B | 159 409 B | +128.8 KB |
 | Prototype kit **+ `ds-table`** | 776 546 B | 191 431 B | +160.8 KB |
 | 11 heaviest components only | 741 977 B | 191 616 B | +161.0 KB |
@@ -61,7 +64,7 @@ the component. Style weight tree-shakes exactly as well as code weight.
 - **Cost of the 52 components a prototype does not use: 18.2 KB gzip**
   (209 603 − 191 431). This is the entire size of the problem the split is meant to solve.
 - **Marginal cost of `ds-table` in an app that already uses the rest: 32.0 KB gzip**
-  (191 431 − 159 409) — *not* the 118.3 KB it measures in isolation. The isolation figure
+  (191 431 − 159 409) — *not* the 118.2 KB it measures in isolation. The isolation figure
   is 3.7× too high because it bills the table for `ds-button`, `ds-menu`, `ds-popover`,
   `ds-pagination`, `ds-skeleton`, `ds-loading-overlay` and the icon set, which the rest of the
   app was paying for anyway.
@@ -88,7 +91,11 @@ future change does not silently break them:
 
 ## 3. Everything proposed for `ids-data-grid` already ships in `ds-table`
 
-Verified in source on 0.11.1. The "advanced grid" wish list, item by item:
+**Verified in source on 0.11.1, and the line numbers below have since drifted.** Re-checked
+2026-09-02: **every symbol named here still exists**, but ten of the twenty-five `file:line`
+citations no longer land, by −1 near the top of `table.component.ts`, −13 mid-file and +78…+86
+below line 1300 — the signature of insertions, not of removals. Read the symbol, not the line.
+The wish list, item by item:
 
 | Asked for | Already in `ds-table` |
 |---|---|

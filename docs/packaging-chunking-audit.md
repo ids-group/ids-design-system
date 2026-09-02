@@ -338,6 +338,37 @@ The third row of the table above it carries the same defect: its "0 of 11 heavy 
 initial bundle" is arithmetic on an empty set — that scenario never imports them and has no lazy chunk
 for them to be in. `Lazy chunk: —` is the tell that it is a different experiment.
 
+### What the fixtures do NOT establish — recorded 2026-09-02
+
+An adversarial pass over the measurement method found six gaps that no number here closes. They do
+not overturn any conclusion; they bound what the numbers can be used for.
+
+- **No probe records which library build it ran against.** `run.sh` never rebuilds `dist/ds`, and
+  `src/lib` changed five times inside the 0.11.1 window — including a toast fix, `fbf475e7`, which
+  landed between the two rows of the anchor table in `packaging-diagnosis.md`. Those two rows cannot
+  be verified as same-build.
+- **No probe exercises the `exports` map.** Every fixture app resolves the library through tsconfig
+  `paths`, which bypasses `exports` entirely, so every deep-specifier result would be identical if
+  the map were absent or wrong. The types half of that gap was closed separately — see the node10
+  box in `packaging-diagnosis.md` — with a real `node_modules` and a failing negative control.
+- **"Initial" is computed by grepping `main.js` only.** `run-placement.sh` scans `main.js` for
+  `from"./chunk-…"`, so a chunk statically imported by *another* eager chunk is missed, and a
+  bindingless `import"./chunk-X.js"` does not match the pattern. Both under-count initial and
+  over-count lazy, and both get likelier as chunk count rises — which is exactly the per-component
+  arms the recommendation rests on. The Angular builder prints the correct figure in every log and
+  was not used.
+- **Gzip is taken over the concatenation** (`cat dist/browser/*.js | gzip -9`), while real transfer
+  gzips each file separately. Measured on a surviving two-file bundle: 33 389 separate vs 33 078
+  concatenated, 311 B understated, biased toward multi-file arms.
+- **Recorded gzip does not reproduce exactly.** `define-probe`'s raw sizes reproduce to the byte;
+  its gzip figures come back 34 963 / 32 979 against the recorded 34 957 / 32 969, and no gzip tool
+  or version is recorded anywhere. Claims at 15-byte and 38-byte precision sit under that noise.
+- **"0 bytes of CSS" is a control that cannot fail.** No probe `angular.json` has a `styles` array,
+  so `CSS=0` is printed under every condition, including one where tree-shaking failed completely.
+
+The graph numbers are no longer in this class: `tools/entry-point-graph.mjs` computes the groups,
+cross-group statements and SCCs on demand.
+
 ### (b) Does the graph partition? Yes — two trivial runtime cycles, both already siblings
 
 > **Scope, and read it before the numbers:** this section counts **runtime edges only**. With
