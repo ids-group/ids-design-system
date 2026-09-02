@@ -14,7 +14,9 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 **Measured, with the before/after as the control.** Same probe, same page, opposite answers: an action toast (which no longer auto-dismisses, so it survives a route change), then `confirm()`. Before, the topmost element at the toast's centre was `div.cdk-overlay-backdrop`. After, it is the toast's own content, `opacity: 1`, still full height, and focus stayed inside the confirm — so the raise costs neither a flicker nor the focus.
 
-Not measured, stated from the code: that a NON-scrimmed overlay does not trigger a raise. The observer returns early unless an added node is or contains a backdrop, and a tooltip pane has none.
+**Both halves measured**, by counting real `showPopover()` calls on the live host: a pane with no backdrop — the shape a dropdown or tooltip adds — produces **0** raises, the same pane with a backdrop produces **1**. The zero is the control; without it the one proves nothing.
+
+The approach is also the only one the platform offers, checked against the sources rather than assumed: z-index does not apply in the top layer at all, and neither MDN nor the Popover API documents an operation for raising an already-open popover — MDN sends the reader to browser testing. CDK uses `popover="manual"`, which is not in the auto stack, so nothing raises it for us.
 
 Underneath this sits a larger finding kept in `todo.md`: of the seven `--layer-*` values above 1000, only the toast lift targets an overlay HOST. `--layer-tooltip`, `--layer-popover` and the dropdown panel's are set on content INSIDE `.cdk-overlay-pane`, itself a stacking context, so they are inert across overlays. The scale documents an order the platform no longer decides.
 
