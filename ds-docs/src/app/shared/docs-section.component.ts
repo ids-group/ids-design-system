@@ -5,7 +5,7 @@ import {
   computed,
   input,
 } from '@angular/core';
-import { COMPONENT_API } from './component-api.generated';
+import { COMPONENT_API, SERVICE_API } from './component-api.generated';
 import { DocsComponentMetaComponent } from './docs-component-meta.component';
 import { DocsApiTableComponent } from './docs-api-table.component';
 
@@ -30,6 +30,9 @@ export class DocsSectionComponent {
    *  the Button section adds `button-group`, `toggle-button`; layout-primitives
    *  adds the whole `layout` family). The anchor's own component stays primary. */
   readonly apiKeys = input<readonly string[] | null>(null);
+  /** Service class names to append beyond the ones this section's own folder
+   *  declares — for a service whose folder is no section's anchor. */
+  readonly serviceKeys = input<readonly string[] | null>(null);
 
   /** The anchor's own component, shown under the title + as the first table. */
   protected readonly primaryKey = computed(() => {
@@ -59,5 +62,24 @@ export class DocsSectionComponent {
     }
 
     return keys;
+  });
+  /** The services this section documents: every one declared in the anchor's own
+   *  folder, plus the explicit `serviceKeys` extras. */
+  protected readonly serviceNames = computed(() => {
+    if (!this.api()) {
+      return [];
+    }
+
+    const anchor = this.anchor();
+    const names = Object.values(SERVICE_API)
+      .filter((service) => service.key === anchor)
+      .map((service) => service.className);
+    for (const name of this.serviceKeys() ?? []) {
+      if (SERVICE_API[name] && !names.includes(name)) {
+        names.push(name);
+      }
+    }
+
+    return names;
   });
 }

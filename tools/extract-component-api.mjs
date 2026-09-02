@@ -278,7 +278,11 @@ function exportedClassNames() {
     ...readFileSync(publicApi, 'utf8').matchAll(/from '\.\/(lib\/[^']+)'/g),
   ]
     .map(([, relative]) => join(ROOT, `src/${relative}`))
-    .map((base) => (base.endsWith('.ts') ? base : join(base, 'index.ts')))
+    // A specifier can be a folder barrel OR a bare module (`./lib/overlay/body-scroll-lock.service`).
+    // Only the folder form was tried, so a module-specifier export resolved to nothing.
+    .flatMap((base) =>
+      base.endsWith('.ts') ? [base] : [`${base}.ts`, join(base, 'index.ts')],
+    )
     .filter((candidate) => existsSync(candidate));
   const names = new Set();
   for (const barrel of barrels) {
@@ -294,6 +298,13 @@ function exportedClassNames() {
           ?.trim();
         if (name) names.add(name);
       }
+    }
+    // A `export * from './lib/overlay/body-scroll-lock.service'` names the FILE, so its
+    // own `export class` never appears inside braces and the class read as unexported.
+    for (const [, name] of source.matchAll(
+      /export\s+(?:abstract\s+)?class\s+([A-Za-z_$][\w$]*)/g,
+    )) {
+      names.add(name);
     }
   }
 
@@ -369,6 +380,111 @@ for (const c of components)
   for (const p of [...c.inputs, ...c.outputs])
     if (!p.description) undescribed.push(`${c.key}.${p.name}`);
 
+// ── services ────────────────────────────────────────────────────────────────
+// A service has no selector, so the component walk above drops it — which left
+// ToastService and ModalService, the two APIs a consumer calls by hand, with no
+// table anywhere in the docs.
+function isInjectable(node, sf) {
+  const decorators = ts.canHaveDecorators(node)
+    ? (ts.getDecorators(node) ?? [])
+    : [];
+
+  return decorators.some(
+    (dec) =>
+      ts.isCallExpression(dec.expression) &&
+      dec.expression.expression.getText(sf) === 'Injectable',
+  );
+}
+
+const LIFECYCLE = new Set([
+  'ngOnInit',
+  'ngOnDestroy',
+  'ngOnChanges',
+  'ngAfterViewInit',
+  'ngDoCheck',
+]);
+
+function isPublicMember(member) {
+  const flags = ts.getCombinedModifierFlags(member);
+  if (flags & (ts.ModifierFlags.Private | ts.ModifierFlags.Protected)) {
+    return false;
+  }
+  const name = member.name?.getText?.();
+
+  return Boolean(name) && !name.startsWith('_') && !name.startsWith('#');
+}
+
+function serviceMembers(node, sf) {
+  const members = [];
+  for (const member of node.members) {
+    if (!isPublicMember(member)) continue;
+    const name = member.name.getText(sf);
+    if (LIFECYCLE.has(name)) continue;
+
+    if (ts.isMethodDeclaration(member)) {
+      const params = member.parameters
+        .map((parameter) => parameter.getText(sf).replace(/\s+/g, ' '))
+        .join(', ');
+      const returns = member.type ? member.type.getText(sf) : null;
+      members.push({
+        name,
+        kind: 'method',
+        signature: `${name}(${params})`,
+        type: returns,
+        description: jsDocText(member),
+      });
+    } else if (ts.isPropertyDeclaration(member)) {
+      members.push({
+        name,
+        kind: 'property',
+        signature: name,
+        type: member.type ? member.type.getText(sf).replace(/\s+/g, ' ') : null,
+        description: jsDocText(member),
+      });
+    }
+  }
+
+  return members;
+}
+
+const services = [];
+for (const file of walkFiles(LIB, '.service.ts')) {
+  const sf = parse(file);
+  sf.forEachChild((node) => {
+    if (!ts.isClassDeclaration(node) || !node.name) return;
+    if (!isInjectable(node, sf)) return;
+    if (!exported.has(node.name.text)) return;
+    const ed = editorial.$services?.[node.name.text] ?? {};
+    services.push({
+      key: basename(dirname(file)),
+      className: node.name.text,
+      importName: node.name.text,
+      importPath: ed.importPath ?? importPathDefault,
+      summary: ed.summary ?? jsDocText(node) ?? null,
+      members: serviceMembers(node, sf).map((m) => ({
+        ...m,
+        description: m.description || ed.members?.[m.name] || '',
+      })),
+    });
+  });
+}
+services.sort((a, b) => a.className.localeCompare(b.className));
+
+const serviceMap = {};
+for (const service of services) serviceMap[service.className] = service;
+
+// Same "shown and flagged" contract the token reference uses: a member missing its
+// description or its return type still appears, and the run says so, rather than the
+// gap being silently absent from the docs.
+const serviceGaps = [];
+for (const service of services)
+  for (const member of service.members) {
+    if (!member.description)
+      serviceGaps.push(`${service.className}.${member.name} — no description`);
+    if (member.type === null)
+      serviceGaps.push(`${service.className}.${member.name} — no declared type`);
+  }
+
 // Bare folder key goes to the component whose selector is `ds-<folder>`
 // (strip [ ] for attribute selectors before comparing); every other
 // same-folder component keeps the "<folder>:<ClassName>" key. If no
@@ -399,16 +515,21 @@ const banner =
   '// Run `npm run extract-component-api`. Editorial text is baked in from\n' +
   '// component-api-descriptions.json at extract time.\n\n';
 const body =
-  "import type { ComponentApi } from './component-api.types';\n\n" +
+  "import type { ComponentApi, ServiceApi } from './component-api.types';\n\n" +
   'export const COMPONENT_API: Record<string, ComponentApi> = ' +
   JSON.stringify(map, null, 2) +
+  ';\n\n' +
+  'export const SERVICE_API: Record<string, ServiceApi> = ' +
+  JSON.stringify(serviceMap, null, 2) +
   ';\n';
 
 writeFileSync(OUT, banner + body);
 console.log(
-  `wrote component-api.generated.ts — ${components.length} components, ${undescribed.length} undescribed props`,
+  `wrote component-api.generated.ts — ${components.length} components, ${services.length} services, ${undescribed.length} undescribed props`,
 );
 if (internal.length)
   console.log(`  left out, not exported: ${internal.join(', ')}`);
+if (serviceGaps.length)
+  console.warn('service API gaps:\n  ' + serviceGaps.join('\n  '));
 if (undescribed.length)
   console.warn('undescribed:\n  ' + undescribed.join('\n  '));

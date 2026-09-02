@@ -32,4 +32,8 @@
       <docs-api-table [key]="key" />
     </div>
   }
+
+  @for (name of serviceNames(); track name) {
+    <docs-api-table [service]="name" />
+  }
 </section>

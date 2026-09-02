@@ -29,3 +29,26 @@ export interface ComponentApi {
   readonly inputs: readonly ApiProp[];
   readonly outputs: readonly ApiProp[];
 }
+
+export type ApiMemberKind = 'method' | 'property';
+
+export interface ApiMember {
+  readonly name: string;
+  readonly kind: ApiMemberKind;
+  /** `show(opts: ToastOptions)` for a method, the bare name for a property. */
+  readonly signature: string;
+  /** Return type for a method, declared type for a property; null where the source
+   *  leaves it to inference, which the extract run reports as a gap. */
+  readonly type: string | null;
+  readonly description: string;
+}
+
+export interface ServiceApi {
+  /** The service's folder, so a docs section can find its services from its own anchor. */
+  readonly key: string;
+  readonly className: string;
+  readonly importName: string;
+  readonly importPath: string;
+  readonly summary: string | null;
+  readonly members: readonly ApiMember[];
+}

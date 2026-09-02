@@ -1,4 +1,10 @@
-import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import {
+  DestroyRef,
+  Injectable,
+  type Signal,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -52,7 +58,7 @@ export class LayoutScrollService {
    * ask the layout for it instead of guessing the layout's internal markup with
    * `document.querySelector`.
    */
-  readonly scroller = this.container.asReadonly();
+  readonly scroller: Signal<Element | null> = this.container.asReadonly();
 
   // null = restoration off, which is the default.
   private restoreTimeoutMs: number | null = null;
