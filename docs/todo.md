@@ -1,5 +1,52 @@
 # DS — improvements backlog
 
+## The hex readout rolls its glyphs like a mechanical board (recorded 2026-09-02, Stas)
+
+- [ ] **[P3] Dragging the picker retypes the hex value instantly; each glyph should ROLL to its new
+  value instead.** The direction is specified, not a preference to re-derive: an INCREASE sends the
+  old glyph DOWN and brings the new one in from ABOVE (`2` → `4` — the 2 leaves downward, the 4
+  arrives on top of it), a DECREASE reverses it (`7` → `2` — the 7 leaves upward, the 2 arrives from
+  below).
+
+  **That direction is a split-flap board, not an odometer drum, and the references disagree with each
+  other.** A car odometer counts up by rolling digits up from BELOW — the opposite of what was asked —
+  so building this from the odometer write-ups gets the direction backwards. Take the DIRECTION from
+  the flap and the MOTION from the drum: a sliding strip, because the flap implementations
+  (hello-mat.com's design-engineering write-up, `jayKayEss/react-split-flap-effect`) animate a hinged
+  fold with `clip-path` halves, `rotateX` and `backface-visibility: hidden`, and a fold is not what
+  was asked for — "как в старых аналоговых счетчиках", a thing that slides.
+
+  **Hex is ONE ordered alphabet, which is why letters need no special case.** Compare the two glyphs
+  by index in `0123456789ABCDEF` and "increase" is defined across the digit/letter boundary for free:
+  `9` → `A` is an increase, `A` → `9` a decrease, and the digit↔letter flow asked for falls out of the
+  same comparison as `2` → `4`. Each of the six positions in `#RRGGBB` decides its own direction from
+  its own pair; nothing carries between positions, so `F` → `0` is simply a decrease.
+
+  **Two glyphs per position, never a drum of sixteen** — the outgoing one and the incoming one, and
+  the incoming becomes the resident once the transition settles.
+
+  **Clipped to the box it already occupies.** `overflow: hidden` on the per-glyph slot, nothing grows
+  the readout, and a glyph half outside the rectangle with its other half invisible is explicitly
+  fine.
+
+  **Two open questions, and they are what makes this bigger than it looks:**
+
+  - **The panel's readout is an `<input>`** — `color-picker.component.html:91` binds
+    `[value]="displayHex()"`, and per-glyph animation cannot live inside an input's value, because
+    there are no element boundaries to animate. The trigger's `<span class="hex">` (line 19) can carry
+    it. So either the effect is trigger-only, or the input needs an animated layer over it that hides
+    while focused. Both surfaces read the same `displayHex()`; pick one before building.
+  - **A drag emits values faster than any animation finishes.** Every `pointermove` produces a new
+    hex, so a glyph will be mid-flight when its next value lands. That forces a `transition` on
+    `translateY` rather than `@keyframes`: a transition retargets from wherever the glyph currently
+    is, keyframes restart from the top.
+
+  **Three things cheap to forget.** The slot cannot jitter as glyphs swap, and
+  `font-variant-numeric: tabular-nums` fixes the digits while doing NOTHING for `A`–`F`, so each slot
+  needs a fixed width of its own. `prefers-reduced-motion` degrades to today's instant swap. And two
+  glyph copies in the DOM read as "24" mid-transition, so the animated glyphs go `aria-hidden` behind
+  one accessible text source.
+
 ## Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)
 
 - [ ] **[P3] Five thousand options render five thousand rows.** No picker uses `cdk-virtual-scroll`,
@@ -78,6 +125,7 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 - P3 · Three edges left open on `ds-table` row expansion — an inert expand-all on an empty page, the lazy label, and a column header whose name flips
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
+- P3 · **The colour picker's hex readout should ROLL each glyph** to its new value, split-flap direction — Stas 2026-09-02; researched, and the panel's readout being an `<input>` is the open question
 
 **Decisions — waiting on Stas, not on work**
 
