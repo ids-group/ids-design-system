@@ -10,15 +10,16 @@ import { DS_TOAST_POSITION, DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
-// Must match the leave transition on :host in toast.component.scss (--duration-base).
+// Must match the leave transition in toast.component.scss, which a consumer can
+// retune via --ds-toast-leave-duration — raise that and the node is pulled from the
+// DOM mid-fade, lower it and an invisible toast holds its slot until this elapses.
 const LEAVE_DURATION_MS = 180;
 
 // A toast whose clock ran out while the pointer was over it should not vanish the
 // instant the pointer leaves — the reader gets this much to see it go.
 const MIN_RESUME_MS = 600;
 
-// An uncapped stack can cover the viewport. Material's answer is one at a time; five
-// is the compromise this library takes, and a consumer can still lift it.
+// Material shows one snackbar at a time; five is this library's compromise.
 const DEFAULT_MAX_VISIBLE = 5;
 
 @Component({
@@ -81,13 +82,12 @@ export class ToastRegionComponent {
     this.slideNeighbours(before);
   }
 
-  /** FLIP, because the alternative is worse here. A new toast is inserted into a flex
-   *  column, so the browser has already MOVED its neighbours by the time we run: they
-   *  jump. Rather than lift the stack out of the document — which would collapse the
-   *  region to zero height and, since it lives in a CDK overlay pane sized to its
-   *  content, take the hit area with it — each neighbour is put back where it was with
-   *  a transform, then released to 0 with a transition. Compositor-only, and a second
-   *  toast arriving mid-slide retargets the same transition instead of fighting it. */
+  /** FLIP: the insert has already moved the neighbours, so each is put back with a
+   *  transform and released to 0 with a transition.
+   *
+   *  Positioning the stack absolutely instead — the usual recipe — collapses the region
+   *  to zero height, and it lives in a CDK pane sized to its content, so that takes the
+   *  hit area with it. */
   private slideNeighbours(before: Map<number, number>): void {
     if (!before.size) {
       return;
@@ -174,10 +174,7 @@ export class ToastRegionComponent {
     this.startedAt.delete(id);
   }
 
-  /** A toast holding the pointer or the keyboard is being read or acted on, so its
-   *  clock stops. Without this the only control for an `action` can be destroyed
-   *  while the user is reaching for it — and the region sits last in tab order, so
-   *  reaching it takes longer than the default five seconds on any real page. */
+  /** A toast holding the pointer or the keyboard is being read, so its clock stops. */
   protected onHover(entered: boolean): void {
     this.hovered = entered;
     this.syncPause();
@@ -227,12 +224,9 @@ export class ToastRegionComponent {
     }
   }
 
-  /** Replace fields of an already-visible or queued toast in place.
-   *
-   *  Patching `durationMs` restarts the clock, and for a QUEUED toast it only takes
-   *  effect on promotion — which is the whole point: `promise()` patches a loading
-   *  toast (duration 0) into a settled one, and if that toast is still behind the cap
-   *  its new duration must not start burning down while it is invisible. */
+  /** Replace fields of an already-visible or queued toast in place. Patching
+   *  `durationMs` restarts the clock, and on a QUEUED toast it takes effect only on
+   *  promotion — otherwise a duration would burn down while the toast is invisible. */
   update(
     id: number,
     patch: Partial<

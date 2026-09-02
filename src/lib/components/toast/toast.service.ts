@@ -24,9 +24,7 @@ import type {
 const SETTLED_SUCCESS_MS = 4000;
 const SETTLED_ERROR_MS = 6000;
 
-// Long enough to gather a synchronous burst into one announcement, short enough that a
-// single toast is not perceptibly late. It only has to outlast the loop that fires the
-// burst, not any human interval.
+// Has to outlast the loop that fires a burst, not any human interval.
 const ANNOUNCE_COALESCE_MS = 120;
 
 @Injectable({ providedIn: 'root' })
@@ -46,9 +44,9 @@ export class ToastService {
     this.ensureRegion();
     const id = this.nextId++;
     const variant = opts.variant ?? 'info';
-    // Loading toasts never auto-dismiss (0 = indefinite). Nor does one carrying an
-    // `action`: that button is the only way to take the action, the region sits last
-    // in tab order, and a keyboard user cannot reach it inside five seconds.
+    // An `action` toast cannot expire: that button is the only way to take the action,
+    // the region is the last child of `body`, and a keyboard user cannot cross a page
+    // to reach it inside five seconds.
     const durationMs =
       variant === 'loading' || opts.action ? 0 : (opts.durationMs ?? 5000);
     const entry: ToastEntry = {
@@ -87,10 +85,9 @@ export class ToastService {
       durationMs: 0,
     });
 
-    // The settled duration is handed to the REGION rather than run here, because only
-    // the region knows when the toast becomes visible. Run from here it burned down
-    // while the toast was still queued behind `maxVisible`, and the result was spliced
-    // out of the queue before anyone saw it.
+    // The duration goes to the region for the reason given on `add()` above: run from
+    // here it burns down while the toast is still queued, and the result is spliced out
+    // of the queue unseen.
     source.then(
       (value) => {
         const successBody =
@@ -123,20 +120,14 @@ export class ToastService {
     return source;
   }
 
-  /** A toast is a status message, so a reader has to be told about it without being
-   *  moved. The announcement does NOT ride the visual toast: `aria-live` on an element
-   *  created together with its text announces nothing in NVDA or JAWS, which is three
-   *  of the five variants. The CDK announcer's region is built once, at construction,
-   *  and only its text changes — the shape screen readers actually fire on.
+  /** The announcement must NOT ride the visual toast: `aria-live` on an element created
+   *  together with its text announces nothing in NVDA or JAWS. The CDK announcer's region
+   *  exists from construction and only its text changes.
    *
-   *  A burst is COALESCED into one announcement rather than queued, and that is not a
-   *  preference. `LiveAnnouncer.announce()` clears the region synchronously and writes
-   *  the text on a 100ms timeout, resolving its promise inside that callback — so even
-   *  a strictly serialised chain loses everything but the last message: measured, each
-   *  of five landed and was cleared again in the same millisecond, before a
-   *  MutationObserver could see it, let alone a reader. Awaiting the promise cannot fix
-   *  that, because it resolves before the write has been observed. One region change
-   *  carrying every message is the only shape that survives. */
+   *  Serialising a burst does not work either — `announce()` clears the region and writes
+   *  on a timeout, resolving its promise inside that callback, so the next message wipes
+   *  the previous one before anything can read it. One region change carrying every
+   *  message is the only shape that survives. */
   private announce(variant: ToastVariant, body: string, title?: string): void {
     const spoken = [title, body].filter(Boolean).join('. ');
     if (!spoken) {
@@ -182,18 +173,12 @@ export class ToastService {
     this.keepAboveScrims();
   }
 
-  /** Keeps the toast above a modal, drawer, confirm or bottom sheet opened AFTER it.
+  /** Keeps the toast above a scrim opened AFTER it. `--layer-toast` cannot: CDK gives
+   *  every overlay host `popover="manual"`, and the browser's top layer paints in the
+   *  order things were shown, ignoring z-index. Re-showing the host is the only lever.
    *
-   *  z-index cannot do this. CDK 21 gives every overlay host `popover="manual"` and
-   *  calls `showPopover()`, which puts it in the browser's top layer — and the top
-   *  layer paints strictly in the order things were shown, ignoring z-index and
-   *  stacking contexts entirely. So `--layer-toast` is inert against another overlay,
-   *  and a scrim opened later covers the toast and swallows its action button.
-   *  Re-showing the toast host is what moves it back to the front.
-   *
-   *  Only SCRIMMED overlays trigger it. A tooltip or a dropdown neither covers the
-   *  toast meaningfully nor eats a click, and the documented scale deliberately puts
-   *  `--layer-tooltip` above the toast — re-raising over those would contradict it. */
+   *  Scrimmed overlays only — the published scale puts `--layer-tooltip` above the
+   *  toast, so raising over a tooltip would contradict our own documentation. */
   private keepAboveScrims(): void {
     const host = this.overlayRef?.hostElement;
     const container = host?.parentElement;
@@ -213,13 +198,12 @@ export class ToastService {
       if (!scrimAppeared || !host.isConnected) {
         return;
       }
-      // hide-then-show in one task: the top layer has no "raise", and nothing paints
-      // between the two calls.
+      // The top layer has no "raise"; nothing paints between these two calls.
       try {
         host.hidePopover();
         host.showPopover();
       } catch {
-        // The host may not be showing — nothing to raise, and nothing to report.
+        // no-empty needs a body: the host may not be showing, and that is fine
       }
     }).observe(container, { childList: true, subtree: true });
   }
