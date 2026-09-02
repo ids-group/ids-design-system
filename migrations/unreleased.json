@@ -19,6 +19,67 @@
       "restore": null,
       "note": "promise<T> declared a type parameter and then threw it away, because the messages interface hardcoded unknown. Every call site that wanted the resolved value had to cast.",
       "action": "Annotate as ToastPromiseMessages<T> where you name the type; inline object literals need no change."
+    },
+    {
+      "id": "toast-message-input-renamed-body",
+      "kind": "input-rename",
+      "old": "message",
+      "new": "body",
+      "appliesWhen": "You render <ds-toast> yourself and bind message. ToastService callers pass body already and change nothing.",
+      "pitfall": "An unknown input on a component is a template error under strictTemplates, but a plain attribute is not - message=\"…\" without brackets keeps compiling and silently renders an empty toast.",
+      "searchHints": [
+        "ds-toast",
+        "message"
+      ],
+      "surface": "template",
+      "detect": [
+        "[message]",
+        "message="
+      ],
+      "verify": "A hand-placed <ds-toast [body]=\"…\"> renders its text; nothing in your templates still binds message on ds-toast.",
+      "restore": null,
+      "note": "ToastOptions and ToastEntry always called the text body; only the component input said message, so one concept had two names either side of the same service.",
+      "action": "Rename the ds-toast input from message to body."
+    },
+    {
+      "id": "toast-border-tokens-gain-color",
+      "kind": "token-rename",
+      "old": "--ds-toast-border, --ds-toast-border-info, --ds-toast-border-success, --ds-toast-border-warning, --ds-toast-border-error",
+      "new": "--ds-toast-border-color, --ds-toast-border-color-info, --ds-toast-border-color-success, --ds-toast-border-color-warning, --ds-toast-border-color-error",
+      "appliesWhen": "You set any of the five anywhere - :root, a theme file, or a per-instance ds-toast block.",
+      "pitfall": "The old name simply stops resolving, and the declaration it sits in is dropped whole - so a toast loses its border rather than falling back to a default. Nothing errors.",
+      "searchHints": [
+        "ds-toast-border"
+      ],
+      "surface": "style",
+      "detect": [
+        "--ds-toast-border"
+      ],
+      "verify": "A :root override of --ds-toast-border-color repaints the toast border, and no rule in your styles still names --ds-toast-border.",
+      "restore": null,
+      "note": "They are colours, and every other border token in the library already carries -color. These five were the last holdouts of the pre-rename naming.",
+      "action": "Add -color after -border in all five token names."
+    },
+    {
+      "id": "banner-alert-announce-opt-in",
+      "kind": "behavior",
+      "old": "role and aria-live always present",
+      "new": null,
+      "appliesWhen": "You rely on a ds-banner or ds-alert being announced by a screen reader when it appears. A banner that is page furniture needs no change - silence is now the correct behaviour for it.",
+      "pitfall": "Nothing breaks visibly and no build fails, so a regression here is invisible without a screen reader: an app that raised an error banner in response to a request and relied on the alert firing now shows it silently.",
+      "searchHints": [
+        "ds-banner",
+        "ds-alert"
+      ],
+      "surface": "template",
+      "detect": [
+        "ds-banner",
+        "ds-alert"
+      ],
+      "verify": "A banner your app raises in response to an event carries announce and is spoken; a static strip carries none and is silent on route change.",
+      "restore": "Pass [announce]=\"true\" to get the previous behaviour on a given instance.",
+      "note": "An alert region fires on insertion, so a statically-placed strip interrupted the reader on every client-side route into its page - 12 such regions on this library's own docs. MDN advises against alert on content the user has not interacted with, and the DS convention is that a new capability is off by default.",
+      "action": "Add [announce]=\"true\" to any ds-banner or ds-alert that should be announced when it appears."
     }
   ],
   "informational": [

@@ -6522,7 +6522,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Base surface fill."
       },
       {
-        "name": "--ds-toast-border",
+        "name": "--ds-toast-border-color",
         "value": "var(--border-default)",
         "notes": "Base border."
       },
@@ -6582,8 +6582,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Info tint fill."
       },
       {
-        "name": "--ds-toast-border-info",
-        "value": "var(--ds-toast-border, var(--border-default))",
+        "name": "--ds-toast-border-color-color-info",
+        "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Info tint border."
       },
       {
@@ -6592,8 +6592,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Success tint fill."
       },
       {
-        "name": "--ds-toast-border-success",
-        "value": "var(--ds-toast-border, var(--border-default))",
+        "name": "--ds-toast-border-color-color-success",
+        "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Success tint border."
       },
       {
@@ -6602,8 +6602,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Warning tint fill."
       },
       {
-        "name": "--ds-toast-border-warning",
-        "value": "var(--ds-toast-border, var(--border-default))",
+        "name": "--ds-toast-border-color-color-warning",
+        "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Warning tint border."
       },
       {
@@ -6612,8 +6612,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Error tint fill."
       },
       {
-        "name": "--ds-toast-border-error",
-        "value": "var(--ds-toast-border, var(--border-default))",
+        "name": "--ds-toast-border-color-color-error",
+        "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Error tint border."
       },
       {

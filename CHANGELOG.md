@@ -88,6 +88,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Breaking
 
+- **`ds-banner` and `ds-alert` no longer announce themselves unless asked.** Both applied `role` and
+  `aria-live` unconditionally, and an `alert` region fires on INSERTION — so a static "maintenance on
+  Sunday" strip interrupted a screen reader on every client-side route into the page. MDN says it
+  outright: do not use `alert` on content the user has not interacted with. Measured on this site's own
+  pages: 12 assertive regions before, 0 now. Pass `[announce]="true"` for a banner the app raises in
+  response to an event; for anything transient use `ToastService`, which owns a region built for it.
+
+- **`<ds-toast>`'s `message` input is now `body`**, matching `ToastOptions.body` and `ToastEntry.body`.
+  One concept had three spellings across the family; `body` wins because it is the one every consumer
+  already passes to the service.
+
+- **Five toast border tokens gain the `-color` the rest of the library uses**:
+  `--ds-toast-border` → `--ds-toast-border-color`, and the four variant suffixes with it. They are
+  colours, and they were the last holdouts of the old naming.
+
+
 - **`ds.color()` now refuses a family it does not know, and that stops your Sass build.**
   `@include ds.color(brand)` used to compile and emit eleven `--accent-*` pointers at values that
   could never resolve, so a zone painted itself with `unset` and the mistake looked like a theming

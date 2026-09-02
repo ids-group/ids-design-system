@@ -42,11 +42,23 @@ export class BannerComponent {
     return !this.accentRail();
   }
 
-  // Announce banners to assistive tech: errors/warnings interrupt (alert),
-  // info/success wait their turn (status). A statically-rendered banner is
-  // present at first paint, so a `status` region won't be re-read needlessly.
+  /** Announce this banner to a screen reader when it appears.
+   *
+   *  Off by default, and that is the safe direction: these components are placed as
+   *  page furniture as often as they are raised in response to something, and an
+   *  `alert` region fires on INSERTION — so a static "maintenance on Sunday" strip
+   *  interrupted the reader on every client-side route change into the page. MDN says
+   *  it outright: do not use `alert` on content the user has not interacted with.
+   *
+   *  Turn it on for a banner the app raises in response to an event. For anything
+   *  transient prefer `ToastService`, which owns a live region built for the purpose. */
+  readonly announce = input(false, { transform: booleanAttribute });
+
   @HostBinding('attr.role')
-  protected get ariaRole(): 'alert' | 'status' {
+  protected get ariaRole(): 'alert' | 'status' | null {
+    if (!this.announce()) {
+      return null;
+    }
     const value = this.variant();
 
     return value === 'error' || value === 'warning' || value === 'severe'
@@ -55,7 +67,11 @@ export class BannerComponent {
   }
 
   @HostBinding('attr.aria-live')
-  protected get ariaLive(): 'assertive' | 'polite' {
+  protected get ariaLive(): 'assertive' | 'polite' | null {
+    if (!this.announce()) {
+      return null;
+    }
+
     return this.ariaRole === 'alert' ? 'assertive' : 'polite';
   }
 

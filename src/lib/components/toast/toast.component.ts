@@ -28,8 +28,8 @@ export class ToastComponent {
   readonly variant = input<ToastVariant>('info');
   /** Optional bold heading above the message. */
   readonly title = input<string>('');
-  /** Body text of the toast. */
-  readonly message = input<string>('');
+  /** Body text of the toast — the same field `ToastOptions.body` carries. */
+  readonly body = input<string>('');
   /** Show a close button that emits `closed`. */
   readonly dismissible = input(false, { transform: booleanAttribute });
   /** Override the variant's default icon. */
