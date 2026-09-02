@@ -587,11 +587,11 @@ this.crumbs.clear();
 - `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), counted from the moment it becomes visible and not overridable; `dismissAll()` cancels it like any other.
 - `dismissAll(): void`
 
-Defaults are set with two injection tokens, NOT through `provideDsConfig`:
-- `DS_TOAST_CONFIG` — `{ maxVisible?: number }`. Unset or `0` means unlimited; extras queue and appear as earlier ones dismiss.
-- `DS_TOAST_POSITION` — `{ horizontalPosition?: 'left' | 'center' | 'right', verticalPosition?: 'top' | 'bottom', offset?: string }`. Defaults to `right` / `top` / `var(--space-6)`.
+Defaults come from `provideDsConfig({ toast: … })`:
+- `maxVisible?: number` — cap on concurrently visible toasts. Default `5`; `0` means unlimited. Extras queue and appear as earlier ones dismiss.
+- `position?: { horizontalPosition?: 'left' | 'center' | 'right', verticalPosition?: 'top' | 'bottom', offset?: string }` — merged field by field over `right` / `top` / `var(--space-6)`, so naming one key keeps the other two.
 
-Both resolve **once, at the root injector**, when the service is first used. Providing either on a `Route` or a component has no effect, and the position cannot change after the first `show()`.
+The `toast` section resolves **once, at the root injector**, when the service is first used — unlike every other section, which a `Route` or a component can narrow. `ToastService` is `providedIn: 'root'`, so a route-level `provideDsConfig` never reaches it, and the position cannot change after the first `show()`.
 
 On first `show()` the service lazily creates a CDK overlay and mounts a `<ds-toast-region>` into it. **Do not place `<ds-toast-region>` yourself** — the service only ever talks to the instance it created, so a hand-placed one is an invisible empty box that never receives a toast, with no warning. It appears in the generated API table only because the extractor lists every exported component.
 

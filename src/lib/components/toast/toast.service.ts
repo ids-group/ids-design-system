@@ -6,12 +6,9 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { DS_CONFIG } from '../../core/ds-config';
 import { ToastRegionComponent } from './toast-region.component';
-import {
-  DS_TOAST_CONFIG,
-  DS_TOAST_POSITION,
-  DS_TOAST_POSITION_DEFAULT,
-} from './toast.config';
+import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import type {
   ToastEntry,
   ToastVariant,
@@ -30,8 +27,7 @@ const ANNOUNCE_COALESCE_MS = 120;
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private readonly overlay = inject(Overlay);
-  private readonly position = inject(DS_TOAST_POSITION, { optional: true });
-  private readonly toastConfig = inject(DS_TOAST_CONFIG, { optional: true });
+  private readonly toastConfig = inject(DS_CONFIG).toast;
   private readonly announcer = inject(LiveAnnouncer);
   private overlayRef: OverlayRef | null = null;
   private regionRef: ComponentRef<ToastRegionComponent> | null = null;
@@ -224,7 +220,10 @@ export class ToastService {
   }
 
   private buildPositionStrategy(): GlobalPositionStrategy {
-    const config = this.position ?? DS_TOAST_POSITION_DEFAULT;
+    const config = {
+      ...DS_TOAST_POSITION_DEFAULT,
+      ...this.toastConfig?.position,
+    };
     const strategy = this.overlay.position().global();
     if (config.verticalPosition === 'top') {
       strategy.top(config.offset);

@@ -1,3 +1,9 @@
+export type {
+  DsToastHorizontalPosition,
+  DsToastVerticalPosition,
+  DsToastPosition,
+} from '../../core/toast-position';
+
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'loading';
 
 export interface ToastAction {
@@ -36,13 +42,4 @@ export interface ToastPromiseMessages<T = unknown> {
   readonly loading: string;
   readonly success: string | ((value: T) => string);
   readonly error: string | ((reason: unknown) => string);
-}
-
-export type DsToastHorizontalPosition = 'left' | 'center' | 'right';
-export type DsToastVerticalPosition = 'top' | 'bottom';
-
-export interface DsToastPosition {
-  readonly horizontalPosition: DsToastHorizontalPosition;
-  readonly verticalPosition: DsToastVerticalPosition;
-  readonly offset: string;
 }

@@ -8,8 +8,9 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { DS_CONFIG } from '../../core/ds-config';
 import { devWarn } from '../../core/dev-warning';
-import { DS_TOAST_POSITION, DS_TOAST_POSITION_DEFAULT } from './toast.config';
+import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
@@ -59,7 +60,7 @@ export class ToastRegionComponent {
   private focusWithin = false;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly position = inject(DS_TOAST_POSITION, { optional: true });
+  private readonly position = inject(DS_CONFIG).toast?.position;
 
   constructor() {
     devWarn(() =>
@@ -88,7 +89,8 @@ export class ToastRegionComponent {
    *  stack is pinned rather than at the far end of a list the reader has to hunt
    *  down. DOM order is the visual order, so this also keeps the reading order. */
   private readonly newestFirst =
-    (this.position ?? DS_TOAST_POSITION_DEFAULT).verticalPosition === 'top';
+    (this.position?.verticalPosition ??
+      DS_TOAST_POSITION_DEFAULT.verticalPosition) === 'top';
 
   add(entry: ToastEntry): void {
     const limit = this.maxVisible();

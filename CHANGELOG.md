@@ -8,13 +8,72 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
-### Changed
+### Breaking
+
+- **`ds-banner` and `ds-alert` no longer announce themselves unless asked.** Both applied `role` and
+  `aria-live` unconditionally, and an `alert` region fires on INSERTION — so a static "maintenance on
+  Sunday" strip interrupted a screen reader on every client-side route into the page. MDN says it
+  outright: do not use `alert` on content the user has not interacted with. Measured on this site's own
+  pages: 12 assertive regions before, 0 now. Pass `[announce]="true"` for a banner the app raises in
+  response to an event; for anything transient use `ToastService`, which owns a region built for it.
+
+- **`<ds-toast>`'s `message` input is now `body`**, matching `ToastOptions.body` and `ToastEntry.body`.
+  One concept had three spellings across the family; `body` wins because it is the one every consumer
+  already passes to the service.
+
+- **Five toast border tokens gain the `-color` the rest of the library uses**:
+  `--ds-toast-border` → `--ds-toast-border-color`, and the four variant suffixes with it. They are
+  colours, and they were the last holdouts of the old naming.
 
 - **`maxVisible` defaults to 5 instead of unlimited.** An uncapped stack was more permissive than any
   system this component is measured against — Material shows one snackbar and dismisses the previous,
-  Carbon and Halstack stack but expect a ceiling. `DS_TOAST_CONFIG` still sets it, and `0` still means
+  Carbon and Halstack stack but expect a ceiling. `provideDsConfig({ toast: { maxVisible: n } })` still sets it, and `0` still means
   no cap; a configured `0` is now forwarded rather than skipped, since it is the only way left to ask
   for one.
+
+- **A screen reader was told nothing about a toast, for three of the five variants.** `aria-live` sat
+  on each toast, and a live region has to exist in the DOM *before* its text arrives — a node created
+  with its message already inside it is the one case NVDA and JAWS reliably do not announce. The
+  region host was `role="region"`, a landmark, not a live region. Announcements now go through the CDK
+  `LiveAnnouncer`, whose region is built once at service construction and only has its text replaced.
+  `error` and `warning` announce assertively, the rest politely. WCAG 2.2 SC 4.1.3.
+
+  A burst is coalesced into one announcement rather than queued, and that is forced rather than
+  chosen: `announce()` clears its region synchronously and writes on a 120ms timeout, resolving its
+  promise inside that callback — so even a strictly serialised chain loses all but the last message.
+  Measured: five announcements each landed and were cleared again in the same millisecond.
+
+  A `<ds-toast>` you place yourself is now silent to a reader. It is a specimen, not an event; use
+  `ToastService` for anything that should be announced.
+
+- **Toast defaults move into `provideDsConfig`, and the two toast tokens are gone.**
+  `DS_TOAST_CONFIG` and `DS_TOAST_POSITION` were the only configuration in the library that did not
+  go through `DsConfig` — thirteen other areas already did — so an app set everything in one call and
+  then remembered two bare `InjectionToken` providers for toasts. They are now
+  `provideDsConfig({ toast: { maxVisible, position } })`, and the `DsToastConfig` interface is
+  removed with its token.
+  `position` is PARTIAL and merged field by field over `right` / `top` / `var(--space-6)`: the old
+  token's type required all three fields, so moving the stack to the bottom meant restating the other
+  two. `DS_TOAST_POSITION_DEFAULT` is unchanged and still exported. One caveat, and it is not new:
+  `ToastService` is `providedIn: 'root'`, so the `toast` section resolves only at the root injector —
+  a route-level `provideDsConfig` cannot narrow it, unlike every other section.
+
+### Changed
+
+- **Toast and table class internals moved again — only matters if you SUBCLASS one of them.**
+  Every name here is a `private` or `protected` internal, not public API and not a signal, but
+  `private` collides with TS2415 exactly as a public name does, so a member of yours sharing one
+  still stops the build. `ToastComponent` **lost `role`** — the component no longer sets one, so
+  an `override role` overrides nothing. `ToastRegionComponent` gained `leaveTimers`,
+  `slideNeighbours`, `toastNodes`, `measureTops` and `leaveDuration`, and **renamed
+  `promoteFromQueue` to `drainQueue`**; an override of the old name now runs never, so move it.
+  `ToastService` gained `announcer`, `pendingAnnouncements`, `pendingAssertive`, `announceTimer`,
+  `scrimWatcher`, `announce` and `keepAboveScrims`. `TableComponent` gained `eventsAtExport`,
+  `eventMessages`, `tableHead`, `hostElement` and `announceExport`; its inputs, outputs, models
+  and exported types are unchanged. `BannerComponent` and `AlertComponent` each gained
+  `announce`, and their `ariaRole` and `ariaLive` now return `null` as well — a subclass that
+  narrowed either type back, or code that assumed the getter is never null, stops compiling.
+  The compiler enumerates every collision, so building after the upgrade is the whole check.
 
 - **The stack no longer jumps when a toast is added.** Its neighbours are put back where they were
   with a `transform` and released, so the re-stack runs on the compositor instead of the browser
@@ -53,8 +112,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Typing on a CLOSED `ds-select` did nothing.** Type-ahead landed with the jump wired only for
   an open panel: the closed branch of the key handler returned before reaching it, so a letter
-  pressed on a collapsed trigger neither jumped nor committed. It commits now, which is what a
-  native `<select>` does and what 0.11.2 said this already did.
+  pressed on a collapsed trigger neither jumped nor committed. It now commits the first
+  matching option without opening the panel — `value` is a `model`, so `valueChange` fires —
+  the way a native `<select>` does; a key that matches nothing is ignored.
 - **A `ds-table` loading scrim covered the top of the first row, or overlapped the header.**
   Its top edge assumed a 40px header. The header is 42.89px at the default density and
   26.89px under `[data-density="ultra-compact"]`, so it cut 2.89px into the header normally
@@ -69,40 +129,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   one of those lines has something new to say, so "Export failed" still stands until the reader
   moves on, and everything after it is announced again.
 
-- **A screen reader was told nothing about a toast, for three of the five variants.** `aria-live` sat
-  on each toast, and a live region has to exist in the DOM *before* its text arrives — a node created
-  with its message already inside it is the one case NVDA and JAWS reliably do not announce. The
-  region host was `role="region"`, a landmark, not a live region. Announcements now go through the CDK
-  `LiveAnnouncer`, whose region is built once at service construction and only has its text replaced.
-  `error` and `warning` announce assertively, the rest politely. WCAG 2.2 SC 4.1.3.
-
-  A burst is coalesced into one announcement rather than queued, and that is forced rather than
-  chosen: `announce()` clears its region synchronously and writes on a 100ms timeout, resolving its
-  promise inside that callback — so even a strictly serialised chain loses all but the last message.
-  Measured: five announcements each landed and were cleared again in the same millisecond.
-
-  A `<ds-toast>` you place yourself is now silent to a reader. It is a specimen, not an event; use
-  `ToastService` for anything that should be announced.
-
 ## 0.11.3 — 2026-09-02
 
 ### Breaking
-
-- **`ds-banner` and `ds-alert` no longer announce themselves unless asked.** Both applied `role` and
-  `aria-live` unconditionally, and an `alert` region fires on INSERTION — so a static "maintenance on
-  Sunday" strip interrupted a screen reader on every client-side route into the page. MDN says it
-  outright: do not use `alert` on content the user has not interacted with. Measured on this site's own
-  pages: 12 assertive regions before, 0 now. Pass `[announce]="true"` for a banner the app raises in
-  response to an event; for anything transient use `ToastService`, which owns a region built for it.
-
-- **`<ds-toast>`'s `message` input is now `body`**, matching `ToastOptions.body` and `ToastEntry.body`.
-  One concept had three spellings across the family; `body` wins because it is the one every consumer
-  already passes to the service.
-
-- **Five toast border tokens gain the `-color` the rest of the library uses**:
-  `--ds-toast-border` → `--ds-toast-border-color`, and the four variant suffixes with it. They are
-  colours, and they were the last holdouts of the old naming.
-
 
 - **`ds.color()` now refuses a family it does not know, and that stops your Sass build.**
   `@include ds.color(brand)` used to compile and emit eleven `--accent-*` pointers at values that
