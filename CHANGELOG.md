@@ -10,6 +10,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **The skeleton shimmer stepped instead of sweeping, on any page but a light one.** The travel was
+  one animated, registered, INHERITED custom property on `:root` that every skeleton read through
+  `mask-position`. A registered custom property is a computed value, so changing it invalidated
+  style for the ENTIRE document on every frame and then repainted — fine on the docs site, visibly
+  jerky inside a heavy host application. The animation moved onto each skeleton's own band:
+  `getAnimations()` on the root now reports 0, nine skeletons report nine, and the document-wide
+  invalidation is gone. The trade is that a skeleton mounted mid-cycle starts its own pass instead
+  of joining the one in flight; the old lock-step was never viewport-anchored anyway, because
+  `mask-position` is measured from the host's own box.
 - **A focused row drew TWO rings, and neither was the focus colour.** `ds-list-item`, `ds-tree`,
   `ds-tag`, `ds-description-list` and `ds-color-picker` each drew their own `outline` on
   `:focus-visible` while the blanket `:where(:focus-visible)` shadow kept painting under it — an
@@ -17,8 +26,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `--focus-ring-color`, which **nothing defined**, so all seven call sites fell through to
   `currentColor` and ringed themselves in their own text colour: near-black on a list row, grey on
   a tree node. The token is defined now, from the same hue channels as the ring's outer halo, and
-  the seven sites share a `focus.outline-indicator` mixin that silences the shadow. Override it per
-  brand with `--focus-ring-color`.
+  the seven sites share a `focus.outline-indicator` mixin that silences the shadow. The colour is
+  `--accent`, so it is the brand hue by default and the family's hue inside a `ds-color` zone —
+  measured: `hsl(229 100% 59%)` outside, `hsl(0 75% 49%)` under `[ds-color="error"]`. Override it
+  per brand with `--focus-ring-color`.
 - **A selected `ds-list-item` or `ds-tree` node retinted its label and left its icon behind.**
   Measured on the list: label `rgb(29 67 237)`, icon `rgb(22 26 40)`. On the tree the row set
   `color` correctly but `.node-icon` declared its own and won, leaving `rgb(107 115 136)` beside an

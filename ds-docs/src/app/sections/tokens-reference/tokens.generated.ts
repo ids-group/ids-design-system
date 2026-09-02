@@ -478,6 +478,11 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
     "notes": "Outer halo alpha."
   },
   {
+    "name": "--focus-ring-color",
+    "value": "var(--accent)",
+    "notes": ""
+  },
+  {
     "name": "--focus-ring",
     "value": "0 0 0 2px var(--focus-ring-inner),\n    0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
     "notes": "Default two-layer focus ring shadow (inner ring + outer glow)."
@@ -3672,6 +3677,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "List item label colour when selected (defaults to --accent-strong)."
       },
       {
+        "name": "--ds-list-item-selected-icon-color",
+        "value": "var(--_list-item-selected-label-color)",
+        "notes": ""
+      },
+      {
         "name": "--ds-list-item-label-color",
         "value": "var(--text-primary)",
         "notes": "List item label text colour (defaults to --text-primary)."
@@ -6798,6 +6808,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-tree-row-selected-text-color",
         "value": "var(--accent-strong)",
         "notes": "Selected tree row text colour (defaults to --accent-strong)."
+      },
+      {
+        "name": "--ds-tree-row-selected-icon-color",
+        "value": "var(--_tree-row-selected-text-color)",
+        "notes": ""
       },
       {
         "name": "--ds-tree-row-text-color",

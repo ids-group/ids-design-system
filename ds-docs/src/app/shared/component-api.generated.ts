@@ -2857,7 +2857,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "inputMode",
         "kind": "input",
-        "type": "| 'none'\r\n    | 'text'\r\n    | 'decimal'\r\n    | 'numeric'\r\n    | 'tel'\r\n    | 'search'\r\n    | 'email'\r\n    | 'url'\r\n    | null",
+        "type": "| 'none'\n    | 'text'\n    | 'decimal'\n    | 'numeric'\n    | 'tel'\n    | 'search'\n    | 'email'\n    | 'url'\n    | null",
         "union": [
           "none",
           "text",
@@ -6391,7 +6391,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it; the right choice is a function of the row count, which only the table holds. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately."
+        "description": "false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it; the right choice is a function of the row count, which only the table holds. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately."
       },
       {
         "name": "stickyHeader",
@@ -6485,7 +6485,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "(label: string, dir: SortDir) => string",
         "union": null,
-        "default": "(label, dir) =>\r\n      dir\r\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\r\n        : `Sorting cleared`",
+        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
         "required": false,
         "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
       },
@@ -6854,7 +6854,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "rowExpandTemplate",
         "kind": "input",
-        "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
+        "type": "TemplateRef<{\n    $implicit: unknown;\n    row: unknown;\n  }> | null",
         "union": null,
         "default": "null",
         "required": false,

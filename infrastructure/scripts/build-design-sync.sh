@@ -64,6 +64,16 @@ echo "Committed upload tree matches the build"
 [ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
 [ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }
 
+# The pane indexes from the manifest and reads a card only for its content, so a manifest that
+# lists fewer cards than the tree holds publishes a project missing those cards entirely - which is
+# how a stale copy written by the retired CLI kept showing 79 components, AppShell among them,
+# after the tree had moved on to 85.
+[ -f .design-sync/upload/_ds_manifest.json ] || { echo "Expected artifact missing: .design-sync/upload/_ds_manifest.json"; exit 1; }
+indexed=$(grep -c '"path":' .design-sync/upload/_ds_manifest.json)
+pages=$(find .design-sync/upload/components -name '*.html' | wc -l)
+[ "$indexed" = "$pages" ] || { echo "Manifest indexes $indexed card(s) against $pages page(s) in the tree"; exit 1; }
+echo "Manifest indexes all $indexed card(s)"
+
 # The project must hold nothing this repo cannot rebuild. Everything in this loop was left over
 # from a hand-made upload until now, which is why a font could not be added and a wipe-and-reupload
 # was unsafe: half the tree had no source.
