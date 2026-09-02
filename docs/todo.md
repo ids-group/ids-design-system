@@ -111,6 +111,7 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 - P3 · **Splitter** — asked, keep in the backlog
 - P3 · **CascadeSelect** — asked, keep in the backlog
 - P3 · **MED cluster** — density beyond hit-targets
+- P3 · **The Claude Design upload has a scriptable route, and we chose not to take it** — the boundary is a client-side guard, not a server one; measured and written up in `.design-sync/COMMANDS.md`
 - P3 · **Image / lightbox** — no demand stated; the overlay and motion infrastructure exists to build on
 - P3 · **CDK Menu adoption** — only if nested submenus, a menubar or context menus are actually wanted
 
