@@ -29,6 +29,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   a projected `[actions]` button 6–14px off depending on its size. `align-items: center` would be
   unconditional but moves the close button, which is the trade above.
 
+- **`ToastRegionComponent`'s member surface moved again — only matters if you SUBCLASS it.** The
+  timer work gained `arm`, `pauseAll`, `remaining`, `resumeAll` and `startedAt`, and **lost
+  `startCountdown`**: a countdown is armed on promotion and re-armed from what is left when a pause
+  ends, where before the region started one timer per toast. All five are `private` or `protected`
+  internals — none is public API and none is a signal — but a member of yours sharing one of those
+  names still stops the build, because `private` collides with TS2415 exactly as a public name does.
+  Rename yours, or add `override` where the semantics genuinely match; the compiler enumerates every
+  collision, so building after the upgrade is the whole check.
+
+  Worth flagging for anyone who followed 0.11.2's note: `startCountdown` was announced there as a
+  member the region had just gained, so an `override startCountdown` added one release ago now
+  overrides nothing and silently never runs. There is no public replacement to call — the countdown
+  is the region's own business now. Delete the override.
+
 ### Fixed
 
 - **`ds-color="error"`, `="success"` and `="warning"` lost their accent colour.** Those zones map
@@ -47,8 +61,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the family's base for `-hover`, `-pressed` and `-strong`, to its `-muted` for the tint pointers,
   and to the theme-wide role for `-on` and the two focus pointers — so a role that goes missing in
   future degrades instead of disappearing.
-
-### Fixed
 
 - **`ToastService.promise()` could destroy its own result.** It ran the settled toast's
   auto-dismiss on a wall-clock timer started when the promise resolved, not when the toast became

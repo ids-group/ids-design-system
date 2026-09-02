@@ -73,10 +73,74 @@ const FIRST_CLASS = /^export (?:abstract )?class /m;
 // text would flood the changed-types report, so those members stay name-only.
 const TYPE_BEARING_INIT = /^(?:input|model|output)(?:\.required)?[<(]/;
 
+// A comment sits INSIDE the captured statement — `statementText` runs to the closing `;`, and an
+// `input()` options object routinely carries one. Rewriting or deleting it then reads as a type
+// change, which sends the release gate looking for a migration entry that would describe nothing:
+// the comment pass over the last three releases tripped `check-class-surface-entry` on
+// SelectComponent and MultiSelectComponent that way, with neither member's type touched. Runs
+// before whitespace is collapsed, because that is what removes the newline ending a `//`.
+//
+// Quotes and template literals are walked rather than skipped, so a `//` inside a default string
+// survives. A `/` is read as a regex only where a value may start; getting that wrong can hide a
+// difference after it, never invent one — both sides mis-slice identically.
+function stripComments(text) {
+  const VALUE_MAY_START = /[([{,;:=!?&|+\-*%~^<>]$/;
+  let out = '';
+  let i = 0;
+  while (i < text.length) {
+    const char = text[i];
+    if (char === '/' && text[i + 1] === '/') {
+      while (i < text.length && text[i] !== '\n') i++;
+      continue;
+    }
+    if (char === '/' && text[i + 1] === '*') {
+      i += 2;
+      while (i < text.length && !(text[i] === '*' && text[i + 1] === '/')) i++;
+      i += 2;
+      out += ' ';
+      continue;
+    }
+    if (char === "'" || char === '"' || char === '`') {
+      out += char;
+      for (i++; i < text.length; i++) {
+        out += text[i];
+        if (text[i] === '\\' && i + 1 < text.length) {
+          out += text[++i];
+          continue;
+        }
+        if (text[i] === char) {
+          i++;
+          break;
+        }
+      }
+      continue;
+    }
+    const preceding = out.trimEnd();
+    if (char === '/' && (preceding === '' || VALUE_MAY_START.test(preceding))) {
+      out += char;
+      for (i++; i < text.length; i++) {
+        out += text[i];
+        if (text[i] === '\\' && i + 1 < text.length) {
+          out += text[++i];
+          continue;
+        }
+        if (text[i] === '/' || text[i] === '\n') {
+          i++;
+          break;
+        }
+      }
+      continue;
+    }
+    out += char;
+    i++;
+  }
+  return out;
+}
+
 // Whitespace inside brackets is collapsed too — a prettier rewrap of an unchanged
 // declaration (`input<\n  readonly RegExp[]…`) must not read as a type change.
 const normalize = (text) =>
-  text
+  stripComments(text)
     .replace(/\s+/g, ' ')
     .replace(/([<([{]) /g, '$1')
     .replace(/ ([>)\]},;])/g, '$1')
