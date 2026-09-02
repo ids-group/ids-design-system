@@ -59,7 +59,6 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 **Bugs — something shipped misbehaves**
 
 - P2 · **A `confirm()` opened after a toast covers it and swallows its action button**, and the whole `--layer-*` scale above 1000 is decorative for overlays. MEASURED 2026-09-02 in headless Chrome, 12 scenarios with three opposite-answer control pairs. CDK 21 sets `usePopover: true` by default, so every overlay host enters the browser TOP LAYER, where paint order is the order of `showPopover()` and z-index does not apply at all. Consequences: `_toast-overlay.scss`'s lift to `--layer-toast` is **dead code** for every consumer on default CDK; `--layer-tooltip: 1600`, documented at `z-index.section.ts:47-51` as "must sit above toasts", is **inert**, because it is set on content INSIDE `.cdk-overlay-pane`, itself a stacking context — same for `--layer-popover` and the dropdown panel's. Of the seven values above 1000 only the toast lift targets an overlay HOST. **Stas decided 2026-09-02: the toast stays above the modal scrim, as the scale promises.** The mechanism follows from the above — re-issue `showPopover()` on the toast host when another overlay opens — but the hook is UNVALIDATED: three probe attempts failed to reproduce the scene, so treat this as not started. First reproduce toast-then-confirm by hand, then establish that a re-raise costs neither a flicker nor the focus. `usePopover` is public on `OverlayConfig`, so a per-overlay lever exists. Do NOT "fix" this by adding z-index: that is what the dead rule already tried.
-- P2 · **The Angular set is pinned inside the range of two high advisories** — 21.2.17 against a fix in 21.2.19, and `@angular/elements`' exact peer is what blocks the move
 - P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
 - P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
@@ -189,11 +188,12 @@ pair at 4.42:1 where AA asks 4.5: it reaches nine components plus `_status.scss`
 `_field-state.scss` — eleven files counted — so one token step fixes all of them. Four of the
 others arrived on 2026-09-01 and were filed under *Asks* first, which was wrong: nobody asked for
 them, they are wrong in code a consumer already reads. After the token step what is left is the
-split-button hover at 1.87:1, the Angular set sitting inside two high advisories, and the two
-cosmetic ones. Four are already closed: the resize handle's unenforced `aria-valuemax` the same
-day it was filed, the loading scrim's top edge, which now measures the header instead of assuming
-40px, the export status, which no longer holds the live region once anything else has something to
-say, and the two lockfiles, now level on every package either tool resolves freely.
+split-button hover at 1.87:1, the confirm() that covers a toast, and the two cosmetic ones. Five
+are already closed: the resize handle's unenforced `aria-valuemax` the same day it was filed, the
+loading scrim's top edge, which now measures the header instead of assuming 40px, the export
+status, which no longer holds the live region once anything else has something to say, the two
+lockfiles, now level on every package either tool resolves freely, and the Angular set, moved off
+21.2.17 and out of the range of two high advisories.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
 items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
@@ -269,10 +269,10 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
-- [ ] **[P2] The Angular set sits at 21.2.17, inside the range of two high advisories.** `npm audit` names *Angular i18n: XSS via event-handler attributes* and *Cache-Key Ambiguity in HttpTransferCache* against `@angular/core`, `@angular/common` and `@angular/compiler`, both `>=21.0.0-next.0 <21.2.19`.
-  **No consumer inherits this through us.** Angular is a peerDependency and the only runtime dependency the package declares is `tslib`, so the consumer's own resolution decides. The exposure is our own builds and the ds-docs site deployed to the CDN.
-  **`@angular/elements` is what blocks the fix.** It is pinned to exactly `21.2.17` and its peer demands `@angular/core@21.2.17`, so moving the set to 21.2.19 means unpinning it first — and that pin is currently what keeps `package-lock.json` and `bun.lock` in agreement.
-  **The other 64 advisories are build-toolchain only** (tar, undici, hono, vite, esbuild, postcss, browserslist, js-yaml, nanoid, brace-expansion and more): 30 vulnerabilities at the top level, 1 critical, and none of them ships.
+- [x] **[P2] The Angular set sat at 21.2.17, inside the range of two high advisories.** Moved to 21.2.22 on 2026-09-02, which is past the 21.2.19 fix for *Angular i18n: XSS via event-handler attributes* and *Cache-Key Ambiguity in HttpTransferCache*. MEASURED after: `npm audit` names no `@angular` advisory at all, and the top-level count fell from 30 to 18 (high 25 to 13).
+  **The fix was to DELETE a pin, not to add one.** `@angular/elements` was the only Angular dep with an exact version, and its own peer demands an exact `@angular/core` match — so the pin in `package.json` was redundant with the mechanism that already enforces lockstep, and all it did was block the set. It now reads `^21.2.0` like its twelve siblings.
+  **The declared ranges did not move.** `bun update` rewrites them to the new floor as a side effect; they were put back to `^21.2.0`, because `@angular/cdk` cannot satisfy `^21.2.22` (its 21.2 line ends at 21.2.14) and a lockfile is where actual versions belong.
+  **What is left is the build toolchain, and one critical.** 18 vulnerabilities across tar, undici, hono, vite, esbuild, postcss and the rest; the critical is *node-tar: Decompression/parse DoS via unlimited input*. None of them ships — the package declares `tslib` as its only runtime dependency.
 
 - [x] **[P2] `package-lock.json` had drifted from `bun.lock`, and `npm ci` no longer resolved.** Regenerated 2026-09-02 with `npm install --package-lock-only` on a deleted lock, which leaves bun's `node_modules` untouched — 101 packages disagreed, 13 of them `@angular`; 5 disagree now and none is `@angular`.
   **The prediction in this item was wrong, and the reason matters.** It said regeneration would land on "whatever is latest that day and diverge from `bun.lock`". It converged instead, because `@angular/elements@21.2.17` peers on `@angular/core@21.2.17` EXACTLY: npm has no freedom inside `^21.2.0` and is forced onto the version bun already had. The pin filed here as merely "not currently harmful" is what makes both locks agree.
