@@ -18,7 +18,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LIB = join(ROOT, 'src/lib');
 const COMPONENTS = join(ROOT, 'src/lib/components');
 const OUT = join(ROOT, 'ds-docs/src/app/shared/component-api.generated.ts');
-const EDITORIAL = join(ROOT, 'ds-docs/src/app/shared/component-api-descriptions.json');
+const EDITORIAL = join(
+  ROOT,
+  'ds-docs/src/app/shared/component-api-descriptions.json',
+);
 
 const CALL_KINDS = { input: 'input', model: 'model', output: 'output' };
 
@@ -31,8 +34,14 @@ function walkFiles(dir, suffix, out = []) {
   return out;
 }
 
+// CRLF is stripped at the read, not at write time: a multi-line input type or default
+// carries its line breaks INSIDE the emitted string, where `.gitattributes` cannot
+// reach them. Left alone, the generated file differs between a CRLF and an LF checkout
+// of the same commit. Same fix as `extract-tokens.mjs`.
 function parse(file) {
-  return ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
+  const source = readFileSync(file, 'utf8').replaceAll('\r\n', '\n');
+
+  return ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true);
 }
 
 // alias name -> its declared TypeNode, across all of src/lib (aliases reference
@@ -42,7 +51,8 @@ function collectAliasNodes() {
   for (const file of walkFiles(LIB, '.ts')) {
     const sf = parse(file);
     sf.forEachChild((node) => {
-      if (ts.isTypeAliasDeclaration(node)) aliases.set(node.name.text, node.type);
+      if (ts.isTypeAliasDeclaration(node))
+        aliases.set(node.name.text, node.type);
     });
   }
   return aliases;
@@ -54,7 +64,8 @@ function collectAliasNodes() {
 // chip list. null/undefined are dropped (absence, not a value).
 function resolveTypeNode(node, aliases, seen = new Set()) {
   if (!node) return null;
-  if (ts.isParenthesizedTypeNode(node)) return resolveTypeNode(node.type, aliases, seen);
+  if (ts.isParenthesizedTypeNode(node))
+    return resolveTypeNode(node.type, aliases, seen);
   if (ts.isUnionTypeNode(node)) {
     const out = [];
     for (const member of node.types) {
@@ -75,12 +86,17 @@ function resolveTypeNode(node, aliases, seen = new Set()) {
   if (node.kind === ts.SyntaxKind.UndefinedKeyword) return [];
   if (ts.isTypeReferenceNode(node)) {
     const name = node.typeName.getText();
-    if ((name === 'Exclude' || name === 'Extract') && node.typeArguments?.length === 2) {
+    if (
+      (name === 'Exclude' || name === 'Extract') &&
+      node.typeArguments?.length === 2
+    ) {
       const base = resolveTypeNode(node.typeArguments[0], aliases, seen);
       const filter = resolveTypeNode(node.typeArguments[1], aliases, seen);
       if (base === null || filter === null) return null;
       const set = new Set(filter);
-      return name === 'Exclude' ? base.filter((v) => !set.has(v)) : base.filter((v) => set.has(v));
+      return name === 'Exclude'
+        ? base.filter((v) => !set.has(v))
+        : base.filter((v) => set.has(v));
     }
     if (node.typeArguments?.length) return null; // other generics — can't enumerate
     if (seen.has(name)) return null; // recursive alias guard
@@ -104,7 +120,10 @@ function jsDocText(node) {
   const docs = node.jsDoc;
   if (!docs || !docs.length) return '';
   const comment = docs[docs.length - 1].comment;
-  const text = typeof comment === 'string' ? comment : (comment ?? []).map((c) => c.text).join('');
+  const text =
+    typeof comment === 'string'
+      ? comment
+      : (comment ?? []).map((c) => c.text).join('');
   return text.replace(/\s+/g, ' ').trim();
 }
 
@@ -128,11 +147,16 @@ function callKind(init) {
 
 function hasTransform(init, name) {
   const opts = init.arguments[init.arguments.length - 1];
-  return opts && ts.isObjectLiteralExpression(opts) &&
+  return (
+    opts &&
+    ts.isObjectLiteralExpression(opts) &&
     opts.properties.some(
-      (p) => ts.isPropertyAssignment(p) && p.name.getText() === 'transform' &&
+      (p) =>
+        ts.isPropertyAssignment(p) &&
+        p.name.getText() === 'transform' &&
         p.initializer.getText().includes(name),
-    );
+    )
+  );
 }
 
 function hasBooleanAttribute(init) {
@@ -165,7 +189,13 @@ function propFromMember(member, sf, aliases) {
 
   const isOutput = info.kind === 'output';
   const isModel = info.kind === 'model';
-  const kind = info.required ? 'input-required' : isModel ? 'model' : isOutput ? 'output' : 'input';
+  const kind = info.required
+    ? 'input-required'
+    : isModel
+      ? 'model'
+      : isOutput
+        ? 'output'
+        : 'input';
 
   return {
     name,
@@ -179,14 +209,24 @@ function propFromMember(member, sf, aliases) {
 }
 
 function decoratorSelector(node, sf) {
-  const decorators = ts.canHaveDecorators(node) ? ts.getDecorators(node) ?? [] : [];
+  const decorators = ts.canHaveDecorators(node)
+    ? (ts.getDecorators(node) ?? [])
+    : [];
   for (const dec of decorators) {
     const call = dec.expression;
-    if (!ts.isCallExpression(call) || call.expression.getText(sf) !== 'Component') continue;
+    if (
+      !ts.isCallExpression(call) ||
+      call.expression.getText(sf) !== 'Component'
+    )
+      continue;
     const arg = call.arguments[0];
     if (arg && ts.isObjectLiteralExpression(arg)) {
       for (const p of arg.properties) {
-        if (ts.isPropertyAssignment(p) && p.name.getText(sf) === 'selector' && ts.isStringLiteral(p.initializer)) {
+        if (
+          ts.isPropertyAssignment(p) &&
+          p.name.getText(sf) === 'selector' &&
+          ts.isStringLiteral(p.initializer)
+        ) {
           return p.initializer.text;
         }
       }
@@ -203,7 +243,8 @@ function indexClasses(files) {
     const sf = parse(file);
     sources.set(file, sf);
     sf.forEachChild((node) => {
-      if (ts.isClassDeclaration(node) && node.name) map.set(node.name.text, { node, sf });
+      if (ts.isClassDeclaration(node) && node.name)
+        map.set(node.name.text, { node, sf });
     });
   }
   return { map, sources };
@@ -233,16 +274,24 @@ function collectProps(classInfo, classIndex, aliases, seen = new Map()) {
 // reference, including internal ones a consumer cannot import.
 function exportedClassNames() {
   const publicApi = join(ROOT, 'src/public-api.ts');
-  const barrels = [...readFileSync(publicApi, 'utf8').matchAll(/from '\.\/(lib\/[^']+)'/g)]
+  const barrels = [
+    ...readFileSync(publicApi, 'utf8').matchAll(/from '\.\/(lib\/[^']+)'/g),
+  ]
     .map(([, relative]) => join(ROOT, `src/${relative}`))
     .map((base) => (base.endsWith('.ts') ? base : join(base, 'index.ts')))
     .filter((candidate) => existsSync(candidate));
   const names = new Set();
   for (const barrel of barrels) {
     const source = readFileSync(barrel, 'utf8');
-    for (const [, group] of source.matchAll(/export\s*(?:type\s*)?\{([^}]*)\}/g)) {
+    for (const [, group] of source.matchAll(
+      /export\s*(?:type\s*)?\{([^}]*)\}/g,
+    )) {
       for (const piece of group.split(',')) {
-        const name = piece.trim().split(/\s+as\s+/).pop()?.trim();
+        const name = piece
+          .trim()
+          .split(/\s+as\s+/)
+          .pop()
+          ?.trim();
         if (name) names.add(name);
       }
     }
@@ -287,8 +336,12 @@ for (const file of files) {
     const props = [...collectProps({ node, sf }, classIndex, aliases).values()];
     const ed = editorial[key] ?? {};
     const finalize = (p) => ({
-      name: p.name, kind: p.kind, type: p.type, union: p.union,
-      default: p.default, required: p.required,
+      name: p.name,
+      kind: p.kind,
+      type: p.type,
+      union: p.union,
+      default: p.default,
+      required: p.required,
       description: p._jsdoc || ed.props?.[p.name] || '',
     });
     components.push({
@@ -306,7 +359,10 @@ for (const file of files) {
   });
 }
 
-components.sort((a, b) => a.key.localeCompare(b.key) || a.className.localeCompare(b.className));
+components.sort(
+  (a, b) =>
+    a.key.localeCompare(b.key) || a.className.localeCompare(b.className),
+);
 
 const undescribed = [];
 for (const c of components)
@@ -329,7 +385,8 @@ for (const [folder, list] of byFolder) {
     map[folder] = list[0];
     continue;
   }
-  const normalizedSelector = (c) => c.selector.replace(/^\[/, '').replace(/\]$/, '');
+  const normalizedSelector = (c) =>
+    c.selector.replace(/^\[/, '').replace(/\]$/, '');
   let primary = list.find((c) => normalizedSelector(c) === `ds-${folder}`);
   if (!primary) primary = list[0]; // fallback: first-wins
   for (const c of list) {
@@ -344,9 +401,14 @@ const banner =
 const body =
   "import type { ComponentApi } from './component-api.types';\n\n" +
   'export const COMPONENT_API: Record<string, ComponentApi> = ' +
-  JSON.stringify(map, null, 2) + ';\n';
+  JSON.stringify(map, null, 2) +
+  ';\n';
 
 writeFileSync(OUT, banner + body);
-console.log(`wrote component-api.generated.ts — ${components.length} components, ${undescribed.length} undescribed props`);
-if (internal.length) console.log(`  left out, not exported: ${internal.join(', ')}`);
-if (undescribed.length) console.warn('undescribed:\n  ' + undescribed.join('\n  '));
+console.log(
+  `wrote component-api.generated.ts — ${components.length} components, ${undescribed.length} undescribed props`,
+);
+if (internal.length)
+  console.log(`  left out, not exported: ${internal.join(', ')}`);
+if (undescribed.length)
+  console.warn('undescribed:\n  ' + undescribed.join('\n  '));
