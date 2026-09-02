@@ -16,3 +16,6 @@ docs/agent/** text eol=lf
 # Pinning eol=lf keeps it LF in the worktree too, so no conversion step is left to
 # double, and the file diffs and merges like every other doc.
 docs/todo.md text eol=lf
+# A whole-file diff hides the real change and buries it in review. An edit that preserves
+# the working copy CRLF can land as a CRLF blob where the history is LF, rewriting every line.
+CHANGELOG.md text eol=lf
