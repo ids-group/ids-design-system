@@ -8,6 +8,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`ds.color()` now refuses a family it does not know, and that stops your Sass build.**
+  `@include ds.color(brand)` used to compile and emit eleven `--accent-*` pointers at values that
+  could never resolve, so a zone painted itself with `unset` and the mistake looked like a theming
+  problem. It `@error`s now, naming the five families it takes: `secondary`, `tertiary`, `error`,
+  `success`, `warning`. Anything else fails the build at the `@include`. The `ds-color="…"`
+  attribute is untouched — no Sass runs for it.
+
 ### Changed
 
 - **The banner and toast icon now centres on the message block**, where it used to align to the first
@@ -30,11 +39,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   unconditional but moves the close button, which is the trade above.
 
 - **`ToastRegionComponent`'s member surface moved again — only matters if you SUBCLASS it.** The
-  timer work gained `arm`, `pauseAll`, `remaining`, `resumeAll` and `startedAt`, and **lost
-  `startCountdown`**: a countdown is armed on promotion and re-armed from what is left when a pause
-  ends, where before the region started one timer per toast. All five are `private` or `protected`
-  internals — none is public API and none is a signal — but a member of yours sharing one of those
-  names still stops the build, because `private` collides with TS2415 exactly as a public name does.
+  timer and pause work gained `arm`, `focusWithin`, `host`, `hovered`, `onFocusWithin`, `onHover`,
+  `paused`, `pauseAll`, `remaining`, `resumeAll`, `startedAt` and `syncPause`, and **lost
+  `startCountdown`**: a countdown is armed when a toast becomes visible and re-armed from what is
+  left when a pause ends, where before the region started one timer per toast. Every one is a
+  `private` or `protected` internal — none is public API, none is a signal, and there is no
+  replacement to call for `startCountdown`, so an override of it should simply go. A member of
+  yours sharing one of those names still stops the build, because `private` collides with TS2415
+  exactly as a public name does. `host` is the one most likely to clash.
   Rename yours, or add `override` where the semantics genuinely match; the compiler enumerates every
   collision, so building after the upgrade is the whole check.
 
@@ -42,6 +54,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   member the region had just gained, so an `override startCountdown` added one release ago now
   overrides nothing and silently never runs. There is no public replacement to call — the countdown
   is the region's own business now. Delete the override.
+
+- **`components.md` documented a component that does not exist and four events that never fired.**
+  It carried a `<ds-dropdown>` entry through three releases; that component was absorbed into
+  `<ds-select>` and an import written from the document fails to compile. Four documented event
+  names were never identifiers here: `ds-banner` and `ds-toast` emit `(closed)`, not `(dismissed)`;
+  `ds-pagination` emits `(currentPageChange)`, not `(pageChange)`; `ds-table` emits `(rowClicked)`,
+  not `(rowClick)`. An unknown event binding registers a DOM listener and never fires, so those
+  four handlers were silently dead with nothing in the console. `<ds-alert>` was missing from the
+  document entirely and is now in it, `'neutral'` variant included.
 
 ### Fixed
 
@@ -71,14 +92,28 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **A toast carrying an `action` no longer auto-dismisses.** The overlay is the last child of `body`,
   so the region is dead last in tab order; a keyboard user cannot cross a real page in the five
-  seconds the button was alive. An `action` toast now waits, and is always dismissible.
+  seconds the button was alive. An `action` toast now waits, and is always dismissible. Note that
+  a `durationMs` you pass alongside an `action` is discarded — the toast waits regardless — and
+  `dismissible: false` is discarded on any toast that cannot expire, not only on a `loading` one.
 
 - **Hovering or focusing the region pauses every countdown**, resuming when the pointer or focus
-  leaves. A toast being read is not a toast that has been read.
+  leaves. A toast being read is not a toast that has been read. The pause is derived from both
+  sources rather than latched, so tabbing out of a region the pointer is still over does not
+  resume, moving focus between the action and the close button is not a leave, and a toast that
+  becomes visible under a stationary pointer — a burst past the cap, or a promise settling — is
+  banked rather than counted. A resumed toast always gets at least 600ms, so one hovered with
+  almost nothing left does not vanish as the pointer leaves.
 
-- **Nothing that cannot expire can also be unclosable.** A `loading` toast was created with
-  `dismissible: false` and no duration, so a promise that never settled held its slot for the life of
-  the page — with a cap of 3, three hung requests blocked the whole channel, including the error
+- **The `ds-banner` close button had no accessible name.** It announced as a bare "button", where
+  the same control on `ds-toast` and `ds-alert` already said "Dismiss". It says it now.
+
+- **A long unbroken word in a toast overflowed the pill.** A URL or an id with no break
+  opportunity ran past the rounded edge instead of wrapping inside it.
+
+- **Nothing that cannot expire can also be unclosable.** The rule is now that any toast with no
+  duration is dismissible, whatever you asked for — a `loading` variant, one carrying an `action`,
+  or an explicit `durationMs: 0`. A `loading` toast was created with `dismissible: false` and no
+  duration, so a promise that never settled held its slot for the life of the page — with a cap of 3, three hung requests blocked the whole channel, including the error
   toasts that would have explained the hang.
 
 ## 0.11.2 — 2026-09-01
@@ -201,14 +236,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Exported class member surface grew — only matters if you SUBCLASS a DS component.**
   `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent`, `TableComponent`,
-  `LoadingOverlayComponent` and `ToastRegionComponent` all gained members for the inputs and outputs
-  above, and `DsPanelHeaderTemplateDirective`,
-  `DsPanelFooterTemplateDirective` and `DsGroupLabelTemplateDirective` are new classes.
-  Subclassing a DS component is unsupported but consumers do it, and a
-  member of yours that shares a name with one of ours stops the build. Rename yours, or add `override`
-  if you meant to replace ours — the compiler enumerates every collision, so building after the
-  upgrade is the whole check.
-
 - **BREAKING for code that CONSTRUCTS a `ToastEntry`: `durationMs` is now a required
   `readonly number`.** The field did not exist on the type before, so it arrives required rather
   than widened: an object literal typed as `ToastEntry` — a test double, a hand-rolled region, a
