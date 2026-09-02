@@ -109,8 +109,6 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 - P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
-- P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
-  of 100 cannot see one group of three collapse
 - P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
 
 **Asks — a consumer or Stas asked for it**
@@ -166,6 +164,7 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 **Records — kept so they are not "simplified" away**
 
+- P3 · **`changelog-lint` checks each source group for emptiness instead of one aggregate floor** — fixed 2026-09-02. Measured on the control: a renamed asset input leaves 295 targets, which the old floor of 100 passed. What still cannot be PROVEN is a group shrinking 3→2, so the counts print on success
 - P3 · **`class-surface-diff` now reads the class BODY, so a field without `readonly` is visible** — fixed 2026-09-02; the old pattern demanded the keyword because the scan ran to end of file and had module-level function bodies in range. An unassigned declaration counts too
 - P3 · **A gate run against a shared working tree can fail on a half-written line** — C013 was accused of a false positive on 2026-09-02 and was right: the same sentence PASSES with its next line present and FAILS without it, and a parallel session was mid-write. Re-run a gate before believing its failure here
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing
