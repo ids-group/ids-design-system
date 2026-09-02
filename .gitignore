@@ -82,3 +82,17 @@ Anton_local
 # Serena MCP local project cache (LSP index + memories) — tooling-generated
 .serena/
 
+# design-sync (claude.ai/design) — staged scripts, build output, machine state.
+# The durable set (.design-sync/ everything else: config, NOTES, conventions,
+# tools/, elements/, previews/, docs/) IS committed.
+/.ds-sync/
+/ds-bundle/
+/.design-sync/.cache/
+/.design-sync/learnings/
+/.design-sync/node_modules
+
+# design-sync elements route: generated wrappers + Angular/esbuild output.
+/.design-sync/elements/gen/
+/.design-sync/elements/dist/
+/.design-sync/elements/demo/dist/
+/out-tsc/

@@ -71,3 +71,17 @@ if (existsSync(draftGuide)) {
   execSync(`git add ${draftGuide} ${guideTarget}`);
   console.log(`changelog: promoted ${draftGuide}/ -> ${guideTarget}/.`);
 }
+
+// .design-sync/elements/package.json carries the same version, and nothing but a gate
+// notices when it stops matching — `npm version` bumps the root alone, so every release
+// used to leave check-manual-surface red on the next merge.
+const elementsPackage = '.design-sync/elements/package.json';
+if (existsSync(elementsPackage)) {
+  const manifest = JSON.parse(readFileSync(elementsPackage, 'utf8'));
+  if (manifest.version !== version) {
+    manifest.version = version;
+    writeFileSync(elementsPackage, JSON.stringify(manifest, null, 2) + '\n');
+    execSync(`git add ${elementsPackage}`);
+    console.log(`changelog: synced ${elementsPackage} to ${version}.`);
+  }
+}

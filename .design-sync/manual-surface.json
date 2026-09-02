@@ -1,0 +1,37 @@
+{
+  "conditionalProjection": [
+    "src/lib/components/auth-layout/auth-layout.component.html",
+    "src/lib/components/badge/badge.component.html",
+    "src/lib/components/bottom-sheet/bottom-sheet.component.html",
+    "src/lib/components/checkbox/checkbox.component.html",
+    "src/lib/components/drawer/drawer.component.html",
+    "src/lib/components/dropzone/dropzone.component.html",
+    "src/lib/components/filter-bar/filter-bar.component.html",
+    "src/lib/components/menu/menu-item.component.html",
+    "src/lib/components/modal/modal.component.html",
+    "src/lib/components/radio/radio.component.html",
+    "src/lib/components/sidenav/sidenav-group.component.html",
+    "src/lib/components/sidenav/sidenav-item.component.html",
+    "src/lib/components/sidenav/sidenav.component.html",
+    "src/lib/components/stat/stat.component.html",
+    "src/lib/components/switch/switch.component.html",
+    "src/lib/components/table/table.component.html"
+  ],
+  "attributeDirectives": [
+    "[dsBrandName]",
+    "[dsCellTemplate]",
+    "[dsChipTemplate]",
+    "[dsCreateTemplate]",
+    "[dsEmptyTemplate]",
+    "[dsFieldClickFocus]",
+    "[dsGroupLabelTemplate]",
+    "[dsOptionTemplate]",
+    "[dsPanelFooterTemplate]",
+    "[dsPanelHeaderTemplate]",
+    "[dsPickerTrigger]",
+    "[dsProjectionDropped]",
+    "[dsRailTrigger]",
+    "[dsReserveMessages]",
+    "[dsTooltip]"
+  ]
+}

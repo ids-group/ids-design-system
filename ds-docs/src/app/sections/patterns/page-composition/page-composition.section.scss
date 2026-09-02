@@ -1,0 +1,94 @@
+    /* Every class here carries a pc- prefix: ds-docs section styles are global, and the
+       unprefixed names collided with the borders and practice sections on first attempt. */
+
+    .pc-regions {
+      display: flex;
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+      padding: var(--space-3);
+      background: var(--surface-tint);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--ds-radius-panel);
+
+      @media (width < 768px) {
+        flex-direction: column;
+      }
+    }
+    .pc-column {
+      display: grid;
+      gap: var(--space-2);
+      flex: 1;
+      min-width: 0;
+    }
+    .pc-region {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--ds-radius-control);
+    }
+    .pc-region--chrome {
+      border-style: dashed;
+      background: transparent;
+    }
+    .pc-regions > .pc-region--chrome {
+      flex-direction: column;
+      justify-content: flex-start;
+      width: 132px;
+      flex: none;
+
+      @media (width < 768px) {
+        width: auto;
+      }
+    }
+    .pc-region--content {
+      min-height: 88px;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-tint);
+      border-style: dashed;
+    }
+    .pc-note {
+      color: var(--text-secondary);
+    }
+
+    .pc-list {
+      display: grid;
+      gap: var(--space-3);
+      margin: var(--space-4) 0 0;
+      padding-left: var(--space-6);
+      max-width: var(--col-cap-text);
+    }
+
+    .pc-table {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+    }
+    .pc-row {
+      display: grid;
+      grid-template-columns: minmax(140px, 0.8fr) minmax(220px, 1.6fr) minmax(220px, 1.6fr);
+      gap: var(--space-4);
+      align-items: start;
+      padding-bottom: var(--space-2);
+      border-bottom: var(--border-width-default) solid var(--border-default);
+
+      @media (width < 1024px) {
+        grid-template-columns: 1fr;
+        gap: var(--space-1);
+      }
+    }
+    .pc-row--head {
+      color: var(--text-secondary);
+      border-bottom-color: var(--border-strong);
+
+      @media (width < 1024px) {
+        display: none;
+      }
+    }
+    .pc-muted {
+      color: var(--text-secondary);
+    }

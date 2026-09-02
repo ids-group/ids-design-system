@@ -101,6 +101,10 @@ Every field-shaped control resolves it — inputs, selects, pickers, search, but
 field group, the number stepper. A literal `height` on a control is a bug: it will not
 line up with its neighbours and will not follow a density change.
 
+### Corner radius has its own section
+
+Radius is a role, not a step, and nested radii must decrease — see §8.
+
 ### Never express a rule in pixels
 
 `[data-density]` retunes the private spacing and height tokens underneath everything
@@ -306,7 +310,135 @@ internals.
 
 ---
 
-## 8. Where the rest lives
+## 8. Radius
+
+### Reach for a ROLE, never a step
+
+Four role tokens carry every corner in the library. Occurrence counts across the library's own
+components (measured 2026-09-01) show which one a given surface actually takes:
+
+| Role | Resolves to | Uses | What it is for |
+| --- | --- | --- | --- |
+| `--ds-radius-inner` | `--radius-sm` (4px) | 37 | Something nested INSIDE a control — a tick, a kbd cap, a focus halo, a segment |
+| `--ds-radius-control` | `--radius-md` (8px) | 26 | The control itself — button, field, tag, tooltip, segmented, search |
+| `--ds-radius-panel` | `--radius-lg` (12px) | 16 | A surface that CONTAINS controls — card, menu, popover, modal, drawer, toast |
+| `--ds-radius-pill` | `--radius-pill` (999px) | 4 | Fully round by meaning, not by size — avatar, badge, radio, progress track |
+
+The raw steps (`--radius-sm` … `--radius-2xl`) are the scale the roles map onto. Using one
+directly says "this corner belongs to no role", which is almost never true. `--radius-xl` (16px)
+and `--radius-2xl` (24px) have no consumer in the library at all — their comments in
+the token file describe an intent, not a usage.
+
+### Nesting: inner < control < panel, and never equal
+
+A rounded thing inside a rounded thing needs a SMALLER radius, or the inner corner appears
+to bulge out of the outer one. The three roles are ordered for exactly this: a field
+(`control`, 8px) inside a card (`panel`, 12px); a tick (`inner`, 4px) inside a checkbox
+(`control`). If two nested surfaces share a radius, one of them is wrong.
+
+The optical rule when you need a value the roles do not cover: inner radius = outer radius
+minus the padding between them. A 12px panel with 8px of padding wants an 8px child, not 12px.
+
+### `--radius-flat` is a statement, not a zero
+
+`--radius-flat` resolves to `--radius-0`, and it exists so that "this corner is deliberately
+square" reads differently from "nobody set a radius". It is what the middle of a button
+group and an in-range calendar day use. Writing `border-radius: 0` there loses the intent
+the next reader needs.
+
+### Overriding
+
+Corner radius is a public knob on every component that has one — `--ds-<component>-radius`,
+declared on `:host`, resolving through the role. Retheming corners means moving the four
+roles, not editing components: set `--ds-radius-control` once and every control follows.
+
+---
+
+## 9. Page composition — where things go
+
+The grid itself (tiers, spans, the canonical 8+4 / 6+6 / 9+3 splits, the forbidden 7+5, the
+720px prose cap) is specified in `docs/agent/foundations/grid.md`. This section is the layer
+above it: which region holds what, and in which order.
+
+### The page is four regions, and three of them are components
+
+```
+ds-app-layout
+├── [sidenav]  ds-sidenav          — reserve the rail, OUTSIDE the page grid
+├── [topbar]   ds-topbar           — global, not per-page
+└── (default)  the page itself
+    ├── ds-page-header             — breadcrumbs · title · meta · actions · tabs
+    ├── ds-filter-bar              — only if the page has data to filter
+    ├── the content, on .page-grid
+    └── ds-page-footer             — optional, page-level actions or legal
+```
+
+The `ds-page-header` slots are the order the eye reads, and they are not interchangeable:
+`[breadcrumbs]` above the title, `[title-badge]` beside it, `[meta]` under it, `[actions]`
+right-aligned on the title line, `[tabs]` last so the tab row sits on the header's bottom
+edge. Putting page actions anywhere else — a floating button, a row above the header —
+breaks the one place a user has learned to look.
+
+### Filters sit directly above the data they filter
+
+`ds-filter-bar` goes between the header and the content, full width, with no wrapper that
+could clip its overflow popover. Not in a sidebar, not inside the table's own card, not
+above the page header. A filter placed away from its data stops reading as a control over
+that data, and the 9+3 split is what a genuine filter RAIL is for — reserved, not the
+default.
+
+### Primary action per region, once
+
+One primary (default `variant`) per region: one in the page header, one per card, one in a
+modal's `[actions]`. A second primary in the same region makes neither primary. Secondary
+work takes `outline`, dismissive work takes `ghost`. A modal's actions read
+destructive-last: cancel then confirm, never the reverse.
+
+### When content belongs in a card, and when it does not
+
+A `ds-card` earns its border when the content inside it is a UNIT that could be moved,
+collapsed or repeated — a record summary, a KPI tile, one form section. It does not earn one
+for "this page has content": a full-width table already has its own frame (`ds-table`
+resolves `--ds-radius-control`), and a card around it double-borders. The DS default is no card;
+reach for one when the boundary means something.
+
+### Supporting information goes under, never beside
+
+Hints, counts, timestamps and helper text sit UNDER the thing they describe, at
+`--space-1`. Beside is reserved for actions. `ds-field-message` is the mechanism for a
+field; for anything else it is a `.t-s` line at `--text-secondary`. Never a tooltip: a
+tooltip is hover-only, so it cannot carry information the user needs in order to act.
+
+### The pattern catalogue
+
+Five page shapes cover what the DS is built for. Naming which one you are building settles
+most placement questions before they come up:
+
+| Pattern | Made of | The rule that is easy to miss |
+| --- | --- | --- |
+| **List + filters** | header · filter-bar · `ds-table` (or a card list) · `ds-pagination` | Filters above the data, pagination below it, both full width |
+| **Record detail** | header with `[meta]` · 8+4 grid — main left, meta sidebar right | The sidebar is metadata, never navigation |
+| **Form** | header · one `ds-card` per section · actions in the last card | One primary; submit gates on presence, never on validity |
+| **Dashboard** | header · a row of `ds-stat` tiles · charts or tables below | Tiles are one row that wraps, not a grid you hand-place |
+| **Empty / error** | `ds-empty-state` centred in the region that would have held the data | It replaces the region, not the page — header and filters stay |
+
+### Checking a composition, instead of eyeballing it
+
+Five checks, in the order that catches the most:
+
+1. **Every gap is a token.** A literal `px` between two elements will not follow
+   `[data-density]` — see §3. Grep the diff for `px` outside a token declaration.
+2. **Every span is a column.** `col-span-*` on `.page-grid`, and the split is 8+4, 6+6 or
+   9+3. If a region needs 7+5, the content is wrong, not the grid.
+3. **One grid per page.** A sub-region aligns to the page tracks; a local `display: grid`
+   with its own columns is how alignment drifts one screen at a time.
+4. **Nested radii decrease.** See §8. Two nested surfaces with the same radius is a defect
+   you can see once you look for it.
+5. **One primary per region**, and prose capped at `--col-cap-text`.
+
+---
+
+## 10. Where the rest lives
 
 The decisions this file does NOT make are the ones about which COMPONENT to reach for, and they
 have their own home: the documentation site's `Practice → Do / Don't` (modal vs drawer, button hierarchy, table
