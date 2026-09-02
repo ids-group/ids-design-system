@@ -73,16 +73,13 @@ const FIRST_CLASS = /^export (?:abstract )?class /m;
 // text would flood the changed-types report, so those members stay name-only.
 const TYPE_BEARING_INIT = /^(?:input|model|output)(?:\.required)?[<(]/;
 
-// A comment sits INSIDE the captured statement — `statementText` runs to the closing `;`, and an
-// `input()` options object routinely carries one. Rewriting or deleting it then reads as a type
-// change, which sends the release gate looking for a migration entry that would describe nothing:
-// the comment pass over the last three releases tripped `check-class-surface-entry` on
-// SelectComponent and MultiSelectComponent that way, with neither member's type touched. Runs
-// before whitespace is collapsed, because that is what removes the newline ending a `//`.
+// A comment sits INSIDE the captured statement — `statementText` runs to the closing `;` and an
+// `input()` options object routinely carries one — so editing one reads as a type change and sends
+// the release gate looking for a migration entry that would describe nothing. Must run before
+// whitespace is collapsed: that is what removes the newline ending a `//`.
 //
-// Quotes and template literals are walked rather than skipped, so a `//` inside a default string
-// survives. A `/` is read as a regex only where a value may start; getting that wrong can hide a
-// difference after it, never invent one — both sides mis-slice identically.
+// A `/` is read as a regex only where a value may start. A wrong guess there can hide a difference,
+// never invent one, so this errs toward reporting a change.
 function stripComments(text) {
   const VALUE_MAY_START = /[([{,;:=!?&|+\-*%~^<>]$/;
   let out = '';
