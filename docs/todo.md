@@ -54,6 +54,7 @@ what makes these the cheapest thing on the board.
 
 **Bugs — something shipped misbehaves**
 
+- P2 · `package-lock.json` is three patches behind `bun.lock` across the Angular set — `npm ci` no longer resolves; delete it or bump the set
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
@@ -64,12 +65,12 @@ what makes these the cheapest thing on the board.
 
 **Asks — a consumer or Stas asked for it**
 
+- P2 · **An md ARCHITECTURE for the whole design system, cross-linked like a graph** — entry point → area → component → field, so an agent reads one leaf instead of a monolith. RESEARCH FIRST, then a plan, then Stas's go-ahead — NEXT UP
 - P2 · **One entry point for the whole library** — a consumer cannot keep the DS out of their initial bundle; secondary entry points would fix it (MBP-133, deck attached)
 - P2 · **No page-level design approach for an agent** — radii, composition and page patterns are unwritten; `design-system.md` answers "what value", not "where does it go"
-- P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
 - P3 · A token named in prose is never checked against the tokens that exist — a removed one survived in two docs for months
-- P3 · `todo.md`'s index no longer accounts for its body — 43 lines against 64 items, and the gap needs a per-section reconciliation
+- P3 · `todo.md`'s index no longer accounts for its body — 44 lines against 66 items, and the gap needs a per-section reconciliation
 - P3 · Three edges left open on `ds-table` row expansion — an inert expand-all on an empty page, the lazy label, and a column header whose name flips
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
@@ -164,10 +165,10 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**43 open: 1 P1, 14 P2, 28 P3** — counted from the index by script, not incremented from the last
+**44 open: 1 P1, 15 P2, 28 P3** — counted from the index by script, not incremented from the last
 figure, which is how three summaries in this file had drifted apart by 2026-09-01, and drifted again
 by 2026-09-02. Ten are *Parked* awaiting a first consumer ask and two are Records, and the one P1 is
-a settled decision kept so it is not re-litigated, so the live board is **31 items — 6 Bugs, 9 Asks
+a settled decision kept so it is not re-litigated, so the live board is **32 items — 7 Bugs, 9 Asks
 and 16 Decisions**.
 
 **Every block is ordered P2 before P3**, with one deliberate exception: the Angular 22 line sits last
@@ -178,7 +179,7 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+**`# Bugs` holds seven.** The cheapest real win is still the warning status pair at 4.42:1 where AA
 asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
 counted — so one token step fixes all of them. Four of the others arrived on 2026-09-01 and were
 filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
@@ -187,7 +188,7 @@ nowhere so the scrim's inset is always its 40px fallback, one export leaving the
 region stuck on "Export ready" forever, then the two cosmetic ones. The sixth, the resize handle's
 unenforced `aria-valuemax`, was closed the same day it was filed.
 
-**The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-one live
+**The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
 items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
 
 **What came off this round:** the whole picker lane. Seven decisions, four follow-up changes, sixteen
@@ -261,6 +262,10 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
+- [ ] **[P2] `package-lock.json` has drifted three patches behind `bun.lock` across the whole Angular set, and `npm ci` no longer resolves — MEASURED 2026-09-02.** `infrastructure/scripts/README.md` says the file is kept for npm and Dependabot consumers, but it pins `@angular/core@21.2.14`, `@angular/cdk@21.2.12` and `@angular/cli@21.2.12` while the installed tree is `21.2.17` / `21.2.14` / `21.2.15`. `npm install --package-lock-only` fails outright: `@angular/elements@21.2.17` peers on `@angular/core@21.2.17` exactly, and the lock offers 21.2.14.
+  **It cannot be regenerated in isolation.** Doing so lets npm re-resolve every Angular package against `^21.2.0`, which lands on whatever is latest that day and diverges from `bun.lock` — and bun is what CI installs with (`_setup.sh`: `npm ci` fails under alpine/musl on the `@emnapi` optional deps). The two answers are to delete the file and move the five Bitbucket cache keys onto `bun.lock`, or to bump the whole Angular set to one version and regenerate both locks. Stas 2026-09-02: recorded, neither done.
+  **Not currently harmful:** `@angular/elements` is pinned to `21.2.17`, the version its peer requires against the installed core, so bun's tree is self-consistent and every build is green. What is lost is any consumer or bot that reads `package-lock.json`.
+
 - [ ] **[P2] `ds-split-button` paints its hover with a TEXT colour, and inside a status zone the label goes unreadable — MEASURED 2026-09-02.** `split-button.component.scss:7` defaults `--_split-button-bg-hover-color` to `var(--accent-strong)` while `:6` keeps the label on `var(--accent-on)`. `--accent-strong` is the family's readable ON-TINT colour — its own token description says "text on light surfaces" — and this is the **only** place in the library that uses it as a background; every other component hovers with `-hover`. In dark, `ds-color="success"` resolves it to `hsl(132deg 55% 62%)` and the white label lands at **1.87:1**; error is **2.46**, and in light warning is **3.78**. Reachable with the component's own default, `variant="primary"`.
   **This is a regression, not an inherited defect.** Before `--accent-strong` resolved for status families, that background was invalid-at-computed-value-time and computed to `transparent`, so the label sat on the page: illegible in light (1.00) and legible in dark (18.6). Making the pointer resolve fixed the three light cells and broke the three dark ones. Six cells, three each way.
   **The fix that was measured and not applied:** default the hover to `var(--accent-hover)`, which is the family base mixed 88% toward black in light and white in dark — so the hover follows the rest state instead of jumping to another colour. Contrast then tracks rest almost exactly: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31, against rest values of 4.83, 3.30 and 11.81. Deferred by Stas 2026-09-02: recorded rather than shipped.
@@ -658,6 +663,14 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 ## Agent-facing docs — the rules an agent needs to prototype a page, and an md layout it can navigate
 
+- [ ] **[P2] An md ARCHITECTURE for the whole design system — cross-linked like a graph, not a pile of files (Stas, 2026-09-01, re-scoped 2026-09-02). NEXT UP, and the first step is RESEARCH, not code.**
+  **What already shipped, so nobody re-solves it:** `components.md` was a 591-line, 60.2 KB monolith with six `##` sections, so there was no unit smaller than a sixth of the file to load. `tools/split-agent-catalogue.mjs` now generates `docs/agent/` from it — an index plus one leaf per component, 60 files, a 9.8 KB index and a ~1.6 KB leaf — and a `--check` gate fails the build when the leaves drift from the source. That closed the COST of the monolith for one file.
+  **What it did not close, and this item is about:** the split is flat and one-directional. A leaf cannot say "this is the same field as that one", an area cannot point at the components it contains, and nothing links a component to the token roles it reads. `design-system.md` (316 lines / 16.6 KB) is still a separate monolith with no route into the leaves. An agent that lands on `ds-input` cannot walk from there to the field-message rules, the status vocabulary, or the sibling controls.
+  **Ask:** design the whole md layout as a graph — a single entry point that routes, then area → component → field, with cross-links between leaves the way an Obsidian vault links notes, so an agent reaches one fact by following edges rather than by loading a file that might contain it.
+  **The sequence Stas asked for, and it is not negotiable:** research the practice first (how other design systems and agent-facing docs do this, what actually works), then ask him 10-20 questions, then a written plan, possibly a deck — and only after his explicit go-ahead does anything get implemented. He parked it on 2026-09-01 until the Claude Design work was finished; that work is finished.
+  **Points to settle when it is designed:** how the split is addressed (per component, per area, or per question); what stays in the root files as the always-loaded core; how a link is expressed so it survives both a generator and a human reader; how the index and the edges stay correct as components are added; and what the package ships versus what stays in-repo.
+  **Precedent already in the repo:** `tools/extract-tokens.mjs`, `tools/extract-component-api.mjs` and `tools/split-agent-catalogue.mjs` all generate documentation from source at prebuild, each with a `--check` gate. Whatever architecture is chosen should be generated the same way wherever it can be, so it cannot drift.
+
 - [ ] **[P2] There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01).** `design-system.md` covers spacing, type, size, colour, motion, content and overrides, and it answers "what value do I use" well. It does not answer **"where does this go on the page"**, which is the whole question when an agent is prototyping a screen rather than styling one control. Concretely missing:
   - **Corner radii have no rule at all.** The only mention in `design-system.md` is line 304, in passing, about radius travelling as a ROLE when a host overrides it. Nothing says which radius belongs to which surface class, or how radii nest (an inner element inside a rounded container).
   - **No composition guidance.** Where the page heading sits, where primary vs secondary actions go, when content belongs in a card and when it does not, where filters live relative to the data they filter, where supporting information goes.
@@ -666,9 +679,6 @@ A0 first, which touches none of it, or wait for that lane to land.
   The deliverable is a file an agent reads before it lays out a screen, in the same voice as `design-system.md`: rules with reasons, not a style tour. It ships in the package (`tools/build-schematics.mjs` copies the root `.md` files into `dist/ds`), so it reaches consumers' agents too.
   **One item in the dictated list needs confirming before it is written up:** "где должен быть фильм" is almost certainly a speech-to-text slip for **фильтр** (filter) — that reading fits the surrounding list of buttons/cards/information/heading. Confirm before treating it as a real requirement.
 
-- [ ] **[P2] `components.md` is a 591-line, 60 KB monolith with six top-level sections — an agent loads the whole thing to answer one question (Stas, 2026-09-01).** Measured 2026-09-01: `design-system.md` is 316 lines / 16.6 KB, `components.md` is **591 lines / 60.2 KB** across only **6** `##` sections, so there is no unit smaller than "a sixth of the file" to load. Both are copied into `dist/ds` by `tools/build-schematics.mjs`, so the cost is paid by every consumer's agent as well as ours.
-  **Ask:** design an md ARCHITECTURE for the whole design system — an index that routes, and leaf files small enough that reading one is cheap — so an agent can find the rule for one component without paying for all of them. Points to settle when it is designed: how the split is addressed (per component, per area, or per question), what stays in the root files as the always-loaded core, how the index stays correct as components are added (a generated index, like the token and component-API extractors already do, rather than a hand-kept one), and what the package ships versus what stays in-repo.
-  **Precedent already in the repo:** `tools/extract-tokens.mjs` and `tools/extract-component-api.mjs` generate documentation from source at prebuild — whatever architecture is chosen should be generated the same way wherever it can be, so it cannot drift.
 ## DS-docs
 
 - [ ] **[P3] ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01).**
@@ -712,7 +722,7 @@ A0 first, which touches none of it, or wait for that lane to land.
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
 
-- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-02: 43 index lines against 64 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
+- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-02: 44 index lines against 66 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
 
 - [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure.
 
