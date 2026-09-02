@@ -138,6 +138,36 @@
 
   .note strong { color: var(--text-primary); }
 
+  /* Verdicts sit next to the item they settle, not in a list at the end: a decision filed
+     away from its subject is one nobody finds when they reopen the question. */
+  .verdict {
+    margin: 0 0 var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    border-left: 3px solid var(--accent);
+    background: var(--surface-muted);
+    font-size: var(--font-size-s);
+  }
+
+  .verdict strong { color: var(--text-primary); }
+
+  .verdict-out,
+  .verdict-open,
+  .verdict-done {
+    margin-left: var(--space-2);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+    vertical-align: middle;
+    background-image: linear-gradient(#EAEDF1, #EAEDF1);
+    color: #4A5568;
+  }
+
+  .verdict-out { background-image: linear-gradient(#FDE7E5, #FDE7E5); color: #8C1D18; }
+  .verdict-done { background-image: linear-gradient(#E3F4EA, #E3F4EA); color: #14532D; }
+
   ul { margin: 0 0 var(--space-3); padding-left: var(--space-6); max-width: 78ch; }
   li { margin-bottom: var(--space-1); }
   code {
@@ -178,7 +208,13 @@
     </div>
   </div>
 
-  <h3>Вариант A — новый шаг рампы, оттенок сохраняется</h3>
+  <h3>Вариант A — новый шаг рампы, оттенок сохраняется <span class="verdict-out">отклонён</span></h3>
+  <div class="verdict">
+    <strong>Стас, 2026-09-02: «в A вообще разницы не видно».</strong> Это находка про саму лестницу, а
+    не вкус: пять образцов ниже отличаются на 0.4–2.0 по контрасту, и человеку, который принимает
+    решение, они читаются одинаково. Значит выбирать между ними нечего — вариант закрыт целиком, а не
+    «не тот оттенок».
+  </div>
   <p>Самый мелкий проходящий шаг — первый. Дальше запас растёт, но цвет уходит в коричневый.</p>
   <div class="grid">
     <div class="swatch">
@@ -208,7 +244,12 @@
     </div>
   </div>
 
-  <h3>Вариант B — другой цвет текста на том же тинте</h3>
+  <h3>Вариант B — другой цвет текста на том же тинте <span class="verdict-open">остался один</span></h3>
+  <div class="verdict">
+    <strong>Единственный незакрытый, но НЕ выбранный.</strong> A и C отклонены, B остался
+    исключением — а исключение это не выбор, поэтому здесь ждёт твой пик из трёх ниже. Три оттенка
+    разведены сильно (14.22 / 10.39 / 8.31), в отличие от лестницы A, где различий не видно.
+  </div>
   <p>Запас огромный и новых токенов не надо, но подпись перестаёт быть жёлтой и выбивается из трёх
     остальных статусов, которые оттенок держат.</p>
   <div class="grid">
@@ -229,7 +270,12 @@
     </div>
   </div>
 
-  <h3>Вариант C — светлее подложку. Головы нет</h3>
+  <h3>Вариант C — светлее подложку. Головы нет <span class="verdict-out">отклонён</span></h3>
+  <div class="verdict">
+    <strong>Стас, 2026-09-02: «в C белый вариант мне точно не нравится».</strong> Почти белый
+    <code>#FFFDF5</code> отклонён. Второй образец тут и не был предложением — он показывает, что
+    запаса в подложке нет вообще.
+  </div>
   <p>Показано, а не заявлено: даже если убрать тинт совсем и оставить чистый белый, текущий текст даёт
     4.59 — то есть проблема в цвете текста, а не в подложке.</p>
   <div class="grid">
@@ -253,7 +299,13 @@
     сломанными.
   </div>
 
-  <h2>2. Зебра красит каждую вторую строку скелетона</h2>
+  <h2>2. Зебра красит каждую вторую строку скелетона <span class="verdict-done">решено</span></h2>
+  <div class="verdict">
+    <strong>Стас, 2026-09-02: «так пусть будет и зебра и скелетон, какая проблема. это лучше чем туда
+    сюда выключать зебру при загрузке».</strong> Полоса на шиммер-строках остаётся <em>намеренно</em>,
+    логику подавления не добавляем: мигание зебры вокруг загрузки хуже, чем тинт под плейсхолдером.
+    Пункт закрыт как решение, а не как фикс — заводить его багом повторно не нужно.
+  </div>
   <p>
     Замерено 2026-09-02 в живом браузере на скомпилированных стилях. Скелетонная строка попадает в
     <code>&lt;tbody&gt;</code> через <code>&lt;ng-container&gt;</code>, который своего элемента не
@@ -315,10 +367,11 @@
     рода, для которого раньше существовал <code>.skeleton-mode</code>, признанный мёртвым.
   </div>
 
-  <h2>Что я жду от тебя</h2>
+  <h2>Что осталось решить</h2>
   <ul>
-    <li><strong>Варнинг:</strong> A и какой именно оттенок, либо B и какой, либо оставить как есть.</li>
-    <li><strong>Зебра:</strong> гасить полосу на скелетоне или оставить.</li>
+    <li><strong>Варнинг:</strong> который из трёх оттенков B. A закрыт (разницы не видно), белый в C
+      закрыт. Записывать B выбранным по остатку я не буду — нужен пик.</li>
+    <li><strong>Зебра:</strong> решено, полоса остаётся. Ничего не реализуется.</li>
   </ul>
 
 </div>

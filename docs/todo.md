@@ -144,7 +144,6 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P3 · The resize handle still eats a finger swipe on a hybrid device — the touch query tests the PRIMARY pointer, and a touch laptop reports a mouse
 - P3 · A `done.md` heading's numbers do not reconcile (43 found / 42 fixed / 3 rejected) and the true breakdown is not in the record
-- P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
 
 **Asks — a consumer or Stas asked for it**
 
@@ -269,16 +268,23 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds seven** (counted 2026-09-02, twice). The cheapest real win is still the warning
-status pair at 4.42:1 where AA asks 4.5: it reaches nine components plus `_status.scss` and
-`_field-state.scss` — eleven files counted — so one token step fixes all of them. Four of the
-others arrived on 2026-09-01 and were filed under *Asks* first, which was wrong: nobody asked for
-them, they are wrong in code a consumer already reads. After the token step what is left is the
-split-button hover at 1.87:1, the table's bulk-actions bar at 1.00:1, and the two cosmetic ones.
-Five are already closed: the resize handle's unenforced `aria-valuemax` the same day it was filed,
-the loading scrim's top edge, which now measures the header instead of assuming 40px, the export
-status, which no longer holds the live region once anything else has something to say, the two
-lockfiles, now level on every package either tool resolves freely, and the Angular set, moved off
+**`# Bugs` holds four** (counted 2026-09-02). Two of them are waiting on a person rather than on
+work. The warning status pair at 4.42:1 where AA asks 4.5 is still the widest in reach —
+`--warning-text` is read by nine components plus `_status.scss` and `_field-state.scss`, eleven
+files counted, so one token step covers all of them — but WHICH step is now narrower than it was:
+Stas rejected the darker-yellow ladder outright on 2026-09-02 because the rungs are
+indistinguishable to him, and rejected the near-white background too, so what is open is the
+choice of foreground on the existing tint. Deck 11 carries the three, marked. The table's
+bulk-actions bar at 1.00:1 is fixed on `feat/design-sync-last-mile` and waits only on that merge.
+The other two arrived from elsewhere on 2026-09-02: the resize handle on a hybrid device, and a
+`done.md` heading whose numbers do not reconcile.
+
+**Seven are closed since 2026-09-01**, and two of those are decisions rather than fixes: the zebra
+tint under a skeleton STAYS (toggling it around a load is the worse behaviour), and the resize
+handle's unenforced `aria-valuemax` went the day it was filed. The fixes: the loading scrim now
+measures the header instead of assuming 40px, the export status no longer holds the live region
+once anything else has something to say, the split-button hover follows the rest state, the two
+lockfiles are level on every package either tool resolves freely, and the Angular set moved off
 21.2.17 and out of the range of two high advisories.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
@@ -398,7 +404,8 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 
 - [ ] **[P3] A `done.md` heading's own numbers do not reconcile, and the true breakdown is not recoverable from the record.** *"The review round on the picker lane — 43 findings, 42 fixed"* says 42 fixed, while its body says three were rejected as overstated: 42 + 3 is 45 against 43 found. The deck it points at has all seven sections `closed` and its §11 lists exactly three rejected findings, so there is NO deferred finding hiding in the gap — the count is what is wrong, not the work. Left uncorrected deliberately: inventing the missing breakdown to make the arithmetic close would be the same error as the claim it produced (a subtraction reported as an observation — see the session's memory on derived numbers). Whoever has the review round's source list can fix the heading; until then the numbers should not be quoted.
 
-- [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. MEASURED 2026-09-02 in a real browser against the compiled styles: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+- [x] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. MEASURED 2026-09-02 in a real browser against the compiled styles: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+  **DECIDED by Stas 2026-09-02, and it is a decision rather than a fix: the tint STAYS.** His words: toggling the zebra off around a load is worse than the tint under a placeholder. So the stripe reaching a shimmer row is intended behaviour, no suppression rule is added, and this is not to be re-filed as a bug. Recorded in `presentations/11-warning-pair-and-zebra.html` next to the two specimens it was decided from.
   **The numbers.** Four shimmer rows under `zebra`: rows 1 and 3 resolve to `rgb(241 244 249)`, rows 2 and 4 to `rgba(0 0 0 / 0)` — two distinct backgrounds, the same split a data table gets, where the stripe is the point. So it reproduces; what is still open is only whether the stripe SHOULD reach a placeholder.
 
 
