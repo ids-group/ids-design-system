@@ -8,6 +8,24 @@
   "docsDir": "../docs",
   "readmeHeader": ".design-sync/conventions.md",
   "overrides": {
+    "Button": {
+      "replaces": ["button"]
+    },
+    "Checkbox": {
+      "replaces": ["input[type=checkbox]"]
+    },
+    "Input": {
+      "replaces": ["input"]
+    },
+    "List": {
+      "replaces": ["ul"]
+    },
+    "Radio": {
+      "replaces": ["input[type=radio]"]
+    },
+    "Select": {
+      "replaces": ["select"]
+    },
     "Icon": {
       "cardMode": "column"
     },
@@ -27,10 +45,12 @@
       "cardMode": "column"
     },
     "Textarea": {
-      "cardMode": "column"
+      "cardMode": "column",
+      "replaces": ["textarea"]
     },
     "Table": {
-      "cardMode": "column"
+      "cardMode": "column",
+      "replaces": ["table"]
     },
     "Timeline": {
       "cardMode": "column"
@@ -51,7 +71,8 @@
       "cardMode": "column"
     },
     "Slider": {
-      "cardMode": "column"
+      "cardMode": "column",
+      "replaces": ["input[type=range]"]
     },
     "Menu": {
       "cardMode": "column"
@@ -75,7 +96,8 @@
       "cardMode": "column"
     },
     "Modal": {
-      "cardMode": "column"
+      "cardMode": "column",
+      "replaces": ["dialog"]
     },
     "ModalCard": {
       "cardMode": "column"
