@@ -84,6 +84,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A chip row could drop a chip, or fail to, when the field sat in a box that sizes itself to its content.** The budget for how many chips fit comes off the trigger's parent, which is only a fixed quantity while that parent takes its width from somewhere else. A parent at `fit-content`, an `inline-block` one, or a flex item that cannot grow all take their width from the chips instead, so the cut was reading back its own result. The parent is now asked whether its width depends on the trigger, and the trigger's own width is used only when it cannot answer. Affects `ds-multi-select` and `ds-autocomplete`.
+
 - **Eight defects the two-wave review confirmed and nobody had acted on.** The toast region and its
   service never tore anything down, so every pending timer fired into a destroyed component — harmless
   in a long-lived app, a stream of "N timers still in the queue" in a consumer's `fakeAsync` tests. The
