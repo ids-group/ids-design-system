@@ -84,6 +84,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-split-button`'s hover left its label unreadable inside a status zone.** The hover background defaulted to the family's readable ON-TINT colour — the one meant for text on light surfaces — and this was the only place in the library using it as a background, so the label landed at 1.87:1 on `success` in dark and 2.46:1 on `error`. It now defaults to `--accent-hover`, the family base mixed toward black in light and white in dark, so the hover follows the rest state instead of jumping to another hue: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31. `--ds-split-button-bg-hover-color` still overrides it.
+
+  This does not close the whole problem. The label colour on a family's solid background already falls below 4.5:1 at REST for `success` (3.30) and `secondary` (3.31), in both themes and on every solid button — a palette question, not this component's.
+
 - **A chip row could drop a chip, or fail to, when the field sat in a box that sizes itself to its content.** The budget for how many chips fit comes off the trigger's parent, which is only a fixed quantity while that parent takes its width from somewhere else. A parent at `fit-content`, an `inline-block` one, or a flex item that cannot grow all take their width from the chips instead, so the cut was reading back its own result. The parent is now asked whether its width depends on the trigger, and the trigger's own width is used only when it cannot answer. Affects `ds-multi-select` and `ds-autocomplete`.
 
 - **Eight defects the two-wave review confirmed and nobody had acted on.** The toast region and its
