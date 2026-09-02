@@ -273,88 +273,11 @@ for (const name of [...byName.keys()].sort()) {
   }
 }
 
-// `delete_files` works only for the project OWNER, so overwriting is the only way to retire an
-// entry from here. retired.json carries the reasoning.
-const retired = JSON.parse(readFileSync(join(syncDir, 'retired.json'), 'utf8'));
-
-// A component name written as `<Menu>` is a tag to the parser, and an unknown element renders
-// nothing — the sentence would lose the very name it is about. So the text is escaped, and the
-// source keeps names in backticks, which markdown renders as code in the prompt too.
-const escapeHtml = (text) =>
-  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-function noticePage({ headline, detail }) {
-  return `<!doctype html>
-<html><head><meta charset="utf-8">
-  <link rel="stylesheet" href="../../../styles.css">
-  <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;padding:32px;background:#fff;font:14px/1.6 system-ui,sans-serif;color:#374151}
-    h1{margin:0 0 10px;font-size:16px;color:#111827}
-    p{margin:0;max-width:60ch}
-    code{background:#f3f4f6;padding:1px 5px;border-radius:3px}
-  </style>
-</head><body>
-  <h1>${escapeHtml(headline)}</h1>
-  <p>${escapeHtml(detail).replace(/`([^`]+)`/g, '<code>$1</code>')}</p>
-</body></html>
-`;
-}
-
-// The notice page above loads no script, so this is not for it: the OLD preview survives on the
-// remote and other surfaces may still load it, and left alone it resolves an export the bundle
-// dropped and prints a raw error.
-const noticePreview = ({ headline, detail }) => `var __dsPreview = (function () {
-  function Retired() {
-    return React.createElement(
-      'div',
-      { style: { font: '14px/1.6 system-ui, sans-serif', color: '#374151', maxWidth: '60ch' } },
-      React.createElement('strong', null, ${JSON.stringify(headline)}),
-      React.createElement('p', { style: { margin: '8px 0 0' } }, ${JSON.stringify(detail)}),
-    );
-  }
-  return { Retired: Retired };
-})();
-`;
-
-const notices = [];
-for (const [name, entry] of Object.entries(retired.components)) {
-  const dir = join(OUT, 'components', entry.group, name);
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, `${name}.html`), noticePage(entry));
-  writeFileSync(join(OUT, '_preview', `${name}.js`), noticePreview(entry));
-  writeFileSync(
-    join(dir, `${name}.jsx`),
-    `// ${entry.headline}. ${entry.detail}\n// Nothing is assigned: this component is not in the bundle.\n`,
-  );
-  writeFileSync(join(dir, `${name}.d.ts`), `// ${entry.headline}\n// ${entry.detail}\nexport {};\n`);
-  writeFileSync(join(dir, `${name}.prompt.md`), `# ${name}\n\n**${entry.headline}.** ${entry.detail}\n`);
-  notices.push(name);
-}
-
-for (const [name, entry] of Object.entries(retired.cardOnly)) {
-  const dir = join(OUT, 'components', entry.group, name);
-  mkdirSync(dir, { recursive: true });
-  const text = entry.parent
-    ? {
-      headline: `${name} has no card of its own`,
-      detail: `It only ever appears inside \`${entry.parent}\`, so its behaviour is shown there.`
-          + ` Its declaration and prompt are published — compose it as a child of \`${entry.parent}\`.`,
-    }
-    : entry;
-  writeFileSync(join(dir, `${name}.html`), noticePage(text));
-  if (entry.hasRemotePreview) {
-    writeFileSync(join(OUT, '_preview', `${name}.js`), noticePreview(text));
-  }
-  notices.push(name);
-}
-
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
 cpSync(join(elements, 'dist', 'ds-bundle.css'), join(OUT, '_ds_bundle.css'));
 
 console.log(
   `✓ ${written.length} card(s) + ${byName.size} declaration(s) into ${OUT.replace(repo, '.')}`
-  + `, ${notices.length} retirement notice(s)`,
 );
 if (skipped.length) {
   console.log(`· ${skipped.length} without a preview, so no card: ${skipped.join(', ')}`);
