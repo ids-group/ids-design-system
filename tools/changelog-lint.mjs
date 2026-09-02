@@ -584,12 +584,20 @@ for (const { full, label: file, isSource } of targets) {
   // `## Unreleased` described as exported, and the module declares `DsListCursorList` and three
   // functions. Only our own `Ds*` prefix is resolved — Angular and TypeScript names are all
   // over this prose and are not ours to account for.
+  //
+  // A REMOVED symbol resolves to nothing either, and naming it is the whole point of the entry
+  // announcing its removal — so the same window C010 uses applies here. Keep it tight: a
+  // misspelling that happens to sit near the word takes the exemption with it.
   scanFlat(
     /`(Ds[A-Z][A-Za-z0-9_]+)`/g,
     'C013',
     (m) =>
       `names \`${m[1]}\`, which this library does not declare — check the spelling, or name the symbol that exists`,
-    (m) => !KNOWN_SYMBOLS.has(m[1]),
+    (m) =>
+      !KNOWN_SYMBOLS.has(m[1]) &&
+      !/\bremoved\b|\bdeleted\b|\bno longer (?:declared|exported|exists)\b/i.test(
+        flat.slice(Math.max(0, m.index - 70), m.index + m[0].length + 70),
+      ),
   );
 
   // C014 — an entry whose SUBJECT is our own bookkeeping. The ban on decision archaeology reads
