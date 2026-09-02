@@ -63,7 +63,6 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 - P2 · `package-lock.json` is three patches behind `bun.lock` across the Angular set — `npm ci` no longer resolves; delete it or bump the set
 - P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
-- P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
 - P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
   of 100 cannot see one group of three collapse
 - P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
@@ -184,14 +183,15 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+**`# Bugs` holds seven** (counted 2026-09-02). The cheapest real win is still the warning status pair at 4.42:1 where AA
 asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
 counted — so one token step fixes all of them. Four of the others arrived on 2026-09-01 and were
 filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
-already reads. In cost order after the token step — one export leaving the table's live
-region stuck on "Export ready" forever, then the two cosmetic ones. Two are already closed: the
-resize handle's unenforced `aria-valuemax` the same day it was filed, and the loading scrim's
-top edge, which now measures the header instead of assuming 40px.
+already reads. After the token step what is left is the split-button hover at 1.87:1, the two
+lockfiles drifting, and the two cosmetic ones. Three are already closed: the
+resize handle's unenforced `aria-valuemax` the same day it was filed, the loading scrim's top
+edge, which now measures the header instead of assuming 40px, and the export status, which
+no longer holds the live region once anything else has something to say.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
 items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
@@ -276,7 +276,16 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **The fix that was measured and not applied:** default the hover to `var(--accent-hover)`, which is the family base mixed 88% toward black in light and white in dark — so the hover follows the rest state instead of jumping to another colour. Contrast then tracks rest almost exactly: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31, against rest values of 4.83, 3.30 and 11.81. Deferred by Stas 2026-09-02: recorded rather than shipped.
   **It does not close the whole problem, and must not be sold as if it does.** `--accent-on` on the family's solid `--accent` already fails at REST for two families — success **3.30**, secondary **3.31** — in both themes, on every solid button, not only this one. That is a palette question of the same family as the warning-pair item above, and it predates all of this.
 
-- [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
+- [x] **[P2] One export silenced `ds-table`'s live region for the rest of the page's life.**
+      Of the three shapes filed, the winner is the export line YIELDING once the events line
+      has something new to say. A timeout guesses how long a message takes to read and can
+      truncate it; making the export line lowest-priority buries "Export ready" under a stale
+      sort line, so it might never be heard. Implemented by snapshotting the events line at
+      announce time and comparing, not by clearing a signal — `statusMessage` is a computed
+      and a computed cannot write. That also settles the board's condition that "Export
+      failed" survive long enough to read: it stands until the reader does something that
+      speaks. `exportStatusState` now has exactly ONE setter, which a probe asserts, because
+      a second one added later would reintroduce the defect silently.
 
 
 - [x] **[P2] The loading scrim's top edge assumed a 40px header.** MEASURED against the 

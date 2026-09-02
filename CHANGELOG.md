@@ -21,6 +21,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   header is measured now, so the edge lands on it at every density and at any header font size
   you set. `--ds-table-head-h` still overrides it if you set that, which you should no longer
   need to.
+- **One export left `ds-table`'s live region stuck for the rest of the page's life.** The export
+  status outranked the sort, row-range and row-expansion lines and was never cleared, so from the
+  first export onwards a screen reader heard "Export ready" and nothing else: every later sort,
+  page change and bulk expansion was swallowed. The export line now holds the region only until
+  one of those lines has something new to say, so "Export failed" still stands until the reader
+  moves on, and everything after it is announced again.
 
 ## 0.11.3 — 2026-09-02
 
