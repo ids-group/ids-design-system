@@ -261,6 +261,16 @@ for (const [pkg, file, target] of vendored) {
   cpSync(join(syncDir, 'node_modules', pkg, file), join(OUT, '_vendor', target));
 }
 
+// Images pasted into the project by hand. They are not design system content, but the point of
+// committing the upload tree is that the repo can rebuild the WHOLE project — and a file with no
+// source here cannot be restored if the project is ever wiped, because `delete_files` and a
+// re-upload are the only repair and only the owner can do the first half.
+const pasted = join(syncDir, 'assets', 'uploads');
+mkdirSync(join(OUT, 'uploads'), { recursive: true });
+for (const file of readdirSync(pasted)) {
+  cpSync(join(pasted, file), join(OUT, 'uploads', file));
+}
+
 // The project's own README, from the same conventions file the agent reads.
 writeFileSync(
   join(OUT, 'README.md'),
@@ -270,5 +280,6 @@ writeFileSync(
 const distinctSections = new Set([...byName.keys()].map((name) => sectionFor(name).slug));
 console.log(
   `✓ ${written.length} card(s) over ${distinctSections.size} ds-docs section(s)`
-    + ` + ${byName.size} declaration(s) into ${OUT.replace(repo, '.')}`,
+    + ` + ${byName.size} declaration(s) + ${readdirSync(pasted).length} pasted image(s)`
+    + ` into ${OUT.replace(repo, '.')}`,
 );

@@ -70,6 +70,9 @@ echo "Committed upload tree matches the build"
 for f in styles.css README.md _vendor/react.js _vendor/react-dom.js fonts/fonts.css; do
   [ -f ".design-sync/upload/$f" ] || { echo "Expected artifact missing: .design-sync/upload/$f"; exit 1; }
 done
+sources=$(find .design-sync/assets/uploads -type f | wc -l)
+copies=$(find .design-sync/upload/uploads -type f | wc -l)
+[ "$sources" = "$copies" ] || { echo "Pasted-image mismatch: $sources source(s) against $copies in the upload tree"; exit 1; }
 faces=$(find .design-sync/upload/fonts -name '*.woff2' | wc -l)
 rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
 [ "$faces" = "$rules" ] || { echo "Font mismatch: $faces face file(s) against $rules @font-face rule(s) - the missing side 404s silently"; exit 1; }
