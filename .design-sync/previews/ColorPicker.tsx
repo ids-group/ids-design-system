@@ -36,7 +36,7 @@ export const Basic = () => (
 
 /** Open panel at a fixed colour — SV plane, hue track, hex field, default presets. */
 export const OpenPanel = () => (
-  <ColorPicker ariaLabel="Brand colour" value="#2F54FF" open />
+  <ColorPicker ariaLabel="Brand colour" value="#2F54FF" />
 );
 
 /** Curated preset palette — the matching swatch shows the selected ring. */
@@ -45,7 +45,6 @@ export const OpenCustomPresets = () => (
     ariaLabel="Route label colour"
     value="#16A34A"
     presets={routePalette}
-    open
     hint="Route colour on the depot map."
   />
 );

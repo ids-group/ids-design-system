@@ -11,16 +11,13 @@ export const SignIn = () => (
       <Input label="Password" type="password" value="hunter2" />
       <Checkbox label="Keep me signed in" checked />
       <Button fullWidth>Sign in</Button>
-      <span dsAuthSupport="">
-        <a className="link" href="#">Forgot password?</a>
-      </span>
     </div>
   </AuthLayout>
 );
 
 /** A denser card for a short form — `cardPadding` and `cardElevation` are the Card vocabulary. */
 export const Compact = () => (
-  <AuthLayout brand="Acme" logoLetter="A" cardPadding="sm" cardElevation="none">
+  <AuthLayout brand="Acme" logoLetter="A" cardPadding="sm" cardElevation="flat">
     <div style={stack}>
       <Input label="Email" type="email" placeholder="you@company.com" />
       <Button fullWidth>Send reset link</Button>

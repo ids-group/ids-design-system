@@ -16,7 +16,7 @@ export const Basic = () => (
 export const States = () => (
   <div style={col}>
     <Input label="Username" value="mikhail.shyshla" invalid hint="This username is already taken." />
-    <Input label="Delivery postcode" value="EC1A 1BB" success hint="We deliver to this area." />
+    <Input label="Delivery postcode" value="EC1A 1BB" success="We deliver to this area." />
     <Input label="Account ID" value="IDS-0042" disabled />
     <Input label="Reference" value="PO-2026-1183" readOnly />
     <Input label="Domain" value="ids-group" loading hint="Checking availability…" />
@@ -35,8 +35,8 @@ export const Sizes = () => (
 /** Floating label sits inside a taller control. */
 export const FloatingLabel = () => (
   <div style={col}>
-    <Input floating label="Recipient name" value="Amelia Barnes" />
-    <Input floating label="Phone" placeholder=" " />
+    <Input label="Recipient name" value="Amelia Barnes" />
+    <Input label="Phone" placeholder=" " />
   </div>
 );
 

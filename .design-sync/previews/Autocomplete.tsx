@@ -72,7 +72,6 @@ export const Multiple = () => (
         placeholder="Add service…"
         multiple
         value={['nd-1030', 'econ-2d']}
-        open
         options={services}
       />
     </div>

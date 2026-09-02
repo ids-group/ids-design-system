@@ -19,6 +19,12 @@
       "detail": "The component declares no inputs at all — it reads its content from an injected MODAL_CONFIRM_DATA token, so ModalService.confirm() is the only thing that can construct one. Its declaration and prompt are still published, because an agent reading the library needs to know it exists.",
       "hasRemotePreview": true
     },
+    "ToastRegion": {
+      "group": "feedback-status",
+      "headline": "ToastRegion cannot be shown in a card",
+      "detail": "The region takes only `maxVisible`; its entries come from `ToastService.show()` and `.promise()` inside the app, so a static preview can render nothing but an empty box. Its declaration and prompt are still published.",
+      "hasRemotePreview": true
+    },
     "AccordionItem": { "group": "data-display", "parent": "Accordion" },
     "DescriptionItem": { "group": "data-display", "parent": "DescriptionList" },
     "ListItem": { "group": "data-display", "parent": "List" },

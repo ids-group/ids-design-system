@@ -151,14 +151,16 @@ for (const tag of [...componentTags].sort()) {
 // The exceptions are real and deliberate: a child component appears inside its parent's
 // preview and has none of its own. They are listed rather than inferred, so adding a
 // component cannot quietly join them.
-// ModalConfirm is the other kind of exception: it declares no inputs at all and reads its content
-// from an injected MODAL_CONFIRM_DATA token, so ModalService.confirm() is the only thing that can
-// build one. There is nothing declarative to preview — its old preview passed six props the
-// component never had, and the card rendered an empty dialog.
+// ModalConfirm and ToastRegion are the other kind of exception: neither can be populated from a
+// card. ModalConfirm declares no inputs at all and reads its content from an injected
+// MODAL_CONFIRM_DATA token, so ModalService.confirm() is the only thing that can build one.
+// ToastRegion takes only `maxVisible` and gets its entries from ToastService inside the app, so a
+// preview can render nothing but an empty region. Both old previews passed props the components
+// never had — six and two — and both cards rendered blank.
 const PREVIEW_EXEMPT = new Set([
   'AccordionItem', 'CalendarDay', 'DescriptionItem', 'ListItem', 'MenuItem',
   'ModalConfirm', 'SidenavGroup', 'SidenavItem', 'Tab', 'TimeColumns',
-  'TimelineItem', 'TooltipPanel',
+  'TimelineItem', 'ToastRegion', 'TooltipPanel',
 ]);
 const previewNames = new Set(
   readdirSync(join(repo, '.design-sync', 'previews'))

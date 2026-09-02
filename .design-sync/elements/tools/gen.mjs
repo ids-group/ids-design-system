@@ -571,9 +571,29 @@ ${components.map(wrapper).join('\n')}`,
 // build (which compiles the templates), so re-exporting it here would make
 // esbuild bundle the raw partial-Ivy sources a second time — ~900 KB of dead,
 // unlinked Angular that would never run.
+// The wrappers' props are typed with the library's own vocabulary — `AutocompleteOption[]`,
+// `DatePickerPreset[]`, `SplitButtonItem[]` — so a caller that cannot import those names cannot
+// declare the value it is about to pass. Re-exporting them is not decoration: without it a preview
+// or a consumer has to widen to `unknown` and loses the check this whole surface exists for.
+// Every exported type, not only the ones a prop names directly: `AutocompleteItem` is a union over
+// `AutocompleteOptionGroup`, and a caller building that value needs the member type too. Collecting
+// only what props mention left three such types unreachable.
+const exportsByModule = new Map();
+const wrapperNames = new Set(components.flatMap((c) => [c.name, `${c.name}Props`]));
+for (const [name, module] of typeIndex) {
+  if (wrapperNames.has(name)) continue;
+  if (!exportsByModule.has(module)) exportsByModule.set(module, new Set());
+  exportsByModule.get(module).add(name);
+}
+const reexports = [...exportsByModule]
+  .sort()
+  .map(([module, names]) => `export type { ${[...names].sort().join(', ')} } from '${module}';`)
+  .join('\n');
+
 writeFileSync(
   join(OUT, 'index.ts'),
   `${header('public surface — wrappers only, see the note in tools/gen.mjs')}export * from './wrappers';
+${reexports}
 `,
 );
 

@@ -43,7 +43,7 @@ export const WithIcon = () => (
 export const Danger = () => (
   <ModalCard
     title="Scrap manifest?"
-    error
+    status="error"
     icon="warn"
     showClose={false}
     actions={

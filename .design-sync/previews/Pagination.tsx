@@ -3,7 +3,7 @@ import { Pagination } from '@ids-group-ltd/ids-design-system';
 
 /** Range label + windowed pages + size select — the full default row. */
 export const Default = () => (
-  <Pagination total={120} pageSize={10} currentPage={2} onPageChange={() => {}} />
+  <Pagination total={120} pageSize={10} currentPage={2} onCurrentPageChange={() => {}} />
 );
 
 /** Mid-range window: 1 … 11 12 13 … 24 — both ellipses visible. */
@@ -12,7 +12,7 @@ export const MidRange = () => (
     total={240}
     pageSize={10}
     currentPage={12}
-    onPageChange={() => {}}
+    onCurrentPageChange={() => {}}
     showLabel={false}
   />
 );
@@ -20,8 +20,8 @@ export const MidRange = () => (
 /** Boundary states — previous disabled on page 1, next disabled on the last. */
 export const Boundaries = () => (
   <div style={{ display: 'grid', gap: 12 }}>
-    <Pagination total={40} pageSize={10} currentPage={1} onPageChange={() => {}} showLabel={false} />
-    <Pagination total={40} pageSize={10} currentPage={4} onPageChange={() => {}} showLabel={false} />
+    <Pagination total={40} pageSize={10} currentPage={1} onCurrentPageChange={() => {}} showLabel={false} />
+    <Pagination total={40} pageSize={10} currentPage={4} onCurrentPageChange={() => {}} showLabel={false} />
   </div>
 );
 
@@ -41,9 +41,8 @@ export const SizeSelectOpen = () => {
         total={500}
         pageSize={25}
         currentPage={3}
-        onPageChange={() => {}}
+        onCurrentPageChange={() => {}}
         showLabel={false}
-        sizeSelectOpen
       />
     </div>
   );

@@ -79,7 +79,6 @@ export const SubmenuOpen = () => (
         <MenuItem icon="edit">Rename</MenuItem>
         <MenuItem
           icon="copy"
-          submenuOpen
           submenu={
             <Menu>
               <MenuItem>PDF</MenuItem>

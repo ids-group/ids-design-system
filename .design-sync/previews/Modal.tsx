@@ -91,9 +91,9 @@ export const Sizes = () => (
   </div>
 );
 
-/** `error` — danger styling for destructive confirmations. */
+/** `status="error"` — danger styling for destructive confirmations. */
 export const DangerConfirm = () => (
-  <Modal staticPreview size="sm" error title="Delete waypoint?" actions={
+  <Modal staticPreview size="sm" status="error" title="Delete waypoint?" actions={
     <>
       {cancel}
       <Button color="error">Delete</Button>

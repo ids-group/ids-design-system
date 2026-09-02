@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Badge, Button, Table } from '@ids-group-ltd/ids-design-system';
+import { Button, Table } from '@ids-group-ltd/ids-design-system';
 
 interface Shipment {
   id: string;
@@ -11,7 +11,6 @@ interface Shipment {
   status: string;
 }
 
-const asShipment = (row: unknown) => row as Shipment;
 
 const shipments: Shipment[] = [
   { id: 's1', ref: 'ORD-2026-0142', origin: 'Leeds LS1 4AP', destination: 'Manchester M1 2AB', pallets: 14, eta: '24 Jul 14:30', status: 'In transit' },
@@ -42,11 +41,6 @@ const backlogColumns = [
   { key: 'status', label: 'Status' },
 ];
 
-const cellTemplates = {
-  ref: (row: unknown) => <span className="t-s-bold">{asShipment(row).ref}</span>,
-  status: (row: unknown) => <Badge withDot>{asShipment(row).status}</Badge>,
-};
-
 /** Canonical shipments list — sorted header (asc), zebra rows, selection with
  *  two rows checked so the bulk-action bar shows. */
 export const Shipments = () => (
@@ -54,12 +48,10 @@ export const Shipments = () => (
     caption="Active shipments"
     data={shipments}
     columns={shipmentColumns}
-    cellTemplateMap={cellTemplates}
     selectable
     selectedIds={new Set(['s1', 's4'])}
     sortKey="ref"
     sortDir="asc"
-    clientSort
     zebra
     stickyHeader={false}
     bulkActions={
@@ -101,9 +93,7 @@ export const Paginated = () => (
     caption="Shipment backlog"
     data={backlog}
     columns={backlogColumns}
-    cellTemplateMap={cellTemplates}
     pageSize={5}
-    clientSort
     bordered
     stickyHeader={false}
   />

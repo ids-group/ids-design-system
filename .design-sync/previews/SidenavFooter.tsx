@@ -99,7 +99,6 @@ export const SearchOpen = () => (
       userName="Priya Patel"
       userRole="Fleet coordinator"
       searchProvider={searchProvider}
-      searchOpen
     />
   </div>
 );
@@ -114,7 +113,6 @@ export const AlertsOpen = () => (
       alerts
       alertItems={alertItems}
       searchProvider={searchProvider}
-      alertsOpen
     />
   </div>
 );
@@ -128,7 +126,6 @@ export const AccountMenuOpen = () => (
       alertItems={alertItems}
       searchProvider={searchProvider}
       profileRoute="/profile"
-      accountMenuOpen
     />
   </div>
 );

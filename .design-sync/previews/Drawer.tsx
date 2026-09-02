@@ -47,7 +47,7 @@ export const ShipmentDetail = () => (
       title="Shipment IDS-48211"
       placement="right"
       size="md"
-      footer={
+      drawerFooter={
         <>
           <Button color="neutral" variant="outline">
             Cancel
@@ -92,7 +92,7 @@ export const LeftPanel = () => (
       title="Filter runs"
       placement="left"
       size="sm"
-      footer={
+      drawerFooter={
         <>
           <Button color="neutral" variant="outline">
             Clear

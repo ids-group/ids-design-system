@@ -78,13 +78,13 @@ export const States = () => (
 /** Open panel rendered inline — selected, active-on-hover and disabled options. */
 export const Open = () => (
   <div style={col}>
-    <Select label="Service level" value="nd-12" open options={serviceOptions} />
+    <Select label="Service level" value="nd-12" staticPreview options={serviceOptions} />
   </div>
 );
 
 /** Grouped options with per-option icons; the selected icon shows in the trigger too. */
 export const OpenGrouped = () => (
   <div style={col}>
-    <Select label="Carrier" value="dpd" open clearable options={courierGroups} />
+    <Select label="Carrier" value="dpd" staticPreview clearable options={courierGroups} />
   </div>
 );

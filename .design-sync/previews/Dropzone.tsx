@@ -17,10 +17,10 @@ export const Idle = () => (
   </div>
 );
 
-/** Drag-over highlight, forced statically with `dragOver`. */
+/** The drop target at rest — the drag-over highlight is a real drag state and cannot be forced. */
 export const DragOver = () => (
   <div style={wrap}>
-    <Dropzone multiple dragOver />
+    <Dropzone multiple />
   </div>
 );
 

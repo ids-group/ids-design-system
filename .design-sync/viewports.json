@@ -1,8 +1,10 @@
 {
-  "note": "Card heights, measured. The Design System pane sizes a card from the `viewport` in its @dsCard marker, and a card taller than its box is clipped. These were produced by the render-check loop the /design-sync skill ran; that loop is not reimplemented here, so the numbers are carried as data and a component absent from this file gets the pane's default. Re-measure a card whose stories change, and add one for a new component.",
+  "note": "Card heights in CSS pixels at 900 wide, measured. The Design System pane sizes a card from the `viewport` in its @dsCard marker and clips anything taller, so a component absent from this file takes the pane's default and may lose its lower stories. HOW TO MEASURE: build the upload tree, serve it with _vendor/react.js + _vendor/react-dom.js beside it, load each card in an iframe 900 wide and TALLER than the card, then read the `#g` grid's height plus twice the body padding. Do not read documentElement.scrollHeight: it floors at the frame height, which silently reported a 167px card as 200. A layout sized in vh grows with the frame instead and cannot be measured this way — declare a height for it and let it fill.",
   "width": 900,
   "heights": {
     "Alert": 940,
+    "AppLayout": 1370,
+    "AuthLayout": 900,
     "Autocomplete": 1580,
     "Banner": 1460,
     "BottomSheet": 480,
@@ -11,17 +13,20 @@
     "DatePicker": 1970,
     "Drawer": 1130,
     "EmptyState": 1370,
-    "Icon": 440,
+    "FieldGroup": 470,
+    "FieldMessage": 480,
+    "FilterBar": 170,
+    "Icon": 460,
     "Inline": 1310,
     "LoadingOverlay": 870,
     "Menu": 1270,
     "Modal": 2000,
     "ModalCard": 900,
-    "ModalConfirm": 960,
     "MultiSelect": 990,
     "OtpInput": 660,
     "PageFooter": 420,
     "PageHeader": 710,
+    "PasswordRules": 580,
     "Progress": 540,
     "RadioGroup": 570,
     "Search": 510,
@@ -30,11 +35,15 @@
     "Stack": 550,
     "Stat": 820,
     "Stepper": 650,
-    "Table": 1230,
+    "Table": 1150,
     "Tabs": 890,
     "Textarea": 1570,
     "TimePicker": 1650,
     "Timeline": 910,
     "Topbar": 410
-  }
+  },
+  "viewportDriven": [
+    "AppLayout",
+    "AuthLayout"
+  ]
 }

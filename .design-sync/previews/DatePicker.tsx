@@ -70,7 +70,6 @@ export const OpenCalendar = () => (
     value={MAR(12)}
     minDate={MAR(3)}
     maxDate={MAR(27)}
-    open
     dateFormat="DD/MM/YYYY"
   />
 );
@@ -81,7 +80,6 @@ export const OpenRange = () => (
     mode="range"
     label="Delivery window"
     value={[MAR(9), MAR(20)]}
-    open
     dateFormat="DD/MM/YYYY"
   />
 );
@@ -93,7 +91,6 @@ export const OpenPresets = () => (
     label="Reporting period"
     value={[MAR(9), MAR(15)]}
     presets={reportingPresets}
-    open
     dateFormat="DD/MM/YYYY"
   />
 );

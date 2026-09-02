@@ -34,7 +34,7 @@ export const Variants = () => (
  *  (no portal); disabled and error items keep their menu styling. */
 export const Open = () => (
   <div style={row}>
-    <SplitButton label="Save" menuLabel="More save options" menuItems={saveActions} open />
+    <SplitButton label="Save" menuLabel="More save options" menuItems={saveActions} />
   </div>
 );
 
@@ -47,7 +47,6 @@ export const OutlineOpen = () => (
       variant="outline"
       menuLabel="Dispatch options"
       menuItems={dispatchActions}
-      open
     />
   </div>
 );

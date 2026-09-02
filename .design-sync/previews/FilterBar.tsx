@@ -20,9 +20,6 @@ export const Default = () => (
       <Select options={depots} value="leeds" placeholder="Depot" size="sm" />
       <MultiSelect options={statuses} value={['open']} placeholder="Status" size="sm" />
       <DatePicker placeholder="From" size="sm" />
-      <span dsFilterBarTrailing="">
-        <Button variant="ghost" size="sm">Reset</Button>
-      </span>
     </FilterBar>
   </div>
 );

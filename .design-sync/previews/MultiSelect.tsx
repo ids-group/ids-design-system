@@ -60,7 +60,6 @@ export const Open = () => (
       value={['dpd', 'rm24']}
       selectAll
       searchPlaceholder="Filter carriers…"
-      open
       options={courierOptions}
     />
   </div>

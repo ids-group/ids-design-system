@@ -43,6 +43,12 @@ bun run check:manual-surface
 echo "Checking the docs and previews against the real surface..."
 node .design-sync/tools/check-doc-api.mjs
 
+# The type-level half, and the one that actually holds: names alone cannot see a wrong TYPE, and
+# esbuild compiles a preview without checking anything. Run against the real wrappers it found 45
+# errors in 19 previews, one of which crashed Angular by handing a React function to a TemplateRef.
+echo "Type-checking the previews against the generated wrappers..."
+node .design-sync/tools/check-previews.mjs
+
 # Everything the upload publishes, built here so a broken generator fails the release rather than
 # the person running the upload. The publish itself cannot run in a pipeline: finalize_plan is a
 # permission gate bound to a claude.ai login and shows the path list for approval.
