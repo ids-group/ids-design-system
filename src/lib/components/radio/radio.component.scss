@@ -1,3 +1,4 @@
+@use '../../styles/control-label' as control-label;
 @use '../../styles/press' as press;
 
 :host {
@@ -29,14 +30,9 @@
   display: inline-flex;
   align-items: center;
 
-  // No flex `gap` between the control and its label: a gap is dead space that neither element
-  // covers, so a click in those few pixels did nothing. The label carries the separation as
-  // padding, which puts it inside its own hit area — and the vertical padding widens the target
-  // past the text line, cancelled by a negative block margin so no layout moves.
+  // No flex `gap` here: see styles/_control-label.scss for why the label carries it.
   .control-text {
-    padding-inline-start: var(--space-2);
-    padding-block: var(--space-1);
-    margin-block: calc(var(--space-1) * -1);
+    @include control-label.hit-area;
 
     font: var(--font-weight-regular) var(--ds-radio-label-font-size, var(--_radio-label-fs)) / var(--line-height-base) var(--font-sans);
     color: var(--_radio-label-color);

@@ -219,6 +219,14 @@
   --focus-ring-outer-l:      var(--primary-l);
   --focus-ring-outer-alpha:  1;
 
+  /* The outer halo's colour, flat, for components that draw an `outline` instead of a
+     shadow (a row inside a clipping list, a swatch grid). Seven call sites referenced
+     this name while nothing defined it, so all seven fell through to `currentColor` and
+     ringed themselves in their own text colour — near-black on a list row, grey on a
+     tree node. */
+  --focus-ring-color:
+    hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
+
   --focus-ring:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));

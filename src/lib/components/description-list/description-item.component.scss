@@ -1,3 +1,5 @@
+@use '../../styles/focus' as focus;
+
 /* The item host is one row. In horizontal mode it is a two-column grid whose
    label column width inherits --_dl-label-w from the parent ds-description-list
    (falls back to the global token when used standalone). */
@@ -81,8 +83,8 @@
 
   &:focus-visible {
     opacity: 1;
-    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
-    outline-offset: 1px;
+
+    @include focus.outline-indicator(1px);
   }
 }
 

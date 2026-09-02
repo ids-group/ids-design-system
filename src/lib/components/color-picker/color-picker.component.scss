@@ -1,3 +1,5 @@
+@use '../../styles/focus' as focus;
+
 /* The panel is portaled by the CDK OUTSIDE the host, and custom properties inherit
    down the DOM tree — which the portaled panel is not part of. So the private
    resolvers are declared twice: on :host for the trigger, and on .panel. */
@@ -124,8 +126,7 @@
   }
 
   &:focus-visible {
-    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
-    outline-offset: var(--focus-ring-offset);
+    @include focus.outline-indicator;
   }
 }
 
@@ -162,8 +163,7 @@
   );
 
   &:focus-visible {
-    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
-    outline-offset: var(--focus-ring-offset);
+    @include focus.outline-indicator;
   }
 }
 
@@ -238,8 +238,7 @@
   }
 
   &:focus-visible {
-    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
-    outline-offset: var(--border-width-strong);
+    @include focus.outline-indicator(var(--border-width-strong));
   }
 }
 

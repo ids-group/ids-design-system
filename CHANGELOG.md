@@ -10,6 +10,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A focused row drew TWO rings, and neither was the focus colour.** `ds-list-item`, `ds-tree`,
+  `ds-tag`, `ds-description-list` and `ds-color-picker` each drew their own `outline` on
+  `:focus-visible` while the blanket `:where(:focus-visible)` shadow kept painting under it — an
+  accent halo outside, their own outline inside. Worse, that outline asked for
+  `--focus-ring-color`, which **nothing defined**, so all seven call sites fell through to
+  `currentColor` and ringed themselves in their own text colour: near-black on a list row, grey on
+  a tree node. The token is defined now, from the same hue channels as the ring's outer halo, and
+  the seven sites share a `focus.outline-indicator` mixin that silences the shadow. Override it per
+  brand with `--focus-ring-color`.
+- **A selected `ds-list-item` or `ds-tree` node retinted its label and left its icon behind.**
+  Measured on the list: label `rgb(29 67 237)`, icon `rgb(22 26 40)`. On the tree the row set
+  `color` correctly but `.node-icon` declared its own and won, leaving `rgb(107 115 136)` beside an
+  accent label. Both follow the label now, through new
+  `--ds-list-item-selected-icon-color` / `--ds-tree-row-selected-icon-color` hooks that default to
+  the selected label colour.
 - **`ds-avatar-group` and `ds-button-group` styled their children by tag name, so a host that
   renames the tag got neither.** Both pierced encapsulation with `::ng-deep ds-avatar` /
   `::ng-deep ds-button`. Measured through the custom-element build, where a tag nested inside
