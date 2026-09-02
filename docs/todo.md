@@ -126,7 +126,7 @@ what makes these the cheapest thing on the board.
 | 8 | `8-rejected-with-numbers` | Every idea this backlog has rejected, with the measurement that rejected it and what would reopen it. | the Parked and Records sections |
 | 9 | `9-migration-manifest-audit` | All 23 findings are fixed; what is open is the tail — ten format practices marked *Adopt* and never ratified. Three of the thirteen shipped on their own (`action`, `appliesWhen`, `exports["./migrations/*"]`). | the P3 line below |
 | 10 | `10-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
-| 11 | `11-warning-pair-and-zebra` | Two measured defects whose FIX is a taste call: which shade closes the warning pair, and whether the zebra stripe should reach a skeleton row. Every option rendered in its own colour. | both sit in `# Bugs`; nothing ships until one is picked |
+| 11 | `11-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself, one of which lightens the tint instead of the text. | the warning pair in `# Bugs` |
 
 **Ranks 4-8 are the packaging lane and are kept contiguous** — they are one argument and were
 scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russian and share
@@ -271,13 +271,12 @@ reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 **`# Bugs` holds four** (counted 2026-09-02). Two of them are waiting on a person rather than on
 work. The warning status pair at 4.42:1 where AA asks 4.5 is still the widest in reach —
 `--warning-text` is read by nine components plus `_status.scss` and `_field-state.scss`, eleven
-files counted, so one token step covers all of them — but WHICH step is now narrower than it was:
-Stas rejected the darker-yellow ladder outright on 2026-09-02 because the rungs are
-indistinguishable to him, and rejected the near-white background too, so what is open is the
-choice of foreground on the existing tint. Deck 11 carries the three, marked. The table's
-bulk-actions bar at 1.00:1 is fixed on `feat/design-sync-last-mile` and waits only on that merge.
-The other two arrived from elsewhere on 2026-09-02: the resize handle on a hybrid device, and a
-`done.md` heading whose numbers do not reconcile.
+files counted, so one token step covers all of them — and the shape of that step is settled: a
+darker rung on the yellow ramp is closed, because the rungs are not distinguishable from one
+another and so there is nothing to choose between. Deck 11 carries the four live candidates. The
+table's bulk-actions bar at 1.00:1 is fixed on `feat/design-sync-last-mile` and waits only on that
+merge. The other two arrived from elsewhere on 2026-09-02: the resize handle on a hybrid device,
+and a `done.md` heading whose numbers do not reconcile.
 
 **Seven are closed since 2026-09-01**, and two of those are decisions rather than fixes: the zebra
 tint under a skeleton STAYS (toggling it around a load is the worse behaviour), and the resize
@@ -405,7 +404,7 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 - [ ] **[P3] A `done.md` heading's own numbers do not reconcile, and the true breakdown is not recoverable from the record.** *"The review round on the picker lane — 43 findings, 42 fixed"* says 42 fixed, while its body says three were rejected as overstated: 42 + 3 is 45 against 43 found. The deck it points at has all seven sections `closed` and its §11 lists exactly three rejected findings, so there is NO deferred finding hiding in the gap — the count is what is wrong, not the work. Left uncorrected deliberately: inventing the missing breakdown to make the arithmetic close would be the same error as the claim it produced (a subtraction reported as an observation — see the session's memory on derived numbers). Whoever has the review round's source list can fix the heading; until then the numbers should not be quoted.
 
 - [x] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. MEASURED 2026-09-02 in a real browser against the compiled styles: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
-  **DECIDED by Stas 2026-09-02, and it is a decision rather than a fix: the tint STAYS.** His words: toggling the zebra off around a load is worse than the tint under a placeholder. So the stripe reaching a shimmer row is intended behaviour, no suppression rule is added, and this is not to be re-filed as a bug. Recorded in `presentations/11-warning-pair-and-zebra.html` next to the two specimens it was decided from.
+  **DECIDED 2026-09-02: the tint STAYS, and this is a decision rather than a fix.** A stripe reaching a shimmer row is intended behaviour, because toggling the zebra off around a load and back on after it is worse than the tint under a placeholder. No suppression rule is added, and this is not to be re-filed as a defect.
   **The numbers.** Four shimmer rows under `zebra`: rows 1 and 3 resolve to `rgb(241 244 249)`, rows 2 and 4 to `rgba(0 0 0 / 0)` — two distinct backgrounds, the same split a data table gets, where the stripe is the point. So it reproduces; what is still open is only whether the stripe SHOULD reach a placeholder.
 
 
