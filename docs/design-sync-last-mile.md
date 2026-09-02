@@ -70,7 +70,8 @@ case-insensitively, so `[dsStatValue]` still claims a node carrying `dsstatvalue
 
 **Input-gated slots work too, and one shared tick is why a probe can say otherwise.** A first probe
 had `<Modal staticPreview actions={…}>` rendering nothing on React 18.3.1, which looked like the
-known property-timing limitation. It was not: the same page rendered `<Table columns={[]} rows={[]}/>`,
+known property-timing limitation. It was not: the same page rendered `<Table columns={[]}
+rows={[]}/>`,
 and `Table` requires `data`, so Angular threw NG0950. **Every element in the bundle shares one
 `ApplicationRef` by design, so that exception aborted the tick the modal was waiting on.** Isolated,
 the modal projects its `actions` correctly.
@@ -82,7 +83,8 @@ either case — `observedAttributes` on `ds-modal` is
 host-directive input is not among them because `getComponentInputs` reads the component's own inputs
 only. That is also why `elements.ts` patches the accessor by hand.
 
-The caveat worth carrying: a preview that leaves a required input unset can blank OTHER components on
+The caveat worth carrying: a preview that leaves a required input unset can blank OTHER components
+on
 the same page. In the product each card is its own page with its own bundle instance, so the blast
 radius there is one card — but a multi-component probe page is exactly where this misleads.
 
@@ -105,9 +107,15 @@ restrictions. It is what actually makes the agent use the system rather than han
 Its input is the port's `@replaces button` annotation, and that native-element→component mapping
 exists nowhere in this repo.
 
-**Fix:** carry the mapping as data — a `replaces` field per component in `config.json`, or a small
-`replaces.json` — and generate the oxlint config from it. The mapping is short and reconstructable
-from the live file, which lists every rule we ever shipped.
+**DONE** (`5d18f76b`): the mapping is a `replaces` field per component in `config.json`, and
+`build-adherence.mjs` writes the whole config from it — 10 forbidden elements, one import
+restriction, the hex/px/font rules, and a prop allowlist per component derived from `surface.json`
+(so the 55 slots are allowed, which the port's own allowlist also did).
+
+One defect found while writing it, and it would have shipped: extracting token names from
+DECLARATIONS alone lost all 120 public `--ds-*` hooks, because those appear only inside the `var()`
+that reads them. The knobs a consumer sets were exactly the ones missing from the list handed to the
+agent. Declared plus referenced is 794.
 
 ### P4 — nothing in the repo emits the per-component artefacts
 
@@ -134,8 +142,13 @@ for 33 components — and they match what is live: `Icon` is `cardMode: column` 
 `var MODE="column"` in `Icon.html`. `group` comes from each doc's `category` front matter.
 `_ds_manifest.json` is NOT ours: the app compiles it from the `@dsCard` markers.
 
-**Fix:** `.design-sync/tools/build-cards.mjs`, one artefact type at a time, verified against the
-live files before anything is uploaded.
+**DONE** (`6111d746`): `build-cards.mjs` writes the card, the re-export, the declaration and the
+prompt for every component, and compiles each preview against the host globals. The declarations are
+better than the port's: real unions rather than `unknown` (aliases are inlined by `gen.mjs`), a doc
+per prop, the icon union trimmed to 15 names plus `string & {}` the way the port trimmed it, and all
+55 slots.
+
+`_ds_sync.json` is deliberately NOT written. Its hash recipes are unknown (`keyRecipe: 7`) and a wrong value is worse than a stale one: a hash that happens to match makes the next skill-driven sync SKIP a file that did change.
 
 ### P5 — `viewport` is not derivable
 
@@ -143,9 +156,10 @@ live files before anything is uploaded.
 tool's `report_validate` takes `total`/`bad`/`thin`/`variantsIdentical`/`iterations` from a
 `.render-check.json`, so the skill ran a measure-and-iterate loop over rendered cards.
 
-**Fix:** carry `viewport` as data in `config.json` per component, measured once, and omit it when
-absent so the pane defaults. Reproducing the render-check loop is a separate, much larger piece of
-work and is not needed to publish.
+**DONE** (`f33f67a4`): all 36 measured heights were recovered from the live `_ds_manifest.json` and
+carried in `.design-sync/viewports.json` — 34 of them, minus `AppShell` and `Tooltip`, which are
+being deleted. A component absent from the file gets the pane's default, so `AppLayout` and the
+other seven new ones need measuring once. The render-check loop is not reimplemented.
 
 ### P6 — nothing gates the agent-facing docs against the real API
 
@@ -154,9 +168,32 @@ props; only two are, the third is a slot. `check-manual-surface` verifies that a
 EXIST for every component, not that either is accurate. These files ship as the agent's
 instructions, so a wrong claim there is executed rather than read.
 
-**Fix:** a gate that cross-checks every prop name a doc mentions in backticks against the generated
-interface for that component, and every slot name against the template. Same shape as
-`check-docblock-drift`.
+**DONE** (`f33f67a4`): `check-doc-api.mjs` checks every prop used in a ```tsx fence in the docs AND
+in every preview, because a preview is COMPILED into a card and esbuild does not type-check — a
+dropped prop renders an empty card in silence.
+
+It found 20, and split them into two very different causes.
+
+**Eight were the generator's fault, and this is the bigger find of the two.** `classApi` read a
+class's OWN members only, so every INHERITED input was missing from every wrapper — `hint`, `error`,
+`warning`, `errors`, `invalid`, `touched`, `reserveMessage` and `messageIcon` reach fifteen field
+components from an internal base, and Angular publishes an inherited input on the element exactly
+like an own one. The elements accepted them, the docs used them, only the wrappers denied it. **630
+inputs/outputs became 769** — 139 members that no declaration named.
+
+**The rest were written against the deleted React port and never updated.** `Popover` had an `open`
+prop there and has none here; `ToastRegion` took `toasts` and `onClosed` where the Angular region
+takes only `maxVisible` and the service owns its content; `DatePicker` had `month`; `Table`'s input
+is `cellTemplateMap`; `MenuItem.tabbable` is a signal `ds-menu` owns through its roving tabindex, so
+the doc told an agent to fight a mechanism the parent runs. Worst of them: **`ModalConfirm`'s
+preview passed six props to a component that declares none** — it reads its content from an injected
+`MODAL_CONFIRM_DATA` token, so `ModalService.confirm()` is the only thing that can build one.
+Nothing declarative to preview, so it joins `PREVIEW_EXEMPT` and its card goes.
+
+One limitation, recorded because the attempt failed: boolean shorthand is not checked. Accepting a
+bare word turned 16 findings into 484, nearly all prose — any `>` inside a tag ends the match early
+and the following sentence reads as attributes. So `<Autocomplete open>` had to be found by hand.
+The gate can fail to report; it will not invent a prop.
 
 ### P7 — CI cannot publish, by design
 
@@ -165,22 +202,40 @@ write/delete list for approval. A pipeline cannot hold that approval. So CI's jo
 to fail when the artefacts drift; the upload stays a local step with a human approving the path
 list. Not a defect — a boundary the design has to accept.
 
+**DONE** (`f33f67a4`): `build-design-sync.sh` now runs `check-doc-api`, then `build-cards` and
+`build-adherence`, and asserts both artefacts exist and that the card count equals the preview count
+— a card whose preview script is missing renders a warning instead of a component, which is how nine
+of them shipped.
+
 ## The diff to publish, verified live
 
 79 components remote against 85 local: **8 new** (`AppLayout`, `AuthLayout`, `CalendarDay`,
-`FieldGroup`, `FieldMessage`, `FilterBar`, `PasswordRules`, `TimeColumns`) and **2 to delete**
-(`AppShell`, renamed to `AppLayout`; `Tooltip`, a directive with no element to register). Every
-other remote name exists in the new bundle's 85 wrappers, so the surviving cards keep working once
-the bundle is replaced.
+`FieldGroup`, `FieldMessage`, `FilterBar`, `PasswordRules`, `TimeColumns`) and **3 to delete** —
+`AppShell` (renamed to `AppLayout`), `Tooltip` (a directive with no element to register), and
+`ModalConfirm` (no declarative surface at all). Every other remote name exists in the new bundle's
+85 wrappers, so the surviving cards keep working once the bundle is replaced.
+
+**Nine remote cards cannot render today**, and the upload should drop their `.html` too:
+`AccordionItem`, `DescriptionItem`, `ListItem`, `MenuItem`, `SidenavGroup`, `SidenavItem`, `Tab`,
+`TimelineItem` and `TooltipPanel` each have a card page whose `_preview/<Name>.js` does not exist,
+so the page reports `no PascalCase exports`. They are on `PREVIEW_EXEMPT` because each only ever
+appears inside its parent's preview; a card was never wanted. The new build writes no page for a
+component with no preview, and CI now asserts the two counts match.
 
 ## Order of work
 
-1. ~~**P1** — slots in `gen.mjs`~~ · ~~**P2** — the input docs~~ — both in `fc117ef8`.
-2. **P4** — `build-cards.mjs` for previews, card HTML, `.jsx`, `.prompt.md`, `_ds_sync.json`.
-3. **P3** — the `replaces` mapping as data, and the oxlint config generated from it.
-4. **P5** — `viewport` as data.
-5. **P6** — the doc-versus-API gate.
-6. **P7** — wire generation into `after-release`; publishing stays manual.
+Everything above is done — P1 and P2 in `fc117ef8`, P4 in `6111d746`, P3 in `5d18f76b`, and P5, P6,
+P7 plus the inherited-input fix in `f33f67a4`.
+
+What is left is not code:
+
+1. **Measure the eight new components' card heights** and add them to `viewports.json`. Until then
+   those cards take the pane's default and may clip.
+2. **Run the upload.** `list_files` first, then a `finalize_plan` naming the writes, the three
+   deletions and the nine dead `.html` pages, then `write_files` from `.design-sync/upload/`. It
+   has never run, and the project is Misha's.
+3. **Run the first `after-release` pipeline** - the only proof the chain works on alpine rather
+   than on this machine.
 
 A repo-local skill carrying the publish procedure is worth writing regardless, so no future session
 has to rediscover the order `list → finalize_plan → write → delete` or which CSS file ships.
