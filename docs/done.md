@@ -142,6 +142,32 @@ eight toasts**, and the control — the same probe with `align-self: flex-start`
 
 Closes screens 30/32 from the 08-13 batch.
 
+## Screenshot 28 — the invisible strip that ate the table's swipe (2026-09-02)
+
+- [x] **DONE 2026-09-02 — fixed as a side effect of making column width reachable on touch, and
+  recorded here because it lived nowhere durable.** The defect was found by another session and
+  written only into its own `.claude/local/todo/screens-27-36.md`, which is gitignored; that
+  session has closed. Without this entry it exists in no tracked file.
+
+  **What it was:** `.col-resize` is 8px wide, paints its line only on `:hover` / `:focus-visible`
+  — neither of which a coarse pointer produces — and carries `touch-action: none`. So at the right
+  edge of every header sat an invisible strip that swallowed the horizontal swipe used to scroll the
+  table, and the more columns, the more dead zones.
+
+  **The two options were not equivalent and Stas picked neither blindly:** hiding the handle below a
+  breakpoint removes resizing from touch entirely, and growing the target makes the dead zones WIDER.
+  The answer was to move the capability rather than resize the control — the handle stands down under
+  `(hover: none) and (pointer: coarse)`, and width moves into the column panel as − / + / Fit, which
+  opens as a `ds-bottom-sheet` there. All three routes share one step, so drag, arrows and buttons
+  move a column by the same amount. Measured on device emulation: 0 of 14 handles rendered, the sheet
+  carried the panel, and the buttons walked a column 109 → 141 → 125 → 109.
+
+  **What it does NOT reach**, filed in `todo.md` rather than left implied: a hybrid device (a touch
+  laptop) reports `hover: hover` and `pointer: fine`, so the query is false and the strip is still
+  dead to a finger there.
+
+---
+
 ## The resize handle's announced ceiling is now a real one (2026-09-01)
 
 - [x] **DONE 2026-09-01 — filed and closed the same day, because it was a regression from that
