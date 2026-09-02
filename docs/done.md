@@ -4,6 +4,20 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The toast stays above a scrim opened after it (2026-09-02)
+
+`--layer-toast: 1500` against `--layer-modal: 1300` was never going to decide this, and the rule that tried is dead code. CDK 21 gives every overlay host `popover="manual"` and calls `showPopover()`, so hosts sit in the browser **top layer**, which paints in the order things were shown and ignores z-index and stacking contexts outright. A `confirm()` opened after a toast was therefore always in front, and its scrim swallowed the toast's action button.
+
+**Fix: re-show the toast host when a scrimmed overlay appears.** The top layer has no "raise", so it is `hidePopover()` then `showPopover()` in one task — nothing paints between them. A MutationObserver on the overlay container watches for an added `.cdk-overlay-backdrop`.
+
+**Only scrimmed overlays trigger it**, and that is deliberate: a tooltip or dropdown neither covers the toast meaningfully nor eats a click, and the published scale puts `--layer-tooltip` ABOVE the toast. Raising over those would contradict our own documentation to fix nothing.
+
+**Measured, with the before/after as the control.** Same probe, same page, opposite answers: an action toast (which no longer auto-dismisses, so it survives a route change), then `confirm()`. Before, the topmost element at the toast's centre was `div.cdk-overlay-backdrop`. After, it is the toast's own content, `opacity: 1`, still full height, and focus stayed inside the confirm — so the raise costs neither a flicker nor the focus.
+
+Not measured, stated from the code: that a NON-scrimmed overlay does not trigger a raise. The observer returns early unless an added node is or contains a backdrop, and a tooltip pane has none.
+
+Underneath this sits a larger finding kept in `todo.md`: of the seven `--layer-*` values above 1000, only the toast lift targets an overlay HOST. `--layer-tooltip`, `--layer-popover` and the dropdown panel's are set on content INSIDE `.cdk-overlay-pane`, itself a stacking context, so they are inert across overlays. The scale documents an order the platform no longer decides.
+
 ## Status `ds-color` zones get their accent colour back (2026-09-01)
 
 `_ds-color.scss` maps `--accent-strong: var(--<family>-strong)` for every family it offers —

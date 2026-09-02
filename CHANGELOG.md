@@ -24,6 +24,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A modal, drawer, confirm or bottom sheet opened after a toast covered it and swallowed its action
+  button.** `--layer-toast: 1500` could not prevent it and never could: CDK 21 gives every overlay host
+  `popover="manual"` and calls `showPopover()`, so hosts live in the browser's top layer, which paints
+  strictly in the order things were shown and ignores z-index and stacking contexts. The toast host is
+  now re-shown when a scrimmed overlay appears, which is the only thing that moves it back to the
+  front. Measured before and after on the same probe: the scrim was the topmost element at the toast's
+  centre, and is not any more.
+
+  Only *scrimmed* overlays trigger it. A tooltip or dropdown neither covers the toast meaningfully nor
+  eats a click, and the documented scale deliberately puts `--layer-tooltip` above the toast.
+
+
 - **Typing on a CLOSED `ds-select` did nothing.** Type-ahead landed with the jump wired only for
   an open panel: the closed branch of the key handler returned before reaching it, so a letter
   pressed on a collapsed trigger neither jumped nor committed. It commits now, which is what a

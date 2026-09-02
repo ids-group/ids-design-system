@@ -179,6 +179,49 @@ export class ToastService {
     if (typeof maxVisible === 'number' && maxVisible >= 0) {
       this.regionRef.setInput('maxVisible', maxVisible);
     }
+    this.keepAboveScrims();
+  }
+
+  /** Keeps the toast above a modal, drawer, confirm or bottom sheet opened AFTER it.
+   *
+   *  z-index cannot do this. CDK 21 gives every overlay host `popover="manual"` and
+   *  calls `showPopover()`, which puts it in the browser's top layer — and the top
+   *  layer paints strictly in the order things were shown, ignoring z-index and
+   *  stacking contexts entirely. So `--layer-toast` is inert against another overlay,
+   *  and a scrim opened later covers the toast and swallows its action button.
+   *  Re-showing the toast host is what moves it back to the front.
+   *
+   *  Only SCRIMMED overlays trigger it. A tooltip or a dropdown neither covers the
+   *  toast meaningfully nor eats a click, and the documented scale deliberately puts
+   *  `--layer-tooltip` above the toast — re-raising over those would contradict it. */
+  private keepAboveScrims(): void {
+    const host = this.overlayRef?.hostElement;
+    const container = host?.parentElement;
+    if (!host || !container || typeof host.showPopover !== 'function') {
+      return;
+    }
+    new MutationObserver((records) => {
+      const scrimAppeared = records.some((record) =>
+        [...record.addedNodes].some(
+          (node) =>
+            node instanceof HTMLElement &&
+            node !== host &&
+            (node.classList.contains('cdk-overlay-backdrop') ||
+              node.querySelector?.('.cdk-overlay-backdrop')),
+        ),
+      );
+      if (!scrimAppeared || !host.isConnected) {
+        return;
+      }
+      // hide-then-show in one task: the top layer has no "raise", and nothing paints
+      // between the two calls.
+      try {
+        host.hidePopover();
+        host.showPopover();
+      } catch {
+        // The host may not be showing — nothing to raise, and nothing to report.
+      }
+    }).observe(container, { childList: true, subtree: true });
   }
 
   private buildPositionStrategy(): GlobalPositionStrategy {
