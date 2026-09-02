@@ -1,10 +1,16 @@
 <!-- @dsCard group="layout" viewport="900x550" -->
 <!doctype html>
-<html><head><meta charset="utf-8">
+<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
+     automatic OS branch, so a host that sets it on this document flips every component's tokens
+     while the page keeps its own background. Measured on the live cards: a light page whose tonal
+     buttons came out dark navy with white labels and whose outline labels went invisible. -->
+<html data-theme="light"><head><meta charset="utf-8">
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
   <style>
-    body{margin:0;padding:24px;background:#fff}
+    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
+       all, because the components followed the theme and the page did not. */
+    body{margin:0;padding:24px;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
     /* auto-fit (not auto-fill): empty tracks collapse, so a 1-2 story card
        fills the width instead of stranding stories in a half-width left
        column beside phantom empty columns */
