@@ -52,8 +52,6 @@ node .design-sync/tools/check-previews.mjs
 # Everything the upload publishes, built here so a broken generator fails the release rather than
 # the person running the upload. The publish itself cannot run in a pipeline: finalize_plan is a
 # permission gate bound to a claude.ai login and shows the path list for approval.
-# One command, because build-cards wipes the tree it owns and does not write the adherence config:
-# running it alone DELETES that file, and the two have to stay in this order.
 echo "Building the upload artefacts..."
 bun run build:upload
 
