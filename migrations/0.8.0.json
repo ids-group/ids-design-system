@@ -158,10 +158,10 @@
       "kind": "behavior",
       "old": "ds-time-picker",
       "new": null,
-      "action": "Nothing to configure: `--ds-time-picker-panel-radius` is inert here, so setting it has no effect. Take the square panel, or override it from your own global CSS as `restore` shows.",
+      "action": "None, unless a square dropdown is unacceptable — then apply `restore`.",
       "appliesWhen": "The open dropdown only. The trigger radius is unchanged and still resolves through `--ds-time-picker-trigger-radius`.",
-      "note": "The panel renders SQUARE. It had drawn the CONTROL radius (8px), out of step with every other floating surface; the move onto the panel role reads a private token declared on `:host`, which the portaled panel cannot see, so `border-radius` falls back to its initial `0` — neither the old 8px nor the 12px intended. The new `--ds-time-picker-panel-radius` hook is forwarded onto the pane but read by no rule, so it changes nothing.",
-      "pitfall": "A private `--_*` token declared on `:host` does not reach a panel the CDK portals out of that host, and an unresolvable `var()` silently becomes the property's initial value — `0` for a radius. Read the PUBLIC `--ds-*` token at the use site instead.",
+      "note": "The panel renders square, where it drew an 8px corner before. Its rule reads a private token declared on `:host` and the CDK portals the panel out of that host, so the `var()` does not resolve and `border-radius` takes its initial `0`. The public `--ds-time-picker-panel-radius` hook is forwarded onto the pane but read by no rule, so setting it changes nothing.",
+      "pitfall": "The obvious override does nothing, and does it silently. `ds-time-picker { --ds-time-picker-panel-radius: … }` cannot reach the panel at all, the panel being portaled out of that element; and a single `.time-panel { border-radius: … }` loses to the component's own rule, which view encapsulation shims to `.time-panel[_ngcontent-…]`. Only a global rule with the class doubled out-ranks it, which is why `restore` is written that way.",
       "searchHints": [
         "ds-time-picker",
         "--ds-time-picker-panel-radius",
@@ -170,8 +170,8 @@
         "time-picker"
       ],
       "surface": "style",
-      "restore": "`.time-panel.time-panel { border-radius: var(--radius-md); }` in a GLOBAL stylesheet: the panel is portaled out of the component, so a rule scoped under `ds-time-picker` cannot match it, and the doubled class is what out-ranks the encapsulation-shimmed `.time-panel[_ngcontent-…]`.",
-      "verify": "Open the time picker: the panel has SQUARE corners. That is this release's behaviour, not a misconfiguration, and no token setting changes it."
+      "restore": "`.time-panel.time-panel { border-radius: var(--radius-md); }`, in a global stylesheet.",
+      "verify": "Open the time picker: the panel draws square corners, or the 8px corner if you applied `restore`."
     },
     {
       "id": "focus-partial-needs-use-line",
