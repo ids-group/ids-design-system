@@ -157,9 +157,13 @@ function findScss(dir) {
         : [];
   });
 }
+// CRLF is stripped at every read, not at write time: a multi-line token value (the focus rings)
+// carries its line breaks INSIDE the emitted string, where `.gitattributes` cannot reach them. Left
+// alone, the generated file differs between a CRLF and an LF checkout of the same commit.
+const readSource = (p) => readFileSync(p, 'utf8').replaceAll('\r\n', '\n');
 const readIf = (p) => {
   try {
-    return readFileSync(p, 'utf8');
+    return readSource(p);
   } catch {
     return '';
   }
@@ -167,7 +171,7 @@ const readIf = (p) => {
 
 const compFiles = findScss(join(ROOT, 'src/lib/components'));
 const comp = compFiles.flatMap((f) =>
-  extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))),
+  extractComponentTokens(readSource(f), basename(dirname(f))),
 );
 
 // findScss only walks *.component.scss, so a public hook exposed by a shared partial
