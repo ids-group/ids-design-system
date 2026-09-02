@@ -6582,7 +6582,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Info tint fill."
       },
       {
-        "name": "--ds-toast-border-color-color-info",
+        "name": "--ds-toast-border-color-info",
         "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Info tint border."
       },
@@ -6592,7 +6592,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Success tint fill."
       },
       {
-        "name": "--ds-toast-border-color-color-success",
+        "name": "--ds-toast-border-color-success",
         "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Success tint border."
       },
@@ -6602,7 +6602,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Warning tint fill."
       },
       {
-        "name": "--ds-toast-border-color-color-warning",
+        "name": "--ds-toast-border-color-warning",
         "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Warning tint border."
       },
@@ -6612,7 +6612,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Error tint fill."
       },
       {
-        "name": "--ds-toast-border-color-color-error",
+        "name": "--ds-toast-border-color-error",
         "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Error tint border."
       },
