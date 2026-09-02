@@ -11,7 +11,6 @@
 // brand-agnostic) and the sidebar-collapse rule (docs-site chrome, not design system).
 @use 'styles/status' as status;
 @use 'styles/specimens';
-
 @include status.semantic-preset;
 @include status.define(
   (

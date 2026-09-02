@@ -1,12 +1,17 @@
-/* Joins projected <ds-button> children into one bordered unit. The buttons sit
+/* Joins projected button children into one bordered unit. The buttons sit
    in this component's view, so we pierce emulated encapsulation with an anchored
    ::ng-deep to reach their inner .button (mirrors avatar-group's approach). An
-   unanchored ::ng-deep would compile to a global rule hitting every ds-button. */
+   unanchored ::ng-deep would compile to a global rule hitting every ds-button.
+   Matched as the direct CHILD, not as `ds-button`: a host that registers this
+   library as custom elements must rename a tag it nests inside another
+   component's template (angular/angular#24536), and a tag selector then misses
+   its own children — measured through the React wrappers, every button lost its
+   margin and its flattened radii. */
 
 :host {
   display: inline-flex;
 
-  & ::ng-deep ds-button {
+  & > ::ng-deep * {
     &:not(:first-child) {
       margin-left: var(--btn-group-overlap);
     }

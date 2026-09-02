@@ -10,6 +10,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-avatar-group` and `ds-button-group` styled their children by tag name, so a host that
+  renames the tag got neither.** Both pierced encapsulation with `::ng-deep ds-avatar` /
+  `::ng-deep ds-button`. Measured through the custom-element build, where a tag nested inside
+  another component's template has to be renamed (angular/angular#24536), all three
+  avatars came back `margin-left: 0` with no ring and the button group lost every flattened
+  radius. They match the direct child now, so the grouping holds whatever the child is rendered
+  as. Computed output in an ordinary Angular app is unchanged — verified identical before and
+  after.
 - **Typing on a CLOSED `ds-select` did nothing.** Type-ahead landed with the jump wired only for
   an open panel: the closed branch of the key handler returned before reaching it, so a letter
   pressed on a collapsed trigger neither jumped nor committed. It commits now, which is what a
