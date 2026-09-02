@@ -5159,7 +5159,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-split-button-bg-hover-color",
-        "value": "var(--accent-strong)",
+        "value": "var(--accent-hover)",
         "notes": "Split button hover fill (defaults to --accent-strong)."
       },
       {
@@ -6393,11 +6393,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Trigger horizontal padding; follows the field family via --field-pad-x, so it tracks density like ds-input."
       },
       {
-        "name": "--ds-time-picker-panel-radius",
-        "value": "var(--ds-radius-panel)",
-        "notes": "Time panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
-      },
-      {
         "name": "--ds-time-picker-required-color",
         "value": "var(--error)",
         "notes": "Colour of the required asterisk beside the time label (default --error)."
@@ -6426,6 +6421,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-time-picker-border",
         "value": "var(--border-default)",
         "notes": "Panel border."
+      },
+      {
+        "name": "--ds-time-picker-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Time panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
       },
       {
         "name": "--ds-time-picker-shadow",
