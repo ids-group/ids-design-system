@@ -4,6 +4,7 @@
   display: inline-flex;
   --_split-button-bg-color: var(--ds-split-button-bg-color, var(--accent));
   --_split-button-text-color: var(--ds-split-button-text-color, var(--accent-on));
+
   /* --accent-hover, not --accent-strong: the latter is the family's readable ON-TINT colour and
      this was the only place in the library using it as a BACKGROUND, which put the white label
      at 1.87:1 on success in dark. --accent-hover is the family base mixed toward black in light
