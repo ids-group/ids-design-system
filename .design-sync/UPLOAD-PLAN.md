@@ -19,20 +19,11 @@ bulk delete requires project ownership when called without a turn fence;
 this project is owned by another user
 ```
 
-So the project now carries the current 85 components AND the stale entries below. Two cards that
-used to work are now broken by that: `AppShell` and `Tooltip` still have their July preview scripts,
-which reference `window.IdsDs.AppShell` and `.Tooltip`, and the current bundle exports neither. That
-is the intended end state for both components — one was renamed, the other is a directive — but
-until the files go they read as broken cards rather than absent ones.
-
-### For Misha to delete
-
-| path | why |
-|---|---|
-| `components/navigation/AppShell/**` · `_preview/AppShell.js` | renamed to `AppLayout`, which is uploaded |
-| `components/overlays/Tooltip/**` · `_preview/Tooltip.js` | `dsTooltip` is a directive; there is no element to register |
-| `components/overlays/ModalConfirm/ModalConfirm.html` · `_preview/ModalConfirm.js` | the component declares no inputs and reads `MODAL_CONFIRM_DATA` from DI, so only `ModalService.confirm()` can build one. Its declaration and prompt stay |
-| `AccordionItem` · `DescriptionItem` · `ListItem` · `TimelineItem` · `MenuItem` · `SidenavGroup` · `SidenavItem` · `Tab` · `TooltipPanel` — the `.html` only | each has a card page whose `_preview/<Name>.js` never existed, so the page prints "no PascalCase exports". All nine are on `PREVIEW_EXEMPT`: they appear inside a parent's preview and a card was never wanted |
+The durable constraint: **`delete_files` only works for the project OWNER.** Removing a stale entry
+is not something a collaborator can do from here at all, one path or many, so a rename or a dropped
+component leaves its old files behind until the owner deletes them — and a card whose preview script
+still names an export the current bundle dropped reads as broken rather than absent. Plan a rename
+as "upload the new name, ask the owner to remove the old one".
 
 ## Counts
 
