@@ -58,7 +58,9 @@ try {
   execSync('node tools/migration-lint-selftest.mjs', { stdio: 'inherit' });
 } catch {
   fail(
-    'a migration-lint rule can no longer fire — the lint below would pass on data it should reject.',
+    'the migration-lint selftest did not pass — read its output above. A rule that can no longer
+      fire means the lint below would pass on data it should reject; a selftest that could not run
+      means nothing has been proved either way.',
   );
 }
 
@@ -75,7 +77,9 @@ try {
   execSync('node tools/changelog-lint-selftest.mjs', { stdio: 'inherit' });
 } catch {
   fail(
-    'a changelog-lint rule can no longer fire — the lint below would pass on text it should reject.',
+    'the changelog-lint selftest did not pass — read its output above. A rule that can no longer
+      fire means the lint below would pass on text it should reject; a selftest that could not run
+      means nothing has been proved either way.',
   );
 }
 
@@ -105,7 +109,8 @@ try {
   execSync('node tools/check-color-families.mjs', { stdio: 'inherit' });
 } catch {
   fail(
-    'a ds-color family cannot resolve a role its accent pointers read, so that zone renders as body text (errors above).',
+    'the colour-family check did not pass — read its own output above: it reports either a family
+      that cannot resolve a role its accent pointers read, or that it could not run at all.',
   );
 }
 
