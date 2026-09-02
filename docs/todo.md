@@ -31,11 +31,38 @@
 
   **Two open questions, and they are what makes this bigger than it looks:**
 
-  - **The panel's readout is an `<input>`** — `color-picker.component.html:91` binds
-    `[value]="displayHex()"`, and per-glyph animation cannot live inside an input's value, because
-    there are no element boundaries to animate. The trigger's `<span class="hex">` (line 19) can carry
-    it. So either the effect is trigger-only, or the input needs an animated layer over it that hides
-    while focused. Both surfaces read the same `displayHex()`; pick one before building.
+  - **BOTH readouts can roll, and the panel's `<input>` is the interesting half — RESEARCHED
+    2026-09-02, and the answer is cheaper than it looks.** Per-glyph animation cannot live inside an
+    input's value: there are no element boundaries to animate. The published recipe is a mirror layer
+    over a transparent input, and its known costs are caret sync, selection sync, scroll sync and a
+    per-keystroke timing budget. **None of the four applies here**, because the layer only ever has to
+    be visible while the input is NOT focused, and every path that changes the value from outside the
+    input leaves focus outside it:
+    - the SV plane and the hue rail are `tabindex="0"` and their `pointerdown` handlers do NOT call
+      `preventDefault()` (`color-picker.component.ts:204`, `:256`), so pressing either moves focus to
+      that surface by browser default;
+    - arrow-key adjustment happens with focus already on those surfaces — all three
+      `preventDefault()` calls in the component are on `keydown`, never on a pointer event;
+    - a preset is a `<button>`, which takes focus itself;
+    - the panel autofocuses nothing (no `focus()` call anywhere in the component), so opening it does
+      not put the caret in the field;
+    - typing in the field is the ONLY case where focus is inside it, and there an odometer would fight
+      the user's own caret — so no animation is wanted, which is the same condition.
+
+    So: `focusin` hides the layer and shows the native input, `focusout` restores it. No caret, no
+    selection, no scroll to synchronise.
+
+  - **One component, two mount points.** The trigger's `<span class="hex">` needs no overlay at all —
+    it is already a span, so it hosts the roller directly. The panel input hosts the same roller as an
+    `aria-hidden` layer inside a wrapper, positioned `inset: 0`. Alignment is exact rather than
+    approximate because both readouts are `var(--font-mono)` at `var(--font-size-s)` /
+    `var(--line-height-flat)`: the layer copies that font plus the field's `padding: 0 var(--space-2)`
+    and `border-width-default`. Monospace also removes the width-jitter problem for `A`-`F` that
+    `font-variant-numeric: tabular-nums` could not have solved.
+
+  - **Measure before trusting the geometry.** The no-scroll-sync claim rests on a 7-character value
+    never overflowing the field; that width has NOT been measured. Check it in a real browser at the
+    smallest field size before relying on it, and keep `overflow: hidden` on the layer either way.
   - **A drag emits values faster than any animation finishes.** Every `pointermove` produces a new
     hex, so a glyph will be mid-flight when its next value lands. That forces a `transition` on
     `translateY` rather than `@keyframes`: a transition retargets from wherever the glyph currently
