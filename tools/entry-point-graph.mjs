@@ -43,7 +43,7 @@ function resolveSpecifier(fromFile, specifier) {
     try {
       if (statSync(candidate).isFile()) return candidate;
     } catch {
-      /* not this one */
+      continue;
     }
   }
   return null;
