@@ -215,6 +215,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "app-layout:RailTriggerDirective": {
+    "key": "app-layout",
+    "selector": "[dsRailTrigger]",
+    "isElement": false,
+    "className": "RailTriggerDirective",
+    "status": "stable",
+    "importName": "RailTriggerDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "auth-layout": {
     "key": "auth-layout",
     "selector": "ds-auth-layout",
@@ -1570,6 +1582,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "chip-template": {
+    "key": "chip-template",
+    "selector": "[dsChipTemplate]",
+    "isElement": false,
+    "className": "DsChipTemplateDirective",
+    "status": "stable",
+    "importName": "DsChipTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "color-picker": {
     "key": "color-picker",
     "selector": "ds-color-picker",
@@ -1707,6 +1731,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       }
     ],
+    "outputs": []
+  },
+  "create-template": {
+    "key": "create-template",
+    "selector": "[dsCreateTemplate]",
+    "isElement": false,
+    "className": "DsCreateTemplateDirective",
+    "status": "stable",
+    "importName": "DsCreateTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "date-picker": {
@@ -2305,6 +2341,30 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "empty-template": {
+    "key": "empty-template",
+    "selector": "[dsEmptyTemplate]",
+    "isElement": false,
+    "className": "DsEmptyTemplateDirective",
+    "status": "stable",
+    "importName": "DsEmptyTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
+  "field-click-focus": {
+    "key": "field-click-focus",
+    "selector": "[dsFieldClickFocus]",
+    "isElement": false,
+    "className": "FieldClickFocusDirective",
+    "status": "stable",
+    "importName": "FieldClickFocusDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "field-group": {
     "key": "field-group",
     "selector": "ds-field-group",
@@ -2400,6 +2460,40 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Height of the \"+N\" trigger, to match the filters beside it. The bar cannot infer this: `dsFilterItem` carries a WIDTH, and the filters are arbitrary projected controls whose own `size` it never sees — so a row of `sm` filters got an `md` trigger standing 8px taller under `align-items: flex-end`."
       }
     ],
+    "outputs": []
+  },
+  "filter-bar:FilterItemDirective": {
+    "key": "filter-bar",
+    "selector": "ng-template[dsFilterItem]",
+    "isElement": true,
+    "className": "FilterItemDirective",
+    "status": "stable",
+    "importName": "FilterItemDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "width",
+        "kind": "input",
+        "type": "unknown",
+        "union": null,
+        "default": "DEFAULT_ITEM_WIDTH",
+        "required": false,
+        "description": "Slot width in px. Bare `dsFilterItem` (or a non-positive value) means 180."
+      }
+    ],
+    "outputs": []
+  },
+  "group-label-template": {
+    "key": "group-label-template",
+    "selector": "[dsGroupLabelTemplate]",
+    "isElement": false,
+    "className": "DsGroupLabelTemplateDirective",
+    "status": "stable",
+    "importName": "DsGroupLabelTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "icon-button": {
@@ -3973,6 +4067,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "option-template": {
+    "key": "option-template",
+    "selector": "[dsOptionTemplate]",
+    "isElement": false,
+    "className": "DsOptionTemplateDirective",
+    "status": "stable",
+    "importName": "DsOptionTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "otp-input": {
     "key": "otp-input",
     "selector": "ds-otp-input",
@@ -4303,6 +4409,30 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "panel-footer-template": {
+    "key": "panel-footer-template",
+    "selector": "[dsPanelFooterTemplate]",
+    "isElement": false,
+    "className": "DsPanelFooterTemplateDirective",
+    "status": "stable",
+    "importName": "DsPanelFooterTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
+  "panel-header-template": {
+    "key": "panel-header-template",
+    "selector": "[dsPanelHeaderTemplate]",
+    "isElement": false,
+    "className": "DsPanelHeaderTemplateDirective",
+    "status": "stable",
+    "importName": "DsPanelHeaderTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "password-rules": {
     "key": "password-rules",
     "selector": "ds-password-rules",
@@ -4359,6 +4489,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly and both sides can name the same string, which avoids threading a template ref between two siblings."
       }
     ],
+    "outputs": []
+  },
+  "picker-trigger": {
+    "key": "picker-trigger",
+    "selector": "[dsPickerTrigger]",
+    "isElement": false,
+    "className": "DsPickerTriggerDirective",
+    "status": "stable",
+    "importName": "DsPickerTriggerDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "popover": {
@@ -4779,6 +4921,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Visible group label; omit to supply your own."
       }
     ],
+    "outputs": []
+  },
+  "reserve-messages": {
+    "key": "reserve-messages",
+    "selector": "[dsReserveMessages]",
+    "isElement": false,
+    "className": "ReserveMessagesDirective",
+    "status": "stable",
+    "importName": "ReserveMessagesDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "search": {
@@ -5309,6 +5463,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The panel closed, for any reason — a pick, Escape, an outside click, a scroll."
       }
     ]
+  },
+  "sidenav:BrandNameDirective": {
+    "key": "sidenav",
+    "selector": "[dsBrandName]",
+    "isElement": false,
+    "className": "BrandNameDirective",
+    "status": "stable",
+    "importName": "BrandNameDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "sidenav": {
     "key": "sidenav",
@@ -6343,6 +6509,59 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Inline label rendered beside the track and wired via for/id. Omit to bring your own <label>."
+      }
+    ],
+    "outputs": []
+  },
+  "table:CellTemplateDirective": {
+    "key": "table",
+    "selector": "[dsCellTemplate]",
+    "isElement": false,
+    "className": "CellTemplateDirective",
+    "status": "stable",
+    "importName": "CellTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsCellTemplate",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "The `key` of the column this template replaces, matched against the table's `columns`. A key no column declares renders nothing and warns nowhere."
+      }
+    ],
+    "outputs": []
+  },
+  "table:HeaderFilterDirective": {
+    "key": "table",
+    "selector": "ng-template[dsHeaderFilter]",
+    "isElement": true,
+    "className": "HeaderFilterDirective",
+    "status": "stable",
+    "importName": "HeaderFilterDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsHeaderFilter",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Key of the column this filter belongs to."
+      },
+      {
+        "name": "active",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether YOUR criterion is currently set, which drives the header's active-filter styling."
       }
     ],
     "outputs": []
@@ -7968,6 +8187,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "outputs": []
   },
   "tooltip": {
+    "key": "tooltip",
+    "selector": "[dsTooltip]",
+    "isElement": false,
+    "className": "TooltipDirective",
+    "status": "stable",
+    "importName": "TooltipDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsTooltip",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Tip text. An empty string is how you turn the tooltip off — a host bound to a value that may be blank needs no separate condition."
+      },
+      {
+        "name": "dsTooltipPlacement",
+        "kind": "input",
+        "type": "TooltipPlacement",
+        "union": [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ],
+        "default": "'top'",
+        "required": false,
+        "description": "Which side the tip opens on. It does NOT flip: only the requested side is offered to the overlay, so a tip with no room there is pushed rather than moved to the opposite side."
+      },
+      {
+        "name": "dsTooltipDelay",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "120",
+        "required": false,
+        "description": "Milliseconds before the tip appears. Hiding is immediate — this delay only ever suppresses a tip the pointer passed over on its way somewhere else."
+      }
+    ],
+    "outputs": []
+  },
+  "tooltip:TooltipPanelComponent": {
     "key": "tooltip",
     "selector": "ds-tooltip-panel",
     "isElement": true,

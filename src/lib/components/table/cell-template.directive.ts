@@ -23,6 +23,8 @@ import { Directive, TemplateRef, inject, input } from '@angular/core';
   standalone: true,
 })
 export class CellTemplateDirective {
+  /** The `key` of the column this template replaces, matched against the table's
+   *  `columns`. A key no column declares renders nothing and warns nowhere. */
   readonly dsCellTemplate = input.required<string>();
   readonly template = inject(TemplateRef<{ $implicit: unknown; row: unknown }>);
 }

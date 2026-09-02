@@ -25,6 +25,9 @@ const EDITORIAL = join(
 
 const CALL_KINDS = { input: 'input', model: 'model', output: 'output' };
 
+// Both carry inputs and outputs, and a consumer binds them the same way.
+const DECLARABLE = new Set(['Component', 'Directive']);
+
 function walkFiles(dir, suffix, out = []) {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
@@ -216,7 +219,7 @@ function decoratorSelector(node, sf) {
     const call = dec.expression;
     if (
       !ts.isCallExpression(call) ||
-      call.expression.getText(sf) !== 'Component'
+      !DECLARABLE.has(call.expression.getText(sf))
     )
       continue;
     const arg = call.arguments[0];
@@ -311,7 +314,10 @@ function exportedClassNames() {
   return names;
 }
 
-const files = walkFiles(COMPONENTS, '.component.ts');
+const files = [
+  ...walkFiles(COMPONENTS, '.component.ts'),
+  ...walkFiles(COMPONENTS, '.directive.ts'),
+];
 // Base classes (e.g. control-value-accessor.ts's DsBooleanControlValueAccessor)
 // live outside the *.component.ts glob — index every *.ts so `extends` resolves.
 const allTsFiles = walkFiles(COMPONENTS, '.ts');
@@ -343,7 +349,12 @@ for (const file of files) {
 
       return;
     }
-    const key = basename(dirname(file));
+    // A directive in its component's folder keys on that folder; a LOOSE one sits
+    // directly in components/, where every file would key on `components`.
+    const key =
+      dirname(file) === COMPONENTS
+        ? basename(file).replace(/\.directive\.ts$/, '')
+        : basename(dirname(file));
     const props = [...collectProps({ node, sf }, classIndex, aliases).values()];
     const ed = editorial[key] ?? {};
     const finalize = (p) => ({
