@@ -44,9 +44,16 @@
 .control-line {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
 
+  // No flex `gap` between the control and its label: a gap is dead space that neither element
+  // covers, so a click in those few pixels did nothing. The label carries the separation as
+  // padding, which puts it inside its own hit area — and the vertical padding widens the target
+  // past the text line, cancelled by a negative block margin so no layout moves.
   .control-text {
+    padding-inline-start: var(--space-2);
+    padding-block: var(--space-1);
+    margin-block: calc(var(--space-1) * -1);
+
     font: var(--font-weight-regular) var(--ds-switch-label-font-size, var(--_switch-label-fs)) / var(--line-height-base) var(--font-sans);
     color: var(--ds-switch-label-color, var(--text-primary));
     cursor: pointer;
