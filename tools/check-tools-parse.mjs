@@ -1,11 +1,7 @@
 #!/usr/bin/env node
-// Does every script in tools/ and eslint-rules/ still parse?
-//
-// Nothing else asks. `npm run lint` globs `{src,ds-docs/src}/**/*.{ts,html}`, so these files are
-// linted by no one, and a syntax error in one surfaces only when that file happens to run.
-// `preflight.mjs` is the worst case: it refuses to run off `main`, so it is the one gate never
-// exercised before the cut — an unterminated string sat committed in it, and nine other gates
-// passing said nothing about it.
+// `npm run lint` globs `{src,ds-docs/src}/**/*.{ts,html}`, so nothing else parses these files
+// and a syntax error in one surfaces only when that file happens to run. `preflight.mjs` is the
+// worst case: it refuses to run off `main`, so it is never exercised before the cut.
 //
 //   node tools/check-tools-parse.mjs
 import { readdirSync, statSync } from 'node:fs';

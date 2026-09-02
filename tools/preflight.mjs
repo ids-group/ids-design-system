@@ -50,8 +50,7 @@ if (!hasEntry)
 
 try {
   // First, because every check below is one of these files: a gate that does not parse
-  // cannot report anything, and preflight refusing off `main` means this one is never
-  // exercised locally.
+  // cannot report anything.
   execSync('node tools/check-tools-parse.mjs', { stdio: 'inherit' });
 } catch {
   fail('a script in tools/ does not parse — the file and the error are above.');
