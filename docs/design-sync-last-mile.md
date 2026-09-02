@@ -68,22 +68,23 @@ Verified in a real browser against the built bundle: six slots claimed by the ri
 purpose — React warns on any other case, HTML lowercases it regardless, and attribute names match
 case-insensitively, so `[dsStatValue]` still claims a node carrying `dsstatvalue`.
 
-### P8 — an input-gated slot cannot work on the React the host vendors
+**Input-gated slots work too, and one shared tick is why a probe can say otherwise.** A first probe
+had `<Modal staticPreview actions={…}>` rendering nothing on React 18.3.1, which looked like the
+known property-timing limitation. It was not: the same page rendered `<Table columns={[]} rows={[]}/>`,
+and `Table` requires `data`, so Angular threw NG0950. **Every element in the bundle shares one
+`ApplicationRef` by design, so that exception aborted the tick the modal was waiting on.** Isolated,
+the modal projects its `actions` correctly.
 
-Measured with the same probe: `<Modal staticPreview actions={…}>` renders nothing at all on **React
-18.3.1**, the version in the project's `_vendor/react.js`. The element's `staticPreview` never
-arrives — React 18 can only assign a custom element's properties from a layout effect, after
-`connectedCallback`, by which point Angular has created the view and discarded the light DOM. React
-19 assigns them while the element is still detached, which is why the same case works there.
+Measured directly on the element afterwards, all four routes agreed: setting `staticPreview` as a
+PROPERTY works both before and after insertion, and the attribute route does not work at all in
+either case — `observedAttributes` on `ds-modal` is
+`["open","size","status","title","subtitle","dividers","close-on-backdrop","persistent"]`, and a
+host-directive input is not among them because `getComponentInputs` reads the component's own inputs
+only. That is also why `elements.ts` patches the accessor by hand.
 
-So the slots behind an input-gated `@if` — Modal's and ModalCard's five each, `sidenav`'s
-`[dsBrandName]` — are unreachable in the design host today. The doc comment naming the opening input
-is necessary but not sufficient.
-
-The narrow fix worth trying: on React 18, put PRIMITIVE inputs (string, number, boolean) into the
-initial `createElement` props so they land as attributes before connect, leaving objects and arrays
-to the effect where they would otherwise stringify. `staticPreview` and `open` are booleans, so that
-covers the gates that matter. Not attempted.
+The caveat worth carrying: a preview that leaves a required input unset can blank OTHER components on
+the same page. In the product each card is its own page with its own bundle instance, so the blast
+radius there is one card — but a multi-component probe page is exactly where this misleads.
 
 ### P2 — the per-prop documentation is dropped
 
@@ -178,9 +179,8 @@ the bundle is replaced.
 2. **P4** — `build-cards.mjs` for previews, card HTML, `.jsx`, `.prompt.md`, `_ds_sync.json`.
 3. **P3** — the `replaces` mapping as data, and the oxlint config generated from it.
 4. **P5** — `viewport` as data.
-5. **P8** — primitive inputs as initial attributes, so an input-gated slot works on React 18.
-6. **P6** — the doc-versus-API gate.
-7. **P7** — wire generation into `after-release`; publishing stays manual.
+5. **P6** — the doc-versus-API gate.
+6. **P7** — wire generation into `after-release`; publishing stays manual.
 
 A repo-local skill carrying the publish procedure is worth writing regardless, so no future session
 has to rediscover the order `list → finalize_plan → write → delete` or which CSS file ships.
