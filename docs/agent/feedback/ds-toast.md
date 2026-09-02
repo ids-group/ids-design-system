@@ -3,8 +3,9 @@
 
 Group: Display & feedback
 
-Inputs: `variant: 'info' | 'success' | 'warning' | 'error' = 'info'`, `title: string = ''`, `message: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
-Output: `(dismissed): void`
+Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'loading' = 'info'`, `title: string = ''`, `message: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default), `action: ToastAction | null = null` (`{ label, handler }` — renders a trailing button)
+Output: `(closed): void`
+Content slots: default (body text, an alternative to `message`), `[actions]` (trailing CTAs). Neither is reachable through `ToastService`, which renders from `ToastOptions` — they are for a `<ds-toast>` you place yourself.
 
 The companion `<ds-toast-region>` lives inside the `ToastService` (see Services) — it is auto-mounted via a CDK overlay on first `toast.show()`, so consumers do **not** need to place `<ds-toast-region>` anywhere in their markup. Render `<ds-toast>` directly only for static specimens.
 

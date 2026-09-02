@@ -80,9 +80,13 @@ const cases = [
   ['D008', DECKS, '5008-selftest.html', deck()],
   [
     'D009',
-    DECKS,
+    ARCHIVE,
     '5009-selftest.html',
-    deck({ status: '<meta name="ds-deck-status" content="tool">' }),
+    deck({
+      status: IMPLEMENTED,
+      evidence: GOOD_EVIDENCE,
+      stylesheet: '<link rel="stylesheet" href="../ds.css">',
+    }),
   ],
   [
     'D010',

@@ -1,12 +1,32 @@
 <meta charset="utf-8">
-<title>Outside-pointer guard — the five overlays, driven in an iframe</title>
-<meta name="ds-deck-status" content="tool">
-<meta name="ds-deck-evidence" content="regression harness for the outside-pointer guard - see the section above">
+<title>Outside-pointer guard — regression harness</title>
 <style>
   body { margin: 0; font: 14px/1.5 ui-monospace, monospace; }
   iframe { width: 1200px; height: 800px; border: 1px solid #ccc; }
   pre { padding: 12px; white-space: pre-wrap; }
+  .how { margin: 0; padding: 12px 16px; background: #fff8e1; border-bottom: 1px solid #e6d8a8; font: 13px/1.6 system-ui, sans-serif; }
+  .how code { font: 12px/1.5 ui-monospace, monospace; background: #00000010; padding: 1px 4px; border-radius: 3px; }
+  .how b { display: block; margin-bottom: 4px; }
 </style>
+
+<div class="how">
+  <b>This is a TEST, not a page you read — and opening it from the file explorer shows nothing.</b>
+  It drives the docs app in the iframe below over relative paths (<code>/components/select</code> and
+  four more), so it only works when served from the same origin as a built ds-docs. Over
+  <code>file://</code> those paths point at the filesystem root and the iframe stays empty.
+  <br />
+  <code>npm run build:docs</code> →
+  <code>cp tools/overlay-guard-harness.html dist/ds-docs/browser/</code> → serve that folder → open
+  <code>/overlay-guard-harness.html</code>. Run it headless and read the block below out of
+  <code>--dump-dom</code>; a background tab clamps timers and never finishes a leave animation, so the
+  same probe reads false there.
+  <br />
+  <b style="margin-top:6px">What it guards.</b>
+  It opens each of the five pickers, presses the trigger, then presses the one place inside the host
+  that is NOT the trigger, and records <code>aria-expanded</code> and the pane count either side. The
+  control run is what makes a pass mean anything: revert one component to <code>host.contains</code>
+  and this must go red.
+</div>
 
 <pre id="out">running…</pre>
 <iframe id="stage" src="about:blank"></iframe>

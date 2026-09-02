@@ -660,3 +660,112 @@ uses it for exactly that (`ngDevMode`).
 - **`conditions` is the other half of the idea and stays unexplored.** Serving a different FESM per
   resolution condition is cleaner than sprinkling guards, but it means publishing two builds of the
   library and only makes sense after A3.
+
+## Prior art, and two things it changed (2026-09-01)
+
+Searched deliberately rather than reasoning from first principles, after the same instinct paid off
+earlier in this document. Two libraries have solved our exact problem, and one tool answers the caveat
+that was open on three decks.
+
+### AG Grid 33 went from 25 packages to 2 — the opposite of the basic/advanced proposal
+
+AG Grid's whole feature set used to ship as separate npm packages. In v33 they **collapsed 25 packages
+into two** (`ag-grid-community`, `ag-grid-enterprise`) and made features tree-shakeable *from a single
+bundled package* through a module-registration API:
+
+```js
+ModuleRegistry.registerModules([ClientSideRowModelModule]);            // global
+createGrid(element, options, { modules: [CsvExportModule] });          // per grid
+```
+
+Reported: grids up to **40% smaller**, and a measured **43% reduction** in one application's bundle.
+Their stated second reason is maintenance — "supporting 2 packages instead of 25 means better velocity".
+
+This is independent, large-scale confirmation of the verdict in `basic-advanced-split-audit.md`: the
+industry's biggest data-grid vendor moved *away* from package-per-feature towards tree-shaking inside
+one package. Registering modules globally must happen before any grid is instantiated; the per-grid
+form combines with the global set.
+
+### TanStack Table v9 makes features opt-in — and narrows the type surface with them
+
+```ts
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+});
+const table = useTable({ features, columns, data });
+```
+
+A table registers only what it uses; sorting, filtering, pagination, selection and sizing are all
+opt-in, and a small table starts around 5 kB. The library itself grew 14 → 25 kB, but the average table
+shrank, which is the same shape as our own measurement.
+
+The part worth stealing is not the size: **the registered feature set controls the TypeScript surface,
+so an omitted feature's API does not exist on the table.** That closes the exact footgun this document
+flags elsewhere — with directives or a build flag, a consumer can still bind `resizableColumns` and
+have it silently do nothing.
+
+**But it does not transfer to Angular as-is.** An Angular component's inputs are fixed on the class;
+there is no way to make `resizableColumns` conditionally absent based on what a consumer registered. So
+the type-narrowing benefit is unavailable to us, and the choice between shapes is about ergonomics, not
+type safety. That is worth saying plainly so nobody plans around a benefit we cannot have.
+
+### Angular's own feature pattern is the third shape, and it is documented
+
+Angular's `provideRouter(routes, withComponentInputBinding(), withViewTransitions())` is the same idea
+expressed as a provider factory: a function returning `EnvironmentProviders`, taking feature objects
+that each carry a `kind` discriminator — and the `kind` exists precisely so **invalid combinations can
+be validated**. It tree-shakes, works with lazy loading, and is explicitly recommended for libraries.
+
+One constraint decides whether it fits: `EnvironmentProviders` is cross-cast specifically to prevent
+component-scope use, so this pattern is **route- or app-scoped, not per-component-instance**. Every
+table under that route would get the same feature set. For a data-grid route that is usually fine, and
+it is simpler than per-instance wiring — but it is a real semantic difference from directives.
+
+### AG Grid ships CSS inside the modules; for us that carries a CSP bill
+
+AG Grid notes that keeping CSS in the code lets it split per module, which would make our portaled
+overlay styles arrive with the feature instead of needing a consumer-side opt-in import.
+
+**The catch is Content Security Policy.** Angular injects component styles as `<style>` tags at
+runtime; before Angular 16 a strict CSP needed `unsafe-inline`, and 16+ adds nonces to runtime-injected
+styles. Under SSR the static build-time `<style>` tags in `index.html` carry no nonce, so a strict CSP
+blocks them — and a consumer "does not have control over how libraries handle their styling". So
+injecting global CSS from our own code would push a CSP and SSR burden onto every consumer. That is a
+real argument against copying AG Grid here, and it should be weighed rather than assumed away.
+
+### `@arethetypeswrong/cli` answers the caveat that was open on three decks
+
+`attw` runs a published artifact through every resolution mode TypeScript supports and reports which
+ones return correct types. Run against the packed artifact, not the source tree — the tarball is what
+consumers get.
+
+**Baseline, today's package:**
+
+| Entry | node10 | node16 (CJS) | node16 (ESM) | bundler |
+| --- | --- | --- | --- | --- |
+| `@ids-group-ltd/ids-design-system` | 🟢 | ⚠️ ESM, dynamic import only | 🟢 | 🟢 |
+
+**A three-entry-point build of the same shape A3 would produce:**
+
+| Entry | node10 |
+| --- | --- |
+| root facade | 🥴 internal resolution error |
+| every subpath | 💀 resolution failed |
+
+So **A3 as planned would break a consumer on legacy `moduleResolution: "node"`** — and not only for
+deep specifiers: the root breaks too, because the facade's `.d.ts` re-exports from subpaths that node10
+cannot resolve. The caveat carried on decks 5 and 9 as "untested" is now a measured breaking change.
+
+**And it is fully fixed by a generated `typesVersions` map:**
+
+```json
+"typesVersions": { "*": { "core": ["types/…-core.d.ts"], "components/button": ["…"] } }
+```
+
+With it, every row goes green — root and all subpaths under node10. It is one more generated field in
+the same build step that writes the entry points, so the cost is a few lines, but **it is not optional
+and it was not in the plan.**
+
+**Recommendation beyond the fix:** add `attw --pack ./dist/ds` to the release gate. The current package
+passes, so it starts green and stays a real check rather than a formality.

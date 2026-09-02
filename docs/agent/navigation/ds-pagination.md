@@ -4,4 +4,4 @@
 Group: Layout & navigation
 
 Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`
-Outputs: `(pageChange): number`, `(pageSizeChange): number`
+Outputs: `(currentPageChange): number`, `(pageSizeChange): number`

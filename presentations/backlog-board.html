@@ -204,10 +204,10 @@
 
 ## Decks awaiting a verdict (re-audited 2026-09-01)
 
-Six decks carry `ds-deck-status: open`. The two picker decks closed — every question in them is
+Ten decks carry `ds-deck-status: open`. The two picker decks closed — every question in them is
 answered and they moved to `presentations/implemented/`.
 
-**Three have a backlog twin waiting on the same answer, so answering one closes two lines.** That is
+**Four have a backlog twin waiting on the same answer, so answering one closes two lines.** That is
 what makes these the cheapest thing on the board.
 
 | Deck | Asks | Twin |
@@ -243,7 +243,7 @@ what makes these the cheapest thing on the board.
 
 Ordered by what each unblocks. The top four each hold a deck or a whole lane hostage.
 
-- P2 · **Six decks have no verdict**; three have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
+- P2 · **Ten decks have no verdict**; four have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
 - P2 · **Single-source colour engine** — one token per role, derived. Two decks argue it; the warning-contrast bug is downstream of the same palette question
 - P2 · **prettier vs eslint on HTML** — they want opposite things, so `lint:all` can never be green. Every branch pays this until a config wins
 - P2 · **`.ds-interactive`** — global state-interaction contract, agreed in principle, prototype before spec
@@ -650,7 +650,6 @@ Three defects the port surfaced by reading every component's template + SCSS aga
 
 - [ ] **[P2] `ds-stat` `variant="error"` never recolours the value.** `stat.component.scss:24` is `:host(.error) .value { color: var(--error-text) }`; the later `.stat { .value { color: var(--_stat-value-color) } }` (line 61) compiles to `.stat .value` at the same specificity and wins on source order. Angular's emulated encapsulation adds one attribute selector to each, so the tie survives compilation. Fix by scoping the error rule through `.stat` (`:host(.error) .stat .value`) or by overriding `--_stat-value-color` in the `:host(.error)` block instead of the colour property — the token route matches how the rest of the file is written.
 - [ ] **[P2] `ds-banner` dismiss button has no accessible name.** `banner.component.html:28-40` renders `<button class="close">` containing only `<ds-icon name="x">` — no `aria-label`, no text, and the icon is decorative, so screen readers announce an unlabelled button. Add `aria-label="Dismiss"` (the React binding already does). Worth sweeping the other icon-only close buttons in the same pass.
-- [ ] **[P2] `--error-strong` / `--success-strong` / `--warning-strong` are referenced but never defined — status `ds-color` zones lose their accent.** `_ds-color.scss:14` maps `--accent-strong: var(--<family>-strong)` for `$families: secondary, tertiary, error, success, warning`, but only `--primary/secondary/tertiary-strong` exist (`themes/_semantic.scss:117,132,152`, `themes/dark/_theme.scss:48,53,58`). The `--<family>-muted-strong` cousins DO exist for all three status families, which is what makes the gap easy to miss. Inside `ds-color="error|success|warning"` every declaration reading `var(--accent-strong)` becomes invalid at computed-value time. Either define the three missing tokens in both themes or give the map a fallback. (One smaller cousin of the same class survives: `--icon-disabled`, referenced at `accordion-item.component.scss:51` and defined nowhere, so that rule silently does nothing. `--border-error`, listed here originally, is FIXED — `autocomplete` now routes through `--_input-border-error`, which falls back to the defined `--error`.)
 
 ## Missing components (from gap analysis)
 
@@ -742,29 +741,52 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 
 ---
 
-## `changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)
-
-- [ ] **[P3] The gate's own floor does not catch the failure it was written for.** Before it can
-  check anything, `changelog-lint` builds the list of published artefacts from two resolvers, and
-  both degrade quietly: `publishedFiles()` filters through `existsSync`, and `shippedSources()`
-  reads `assets ?? []` out of `ng-package.json`. Rename a directory, or rename that key, and the
-  list simply gets shorter — the gate checks what it found, prints `OK`, and never opens the rest.
-  A leak in an unopened file ships.
-
-  **Measured 2026-09-01.** The sweep is 320 files, and it is three groups, not one: **30**
-  documents, **36** assets from `src/lib/styles` + `src/lib/themes`, **254** TypeScript sources
-  under `src/lib`. Dropping the `assets` key costs the 36 and leaves **284** — which clears the
-  floor of 100 with room to spare. **The floor is green for exactly the collapse it exists to
-  catch**, because a single total cannot see one group of three go to zero.
-
-  **Two ways out, and the smaller one may be enough.** (a) A committed census per group in
-  `tools/surface-baseline.json`: fewer than last time fails and names the group, more is normal
-  growth, and `tools/changelog-release.mjs` rewrites the numbers at the cut so they land in the
-  release commit rather than dirtying an unrelated branch. (b) Just assert that every directory
-  named in `ng-package.json` `assets` yields at least one file — three lines, catches this exact
-  scenario, no numbers to maintain. **Nothing has broken yet**; this is a guard against a future
-  rename, which is why it is parked rather than open.
-
+## `changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)
+
+
+
+- [ ] **[P3] The gate's own floor does not catch the failure it was written for.** Before it can
+
+  check anything, `changelog-lint` builds the list of published artefacts from two resolvers, and
+
+  both degrade quietly: `publishedFiles()` filters through `existsSync`, and `shippedSources()`
+
+  reads `assets ?? []` out of `ng-package.json`. Rename a directory, or rename that key, and the
+
+  list simply gets shorter — the gate checks what it found, prints `OK`, and never opens the rest.
+
+  A leak in an unopened file ships.
+
+
+
+  **Measured 2026-09-01.** The sweep is 320 files, and it is three groups, not one: **30**
+
+  documents, **36** assets from `src/lib/styles` + `src/lib/themes`, **254** TypeScript sources
+
+  under `src/lib`. Dropping the `assets` key costs the 36 and leaves **284** — which clears the
+
+  floor of 100 with room to spare. **The floor is green for exactly the collapse it exists to
+
+  catch**, because a single total cannot see one group of three go to zero.
+
+
+
+  **Two ways out, and the smaller one may be enough.** (a) A committed census per group in
+
+  `tools/surface-baseline.json`: fewer than last time fails and names the group, more is normal
+
+  growth, and `tools/changelog-release.mjs` rewrites the numbers at the cut so they land in the
+
+  release commit rather than dirtying an unrelated branch. (b) Just assert that every directory
+
+  named in `ng-package.json` `assets` yields at least one file — three lines, catches this exact
+
+  scenario, no numbers to maintain. **Nothing has broken yet**; this is a guard against a future
+
+  rename, which is why it is parked rather than open.
+
+
+
 ## Board history — the 08-10 actualization, kept for the release-gate reasoning
 
 > Superseded as a BOARD by the 08-21 one above. Kept because the reasoning is still the rule: a
@@ -2045,7 +2067,7 @@ Highest: each one is wrong in code a consumer already has.
   the generated stat token description says an unwrapped phrase value is "clipped" when `.stat` sets
   no `overflow` and it actually escapes the tile.
 
-- [x] **DONE 2026-08-21 — all five follow `ds-date-picker`: the guard tests the trigger, not the host.** The open question the item held — "is label-click-keeps-the-panel-open something anyone relies on" — was already answered by shipping that fix on the date picker in 0.10.1, so the siblings follow rather than diverge. `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-color-picker` each own a single `#trigger` viewChild and now test it; `ds-time-picker` has THREE trigger boxes (single, range start, range end) and tests whichever are present, so a range picker keeps both of its own boxes exempt. **Verified end to end on 2026-08-21, all five, with a control experiment** — `presentations/overlay-guard-check.html`, driven headless. **Why a harness rather than the open docs tab:** the tab was a BACKGROUND tab, and Chrome clamps timers and runs no animations there, so both "is the pane still in the DOM" and "did the timer fire" read wrong — which is exactly what made the first attempt look flaky. The harness iframes each component page (same origin, so it can drive and read it), presses the trigger, then presses the one place inside the host that is NOT the trigger, and records two independent signals: the trigger's `aria-expanded` and the pane count in the overlay container. **Result: 10 opens, 10 dismissals, both signals agreeing every time.** **Finding along the way:** only `ds-select` and `ds-time-picker` have a `label` input at all, so for the other three the reachable outside-the-trigger area is the message row — the harness looks for a label, then a rendered message row, then any strip the layout leaves beside the trigger, which is the consumer geometry MBP-225 described. **The control run is what makes the pass mean anything:** reverting `ds-select` alone to `host.contains` took it to **0 of 3** dismissals while the other four stayed at 2/2, then restoring it went back to 2/2. So the harness detects the defect, and the predicate change is what fixes it. Worst case if one is wrong is a dismiss that used to be swallowed — the direction the fix wants. 
+- [x] **DONE 2026-08-21 — all five follow `ds-date-picker`: the guard tests the trigger, not the host.** The open question the item held — "is label-click-keeps-the-panel-open something anyone relies on" — was already answered by shipping that fix on the date picker in 0.10.1, so the siblings follow rather than diverge. `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-color-picker` each own a single `#trigger` viewChild and now test it; `ds-time-picker` has THREE trigger boxes (single, range start, range end) and tests whichever are present, so a range picker keeps both of its own boxes exempt. **Verified end to end on 2026-08-21, all five, with a control experiment** — `tools/overlay-guard-harness.html`, driven headless. **Why a harness rather than the open docs tab:** the tab was a BACKGROUND tab, and Chrome clamps timers and runs no animations there, so both "is the pane still in the DOM" and "did the timer fire" read wrong — which is exactly what made the first attempt look flaky. The harness iframes each component page (same origin, so it can drive and read it), presses the trigger, then presses the one place inside the host that is NOT the trigger, and records two independent signals: the trigger's `aria-expanded` and the pane count in the overlay container. **Result: 10 opens, 10 dismissals, both signals agreeing every time.** **Finding along the way:** only `ds-select` and `ds-time-picker` have a `label` input at all, so for the other three the reachable outside-the-trigger area is the message row — the harness looks for a label, then a rendered message row, then any strip the layout leaves beside the trigger, which is the consumer geometry MBP-225 described. **The control run is what makes the pass mean anything:** reverting `ds-select` alone to `host.contains` took it to **0 of 3** dismissals while the other four stayed at 2/2, then restoring it went back to 2/2. So the harness detects the defect, and the predicate change is what fixes it. Worst case if one is wrong is a dismiss that used to be swallowed — the direction the fix wants. 
   ORIGINAL: [P3] Five more overlays treat the whole host as "the trigger" in their outside-click guard.**
   `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all
   pass `(target) => this.host.nativeElement.contains(target)` to `closeOnOutsidePointer`, the same

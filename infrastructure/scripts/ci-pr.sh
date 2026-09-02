@@ -15,6 +15,8 @@
 #                   the wrong name in the published API table
 # surface        -> fails the step when the @angular/elements route's hand-maintained
 #                   list drifts from src/lib (see .design-sync/MANUAL-SURFACE.md)
+# colour-families -> fails the step; a ds-color family missing one of the roles the
+#                   accent pointers read renders as body text, silently
 # lint           -> report-only (prettier/stylelint/eslint), never fails the step
 #                   while the repo carries pre-existing lint debt
 set -e
@@ -39,6 +41,12 @@ node tools/migration-lint-selftest.mjs
 # commit that edits the source without regenerating leaves the shipped leaves lying.
 echo "===== agent catalogue ====="
 node tools/split-agent-catalogue.mjs --check
+
+# Every family ds-color offers must define every role the accent pointers read. A role
+# that is missing is invalid at computed-value time, so the label renders as body text
+# with nothing in the console, which is how three families shipped broken.
+echo "===== colour families ====="
+node tools/check-color-families.mjs
 
 echo "===== delete-table parity ====="
 node tools/check-delete-tables.mjs

@@ -34,6 +34,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-stat> — StatComponent](feedback/ds-stat.md) — Delta direction is derived from the sign of delta: positive → up (arrow + green), negative → down (arrow + red
 - [<ds-empty-state> — EmptyStateComponent](feedback/ds-empty-state.md) — Content slot: [actions] — CTA buttons / links.
 - [<ds-banner> — BannerComponent](feedback/ds-banner.md) — - layout="stacked" (default): actions wrap onto a new line, indented under the body. Use for multi-line messag
+- [<ds-alert> — AlertComponent](feedback/ds-alert.md) — Inline message, ds-banner's smaller twin — same anatomy, sized for placement inside a form or a card rather th
 - [<ds-toast> — ToastComponent](feedback/ds-toast.md) — The companion <ds-toast-region> lives inside the ToastService (see Services) — it is auto-mounted via a CDK ov
 
 ## forms

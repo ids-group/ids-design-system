@@ -16,8 +16,58 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the change: 0px on all twelve banner shapes and all eight toast shapes.
 
   It is `align-self` on the icon rather than `align-items` on the row, so the close button and the
-  action buttons keep the positions they had. `--banner-ic-mt` is **removed** — it existed only to nudge
-  the icon down by one border-width under the old rule, and nothing reads it now.
+  action buttons keep the positions they had — measured: `align-items` would move the close button
+  10.95px in the default `layout-stacked` banner. `--banner-ic-mt` is **removed**; it existed only to
+  nudge the icon down by one border-width under the old rule.
+
+  `ds-alert` follows, for the same reason: it carried the same nudge inlined as
+  `var(--border-width-default)` rather than through the token, so the sweep missed it and the two
+  components placed their icons 22.8px apart on the same content.
+
+  **Known limit.** The icon centres on the flex LINE, which equals the message block only while the
+  message is the tallest thing in the row. A one-line toast with a close button is 0.53px off, and with
+  a projected `[actions]` button 6–14px off depending on its size. `align-items: center` would be
+  unconditional but moves the close button, which is the trade above.
+
+### Fixed
+
+- **`ds-color="error"`, `="success"` and `="warning"` lost their accent colour.** Those zones map
+  `--accent-strong` onto `--<family>-strong`, and the three status families never defined it — only
+  the brand families did. The declaration was invalid at computed-value time, so inside a status
+  zone the sixteen places that read `--accent-strong` reset to `unset`: selected list and tree rows,
+  the active sidenav item and its rail, the active tab pill, avatar and avatar-group initials, the
+  active tag, dropzone text, the date-picker range label, the toast's action label, the selected
+  toggle button, the split-button hover fill, and the tonal, ghost, outline and link variants of
+  `ds-button` and `ds-icon-button`. Text there fell through to the inherited body colour; the fill
+  and the rail, which inherit nothing, disappeared.
+
+  No new token was needed: a status family already carries its readable on-tint colour as `-text`,
+  so `--accent-strong` now asks for `-strong` first and `-text` second, and the brand families keep
+  answering it as `-strong` because they have no `-text`. Each pointer also ends in a fallback — to
+  the family's base for `-hover`, `-pressed` and `-strong`, to its `-muted` for the tint pointers,
+  and to the theme-wide role for `-on` and the two focus pointers — so a role that goes missing in
+  future degrades instead of disappearing.
+
+### Fixed
+
+- **`ToastService.promise()` could destroy its own result.** It ran the settled toast's
+  auto-dismiss on a wall-clock timer started when the promise resolved, not when the toast became
+  visible — the one thing the rest of the timer work had already moved into the region. With a
+  `maxVisible` cap set, a promise that settled while its toast was still queued had the result spliced
+  out of the queue before anyone saw it: the user saved, it succeeded, and no toast appeared at all.
+  The settled duration is now handed to the region with the content, so it starts on promotion.
+
+- **A toast carrying an `action` no longer auto-dismisses.** The overlay is the last child of `body`,
+  so the region is dead last in tab order; a keyboard user cannot cross a real page in the five
+  seconds the button was alive. An `action` toast now waits, and is always dismissible.
+
+- **Hovering or focusing the region pauses every countdown**, resuming when the pointer or focus
+  leaves. A toast being read is not a toast that has been read.
+
+- **Nothing that cannot expire can also be unclosable.** A `loading` toast was created with
+  `dismissible: false` and no duration, so a promise that never settled held its slot for the life of
+  the page — with a cap of 3, three hung requests blocked the whole channel, including the error
+  toasts that would have explained the hang.
 
 ## 0.11.2 — 2026-09-01
 

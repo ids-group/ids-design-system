@@ -114,6 +114,54 @@
     than today.
   </p>
 
+  <h2>Two libraries solved this already, and both landed in the same place</h2>
+
+  <p>
+    Searched before designing, not after. The two most-used data grids both rebuilt their feature
+    architecture in the last release cycle, and neither chose a second package.
+  </p>
+
+  <table>
+    <thead><tr><th></th><th>AG Grid 33</th><th>TanStack Table v9</th></tr></thead>
+    <tbody>
+      <tr>
+        <th>What they did</th>
+        <td>collapsed <b>25 npm packages into 2</b>, features tree-shake from one bundled package</td>
+        <td>features are opt-in and registered per table; core stays tiny</td>
+      </tr>
+      <tr>
+        <th>API</th>
+        <td><code>ModuleRegistry.registerModules([…])</code> globally, or <code>modules: […]</code> per grid</td>
+        <td><code>tableFeatures({ rowPaginationFeature, … })</code> passed to the table</td>
+      </tr>
+      <tr>
+        <th>Reported result</th>
+        <td>grids up to <b>40% smaller</b>; <b>43%</b> off one application's bundle</td>
+        <td>a small table starts around <b>5 kB</b>; the library grew 14 → 25 kB but the average table shrank</td>
+      </tr>
+      <tr>
+        <th>Second motive</th>
+        <td>"2 packages instead of 25 means better velocity" — maintenance, not size</td>
+        <td>the registered set <b>narrows the TypeScript surface</b>: an omitted feature's API does not exist</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <p>
+      <b>AG Grid's move is independent confirmation of the basic/advanced verdict on deck 5.</b> The biggest data-grid vendor
+      went <em>away</em> from package-per-feature towards tree-shaking inside one package — which is
+      exactly what the basic/advanced proposal wanted to reverse.
+    </p>
+    <p style="margin-bottom:0">
+      <b>TanStack's type narrowing is the one thing we cannot copy.</b> An Angular component's inputs are
+      fixed on the class; there is no way to make <code>resizableColumns</code> conditionally absent based
+      on what a consumer registered. So the footgun this deck flags — binding a feature you did not
+      import and getting silence — stays under every shape below. Worth knowing before anyone plans
+      around a benefit we cannot have.
+    </p>
+  </div>
+
   <h2>Choice 1 — the table's grid features</h2>
 
   <div class="bars">
@@ -143,7 +191,7 @@
     selection, pagination, loading, sticky header, cell rendering — has to stay.
   </p>
 
-  <h3>The proposed API, and why it is a registry rather than a method move</h3>
+  <h3>Why it is a registry rather than a method move</h3>
 
   <p>
     The ablation kept colliding with shared helpers: <code>clipWidth</code>/<code>fitsContent</code>
@@ -170,7 +218,63 @@ export class DsTableLayout&lt;T&gt; {
     <b>The table never names a feature</b> — no <code>if (resizable)</code> anywhere.
   </p>
 
-  <p>What a consumer writes:</p>
+  <h3>Three shapes for the opt-in, and the choice is ergonomics — not size</h3>
+
+  <p>
+    All three tree-shake identically: an unimported directive, an uncalled feature function and an
+    unreferenced provider are all dead code. They differ in where the wiring lives and what scope it has.
+  </p>
+
+  <table>
+    <thead><tr><th></th><th>1a — directives</th><th>1b — features input</th><th>1c — provider features</th></tr></thead>
+    <tbody>
+      <tr>
+        <th>What a consumer writes</th>
+        <td><code>&lt;ds-table dsResizable dsExport&gt;</code></td>
+        <td><code>[features]="[withResize(), withExport()]"</code></td>
+        <td><code>provideDsTable(withResize(), withExport())</code></td>
+      </tr>
+      <tr>
+        <th>Scope</th>
+        <td class="yes">per table instance</td>
+        <td class="yes">per table instance</td>
+        <td class="no">route or app — every table under it gets the same set</td>
+      </tr>
+      <tr>
+        <th>Prior art</th>
+        <td>Angular's own directive idiom</td>
+        <td>TanStack Table v9</td>
+        <td>Angular's <code>provideRouter(withViewTransitions())</code>; AG Grid's per-grid modules</td>
+      </tr>
+      <tr>
+        <th>Invalid combinations</th>
+        <td>not detectable</td>
+        <td>checkable at runtime</td>
+        <td class="yes">the documented pattern gives each feature a <code>kind</code> so combinations can be validated</td>
+      </tr>
+      <tr>
+        <th>Cost per feature</th>
+        <td>a selector and a host binding</td>
+        <td>one factory function</td>
+        <td>one factory function</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    <b>1c is the most Angular-idiomatic and the only one that validates combinations</b> — but
+    <code>EnvironmentProviders</code> is deliberately cross-cast so it cannot be used in component scope,
+    which makes it route-wide. That is usually fine for a data-grid route and it is simpler wiring, but it
+    is a real semantic difference: two tables on one page could not differ.
+  </p>
+
+  <p>
+    <b>1a keeps per-instance control and reads naturally in a template</b>, which is what the seam below
+    was designed for. <b>1b is the same control with one input instead of N attributes</b>, and it is what
+    TanStack chose — but without their type narrowing, its advantage over 1a is mostly tidiness.
+  </p>
+
+  <p>What a consumer writes under 1a:</p>
 
   <pre>&lt;!-- prototype: nothing imported, nothing shipped --&gt;
 &lt;ds-table [columns]="cols" [data]="rows" /&gt;
@@ -242,6 +346,22 @@ imports: [DsTable, DsTableResizable, DsTableExport]
     of the three and the one most reasonably declined.
   </p>
 
+  <div class="note">
+    <p>
+      <b>AG Grid solves this differently, and their way costs more than it saves here.</b> They keep CSS
+      in the code so it splits per module — the style would arrive with the feature and vanish without
+      it, needing no opt-in import at all.
+    </p>
+    <p style="margin-bottom:0">
+      <b>The bill is Content Security Policy.</b> Angular injects styles as runtime <code>&lt;style&gt;</code>
+      tags; a strict CSP needed <code>unsafe-inline</code> before Angular 16, and 16+ adds nonces — but
+      under SSR the static build-time tags in <code>index.html</code> carry no nonce and a strict CSP
+      blocks them. A consumer has no control over how a library handles its styling, so injecting global
+      CSS from our own code pushes a CSP and SSR burden onto every one of them. For <b>1.6 KB</b>, not
+      worth it.
+    </p>
+  </div>
+
   <h2>Why a build-time flag is not the tool for any of these</h2>
 
   <p>
@@ -273,7 +393,8 @@ imports: [DsTable, DsTableResizable, DsTableExport]
     <ul style="margin-bottom:0">
       <li><b>Choice 1 — the table seam.</b> 18.9 KB floor, 923 B fixed overhead, one refactor of one
         component. Build the seam plus <code>DsTableExport</code> first (no header markup, no shared
-        width logic) to price the slots, then the remaining four directives?</li>
+        width logic) to price the slots, then the rest?
+        <b>And which shape</b> — 1a directives, 1b a features input, or 1c provider features?</li>
       <li><b>Choice 2 — the button's message row.</b> 11.0 KB. Drop the feature, or move it behind
         <code>DsButtonMessage</code>?</li>
       <li><b>Choice 3 — the portaled CSS.</b> 1.6 KB, opt-in import, and a change every consumer's

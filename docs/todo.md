@@ -22,7 +22,7 @@
 
 ## Decks awaiting a verdict (re-audited 2026-09-01)
 
-**Nine** decks carry `ds-deck-status: open` — counted on disk, not from this list, which had missed
+**Ten** decks carry `ds-deck-status: open` — counted on disk, not from this list, which had missed
 `basic-advanced-split` and then `banner-toast-icon-alignment`. The two picker decks closed: every
 question in them is answered and they moved to `presentations/implemented/`.
 
@@ -44,6 +44,7 @@ what makes these the cheapest thing on the board.
 | 7 | `7-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
 | 8 | `8-entry-point-shape` | Which entry-point layout A3 builds — three real ng-packagr builds, not a fixture. | the P2 ask about keeping the DS out of a consumer's initial bundle |
 | 9 | `9-opt-in-seam` | 31.5 KB behind an opt-in seam, three choices, no blockers found. | the P2 ask about splitting the package |
+| 10 | `10-rejected-with-numbers` | Every idea this backlog has rejected, with the measurement that rejected it and what would reopen it. | the Parked and Records sections |
 
 ---
 
@@ -53,6 +54,7 @@ what makes these the cheapest thing on the board.
 
 **Bugs — something shipped misbehaves**
 
+- P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
 - P2 · `--ds-table-head-h` is declared nowhere, so the loading scrim's top edge is a hardcoded 40px regardless of density
@@ -67,7 +69,7 @@ what makes these the cheapest thing on the board.
 - P2 · **`components.md` is a 60 KB monolith** — an agent loads all six sections to answer one question; the DS needs an md architecture with a generated index
 - P3 · Drop the brand and domain EXAMPLES from the published docs, not just their names — Stas 2026-08-31
 - P3 · A token named in prose is never checked against the tokens that exist — a removed one survived in two docs for months
-- P3 · `todo.md`'s index no longer accounts for its body — 44 lines against 58 items, and the gap needs a per-section reconciliation
+- P3 · `todo.md`'s index no longer accounts for its body — 43 lines against 64 items, and the gap needs a per-section reconciliation
 - P3 · Three edges left open on `ds-table` row expansion — an inert expand-all on an empty page, the lazy label, and a column header whose name flips
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
@@ -76,13 +78,13 @@ what makes these the cheapest thing on the board.
 
 Ordered by what each unblocks. The top four each hold a deck or a whole lane hostage.
 
-- P2 · **Six decks have no verdict**; three have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
+- P2 · **Ten decks have no verdict**; four have a backlog twin, so one answer closes two lines — see *Decks awaiting a verdict* above
 - P2 · **Single-source colour engine** — one token per role, derived. Two decks argue it; the warning-contrast bug is downstream of the same palette question
 - P2 · **prettier vs eslint on HTML** — they want opposite things, so `lint:all` can never be green. Every branch pays this until a config wins
 - P2 · **`.ds-interactive`** — global state-interaction contract, agreed in principle, prototype before spec
 - P2 · **Theme recipe vs hand-tuned picks** — does state derivation follow the theme's mix-to-black recipe, or the drawn ramp? Blocks the two above
 - P2 · **`ds-number-stepper` and `ds-dropzone` are outside the field-message system** — bring them in, or say they are not fields
-- P3 · **Ten manifest-format practices** the audit marked *Adopt* and nobody ratified — re-counted 2026-09-01, three of the original thirteen have since shipped
+- P3 · **Eight manifest-format practices** the audit marked *Adopt* and nobody ratified — re-counted 2026-09-02, five of the original thirteen have since shipped, two of them with the auto-update plugin
 - P3 · **Three deferred DEFAULT changes** held back by the release policy
 - P3 · **Does a release note owe a WHY**, or only a what-and-what-to-do
 - P3 · **ds-docs still writes BEM modifiers as `--suffix`** — a state should be its own `is-*` class
@@ -162,10 +164,11 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 ## Priority board (recut 2026-09-01, after the picker lane closed end to end)
 
-**42 open: 1 P1, 12 P2, 29 P3** — counted from the index by script, not incremented from the last
-figure, which is how three summaries in this file had drifted apart by 2026-09-01. Ten are *Parked*
-awaiting a first consumer ask and two are Records, and the one P1 is a settled decision kept so it
-is not re-litigated, so the live board is **29 items — 5 Bugs, 9 Asks and 15 Decisions**.
+**43 open: 1 P1, 14 P2, 28 P3** — counted from the index by script, not incremented from the last
+figure, which is how three summaries in this file had drifted apart by 2026-09-01, and drifted again
+by 2026-09-02. Ten are *Parked* awaiting a first consumer ask and two are Records, and the one P1 is
+a settled decision kept so it is not re-litigated, so the live board is **31 items — 6 Bugs, 9 Asks
+and 16 Decisions**.
 
 **Every block is ordered P2 before P3**, with one deliberate exception: the Angular 22 line sits last
 in *Decisions* under a P1 tag because it is DECIDED, not pending — the tag keeps it out of both
@@ -175,17 +178,17 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds five.** The cheapest real win is still the warning status pair at 4.42:1 where AA
+**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
 asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
-counted — so one token step fixes all of them. The other five arrived on 2026-09-01 and four were
+counted — so one token step fixes all of them. Four of the others arrived on 2026-09-01 and were
 filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
 already reads. In cost order after the token step — `--ds-table-head-h` declared
 nowhere so the scrim's inset is always its 40px fallback, one export leaving the table's live
 region stuck on "Export ready" forever, then the two cosmetic ones. The sixth, the resize handle's
 unenforced `aria-valuemax`, was closed the same day it was filed.
 
-**The board is not waiting on hands, it is waiting on verdicts.** Fourteen of the nineteen live items
-are Decisions, and seven decks are open against them. Nothing below is blocked on effort.
+**The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-one live
+items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
 
 **What came off this round:** the whole picker lane. Seven decisions, four follow-up changes, sixteen
 proposals (fifteen built), 43 review findings and five blockers — all closed, both decks moved to
@@ -258,6 +261,11 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
+- [ ] **[P2] `ds-split-button` paints its hover with a TEXT colour, and inside a status zone the label goes unreadable — MEASURED 2026-09-02.** `split-button.component.scss:7` defaults `--_split-button-bg-hover-color` to `var(--accent-strong)` while `:6` keeps the label on `var(--accent-on)`. `--accent-strong` is the family's readable ON-TINT colour — its own token description says "text on light surfaces" — and this is the **only** place in the library that uses it as a background; every other component hovers with `-hover`. In dark, `ds-color="success"` resolves it to `hsl(132deg 55% 62%)` and the white label lands at **1.87:1**; error is **2.46**, and in light warning is **3.78**. Reachable with the component's own default, `variant="primary"`.
+  **This is a regression, not an inherited defect.** Before `--accent-strong` resolved for status families, that background was invalid-at-computed-value-time and computed to `transparent`, so the label sat on the page: illegible in light (1.00) and legible in dark (18.6). Making the pointer resolve fixed the three light cells and broke the three dark ones. Six cells, three each way.
+  **The fix that was measured and not applied:** default the hover to `var(--accent-hover)`, which is the family base mixed 88% toward black in light and white in dark — so the hover follows the rest state instead of jumping to another colour. Contrast then tracks rest almost exactly: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31, against rest values of 4.83, 3.30 and 11.81. Deferred by Stas 2026-09-02: recorded rather than shipped.
+  **It does not close the whole problem, and must not be sold as if it does.** `--accent-on` on the family's solid `--accent` already fails at REST for two families — success **3.30**, secondary **3.31** — in both themes, on every solid button, not only this one. That is a palette question of the same family as the warning-pair item above, and it predates all of this.
+
 - [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
 
 
@@ -467,6 +475,27 @@ the service was just the one somebody noticed. Full table and every tested hypot
   between entry points, so any clustering must be de-cycled first. Per-component has only the two
   trivial sibling cycles. **Verdict: go per-component.**
 
+  **Re-validated 2026-09-02 after a challenge, and the rejection got stronger.** The first argument was
+  weak — it rested on ONE attempted clustering having a cycle, which proves nothing about clustering in
+  general. So the question was asked properly: make that clustering acyclic and see what it becomes. A
+  cluster graph is made acyclic by merging its strongly-connected components, and `data`, `fields`,
+  `display` and `shell` all merge:
+
+  | cluster after merging | groups |
+  | --- | --- |
+  | `data+display+fields+shell` | **60** |
+  | `core` | 15 |
+  | `services` | 2 |
+
+  **Six semantic clusters collapse to three, and one of them holds 60 of the 77 groups.** That is the
+  three-layer partition again, which is already measured as delivering roughly nothing for an
+  eager-shell consumer. A lazy route using `ds-table` would drag **59 sibling groups** with it.
+
+  The cause is that the cycle is made of real edges — `pagination -> select`, `autocomplete -> tag`,
+  `multi-select -> badge`, `empty-state -> loading-overlay`. Components compose across semantic
+  categories, so the categories do not match the dependency structure. It is not that this particular
+  clustering was badly chosen; it is that clustering by meaning does not survive contact with the graph.
+
   **A missed rewrite fails the build with a useless message, tested:** swapping one public specifier for
   a relative path across a boundary gives `Cannot destructure property 'pos' of
   'file.referencedFiles[index]' as it is undefined`, with nothing naming the cause. The good news is it
@@ -482,19 +511,30 @@ the service was just the one somebody noticed. Full table and every tested hypot
   (ng-packagr `docs/secondary-entrypoints.md` on `main`, plus a Feb 2026 guide). Full analysis:
   `packaging-diagnosis.md` « Do we have to split? ».
 
-- [x] **[P2] A3-pre — DECLINED 2026-09-01, measured: the cycle costs 593 B gzip, the fix costs 40
-  import rewrites.** The four-way SCC (`components/card`, `config`, `core`, `icons`) is real, and every
-  edge out of `ds-config.ts` that creates it is a TYPE import. The minimum cut was priced: move
-  `ds-config.ts` (11 importers), `icons.data.ts` (27) and card's two type aliases (2) into `core` —
-  **40 import statements**, plus moving a component's public types into the bottom layer, plus conflict
-  risk against the active parallel lane.
+- [ ] **[P2] A3-pre — DO IT. Reversed 2026-09-02: the minimum cut is 14 import rewrites, not 40.**
+  The earlier decline rested on my own inflated figure. Recomputed by searching every subset of
+  candidate moves for the cheapest one that breaks the four-way SCC (`components/card`, `config`,
+  `core`, `icons`):
 
-  **What the cycle actually costs is almost nothing.** `config`, `core` and `icons` were always going to
-  share the `core` entry point, so the ONLY consequence of leaving the SCC intact is that `ds-card`
-  ships with them. Measured: core seed (button, icon, spinner, field-group, popover, menu, menu-item)
-  **84 430 B gzip**; the same seed plus `CardComponent` **85 023 B** — **593 B**. And `card` is a common
-  component most consumers use anyway. **Decision: accept the SCC, put `card` in the core entry.** Do
-  not re-open without a new measurement.
+  | move | import statements to rewrite |
+  | --- | --- |
+  | `config/ds-config.ts` -> `core` | 11 |
+  | `components/card/card.types.ts` -> `core` | 3 |
+  | **total** | **14** |
+
+  The 40 came from assuming `icons.data.ts` (28 importers) had to move too. **It does not.** After the
+  two moves above the four-way cycle is gone and what remains is `core <-> icons`, a two-group cycle
+  that costs nothing: `icons` has in-degree 38 and was always going to live in the `core` entry.
+
+  **Why do it, now that it is cheap.** Bytes were never the case — accepting the cycle costs 593 B gzip
+  (core seed 84 430 B, seed + `CardComponent` 85 023 B). The case is architectural and I failed to weigh
+  it the first time: `ds-config.ts` type-imports `CardElevation`/`CardPadding` from a COMPONENT, which is
+  a layering inversion — the config knows about a thing that depends on it. Fixing that also makes
+  `card` an ordinary leaf component with its own entry point instead of a permanent resident of the
+  bottom layer. Fourteen rewrites is a twentieth of the 307 the entry-point work needs anyway.
+
+  Do it as the FIRST commit of the entry-point work, on its own, so the layering fix is reviewable
+  separately from the 307 mechanical rewrites.
 
   **Still worth having, and independent of the cycle:** `theme` as its own entry point.
   `provide-ds-theme.ts` imports only `@angular/core` and `@angular/common`, so it is a true leaf, and
@@ -672,7 +712,7 @@ A0 first, which touches none of it, or wait for that lane to land.
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
 
-- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-01: 44 index lines against 58 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
+- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-02: 43 index lines against 64 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
 
 - [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure.
 
@@ -729,7 +769,7 @@ A0 first, which touches none of it, or wait for that lane to land.
   **Re-measured 2026-08-31**, running the three in the order prettier → stylelint → eslint with eslint last: prettier rewrote 112 files in its own scope, stylelint had nothing to say, and `eslint --fix` reverted 111 of the 112. Net change was 8 files of whitespace inside inline elements, which Angular discards — so the tree has been in eslint's shape all along and `npm run format` is red at 111 either way.
   **Not urgent, not cosmetic:** nothing ships wrong today, but a permanently red gate is how a real finding gets missed — which is the same failure mode as the report-only PR lint.
 
-- [ ] **[P3] Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/6-migration-manifest-audit.html`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
+- [ ] **[P3] Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/6-migration-manifest-audit.html`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
   **Three of the thirteen are already settled and are NOT part of this item:** the instruction/rationale split shipped as `action` (the prose-split pass, 2026-08-25); package reachability shipped — `package.json` already exports `"./migrations/*"`; and `schemaVersion` was **rejected** in the prose-split session along with `author`, `place`, `outcome`, `unchanged` and `source`.
   **The ten, with what each would cost, verified as absent today** (grep: none of these keys or checks exists in `tools/migration-lint.mjs` or `migrations/AUTHORING.md`):
   (1) **precondition guard** — a no-op check each runbook opens with, so an item cannot half-apply (OpenRewrite `Preconditions.check`, Nx agentic runbooks); (2) **`replaceIn` polarity** — CDK's `CssTokenUpgradeData` defaults to ALL files and narrows, ours is a whitelist that silently excludes, which is a wrong-by-default surface; (3) **executable verification** — Polaris ships a literal alternation `RegExp` per token group, where our `verify` is prose; (4) **runtime signal ids** — Vue/Ember collect what actually fired per app, and `devWarn` already exists here, so this is wiring rather than a mechanism; (5) **escalation marker** — Next.js codemods write a comment that breaks the build until removed (adopt the comment half only); (6) **explicit "no replacement"** — ESLint's `replacedBy` may be an empty array to SAY there is none, and 0 of 22 manifests would fail the check; (7) **`deprecatedIn`** — one half of ESLint `deprecatedSince` / Ember RFC 0649 `since`; the `availableUntil` half was rejected; (8) **provenance link** — CDK makes the PR link a required member; adopt it optional and lint it only on `unreleased`; (9) **`ng-update` requirements key** — the hard pre-flight the Angular CLI enforces (adopt the key, NOT a port to real schematics); (10) **dry-run hit counts** — jscodeshift prints per-file outcomes and Next.js warns that a wrong path reports 0 rather than failing; this one lands in the plugin, not the lint.
@@ -863,8 +903,6 @@ Three defects the port surfaced by reading every component's template + SCSS aga
 
 - [ ] **[P2] `ds-stat` `variant="error"` never recolours the value.** `stat.component.scss:24` is `:host(.error) .value { color: var(--error-text) }`; the later `.stat { .value { color: var(--_stat-value-color) } }` (line 61) compiles to `.stat .value` at the same specificity and wins on source order. Angular's emulated encapsulation adds one attribute selector to each, so the tie survives compilation. Fix by scoping the error rule through `.stat` (`:host(.error) .stat .value`) or by overriding `--_stat-value-color` in the `:host(.error)` block instead of the colour property — the token route matches how the rest of the file is written.
 - [ ] **[P2] `ds-banner` dismiss button has no accessible name.** `banner.component.html:28-40` renders `<button class="close">` containing only `<ds-icon name="x">` — no `aria-label`, no text, and the icon is decorative, so screen readers announce an unlabelled button. Add `aria-label="Dismiss"` (the React binding already does). Worth sweeping the other icon-only close buttons in the same pass.
-- [ ] **[P2] `--error-strong` / `--success-strong` / `--warning-strong` are referenced but never defined — status `ds-color` zones lose their accent.** `_ds-color.scss:14` maps `--accent-strong: var(--<family>-strong)` for `$families: secondary, tertiary, error, success, warning`, but only `--primary/secondary/tertiary-strong` exist (`themes/_semantic.scss:117,132,152`, `themes/dark/_theme.scss:48,53,58`). The `--<family>-muted-strong` cousins DO exist for all three status families, which is what makes the gap easy to miss. Inside `ds-color="error|success|warning"` every declaration reading `var(--accent-strong)` becomes invalid at computed-value time. Either define the three missing tokens in both themes or give the map a fallback. (One smaller cousin of the same class survives: `--icon-disabled`, referenced at `accordion-item.component.scss:51` and defined nowhere, so that rule silently does nothing. `--border-error`, listed here originally, is FIXED — `autocomplete` now routes through `--_input-border-error`, which falls back to the defined `--error`.)
-
 ## Missing components (from gap analysis)
 
 Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · button-group · segmented · timeline · description-list · list · data-grid · confirm-dialog · layout · color-picker · slider · otp-input · tree · loading-overlay · split-button; plus this session's `ds-app-layout` + `ds-sidenav-footer`). Remaining:
@@ -984,7 +1022,7 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 > release cut sequences everything breaking behind it, and every breaking change added before the cut
 > makes the one migration a consumer must swallow larger.
 
-**23 open — 9 P2 and 14 P3 — but the count flatters the board.** **Twelve are parked**: ten P3s waiting on a first consumer ask (splitter, CascadeSelect, lightbox, CDK Menu, `ds-select` native multi, stepper formatting, row-expansion deltas, primary-CTA, MED, inspect mode) and two kept deliberately as decision records not to be "simplified" (`role="banner"`, the duplicated `compact` condition). **A P2 — shared picker internals — is open against its own recommendation**, which is not to build it until a fourth list picker appears.
+**22 open — 8 P2 and 14 P3 — but the count flatters the board.** **Twelve are parked**: ten P3s waiting on a first consumer ask (splitter, CascadeSelect, lightbox, CDK Menu, `ds-select` native multi, stepper formatting, row-expansion deltas, primary-CTA, MED, inspect mode) and two kept deliberately as decision records not to be "simplified" (`role="banner"`, the duplicated `compact` condition). **A P2 — shared picker internals — is open against its own recommendation**, which is not to build it until a fourth list picker appears.
 
 **So the live board is six decisions and one piece of work.** _(0.9.0 was CUT on 2026-08-10 — the P1 that everything queued behind is done, and the release chain ran clean: publish to npmjs, docs deployed.)_ The decisions: **Angular 22**, whose peer range we currently exclude and which should be settled before the next cut · **packaging A/C/D** · **the breaking batch**, decided as one story · **the four identical consumer overrides**, which are evidence about our defaults · **verdicts B1–B5** plus a colour space, for the interlocked token trio · **the LOOK** for `dirty` / `pending` / `disabledReasons`. The work: the `ds-modal` status widening (breaking, so it rides the batch) — width-based overflow shipped as an opt-in on 2026-08-11, leaving only its default flip, which is already a member of the batch. _(Composition rules closed 2026-08-10: all three rule gaps written and rendered at `Practice → Composition rules` from the same file the package ships.)_
 

@@ -56,7 +56,7 @@
   }
 
   .icon  { color: var(--_toast-icon-color); flex-shrink: 0; align-self: center; }
-  .body  { flex: 1; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  .body  { flex: 1; min-width: 0; overflow-wrap: anywhere; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
   .title { font-weight: var(--font-weight-bold); color: var(--text-primary); margin-bottom: var(--space-0-5); }
   .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--space-0-5);
 
