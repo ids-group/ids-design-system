@@ -125,8 +125,11 @@ export class ToastService {
     this.regionRef = this.overlayRef.attach(
       new ComponentPortal(ToastRegionComponent),
     );
+    // A configured 0 is forwarded, not skipped: since the region's own default became
+    // a cap, 0 is the only way left to ask for an uncapped stack, and swallowing it
+    // would silently hand that consumer the default instead.
     const maxVisible = this.toastConfig?.maxVisible;
-    if (maxVisible && maxVisible > 0) {
+    if (typeof maxVisible === 'number' && maxVisible >= 0) {
       this.regionRef.setInput('maxVisible', maxVisible);
     }
   }

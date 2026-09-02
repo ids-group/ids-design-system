@@ -19,6 +19,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`maxVisible` defaults to 5 instead of unlimited.** An uncapped stack was more permissive than any
+  system this component is measured against — Material shows one snackbar and dismisses the previous,
+  Carbon and Halstack stack but expect a ceiling. `DS_TOAST_CONFIG` still sets it, and `0` still means
+  no cap; a configured `0` is now forwarded rather than skipped, since it is the only way left to ask
+  for one.
+
+- **The stack no longer jumps when a toast is added.** Its neighbours are put back where they were
+  with a `transform` and released, so the re-stack runs on the compositor instead of the browser
+  moving them all in one frame. Two new tokens tune it: `--ds-toast-shift-duration` (default
+  `--duration-fast`) and `--ds-toast-shift-easing`. A dismissal keeps its own, longer timing — a
+  re-stack and a leave are different motions.
+
+
 - **The banner and toast icon now centres on the message block**, where it used to align to the first
   line of text. The two rules agree on a one-line message — which is most toasts — and diverge as the
   text grows: the icon sat 12px above the block centre at two lines and 21px at three. Measured after

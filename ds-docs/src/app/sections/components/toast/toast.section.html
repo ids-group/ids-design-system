@@ -155,13 +155,17 @@
     <code class="t-mono-inline">
       maxVisible
     </code> to cap concurrent toasts.
-    Extras queue and appear as earlier ones dismiss. A region is unlimited by
-    default; this site provides
+    Extras queue and appear as earlier ones dismiss. A region shows
     <code class="t-mono-inline">
-      maxVisible: 3
-    </code> so the queue is
-    demonstrable — the button below fires 5 toasts in one go and you will see 3,
-    with the other two arriving as those dismiss.
+      maxVisible
+    </code> at once, five by default — fire
+    the button below twice and the sixth onwards wait their turn. Set
+    <code class="t-mono-inline">
+      DS_TOAST_CONFIG
+    </code> to change it, or
+    <code class="t-mono-inline">
+      0
+    </code> for no cap at all.
   </p>
 
   <div class="demo">
