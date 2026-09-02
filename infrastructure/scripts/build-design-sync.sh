@@ -25,11 +25,13 @@ CI=true bun run build:elements
 
 [ -f .design-sync/elements/dist/ds-bundle.js ] || { echo "Expected artifact missing: .design-sync/elements/dist/ds-bundle.js"; exit 1; }
 
-# The bundle is useless to the design host without the stylesheet and the faces it
-# names, and the CSS points at ./media — so a deploy that carries only the JS
-# renders unstyled cards in a fallback font.
-[ -f .design-sync/elements/dist/browser/styles.css ] || { echo "Expected artifact missing: .design-sync/elements/dist/browser/styles.css"; exit 1; }
-[ -d .design-sync/elements/dist/browser/media ] || { echo "Expected artifact missing: .design-sync/elements/dist/browser/media/"; exit 1; }
+# The bundle is useless to the design host without its stylesheet, and the file that ships is the
+# REWRITTEN copy named by config.json's cssEntry — not Angular's own styles.css, whose `./media/`
+# font URLs resolve to nothing in the project. Assert the copy, and assert the rewrite actually
+# happened: a silent no-op there leaves a byte-identical file and 404s every face.
+[ -f .design-sync/elements/dist/ds-bundle.css ] || { echo "Expected artifact missing: .design-sync/elements/dist/ds-bundle.css (the file cssEntry names)"; exit 1; }
+grep -q 'url("fonts/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bundle.css carries no fonts/ URL - the rewrite did not run"; exit 1; }
+! grep -q './media/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bundle.css still points at ./media/ - the rewrite was incomplete"; exit 1; }
 
 echo "Checking the hand-maintained surface..."
 bun run check:manual-surface
