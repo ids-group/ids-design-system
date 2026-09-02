@@ -56,6 +56,20 @@ echo "Building the upload artefacts..."
 node .design-sync/tools/build-cards.mjs
 node .design-sync/tools/build-adherence.mjs
 
+# The tree is COMMITTED, so a stale copy in the repo is the failure to catch: the build above just
+# regenerated it from source, and git is the comparator. Same idiom as `split-agent-catalogue
+# --check`, except the comparison is free.
+if [ -n "$(git status --porcelain .design-sync/upload)" ]; then
+  echo "The committed upload tree is stale — this build regenerated different files:"
+  git status --porcelain .design-sync/upload
+  echo ""
+  echo "Run 'node .design-sync/tools/build-cards.mjs && node .design-sync/tools/build-adherence.mjs'"
+  echo "and commit .design-sync/upload. It is what a publish uploads, so a stale copy publishes"
+  echo "the previous release's contract."
+  exit 1
+fi
+echo "Committed upload tree matches the build"
+
 [ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
 [ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }
 cards=$(find .design-sync/upload/components -name '*.html' | wc -l)

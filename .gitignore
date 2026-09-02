@@ -95,7 +95,4 @@ Anton_local
 /.design-sync/elements/gen/
 /.design-sync/elements/dist/
 /.design-sync/elements/demo/dist/
-# The upload staging tree build-cards.mjs writes: derived from everything above, and rebuilt in
-# whichever account performs the upload, because a build does not travel between them.
-/.design-sync/upload/
 /out-tsc/
