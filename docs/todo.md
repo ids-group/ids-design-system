@@ -105,7 +105,6 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 
 **Bugs — something shipped misbehaves**
 
-- P3 · **A gate run against a shared working tree can fail on a half-written line** — C013 was accused of a false positive on 2026-09-02 and was right: the same sentence PASSES with its next line present and FAILS without it, and a parallel session was mid-write. Re-run a gate before believing its failure here
 - P2 · **The table's bulk-actions bar paints its buttons the colour of the bar** — the rule styled a `.button` CLASS and stopped reaching anything when the button became a component; fixed on `feat/design-sync-last-mile`, unmerged
 - P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
 - P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either
@@ -168,6 +167,7 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 **Records — kept so they are not "simplified" away**
 
+- P3 · **A gate run against a shared working tree can fail on a half-written line** — C013 was accused of a false positive on 2026-09-02 and was right: the same sentence PASSES with its next line present and FAILS without it, and a parallel session was mid-write. Re-run a gate before believing its failure here
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй").
 
