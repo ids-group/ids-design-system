@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>Варнинг-пара и зебра на скелетоне — два решения</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="docs/todo.md - warning status pair (P2) 4.42:1 measured 2026-08-27; zebra over skeleton (P3) measured 2026-09-02. src/lib/styles/_status.scss pairs the failing colours; src/lib/components/table/table.component.scss carries the stripe rule.">
+<link rel="stylesheet" href="ds.css">
+<style>
+  body {
+    margin: 0;
+    padding: var(--space-8) var(--space-6) var(--space-12);
+    background: var(--surface-canvas);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-m);
+    line-height: var(--line-height-base);
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  h1 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  h2 {
+    margin: var(--space-10) 0 var(--space-3);
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-bold);
+  }
+
+  h3 {
+    margin: var(--space-6) 0 var(--space-2);
+    font-size: var(--font-size-l);
+    font-weight: var(--font-weight-bold);
+  }
+
+  p { margin: 0 0 var(--space-3); max-width: 78ch; }
+  .lede { color: var(--text-secondary); }
+
+  /* Every judged colour is painted as a GRADIENT, not a background-color: a browser with
+     force-dark on rewrites colours but leaves gradients alone, so what is on screen is what
+     the token actually resolves to. */
+  .swatch {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: var(--space-4) var(--space-5);
+    border: var(--border-width-default) solid rgba(0, 0, 0, 0.12);
+    border-radius: var(--radius-md);
+    background-image: linear-gradient(#FFFBEA, #FFFBEA);
+  }
+
+  .swatch .line { font-size: var(--font-size-m); font-weight: var(--font-weight-regular); }
+  .swatch .small { font-size: var(--font-size-s); }
+  .swatch .strong { font-weight: var(--font-weight-bold); }
+
+  .meta {
+    display: flex;
+    gap: var(--space-4);
+    align-items: baseline;
+    margin-top: var(--space-2);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ratio { font-weight: var(--font-weight-bold); color: var(--text-primary); }
+  .pass { color: #1B7F4B; font-weight: var(--font-weight-bold); }
+  .fail { color: #B3261E; font-weight: var(--font-weight-bold); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-4) 0 var(--space-6);
+  }
+
+  .card {
+    padding: var(--space-5);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--surface-default);
+  }
+
+  .card > h3 { margin-top: 0; }
+
+  table.spec {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-s);
+  }
+
+  table.spec th {
+    text-align: left;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border-bottom: var(--border-width-default) solid var(--border-default);
+  }
+
+  table.spec td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-width-default) solid var(--border-divider);
+  }
+
+  /* The stripe as the table actually resolves it, measured: rgb(241 244 249). */
+  table.spec.zebra tbody tr:nth-child(odd) td {
+    background-image: linear-gradient(rgb(241, 244, 249), rgb(241, 244, 249));
+  }
+
+  table.spec.zebra.no-stripe tbody tr.skeleton-row:nth-child(odd) td {
+    background-image: none;
+  }
+
+  .shimmer {
+    display: block;
+    height: 12px;
+    border-radius: var(--radius-sm);
+    background-image: linear-gradient(90deg, #E4E7EB, #D2D6DC, #E4E7EB);
+  }
+
+  .note {
+    margin: var(--space-4) 0 0;
+    padding: var(--space-4) var(--space-5);
+    border-left: 3px solid var(--border-strong);
+    background: var(--surface-muted);
+    font-size: var(--font-size-s);
+    color: var(--text-secondary);
+  }
+
+  .note strong { color: var(--text-primary); }
+
+  ul { margin: 0 0 var(--space-3); padding-left: var(--space-6); max-width: 78ch; }
+  li { margin-bottom: var(--space-1); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    padding: 0 var(--space-1);
+    background: var(--surface-muted);
+    border-radius: var(--radius-sm);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Два решения: варнинг-пара и зебра на скелетоне</h1>
+  <p class="lede">
+    Оба замерены, ни одно не применено. Каждый вариант ниже отрисован тем самым цветом, о котором идёт
+    речь — судить надо глазами, числа рядом только чтобы знать цену.
+  </p>
+
+  <h2>1. Варнинг-пара не проходит AA для обычного текста</h2>
+  <p>
+    <code>_status.scss</code> ставит <code>--warning-text</code> на <code>--warning-subtitle</code>. В
+    дефолтной теме это <code>#8A7400</code> на <code>#FFFBEA</code> — <strong>4.42:1</strong>, а порог
+    4.5. Это единственная статусная пара, которая падает: ошибка даёт 5.92, успех 6.42, primary 6.16.
+  </p>
+  <p>
+    <strong>Тёмного шага в рампе нет.</strong> Жёлтая рампа кончается на <code>--yellow-700</code>, и это
+    ровно текущее значение. Значит либо новый шаг, либо другой цвет текста, либо оставить как есть.
+  </p>
+
+  <h3>Как есть сейчас</h3>
+  <div class="grid">
+    <div class="swatch">
+      <span class="line" style="color: #8A7400">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #8A7400">Обычный текст, 14px — тот случай, который и не проходит</span>
+      <div class="meta"><span><code>#8A7400</code></span><span class="ratio">4.42:1</span><span class="fail">не проходит AA</span></div>
+    </div>
+  </div>
+
+  <h3>Вариант A — новый шаг рампы, оттенок сохраняется</h3>
+  <p>Самый мелкий проходящий шаг — первый. Дальше запас растёт, но цвет уходит в коричневый.</p>
+  <div class="grid">
+    <div class="swatch">
+      <span class="line" style="color: #806C00">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #806C00">Обычный текст, 14px</span>
+      <div class="meta"><span><code>#806C00</code></span><span class="ratio">4.98:1</span><span class="pass">AA</span></div>
+    </div>
+    <div class="swatch">
+      <span class="line" style="color: #7A6700">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #7A6700">Обычный текст, 14px</span>
+      <div class="meta"><span><code>#7A6700</code></span><span class="ratio">5.37:1</span><span class="pass">AA</span></div>
+    </div>
+    <div class="swatch">
+      <span class="line" style="color: #756300">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #756300">Обычный текст, 14px</span>
+      <div class="meta"><span><code>#756300</code></span><span class="ratio">5.72:1</span><span class="pass">AA</span></div>
+    </div>
+    <div class="swatch">
+      <span class="line" style="color: #6E5C00">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #6E5C00">Обычный текст, 14px</span>
+      <div class="meta"><span><code>#6E5C00</code></span><span class="ratio">6.34:1</span><span class="pass">AA</span></div>
+    </div>
+    <div class="swatch">
+      <span class="line" style="color: #665600">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #665600">Обычный текст, 14px</span>
+      <div class="meta"><span><code>#665600</code></span><span class="ratio">6.99:1</span><span class="pass">AA</span></div>
+    </div>
+  </div>
+
+  <h3>Вариант B — другой цвет текста на том же тинте</h3>
+  <p>Запас огромный и новых токенов не надо, но подпись перестаёт быть жёлтой и выбивается из трёх
+    остальных статусов, которые оттенок держат.</p>
+  <div class="grid">
+    <div class="swatch">
+      <span class="line" style="color: #1F2933">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #1F2933">Обычный текст, 14px</span>
+      <div class="meta"><span><code>#1F2933</code> основной текст</span><span class="ratio">14.22:1</span><span class="pass">AA</span></div>
+    </div>
+    <div class="swatch">
+      <span class="line" style="color: #323F4B">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #323F4B">Обычный текст, 14px</span>
+      <div class="meta"><span><code>#323F4B</code> серый</span><span class="ratio">10.39:1</span><span class="pass">AA</span></div>
+    </div>
+    <div class="swatch">
+      <span class="line" style="color: #5C4A00">Срок действия полиса истекает через 14 дней</span>
+      <span class="line small" style="color: #5C4A00">Обычный текст, 14px</span>
+      <div class="meta"><span><code>#5C4A00</code> тёмно-жёлтый</span><span class="ratio">8.31:1</span><span class="pass">AA</span></div>
+    </div>
+  </div>
+
+  <h3>Вариант C — светлее подложку. Головы нет</h3>
+  <p>Показано, а не заявлено: даже если убрать тинт совсем и оставить чистый белый, текущий текст даёт
+    4.59 — то есть проблема в цвете текста, а не в подложке.</p>
+  <div class="grid">
+    <div class="swatch" style="background-image: linear-gradient(#FFFDF5, #FFFDF5)">
+      <span class="line" style="color: #8A7400">Срок действия полиса истекает через 14 дней</span>
+      <div class="meta"><span>тинт <code>#FFFDF5</code></span><span class="ratio">4.50:1</span><span class="pass">ровно порог</span></div>
+    </div>
+    <div class="swatch" style="background-image: linear-gradient(#FFFFFF, #FFFFFF)">
+      <span class="line" style="color: #8A7400">Срок действия полиса истекает через 14 дней</span>
+      <div class="meta"><span>чистый белый</span><span class="ratio">4.59:1</span><span class="pass">AA, но тинта нет</span></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Что решение НЕ закрывает.</strong> <code>--warning-text</code> читают одиннадцать мест —
+    <code>ds-alert</code>, <code>ds-banner</code> (два), <code>ds-button</code>, <code>ds-checkbox</code>
+    (два), <code>ds-field-message</code>, <code>ds-icon-button</code>, <code>ds-modal</code> (два),
+    <code>ds-radio-group</code>, <code>ds-sidenav-footer</code> и <code>_field-state.scss</code>. Не
+    каждое ставит его на <code>--warning-subtitle</code>; замерена именно пара из
+    <code>_status.scss</code>, и остальные сайты нужно мерить отдельно, прежде чем называть их
+    сломанными.
+  </div>
+
+  <h2>2. Зебра красит каждую вторую строку скелетона</h2>
+  <p>
+    Замерено 2026-09-02 в живом браузере на скомпилированных стилях. Скелетонная строка попадает в
+    <code>&lt;tbody&gt;</code> через <code>&lt;ng-container&gt;</code>, который своего элемента не
+    создаёт, поэтому <code>tbody tr:nth-child(odd)</code> её выбирает. Четыре шиммер-строки под
+    <code>zebra</code> дают два разных фона: строки 1 и 3 — <code>rgb(241 244 249)</code>, строки 2 и
+    4 — прозрачный.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Как есть — полоса доходит до скелетона</h3>
+      <table class="spec zebra">
+        <thead><tr><th>Брокер</th><th>Роль</th></tr></thead>
+        <tbody>
+          <tr class="skeleton-row"><td><span class="shimmer"></span></td><td><span class="shimmer"></span></td></tr>
+          <tr class="skeleton-row"><td><span class="shimmer"></span></td><td><span class="shimmer"></span></td></tr>
+          <tr class="skeleton-row"><td><span class="shimmer"></span></td><td><span class="shimmer"></span></td></tr>
+          <tr class="skeleton-row"><td><span class="shimmer"></span></td><td><span class="shimmer"></span></td></tr>
+        </tbody>
+      </table>
+      <div class="meta"><span>плейсхолдер читается неровно</span></div>
+    </div>
+
+    <div class="card">
+      <h3>Гасить полосу на скелетоне</h3>
+      <table class="spec zebra no-stripe">
+        <thead><tr><th>Брокер</th><th>Роль</th></tr></thead>
+        <tbody>
+          <tr class="skeleton-row"><td><span class="shimmer"></span></td><td><span class="shimmer"></span></td></tr>
+          <tr class="skeleton-row"><td><span class="shimmer"></span></td><td><span class="shimmer"></span></td></tr>
+          <tr class="skeleton-row"><td><span class="shimmer"></span></td><td><span class="shimmer"></span></td></tr>
+          <tr class="skeleton-row"><td><span class="shimmer"></span></td><td><span class="shimmer"></span></td></tr>
+        </tbody>
+      </table>
+      <div class="meta"><span>одно правило-исключение</span></div>
+    </div>
+  </div>
+
+  <h3>Для сравнения — зебра там, где она и нужна</h3>
+  <p>Полоса существует, чтобы глаз вёл строку по колонкам. В данных это работает.</p>
+  <div class="grid">
+    <div class="card">
+      <table class="spec zebra">
+        <thead><tr><th>Брокер</th><th>Роль</th></tr></thead>
+        <tbody>
+          <tr><td>Анна Соколова</td><td>Брокер</td></tr>
+          <tr><td>Борис Ким</td><td>Брокер</td></tr>
+          <tr><td>Вера Литвин</td><td>Администратор</td></tr>
+          <tr><td>Глеб Осипов</td><td>Администратор</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Почему это вынесено, а не починено.</strong> Борд сам классифицирует это как design call, а
+    не дефект: строк с данными полоса помогает, а плейсхолдер вести нечего. Переклассифицировать чужую
+    запись молча — не моё дело, поэтому выбор за тобой. Цена варианта «гасить» — одно правило, того
+    рода, для которого раньше существовал <code>.skeleton-mode</code>, признанный мёртвым.
+  </div>
+
+  <h2>Что я жду от тебя</h2>
+  <ul>
+    <li><strong>Варнинг:</strong> A и какой именно оттенок, либо B и какой, либо оставить как есть.</li>
+    <li><strong>Зебра:</strong> гасить полосу на скелетоне или оставить.</li>
+  </ul>
+
+</div>
+</body>
+</html>

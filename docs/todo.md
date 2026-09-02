@@ -126,6 +126,7 @@ what makes these the cheapest thing on the board.
 | 8 | `8-rejected-with-numbers` | Every idea this backlog has rejected, with the measurement that rejected it and what would reopen it. | the Parked and Records sections |
 | 9 | `9-migration-manifest-audit` | All 23 findings are fixed; what is open is the tail — ten format practices marked *Adopt* and never ratified. Three of the thirteen shipped on their own (`action`, `appliesWhen`, `exports["./migrations/*"]`). | the P3 line below |
 | 10 | `10-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
+| 11 | `11-warning-pair-and-zebra` | Two measured defects whose FIX is a taste call: which shade closes the warning pair, and whether the zebra stripe should reach a skeleton row. Every option rendered in its own colour. | both sit in `# Bugs`; nothing ships until one is picked |
 
 **Ranks 4-8 are the packaging lane and are kept contiguous** — they are one argument and were
 scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russian and share
@@ -281,7 +282,7 @@ lockfiles, now level on every package either tool resolves freely, and the Angul
 21.2.17 and out of the range of two high advisories.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
-items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
+items are Decisions, and eleven decks are open against them. Nothing below is blocked on effort.
 
 **What came off this round:** the whole picker lane. Seven decisions, four follow-up changes, sixteen
 proposals (fifteen built), 43 review findings and five blockers — all closed, both decks moved to
