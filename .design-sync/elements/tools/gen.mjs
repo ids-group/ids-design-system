@@ -34,6 +34,66 @@ const capitalize = (name) => `${name[0].toUpperCase()}${name.slice(1)}`;
 
 const SIGNAL_KINDS = new Set(['input', 'output', 'model']);
 
+/**
+ * Named projection slots, read from the template. Measured in a real browser against the built
+ * bundle: an externally created node carrying the slot attribute IS projected, and the attribute's
+ * case does not matter — `[dsStatValue]` matches a node built with `setAttribute('dsStatValue')` —
+ * so the only thing standing between a caller and these slots was that nothing declared them.
+ *
+ * A slot behind an `@if` whose gate is unsatisfied is dropped rather than left unprojected, which is
+ * why `conditional` is carried: `ds-sidenav`'s `[dsBrandName]` renders nothing until `brandName` is
+ * also set, and silence is the worst way to learn that.
+ */
+function templateSlots(componentFile, meta) {
+  const urlNode = metaProperty(meta, 'templateUrl');
+  if (!urlNode || !ts.isStringLiteralLike(urlNode)) return [];
+  const template = readFileSync(resolve(dirname(componentFile), urlNode.text), 'utf8');
+  const slots = [];
+  // Brace depth carries the enclosing `@if` conditions, so a slot reports the gates that actually
+  // still apply to it rather than every one that appears earlier in the file.
+  const gates = [];
+  let depth = 0;
+  const token = /@(if|else if)\s*\(([\s\S]*?)\)\s*\{|\{|\}|<ng-content\s+select="([^"]+)"/g;
+  for (const match of template.matchAll(token)) {
+    if (match[1]) {
+      depth += 1;
+      gates.push({ depth, condition: match[2] });
+      continue;
+    }
+    if (match[0] === '{') {
+      depth += 1;
+      continue;
+    }
+    if (match[0] === '}') {
+      depth -= 1;
+      while (gates.length && gates[gates.length - 1].depth > depth) gates.pop();
+      continue;
+    }
+    for (const selector of match[3].split(',')) {
+      const attribute = selector.trim().replace(/^\[|\]$/g, '');
+      // Element and class selectors project by shape, not by a marker the caller can set.
+      if (!attribute || /[.#=\s]/.test(attribute)) continue;
+      slots.push({ attribute, gates: gates.map((gate) => gate.condition) });
+    }
+  }
+
+  return slots;
+}
+
+/**
+ * `[dsInputPrefix]` reads as `prefix` on `<Input>`, `[bulk-actions]` as `bulkActions`. The
+ * `ds<Component>` prefix goes because it exists to keep the attribute unique in a global DOM, which
+ * a property on one interface already is.
+ */
+function slotPropName(attribute, componentName) {
+  const stripped = attribute.startsWith(`ds${componentName}`)
+    ? attribute.slice(2 + componentName.length)
+    : attribute.replace(/^ds(?=[A-Z])/, '');
+  const camel = (stripped || attribute).replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+
+  return camel[0].toLowerCase() + camel.slice(1);
+}
+
 function signalKind(initializer) {
   if (!initializer || !ts.isCallExpression(initializer)) return null;
   const callee = initializer.expression;
@@ -111,6 +171,17 @@ function metaProperty(meta, name) {
   )?.initializer;
 }
 
+/** The member's own doc comment, flattened to one line — the type says what a prop accepts, this is
+ *  the only place that says what it MEANS, and dropping it left the agent reading bare unions. */
+function docOf(member) {
+  const comment = ts.getJSDocCommentsAndTags(member)?.[0];
+  const text = typeof comment?.comment === 'string'
+    ? comment.comment
+    : (comment?.comment ?? []).map((part) => part.text ?? '').join('');
+
+  return text.replace(/\s*\n\s*\*?\s*/g, ' ').replace(/\s+/g, ' ').trim() || null;
+}
+
 /** Signal API declared directly on a class. */
 function classApi(classNode) {
   const api = [];
@@ -124,7 +195,12 @@ function classApi(classNode) {
     if (hidden) continue;
     const kind = signalKind(member.initializer);
     if (!kind) continue;
-    api.push({ name: member.name.getText(), kind, type: propType(member.initializer, kind) });
+    api.push({
+      name: member.name.getText(),
+      kind,
+      type: propType(member.initializer, kind),
+      doc: docOf(member),
+    });
   }
 
   return api;
@@ -152,7 +228,12 @@ function hostDirectiveApi(meta, directiveApi) {
       // `'name: alias'` publishes under the alias
       const [name, alias] = element.text.split(':').map((part) => part.trim());
       const source = declared.find((entry_) => entry_.name === name);
-      api.push({ name: alias || name, kind: 'input', type: source?.type ?? 'boolean' });
+      api.push({
+        name: alias || name,
+        kind: 'input',
+        type: source?.type ?? 'boolean',
+        doc: source?.doc ?? null,
+      });
     }
   }
 
@@ -197,6 +278,7 @@ for (const file of walk(join(repo, 'src/lib'), '.ts').sort()) {
 }
 
 const components = [];
+const renamedSlots = [];
 for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
   const source = parse(file);
   source.forEachChild((node) => {
@@ -219,12 +301,32 @@ for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
 
       return { ...entry, type };
     });
+    const name = pascalOf(selector);
+    const slots = templateSlots(file, meta).map((slot) => ({
+      ...slot,
+      prop: slotPropName(slot.attribute, name),
+    }));
+    // A slot and an input can legitimately share a name — `ds-auth-layout` takes `brand` as a
+    // string OR `[brand]` as your own markup. The slot yields, because the input is the published
+    // name a consumer already binds.
+    const taken = new Set(api.map((entry) => entry.name));
+    for (const slot of slots) {
+      if (taken.has(slot.prop)) {
+        renamedSlots.push(`${name}.${slot.prop} → ${slot.prop}Content ([${slot.attribute}])`);
+        slot.prop = `${slot.prop}Content`;
+      }
+      if (taken.has(slot.prop)) {
+        throw new Error(`${name}: slot [${slot.attribute}] cannot be named — "${slot.prop}" is taken too.`);
+      }
+      taken.add(slot.prop);
+    }
     components.push({
       selector,
       className: node.name.text,
-      name: pascalOf(selector),
+      name,
       importPath: `../../../${relative(repo, file).replace(/\\/g, '/').replace(/\.ts$/, '')}`,
       api,
+      slots,
       hostInputs: hostApi.map((entry) => entry.name),
     });
   });
@@ -314,14 +416,34 @@ export function defineDsElements(): Promise<void> {
 // stringify objects, and Angular's element strategy reads properties directly.
 // Outputs arrive as CustomEvents named after the output, so `on<Output>` props
 // become addEventListener calls.
+const docLine = (doc) => (doc ? `  /** ${doc} */\n` : '');
+
 function propsInterface(component) {
-  const lines = component.api.map(({ name, kind, type }) => {
-    if (kind === 'output') return `  ${`on${capitalize(name)}`}?: (value: ${type}) => void;`;
-    const own = `  ${name}?: ${type};`;
+  const lines = component.api.map(({ name, kind, type, doc }) => {
+    if (kind === 'output') {
+      return `${docLine(doc)}  ${`on${capitalize(name)}`}?: (value: ${type}) => void;`;
+    }
+    const own = `${docLine(doc)}  ${name}?: ${type};`;
     return kind === 'model'
       ? `${own}\n  ${`on${capitalize(name)}Change`}?: (value: ${type}) => void;`
       : own;
   });
+  const inputNames = new Set(
+    component.api.filter((entry) => entry.kind !== 'output').map((entry) => entry.name),
+  );
+  for (const { prop, attribute, gates } of component.slots) {
+    // Only inputs are worth naming: a gate on an internal signal is not something a caller can
+    // open, and telling them to set it would send them looking for a prop that does not exist.
+    const openers = [
+      ...new Set(gates.flatMap((gate) => gate.match(/[A-Za-z_$][\w$]*/g) ?? []).filter((n) => inputNames.has(n))),
+    ];
+    const gate = openers.length
+      ? ` Rendered only while ${openers.map((n) => `\`${n}\``).join(' or ')} is set.`
+      : gates.length
+        ? ' Rendered behind a condition the component owns, so it can be absent even when passed.'
+        : '';
+    lines.push(`  /** Content for the \`[${attribute}]\` slot.${gate} */\n  ${prop}?: React.ReactNode;`);
+  }
 
   return `export interface ${component.name}Props extends DsHostProps {\n${lines.join('\n')}\n}`;
 }
@@ -335,6 +457,7 @@ function wrapper(component) {
         ? [[`${entry.name}Change`, `on${capitalize(entry.name)}Change`]]
         : [],
   );
+  const slots = component.slots.map((slot) => [slot.prop, slot.attribute]);
 
   return `${propsInterface(component)}
 
@@ -343,7 +466,8 @@ export const ${component.name} = React.forwardRef<HTMLElement, ${component.name}
   function ${component.name}(props, forwarded) {
     return useDsElement('${component.tag}', props, forwarded,
       ${JSON.stringify(inputs)},
-      ${JSON.stringify(events)});
+      ${JSON.stringify(events)},
+      ${JSON.stringify(slots)});
   },
 );
 `;
@@ -424,7 +548,13 @@ writeFileSync(
 `,
 );
 
+if (renamedSlots.length) {
+  console.log(`· ${renamedSlots.length} slot(s) renamed — an input already held the name:`);
+  for (const note of renamedSlots) console.log(`    ${note}`);
+}
+const slotTotal = components.reduce((total, c) => total + c.slots.length, 0);
 console.error(
   `✓ generated ${components.length} elements + wrappers`
-  + ` (${components.reduce((total, c) => total + c.api.length, 0)} inputs/outputs)`,
+  + ` (${components.reduce((total, c) => total + c.api.length, 0)} inputs/outputs,`
+  + ` ${slotTotal} named slots across ${components.filter((c) => c.slots.length).length})`,
 );

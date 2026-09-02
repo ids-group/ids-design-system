@@ -22,6 +22,7 @@ export function useDsElement<Props extends object>(
   forwarded: React.ForwardedRef<HTMLElement>,
   inputNames: readonly string[],
   events: ReadonlyArray<readonly [string, string]>,
+  slots: ReadonlyArray<readonly [string, string]> = [],
 ): React.ReactElement {
   // Each generated wrapper passes its own `<Name>Props`, which has no index
   // signature — so the parameter is generic and indexed through one cast here
@@ -87,7 +88,24 @@ export function useDsElement<Props extends object>(
     }
   }
 
-  return React.createElement(tag, hostProps, children);
+  // A named slot is claimed by the attribute on the projected node, so each slot prop is wrapped in
+  // an element carrying it. `display: contents` keeps that wrapper out of layout entirely — the
+  // alternative is choosing between a block and an inline element per slot, and either is wrong
+  // somewhere (a `div` inside `[dsButtonSubtext]` breaks the button's own line box).
+  const slotChildren = slots
+    .filter(([prop]) => props[prop] !== undefined && props[prop] !== null)
+    .map(([prop, attribute]) =>
+      React.createElement(
+        'span',
+        // Lowercased deliberately: React warns on any non-lowercase attribute it does not know, and
+        // the HTML parser would lowercase it anyway. Attribute NAMES match case-insensitively in an
+        // HTML document, so `[dsStatValue]` still claims a node carrying `dsstatvalue` — measured.
+        { key: attribute, [attribute.toLowerCase()]: '', style: { display: 'contents' } },
+        props[prop] as React.ReactNode,
+      ),
+    );
+
+  return React.createElement(tag, hostProps, ...slotChildren, children);
 }
 
 const SETS_PROPERTIES_ON_CUSTOM_ELEMENTS = Number.parseInt(React.version, 10) >= 19;
