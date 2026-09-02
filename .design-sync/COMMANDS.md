@@ -25,6 +25,46 @@ the one people look at every day. The flag is load-bearing: a section renders DS
 components as ANGULAR components, and registering those same tags as custom
 elements upgrades every host a second time.
 
+**One card per BLOCK**, not per component. A block is one demo with its own
+`<h3 class="block-title">` and description, and the card keeps exactly that block
+plus the chapter's heading, tag chip and lede. 85 components, 314 cards.
+
+That granularity is forced by how the pane renders: it fits a card's declared
+`viewport` into a fixed tile, so **the declared height IS the zoom level**.
+Table's chapter measures 18919px and rendered as an illegible smudge; its 35
+blocks are a few hundred pixels each and legible at the same scale as everything
+else. Nothing is cut from ds-docs — every title, description and demo survives,
+distributed across cards — and because the pane labels a card by its FILENAME,
+`Table-Sortable-columns.html` puts the block's name outside the card too, which
+is the only way to get text out there at all.
+
+A chapter also documents the parts that only exist inside it — Menu covers
+MenuItem and MenuDivider. Those blocks carry `data-for="menu-item"` in the
+ds-docs template, which is how a block is attributed to a component; unmarked
+blocks belong to the chapter's own. The API table goes on a component's FIRST
+card only: on Table that is one table instead of thirty-five copies.
+
+A component whose chapter marks no block for it falls back to one whole-chapter
+card — the tall shape this design exists to avoid. Four do: `ModalCard`,
+`PasswordRules`, `SidenavFooter` and `TimeColumns`, because ds-docs demonstrates
+none of them on its own. `check-manual-surface` prints all four on every run.
+
+The card's **group** is the ds-docs group page that renders its section, not a
+`category` in the doc's front matter. Those were two hand-kept opinions and they
+disagreed — Container, Inline, Stack and Divider were filed under `layout` /
+`data-display` while ds-docs puts all four under Foundations.
+
+Heights are generated: `node .design-sync/tools/measure-cards.mjs` loads every
+built card in a browser and writes `viewports.json`. It needs Chrome, so it runs
+locally and is not in `build-upload`; CI checks that every card ended up with a
+`viewport`.
+
+Everything the project holds now has a source here. `.thumbnail` — the project's
+cover image — was the last file that did not: a WebP that arrived with the
+hand-made upload, so a wipe-and-reupload would have blanked the tile with nothing
+to restore it from. It lives at `assets/thumbnail.webp` and is copied into the
+tree like the pasted images. Re-rendering it from a card is still open (todo).
+
 Project: **IDS Design System**, `455f9a87-1a6e-4b1d-a0e7-cf47ed772e63`
 (`PROJECT_TYPE_DESIGN_SYSTEM` — immutable at creation; a regular project can
 never be turned into one).
@@ -125,6 +165,19 @@ delete_files { planId, paths }
   from each card's first-line `<!-- @dsCard group="…" -->` comment, compiled
   into `_ds_manifest.json`. Only hand-authored projects without those markers
   need explicit registration.
+- **We write `_ds_manifest.json` ourselves** (`build-manifest.mjs`). The app
+  compiles one from the markers on its own self-check, but the copy on the
+  project had been written by the retired `/design-sync` CLI
+  (`"source": "design-sync-cli"`) and nothing regenerated it: it still listed 79
+  components including `AppShell`, renamed three releases earlier, and none of the
+  cards added since. The pane indexes from the manifest and reads a card only for
+  its content — so a stale index shows a stale project no matter what else is
+  uploaded, which is why refreshed cards kept rendering the old preview grid.
+  A card entry holds only `path`, `group` and `viewport`: there is no field for a
+  name, a subtitle or any prose, and the pane labels a card by its FILENAME.
+  `templates` and `startingPoints` are in the schema and empty; the pane is
+  server-side (the CLI binary carries only the tool description), so what fills
+  them cannot be determined from here.
 - Never wholesale-replace: sync one component at a time and diff against
   `list_files` first.
 

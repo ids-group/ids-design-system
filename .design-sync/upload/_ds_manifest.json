@@ -19,7 +19,7 @@
     },
     {
       "name": "AuthLayout",
-      "sourcePath": "components/page-structure/AuthLayout/AuthLayout.jsx"
+      "sourcePath": "components/navigation/AuthLayout/AuthLayout.jsx"
     },
     {
       "name": "Autocomplete",
@@ -75,7 +75,7 @@
     },
     {
       "name": "Container",
-      "sourcePath": "components/layout/Container/Container.jsx"
+      "sourcePath": "components/foundations/Container/Container.jsx"
     },
     {
       "name": "DatePicker",
@@ -91,7 +91,7 @@
     },
     {
       "name": "Divider",
-      "sourcePath": "components/data-display/Divider/Divider.jsx"
+      "sourcePath": "components/foundations/Divider/Divider.jsx"
     },
     {
       "name": "Drawer",
@@ -115,7 +115,7 @@
     },
     {
       "name": "FilterBar",
-      "sourcePath": "components/data-display/FilterBar/FilterBar.jsx"
+      "sourcePath": "components/page-structure/FilterBar/FilterBar.jsx"
     },
     {
       "name": "Icon",
@@ -127,7 +127,7 @@
     },
     {
       "name": "Inline",
-      "sourcePath": "components/layout/Inline/Inline.jsx"
+      "sourcePath": "components/foundations/Inline/Inline.jsx"
     },
     {
       "name": "Input",
@@ -243,7 +243,7 @@
     },
     {
       "name": "Skeleton",
-      "sourcePath": "components/data-display/Skeleton/Skeleton.jsx"
+      "sourcePath": "components/feedback-status/Skeleton/Skeleton.jsx"
     },
     {
       "name": "Slider",
@@ -259,7 +259,7 @@
     },
     {
       "name": "Stack",
-      "sourcePath": "components/layout/Stack/Stack.jsx"
+      "sourcePath": "components/foundations/Stack/Stack.jsx"
     },
     {
       "name": "Stat",
@@ -345,239 +345,894 @@
   "startingPoints": [],
   "cards": [
     {
-      "path": "components/actions/ButtonGroup/ButtonGroup.html",
+      "path": "components/actions/ButtonGroup/ButtonGroup-Button-group.html",
       "group": "actions",
-      "viewport": "1200x3655"
+      "viewport": "1200x578"
     },
     {
-      "path": "components/actions/Button/Button.html",
+      "path": "components/actions/Button/Button-Color-variant.html",
       "group": "actions",
-      "viewport": "1200x3655"
+      "viewport": "1200x1405"
     },
     {
-      "path": "components/actions/IconButton/IconButton.html",
+      "path": "components/actions/Button/Button-Full-width.html",
       "group": "actions",
-      "viewport": "1200x1779"
+      "viewport": "1200x596"
     },
     {
-      "path": "components/actions/Segmented/Segmented.html",
+      "path": "components/actions/Button/Button-Refused-and-why.html",
       "group": "actions",
-      "viewport": "1200x825"
+      "viewport": "1200x933"
     },
     {
-      "path": "components/actions/SplitButton/SplitButton.html",
+      "path": "components/actions/Button/Button-Sizes.html",
       "group": "actions",
-      "viewport": "1200x897"
+      "viewport": "1200x500"
     },
     {
-      "path": "components/actions/ToggleButton/ToggleButton.html",
+      "path": "components/actions/Button/Button-States.html",
       "group": "actions",
-      "viewport": "1200x3655"
+      "viewport": "1200x807"
     },
     {
-      "path": "components/data-display/AccordionItem/AccordionItem.html",
+      "path": "components/actions/Button/Button-With-icon.html",
+      "group": "actions",
+      "viewport": "1200x512"
+    },
+    {
+      "path": "components/actions/Button/Button-With-subtext.html",
+      "group": "actions",
+      "viewport": "1200x541"
+    },
+    {
+      "path": "components/actions/IconButton/IconButton-Color-variant.html",
+      "group": "actions",
+      "viewport": "1200x1146"
+    },
+    {
+      "path": "components/actions/IconButton/IconButton-Disabled.html",
+      "group": "actions",
+      "viewport": "1200x554"
+    },
+    {
+      "path": "components/actions/IconButton/IconButton-Sizes.html",
+      "group": "actions",
+      "viewport": "1200x543"
+    },
+    {
+      "path": "components/actions/IconButton/IconButton-Toggle.html",
+      "group": "actions",
+      "viewport": "1200x535"
+    },
+    {
+      "path": "components/actions/Segmented/Segmented-Segmented-control.html",
+      "group": "actions",
+      "viewport": "1200x646"
+    },
+    {
+      "path": "components/actions/SplitButton/SplitButton-Outline-variant.html",
+      "group": "actions",
+      "viewport": "1200x489"
+    },
+    {
+      "path": "components/actions/SplitButton/SplitButton-Primary-variant.html",
+      "group": "actions",
+      "viewport": "1200x719"
+    },
+    {
+      "path": "components/actions/ToggleButton/ToggleButton-Toggle-link.html",
+      "group": "actions",
+      "viewport": "1200x634"
+    },
+    {
+      "path": "components/data-display/AccordionItem/AccordionItem-States-showcase.html",
       "group": "data-display",
-      "viewport": "1200x1600"
+      "viewport": "1200x881"
     },
     {
-      "path": "components/data-display/Accordion/Accordion.html",
+      "path": "components/data-display/Accordion/Accordion-Default.html",
       "group": "data-display",
-      "viewport": "1200x1600"
+      "viewport": "1200x782"
     },
     {
-      "path": "components/data-display/AvatarGroup/AvatarGroup.html",
+      "path": "components/data-display/Accordion/Accordion-Single-open-multi-false.html",
       "group": "data-display",
-      "viewport": "1200x1566"
+      "viewport": "1200x559"
     },
     {
-      "path": "components/data-display/Avatar/Avatar.html",
+      "path": "components/data-display/AvatarGroup/AvatarGroup-Group.html",
       "group": "data-display",
-      "viewport": "1200x1566"
+      "viewport": "1200x541"
     },
     {
-      "path": "components/data-display/Card/Card.html",
+      "path": "components/data-display/Avatar/Avatar-Fallback-icon.html",
       "group": "data-display",
-      "viewport": "1200x1728"
+      "viewport": "1200x425"
     },
     {
-      "path": "components/data-display/DescriptionItem/DescriptionItem.html",
+      "path": "components/data-display/Avatar/Avatar-Seeded-tint.html",
       "group": "data-display",
-      "viewport": "1200x1359"
+      "viewport": "1200x866"
     },
     {
-      "path": "components/data-display/DescriptionList/DescriptionList.html",
+      "path": "components/data-display/Avatar/Avatar-Sizes.html",
       "group": "data-display",
-      "viewport": "1200x1359"
+      "viewport": "1200x488"
     },
     {
-      "path": "components/data-display/Divider/Divider.html",
+      "path": "components/data-display/Avatar/Avatar-Status-dots.html",
       "group": "data-display",
-      "viewport": "1200x1649"
+      "viewport": "1200x417"
     },
     {
-      "path": "components/data-display/FilterBar/FilterBar.html",
+      "path": "components/data-display/Card/Card-A-full-bleed-child-needs-the-card-to-clip.html",
       "group": "data-display",
-      "viewport": "1200x1399"
+      "viewport": "1200x605"
     },
     {
-      "path": "components/data-display/Icon/Icon.html",
+      "path": "components/data-display/Card/Card-Elevations-paddings.html",
       "group": "data-display",
-      "viewport": "1200x920"
+      "viewport": "1200x1111"
     },
     {
-      "path": "components/data-display/ListItem/ListItem.html",
+      "path": "components/data-display/Card/Card-Header-body-footer.html",
       "group": "data-display",
-      "viewport": "1200x1768"
+      "viewport": "1200x587"
     },
     {
-      "path": "components/data-display/List/List.html",
+      "path": "components/data-display/DescriptionItem/DescriptionItem-Copy-to-clipboard-value.html",
       "group": "data-display",
-      "viewport": "1200x1768"
+      "viewport": "1200x589"
     },
     {
-      "path": "components/data-display/Skeleton/Skeleton.html",
+      "path": "components/data-display/DescriptionList/DescriptionList-Horizontal-layout.html",
       "group": "data-display",
-      "viewport": "1200x778"
+      "viewport": "1200x689"
     },
     {
-      "path": "components/data-display/Stat/Stat.html",
+      "path": "components/data-display/DescriptionList/DescriptionList-Stacked-layout.html",
       "group": "data-display",
-      "viewport": "1200x1746"
+      "viewport": "1200x655"
     },
     {
-      "path": "components/data-display/Table/Table.html",
+      "path": "components/data-display/Icon/Icon-Sample-names.html",
       "group": "data-display",
-      "viewport": "1200x18919"
+      "viewport": "1200x463"
     },
     {
-      "path": "components/data-display/Tag/Tag.html",
+      "path": "components/data-display/Icon/Icon-Sizes.html",
       "group": "data-display",
-      "viewport": "1200x911"
+      "viewport": "1200x432"
     },
     {
-      "path": "components/data-display/TimelineItem/TimelineItem.html",
+      "path": "components/data-display/Icon/Icon-Stroke-weight.html",
       "group": "data-display",
-      "viewport": "1200x1168"
+      "viewport": "1200x556"
     },
     {
-      "path": "components/data-display/Timeline/Timeline.html",
+      "path": "components/data-display/ListItem/ListItem-A-row-with-its-own-control.html",
       "group": "data-display",
-      "viewport": "1200x1168"
+      "viewport": "1200x900"
     },
     {
-      "path": "components/data-display/Tree/Tree.html",
+      "path": "components/data-display/List/List-List-with-leading-and-trailing-icons.html",
       "group": "data-display",
-      "viewport": "1200x1048"
+      "viewport": "1200x744"
     },
     {
-      "path": "components/feedback-status/Alert/Alert.html",
+      "path": "components/data-display/List/List-Selected-state.html",
+      "group": "data-display",
+      "viewport": "1200x635"
+    },
+    {
+      "path": "components/data-display/Stat/Stat-A-formatted-number-through-Angular-s-own-pipe.html",
+      "group": "data-display",
+      "viewport": "1200x574"
+    },
+    {
+      "path": "components/data-display/Stat/Stat-A-value-that-is-a-phrase.html",
+      "group": "data-display",
+      "viewport": "1200x631"
+    },
+    {
+      "path": "components/data-display/Stat/Stat-A-value-that-is-not-a-number.html",
+      "group": "data-display",
+      "viewport": "1200x559"
+    },
+    {
+      "path": "components/data-display/Stat/Stat-Sizes.html",
+      "group": "data-display",
+      "viewport": "1200x537"
+    },
+    {
+      "path": "components/data-display/Stat/Stat-Stat-tiles.html",
+      "group": "data-display",
+      "viewport": "1200x611"
+    },
+    {
+      "path": "components/data-display/Table/Table-A-cell-that-IS-a-link-the-accessible-way-to-say.html",
+      "group": "data-display",
+      "viewport": "1200x961"
+    },
+    {
+      "path": "components/data-display/Table/Table-Bordered.html",
+      "group": "data-display",
+      "viewport": "1200x700"
+    },
+    {
+      "path": "components/data-display/Table/Table-CSV-export.html",
+      "group": "data-display",
+      "viewport": "1200x807"
+    },
+    {
+      "path": "components/data-display/Table/Table-Clickable-rows-drawer-detail.html",
+      "group": "data-display",
+      "viewport": "1200x777"
+    },
+    {
+      "path": "components/data-display/Table/Table-Column-filters.html",
+      "group": "data-display",
+      "viewport": "1200x751"
+    },
+    {
+      "path": "components/data-display/Table/Table-Column-picker-reorder.html",
+      "group": "data-display",
+      "viewport": "1200x744"
+    },
+    {
+      "path": "components/data-display/Table/Table-Default.html",
+      "group": "data-display",
+      "viewport": "1200x895"
+    },
+    {
+      "path": "components/data-display/Table/Table-Dense-zebra.html",
+      "group": "data-display",
+      "viewport": "1200x707"
+    },
+    {
+      "path": "components/data-display/Table/Table-Empty-states.html",
+      "group": "data-display",
+      "viewport": "1200x2121"
+    },
+    {
+      "path": "components/data-display/Table/Table-Expandable-rows.html",
+      "group": "data-display",
+      "viewport": "1200x818"
+    },
+    {
+      "path": "components/data-display/Table/Table-Header-sort-states.html",
+      "group": "data-display",
+      "viewport": "1200x560"
+    },
+    {
+      "path": "components/data-display/Table/Table-Inline-editing.html",
+      "group": "data-display",
+      "viewport": "1200x642"
+    },
+    {
+      "path": "components/data-display/Table/Table-Lazy-loading.html",
+      "group": "data-display",
+      "viewport": "1200x974"
+    },
+    {
+      "path": "components/data-display/Table/Table-Loading-let-the-table-choose.html",
+      "group": "data-display",
+      "viewport": "1200x1102"
+    },
+    {
+      "path": "components/data-display/Table/Table-Loading-overlay.html",
+      "group": "data-display",
+      "viewport": "1200x698"
+    },
+    {
+      "path": "components/data-display/Table/Table-Loading-skeleton.html",
+      "group": "data-display",
+      "viewport": "1200x668"
+    },
+    {
+      "path": "components/data-display/Table/Table-One-row-at-a-time.html",
+      "group": "data-display",
+      "viewport": "1200x682"
+    },
+    {
+      "path": "components/data-display/Table/Table-Pagination-sticky-column.html",
+      "group": "data-display",
+      "viewport": "1200x922"
+    },
+    {
+      "path": "components/data-display/Table/Table-Persisted-layout-export.html",
+      "group": "data-display",
+      "viewport": "1200x1167"
+    },
+    {
+      "path": "components/data-display/Table/Table-Resizable-columns.html",
+      "group": "data-display",
+      "viewport": "1200x1046"
+    },
+    {
+      "path": "components/data-display/Table/Table-Row-actions-kebab-menu.html",
+      "group": "data-display",
+      "viewport": "1200x972"
+    },
+    {
+      "path": "components/data-display/Table/Table-Row-interaction-states.html",
+      "group": "data-display",
+      "viewport": "1200x599"
+    },
+    {
+      "path": "components/data-display/Table/Table-Row-selection-bulk-action-bar.html",
+      "group": "data-display",
+      "viewport": "1200x721"
+    },
+    {
+      "path": "components/data-display/Table/Table-Server-side-filtering-and-a-filter-of-your-own.html",
+      "group": "data-display",
+      "viewport": "1200x701"
+    },
+    {
+      "path": "components/data-display/Table/Table-Server-sort-a-host-that-answers-with-its-own.html",
+      "group": "data-display",
+      "viewport": "1200x791"
+    },
+    {
+      "path": "components/data-display/Table/Table-Sizing-a-column-to-its-content.html",
+      "group": "data-display",
+      "viewport": "1200x985"
+    },
+    {
+      "path": "components/data-display/Table/Table-Sortable-columns.html",
+      "group": "data-display",
+      "viewport": "1200x664"
+    },
+    {
+      "path": "components/data-display/Table/Table-Sticky-header.html",
+      "group": "data-display",
+      "viewport": "1200x648"
+    },
+    {
+      "path": "components/data-display/Table/Table-Sticky-horizontal-scrollbar.html",
+      "group": "data-display",
+      "viewport": "1200x886"
+    },
+    {
+      "path": "components/data-display/Table/Table-The-cell-that-names-what-the-row-opens.html",
+      "group": "data-display",
+      "viewport": "1200x638"
+    },
+    {
+      "path": "components/data-display/Table/Table-The-same-thing-two-way-when-the-host-has-no.html",
+      "group": "data-display",
+      "viewport": "1200x811"
+    },
+    {
+      "path": "components/data-display/Table/Table-Toolbar-slot-the-export-button-anywhere.html",
+      "group": "data-display",
+      "viewport": "1200x1249"
+    },
+    {
+      "path": "components/data-display/Table/Table-Truncation-full-text-popover.html",
+      "group": "data-display",
+      "viewport": "1200x678"
+    },
+    {
+      "path": "components/data-display/Table/Table-Virtual-scroll.html",
+      "group": "data-display",
+      "viewport": "1200x999"
+    },
+    {
+      "path": "components/data-display/Table/Table-What-a-screen-reader-is-told.html",
+      "group": "data-display",
+      "viewport": "1200x526"
+    },
+    {
+      "path": "components/data-display/Tag/Tag-Closable.html",
+      "group": "data-display",
+      "viewport": "1200x444"
+    },
+    {
+      "path": "components/data-display/Tag/Tag-Interactive-selectable.html",
+      "group": "data-display",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/data-display/Tag/Tag-Variants.html",
+      "group": "data-display",
+      "viewport": "1200x598"
+    },
+    {
+      "path": "components/data-display/TimelineItem/TimelineItem-Tone-variants.html",
+      "group": "data-display",
+      "viewport": "1200x667"
+    },
+    {
+      "path": "components/data-display/Timeline/Timeline-Activity-feed.html",
+      "group": "data-display",
+      "viewport": "1200x709"
+    },
+    {
+      "path": "components/data-display/Tree/Tree-Interactive-tree.html",
+      "group": "data-display",
+      "viewport": "1200x850"
+    },
+    {
+      "path": "components/data-display/Tree/Tree-Single-node-states.html",
+      "group": "data-display",
+      "viewport": "1200x509"
+    },
+    {
+      "path": "components/feedback-status/Alert/Alert-Dismissible.html",
       "group": "feedback-status",
-      "viewport": "1200x2067"
+      "viewport": "1200x579"
     },
     {
-      "path": "components/feedback-status/Badge/Badge.html",
+      "path": "components/feedback-status/Alert/Alert-Variants.html",
       "group": "feedback-status",
-      "viewport": "1200x1376"
+      "viewport": "1200x1141"
     },
     {
-      "path": "components/feedback-status/Banner/Banner.html",
+      "path": "components/feedback-status/Alert/Alert-With-actions.html",
       "group": "feedback-status",
-      "viewport": "1200x2862"
+      "viewport": "1200x619"
     },
     {
-      "path": "components/feedback-status/EmptyState/EmptyState.html",
+      "path": "components/feedback-status/Alert/Alert-With-title.html",
       "group": "feedback-status",
-      "viewport": "1200x1487"
+      "viewport": "1200x728"
     },
     {
-      "path": "components/feedback-status/LoadingOverlay/LoadingOverlay.html",
+      "path": "components/feedback-status/Badge/Badge-Lifecycle-states-showcase.html",
       "group": "feedback-status",
-      "viewport": "1200x892"
+      "viewport": "1200x562"
     },
     {
-      "path": "components/feedback-status/Progress/Progress.html",
+      "path": "components/feedback-status/Badge/Badge-Numeric-count-badge.html",
+      "group": "feedback-status",
+      "viewport": "1200x551"
+    },
+    {
+      "path": "components/feedback-status/Badge/Badge-Per-instance-tone.html",
+      "group": "feedback-status",
+      "viewport": "1200x532"
+    },
+    {
+      "path": "components/feedback-status/Badge/Badge-Semantic-states-showcase.html",
+      "group": "feedback-status",
+      "viewport": "1200x594"
+    },
+    {
+      "path": "components/feedback-status/Banner/Banner-Accent-rail.html",
+      "group": "feedback-status",
+      "viewport": "1200x717"
+    },
+    {
+      "path": "components/feedback-status/Banner/Banner-Compact.html",
+      "group": "feedback-status",
+      "viewport": "1200x674"
+    },
+    {
+      "path": "components/feedback-status/Banner/Banner-Layout.html",
+      "group": "feedback-status",
+      "viewport": "1200x806"
+    },
+    {
+      "path": "components/feedback-status/Banner/Banner-Variants.html",
+      "group": "feedback-status",
+      "viewport": "1200x1274"
+    },
+    {
+      "path": "components/feedback-status/Banner/Banner-With-actions.html",
+      "group": "feedback-status",
+      "viewport": "1200x632"
+    },
+    {
+      "path": "components/feedback-status/EmptyState/EmptyState-States-showcase.html",
+      "group": "feedback-status",
+      "viewport": "1200x1065"
+    },
+    {
+      "path": "components/feedback-status/EmptyState/EmptyState-Variants.html",
+      "group": "feedback-status",
+      "viewport": "1200x755"
+    },
+    {
+      "path": "components/feedback-status/LoadingOverlay/LoadingOverlay-Interactive-demo.html",
+      "group": "feedback-status",
+      "viewport": "1200x638"
+    },
+    {
+      "path": "components/feedback-status/LoadingOverlay/LoadingOverlay-The-scrim-stops-the-keyboard-too.html",
+      "group": "feedback-status",
+      "viewport": "1200x557"
+    },
+    {
+      "path": "components/feedback-status/Progress/Progress-Variants.html",
       "group": "feedback-status",
       "viewport": "1200x723"
     },
     {
-      "path": "components/feedback-status/Spinner/Spinner.html",
+      "path": "components/feedback-status/Skeleton/Skeleton-Common-patterns.html",
       "group": "feedback-status",
-      "viewport": "1200x683"
+      "viewport": "1200x778"
     },
     {
-      "path": "components/feedback-status/StatusDot/StatusDot.html",
+      "path": "components/feedback-status/Spinner/Spinner-Inline-usage.html",
+      "group": "feedback-status",
+      "viewport": "1200x427"
+    },
+    {
+      "path": "components/feedback-status/Spinner/Spinner-Sizes.html",
+      "group": "feedback-status",
+      "viewport": "1200x566"
+    },
+    {
+      "path": "components/feedback-status/StatusDot/StatusDot-Variants.html",
       "group": "feedback-status",
       "viewport": "1200x517"
     },
     {
-      "path": "components/feedback-status/ToastRegion/ToastRegion.html",
+      "path": "components/feedback-status/ToastRegion/ToastRegion-maxVisible-queue.html",
       "group": "feedback-status",
-      "viewport": "1200x1790"
+      "viewport": "1200x670"
     },
     {
-      "path": "components/feedback-status/Toast/Toast.html",
+      "path": "components/feedback-status/Toast/Toast-Live-demo.html",
       "group": "feedback-status",
-      "viewport": "1200x1790"
+      "viewport": "1200x477"
     },
     {
-      "path": "components/forms-inputs/Autocomplete/Autocomplete.html",
-      "group": "forms-inputs",
-      "viewport": "1200x3289"
+      "path": "components/feedback-status/Toast/Toast-Promise-toast.html",
+      "group": "feedback-status",
+      "viewport": "1200x498"
     },
     {
-      "path": "components/forms-inputs/CalendarDay/CalendarDay.html",
-      "group": "forms-inputs",
-      "viewport": "1200x2966"
+      "path": "components/feedback-status/Toast/Toast-States-showcase-static-specimens.html",
+      "group": "feedback-status",
+      "viewport": "1200x930"
     },
     {
-      "path": "components/forms-inputs/Checkbox/Checkbox.html",
-      "group": "forms-inputs",
-      "viewport": "1200x1394"
+      "path": "components/feedback-status/Toast/Toast-With-action.html",
+      "group": "feedback-status",
+      "viewport": "1200x477"
     },
     {
-      "path": "components/forms-inputs/ColorPicker/ColorPicker.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-A-search-placeholder-of-its-own.html",
       "group": "forms-inputs",
-      "viewport": "1200x1212"
+      "viewport": "1200x512"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Capping-the-chips.html",
       "group": "forms-inputs",
-      "viewport": "1200x2966"
+      "viewport": "1200x821"
     },
     {
-      "path": "components/forms-inputs/Dropzone/Dropzone.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Create-new.html",
       "group": "forms-inputs",
-      "viewport": "1200x2858"
+      "viewport": "1200x534"
     },
     {
-      "path": "components/forms-inputs/FieldGroup/FieldGroup.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Icons-in-the-options.html",
       "group": "forms-inputs",
-      "viewport": "1200x1184"
+      "viewport": "1200x680"
     },
     {
-      "path": "components/forms-inputs/FieldMessage/FieldMessage.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Multi.html",
       "group": "forms-inputs",
-      "viewport": "1200x4095"
+      "viewport": "1200x470"
     },
     {
-      "path": "components/forms-inputs/Input/Input.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Object-values-keep-their-selection.html",
       "group": "forms-inputs",
-      "viewport": "1200x4095"
+      "viewport": "1200x601"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Option-groups.html",
       "group": "forms-inputs",
-      "viewport": "1200x4359"
+      "viewport": "1200x515"
     },
     {
-      "path": "components/forms-inputs/NumberStepper/NumberStepper.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Single.html",
       "group": "forms-inputs",
-      "viewport": "1200x988"
+      "viewport": "1200x624"
     },
     {
-      "path": "components/forms-inputs/OtpInput/OtpInput.html",
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Validation-states.html",
       "group": "forms-inputs",
-      "viewport": "1200x1360"
+      "viewport": "1200x716"
+    },
+    {
+      "path": "components/forms-inputs/Autocomplete/Autocomplete-Width.html",
+      "group": "forms-inputs",
+      "viewport": "1200x528"
+    },
+    {
+      "path": "components/forms-inputs/CalendarDay/CalendarDay-Day-states.html",
+      "group": "forms-inputs",
+      "viewport": "1200x754"
+    },
+    {
+      "path": "components/forms-inputs/Checkbox/Checkbox-A-caption-with-markup-in-it.html",
+      "group": "forms-inputs",
+      "viewport": "1200x486"
+    },
+    {
+      "path": "components/forms-inputs/Checkbox/Checkbox-Checkbox-states-showcase.html",
+      "group": "forms-inputs",
+      "viewport": "1200x653"
+    },
+    {
+      "path": "components/forms-inputs/Checkbox/Checkbox-Required.html",
+      "group": "forms-inputs",
+      "viewport": "1200x349"
+    },
+    {
+      "path": "components/forms-inputs/Checkbox/Checkbox-Sizes.html",
+      "group": "forms-inputs",
+      "viewport": "1200x353"
+    },
+    {
+      "path": "components/forms-inputs/Checkbox/Checkbox-Validation-states.html",
+      "group": "forms-inputs",
+      "viewport": "1200x452"
+    },
+    {
+      "path": "components/forms-inputs/ColorPicker/ColorPicker-Custom-presets.html",
+      "group": "forms-inputs",
+      "viewport": "1200x520"
+    },
+    {
+      "path": "components/forms-inputs/ColorPicker/ColorPicker-Default-presets.html",
+      "group": "forms-inputs",
+      "viewport": "1200x628"
+    },
+    {
+      "path": "components/forms-inputs/ColorPicker/ColorPicker-Helper-error-text.html",
+      "group": "forms-inputs",
+      "viewport": "1200x648"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Calendar-only.html",
+      "group": "forms-inputs",
+      "viewport": "1200x470"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Custom-format.html",
+      "group": "forms-inputs",
+      "viewport": "1200x470"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Date-of-birth.html",
+      "group": "forms-inputs",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Date-range.html",
+      "group": "forms-inputs",
+      "viewport": "1200x447"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Disabled-date-predicate.html",
+      "group": "forms-inputs",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Label-hint-required.html",
+      "group": "forms-inputs",
+      "viewport": "1200x532"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Localization.html",
+      "group": "forms-inputs",
+      "viewport": "1200x509"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Masked-manual-entry.html",
+      "group": "forms-inputs",
+      "viewport": "1200x552"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Min-max-date-bounds.html",
+      "group": "forms-inputs",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Presets.html",
+      "group": "forms-inputs",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Single-date.html",
+      "group": "forms-inputs",
+      "viewport": "1200x556"
+    },
+    {
+      "path": "components/forms-inputs/DatePicker/DatePicker-Validation-states.html",
+      "group": "forms-inputs",
+      "viewport": "1200x493"
+    },
+    {
+      "path": "components/forms-inputs/Dropzone/Dropzone-File-row-states.html",
+      "group": "forms-inputs",
+      "viewport": "1200x1210"
+    },
+    {
+      "path": "components/forms-inputs/Dropzone/Dropzone-Single-file-mode.html",
+      "group": "forms-inputs",
+      "viewport": "1200x612"
+    },
+    {
+      "path": "components/forms-inputs/Dropzone/Dropzone-States-showcase.html",
+      "group": "forms-inputs",
+      "viewport": "1200x1612"
+    },
+    {
+      "path": "components/forms-inputs/FieldGroup/FieldGroup-Every-supported-control.html",
+      "group": "forms-inputs",
+      "viewport": "1200x464"
+    },
+    {
+      "path": "components/forms-inputs/FieldGroup/FieldGroup-Sizes-error-and-full-width.html",
+      "group": "forms-inputs",
+      "viewport": "1200x614"
+    },
+    {
+      "path": "components/forms-inputs/FieldGroup/FieldGroup-Trailing-action-and-a-unit-after-the-value.html",
+      "group": "forms-inputs",
+      "viewport": "1200x533"
+    },
+    {
+      "path": "components/forms-inputs/FieldMessage/FieldMessage-Messages-error-warning-hint.html",
+      "group": "forms-inputs",
+      "viewport": "1200x754"
+    },
+    {
+      "path": "components/forms-inputs/FieldMessage/FieldMessage-Reserved-message-row.html",
+      "group": "forms-inputs",
+      "viewport": "1200x623"
+    },
+    {
+      "path": "components/forms-inputs/FieldMessage/FieldMessage-The-glyph-on-the-message-line.html",
+      "group": "forms-inputs",
+      "viewport": "1200x1154"
+    },
+    {
+      "path": "components/forms-inputs/Input/Input-Character-counter.html",
+      "group": "forms-inputs",
+      "viewport": "1200x491"
+    },
+    {
+      "path": "components/forms-inputs/Input/Input-Clearable.html",
+      "group": "forms-inputs",
+      "viewport": "1200x468"
+    },
+    {
+      "path": "components/forms-inputs/Input/Input-Password-toggle.html",
+      "group": "forms-inputs",
+      "viewport": "1200x468"
+    },
+    {
+      "path": "components/forms-inputs/Input/Input-Required-vs-optional.html",
+      "group": "forms-inputs",
+      "viewport": "1200x468"
+    },
+    {
+      "path": "components/forms-inputs/Input/Input-States-showcase.html",
+      "group": "forms-inputs",
+      "viewport": "1200x1132"
+    },
+    {
+      "path": "components/forms-inputs/Input/Input-Variant-states-prefix-suffix.html",
+      "group": "forms-inputs",
+      "viewport": "1200x511"
+    },
+    {
+      "path": "components/forms-inputs/Input/Input-Whole-form-at-once.html",
+      "group": "forms-inputs",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/forms-inputs/Input/Input-With-icon-prefix-suffix.html",
+      "group": "forms-inputs",
+      "viewport": "1200x566"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Basic-usage.html",
+      "group": "forms-inputs",
+      "viewport": "1200x754"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Compact-trigger.html",
+      "group": "forms-inputs",
+      "viewport": "1200x596"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Custom-option-and-chip-content.html",
+      "group": "forms-inputs",
+      "viewport": "1200x629"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Group-headings-and-why-an-option-is-off.html",
+      "group": "forms-inputs",
+      "viewport": "1200x596"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Helper-error-text.html",
+      "group": "forms-inputs",
+      "viewport": "1200x693"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Hiding-the-filter-row.html",
+      "group": "forms-inputs",
+      "viewport": "1200x627"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Icons-in-the-options.html",
+      "group": "forms-inputs",
+      "viewport": "1200x649"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Labels-in-the-trigger-and-per-group-select-all.html",
+      "group": "forms-inputs",
+      "viewport": "1200x596"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Option-groups.html",
+      "group": "forms-inputs",
+      "viewport": "1200x556"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Overflow-collapse.html",
+      "group": "forms-inputs",
+      "viewport": "1200x839"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Panel-header-and-footer.html",
+      "group": "forms-inputs",
+      "viewport": "1200x576"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Read-only-clearable-and-a-name-for-a-native.html",
+      "group": "forms-inputs",
+      "viewport": "1200x645"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Server-side-search.html",
+      "group": "forms-inputs",
+      "viewport": "1200x630"
+    },
+    {
+      "path": "components/forms-inputs/MultiSelect/MultiSelect-Width.html",
+      "group": "forms-inputs",
+      "viewport": "1200x554"
+    },
+    {
+      "path": "components/forms-inputs/NumberStepper/NumberStepper-Bounds-step.html",
+      "group": "forms-inputs",
+      "viewport": "1200x512"
+    },
+    {
+      "path": "components/forms-inputs/NumberStepper/NumberStepper-Disabled.html",
+      "group": "forms-inputs",
+      "viewport": "1200x487"
+    },
+    {
+      "path": "components/forms-inputs/NumberStepper/NumberStepper-Sizes.html",
+      "group": "forms-inputs",
+      "viewport": "1200x609"
+    },
+    {
+      "path": "components/forms-inputs/OtpInput/OtpInput-4-digit-masked-PIN.html",
+      "group": "forms-inputs",
+      "viewport": "1200x483"
+    },
+    {
+      "path": "components/forms-inputs/OtpInput/OtpInput-6-digit-numeric-OTP.html",
+      "group": "forms-inputs",
+      "viewport": "1200x796"
+    },
+    {
+      "path": "components/forms-inputs/OtpInput/OtpInput-Helper-error-text.html",
+      "group": "forms-inputs",
+      "viewport": "1200x658"
     },
     {
       "path": "components/forms-inputs/PasswordRules/PasswordRules.html",
@@ -585,39 +1240,174 @@
       "viewport": "1200x679"
     },
     {
-      "path": "components/forms-inputs/RadioGroup/RadioGroup.html",
+      "path": "components/forms-inputs/RadioGroup/RadioGroup-Radio-group.html",
       "group": "forms-inputs",
-      "viewport": "1200x1692"
+      "viewport": "1200x779"
     },
     {
-      "path": "components/forms-inputs/Radio/Radio.html",
+      "path": "components/forms-inputs/Radio/Radio-Radio-states-showcase.html",
       "group": "forms-inputs",
-      "viewport": "1200x1692"
+      "viewport": "1200x653"
     },
     {
-      "path": "components/forms-inputs/Search/Search.html",
+      "path": "components/forms-inputs/Radio/Radio-Required.html",
       "group": "forms-inputs",
-      "viewport": "1200x2047"
+      "viewport": "1200x349"
     },
     {
-      "path": "components/forms-inputs/Select/Select.html",
+      "path": "components/forms-inputs/Radio/Radio-Sizes.html",
       "group": "forms-inputs",
-      "viewport": "1200x4296"
+      "viewport": "1200x353"
     },
     {
-      "path": "components/forms-inputs/Slider/Slider.html",
+      "path": "components/forms-inputs/Radio/Radio-Validation-standalone.html",
       "group": "forms-inputs",
-      "viewport": "1200x1429"
+      "viewport": "1200x452"
     },
     {
-      "path": "components/forms-inputs/Switch/Switch.html",
+      "path": "components/forms-inputs/Search/Search-Compact.html",
       "group": "forms-inputs",
-      "viewport": "1200x1168"
+      "viewport": "1200x447"
     },
     {
-      "path": "components/forms-inputs/Textarea/Textarea.html",
+      "path": "components/forms-inputs/Search/Search-Debounce-and-the-two-things-it-must-not-delay.html",
       "group": "forms-inputs",
-      "viewport": "1200x1720"
+      "viewport": "1200x685"
+    },
+    {
+      "path": "components/forms-inputs/Search/Search-Default-filled-focus.html",
+      "group": "forms-inputs",
+      "viewport": "1200x713"
+    },
+    {
+      "path": "components/forms-inputs/Search/Search-In-a-form-and-disabled.html",
+      "group": "forms-inputs",
+      "viewport": "1200x680"
+    },
+    {
+      "path": "components/forms-inputs/Search/Search-Sizes.html",
+      "group": "forms-inputs",
+      "viewport": "1200x475"
+    },
+    {
+      "path": "components/forms-inputs/Search/Search-With-keyboard-hint.html",
+      "group": "forms-inputs",
+      "viewport": "1200x447"
+    },
+    {
+      "path": "components/forms-inputs/Search/Search-Without-leading-icon.html",
+      "group": "forms-inputs",
+      "viewport": "1200x447"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-A-panel-footer-and-a-reason-an-option-is-off.html",
+      "group": "forms-inputs",
+      "viewport": "1200x551"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-Clearable.html",
+      "group": "forms-inputs",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-Clearing-from-outside.html",
+      "group": "forms-inputs",
+      "viewport": "1200x583"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-Custom-dropdown-lt-ds-select-gt.html",
+      "group": "forms-inputs",
+      "viewport": "1200x1748"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-Helper-error-text.html",
+      "group": "forms-inputs",
+      "viewport": "1200x512"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-Long-option-list.html",
+      "group": "forms-inputs",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-Per-option-icons.html",
+      "group": "forms-inputs",
+      "viewport": "1200x490"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-Sizes.html",
+      "group": "forms-inputs",
+      "viewport": "1200x606"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-States-showcase.html",
+      "group": "forms-inputs",
+      "viewport": "1200x847"
+    },
+    {
+      "path": "components/forms-inputs/Select/Select-Type-ahead-and-the-cursor-staying-in-view.html",
+      "group": "forms-inputs",
+      "viewport": "1200x716"
+    },
+    {
+      "path": "components/forms-inputs/Slider/Slider-Helper-error-text.html",
+      "group": "forms-inputs",
+      "viewport": "1200x747"
+    },
+    {
+      "path": "components/forms-inputs/Slider/Slider-Range-slider.html",
+      "group": "forms-inputs",
+      "viewport": "1200x584"
+    },
+    {
+      "path": "components/forms-inputs/Slider/Slider-Single-slider.html",
+      "group": "forms-inputs",
+      "viewport": "1200x673"
+    },
+    {
+      "path": "components/forms-inputs/Switch/Switch-Required.html",
+      "group": "forms-inputs",
+      "viewport": "1200x349"
+    },
+    {
+      "path": "components/forms-inputs/Switch/Switch-Sizes.html",
+      "group": "forms-inputs",
+      "viewport": "1200x355"
+    },
+    {
+      "path": "components/forms-inputs/Switch/Switch-Switch-states-showcase.html",
+      "group": "forms-inputs",
+      "viewport": "1200x653"
+    },
+    {
+      "path": "components/forms-inputs/Switch/Switch-Validation-states.html",
+      "group": "forms-inputs",
+      "viewport": "1200x452"
+    },
+    {
+      "path": "components/forms-inputs/Textarea/Textarea-Autosize.html",
+      "group": "forms-inputs",
+      "viewport": "1200x473"
+    },
+    {
+      "path": "components/forms-inputs/Textarea/Textarea-Character-counter.html",
+      "group": "forms-inputs",
+      "viewport": "1200x554"
+    },
+    {
+      "path": "components/forms-inputs/Textarea/Textarea-Read-only.html",
+      "group": "forms-inputs",
+      "viewport": "1200x532"
+    },
+    {
+      "path": "components/forms-inputs/Textarea/Textarea-Variant-states-default-value-error-disabled.html",
+      "group": "forms-inputs",
+      "viewport": "1200x845"
+    },
+    {
+      "path": "components/forms-inputs/Textarea/Textarea-With-value.html",
+      "group": "forms-inputs",
+      "viewport": "1200x467"
     },
     {
       "path": "components/forms-inputs/TimeColumns/TimeColumns.html",
@@ -625,109 +1415,374 @@
       "viewport": "1200x1552"
     },
     {
-      "path": "components/forms-inputs/TimePicker/TimePicker.html",
+      "path": "components/forms-inputs/TimePicker/TimePicker-12-hour-AM-PM.html",
       "group": "forms-inputs",
-      "viewport": "1200x1552"
+      "viewport": "1200x470"
     },
     {
-      "path": "components/forms-inputs/W3w/W3w.html",
+      "path": "components/forms-inputs/TimePicker/TimePicker-Clearable-sizes.html",
       "group": "forms-inputs",
-      "viewport": "1200x747"
+      "viewport": "1200x497"
     },
     {
-      "path": "components/layout/Container/Container.html",
-      "group": "layout",
-      "viewport": "1200x1285"
+      "path": "components/forms-inputs/TimePicker/TimePicker-Min-max-disabled-slots.html",
+      "group": "forms-inputs",
+      "viewport": "1200x489"
     },
     {
-      "path": "components/layout/Inline/Inline.html",
-      "group": "layout",
-      "viewport": "1200x1285"
+      "path": "components/forms-inputs/TimePicker/TimePicker-Minute-step.html",
+      "group": "forms-inputs",
+      "viewport": "1200x470"
     },
     {
-      "path": "components/layout/Stack/Stack.html",
-      "group": "layout",
-      "viewport": "1200x1285"
+      "path": "components/forms-inputs/TimePicker/TimePicker-Range.html",
+      "group": "forms-inputs",
+      "viewport": "1200x492"
     },
     {
-      "path": "components/navigation/AppLayout/AppLayout.html",
+      "path": "components/forms-inputs/TimePicker/TimePicker-Single.html",
+      "group": "forms-inputs",
+      "viewport": "1200x601"
+    },
+    {
+      "path": "components/forms-inputs/TimePicker/TimePicker-Validation-reactive-forms.html",
+      "group": "forms-inputs",
+      "viewport": "1200x492"
+    },
+    {
+      "path": "components/forms-inputs/W3w/W3w-Non-copyable.html",
+      "group": "forms-inputs",
+      "viewport": "1200x461"
+    },
+    {
+      "path": "components/forms-inputs/W3w/W3w-Specimen.html",
+      "group": "forms-inputs",
+      "viewport": "1200x615"
+    },
+    {
+      "path": "components/foundations/Container/Container-Container.html",
+      "group": "foundations",
+      "viewport": "1200x603"
+    },
+    {
+      "path": "components/foundations/Divider/Divider-Divider-component.html",
+      "group": "foundations",
+      "viewport": "1200x554"
+    },
+    {
+      "path": "components/foundations/Divider/Divider-Divider-spacing.html",
+      "group": "foundations",
+      "viewport": "1200x695"
+    },
+    {
+      "path": "components/foundations/Inline/Inline-Inline.html",
+      "group": "foundations",
+      "viewport": "1200x602"
+    },
+    {
+      "path": "components/foundations/Stack/Stack-Stack.html",
+      "group": "foundations",
+      "viewport": "1200x644"
+    },
+    {
+      "path": "components/navigation/AppLayout/AppLayout-Content-span-topbar.html",
       "group": "navigation",
-      "viewport": "1200x2451"
+      "viewport": "1200x1062"
     },
     {
-      "path": "components/navigation/Breadcrumbs/Breadcrumbs.html",
+      "path": "components/navigation/AppLayout/AppLayout-Full-span-topbar.html",
       "group": "navigation",
-      "viewport": "1200x1638"
+      "viewport": "1200x954"
     },
     {
-      "path": "components/navigation/MenuDivider/MenuDivider.html",
+      "path": "components/navigation/AppLayout/AppLayout-Opening-the-rail-from-your-own-chrome.html",
       "group": "navigation",
-      "viewport": "1200x2398"
+      "viewport": "1200x623"
+    },
+    {
+      "path": "components/navigation/AppLayout/AppLayout-Returning-the-reader-to-where-they-were.html",
+      "group": "navigation",
+      "viewport": "1200x886"
+    },
+    {
+      "path": "components/navigation/AuthLayout/AuthLayout-On-a-short-screen-the-chrome-compresses-not-the.html",
+      "group": "navigation",
+      "viewport": "1200x803"
+    },
+    {
+      "path": "components/navigation/AuthLayout/AuthLayout-The-notch-needs-one-line-from-YOUR-app.html",
+      "group": "navigation",
+      "viewport": "1200x602"
+    },
+    {
+      "path": "components/navigation/AuthLayout/AuthLayout-Two-tone-wordmark-flat-card.html",
+      "group": "navigation",
+      "viewport": "1200x1057"
+    },
+    {
+      "path": "components/navigation/AuthLayout/AuthLayout-Why-it-centres-with-auto-margins.html",
+      "group": "navigation",
+      "viewport": "1200x544"
+    },
+    {
+      "path": "components/navigation/Breadcrumbs/Breadcrumbs-Custom-separator.html",
+      "group": "navigation",
+      "viewport": "1200x473"
+    },
+    {
+      "path": "components/navigation/Breadcrumbs/Breadcrumbs-Default.html",
+      "group": "navigation",
+      "viewport": "1200x607"
+    },
+    {
+      "path": "components/navigation/Breadcrumbs/Breadcrumbs-Long-trail-ellipsis-collapse.html",
+      "group": "navigation",
+      "viewport": "1200x540"
+    },
+    {
+      "path": "components/navigation/Breadcrumbs/Breadcrumbs-Non-clickable.html",
+      "group": "navigation",
+      "viewport": "1200x473"
+    },
+    {
+      "path": "components/navigation/Breadcrumbs/Breadcrumbs-Service-driven-route-aware-apps.html",
+      "group": "navigation",
+      "viewport": "1200x656"
+    },
+    {
+      "path": "components/navigation/Breadcrumbs/Breadcrumbs-Single-level.html",
+      "group": "navigation",
+      "viewport": "1200x453"
+    },
+    {
+      "path": "components/navigation/MenuDivider/MenuDivider-Dividers.html",
+      "group": "navigation",
+      "viewport": "1200x694"
     },
     {
       "path": "components/navigation/MenuItem/MenuItem.html",
       "group": "navigation",
-      "viewport": "1200x2398"
+      "viewport": "1200x938"
     },
     {
-      "path": "components/navigation/Menu/Menu.html",
+      "path": "components/navigation/Menu/Menu-Default.html",
       "group": "navigation",
-      "viewport": "1200x2398"
+      "viewport": "1200x371"
     },
     {
-      "path": "components/navigation/Pagination/Pagination.html",
+      "path": "components/navigation/Menu/Menu-Disabled-item.html",
       "group": "navigation",
-      "viewport": "1200x1775"
+      "viewport": "1200x371"
+    },
+    {
+      "path": "components/navigation/Menu/Menu-Error.html",
+      "group": "navigation",
+      "viewport": "1200x371"
+    },
+    {
+      "path": "components/navigation/Menu/Menu-Standing-description.html",
+      "group": "navigation",
+      "viewport": "1200x741"
+    },
+    {
+      "path": "components/navigation/Menu/Menu-Submenus.html",
+      "group": "navigation",
+      "viewport": "1200x671"
+    },
+    {
+      "path": "components/navigation/Menu/Menu-Text-only.html",
+      "group": "navigation",
+      "viewport": "1200x371"
+    },
+    {
+      "path": "components/navigation/Menu/Menu-Trigger-opened-overlay.html",
+      "group": "navigation",
+      "viewport": "1200x570"
+    },
+    {
+      "path": "components/navigation/Pagination/Pagination-Default.html",
+      "group": "navigation",
+      "viewport": "1200x506"
+    },
+    {
+      "path": "components/navigation/Pagination/Pagination-Ranges.html",
+      "group": "navigation",
+      "viewport": "1200x810"
+    },
+    {
+      "path": "components/navigation/Pagination/Pagination-States-showcase.html",
+      "group": "navigation",
+      "viewport": "1200x854"
+    },
+    {
+      "path": "components/navigation/Pagination/Pagination-With-page-size-select.html",
+      "group": "navigation",
+      "viewport": "1200x468"
     },
     {
       "path": "components/navigation/SidenavFooter/SidenavFooter.html",
       "group": "navigation",
-      "viewport": "1200x3546"
+      "viewport": "1200x2451"
     },
     {
-      "path": "components/navigation/SidenavGroup/SidenavGroup.html",
+      "path": "components/navigation/SidenavGroup/SidenavGroup-Expandable-groups.html",
       "group": "navigation",
-      "viewport": "1200x3546"
+      "viewport": "1200x877"
     },
     {
-      "path": "components/navigation/SidenavItem/SidenavItem.html",
+      "path": "components/navigation/SidenavItem/SidenavItem-Item-states-showcase.html",
       "group": "navigation",
-      "viewport": "1200x3546"
+      "viewport": "1200x791"
     },
     {
-      "path": "components/navigation/Sidenav/Sidenav.html",
+      "path": "components/navigation/Sidenav/Sidenav-Collapsed.html",
       "group": "navigation",
-      "viewport": "1200x3546"
+      "viewport": "1200x773"
     },
     {
-      "path": "components/navigation/Stepper/Stepper.html",
+      "path": "components/navigation/Sidenav/Sidenav-Custom-brand-logo.html",
       "group": "navigation",
-      "viewport": "1200x1996"
+      "viewport": "1200x649"
     },
     {
-      "path": "components/navigation/Tab/Tab.html",
+      "path": "components/navigation/Sidenav/Sidenav-Default.html",
       "group": "navigation",
-      "viewport": "1200x4016"
+      "viewport": "1200x1056"
     },
     {
-      "path": "components/navigation/Tabs/Tabs.html",
+      "path": "components/navigation/Sidenav/Sidenav-Letter-mark-accent-wordmark.html",
       "group": "navigation",
-      "viewport": "1200x4016"
+      "viewport": "1200x796"
     },
     {
-      "path": "components/navigation/Topbar/Topbar.html",
+      "path": "components/navigation/Stepper/Stepper-Clickable-steps.html",
       "group": "navigation",
-      "viewport": "1200x840"
+      "viewport": "1200x556"
     },
     {
-      "path": "components/overlays/BottomSheet/BottomSheet.html",
+      "path": "components/navigation/Stepper/Stepper-Default.html",
+      "group": "navigation",
+      "viewport": "1200x710"
+    },
+    {
+      "path": "components/navigation/Stepper/Stepper-Error-state.html",
+      "group": "navigation",
+      "viewport": "1200x556"
+    },
+    {
+      "path": "components/navigation/Stepper/Stepper-Inline-labels.html",
+      "group": "navigation",
+      "viewport": "1200x533"
+    },
+    {
+      "path": "components/navigation/Stepper/Stepper-Single-node-states.html",
+      "group": "navigation",
+      "viewport": "1200x577"
+    },
+    {
+      "path": "components/navigation/Stepper/Stepper-States-showcase.html",
+      "group": "navigation",
+      "viewport": "1200x753"
+    },
+    {
+      "path": "components/navigation/Stepper/Stepper-Vertical.html",
+      "group": "navigation",
+      "viewport": "1200x709"
+    },
+    {
+      "path": "components/navigation/Tab/Tab-States-showcase.html",
+      "group": "navigation",
+      "viewport": "1200x800"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-Closable.html",
+      "group": "navigation",
+      "viewport": "1200x554"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-Keeping-the-tab-in-the-URL.html",
+      "group": "navigation",
+      "viewport": "1200x1029"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-Lazy.html",
+      "group": "navigation",
+      "viewport": "1200x552"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-Pills-states-showcase.html",
+      "group": "navigation",
+      "viewport": "1200x642"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-Reopening-the-last-tab.html",
+      "group": "navigation",
+      "viewport": "1200x579"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-Scrollable.html",
+      "group": "navigation",
+      "viewport": "1200x690"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-Variants.html",
+      "group": "navigation",
+      "viewport": "1200x864"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-Vertical.html",
+      "group": "navigation",
+      "viewport": "1200x593"
+    },
+    {
+      "path": "components/navigation/Tabs/Tabs-With-count-badge-icon-disabled.html",
+      "group": "navigation",
+      "viewport": "1200x539"
+    },
+    {
+      "path": "components/navigation/Topbar/Topbar-Default.html",
+      "group": "navigation",
+      "viewport": "1200x489"
+    },
+    {
+      "path": "components/navigation/Topbar/Topbar-Minimal.html",
+      "group": "navigation",
+      "viewport": "1200x485"
+    },
+    {
+      "path": "components/navigation/Topbar/Topbar-With-breadcrumb.html",
+      "group": "navigation",
+      "viewport": "1200x485"
+    },
+    {
+      "path": "components/overlays/BottomSheet/BottomSheet-Live-demo.html",
       "group": "overlays",
-      "viewport": "1200x1066"
+      "viewport": "1200x666"
     },
     {
-      "path": "components/overlays/Drawer/Drawer.html",
+      "path": "components/overlays/BottomSheet/BottomSheet-Snap-points.html",
       "group": "overlays",
-      "viewport": "1200x1017"
+      "viewport": "1200x551"
+    },
+    {
+      "path": "components/overlays/BottomSheet/BottomSheet-The-home-indicator-needs-one-line-from-YOUR-app.html",
+      "group": "overlays",
+      "viewport": "1200x530"
+    },
+    {
+      "path": "components/overlays/Drawer/Drawer-Live-demo.html",
+      "group": "overlays",
+      "viewport": "1200x672"
+    },
+    {
+      "path": "components/overlays/Drawer/Drawer-Placements.html",
+      "group": "overlays",
+      "viewport": "1200x538"
+    },
+    {
+      "path": "components/overlays/Drawer/Drawer-Sizes.html",
+      "group": "overlays",
+      "viewport": "1200x518"
     },
     {
       "path": "components/overlays/ModalCard/ModalCard.html",
@@ -735,39 +1790,129 @@
       "viewport": "1200x7049"
     },
     {
-      "path": "components/overlays/ModalConfirm/ModalConfirm.html",
+      "path": "components/overlays/ModalConfirm/ModalConfirm-Confirmation.html",
       "group": "overlays",
-      "viewport": "1200x7049"
+      "viewport": "1200x898"
     },
     {
-      "path": "components/overlays/Modal/Modal.html",
+      "path": "components/overlays/Modal/Modal-Eyebrow-context-above-the-title.html",
       "group": "overlays",
-      "viewport": "1200x7049"
+      "viewport": "1200x915"
     },
     {
-      "path": "components/overlays/Popover/Popover.html",
+      "path": "components/overlays/Modal/Modal-Persistent.html",
       "group": "overlays",
-      "viewport": "1200x1395"
+      "viewport": "1200x857"
     },
     {
-      "path": "components/overlays/TooltipPanel/TooltipPanel.html",
+      "path": "components/overlays/Modal/Modal-Sizes.html",
       "group": "overlays",
-      "viewport": "1200x756"
+      "viewport": "1200x1786"
     },
     {
-      "path": "components/page-structure/AuthLayout/AuthLayout.html",
+      "path": "components/overlays/Modal/Modal-Status.html",
+      "group": "overlays",
+      "viewport": "1200x1172"
+    },
+    {
+      "path": "components/overlays/Modal/Modal-Title-badge-subtitle.html",
+      "group": "overlays",
+      "viewport": "1200x789"
+    },
+    {
+      "path": "components/overlays/Modal/Modal-Variants.html",
+      "group": "overlays",
+      "viewport": "1200x1398"
+    },
+    {
+      "path": "components/overlays/Modal/Modal-With-form.html",
+      "group": "overlays",
+      "viewport": "1200x900"
+    },
+    {
+      "path": "components/overlays/Modal/Modal-Without-dividers.html",
+      "group": "overlays",
+      "viewport": "1200x933"
+    },
+    {
+      "path": "components/overlays/Popover/Popover-Alignment.html",
+      "group": "overlays",
+      "viewport": "1200x501"
+    },
+    {
+      "path": "components/overlays/Popover/Popover-Arrow.html",
+      "group": "overlays",
+      "viewport": "1200x473"
+    },
+    {
+      "path": "components/overlays/Popover/Popover-Live-demo.html",
+      "group": "overlays",
+      "viewport": "1200x481"
+    },
+    {
+      "path": "components/overlays/Popover/Popover-Placement.html",
+      "group": "overlays",
+      "viewport": "1200x493"
+    },
+    {
+      "path": "components/overlays/Popover/Popover-Static-specimen.html",
+      "group": "overlays",
+      "viewport": "1200x651"
+    },
+    {
+      "path": "components/overlays/TooltipPanel/TooltipPanel-States-showcase-static-specimens.html",
+      "group": "overlays",
+      "viewport": "1200x581"
+    },
+    {
+      "path": "components/page-structure/FilterBar/FilterBar-Sizing-the-N-trigger.html",
       "group": "page-structure",
-      "viewport": "1200x3128"
+      "viewport": "1200x662"
     },
     {
-      "path": "components/page-structure/PageFooter/PageFooter.html",
+      "path": "components/page-structure/FilterBar/FilterBar-What-the-width-buys.html",
       "group": "page-structure",
-      "viewport": "1200x783"
+      "viewport": "1200x556"
     },
     {
-      "path": "components/page-structure/PageHeader/PageHeader.html",
+      "path": "components/page-structure/PageFooter/PageFooter-Compact.html",
       "group": "page-structure",
-      "viewport": "1200x2020"
+      "viewport": "1200x440"
+    },
+    {
+      "path": "components/page-structure/PageFooter/PageFooter-Default.html",
+      "group": "page-structure",
+      "viewport": "1200x525"
+    },
+    {
+      "path": "components/page-structure/PageFooter/PageFooter-Save-unsaved-changes.html",
+      "group": "page-structure",
+      "viewport": "1200x440"
+    },
+    {
+      "path": "components/page-structure/PageHeader/PageHeader-Compact.html",
+      "group": "page-structure",
+      "viewport": "1200x602"
+    },
+    {
+      "path": "components/page-structure/PageHeader/PageHeader-Default.html",
+      "group": "page-structure",
+      "viewport": "1200x759"
+    },
+    {
+      "path": "components/page-structure/PageHeader/PageHeader-With-breadcrumb-above-title.html",
+      "group": "page-structure",
+      "viewport": "1200x649"
+    },
+    {
+      "path": "components/page-structure/PageHeader/PageHeader-With-divider.html",
+      "group": "page-structure",
+      "viewport": "1200x643"
+    },
+    {
+      "path": "components/page-structure/PageHeader/PageHeader-With-status-badge-inline-with-title.html",
+      "group": "page-structure",
+      "viewport": "1200x606"
     }
   ],
   "templates": [],

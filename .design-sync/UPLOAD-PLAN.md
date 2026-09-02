@@ -10,12 +10,21 @@ could not run in a pipeline anyway, so the machinery it owned is now repo code �
 neither writes is `_ds_sync.json`: its hash recipes are unknown (`keyRecipe: 7`), and a hash that
 happens to match would make a later sync SKIP a file that did change.
 
-**Superseded for the NEXT upload.** The showcase is no longer a hand-written React preview per
-component: a card is the ds-docs section that documents it. So the next diff adds a card for the
-thirteen components that had none (`AccordionItem`, `CalendarDay`, `DescriptionItem`, `ListItem`,
-`MenuItem`, `ModalConfirm`, `SidenavGroup`, `SidenavItem`, `Tab`, `TimeColumns`, `TimelineItem`,
-`ToastRegion`, `TooltipPanel`) and orphans the whole of `_preview/` — 72 more paths only the owner
-can remove. Every count below is the 2026-09-02 state, kept as the record of what was sent.
+**Superseded, twice.** Every count below is the 2026-09-02 state, kept as the record of what was
+sent; what the tree holds now is different in three ways.
+
+1. **The showcase is the ds-docs sections.** A card is the chapter that documents its component,
+   sliced to its own blocks. Thirteen components that had no card at all now have one, and the whole
+   of `_preview/` is orphaned — 76 paths only the owner can remove. Two cards still render the same
+   page (`SidenavFooter` with AppLayout, `TimeColumns` with TimePicker) because ds-docs demonstrates
+   neither on its own; `check-manual-surface` prints them on every run.
+2. **The groups are ds-docs'.** The card path used to come from `category` in the doc's front
+   matter, a second hand-kept opinion that disagreed with the site: `components/layout/` is gone,
+   Container, Inline, Stack and Divider moved to `components/foundations/`, and FilterBar to
+   `components/page-structure/`. Every moved component leaves its old path behind as an orphan.
+3. **`_ds_manifest.json` is ours.** `build-manifest.mjs` writes it. The copy on the project came
+   from the retired CLI and had gone stale — 79 components including `AppShell` — and since the pane
+   indexes from the manifest, that alone was enough to keep showing the previous showcase.
 
 **The deletions did NOT land, and only Misha can make them.** `delete_files` refuses every path on
 this project — one at a time as readily as in bulk:

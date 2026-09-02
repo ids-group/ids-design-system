@@ -10,6 +10,9 @@ import { fileURLToPath } from 'node:url';
 
 // build-manifest reads each card's own `@dsCard` marker, so it runs after build-cards wrote them —
 // which is what keeps the pane's index from disagreeing with the pages it indexes.
+// build-thumbnail is NOT here: it needs a browser, and this runs in a pipeline that has none. The
+// cover image changes only when the card it is shot from does, so it is a local step like
+// measure-cards — CI checks the file exists rather than re-rendering it.
 const here = dirname(fileURLToPath(import.meta.url));
 for (const tool of ['build-cards.mjs', 'build-adherence.mjs', 'build-manifest.mjs']) {
   execFileSync(process.execPath, [join(here, tool)], { stdio: 'inherit' });

@@ -1,0 +1,75 @@
+<!-- @dsCard group="data-display" viewport="1200x631" -->
+<!doctype html>
+<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
+     automatic OS branch, so a host that sets it on this document flips every component's tokens
+     while the page keeps its own background. Measured on the live cards: a light page whose tonal
+     buttons came out dark navy with white labels and whose outline labels went invisible. -->
+<html data-theme="light"><head><meta charset="utf-8">
+  <title>Stat</title>
+  <link rel="stylesheet" href="../../../styles.css">
+  <link rel="stylesheet" href="../../../_ds_bundle.css">
+  <style>
+    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
+       all, because the components followed the theme and the page did not. */
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
+       for a capped, padded column stretches edge to edge without it, and every demo that relies on
+       wrapping wraps at the wrong width. */
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
+  </style>
+</head><body>
+  <div class="ds-page"><ds-docs-components-stat></ds-docs-components-stat></div>
+  <!-- Sections only: a section renders DS components as Angular components, and registering those
+       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
+  <script>window.__dsSectionsOnly = true</script>
+  <script src="../../../_ds_bundle.js"></script>
+  <script>
+    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
+       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
+       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
+       chapter's own component), and runs until the next one. CHROME is docs-section's own template
+       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
+       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
+    (function () {
+      var OWNS = "";
+      var INDEX = 3;
+      var KEY = null;
+      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
+      var API = '[data-key]';
+      var host = document.querySelector("ds-docs-components-stat");
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(CHROME)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          // Counted per owner, so INDEX means "the Nth block this component owns" — the same thing
+          // the generator counted in the template.
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+        }
+        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
+           part by the anchor plus its class name. A part the extractor left out has no key at all,
+           and then the chapter's table is the only one there is, so it stays. */
+        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
+        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+      })();
+    })();
+  </script>
+</body></html>

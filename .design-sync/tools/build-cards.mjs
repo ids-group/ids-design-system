@@ -10,8 +10,7 @@
 // What it does NOT write is `_ds_sync.json`. That file is the skill's incremental-sync bookkeeping
 // and its hash recipes are unknown (`keyRecipe: 7` names a version we cannot reproduce). A wrong
 // value there is worse than a stale one: a hash that happens to match makes the next skill-driven
-// sync SKIP a file that did change. `_ds_manifest.json` is not ours either — the app compiles it
-// from the `@dsCard` markers in each card.
+// sync SKIP a file that did change. `_ds_manifest.json` IS ours — see build-manifest.mjs.
 import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -50,18 +49,164 @@ function sectionFor(name) {
   return section;
 }
 
-// `category: Forms & inputs` in a doc's front matter is `forms-inputs` on the remote, which is also
-// the `@dsCard group`. Verified against all eight groups the live project already carries.
-const groupOf = (category) =>
-  category.toLowerCase().replace(/&/g, '').trim().replace(/\s+/g, '-');
+/** Which sub-components each chapter marks a block for, so a card can tell its own blocks from the
+ *  chapter's. Read from the templates because the marks live there and nowhere else. */
+const markedInSection = new Map();
+for (const section of sections) {
+  const template = join(
+    repo, 'ds-docs/src/app/sections', section.slug, `${section.slug.split('/').pop()}.section.html`,
+  );
+  let html = '';
+  try {
+    html = readFileSync(template, 'utf8');
+  } catch {
+    continue;
+  }
+  markedInSection.set(
+    section.slug,
+    new Set([...html.matchAll(/data-for="([^"]+)"/g)].map((match) => match[1])),
+  );
+}
+
+/** Selector → the key docs-section renders its API table under. Read from the generated data
+ *  because the key is not derivable: most components are keyed by their folder (`avatar-group`),
+ *  one that shares a folder with its parent by `folder:ClassName` (`menu:MenuItemComponent`), and
+ *  `ds-container` by the folder it shares with Stack and Inline (`layout`). Guessing produced a
+ *  card with no API table at all. */
+const apiKeyBySelector = (() => {
+  const source = readFileSync(
+    join(repo, 'ds-docs/src/app/shared/component-api.generated.ts'), 'utf8',
+  );
+  const map = new Map();
+  // Each entry opens with its own `key` and `selector` on adjacent lines.
+  for (const [, key, selector] of source.matchAll(
+    /"key":\s*"([^"]+)",\s*\n\s*"selector":\s*"([^"]+)"/g,
+  )) {
+    if (!map.has(selector)) map.set(selector, key);
+  }
+
+  return map;
+})();
+
+/** The blocks of a section, in template order, each with the component it belongs to.
+ *
+ *  A block is a demo with its own `<h3 class="block-title">` and description, or a container
+ *  carrying `data-for` when a set of demos is grouped without a heading of its own (Menu's item
+ *  states). `owner` is the sub-component the block documents, or `''` for the chapter's own. */
+function blocksOf(slug) {
+  const template = join(
+    repo, 'ds-docs/src/app/sections', slug, `${slug.split('/').pop()}.section.html`,
+  );
+  let html = '';
+  try {
+    html = readFileSync(template, 'utf8');
+  } catch {
+    return [];
+  }
+
+  const found = [];
+  // The whole attribute list in one group: `data-for` sits AFTER `class` on a marked heading, so a
+  // pattern that stops at `class="block-title` never sees it — and every block then read as the
+  // chapter's own, which gave Stack a card for Inline's demo.
+  const MARKER = /<h3\b([^>]*)>([\s\S]*?)<\/h3>|<(?:div|section)\b([^>]*\bdata-for="[^"]+"[^>]*)>/g;
+  for (const [, headingAttrs, headingBody, containerAttrs] of html.matchAll(MARKER)) {
+    if (headingAttrs !== undefined) {
+      if (!/class="block-title/.test(headingAttrs)) continue;
+      const title = headingBody
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/\s+/g, ' ')
+        .trim();
+      found.push({ title, owner: headingAttrs.match(/data-for="([^"]+)"/)?.[1] ?? '' });
+    } else {
+      found.push({ title: '', owner: containerAttrs.match(/data-for="([^"]+)"/)[1] });
+    }
+  }
+
+  return found;
+}
+
+const MAX_SLUG = 48;
+
+/** A block's title as a filename. The pane labels a card by its filename, so this is the only
+ *  place a block's name reaches the outside of the card — worth keeping readable. */
+function blockSlug(title) {
+  const words = title
+    .normalize('NFKD')
+    .replace(/[^\w\s-]/g, ' ')
+    .trim()
+    .split(/[\s-]+/)
+    .filter(Boolean);
+
+  const kept = [];
+  for (const word of words) {
+    if (kept.join('-').length + word.length + 1 > MAX_SLUG) break;
+    kept.push(word);
+  }
+
+  return kept.join('-') || 'block';
+}
+
+/** The cards a component gets: one per block it owns, or one whole-chapter card when the chapter
+ *  marks nothing for it.
+ *
+ *  One card per block, because the pane fits a card's declared `viewport` into a fixed tile — so a
+ *  card's height IS its zoom level. Table's chapter is 18919px tall and rendered as an illegible
+ *  smudge; its 35 blocks are a few hundred pixels each and legible at the same scale as everything
+ *  else. Nothing is cut from ds-docs: a block carries its own title and prose, and the pane labels
+ *  a card by its FILENAME, so the block's name lands outside the card as well. */
+function cardsFor(name) {
+  const section = sectionFor(name);
+  const own = kebab(name);
+  const blocks = blocksOf(section.slug);
+  const marks = new Set(blocks.map((block) => block.owner).filter(Boolean));
+  // Only the chapter's OWN component may claim the unmarked blocks. A part whose chapter marks
+  // nothing for it falls back to one whole-chapter card — giving it a card per block would republish
+  // the parent's demos under a second name, which is the duplication this whole design removes.
+  const primary = section.slug.startsWith('components/') && section.slug.slice(11) === own;
+  const owner = marks.has(own) ? own : (primary ? '' : null);
+  if (owner === null || !blocks.length) return [{ file: name, owns: null, index: -1, title: '' }];
+
+  const mine = blocks.filter((block) => block.owner === owner);
+  if (!mine.length) return [{ file: name, owns: null, index: -1, title: '' }];
+
+  const seen = new Map();
+
+  return mine.map((block, index) => {
+    // A block with no heading of its own is a grouped set of demos (Menu's item states); the
+    // component's own name is the best label there is, and it needs an ordinal only if there
+    // are several.
+    const base = block.title
+      ? blockSlug(block.title)
+      : (mine.length > 1 ? `states-${index + 1}` : '');
+    const key = base || name;
+    const count = (seen.get(key) ?? 0) + 1;
+    seen.set(key, count);
+    const suffix = count > 1 ? `${base}-${count}` : base;
+
+    return {
+      file: suffix ? `${name}-${suffix}` : name,
+      owns: owner,
+      index,
+      title: block.title,
+    };
+  });
+}
+
+/** The card's group, taken from the ds-docs group page that renders its section.
+ *
+ *  It used to come from `category` in the doc's front matter, which was a second, hand-kept
+ *  opinion about where a component belongs — and it disagreed: the front matter filed Container,
+ *  Inline and Stack under `layout` and Divider under `data-display`, while ds-docs puts all four
+ *  under Foundations. One source now, and it is the site people actually navigate. */
+const groupOf = (section) => section.group.replace(/^components\//, '');
 
 function readDoc(name) {
   const raw = readFileSync(join(syncDir, 'docs', `${name}.md`), 'utf8').replace(/\r\n/g, '\n');
   const front = raw.match(/^---\n([\s\S]*?)\n---\n?/);
-  const category = front?.[1].match(/^category:\s*(.+)$/m)?.[1].trim();
-  if (!category) throw new Error(`${name}.md has no \`category\` in its front matter.`);
+  if (!front) throw new Error(`${name}.md has no front matter.`);
 
-  return { group: groupOf(category), body: raw.slice(front[0].length).trimStart() };
+  return raw.slice(front[0].length).trimStart();
 }
 
 /** The card page: the ds-docs section for this component, and nothing else.
@@ -69,7 +214,7 @@ function readDoc(name) {
  *  There is no React on this page and no per-card script. A hand-written preview per component was
  *  the previous design and the showcase drifted from the components it showed, because a specimen
  *  nobody opens is a specimen nobody checks. The docs site is looked at every day. */
-function cardHtml({ name, group, tag, viewport }) {
+function cardHtml({ name, group, tag, viewport, owns, index, apiKey }) {
   const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''} -->`;
 
   return `${marker}
@@ -97,7 +242,56 @@ function cardHtml({ name, group, tag, viewport }) {
        same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
   <script>window.__dsSectionsOnly = true</script>
   <script src="../../../_ds_bundle.js"></script>
-</body></html>
+${owns === null ? '' : `  <script>
+    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
+       than the same chapter twice. A block starts at a top-level child carrying \`data-for\` (which
+       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
+       chapter's own component), and runs until the next one. CHROME is docs-section's own template
+       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
+       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
+    (function () {
+      var OWNS = ${JSON.stringify(owns)};
+      var INDEX = ${JSON.stringify(index)};
+      var KEY = ${JSON.stringify(apiKey)};
+      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
+      var API = '[data-key]';
+      var host = document.querySelector(${JSON.stringify(tag)});
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(CHROME)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          // Counted per owner, so INDEX means "the Nth block this component owns" — the same thing
+          // the generator counted in the template.
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+        }
+        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
+           part by the anchor plus its class name. A part the extractor left out has no key at all,
+           and then the chapter's table is the only one there is, so it stays. */
+        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
+        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+      })();
+    })();
+  </script>
+`}</body></html>
 `;
 }
 
@@ -175,8 +369,9 @@ mkdirSync(OUT, { recursive: true });
 const written = [];
 for (const name of [...byName.keys()].sort()) {
   const component = byName.get(name);
-  const { group, body } = readDoc(name);
+  const body = readDoc(name);
   const section = sectionFor(name);
+  const group = groupOf(section);
   const dir = join(OUT, 'components', group, name);
   mkdirSync(dir, { recursive: true });
 
@@ -198,19 +393,26 @@ for (const name of [...byName.keys()].sort()) {
   );
   writeFileSync(join(dir, `${name}.prompt.md`), `# ${name}\n\n${body}`);
 
-  // The height is per SECTION, not per component: several components share one, and the card is
-  // that section. Sub-components inherit their parent's measurement for the same reason.
-  const height = viewports.heights[section.slug];
-  writeFileSync(
-    join(dir, `${name}.html`),
-    cardHtml({
-      name,
-      group,
-      tag: section.tag,
-      viewport: height ? `${viewports.width}x${height}` : null,
-    }),
-  );
-  written.push(name);
+  // Keyed by the card FILE, not the component: a component publishes one card per block it owns and
+  // each is a different height. measure-cards.mjs writes these keys.
+  for (const card of cardsFor(name)) {
+    const height = viewports.heights[card.file];
+    writeFileSync(
+      join(dir, `${card.file}.html`),
+      cardHtml({
+        name,
+        group,
+        tag: section.tag,
+        viewport: height ? `${viewports.width}x${height}` : null,
+        owns: card.owns,
+        index: card.index,
+        // Only the first card of a component carries the API table. On Table that is the difference
+        // between one table and thirty-five copies of it.
+        apiKey: card.index <= 0 ? apiKeyBySelector.get(component.selector) ?? '' : null,
+      }),
+    );
+    written.push(card.file);
+  }
 }
 
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
@@ -270,6 +472,11 @@ mkdirSync(join(OUT, 'uploads'), { recursive: true });
 for (const file of readdirSync(pasted)) {
   cpSync(join(pasted, file), join(OUT, 'uploads', file));
 }
+
+// The project's cover image. It was the last file in the project with no source at all — a WebP
+// that came with the hand-made upload — so a wipe-and-reupload would have blanked the tile with
+// nothing to restore it from. These are still those bytes; see docs/todo.md for re-rendering it.
+cpSync(join(syncDir, 'assets', 'thumbnail.webp'), join(OUT, '.thumbnail'));
 
 // The project's own README, from the same conventions file the agent reads.
 writeFileSync(

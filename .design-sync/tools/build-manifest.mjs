@@ -45,13 +45,16 @@ for (const file of walk(join(OUT, 'components')).filter((f) => f.endsWith('.html
   cards.push(viewport ? { path: posix(file), group, viewport } : { path: posix(file), group });
 }
 
+// From the emitted `.jsx` files, not from a card: a component publishes one card per documented
+// block now, so no card path carries the component's own name any more.
+const sources = new Map(
+  walk(join(OUT, 'components'))
+    .filter((file) => file.endsWith('.jsx'))
+    .map((file) => [posix(file).split('/').pop().replace(/\.jsx$/, ''), posix(file)]),
+);
 const components = [...surface.components]
   .sort((a, b) => a.name.localeCompare(b.name))
-  .map((component) => {
-    const card = cards.find((entry) => entry.path.endsWith(`/${component.name}.html`));
-
-    return { name: component.name, sourcePath: card?.path.replace(/\.html$/, '.jsx') };
-  })
+  .map((component) => ({ name: component.name, sourcePath: sources.get(component.name) }))
   .filter((entry) => entry.sourcePath);
 
 // ── tokens ───────────────────────────────────────────────────────────────

@@ -74,6 +74,20 @@ pages=$(find .design-sync/upload/components -name '*.html' | wc -l)
 [ "$indexed" = "$pages" ] || { echo "Manifest indexes $indexed card(s) against $pages page(s) in the tree"; exit 1; }
 echo "Manifest indexes all $indexed card(s)"
 
+# A card with no `viewport` takes the pane's default and loses everything below the fold, which is
+# silent - so the numbers are a build input, not an optional refinement. They come from
+# `node .design-sync/tools/measure-cards.mjs`, which needs a browser and therefore runs locally;
+# this only checks that somebody ran it for every card.
+unsized=$(grep -L 'viewport="' $(find .design-sync/upload/components -name '*.html') | wc -l)
+[ "$unsized" = "0" ] || {
+  echo "$unsized card(s) carry no viewport in their @dsCard marker:"
+  grep -L 'viewport="' $(find .design-sync/upload/components -name '*.html')
+  echo ""
+  echo "Run 'node .design-sync/tools/measure-cards.mjs' and commit .design-sync/viewports.json."
+  exit 1
+}
+echo "Every card carries a measured viewport"
+
 # The project must hold nothing this repo cannot rebuild. Everything in this loop was left over
 # from a hand-made upload until now, which is why a font could not be added and a wipe-and-reupload
 # was unsafe: half the tree had no source.
@@ -83,6 +97,9 @@ done
 sources=$(find .design-sync/assets/uploads -type f | wc -l)
 copies=$(find .design-sync/upload/uploads -type f | wc -l)
 [ "$sources" = "$copies" ] || { echo "Pasted-image mismatch: $sources source(s) against $copies in the upload tree"; exit 1; }
+# The project's cover image. Rendered locally by build-thumbnail.mjs (it needs a browser), so all
+# CI can do is refuse to publish a tree that would blank the project tile.
+[ -f .design-sync/upload/.thumbnail ] || { echo "Expected artifact missing: .design-sync/upload/.thumbnail — run 'node .design-sync/tools/build-thumbnail.mjs'"; exit 1; }
 faces=$(find .design-sync/upload/fonts -name '*.woff2' | wc -l)
 rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
 [ "$faces" = "$rules" ] || { echo "Font mismatch: $faces face file(s) against $rules @font-face rule(s) - the missing side 404s silently"; exit 1; }

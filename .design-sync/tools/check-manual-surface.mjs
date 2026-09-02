@@ -170,6 +170,32 @@ for (const [name, slug] of Object.entries(sectionMap).sort()) {
   }
 }
 
+// A component whose chapter marks no block for it falls back to ONE whole-chapter card, which is
+// the tall unreadable shape this design exists to avoid — the pane fits a card's declared viewport
+// into a fixed tile, so height is zoom. Reported, not failed: giving such a part a block of its own
+// is a ds-docs authoring decision, not something a build can invent.
+const wholeChapter = new Map();
+for (const tag of [...componentTags].sort()) {
+  const name = pascalOfTag(tag);
+  const slug = sectionMap[name] ?? `components/${tag.replace(/^ds-/, '')}`;
+  const template = join(
+    repo, 'ds-docs/src/app/sections', slug, `${slug.split('/').pop()}.section.html`,
+  );
+  let html = '';
+  try {
+    html = readFileSync(template, 'utf8');
+  } catch { /* a section with no template of its own cannot mark anything */ }
+  const own = tag.replace(/^ds-/, '');
+  const marks = new Set([...html.matchAll(/data-for="([^"]+)"/g)].map((match) => match[1]));
+  const blocks = (html.match(/class="block-title/g) ?? []).length;
+  if (marks.has(own)) continue;
+  if (slug === `components/${own}` && blocks) continue;
+  wholeChapter.set(name, slug);
+}
+for (const [name, slug] of wholeChapter) {
+  console.log(`· ${name} has no block of its own in ${slug} — its card is the whole chapter, which the pane renders zoomed out`);
+}
+
 // Both directions, because only one of them was checked until 2026-09-01 and two orphans sat
 // there unnoticed: a doc and a preview for `Tooltip`, which is a DIRECTIVE and can therefore
 // never have a card. A doc for something that does not exist is worse than a missing one — it
