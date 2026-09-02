@@ -60,9 +60,16 @@
     and `border-width-default`. Monospace also removes the width-jitter problem for `A`-`F` that
     `font-variant-numeric: tabular-nums` could not have solved.
 
-  - **Measure before trusting the geometry.** The no-scroll-sync claim rests on a 7-character value
-    never overflowing the field; that width has NOT been measured. Check it in a real browser at the
-    smallest field size before relying on it, and keep `overflow: hidden` on the layer either way.
+  - **The geometry is MEASURED, not assumed (2026-09-02, headless Chrome over http, the shipped
+    stylesheet and its self-hosted fonts).** JetBrains Mono at `--font-size-s` advances **8.40px**,
+    and `0` and `A` measure identically — so the width-jitter worry is dead outright, not merely
+    mitigated. `#FFFFFF` is **58.80px** of text in a **136px** inner field, leaving **77.20px** of
+    slack, and the field reports `scrollWidth === clientWidth` (152/152), i.e. it is never scrolled,
+    which is what makes the no-scroll-sync claim hold rather than merely look likely. The panel is a
+    fixed 240px (`--color-picker-panel-w`), and **160.80px** is the width at which seven glyphs would
+    start to overflow — so only a consumer who shrinks `--ds-color-picker-panel-w` below ~161px can
+    break this. Keep `overflow: hidden` on the layer so that case degrades to a clip rather than a
+    spill.
   - **A drag emits values faster than any animation finishes.** Every `pointermove` produces a new
     hex, so a glyph will be mid-flight when its next value lands. That forces a `transition` on
     `translateY` rather than `@keyframes`: a transition retargets from wherever the glyph currently
