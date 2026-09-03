@@ -73,6 +73,32 @@ const cases = [
 ];
 
 let failed = 0;
+
+// A family-wide rename is filed once with a placeholder, so a literal substring test reads the
+// whole family as uncovered — it did, for both of 0.3.0's token renames. This is the case that
+// keeps the pattern support from being dropped as unnecessary.
+{
+  const versionMode = (version) => {
+    try {
+      execFileSync('node', ['tools/check-manifest-coverage.mjs', version], {
+        cwd: ROOT,
+        encoding: 'utf8',
+        stdio: 'pipe',
+      });
+      return 'green';
+    } catch {
+      return 'red';
+    }
+  };
+  const got = versionMode('0.3.0');
+  const ok = got === 'green';
+  if (!ok) failed++;
+  console.log(
+    `${ok ? 'ok   ' : 'FAIL '} a placeholder rename (--ds-*-bg → --ds-*-bg-color) covers its ` +
+      `members — expected green, got ${got}`,
+  );
+}
+
 try {
   for (const testCase of cases) {
     const block = [

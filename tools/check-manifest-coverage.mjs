@@ -125,12 +125,34 @@ function entriesOf(block) {
   return found;
 }
 
+// A family-wide rename is filed as one item with a placeholder — `--ds-*-bg` → `--ds-*-bg-color`,
+// `--<role>-subtle` → `--<role>-subtitle` — which is the right way to file it: enumerating every
+// member would be worse. A literal substring test cannot see through that, so it read the whole of
+// 0.3.0 as uncovered. Placeholders are matched as patterns.
+function patternsIn(text) {
+  const patterns = [];
+  for (const match of text.matchAll(/--[a-z0-9-]*(?:\*|<[a-z]+>)[a-z0-9*<>-]*/gi)) {
+    const source = match[0]
+      .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+      .replace(/<[a-z]+>/gi, '[a-z0-9-]+')
+      .replace(/\*/g, '[a-z0-9-]*');
+    patterns.push(new RegExp(`^${source}$`));
+  }
+  return patterns;
+}
+
 function manifestFor(version) {
   const path =
     version === 'unreleased'
       ? join(ROOT, 'migrations/unreleased.json')
       : join(ROOT, `migrations/${version}.json`);
-  return existsSync(path) ? { path, text: readFileSync(path, 'utf8') } : null;
+  if (!existsSync(path)) return null;
+  const text = readFileSync(path, 'utf8');
+  const patterns = patternsIn(text);
+  return {
+    path,
+    names: (hook) => text.includes(hook) || patterns.some((pattern) => pattern.test(hook)),
+  };
 }
 
 function check(block) {
@@ -143,7 +165,7 @@ function check(block) {
     if (!hooks.size) continue;
     // A missing manifest is only a gap once something in the block actually needs one; that
     // keeps a cycle with no actionable work from being told to create an empty file.
-    const mentioned = manifest ? [...hooks].filter((hook) => manifest.text.includes(hook)) : [];
+    const mentioned = manifest ? [...hooks].filter((hook) => manifest.names(hook)) : [];
     if (!mentioned.length) gaps.push({ ...entry, hooks: [...hooks] });
   }
   return { manifest, entries, gaps };
