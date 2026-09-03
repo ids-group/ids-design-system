@@ -491,10 +491,14 @@ const markerValue = (value) => (value ?? '')
   .replace(/\s+/g, ' ')
   .trim();
 
-/** What the pane prints ABOVE the frame. It clips around a hundred characters mid-word, so the
- *  subtitle is ONE sentence: a whole thought that ends, rather than a paragraph that stops. The rest
- *  of the block's prose is not lost - it becomes the card's usage note. */
-const SUBTITLE_CAP = 90;
+/** What the pane prints ABOVE the frame: ONE sentence, a whole thought that ends rather than a
+ *  paragraph that stops. The rest of the block's prose is not lost - it becomes the card's usage
+ *  note.
+ *
+ *  The pane does NOT truncate; it wraps to a second line. An earlier ellipsis in a screenshot was
+ *  this cap, not the pane. 160 lets the first sentence through whole on 89% of cards - the median
+ *  is 76 characters and the ninetieth percentile 168. */
+const SUBTITLE_CAP = 160;
 const capped = (paragraph) => {
   const stop = paragraph.search(/[.!?](\s|$)/);
   const sentence = stop < 0 ? paragraph : paragraph.slice(0, stop + 1);
