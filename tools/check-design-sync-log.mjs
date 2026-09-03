@@ -47,7 +47,7 @@ if (start === -1) {
   console.error('check-design-sync-log: .design-sync/CHANGELOG.md has no `## Unreleased` heading.');
   process.exit(1);
 }
-// The section runs to the next version heading, or to the end for the very first cycle.
+// No next heading on the first cycle, before any version block exists.
 const rest = text.slice(start + '## Unreleased'.length);
 const nextHeading = rest.search(/^## /m);
 const section = nextHeading === -1 ? rest : rest.slice(0, nextHeading);
