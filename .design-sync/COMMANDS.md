@@ -182,16 +182,18 @@ delete_files { planId, paths }
   write_files, delete_files, register_assets, unregister_assets, create_project,
   report_validate — so "move it to a trashcan folder" means copy plus blank, which
   leaves the original in place and doubles the file count.
-- **Marking an obsolete path, given no rename and no delete.** Three levers, and
-  only two are worth using. The file's own CONTENT becomes the notice: title and
-  body read `[TO BE DELETED]` and name what replaced it, so the path is inert and
-  self-explaining. Alongside it `_TO_BE_DELETED.md` at the project root lists
-  every such path for the owner — one file, sorted next to the other `_` entries,
-  and NOT a copy of anything. A `[TO BE DELETED]` PREFIX on the name would mean
-  writing a second file beside the first, which adds litter to a project where
-  only the owner can remove anything, so it is refused. `register_assets` is the
-  one lever on a card's DISPLAYED name, but registering an orphan publishes a dead
-  card into the pane, which is worse than an invisible file.
+- **Marking an obsolete path, given no rename and no delete: replace its CONTENT,
+  and add nothing.** Title and body read `[TO BE DELETED]` and name what replaced
+  it, so the path is inert and self-explaining. That is the whole solution, and
+  the only one that adds no file. A `[TO BE DELETED]` PREFIX on the name is a
+  second file beside the first, not a rename. `register_assets` is the one lever
+  on a card's DISPLAYED name, but registering an orphan publishes a dead card into
+  the pane, which is worse than an invisible file.
+- **On a project you do not own, every write is permanent.** A helper file added to
+  carry a list of what to delete becomes an item on that list: blanking it leaves a
+  0-byte file with no explanation, which is worse than leaving it. `_TO_BE_DELETED.md`
+  was written for exactly that reason on 2026-09-03 and now names itself. Put a
+  list in the repo or the chat; never on the project.
 - `create_project` makes a project the USER owns, which is the only way to get
   delete rights back.
 - **A big `list_files` result is persisted to a file, not inlined** — the harness
