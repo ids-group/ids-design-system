@@ -864,9 +864,11 @@ writeFileSync(
   readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8')
   + (obsolete.length
     ? `\n## Obsolete paths — for the project owner\n\n`
-      + `The ${obsolete.length} path(s) below are left over from renames and withdrawals. None is`
-      + ` produced by the build, none is in \`_ds_manifest.json\`, so none renders a card — each`
-      + ` one's own content says \`[TO BE DELETED]\`. Only the project's OWNER can remove them.\n\n`
+      + `The ${obsolete.length} path(s) below are left over from renames and withdrawals. Each has`
+      + ` been taken as far as a non-owner can: out of \`_ds_manifest.json\`, through`
+      + ` \`unregister_assets\` so no card registration points at it, and its own content replaced`
+      + ` with a \`[TO BE DELETED]\` notice. What is left is removing the files, and only the`
+      + ` project's OWNER can do that.\n\n`
       + `**To clear them, paste this into Claude:**\n\n`
       + '```text\n'
       + `In my Claude Design project, read README.md, take the paths listed under "Obsolete paths"`
