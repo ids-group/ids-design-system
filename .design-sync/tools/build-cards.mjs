@@ -30,6 +30,12 @@ const sectionBySlug = new Map(sections.map((section) => [section.slug, section])
 
 const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
+/** The component's name as a reader sees it. `ToggleButton` is an identifier — it belongs in the
+ *  declaration and the directory, both of which keep it — but the card's filename IS its label in
+ *  the pane, and a list of run-together words is read a word at a time. `W3w` keeps its shape:
+ *  the split is only ever at a lowercase-or-digit followed by an uppercase. */
+const spacedName = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+
 /** The ds-docs section that documents this component — the card's whole body.
  *
  *  Most resolve by name: `Input` is documented by `components/input`. The rest are sub-components
@@ -242,16 +248,17 @@ function cardsFor(name) {
   // the parent's demos under a second name, which is the duplication this whole design removes.
   const primary = section.slug.startsWith('components/') && section.slug.slice(11) === own;
   const owner = marks.has(own) ? own : (primary ? '' : null);
+  const label = spacedName(name);
   if (owner === null || !blocks.length) {
-    return [{ file: name, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+    return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
   }
 
   const mine = blocks
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => block.owner === owner);
-  if (!mine.length) return [{ file: name, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+  if (!mine.length) return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
 
-  return nameCards(name, mine, owner);
+  return nameCards(label, mine, owner);
 }
 
 /** The chapters that document no component of their own — Foundations, Patterns, Practice, and

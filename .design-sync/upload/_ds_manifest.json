@@ -380,7 +380,7 @@
       "viewport": "1200x596"
     },
     {
-      "path": "components/actions/ToggleButton/ToggleButton - Toggle - link.html",
+      "path": "components/actions/ToggleButton/Toggle Button - Toggle - link.html",
       "group": "actions",
       "viewport": "1200x634"
     },
@@ -390,37 +390,37 @@
       "viewport": "1200x646"
     },
     {
-      "path": "components/actions/ButtonGroup/ButtonGroup - Button group.html",
+      "path": "components/actions/ButtonGroup/Button Group - Button group.html",
       "group": "actions",
       "viewport": "1200x578"
     },
     {
-      "path": "components/actions/IconButton/IconButton - Color x variant.html",
+      "path": "components/actions/IconButton/Icon Button - Color x variant.html",
       "group": "actions",
       "viewport": "1200x1146"
     },
     {
-      "path": "components/actions/IconButton/IconButton - Sizes.html",
+      "path": "components/actions/IconButton/Icon Button - Sizes.html",
       "group": "actions",
       "viewport": "1200x543"
     },
     {
-      "path": "components/actions/IconButton/IconButton - Toggle.html",
+      "path": "components/actions/IconButton/Icon Button - Toggle.html",
       "group": "actions",
       "viewport": "1200x535"
     },
     {
-      "path": "components/actions/IconButton/IconButton - Disabled.html",
+      "path": "components/actions/IconButton/Icon Button - Disabled.html",
       "group": "actions",
       "viewport": "1200x554"
     },
     {
-      "path": "components/actions/SplitButton/SplitButton - Primary variant.html",
+      "path": "components/actions/SplitButton/Split Button - Primary variant.html",
       "group": "actions",
       "viewport": "1200x719"
     },
     {
-      "path": "components/actions/SplitButton/SplitButton - Outline variant.html",
+      "path": "components/actions/SplitButton/Split Button - Outline variant.html",
       "group": "actions",
       "viewport": "1200x489"
     },
@@ -520,82 +520,82 @@
       "viewport": "1200x486"
     },
     {
-      "path": "components/forms-inputs/ColorPicker/ColorPicker - Default presets.html",
+      "path": "components/forms-inputs/ColorPicker/Color Picker - Default presets.html",
       "group": "forms-inputs",
-      "viewport": "1200x628"
+      "viewport": "1200x630"
     },
     {
-      "path": "components/forms-inputs/ColorPicker/ColorPicker - Custom presets.html",
+      "path": "components/forms-inputs/ColorPicker/Color Picker - Custom presets.html",
       "group": "forms-inputs",
       "viewport": "1200x520"
     },
     {
-      "path": "components/forms-inputs/ColorPicker/ColorPicker - Helper & error text.html",
+      "path": "components/forms-inputs/ColorPicker/Color Picker - Helper & error text.html",
       "group": "forms-inputs",
       "viewport": "1200x648"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Single date.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Single date.html",
       "group": "forms-inputs",
       "viewport": "1200x556"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Date range.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Date range.html",
       "group": "forms-inputs",
       "viewport": "1200x447"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Label - hint - required.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Label - hint - required.html",
       "group": "forms-inputs",
       "viewport": "1200x532"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Validation states.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Validation states.html",
       "group": "forms-inputs",
       "viewport": "1200x493"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Min & max date bounds.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Min & max date bounds.html",
       "group": "forms-inputs",
       "viewport": "1200x490"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Disabled-date predicate.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Disabled-date predicate.html",
       "group": "forms-inputs",
       "viewport": "1200x490"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Presets.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Presets.html",
       "group": "forms-inputs",
       "viewport": "1200x490"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Masked manual entry.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Masked manual entry.html",
       "group": "forms-inputs",
       "viewport": "1200x552"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Date of birth.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Date of birth.html",
       "group": "forms-inputs",
       "viewport": "1200x490"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Localization.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Localization.html",
       "group": "forms-inputs",
       "viewport": "1200x509"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Custom format.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Custom format.html",
       "group": "forms-inputs",
       "viewport": "1200x470"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Calendar-only.html",
+      "path": "components/forms-inputs/DatePicker/Date Picker - Calendar-only.html",
       "group": "forms-inputs",
       "viewport": "1200x470"
     },
     {
-      "path": "components/forms-inputs/CalendarDay/CalendarDay - Day states.html",
+      "path": "components/forms-inputs/CalendarDay/Calendar Day - Day states.html",
       "group": "forms-inputs",
       "viewport": "1200x754"
     },
@@ -615,17 +615,17 @@
       "viewport": "1200x1210"
     },
     {
-      "path": "components/forms-inputs/FieldGroup/FieldGroup - Trailing action, and a unit after the value.html",
+      "path": "components/forms-inputs/FieldGroup/Field Group - Trailing action, and a unit after the value.html",
       "group": "forms-inputs",
       "viewport": "1200x533"
     },
     {
-      "path": "components/forms-inputs/FieldGroup/FieldGroup - Every supported control.html",
+      "path": "components/forms-inputs/FieldGroup/Field Group - Every supported control.html",
       "group": "forms-inputs",
       "viewport": "1200x464"
     },
     {
-      "path": "components/forms-inputs/FieldGroup/FieldGroup - Sizes, error and full width.html",
+      "path": "components/forms-inputs/FieldGroup/Field Group - Sizes, error and full width.html",
       "group": "forms-inputs",
       "viewport": "1200x614"
     },
@@ -637,17 +637,17 @@
     {
       "path": "components/forms-inputs/Input/Input - Variant states - prefix - suffix.html",
       "group": "forms-inputs",
-      "viewport": "1200x511"
+      "viewport": "1200x512"
     },
     {
       "path": "components/forms-inputs/Input/Input - With icon - prefix - suffix.html",
       "group": "forms-inputs",
-      "viewport": "1200x566"
+      "viewport": "1200x567"
     },
     {
       "path": "components/forms-inputs/Input/Input - Clearable.html",
       "group": "forms-inputs",
-      "viewport": "1200x467"
+      "viewport": "1200x468"
     },
     {
       "path": "components/forms-inputs/Input/Input - Password toggle.html",
@@ -665,19 +665,19 @@
       "viewport": "1200x467"
     },
     {
-      "path": "components/forms-inputs/FieldMessage/FieldMessage - Messages error, warning, hint.html",
+      "path": "components/forms-inputs/FieldMessage/Field Message - Messages error, warning, hint.html",
       "group": "forms-inputs",
-      "viewport": "1200x755"
+      "viewport": "1200x756"
     },
     {
-      "path": "components/forms-inputs/FieldMessage/FieldMessage - The glyph on the message line.html",
+      "path": "components/forms-inputs/FieldMessage/Field Message - The glyph on the message line.html",
       "group": "forms-inputs",
-      "viewport": "1200x1153"
+      "viewport": "1200x1154"
     },
     {
-      "path": "components/forms-inputs/FieldMessage/FieldMessage - Reserved message row.html",
+      "path": "components/forms-inputs/FieldMessage/Field Message - Reserved message row.html",
       "group": "forms-inputs",
-      "viewport": "1200x623"
+      "viewport": "1200x642"
     },
     {
       "path": "components/forms-inputs/Input/Input - Whole form at once.html",
@@ -685,107 +685,107 @@
       "viewport": "1200x491"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Basic usage.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Basic usage.html",
       "group": "forms-inputs",
       "viewport": "1200x754"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Overflow collapse.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Overflow collapse.html",
       "group": "forms-inputs",
       "viewport": "1200x839"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Labels in the trigger.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Labels in the trigger.html",
       "group": "forms-inputs",
       "viewport": "1200x596"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Hiding the filter row.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Hiding the filter row.html",
       "group": "forms-inputs",
       "viewport": "1200x627"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Compact trigger.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Compact trigger.html",
       "group": "forms-inputs",
       "viewport": "1200x596"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Custom option and chip content.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Custom option and chip content.html",
       "group": "forms-inputs",
       "viewport": "1200x629"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Option groups.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Option groups.html",
       "group": "forms-inputs",
       "viewport": "1200x556"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Width.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Width.html",
       "group": "forms-inputs",
       "viewport": "1200x554"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Helper & error text.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Helper & error text.html",
       "group": "forms-inputs",
       "viewport": "1200x693"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Icons in the options.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Icons in the options.html",
       "group": "forms-inputs",
       "viewport": "1200x649"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Server-side search.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Server-side search.html",
       "group": "forms-inputs",
       "viewport": "1200x630"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Panel header and footer.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Panel header and footer.html",
       "group": "forms-inputs",
       "viewport": "1200x576"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Group headings, and why an option is off.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Group headings, and why an option is off.html",
       "group": "forms-inputs",
       "viewport": "1200x596"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Read-only, clearable.html",
+      "path": "components/forms-inputs/MultiSelect/Multi Select - Read-only, clearable.html",
       "group": "forms-inputs",
       "viewport": "1200x645"
     },
     {
-      "path": "components/forms-inputs/NumberStepper/NumberStepper - Sizes.html",
+      "path": "components/forms-inputs/NumberStepper/Number Stepper - Sizes.html",
       "group": "forms-inputs",
       "viewport": "1200x609"
     },
     {
-      "path": "components/forms-inputs/NumberStepper/NumberStepper - Bounds & step.html",
+      "path": "components/forms-inputs/NumberStepper/Number Stepper - Bounds & step.html",
       "group": "forms-inputs",
       "viewport": "1200x512"
     },
     {
-      "path": "components/forms-inputs/NumberStepper/NumberStepper - Disabled.html",
+      "path": "components/forms-inputs/NumberStepper/Number Stepper - Disabled.html",
       "group": "forms-inputs",
       "viewport": "1200x487"
     },
     {
-      "path": "components/forms-inputs/OtpInput/OtpInput - 6-digit numeric OTP.html",
+      "path": "components/forms-inputs/OtpInput/Otp Input - 6-digit numeric OTP.html",
       "group": "forms-inputs",
       "viewport": "1200x796"
     },
     {
-      "path": "components/forms-inputs/OtpInput/OtpInput - 4-digit masked PIN.html",
+      "path": "components/forms-inputs/OtpInput/Otp Input - 4-digit masked PIN.html",
       "group": "forms-inputs",
       "viewport": "1200x483"
     },
     {
-      "path": "components/forms-inputs/OtpInput/OtpInput - Helper & error text.html",
+      "path": "components/forms-inputs/OtpInput/Otp Input - Helper & error text.html",
       "group": "forms-inputs",
       "viewport": "1200x658"
     },
     {
-      "path": "components/forms-inputs/PasswordRules/PasswordRules - Live checklist.html",
+      "path": "components/forms-inputs/PasswordRules/Password Rules - Live checklist.html",
       "group": "forms-inputs",
       "viewport": "1200x726"
     },
@@ -810,7 +810,7 @@
       "viewport": "1200x452"
     },
     {
-      "path": "components/forms-inputs/RadioGroup/RadioGroup - Radio group.html",
+      "path": "components/forms-inputs/RadioGroup/Radio Group - Radio group.html",
       "group": "forms-inputs",
       "viewport": "1200x779"
     },
@@ -960,42 +960,42 @@
       "viewport": "1200x473"
     },
     {
-      "path": "components/forms-inputs/TimePicker/TimePicker - Single.html",
+      "path": "components/forms-inputs/TimePicker/Time Picker - Single.html",
       "group": "forms-inputs",
       "viewport": "1200x601"
     },
     {
-      "path": "components/forms-inputs/TimePicker/TimePicker - 12-hour (AM PM).html",
+      "path": "components/forms-inputs/TimePicker/Time Picker - 12-hour (AM PM).html",
       "group": "forms-inputs",
       "viewport": "1200x470"
     },
     {
-      "path": "components/forms-inputs/TimePicker/TimePicker - Minute step.html",
+      "path": "components/forms-inputs/TimePicker/Time Picker - Minute step.html",
       "group": "forms-inputs",
       "viewport": "1200x470"
     },
     {
-      "path": "components/forms-inputs/TimePicker/TimePicker - Min - max - disabled slots.html",
+      "path": "components/forms-inputs/TimePicker/Time Picker - Min - max - disabled slots.html",
       "group": "forms-inputs",
       "viewport": "1200x489"
     },
     {
-      "path": "components/forms-inputs/TimePicker/TimePicker - Clearable - sizes.html",
+      "path": "components/forms-inputs/TimePicker/Time Picker - Clearable - sizes.html",
       "group": "forms-inputs",
       "viewport": "1200x497"
     },
     {
-      "path": "components/forms-inputs/TimePicker/TimePicker - Range.html",
+      "path": "components/forms-inputs/TimePicker/Time Picker - Range.html",
       "group": "forms-inputs",
       "viewport": "1200x492"
     },
     {
-      "path": "components/forms-inputs/TimePicker/TimePicker - Validation - reactive forms.html",
+      "path": "components/forms-inputs/TimePicker/Time Picker - Validation - reactive forms.html",
       "group": "forms-inputs",
       "viewport": "1200x492"
     },
     {
-      "path": "components/forms-inputs/TimeColumns/TimeColumns.html",
+      "path": "components/forms-inputs/TimeColumns/Time Columns.html",
       "group": "forms-inputs",
       "viewport": "1200x1552"
     },
@@ -1010,47 +1010,47 @@
       "viewport": "1200x461"
     },
     {
-      "path": "components/navigation/AppLayout/AppLayout - Content-span topbar.html",
+      "path": "components/navigation/AppLayout/App Layout - Content-span topbar.html",
       "group": "navigation",
       "viewport": "1200x1062"
     },
     {
-      "path": "components/navigation/AppLayout/AppLayout - Full-span topbar.html",
+      "path": "components/navigation/AppLayout/App Layout - Full-span topbar.html",
       "group": "navigation",
       "viewport": "1200x954"
     },
     {
-      "path": "components/navigation/AppLayout/AppLayout - Opening the rail from your own chrome.html",
+      "path": "components/navigation/AppLayout/App Layout - Opening the rail from your own chrome.html",
       "group": "navigation",
       "viewport": "1200x623"
     },
     {
-      "path": "components/navigation/AppLayout/AppLayout - Returning the reader to where they were.html",
+      "path": "components/navigation/AppLayout/App Layout - Returning the reader to where they were.html",
       "group": "navigation",
       "viewport": "1200x886"
     },
     {
-      "path": "components/navigation/SidenavFooter/SidenavFooter - The rail footer on its own.html",
+      "path": "components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own.html",
       "group": "navigation",
       "viewport": "1200x1334"
     },
     {
-      "path": "components/navigation/AuthLayout/AuthLayout - Two-tone wordmark, flat card.html",
+      "path": "components/navigation/AuthLayout/Auth Layout - Two-tone wordmark, flat card.html",
       "group": "navigation",
       "viewport": "1200x1057"
     },
     {
-      "path": "components/navigation/AuthLayout/AuthLayout - On a short screen the chrome compresses.html",
+      "path": "components/navigation/AuthLayout/Auth Layout - On a short screen the chrome compresses.html",
       "group": "navigation",
       "viewport": "1200x803"
     },
     {
-      "path": "components/navigation/AuthLayout/AuthLayout - Why it centres with auto margins.html",
+      "path": "components/navigation/AuthLayout/Auth Layout - Why it centres with auto margins.html",
       "group": "navigation",
       "viewport": "1200x544"
     },
     {
-      "path": "components/navigation/AuthLayout/AuthLayout - The notch needs one line from YOUR app.html",
+      "path": "components/navigation/AuthLayout/Auth Layout - The notch needs one line from YOUR app.html",
       "group": "navigation",
       "viewport": "1200x602"
     },
@@ -1095,7 +1095,7 @@
       "viewport": "1200x741"
     },
     {
-      "path": "components/navigation/MenuDivider/MenuDivider - Dividers.html",
+      "path": "components/navigation/MenuDivider/Menu Divider - Dividers.html",
       "group": "navigation",
       "viewport": "1200x694"
     },
@@ -1105,7 +1105,7 @@
       "viewport": "1200x671"
     },
     {
-      "path": "components/navigation/MenuItem/MenuItem.html",
+      "path": "components/navigation/MenuItem/Menu Item.html",
       "group": "navigation",
       "viewport": "1200x938"
     },
@@ -1145,7 +1145,7 @@
       "viewport": "1200x796"
     },
     {
-      "path": "components/navigation/SidenavGroup/SidenavGroup - Expandable groups.html",
+      "path": "components/navigation/SidenavGroup/Sidenav Group - Expandable groups.html",
       "group": "navigation",
       "viewport": "1200x877"
     },
@@ -1155,7 +1155,7 @@
       "viewport": "1200x773"
     },
     {
-      "path": "components/navigation/SidenavItem/SidenavItem - Item states showcase.html",
+      "path": "components/navigation/SidenavItem/Sidenav Item - Item states showcase.html",
       "group": "navigation",
       "viewport": "1200x791"
     },
@@ -1270,7 +1270,7 @@
       "viewport": "1200x559"
     },
     {
-      "path": "components/data-display/AccordionItem/AccordionItem - States showcase.html",
+      "path": "components/data-display/AccordionItem/Accordion Item - States showcase.html",
       "group": "data-display",
       "viewport": "1200x881"
     },
@@ -1280,7 +1280,7 @@
       "viewport": "1200x488"
     },
     {
-      "path": "components/data-display/AvatarGroup/AvatarGroup - Group.html",
+      "path": "components/data-display/AvatarGroup/Avatar Group - Group.html",
       "group": "data-display",
       "viewport": "1200x541"
     },
@@ -1315,17 +1315,17 @@
       "viewport": "1200x605"
     },
     {
-      "path": "components/data-display/DescriptionList/DescriptionList - Horizontal layout.html",
+      "path": "components/data-display/DescriptionList/Description List - Horizontal layout.html",
       "group": "data-display",
       "viewport": "1200x689"
     },
     {
-      "path": "components/data-display/DescriptionList/DescriptionList - Stacked layout.html",
+      "path": "components/data-display/DescriptionList/Description List - Stacked layout.html",
       "group": "data-display",
       "viewport": "1200x655"
     },
     {
-      "path": "components/data-display/DescriptionItem/DescriptionItem - Copy-to-clipboard value.html",
+      "path": "components/data-display/DescriptionItem/Description Item - Copy-to-clipboard value.html",
       "group": "data-display",
       "viewport": "1200x589"
     },
@@ -1355,7 +1355,7 @@
       "viewport": "1200x635"
     },
     {
-      "path": "components/data-display/ListItem/ListItem - A row with its own control.html",
+      "path": "components/data-display/ListItem/List Item - A row with its own control.html",
       "group": "data-display",
       "viewport": "1200x900"
     },
@@ -1407,7 +1407,7 @@
     {
       "path": "components/data-display/Table/Table - The cell that names what the row opens.html",
       "group": "data-display",
-      "viewport": "1200x637"
+      "viewport": "1200x638"
     },
     {
       "path": "components/data-display/Table/Table - A cell that IS a link.html",
@@ -1472,7 +1472,7 @@
     {
       "path": "components/data-display/Table/Table - Clickable rows - drawer detail.html",
       "group": "data-display",
-      "viewport": "1200x776"
+      "viewport": "1200x777"
     },
     {
       "path": "components/data-display/Table/Table - Row actions - kebab menu.html",
@@ -1482,12 +1482,12 @@
     {
       "path": "components/data-display/Table/Table - Column picker - reorder.html",
       "group": "data-display",
-      "viewport": "1200x743"
+      "viewport": "1200x744"
     },
     {
       "path": "components/data-display/Table/Table - Resizable columns.html",
       "group": "data-display",
-      "viewport": "1200x1048"
+      "viewport": "1200x1046"
     },
     {
       "path": "components/data-display/Table/Table - Inline editing.html",
@@ -1527,7 +1527,7 @@
     {
       "path": "components/data-display/Table/Table - Truncation - full-text popover.html",
       "group": "data-display",
-      "viewport": "1200x678"
+      "viewport": "1200x677"
     },
     {
       "path": "components/data-display/Table/Table - Sticky horizontal scrollbar.html",
@@ -1542,7 +1542,7 @@
     {
       "path": "components/data-display/Table/Table - Server-side filtering.html",
       "group": "data-display",
-      "viewport": "1200x701"
+      "viewport": "1200x700"
     },
     {
       "path": "components/data-display/Table/Table - What a screen reader is told.html",
@@ -1552,7 +1552,7 @@
     {
       "path": "components/data-display/Table/Table - Virtual scroll.html",
       "group": "data-display",
-      "viewport": "1200x999"
+      "viewport": "1200x998"
     },
     {
       "path": "components/data-display/Table/Table - Lazy loading.html",
@@ -1580,7 +1580,7 @@
       "viewport": "1200x709"
     },
     {
-      "path": "components/data-display/TimelineItem/TimelineItem - Tone variants.html",
+      "path": "components/data-display/TimelineItem/Timeline Item - Tone variants.html",
       "group": "data-display",
       "viewport": "1200x667"
     },
@@ -1660,22 +1660,22 @@
       "viewport": "1200x717"
     },
     {
-      "path": "components/feedback-status/EmptyState/EmptyState - Variants.html",
+      "path": "components/feedback-status/EmptyState/Empty State - Variants.html",
       "group": "feedback-status",
       "viewport": "1200x755"
     },
     {
-      "path": "components/feedback-status/EmptyState/EmptyState - States showcase.html",
+      "path": "components/feedback-status/EmptyState/Empty State - States showcase.html",
       "group": "feedback-status",
       "viewport": "1200x1065"
     },
     {
-      "path": "components/feedback-status/LoadingOverlay/LoadingOverlay - Interactive demo.html",
+      "path": "components/feedback-status/LoadingOverlay/Loading Overlay - Interactive demo.html",
       "group": "feedback-status",
       "viewport": "1200x638"
     },
     {
-      "path": "components/feedback-status/LoadingOverlay/LoadingOverlay - The scrim stops the keyboard too.html",
+      "path": "components/feedback-status/LoadingOverlay/Loading Overlay - The scrim stops the keyboard too.html",
       "group": "feedback-status",
       "viewport": "1200x557"
     },
@@ -1700,7 +1700,7 @@
       "viewport": "1200x427"
     },
     {
-      "path": "components/feedback-status/StatusDot/StatusDot - Variants.html",
+      "path": "components/feedback-status/StatusDot/Status Dot - Variants.html",
       "group": "feedback-status",
       "viewport": "1200x517"
     },
@@ -1730,22 +1730,22 @@
       "viewport": "1200x559"
     },
     {
-      "path": "components/feedback-status/ToastRegion/ToastRegion - maxVisible queue.html",
+      "path": "components/feedback-status/ToastRegion/Toast Region - maxVisible queue.html",
       "group": "feedback-status",
       "viewport": "1200x743"
     },
     {
-      "path": "components/overlays/BottomSheet/BottomSheet - Live demo.html",
+      "path": "components/overlays/BottomSheet/Bottom Sheet - Live demo.html",
       "group": "overlays",
       "viewport": "1200x666"
     },
     {
-      "path": "components/overlays/BottomSheet/BottomSheet - Snap points.html",
+      "path": "components/overlays/BottomSheet/Bottom Sheet - Snap points.html",
       "group": "overlays",
       "viewport": "1200x551"
     },
     {
-      "path": "components/overlays/BottomSheet/BottomSheet - The home indicator needs one line from YOUR.html",
+      "path": "components/overlays/BottomSheet/Bottom Sheet - The home indicator needs one line from YOUR.html",
       "group": "overlays",
       "viewport": "1200x530"
     },
@@ -1765,22 +1765,22 @@
       "viewport": "1200x518"
     },
     {
-      "path": "components/overlays/ModalCard/ModalCard - Eyebrow - context above the title.html",
+      "path": "components/overlays/ModalCard/Modal Card - Eyebrow - context above the title.html",
       "group": "overlays",
       "viewport": "1200x915"
     },
     {
-      "path": "components/overlays/ModalCard/ModalCard - Title badge - subtitle.html",
+      "path": "components/overlays/ModalCard/Modal Card - Title badge - subtitle.html",
       "group": "overlays",
       "viewport": "1200x789"
     },
     {
-      "path": "components/overlays/ModalCard/ModalCard - Status.html",
+      "path": "components/overlays/ModalCard/Modal Card - Status.html",
       "group": "overlays",
       "viewport": "1200x1172"
     },
     {
-      "path": "components/overlays/ModalCard/ModalCard - Without dividers.html",
+      "path": "components/overlays/ModalCard/Modal Card - Without dividers.html",
       "group": "overlays",
       "viewport": "1200x933"
     },
@@ -1795,17 +1795,17 @@
       "viewport": "1200x857"
     },
     {
-      "path": "components/overlays/ModalCard/ModalCard - Variants.html",
+      "path": "components/overlays/ModalCard/Modal Card - Variants.html",
       "group": "overlays",
       "viewport": "1200x1398"
     },
     {
-      "path": "components/overlays/ModalCard/ModalCard - With form.html",
+      "path": "components/overlays/ModalCard/Modal Card - With form.html",
       "group": "overlays",
       "viewport": "1200x900"
     },
     {
-      "path": "components/overlays/ModalConfirm/ModalConfirm - Confirmation.html",
+      "path": "components/overlays/ModalConfirm/Modal Confirm - Confirmation.html",
       "group": "overlays",
       "viewport": "1200x1115"
     },
@@ -1835,57 +1835,57 @@
       "viewport": "1200x473"
     },
     {
-      "path": "components/overlays/TooltipPanel/TooltipPanel - States showcase (static specimens).html",
+      "path": "components/overlays/TooltipPanel/Tooltip Panel - States showcase (static specimens).html",
       "group": "overlays",
       "viewport": "1200x581"
     },
     {
-      "path": "components/page-structure/FilterBar/FilterBar - Sizing the +N trigger.html",
+      "path": "components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html",
       "group": "page-structure",
       "viewport": "1200x662"
     },
     {
-      "path": "components/page-structure/FilterBar/FilterBar - What the width buys.html",
+      "path": "components/page-structure/FilterBar/Filter Bar - What the width buys.html",
       "group": "page-structure",
       "viewport": "1200x556"
     },
     {
-      "path": "components/page-structure/PageFooter/PageFooter - Default.html",
+      "path": "components/page-structure/PageFooter/Page Footer - Default.html",
       "group": "page-structure",
       "viewport": "1200x525"
     },
     {
-      "path": "components/page-structure/PageFooter/PageFooter - Compact.html",
+      "path": "components/page-structure/PageFooter/Page Footer - Compact.html",
       "group": "page-structure",
       "viewport": "1200x440"
     },
     {
-      "path": "components/page-structure/PageFooter/PageFooter - Save (unsaved-changes).html",
+      "path": "components/page-structure/PageFooter/Page Footer - Save (unsaved-changes).html",
       "group": "page-structure",
       "viewport": "1200x440"
     },
     {
-      "path": "components/page-structure/PageHeader/PageHeader - Default.html",
+      "path": "components/page-structure/PageHeader/Page Header - Default.html",
       "group": "page-structure",
       "viewport": "1200x759"
     },
     {
-      "path": "components/page-structure/PageHeader/PageHeader - Compact.html",
+      "path": "components/page-structure/PageHeader/Page Header - Compact.html",
       "group": "page-structure",
       "viewport": "1200x602"
     },
     {
-      "path": "components/page-structure/PageHeader/PageHeader - With breadcrumb above title.html",
+      "path": "components/page-structure/PageHeader/Page Header - With breadcrumb above title.html",
       "group": "page-structure",
       "viewport": "1200x649"
     },
     {
-      "path": "components/page-structure/PageHeader/PageHeader - With status badge inline with title.html",
+      "path": "components/page-structure/PageHeader/Page Header - With status badge inline with title.html",
       "group": "page-structure",
       "viewport": "1200x606"
     },
     {
-      "path": "components/page-structure/PageHeader/PageHeader - With divider.html",
+      "path": "components/page-structure/PageHeader/Page Header - With divider.html",
       "group": "page-structure",
       "viewport": "1200x643"
     },
