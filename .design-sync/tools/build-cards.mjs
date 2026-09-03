@@ -194,6 +194,17 @@ const apiKeyBySelector = (() => {
  *  A block is a demo with its own `<h3 class="block-title">` and description, or a container
  *  carrying `data-for` when a set of demos is grouped without a heading of its own (Menu's item
  *  states). `owner` is the sub-component the block documents, or `''` for the chapter's own. */
+/** Template markup as a reader would hear it: tags out, entities resolved, bindings dropped. */
+const plainText = (markup) => decode(markup.replace(/<[^>]*>/g, ' '))
+  .replace(/\{\{[\s\S]*?\}\}/g, '')
+  .replace(/\s+/g, ' ')
+  // Only where the mark ENDS a word. Without the lookahead this ate the space in `the global .link`,
+  // because stripping the tags leaves the class name starting with a dot.
+  .replace(/\s+([,.;:!?)])(?=\s|$)/g, '$1')
+  .replace(/(\()\s+/g, '$1')
+  .replace(/\s+\)/g, ')')
+  .trim();
+
 const VOID_TAGS = new Set(['br', 'hr', 'img', 'input', 'meta', 'link', 'source', 'track', 'area']);
 const TAG = /<(\/?)([a-zA-Z][\w-]*)\b([^>]*)>/g;
 
@@ -231,10 +242,10 @@ function blocksOf(slug) {
       const title = decode(body.slice(opens, closes < 0 ? opens : closes).replace(/<[^>]*>/g, ' '))
         .replace(/\s+/g, ' ')
         .trim();
-      found.push({ title, owner: owner ?? '' });
+      found.push({ title, owner: owner ?? '', at: match.index });
     } else if (depth === 1 && owner !== null) {
       // A set of demos grouped without a heading of its own — Menu's item states.
-      found.push({ title: '', owner });
+      found.push({ title: '', owner, at: match.index });
     } else if (depth > 1 && (heading || owner !== null) && !insideMarkedContainer) {
       // Nested under a plain container, so the walk cannot address it: Empty-state lays four of its
       // five variants out in a `.blocks` grid. Slicing that chapter would silently drop them, so it
@@ -248,7 +259,16 @@ function blocksOf(slug) {
     }
   }
 
-  return sliceable ? found : [];
+  if (!sliceable) return [];
+
+  // The block's own first paragraph, which becomes the card's subtitle in the pane. Bounded by the
+  // NEXT block so a chapter's later prose cannot leak into an earlier card's line.
+  return found.map((block, index) => {
+    const until = index + 1 < found.length ? found[index + 1].at : body.length;
+    const paragraph = body.slice(block.at, until).match(/<p[^>]*class="[^"]*block-desc[^"]*"[^>]*>([\s\S]*?)<\/p>/);
+
+    return { ...block, desc: paragraph ? plainText(paragraph[1]) : '' };
+  });
 }
 
 // The pane fits the declared viewport into its tile — `scale = min(tileW/1200, tileH/declaredH)` —
@@ -335,13 +355,13 @@ function cardsFor(name) {
   const label = spacedName(name);
   if (owner === null && blocks.length) return [];
   if (owner === null || !blocks.length) {
-    return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+    return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '' }];
   }
 
   const mine = blocks
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => block.owner === owner);
-  if (!mine.length) return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+  if (!mine.length) return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '' }];
 
   return nameCards(label, mine, owner);
 }
@@ -358,7 +378,7 @@ function guideCardsFor(section) {
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => !block.owner);
   if (!blocks.length) {
-    return [{ file: chapter, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+    return [{ file: chapter, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '' }];
   }
 
   return nameCards(chapter, blocks, '');
@@ -370,7 +390,10 @@ function guideCardsFor(section) {
 const displayTitle = (raw) => (raw ?? '')
   .replace(/\{\{[\s\S]*?\}\}/g, '')
   .replace(/\s+/g, ' ')
-  .trim();
+  .trim()
+  // It follows a dash in `Buttons - with icon`, so it continues the line rather than starting one.
+  // Only an ordinary word is lowered: `CSV export`, `W3w`, `12-hour (AM PM)` keep their shape.
+  .replace(/^[A-Z](?=[a-z]|\s|$)/, (letter) => letter.toLowerCase());
 
 /** One card per owned block, each named `<chapter> - <block>`. */
 function nameCards(chapter, mine, owner) {
@@ -393,6 +416,7 @@ function nameCards(chapter, mine, owner) {
       ownedIndex,
       chapterPosition: block.chapterPosition,
       title: block.title,
+      desc: block.desc ?? '',
     };
   });
 }
@@ -422,13 +446,39 @@ function readDoc(name) {
   return raw.slice(front[0].length).trimStart();
 }
 
+/** The same words the card's own h2 shows, for the line the pane prints above the frame. */
+const paneTitle = (head, blockTitle) => {
+  const shown = displayTitle(blockTitle);
+
+  return shown ? `${head} - ${shown}` : head;
+};
+
 /** The card page: the ds-docs section for this component, and nothing else.
  *
  *  There is no React on this page and no per-card script. A hand-written preview per component was
  *  the previous design and the showcase drifted from the components it showed, because a specimen
  *  nobody opens is a specimen nobody checks. The docs site is looked at every day. */
-function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTable, head, block, react }) {
-  const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''} -->`;
+/** Safe inside an HTML comment attribute. The angle brackets go because a `>` ends the marker for
+ *  any parser that scans to the first one - thirteen subtitles quoting a tag or a loudness order
+ *  did exactly that - and the app's own parser cannot be inspected from here. */
+const markerValue = (value) => (value ?? '')
+  .replace(/"/g, "'")
+  .replace(/[<>]/g, '')
+  .replace(/--+/g, '-')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+/** What the pane prints ABOVE the frame. The subtitle is capped because the pane gives it one line
+ *  and a sentence that runs past it is worse than one that stops at a word. */
+const SUBTITLE_CAP = 120;
+const capped = (sentence) => (sentence.length <= SUBTITLE_CAP
+  ? sentence
+  : `${sentence.slice(0, sentence.lastIndexOf(' ', SUBTITLE_CAP))}…`);
+
+function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTable, head, block, react, title, subtitle }) {
+  const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''}`
+    + `${title ? ` name="${markerValue(title)}"` : ''}`
+    + `${subtitle ? ` subtitle="${markerValue(capped(subtitle))}"` : ''} -->`;
 
   return `${marker}
 <!doctype html>
@@ -557,18 +607,12 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTa
         if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
         if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
 
-        /* The agent reading this card writes React, and the chip names the Angular selector - a tag
-           it cannot type. The React name goes beside it rather than instead of it: the card is where
-           the two dialects meet, and an engineer translating needs the Angular one. The chip is
-           CLONED so the copy keeps Angular's encapsulation attributes and so its styling; ds-docs
-           renders one chip and is not touched. A directive has no React tag and passes null. */
-        var named = section.querySelector('docs-component-meta .chip');
-        if (REACT && named && named.parentNode) {
-          var reactChip = named.cloneNode(true);
-          var label = reactChip.querySelector('.tag') || reactChip;
-          label.textContent = '<' + REACT + ' />';
-          named.parentNode.insertBefore(reactChip, named.nextSibling);
-        }
+/* To Claude Design this is a React design system, so the chip names the React tag and only that
+           one: an agent here cannot type \`<ds-button>\`, and the Angular name is on the docs site,
+           in the \`.d.ts\` and in the README for whoever translates. Rewritten in place, so ds-docs
+           renders its own chip untouched. A directive has no React tag and passes null. */
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
         /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
            over an empty page because the chapter reported more blocks than the card could address,
            and a card that removes everything looks exactly like one that removed nothing. */
@@ -713,6 +757,8 @@ for (const name of [...byName.keys()].sort()) {
         // to the chapter's own component, and then the chapter's own h2 text is already right.
         head: card.owns ? spacedName(name) : null,
         block: displayTitle(card.title),
+        title: paneTitle(card.owns ? spacedName(name) : chapterTitleOf(section.slug), card.title),
+        subtitle: card.desc,
         // `name` IS the React name - it is what the wrapper, the declaration and the card directory
         // are called. All 85 components in the surface are elements today; an attribute selector
         // would be a directive, which has no React tag of its own.
@@ -759,6 +805,8 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
         withTable: card.ownedIndex <= 0,
         head: null,
         block: displayTitle(card.title),
+        title: paneTitle(chapterTitleOf(section.slug), card.title),
+        subtitle: card.desc,
         // A chapter with no component of its own renders no chip, so there is nothing to name.
         react: null,
       }),

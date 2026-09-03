@@ -1,4 +1,4 @@
-<!-- @dsCard group="patterns" viewport="1200x361" -->
+<!-- @dsCard group="patterns" viewport="1200x361" name="Activity - usage" -->
 <!doctype html>
 <!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
      automatic OS branch, so a host that sets it on this document flips every component's tokens
@@ -41,7 +41,7 @@
       var KEY = "";
       var TABLE = false;
       var HEAD = null;
-      var BLOCK = "Usage";
+      var BLOCK = "usage";
       var REACT = null;
       /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
          the title said "Buttons" and the lede described Button, and the card already names itself
@@ -125,18 +125,12 @@
         if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
         if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
 
-        /* The agent reading this card writes React, and the chip names the Angular selector - a tag
-           it cannot type. The React name goes beside it rather than instead of it: the card is where
-           the two dialects meet, and an engineer translating needs the Angular one. The chip is
-           CLONED so the copy keeps Angular's encapsulation attributes and so its styling; ds-docs
-           renders one chip and is not touched. A directive has no React tag and passes null. */
-        var named = section.querySelector('docs-component-meta .chip');
-        if (REACT && named && named.parentNode) {
-          var reactChip = named.cloneNode(true);
-          var label = reactChip.querySelector('.tag') || reactChip;
-          label.textContent = '<' + REACT + ' />';
-          named.parentNode.insertBefore(reactChip, named.nextSibling);
-        }
+/* To Claude Design this is a React design system, so the chip names the React tag and only that
+           one: an agent here cannot type `<ds-button>`, and the Angular name is on the docs site,
+           in the `.d.ts` and in the README for whoever translates. Rewritten in place, so ds-docs
+           renders its own chip untouched. A directive has no React tag and passes null. */
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
         /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
            over an empty page because the chapter reported more blocks than the card could address,
            and a card that removes everything looks exactly like one that removed nothing. */

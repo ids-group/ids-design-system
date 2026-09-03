@@ -44,11 +44,21 @@ const order = JSON.parse(
 ).cards;
 const cards = [];
 for (const path of order) {
-  const marker = readFileSync(join(OUT, path), 'utf8').match(/<!--\s*@dsCard([^>]*?)-->/);
+  const marker = readFileSync(join(OUT, path), 'utf8').match(/<!--\s*@dsCard([\s\S]*?)-->/);
   if (!marker) continue;
   const group = marker[1].match(/group="([^"]*)"/)?.[1];
   const viewport = marker[1].match(/viewport="([^"]*)"/)?.[1];
-  cards.push(viewport ? { path, group, viewport } : { path, group });
+  // The pane prints these two above the frame. Proved on a probe card: it reads them HERE and
+  // ignores the same words on the marker, along with `notes`, `description` and `usage`.
+  const name = marker[1].match(/name="([^"]*)"/)?.[1];
+  const subtitle = marker[1].match(/subtitle="([^"]*)"/)?.[1];
+  cards.push({
+    path,
+    group,
+    ...(viewport ? { viewport } : {}),
+    ...(name ? { name } : {}),
+    ...(subtitle ? { subtitle } : {}),
+  });
 }
 const onDisk = ['components', 'guides']
   .flatMap((root) => walk(join(OUT, root)))
