@@ -72,6 +72,11 @@
         <td class="yes">да</td><td class="yes">да</td>
         <td><b>Entry point остаётся ОДНА.</b> Меняется только то, что лежит в пакете: не один слитый FESM, а модуль на файл. <b>Ноль переписанных импортов, ноль переездов папок.</b></td>
       </tr>
+      <tr>
+        <th>G · как у Angular Material<br /><span class="chip">точки + общие чанки</span></th>
+        <td class="yes">да</td><td class="yes">да</td>
+        <td>Точки на компонент, но внутри библиотеки — <b>относительные</b> импорты, а общий код едет в <code>_*-chunk.mjs</code>. <b>ng-packagr так не умеет</b> — нужен свой rollup-проход.</td>
+      </tr>
     </tbody>
   </table>
 
@@ -175,6 +180,122 @@
     <li><b>Отступление от APF:</b> формат описывает только FESM, и заявленная причина — время сборки и парсинга. Ничто это не проверяет; сама Angular возила <code>esm2022</code> до v13.</li>
     <li><b>Не проверено:</b> поведение под SSR, и рост числа файлов на холодном старте у потребителя.</li>
   </ul>
+
+  <h2>Что именно даёт D: два конкретных примера</h2>
+
+  <h3>1. <code>@defer</code> — сегодня он молча не работает</h3>
+
+  <p>
+    Код ниже выглядит правильно и <b>компилируется без единого предупреждения</b>. Таблица всё равно
+    едет в стартовый бандл — при любой упаковке, включая F:
+  </p>
+
+<pre><code>import { TableComponent } from '@ids-group-ltd/ids-design-system';   // ← через корень
+
+@Component({
+  imports: [TableComponent],
+  template: `
+    @defer (on viewport) {
+      &lt;ds-table [columns]="cols" [data]="rows" /&gt;
+    } @placeholder {
+      &lt;ds-skeleton /&gt;
+    }
+  `,
+})</code></pre>
+
+  <p>Одна строка — и то же самое действительно откладывается:</p>
+
+<pre><code>import { TableComponent } from '@ids-group-ltd/ids-design-system/table';  // ← глубокий специфер</code></pre>
+
+  <p>
+    Замерено: <b>153 791 → 123 494 B</b> стартового бандла, файлов JS 1 → 4. Разница только в строке
+    импорта. Без точек на компонент второй строки не существует.
+  </p>
+
+  <h3>2. Material-подобный публичный API</h3>
+
+<pre><code>// сегодня — всё из корня, и корень тянет за собой всё
+import { ButtonComponent, TableComponent, DatePickerComponent }
+  from '@ids-group-ltd/ids-design-system';
+
+// как у Angular Material
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule }  from '@angular/material/table';
+
+// у нас после D
+import { ButtonComponent }     from '@ids-group-ltd/ids-design-system/button';
+import { TableComponent }      from '@ids-group-ltd/ids-design-system/table';
+import { DatePickerComponent } from '@ids-group-ltd/ids-design-system/date-picker';</code></pre>
+
+  <p>
+    Корень при этом <b>остаётся</b> и продолжает работать — фасад никто не удаляет, старые импорты не
+    ломаются. Глубокий специфер — это <b>дополнение</b>, а не замена.
+  </p>
+
+  <h2>Кто как делает на самом деле</h2>
+
+  <table>
+    <thead><tr><th>Библиотека</th><th>Форма пакета</th><th>Чем это для нас</th></tr></thead>
+    <tbody>
+      <tr>
+        <th>rxjs</th>
+        <td><b>251 несплющенный ESM-файл</b>, одна точка входа</td>
+        <td class="yes"><b>Прецедент для F.</b> Крупнейшая зависимость экосистемы возит именно то, что предлагает F</td>
+      </tr>
+      <tr>
+        <th>@angular/cdk</th>
+        <td><b>36 точек входа + 55 файлов FESM</b>, включая общие <code>_*-chunk.mjs</code></td>
+        <td>Прецедент для D — и для G</td>
+      </tr>
+      <tr>
+        <th>ng-zorro</th>
+        <td>вторичные точки входа с 7.3.0</td>
+        <td>Прецедент для D</td>
+      </tr>
+      <tr>
+        <th>Taiga UI</th>
+        <td>вторичные точки входа как основа архитектуры</td>
+        <td>Прецедент для D</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <section class="panel">
+    <h3 style="margin-top:0">G — архитектура Angular Material, и почему её нельзя просто взять</h3>
+    <p>
+      Смотрю в установленный пакет: <code>@angular/cdk/fesm2022/overlay.mjs</code> — это шим на 4,5 КБ,
+      который импортирует <code>./_overlay-module-chunk.mjs</code> (92 КБ) и соседние точки
+      <code>./scrolling.mjs</code>, <code>./bidi.mjs</code> — <b>относительными путями</b>.
+    </p>
+    <p>
+      <b>ng-packagr именно это и запрещает</b> — ради этого написано наше lint-правило
+      <code>entry-point-boundary</code>: относительный импорт через границу точки роняет сборку.
+      Material так может, потому что собирается <b>не ng-packagr</b>, а своим проходом rollup сразу по
+      всем точкам — отсюда и общие чанки, которых у ng-packagr не бывает (он гоняет rollup на каждую
+      точку отдельно).
+    </p>
+    <p style="margin-bottom:0">
+      И это не бесплатно даже для них: переход на относительные импорты уткнулся в ограничение
+      компилятора Angular — символы, реэкспортированные косвенно, переставали импортироваться, и
+      понадобился отдельный
+      <a href="https://github.com/angular/components/pull/30667">фикс на 241 строку в 9 файлах</a>.
+      <b>G даёт лучший результат по байтам, но стоит замены билд-пайплайна.</b>
+    </p>
+  </section>
+
+  <section class="panel verdict is-dead">
+    <h3 style="margin-top:0">Апстрим это чинить не будет</h3>
+    <p style="margin-bottom:0">
+      Ровно наша проблема заведена в Angular CLI дважды:
+      <a href="https://github.com/angular/angular-cli/issues/14830">#14830 «It is impossible to lazy load
+      libraries correctly»</a> и
+      <a href="https://github.com/angular/angular-cli/issues/10754">#10754 «Option to use ESM instead of
+      FESM»</a> — то есть <b>F предлагали апстриму ещё в 2018-м</b>. Второе перенаправили в
+      <a href="https://github.com/angular/angular-cli/issues/13635">#13635</a> и закрыли как
+      <b>not planned</b>. Значит это не временная дыра, которую закроет следующая мажорная версия, а
+      постоянное свойство формата — и решать его библиотеке.
+    </p>
+  </section>
 
   <p class="src">
     Механизм, замеры, фикстуры и то, что они НЕ доказывают — <code>docs/packaging-diagnosis.md</code> и
