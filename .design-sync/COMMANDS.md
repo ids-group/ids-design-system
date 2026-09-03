@@ -195,11 +195,26 @@ delete_files { planId, paths }
   was written for exactly that reason on 2026-09-03 and now names itself. The list
   belongs in the repo, and reaches the project only inside a file the build already
   writes.
-- **A finalize_plan that DECLARES the deletes does not lift the ownership check.**
-  The refusal names a "turn fence", which reads like something a plan could supply;
-  it is not. Tested 2026-09-03 with a plan whose `deletes` held the three exact
-  paths and no globs: `delete_files` answered the same 403. The fence is
-  server-side, so deleting is the owner's account and nothing else.
+- **Removing a file: every route tested, 2026-09-03, all closed.** The refusal
+  wording invites two theories and both are wrong.
+  - A finalize_plan that DECLARES the deletes does not lift it. The 403 names a
+    "turn fence", which reads like something a plan could supply; a plan whose
+    `deletes` held the three exact paths and no globs got the same 403. The fence
+    is server-side.
+  - "**bulk** delete" does not mean the batch is the problem. `delete_files` with a
+    SINGLE path got the same 403.
+  - `unregister_assets` SUCCEEDS on a non-owned project (`unregistered: 3`) and
+    removes nothing: `get_file` still returned the file byte-for-byte afterwards.
+    It clears a card registration, not a path — and these paths had none, so the
+    success is empty.
+  - There is no move or rename anywhere in the surface, so "rename it out of the
+    way" is a second file plus a blanked first.
+  - `get_project` reports `canEdit: true` with `ownerDisplayName: Mikhail`: write
+    yes, delete no. `list_projects` shows no project this account owns, and
+    `create_project` — a project the USER owns — is the only way to hold delete
+    rights.
+  - The closest thing to deletion that works is `write_files` with `data: ""`,
+    which leaves a 0-byte file.
 - **The obsolete-path pipeline, so the owner never hunts for files.**
   `.design-sync/obsolete.txt` (one project-relative path per line) is the source of
   truth in the REPO; `build-cards` renders it into the project's own `README.md`
