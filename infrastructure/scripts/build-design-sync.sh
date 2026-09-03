@@ -70,8 +70,8 @@ echo "Committed upload tree matches the build"
 # after the tree had moved on to 85.
 [ -f .design-sync/upload/_ds_manifest.json ] || { echo "Expected artifact missing: .design-sync/upload/_ds_manifest.json"; exit 1; }
 # `"path"` alone also matches brandFonts, which is how this first reported 316 against 314.
-indexed=$(grep -c '"path": "components/' .design-sync/upload/_ds_manifest.json)
-pages=$(find .design-sync/upload/components -name '*.html' | wc -l)
+indexed=$(grep -cE '"path": "(components|guides)/' .design-sync/upload/_ds_manifest.json)
+pages=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' | wc -l)
 [ "$indexed" = "$pages" ] || { echo "Manifest indexes $indexed card(s) against $pages page(s) in the tree"; exit 1; }
 echo "Manifest indexes all $indexed card(s)"
 
@@ -79,10 +79,12 @@ echo "Manifest indexes all $indexed card(s)"
 # silent - so the numbers are a build input, not an optional refinement. They come from
 # `node .design-sync/tools/measure-cards.mjs`, which needs a browser and therefore runs locally;
 # this only checks that somebody ran it for every card.
-unsized=$(grep -L 'viewport="' $(find .design-sync/upload/components -name '*.html') | wc -l)
+# `-exec ... +` rather than `$(find)`: card names carry spaces, and word-splitting the list turns
+# one card into three paths that do not exist.
+unsized=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' -exec grep -L 'viewport="' {} + | wc -l)
 [ "$unsized" = "0" ] || {
   echo "$unsized card(s) carry no viewport in their @dsCard marker:"
-  grep -L 'viewport="' $(find .design-sync/upload/components -name '*.html')
+  find .design-sync/upload/components .design-sync/upload/guides -name '*.html' -exec grep -L 'viewport="' {} +
   echo ""
   echo "Run 'node .design-sync/tools/measure-cards.mjs' and commit .design-sync/viewports.json."
   exit 1
@@ -100,7 +102,7 @@ copies=$(find .design-sync/upload/uploads -type f | wc -l)
 [ "$sources" = "$copies" ] || { echo "Pasted-image mismatch: $sources source(s) against $copies in the upload tree"; exit 1; }
 # The project's cover image. Rendered locally by build-thumbnail.mjs (it needs a browser), so all
 # CI can do is refuse to publish a tree that would blank the project tile.
-[ -f .design-sync/upload/.thumbnail ] || { echo "Expected artifact missing: .design-sync/upload/.thumbnail — run 'node .design-sync/tools/build-thumbnail.mjs'"; exit 1; }
+[ -f .design-sync/upload/.thumbnail ] || { echo "Expected artifact missing: .design-sync/upload/.thumbnail — it is copied from .design-sync/assets/thumbnail.webp"; exit 1; }
 faces=$(find .design-sync/upload/fonts -name '*.woff2' | wc -l)
 rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
 [ "$faces" = "$rules" ] || { echo "Font mismatch: $faces face file(s) against $rules @font-face rule(s) - the missing side 404s silently"; exit 1; }
@@ -111,7 +113,7 @@ echo "Self-contained: $faces face(s), React vendored, styles.css and README gene
 # A component publishes one card per documented block, so cards outnumber components — but every
 # component must still have at least one, and a declaration beside it. Eleven shipped with no card
 # at all under the design before last.
-cards=$(find .design-sync/upload/components -name '*.html' | wc -l)
+cards=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' | wc -l)
 declarations=$(find .design-sync/upload/components -name '*.d.ts' | wc -l)
 cardless=0
 for decl in $(find .design-sync/upload/components -name '*.d.ts'); do
@@ -122,5 +124,9 @@ for decl in $(find .design-sync/upload/components -name '*.d.ts'); do
   fi
 done
 [ "$cardless" = "0" ] || { echo "$cardless component(s) would ship with no card at all"; exit 1; }
-sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html | sort -u | wc -l)
+# Every chapter the bundle compiles must be on a card. Twenty-seven were not - all of Foundations,
+# Patterns and Practice - so the colour ramps, the spacing scale and the do/don't shipped inside the
+# bundle and were reachable from nothing.
+node .design-sync/tools/check-section-coverage.mjs
+sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html .design-sync/upload/guides/*/*/*.html | sort -u | wc -l)
 echo "Upload artefacts: $cards card(s) for $declarations component(s) over $sections ds-docs section(s)"

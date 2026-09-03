@@ -66,7 +66,15 @@
         for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
 
         for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
+           over an empty page because the chapter reported more blocks than the card could address,
+           and a card that removes everything looks exactly like one that removed nothing. */
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
+        }
         document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
       })();
     })();
   </script>

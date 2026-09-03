@@ -49,22 +49,44 @@ function sectionFor(name) {
   return section;
 }
 
+/** A section's template, comments stripped. Most are a `.section.html`; `practice/rules` keeps its
+ *  markup inline in the decorator, and reading only the file left that chapter with no blocks.
+ *
+ *  The comments have to go because they quote markup: Dropzone's says "every cell is a live
+ *  <ds-dropzone>", which any scan of this file reads as an element that opens and never closes. */
+function templateOf(slug) {
+  const base = join(repo, 'ds-docs/src/app/sections', slug, `${slug.split('/').pop()}.section`);
+  const read = (file) => readFileSync(file, 'utf8').replace(/<!--[\s\S]*?-->/g, '');
+  try {
+    return read(`${base}.html`);
+  } catch {
+    /* falls through to the inline template */
+  }
+  try {
+    return read(`${base}.ts`).match(/template:\s*`([\s\S]*?)`\s*[,}]/)?.[1] ?? '';
+  } catch {
+    return '';
+  }
+}
+
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', ndash: '–', mdash: '—', rarr: '→', times: '×', middot: '·' };
+const decode = (text) => text
+  .replace(/&(\w+);/g, (whole, name) => ENTITIES[name] ?? whole)
+  .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
+
+/** The chapter's own heading, which is what a card is named after. Taken from the template's
+ *  `title=` rather than the slug: the slug says `color` where the page says `Colour`, and the
+ *  page is what a reader recognises. */
+const chapterTitleOf = (slug) => decode(templateOf(slug).match(/title="([^"]*)"/)?.[1] ?? '')
+  || slug.split('/').pop();
+
 /** Which sub-components each chapter marks a block for, so a card can tell its own blocks from the
  *  chapter's. Read from the templates because the marks live there and nowhere else. */
 const markedInSection = new Map();
 for (const section of sections) {
-  const template = join(
-    repo, 'ds-docs/src/app/sections', section.slug, `${section.slug.split('/').pop()}.section.html`,
-  );
-  let html = '';
-  try {
-    html = readFileSync(template, 'utf8');
-  } catch {
-    continue;
-  }
   markedInSection.set(
     section.slug,
-    new Set([...html.matchAll(/data-for="([^"]+)"/g)].map((match) => match[1])),
+    new Set([...templateOf(section.slug).matchAll(/data-for="([^"]+)"/g)].map((match) => match[1])),
   );
 }
 
@@ -93,58 +115,107 @@ const apiKeyBySelector = (() => {
  *  A block is a demo with its own `<h3 class="block-title">` and description, or a container
  *  carrying `data-for` when a set of demos is grouped without a heading of its own (Menu's item
  *  states). `owner` is the sub-component the block documents, or `''` for the chapter's own. */
-function blocksOf(slug) {
-  const template = join(
-    repo, 'ds-docs/src/app/sections', slug, `${slug.split('/').pop()}.section.html`,
-  );
-  let html = '';
-  try {
-    html = readFileSync(template, 'utf8');
-  } catch {
-    return [];
-  }
+const VOID_TAGS = new Set(['br', 'hr', 'img', 'input', 'meta', 'link', 'source', 'track', 'area']);
+const TAG = /<(\/?)([a-zA-Z][\w-]*)\b([^>]*)>/g;
 
+function blocksOf(slug) {
+  const html = templateOf(slug);
+  const from = html.indexOf('<docs-section');
+  if (from < 0) return [];
+
+  const body = html.slice(from);
   const found = [];
-  // The whole attribute list in one group: `data-for` sits AFTER `class` on a marked heading, so a
-  // pattern that stops at `class="block-title` never sees it — and every block then read as the
-  // chapter's own, which gave Stack a card for Inline's demo.
-  const MARKER = /<h3\b([^>]*)>([\s\S]*?)<\/h3>|<(?:div|section)\b([^>]*\bdata-for="[^"]+"[^>]*)>/g;
-  for (const [, headingAttrs, headingBody, containerAttrs] of html.matchAll(MARKER)) {
-    if (headingAttrs !== undefined) {
-      if (!/class="block-title/.test(headingAttrs)) continue;
-      const title = headingBody
-        .replace(/<[^>]*>/g, ' ')
-        .replace(/&amp;/g, '&')
+  // A card slices itself by walking the section's own children, so only a DIRECT child of
+  // `<docs-section>` can be a block. Counting nested headings as blocks too is what shipped four
+  // blank Menu cards: the chapter reported seven blocks, the card could address three, and the
+  // other four sliced everything away and published a heading over an empty page.
+  let depth = 0;
+  let insideMarkedContainer = false;
+  let sliceable = true;
+
+  for (const match of body.matchAll(TAG)) {
+    const [tag, closing, name, attributes] = match;
+    if (closing) {
+      depth -= 1;
+      if (depth <= 1) insideMarkedContainer = false;
+      continue;
+    }
+
+    const heading = /class="block-title/.test(attributes);
+    const owner = attributes.match(/data-for="([^"]+)"/)?.[1] ?? null;
+    const empty = attributes.trimEnd().endsWith('/') || VOID_TAGS.has(name.toLowerCase());
+
+    if (depth === 1 && heading) {
+      // The heading's own text, which is what the card is named after.
+      const opens = match.index + tag.length;
+      const closes = body.indexOf('</h3>', opens);
+      const title = decode(body.slice(opens, closes < 0 ? opens : closes).replace(/<[^>]*>/g, ' '))
         .replace(/\s+/g, ' ')
         .trim();
-      found.push({ title, owner: headingAttrs.match(/data-for="([^"]+)"/)?.[1] ?? '' });
-    } else {
-      found.push({ title: '', owner: containerAttrs.match(/data-for="([^"]+)"/)[1] });
+      found.push({ title, owner: owner ?? '' });
+    } else if (depth === 1 && owner !== null) {
+      // A set of demos grouped without a heading of its own — Menu's item states.
+      found.push({ title: '', owner });
+    } else if (depth > 1 && (heading || owner !== null) && !insideMarkedContainer) {
+      // Nested under a plain container, so the walk cannot address it: Empty-state lays four of its
+      // five variants out in a `.blocks` grid. Slicing that chapter would silently drop them, so it
+      // publishes as one whole-chapter card instead.
+      sliceable = false;
+    }
+
+    if (!empty) {
+      if (depth === 1 && owner !== null) insideMarkedContainer = true;
+      depth += 1;
     }
   }
 
-  return found;
+  return sliceable ? found : [];
 }
 
-const MAX_SLUG = 48;
+const MAX_LABEL = 46;
 
-/** A block's title as a filename. The pane labels a card by its filename, so this is the only
- *  place a block's name reaches the outside of the card — worth keeping readable. */
-function blockSlug(title) {
+/** A block's title as a filename. The pane labels a card by its filename and nothing else, so this
+ *  string is the card's name in the UI — it is written to be read, not to be parsed.
+ *
+ *  Spaces are used because the pane accepts them (verified against the live project: a path with
+ *  spaces writes and reads back unchanged). Everything else is folded to printable ASCII: the
+ *  transport is proven for it and not for the `×` and `·` the titles actually contain, and a
+ *  rejected path would only surface as a card silently missing from the pane. */
+function blockLabel(title) {
   const words = title
+    .replace(/[×✕]/g, 'x')
+    .replace(/[·•]/g, '-')
+    .replace(/[—–]/g, '-')
+    .replace(/[’‘]/g, "'")
+    .replace(/[“”]/g, '')
     .normalize('NFKD')
-    .replace(/[^\w\s-]/g, ' ')
-    .trim()
-    .split(/[\s-]+/)
+    .replace(/[^\x20-\x7E]/g, '')
+    // Windows forbids these in a filename, and the build writes the tree to disk before it uploads.
+    .replace(/[<>:"/\\|?*]/g, ' ')
+    .split(/\s+/)
     .filter(Boolean);
+
+  // A trailing dot is dropped by Windows on write, so the file would not be where the manifest says.
+  const clean = (text) => text.replace(/[-,.:;\s]+$/, '');
+  const whole = words.join(' ');
+  if (whole.length <= MAX_LABEL) return clean(whole);
+
+  // Too long to keep: end it on a clause rather than mid-sentence. "The header slots are a reading
+  // order, not a promise" reads as a name at the comma and as a truncation two words later.
+  let cut = '';
+  for (const separator of [', ', ' - ', ': ', '; ', ' (']) {
+    const at = whole.lastIndexOf(separator, MAX_LABEL);
+    if (at > MAX_LABEL * 0.4 && at > cut.length) cut = whole.slice(0, at);
+  }
+  if (cut) return clean(cut);
 
   const kept = [];
   for (const word of words) {
-    if (kept.join('-').length + word.length + 1 > MAX_SLUG) break;
+    if (kept.join(' ').length + word.length + 1 > MAX_LABEL) break;
     kept.push(word);
   }
 
-  return kept.join('-') || 'block';
+  return clean(kept.join(' '));
 }
 
 /** The cards a component gets: one per block it owns, or one whole-chapter card when the chapter
@@ -165,29 +236,53 @@ function cardsFor(name) {
   // the parent's demos under a second name, which is the duplication this whole design removes.
   const primary = section.slug.startsWith('components/') && section.slug.slice(11) === own;
   const owner = marks.has(own) ? own : (primary ? '' : null);
-  if (owner === null || !blocks.length) return [{ file: name, owns: null, index: -1, title: '' }];
+  if (owner === null || !blocks.length) {
+    return [{ file: name, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+  }
 
   const mine = blocks
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => block.owner === owner);
   if (!mine.length) return [{ file: name, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
 
+  return nameCards(name, mine, owner);
+}
+
+/** The chapters that document no component of their own — Foundations, Patterns, Practice, and
+ *  Link, whose `ds-link` is a directive and so has no entry in the component surface.
+ *
+ *  They were compiled into the bundle from the first build and shown on nothing: 27 chapters, the
+ *  colour ramps and the spacing scale and the do/don't among them, which is most of what an agent
+ *  needs before it places a single component. */
+function guideCardsFor(section) {
+  const chapter = blockLabel(chapterTitleOf(section.slug));
+  const blocks = blocksOf(section.slug)
+    .map((block, chapterPosition) => ({ ...block, chapterPosition }))
+    .filter((block) => !block.owner);
+  if (!blocks.length) {
+    return [{ file: chapter, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+  }
+
+  return nameCards(chapter, blocks, '');
+}
+
+/** One card per owned block, each named `<chapter> - <block>`. */
+function nameCards(chapter, mine, owner) {
   const seen = new Map();
 
   return mine.map((block, ownedIndex) => {
     // A block with no heading of its own is a grouped set of demos (Menu's item states); the
-    // component's own name is the best label there is, and it needs an ordinal only if there
+    // chapter's own name is the best label there is, and it needs an ordinal only if there
     // are several.
     const base = block.title
-      ? blockSlug(block.title)
-      : (mine.length > 1 ? `states-${ownedIndex + 1}` : '');
-    const key = base || name;
-    const count = (seen.get(key) ?? 0) + 1;
-    seen.set(key, count);
-    const suffix = count > 1 ? `${base}-${count}` : base;
+      ? blockLabel(block.title)
+      : (mine.length > 1 ? `States ${ownedIndex + 1}` : '');
+    const count = (seen.get(base) ?? 0) + 1;
+    seen.set(base, count);
+    const suffix = count > 1 ? `${base} ${count}` : base;
 
     return {
-      file: suffix ? `${name}-${suffix}` : name,
+      file: suffix ? `${chapter} - ${suffix}` : chapter,
       owns: owner,
       ownedIndex,
       chapterPosition: block.chapterPosition,
@@ -288,7 +383,15 @@ ${owns === null ? '' : `  <script>
         for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
 
         for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
+           over an empty page because the chapter reported more blocks than the card could address,
+           and a card that removes everything looks exactly like one that removed nothing. */
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
+        }
         document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
       })();
     })();
   </script>
@@ -412,7 +515,47 @@ for (const name of [...byName.keys()].sort()) {
         apiKey: card.ownedIndex <= 0 ? apiKeyBySelector.get(component.selector) ?? '' : null,
       }),
     );
-    written.push({ file: card.file, path: `components/${group}/${name}/${card.file}.html` });
+    written.push({
+      file: card.file,
+      path: `components/${group}/${name}/${card.file}.html`,
+      slug: section.slug,
+      chapterPosition: card.chapterPosition,
+      name,
+    });
+  }
+}
+
+// Chapters with no component of their own. Link keeps its place among the components because that
+// is where a reader looks for it; the rest are guides and get a tree of their own.
+const claimed = new Set([...byName.keys()].map((name) => sectionFor(name).slug));
+for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
+  const group = groupOf(section);
+  const chapter = blockLabel(chapterTitleOf(section.slug));
+  const root = section.slug.startsWith('components/') ? 'components' : 'guides';
+  const dir = join(OUT, root, group, chapter);
+  mkdirSync(dir, { recursive: true });
+
+  for (const card of guideCardsFor(section)) {
+    const height = viewports.heights[card.file];
+    writeFileSync(
+      join(dir, `${card.file}.html`),
+      cardHtml({
+        name: chapter,
+        group,
+        tag: section.tag,
+        viewport: height ? `${viewports.width}x${height}` : null,
+        owns: card.owns,
+        ownedIndex: card.ownedIndex,
+        apiKey: card.ownedIndex <= 0 ? '' : null,
+      }),
+    );
+    written.push({
+      file: card.file,
+      path: `${root}/${group}/${chapter}/${card.file}.html`,
+      slug: section.slug,
+      chapterPosition: card.chapterPosition,
+      name: chapter,
+    });
   }
 }
 
@@ -421,19 +564,12 @@ for (const name of [...byName.keys()].sort()) {
 // build-manifest, because walking the built tree only ever yields alphabetical, which put Button's
 // "Color × variant" nowhere near the top of the Buttons chapter where it opens.
 const sectionOrder = new Map(sections.map((section, index) => [section.slug, index]));
-const ordered = [];
-for (const name of byName.keys()) {
-  const section = sectionFor(name);
-  const group = groupOf(section);
-  for (const card of cardsFor(name)) {
-    ordered.push({
-      path: `components/${group}/${name}/${card.file}.html`,
-      section: sectionOrder.get(section.slug) ?? Number.MAX_SAFE_INTEGER,
-      block: card.chapterPosition < 0 ? Number.MAX_SAFE_INTEGER : card.chapterPosition,
-      name,
-    });
-  }
-}
+const ordered = written.map((card) => ({
+  path: card.path,
+  section: sectionOrder.get(card.slug) ?? Number.MAX_SAFE_INTEGER,
+  block: card.chapterPosition < 0 ? Number.MAX_SAFE_INTEGER : card.chapterPosition,
+  name: card.name,
+}));
 ordered.sort((a, b) => a.section - b.section || a.block - b.block || a.name.localeCompare(b.name));
 writeFileSync(
   join(elements, 'gen', 'cards.json'),
@@ -509,7 +645,7 @@ writeFileSync(
   readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8'),
 );
 
-const distinctSections = new Set([...byName.keys()].map((name) => sectionFor(name).slug));
+const distinctSections = new Set(written.map((card) => card.slug));
 console.log(
   `✓ ${written.length} card(s) over ${distinctSections.size} ds-docs section(s)`
     + ` + ${byName.size} declaration(s) + ${readdirSync(pasted).length} pasted image(s)`

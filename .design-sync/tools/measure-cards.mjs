@@ -21,7 +21,7 @@
 import { createServer } from 'node:http';
 import { execFile } from 'node:child_process';
 import {
-  existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync,
+  existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, extname, join, resolve } from 'node:path';
@@ -54,25 +54,22 @@ const TYPES = {
   '.png': 'image/png',
 };
 
-// Every .html under a component directory: a component publishes one card per documented block,
-// so the file name is `<Component>-<block>.html` and there is no card named after the component.
+// The list build-cards wrote, not a walk of the tree: cards live under `components/` and `guides/`
+// and are named after the block they show, so any shape assumed here would be a second opinion
+// about the layout — and the walk that assumed `<Component>/<Component>.html` did exactly that and
+// found nothing once the names changed.
 function cards() {
-  const found = [];
-  const groups = join(OUT, 'components');
-  for (const group of readdirSync(groups)) {
-    for (const component of readdirSync(join(groups, group))) {
-      const dir = join(groups, group, component);
-      for (const entry of readdirSync(dir)) {
-        if (!entry.endsWith('.html') || !statSync(join(dir, entry)).isFile()) continue;
-        found.push({
-          name: entry.replace(/\.html$/, ''),
-          url: `/components/${group}/${component}/${entry}`,
-        });
-      }
-    }
-  }
+  const listed = JSON.parse(
+    readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8'),
+  ).cards;
 
-  return found.sort((a, b) => a.name.localeCompare(b.name));
+  return listed
+    .map((path) => ({
+      name: path.split('/').pop().replace(/\.html$/, ''),
+      // Card names carry spaces, so the request line needs escaping; the server decodes it back.
+      url: `/${path.split('/').map(encodeURIComponent).join('/')}`,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // Injected into the card itself: it reports the height through the page TITLE, which --dump-dom
@@ -89,7 +86,8 @@ const REPORTER = `
       if ((!rendered || (needsSlice && !slices)) && Date.now() - t0 < 20000) {
         return setTimeout(settle, 50);
       }
-      document.title = 'H=' + (page ? page.offsetHeight : 0);
+      var kept = document.documentElement.getAttribute('data-ds-kept');
+      document.title = 'H=' + (page ? page.offsetHeight : 0) + ';K=' + (kept === null ? '-' : kept);
     })();
   })();
 </script>
@@ -140,19 +138,30 @@ function measure(card) {
         '--dump-dom', `http://127.0.0.1:${PORT}${card.url}`,
       ],
       { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
-      (error, stdout) => done(error ? 0 : Number(stdout.match(/<title>H=(\d+)<\/title>/)?.[1] ?? 0)),
+      (error, stdout) => {
+        const reported = error ? null : stdout.match(/<title>H=(\d+);K=(\d+|-)<\/title>/);
+
+        return done({
+          height: Number(reported?.[1] ?? 0),
+          kept: reported?.[2] === '-' ? null : Number(reported?.[2] ?? 0),
+        });
+      },
     );
   });
 }
+
+const blank = [];
 
 let next = 0;
 let finished = 0;
 async function lane() {
   while (next < all.length) {
     const card = all[next++];
-    heights[card.name] = await measure(card);
+    const { height, kept } = await measure(card);
+    heights[card.name] = height;
+    if (kept === 0) blank.push(card.name);
     finished += 1;
-    process.stderr.write(`  ${finished}/${all.length} ${card.name} = ${heights[card.name]}px        \r`);
+    process.stderr.write(`  ${finished}/${all.length} ${card.name} = ${height}px        \r`);
   }
 }
 
@@ -163,9 +172,28 @@ try {
   rmSync(profile, { recursive: true, force: true });
 }
 
-const missing = Object.entries(heights).filter(([, value]) => !value).map(([name]) => name);
+// A card that renders nothing still has a height: the chapter's heading and lede are the card's own
+// chrome and come to 144px. Every one of 418 cards measured exactly that against a half-built
+// bundle, and the run passed, because none of them was zero. The smallest card that has ever
+// rendered its block is 349px, so anything under this floor did not render one.
+const EMPTY_CARD = 250;
+
+// A card that sliced its own content away still renders a heading and a lede, so it is 371px, not
+// 144px, and no height threshold separates it from a small real card. The card counts what survived
+// its slice; zero means it published a title over an empty page. Four Menu cards did.
+if (blank.length) {
+  console.error(`\n✗ ${blank.length} card(s) sliced away everything they were meant to show:`);
+  for (const name of blank) console.error(`    ${name}`);
+  process.exit(1);
+}
+
+const missing = Object.entries(heights).filter(([, value]) => value < EMPTY_CARD);
 if (missing.length) {
-  console.error(`\n✗ ${missing.length} card(s) measured nothing: ${missing.join(', ')}`);
+  console.error(`\n✗ ${missing.length} card(s) rendered no block (under ${EMPTY_CARD}px):`);
+  for (const [name, value] of missing.slice(0, 12)) console.error(`    ${value}px  ${name}`);
+  if (missing.length > 12) console.error(`    … and ${missing.length - 12} more`);
+  console.error('\nA whole run at one small height means the bundle is stale: rebuild it with'
+    + ' `bun run build:elements` before measuring.');
   process.exit(1);
 }
 

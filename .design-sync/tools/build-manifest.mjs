@@ -50,7 +50,9 @@ for (const path of order) {
   const viewport = marker[1].match(/viewport="([^"]*)"/)?.[1];
   cards.push(viewport ? { path, group, viewport } : { path, group });
 }
-const onDisk = walk(join(OUT, 'components')).filter((file) => file.endsWith('.html')).length;
+const onDisk = ['components', 'guides']
+  .flatMap((root) => walk(join(OUT, root)))
+  .filter((file) => file.endsWith('.html')).length;
 if (cards.length !== onDisk) {
   throw new Error(`cards.json lists ${cards.length} card(s) against ${onDisk} on disk`);
 }
