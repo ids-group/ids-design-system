@@ -251,6 +251,32 @@ delete_files { planId, paths }
 - Never wholesale-replace: sync one component at a time and diff against
   `list_files` first.
 
+## The credential CI would need, and what is actually missing
+
+Corrected 2026-09-03. The earlier answer here was "no documented service credential, therefore
+impossible", and the second half does not follow from the first. `~/.claude/.credentials.json` holds
+a `designOauth` entry beside `claudeAiOauth`:
+
+    accessToken   108 chars
+    refreshToken  108 chars
+    expiresAt     epoch ms - the live one lasted about a day
+    scopes        ["user:design:read", "user:design:write"]
+    clientId      36 chars
+
+So the transport is reachable from anywhere that can hold a secret: refresh with `clientId` +
+`refreshToken`, then speak MCP over HTTP to `https://api.anthropic.com/v1/design/mcp` with the
+access token as a bearer. `/design-login` is only the interactive way to MINT that pair, not the
+only way to use it.
+
+Two things stand in the way, and neither is "no credential":
+
+- **It is a person's identity, not a service's.** The token carries `user:design:write` for a real
+  account, so a pipeline holding it acts as that person on every project they can write to. There is
+  no service account to scope down to one project.
+- **Refresh-token rotation is unverified.** If a refresh returns a NEW refresh token, CI must write
+  it back somewhere durable; a pipeline secret it cannot update means the second run fails. Test
+  this before building anything on it.
+
 ## Why the upload is not in the pipeline
 
 Investigated 2026-09-02. The short answer is that CI cannot hold the approval, and the
