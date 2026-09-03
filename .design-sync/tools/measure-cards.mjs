@@ -87,7 +87,14 @@ const REPORTER = `
         return setTimeout(settle, 50);
       }
       var kept = document.documentElement.getAttribute('data-ds-kept');
-      document.title = 'H=' + (page ? page.offsetHeight : 0) + ';K=' + (kept === null ? '-' : kept);
+      // Web fonts land AFTER the section renders, and Mulish is taller than the fallback: measuring
+      // on sight came out 20px short on twenty-two cards, which then declared a viewport the pane
+      // had to scroll. Found by measuring a card twice, before and after fonts.ready.
+      document.fonts.ready.then(function () {
+        setTimeout(function () {
+          document.title = 'H=' + (page ? page.offsetHeight : 0) + ';K=' + (kept === null ? '-' : kept);
+        }, 50);
+      });
     })();
   })();
 </script>

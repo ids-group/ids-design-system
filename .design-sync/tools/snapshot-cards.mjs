@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Freezes every card that does not need to be live into static HTML.
+// Freezes every card that does not need to be live into static HTML, then minifies the result.
 //
 // A card is a whole document that downloads a 2.12 MB bundle and boots its own Angular application,
 // and the pane shows a grid of them. Measured on this tree: 89 of the 90 custom-element definitions
@@ -30,6 +30,7 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
 const OUT = join(syncDir, 'upload');
+const SHARED_CSS = '_ds_cards.css';
 const PORT = 4579;
 const WIDTH = 1200;
 const FRAME_HEIGHT = 24000;
@@ -66,6 +67,35 @@ const chapterOf = (html) => {
 
 const cards = JSON.parse(readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8')).cards;
 
+// Template indentation reaches the snapshot as real text nodes. Collapsing it with a regexp over
+// the file would corrupt the places where whitespace is content - `white-space: pre` on the mono
+// type specimen, `pre-wrap` on the breadcrumb separator and the token tiles, `pre-line` in the token
+// reference - so it is collapsed HERE, in the page, where the computed style says which is which.
+// A run collapsed to ONE space renders identically: that is what the browser does with it anyway.
+const TIDY = `
+<script>
+  (function () {
+    var t0 = Date.now();
+    (function ready() {
+      if (!document.documentElement.hasAttribute('data-ds-sliced') && Date.now() - t0 < 20000) {
+        return setTimeout(ready, 25);
+      }
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      var pending = [];
+      for (var node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (!/[\n\t]|  /.test(node.nodeValue)) continue;
+        var mode = getComputedStyle(node.parentElement).whiteSpace;
+        if (mode !== 'normal' && mode !== 'nowrap') continue;
+        pending.push(node);
+      }
+      for (var i = 0; i < pending.length; i++) {
+        pending[i].nodeValue = pending[i].nodeValue.replace(/\s+/g, ' ');
+      }
+      document.documentElement.setAttribute('data-ds-tidied', String(pending.length));
+    })();
+  })();
+</script>`;
+
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.json': 'application/json', '.md': 'text/plain', '.png': 'image/png' };
 const server = createServer((request, response) => {
   const url = decodeURIComponent(request.url.split('?')[0]);
@@ -75,7 +105,12 @@ const server = createServer((request, response) => {
 
     return response.end('nf');
   }
-  response.writeHead(200, { 'Content-Type': url.endsWith('.html') ? 'text/html' : (TYPES[extname(file)] ?? 'application/octet-stream') });
+  if (url.endsWith('.html')) {
+    response.writeHead(200, { 'Content-Type': 'text/html' });
+
+    return response.end(readFileSync(file, 'utf8') + TIDY);
+  }
+  response.writeHead(200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' });
 
   return response.end(readFileSync(file));
 });
@@ -99,11 +134,10 @@ server.listen(PORT);
 const profile = mkdtempSync(join(tmpdir(), 'ds-snapshot-'));
 
 const kept = [];
-const frozen = [];
 const failed = [];
+const snapshots = new Map();
 const queue = cards.filter((path) => {
-  const html = readFileSync(join(OUT, path), 'utf8');
-  const chapter = chapterOf(html);
+  const chapter = chapterOf(readFileSync(join(OUT, path), 'utf8'));
   if (chapter && live.has(chapter)) {
     kept.push(path);
 
@@ -117,23 +151,15 @@ let next = 0;
 async function lane() {
   while (next < queue.length) {
     const path = queue[next++];
-    const source = readFileSync(join(OUT, path), 'utf8');
-    // Everything before `<!doctype`: the @dsCard marker lives there and a DOM dump starts at
-    // `<html>`, so without this the card would vanish from the manifest the next build reads.
-    const marker = source.slice(0, source.indexOf('<!doctype'));
     const dom = await render(path);
-    // `data-ds-sliced` is set by the card's own script when it finishes. Without it the page was
-    // caught mid-boot and the snapshot would freeze a half-built section.
-    if (!dom.includes('data-ds-sliced')) {
+    // `data-ds-tidied` is the last thing set, after the card's own script has finished slicing.
+    // Without it the page was caught mid-boot and the snapshot would freeze a half-built section.
+    if (!dom.includes('data-ds-tidied')) {
       failed.push(path);
       continue;
     }
-    writeFileSync(
-      join(OUT, path),
-      marker + dom.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').replace(/\n{3,}/g, '\n\n'),
-    );
-    frozen.push(path);
-    process.stderr.write(`  ${frozen.length + failed.length}/${queue.length} ${path.split('/').pop()}        \r`);
+    snapshots.set(path, dom);
+    process.stderr.write(`  rendered ${snapshots.size + failed.length}/${queue.length}        \r`);
   }
 }
 
@@ -146,12 +172,75 @@ try {
 
 process.stderr.write('\r'.padEnd(90));
 if (failed.length) {
-  console.error(`\n✗ ${failed.length} card(s) never finished rendering, so they were left live:`);
+  console.error(`\n✗ ${failed.length} card(s) never finished rendering, so nothing was written:`);
   for (const path of failed.slice(0, 10)) console.error(`    ${path}`);
   process.exit(1);
 }
 
+// Angular inlines a component's styles into every document that renders it, so the same block
+// arrives in card after card: 4005 style tags across the tree, 190 of them distinct, 10.3 MB inlined
+// against 473 KB of union. They are scoped by `_ngcontent`/`_nghost` attributes and therefore
+// position-independent, so concatenating them into one linked sheet is safe - and the browser then
+// fetches it once for the whole grid instead of parsing 27 KB inside each card.
+const isComponentStyle = (body) => body.includes('_nghost-') || body.includes('_ngcontent-');
+
+const blocks = [];
+for (const dom of snapshots.values()) {
+  for (const [, body] of dom.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
+    if (isComponentStyle(body) && !blocks.includes(body)) blocks.push(body);
+  }
+}
+
+// Renamed across the sheet and every card in one pass: the attribute IS the scope, so a rename
+// that reaches only one of them silently unstyles the component.
+const ids = new Map();
+const shorten = (text) => text.replace(/ng-c\d+/g, (id) => {
+  if (!ids.has(id)) ids.set(id, `c${ids.size.toString(36)}`);
+
+  return ids.get(id);
+});
+
+const sheet = shorten(blocks.join('\n').replace(/@charset "UTF-8";/g, ''));
+writeFileSync(join(OUT, SHARED_CSS), `${sheet.trim()}\n`);
+
+let before = 0;
+let after = 0;
+for (const [path, dom] of snapshots) {
+  const source = readFileSync(join(OUT, path), 'utf8');
+  // Everything before `<!doctype`: the @dsCard marker lives there and a DOM dump starts at
+  // `<html>`, so without this the card would vanish from the manifest the next build reads.
+  const marker = source.slice(0, source.indexOf('<!doctype'));
+  before += Buffer.byteLength(source);
+
+  let html = dom.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+  let linked = false;
+  html = html.replace(/<style[^>]*>([\s\S]*?)<\/style>/g, (whole, body) => {
+    if (!isComponentStyle(body)) return whole;
+    if (linked) return '';
+    linked = true;
+
+    return `<link rel="stylesheet" href="../../../${SHARED_CSS}">`;
+  });
+  html = shorten(html)
+    // The card's own comments explain the LIVE card to whoever reads the generator's output; a
+    // frozen card is generated output that nobody edits, and they are in all 376 of them.
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\sng-version="[^"]*"/g, '')
+    .replace(/\sdata-ds-(?:tidied|sliced|kept)="[^"]*"/g, '');
+  // No newline squashing over the file: a regexp cannot see that it is inside `<pre>`. One that did
+  // ate the indentation of the SQL sample in the mono type specimen and cost the card a line. The
+  // in-page pass above is the only whitespace touched, and it asks the computed style first.
+
+  const written = marker + html;
+  after += Buffer.byteLength(written);
+  writeFileSync(join(OUT, path), written);
+}
+
+const kb = (bytes) => `${Math.round(bytes / 1024)} KB`;
 console.log(
-  `\n✓ ${frozen.length} card(s) frozen to static HTML, ${kept.length} left live`
-  + ` (${[...live].join(', ')})`,
+  `\n✓ ${snapshots.size} card(s) frozen to static HTML, ${kept.length} left live`
+  + ` (${[...live].join(', ')})`
+  + `\n  ${blocks.length} distinct component style block(s) → ${SHARED_CSS} (${kb(Buffer.byteLength(sheet))}, fetched once)`
+  + `\n  ${ids.size} Angular component id(s) shortened`
+  + `\n  cards ${kb(before)} → ${kb(after)}`,
 );
