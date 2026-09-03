@@ -33,6 +33,7 @@ node tools/check-color-families.mjs
 echo "===== delete-table parity ====="
 node tools/check-tools-parse.mjs
 node tools/check-delete-tables.mjs
+node tools/check-design-sync-log.mjs
 
 # CHANGELOG.md and the manifests go into the tarball on a public registry, so a client's name
 # or a `tools/` path in them reaches everyone. Prose review cannot hold this line: the writing
