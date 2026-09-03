@@ -183,6 +183,9 @@ const MAX_LABEL = 46;
  *  rejected path would only surface as a card silently missing from the pane. */
 function blockLabel(title) {
   const words = title
+    // A binding in a heading is a value at runtime and a name here, so `Library ({{ names.length }})`
+    // would have gone up as the card's own label. The parentheses go with it.
+    .replace(/\(?\s*\{\{[^}]*\}\}\s*\)?/g, '')
     .replace(/[×✕]/g, 'x')
     .replace(/[·•]/g, '-')
     .replace(/[—–]/g, '-')
