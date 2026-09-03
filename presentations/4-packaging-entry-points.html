@@ -1,7 +1,7 @@
 <meta charset="utf-8">
-<title>Одна entry point — и четыре выхода</title>
+<title>Одна entry point — и пять выходов</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/packaging-diagnosis.md - docs/packaging-chunking-audit.md - вариант B снят как несобираемый, живой выбор A/D">
+<meta name="ds-deck-evidence" content="docs/packaging-diagnosis.md - docs/packaging-chunking-audit.md - замеры .claude/local/{bundle,scale}-probe, вариант F проверен на настоящей библиотеке">
 <link rel="stylesheet" href="ds.css">
 <link rel="stylesheet" href="deck.css">
 
@@ -11,295 +11,168 @@
       <span class="chip is-open">нужен вердикт</span>
       <span class="chip">MBP-133</span>
     </div>
-    <h1>Одна entry point — и четыре выхода</h1>
+    <h1>Одна entry point — и пять выходов</h1>
     <p class="lede">
-      <b>Проблема.</b> У библиотеки один <code>entryFile</code> → один FESM-модуль. Модуль — атом
-      бандлера, разрезать пополам нельзя. Поэтому <b>любой</b> eager-символ тянет в стартовый бандл
-      всё, что приложение использует хоть где-нибудь — включая компоненты только для ленивых роутов.
+      <b>Проблема.</b> Библиотека — один слитый FESM-модуль. Модуль неделим, поэтому <b>любой</b>
+      eager-символ тянет в стартовый бандл всё, что приложение использует хоть где-нибудь.
+      Tree-shaking при этом работает: неиспользуемое выбрасывается. Сломано <b>размещение</b>.
     </p>
   </header>
 
+  <h2>Стартовый бандл, настоящая библиотека</h2>
+
+  <p>
+    Обе формы в одной сборке, gzip. <span style="color:#5b6b8c">Серое</span> — пол приложения без DS
+    (59 980 B), он одинаков везде. <span style="color:#db1f1f">Красное</span> и
+    <span style="color:#22a33a">зелёное</span> — доля DS.
+  </p>
+
+  <div class="chart">
+    <div class="grp">Eager-корень трогает три сервиса</div>
+    <div class="row"><span class="k">сплющено, сегодня</span>
+      <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg cost" style="width:68.6%"></span></span>
+      <span class="v">195 КБ</span></div>
+    <div class="row"><span class="k">F — не сплющивать</span>
+      <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg win" style="width:11.8%"></span></span>
+      <span class="v">82 КБ</span></div>
+
+    <div class="grp">Eager-корень — app-shell</div>
+    <div class="row"><span class="k">сплющено, сегодня</span>
+      <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg cost" style="width:70.6%"></span></span>
+      <span class="v">199 КБ</span></div>
+    <div class="row"><span class="k">F — не сплющивать</span>
+      <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg win" style="width:24.6%"></span></span>
+      <span class="v">108 КБ</span></div>
+
+    <div class="grp">Eager-корень — один компонент</div>
+    <div class="row"><span class="k">сплющено, сегодня</span>
+      <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg cost" style="width:66.2%"></span></span>
+      <span class="v">191 КБ</span></div>
+    <div class="row"><span class="k">F — не сплющивать</span>
+      <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg win" style="width:6.9%"></span></span>
+      <span class="v">72 КБ</span></div>
+  </div>
+
   <div class="kpis">
-    <div class="kpi">
-      <span class="n is-bad">+135 744 B</span>
-      <span class="k">gzip в стартовый бандл от одного <code>inject(ToastService)</code></span>
+    <div class="kpi"><span class="n is-good">−83%</span><span class="k">доля DS при eager-сервисе: 140 → 24 КБ</span></div>
+    <div class="kpi"><span class="n is-good">−65%</span><span class="k">при eager-шелле — случай, который трёхслойка не чинит</span></div>
+    <div class="kpi"><span class="n">189 B → 503 КБ</span><span class="k">ленивый чанк перестаёт схлопываться</span></div>
+  </div>
+
+  <h2>Куда попадают компоненты</h2>
+
+  <div class="lands">
+    <div class="col">
+      <h4>Сегодня — один FESM</h4>
+      <div class="box eager">СТАРТОВЫЙ БАНДЛ<small>кнопка · таблица · date-picker · дерево · и ещё 8 тяжёлых</small></div>
+      <div class="box lazy">ленивый чанк<small>189 байт — пустышка</small></div>
     </div>
-    <div class="kpi">
-      <span class="n">566 761 → 189 B</span>
-      <span class="k">ленивый чанк схлопывается в ноль</span>
-    </div>
-    <div class="kpi">
-      <span class="n">2 519 B</span>
-      <span class="k">разброс между темой, конфигом, кнопкой и сервисом — <b>не важно, что импортировать</b></span>
+    <div class="col">
+      <h4>F — модуль на файл</h4>
+      <div class="box eager">СТАРТОВЫЙ БАНДЛ<small>только то, что нужно eager-но</small></div>
+      <div class="box lazy">ленивый чанк<small>11 тяжёлых компонентов, 503 КБ</small></div>
     </div>
   </div>
 
-  <p>
-    Tree-shaking при этом <b>работает</b>: вход стоит 5,6 КБ, 52 неиспользуемых компонента стоят 0.
-    Сломано <b>размещение по чанкам</b>. Внутренний рефакторинг не сдвинет ни байта, пока entry point
-    одна.
-  </p>
+  <h2>Что каждый вариант чинит</h2>
 
-  <h2>Варианты</h2>
-
-  <table>
+  <table class="matrix">
     <thead>
-      <tr><th>Вариант</th><th>Размещение</th><th>Tree-shaking</th><th>Цена</th></tr>
+      <tr><th></th><th class="opt">A<br /><small>ничего</small></th><th class="opt">C<br /><small>import() у&nbsp;потребителя</small></th><th class="opt">D<br /><small>точка на&nbsp;компонент</small></th><th class="opt">F<br /><small>не&nbsp;сплющивать</small></th><th class="opt">G<br /><small>как&nbsp;Material</small></th></tr>
     </thead>
     <tbody>
-      <tr>
-        <th>A · ничего</th>
-        <td class="no">нет</td><td class="yes">да</td>
-        <td>Роуты и так ленивые — чанк приедет с первым роутом. Но каждый потребитель открывает это заново.</td>
-      </tr>
-      <tr class="dead">
-        <th>B · одна services-точка</th>
-        <td class="no">—</td><td class="no">—</td>
-        <td><b>Не собирается.</b> ng-packagr запрещает циклы между точками, а services обязана владеть <code>button</code>/<code>icon</code>/<code>spinner</code>.</td>
-      </tr>
-      <tr>
-        <th>C · <code>await import()</code> у потребителя</th>
-        <td class="yes">да</td><td class="no">нет</td>
-        <td><b>+50%</b> на отложенном чанке. И переоткрывать в каждом проекте.</td>
-      </tr>
-      <tr>
-        <th>D · точка на компонент</th>
-        <td class="yes">да</td><td class="yes">да</td>
-        <td>Рефакторинг на 71 папку. <b>Потребитель не меняет ни одного импорта</b> — корень остаётся фасадом.</td>
-      </tr>
-      <tr class="pick">
-        <th>F · не сплющивать пакет<br /><span class="chip is-accent">новое 2026-09-03</span></th>
-        <td class="yes">да</td><td class="yes">да</td>
-        <td><b>Entry point остаётся ОДНА.</b> Меняется только то, что лежит в пакете: не один слитый FESM, а модуль на файл. <b>Ноль переписанных импортов, ноль переездов папок.</b></td>
-      </tr>
-      <tr>
-        <th>G · как у Angular Material<br /><span class="chip">точки + общие чанки</span></th>
-        <td class="yes">да</td><td class="yes">да</td>
-        <td>Точки на компонент, но внутри библиотеки — <b>относительные</b> импорты, а общий код едет в <code>_*-chunk.mjs</code>. <b>ng-packagr так не умеет</b> — нужен свой rollup-проход.</td>
-      </tr>
+      <tr><th>Размещение по чанкам</th><td class="bad">нет</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
+      <tr><th>Tree-shaking сохраняется</th><td class="ok">да</td><td class="bad">−50%</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
+      <tr><th>Случай eager-шелла</th><td class="bad">нет</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
+      <tr><th><code>@defer</code> через корень</th><td class="bad">нет</td><td class="bad">нет</td><td class="ok">да<br /><small>глубокий специфер</small></td><td class="bad">нет</td><td class="ok">да</td></tr>
+      <tr><th>Потребитель не меняет импорты</th><td class="ok">да</td><td class="bad">нет</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
+      <tr><th>Собирается нашим ng-packagr</th><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td><td class="mid">+ шаг</td><td class="bad">нет</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Во что обходится</h2>
+
+  <table class="matrix">
+    <thead>
+      <tr><th></th><th class="opt">A</th><th class="opt">C</th><th class="opt">D</th><th class="opt">F</th><th class="opt">G</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Переписать импортов в библиотеке</th><td>0</td><td>0</td><td class="bad">307</td><td class="ok">0</td><td class="bad">307</td></tr>
+      <tr><th>Новых <code>ng-package.json</code></th><td>0</td><td>0</td><td class="bad">~75</td><td class="ok">0</td><td class="bad">~75</td></tr>
+      <tr><th>Переехать папок компонентов</th><td>0</td><td>0</td><td>0…71</td><td class="ok">0</td><td>0…71</td></tr>
+      <tr><th>Замена билд-пайплайна</th><td>нет</td><td>нет</td><td>нет</td><td class="mid">шаг сборки</td><td class="bad">свой rollup</td></tr>
+      <tr><th>Работа на стороне потребителя</th><td class="bad">каждый сам</td><td class="bad">каждый сам</td><td>нет</td><td>нет</td><td>нет</td></tr>
     </tbody>
   </table>
 
   <section class="panel verdict">
-    <h2 style="margin-top:0">Рекомендация: сначала F, потом D — если понадобится</h2>
-    <p>
-      <b>F даёт тот же результат, что 61 entry point — побайтово</b>, и стоит один шаг сборки вместо
-      307 переписанных импортов. Если после него понадобятся короткие специферы (для
-      <code>@defer</code> или ради Material-подобного API), D делается сверху и уже не срочно.
-      Трёх слоёв по-прежнему недостаточно: eager-шелл затягивает компонентный слой целиком обратно.
-    </p>
-    <ul class="facts">
-      <li><b>Приз F, измеренный:</b> доля DS в стартовом бандле <b>139 971 → 24 104 B gzip, −83%</b> для eager-сервиса и <b>−65%</b> для eager-шелла. Для D приз тот же — у него другая цена.</li>
-      <li><b>Одно исключение для потребителя:</b> внутри <code>@defer</code> нужен глубокий специфер, иначе не отложится ничего (<a href="https://github.com/angular/angular/issues/52554">angular#52554</a>).</li>
-      <li><b>node10 не ломается.</b> ng-packagr сам эмитит совместимостную заглушку на каждую точку.</li>
-    </ul>
+    <h2 style="margin-top:0">Рекомендация: F сейчас, D потом — если понадобится</h2>
     <p style="margin-bottom:0">
-      <b>Что бы это изменило:</b> реальный per-component разрез окажется дороже, чем предсказала фикстура.
+      F даёт весь выигрыш по байтам за один шаг сборки. D добавляет сверху только
+      <b><code>@defer</code> и Material-подобные специферы</b> — и это уже не срочно, потому что
+      корень-фасад остаётся и старые импорты не ломаются.
     </p>
   </section>
 
-  <h2>Замер F на настоящей библиотеке</h2>
+  <h2>Единственное, что D даёт сверх F</h2>
 
-  <p>
-    Библиотека собрана <code>ngc</code> с <code>compilationMode: partial</code> в 256 модулей вместо
-    одного FESM, специфер и <code>exports</code> те же. Прогон — фикстура
-    <code>.claude/local/bundle-probe</code>, <b>обе формы в одной сборке</b>, тяжёлые компоненты за
-    ленивым роутом.
-  </p>
-
-  <table>
-    <thead>
-      <tr><th>Что импортирует eager-корень</th><th class="num">сплющено, gzip</th><th class="num">F, gzip</th><th class="num">Δ</th><th>тяжёлых в стартовом</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>ничего из DS — контроль</th><td class="num">59 980</td><td class="num">59 980</td><td class="num">0</td><td class="yes">0/11 → 0/11</td></tr>
-      <tr class="pick"><th>три сервиса (<code>ToastService</code> и др.)</th><td class="num">199 951</td><td class="num"><b>84 084</b></td><td class="num">−115 867</td><td><span class="no">11/11</span> → <span class="yes">0/11</span></td></tr>
-      <tr><th>app-shell</th><td class="num">204 185</td><td class="num"><b>110 113</b></td><td class="num">−94 072</td><td><span class="no">11/11</span> → <span class="yes">0/11</span></td></tr>
-      <tr><th>один компонент</th><td class="num">195 128</td><td class="num"><b>74 060</b></td><td class="num">−121 068</td><td><span class="no">11/11</span> → <span class="yes">0/11</span></td></tr>
-    </tbody>
-  </table>
-
-  <p>
-    Доля DS в стартовом бандле, поверх DS-свободного пола в 59 980 B:
-    <b>139 971 → 24 104 B gzip — −83%</b> для eager-сервиса, <b>−65%</b> для app-shell,
-    <b>−90%</b> для одного компонента. <b>Это не модель, а замер</b>: тот самый like-for-like
-    контроль, который до сих пор нельзя было построить, потому что при одной сплющенной точке
-    <code>inject(ToastService)</code> тянет всё.
-  </p>
-
-  <p>
-    Ленивый чанк перестаёт схлопываться: <b>189 B → 503 126 B</b>. Компоненты возвращаются туда, где
-    им место. Заодно F чинит и <b>случай eager-шелла</b>, который трёхслойное разбиение не чинит.
-  </p>
-
-  <section class="panel verdict is-dead">
-    <h3 style="margin-top:0">Обратная сторона, и её надо знать до решения</h3>
-    <p>
-      <b>Приложению, которое использует библиотеку целиком и eager-но, F делает ХУЖЕ.</b>
-      Собрал <code>ds-docs</code> обеими формами: <b>239,35 → 248,44 КБ gzip, +9 КБ (+3,8%)</b>.
-      Откладывать там нечего — витрина рисует почти все компоненты сразу, — а обёртки модулей
-      стоят места.
-    </p>
-    <p style="margin-bottom:0">
-      Так что F — не бесплатное улучшение для всех, а <b>сдвиг в пользу тех, у кого ленивые роуты</b>.
-      Для потребителя вроде mm-broker это ровно та цель, ради которой всё затевалось; для
-      витрины — небольшой минус.
-    </p>
-  </section>
-
-  <section class="panel">
-    <h3 style="margin-top:0"><code>@defer</code> не чинит ни F, ни D через фасад</h3>
-    <p>
-      Проверено на одной фикстуре, четыре формы. <code>@defer</code> с компонентом, импортированным
-      <b>через бочку</b>, не откладывает ничего — <b>при любой упаковке</b>:
-    </p>
-    <table>
-      <thead><tr><th>Форма</th><th class="num">Стартовый бандл</th><th class="num">Файлов JS</th><th>Отложилось?</th></tr></thead>
-      <tbody>
-        <tr><th>один FESM</th><td class="num">153 774</td><td class="num">1</td><td class="no">нет</td></tr>
-        <tr><th><b>F</b> — модуль на файл, одна точка</th><td class="num">153 791</td><td class="num">1</td><td class="no">нет</td></tr>
-        <tr><th>61 точка, импорт через корень</th><td class="num">153 791</td><td class="num">1</td><td class="no">нет</td></tr>
-        <tr class="pick"><th><b>61 точка + глубокие специферы</b></th><td class="num">123 494</td><td class="num">4</td><td class="yes">да</td></tr>
-      </tbody>
-    </table>
-    <p style="margin-bottom:0">
-      <b>Вот единственное, что D даёт сверх F:</b> глубокие специферы, а они — единственное, что
-      заставляет <code>@defer</code> работать (<a href="https://github.com/angular/angular/issues/52554">angular#52554</a>).
-      Не байты, а <code>@defer</code> и Material-подобный публичный API.
-    </p>
-  </section>
-
-  <h2>Что стоит F</h2>
-
-  <ul class="facts">
-    <li><b>Шаг сборки, не рефакторинг.</b> <code>ngc --compilationMode partial</code> в <code>outDir</code>, затем <code>module</code>/<code>exports</code> на бочку. ng-packagr уже собирает ровно эти файлы (<code>tmp-esm2022</code>) и удаляет их после склейки.</li>
-    <li><b>Расширения обязательны.</b> TypeScript не переписывает специферы, поэтому <code>ngc</code> оставляет относительные импорты без <code>.js</code>. Бандлер это резолвит, <b>нативный ESM в Node — нет</b>, и SSR-потребитель сломается. 493 специфера переписаны скриптом, из них 69 — папка → <code>index.js</code>. После правки замеры не изменились.</li>
-    <li><b>Потребитель не меняет ничего:</b> тот же специфер, та же карта <code>exports</code>, подпутей не появляется — node10 и <code>typesVersions</code> не задеты.</li>
-    <li><b>Размер пакета:</b> 2,4 МБ против 3,1 МБ у <code>fesm2022</code>. Общий вес бандла не меняется — это перераспределение, а не потеря сжатия.</li>
-    <li><b>Время сборки:</b> 8,73 против 8,88 с на <code>ds-docs</code> — в пределах шума.</li>
-    <li><b>Отступление от APF:</b> формат описывает только FESM, и заявленная причина — время сборки и парсинга. Ничто это не проверяет; сама Angular возила <code>esm2022</code> до v13.</li>
-    <li><b>Не проверено:</b> поведение под SSR, и рост числа файлов на холодном старте у потребителя.</li>
-  </ul>
-
-  <h2>Что именно даёт D: два конкретных примера</h2>
-
-  <h3>1. <code>@defer</code> — сегодня он молча не работает</h3>
-
-  <p>
-    Код ниже выглядит правильно и <b>компилируется без единого предупреждения</b>. Таблица всё равно
-    едет в стартовый бандл — при любой упаковке, включая F:
-  </p>
+  <p>Этот код компилируется без предупреждений и <b>ничего не откладывает</b> — при любой упаковке:</p>
 
 <pre><code>import { TableComponent } from '@ids-group-ltd/ids-design-system';   // ← через корень
 
-@Component({
-  imports: [TableComponent],
-  template: `
-    @defer (on viewport) {
-      &lt;ds-table [columns]="cols" [data]="rows" /&gt;
-    } @placeholder {
-      &lt;ds-skeleton /&gt;
-    }
-  `,
-})</code></pre>
+@defer (on viewport) { &lt;ds-table [columns]="cols" [data]="rows" /&gt; }</code></pre>
 
-  <p>Одна строка — и то же самое действительно откладывается:</p>
+  <p>Одна строка — и откладывается по-настоящему:</p>
 
-<pre><code>import { TableComponent } from '@ids-group-ltd/ids-design-system/table';  // ← глубокий специфер</code></pre>
+<pre><code>import { TableComponent } from '@ids-group-ltd/ids-design-system/table';</code></pre>
 
-  <p>
-    Замерено: <b>153 791 → 123 494 B</b> стартового бандла, файлов JS 1 → 4. Разница только в строке
-    импорта. Без точек на компонент второй строки не существует.
-  </p>
+  <div class="chart">
+    <div class="row"><span class="k">через корень</span>
+      <span class="bar"><span class="seg cost" style="width:100%"></span></span>
+      <span class="v">154 КБ · 1 файл</span></div>
+    <div class="row"><span class="k">глубокий специфер</span>
+      <span class="bar"><span class="seg win" style="width:80%"></span></span>
+      <span class="v">123 КБ · 4 файла</span></div>
+  </div>
 
-  <h3>2. Material-подобный публичный API</h3>
-
-<pre><code>// сегодня — всё из корня, и корень тянет за собой всё
-import { ButtonComponent, TableComponent, DatePickerComponent }
-  from '@ids-group-ltd/ids-design-system';
-
-// как у Angular Material
-import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule }  from '@angular/material/table';
-
-// у нас после D
-import { ButtonComponent }     from '@ids-group-ltd/ids-design-system/button';
-import { TableComponent }      from '@ids-group-ltd/ids-design-system/table';
-import { DatePickerComponent } from '@ids-group-ltd/ids-design-system/date-picker';</code></pre>
+  <h2>Обратная сторона F, и её надо знать</h2>
 
   <p>
-    Корень при этом <b>остаётся</b> и продолжает работать — фасад никто не удаляет, старые импорты не
-    ломаются. Глубокий специфер — это <b>дополнение</b>, а не замена.
+    Приложению, которое рисует почти всё сразу, F делает <b>хуже</b> — откладывать нечего, а обёртки
+    модулей стоят места. Собрал <code>ds-docs</code> обеими формами:
   </p>
 
-  <h2>Кто как делает на самом деле</h2>
+  <div class="chart">
+    <div class="row"><span class="k">сплющено</span>
+      <span class="bar"><span class="seg floor" style="width:96.3%"></span></span>
+      <span class="v">239 КБ</span></div>
+    <div class="row"><span class="k">F</span>
+      <span class="bar"><span class="seg warn" style="width:100%"></span></span>
+      <span class="v">248 КБ · +3,8%</span></div>
+  </div>
+
+  <p>
+    То есть F — не бесплатное улучшение для всех, а <b>сдвиг в пользу тех, у кого ленивые роуты</b>.
+    Для потребителя вроде mm-broker это ровно цель; для витрины — небольшой минус.
+  </p>
+
+  <h2>Кто как делает</h2>
 
   <table>
-    <thead><tr><th>Библиотека</th><th>Форма пакета</th><th>Чем это для нас</th></tr></thead>
+    <thead><tr><th>Библиотека</th><th>Форма</th><th>Чем это для нас</th></tr></thead>
     <tbody>
-      <tr>
-        <th>rxjs</th>
-        <td><b>251 несплющенный ESM-файл</b>, одна точка входа</td>
-        <td class="yes"><b>Прецедент для F.</b> Крупнейшая зависимость экосистемы возит именно то, что предлагает F</td>
-      </tr>
-      <tr>
-        <th>@angular/cdk</th>
-        <td><b>36 точек входа + 55 файлов FESM</b>, включая общие <code>_*-chunk.mjs</code></td>
-        <td>Прецедент для D — и для G</td>
-      </tr>
-      <tr>
-        <th>ng-zorro</th>
-        <td>вторичные точки входа с 7.3.0</td>
-        <td>Прецедент для D</td>
-      </tr>
-      <tr>
-        <th>Taiga UI</th>
-        <td>вторичные точки входа как основа архитектуры</td>
-        <td>Прецедент для D</td>
-      </tr>
+      <tr><th>rxjs</th><td>251 несплющенный ESM-файл, одна точка</td><td class="yes">прецедент для F</td></tr>
+      <tr><th>@angular/cdk</th><td>36 точек + общие <code>_*-chunk.mjs</code>, внутри — относительные импорты</td><td>прецедент для D и G; собирается Bazel, не ng-packagr</td></tr>
+      <tr><th>ng-zorro · Taiga UI</th><td>вторичные точки входа</td><td>прецедент для D</td></tr>
     </tbody>
   </table>
 
-  <section class="panel">
-    <h3 style="margin-top:0">G — архитектура Angular Material, и почему её нельзя просто взять</h3>
-    <p>
-      Смотрю в установленный пакет: <code>@angular/cdk/fesm2022/overlay.mjs</code> — это шим на 4,5 КБ,
-      который импортирует <code>./_overlay-module-chunk.mjs</code> (92 КБ) и соседние точки
-      <code>./scrolling.mjs</code>, <code>./bidi.mjs</code> — <b>относительными путями</b>.
-    </p>
-    <p>
-      <b>ng-packagr именно это и запрещает</b> — ради этого написано наше lint-правило
-      <code>entry-point-boundary</code>: относительный импорт через границу точки роняет сборку.
-      Material так может, потому что собирается <b>не ng-packagr</b>, а своим проходом rollup сразу по
-      всем точкам — отсюда и общие чанки, которых у ng-packagr не бывает (он гоняет rollup на каждую
-      точку отдельно).
-    </p>
-    <p style="margin-bottom:0">
-      И это не бесплатно даже для них: переход на относительные импорты уткнулся в ограничение
-      компилятора Angular — символы, реэкспортированные косвенно, переставали импортироваться, и
-      понадобился отдельный
-      <a href="https://github.com/angular/components/pull/30667">фикс на 241 строку в 9 файлах</a>.
-      <b>G даёт лучший результат по байтам, но стоит замены билд-пайплайна.</b>
-    </p>
-  </section>
-
-  <section class="panel verdict is-dead">
-    <h3 style="margin-top:0">Апстрим это чинить не будет</h3>
-    <p style="margin-bottom:0">
-      Ровно наша проблема заведена в Angular CLI дважды:
-      <a href="https://github.com/angular/angular-cli/issues/14830">#14830 «It is impossible to lazy load
-      libraries correctly»</a> и
-      <a href="https://github.com/angular/angular-cli/issues/10754">#10754 «Option to use ESM instead of
-      FESM»</a> — то есть <b>F предлагали апстриму ещё в 2018-м</b>. Второе перенаправили в
-      <a href="https://github.com/angular/angular-cli/issues/13635">#13635</a> и закрыли как
-      <b>not planned</b>. Значит это не временная дыра, которую закроет следующая мажорная версия, а
-      постоянное свойство формата — и решать его библиотеке.
-    </p>
-  </section>
-
   <p class="src">
-    Механизм, замеры, фикстуры и то, что они НЕ доказывают — <code>docs/packaging-diagnosis.md</code> и
-    <code>docs/packaging-chunking-audit.md</code>. Граф: <code>node tools/entry-point-graph.mjs</code>.
-    Дальше: форма раскладки — дека 6, opt-in-шов — дека 7.
+    Апстрим это чинить не будет: <a href="https://github.com/angular/angular-cli/issues/10754">#10754</a>
+    («ESM вместо FESM», то есть F) перенаправлен в
+    <a href="https://github.com/angular/angular-cli/issues/13635">#13635</a> и закрыт как <b>not planned</b>;
+    <a href="https://github.com/angular/angular-cli/issues/14830">#14830</a> — та же проблема другими словами.
+    Замеры, фикстуры и то, чего они не доказывают — <code>docs/packaging-diagnosis.md</code>,
+    <code>docs/packaging-chunking-audit.md</code>. Форма раскладки — дека 6, opt-in-шов — дека 7.
   </p>
 </main>
