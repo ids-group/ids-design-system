@@ -174,17 +174,17 @@ for (const [name, slug] of Object.entries(sectionMap).sort()) {
 // the tall unreadable shape this design exists to avoid — the pane fits a card's declared viewport
 // into a fixed tile, so height is zoom. Reported, not failed: giving such a part a block of its own
 // is a ds-docs authoring decision, not something a build can invent.
-// The pane fits a card's declared viewport into a fixed tile, so height IS zoom: a card much taller
-// than the rest is rendered proportionally smaller and stops being readable. Measured, not guessed
-// — `viewports.json` is what the markers carry. Reported rather than failed: the fix is to give the
-// component a block of its own in ds-docs, which is authoring, not building.
+// Height is no longer zoom: a card declares at most VIEWPORT_CAP (build-cards.mjs) and the frame
+// scrolls past it, which is measured on the live pane. So a very tall card is no longer unreadable
+// — it is a long scroll, and past this much it is a chapter that wants splitting into blocks.
+// Reported rather than failed: splitting is ds-docs authoring, not something a build can invent.
 const TALL = 3000;
 const heights = JSON.parse(
   readFileSync(join(repo, '.design-sync', 'viewports.json'), 'utf8'),
 ).heights;
 const tall = Object.entries(heights).filter(([, height]) => height > TALL);
 for (const [card, height] of tall.sort((a, b) => b[1] - a[1])) {
-  console.log(`· ${card} is ${height}px — over ${TALL}px the pane shows it too small to read; give that component a block of its own in ds-docs`);
+  console.log(`· ${card} renders ${height}px of content — past ${TALL}px that is a long scroll inside the card; consider giving it a block of its own in ds-docs`);
 }
 
 // Both directions, because only one of them was checked until 2026-09-01 and two orphans sat

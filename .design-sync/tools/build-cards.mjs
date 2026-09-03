@@ -248,6 +248,15 @@ function blocksOf(slug) {
   return sliceable ? found : [];
 }
 
+// The pane fits the declared viewport into its tile — `scale = min(tileW/1200, tileH/declaredH)` —
+// so a card that declares its true height is scaled DOWN by exactly the ratio it overshoots by:
+// `Button - Color x variant` at 1405px rendered at 0.54 and was unreadable. Declaring no more than
+// this instead renders the page at its own size and lets the frame scroll, which it does (measured
+// on the live pane with a probe card: a 2400px page inside a 700px declaration scrolls to the end).
+// Below the cap the true height is kept, so a short card has no dead space under it.
+const VIEWPORT_CAP = 700;
+const declaredHeight = (measured) => Math.min(measured, VIEWPORT_CAP);
+
 const MAX_LABEL = 46;
 
 /** A block's title as a filename. The pane labels a card by its filename and nothing else, so this
@@ -597,7 +606,7 @@ for (const name of [...byName.keys()].sort()) {
         name,
         group,
         tag: section.tag,
-        viewport: height ? `${viewports.width}x${height}` : null,
+        viewport: height ? `${viewports.width}x${declaredHeight(height)}` : null,
         owns: card.owns,
         ownedIndex: card.ownedIndex,
         // Only the first card of a component carries the API table. On Table that is the difference
@@ -633,7 +642,7 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
         name: chapter,
         group,
         tag: section.tag,
-        viewport: height ? `${viewports.width}x${height}` : null,
+        viewport: height ? `${viewports.width}x${declaredHeight(height)}` : null,
         owns: card.owns,
         ownedIndex: card.ownedIndex,
         apiKey: card.ownedIndex <= 0 ? '' : null,
