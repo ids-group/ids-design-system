@@ -726,8 +726,15 @@ for (const file of readdirSync(pasted)) {
 
 // The project's cover image. It was the last file in the project with no source at all — a WebP
 // that came with the hand-made upload — so a wipe-and-reupload would have blanked the tile with
-// nothing to restore it from. These are still those bytes; see docs/todo.md for re-rendering it.
-cpSync(join(syncDir, 'assets', 'thumbnail.webp'), join(OUT, '.thumbnail'));
+// nothing to restore it from. These are still those bytes.
+//
+// Any extension is accepted because the project file is called `.thumbnail` and carries none:
+// dropping a replacement into assets/ should not also mean editing this line.
+const cover = readdirSync(join(syncDir, 'assets')).find((file) => /^thumbnail\./.test(file));
+if (!cover) {
+  throw new Error('no assets/thumbnail.* — the project tile would publish blank.');
+}
+cpSync(join(syncDir, 'assets', cover), join(OUT, '.thumbnail'));
 
 // The project's own README, from the same conventions file the agent reads.
 writeFileSync(
