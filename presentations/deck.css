@@ -503,3 +503,39 @@ table.matrix .mid {
   font-weight: var(--font-weight-regular);
   opacity: 0.8;
 }
+
+/* ---- option badges: a plain digit in a circle, because ①②③ is unreadable --- */
+
+.vnum {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(#1f3d8a, #1f3d8a);
+  color: #fff;
+  font: var(--font-weight-extrabold) var(--font-size-xs) / 1 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  margin-right: var(--space-2);
+  vertical-align: -6px;
+}
+
+.vnum.is-dead {
+  background-image: linear-gradient(#b0b7c3, #b0b7c3);
+}
+.vnum.is-pick {
+  background-image: linear-gradient(#1a7f37, #1a7f37);
+}
+
+th .vnum {
+  margin: 0 0 var(--space-1);
+  vertical-align: baseline;
+}
+
+.lands .col h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-s);
+  color: var(--text-primary);
+}

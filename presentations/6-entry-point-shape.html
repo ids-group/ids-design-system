@@ -23,27 +23,27 @@
 
   <div class="lands">
     <div class="col">
-      <h4>① Ничего не двигаем</h4>
+      <h4><span class="vnum is-dead">1</span> Как есть</h4>
       <div class="box eager" style="font-size:11px">@ids/ds/<b>src/lib/components/button</b></div>
       <p style="margin:0;font-size:12px">Путь в репозитории торчит наружу. Переименуем папку — сломаем всех.</p>
       <p style="margin:8px 0 0"><span class="chip is-dead">непригодно</span></p>
     </div>
     <div class="col">
-      <h4>② Корень пакета → <code>src/lib</code></h4>
+      <h4><span class="vnum">2</span> Корень в <code>src/lib</code></h4>
       <div class="box lazy" style="font-size:11px">@ids/ds/<b>components/button</b></div>
       <p style="margin:0;font-size:12px">Папки на месте. Слово <code>components</code> остаётся в каждом импорте.</p>
       <p style="margin:8px 0 0"><span class="chip is-done">собрано и измерено</span></p>
     </div>
     <div class="col">
-      <h4>③ Поднять папки наверх</h4>
+      <h4><span class="vnum">3</span> Плоско</h4>
       <div class="box lazy" style="font-size:11px">@ids/ds/<b>button</b></div>
       <p style="margin:0;font-size:12px">Как у Angular Material. <b>71 папка физически переезжает</b> из <code>components/</code>.</p>
       <p style="margin:8px 0 0"><span class="chip">чище всего на диске</span></p>
     </div>
     <div class="col">
-      <h4>④ Алиасы поверх</h4>
+      <h4><span class="vnum is-pick">4</span> Алиасы</h4>
       <div class="box lazy" style="font-size:11px">@ids/ds/<b>button</b></div>
-      <p style="margin:0;font-size:12px">Тот же импорт, что у ③, но <b>ничего не двигаем</b> — короткие имена дописывает скрипт после сборки.</p>
+      <p style="margin:0;font-size:12px">Тот же импорт, что у варианта 3, но <b>ничего не двигаем</b> — короткие имена дописывает скрипт после сборки.</p>
       <p style="margin:8px 0 0"><span class="chip is-accent">рекомендую</span></p>
     </div>
   </div>
@@ -53,10 +53,10 @@
   <table class="matrix">
     <thead>
       <tr><th></th>
-        <th class="opt">①<br /><small>не двигаем</small></th>
-        <th class="opt">②<br /><small>корень в src/lib</small></th>
-        <th class="opt">③<br /><small>поднять папки</small></th>
-        <th class="opt">④<br /><small>алиасы</small></th></tr>
+        <th class="opt"><span class="vnum is-dead">1</span><br /><small>как есть</small></th>
+        <th class="opt"><span class="vnum">2</span><br /><small>корень в src/lib</small></th>
+        <th class="opt"><span class="vnum">3</span><br /><small>плоско</small></th>
+        <th class="opt"><span class="vnum is-pick">4</span><br /><small>алиасы</small></th></tr>
     </thead>
     <tbody>
       <tr><th>Импорт потребителя</th><td class="bad">длинный и хрупкий</td><td>средний</td><td class="ok">короткий</td><td class="ok">короткий</td></tr>
@@ -70,12 +70,12 @@
 
   <p>
     <b>316 переписанных импортов — одинаково во всех четырёх.</b> Импорту, ставшему публичным
-    специфером, всё равно, как глубоко лежит его файл. Реально лишняя работа только у ③ — 71
+    специфером, всё равно, как глубоко лежит его файл. Реально лишняя работа только у варианта <b>3</b> — 71
     механический <code>git mv</code>.
   </p>
 
   <section class="panel verdict is-dead">
-    <h3 style="margin-top:0">Риск ② и ③: молча неверная версия в npm</h3>
+    <h3 style="margin-top:0">Риск вариантов <b>2</b> и <b>3</b>: молча неверная версия в npm</h3>
     <p style="margin-bottom:0">
       Корень пакета уезжает в <code>src/lib</code> → ng-packagr перестаёт читать корневой
       <code>package.json</code>, а <code>cut-release.sh:75</code> читает именно его. Релиз поднимет одно
@@ -85,7 +85,7 @@
   </section>
 
   <section class="panel verdict is-done">
-    <h3 style="margin-top:0">Цена ④: одно генерируемое поле</h3>
+    <h3 style="margin-top:0">Цена варианта <b>4</b>: одно генерируемое поле</h3>
     <p>
       У короткого алиаса нет папки на диске, а старый резолвер <code>node10</code> игнорирует
       <code>exports</code> и ищет именно папку. Проверено резолвером TypeScript 5.9.3 с падающим
@@ -94,34 +94,34 @@
     <table class="matrix">
       <thead><tr><th></th><th class="opt">node10</th><th class="opt">bundler</th><th class="opt">node16</th></tr></thead>
       <tbody>
-        <tr><th>обычная точка входа <small>(①②③)</small></th><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td></tr>
-        <tr><th>алиас без папки <small>(④)</small></th><td class="bad">✗</td><td class="ok">✓</td><td class="ok">✓</td></tr>
+        <tr><th>обычная точка входа <small>(варианты 1, 2, 3)</small></th><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td></tr>
+        <tr><th>алиас без папки <small>(вариант 4)</small></th><td class="bad">✗</td><td class="ok">✓</td><td class="ok">✓</td></tr>
         <tr><th>алиас + <code>typesVersions</code></th><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td></tr>
       </tbody>
     </table>
     <p style="margin-bottom:0">
-      ng-packagr сам кладёт node10-заглушку в папку каждой точки — поэтому ①②③ работают без ничего.
-      Для ④ то же делает одно генерируемое поле в том же шаге сборки.
+      ng-packagr сам кладёт node10-заглушку в папку каждой точки — поэтому варианты 1, 2 и 3 работают без ничего.
+      Для варианта 4 то же делает одно генерируемое поле в том же шаге сборки.
     </p>
   </section>
 
   <section class="panel verdict">
-    <h2 style="margin-top:0">Рекомендация: ④ — алиасы поверх</h2>
+    <h2 style="margin-top:0">Рекомендация: вариант <b>4</b> — алиасы</h2>
     <p>
       Импорт короткий как у Material, папки не двигаются, релизный конвейер не трогаем.
       Проверено на настоящем <code>node_modules</code>: резолвится, размещение верное, и <b>одна
       идентичность класса</b> через короткий и длинный путь.
     </p>
     <p style="margin-bottom:0">
-      <b>Минус ④:</b> внутри библиотеки специферы длинные, снаружи короткие — два словаря.
-      Если это раздражает — берём <b>③</b> и платим 71 переездом папок.
-      <b>②</b> — если короткие имена не нужны вовсе: это единственный вариант, уже собранный
+      <b>Минус варианта 4:</b> внутри библиотеки специферы длинные, снаружи короткие — два словаря.
+      Если это раздражает — берём <b>3</b> и платим 71 переездом папок.
+      <b>2</b> — если короткие имена не нужны вовсе: это единственный вариант, уже собранный
       настоящим ng-packagr на всей библиотеке.
     </p>
   </section>
 
   <p class="src">
-    Прототипы <code>.claude/local/shape-probe/variant-{A,B,C}</code>; вариант ② собран целиком —
+    Прототипы <code>.claude/local/shape-probe/variant-{A,B,C}</code>; вариант <b>2</b> собран целиком —
     <code>.claude/local/ds-d</code>, 73 точки входа. Матрица резолвинга —
     <code>docs/packaging-diagnosis.md</code>. Почему D — дека 4.
   </p>
