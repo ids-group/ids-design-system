@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <title>basic + advanced — почему два пакета не нужны</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/basic-advanced-split-audit.md - лестница замеров на dist/ds 0.11.1, абляция ds-table §9">
+<meta name="ds-deck-evidence" content="docs/basic-advanced-split-audit.md - лестница на dist/ds 0.11.1, абляция ds-table §9">
 <link rel="stylesheet" href="ds.css">
 <link rel="stylesheet" href="deck.css">
 
@@ -10,71 +10,40 @@
     <div class="chips">
       <span class="chip is-open">нужен вердикт</span>
       <span class="chip is-dead">рекомендую отклонить</span>
-      <span class="chip is-accent">обновлено 2026-09-02</span>
     </div>
     <h1>basic + advanced — почему два пакета не нужны</h1>
     <p class="lede">
-      Запрос: разнести <code>@ids-group-ltd/ids-design-system</code> на лёгкий и тяжёлый пакеты,
-      чтобы прототипы не тянули тяжёлую библиотеку. Замерили — <b>проблемы, которую это решает,
-      нет</b>, а та, что есть, решается в другом месте.
+      <b>Запрос.</b> Разнести пакет на лёгкий и тяжёлый, чтобы прототипы не тянули тяжёлую
+      библиотеку. <b>Замерили — проблемы, которую это решает, нет.</b>
     </p>
   </header>
-
-  <section class="panel verdict is-dead">
-    <h2 style="margin-top:0">Вердикт</h2>
-    <ul class="facts">
-      <li><b>Неиспользуемые компоненты уже бесплатны.</b> Tree-shaking их выбрасывает — проверено на фикстурах.</li>
-      <li><b>Прототип без таблицы экономит 0.</b> Не 32 КБ: 32 КБ — это вес, ПЕРЕЛОЖЕННЫЙ в другой пакет, а не сэкономленные байты.</li>
-      <li><b>Всё, что просили в «продвинутой» таблице, уже есть</b> в <code>ds-table</code> — весь список, со ссылками на символы.</li>
-      <li><b>Цена — вечное зеркало.</b> Два пакета надо синхронизировать версиями, ченджлогами и миграциями до конца жизни.</li>
-      <li><b>AG Grid пошёл в обратную сторону</b>: в 33-й версии 25 npm-пакетов схлопнули в 2. <span style="opacity:.7">(их цифра, не наш замер)</span></li>
-    </ul>
-  </section>
-
-  <h2>Лестница замеров</h2>
-
-  <p>
-    Реальные production-сборки <code>dist/ds</code> 0.11.1, компоненты держатся из рантайм-массива,
-    чтобы компилятор их не выбросил. КБ здесь — ÷1000.
-  </p>
-
-  <table>
-    <thead>
-      <tr><th>Ступень</th><th class="num">JS raw</th><th class="num">JS gzip</th><th class="num">Δ к пустому Angular</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>Пустое Angular-приложение</th><td class="num">92 686</td><td class="num">30 646</td><td class="num">—</td></tr>
-      <tr><th>+ <code>ds-divider</code> — самый дешёвый</th><td class="num">108 243</td><td class="num">36 215</td><td class="num">+5,6 КБ</td></tr>
-      <tr><th>+ <code>ds-button</code></th><td class="num">200 941</td><td class="num">62 733</td><td class="num">+32,1 КБ</td></tr>
-      <tr><th>+ <code>ds-table</code></th><td class="num">543 124</td><td class="num">148 882</td><td class="num">+118,2 КБ</td></tr>
-      <tr><th>Набор прототипа — 43 компонента, без таблицы</th><td class="num">645 558</td><td class="num">159 409</td><td class="num">+128,8 КБ</td></tr>
-      <tr class="pick"><th>Набор прототипа <b>+ <code>ds-table</code></b></th><td class="num">776 546</td><td class="num">191 431</td><td class="num">+160,8 КБ</td></tr>
-      <tr><th>Все 96 экспортируемых деклараблов</th><td class="num">891 434</td><td class="num">209 603</td><td class="num">+179,0 КБ</td></tr>
-    </tbody>
-  </table>
 
   <div class="kpis">
     <div class="kpi">
       <span class="n">18,2 КБ</span>
-      <span class="k">весь потолок: 52 компонента, которых прототип не касается — <b>и они уже стоят 0</b></span>
-    </div>
-    <div class="kpi">
-      <span class="n">32,0 КБ</span>
-      <span class="k">предельная цена <code>ds-table</code> внутри набора — вес, а не экономия</span>
+      <span class="k">весь потолок: 52 компонента, которых прототип не касается</span>
     </div>
     <div class="kpi">
       <span class="n is-good">0</span>
-      <span class="k">экономия прототипа, который таблицу не использует</span>
+      <span class="k">столько это экономит сегодня — tree-shaking их уже выбрасывает</span>
+    </div>
+    <div class="kpi">
+      <span class="n">32,0 КБ</span>
+      <span class="k">цена <code>ds-table</code> — это вес, ПЕРЕЛОЖЕННЫЙ в другой пакет, не экономия</span>
     </div>
   </div>
 
-  <h2>Где настоящая экономия</h2>
+  <section class="panel verdict is-dead">
+    <h2 style="margin-top:0">Почему нет</h2>
+    <ul class="facts">
+      <li><b>Прототип без таблицы экономит ноль.</b> Он и сегодня стоит 159 409 B; после сплита — столько же.</li>
+      <li><b>Всё из списка «продвинутой сетки» уже есть</b> в <code>ds-table</code>: ресайз, фильтры по колонкам, скрытие/перестановка, сохранение раскладки, CSV, клик по строке, обрезка с поповером, редактирование ячейки, липкий скроллбар, меню на три точки.</li>
+      <li><b>Цена — вечное зеркало:</b> вторая <code>ds-table</code>, удвоенный релизный конвейер, переписывание шаблонов при каждом переходе прототипа в продакшен.</li>
+      <li><b>AG Grid пошёл в обратную сторону:</b> 25 npm-пакетов схлопнул в 2. <span style="opacity:.7">(их цифра)</span></li>
+    </ul>
+  </section>
 
-  <p>
-    Не между пакетами, а <b>внутри одного компонента</b>. Абляция: удалили ресайз, переупорядочивание
-    колонок, фильтры по колонкам, CSV-экспорт, сохранение раскладки и truncate-popover — 1 063 строки
-    в <code>.ts</code>/<code>.html</code>/<code>.scss</code>.
-  </p>
+  <h2>Где настоящая экономия — внутри компонента</h2>
 
   <div class="bars">
     <div class="bar-row">
@@ -83,66 +52,28 @@
       <span class="num">31 428 B</span>
     </div>
     <div class="bar-row">
-      <span class="name">после выноса опций</span>
+      <span class="name">опции вынесены в директивы</span>
       <span class="track"><span class="fill lazy" style="width:39%"></span></span>
       <span class="num">12 125 B</span>
     </div>
   </div>
 
   <p>
-    <b>19 303 B gzip, −61%</b> — больше, чем весь потолок пакетного сплита (18,2 КБ), внутри одного
-    компонента, и синхронизировать нечего. И это <b>пол, а не потолок</b>: row actions и
-    инлайн-редактирование ячеек ровно так же «продвинутые» и остались внутри.
-  </p>
-
-  <h2>Что уже есть в <code>ds-table</code></h2>
-
-  <p>
-    Список «продвинутой сетки», пункт за пунктом. Проверено в исходнике на 0.11.1; номера строк с тех
-    пор уехали — смотрите на символ, не на строку.
-  </p>
-
-  <table>
-    <thead><tr><th>Просили</th><th>Уже есть</th></tr></thead>
-    <tbody>
-      <tr><th>ресайз колонок</th><td><code>resizableColumns</code> + <code>columnWidths</code></td></tr>
-      <tr><th>фильтры по колонкам</th><td><code>columnFilters</code>, <code>filterQuery</code>, <code>HeaderFilterDirective</code></td></tr>
-      <tr><th>скрыть / переставить колонки</th><td><code>reorderableColumns</code>, <code>hiddenKeys</code>, <code>columnOrder</code></td></tr>
-      <tr><th>сохранить раскладку</th><td><code>persistLayout</code> + <code>storageKey</code></td></tr>
-      <tr><th>экспорт в CSV</th><td><code>exportButton</code>, <code>exportFilename</code>, <code>exportFetcher</code></td></tr>
-      <tr><th>клик по строке открывает запись</th><td><code>rowInteractive</code> + <code>rowActivated</code></td></tr>
-      <tr><th>обрезка текста с поповером</th><td><code>TableColumn.truncate</code> + <code>cellTextPopover</code></td></tr>
-      <tr><th>редактирование ячейки</th><td><code>TableColumn.editable</code> + <code>cellEdited</code></td></tr>
-      <tr><th>горизонтальный скроллбар всегда виден</th><td><code>stickyScrollbar</code></td></tr>
-      <tr><th>меню на три точки в колонке</th><td><code>rowActions</code></td></tr>
-    </tbody>
-  </table>
-
-  <p>
-    По умолчанию не включено ничего. Форма при этом не везде <code>input(false)</code>: шесть членов —
-    это <code>input&lt;boolean | null&gt;(null)</code> или <code>model()</code>, но все шесть
-    разрешаются в «выключено».
-  </p>
-
-  <h2>Когда отдельный пакет всё-таки оправдан</h2>
-
-  <p>
-    Критерий один и он не про размер: <b>внешняя рантайм-зависимость</b>. Пакет вроде
-    <code>ids-charts</code> оправдан в тот день, когда ему понадобится своя библиотека рисования —
-    тогда её не должен тянуть каждый, кто поставил дизайн-систему. У таблицы такой зависимости нет.
+    <b>19 303 B gzip, −61%</b> — больше, чем весь потолок пакетного сплита, внутри одного компонента,
+    и синхронизировать нечего. Это <b>пол, а не потолок</b>: row actions и редактирование ячеек
+    остались внутри. Как это делать — <b>дека 7</b>.
   </p>
 
   <section class="panel">
-    <h3 style="margin-top:0">Что бы изменило вердикт</h3>
-    <ul class="facts">
-      <li>Внешняя рантайм-зависимость в чём-то «продвинутом».</li>
-      <li>Потребитель, у которого <b>после</b> выноса опций таблицы и entry points всё ещё болит размер.</li>
-    </ul>
+    <h3 style="margin-top:0">Когда отдельный пакет оправдан</h3>
+    <p style="margin-bottom:0">
+      Критерий один, и он не про размер: <b>внешняя рантайм-зависимость</b>. <code>ids-charts</code>
+      оправдан в тот день, когда ему понадобится своя библиотека рисования. У таблицы её нет.
+      <b>Это же и есть условие переоткрытия.</b>
+    </p>
   </section>
 
   <p class="src">
-    Источники: <code>docs/basic-advanced-split-audit.md</code> (лестница §1, абляция §9),
-    <code>docs/packaging-diagnosis.md</code>. Размещение по чанкам — дека 4, форма раскладки — дека 6,
-    opt-in-шов — дека 7, отклонённые идеи с цифрами — дека 8.
+    Полная лестница замеров, абляция и построчная сверка списка — <code>docs/basic-advanced-split-audit.md</code>.
   </p>
 </main>
