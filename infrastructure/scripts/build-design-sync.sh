@@ -48,18 +48,61 @@ node .design-sync/tools/check-doc-api.mjs
 echo "Building the upload artefacts..."
 bun run build:upload
 
-# The tree is COMMITTED, so a stale copy in the repo is the failure to catch: the build above just
-# regenerated it from source, and git is the comparator. Same idiom as `split-agent-catalogue
-# --check`, except the comparison is free.
-if [ -n "$(git status --porcelain .design-sync/upload)" ]; then
+# The node:22-alpine image ships without git, and this check used to run `git status` anyway: the
+# substitution came back empty, the emptiness test passed, and the step printed "Committed upload
+# tree matches the build" having compared nothing. It had never once run. Install git first, and
+# refuse to continue without it — a missing tool must never read as a pass.
+command -v git > /dev/null || apk add --no-cache git > /dev/null 2>&1 || true
+command -v git > /dev/null || { echo "git is not available, so the upload tree cannot be compared or committed"; exit 1; }
+
+# A release bumps the version, DS_VERSION carries it into the bundle, and the bundle is part of the
+# committed tree — so every release leaves this tree one version behind. In the pipeline the answer
+# is to commit the rebuild, not to fail on it; run by hand, the answer is the opposite, because a
+# script must not push on a developer's behalf.
+if [ -z "$(git status --porcelain .design-sync/upload)" ]; then
+  echo "Committed upload tree matches the build"
+elif [ -z "$BITBUCKET_BUILD_NUMBER" ]; then
   echo "The committed upload tree is stale — this build regenerated different files:"
   git status --porcelain .design-sync/upload
   echo ""
   echo "Run 'npm run build:upload' and commit .design-sync/upload — it is what a publish"
   echo "sends, so a stale copy publishes the previous release's contract."
   exit 1
+else
+  [ -n "$RELEASE_TOKEN" ] || { echo "the upload tree needs committing but RELEASE_TOKEN is unset"; exit 1; }
+  echo "The upload tree changed; committing it as the release bot..."
+  git status --porcelain .design-sync/upload
+
+  # Same identity and token route cut-release.sh uses, so the two bot commits are indistinguishable.
+  git config user.name "${RELEASE_GIT_NAME:-IDS Release Bot}"
+  git config user.email "${RELEASE_GIT_EMAIL:-ci@ids-group.co.uk}"
+  git remote set-url origin "https://x-token-auth:${RELEASE_TOKEN}@bitbucket.org/itband/ids-design-system.git"
+  git remote set-branches origin main dev
+  if [ -f "$(git rev-parse --git-dir)/shallow" ]; then
+    git fetch --unshallow origin --quiet
+  else
+    git fetch origin --quiet
+  fi
+
+  # trigger-after-release.sh starts this pipeline on main, so the checkout is already there and the
+  # rebuilt files are sitting in the working tree. `-B main HEAD` only names the branch; resetting
+  # it to origin/main instead would throw the rebuild away and the commit would be empty.
+  git checkout -B main HEAD --quiet
+  git add .design-sync/upload
+  git commit --quiet -m "chore(design-sync): rebuild the upload tree for $(node -p "require('./package.json').version")"
+  git push origin main
+
+  git checkout -B dev origin/dev
+  git merge --no-edit --no-ff main || {
+    git merge --abort 2>/dev/null || true
+    echo "main does not merge cleanly into dev — the docs are already deployed, but the upload"
+    echo "tree on dev is one version behind. Merge main into dev by hand."
+    exit 1
+  }
+  git push origin dev
+  git checkout main --quiet
+  echo "Upload tree committed to main and merged into dev"
 fi
-echo "Committed upload tree matches the build"
 
 [ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
 [ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }

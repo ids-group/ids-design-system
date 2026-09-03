@@ -158,63 +158,73 @@ pipelines:
     # and /pm-field. Requires the same Secured repository variables pinkmoon uses:
     # IDS_DOCKER_AWS_ACCESS_KEY_ID, IDS_DOCKER_AWS_SECRET_ACCESS_KEY.
     #
-    # The design-sync step is last on purpose: it is the slow half and nothing else
-    # waits on it, so a failure there leaves the published docs already deployed.
+    # The bundle step also COMMITS what it regenerates, so it needs RELEASE_TOKEN as well —
+    # `.design-sync/upload` is committed and carries the version through DS_VERSION, which left
+    # it one release behind every time. It pushes main and merges into dev, the same route
+    # cut-release.sh takes. No `branches:` trigger exists, so that push starts nothing.
+    #
+    # The deploy and the design-sync build run SIDE BY SIDE. The bundle is the slow half and
+    # nothing else waits on it, so running it in parallel with the deploy keeps the property
+    # that mattered — a failure in the bundle still leaves the docs published — and stops the
+    # docs waiting for it. Putting the bundle beside the docs BUILD instead would have lost
+    # that: a parallel group must finish before the next step, so a bundle failure would then
+    # block the deploy.
     after-release:
       - step:
           <<: *build
           name: Build ds-docs showcase
           artifacts:
             - dist/ds-docs/**
-      - step:
-          name: Deploy ds-docs to IDS prototypes CDN
-          image: amazon/aws-cli
-          script:
-            - export AWS_ACCESS_KEY_ID=$IDS_DOCKER_AWS_ACCESS_KEY_ID
-            - export AWS_SECRET_ACCESS_KEY=$IDS_DOCKER_AWS_SECRET_ACCESS_KEY
-            - export AWS_DEFAULT_REGION=eu-west-2
-            - PROTO_S3_BUCKET="ids-prototypes"
-            - PROTO_CF_DISTRIBUTION_ID="E1P3IR95745IWV"
-            # Hashed assets — long immutable cache. Everything Angular copies
-            # verbatim is excluded: those keep a STABLE name, so `immutable`
-            # pinned each visitor's first copy for a year and no redeploy could
-            # dislodge it — that is what served a stale /changelog.
-            - >
-              aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
-              --delete
-              --cache-control "public, max-age=31536000, immutable"
-              --exclude "index.html"
-              --exclude "CHANGELOG.md"
-              --exclude "favicon.ico"
-              --exclude "favicon.svg"
-              --exclude "apple-touch-icon.png"
-            # Stable-name assets — always revalidate
-            - >
-              aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
-              --cache-control "public, max-age=0, must-revalidate"
-              --exclude "*"
-              --include "CHANGELOG.md"
-              --include "favicon.ico"
-              --include "favicon.svg"
-              --include "apple-touch-icon.png"
-            # SPA entry point — always revalidate
-            - >
-              aws s3 cp dist/ds-docs/browser/index.html s3://$PROTO_S3_BUCKET/ids-ds/index.html
-              --cache-control "public, max-age=0, must-revalidate"
-              --content-type "text/html"
-            # Invalidate every stable-name path (hashed assets need none)
-            - >
-              aws cloudfront create-invalidation
-              --distribution-id $PROTO_CF_DISTRIBUTION_ID
-              --paths "/ids-ds/index.html" "/ids-ds/CHANGELOG.md" "/ids-ds/favicon.ico" "/ids-ds/favicon.svg" "/ids-ds/apple-touch-icon.png"
-      - step:
-          name: Build Claude Design bundle
-          caches:
-            - npm
-            - bun-bin
-            - bun-cache
-            - angular
-          artifacts:
-            - .design-sync/elements/dist/**
-          script:
-            - sh infrastructure/scripts/build-design-sync.sh
+      - parallel:
+        - step:
+            name: Deploy ds-docs to IDS prototypes CDN
+            image: amazon/aws-cli
+            script:
+              - export AWS_ACCESS_KEY_ID=$IDS_DOCKER_AWS_ACCESS_KEY_ID
+              - export AWS_SECRET_ACCESS_KEY=$IDS_DOCKER_AWS_SECRET_ACCESS_KEY
+              - export AWS_DEFAULT_REGION=eu-west-2
+              - PROTO_S3_BUCKET="ids-prototypes"
+              - PROTO_CF_DISTRIBUTION_ID="E1P3IR95745IWV"
+              # Hashed assets — long immutable cache. Everything Angular copies
+              # verbatim is excluded: those keep a STABLE name, so `immutable`
+              # pinned each visitor's first copy for a year and no redeploy could
+              # dislodge it — that is what served a stale /changelog.
+              - >
+                aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
+                --delete
+                --cache-control "public, max-age=31536000, immutable"
+                --exclude "index.html"
+                --exclude "CHANGELOG.md"
+                --exclude "favicon.ico"
+                --exclude "favicon.svg"
+                --exclude "apple-touch-icon.png"
+              # Stable-name assets — always revalidate
+              - >
+                aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
+                --cache-control "public, max-age=0, must-revalidate"
+                --exclude "*"
+                --include "CHANGELOG.md"
+                --include "favicon.ico"
+                --include "favicon.svg"
+                --include "apple-touch-icon.png"
+              # SPA entry point — always revalidate
+              - >
+                aws s3 cp dist/ds-docs/browser/index.html s3://$PROTO_S3_BUCKET/ids-ds/index.html
+                --cache-control "public, max-age=0, must-revalidate"
+                --content-type "text/html"
+              # Invalidate every stable-name path (hashed assets need none)
+              - >
+                aws cloudfront create-invalidation
+                --distribution-id $PROTO_CF_DISTRIBUTION_ID
+                --paths "/ids-ds/index.html" "/ids-ds/CHANGELOG.md" "/ids-ds/favicon.ico" "/ids-ds/favicon.svg" "/ids-ds/apple-touch-icon.png"
+        - step:
+            name: Build Claude Design bundle
+            caches:
+              - npm
+              - bun-bin
+              - bun-cache
+              - angular
+            artifacts:
+              - .design-sync/elements/dist/**
+            script:
+              - sh infrastructure/scripts/build-design-sync.sh
