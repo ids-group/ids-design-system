@@ -1,4 +1,4 @@
-<!-- @dsCard group="navigation" viewport="1200x457" -->
+<!-- @dsCard group="navigation" viewport="1200x446" -->
 <!doctype html>
 <!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
      automatic OS branch, so a host that sets it on this document flips every component's tokens
@@ -12,6 +12,9 @@
     /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
        all, because the components followed the theme and the page did not. */
     body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
+       title and takes the tight gap a heading gives, not the loose one that separates demos. */
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
     /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
        for a capped, padded column stretches edge to edge without it, and every demo that relies on
        wrapping wraps at the wrong width. */
@@ -35,16 +38,21 @@
     (function () {
       var OWNS = "";
       var INDEX = 2;
-      var KEY = null;
+      var KEY = "app-layout";
+      var TABLE = false;
+      var HEAD = null;
+      var BLOCK = "Opening the rail from your own chrome";
       /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
          the title said "Buttons" and the lede described Button, and the card already names itself
          in its block heading and in the pane's label. The lede rides the chapter's first card.
          A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
          slice and nothing repeated — it loses only the eyebrow. */
       var WHOLE = OWNS === null;
-      var OWN_CHAPTER = OWNS === '';
-      var KEEP = WHOLE ? 'h2, p.lede' : (OWN_CHAPTER ? (INDEX === 0 ? 'h2, p.lede' : 'h2') : ':not(*)');
-      var DROP_ALWAYS = '.eyebrow' + (WHOLE || OWN_CHAPTER ? '' : ', h2, p.lede');
+      /* The chapter's summary belongs to the chapter, so it rides its first card only - seven
+         copies of the same paragraph is what it was before. A whole-chapter card is that card. */
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
       var host = document.querySelector("ds-docs-components-app-layout");
       var start = Date.now();
@@ -58,6 +66,7 @@
         var doomed = [];
         var apis = [];
         var ordinal = -1;
+        var heading = null;
         for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
           if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
           if (WHOLE) continue;
@@ -69,25 +78,57 @@
           else if (node.matches('h3.block-title')) owner = '';
           if (starts && owner === OWNS) ordinal += 1;
           if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
         }
         /* One API table per card: its own. The chapter's component is keyed by the anchor and a
            part by the anchor plus its class name. A part the extractor left out has no key at all,
            and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === null ? [] : (mine.length ? mine : apis.slice(0, 1));
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
         if (!WHOLE) {
           for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) doomed.push(apis[a]);
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
           }
         }
 
+        /* The h2 names what the card is ABOUT. It said "Buttons" on all seven Button cards and
+           said nothing at all on a part's card, while the block's own h3 carried the only specific
+           words on the page - so the h3's text moves up and the h3 itself goes. HEAD overrides the
+           chapter's name for a part, whose own name is not the chapter's. */
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
+
         for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+
+        /* A part's chip is rendered inside its `.api-sub` wrapper at the foot of the chapter, while
+           the chapter's own sits directly under the title. Same place on every card. An emptied
+           wrapper goes with it - it carries a margin of its own. */
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
         /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
            over an empty page because the chapter reported more blocks than the card could address,
            and a card that removes everything looks exactly like one that removed nothing. */
         var kept = 0;
         for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API)) kept += 1;
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
         }
         document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
         document.documentElement.setAttribute('data-ds-kept', String(kept));
