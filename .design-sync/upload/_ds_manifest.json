@@ -58,10 +58,6 @@
       "sourcePath": "components/actions/ButtonGroup/ButtonGroup.jsx"
     },
     {
-      "name": "CalendarDay",
-      "sourcePath": "components/forms-inputs/CalendarDay/CalendarDay.jsx"
-    },
-    {
       "name": "Card",
       "sourcePath": "components/data-display/Card/Card.jsx"
     },
@@ -108,10 +104,6 @@
     {
       "name": "FieldGroup",
       "sourcePath": "components/forms-inputs/FieldGroup/FieldGroup.jsx"
-    },
-    {
-      "name": "FieldMessage",
-      "sourcePath": "components/forms-inputs/FieldMessage/FieldMessage.jsx"
     },
     {
       "name": "FilterBar",
@@ -164,10 +156,6 @@
     {
       "name": "ModalCard",
       "sourcePath": "components/overlays/ModalCard/ModalCard.jsx"
-    },
-    {
-      "name": "ModalConfirm",
-      "sourcePath": "components/overlays/ModalConfirm/ModalConfirm.jsx"
     },
     {
       "name": "MultiSelect",
@@ -296,10 +284,6 @@
     {
       "name": "Textarea",
       "sourcePath": "components/forms-inputs/Textarea/Textarea.jsx"
-    },
-    {
-      "name": "TimeColumns",
-      "sourcePath": "components/forms-inputs/TimeColumns/TimeColumns.jsx"
     },
     {
       "name": "Timeline",

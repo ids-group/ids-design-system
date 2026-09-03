@@ -36,6 +36,76 @@ const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase(
  *  the split is only ever at a lowercase-or-digit followed by an uppercase. */
 const spacedName = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
 
+/** Every name `src/public-api.ts` exports, by walking the re-export graph.
+ *
+ *  This decides what gets a published CONTRACT. The README the project ships says it outright:
+ *  "Engineers translate what you build here… anything with no Angular counterpart can't be handed
+ *  off". A component the package does not export has no counterpart to hand off — an engineer
+ *  cannot import it — so a `.d.ts` and a React wrapper for it are a false promise. Four were:
+ *  TimeColumns and FieldMessage say "Internal" in their own docblocks, `modal/index.ts` withholds
+ *  ModalConfirmComponent while exporting the service that opens it, and CalendarDay was never
+ *  re-exported at all.
+ *
+ *  The lever is `public-api.ts` and nothing here: export a component and it is published on the
+ *  next build. There is deliberately no allowlist to drift. */
+const publicExports = (() => {
+  const names = new Set();
+  const seen = new Set();
+
+  const resolve = (from, specifier) => {
+    const base = join(dirname(from), specifier);
+    for (const candidate of [`${base}.ts`, join(base, 'index.ts')]) {
+      try {
+        readFileSync(candidate);
+
+        return candidate;
+      } catch {
+        /* try the next shape */
+      }
+    }
+
+    return null;
+  };
+
+  const declaredIn = (source) => {
+    for (const [, name] of source.matchAll(/export\s+(?:abstract\s+)?class\s+(\w+)/g)) {
+      names.add(name);
+    }
+  };
+
+  (function walk(file) {
+    if (!file || seen.has(file)) return;
+    seen.add(file);
+    let source = '';
+    try {
+      source = readFileSync(file, 'utf8');
+    } catch {
+      return;
+    }
+    declaredIn(source);
+    for (const [, listed, specifier] of source.matchAll(/export\s*\{([^}]*)\}\s*from\s*'([^']+)'/g)) {
+      for (const entry of listed.split(',')) {
+        const name = entry.replace(/\btype\b/, '').split(/\s+as\s+/).pop().trim();
+        if (name) names.add(name);
+      }
+      walk(resolve(file, specifier));
+    }
+    for (const [, specifier] of source.matchAll(/export\s*\*\s*from\s*'([^']+)'/g)) {
+      const target = resolve(file, specifier);
+      if (target) {
+        try {
+          declaredIn(readFileSync(target, 'utf8'));
+        } catch {
+          /* the walk below reports it */
+        }
+      }
+      walk(target);
+    }
+  })(join(repo, 'src', 'public-api.ts'));
+
+  return names;
+})();
+
 /** The ds-docs section that documents this component — the card's whole body.
  *
  *  Most resolve by name: `Input` is documented by `components/input`. The rest are sub-components
@@ -484,6 +554,7 @@ rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
 const written = [];
+const withheld = [];
 for (const name of [...byName.keys()].sort()) {
   const component = byName.get(name);
   const body = readDoc(name);
@@ -492,23 +563,29 @@ for (const name of [...byName.keys()].sort()) {
   const dir = join(OUT, 'components', group, name);
   mkdirSync(dir, { recursive: true });
 
-  writeFileSync(
-    join(dir, `${name}.jsx`),
-    `// Re-export of ${config.pkg} ${name}. Implementation is in the root _ds_bundle.js (window.IdsDs).\n`
-    + `Object.assign(window, { ${name}: window.IdsDs.${name} });\n`,
-  );
-  writeFileSync(
-    join(dir, `${name}.d.ts`),
-    declaration({
-      name,
-      doc: body,
-      component: {
-        ...component,
-        api: component.api.map((entry) => ({ ...entry, type: declarationType(entry.inlined) })),
-      },
-    }),
-  );
-  writeFileSync(join(dir, `${name}.prompt.md`), `# ${name}\n\n${body}`);
+  // The chapter still publishes its CARDS — how a field message or a day cell looks is worth
+  // seeing — but a component the package does not export gets no contract to build against.
+  if (publicExports.has(component.className)) {
+    writeFileSync(
+      join(dir, `${name}.jsx`),
+      `// Re-export of ${config.pkg} ${name}. Implementation is in the root _ds_bundle.js (window.IdsDs).\n`
+      + `Object.assign(window, { ${name}: window.IdsDs.${name} });\n`,
+    );
+    writeFileSync(
+      join(dir, `${name}.d.ts`),
+      declaration({
+        name,
+        doc: body,
+        component: {
+          ...component,
+          api: component.api.map((entry) => ({ ...entry, type: declarationType(entry.inlined) })),
+        },
+      }),
+    );
+    writeFileSync(join(dir, `${name}.prompt.md`), `# ${name}\n\n${body}`);
+  } else {
+    withheld.push(name);
+  }
 
   // Keyed by the card FILE, not the component: a component publishes one card per block it owns and
   // each is a different height. measure-cards.mjs writes these keys.
@@ -658,9 +735,16 @@ writeFileSync(
   readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8'),
 );
 
+if (withheld.length) {
+  console.log(
+    `· ${withheld.length} component(s) get cards but no contract — src/public-api.ts does not`
+      + ` export them: ${withheld.join(', ')}`,
+  );
+}
+
 const distinctSections = new Set(written.map((card) => card.slug));
 console.log(
   `✓ ${written.length} card(s) over ${distinctSections.size} ds-docs section(s)`
-    + ` + ${byName.size} declaration(s) + ${readdirSync(pasted).length} pasted image(s)`
+    + ` + ${byName.size - withheld.length} declaration(s) + ${readdirSync(pasted).length} pasted image(s)`
     + ` into ${OUT.replace(repo, '.')}`,
 );
