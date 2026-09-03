@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.11.4 — 2026-09-03
+
 ### Breaking
 
 - **`ds-banner` and `ds-alert` no longer announce themselves unless asked.** Both applied `role` and
