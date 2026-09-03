@@ -4,20 +4,10 @@
   <title>AuthLayout</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-components-auth-layout _nghost-c1z=""><docs-section _ngcontent-c1z="" anchor="auth-layout" eyebrow="Components" title="Auth layout" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-auth-layout" data-anchor="auth-layout"><h2 _ngcontent-c1="" class="t-h2">Auth layout - why it centres with auto margins</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="auth-layout"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;AuthLayout /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1z="" class="block-desc t-s"> The full-height box is the layout's own host, and there is only one of it — the hand-rolled version this replaces nested a 100vh wrapper inside a 100dvh one, which scrolls a page whose content fits. Inside it the column is centred with auto margins rather than centre alignment. On a normal page the two are the same, because the host is free to grow and a tall form simply lengthens it. They differ once the host cannot grow — when you embed the layout by setting its min-height token to 100% in a fixed-height parent. There, centre alignment puts a form taller than the box above the scroll origin, out of reach of any scrolling; auto margins collapse to zero instead, so the form pins to the top padding edge and scrolls from there. Both demos above are the real component with that token lowered to fit this page. </p></section></docs-section></ds-docs-components-auth-layout></div>
   
   

@@ -4,20 +4,10 @@
   <title>Switch</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-components-switch _nghost-c1k=""><docs-section _ngcontent-c1k="" anchor="switch" eyebrow="Components" title="Switch" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-switch" data-anchor="switch"><h2 _ngcontent-c1="" class="t-h2">Switch - validation states</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="switch"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Switch /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1k="" class="block-desc t-s"> Use <code _ngcontent-c1k="" class="t-mono-inline">hint</code> for helper text and <code _ngcontent-c1k="" class="t-mono-inline"> [invalid]="true" </code> to surface an error. </p><div _ngcontent-c1k="" class="stack"><ds-switch _ngcontent-c1k="" label="Email notifications" hint="Notifications are sent to your registered email." _nghost-c3=""><div _ngcontent-c3="" class="size-md switch-field"><span _ngcontent-c3="" class="control-line"><input _ngcontent-c3="" type="checkbox" role="switch" class="switch" aria-checked="false" id="ds-switch-17" aria-describedby="ds-switch-17-hint"><label _ngcontent-c3="" class="control-text" for="ds-switch-17"> Email notifications </label></span><ds-field-message _ngcontent-c3="" _nghost-c7=""><span _ngcontent-c7="" class="default field-message" id="ds-switch-17-hint"> Notifications are sent to your registered email. </span></ds-field-message></div></ds-switch><ds-switch _ngcontent-c1k="" label="Email notifications" error="At least one notification channel must remain active." _nghost-c3=""><div _ngcontent-c3="" class="size-md switch-field"><span _ngcontent-c3="" class="control-line"><input _ngcontent-c3="" type="checkbox" role="switch" class="switch" aria-checked="false" id="ds-switch-18" aria-invalid="true" aria-describedby="ds-switch-18-hint"><label _ngcontent-c3="" class="control-text" for="ds-switch-18"> Email notifications </label></span><ds-field-message _ngcontent-c3="" _nghost-c7=""><span _ngcontent-c7="" role="alert" class="field-message error" id="ds-switch-18-hint"><ds-icon _ngcontent-c7="" class="message-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16v.01"></path></svg></ds-icon> At least one notification channel must remain active. </span></ds-field-message></div></ds-switch></div></section></docs-section></ds-docs-components-switch></div>
   
   

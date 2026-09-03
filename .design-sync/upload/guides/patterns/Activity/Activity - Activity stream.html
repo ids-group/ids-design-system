@@ -4,20 +4,10 @@
   <title>Activity</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-patterns-activity _nghost-c4c=""><docs-section _ngcontent-c4c="" anchor="pattern-activity" eyebrow="Patterns" title="Activity" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-pattern-activity" data-anchor="pattern-activity"><h2 _ngcontent-c1="" class="t-h2">Activity - activity stream</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c4c="" lede=""> A vertical list of attributed events on a record — avatar, actor, verb, object, optional inline status badge, and a relative timestamp. Plus a calm empty state for fresh records. </span></p><p _ngcontent-c4c="" class="block-desc t-s"> Vertical list of attributed events on a record. Each row: avatar, bold subject (actor + verb + object), one-line body, optional inline status badge, and a relative timestamp on the trailing edge. </p><div _ngcontent-c4c="" class="stage"><ul _ngcontent-c4c="" class="activity-list"><li _ngcontent-c4c="" class="activity"><ds-avatar _ngcontent-c4c="" size="sm" _nghost-c1x="" aria-hidden="true" class="sm"> AP
 </ds-avatar><div _ngcontent-c4c="" class="activity-body"><p _ngcontent-c4c="" class="t-s subject"><strong _ngcontent-c4c=""> Alex Park </strong> changed <strong _ngcontent-c4c=""> Alpha · Build start </strong><ds-badge _ngcontent-c4c="" _nghost-c16="" data-status="warning"><span _ngcontent-c16="" class="badge"> Impact pending </span></ds-badge></p><p _ngcontent-c4c="" class="t-s detail"> from 26 Jul 06:00 to 27 Jul 06:00 </p></div><span _ngcontent-c4c="" class="t-s time"> 2 minutes ago </span></li><li _ngcontent-c4c="" class="activity"><ds-avatar _ngcontent-c4c="" size="sm" _nghost-c1x="" aria-hidden="true" class="sm"> SK
 </ds-avatar><div _ngcontent-c4c="" class="activity-body"><p _ngcontent-c4c="" class="t-s subject"><strong _ngcontent-c4c=""> Sara Khan </strong> recomputed <strong _ngcontent-c4c=""> 3 Logistics plans </strong></p><p _ngcontent-c4c="" class="t-s detail"> All within volume limits. </p></div><span _ngcontent-c4c="" class="t-s time"> 14 minutes ago </span></li><li _ngcontent-c4c="" class="activity"><ds-avatar _ngcontent-c4c="" size="sm" _nghost-c1x="" aria-hidden="true" class="sm"> JR

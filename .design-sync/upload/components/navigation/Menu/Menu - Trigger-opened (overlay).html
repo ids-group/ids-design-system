@@ -4,20 +4,10 @@
   <title>Menu</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-components-menu _nghost-c24=""><docs-section _ngcontent-c24="" anchor="menu" eyebrow="Components" title="Menu" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-menu" data-anchor="menu"><h2 _ngcontent-c1="" class="t-h2">Menu - trigger-opened (overlay)</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="menu"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Menu /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c24="" lede=""> Inline list of actions. Used inside modals, popovers, or any container that already provides its own surface. Each item is a full-width button with an optional leading icon. <code _ngcontent-c24="">error</code> turns the item red for destructive actions (Sign out, Delete); <code _ngcontent-c24="">disabled</code> dims it and blocks clicks. To float it from a trigger, host it in a <code _ngcontent-c24=""> ds-popover </code> — see the first demo. </span></p><p _ngcontent-c24="" class="block-desc t-s"> The real usage — a button opens the menu in a <code _ngcontent-c24="">ds-popover</code>. Selecting an item closes the overlay automatically (the item finds it via DI, no wiring needed). Click outside or press <code _ngcontent-c24="">Esc</code> to dismiss. </p><div _ngcontent-c24="" class="demo"><ds-button _ngcontent-c24="" color="neutral" variant="outline" ariahaspopup="menu" _nghost-c5="" data-variant="outline" data-color="neutral"><button _ngcontent-c5="" class="button c-neutral md v-outline" type="button" aria-haspopup="menu" aria-expanded="false"><span _ngcontent-c5="" class="button-main"> Account ▾ </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button><ds-popover _ngcontent-c24="" align="start" _nghost-ch=""></ds-popover></div><docs-api-table _ngcontent-c1="" _nghost-c9="" data-key="menu"></docs-api-table></section></docs-section></ds-docs-components-menu></div>
   
   

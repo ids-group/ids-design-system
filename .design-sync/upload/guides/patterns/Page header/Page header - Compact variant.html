@@ -4,20 +4,10 @@
   <title>Page header</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-patterns-page-header _nghost-c4g=""><docs-section _ngcontent-c4g="" anchor="pattern-page-header" eyebrow="Patterns" title="Page header" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-pattern-page-header" data-anchor="pattern-page-header"><h2 _ngcontent-c1="" class="t-h2">Page header - compact variant</h2><p _ngcontent-c4g="" class="block-desc t-s"> No breadcrumb, no tabs — just title + sub-line + action row. For embedded views (drawers, secondary pages) where the chrome already establishes location. </p><div _ngcontent-c4g="" class="stage"><ds-page-header _ngcontent-c4g="" title="Edit allocation" subtitle="3 lanes affected · auto-recompute on save" _nghost-c3p=""><header _ngcontent-c3p="" class="compact page-header"><div _ngcontent-c3p="" class="row title-row"><div _ngcontent-c3p="" class="title-block"><div _ngcontent-c3p="" class="title-line"><h1 _ngcontent-c3p="" class="title"> Edit allocation </h1></div><p _ngcontent-c3p="" class="subtitle"> 3 lanes affected · auto-recompute on save </p><div _ngcontent-c3p="" class="meta"></div></div><div _ngcontent-c3p="" class="actions"><div _ngcontent-c4g="" actions=""><ds-button _ngcontent-c4g="" color="neutral" variant="outline" _nghost-c5="" data-variant="outline" data-color="neutral"><button _ngcontent-c5="" class="button c-neutral md v-outline" type="button"><span _ngcontent-c5="" class="button-main"> Discard </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button><ds-button _ngcontent-c4g="" _nghost-c5="" data-variant="solid" data-color="primary"><button _ngcontent-c5="" class="button md" type="button"><span _ngcontent-c5="" class="button-main"> Save </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button></div></div></div></header></ds-page-header></div></section></docs-section></ds-docs-patterns-page-header></div>
   
   

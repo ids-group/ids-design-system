@@ -4,20 +4,10 @@
   <title>Signal Forms</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-practice-signal-forms _nghost-c4k=""><docs-section _ngcontent-c4k="" anchor="practice-signal-forms" eyebrow="Practice" title="Signal Forms" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-practice-signal-forms" data-anchor="practice-signal-forms"><h2 _ngcontent-c1="" class="t-h2">Signal Forms - reactive and template-driven forms still work</h2><p _ngcontent-c4k="" class="block-desc t-s"> Nothing here replaces anything. Every control still provides a <code _ngcontent-c4k="" class="t-mono-inline"> ControlValueAccessor </code>, so <code _ngcontent-c4k="" class="t-mono-inline"> formControlName </code> and <code _ngcontent-c4k="" class="t-mono-inline"> ngModel </code> bind exactly as before, and the same message row serves both. A given field is driven by one form system at a time, so the two cannot disagree. </p></section></docs-section></ds-docs-practice-signal-forms></div>
   
   

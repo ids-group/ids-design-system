@@ -4,39 +4,28 @@
   <title>AppLayout</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<style type="text/css"></style><link rel="stylesheet" href="../../../_ds_cards.css"><style>.cdk-visually-hidden {
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  white-space: nowrap;
-  outline: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  left: 0;
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<style></style><link rel="stylesheet" href="../../../_ds_cards.css"><style>.cdk-visually-hidden {
+border: 0;
+clip: rect(0 0 0 0);
+height: 1px;
+margin: -1px;
+overflow: hidden;
+padding: 0;
+position: absolute;
+width: 1px;
+white-space: nowrap;
+outline: 0;
+-webkit-appearance: none;
+-moz-appearance: none;
+left: 0;
 }
 [dir=rtl] .cdk-visually-hidden {
-  left: auto;
-  right: 0;
-}
-</style><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+left: auto;
+right: 0;
+}</style><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-components-app-layout _nghost-c1r=""><docs-section _ngcontent-c1r="" anchor="app-layout" eyebrow="Components" title="App layout" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-app-layout" data-anchor="app-layout"><h2 _ngcontent-c1="" class="t-h2">App layout - opening the rail from your own chrome</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="app-layout"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;AppLayout /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1r="" class="block-desc t-s"> Below the lg breakpoint the rail becomes an overlay, and the button that opens it lives in YOUR topbar — so the layout cannot wire it up for you. Two routes, and picking the wrong one is the easy mistake. On a native <code _ngcontent-c1r="" class="t-mono-inline"> button </code> put <code _ngcontent-c1r="" class="t-mono-inline"> dsRailTrigger </code> on it: the directive toggles the rail and keeps <code _ngcontent-c1r="" class="t-mono-inline"> aria-expanded </code> and <code _ngcontent-c1r="" class="t-mono-inline"> aria-controls </code> correct. On a <code _ngcontent-c1r="" class="t-mono-inline"> ds-icon-button </code> do NOT — the directive's attributes would land on the wrapper, and the inner <code _ngcontent-c1r="" class="t-mono-inline"> button </code> is what a screen reader reads. Bind that component's forwarding inputs instead, off a template ref: <code _ngcontent-c1r="" class="t-mono-inline"> [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null" </code> and <code _ngcontent-c1r="" class="t-mono-inline"> [ariaControls]="layout.railId" </code>. These docs use the second route — the burger at the top of this page on a narrow screen is it. </p><p _ngcontent-c1r="" class="block-desc t-s"> Both attributes are dropped while the rail is NOT an overlay: above the breakpoint the rail is permanently in the layout, so <code _ngcontent-c1r="" class="t-mono-inline"> aria-expanded="false" </code> would state the opposite of what the reader sees. </p></section></docs-section></ds-docs-components-app-layout></div>
   
   
