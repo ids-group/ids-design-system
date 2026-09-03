@@ -495,10 +495,11 @@ const markerValue = (value) => (value ?? '')
  *  paragraph that stops. The rest of the block's prose is not lost - it becomes the card's usage
  *  note.
  *
- *  The pane does NOT truncate; it wraps to a second line. An earlier ellipsis in a screenshot was
- *  this cap, not the pane. 160 lets the first sentence through whole on 89% of cards - the median
- *  is 76 characters and the ninetieth percentile 168. */
-const SUBTITLE_CAP = 160;
+ *  Measured, not guessed: a 2003-character probe was stored by the API in full and the pane showed
+ *  it up to character 193, so the pane's own limit is about 195. This cap sits under it so the cut
+ *  is OURS - on a word, with an ellipsis - rather than the pane's mid-word. The median first
+ *  sentence is 76 characters and the ninetieth percentile 168, so 180 lets 93% through whole. */
+const SUBTITLE_CAP = 180;
 const capped = (paragraph) => {
   const stop = paragraph.search(/[.!?](\s|$)/);
   const sentence = stop < 0 ? paragraph : paragraph.slice(0, stop + 1);

@@ -464,7 +464,7 @@
       "group": "actions",
       "viewport": "1200x343",
       "name": "Link - on a button, for an action that is not navigation",
-      "subtitle": "ds-button warns variant='text' off in favour of this class, and anything that acts rather than navigates has to be a button — so the class resets the…"
+      "subtitle": "ds-button warns variant='text' off in favour of this class, and anything that acts rather than navigates has to be a button — so the class resets the browser's button chrome…"
     },
     {
       "path": "components/forms-inputs/Autocomplete/Autocomplete - Single.html",
@@ -648,7 +648,7 @@
       "group": "forms-inputs",
       "viewport": "1200x358",
       "name": "Date picker - date of birth",
-      "subtitle": "[maxDate]='today' rejects future dates, and [defaultDate] opens the panel on that date instead of the current month — the calendar focuses its exact day without…"
+      "subtitle": "[maxDate]='today' rejects future dates, and [defaultDate] opens the panel on that date instead of the current month — the calendar focuses its exact day without selecting it."
     },
     {
       "path": "components/forms-inputs/DatePicker/Date Picker - Localization.html",
@@ -738,7 +738,7 @@
       "group": "forms-inputs",
       "viewport": "1200x457",
       "name": "Input - with icon · prefix · suffix",
-      "subtitle": "Clicking anywhere in the frame — a leading icon, a prefix/suffix add-on, or the padding — focuses the input; only nested controls (a projected button, the clear…"
+      "subtitle": "Clicking anywhere in the frame — a leading icon, a prefix/suffix add-on, or the padding — focuses the input; only nested controls (a projected button, the clear ✕, the password…"
     },
     {
       "path": "components/forms-inputs/Input/Input - Clearable.html",
@@ -780,7 +780,7 @@
       "group": "forms-inputs",
       "viewport": "1200x700",
       "name": "Field Message - the glyph on the message line",
-      "subtitle": "error, warning and success each bring a glyph; hint does not, because it is the resting text rather than a state and a form where every field carries an info…"
+      "subtitle": "error, warning and success each bring a glyph; hint does not, because it is the resting text rather than a state and a form where every field carries an info circle reads as noise."
     },
     {
       "path": "components/forms-inputs/FieldMessage/Field Message - Reserved message row.html",
@@ -815,7 +815,7 @@
       "group": "forms-inputs",
       "viewport": "1200x420",
       "name": "Multi-select - labels in the trigger, and per-group select-all",
-      "subtitle": "triggerDisplay='labels' keeps the compact footprint but names what is selected instead of counting it, cut to the width with the rest behind &laquo;+N&raquo; —…"
+      "subtitle": "triggerDisplay='labels' keeps the compact footprint but names what is selected instead of counting it, cut to the width with the rest behind &laquo;+N&raquo; — the same measurement…"
     },
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Hiding the filter row.html",
@@ -829,14 +829,14 @@
       "group": "forms-inputs",
       "viewport": "1200x420",
       "name": "Multi-select - compact trigger",
-      "subtitle": "triggerDisplay='count' swaps the chip field for a caption and a selected-count badge at intrinsic width — a fixed footprint for a filter toolbar, where a field…"
+      "subtitle": "triggerDisplay='count' swaps the chip field for a caption and a selected-count badge at intrinsic width — a fixed footprint for a filter toolbar, where a field that grows with the…"
     },
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Custom option and chip content.html",
       "group": "forms-inputs",
       "viewport": "1200x453",
       "name": "Multi-select - custom option and chip content",
-      "subtitle": "dsOptionTemplate fills an option row's label area, dsChipTemplate fills the selected chip — so a visual that identifies the option does not vanish the moment it…"
+      "subtitle": "dsOptionTemplate fills an option row's label area, dsChipTemplate fills the selected chip — so a visual that identifies the option does not vanish the moment it is picked."
     },
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Option groups.html",
@@ -940,7 +940,7 @@
       "group": "forms-inputs",
       "viewport": "1200x659",
       "name": "Password rules - live checklist",
-      "subtitle": "Each row carries its own predicate, because the POLICY has to mirror your server — the component owns the tri-state glyph, the colours and the type scale,…"
+      "subtitle": "Each row carries its own predicate, because the POLICY has to mirror your server — the component owns the tri-state glyph, the colours and the type scale, nothing else."
     },
     {
       "path": "components/forms-inputs/Radio/Radio - Radio states showcase.html",
@@ -1021,7 +1021,7 @@
       "group": "forms-inputs",
       "viewport": "1200x548",
       "name": "Search - in a form, and disabled",
-      "subtitle": "A search box holds a value, so it binds like any other control now: [formControl], formControlName, [(ngModel)] and a signal form all reach it, and its own…"
+      "subtitle": "A search box holds a value, so it binds like any other control now: [formControl], formControlName, [(ngModel)] and a signal form all reach it, and its own [(value)] keeps working."
     },
     {
       "path": "components/forms-inputs/Select/Select - Sizes.html",
@@ -1258,7 +1258,7 @@
       "group": "navigation",
       "viewport": "1200x700",
       "name": "App layout - returning the reader to where they were",
-      "subtitle": "[restoreScroll]='true' remembers the scroll position per route and restores it — but only on a BACK, which is the whole design: returning to a list should…"
+      "subtitle": "[restoreScroll]='true' remembers the scroll position per route and restores it — but only on a BACK, which is the whole design: returning to a list should return to the reader's…"
     },
     {
       "path": "components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own.html",
@@ -1279,21 +1279,21 @@
       "group": "navigation",
       "viewport": "1200x700",
       "name": "Auth layout - on a short screen the chrome compresses, not the card",
-      "subtitle": "A landscape phone leaves about 330px of viewport, and the furniture this layout puts around your card — block padding, the column gap, the letter-mark tile, the…"
+      "subtitle": "A landscape phone leaves about 330px of viewport, and the furniture this layout puts around your card — block padding, the column gap, the letter-mark tile, the wordmark, the…"
     },
     {
       "path": "components/navigation/AuthLayout/Auth Layout - Why it centres with auto margins.html",
       "group": "navigation",
       "viewport": "1200x413",
       "name": "Auth layout - why it centres with auto margins",
-      "subtitle": "The full-height box is the layout's own host, and there is only one of it — the hand-rolled version this replaces nested a 100vh wrapper inside a 100dvh one,…"
+      "subtitle": "The full-height box is the layout's own host, and there is only one of it — the hand-rolled version this replaces nested a 100vh wrapper inside a 100dvh one, which scrolls a page…"
     },
     {
       "path": "components/navigation/AuthLayout/Auth Layout - The notch needs one line from YOUR app.html",
       "group": "navigation",
       "viewport": "1200x477",
       "name": "Auth layout - the notch needs one line from YOUR app",
-      "subtitle": "This layout pads itself by env(safe-area-inset-*), so a notched phone in landscape does not put the card under the cutout — and ds-bottom-sheet does the same…"
+      "subtitle": "This layout pads itself by env(safe-area-inset-*), so a notched phone in landscape does not put the card under the cutout — and ds-bottom-sheet does the same for the home…"
     },
     {
       "path": "components/navigation/Breadcrumbs/Breadcrumbs - Default.html",
@@ -1419,7 +1419,7 @@
       "group": "navigation",
       "viewport": "1200x665",
       "name": "Sidenav - letter-mark & accent wordmark",
-      "subtitle": "logoLetter sets the tile glyph when it differs from the brand's first letter, and markup marked dsBrandName projects a custom wordmark in place of the plain…"
+      "subtitle": "logoLetter sets the tile glyph when it differs from the brand's first letter, and markup marked dsBrandName projects a custom wordmark in place of the plain brand text — here a…"
     },
     {
       "path": "components/navigation/SidenavGroup/Sidenav Group - Expandable groups.html",
@@ -1624,7 +1624,7 @@
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Avatars - seeded tint",
-      "subtitle": "Pass seed (an email or name) for a deterministic hsl(H 50% 62%) colour — the same person always gets the same tint across apps — with WHITE initials on every…"
+      "subtitle": "Pass seed (an email or name) for a deterministic hsl(H 50% 62%) colour — the same person always gets the same tint across apps — with WHITE initials on every one."
     },
     {
       "path": "components/data-display/Card/Card - Elevations x paddings.html",
@@ -1645,7 +1645,7 @@
       "group": "data-display",
       "viewport": "1200x496",
       "name": "Cards - a full-bleed child needs the card to clip",
-      "subtitle": "A child whose background runs to the card’s edge paints its square corners over the card’s radius, and the host cannot fix it: the rounded box is the card’s own…"
+      "subtitle": "A child whose background runs to the card’s edge paints its square corners over the card’s radius, and the host cannot fix it: the rounded box is the card’s own inner element."
     },
     {
       "path": "components/data-display/DescriptionList/Description List - Horizontal layout.html",
@@ -1729,21 +1729,21 @@
       "group": "data-display",
       "viewport": "1200x450",
       "name": "Stats - a value that is not a number",
-      "subtitle": "Project into [dsStatValue] when the headline is a badge, a status dot or anything else a number slot cannot hold — the tile keeps its geometry, so it sits level…"
+      "subtitle": "Project into [dsStatValue] when the headline is a badge, a status dot or anything else a number slot cannot hold — the tile keeps its geometry, so it sits level with the numeric…"
     },
     {
       "path": "components/data-display/Stat/Stat - A value that is a phrase.html",
       "group": "data-display",
       "viewport": "1200x538",
       "name": "Stats - a value that is a phrase",
-      "subtitle": "The value line is white-space: nowrap, which is right for the number this tile was built around and wrong for a date range or a status phrase — that used to be…"
+      "subtitle": "The value line is white-space: nowrap, which is right for the number this tile was built around and wrong for a date range or a status phrase — that used to be a reason to reach…"
     },
     {
       "path": "components/data-display/Stat/Stat - A formatted number, through Angular's own pipe.html",
       "group": "data-display",
       "viewport": "1200x465",
       "name": "Stats - a formatted number, through Angular's own pipe",
-      "subtitle": "value takes string | number | null, so the number, percent and date pipes bind directly — they are typed string | null, and before the null they failed…"
+      "subtitle": "value takes string | number | null, so the number, percent and date pipes bind directly — they are typed string | null, and before the null they failed strictTemplates with TS2322."
     },
     {
       "path": "components/data-display/Table/Table - Default.html",
@@ -1848,7 +1848,7 @@
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - pagination · sticky column",
-      "subtitle": "[pageSize] turns on client-side pagination (select-all then scopes to the current page); [stickyFirstColumn] pins the first column on horizontal scroll;…"
+      "subtitle": "[pageSize] turns on client-side pagination (select-all then scopes to the current page); [stickyFirstColumn] pins the first column on horizontal scroll; sortMode says who sorts —…"
     },
     {
       "path": "components/data-display/Table/Table - Expandable rows.html",
@@ -1869,21 +1869,21 @@
       "group": "data-display",
       "viewport": "1200x645",
       "name": "Table - clickable rows · drawer detail",
-      "subtitle": "[rowInteractive]='true' turns every row into a keyboard-operable control — pointer cursor, hover and pressed tints (passive tables render none), focus ring,…"
+      "subtitle": "[rowInteractive]='true' turns every row into a keyboard-operable control — pointer cursor, hover and pressed tints (passive tables render none), focus ring, Enter/Space — and…"
     },
     {
       "path": "components/data-display/Table/Table - Row actions - kebab menu.html",
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - row actions · kebab menu",
-      "subtitle": "[rowActions] renders a trailing ⋮ column — the button opens a menu of the configured items and (rowActionSelected) reports the chosen action together with its…"
+      "subtitle": "[rowActions] renders a trailing ⋮ column — the button opens a menu of the configured items and (rowActionSelected) reports the chosen action together with its row."
     },
     {
       "path": "components/data-display/Table/Table - Column picker - reorder.html",
       "group": "data-display",
       "viewport": "1200x612",
       "name": "Table - column picker · reorder",
-      "subtitle": "The header Columns button opens a panel that toggles visibility for hideable: true columns (two-way [(hiddenKeys)]; hidden: true is the initial state, the last…"
+      "subtitle": "The header Columns button opens a panel that toggles visibility for hideable: true columns (two-way [(hiddenKeys)]; hidden: true is the initial state, the last visible column is…"
     },
     {
       "path": "components/data-display/Table/Table - Resizable columns.html",
@@ -1904,7 +1904,7 @@
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - persisted layout & export",
-      "subtitle": "[persistLayout]='true' with a storageKey round-trips the column order, widths and hidden set through localStorage, so reorder a column or hide one, reload the…"
+      "subtitle": "[persistLayout]='true' with a storageKey round-trips the column order, widths and hidden set through localStorage, so reorder a column or hide one, reload the page, and it stays."
     },
     {
       "path": "components/data-display/Table/Table - Toolbar slot - the export button anywhere.html",
@@ -1925,14 +1925,14 @@
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - server sort · a host that answers with its own default",
-      "subtitle": "The shape a server-paged list actually has: [sortKey] and [sortDir] are bound ONE-WAY from the host's own state (usually a computed over the URL), and…"
+      "subtitle": "The shape a server-paged list actually has: [sortKey] and [sortDir] are bound ONE-WAY from the host's own state (usually a computed over the URL), and (sortChange) is where it…"
     },
     {
       "path": "components/data-display/Table/Table - The same thing two-way.html",
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - the same thing two-way, when the host has no opinion to defend",
-      "subtitle": "sortKey and sortDir each have a matching Change output, so [(sortKey)] and [(sortDir)] work: the table writes the host's state and the host reads it back, with…"
+      "subtitle": "sortKey and sortDir each have a matching Change output, so [(sortKey)] and [(sortDir)] work: the table writes the host's state and the host reads it back, with no handler to write."
     },
     {
       "path": "components/data-display/Table/Table - Column filters.html",
@@ -1953,7 +1953,7 @@
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - sticky horizontal scrollbar",
-      "subtitle": "[stickyScrollbar]='true' hides the scroll container's native bar and pins a proxy scrollbar to the bottom of the viewport while the table is on screen — on a…"
+      "subtitle": "[stickyScrollbar]='true' hides the scroll container's native bar and pins a proxy scrollbar to the bottom of the viewport while the table is on screen — on a tall, wide table the…"
     },
     {
       "path": "components/data-display/Table/Table - CSV export.html",
@@ -1967,7 +1967,7 @@
       "group": "data-display",
       "viewport": "1200x570",
       "name": "Table - server-side filtering, and a filter of your own",
-      "subtitle": "Header filters default to filterMode='server': the table tracks columnFilters without filtering anything, so your request drives the rows; pass the real domain…"
+      "subtitle": "Header filters default to filterMode='server': the table tracks columnFilters without filtering anything, so your request drives the rows; pass the real domain through…"
     },
     {
       "path": "components/data-display/Table/Table - What a screen reader is told.html",
@@ -2209,7 +2209,7 @@
       "group": "feedback-status",
       "viewport": "1200x366",
       "name": "Toast - promise toast",
-      "subtitle": "ToastService.promise() shows a loading toast while the promise is pending and updates it in-place to success or error when it settles (60 % chance of success in…"
+      "subtitle": "ToastService.promise() shows a loading toast while the promise is pending and updates it in-place to success or error when it settles (60 % chance of success in this demo)."
     },
     {
       "path": "components/feedback-status/Toast/Toast - Screen readers, and what the service owns.html",
@@ -2279,14 +2279,14 @@
       "group": "overlays",
       "viewport": "1200x634",
       "name": "Modal Card - title badge · subtitle",
-      "subtitle": "A header richer than one string, without leaving the component: project a status chip into [title-badge] beside the title, and set subtitle for the line under…"
+      "subtitle": "A header richer than one string, without leaving the component: project a status chip into [title-badge] beside the title, and set subtitle for the line under it."
     },
     {
       "path": "components/overlays/ModalCard/Modal Card - Status.html",
       "group": "overlays",
       "viewport": "1200x700",
       "name": "Modal Card - status",
-      "subtitle": "status takes the same DsStatus vocabulary as the rest of the library, and one word drives four things: the icon-badge tint, the title colour, the DEFAULT icon…"
+      "subtitle": "status takes the same DsStatus vocabulary as the rest of the library, and one word drives four things: the icon-badge tint, the title colour, the DEFAULT icon and the ARIA role."
     },
     {
       "path": "components/overlays/ModalCard/Modal Card - Without dividers.html",
@@ -2382,7 +2382,7 @@
       "group": "page-structure",
       "viewport": "1200x446",
       "name": "Filter bar - what the width buys",
-      "subtitle": "The declared width is a contract rather than a hint: the bar sizes each slot to exactly that number, so the arithmetic that decided the filter fits is true by…"
+      "subtitle": "The declared width is a contract rather than a hint: the bar sizes each slot to exactly that number, so the arithmetic that decided the filter fits is true by construction, and a…"
     },
     {
       "path": "components/page-structure/PageFooter/Page Footer - Default.html",
@@ -2506,7 +2506,7 @@
       "group": "foundations",
       "viewport": "1200x700",
       "name": "Colour - secondary role",
-      "subtitle": "The -secondary family is the DS's secondary colour role — a complementary tone for non-interactive emphasis (active rails, decorative indicators, accent…"
+      "subtitle": "The -secondary family is the DS's secondary colour role — a complementary tone for non-interactive emphasis (active rails, decorative indicators, accent pills)."
     },
     {
       "path": "guides/foundations/Colour/Colour - Secondary in use.html",
@@ -2562,7 +2562,7 @@
       "group": "foundations",
       "viewport": "1200x541",
       "name": "Colour - a clipping ancestor eats the ring — data-focus='inset' is the answer",
-      "subtitle": "Every style above draws OUTSIDE the border box, so an ancestor with overflow: hidden cuts the indicator away and leaves the element focusable with nothing to…"
+      "subtitle": "Every style above draws OUTSIDE the border box, so an ancestor with overflow: hidden cuts the indicator away and leaves the element focusable with nothing to see."
     },
     {
       "path": "guides/foundations/Colour/Colour - Surface contrast.html",
@@ -2649,7 +2649,7 @@
       "group": "foundations",
       "viewport": "1200x690",
       "name": "Layout - breakpoints",
-      "subtitle": "A custom property can't be read inside an @media condition, so for media queries use the compile-time Sass aliases instead: after @use 'breakpoints' as bp write…"
+      "subtitle": "A custom property can't be read inside an @media condition, so for media queries use the compile-time Sass aliases instead: after @use 'breakpoints' as bp write @include bp.up(md)…"
     },
     {
       "path": "guides/foundations/Layout/Layout - Layout grid.html",
@@ -2838,7 +2838,7 @@
       "group": "foundations",
       "viewport": "1200x700",
       "name": "Theming & dark mode - worked example — a square brand",
-      "subtitle": "The most common whole-brand change, and the one most often done the long way: a consumer audit found twelve scattered -ds-component-radius: 0 declarations…"
+      "subtitle": "The most common whole-brand change, and the one most often done the long way: a consumer audit found twelve scattered -ds-component-radius: 0 declarations written one component…"
     },
     {
       "path": "guides/foundations/Typography/Typography - Type ramp.html",
@@ -2878,7 +2878,7 @@
       "group": "patterns",
       "viewport": "1200x315",
       "name": "Page composition - the header slots are a reading order, not a set",
-      "subtitle": "[breadcrumbs] above the title, [title-badge] beside it, [meta] under it, [actions] right-aligned on the title line, [tabs] last so the tab row sits on the…"
+      "subtitle": "[breadcrumbs] above the title, [title-badge] beside it, [meta] under it, [actions] right-aligned on the title line, [tabs] last so the tab row sits on the header's bottom edge."
     },
     {
       "path": "guides/patterns/Page composition/Page composition - Three placement rules that settle most.html",
@@ -2952,7 +2952,7 @@
       "group": "patterns",
       "viewport": "1200x681",
       "name": "Filter bar - wired to a table",
-      "subtitle": "The same bar driving a live ds-table — the search box feeds the table's built-in client filter ([filterQuery], case-insensitive substring over every column),…"
+      "subtitle": "The same bar driving a live ds-table — the search box feeds the table's built-in client filter ([filterQuery], case-insensitive substring over every column), the status facet…"
     },
     {
       "path": "guides/patterns/Filter bar/Filter bar - Usage.html",
@@ -2999,7 +2999,7 @@
       "group": "patterns",
       "viewport": "1200x628",
       "name": "Page header - full record header",
-      "subtitle": "Breadcrumb above the title row, one status badge inline with the title, a sub-line of identifiers, primary action on the right with a ghost secondary, and tabs…"
+      "subtitle": "Breadcrumb above the title row, one status badge inline with the title, a sub-line of identifiers, primary action on the right with a ghost secondary, and tabs anchored immediately…"
     },
     {
       "path": "guides/patterns/Page header/Page header - Compact variant.html",
