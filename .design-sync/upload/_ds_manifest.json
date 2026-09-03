@@ -651,7 +651,7 @@
     {
       "path": "components/forms-inputs/FieldMessage/Field Message - Messages error, warning, hint.html",
       "group": "forms-inputs",
-      "viewport": "1200x503"
+      "viewport": "1200x504"
     },
     {
       "path": "components/forms-inputs/FieldMessage/Field Message - The glyph on the message line.html",
@@ -1451,7 +1451,7 @@
     {
       "path": "components/data-display/Table/Table - Clickable rows - drawer detail.html",
       "group": "data-display",
-      "viewport": "1200x654"
+      "viewport": "1200x655"
     },
     {
       "path": "components/data-display/Table/Table - Row actions - kebab menu.html",
@@ -1471,7 +1471,7 @@
     {
       "path": "components/data-display/Table/Table - Inline editing.html",
       "group": "data-display",
-      "viewport": "1200x520"
+      "viewport": "1200x521"
     },
     {
       "path": "components/data-display/Table/Table - Persisted layout & export.html",
@@ -1491,17 +1491,17 @@
     {
       "path": "components/data-display/Table/Table - Server sort - a host that answers with its own.html",
       "group": "data-display",
-      "viewport": "1200x668"
+      "viewport": "1200x671"
     },
     {
       "path": "components/data-display/Table/Table - The same thing two-way.html",
       "group": "data-display",
-      "viewport": "1200x690"
+      "viewport": "1200x688"
     },
     {
       "path": "components/data-display/Table/Table - Column filters.html",
       "group": "data-display",
-      "viewport": "1200x629"
+      "viewport": "1200x630"
     },
     {
       "path": "components/data-display/Table/Table - Truncation - full-text popover.html",

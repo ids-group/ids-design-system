@@ -9,6 +9,17 @@
       border-radius: var(--radius-lg);
     }
 
+    /* The refusal block carries four subjects under one h3. They stay h4 rather than becoming
+       block titles of their own because an h3 there would split the card four ways. */
+    .sub-title {
+      margin-top: var(--space-6);
+      color: var(--text-tertiary);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
+    }
+    .sub-title + .block-desc { margin-top: var(--space-1); }
+
     /* ---------- states matrix (button-specific; color × variant uses docs-matrix) ---------- */
     .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
     .matrix {
