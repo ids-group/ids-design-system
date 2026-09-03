@@ -1,4 +1,4 @@
-<!-- @dsCard group="navigation" viewport="1200x642" -->
+<!-- @dsCard group="navigation" viewport="1200x521" -->
 <!doctype html>
 <!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
      automatic OS branch, so a host that sets it on this document flips every component's tokens
@@ -27,14 +27,21 @@
     /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
        than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
        names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one. CHROME is docs-section's own template
-       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
-       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
+       chapter's own component), and runs until the next one.
+       Of the chapter's own header only the title is kept on every card. The eyebrow is a constant,
+       and the lede describes the CHAPTER — printing it on all seven Button cards is the same
+       paragraph seven times, so it rides the first card only. Removed rather than hidden: the pane
+       sizes a card from its rendered height. */
     (function () {
       var OWNS = "";
       var INDEX = 6;
       var KEY = null;
-      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
+      /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
+         the title said "Buttons" and the lede described Button, and the card already names itself
+         in its block heading and in the pane's label. The lede rides the chapter's first card. */
+      var OWN_CHAPTER = OWNS === '';
+      var KEEP = OWN_CHAPTER ? (INDEX === 0 ? 'h2, p.lede' : 'h2') : ':not(*)';
+      var DROP_ALWAYS = '.eyebrow' + (OWN_CHAPTER ? '' : ', h2, p.lede');
       var API = '[data-key]';
       var host = document.querySelector("ds-docs-components-tabs");
       var start = Date.now();
@@ -49,7 +56,8 @@
         var apis = [];
         var ordinal = -1;
         for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(CHROME)) continue;
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (node.matches(KEEP)) continue;
           if (node.matches(API)) { apis.push(node); continue; }
           var marked = node.getAttribute('data-for');
           var starts = marked !== null || node.matches('h3.block-title');
@@ -62,8 +70,10 @@
            part by the anchor plus its class name. A part the extractor left out has no key at all,
            and then the chapter's table is the only one there is, so it stays. */
         var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
-        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+        var keepApi = KEY === null ? [] : (mine.length ? mine : apis.slice(0, 1));
+        for (var a = 0; a < apis.length; a++) {
+          if (keepApi.indexOf(apis[a]) < 0) doomed.push(apis[a]);
+        }
 
         for (var i = 0; i < doomed.length; i++) doomed[i].remove();
         /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
@@ -71,7 +81,7 @@
            and a card that removes everything looks exactly like one that removed nothing. */
         var kept = 0;
         for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
+          if (!k.matches(KEEP) && !k.matches(API)) kept += 1;
         }
         document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
         document.documentElement.setAttribute('data-ds-kept', String(kept));

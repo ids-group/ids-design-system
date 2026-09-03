@@ -172,11 +172,11 @@ try {
   rmSync(profile, { recursive: true, force: true });
 }
 
-// A card that renders nothing still has a height: the chapter's heading and lede are the card's own
-// chrome and come to 144px. Every one of 418 cards measured exactly that against a half-built
-// bundle, and the run passed, because none of them was zero. The smallest card that has ever
-// rendered its block is 349px, so anything under this floor did not render one.
-const EMPTY_CARD = 250;
+// A card that renders nothing still has a height, so a run where the bundle was half-built came in
+// at 144px for all 418 cards and passed on none of them being zero. The floor sits between that and
+// the smallest card that does render its block, which is 281px now that the chapter's lede no
+// longer rides every card.
+const EMPTY_CARD = 200;
 
 // A card that sliced its own content away still renders a heading and a lede, so it is 371px, not
 // 144px, and no height threshold separates it from a small real card. The card counts what survived

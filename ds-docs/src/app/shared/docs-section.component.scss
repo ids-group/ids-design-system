@@ -18,9 +18,8 @@
   margin-top: var(--space-8);
 }
 
-// A block that alternates prose and demos — Button's "Refused with reason" runs three of each —
-// used to give every paragraph the 4px that only belongs directly under a heading, so the text
-// sat glued to the specimens above it. The tight value is now scoped to that one position.
+// The tight gap belongs only directly under a heading; a paragraph that follows a demo reads as
+// glued to it. Collapsing these three back into one rule brings that back.
 :host ::ng-deep .block-desc {
   color: var(--text-secondary);
   margin-top: var(--space-5);

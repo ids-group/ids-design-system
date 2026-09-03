@@ -12,7 +12,10 @@
   </h2>
 
   @if (primaryKey(); as pk) {
-    <docs-component-meta [key]="pk" />
+    <docs-component-meta
+      [key]="pk"
+      [attr.data-key]="pk"
+    />
   }
 
   <p class="lede t-m">
@@ -21,9 +24,9 @@
 
   <ng-content />
 
-  <!-- `data-key` is unused by the docs site. It is what lets a Claude Design card keep the API
-       table of the component it is about and drop the others: a chapter publishes one card per
-       component it documents, and MenuItem's card carried Menu's and MenuDivider's tables too. -->
+  <!-- `data-key` is unused by the docs site. It is what lets a Claude Design card keep the chip
+       and the API table of the component it is ABOUT and drop the chapter's: a ToggleButton card
+       used to open with Button's name and tag. -->
   @if (primaryKey(); as pk) {
     <docs-api-table
       [key]="pk"
