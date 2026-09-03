@@ -1,0 +1,18 @@
+// The label of a boolean control is part of its hit area, and the separation between
+// control and label has to live INSIDE that area.
+//
+// A flex `gap` cannot do it: a gap is dead space neither element covers, so a click in
+// those few pixels did nothing. Measured on checkbox/radio/switch — an 8px vertical
+// strip beside every label was inert. The label carries the separation as padding
+// instead, and the block padding widens the target past the text line, cancelled by a
+// negative block margin so no layout moves.
+//
+// Usage — @include inside the label's own selector, and give the row NO gap:
+//   @use '../../styles/control-label' as control-label;
+//   .control-line { display: flex; align-items: center; }   // no gap
+//   .control-text { @include control-label.hit-area; }
+@mixin hit-area {
+  padding-inline-start: var(--space-2);
+  padding-block: var(--space-1);
+  margin-block: calc(var(--space-1) * -1);
+}

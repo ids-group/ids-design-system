@@ -6,22 +6,36 @@
 :host {
   --_toast-leave-duration: var(--ds-toast-leave-duration, var(--duration-base));
   --_toast-leave-easing: var(--ds-toast-leave-easing, var(--ease-standard));
+  --_toast-shift-duration: var(--ds-toast-shift-duration, var(--duration-fast));
+  --_toast-shift-easing: var(--ds-toast-shift-easing, var(--ease-standard));
 
   display: block;
+  transition:
+    opacity var(--_toast-leave-duration) var(--_toast-leave-easing),
+    transform var(--_toast-shift-duration) var(--_toast-shift-easing);
+}
+
+/* Restates the transform timing rather than inheriting the shift's: a dismissal and a
+   re-stack are different motions. */
+:host(.leaving) {
+  opacity: 0;
+  transform: translateY(calc(var(--space-2) * -1));
+  pointer-events: none;
   transition:
     opacity var(--_toast-leave-duration) var(--_toast-leave-easing),
     transform var(--_toast-leave-duration) var(--_toast-leave-easing);
 }
 
-:host(.leaving) {
-  opacity: 0;
-  transform: translateY(calc(var(--space-2) * -1));
-  pointer-events: none;
+/* The inverted half of the region's FLIP. The transition is suppressed so the
+   jump-back is not itself animated; releasing the class carries it to 0. */
+:host(.shifting) {
+  transform: translateY(var(--_toast-shift, 0));
+  transition: none;
 }
 
 .toast {
   --_toast-bg-color:     var(--ds-toast-bg-color,     var(--surface-overlay));
-  --_toast-border:        var(--ds-toast-border,        var(--border-default));
+  --_toast-border:        var(--ds-toast-border-color,        var(--border-default));
   --_toast-focus-shadow:  var(--ds-toast-focus-shadow,  var(--ds-control-focus-shadow));
   --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
   --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
@@ -88,7 +102,7 @@
 
   &.info {
     --_toast-bg-color:     var(--ds-toast-bg-color-info,     var(--ds-toast-bg-color,     var(--surface-overlay)));
-    --_toast-border: var(--ds-toast-border-info,  var(--ds-toast-border, var(--border-default)));
+    --_toast-border: var(--ds-toast-border-color-info,  var(--ds-toast-border-color, var(--border-default)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
 
@@ -96,7 +110,7 @@
   }
   &.success {
     --_toast-bg-color:     var(--ds-toast-bg-color-success,     var(--ds-toast-bg-color,     var(--surface-overlay)));
-    --_toast-border: var(--ds-toast-border-success,  var(--ds-toast-border, var(--border-default)));
+    --_toast-border: var(--ds-toast-border-color-success,  var(--ds-toast-border-color, var(--border-default)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--success));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--success));
 
@@ -105,7 +119,7 @@
   }
   &.warning {
     --_toast-bg-color:     var(--ds-toast-bg-color-warning,     var(--ds-toast-bg-color,     var(--surface-overlay)));
-    --_toast-border: var(--ds-toast-border-warning,  var(--ds-toast-border, var(--border-default)));
+    --_toast-border: var(--ds-toast-border-color-warning,  var(--ds-toast-border-color, var(--border-default)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--warning-hover));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--warning-hover));
 
@@ -114,7 +128,7 @@
   }
   &.error {
     --_toast-bg-color:     var(--ds-toast-bg-color-error,     var(--ds-toast-bg-color,     var(--surface-overlay)));
-    --_toast-border: var(--ds-toast-border-error,  var(--ds-toast-border, var(--border-default)));
+    --_toast-border: var(--ds-toast-border-color-error,  var(--ds-toast-border-color, var(--border-default)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--error));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--error));
 

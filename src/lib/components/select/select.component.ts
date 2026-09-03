@@ -477,6 +477,14 @@ export class SelectComponent
       ) {
         event.preventDefault();
         this.openPanel();
+
+        return;
+      }
+      // A native <select> commits as you type without opening, so the value changes under
+      // the closed trigger.
+      if (this.handleTypeAhead(key)) {
+        event.preventDefault();
+        this.pickActive();
       }
 
       return;
@@ -542,9 +550,6 @@ export class SelectComponent
     }
     if (this.handleTypeAhead(key)) {
       event.preventDefault();
-      if (!this.open()) {
-        this.pickActive();
-      }
     }
   }
 

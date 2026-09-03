@@ -1,4 +1,3 @@
-// =========================================================================
 // Shared role structure — Tier 2 semantic role ASSIGNMENTS.
 //
 // Exposes @mixin roles: the role map whose structure is identical across
@@ -10,7 +9,6 @@
 // This mixin is an authoring-DRY device. At runtime, exactly one theme block
 // matches (`:not([data-theme='dark'])` vs `[data-theme='dark']`), and that
 // block declares the complete token set itself (palette + roles + overrides).
-// =========================================================================
 
 @mixin roles {
   /* Surfaces — six-stop scale.
@@ -218,6 +216,17 @@
   --focus-ring-outer-s:      var(--primary-s);
   --focus-ring-outer-l:      var(--primary-l);
   --focus-ring-outer-alpha:  1;
+
+  /* A flat focus colour, for components that draw an `outline` instead of a shadow (a row
+     inside a clipping list, a swatch grid). It must stay DEFINED: an `outline-color` that
+     falls through resolves to `currentColor`, so a row rings itself in its own text colour.
+
+     `--accent`, not the ring's own primary channels: outside a zone it IS `--primary`, and
+     inside `[ds-color="error"]` it becomes that family, which is the same adaptivity the
+     zone already gives the shadow ring through `--accent-focus-ring`. Composing it from
+     `--focus-ring-outer-*` would have pinned the outline to the brand hue in a zone whose
+     every other accent had moved. */
+  --focus-ring-color: var(--accent);
 
   --focus-ring:
     0 0 0 2px var(--focus-ring-inner),

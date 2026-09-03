@@ -10,7 +10,7 @@ One collapsible section inside an `Accordion`: a full-width header toggle button
 - Body content is `children`; it is inert (hidden from interaction/AT) while collapsed.
 
 ```tsx
-<AccordionItem title="Open exceptions" badge={<Badge tone="warning">2</Badge>} expanded>
+<AccordionItem title="Open exceptions" badge={<Badge status="warning">2</Badge>} expanded>
   Two shipments at the Leeds depot are awaiting re-delivery slots.
 </AccordionItem>
 ```

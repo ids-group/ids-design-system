@@ -21,15 +21,28 @@
 
   <ng-content />
 
+  <!-- `data-key` is unused by the docs site. It is what lets a Claude Design card keep the API
+       table of the component it is about and drop the others: a chapter publishes one card per
+       component it documents, and MenuItem's card carried Menu's and MenuDivider's tables too. -->
   @if (primaryKey(); as pk) {
-    <docs-api-table [key]="pk" />
+    <docs-api-table
+      [key]="pk"
+      [attr.data-key]="pk"
+    />
   }
 
   @for (key of secondaryKeys(); track key) {
-    <div class="api-sub">
+    <div
+      class="api-sub"
+      [attr.data-key]="key"
+    >
       <docs-component-meta [key]="key" />
 
       <docs-api-table [key]="key" />
     </div>
+  }
+
+  @for (name of serviceNames(); track name) {
+    <docs-api-table [service]="name" />
   }
 </section>

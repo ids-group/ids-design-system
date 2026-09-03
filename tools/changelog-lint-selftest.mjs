@@ -333,6 +333,14 @@ try {
   console.log(`${realQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol that resolves`);
   if (!realQuiet) dead.push('C013 false positive on a real symbol');
 
+  // Announcing a removal is the one entry that MUST name a symbol nothing declares.
+  const REMOVED =
+    '# Fixture\n\n## Unreleased\n\n### Breaking\n\n- **A.** The `DsToastConfig` interface is removed with its token.\n';
+  writeFileSync(FIXTURE_PATH, REMOVED);
+  const removalQuiet = !run(FIXTURE).includes('  C013  ');
+  console.log(`${removalQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol the entry says was removed`);
+  if (!removalQuiet) dead.push('C013 false positive on an announced removal');
+
   // C012 — the section order, which arrived wrong twice in two days before anything checked it.
   const WRONG_ORDER =
     '# Fixture\n\n## Unreleased\n\n### Changed\n\n- **A.** x\n\n### Added\n\n- **B.** y\n';

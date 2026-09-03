@@ -31,8 +31,16 @@ one-time `npm i -g bun` bootstrap only runs on a cold cache.
 
 Installs use the committed **`bun.lock`** with `--frozen-lockfile` for
 reproducible builds (it pins cross-platform, incl. the linux/musl optionals).
-Regenerate it with `bun install` whenever dependencies change. `package-lock.json`
-is kept for npm/Dependabot consumers — bun prefers `bun.lock`.
+Regenerate it with `bun install` whenever dependencies change, and the five cache
+keys are keyed on that file because it is the one `--frozen-lockfile` reads.
+
+`package-lock.json` is kept only for a developer who installs with npm: it is not
+in the published tarball, and Dependabot does not read it here — that is a GitHub
+service and this repo has no `.github`. Regenerate it in the same commit
+(`npm install --package-lock-only`, which leaves bun's `node_modules` alone), or
+the two locks drift. They cannot be made identical: the `@emnapi` optional-peer
+family npm and bun resolve differently is the same family that breaks `npm ci`
+under musl.
 
 `_setup.sh` is **sourced**, not executed: a child process cannot export `bun`
 onto the calling shell's `PATH`.

@@ -87,6 +87,7 @@ and token names.** These leaves are for orientation and usage.
 - [DS_CONFIG / provideDsConfig(config)](platform/ds-config.md) — Inject DS_CONFIG token (default factory returns {}) to set library-wide defaults that consumer-level component
 - [BreadcrumbsService](platform/breadcrumbs-service.md) — @Injectable({ providedIn: 'root' }). Signal-based state primitive — apps push crumbs, <ds-breadcrumbs> reads f
 - [ToastService](platform/toast-service.md) — @Injectable({ providedIn: 'root' }). Inject and call:
+- [BodyScrollLockService](platform/body-scroll-lock-service.md) — @Injectable({ providedIn: 'root' }). Ref-counted lock on document.body scroll, shared by every overlay that co
 
 ## surfaces
 

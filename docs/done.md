@@ -4,6 +4,54 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The release gate on the toast class surface is green (2026-09-02)
+
+`check-class-surface-entry` was RED on `ToastRegionComponent`, `ToastComponent` and
+`ToastService` — three classes whose member surface moved since v0.11.1 — and it blocks the
+release cut. Re-run against HEAD it passes: all eight classes with a moved surface are named
+in `## Unreleased` AND carried by a `detect`, the three toast ones by
+`toast-table-subclass-members-moved`.
+
+**The item's own advice is what closed it: re-run the gate rather than trusting the list.** It
+was written while the toast work still had uncommitted files, so the surface it measured was
+half-written. The `DsConfig` move later changed `ToastService`'s fields again and the existing
+`detect` still covers it, which is the point of naming a class rather than its members.
+
+---
+
+## Toasts announce, pause, slide and cap (2026-09-02)
+
+**One wave-2 accusation, from the review that produced this work, was itself false.** Reviewing the `ToastService.promise()` finding, wave 2 wrote that *"five wave-1 agents rediscovered a documented known gap and none of them said so — that is the shared blind spot."* Two of the five named it explicitly and one verified it: the timers axis wrote *"already acknowledged in `CHANGELOG.md:219-220`"* and the API axis *"`CHANGELOG.md:220-221` self-discloses the remaining hole … Verified true"*. The finding wave 2 made stands; its accusation about the other agents does not. Kept because it is the clearest reason the second wave needs validating too, rather than being treated as the tie-breaker.
+
+
+Four changes on the notification lane, all measured. Kept because three of them rest on platform facts that are not obvious from the code and that an "obvious" later fix would undo.
+
+**A screen reader was told nothing, for three of five variants.** `aria-live` sat on each toast, and a live region has to exist BEFORE its text arrives — a node created with its message already inside it is the one case NVDA and JAWS reliably do not announce; the region host was `role="region"`, a landmark. Announcements now go through the CDK `LiveAnnouncer`, whose region is built at service construction. SC 4.1.3 (AA).
+
+**Serialising a burst cannot work, and this is the fact worth keeping.** The first implementation chained announcements on the promise `announce()` returns. Measured: of five messages, ONE arrived. The chain was not at fault — it spaced them by ~100ms exactly as intended. `LiveAnnouncer.announce()` clears its region synchronously, writes the text on a 100ms timeout, and resolves its promise INSIDE that callback; the next call in the chain therefore clears the text in the same millisecond, before a MutationObserver can see it, let alone a reader. Awaiting the promise cannot fix it, because it resolves before the write has been observed. Coalescing a burst into one region change is the only shape that survives — not a preference.
+
+**The stack slid instead of jumping.** Inserting a toast moves its flex neighbours in one frame. FLIP: each is put back with a transform and released to 0 with a transition. Measured frame by frame: -75.19px on the first frame easing to `none`, against a layout delta of exactly 75px. Sonner's documented recipe positions the stack absolutely instead; that collapses the region to zero height, and it lives in a CDK pane sized to its content, so it would take the hit area with it.
+
+**`maxVisible` defaults to 5**, where an uncapped stack was more permissive than Material (one at a time), Carbon or Halstack. Eight fired leaves five on screen. A configured `0` is now forwarded rather than skipped — with a real default it is the only way left to ask for no cap.
+
+**Also: `promise()` was destroying its own result.** It ran the settled toast's dismissal on a wall-clock timer started when the promise resolved, so a promise settling behind the cap had its result spliced out of the queue before anyone saw it. And an `action` toast now never auto-dismisses: the region is the last child of `body`, so a keyboard user cannot cross a page to reach that button inside five seconds.
+
+## The toast stays above a scrim opened after it (2026-09-02)
+
+`--layer-toast: 1500` against `--layer-modal: 1300` was never going to decide this, and the rule that tried is dead code. CDK 21 gives every overlay host `popover="manual"` and calls `showPopover()`, so hosts sit in the browser **top layer**, which paints in the order things were shown and ignores z-index and stacking contexts outright. A `confirm()` opened after a toast was therefore always in front, and its scrim swallowed the toast's action button.
+
+**Fix: re-show the toast host when a scrimmed overlay appears.** The top layer has no "raise", so it is `hidePopover()` then `showPopover()` in one task — nothing paints between them. A MutationObserver on the overlay container watches for an added `.cdk-overlay-backdrop`.
+
+**Only scrimmed overlays trigger it**, and that is deliberate: a tooltip or dropdown neither covers the toast meaningfully nor eats a click, and the published scale puts `--layer-tooltip` ABOVE the toast. Raising over those would contradict our own documentation to fix nothing.
+
+**Measured, with the before/after as the control.** Same probe, same page, opposite answers: an action toast (which no longer auto-dismisses, so it survives a route change), then `confirm()`. Before, the topmost element at the toast's centre was `div.cdk-overlay-backdrop`. After, it is the toast's own content, `opacity: 1`, still full height, and focus stayed inside the confirm — so the raise costs neither a flicker nor the focus.
+
+**Both halves measured**, by counting real `showPopover()` calls on the live host: a pane with no backdrop — the shape a dropdown or tooltip adds — produces **0** raises, the same pane with a backdrop produces **1**. The zero is the control; without it the one proves nothing.
+
+The approach is also the only one the platform offers, checked against the sources rather than assumed: z-index does not apply in the top layer at all, and neither MDN nor the Popover API documents an operation for raising an already-open popover — MDN sends the reader to browser testing. CDK uses `popover="manual"`, which is not in the auto stack, so nothing raises it for us.
+
+Underneath this sits a larger finding kept in `todo.md`: of the seven `--layer-*` values above 1000, only the toast lift targets an overlay HOST. `--layer-tooltip`, `--layer-popover` and the dropdown panel's are set on content INSIDE `.cdk-overlay-pane`, itself a stacking context, so they are inert across overlays. The scale documents an order the platform no longer decides.
+
 ## Status `ds-color` zones get their accent colour back (2026-09-01)
 
 `_ds-color.scss` maps `--accent-strong: var(--<family>-strong)` for every family it offers —
@@ -93,6 +141,32 @@ eight toasts**, and the control — the same probe with `align-self: flex-start`
 **-11px**, so the probe measures what it claims to.
 
 Closes screens 30/32 from the 08-13 batch.
+
+## Screenshot 28 — the invisible strip that ate the table's swipe (2026-09-02)
+
+- [x] **DONE 2026-09-02 — fixed as a side effect of making column width reachable on touch, and
+  recorded here because it lived nowhere durable.** The defect was found by another session and
+  written only into its own `.claude/local/todo/screens-27-36.md`, which is gitignored; that
+  session has closed. Without this entry it exists in no tracked file.
+
+  **What it was:** `.col-resize` is 8px wide, paints its line only on `:hover` / `:focus-visible`
+  — neither of which a coarse pointer produces — and carries `touch-action: none`. So at the right
+  edge of every header sat an invisible strip that swallowed the horizontal swipe used to scroll the
+  table, and the more columns, the more dead zones.
+
+  **The two options were not equivalent and Stas picked neither blindly:** hiding the handle below a
+  breakpoint removes resizing from touch entirely, and growing the target makes the dead zones WIDER.
+  The answer was to move the capability rather than resize the control — the handle stands down under
+  `(hover: none) and (pointer: coarse)`, and width moves into the column panel as − / + / Fit, which
+  opens as a `ds-bottom-sheet` there. All three routes share one step, so drag, arrows and buttons
+  move a column by the same amount. Measured on device emulation: 0 of 14 handles rendered, the sheet
+  carried the panel, and the buttons walked a column 109 → 141 → 125 → 109.
+
+  **What it does NOT reach**, filed in `todo.md` rather than left implied: a hybrid device (a touch
+  laptop) reports `hover: hover` and `pointer: fine`, so the query is false and the strip is still
+  dead to a finger there.
+
+---
 
 ## The resize handle's announced ceiling is now a real one (2026-09-01)
 

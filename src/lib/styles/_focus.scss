@@ -25,6 +25,22 @@
   }
 }
 
+// The indicator for something that must ring with an `outline` rather than the shadow — a
+// row inside a clipping list, a swatch in a grid — where the outset halo is eaten by the
+// `overflow` ancestor.
+//
+// `box-shadow: none` is the load-bearing line: the blanket rule above still paints, so five
+// components drew BOTH, an accent halo outside and their own outline inside it.
+//
+// Usage — @include inside the element's own `&:focus-visible` block:
+//   @use '../../styles/focus' as focus;
+//   &:focus-visible { @include focus.outline-indicator(calc(-1 * var(--border-width-strong))); }
+@mixin outline-indicator($offset: var(--focus-ring-offset)) {
+  outline: var(--border-width-strong) solid var(--focus-ring-color);
+  outline-offset: $offset;
+  box-shadow: none;
+}
+
 :root[data-focus='ring'] {
   --ds-field-focus-shadow: var(--focus-ring);
   --ds-field-focus-shadow-error: var(--focus-ring-error);

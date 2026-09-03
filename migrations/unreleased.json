@@ -1,0 +1,241 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "toast-promise-messages-generic",
+      "kind": "type-rename",
+      "old": "ToastPromiseMessages",
+      "new": "ToastPromiseMessages<T>",
+      "appliesWhen": "You name the type explicitly, e.g. in a variable or a helper that builds the messages object. Calling toast.promise(p, {...}) inline needs no change - T is inferred.",
+      "pitfall": "The parameter defaults to unknown, so an un-parameterised annotation still compiles - and still hands your success callback `unknown`, which is the defect. Passing the type is what fixes it, not the compile.",
+      "searchHints": [
+        "ToastPromiseMessages"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "ToastPromiseMessages"
+      ],
+      "verify": "A success callback receives the resolved value with its real type: toast.promise(loadOrder(), { success: (order) => `Saved #${order.id}` }) compiles without a cast.",
+      "restore": null,
+      "note": "promise<T> declared a type parameter and then threw it away, because the messages interface hardcoded unknown. Every call site that wanted the resolved value had to cast.",
+      "action": "Annotate as ToastPromiseMessages<T> where you name the type; inline object literals need no change."
+    },
+    {
+      "id": "toast-message-input-renamed-body",
+      "kind": "input-rename",
+      "old": "message",
+      "new": "body",
+      "appliesWhen": "You render <ds-toast> yourself and bind message. ToastService callers pass body already and change nothing.",
+      "pitfall": "An unknown input on a component is a template error under strictTemplates, but a plain attribute is not - message=\"…\" without brackets keeps compiling and silently renders an empty toast.",
+      "searchHints": [
+        "ds-toast",
+        "message"
+      ],
+      "surface": "template",
+      "detect": [
+        "[message]",
+        "message="
+      ],
+      "verify": "A hand-placed <ds-toast [body]=\"…\"> renders its text; nothing in your templates still binds message on ds-toast.",
+      "restore": null,
+      "note": "ToastOptions and ToastEntry always called the text body; only the component input said message, so one concept had two names either side of the same service.",
+      "action": "Rename the ds-toast input from message to body."
+    },
+    {
+      "id": "toast-border-tokens-gain-color",
+      "kind": "token-rename",
+      "old": "--ds-toast-border, --ds-toast-border-info, --ds-toast-border-success, --ds-toast-border-warning, --ds-toast-border-error",
+      "new": "--ds-toast-border-color, --ds-toast-border-color-info, --ds-toast-border-color-success, --ds-toast-border-color-warning, --ds-toast-border-color-error",
+      "appliesWhen": "You set any of the five anywhere - :root, a theme file, or a per-instance ds-toast block.",
+      "pitfall": "The old name simply stops resolving, and the declaration it sits in is dropped whole - so a toast loses its border rather than falling back to a default. Nothing errors.",
+      "searchHints": [
+        "ds-toast-border"
+      ],
+      "surface": "style",
+      "detect": [
+        "--ds-toast-border"
+      ],
+      "verify": "A :root override of --ds-toast-border-color repaints the toast border, and no rule in your styles still names --ds-toast-border.",
+      "restore": null,
+      "note": "They are colours, and every other border token in the library already carries -color. These five were the last holdouts of the pre-rename naming.",
+      "action": "Add -color after -border in all five token names."
+    },
+    {
+      "id": "banner-alert-announce-opt-in",
+      "kind": "behavior",
+      "old": "role and aria-live always present",
+      "new": null,
+      "appliesWhen": "You rely on a ds-banner or ds-alert being announced by a screen reader when it appears. A banner that is page furniture needs no change - silence is now the correct behaviour for it.",
+      "pitfall": "Nothing breaks visibly and no build fails, so a regression here is invisible without a screen reader: an app that raised an error banner in response to a request and relied on the alert firing now shows it silently.",
+      "searchHints": [
+        "ds-banner",
+        "ds-alert"
+      ],
+      "surface": "template",
+      "detect": [
+        "ds-banner",
+        "ds-alert"
+      ],
+      "verify": "A banner your app raises in response to an event carries announce and is spoken; a static strip carries none and is silent on route change.",
+      "restore": "Pass [announce]=\"true\" to get the previous behaviour on a given instance.",
+      "note": "An alert region fires on insertion, so a statically-placed strip interrupted the reader on every client-side route into its page - 12 such regions on this library's own docs. MDN advises against alert on content the user has not interacted with, and the DS convention is that a new capability is off by default.",
+      "action": "Add [announce]=\"true\" to any ds-banner or ds-alert that should be announced when it appears."
+    },
+    {
+      "id": "toast-config-token-removed",
+      "kind": "removed-api",
+      "old": "DS_TOAST_CONFIG",
+      "new": "provideDsConfig({ toast: { maxVisible: 5 } })",
+      "appliesWhen": "You provide DS_TOAST_CONFIG anywhere - app.config.ts, a Route's providers, or a component's.",
+      "pitfall": "The import stops resolving, so this one fails the build rather than going quiet. The DsToastConfig interface went with the token.",
+      "searchHints": [
+        "DS_TOAST_CONFIG",
+        "DsToastConfig",
+        "maxVisible"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "DS_TOAST_CONFIG"
+      ],
+      "verify": "Raising more toasts at once than the cap queues the extras, with the cap read from provideDsConfig and no token provider left in the app.",
+      "restore": null,
+      "note": "The two toast tokens were the only configuration in the library that did not go through DsConfig, so an app set thirteen other areas in one provideDsConfig call and then remembered two bare InjectionToken providers for toasts.",
+      "action": "Replace the { provide: DS_TOAST_CONFIG, useValue: { maxVisible: n } } provider with provideDsConfig({ toast: { maxVisible: n } }), and drop the DS_TOAST_CONFIG and DsToastConfig imports."
+    },
+    {
+      "id": "toast-position-token-removed",
+      "kind": "removed-api",
+      "old": "DS_TOAST_POSITION",
+      "new": "provideDsConfig({ toast: { position: { verticalPosition: 'bottom' } } })",
+      "appliesWhen": "You provide DS_TOAST_POSITION to move the stack off its default top-right corner.",
+      "pitfall": "The import stops resolving, so the build fails rather than the toasts quietly moving. DS_TOAST_POSITION_DEFAULT is unchanged and still exported.",
+      "searchHints": [
+        "DS_TOAST_POSITION",
+        "horizontalPosition",
+        "verticalPosition"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "DS_TOAST_POSITION"
+      ],
+      "verify": "A toast appears at the corner named in provideDsConfig, and naming only verticalPosition keeps the default horizontal side and offset.",
+      "restore": null,
+      "note": "position is now partial and merged field by field over right / top / var(--space-6). The old token's type required all three fields, so moving the stack to the bottom meant restating the other two; naming one key is now enough.",
+      "action": "Replace the { provide: DS_TOAST_POSITION, useValue: {...} } provider with provideDsConfig({ toast: { position: {...} } }), keeping only the fields you actually change."
+    },
+    {
+      "id": "toast-max-visible-default-5",
+      "kind": "behavior",
+      "old": "provideDsConfig without a toast.maxVisible",
+      "new": null,
+      "appliesWhen": "You raise more than five toasts at once and expect every one to be on screen together. An app that shows one or two at a time needs nothing.",
+      "pitfall": "Nothing is dropped and nothing errors, so this reads as toasts \"not appearing\": the sixth is queued and shows as an earlier one dismisses. A cap of 0 is the only way left to ask for an uncapped stack, and 0 no longer means \"unset\" - it is forwarded.",
+      "searchHints": [
+        "provideDsConfig",
+        "maxVisible",
+        "ToastService"
+      ],
+      "surface": "config",
+      "detect": [
+        "maxVisible"
+      ],
+      "verify": "Raise six toasts at once: with maxVisible 0 all six are on screen, and with the default five are, the sixth arriving as one dismisses.",
+      "restore": "Pass provideDsConfig({ toast: { maxVisible: 0 } }).",
+      "note": "The default moved from unlimited to 5. A negative value means unlimited too and warns in development, because 0 already says it.",
+      "action": "Decide whether an uncapped stack was deliberate. If it was, pass provideDsConfig({ toast: { maxVisible: 0 } }); otherwise change nothing."
+    },
+    {
+      "id": "toast-standalone-no-longer-announced",
+      "kind": "behavior",
+      "old": "<ds-toast>",
+      "new": null,
+      "appliesWhen": "You place <ds-toast> in a template yourself and rely on a screen reader announcing it. Calling ToastService needs nothing - it announces through its own region.",
+      "pitfall": "The toast still renders and still looks right, so nothing signals the loss; only a screen reader shows it, and only for the markup you placed by hand.",
+      "searchHints": [
+        "<ds-toast",
+        "ds-toast",
+        "aria-live",
+        "role=\"alert\"",
+        "role=\"status\""
+      ],
+      "surface": "template",
+      "detect": [
+        "<ds-toast"
+      ],
+      "verify": "A hand-placed <ds-toast> carries no role or aria-live in the DOM, and a toast raised through ToastService is announced once.",
+      "restore": null,
+      "note": "<ds-toast> no longer sets role, aria-live or aria-atomic: a node created with its text already inside it is the case screen readers do not announce, so announcing moved to a region that exists first. The markup is a specimen.",
+      "action": "Raise anything that should be announced through ToastService. Keep <ds-toast> in a template only for a static specimen, or add your own live region around it."
+    },
+    {
+      "id": "toast-table-subclass-members-moved",
+      "kind": "behavior",
+      "old": "class MyThing extends ToastComponent | ToastRegionComponent | ToastService | TableComponent | BannerComponent | AlertComponent",
+      "new": null,
+      "appliesWhen": "Only a class that extends one of those six. Template users and service callers need nothing.",
+      "pitfall": "Every new name is private or protected, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does. And an `override promoteFromQueue` or `override role` now overrides nothing: it compiles clean and silently never runs.",
+      "searchHints": [
+        "extends ToastComponent",
+        "extends ToastRegionComponent",
+        "extends ToastService",
+        "extends TableComponent",
+        "promoteFromQueue",
+        "override role",
+        "TS2415",
+        "TS4114",
+        "extends BannerComponent",
+        "extends AlertComponent"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends ToastComponent",
+        "extends ToastRegionComponent",
+        "extends ToastService",
+        "extends TableComponent",
+        "override promoteFromQueue",
+        "override role",
+        "extends BannerComponent",
+        "extends AlertComponent"
+      ],
+      "verify": "The app builds with no TS4114 / TS2415 / TS2416 naming any of the six classes, and no override of promoteFromQueue, role or message remains in your source.",
+      "restore": null,
+      "note": "ToastComponent lost `role`. ToastRegionComponent gained `leaveTimers`, `slideNeighbours`, `toastNodes`, `measureTops` and `leaveDuration`, and renamed `promoteFromQueue` to `drainQueue`. ToastService gained `announcer`, `pendingAnnouncements`, `pendingAssertive`, `announceTimer`, `scrimWatcher`, `announce` and `keepAboveScrims`. TableComponent gained `eventsAtExport`, `eventMessages`, `tableHead`, `hostElement` and `announceExport`. None is public API or a signal. BannerComponent and AlertComponent each gained `announce`. ToastComponent also gained `body` and lost `message`, which is the input rename listed separately.",
+      "action": "Build after upgrading. Rename or mark `override` every member the compiler reports as colliding, and DELETE any `override promoteFromQueue` or `override role` - neither member exists any more, so the override is dead code."
+    },
+    {
+      "id": "banner-alert-aria-getters-nullable",
+      "kind": "behavior",
+      "old": "protected get ariaRole(): 'alert' | 'status'",
+      "new": null,
+      "appliesWhen": "Only a class extending BannerComponent or AlertComponent that reads or overrides ariaRole or ariaLive. Nothing in a template sees these.",
+      "pitfall": "A widening breaks the READER, not the writer: an override that still declares the narrow return type fails, and code that fed the value somewhere non-nullable fails too, both at a site that did not change.",
+      "searchHints": [
+        "ariaRole",
+        "ariaLive",
+        "extends BannerComponent",
+        "extends AlertComponent",
+        "TS2416"
+      ],
+      "surface": "typescript",
+      "detect": [
+        "ariaRole",
+        "ariaLive"
+      ],
+      "verify": "The app builds with no TS2416 naming ariaRole or ariaLive, and any code consuming either handles null.",
+      "restore": null,
+      "note": "Both getters widened from `'alert' | 'status'` and `'assertive' | 'polite'` to include `null`, and return null while `announce` is false, which is the default - that is how the attribute is left off entirely rather than set to an empty value.",
+      "action": "Widen your own declaration to include null, and handle null wherever you read either getter."
+    }
+  ],
+  "informational": [
+    "Typing on a closed ds-select now commits the type-ahead jump, as a native <select> does. The path existed but was unreachable, so nothing that worked before changes. NO ACTION.",
+    "A chip row's guard against a parent that hugs its content was unreachable and is removed; the measurement is unchanged. NO ACTION.",
+    "A queued toast is not lost: it appears as an earlier one dismisses. The stack also animates when a toast is added rather than jumping, and --ds-toast-shift-duration and --ds-toast-shift-easing tune that. NO ACTION.",
+    "Info, success and loading toasts raised through ToastService are now announced at all, where before only error and warning were. NO ACTION.",
+    "Six tokens the connected panel reads - --ds-option-padding, -gap, -radius, -row-gap, --ds-option-bg-color-active and --ds-dropdown-panel-maxh - now take effect when scoped to one picker (ds-select { ... }), where before only a global declaration reached them. The panel is portaled outside the component, so a host-scoped value arrives only if the token is on the forwarded list, and these six were not; --ds-dropdown-panel-maxh reached ds-autocomplete and neither of its siblings. NO ACTION, and nothing moves on its own: it changes only where such a declaration is already written on an element and was being ignored. If you widened one to a global rule because the scoped form did nothing, the scoped form is now the narrower way to say it.",
+    "A click in the strip between a boolean control and its label now toggles the control, where it previously hit nothing. Affects ds-radio, ds-checkbox and ds-switch. The label’s clickable box grew 8px taller; its laid-out size, the text position and the row height are unchanged, so nothing in your layout moves. NO ACTION.",
+    "The buttons inside ds-table’s bulk-actions bar are visible again — their label was the same colour as the inverted bar behind it. A pressed state now has a fill where it had none. NO ACTION.",
+    "The skeleton shimmer is driven per element instead of by one registered custom property on :root, so skeletons no longer travel in lock-step with one another. The property that drove it, --skeleton-shimmer-x, no longer exists: it was never a --ds-* hook, but if you referenced it, it now resolves to nothing. NO ACTION otherwise."
+  ],
+  "deleteList": []
+}

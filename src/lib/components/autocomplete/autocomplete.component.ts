@@ -109,7 +109,6 @@ export class AutocompleteComponent<T = unknown>
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-radius',
-    '--ds-dropdown-panel-maxh',
     '--ds-dropdown-panel-minw',
     '--ds-dropdown-panel-maxw',
     '--ds-option-selected-bg-color',
