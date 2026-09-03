@@ -166,8 +166,7 @@ export class TableComponent<T extends object> {
    *  `true` — the table picks: skeleton rows while it has nothing to show, overlay
    *  once rows are on screen. Prefer it; the right choice is a function of the row
    *  count, which only the table holds.
-   *  'skeleton' — first-load placeholder; rows are replaced with shimmer
-   *  rows that read the global --skeleton-shimmer-x driver.
+   *  'skeleton' — first-load placeholder; rows are replaced with shimmer rows.
    *  'overlay'  — re-fetch indicator; existing rows stay visible behind
    *  a translucent overlay with a centred spinner. Pin either one only to
    *  override the rule deliberately. */

@@ -1,5 +1,5 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
-
 
 :host {
   --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
@@ -86,7 +86,6 @@
   @include press.feedback;
 
   &:focus-visible {
-    outline: var(--border-width-strong, 2px) solid var(--focus-ring-color, currentColor);
-    outline-offset: 1px;
+    @include focus.outline-indicator(1px);
   }
 }

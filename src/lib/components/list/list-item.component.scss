@@ -1,3 +1,5 @@
+@use '../../styles/focus' as focus;
+
 :host {
   --_list-item-pad-y: var(--ds-list-item-pad-y, var(--list-item-pad-y));
   --_list-item-pad-x: var(--ds-list-item-pad-x, var(--list-item-pad-x));
@@ -5,6 +7,7 @@
   --_list-item-hover-bg-color: var(--ds-list-item-hover-bg-color, var(--surface-secondary));
   --_list-item-selected-bg-color: var(--ds-list-item-selected-bg-color, var(--accent-surface-tint));
   --_list-item-selected-label-color: var(--ds-list-item-selected-label-color, var(--accent-strong));
+  --_list-item-selected-icon-color: var(--ds-list-item-selected-icon-color, var(--_list-item-selected-label-color));
   --_list-item-label-color: var(--ds-list-item-label-color, var(--text-primary));
   --_list-item-subtitle-color: var(--ds-list-item-subtitle-color, var(--text-tertiary));
 
@@ -32,8 +35,7 @@ button.activator {
   cursor: pointer;
 
   &:focus-visible {
-    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
-    outline-offset: calc(-1 * var(--border-width-strong));
+    @include focus.outline-indicator(calc(-1 * var(--border-width-strong)));
   }
 
   &:disabled {
@@ -92,6 +94,13 @@ button.activator {
 }
 :host(.selected) .title {
   color: var(--_list-item-selected-label-color);
+}
+
+// The leading icon inherits from the host, and selection retints only .title — so the label
+// went accent while the icon stayed near-black next to it. Measured before the fix: label
+// rgb(29 67 237), icon rgb(22 26 40).
+:host(.selected) .leading {
+  color: var(--_list-item-selected-icon-color);
 }
 
 :host(.disabled) .title,

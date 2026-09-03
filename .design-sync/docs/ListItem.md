@@ -15,7 +15,7 @@ One row of a `List` (`role="listitem"`) with a leading / body / trailing layout.
   title="ORD-20871"
   subtitle="Out for delivery — SW1A 2AA"
   leading={<Avatar name="Amelia Barnes" />}
-  trailing={<Badge tone="success">On time</Badge>}
+  trailing={<Badge status="success">On time</Badge>}
   onActivated={openOrder}
 />
 ```

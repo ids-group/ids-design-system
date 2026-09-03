@@ -25,6 +25,7 @@
     "build:docs": "npm run extract-docs && ng build ds-docs",
     "build:docs:dev": "npm run extract-docs && ng build ds-docs --configuration development",
     "build:elements": "node .design-sync/elements/tools/gen.mjs && ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs",
+    "build:upload": "node .design-sync/tools/build-upload.mjs",
     "build:lib": "ng build ds && node tools/build-schematics.mjs",
     "build:lib:dev": "ng build ds --configuration development",
     "build:schematics": "node tools/build-schematics.mjs",
@@ -68,7 +69,7 @@
     "release:minor": "npm version minor -m \"release: %s\"",
     "release:patch": "npm version patch -m \"release: %s\"",
     "start": "npm run dev:docs",
-    "version": "node tools/changelog-release.mjs",
+    "version": "node tools/prepare-release-commit.mjs",
     "watch": "ng build ds --watch --configuration development"
   },
   "peerDependencies": {

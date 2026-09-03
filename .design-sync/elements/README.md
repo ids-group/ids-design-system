@@ -171,13 +171,13 @@ one web search for the symptom returned #24536 on the first page.
   nothing needs it to be.
 - **`@angular/elements` is a new dependency** (first-party, locked to the Angular
   major already in use, dev-only — but still a dependency the DS repo didn't have).
-- **Upload is untested, but the contract is now known and satisfied.** Read off the live
-  project 2026-09-01: a preview card is a plain HTML page loading `_vendor/react.js`,
-  `_vendor/react-dom.js`, `_ds_bundle.js`, `_preview/<Name>.js` as classic scripts, and the
-  compiled preview does `window.IdsDs.<Component>` with `React` taken from a global. React is
-  vendored as a separate file and is NOT expected inside the DS bundle — which is exactly what
-  `build-bundle.mjs` emits (IIFE, `window.IdsDs`, react from window). So nothing inspects the
-  framework riding along; what remains untested is only the upload itself. See `../COMMANDS.md`.
+- **The host contract, read off the live project 2026-09-01 and satisfied.** The agent's code does
+  `window.IdsDs.<Component>` with `React` taken from a global, and React is vendored as a separate
+  file rather than expected inside the DS bundle — which is exactly what `build-bundle.mjs` emits
+  (IIFE, `window.IdsDs`, react from window). Nothing inspects the framework riding along.
+  A **card** takes the other path and needs no React at all: it sets `window.__dsSectionsOnly` and
+  holds one `ds-docs-*` element, the ds-docs section documenting the component. See
+  `../COMMANDS.md`.
 
 ## Verdict
 

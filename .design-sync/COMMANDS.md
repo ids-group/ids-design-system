@@ -1,18 +1,75 @@
 # Runbook — building and publishing to Claude Design
 
 What Claude Design does with this: a design-system project holds our real
-library, and its agent builds screens out of it. Not "in the style of" — a
-preview card is a plain HTML page that loads four classic scripts in order,
+library, and its agent builds screens out of it. Not "in the style of" — the
+agent's code renders `React.createElement(window.IdsDs.<Component>)`, with
+React arriving separately as a global. So the contract is: **expose React
+components on `window.IdsDs`; React arrives separately as a global.** The
+elements route emits wrappers around real custom elements, and nothing inspects
+what else is inside the bundle — which is why an Angular runtime can ride along
+inside it.
+
+A **card** is the other half, and it holds no React at all. It is a plain HTML
+page with one element in it:
 
 ```
-_vendor/react.js → _vendor/react-dom.js → _ds_bundle.js → _preview/<Name>.js
+<script>window.__dsSectionsOnly = true</script>
+<script src="_ds_bundle.js"></script>
+…
+<div class="ds-page"><ds-docs-components-button></ds-docs-components-button></div>
 ```
 
-and renders `React.createElement(window.IdsDs.<Component>)`. So the contract is:
-**expose React components on `window.IdsDs`; React arrives separately as a
-global.** The elements route emits wrappers around real custom elements, and nothing
-inspects what else is inside the bundle — which is why an Angular runtime can
-ride along inside it.
+That element is the ds-docs section documenting the component — the same page
+the design system's own site serves. So the showcase has ONE source, and it is
+the one people look at every day. The flag is load-bearing: a section renders DS
+components as ANGULAR components, and registering those same tags as custom
+elements upgrades every host a second time.
+
+**One card per BLOCK**, not per component. A block is one demo with its own
+`<h3 class="block-title">` and description, and the card keeps exactly that block
+plus the chapter's heading, tag chip and lede. 85 components, 314 cards.
+
+That granularity is forced by how the pane renders: it fits a card's declared
+`viewport` into a fixed tile, so **the declared height IS the zoom level**.
+Table's chapter measures 18919px and rendered as an illegible smudge; its 35
+blocks are a few hundred pixels each and legible at the same scale as everything
+else. Nothing is cut from ds-docs — every title, description and demo survives,
+distributed across cards — and because the pane labels a card by its FILENAME,
+`Table-Sortable-columns.html` puts the block's name outside the card too, which
+is the only way to get text out there at all.
+
+A chapter also documents the parts that only exist inside it — Menu covers
+MenuItem and MenuDivider. Those blocks carry `data-for="menu-item"` in the
+ds-docs template, which is how a block is attributed to a component; unmarked
+blocks belong to the chapter's own. The API table goes on a component's FIRST
+card only: on Table that is one table instead of thirty-five copies.
+
+A component whose chapter marks no block for it falls back to one whole-chapter
+card — the tall shape this design exists to avoid. `check-manual-surface` reports
+by measured HEIGHT rather than by markup, because height is the actual risk: any
+card over 3000px is named on every run.
+
+Cards are listed in the manifest in the READING order of the docs site — groups
+as GROUP_PAGES lists them, chapters within a group, blocks within a chapter.
+`build-cards` writes that order to `elements/gen/cards.json` and `build-manifest`
+follows it; walking the built tree instead yields alphabetical, which put the
+Buttons chapter's opening block in the middle of its own group.
+
+The card's **group** is the ds-docs group page that renders its section, not a
+`category` in the doc's front matter. Those were two hand-kept opinions and they
+disagreed — Container, Inline, Stack and Divider were filed under `layout` /
+`data-display` while ds-docs puts all four under Foundations.
+
+Heights are generated: `node .design-sync/tools/measure-cards.mjs` loads every
+built card in a browser and writes `viewports.json`. It needs Chrome, so it runs
+locally and is not in `build-upload`; CI checks that every card ended up with a
+`viewport`.
+
+Everything the project holds now has a source here. `.thumbnail` — the project's
+cover image — was the last file that did not: a WebP that arrived with the
+hand-made upload, so a wipe-and-reupload would have blanked the tile with nothing
+to restore it from. It lives at `assets/thumbnail.webp` and is copied into the
+tree like the pasted images. Re-rendering it from a card is still open (todo).
 
 Project: **IDS Design System**, `455f9a87-1a6e-4b1d-a0e7-cf47ed772e63`
 (`PROJECT_TYPE_DESIGN_SYSTEM` — immutable at creation; a regular project can
@@ -80,7 +137,7 @@ files already sit at `fonts/`. `build-bundle.mjs` writes the upload copy with th
 `check-manual-surface.mjs` fails if that `package.json` goes missing or its version drifts from
 the root — it is load-bearing for path resolution and nothing else would notice.
 
-## Writing a preview: pass state as an initial prop
+## Composing with the wrappers: pass state as an initial prop
 
 **Never toggle a gate after mount.** A slot behind an `@if` works — nested DS components
 included — as long as the gate is true when the element connects; Angular Elements applies
@@ -88,10 +145,12 @@ initial inputs in the same microtask, so nothing is detached. Toggle it later an
 wrapper survives while the custom elements inside it are destroyed
 ([angular/angular#38962](https://github.com/angular/angular/issues/38962), ~10 ms). Concretely:
 
-- an overlay preview sets `staticPreview` (or `open`) at creation, not on a click;
-- a `ds-table` preview that shows `[bulk-actions]` passes `selectedIds` at creation;
-- previews render with their props set, so this is satisfied by construction — it only bites an
-  interactive composition.
+- an overlay sets `staticPreview` (or `open`) at creation, not on a click;
+- a `ds-table` that shows `[bulk-actions]` passes `selectedIds` at creation.
+
+This is a constraint on the AGENT's compositions, not on the cards: a card is an Angular section,
+where the ordinary change-detection rules apply and none of this bites.
+
 ## Publishing
 
 Read first, then lock the plan, then write — the tool enforces that order and
@@ -109,9 +168,22 @@ delete_files { planId, paths }
 - Max 256 files per call — split larger bundles across several `write_files`
   calls under the same `planId`.
 - `register_assets` is **legacy**. The Design System pane builds its card index
-  from each preview HTML's first-line `<!-- @dsCard group="…" -->` comment,
-  compiled into `_ds_manifest.json`. Only hand-authored projects without those
-  markers need explicit registration.
+  from each card's first-line `<!-- @dsCard group="…" -->` comment, compiled
+  into `_ds_manifest.json`. Only hand-authored projects without those markers
+  need explicit registration.
+- **We write `_ds_manifest.json` ourselves** (`build-manifest.mjs`). The app
+  compiles one from the markers on its own self-check, but the copy on the
+  project had been written by the retired `/design-sync` CLI
+  (`"source": "design-sync-cli"`) and nothing regenerated it: it still listed 79
+  components including `AppShell`, renamed three releases earlier, and none of the
+  cards added since. The pane indexes from the manifest and reads a card only for
+  its content — so a stale index shows a stale project no matter what else is
+  uploaded, which is why refreshed cards kept rendering the old preview grid.
+  A card entry holds only `path`, `group` and `viewport`: there is no field for a
+  name, a subtitle or any prose, and the pane labels a card by its FILENAME.
+  `templates` and `startingPoints` are in the schema and empty; the pane is
+  server-side (the CLI binary carries only the tool description), so what fills
+  them cannot be determined from here.
 - Never wholesale-replace: sync one component at a time and diff against
   `list_files` first.
 
@@ -157,12 +229,12 @@ the plan. The upload stays a local step with a human approving the paths.
 
 ## What lives remotely, and what this repo commits
 
-The repo commits **sync inputs only** — `previews/`, `docs/`,
-`elements/`, `tools/`, `config.json`, `conventions.md`. Everything with a `_`
-prefix in the project is an **output the publish step generates**:
-`_ds_bundle.js`, `_ds_bundle.css`, `_ds_manifest.json`, `_ds_sync.json`,
-`_preview/*.js`, `_vendor/react*.js`. Their absence from this directory is by
-design and is not evidence that anything drifted.
+The repo commits the sync inputs — `docs/`, `elements/`, `tools/`,
+`config.json`, `viewports.json`, `conventions.md` — **and** the built tree at
+`upload/`, so a release commit carries exactly what a publish sends and CI can
+fail on a stale copy. `_ds_manifest.json` and `_ds_sync.json` are the only files
+in the project this repo does not hold: the app compiles the first from the
+`@dsCard` markers, and the second is the skill's own sync bookkeeping.
 
 `_ds_sync.json` is the incremental-sync bookkeeping: `styleSha`, per-component
 `renderHashes` and `sourceKeys`, `sourceHashes` per uploaded file, `keyRecipe`,

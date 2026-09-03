@@ -1,3 +1,4 @@
+@use '../../styles/control-label' as control-label;
 @use '../../styles/press' as press;
 
 :host {
@@ -28,9 +29,11 @@
 .control-line {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
 
+  // No flex `gap` here: see styles/_control-label.scss for why the label carries it.
   .control-text {
+    @include control-label.hit-area;
+
     font: var(--font-weight-regular) var(--ds-radio-label-font-size, var(--_radio-label-fs)) / var(--line-height-base) var(--font-sans);
     color: var(--_radio-label-color);
     cursor: pointer;

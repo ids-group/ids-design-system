@@ -1,10 +1,4 @@
 /* Skeleton — shimmer placeholder.
-   The shimmer band reads a SHARED viewport-anchored offset
-   (`--skeleton-shimmer-x`, animated once on :root in
-   ds/src/lib/styles/_skeleton-shimmer.scss). Every skeleton on the page
-   reveals the same moving slice in lock-step, so the animation looks
-   like one light pass across the whole surface instead of N independent
-   loops per element.
 
    Base layer    : solid --surface-secondary on host.
    Shimmer layer : ::after solid --surface-muted, clipped by a viewport-
@@ -44,7 +38,16 @@
   mask-size: 200vw 100%;
   mask-repeat: no-repeat;
 
-  /* Lock-step across the page: the mask position tracks a single viewport-wide
-     driver animated once on :root, so every skeleton reveals the same slice. */
-  mask-position: var(--skeleton-shimmer-x, 100vw) 0;
+  /* Declared HERE, not in the global partial: Angular's emulated encapsulation rewrites the
+     animation name inside a component stylesheet, so a reference to a globally-declared
+     `@keyframes` resolves to a name that does not exist and the element simply never animates.
+     Every component copy carries its own prefixed keyframes, which is the same animation.
+
+     The keyframes moved out of :root for the frame rate — see styles/_skeleton-shimmer.scss. */
+  animation: ds-skeleton-shimmer-loop var(--duration-loop-slow, 1400ms) linear infinite;
+}
+
+@keyframes ds-skeleton-shimmer-loop {
+  from { mask-position: 100vw 0; }
+  to   { mask-position: -100vw 0; }
 }

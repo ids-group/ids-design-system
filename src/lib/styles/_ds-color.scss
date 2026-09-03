@@ -30,6 +30,12 @@ $families: secondary, tertiary, error, success, warning;
   --accent-focus-ring: var(--focus-ring-#{$family}, var(--focus-ring));
   --accent-focus-field: var(--focus-field-#{$family}, var(--focus-field));
   --accent-surface-tint: var(--#{$family}-subtitle, var(--#{$family}-muted));
+
+  // Re-declared rather than left to inherit: `--focus-ring-color: var(--accent)` on :root
+  // substitutes ON :root, so the brand hue is what reaches this subtree already resolved. The flat
+  // outline colour has to be written again where the accent actually changed, or a focused row
+  // inside an error zone rings brand-blue while every other accent around it is red.
+  --focus-ring-color: var(--#{$family});
 }
 
 /// Recolour the DS accent for a type or scope from consumer SCSS, e.g.

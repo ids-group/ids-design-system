@@ -827,14 +827,16 @@
     background: var(--border-inverted);
   }
 
-  .button {
-    background: transparent;
-    color: var(--text-inverted);
-
-    &:hover {
-      background: var(--surface-inverted-hover);
-    }
-  }
+  /* The bar is an inverted surface, so the buttons projected into it have to be told: a ds-button
+     resolves its label from --ds-button-label-color and ignores the inherited `color`, which left
+     the label on the SAME token as this bar's background — measured 1.00:1, invisible until hover
+     revealed it. The rule this replaces styled a `.button` CLASS and stopped reaching anything when
+     the button became a component. Only the label: the outline border already measured 13.20:1
+     against the bar, and pointing it at --border-inverted dropped it to 1.55. */
+  --ds-button-label-color: var(--text-inverted);
+  --ds-button-bg-color: transparent;
+  --ds-button-bg-color-hover: var(--surface-inverted-hover);
+  --ds-button-bg-color-active: var(--surface-inverted-hover);
 }
 
 .table-toolbar {

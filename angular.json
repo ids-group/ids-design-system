@@ -131,11 +131,13 @@
             "sourceMap": false,
             "extractLicenses": false,
             "styles": [
-              "src/lib/styles/ds.scss"
+              "src/lib/styles/ds.scss",
+              ".design-sync/elements/docs-globals.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src/lib"
+                "src/lib",
+                "ds-docs/src"
               ]
             },
             "index": false

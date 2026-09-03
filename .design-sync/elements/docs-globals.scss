@@ -1,0 +1,38 @@
+// The global half of the ds-docs showcase. `ds.scss` already ships everything the DS itself needs;
+// this file adds only what a docs SECTION additionally relies on, so a card renders the same as the
+// docs page it came from.
+//
+// Two things, and both are global for a reason Angular's encapsulation cannot work around:
+//   · the four project statuses the demos use (22 references across the sections) — `status.define`
+//     writes `[data-status]` rules, which a component's scoped styles could never reach
+//   · the raw specimens, which exist because those APIs are not components yet
+//
+// Deliberately NOT here: `preview-brand-manage-my` (a brand override, and the DS ships
+// brand-agnostic) and the sidebar-collapse rule (docs-site chrome, not design system).
+@use 'styles/status' as status;
+@use 'styles/specimens';
+@include status.semantic-preset;
+@include status.define(
+  (
+    planning: (
+      bg: var(--neutral-150),
+      text: var(--neutral-700),
+      dot: var(--icon-muted),
+    ),
+    confirmed: (
+      bg: var(--primary-subtitle),
+      text: var(--primary-strong),
+      dot: var(--accent),
+    ),
+    active: (
+      bg: var(--success-subtitle),
+      text: var(--success-text),
+      dot: var(--success),
+    ),
+    completed: (
+      bg: var(--neutral-900),
+      text: var(--neutral-0),
+      dot: var(--icon-strong),
+    ),
+  )
+);

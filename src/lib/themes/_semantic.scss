@@ -219,6 +219,18 @@
   --focus-ring-outer-l:      var(--primary-l);
   --focus-ring-outer-alpha:  1;
 
+  /* A flat focus colour, for components that draw an `outline` instead of a shadow (a row
+     inside a clipping list, a swatch grid). Seven call sites referenced this name while
+     nothing defined it, so all seven fell through to `currentColor` and ringed themselves
+     in their own text colour — near-black on a list row, grey on a tree node.
+
+     `--accent`, not the ring's own primary channels: outside a zone it IS `--primary`, and
+     inside `[ds-color="error"]` it becomes that family, which is the same adaptivity the
+     zone already gives the shadow ring through `--accent-focus-ring`. Composing it from
+     `--focus-ring-outer-*` would have pinned the outline to the brand hue in a zone whose
+     every other accent had moved. */
+  --focus-ring-color: var(--accent);
+
   --focus-ring:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
