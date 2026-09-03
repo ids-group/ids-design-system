@@ -530,7 +530,7 @@
       "viewport": "1200x520"
     },
     {
-      "path": "components/forms-inputs/ColorPicker/ColorPicker - Helper error text.html",
+      "path": "components/forms-inputs/ColorPicker/ColorPicker - Helper & error text.html",
       "group": "forms-inputs",
       "viewport": "1200x648"
     },
@@ -555,7 +555,7 @@
       "viewport": "1200x493"
     },
     {
-      "path": "components/forms-inputs/DatePicker/DatePicker - Min max date bounds.html",
+      "path": "components/forms-inputs/DatePicker/DatePicker - Min & max date bounds.html",
       "group": "forms-inputs",
       "viewport": "1200x490"
     },
@@ -632,7 +632,7 @@
     {
       "path": "components/forms-inputs/Input/Input - States showcase.html",
       "group": "forms-inputs",
-      "viewport": "1200x1131"
+      "viewport": "1200x1133"
     },
     {
       "path": "components/forms-inputs/Input/Input - Variant states - prefix - suffix.html",
@@ -657,7 +657,7 @@
     {
       "path": "components/forms-inputs/Input/Input - Character counter.html",
       "group": "forms-inputs",
-      "viewport": "1200x491"
+      "viewport": "1200x490"
     },
     {
       "path": "components/forms-inputs/Input/Input - Required vs optional.html",
@@ -667,17 +667,17 @@
     {
       "path": "components/forms-inputs/FieldMessage/FieldMessage - Messages error, warning, hint.html",
       "group": "forms-inputs",
-      "viewport": "1200x756"
+      "viewport": "1200x755"
     },
     {
       "path": "components/forms-inputs/FieldMessage/FieldMessage - The glyph on the message line.html",
       "group": "forms-inputs",
-      "viewport": "1200x1154"
+      "viewport": "1200x1153"
     },
     {
       "path": "components/forms-inputs/FieldMessage/FieldMessage - Reserved message row.html",
       "group": "forms-inputs",
-      "viewport": "1200x622"
+      "viewport": "1200x623"
     },
     {
       "path": "components/forms-inputs/Input/Input - Whole form at once.html",
@@ -725,7 +725,7 @@
       "viewport": "1200x554"
     },
     {
-      "path": "components/forms-inputs/MultiSelect/MultiSelect - Helper error text.html",
+      "path": "components/forms-inputs/MultiSelect/MultiSelect - Helper & error text.html",
       "group": "forms-inputs",
       "viewport": "1200x693"
     },
@@ -780,7 +780,7 @@
       "viewport": "1200x483"
     },
     {
-      "path": "components/forms-inputs/OtpInput/OtpInput - Helper error text.html",
+      "path": "components/forms-inputs/OtpInput/OtpInput - Helper & error text.html",
       "group": "forms-inputs",
       "viewport": "1200x658"
     },
@@ -870,7 +870,7 @@
       "viewport": "1200x1748"
     },
     {
-      "path": "components/forms-inputs/Select/Select - Helper error text.html",
+      "path": "components/forms-inputs/Select/Select - Helper & error text.html",
       "group": "forms-inputs",
       "viewport": "1200x512"
     },
@@ -910,7 +910,7 @@
       "viewport": "1200x584"
     },
     {
-      "path": "components/forms-inputs/Slider/Slider - Helper error text.html",
+      "path": "components/forms-inputs/Slider/Slider - Helper & error text.html",
       "group": "forms-inputs",
       "viewport": "1200x747"
     },
@@ -1027,12 +1027,12 @@
     {
       "path": "components/navigation/AppLayout/AppLayout - Returning the reader to where they were.html",
       "group": "navigation",
-      "viewport": "1200x1417"
+      "viewport": "1200x886"
     },
     {
-      "path": "components/navigation/SidenavFooter/SidenavFooter.html",
+      "path": "components/navigation/SidenavFooter/SidenavFooter - The rail footer on its own.html",
       "group": "navigation",
-      "viewport": "1200x3039"
+      "viewport": "1200x1334"
     },
     {
       "path": "components/navigation/AuthLayout/AuthLayout - Two-tone wordmark, flat card.html",
@@ -1397,7 +1397,7 @@
     {
       "path": "components/data-display/Table/Table - Header sort states.html",
       "group": "data-display",
-      "viewport": "1200x559"
+      "viewport": "1200x560"
     },
     {
       "path": "components/data-display/Table/Table - Row interaction states.html",
@@ -1407,7 +1407,7 @@
     {
       "path": "components/data-display/Table/Table - The cell that names what the row opens.html",
       "group": "data-display",
-      "viewport": "1200x638"
+      "viewport": "1200x637"
     },
     {
       "path": "components/data-display/Table/Table - A cell that IS a link.html",
@@ -1452,17 +1452,17 @@
     {
       "path": "components/data-display/Table/Table - Dense - zebra.html",
       "group": "data-display",
-      "viewport": "1200x687"
+      "viewport": "1200x707"
     },
     {
       "path": "components/data-display/Table/Table - Pagination - sticky column.html",
       "group": "data-display",
-      "viewport": "1200x924"
+      "viewport": "1200x923"
     },
     {
       "path": "components/data-display/Table/Table - Expandable rows.html",
       "group": "data-display",
-      "viewport": "1200x817"
+      "viewport": "1200x818"
     },
     {
       "path": "components/data-display/Table/Table - One row at a time.html",
@@ -1472,7 +1472,7 @@
     {
       "path": "components/data-display/Table/Table - Clickable rows - drawer detail.html",
       "group": "data-display",
-      "viewport": "1200x777"
+      "viewport": "1200x776"
     },
     {
       "path": "components/data-display/Table/Table - Row actions - kebab menu.html",
@@ -1482,12 +1482,12 @@
     {
       "path": "components/data-display/Table/Table - Column picker - reorder.html",
       "group": "data-display",
-      "viewport": "1200x744"
+      "viewport": "1200x743"
     },
     {
       "path": "components/data-display/Table/Table - Resizable columns.html",
       "group": "data-display",
-      "viewport": "1200x1046"
+      "viewport": "1200x1048"
     },
     {
       "path": "components/data-display/Table/Table - Inline editing.html",
@@ -1527,7 +1527,7 @@
     {
       "path": "components/data-display/Table/Table - Truncation - full-text popover.html",
       "group": "data-display",
-      "viewport": "1200x677"
+      "viewport": "1200x678"
     },
     {
       "path": "components/data-display/Table/Table - Sticky horizontal scrollbar.html",
@@ -1752,7 +1752,7 @@
     {
       "path": "components/overlays/Drawer/Drawer - Live demo.html",
       "group": "overlays",
-      "viewport": "1200x651"
+      "viewport": "1200x672"
     },
     {
       "path": "components/overlays/Drawer/Drawer - Placements.html",
@@ -2325,37 +2325,37 @@
       "viewport": "1200x446"
     },
     {
-      "path": "guides/practice/Do Don't/Do Don't - Button hierarchy.html",
+      "path": "guides/practice/Do & Don't/Do & Don't - Button hierarchy.html",
       "group": "practice",
       "viewport": "1200x558"
     },
     {
-      "path": "guides/practice/Do Don't/Do Don't - Modal vs Drawer.html",
+      "path": "guides/practice/Do & Don't/Do & Don't - Modal vs Drawer.html",
       "group": "practice",
       "viewport": "1200x630"
     },
     {
-      "path": "guides/practice/Do Don't/Do Don't - Table density.html",
+      "path": "guides/practice/Do & Don't/Do & Don't - Table density.html",
       "group": "practice",
       "viewport": "1200x624"
     },
     {
-      "path": "guides/practice/Do Don't/Do Don't - Badge proliferation.html",
+      "path": "guides/practice/Do & Don't/Do & Don't - Badge proliferation.html",
       "group": "practice",
       "viewport": "1200x587"
     },
     {
-      "path": "guides/practice/Do Don't/Do Don't - Empty state copy.html",
+      "path": "guides/practice/Do & Don't/Do & Don't - Empty state copy.html",
       "group": "practice",
       "viewport": "1200x592"
     },
     {
-      "path": "guides/practice/Do Don't/Do Don't - Status without colour.html",
+      "path": "guides/practice/Do & Don't/Do & Don't - Status without colour.html",
       "group": "practice",
       "viewport": "1200x558"
     },
     {
-      "path": "guides/practice/Do Don't/Do Don't - Tooltips vs banners.html",
+      "path": "guides/practice/Do & Don't/Do & Don't - Tooltips vs banners.html",
       "group": "practice",
       "viewport": "1200x558"
     },

@@ -186,6 +186,9 @@ function blockLabel(title) {
     // A binding in a heading is a value at runtime and a name here, so `Library ({{ names.length }})`
     // would have gone up as the card's own label. The parentheses go with it.
     .replace(/\(?\s*\{\{[^}]*\}\}\s*\)?/g, '')
+    // A slash joining two alternatives is an "and", and it cannot survive in a path: the Practice
+    // chapter is titled "Do / Don't" and dropping the slash left "Do Don't", which reads as a typo.
+    .replace(/\s+\/\s+/g, ' & ')
     .replace(/[×✕]/g, 'x')
     .replace(/[·•]/g, '-')
     .replace(/[—–]/g, '-')
