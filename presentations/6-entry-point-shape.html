@@ -48,6 +48,55 @@
     </div>
   </div>
 
+  <h2>3 и 4 дают один и тот же импорт — в чём разница</h2>
+
+  <p>
+    <b>Потребитель не отличит их вообще.</b> Оба пишут <code>@ids/ds/button</code>. Разница целиком
+    внутри репозитория: <b>переезжает ли папка</b>.
+  </p>
+
+  <div class="lands">
+    <div class="col">
+      <h4><span class="vnum">3</span> Плоско</h4>
+      <p style="margin:0 0 6px;font-size:12px"><b>На диске:</b> папка физически переезжает</p>
+<pre style="margin:0 0 10px"><code>src/lib/<b>button</b>/          ← была components/button
+src/lib/<b>table</b>/
+src/lib/<b>date-picker</b>/
+… и ещё 68 папок</code></pre>
+      <p style="margin:0 0 6px;font-size:12px"><b>ng-packagr берёт имя из пути:</b></p>
+<pre style="margin:0"><code>"./button": …    ← само так называется</code></pre>
+      <p style="margin:10px 0 0;font-size:12px">
+        <b>Одно имя везде.</b> Внутри библиотеки импорты тоже <code>@ids/ds/button</code>.
+      </p>
+    </div>
+    <div class="col">
+      <h4><span class="vnum is-pick">4</span> Алиасы</h4>
+      <p style="margin:0 0 6px;font-size:12px"><b>На диске:</b> ничего не меняется</p>
+<pre style="margin:0 0 10px"><code>src/lib/components/<b>button</b>/
+src/lib/components/<b>table</b>/
+src/lib/components/<b>date-picker</b>/
+… как лежит сейчас</code></pre>
+      <p style="margin:0 0 6px;font-size:12px"><b>Скрипт дописывает второй ключ:</b></p>
+<pre style="margin:0"><code>"./components/button": …  ← родное
+"./button":            …  ← алиас на тот же файл</code></pre>
+      <p style="margin:10px 0 0;font-size:12px">
+        <b>Два словаря.</b> Внутри библиотеки импорты длинные, снаружи короткие.
+      </p>
+    </div>
+  </div>
+
+  <table class="matrix">
+    <thead><tr><th></th><th class="opt"><span class="vnum">3</span><br /><small>плоско</small></th><th class="opt"><span class="vnum is-pick">4</span><br /><small>алиасы</small></th></tr></thead>
+    <tbody>
+      <tr><th>Что видит потребитель</th><td colspan="2" class="ok" style="text-align:center"><code>@ids/ds/button</code> — одинаково</td></tr>
+      <tr><th><code>git mv</code> папок</th><td class="bad">71</td><td class="ok">0</td></tr>
+      <tr><th>Имён у одной точки входа</th><td class="ok">одно</td><td class="mid">два</td></tr>
+      <tr><th>Корень <code>src/lib</code> после переезда</th><td class="mid">71 папка вперемешку с 23 файлами</td><td class="ok">как сейчас</td></tr>
+      <tr><th>Нужен <code>typesVersions</code></th><td class="ok">нет</td><td class="mid">да</td></tr>
+      <tr><th>Если позже переименуем компонент</th><td class="bad">ломается импорт потребителя</td><td class="ok">алиас можно оставить старым</td></tr>
+    </tbody>
+  </table>
+
   <h2>Чем они отличаются на деле</h2>
 
   <table class="matrix">

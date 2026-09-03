@@ -539,3 +539,10 @@ th .vnum {
   font-size: var(--font-size-s);
   color: var(--text-primary);
 }
+
+/* `b` inside a dark pre inherits the light text colour, or it paints dark on dark */
+pre b,
+pre strong {
+  color: #9fe6b4;
+  font-weight: var(--font-weight-bold);
+}
