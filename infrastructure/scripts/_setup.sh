@@ -1,11 +1,7 @@
-# Sourced helper (do not execute directly): puts bun on PATH and installs deps.
+# Must be SOURCED (`. _setup.sh`), never executed: a child process cannot export PATH back.
 #
-# bun replaces `npm ci` because npm ci fails on the @emnapi optional peer-deps of
-# @napi-rs/wasm-runtime under alpine/musl. The bun binary is cached in ~/.bun/bin
-# so the npm bootstrap only runs on a cold cache.
-#
-# Must be sourced (`. _setup.sh`), not run: an executed child cannot export PATH
-# back into the calling shell.
+# bun replaces `npm ci`, which fails on the @emnapi optional peer-deps of @napi-rs/wasm-runtime
+# under alpine/musl.
 
 setup_bun() {
   export BUN_INSTALL="$HOME/.bun"
@@ -19,8 +15,7 @@ setup_bun() {
 }
 
 install_deps() {
-  # --frozen-lockfile: install exactly what the committed bun.lock pins, and fail
-  # if package.json and bun.lock disagree — reproducible builds, especially for
-  # the npm publish. Regenerate the lock with `bun install` when deps change.
+  # --frozen-lockfile fails when package.json and bun.lock disagree, which is what keeps a
+  # publish reproducible. Regenerate the lock with `bun install` when deps change.
   bun install --frozen-lockfile --no-progress
 }

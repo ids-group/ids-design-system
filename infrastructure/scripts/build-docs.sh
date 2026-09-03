@@ -1,10 +1,8 @@
 #!/bin/sh
 # Build the ds-docs showcase into dist/ds-docs.
 #
-# ds-docs imports the library via the `ds` tsconfig path -> dist/ds, so the
-# library must exist first. The rebuild is skipped on a dist-ds cache hit; that
-# cache is keyed on the library sources, so any lib change busts it and forces a
-# fresh build.
+# ds-docs imports the library through the `ds` tsconfig path, so dist/ds must exist first. The
+# dist-ds cache is keyed on the library sources, so any lib change busts it.
 set -e
 
 cd "$(dirname "$0")/../.."
@@ -23,5 +21,4 @@ fi
 echo "Building ds-docs..."
 bun run build:docs
 
-# Fail loud if the deployable artifact didn't land where the deploy step expects.
 [ -f dist/ds-docs/browser/index.html ] || { echo "Expected artifact missing: dist/ds-docs/browser/index.html"; exit 1; }

@@ -1,13 +1,9 @@
 #!/bin/sh
-# Run prettier, then stylelint, then eslint — STRICTLY in that order, one at a
-# time (never in parallel). All three run even if an earlier one fails, so a
-# single pass reports every issue; the script then fails if any check failed.
+# prettier, then stylelint, then eslint — one at a time, never in parallel, and all three run
+# even when an earlier one fails so a single pass reports everything.
 #
-# Usage: lint.sh [report-only]
-#   (default)     fail the build if any check fails
-#   report-only   print results but always exit 0 — used by the PR gate while the
-#                 repo still carries pre-existing lint debt. Flip to blocking once
-#                 the codebase is clean.
+# Usage: lint.sh [report-only] — report-only always exits 0, for the PR gate while the repo
+# carries pre-existing debt. Flip it to blocking once the codebase is clean.
 set -eu
 
 mode="${1:-blocking}"
@@ -20,9 +16,8 @@ install_deps
 
 failed=0
 
-# Run one check to completion, print its result, record failure. Wrapped in `if`
-# so a non-zero exit is captured (not killed by `set -e`) and the next check
-# still runs in turn.
+# Wrapped in `if` so a non-zero exit is captured rather than killed by `set -e`, and the next
+# check still runs.
 run_check() {
   label="$1"
   script="$2"
@@ -36,7 +31,6 @@ run_check() {
   echo ""
 }
 
-# Strict sequence — each finishes before the next starts:
 run_check prettier  format
 run_check stylelint lint:styles
 run_check eslint    lint

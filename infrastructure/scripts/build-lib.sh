@@ -11,5 +11,4 @@ install_deps
 echo "Building ds library..."
 bun run build:lib
 
-# Fail loud if the publishable artifact didn't land where we expect.
 [ -f dist/ds/package.json ] || { echo "Expected artifact missing: dist/ds/package.json"; exit 1; }
