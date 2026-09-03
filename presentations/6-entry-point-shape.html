@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <title>Форма раскладки — какие специферы увидит потребитель</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/packaging-diagnosis.md - docs/todo.md A3+ - .claude/local/shape-probe (реальные сборки ng-packagr, E проверен на настоящем node_modules)">
+<meta name="ds-deck-evidence" content="docs/packaging-diagnosis.md - .claude/local/shape-probe, реальные сборки ng-packagr; вариант E проверен на настоящем node_modules">
 <link rel="stylesheet" href="ds.css">
 <link rel="stylesheet" href="deck.css">
 
@@ -9,95 +9,90 @@
   <header class="masthead">
     <div class="chips">
       <span class="chip is-open">нужен вердикт</span>
-      <span class="chip">4 варианта, все собраны</span>
+      <span class="chip">нужен только для D и G</span>
     </div>
     <h1>Форма раскладки — какие специферы увидит потребитель</h1>
     <p class="lede">
-      <b>Проблема.</b> Дека 4 решила <em>что</em> строить. Здесь — <em>как</em>. Ключевой факт:
-      <b>ng-packagr называет entry point по пути папки, дословно, и опции переименовать нет.</b>
-      Значит структура папок становится публичным API навсегда.
+      <b>Ключевой факт:</b> ng-packagr называет entry point по пути папки, дословно. Опции переименовать
+      нет — значит <b>структура папок становится публичным API навсегда</b>.
+      <span style="opacity:.75">Для варианта F (дека 4) этот вопрос не возникает: точка остаётся одна.</span>
     </p>
   </header>
 
-  <h2>Варианты</h2>
+  <h2>Что видит потребитель</h2>
 
-  <table>
+<pre><code>A  import { ButtonComponent } from '@ids/ds/src/lib/components/button';   ← раскладка наружу
+B  import { ButtonComponent } from '@ids/ds/components/button';
+C  import { ButtonComponent } from '@ids/ds/button';                      ← форма Material
+E  import { ButtonComponent } from '@ids/ds/button';                      ← то же, без переездов</code></pre>
+
+  <h2>Чем отличаются</h2>
+
+  <table class="matrix">
     <thead>
-      <tr><th>Вариант</th><th>Специфер потребителя</th><th>Что двигаем</th><th>Итог</th></tr>
+      <tr><th></th><th class="opt">A<br /><small>как есть</small></th><th class="opt">B<br /><small>корень в src/lib</small></th><th class="opt">C<br /><small>распрямить</small></th><th class="opt">E<br /><small>алиасы после сборки</small></th></tr>
     </thead>
     <tbody>
-      <tr class="dead">
-        <th>A · как есть</th>
-        <td><code>@ids/ds/src/lib/components/button</code></td>
-        <td>ничего</td>
-        <td class="no">Непригодно — внутренняя раскладка становится вечным API.</td>
-      </tr>
-      <tr>
-        <th>B · корень в <code>src/lib</code></th>
-        <td><code>@ids/ds/components/button</code></td>
-        <td><code>public-api.ts</code> + 2 конфига</td>
-        <td>Годится. Слово <code>components</code> в каждом специфере. <b>Ловушка с версией.</b></td>
-      </tr>
-      <tr>
-        <th>C · ещё и распрямить</th>
-        <td><code>@ids/ds/button</code></td>
-        <td><b>71 папку</b> вверх из <code>components/</code></td>
-        <td>Форма Angular Material. <b>Ловушка с версией.</b></td>
-      </tr>
-      <tr class="pick">
-        <th>E · алиасы после сборки</th>
-        <td><code>@ids/ds/button</code></td>
-        <td>ничего</td>
-        <td class="yes"><b>Рекомендация.</b> Скрипт дописывает короткие ключи в <code>exports</code>.</td>
-      </tr>
+      <tr><th>Специфер пригоден</th><td class="bad">нет</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
+      <tr><th>Переписать импортов</th><td>307</td><td>307</td><td>307</td><td>307</td></tr>
+      <tr><th>Переехать папок</th><td>0</td><td>0</td><td class="bad">71</td><td class="ok">0</td></tr>
+      <tr><th>Ловушка с версией</th><td class="ok">нет</td><td class="bad">есть</td><td class="bad">есть</td><td class="ok">нет</td></tr>
+      <tr><th>Нужен <code>typesVersions</code></th><td class="ok">нет</td><td class="ok">нет</td><td class="ok">нет</td><td class="mid">да</td></tr>
+      <tr><th>Внутренние импорты библиотеки</th><td>длинные</td><td>короткие</td><td>короткие</td><td class="mid">длинные</td></tr>
     </tbody>
   </table>
 
   <p>
-    <b>307 переписанных импортов — одинаково во всех вариантах.</b> Импорту, ставшему публичным
-    специфером, всё равно, как глубоко лежит файл. Поэтому C дороже только на 71 механический
-    <code>git mv</code> плюс дом для 23 свободных файлов.
+    <b>307 переписанных импортов — одинаково везде.</b> Импорту, ставшему публичным специфером, всё
+    равно, как глубоко лежит файл. Реально лишняя работа в C — 71 механический <code>git mv</code>.
   </p>
 
-  <h2>Два фактора, которые и решают выбор</h2>
+  <section class="panel verdict is-dead">
+    <h3 style="margin-top:0">Ловушка с версией — бьёт по B и C</h3>
+    <p style="margin-bottom:0">
+      Корень пакета уезжает в <code>src/lib</code> → ng-packagr перестаёт читать корневой
+      <code>package.json</code>, а <code>cut-release.sh:75</code> читает именно его. Релиз поднимет одно
+      число, опубликует другое: <b>молча неверная версия в npm</b>. Лечится генерацией
+      <code>src/lib/package.json</code> из корневого в prebuild — репозиторий уже так делает для
+      <code>tokens.generated.ts</code>.
+    </p>
+  </section>
 
-  <table>
-    <thead><tr><th></th><th>B</th><th>C</th><th>E</th></tr></thead>
-    <tbody>
-      <tr>
-        <th>Ловушка с версией<br /><span style="font-weight:400;opacity:.75">корень пакета уезжает в <code>src/lib</code>, ng-packagr перестаёт читать корневой <code>package.json</code>, а <code>cut-release.sh:75</code> читает его. Релиз поднимет одно число, опубликует другое — <b>молча неверная версия в npm</b></span></th>
-        <td class="no">есть</td><td class="no">есть</td><td class="yes">нет</td>
-      </tr>
-      <tr>
-        <th><code>typesVersions</code> нужен<br /><span style="font-weight:400;opacity:.75">короткий алиас не имеет папки на диске, а node10 игнорирует <code>exports</code> и ищет папку</span></th>
-        <td class="yes">нет</td><td class="yes">нет</td><td class="no">да, обязателен</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p>
-    Ловушка с версией лечится генерацией <code>src/lib/package.json</code> из корневого в prebuild —
-    репозиторий уже так делает для <code>tokens.generated.ts</code>. <code>typesVersions</code> — это
-    одно генерируемое поле в том же шаге сборки, что пишет точки.
-  </p>
+  <section class="panel verdict is-done">
+    <h3 style="margin-top:0"><code>typesVersions</code> — нужен только E</h3>
+    <p>
+      Проверено резолвером TypeScript 5.9.3 на реальных фикстурах, с падающим негативным контролем:
+    </p>
+    <table class="matrix">
+      <thead><tr><th></th><th class="opt">node10</th><th class="opt">bundler</th><th class="opt">node16</th></tr></thead>
+      <tbody>
+        <tr><th>вывод ng-packagr, <b>без</b> <code>typesVersions</code></th><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td></tr>
+        <tr><th>короткий алиас без папки на диске <small>(E)</small></th><td class="bad">✗</td><td class="ok">✓</td><td class="ok">✓</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-bottom:0">
+      Причина на диске: <b>ng-packagr сам эмитит node10-заглушку на каждую точку</b>. node10 игнорирует
+      <code>exports</code>, находит папку, читает <code>typings</code>. У алиасов E папки нет — отсюда
+      и <code>typesVersions</code>. Это <b>единственная</b> цена E, и она одно генерируемое поле.
+    </p>
+  </section>
 
   <section class="panel verdict">
     <h2 style="margin-top:0">Рекомендация: E</h2>
     <p>
-      Специферы как у Material, ноль перемещений файлов, корень пакета на месте, релизный конвейер не
-      трогаем. <b>Проверено на настоящем <code>node_modules</code></b> (не через <code>paths</code>,
-      иначе карта <code>exports</code> не участвует): резолвится, размещение верное — ленивый компонент
-      в стартовом бандле <b>0 раз</b>, и <b>одна идентичность класса</b> через короткий и длинный путь.
+      Специферы как у Material, ноль переездов, корень пакета на месте, релизный конвейер не трогаем.
+      <b>Проверено на настоящем <code>node_modules</code></b> (не через <code>paths</code>, иначе карта
+      <code>exports</code> не участвует): резолвится, размещение верное — ленивый компонент в стартовом
+      бандле <b>0 раз</b>, и <b>одна идентичность класса</b> через короткий и длинный путь.
     </p>
     <p style="margin-bottom:0">
-      <b>Шероховатость E:</b> собственные импорты библиотеки придётся писать длинными специферами, пока
-      потребитель видит короткие. Два словаря — некрасиво внутри, чисто снаружи. <b>C</b> — если
-      важнее, чтобы диск совпадал со специферами.
+      <b>Шероховатость E:</b> внутри библиотеки специферы длинные, снаружи короткие — два словаря.
+      <b>C</b> — если важнее, чтобы диск совпадал со специферами.
     </p>
   </section>
 
   <p class="src">
     Прототипы <code>.claude/local/shape-probe/variant-{A,B,C}</code>, собраны собственным ng-packagr.
-    Замеры и матрица резолвинга — <code>docs/packaging-diagnosis.md</code>.
+    Матрица резолвинга — <code>docs/packaging-diagnosis.md</code>. Механизм и выбор варианта — дека 4.
   </p>
 </main>
