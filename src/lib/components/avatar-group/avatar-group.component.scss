@@ -5,8 +5,7 @@
 // Matched as the direct CHILD, not as `ds-avatar`: a host that registers this
 // library as custom elements must rename a tag it nests inside another
 // component's template (angular/angular#24536), and a tag selector then misses
-// its own children — measured through the React wrappers, all three avatars came
-// back margin-left 0 and border 0, so the stack read as a plain row.
+// its own children — the overlap and the border go, and the stack reads as a row.
 :host {
   --_avatar-group-overlap: var(--ds-avatar-group-overlap, calc(-1 * var(--space-2)));
   --_avatar-group-ring:    var(--ds-avatar-group-ring,    var(--surface-default));

@@ -96,9 +96,8 @@ button.activator {
   color: var(--_list-item-selected-label-color);
 }
 
-// The leading icon inherits from the host, and selection retints only .title — so the label
-// went accent while the icon stayed near-black next to it. Measured before the fix: label
-// rgb(29 67 237), icon rgb(22 26 40).
+// The leading icon inherits from the host and selection retints only `.title`, so without
+// this the label goes accent and the icon stays near-black beside it.
 :host(.selected) .leading {
   color: var(--_list-item-selected-icon-color);
 }

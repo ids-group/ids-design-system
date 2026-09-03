@@ -4,14 +4,11 @@
 // has to be global: the media query is a document-level preference, and a component stylesheet
 // cannot express "stop wherever a skeleton appears" without one.
 //
-// It used to be the whole driver — one animated, REGISTERED, inherited custom property on :root
-// that every skeleton read through `mask-position`. That kept a late-mounted skeleton in phase with
-// the rest, and it cost a style invalidation of the ENTIRE document every frame plus a repaint: a
-// registered custom property is a computed value, so changing it invalidates every element that
-// could inherit it. Smooth on the docs site, visibly stepped inside a heavy host page. The
-// phase-lock was worth less than the frame rate — and it never bought viewport anchoring anyway,
-// because `mask-position` is measured from the host's own box, so the highlight already sat at a
-// different screen x on every skeleton.
+// Do NOT drive it from one animated custom property on :root instead, however tempting the
+// phase-lock between skeletons is: a REGISTERED custom property is a computed value, so animating
+// one invalidates the style of every element that could inherit it — the whole document, every
+// frame. And the phase-lock buys no viewport anchoring anyway, because `mask-position` measures
+// from the host's own box.
 @media (prefers-reduced-motion: reduce) {
   ds-skeleton::after {
     animation: none;

@@ -1,4 +1,3 @@
-// =========================================================================
 // Shared role structure — Tier 2 semantic role ASSIGNMENTS.
 //
 // Exposes @mixin roles: the role map whose structure is identical across
@@ -10,7 +9,6 @@
 // This mixin is an authoring-DRY device. At runtime, exactly one theme block
 // matches (`:not([data-theme='dark'])` vs `[data-theme='dark']`), and that
 // block declares the complete token set itself (palette + roles + overrides).
-// =========================================================================
 
 @mixin roles {
   /* Surfaces — six-stop scale.
@@ -220,9 +218,8 @@
   --focus-ring-outer-alpha:  1;
 
   /* A flat focus colour, for components that draw an `outline` instead of a shadow (a row
-     inside a clipping list, a swatch grid). Seven call sites referenced this name while
-     nothing defined it, so all seven fell through to `currentColor` and ringed themselves
-     in their own text colour — near-black on a list row, grey on a tree node.
+     inside a clipping list, a swatch grid). It must stay DEFINED: an `outline-color` that
+     falls through resolves to `currentColor`, so a row rings itself in its own text colour.
 
      `--accent`, not the ring's own primary channels: outside a zone it IS `--primary`, and
      inside `[ds-color="error"]` it becomes that family, which is the same adaptivity the
