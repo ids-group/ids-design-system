@@ -17,10 +17,20 @@
 :host ::ng-deep .block-title {
   margin-top: var(--space-8);
 }
+
+// A block that alternates prose and demos — Button's "Refused with reason" runs three of each —
+// used to give every paragraph the 4px that only belongs directly under a heading, so the text
+// sat glued to the specimens above it. The tight value is now scoped to that one position.
 :host ::ng-deep .block-desc {
   color: var(--text-secondary);
-  margin-top: var(--space-1);
+  margin-top: var(--space-5);
   max-width: var(--col-cap-text);
+}
+:host ::ng-deep .block-title + .block-desc {
+  margin-top: var(--space-1);
+}
+:host ::ng-deep .block-desc + .block-desc {
+  margin-top: var(--space-3);
 }
 
 .api-sub {

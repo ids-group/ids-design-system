@@ -354,7 +354,7 @@
       "viewport": "1200x541"
     },
     {
-      "path": "components/actions/Button/Button - Refused, and why.html",
+      "path": "components/actions/Button/Button - Refused with reason.html",
       "group": "actions",
       "viewport": "1200x700"
     },
@@ -471,7 +471,7 @@
     {
       "path": "components/forms-inputs/Autocomplete/Autocomplete - Object values keep their selection.html",
       "group": "forms-inputs",
-      "viewport": "1200x601"
+      "viewport": "1200x617"
     },
     {
       "path": "components/forms-inputs/Autocomplete/Autocomplete - A search placeholder of its own.html",
@@ -506,7 +506,7 @@
     {
       "path": "components/forms-inputs/ColorPicker/Color Picker - Default presets.html",
       "group": "forms-inputs",
-      "viewport": "1200x630"
+      "viewport": "1200x628"
     },
     {
       "path": "components/forms-inputs/ColorPicker/Color Picker - Custom presets.html",
@@ -611,7 +611,7 @@
     {
       "path": "components/forms-inputs/FieldGroup/Field Group - Sizes, error and full width.html",
       "group": "forms-inputs",
-      "viewport": "1200x614"
+      "viewport": "1200x630"
     },
     {
       "path": "components/forms-inputs/Input/Input - States showcase.html",
@@ -621,12 +621,12 @@
     {
       "path": "components/forms-inputs/Input/Input - Variant states - prefix - suffix.html",
       "group": "forms-inputs",
-      "viewport": "1200x512"
+      "viewport": "1200x511"
     },
     {
       "path": "components/forms-inputs/Input/Input - With icon - prefix - suffix.html",
       "group": "forms-inputs",
-      "viewport": "1200x567"
+      "viewport": "1200x566"
     },
     {
       "path": "components/forms-inputs/Input/Input - Clearable.html",
@@ -646,7 +646,7 @@
     {
       "path": "components/forms-inputs/Input/Input - Required vs optional.html",
       "group": "forms-inputs",
-      "viewport": "1200x467"
+      "viewport": "1200x468"
     },
     {
       "path": "components/forms-inputs/FieldMessage/Field Message - Messages error, warning, hint.html",
@@ -661,12 +661,12 @@
     {
       "path": "components/forms-inputs/FieldMessage/Field Message - Reserved message row.html",
       "group": "forms-inputs",
-      "viewport": "1200x642"
+      "viewport": "1200x622"
     },
     {
       "path": "components/forms-inputs/Input/Input - Whole form at once.html",
       "group": "forms-inputs",
-      "viewport": "1200x491"
+      "viewport": "1200x490"
     },
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Basic usage.html",
@@ -721,7 +721,7 @@
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Server-side search.html",
       "group": "forms-inputs",
-      "viewport": "1200x630"
+      "viewport": "1200x646"
     },
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Panel header and footer.html",
@@ -1036,7 +1036,7 @@
     {
       "path": "components/navigation/AuthLayout/Auth Layout - The notch needs one line from YOUR app.html",
       "group": "navigation",
-      "viewport": "1200x602"
+      "viewport": "1200x609"
     },
     {
       "path": "components/navigation/Breadcrumbs/Breadcrumbs - Default.html",
@@ -1361,7 +1361,7 @@
     {
       "path": "components/data-display/Stat/Stat - A value that is a phrase.html",
       "group": "data-display",
-      "viewport": "1200x631"
+      "viewport": "1200x647"
     },
     {
       "path": "components/data-display/Stat/Stat - A formatted number, through Angular's own pipe.html",
@@ -1381,7 +1381,7 @@
     {
       "path": "components/data-display/Table/Table - Header sort states.html",
       "group": "data-display",
-      "viewport": "1200x560"
+      "viewport": "1200x559"
     },
     {
       "path": "components/data-display/Table/Table - Row interaction states.html",
@@ -1391,7 +1391,7 @@
     {
       "path": "components/data-display/Table/Table - The cell that names what the row opens.html",
       "group": "data-display",
-      "viewport": "1200x638"
+      "viewport": "1200x637"
     },
     {
       "path": "components/data-display/Table/Table - A cell that IS a link.html",
@@ -1436,7 +1436,7 @@
     {
       "path": "components/data-display/Table/Table - Dense - zebra.html",
       "group": "data-display",
-      "viewport": "1200x700"
+      "viewport": "1200x687"
     },
     {
       "path": "components/data-display/Table/Table - Pagination - sticky column.html",
@@ -1451,7 +1451,7 @@
     {
       "path": "components/data-display/Table/Table - One row at a time.html",
       "group": "data-display",
-      "viewport": "1200x682"
+      "viewport": "1200x681"
     },
     {
       "path": "components/data-display/Table/Table - Clickable rows - drawer detail.html",
@@ -1511,7 +1511,7 @@
     {
       "path": "components/data-display/Table/Table - Truncation - full-text popover.html",
       "group": "data-display",
-      "viewport": "1200x677"
+      "viewport": "1200x678"
     },
     {
       "path": "components/data-display/Table/Table - Sticky horizontal scrollbar.html",
@@ -1826,7 +1826,7 @@
     {
       "path": "components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html",
       "group": "page-structure",
-      "viewport": "1200x662"
+      "viewport": "1200x663"
     },
     {
       "path": "components/page-structure/FilterBar/Filter Bar - What the width buys.html",
@@ -2366,7 +2366,7 @@
     {
       "path": "guides/practice/Signal Forms/Signal Forms - Error text comes from the validator.html",
       "group": "practice",
-      "viewport": "1200x682"
+      "viewport": "1200x689"
     },
     {
       "path": "guides/practice/Signal Forms/Signal Forms - What the controls implement.html",
