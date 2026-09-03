@@ -31,15 +31,27 @@ export class AlertComponent {
   /** Fires when the user dismisses the alert. */
   readonly closed = output<void>();
 
+  /** Announce this alert to a screen reader when it appears. Off by default — see
+   *  `ds-banner`'s `announce` for why, and prefer `ToastService` for anything
+   *  transient. */
+  readonly announce = input(false, { transform: booleanAttribute });
+
   @HostBinding('attr.role')
-  protected get ariaRole(): 'alert' | 'status' {
+  protected get ariaRole(): 'alert' | 'status' | null {
+    if (!this.announce()) {
+      return null;
+    }
     const value = this.variant();
 
     return value === 'error' || value === 'warning' ? 'alert' : 'status';
   }
 
   @HostBinding('attr.aria-live')
-  protected get ariaLive(): 'assertive' | 'polite' {
+  protected get ariaLive(): 'assertive' | 'polite' | null {
+    if (!this.announce()) {
+      return null;
+    }
+
     return this.ariaRole === 'alert' ? 'assertive' : 'polite';
   }
 

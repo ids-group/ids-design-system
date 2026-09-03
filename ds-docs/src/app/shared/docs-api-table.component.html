@@ -158,9 +158,145 @@
       </div>
     </details>
   }
-} @else {
+}
+
+@if (serviceData()?.summary; as summary) {
+  <p class="svc-summary t-s">
+    {{ summary }}
+  </p>
+}
+
+@if (methods().length) {
+  <details class="api">
+    <summary>
+      {{ serviceData()?.className }} methods <span class="count">{{ methods().length }}</span>
+    </summary>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              Signature
+            </th>
+
+            <th>
+              Returns
+            </th>
+
+            <th>
+              Description
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (m of methods(); track m.name) {
+            <tr>
+              <td>
+                <code class="mono">
+                  {{ m.signature }}
+                </code>
+              </td>
+
+              <td>
+                @if (m.type) {
+                  <code class="mono type">
+                    {{ m.type }}
+                  </code>
+                } @else {
+                  <span class="muted">
+                    —
+                  </span>
+                }
+              </td>
+
+              <td>
+                @if (m.description) {
+                  <span class="desc">
+                    {{ m.description }}
+                  </span>
+                } @else {
+                  <span class="desc missing">
+                    — needs description —
+                  </span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </details>
+}
+
+@if (properties().length) {
+  <details class="api">
+    <summary>
+      {{ serviceData()?.className }} properties <span class="count">{{ properties().length }}</span>
+    </summary>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              Name
+            </th>
+
+            <th>
+              Type
+            </th>
+
+            <th>
+              Description
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (p of properties(); track p.name) {
+            <tr>
+              <td>
+                <span class="pname">
+                  {{ p.name }}
+                </span>
+              </td>
+
+              <td>
+                @if (p.type) {
+                  <code class="mono type">
+                    {{ p.type }}
+                  </code>
+                } @else {
+                  <span class="muted">
+                    —
+                  </span>
+                }
+              </td>
+
+              <td>
+                @if (p.description) {
+                  <span class="desc">
+                    {{ p.description }}
+                  </span>
+                } @else {
+                  <span class="desc missing">
+                    — needs description —
+                  </span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </details>
+}
+
+@if (missing()) {
   <p class="unknown">
-    No API metadata for key "{{ key() }}".
+    No API metadata for "{{ missingName() }}".
   </p>
 }
 

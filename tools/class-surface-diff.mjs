@@ -54,12 +54,18 @@ function show(ref, path) {
 // `readonly x = this.y.z` and every literal, and those collide in a subclass just the
 // same. `readonly` is illegal in an object literal, so class depth plus the keyword
 // is enough to be sure this is a member.
-// KNOWN GAP: anchored on `readonly`, so a plain `private hovered = false` is not seen and a
-// subclass colliding with one gets no warning. Widening this to any assignment matches ordinary
-// statements in a module-level function body, and a false positive here blocks a release cut —
-// closing it properly needs parsing, not a wider pattern. Tracked in docs/todo.md.
+// `readonly` is NOT required: a plain `private hovered = false` collides in a subclass exactly as
+// an annotated one does. Widening it is only safe because the scan is bounded to the class BODY —
+// see classBody() — so the module-level function bodies that share this indentation are out of
+// range before the pattern ever runs.
 const FIELD =
-  /^ {2}((?:protected |public |private )?)readonly (\w+)(\s*:[^=\n]+)? = /gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*:[^=\n]+)? = /gm;
+// A field can also be DECLARED and never assigned — `announceTimer: number | undefined;`. It
+// collides in a subclass like any other, and FIELD cannot see it because it requires an `=`.
+// Only safe inside the bounded class body, where a bare `name: Type;` is a declaration and
+// nothing else.
+const DECLARED_FIELD =
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*[?!]?\s*:[^=;\n]+)?;$/gm;
 // `get ` is matched here rather than in FIELD: a getter is a member and collides like one, and
 // `get name(` never matched `name(` because of the space.
 const METHOD =
@@ -175,13 +181,31 @@ function blockText(source, openBraceIndex) {
   return source.slice(openBraceIndex + 1);
 }
 
+// Two-space depth means "class member" only inside a class body. Slicing from the class and
+// running to end of file left every module-level function AFTER it in range, which is what forced
+// FIELD to demand `readonly` as a proxy for "this is a member". The class ends at the first brace
+// back at column 0, which prettier guarantees here.
+//
+// Comments go, and template literals are blanked to spaces of the same length: a commented-out or
+// quoted declaration would otherwise read as a member, and a false positive blocks a release cut.
+// Same length, because statementText() reads offsets into this string.
+function classBody(source) {
+  const classStart = source.search(FIRST_CLASS);
+  if (classStart === -1) return null;
+  const body = source.slice(classStart);
+  const end = body.search(/^\}/m);
+  const bounded = end === -1 ? body : body.slice(0, end);
+
+  return stripComments(bounded).replace(
+    /`(?:[^`\\]|\\.)*`/g,
+    (literal) => literal.replace(/[^\n]/g, ' '),
+  );
+}
+
 function classSurface(source) {
   if (source === null) return null;
-  // Two-space depth means "class member" only inside a class — a module-level
-  // function body has the same indentation, and its calls are not members.
-  const classStart = source.search(FIRST_CLASS);
-  if (classStart === -1) return { names: new Set(), heads: new Map() };
-  source = source.slice(classStart);
+  source = classBody(source);
+  if (source === null) return { names: new Set(), heads: new Map() };
 
   const names = new Set();
   const heads = new Map();
@@ -195,6 +219,13 @@ function classSurface(source) {
     if (annotation || TYPE_BEARING_INIT.test(initializer)) {
       heads.set(name, normalize(`${annotation ?? ''} = ${initializer}`));
     }
+  }
+  for (const match of source.matchAll(DECLARED_FIELD)) {
+    const [, , name] = match;
+    if (NOT_A_MEMBER.has(name)) continue;
+    // Name only: an unassigned field carries no initializer to compare, and its annotation
+    // churns with implementation like every other non-input type.
+    names.add(name);
   }
   for (const match of source.matchAll(METHOD)) {
     const [, visibility, name] = match;

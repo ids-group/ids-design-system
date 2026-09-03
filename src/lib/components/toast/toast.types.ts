@@ -1,3 +1,9 @@
+export type {
+  DsToastHorizontalPosition,
+  DsToastVerticalPosition,
+  DsToastPosition,
+} from '../../core/toast-position';
+
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'loading';
 
 export interface ToastAction {
@@ -28,21 +34,12 @@ export interface ToastEntry {
   readonly action?: ToastAction;
   /** Auto-dismiss delay, counted from the moment the toast becomes VISIBLE — a
    *  queued toast must not expire while it is still waiting behind the cap.
-   *  0 = indefinite. */
+   *  `0`, and any negative, means it never expires. */
   readonly durationMs: number;
 }
 
-export interface ToastPromiseMessages {
+export interface ToastPromiseMessages<T = unknown> {
   readonly loading: string;
-  readonly success: string | ((value: unknown) => string);
+  readonly success: string | ((value: T) => string);
   readonly error: string | ((reason: unknown) => string);
-}
-
-export type DsToastHorizontalPosition = 'left' | 'center' | 'right';
-export type DsToastVerticalPosition = 'top' | 'bottom';
-
-export interface DsToastPosition {
-  readonly horizontalPosition: DsToastHorizontalPosition;
-  readonly verticalPosition: DsToastVerticalPosition;
-  readonly offset: string;
 }

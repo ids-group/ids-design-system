@@ -24,16 +24,19 @@ import {
  */
 
 /**
- * Null when there is no usable parent — a detached node, or an inline one, which has no
- * content box to read.
+ * Null when the host cannot supply a budget: a detached node, an inline one with no content box,
+ * or one whose own width DEPENDS on the trigger — which would feed the cut back into its own
+ * input.
  *
- * KNOWN GAP: a parent that hugs its content carries the same feedback loop the trigger does,
- * and this does not catch it. `getComputedStyle` reports a used pixel value, so the
- * `fit-content` a consumer wrote is not readable back; and measurement cannot tell that parent
- * from a `fill` trigger, because in both the content box equals the trigger's width. A test on
- * that equality would reject the ordinary case and drop a chip. Tracked in docs/todo.md.
+ * That last one is asked of layout, not read off a style: `getComputedStyle().width` is a used
+ * pixel value, so the `fit-content` a consumer wrote is not readable back. Pinning the trigger to
+ * zero and re-reading the host tests it directly — a host sized by its own parent does not move,
+ * one sized by its content collapses — at the cost of a second forced layout.
  */
-function hostContentWidth(host: HTMLElement | null): number | null {
+function hostContentWidth(
+  host: HTMLElement | null,
+  trigger: HTMLElement,
+): number | null {
   if (!host || host.clientWidth === 0) {
     return null;
   }
@@ -42,10 +45,17 @@ function hostContentWidth(host: HTMLElement | null): number | null {
     return null;
   }
 
+  const before = host.clientWidth;
+  const pinned = trigger.style.width;
+  trigger.style.width = '0px';
+  const dependsOnTrigger = host.clientWidth !== before;
+  trigger.style.width = pinned;
+  if (dependsOnTrigger) {
+    return null;
+  }
+
   return (
-    host.clientWidth -
-    parseFloat(styles.paddingLeft) -
-    parseFloat(styles.paddingRight)
+    before - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight)
   );
 }
 
@@ -94,8 +104,11 @@ export function chipFit(
     // feeds the result back into its own input. The parent's content box is the
     // space actually available and does not move when the chips do; for a `fill`
     // trigger the two are the same number.
+    //
+    // The fallback is that same feedback loop, so it is a last resort, not a default: it runs
+    // only when the host cannot answer at all.
     const host = trigger.parentElement;
-    const budget = hostContentWidth(host) ?? trigger.clientWidth;
+    const budget = hostContentWidth(host, trigger) ?? trigger.clientWidth;
 
     const width = budget;
     const currentCount = untracked(count);

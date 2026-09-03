@@ -154,13 +154,14 @@
       "verify": "Every menu that uses ds-menu-divider reads as intended with the line taking one row's place instead of adding a second gap."
     },
     {
-      "id": "time-picker-panel-radius-now-panel-role",
+      "id": "time-picker-panel-lost-its-radius",
       "kind": "behavior",
       "old": "ds-time-picker",
       "new": null,
-      "action": "None unless you want the old 8px corner: `ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }`. The hook is forwarded onto the portaled overlay pane, so a per-instance override does reach the panel.",
+      "action": "None, unless a square dropdown is unacceptable — then apply `restore`.",
       "appliesWhen": "The open dropdown only. The trigger radius is unchanged and still resolves through `--ds-time-picker-trigger-radius`.",
-      "note": "The panel drew the CONTROL radius (8px) and draws the panel role now (12px). It was the last floating panel in the library still doing so, and it rendered different corners beside its own sibling ds-date-picker in the same form.",
+      "note": "The panel renders square, where it drew an 8px corner before. Its rule reads a private token declared on `:host` and the CDK portals the panel out of that host, so the `var()` does not resolve and `border-radius` takes its initial `0`. The public `--ds-time-picker-panel-radius` hook is forwarded onto the pane but read by no rule, so setting it changes nothing.",
+      "pitfall": "The obvious override does nothing, and does it silently: `ds-time-picker { --ds-time-picker-panel-radius: … }` cannot reach the panel, the panel being portaled out of that element. Do not reach for a selector instead — a single `.time-panel { border-radius: … }` loses to the component’s own rule, which view encapsulation shims to `.time-panel[_ngcontent-…]`, and matching its two classes only ties, with the tie going to whichever comes later. `restore` declares the PRIVATE token the panel already reads on an ancestor it does have — the CDK overlay container — so it inherits down and no specificity is contested.",
       "searchHints": [
         "ds-time-picker",
         "--ds-time-picker-panel-radius",
@@ -169,8 +170,8 @@
         "time-picker"
       ],
       "surface": "style",
-      "restore": "ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }",
-      "verify": "A time picker beside a date picker draws the same corner, or the app pins the old 8px deliberately."
+      "restore": "`.cdk-overlay-container { --_time-picker-panel-radius: var(--radius-md); }`, in a global stylesheet.",
+      "verify": "Open the time picker: the panel draws square corners, or the 8px corner if you applied `restore`."
     },
     {
       "id": "focus-partial-needs-use-line",

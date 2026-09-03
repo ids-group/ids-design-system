@@ -171,8 +171,8 @@
         "message": "<AccordionItem> doesn't accept that prop. Declared props: title, expanded, disabled, onExpandedChange, badge, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Alert'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|dismissible|icon|onClosed|actions|children|key|ref|className|style)$/]",
-        "message": "<Alert> doesn't accept that prop. Declared props: variant, title, dismissible, icon, onClosed, actions, children."
+        "selector": "JSXOpeningElement[name.name='Alert'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|dismissible|icon|onClosed|announce|actions|children|key|ref|className|style)$/]",
+        "message": "<Alert> doesn't accept that prop. Declared props: variant, title, dismissible, icon, onClosed, announce, actions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='AppLayout'] > JSXAttribute > JSXIdentifier[name!=/^(?:topbarSpan|railOpen|railLabel|restoreScroll|restoreScrollTimeout|scrollReset|onRailOpenChange|sidenav|topbar|children|key|ref|className|style)$/]",
@@ -199,8 +199,8 @@
         "message": "<Badge> doesn't accept that prop. Declared props: status, withDot, solid, count, max, countLabel, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Banner'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|dismissible|icon|compact|layout|accentRail|onClosed|actions|children|key|ref|className|style)$/]",
-        "message": "<Banner> doesn't accept that prop. Declared props: variant, title, dismissible, icon, compact, layout, accentRail, onClosed, actions, children."
+        "selector": "JSXOpeningElement[name.name='Banner'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|dismissible|icon|compact|layout|accentRail|onClosed|announce|actions|children|key|ref|className|style)$/]",
+        "message": "<Banner> doesn't accept that prop. Declared props: variant, title, dismissible, icon, compact, layout, accentRail, onClosed, announce, actions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='BottomSheet'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|title|onClosed|snapPoints|onOpenChange|actions|children|key|ref|className|style)$/]",
@@ -475,8 +475,8 @@
         "message": "<TimePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, mode, minuteStep, minTime, maxTime, disabledTime, size, fullWidth, label, required, optional, disabled, success, placeholder, clearable, ariaLabel, format, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Toast'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|message|dismissible|icon|action|onClosed|actions|children|key|ref|className|style)$/]",
-        "message": "<Toast> doesn't accept that prop. Declared props: variant, title, message, dismissible, icon, action, onClosed, actions, children."
+        "selector": "JSXOpeningElement[name.name='Toast'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|body|dismissible|icon|action|onClosed|actions|children|key|ref|className|style)$/]",
+        "message": "<Toast> doesn't accept that prop. Declared props: variant, title, body, dismissible, icon, action, onClosed, actions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ToastRegion'] > JSXAttribute > JSXIdentifier[name!=/^(?:maxVisible|children|key|ref|className|style)$/]",

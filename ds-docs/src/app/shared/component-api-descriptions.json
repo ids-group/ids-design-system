@@ -1,6 +1,49 @@
 {
   "$importPathDefault": "@ids-group-ltd/ids-design-system",
-  "button": { "status": "stable" },
-  "checkbox": { "status": "stable" },
-  "date-picker": { "status": "stable" }
+  "$services": {
+    "ToastService": {
+      "members": {
+        "show": "Raise a toast and get a handle back. `durationMs` is counted from the moment the toast becomes VISIBLE, not from the call, so one queued behind the cap keeps its full time on screen; `0` and any negative never expire. A `loading` toast and one carrying an `action` are forced to 0 — that button is the only way to take the action.",
+        "dismissAll": "Dismiss every visible toast and drop the queue behind them."
+      }
+    },
+    "ModalService": {
+      "members": {}
+    },
+    "BreadcrumbsService": {
+      "members": {
+        "items": "The current trail. `<ds-breadcrumbs>` reads this whenever no `[items]` input is bound.",
+        "set": "Replace the whole trail.",
+        "push": "Append one item to the end of the trail.",
+        "pop": "Drop the last item. A no-op on an empty trail.",
+        "replaceLast": "Swap the last item, or set the trail to this one item if it is empty — for a page whose leaf name arrives after its data loads.",
+        "clear": "Empty the trail."
+      }
+    },
+    "BodyScrollLockService": {
+      "members": {
+        "lock": "Take a lock. The first one saves the current `body` overflow and hides it.",
+        "unlock": "Release a lock. Only the last one restores the saved overflow, so closing one overlay cannot re-enable page scroll under another still open above it."
+      }
+    },
+    "LayoutNavigationService": {
+      "members": {
+        "pathChanged": "Emits the new path on every navigation that lands on a DIFFERENT path — query and hash are stripped, repeats are dropped, and a navigation the app marked `dsSamePage` is skipped entirely."
+      }
+    },
+    "LayoutScrollService": {
+      "members": {
+        "scrollToTop": "Send the layout's content region back to the top. For a screen that wants the top after its own filter or sort change, which `resetScroll=\"path\"` deliberately does not do."
+      }
+    }
+  },
+  "button": {
+    "status": "stable"
+  },
+  "checkbox": {
+    "status": "stable"
+  },
+  "date-picker": {
+    "status": "stable"
+  }
 }

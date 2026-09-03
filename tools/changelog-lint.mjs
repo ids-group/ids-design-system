@@ -62,8 +62,11 @@ const SOURCE_RULES = new Set([
   'C011',
 ]);
 
+// Returns the files AND the per-source breakdown, because a collapse is per-source: the total
+// stays high while one input resolves to nothing.
 function shippedSources() {
   const found = [];
+  const groups = [];
   const crawl = (dir, keep) => {
     if (!existsSync(dir)) return;
     for (const item of readdirSync(dir, { withFileTypes: true })) {
@@ -81,14 +84,19 @@ function shippedSources() {
     : [];
   const TEXT = /\.(scss|css|md|json|txt)$/;
   for (const asset of assets) {
-    if (asset.input) crawl(join(ROOT, asset.input), (n) => TEXT.test(n));
+    if (!asset.input) continue;
+    const before = found.length;
+    crawl(join(ROOT, asset.input), (n) => TEXT.test(n));
+    groups.push({ name: `assets:${asset.input}`, count: found.length - before });
   }
+  const beforeSource = found.length;
   crawl(
     join(ROOT, 'src/lib'),
     (n) => n.endsWith('.ts') && !n.endsWith('.spec.ts'),
   );
+  groups.push({ name: 'src/lib/**/*.ts', count: found.length - beforeSource });
 
-  return found;
+  return { files: found, groups, assetsDeclared: assets.length };
 }
 
 // A published artefact is read by ALL of these, so naming one to the others is a
@@ -300,7 +308,8 @@ if (process.argv.includes('--list')) {
 }
 // `resolve`, not `join`: an absolute argument has to work, so a staged copy of one release
 // block can be checked before it is spliced back.
-const sourceSet = new Set(shippedSources());
+const shipped = shippedSources();
+const sourceSet = new Set(shipped.files);
 const targets = (
   requested.length ? requested : [...publishedFiles(), ...sourceSet]
 ).map((file) => {
@@ -312,8 +321,9 @@ const targets = (
 });
 
 // Both resolvers degrade quietly — `existsSync` filtering and `assets ?? []` — so a renamed
-// path or ng-package key shrinks the sweep toward nothing while still reporting OK. The
-// floor catches a collapse; it is too low to catch drift.
+// path or ng-package key takes out one GROUP while the total stays high. Checked per group for
+// that reason: an aggregate floor high enough to notice three files going missing would fail on
+// every ordinary addition.
 if (!requested.length) {
   const REQUIRED = [
     'CHANGELOG.md',
@@ -322,14 +332,35 @@ if (!requested.length) {
     'components.md',
   ];
   const missing = REQUIRED.filter((file) => !existsSync(join(ROOT, file)));
-  if (missing.length || targets.length < 100) {
+  const manifests = targets.filter((t) => t.label.startsWith('migrations/')).length;
+  const groups = [
+    ...shipped.groups,
+    { name: 'migrations/*.json', count: manifests },
+  ];
+  const empty = groups.filter((group) => group.count === 0);
+  // "every group is non-empty" says nothing when there are no groups.
+  const noGroups = shipped.assetsDeclared === 0 || groups.length < 2;
+  if (missing.length || empty.length || noGroups) {
     console.error(
-      `changelog-lint: resolved only ${targets.length} target(s)` +
-        (missing.length ? ` and could not find ${missing.join(', ')}` : '') +
-        ' — publishedFiles()/shippedSources() has drifted from what actually ships.',
+      'changelog-lint: the sweep has drifted from what actually ships —' +
+        (missing.length ? ` cannot find ${missing.join(', ')};` : '') +
+        (empty.length
+          ? ` these resolved nothing: ${empty.map((g) => g.name).join(', ')};`
+          : '') +
+        (noGroups ? ' ng-package.json declares no asset inputs;' : '') +
+        ` ${targets.length} target(s) in total.`,
     );
     process.exit(1);
   }
+  process.on('exit', (code) => {
+    if (code === 0) {
+      console.log(
+        `changelog-lint: by group — ${groups
+          .map((g) => `${g.name} ${g.count}`)
+          .join(', ')}`,
+      );
+    }
+  });
 }
 
 const errors = [];
@@ -584,12 +615,20 @@ for (const { full, label: file, isSource } of targets) {
   // `## Unreleased` described as exported, and the module declares `DsListCursorList` and three
   // functions. Only our own `Ds*` prefix is resolved — Angular and TypeScript names are all
   // over this prose and are not ours to account for.
+  //
+  // A REMOVED symbol resolves to nothing either, and naming it is the whole point of the entry
+  // announcing its removal — so the same window C010 uses applies here. Keep it tight: a
+  // misspelling that happens to sit near the word takes the exemption with it.
   scanFlat(
     /`(Ds[A-Z][A-Za-z0-9_]+)`/g,
     'C013',
     (m) =>
       `names \`${m[1]}\`, which this library does not declare — check the spelling, or name the symbol that exists`,
-    (m) => !KNOWN_SYMBOLS.has(m[1]),
+    (m) =>
+      !KNOWN_SYMBOLS.has(m[1]) &&
+      !/\bremoved\b|\bdeleted\b|\bno longer (?:declared|exported|exists)\b/i.test(
+        flat.slice(Math.max(0, m.index - 70), m.index + m[0].length + 70),
+      ),
   );
 
   // C014 — an entry whose SUBJECT is our own bookkeeping. The ban on decision archaeology reads

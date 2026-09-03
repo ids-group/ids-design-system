@@ -627,12 +627,12 @@
     {
       "path": "components/forms-inputs/Input/Input-Clearable.html",
       "group": "forms-inputs",
-      "viewport": "1200x467"
+      "viewport": "1200x468"
     },
     {
       "path": "components/forms-inputs/Input/Input-Password-toggle.html",
       "group": "forms-inputs",
-      "viewport": "1200x468"
+      "viewport": "1200x467"
     },
     {
       "path": "components/forms-inputs/Input/Input-Character-counter.html",
@@ -1007,12 +1007,12 @@
     {
       "path": "components/navigation/AppLayout/AppLayout-Returning-the-reader-to-where-they-were.html",
       "group": "navigation",
-      "viewport": "1200x886"
+      "viewport": "1200x1417"
     },
     {
       "path": "components/navigation/SidenavFooter/SidenavFooter.html",
       "group": "navigation",
-      "viewport": "1200x2451"
+      "viewport": "1200x3039"
     },
     {
       "path": "components/navigation/AuthLayout/AuthLayout-Two-tone-wordmark-flat-card.html",
@@ -1062,7 +1062,7 @@
     {
       "path": "components/navigation/Breadcrumbs/Breadcrumbs-Service-driven-route-aware-apps.html",
       "group": "navigation",
-      "viewport": "1200x656"
+      "viewport": "1200x849"
     },
     {
       "path": "components/navigation/Menu/Menu-Trigger-opened-overlay.html",
@@ -1557,7 +1557,7 @@
     {
       "path": "components/data-display/Table/Table-Lazy-loading.html",
       "group": "data-display",
-      "viewport": "1200x974"
+      "viewport": "1200x973"
     },
     {
       "path": "components/data-display/Tag/Tag-Variants.html",
@@ -1712,12 +1712,12 @@
     {
       "path": "components/feedback-status/Toast/Toast-Live-demo.html",
       "group": "feedback-status",
-      "viewport": "1200x477"
+      "viewport": "1200x516"
     },
     {
       "path": "components/feedback-status/Toast/Toast-With-action.html",
       "group": "feedback-status",
-      "viewport": "1200x477"
+      "viewport": "1200x517"
     },
     {
       "path": "components/feedback-status/Toast/Toast-Promise-toast.html",
@@ -1725,9 +1725,14 @@
       "viewport": "1200x498"
     },
     {
+      "path": "components/feedback-status/Toast/Toast-Screen-readers-and-what-the-service-owns.html",
+      "group": "feedback-status",
+      "viewport": "1200x559"
+    },
+    {
       "path": "components/feedback-status/ToastRegion/ToastRegion-maxVisible-queue.html",
       "group": "feedback-status",
-      "viewport": "1200x670"
+      "viewport": "1200x743"
     },
     {
       "path": "components/overlays/BottomSheet/BottomSheet-Live-demo.html",
@@ -1802,7 +1807,7 @@
     {
       "path": "components/overlays/ModalConfirm/ModalConfirm-Confirmation.html",
       "group": "overlays",
-      "viewport": "1200x898"
+      "viewport": "1200x1115"
     },
     {
       "path": "components/overlays/Popover/Popover-Static-specimen.html",

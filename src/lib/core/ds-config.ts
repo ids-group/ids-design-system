@@ -2,6 +2,7 @@ import { InjectionToken, Provider, inject } from '@angular/core';
 import type { IconName } from '../icons/icons.data';
 import type { DsSize } from './size';
 import type { CardElevation, CardPadding } from './card.types';
+import type { DsToastPosition } from './toast-position';
 
 export interface DsConfig {
   field?: {
@@ -65,6 +66,14 @@ export interface DsConfig {
      *  Configurable app-wide because a `ModalService` confirm renders a card with no
      *  `ds-modal` ancestor to bind — an attribute cannot reach it. */
     dividers?: boolean;
+  };
+  toast?: {
+    /** Where the stack sits. Merged field by field over the built-in
+     *  `right` / `top` / `var(--space-6)`, so naming one key keeps the other two. */
+    position?: Partial<DsToastPosition>;
+    /** Maximum number of toasts visible at once. Extras are queued and shown as
+     *  earlier ones dismiss. Default `5`; `0` means unlimited. */
+    maxVisible?: number;
   };
   picker?: {
     /** Default for `ds-multi-select``s `searchable`. `true` always shows the panel's

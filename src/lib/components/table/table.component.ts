@@ -325,6 +325,7 @@ export class TableComponent<T extends object> {
    *  can show the same in-flight state as the built-in one. */
   readonly exporting = this.exportingState.asReadonly();
   private readonly exportStatusState = signal('');
+  private readonly eventsAtExport = signal('');
   /** Announced in the table's live region while an export is running or after it
    *  failed, so the button's own disabled state is not the only signal. */
   readonly exportStatus = this.exportStatusState.asReadonly();
@@ -1199,18 +1200,22 @@ export class TableComponent<T extends object> {
     if (this.loadingMode() !== false) {
       return 'Loading…';
     }
-    const exportState = this.exportStatus();
-    if (exportState) {
-      return exportState;
+    const events = this.eventMessages();
+    // The export line holds the region until the events line has something NEW to say, so
+    // "Export failed" survives until the reader moves on rather than for a guessed interval.
+    // Compared against a snapshot rather than cleared, because a computed cannot write.
+    if (this.exportStatus() && events === this.eventsAtExport()) {
+      return this.exportStatus();
     }
-    const parts = [
-      this.sortMessage(),
-      this.rangeMessage(),
-      this.expansionMessage(),
-    ].filter(Boolean);
 
-    return parts.join('. ');
+    return events;
   });
+
+  private readonly eventMessages = computed<string>(() =>
+    [this.sortMessage(), this.rangeMessage(), this.expansionMessage()]
+      .filter(Boolean)
+      .join('. '),
+  );
 
   /** Only from two rows up: a single expander announces itself through its own
    *  `aria-expanded`, and repeating that here would say everything twice. */
@@ -1483,11 +1488,10 @@ export class TableComponent<T extends object> {
   constructor() {
     this.watchPointer();
 
-    // The scrim starts below the header, so it needs the header's height. Measured and not
-    // summed from the padding and line-height: `vertical-align: middle` on the inline-flex
-    // label extends the line box past the strut by a font-metric amount no calc() can carry,
-    // and a sum is blind to a taller control in the header. Re-measured per loading episode,
-    // which is when the value is read.
+    // The scrim starts below the header, so it needs the header's height. Measured, not summed
+    // from padding and line-height: `vertical-align: middle` on the inline-flex label extends
+    // the line box past the strut by a font-metric amount no calc() can carry, and a sum is
+    // blind to a taller control in the header.
     effect(() => {
       if (!this.isOverlayLoading()) {
         return;
@@ -2143,7 +2147,7 @@ export class TableComponent<T extends object> {
       return;
     }
     this.exportingState.set(true);
-    this.exportStatusState.set('Preparing export…');
+    this.announceExport('Preparing export…');
     try {
       const result = await fetcher();
       if (typeof result === 'string' || result instanceof Blob) {
@@ -2151,13 +2155,18 @@ export class TableComponent<T extends object> {
       } else {
         this.exportCsv(this.exportFilename(), result);
       }
-      this.exportStatusState.set('Export ready');
+      this.announceExport('Export ready');
     } catch (error) {
-      this.exportStatusState.set('Export failed');
+      this.announceExport('Export failed');
       this.exportFailed.emit(error);
     } finally {
       this.exportingState.set(false);
     }
+  }
+
+  private announceExport(status: string): void {
+    this.eventsAtExport.set(this.eventMessages());
+    this.exportStatusState.set(status);
   }
 
   /** Hands a ready-made file to the browser. Only a Blob gets its object URL

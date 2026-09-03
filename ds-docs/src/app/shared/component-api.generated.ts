@@ -2,7 +2,7 @@
 // Run `npm run extract-component-api`. Editorial text is baked in from
 // component-api-descriptions.json at extract time.
 
-import type { ComponentApi } from './component-api.types';
+import type { ComponentApi, ServiceApi } from './component-api.types';
 
 export const COMPONENT_API: Record<string, ComponentApi> = {
   "accordion": {
@@ -118,6 +118,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Override the variant's default icon."
+      },
+      {
+        "name": "announce",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Announce this alert to a screen reader when it appears. Off by default — see `ds-banner`'s `announce` for why, and prefer `ToastService` for anything transient."
       }
     ],
     "outputs": [
@@ -204,6 +213,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `LayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one."
       }
     ],
+    "outputs": []
+  },
+  "app-layout:RailTriggerDirective": {
+    "key": "app-layout",
+    "selector": "[dsRailTrigger]",
+    "isElement": false,
+    "className": "RailTriggerDirective",
+    "status": "stable",
+    "importName": "RailTriggerDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "auth-layout": {
@@ -954,6 +975,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Coloured accent rail on the leading edge; set false to hide it."
+      },
+      {
+        "name": "announce",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Announce this banner to a screen reader when it appears. Off by default: an `alert` region fires on INSERTION, so a banner that is page furniture would interrupt the reader on every route into the page. Turn it on for one the app raises in response to an event; for anything transient prefer `ToastService`, which owns a live region built for the purpose."
       }
     ],
     "outputs": [
@@ -1552,6 +1582,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "chip-template": {
+    "key": "chip-template",
+    "selector": "[dsChipTemplate]",
+    "isElement": false,
+    "className": "DsChipTemplateDirective",
+    "status": "stable",
+    "importName": "DsChipTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "color-picker": {
     "key": "color-picker",
     "selector": "ds-color-picker",
@@ -1689,6 +1731,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       }
     ],
+    "outputs": []
+  },
+  "create-template": {
+    "key": "create-template",
+    "selector": "[dsCreateTemplate]",
+    "isElement": false,
+    "className": "DsCreateTemplateDirective",
+    "status": "stable",
+    "importName": "DsCreateTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "date-picker": {
@@ -2287,6 +2341,30 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "empty-template": {
+    "key": "empty-template",
+    "selector": "[dsEmptyTemplate]",
+    "isElement": false,
+    "className": "DsEmptyTemplateDirective",
+    "status": "stable",
+    "importName": "DsEmptyTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
+  "field-click-focus": {
+    "key": "field-click-focus",
+    "selector": "[dsFieldClickFocus]",
+    "isElement": false,
+    "className": "FieldClickFocusDirective",
+    "status": "stable",
+    "importName": "FieldClickFocusDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "field-group": {
     "key": "field-group",
     "selector": "ds-field-group",
@@ -2382,6 +2460,40 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Height of the \"+N\" trigger, to match the filters beside it. The bar cannot infer this: `dsFilterItem` carries a WIDTH, and the filters are arbitrary projected controls whose own `size` it never sees — so a row of `sm` filters got an `md` trigger standing 8px taller under `align-items: flex-end`."
       }
     ],
+    "outputs": []
+  },
+  "filter-bar:FilterItemDirective": {
+    "key": "filter-bar",
+    "selector": "ng-template[dsFilterItem]",
+    "isElement": true,
+    "className": "FilterItemDirective",
+    "status": "stable",
+    "importName": "FilterItemDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "width",
+        "kind": "input",
+        "type": "unknown",
+        "union": null,
+        "default": "DEFAULT_ITEM_WIDTH",
+        "required": false,
+        "description": "Slot width in px. Bare `dsFilterItem` (or a non-positive value) means 180."
+      }
+    ],
+    "outputs": []
+  },
+  "group-label-template": {
+    "key": "group-label-template",
+    "selector": "[dsGroupLabelTemplate]",
+    "isElement": false,
+    "className": "DsGroupLabelTemplateDirective",
+    "status": "stable",
+    "importName": "DsGroupLabelTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "icon-button": {
@@ -3955,6 +4067,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "option-template": {
+    "key": "option-template",
+    "selector": "[dsOptionTemplate]",
+    "isElement": false,
+    "className": "DsOptionTemplateDirective",
+    "status": "stable",
+    "importName": "DsOptionTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "otp-input": {
     "key": "otp-input",
     "selector": "ds-otp-input",
@@ -4285,6 +4409,30 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "panel-footer-template": {
+    "key": "panel-footer-template",
+    "selector": "[dsPanelFooterTemplate]",
+    "isElement": false,
+    "className": "DsPanelFooterTemplateDirective",
+    "status": "stable",
+    "importName": "DsPanelFooterTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
+  "panel-header-template": {
+    "key": "panel-header-template",
+    "selector": "[dsPanelHeaderTemplate]",
+    "isElement": false,
+    "className": "DsPanelHeaderTemplateDirective",
+    "status": "stable",
+    "importName": "DsPanelHeaderTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "password-rules": {
     "key": "password-rules",
     "selector": "ds-password-rules",
@@ -4341,6 +4489,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly and both sides can name the same string, which avoids threading a template ref between two siblings."
       }
     ],
+    "outputs": []
+  },
+  "picker-trigger": {
+    "key": "picker-trigger",
+    "selector": "[dsPickerTrigger]",
+    "isElement": false,
+    "className": "DsPickerTriggerDirective",
+    "status": "stable",
+    "importName": "DsPickerTriggerDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "popover": {
@@ -4761,6 +4921,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Visible group label; omit to supply your own."
       }
     ],
+    "outputs": []
+  },
+  "reserve-messages": {
+    "key": "reserve-messages",
+    "selector": "[dsReserveMessages]",
+    "isElement": false,
+    "className": "ReserveMessagesDirective",
+    "status": "stable",
+    "importName": "ReserveMessagesDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
     "outputs": []
   },
   "search": {
@@ -5291,6 +5463,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The panel closed, for any reason — a pick, Escape, an outside click, a scroll."
       }
     ]
+  },
+  "sidenav:BrandNameDirective": {
+    "key": "sidenav",
+    "selector": "[dsBrandName]",
+    "isElement": false,
+    "className": "BrandNameDirective",
+    "status": "stable",
+    "importName": "BrandNameDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "sidenav": {
     "key": "sidenav",
@@ -6325,6 +6509,59 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Inline label rendered beside the track and wired via for/id. Omit to bring your own <label>."
+      }
+    ],
+    "outputs": []
+  },
+  "table:CellTemplateDirective": {
+    "key": "table",
+    "selector": "[dsCellTemplate]",
+    "isElement": false,
+    "className": "CellTemplateDirective",
+    "status": "stable",
+    "importName": "CellTemplateDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsCellTemplate",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "The `key` of the column this template replaces, matched against the table's `columns`. A key no column declares renders nothing and warns nowhere."
+      }
+    ],
+    "outputs": []
+  },
+  "table:HeaderFilterDirective": {
+    "key": "table",
+    "selector": "ng-template[dsHeaderFilter]",
+    "isElement": true,
+    "className": "HeaderFilterDirective",
+    "status": "stable",
+    "importName": "HeaderFilterDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsHeaderFilter",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Key of the column this filter belongs to."
+      },
+      {
+        "name": "active",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether YOUR criterion is currently set, which drives the header's active-filter styling."
       }
     ],
     "outputs": []
@@ -7827,7 +8064,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'info'",
         "required": false,
-        "description": "Severity — drives colour, the default icon/spinner and the ARIA role/live."
+        "description": "Severity — drives colour and the default icon or spinner."
       },
       {
         "name": "title",
@@ -7839,13 +8076,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Optional bold heading above the message."
       },
       {
-        "name": "message",
+        "name": "body",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Body text of the toast."
+        "description": "The same field `ToastOptions.body` carries, so a specimen and a raised toast agree."
       },
       {
         "name": "dismissible",
@@ -7902,9 +8139,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "DEFAULT_MAX_VISIBLE",
         "required": false,
-        "description": "Cap on concurrently visible toasts. Extras are queued and shown as earlier ones dismiss. 0 = unlimited (default)."
+        "description": "Cap on concurrently visible toasts. Extras are queued and shown as earlier ones dismiss. `0` = unlimited."
       }
     ],
     "outputs": []
@@ -7950,6 +8187,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "outputs": []
   },
   "tooltip": {
+    "key": "tooltip",
+    "selector": "[dsTooltip]",
+    "isElement": false,
+    "className": "TooltipDirective",
+    "status": "stable",
+    "importName": "TooltipDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsTooltip",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Tip text. An empty string is how you turn the tooltip off — a host bound to a value that may be blank needs no separate condition."
+      },
+      {
+        "name": "dsTooltipPlacement",
+        "kind": "input",
+        "type": "TooltipPlacement",
+        "union": [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ],
+        "default": "'top'",
+        "required": false,
+        "description": "Which side the tip opens on. It does NOT flip: only the requested side is offered to the overlay, so a tip with no room there is pushed rather than moved to the opposite side."
+      },
+      {
+        "name": "dsTooltipDelay",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "120",
+        "required": false,
+        "description": "Milliseconds before the tip appears. Hiding is immediate — this delay only ever suppresses a tip the pointer passed over on its way somewhere else."
+      }
+    ],
+    "outputs": []
+  },
+  "tooltip:TooltipPanelComponent": {
     "key": "tooltip",
     "selector": "ds-tooltip-panel",
     "isElement": true,
@@ -8103,6 +8385,210 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires with `address` after a successful copy."
+      }
+    ]
+  }
+};
+
+export const SERVICE_API: Record<string, ServiceApi> = {
+  "BodyScrollLockService": {
+    "key": "overlay",
+    "className": "BodyScrollLockService",
+    "importName": "BodyScrollLockService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "Ref-counted lock on `document.body` scroll, shared by every overlay that covers the viewport (modal, drawer, bottom-sheet). The FIRST `lock()` saves the current `body` overflow and hides it; the LAST `unlock()` restores it — so closing one overlay never re-enables page scroll while another stacked on top of it is still open. Calls must be paired (one `unlock()` per `lock()`).",
+    "members": [
+      {
+        "name": "lock",
+        "kind": "method",
+        "signature": "lock()",
+        "type": "void",
+        "description": "Take a lock. The first one saves the current `body` overflow and hides it."
+      },
+      {
+        "name": "unlock",
+        "kind": "method",
+        "signature": "unlock()",
+        "type": "void",
+        "description": "Release a lock. Only the last one restores the saved overflow, so closing one overlay cannot re-enable page scroll under another still open above it."
+      }
+    ]
+  },
+  "BreadcrumbsService": {
+    "key": "breadcrumbs",
+    "className": "BreadcrumbsService",
+    "importName": "BreadcrumbsService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "Library-level breadcrumb state. Apps push items either programmatically (page constructor / effect) or via a router-data driver (see app docs). `<ds-breadcrumbs>` reads from here when no `[items]` input is provided.",
+    "members": [
+      {
+        "name": "items",
+        "kind": "property",
+        "signature": "items",
+        "type": "Signal<BreadcrumbItem[]>",
+        "description": "The current trail. `<ds-breadcrumbs>` reads this whenever no `[items]` input is bound."
+      },
+      {
+        "name": "set",
+        "kind": "method",
+        "signature": "set(items: BreadcrumbItem[])",
+        "type": "void",
+        "description": "Replace the whole trail."
+      },
+      {
+        "name": "push",
+        "kind": "method",
+        "signature": "push(item: BreadcrumbItem)",
+        "type": "void",
+        "description": "Append one item to the end of the trail."
+      },
+      {
+        "name": "pop",
+        "kind": "method",
+        "signature": "pop()",
+        "type": "void",
+        "description": "Drop the last item. A no-op on an empty trail."
+      },
+      {
+        "name": "replaceLast",
+        "kind": "method",
+        "signature": "replaceLast(item: BreadcrumbItem)",
+        "type": "void",
+        "description": "Swap the last item, or set the trail to this one item if it is empty — for a page whose leaf name arrives after its data loads."
+      },
+      {
+        "name": "clear",
+        "kind": "method",
+        "signature": "clear()",
+        "type": "void",
+        "description": "Empty the trail."
+      }
+    ]
+  },
+  "LayoutNavigationService": {
+    "key": "app-layout",
+    "className": "LayoutNavigationService",
+    "importName": "LayoutNavigationService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "Emits the new path whenever navigation lands on a DIFFERENT one. A query- or fragment-only navigation is a search, sort or page step on the same screen, and everything that reacts to \"went somewhere else\" must agree on that — the scroll reset, the responsive rail, and now your own code — so they read one source instead of each deciding for itself. PUBLIC since 0.8.x, because consumers were re-deriving it and disagreeing: one consumer had three separate answers to \"did the path change?\" — route snapshots in a view-transition skip, this stream inside the layout, and a `split('?')` in a tab helper that ignored the fragment this one strips. Inject it and read `pathChanged` rather than writing a fourth: ```ts private readonly navigation = inject(LayoutNavigationService); constructor() { this.navigation.pathChanged .pipe(takeUntilDestroyed()) .subscribe((path) => …); } ``` A PATH change is not always a page change. An app whose URL mirrors the reader's position — a docs layout rewriting `/area/section` from a scroll spy, a wizard that names its step — changes the path while staying on the screen, and resetting the scroll there fights the user: the reset moves the scroll, the spy rewrites the path again, and the page ping-pongs. Such a navigation must carry `state: { dsSamePage: true }`, which is skipped here. Root-provided, which is also what makes it safe to expose: the stream is derived from the router and holds no state, so one instance serves every reader. `LayoutScrollService` depends on it, so a consumer providing THAT outside `ds-app-layout` needs this one resolvable too.",
+    "members": [
+      {
+        "name": "pathChanged",
+        "kind": "property",
+        "signature": "pathChanged",
+        "type": "Observable<string>",
+        "description": "Emits the new path on every navigation that lands on a DIFFERENT path — query and hash are stripped, repeats are dropped, and a navigation the app marked `dsSamePage` is skipped entirely."
+      }
+    ]
+  },
+  "LayoutScrollService": {
+    "key": "app-layout",
+    "className": "LayoutScrollService",
+    "importName": "LayoutScrollService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "Owns the layout's content scroller. In the fixed-frame layout the window never scrolls, so the router's built-in window-based scrolling no-ops — this service resets the registered container to the top when navigation lands on a different PATH instead. Provided by `ds-app-layout`, so routed pages can `inject(LayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages that DO want the top after a filter change). With `restoreScroll` on the layout it also restores the reader's place. Only when ARMED, which is the whole design: going BACK to a list should return to where the reader was, while following a link into a new screen should not.",
+    "members": [
+      {
+        "name": "scroller",
+        "kind": "property",
+        "signature": "scroller",
+        "type": "Signal<Element | null>",
+        "description": "The content scroller, once the layout has rendered it. Exposed so a host that must measure or drive the scroll itself — a scroll-spy, a virtualizer — can ask the layout for it instead of guessing the layout's internal markup with `document.querySelector`."
+      },
+      {
+        "name": "setScrollContainer",
+        "kind": "method",
+        "signature": "setScrollContainer(element: Element)",
+        "type": "void",
+        "description": "Wiring, called by `ds-app-layout` once its content region exists. Public only because the component and the service sit in different files - a consumer has no reason to call it, and calling it points the service at the wrong element."
+      },
+      {
+        "name": "configureRestore",
+        "kind": "method",
+        "signature": "configureRestore(timeoutMs: number | null)",
+        "type": "void",
+        "description": "Wiring: `ds-app-layout` mirrors its `restoreScroll` inputs through here."
+      },
+      {
+        "name": "configureReset",
+        "kind": "method",
+        "signature": "configureReset(strategy: DsScrollReset)",
+        "type": "void",
+        "description": "Wiring: `ds-app-layout` mirrors its `scrollReset` input through here."
+      },
+      {
+        "name": "scrollToTop",
+        "kind": "method",
+        "signature": "scrollToTop()",
+        "type": "void",
+        "description": "Send the layout's content region back to the top. For a screen that wants the top after its own filter or sort change, which `resetScroll=\"path\"` deliberately does not do."
+      },
+      {
+        "name": "scrollTo",
+        "kind": "method",
+        "signature": "scrollTo(top: number)",
+        "type": "void",
+        "description": "Scroll the content region to an absolute offset. Assigns `scrollTop` rather than calling `scrollTo`, so a themed `scroll-behavior: smooth` cannot turn a positioning jump into an animation."
+      },
+      {
+        "name": "consumePendingOffset",
+        "kind": "method",
+        "signature": "consumePendingOffset()",
+        "type": "number | null",
+        "description": "Take the offset this navigation is going to restore, and cancel the restore. For a host that renders its own scroll position — a virtualizer needs the offset BEFORE it decides which rows to build, so letting the service assign `scrollTop` afterwards would scroll a list that has not been built yet. Returns null when nothing is pending, which is every navigation that is not a back."
+      },
+      {
+        "name": "contentReady",
+        "kind": "method",
+        "signature": "contentReady()",
+        "type": "void",
+        "description": "Optional accelerator: tell the layout the content for this route is in the DOM. Without it the restore still lands — it waits for the container to grow and clamps at the deadline — but a host that knows when its data arrived can end the wait early instead of paying the growth watch."
+      }
+    ]
+  },
+  "ModalService": {
+    "key": "modal",
+    "className": "ModalService",
+    "importName": "ModalService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "",
+    "members": [
+      {
+        "name": "confirm",
+        "kind": "method",
+        "signature": "confirm(options: ModalConfirmOptions)",
+        "type": "Promise<boolean>",
+        "description": "Open a confirmation dialog. Resolves true on confirm, false on cancel, backdrop click or Escape."
+      }
+    ]
+  },
+  "ToastService": {
+    "key": "toast",
+    "className": "ToastService",
+    "importName": "ToastService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "",
+    "members": [
+      {
+        "name": "show",
+        "kind": "method",
+        "signature": "show(opts: ToastOptions)",
+        "type": "ToastRef",
+        "description": "Raise a toast and get a handle back. `durationMs` is counted from the moment the toast becomes VISIBLE, not from the call, so one queued behind the cap keeps its full time on screen; `0` and any negative never expire. A `loading` toast and one carrying an `action` are forced to 0 — that button is the only way to take the action."
+      },
+      {
+        "name": "promise",
+        "kind": "method",
+        "signature": "promise(source: Promise<T>, messages: ToastPromiseMessages<T>)",
+        "type": "Promise<T>",
+        "description": "Show a loading toast for the duration of `source`. Resolution and rejection are reflected in-place (same toast, no stack-up) as success/error variants, each with its own auto-dismiss delay. Returns `source` itself, so the caller still owns rejection handling — an un-`catch`ed call produces an unhandled rejection exactly as it would without a toast."
+      },
+      {
+        "name": "dismissAll",
+        "kind": "method",
+        "signature": "dismissAll()",
+        "type": "void",
+        "description": "Dismiss every visible toast and drop the queue behind them."
       }
     ]
   }

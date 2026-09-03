@@ -1,5 +1,86 @@
 # DS — improvements backlog
 
+## The hex readout rolls its glyphs like a mechanical board (recorded 2026-09-02, Stas)
+
+- [ ] **[P3] Dragging the picker retypes the hex value instantly; each glyph should ROLL to its new
+  value instead.** The direction is specified, not a preference to re-derive: an INCREASE sends the
+  old glyph DOWN and brings the new one in from ABOVE (`2` → `4` — the 2 leaves downward, the 4
+  arrives on top of it), a DECREASE reverses it (`7` → `2` — the 7 leaves upward, the 2 arrives from
+  below).
+
+  **That direction is a split-flap board, not an odometer drum, and the references disagree with each
+  other.** A car odometer counts up by rolling digits up from BELOW — the opposite of what was asked —
+  so building this from the odometer write-ups gets the direction backwards. Take the DIRECTION from
+  the flap and the MOTION from the drum: a sliding strip, because the flap implementations
+  (hello-mat.com's design-engineering write-up, `jayKayEss/react-split-flap-effect`) animate a hinged
+  fold with `clip-path` halves, `rotateX` and `backface-visibility: hidden`, and a fold is not what
+  was asked for — "как в старых аналоговых счетчиках", a thing that slides.
+
+  **Hex is ONE ordered alphabet, which is why letters need no special case.** Compare the two glyphs
+  by index in `0123456789ABCDEF` and "increase" is defined across the digit/letter boundary for free:
+  `9` → `A` is an increase, `A` → `9` a decrease, and the digit↔letter flow asked for falls out of the
+  same comparison as `2` → `4`. Each of the six positions in `#RRGGBB` decides its own direction from
+  its own pair; nothing carries between positions, so `F` → `0` is simply a decrease.
+
+  **Two glyphs per position, never a drum of sixteen** — the outgoing one and the incoming one, and
+  the incoming becomes the resident once the transition settles.
+
+  **Clipped to the box it already occupies.** `overflow: hidden` on the per-glyph slot, nothing grows
+  the readout, and a glyph half outside the rectangle with its other half invisible is explicitly
+  fine.
+
+  **Two open questions, and they are what makes this bigger than it looks:**
+
+  - **BOTH readouts can roll, and the panel's `<input>` is the interesting half — RESEARCHED
+    2026-09-02, and the answer is cheaper than it looks.** Per-glyph animation cannot live inside an
+    input's value: there are no element boundaries to animate. The published recipe is a mirror layer
+    over a transparent input, and its known costs are caret sync, selection sync, scroll sync and a
+    per-keystroke timing budget. **None of the four applies here**, because the layer only ever has to
+    be visible while the input is NOT focused, and every path that changes the value from outside the
+    input leaves focus outside it:
+    - the SV plane and the hue rail are `tabindex="0"` and their `pointerdown` handlers do NOT call
+      `preventDefault()` (`color-picker.component.ts:204`, `:256`), so pressing either moves focus to
+      that surface by browser default;
+    - arrow-key adjustment happens with focus already on those surfaces — all three
+      `preventDefault()` calls in the component are on `keydown`, never on a pointer event;
+    - a preset is a `<button>`, which takes focus itself;
+    - the panel autofocuses nothing (no `focus()` call anywhere in the component), so opening it does
+      not put the caret in the field;
+    - typing in the field is the ONLY case where focus is inside it, and there an odometer would fight
+      the user's own caret — so no animation is wanted, which is the same condition.
+
+    So: `focusin` hides the layer and shows the native input, `focusout` restores it. No caret, no
+    selection, no scroll to synchronise.
+
+  - **One component, two mount points.** The trigger's `<span class="hex">` needs no overlay at all —
+    it is already a span, so it hosts the roller directly. The panel input hosts the same roller as an
+    `aria-hidden` layer inside a wrapper, positioned `inset: 0`. Alignment is exact rather than
+    approximate because both readouts are `var(--font-mono)` at `var(--font-size-s)` /
+    `var(--line-height-flat)`: the layer copies that font plus the field's `padding: 0 var(--space-2)`
+    and `border-width-default`. Monospace also removes the width-jitter problem for `A`-`F` that
+    `font-variant-numeric: tabular-nums` could not have solved.
+
+  - **The geometry is MEASURED, not assumed (2026-09-02, headless Chrome over http, the shipped
+    stylesheet and its self-hosted fonts).** JetBrains Mono at `--font-size-s` advances **8.40px**,
+    and `0` and `A` measure identically — so the width-jitter worry is dead outright, not merely
+    mitigated. `#FFFFFF` is **58.80px** of text in a **136px** inner field, leaving **77.20px** of
+    slack, and the field reports `scrollWidth === clientWidth` (152/152), i.e. it is never scrolled,
+    which is what makes the no-scroll-sync claim hold rather than merely look likely. The panel is a
+    fixed 240px (`--color-picker-panel-w`), and **160.80px** is the width at which seven glyphs would
+    start to overflow — so only a consumer who shrinks `--ds-color-picker-panel-w` below ~161px can
+    break this. Keep `overflow: hidden` on the layer so that case degrades to a clip rather than a
+    spill.
+  - **A drag emits values faster than any animation finishes.** Every `pointermove` produces a new
+    hex, so a glyph will be mid-flight when its next value lands. That forces a `transition` on
+    `translateY` rather than `@keyframes`: a transition retargets from wherever the glyph currently
+    is, keyframes restart from the top.
+
+  **Three things cheap to forget.** The slot cannot jitter as glyphs swap, and
+  `font-variant-numeric: tabular-nums` fixes the digits while doing NOTHING for `A`–`F`, so each slot
+  needs a fixed width of its own. `prefers-reduced-motion` degrades to today's instant swap. And two
+  glyph copies in the DOM read as "24" mid-transition, so the animated glyphs go `aria-hidden` behind
+  one accessible text source.
+
 ## Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)
 
 - [ ] **[P3] Five thousand options render five thousand rows.** No picker uses `cdk-virtual-scroll`,
@@ -45,6 +126,7 @@ what makes these the cheapest thing on the board.
 | 8 | `8-rejected-with-numbers` | Every idea this backlog has rejected, with the measurement that rejected it and what would reopen it. | the Parked and Records sections |
 | 9 | `9-migration-manifest-audit` | All 23 findings are fixed; what is open is the tail — ten format practices marked *Adopt* and never ratified. Three of the thirteen shipped on their own (`action`, `appliesWhen`, `exports["./migrations/*"]`). | the P3 line below |
 | 10 | `10-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already Parked — likely answerable with "keep parked" and closed |
+| 11 | `11-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself, one of which lightens the tint instead of the text. | the warning pair in `# Bugs` |
 
 **Ranks 4-8 are the packaging lane and are kept contiguous** — they are one argument and were
 scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russian and share
@@ -58,15 +140,10 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 
 **Bugs — something shipped misbehaves**
 
-- P3 · **A chip row measures a parent that hugs its content** — the guard against it was dead code, and measurement cannot tell that parent from a `fill` trigger; closing it needs a signal other than the two boxes
-- P3 · **`class-surface-diff` cannot see a field declared without `readonly`** — a subclass colliding with one gets no warning, and the gate that guards the release cannot warn either
-- P2 · `package-lock.json` is three patches behind `bun.lock` across the Angular set — `npm ci` no longer resolves; delete it or bump the set
-- P2 · `ds-split-button` hovers with a TEXT colour — inside a status zone the label lands at 1.87:1 in dark; measured 2026-09-02, fix chosen and deferred
+- P2 · **The table's bulk-actions bar paints its buttons the colour of the bar** — the rule styled a `.button` CLASS and stopped reaching anything when the button became a component; fixed on `feat/design-sync-last-mile`, unmerged
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
-- P2 · One export permanently silences `ds-table`'s live region — `exportStatus` outranks every other line and is never cleared
-- P3 · `changelog-lint` prints OK for a sweep that silently lost a third of its files — its floor
-  of 100 cannot see one group of three collapse
-- P3 · Zebra striping tints skeleton rows, because `:nth-child` selects on position and the shimmer rows are tbody children
+- P3 · The resize handle still eats a finger swipe on a hybrid device — the touch query tests the PRIMARY pointer, and a touch laptop reports a mouse
+- P3 · A `done.md` heading's numbers do not reconcile (43 found / 42 fixed / 3 rejected) and the true breakdown is not in the record
 
 **Asks — a consumer or Stas asked for it**
 
@@ -77,8 +154,10 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 - P3 · A token named in prose is never checked against the tokens that exist — a removed one survived in two docs for months
 - P3 · `todo.md`'s index no longer accounts for its body — 44 lines against 66 items, and the gap needs a per-section reconciliation
 - P3 · Three edges left open on `ds-table` row expansion — an inert expand-all on an empty page, the lazy label, and a column header whose name flips
+- P3 · **`changelog-lint`'s C010 judges published history by today's export surface** — un-exporting a symbol turns its own release entry red: making `BodyScrollLockService` internal reddened `CHANGELOG.md`'s 0.7.0 block and `migrations/0.7.0.json`, both of which correctly described a symbol that WAS public then. Measured 2026-09-02 while the removal was being tried; the removal was reversed, so nothing is red now. It will fire on the next un-export. A released section describes the surface AT that version
 - P3 · **`ds-number-stepper` — optional numeric formatting** (locale / currency / decimals / grouping); today it is a raw `value: number` with no display formatting
 - P3 · **The two row-action halves left open on purpose** — a per-row `label`, and a divider between action groups
+- P3 · **The colour picker's hex readout should ROLL each glyph** to its new value, split-flap direction — Stas 2026-09-02; researched, and the panel's readout being an `<input>` is the open question
 
 **Decisions — waiting on Stas, not on work**
 
@@ -95,7 +174,7 @@ Ordered by what each unblocks. The top four each hold a deck or a whole lane hos
 - P3 · **Does a release note owe a WHY**, or only a what-and-what-to-do
 - P3 · **ds-docs still writes BEM modifiers as `--suffix`** — a state should be its own `is-*` class
 - P3 · **Three signal-forms contract members** are unimplemented, all blocked on a LOOK rather than wiring
-- P3 · **Shared picker internals** — surveyed, and the recommendation is NOT to build until a fourth list picker appears
+- P2 · **Shared picker internals** — DECIDED 2026-09-02 (Stas): build it, over the survey's own recommendation not to
 - P3 · **Virtualising a long picker list** — fights `aria-activedescendant`; measure before building
 - P3 · **`schematics/tsconfig.json` asks for `moduleResolution: "node"`**, which TypeScript 6 removes — fix is `node16`, cheap, do it before the bump
 - P3 · **Re-wrap `CHANGELOG.md` to ~100 columns** — mechanical, no prose changes; Stas 2026-08-31: "щас не будем"
@@ -113,11 +192,16 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 - P3 · **Splitter** — asked, keep in the backlog
 - P3 · **CascadeSelect** — asked, keep in the backlog
 - P3 · **MED cluster** — density beyond hit-targets
+- P3 · **The Claude Design upload has a scriptable route, and we chose not to take it** — the boundary is a client-side guard, not a server one; measured and written up in `.design-sync/COMMANDS.md`
 - P3 · **Image / lightbox** — no demand stated; the overlay and motion infrastructure exists to build on
 - P3 · **CDK Menu adoption** — only if nested submenus, a menubar or context menus are actually wanted
 
 **Records — kept so they are not "simplified" away**
 
+- P3 · **A chip row asks layout whether the host depends on the trigger, instead of comparing boxes** — fixed 2026-09-02. Measured in a real browser: the test it replaced answered with a width on 3 of 3 hugging hosts, and the width it returned was the chips' own 154px. Costs one more forced layout
+- P3 · **`changelog-lint` checks each source group for emptiness instead of one aggregate floor** — fixed 2026-09-02. Measured on the control: a renamed asset input leaves 295 targets, which the old floor of 100 passed. What still cannot be PROVEN is a group shrinking 3→2, so the counts print on success
+- P3 · **`class-surface-diff` now reads the class BODY, so a field without `readonly` is visible** — fixed 2026-09-02; the old pattern demanded the keyword because the scan ran to end of file and had module-level function bodies in range. An unassigned declaration counts too
+- P3 · **A gate run against a shared working tree can fail on a half-written line** — C013 was accused of a false positive on 2026-09-02 and was right: the same sentence PASSES with its next line present and FAILS without it, and a parallel session was mid-write. Re-run a gate before believing its failure here
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй").
 
@@ -184,17 +268,26 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds six.** The cheapest real win is still the warning status pair at 4.42:1 where AA
-asks 4.5: it reaches nine components plus `_status.scss` and `_field-state.scss` — eleven files
-counted — so one token step fixes all of them. Four of the others arrived on 2026-09-01 and were
-filed under *Asks* first, which was wrong: nobody asked for them, they are wrong in code a consumer
-already reads. In cost order after the token step — one export leaving the table's live
-region stuck on "Export ready" forever, then the two cosmetic ones. Two are already closed: the
-resize handle's unenforced `aria-valuemax` the same day it was filed, and the loading scrim's
-top edge, which now measures the header instead of assuming 40px.
+**`# Bugs` holds four** (counted 2026-09-02). Two of them are waiting on a person rather than on
+work. The warning status pair at 4.42:1 where AA asks 4.5 is still the widest in reach —
+`--warning-text` is read by nine components plus `_status.scss` and `_field-state.scss`, eleven
+files counted, so one token step covers all of them — and the shape of that step is settled: a
+darker rung on the yellow ramp is closed, because the rungs are not distinguishable from one
+another and so there is nothing to choose between. Deck 11 carries the four live candidates. The
+table's bulk-actions bar at 1.00:1 is fixed on `feat/design-sync-last-mile` and waits only on that
+merge. The other two arrived from elsewhere on 2026-09-02: the resize handle on a hybrid device,
+and a `done.md` heading whose numbers do not reconcile.
+
+**Seven are closed since 2026-09-01**, and two of those are decisions rather than fixes: the zebra
+tint under a skeleton STAYS (toggling it around a load is the worse behaviour), and the resize
+handle's unenforced `aria-valuemax` went the day it was filed. The fixes: the loading scrim now
+measures the header instead of assuming 40px, the export status no longer holds the live region
+once anything else has something to say, the split-button hover follows the rest state, the two
+lockfiles are level on every package either tool resolves freely, and the Angular set moved off
+21.2.17 and out of the range of two high advisories.
 
 **The board is not waiting on hands, it is waiting on verdicts.** Sixteen of the thirty-two live
-items are Decisions, and ten decks are open against them. Nothing below is blocked on effort.
+items are Decisions, and eleven decks are open against them. Nothing below is blocked on effort.
 
 **What came off this round:** the whole picker lane. Seven decisions, four follow-up changes, sixteen
 proposals (fifteen built), 43 review findings and five blockers — all closed, both decks moved to
@@ -267,16 +360,31 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
   **Reach, before anyone assumes it is one component:** `--warning-text` is read by `ds-alert`, `ds-banner` (two places), `ds-button`, `ds-checkbox` (two), `ds-field-message`, `ds-icon-button`, `ds-modal` (two), `ds-radio-group`, `ds-sidenav-footer` and `_field-state.scss`. Not every one of those puts it on `--warning-subtitle` — `_status.scss` is the pairing that was measured, and each other site needs its own measurement before it is called broken.
   **Not the same thing as the 3:1 note already in `_field-state.scss:29`**, which is about WCAG 1.4.11 non-text contrast for a border and is satisfied. This is 1.4.3, text.
-- [ ] **[P2] `package-lock.json` has drifted three patches behind `bun.lock` across the whole Angular set, and `npm ci` no longer resolves — MEASURED 2026-09-02.** `infrastructure/scripts/README.md` says the file is kept for npm and Dependabot consumers, but it pins `@angular/core@21.2.14`, `@angular/cdk@21.2.12` and `@angular/cli@21.2.12` while the installed tree is `21.2.17` / `21.2.14` / `21.2.15`. `npm install --package-lock-only` fails outright: `@angular/elements@21.2.17` peers on `@angular/core@21.2.17` exactly, and the lock offers 21.2.14.
-  **It cannot be regenerated in isolation.** Doing so lets npm re-resolve every Angular package against `^21.2.0`, which lands on whatever is latest that day and diverges from `bun.lock` — and bun is what CI installs with (`_setup.sh`: `npm ci` fails under alpine/musl on the `@emnapi` optional deps). The two answers are to delete the file and move the five Bitbucket cache keys onto `bun.lock`, or to bump the whole Angular set to one version and regenerate both locks. Stas 2026-09-02: recorded, neither done.
-  **Not currently harmful:** `@angular/elements` is pinned to `21.2.17`, the version its peer requires against the installed core, so bun's tree is self-consistent and every build is green. What is lost is any consumer or bot that reads `package-lock.json`.
+- [x] **[P2] The Angular set sat at 21.2.17, inside the range of two high advisories.** Moved to 21.2.22 on 2026-09-02, which is past the 21.2.19 fix for *Angular i18n: XSS via event-handler attributes* and *Cache-Key Ambiguity in HttpTransferCache*. MEASURED after: `npm audit` names no `@angular` advisory at all, and the top-level count fell from 30 to 18 (high 25 to 13).
+  **The fix was to DELETE a pin, not to add one.** `@angular/elements` was the only Angular dep with an exact version, and its own peer demands an exact `@angular/core` match — so the pin in `package.json` was redundant with the mechanism that already enforces lockstep, and all it did was block the set. It now reads `^21.2.0` like its twelve siblings.
+  **The declared ranges did not move.** `bun update` rewrites them to the new floor as a side effect; they were put back to `^21.2.0`, because `@angular/cdk` cannot satisfy `^21.2.22` (its 21.2 line ends at 21.2.14) and a lockfile is where actual versions belong.
+  **What is left is the build toolchain, and one critical.** 18 vulnerabilities across tar, undici, hono, vite, esbuild, postcss and the rest; the critical is *node-tar: Decompression/parse DoS via unlimited input*. None of them ships — the package declares `tslib` as its only runtime dependency.
 
-- [ ] **[P2] `ds-split-button` paints its hover with a TEXT colour, and inside a status zone the label goes unreadable — MEASURED 2026-09-02.** `split-button.component.scss:7` defaults `--_split-button-bg-hover-color` to `var(--accent-strong)` while `:6` keeps the label on `var(--accent-on)`. `--accent-strong` is the family's readable ON-TINT colour — its own token description says "text on light surfaces" — and this is the **only** place in the library that uses it as a background; every other component hovers with `-hover`. In dark, `ds-color="success"` resolves it to `hsl(132deg 55% 62%)` and the white label lands at **1.87:1**; error is **2.46**, and in light warning is **3.78**. Reachable with the component's own default, `variant="primary"`.
+- [x] **[P2] `package-lock.json` had drifted from `bun.lock`, and `npm ci` no longer resolved.** Regenerated 2026-09-02 with `npm install --package-lock-only` on a deleted lock, which leaves bun's `node_modules` untouched — 101 packages disagreed, 13 of them `@angular`; 5 disagree now and none is `@angular`.
+  **The prediction in this item was wrong, and the reason matters.** It said regeneration would land on "whatever is latest that day and diverge from `bun.lock`". It converged instead, because `@angular/elements@21.2.17` peers on `@angular/core@21.2.17` EXACTLY: npm has no freedom inside `^21.2.0` and is forced onto the version bun already had. The pin filed here as merely "not currently harmful" is what makes both locks agree.
+  **What is left is not drift.** The five are `@emnapi/core`, `@emnapi/runtime`, `@emnapi/wasi-threads`, `@napi-rs/wasm-runtime` and `@tybys/wasm-util` — the optional-peer family `_setup.sh` names as the reason `npm ci` breaks under musl, so npm and bun resolve them differently by design.
+
+- [x] **[P2] `ds-split-button` paints its hover with a TEXT colour, and inside a status zone the label goes unreadable — MEASURED 2026-09-02.** `split-button.component.scss:7` defaults `--_split-button-bg-hover-color` to `var(--accent-strong)` while `:6` keeps the label on `var(--accent-on)`. `--accent-strong` is the family's readable ON-TINT colour — its own token description says "text on light surfaces" — and this is the **only** place in the library that uses it as a background; every other component hovers with `-hover`. In dark, `ds-color="success"` resolves it to `hsl(132deg 55% 62%)` and the white label lands at **1.87:1**; error is **2.46**, and in light warning is **3.78**. Reachable with the component's own default, `variant="primary"`.
+  **Shipped 2026-09-02** as the fix recorded below: the hover defaults to `--accent-hover`. The REST failure named at the end of this item is NOT closed and stays open as the warning-pair palette question.
   **This is a regression, not an inherited defect.** Before `--accent-strong` resolved for status families, that background was invalid-at-computed-value-time and computed to `transparent`, so the label sat on the page: illegible in light (1.00) and legible in dark (18.6). Making the pointer resolve fixed the three light cells and broke the three dark ones. Six cells, three each way.
   **The fix that was measured and not applied:** default the hover to `var(--accent-hover)`, which is the family base mixed 88% toward black in light and white in dark — so the hover follows the rest state instead of jumping to another colour. Contrast then tracks rest almost exactly: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31, against rest values of 4.83, 3.30 and 11.81. Deferred by Stas 2026-09-02: recorded rather than shipped.
   **It does not close the whole problem, and must not be sold as if it does.** `--accent-on` on the family's solid `--accent` already fails at REST for two families — success **3.30**, secondary **3.31** — in both themes, on every solid button, not only this one. That is a palette question of the same family as the warning-pair item above, and it predates all of this.
 
-- [ ] **[P2] One export permanently silences `ds-table`'s live region.** `statusMessage()` returns `exportStatus()` before it ever reaches the sort, row-range and row-expansion lines, and `exportStatusState` is set to "Preparing export…", "Export ready" or "Export failed" and **never back to `''`**. So from the first export onwards the region is stuck on "Export ready", and every later sort, page change and bulk expansion is swallowed — a screen-reader user is told nothing about any of them for the rest of the page's life. Found while adding the expansion announcement, which is one of the things it swallows. The fix is a clearing path, and the shape needs picking: a timeout (the component has no destroy hook today, so that means adding one), clearing on the next state change that would have spoken, or making the export line lowest-priority instead of highest. Whichever wins, "Export failed" must survive long enough to be read.
+- [x] **[P2] One export silenced `ds-table`'s live region for the rest of the page's life.**
+      Of the three shapes filed, the winner is the export line YIELDING once the events line
+      has something new to say. A timeout guesses how long a message takes to read and can
+      truncate it; making the export line lowest-priority buries "Export ready" under a stale
+      sort line, so it might never be heard. Implemented by snapshotting the events line at
+      announce time and comparing, not by clearing a signal — `statusMessage` is a computed
+      and a computed cannot write. That also settles the board's condition that "Export
+      failed" survive long enough to read: it stands until the reader does something that
+      speaks. `exportStatusState` now has exactly ONE setter, which a probe asserts, because
+      a second one added later would reintroduce the defect silently.
 
 
 - [x] **[P2] The loading scrim's top edge assumed a 40px header.** MEASURED against the 
@@ -291,7 +399,13 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
       measured per loading episode instead.
 
 
-- [ ] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. Derived from the template, NOT measured in a browser: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+- [ ] **[P3] The resize handle still eats a finger swipe on a HYBRID device, which the touch fix does not reach.** `table.component.scss` hides the handle under `@media (hover: none) and (pointer: coarse)`, which is the right test for a phone — but a touch laptop reports `hover: hover` and `pointer: fine` because its PRIMARY input is the mouse, so the query is false, the handle renders, and its `touch-action: none` still takes the horizontal swipe that scrolls the table. The 8px strip is dead there for exactly the same reason it was dead on a phone. Not a regression: before 2026-09-02 it behaved this way on every device. The options are not equivalent — `(any-pointer: coarse)` catches hybrids but would also strip the handle from a mouse user who merely HAS a touchscreen, which is worse; dropping `touch-action: none` and calling `preventDefault` only once a drag has actually started keeps the handle usable by mouse AND returns the swipe, but needs the pointer-event sequence reworked and measured on a real hybrid, not emulated. Nobody has reported it; recorded so the narrow query is a known choice rather than an oversight.
+
+- [ ] **[P3] A `done.md` heading's own numbers do not reconcile, and the true breakdown is not recoverable from the record.** *"The review round on the picker lane — 43 findings, 42 fixed"* says 42 fixed, while its body says three were rejected as overstated: 42 + 3 is 45 against 43 found. The deck it points at has all seven sections `closed` and its §11 lists exactly three rejected findings, so there is NO deferred finding hiding in the gap — the count is what is wrong, not the work. Left uncorrected deliberately: inventing the missing breakdown to make the arithmetic close would be the same error as the claim it produced (a subtraction reported as an observation — see the session's memory on derived numbers). Whoever has the review round's source list can fix the heading; until then the numbers should not be quoted.
+
+- [x] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. MEASURED 2026-09-02 in a real browser against the compiled styles: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+  **DECIDED 2026-09-02: the tint STAYS, and this is a decision rather than a fix.** A stripe reaching a shimmer row is intended behaviour, because toggling the zebra off around a load and back on after it is worse than the tint under a placeholder. No suppression rule is added, and this is not to be re-filed as a defect.
+  **The numbers.** Four shimmer rows under `zebra`: rows 1 and 3 resolve to `rgb(241 244 249)`, rows 2 and 4 to `rgba(0 0 0 / 0)` — two distinct backgrounds, the same split a data table gets, where the stripe is the point. So it reproduces; what is still open is only whether the stripe SHOULD reach a placeholder.
 
 
 # Asks — a consumer or Stas asked for it
@@ -617,7 +731,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
   (gitignored).
 
 - [ ] **[P2] The boundary guard cannot be flipped to `'error'` as it shipped — five defects found by
-  the two-wave review, 2026-09-02 (`docs/two-wave-review.md`). All of them belong WITH A3, not
+  the two-wave review, 2026-09-02 (`docs/packaging-record-review-2026-09-02.md`). All of them belong WITH A3, not
   before it.**
   Nothing here is urgent while the rule is `'off'` (`npm run lint` reports 0 from it, verified), and
   nothing here changes a shipped API. But every one fires on the day someone follows the instruction
@@ -969,8 +1083,12 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
 
 ## Component API / portfolio
 
-- [ ] **[P3] Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not six, and the duplicated surface is ~25 lines each.** Measured: only `ds-select`, `ds-multi-select` and `ds-autocomplete` share the shape (an `activeIndex` signal + wrap-around arrow nav over a flat option list). `ds-date-picker` navigates a 2-D day grid, `ds-time-picker` has NO arrow handling at all (it delegates to `ds-time-columns`), and `ds-color-picker`’s arrows drive a continuous saturation/hue canvas — three different models that a shared list helper would not serve. **Type-ahead does not exist anywhere** (zero hits), so that part of the ask describes code that was never written. And the three that DO overlap differ where it matters: select carries groups + Home/End + `firstEnabledIndex()` skipping disabled, multi-select works over a filtered list with a select-all row, autocomplete counts a create/no-match slot into its modulo. **Recommendation: extract only the index cursor** — a ~30-line `createListCursor({ length, isEnabled })` returning `{ index, next, prev, first, last, reset }` — and NOT a picker base class. **Worth doing when a fourth list picker appears, not before:** 3 × 25 lines against a 30-line helper is a wash today, and the wrong shared abstraction here costs more than the duplication. **Update (0.11.1):** the three now share one panel implementation, one group shape (`DsOptionItem`) and five projection slots, and `docs/picker-contract.md` + `npm run picker-parity` keep that honest — so the remaining duplication is the index cursor alone, exactly as recommended. Still not extracted, still waiting on a fourth picker.
-  **P2 → P3, 2026-08-21:** demoted, and it should have been on the day it was surveyed: **the item's own conclusion is not to build it** — three components share ~25 lines each, against a ~30-line helper, so extracting now is a wash and the wrong shared abstraction costs more than the duplication. It is kept open only so the survey is not repeated, which makes it a parked record, not a P2. Revisit when a FOURTH list picker appears.
+- [ ] **[P2] Shared picker internals — DECIDED 2026-09-02 (Stas): BUILD IT.** The survey below recommended against, and Stas overruled it: the extraction happens without waiting for a fourth list picker. Everything measured in 2026-08-05 still holds and is the scope, not an argument against it — read it as the cost estimate. What the survey established: it is THREE components, not six, and the duplicated surface is ~25 lines each.
+
+  **SURVEYED 2026-08-05, and the premise was wrong: it is THREE components, not six, and the duplicated surface is ~25 lines each.** Measured: only `ds-select`, `ds-multi-select` and `ds-autocomplete` share the shape (an `activeIndex` signal + wrap-around arrow nav over a flat option list). `ds-date-picker` navigates a 2-D day grid, `ds-time-picker` has NO arrow handling at all (it delegates to `ds-time-columns`), and `ds-color-picker`’s arrows drive a continuous saturation/hue canvas — three different models that a shared list helper would not serve. **Type-ahead does not exist anywhere** (zero hits), so that part of the ask describes code that was never written. And the three that DO overlap differ where it matters: select carries groups + Home/End + `firstEnabledIndex()` skipping disabled, multi-select works over a filtered list with a select-all row, autocomplete counts a create/no-match slot into its modulo. **Recommendation: extract only the index cursor** — a ~30-line `createListCursor({ length, isEnabled })` returning `{ index, next, prev, first, last, reset }` — and NOT a picker base class. **Worth doing when a fourth list picker appears, not before:** 3 × 25 lines against a 30-line helper is a wash today, and the wrong shared abstraction here costs more than the duplication. **Update (0.11.1):** the three now share one panel implementation, one group shape (`DsOptionItem`) and five projection slots, and `docs/picker-contract.md` + `npm run picker-parity` keep that honest — so the remaining duplication is the index cursor alone, exactly as recommended. Still not extracted, still waiting on a fourth picker.
+  **P3 → P2, 2026-09-02:** promoted by the decision above; the demotion below is kept so the reasoning that was overruled is still readable, not deleted.
+
+  **P2 → P3, 2026-08-21 (SUPERSEDED):** demoted, and it should have been on the day it was surveyed: **the item's own conclusion is not to build it** — three components share ~25 lines each, against a ~30-line helper, so extracting now is a wash and the wrong shared abstraction costs more than the duplication. It is kept open only so the survey is not repeated, which makes it a parked record, not a P2. Revisit when a FOURTH list picker appears.
 
 ## ds-auth-layout — residue from the 0.8.0/0.9.0 audit (recorded 2026-08-11, from the ai-sdlc-prototype side)
 

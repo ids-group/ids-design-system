@@ -34,7 +34,15 @@ const OVERLAY_MOTION_TOKENS = [
 
 /** Styles `dropdownOverlay()`'s default panel class, so every connected picker
  *  gets it whether or not it names panel tokens of its own. */
-const DROPDOWN_PANEL_TOKENS = ['--ds-dropdown-panel-radius'] as const;
+const DROPDOWN_PANEL_TOKENS = [
+  '--ds-dropdown-panel-radius',
+  '--ds-dropdown-panel-maxh',
+  '--ds-option-padding',
+  '--ds-option-gap',
+  '--ds-option-radius',
+  '--ds-option-row-gap',
+  '--ds-option-bg-color-active',
+] as const;
 
 /**
  * Why a panel is closing. `'select'` is a deliberate action that produced a

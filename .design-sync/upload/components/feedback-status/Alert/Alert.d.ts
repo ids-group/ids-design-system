@@ -15,6 +15,8 @@ export interface AlertProps {
   icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
   /** Fires when the user dismisses the alert. */
   onClosed?: (value: void) => void;
+  /** Announce this alert to a screen reader when it appears. Off by default — see `ds-banner`'s `announce` for why, and prefer `ToastService` for anything transient. */
+  announce?: boolean;
   /** Content for the `[actions]` slot. */
   actions?: React.ReactNode;
   /** Element content. */

@@ -187,6 +187,46 @@ delete_files { planId, paths }
 - Never wholesale-replace: sync one component at a time and diff against
   `list_files` first.
 
+## Why the upload is not in the pipeline
+
+Investigated 2026-09-02. The short answer is that CI cannot hold the approval, and the
+long answer is worth having, because the obvious workarounds each fail for a different
+reason.
+
+**The transport is a first-party MCP endpoint, not a CLI.** `DesignSync` posts to
+`api.anthropic.com/v1/design/mcp` with the design OAuth access token as a bearer, and
+refuses any other origin ("only reachable from api.anthropic.com; the current OAuth base
+URL is not on the first-party allowlist"). Two sibling resources carry the permission
+state: `GET /v1/design/grants` answers whether a project is granted, `POST` creates the
+grant, and `/v1/design/consent` holds the account-level consent. Tokens refresh through
+`POST /v1/oauth/token` with `grant_type=refresh_token`.
+
+**Authorization is a personal claude.ai grant, established interactively.**
+`/design-login` opens a browser. The result is machine-local, scoped
+`user:design:read` + `user:design:write`, and it carries a refresh token — which is why
+the CLI says a headless or SDK run on the SAME machine reuses it. It is not a service
+credential, and there is no documented way to mint one: Anthropic's help centre describes
+only the interactive route and documents no API or CI path at all.
+
+**So a hosted runner cannot do it**, and not for one reason but three: the container is
+ephemeral, so neither the authorization nor the project grant persists; `/design-login`
+"cannot run in this non-interactive session"; and without it `DesignSync` is
+"not supported through Bedrock, Vertex, or other third-party providers".
+
+**Where the human boundary actually is.** `finalize_plan` is it — the tool calls the human
+"the path-review boundary", and the approval both returns the `planId` writes require and
+grants prompt-free writes to those paths for 15 minutes. A project write grant, once
+established, lets later writes run without a fresh plan. The guard that refuses to create
+that grant unattended is in the CLI's permission layer, immediately before the
+`POST /v1/design/grants` — so the boundary is enforced client-side, and whether the server
+requires the interactive consent independently was NOT measured (measuring it means writing
+to a shared project). Stas 2026-09-02: recorded, and deliberately not built on. The review
+of the write/delete list is the point of the step, not an obstacle to route around.
+
+**What CI does instead, and it is most of the work.** `build-design-sync.sh` generates the
+bundle, the cards, the previews and the docs, and fails when they drift — everything up to
+the plan. The upload stays a local step with a human approving the paths.
+
 ## What lives remotely, and what this repo commits
 
 The repo commits the sync inputs — `docs/`, `elements/`, `tools/`,
