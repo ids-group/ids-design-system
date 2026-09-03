@@ -5,21 +5,22 @@
 # a finalize_plan does not help - the "turn fence" the error names is server-side (verified
 # 2026-09-03). So a rename or a withdrawal leaves the old path behind, and only the owner can remove
 # it. Nobody should have to hunt for those paths in the file list: they are listed HERE, the build
-# renders them into the project's own README, and the owner clears them in one pasted instruction
-# (the recipe is in that README block and in COMMANDS.md).
+# PRINTS them for whoever runs the upload, and the owner clears them in one pasted instruction. The
+# list must not reach the project itself - a section in its README is one more thing to clean up
+# afterwards. The recipe is below and in COMMANDS.md.
 #
 # ONE PATH PER LINE, project-relative, exactly as `list_files` reports it. `#` comments and blank
 # lines are ignored. A path the build still produces is a mistake, not an obsolete file, and
 # build-cards fails on it.
 #
 # WHEN A CARD IS RENAMED OR WITHDRAWN, all four steps, three of which are ours:
-#   1. add its old path here, and rebuild so the project README carries it;
+#   1. add its old path here, and rebuild so the upload run prints it;
 #   2. `write_files` that path with a `[TO BE DELETED]` notice as its whole content, so it is inert
 #      and says why;
 #   3. `unregister_assets` on it — this SUCCEEDS for a non-owner and clears any card registration,
 #      which is the only delete-shaped call we are allowed (it removes no file: verified with
 #      `get_file` straight afterwards);
-#   4. the owner pastes the instruction from the README and the files go.
+#   4. the owner pastes the printed instruction into Claude and the files go.
 # Delete the line once the owner has done that and `list_files` no longer shows the path.
 
 components/actions/Button/Button - Refused, and why.html

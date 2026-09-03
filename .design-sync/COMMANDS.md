@@ -27,7 +27,7 @@ elements upgrades every host a second time.
 
 **One card per BLOCK**, not per component. A block is one demo with its own
 `<h3 class="block-title">` and description, and the card keeps exactly that block
-plus the chapter's heading, tag chip and lede. 85 components, 314 cards.
+plus the chapter's heading, tag chip and lede. 85 components, 409 cards.
 
 That granularity is forced by how the pane renders: it fits a card's declared
 `viewport` into a fixed tile, so **the declared height IS the zoom level**.
@@ -151,6 +151,49 @@ wrapper survives while the custom elements inside it are destroyed
 This is a constraint on the AGENT's compositions, not on the cards: a card is an Angular section,
 where the ordinary change-detection rules apply and none of this bites.
 
+## Freezing the cards (runs LAST)
+
+```sh
+node .design-sync/tools/snapshot-cards.mjs   # after build-cards and measure-cards
+```
+
+A card is a whole document that downloads the 2.12 MB bundle and boots its own
+Angular application, and the pane shows a grid of them. `snapshot-cards` renders
+each one in headless Chrome, waits for the card's own slicer to finish, and
+writes the SETTLED DOM back with every `<script>` stripped. Nothing about the
+rendering changes: Angular's emulated-encapsulation styles are already `<style>`
+tags by then, and no colour is baked in — the theme tokens stay in
+`_ds_bundle.css`, which the frozen card still links, so the pane switching
+`data-theme` still recolours it.
+
+What is lost is BEHAVIOUR. The chapters that need it are in
+`live-chapters.txt` — toast, drawer, modal, popover, bottom-sheet, tree,
+loading-overlay, scrollbar — and are left as live Angular. 376 frozen, 33 live.
+
+Angular inlines a component's styles into every document that renders it, so the
+same block arrived in card after card: 185 distinct blocks against 4005 tags.
+They are scoped by `_ngcontent`/`_nghost` attributes and therefore
+position-independent, which is what makes concatenating them into `_ds_cards.css`
+safe — the browser fetches 428 KB once for the whole grid instead of parsing 27 KB
+inside each card. The `ng-cNNNN` ids are shortened across the sheet and every card
+**in one pass**: the attribute IS the scope, so a rename reaching only one of them
+silently unstyles the component. Tree 20 MB → 9.2 MB.
+
+- **Run it LAST.** It rewrites cards in place, and any later `build-cards` run
+  replaces them with live cards again.
+- **Whitespace is collapsed IN THE PAGE, never by a regexp over the file.**
+  `white-space: pre|pre-wrap|pre-line` is live in five places here, so the tidy
+  pass walks text nodes and asks `getComputedStyle` which is which. A file-level
+  `\n[ \t]*` regexp ate the indentation of the SQL sample in the mono type
+  specimen and cost that card a line.
+- **The `@dsCard` marker is re-prepended by hand**: a DOM dump starts at `<html>`,
+  so without that the card vanishes from the next manifest.
+- **Proof it changed no pixel**: render every card and compare against
+  `viewports.json`. Measure only after `document.fonts.ready` — Mulish is taller
+  than the fallback, and measuring before it lands under-reports by ~20px, which
+  once produced 66 phantom "shrinks" and had also left 22 recorded heights short.
+  Last run: 409 checked, 0 blank, 0 heights moved by more than 3px.
+
 ## Publishing
 
 Read first, then lock the plan, then write — the tool enforces that order and
@@ -217,11 +260,12 @@ delete_files { planId, paths }
     which leaves a 0-byte file.
 - **The obsolete-path pipeline, so the owner never hunts for files.**
   `.design-sync/obsolete.txt` (one project-relative path per line) is the source of
-  truth in the REPO; `build-cards` renders it into the project's own `README.md`
-  under "Obsolete paths", together with the single instruction the owner pastes
-  into Claude to delete exactly those paths and rewrite the README without the
-  section. The build FAILS if a listed path is one it still produces — that is a
-  live card, not an obsolete file. Add the line when a card is renamed or
+  truth in the REPO, and `build-cards` PRINTS it for whoever runs the upload,
+  together with the instruction the owner pastes into Claude to delete exactly
+  those paths. It must not reach the project: a section in the project's README
+  is one more thing the owner has to clean up afterwards, and it was removed for
+  that reason. The build FAILS if a listed path is one it still produces — that is
+  a live card, not an obsolete file. Add the line when a card is renamed or
   withdrawn; remove it once `list_files` no longer shows the path.
 - `create_project` makes a project the USER owns, which is the only way to get
   delete rights back.
@@ -243,11 +287,22 @@ delete_files { planId, paths }
   cards added since. The pane indexes from the manifest and reads a card only for
   its content — so a stale index shows a stale project no matter what else is
   uploaded, which is why refreshed cards kept rendering the old preview grid.
-  A card entry holds only `path`, `group` and `viewport`: there is no field for a
-  name, a subtitle or any prose, and the pane labels a card by its FILENAME.
   `templates` and `startingPoints` are in the schema and empty; the pane is
   server-side (the CLI binary carries only the tool description), so what fills
   them cannot be determined from here.
+- **What the pane puts OUTSIDE a card: `name`, `subtitle` and a usage note.** A
+  manifest entry carries `path`, `group`, `viewport`, `name` and `subtitle`;
+  the tile shows `name` as its title and `subtitle` under it, and falls back to
+  the filename only when `name` is absent. `build-manifest` reads both out of the
+  card's own `@dsCard` marker, so the card file stays the single source. The
+  subtitle renders to about 195 characters — the API stores at least 2003, so the
+  limit is the pane's, not the schema's — and `build-cards` caps at 180, cutting
+  at a sentence end where there is one. A marker value may not contain `>`: any
+  parser scanning to the first one ends the comment there, which silently
+  truncated 13 subtitles.
+- **Usage notes are a FILE, not a field**: `<card>.prompt.md` beside the card,
+  same basename. The pane shows it as "Usage notes for Claude". Nothing in the
+  manifest points at it — the name is the whole convention.
 - Never wholesale-replace: sync one component at a time and diff against
   `list_files` first.
 
@@ -322,19 +377,19 @@ the plan. The upload stays a local step with a human approving the paths.
 The repo commits the sync inputs — `docs/`, `elements/`, `tools/`,
 `config.json`, `viewports.json`, `conventions.md` — **and** the built tree at
 `upload/`, so a release commit carries exactly what a publish sends and CI can
-fail on a stale copy. `_ds_manifest.json` and `_ds_sync.json` are the only files
-in the project this repo does not hold: the app compiles the first from the
-`@dsCard` markers, and the second is the skill's own sync bookkeeping.
+fail on a stale copy. `_ds_manifest.json` is in there too since we started writing
+it ourselves. `_ds_sync.json` is the only file in the project this repo does not
+hold: it is the retired skill's own sync bookkeeping.
 
 `_ds_sync.json` is the incremental-sync bookkeeping: `styleSha`, per-component
 `renderHashes` and `sourceKeys`, `sourceHashes` per uploaded file, `keyRecipe`,
 `bundleSha12`. It is what lets a re-sync touch only what changed.
 
-## Current remote state (read 2026-09-01)
+## Current remote state (read 2026-09-04)
 
-Last updated 2026-07-31, so it is one month behind: **79 components against 85**,
-`AppShell` under its pre-rename name, `sourceKeys` from before the
-`AppShell` → `AppLayout` break. A re-sync has to go out.
+In sync. `list_files` and the built tree differ by exactly the three obsolete
+paths in `obsolete.txt`, which only the owner can remove; every other path
+matches, cards included.
 
 The route is settled: asked on 2026-09-02 how he updates the design system, Misha answered that he
 does it through the CLI, so the generated bundle is what he consumes and the upload is the delivery
