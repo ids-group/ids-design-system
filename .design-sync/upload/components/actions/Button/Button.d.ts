@@ -2,7 +2,7 @@ import * as React from 'react';
 
 /**
  * Button — the real ButtonComponent, run by Angular behind `<ds-x-button>`.
- * Action button with two orthogonal axes: `color` (primary | secondary | tertiary | neutral | error | success | warning) and `variant` (solid | tonal | ghost | outline | text). Default is primary solid. All pairs render, but prefer solid/tonal for success & warning and tonal/ghost/outline for neutral; `variant="text"` is discouraged — use the global `.link` class for link-styled actions.
+ * Action button with two orthogonal axes: `color` (primary | secondary | tertiary | neutral | error | success | warning) and `variant` (solid | tonal | outline | ghost | text). Default is primary solid. All pairs render, but prefer solid/tonal for success & warning and tonal/outline/ghost for neutral; `variant="text"` is discouraged — use the global `.link` class for link-styled actions.
  */
 export interface ButtonProps {
   /** Helper text shown below the control. */

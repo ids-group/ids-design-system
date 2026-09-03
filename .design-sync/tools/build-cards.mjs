@@ -840,11 +840,9 @@ if (!cover) {
 }
 cpSync(join(syncDir, 'assets', cover), join(OUT, '.thumbnail'));
 
-/* Paths the project still holds and this build no longer produces. Only the project's OWNER can
-   delete (`bulk delete requires project ownership`, and a finalize_plan's `deletes` does not lift
-   it - the turn fence is server-side), and there is no rename. So the list travels WITH the
-   project, inside the README the build already writes, together with the one instruction that
-   clears it: nobody has to open the file tree and pick paths out of it. */
+/* Paths the project still holds and this build no longer produces. The list stays in the REPO and
+   is printed for whoever is running the upload - it must NOT reach the project. The README there is
+   the front door a designer and an agent read, and our clean-up list has no business in it. */
 const obsolete = readFileSync(join(syncDir, 'obsolete.txt'), 'utf8')
   .split('\n')
   .map((line) => line.trim())
@@ -861,22 +859,15 @@ if (live.length) {
 // The project's own README, from the same conventions file the agent reads.
 writeFileSync(
   join(OUT, 'README.md'),
-  readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8')
-  + (obsolete.length
-    ? `\n## Obsolete paths — for the project owner\n\n`
-      + `The ${obsolete.length} path(s) below are left over from renames and withdrawals. Each has`
-      + ` been taken as far as a non-owner can: out of \`_ds_manifest.json\`, through`
-      + ` \`unregister_assets\` so no card registration points at it, and its own content replaced`
-      + ` with a \`[TO BE DELETED]\` notice. What is left is removing the files, and only the`
-      + ` project's OWNER can do that.\n\n`
-      + `**To clear them, paste this into Claude:**\n\n`
-      + '```text\n'
-      + `In my Claude Design project, read README.md, take the paths listed under "Obsolete paths"`
-      + ` and delete exactly those files — then rewrite README.md without that section.\n`
-      + '```\n\n'
-      + `${obsolete.map((path) => `- \`${path}\``).join('\n')}\n`
-    : ''),
+  readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8'),
 );
+
+if (obsolete.length) {
+  console.log(
+    `· ${obsolete.length} obsolete path(s) still on the project, owner-only to delete:`
+    + `\n  ${obsolete.join('\n  ')}`,
+  );
+}
 
 if (untagged.length) {
   throw new Error(

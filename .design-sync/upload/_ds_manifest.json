@@ -626,12 +626,12 @@
     {
       "path": "components/forms-inputs/Input/Input - With icon - prefix - suffix.html",
       "group": "forms-inputs",
-      "viewport": "1200x457"
+      "viewport": "1200x456"
     },
     {
       "path": "components/forms-inputs/Input/Input - Clearable.html",
       "group": "forms-inputs",
-      "viewport": "1200x359"
+      "viewport": "1200x358"
     },
     {
       "path": "components/forms-inputs/Input/Input - Password toggle.html",
@@ -646,7 +646,7 @@
     {
       "path": "components/forms-inputs/Input/Input - Required vs optional.html",
       "group": "forms-inputs",
-      "viewport": "1200x359"
+      "viewport": "1200x358"
     },
     {
       "path": "components/forms-inputs/FieldMessage/Field Message - Messages error, warning, hint.html",
@@ -821,7 +821,7 @@
     {
       "path": "components/forms-inputs/Search/Search - Sizes.html",
       "group": "forms-inputs",
-      "viewport": "1200x345"
+      "viewport": "1200x343"
     },
     {
       "path": "components/forms-inputs/Search/Search - Debounce, and the two things it must not delay.html",
@@ -1381,7 +1381,7 @@
     {
       "path": "components/data-display/Table/Table - Row interaction states.html",
       "group": "data-display",
-      "viewport": "1200x467"
+      "viewport": "1200x466"
     },
     {
       "path": "components/data-display/Table/Table - The cell that names what the row opens.html",
@@ -1401,7 +1401,7 @@
     {
       "path": "components/data-display/Table/Table - Sticky header.html",
       "group": "data-display",
-      "viewport": "1200x515"
+      "viewport": "1200x516"
     },
     {
       "path": "components/data-display/Table/Table - Bordered.html",
@@ -1411,7 +1411,7 @@
     {
       "path": "components/data-display/Table/Table - Loading - skeleton.html",
       "group": "data-display",
-      "viewport": "1200x535"
+      "viewport": "1200x536"
     },
     {
       "path": "components/data-display/Table/Table - Loading - overlay.html",
@@ -1431,7 +1431,7 @@
     {
       "path": "components/data-display/Table/Table - Dense - zebra.html",
       "group": "data-display",
-      "viewport": "1200x556"
+      "viewport": "1200x575"
     },
     {
       "path": "components/data-display/Table/Table - Pagination - sticky column.html",
@@ -1696,7 +1696,7 @@
     {
       "path": "components/feedback-status/Toast/Toast - With action.html",
       "group": "feedback-status",
-      "viewport": "1200x386"
+      "viewport": "1200x385"
     },
     {
       "path": "components/feedback-status/Toast/Toast - Promise toast.html",
@@ -1821,7 +1821,7 @@
     {
       "path": "components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html",
       "group": "page-structure",
-      "viewport": "1200x596"
+      "viewport": "1200x597"
     },
     {
       "path": "components/page-structure/FilterBar/Filter Bar - What the width buys.html",
