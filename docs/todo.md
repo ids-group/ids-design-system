@@ -140,7 +140,6 @@ scattered across 4, 5, 8, 9, 10 until 2026-09-02. Those five are written in Russ
 
 **Bugs — something shipped misbehaves**
 
-- P2 · **The table's bulk-actions bar paints its buttons the colour of the bar** — the rule styled a `.button` CLASS and stopped reaching anything when the button became a component; fixed on `feat/design-sync-last-mile`, unmerged
 - P2 · The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27, 4.42:1 against 4.5
 - P3 · The resize handle still eats a finger swipe on a hybrid device — the touch query tests the PRIMARY pointer, and a touch laptop reports a mouse
 - P3 · A `done.md` heading's numbers do not reconcile (43 found / 42 fixed / 3 rejected) and the true breakdown is not in the record
@@ -198,6 +197,7 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 **Records — kept so they are not "simplified" away**
 
+- P3 · **The table's bulk-actions bar styled a `.button` CLASS that stopped reaching anything when the button became a component** — fixed and merged 2026-09-03; the bar now sets `--ds-button-label-color`, the token the component actually reads
 - P3 · **A chip row asks layout whether the host depends on the trigger, instead of comparing boxes** — fixed 2026-09-02. Measured in a real browser: the test it replaced answered with a width on 3 of 3 hugging hosts, and the width it returned was the chips' own 154px. Costs one more forced layout
 - P3 · **`changelog-lint` checks each source group for emptiness instead of one aggregate floor** — fixed 2026-09-02. Measured on the control: a renamed asset input leaves 295 targets, which the old floor of 100 passed. What still cannot be PROVEN is a group shrinking 3→2, so the counts print on success
 - P3 · **`class-surface-diff` now reads the class BODY, so a field without `readonly` is visible** — fixed 2026-09-02; the old pattern demanded the keyword because the scan ran to end of file and had module-level function bodies in range. An unassigned declaration counts too
@@ -268,15 +268,14 @@ counts, and the position keeps it out of the way.
 scanning the top of the file could see them. They are on it now: the schematics tsconfig, the sidebar
 reflow, the brand examples in the published docs, and the CHANGELOG re-wrap.
 
-**`# Bugs` holds four** (counted 2026-09-02). Two of them are waiting on a person rather than on
+**`# Bugs` holds three** (counted 2026-09-03). Two of them are waiting on a person rather than on
 work. The warning status pair at 4.42:1 where AA asks 4.5 is still the widest in reach —
 `--warning-text` is read by nine components plus `_status.scss` and `_field-state.scss`, eleven
 files counted, so one token step covers all of them — and the shape of that step is settled: a
 darker rung on the yellow ramp is closed, because the rungs are not distinguishable from one
 another and so there is nothing to choose between. Deck 11 carries the four live candidates. The
-table's bulk-actions bar at 1.00:1 is fixed on `feat/design-sync-last-mile` and waits only on that
-merge. The other two arrived from elsewhere on 2026-09-02: the resize handle on a hybrid device,
-and a `done.md` heading whose numbers do not reconcile.
+other two arrived from elsewhere on 2026-09-02: the resize handle on a hybrid device, and a
+`done.md` heading whose numbers do not reconcile.
 
 **Seven are closed since 2026-09-01**, and two of those are decisions rather than fixes: the zebra
 tint under a skeleton STAYS (toggling it around a load is the worse behaviour), and the resize
