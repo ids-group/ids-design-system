@@ -981,9 +981,8 @@ this package ships under `migrations/`.
   the result.** The prose split above rewrote every item; this is the separate, smaller set where the
   DATA was wrong. It matters
   because these files are executed: your upgrade tooling read them, acted, and reported done.
-  **Three changes had no item at all.** `0.2.0` never filed the `--surface-subtle` →
-  `--surface-subtitle` rename, so an override still naming the old token resolves to nothing and says
-  nothing. `0.9.0` never filed the six inputs whose declared type widened from `InputSignal` to
+  **Two changes had no item at all.** `0.9.0` never filed the six inputs whose declared type
+  widened from `InputSignal` to
   `InputSignalWithTransform` (`min`/`max`/`maxLength` on `ds-input`, `min`/`max` on
   `ds-number-stepper`, `maxLength` on `ds-textarea`) — the TS2322 an explicit annotation hits and the
   TS2416 a subclass hits had no explanation anywhere. `0.10.0` never filed
