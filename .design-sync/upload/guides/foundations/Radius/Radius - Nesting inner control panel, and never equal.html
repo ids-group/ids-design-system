@@ -1,10 +1,6 @@
 <!-- @dsCard group="foundations" viewport="1200x560" name="Radius - nesting: inner control panel, and never equal" subtitle="A rounded thing inside a rounded thing needs a SMALLER radius, or the inner corner appears to bulge out of the outer one." -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
-<html data-theme="light"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html data-theme="light" data-ds-sliced="12" data-ds-kept="3"><head><meta charset="utf-8">
   <title>Radius</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
@@ -20,127 +16,12 @@
        wrapping wraps at the wrong width. */
     .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
   </style>
-</head><body>
-  <div class="ds-page"><ds-docs-foundations-radius></ds-docs-foundations-radius></div>
+<style>.radius-grid[_ngcontent-ng-c3865000984]{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-4);margin-top:var(--space-4)}.radius-tile[_ngcontent-ng-c3865000984]{display:grid;gap:var(--space-1);padding:var(--space-5);min-height:140px;background:var(--surface-tint);border:var(--border-width-default) solid var(--border-default);color:var(--text-primary)}.token-name[_ngcontent-ng-c3865000984]{font-size:11px;color:var(--text-secondary)}.token-px[_ngcontent-ng-c3865000984]{margin-top:var(--space-1)}.token-desc[_ngcontent-ng-c3865000984]{color:var(--text-secondary);line-height:1.5}.radius-role-table[_ngcontent-ng-c3865000984]{display:grid;gap:var(--space-2);margin-top:var(--space-4)}.radius-role-row[_ngcontent-ng-c3865000984]{display:grid;grid-template-columns:minmax(180px,1.1fr) minmax(120px,.7fr) 56px minmax(220px,2fr);gap:var(--space-4);align-items:center}@media(width<1024px){.radius-role-row[_ngcontent-ng-c3865000984]{grid-template-columns:1fr;gap:var(--space-1);padding-bottom:var(--space-3);border-bottom:var(--border-width-default) solid var(--border-default)}}.radius-radius-role-row--head[_ngcontent-ng-c3865000984]{color:var(--text-secondary)}@media(width<1024px){.radius-radius-role-row--head[_ngcontent-ng-c3865000984]{display:none}}.radius-role-swatch[_ngcontent-ng-c3865000984]{display:flex;align-items:center;justify-content:center;min-height:52px;padding:var(--space-2) var(--space-3);background:var(--surface-tint);border:var(--border-width-default) solid var(--border-strong)}.radius-role-uses[_ngcontent-ng-c3865000984]{font-variant-numeric:tabular-nums;color:var(--text-secondary)}.radius-role-resolves[_ngcontent-ng-c3865000984], .radius-role-desc[_ngcontent-ng-c3865000984]{color:var(--text-secondary)}.nest-pair[_ngcontent-ng-c3865000984]{display:flex;flex-wrap:wrap;gap:var(--space-6);margin-top:var(--space-4)}.nest-cell[_ngcontent-ng-c3865000984]{display:grid;gap:var(--space-2);justify-items:start}.nest-panel[_ngcontent-ng-c3865000984]{width:152px;height:152px;display:grid;padding:var(--space-2);background:var(--surface-tint);border:var(--border-width-default) solid var(--border-default);border-radius:var(--ds-radius-panel)}.nest-child[_ngcontent-ng-c3865000984]{display:grid;place-items:center;text-align:center;padding:var(--space-2);background:var(--surface-default);border:var(--border-width-strong) solid var(--primary)}.nest-child--correct[_ngcontent-ng-c3865000984]{border-radius:var(--ds-radius-control)}.nest-child--wrong[_ngcontent-ng-c3865000984]{border-radius:var(--ds-radius-panel)}.applied-grid[_ngcontent-ng-c3865000984]{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-3);margin-top:var(--space-3);padding:var(--space-4);background:var(--surface-secondary);border-radius:var(--radius-lg)}.applied-cell[_ngcontent-ng-c3865000984]{display:flex;flex-direction:column;gap:var(--space-2)}.applied-cell-stage[_ngcontent-ng-c3865000984]{display:flex;align-items:center;justify-content:center;gap:var(--space-2);padding:var(--space-4);min-height:96px;background:var(--surface-default);border:var(--border-width-default) solid var(--border-default);border-radius:var(--radius-md)}.applied-cell-label[_ngcontent-ng-c3865000984]{text-align:center;font:var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-mono);color:var(--text-tertiary)}.demo-group[_ngcontent-ng-c3865000984]{display:inline-flex}.demo-group-btn[_ngcontent-ng-c3865000984]{height:32px;padding:0 var(--space-3);font:var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);background:var(--surface-default);color:var(--text-primary);border:var(--border-width-default) solid var(--border-default);cursor:default}.demo-group-btn[_ngcontent-ng-c3865000984] + .demo-group-btn[_ngcontent-ng-c3865000984]{margin-left:calc(var(--border-width-default) * -1)}.demo-group-btn--start[_ngcontent-ng-c3865000984]{border-top-left-radius:var(--radius-md);border-bottom-left-radius:var(--radius-md)}.demo-group-btn--mid[_ngcontent-ng-c3865000984]{border-radius:var(--radius-0)}.demo-group-btn--end[_ngcontent-ng-c3865000984]{border-top-right-radius:var(--radius-md);border-bottom-right-radius:var(--radius-md)}.demo-kbd[_ngcontent-ng-c3865000984]{display:inline-flex;align-items:center;justify-content:center;min-width:22px;padding:var(--kbd-pad-y) var(--kbd-pad-x);font:var(--font-weight-medium) var(--font-size-xs)/var(--line-height-flat) var(--font-mono);color:var(--text-secondary);background:var(--surface-default);border:var(--border-width-default) solid var(--border-default);border-bottom-width:2px;border-radius:var(--radius-sm)}.demo-btn[_ngcontent-ng-c3865000984]{height:40px;padding:0 var(--space-4);font:var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);color:var(--text-on-primary);background:var(--primary);border:0;border-radius:var(--radius-md);cursor:default}.demo-card[_ngcontent-ng-c3865000984]{width:160px;display:grid;gap:var(--space-1);padding:var(--space-4);background:var(--surface-default);border:var(--border-width-default) solid var(--border-divider);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}.demo-card-head[_ngcontent-ng-c3865000984]{color:var(--text-secondary)}.demo-hero[_ngcontent-ng-c3865000984]{width:100%;display:grid;gap:var(--space-1);padding:var(--space-5) var(--space-5);background:var(--primary);border-radius:var(--radius-2xl)}.demo-pill[_ngcontent-ng-c3865000984]{display:inline-flex;align-items:center;padding:var(--space-1) var(--space-3);font:var(--font-weight-semibold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);border-radius:var(--radius-pill)}.demo-pill--active[_ngcontent-ng-c3865000984]{background-color:var(--success-subtitle);color:var(--success-text)}.demo-pill--planning[_ngcontent-ng-c3865000984]{background-color:var(--neutral-150);color:var(--neutral-700)}</style><style>[_nghost-ng-c1634159993]{display:block}.section[_ngcontent-ng-c1634159993]{scroll-margin-top:calc(var(--topbar-h) + var(--space-4))}.eyebrow[_ngcontent-ng-c1634159993]{color:var(--primary);margin-bottom:var(--space-2)}.lede[_ngcontent-ng-c1634159993]{color:var(--text-secondary);margin-top:var(--space-2);max-width:var(--col-cap-text)}[_nghost-ng-c1634159993]     .block-title{margin-top:var(--space-8)}[_nghost-ng-c1634159993]     .block-desc{color:var(--text-secondary);margin-top:var(--space-5);max-width:var(--col-cap-text)}[_nghost-ng-c1634159993]     .block-title+.block-desc{margin-top:var(--space-1)}[_nghost-ng-c1634159993]     .block-desc+.block-desc{margin-top:var(--space-3)}.api-sub[_ngcontent-ng-c1634159993]{margin-top:var(--space-8)}</style></head><body>
+  <div class="ds-page"><ds-docs-foundations-radius ng-version="21.2.22" _nghost-ng-c3865000984=""><docs-section _ngcontent-ng-c3865000984="" anchor="radius" eyebrow="Foundations" title="Radius" _nghost-ng-c1634159993=""><section _ngcontent-ng-c1634159993="" class="section" id="section-radius" data-anchor="radius"><h2 _ngcontent-ng-c1634159993="" class="t-h2">Radius - nesting: inner &lt; control &lt; panel, and never equal</h2><!----><p _ngcontent-ng-c3865000984="" class="block-desc t-s"> A rounded thing inside a rounded thing needs a SMALLER radius, or the inner corner appears to bulge out of the outer one. The two stages below are the same markup with one token changed — the left one is correct, the right one gives the child the parent's radius. </p><div _ngcontent-ng-c3865000984="" class="nest-pair"><div _ngcontent-ng-c3865000984="" class="nest-cell"><div _ngcontent-ng-c3865000984="" class="nest-panel"><div _ngcontent-ng-c3865000984="" class="nest-child nest-child--correct"><span _ngcontent-ng-c3865000984="" class="t-xs"> Field in a card </span></div></div><div _ngcontent-ng-c3865000984="" class="applied-cell-label"> panel 12px · child 8px — correct </div></div><div _ngcontent-ng-c3865000984="" class="nest-cell"><div _ngcontent-ng-c3865000984="" class="nest-panel"><div _ngcontent-ng-c3865000984="" class="nest-child nest-child--wrong"><span _ngcontent-ng-c3865000984="" class="t-xs"> Field in a card </span></div></div><div _ngcontent-ng-c3865000984="" class="applied-cell-label"> panel 12px · child 12px — the corner bulges </div></div></div><p _ngcontent-ng-c3865000984="" class="block-desc t-s"> The optical rule when the roles do not cover a value: inner radius = outer radius minus the padding between them. A 12px panel with 8px of padding wants an 8px child. And <code _ngcontent-ng-c3865000984="" class="t-mono-inline">--radius-flat</code> is a statement, not a zero — it exists so "deliberately square" reads differently from "nobody set a radius", which is what the middle of a button group and an in-range calendar day rely on. </p><!----><!----><!----></section></docs-section></ds-docs-foundations-radius></div>
   <!-- Sections only: a section renders DS components as Angular components, and registering those
        same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one.
-       Of the chapter's own header only the title is kept on every card. The eyebrow is a constant,
-       and the lede describes the CHAPTER — printing it on all seven Button cards is the same
-       paragraph seven times, so it rides the first card only. Removed rather than hidden: the pane
-       sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "";
-      var INDEX = 2;
-      var KEY = "";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "nesting: inner < control < panel, and never equal";
-      var REACT = null;
-      /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
-         the title said "Buttons" and the lede described Button, and the card already names itself
-         in its block heading and in the pane's label. The lede rides the chapter's first card.
-         A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
-         slice and nothing repeated — it loses only the eyebrow. */
-      var WHOLE = OWNS === null;
-      /* The chapter's summary belongs to the chapter, so it rides its first card only - seven
-         copies of the same paragraph is what it was before. A whole-chapter card is that card. */
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-foundations-radius");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
+  
+  
+  
 
-        /* The h2 names what the card is ABOUT. It said "Buttons" on all seven Button cards and
-           said nothing at all on a part's card, while the block's own h3 carried the only specific
-           words on the page - so the h3's text moves up and the h3 itself goes. HEAD overrides the
-           chapter's name for a part, whose own name is not the chapter's. */
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-
-        /* A part's chip is rendered inside its `.api-sub` wrapper at the foot of the chapter, while
-           the chapter's own sits directly under the title. Same place on every card. An emptied
-           wrapper goes with it - it carries a margin of its own. */
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-
-/* To Claude Design this is a React design system, so the chip names the React tag and only that
-           one: an agent here cannot type `<ds-button>`, and the Angular name is on the docs site,
-           in the `.d.ts` and in the README for whoever translates. Rewritten in place, so ds-docs
-           renders its own chip untouched. A directive has no React tag and passes null. */
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
 </body></html>

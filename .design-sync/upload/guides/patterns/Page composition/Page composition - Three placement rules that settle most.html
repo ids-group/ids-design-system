@@ -1,10 +1,6 @@
 <!-- @dsCard group="patterns" viewport="1200x453" name="Page composition - three placement rules that settle most arguments" -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
-<html data-theme="light"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html data-theme="light" data-ds-sliced="16" data-ds-kept="1"><head><meta charset="utf-8">
   <title>Page composition</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
@@ -20,127 +16,12 @@
        wrapping wraps at the wrong width. */
     .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
   </style>
-</head><body>
-  <div class="ds-page"><ds-docs-patterns-page-composition></ds-docs-patterns-page-composition></div>
+<style>.pc-regions[_ngcontent-ng-c732284839]{display:flex;gap:var(--space-3);margin-top:var(--space-4);padding:var(--space-3);background:var(--surface-tint);border:var(--border-width-default) solid var(--border-default);border-radius:var(--ds-radius-panel)}@media(width<768px){.pc-regions[_ngcontent-ng-c732284839]{flex-direction:column}}.pc-column[_ngcontent-ng-c732284839]{display:grid;gap:var(--space-2);flex:1;min-width:0}.pc-region[_ngcontent-ng-c732284839]{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2);padding:var(--space-3);background:var(--surface-default);border:var(--border-width-default) solid var(--border-default);border-radius:var(--ds-radius-control)}.pc-region--chrome[_ngcontent-ng-c732284839]{border-style:dashed;background:transparent}.pc-regions[_ngcontent-ng-c732284839] > .pc-region--chrome[_ngcontent-ng-c732284839]{flex-direction:column;justify-content:flex-start;width:132px;flex:none}@media(width<768px){.pc-regions[_ngcontent-ng-c732284839] > .pc-region--chrome[_ngcontent-ng-c732284839]{width:auto}}.pc-region--content[_ngcontent-ng-c732284839]{min-height:88px;align-items:center;justify-content:center;background:var(--surface-tint);border-style:dashed}.pc-note[_ngcontent-ng-c732284839]{color:var(--text-secondary)}.pc-list[_ngcontent-ng-c732284839]{display:grid;gap:var(--space-3);margin:var(--space-4) 0 0;padding-left:var(--space-6);max-width:var(--col-cap-text)}.pc-table[_ngcontent-ng-c732284839]{display:grid;gap:var(--space-2);margin-top:var(--space-4)}.pc-row[_ngcontent-ng-c732284839]{display:grid;grid-template-columns:minmax(140px,.8fr) minmax(220px,1.6fr) minmax(220px,1.6fr);gap:var(--space-4);align-items:start;padding-bottom:var(--space-2);border-bottom:var(--border-width-default) solid var(--border-default)}@media(width<1024px){.pc-row[_ngcontent-ng-c732284839]{grid-template-columns:1fr;gap:var(--space-1)}}.pc-row--head[_ngcontent-ng-c732284839]{color:var(--text-secondary);border-bottom-color:var(--border-strong)}@media(width<1024px){.pc-row--head[_ngcontent-ng-c732284839]{display:none}}.pc-muted[_ngcontent-ng-c732284839]{color:var(--text-secondary)}</style><style>[_nghost-ng-c1634159993]{display:block}.section[_ngcontent-ng-c1634159993]{scroll-margin-top:calc(var(--topbar-h) + var(--space-4))}.eyebrow[_ngcontent-ng-c1634159993]{color:var(--primary);margin-bottom:var(--space-2)}.lede[_ngcontent-ng-c1634159993]{color:var(--text-secondary);margin-top:var(--space-2);max-width:var(--col-cap-text)}[_nghost-ng-c1634159993]     .block-title{margin-top:var(--space-8)}[_nghost-ng-c1634159993]     .block-desc{color:var(--text-secondary);margin-top:var(--space-5);max-width:var(--col-cap-text)}[_nghost-ng-c1634159993]     .block-title+.block-desc{margin-top:var(--space-1)}[_nghost-ng-c1634159993]     .block-desc+.block-desc{margin-top:var(--space-3)}.api-sub[_ngcontent-ng-c1634159993]{margin-top:var(--space-8)}</style></head><body>
+  <div class="ds-page"><ds-docs-patterns-page-composition ng-version="21.2.22" _nghost-ng-c732284839=""><docs-section _ngcontent-ng-c732284839="" anchor="pattern-page-composition" eyebrow="Patterns" title="Page composition" _nghost-ng-c1634159993=""><section _ngcontent-ng-c1634159993="" class="section" id="section-pattern-page-composition" data-anchor="pattern-page-composition"><h2 _ngcontent-ng-c1634159993="" class="t-h2">Page composition - three placement rules that settle most arguments</h2><!----><ul _ngcontent-ng-c732284839="" class="pc-list t-s"><li _ngcontent-ng-c732284839=""><strong _ngcontent-ng-c732284839=""> Filters sit directly above the data they filter </strong> — between the header and the content, full width, with no wrapper that could clip the overflow popover. Not in a sidebar, not inside the table's own card. The 9+3 split is what a genuine filter RAIL is for, and it is reserved, not the default. </li><li _ngcontent-ng-c732284839=""><strong _ngcontent-ng-c732284839=""> One primary per region, once </strong> — one in the page header, one per card, one in a modal's actions. A second primary in the same region makes neither primary. Secondary work takes <code _ngcontent-ng-c732284839="" class="t-mono-inline">outline</code>, dismissive work takes <code _ngcontent-ng-c732284839="" class="t-mono-inline"> ghost </code>. </li><li _ngcontent-ng-c732284839=""><strong _ngcontent-ng-c732284839=""> Supporting information goes under, never beside </strong> — hints, counts and timestamps sit under the thing they describe at <code _ngcontent-ng-c732284839="" class="t-mono-inline"> --space-1 </code>. Beside is reserved for actions. Never a tooltip: it is hover-only, so it cannot carry anything the user needs in order to act. </li></ul><!----><!----><!----></section></docs-section></ds-docs-patterns-page-composition></div>
   <!-- Sections only: a section renders DS components as Angular components, and registering those
        same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one.
-       Of the chapter's own header only the title is kept on every card. The eyebrow is a constant,
-       and the lede describes the CHAPTER — printing it on all seven Button cards is the same
-       paragraph seven times, so it rides the first card only. Removed rather than hidden: the pane
-       sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "";
-      var INDEX = 2;
-      var KEY = "";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "three placement rules that settle most arguments";
-      var REACT = null;
-      /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
-         the title said "Buttons" and the lede described Button, and the card already names itself
-         in its block heading and in the pane's label. The lede rides the chapter's first card.
-         A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
-         slice and nothing repeated — it loses only the eyebrow. */
-      var WHOLE = OWNS === null;
-      /* The chapter's summary belongs to the chapter, so it rides its first card only - seven
-         copies of the same paragraph is what it was before. A whole-chapter card is that card. */
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-patterns-page-composition");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
+  
+  
+  
 
-        /* The h2 names what the card is ABOUT. It said "Buttons" on all seven Button cards and
-           said nothing at all on a part's card, while the block's own h3 carried the only specific
-           words on the page - so the h3's text moves up and the h3 itself goes. HEAD overrides the
-           chapter's name for a part, whose own name is not the chapter's. */
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-
-        /* A part's chip is rendered inside its `.api-sub` wrapper at the foot of the chapter, while
-           the chapter's own sits directly under the title. Same place on every card. An emptied
-           wrapper goes with it - it carries a margin of its own. */
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-
-/* To Claude Design this is a React design system, so the chip names the React tag and only that
-           one: an agent here cannot type `<ds-button>`, and the Angular name is on the docs site,
-           in the `.d.ts` and in the README for whoever translates. Rewritten in place, so ds-docs
-           renders its own chip untouched. A directive has no React tag and passes null. */
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
 </body></html>

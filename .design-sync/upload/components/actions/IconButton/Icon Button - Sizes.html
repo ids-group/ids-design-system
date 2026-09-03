@@ -1,10 +1,6 @@
 <!-- @dsCard group="actions" viewport="1200x389" name="Icon button - sizes" subtitle="sm 32 · md 40 (default) · lg 48 — aligned with the field / button scale." -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
-<html data-theme="light"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html data-theme="light" data-ds-sliced="13" data-ds-kept="2"><head><meta charset="utf-8">
   <title>IconButton</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
@@ -20,127 +16,13 @@
        wrapping wraps at the wrong width. */
     .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
   </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-icon-button></ds-docs-components-icon-button></div>
+<style>.row[_ngcontent-ng-c3368470368]{display:flex;flex-wrap:wrap;gap:var(--space-6);align-items:flex-end;margin-top:var(--space-3);padding:var(--space-5) var(--space-4);background:var(--surface-default);border:var(--border-width-default) solid var(--border-divider);border-radius:var(--radius-lg)}.cell[_ngcontent-ng-c3368470368]{display:flex;flex-direction:column;gap:var(--space-2);align-items:center}</style><style>[_nghost-ng-c1634159993]{display:block}.section[_ngcontent-ng-c1634159993]{scroll-margin-top:calc(var(--topbar-h) + var(--space-4))}.eyebrow[_ngcontent-ng-c1634159993]{color:var(--primary);margin-bottom:var(--space-2)}.lede[_ngcontent-ng-c1634159993]{color:var(--text-secondary);margin-top:var(--space-2);max-width:var(--col-cap-text)}[_nghost-ng-c1634159993]     .block-title{margin-top:var(--space-8)}[_nghost-ng-c1634159993]     .block-desc{color:var(--text-secondary);margin-top:var(--space-5);max-width:var(--col-cap-text)}[_nghost-ng-c1634159993]     .block-title+.block-desc{margin-top:var(--space-1)}[_nghost-ng-c1634159993]     .block-desc+.block-desc{margin-top:var(--space-3)}.api-sub[_ngcontent-ng-c1634159993]{margin-top:var(--space-8)}</style><style>@charset "UTF-8";.scroll[_ngcontent-ng-c2146189058]{overflow-x:auto;margin-top:var(--space-3)}.matrix[_ngcontent-ng-c2146189058]{display:grid;gap:var(--space-4) var(--space-6);align-items:center;padding:var(--space-4);background:var(--surface-secondary);border-radius:var(--radius-lg)}.head[_ngcontent-ng-c2146189058]{text-align:center}.corner[_ngcontent-ng-c2146189058]{color:var(--text-tertiary)}.row-label[_ngcontent-ng-c2146189058]{display:flex;align-items:center;gap:var(--space-2)}.dot[_ngcontent-ng-c2146189058]{width:12px;height:12px;border-radius:var(--radius-pill);flex-shrink:0}.name[_ngcontent-ng-c2146189058]{font-weight:var(--font-weight-semibold);color:var(--text-primary)}.note[_ngcontent-ng-c2146189058]{color:var(--text-tertiary);margin-left:auto}.cell[_ngcontent-ng-c2146189058]{position:relative;display:flex;align-items:center;justify-content:center;min-height:52px}.cell.is-discouraged[_ngcontent-ng-c2146189058]{background-image:repeating-linear-gradient(135deg,transparent 0 5px,var(--border-divider) 5px 6px);border-radius:var(--radius-sm)}.warn[_ngcontent-ng-c2146189058]{position:absolute;top:0;right:2px;font-size:12px;line-height:1;opacity:.7;pointer-events:none}.warn[_ngcontent-ng-c2146189058]:after{content:"\26a0"}.na[_ngcontent-ng-c2146189058]{color:var(--text-tertiary)}</style><style>@charset "UTF-8";[_nghost-ng-c838688186]{display:inline-flex}.icon-button[_ngcontent-ng-c838688186]{--c-base: var(--accent);--c-on: var(--accent-on);--c-strong: var(--accent-strong);--c-subtitle: var(--accent-subtitle);--c-muted: var(--accent-muted);--c-muted-strong: var(--accent-muted-strong);--_icon-button-bg-color: var(--ds-icon-button-bg-color, transparent);--_icon-button-icon-color: var(--ds-icon-button-icon-color, var(--text-secondary));--_icon-button-border: var(--ds-icon-button-border, transparent);--_icon-button-bg-color-hover: var(--ds-icon-button-bg-color-hover, var(--surface-muted));--_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--_icon-button-bg-color-hover));--_icon-button-icon-color-hover: var(--ds-icon-button-icon-color-hover, var(--text-primary));--_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--ds-control-focus-shadow));--_icon-button-radius: var(--ds-icon-button-radius, var(--ds-radius-control));--_icon-button-press-scale: var(--ds-icon-button-press-scale, .96);--_icon-button-accent: var(--_icon-button-icon-color);--_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);--_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 70% .035 h));--_icon-button-border-disabled: var(--ds-icon-button-border-disabled, transparent);--_icon-button-size: var(--ds-icon-button-size, var(--hit-cozy));display:inline-flex;align-items:center;justify-content:center;width:var(--_icon-button-size);height:var(--_icon-button-size);aspect-ratio:1;padding:0;border:var(--border-width-default) solid var(--_icon-button-border);border-radius:var(--_icon-button-radius);background-color:var(--_icon-button-bg-color);color:var(--_icon-button-icon-color);cursor:pointer;-webkit-user-select:none;user-select:none;transition:background var(--duration-fast) var(--ease-standard),border-color var(--duration-fast) var(--ease-standard),color var(--duration-fast) var(--ease-standard),transform var(--duration-instant) var(--ease-standard),box-shadow var(--duration-fast) var(--ease-standard)}.icon-button[_ngcontent-ng-c838688186]:hover{background-color:var(--_icon-button-bg-color-hover);color:var(--_icon-button-icon-color-hover)}.icon-button[_ngcontent-ng-c838688186]:active{background-color:var(--_icon-button-bg-color-active);transform:scale(var(--_icon-button-press-scale))}.icon-button[_ngcontent-ng-c838688186]:focus-visible{outline:none;box-shadow:var(--_icon-button-focus-shadow)}.icon-button[disabled][_ngcontent-ng-c838688186]{background-color:var(--_icon-button-bg-color-disabled);color:var(--_icon-button-icon-color-disabled);border-color:var(--_icon-button-border-disabled);cursor:not-allowed;pointer-events:none}.icon-button.sm[_ngcontent-ng-c838688186]{--_icon-button-size: var(--ds-icon-button-size, var(--hit-min));width:var(--_icon-button-size);height:var(--_icon-button-size)}.icon-button.md[_ngcontent-ng-c838688186]{--_icon-button-size: var(--ds-icon-button-size, var(--hit-cozy));width:var(--_icon-button-size);height:var(--_icon-button-size)}.icon-button.lg[_ngcontent-ng-c838688186]{--_icon-button-size: var(--ds-icon-button-size, var(--field-h-lg));width:var(--_icon-button-size);height:var(--_icon-button-size)}.icon-button.standard[_ngcontent-ng-c838688186]{--_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, color-mix(in srgb, var(--_icon-button-icon-color) 40%, var(--surface-default)))}.icon-button.filled[_ngcontent-ng-c838688186]{--_icon-button-bg-color: var(--ds-icon-button-bg-color, var(--c-base));--_icon-button-icon-color: var(--ds-icon-button-icon-color, var(--c-on));--_icon-button-bg-color-hover: var(--ds-icon-button-bg-color-hover, color-mix(in srgb, var(--_icon-button-bg-color) 88%, black));--_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));--_icon-button-icon-color-hover: var(--ds-icon-button-icon-color-hover, var(--_icon-button-icon-color));--_icon-button-accent: var(--_icon-button-bg-color);--_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 92% .03 h))}.icon-button.tonal[_ngcontent-ng-c838688186]{--_icon-button-bg-color: var(--ds-icon-button-bg-color, var(--c-muted));--_icon-button-icon-color: var(--ds-icon-button-icon-color, var(--c-strong));--_icon-button-bg-color-hover: var(--ds-icon-button-bg-color-hover, var(--c-subtitle));--_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--c-muted-strong));--_icon-button-icon-color-hover: var(--ds-icon-button-icon-color-hover, var(--c-strong));--_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)))}.icon-button.outlined[_ngcontent-ng-c838688186]{--_icon-button-bg-color: var(--ds-icon-button-bg-color, transparent);--_icon-button-icon-color: var(--ds-icon-button-icon-color, var(--text-primary));--_icon-button-border: var(--ds-icon-button-border, var(--border-default));--_icon-button-bg-color-hover: var(--ds-icon-button-bg-color-hover, var(--surface-secondary));--_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--surface-muted));--_icon-button-icon-color-hover: var(--ds-icon-button-icon-color-hover, var(--text-primary));--_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);--_icon-button-border-disabled: var(--ds-icon-button-border-disabled, color-mix(in srgb, var(--_icon-button-border) 55%, var(--surface-disabled)))}.icon-button.c-secondary[_ngcontent-ng-c838688186]{--c-base: var(--secondary);--c-on: var(--secondary-on);--c-strong: var(--secondary-strong);--c-subtitle: var(--secondary-subtitle);--c-muted: var(--secondary-muted);--c-muted-strong: var(--secondary-muted-strong)}.icon-button.c-tertiary[_ngcontent-ng-c838688186]{--c-base: var(--tertiary);--c-on: var(--tertiary-on);--c-strong: var(--tertiary-strong);--c-subtitle: var(--tertiary-subtitle);--c-muted: var(--tertiary-muted);--c-muted-strong: var(--tertiary-muted-strong)}.icon-button.c-neutral[_ngcontent-ng-c838688186]{--c-base: var(--text-secondary);--c-on: var(--surface-default);--c-strong: var(--text-primary);--c-subtitle: var(--surface-secondary);--c-muted: var(--surface-secondary);--c-muted-strong: var(--border-default)}.icon-button.c-error[_ngcontent-ng-c838688186]{--c-base: var(--error);--c-on: var(--text-on-error);--c-strong: var(--error-text);--c-subtitle: var(--error-subtitle);--c-muted: var(--error-muted);--c-muted-strong: var(--error-muted-strong)}.icon-button.c-success[_ngcontent-ng-c838688186]{--c-base: var(--success);--c-on: var(--text-on-success);--c-strong: var(--success-text);--c-subtitle: var(--success-subtitle);--c-muted: var(--success-muted);--c-muted-strong: var(--success-muted-strong)}.icon-button.c-warning[_ngcontent-ng-c838688186]{--c-base: var(--warning);--c-on: var(--text-on-warning);--c-strong: var(--warning-text);--c-subtitle: var(--warning-subtitle);--c-muted: var(--warning-muted);--c-muted-strong: var(--warning-muted-strong)}.icon-button.selected[_ngcontent-ng-c838688186]{--_icon-button-bg-color: var(--ds-icon-button-bg-color, var(--c-base));--_icon-button-icon-color: var(--ds-icon-button-icon-color, var(--c-on));--_icon-button-border: var(--ds-icon-button-border, transparent);--_icon-button-bg-color-hover: var(--ds-icon-button-bg-color-hover, color-mix(in srgb, var(--_icon-button-bg-color) 88%, black));--_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));--_icon-button-icon-color-hover: var(--ds-icon-button-icon-color-hover, var(--_icon-button-icon-color));--_icon-button-accent: var(--_icon-button-bg-color);--_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 92% .03 h))}</style><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
+</style><style>[_nghost-ng-c1120493896]{display:block;margin-top:var(--space-4)}.meta[_ngcontent-ng-c1120493896]{display:flex;flex-direction:column;gap:var(--space-3)}.row[_ngcontent-ng-c1120493896]{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center}.chip[_ngcontent-ng-c1120493896]{display:inline-flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--font-size-s);font-weight:var(--font-weight-semibold);background:var(--surface-secondary);border:var(--border-width-default) solid var(--border-default);border-radius:var(--radius-sm);padding:5px 10px}.chip.tagchip[_ngcontent-ng-c1120493896]{border-color:var(--primary)}.chip[_ngcontent-ng-c1120493896]   .tag[_ngcontent-ng-c1120493896]{color:var(--primary);font-weight:var(--font-weight-semibold)}.summary[_ngcontent-ng-c1120493896]{color:var(--text-secondary);margin:0}</style><style>@charset "UTF-8";[_nghost-ng-c2484653460]{display:block;margin-top:var(--space-6)}details.api[_ngcontent-ng-c2484653460]{border:var(--border-width-default) solid var(--border-default);border-radius:var(--radius-md);background:var(--surface-secondary);overflow:hidden;margin-bottom:var(--space-4)}summary[_ngcontent-ng-c2484653460]{list-style:none;cursor:pointer;padding:var(--space-3) var(--space-4);font-weight:var(--font-weight-bold);display:flex;align-items:center;gap:var(--space-2);-webkit-user-select:none;user-select:none}summary[_ngcontent-ng-c2484653460]::-webkit-details-marker{display:none}summary[_ngcontent-ng-c2484653460]:before{content:"\25b8";color:var(--text-tertiary);transition:transform var(--duration-fast) var(--ease-standard)}details[open][_ngcontent-ng-c2484653460] > summary[_ngcontent-ng-c2484653460]:before{transform:rotate(90deg)}.count[_ngcontent-ng-c2484653460]{font-size:var(--font-size-xs);font-weight:var(--font-weight-bold);color:var(--text-tertiary);background:var(--surface-muted);border-radius:var(--radius-pill);padding:1px 8px}.scroll[_ngcontent-ng-c2484653460]{overflow-x:auto}table[_ngcontent-ng-c2484653460]{width:100%;border-collapse:collapse;font-size:var(--font-size-s);background:var(--surface-default)}thead[_ngcontent-ng-c2484653460]   th[_ngcontent-ng-c2484653460]{text-align:left;font-size:var(--font-size-xs);font-weight:var(--font-weight-bold);text-transform:uppercase;letter-spacing:var(--letter-spacing-wider);color:var(--text-tertiary);padding:var(--space-2) var(--space-4);background:var(--surface-muted);border-block:var(--border-width-default) solid var(--border-default)}tbody[_ngcontent-ng-c2484653460]   td[_ngcontent-ng-c2484653460]{padding:var(--space-3) var(--space-4);border-bottom:var(--border-width-default) solid var(--border-divider);vertical-align:top}tbody[_ngcontent-ng-c2484653460]   tr[_ngcontent-ng-c2484653460]:last-child   td[_ngcontent-ng-c2484653460]{border-bottom:0}.pname[_ngcontent-ng-c2484653460]{font-family:var(--font-mono);font-weight:var(--font-weight-semibold)}.req[_ngcontent-ng-c2484653460]{color:var(--error);font-weight:var(--font-weight-bold);margin-left:2px}.tag[_ngcontent-ng-c2484653460]{font-size:10px;font-weight:var(--font-weight-bold);color:var(--primary);background:var(--surface-muted);border-radius:var(--radius-sm);padding:1px 5px;margin-left:6px;vertical-align:middle}.mono[_ngcontent-ng-c2484653460]{font-family:var(--font-mono);font-size:var(--font-size-xs)}.uni[_ngcontent-ng-c2484653460]{display:inline-flex;flex-wrap:wrap;gap:var(--space-1)}.chip[_ngcontent-ng-c2484653460]{background:var(--surface-muted);border-radius:var(--radius-sm);padding:1px 6px}.muted[_ngcontent-ng-c2484653460]{color:var(--text-tertiary);font-style:italic}.desc[_ngcontent-ng-c2484653460]{color:var(--text-secondary)}.desc.missing[_ngcontent-ng-c2484653460]{color:var(--warning);font-style:italic}.svc-summary[_ngcontent-ng-c2484653460]{color:var(--text-secondary);margin-bottom:var(--space-3)}.unknown[_ngcontent-ng-c2484653460]{color:var(--warning);font-family:var(--font-mono);font-size:var(--font-size-s)}</style></head><body>
+  <div class="ds-page"><ds-docs-components-icon-button ng-version="21.2.22" _nghost-ng-c3368470368=""><docs-section _ngcontent-ng-c3368470368="" anchor="icon-button" eyebrow="Components" title="Icon button" _nghost-ng-c1634159993=""><section _ngcontent-ng-c1634159993="" class="section" id="section-icon-button" data-anchor="icon-button"><h2 _ngcontent-ng-c1634159993="" class="t-h2">Icon button - sizes</h2><docs-component-meta _ngcontent-ng-c1634159993="" _nghost-ng-c1120493896="" data-key="icon-button"><div _ngcontent-ng-c1120493896="" class="meta"><div _ngcontent-ng-c1120493896="" class="row"><span _ngcontent-ng-c1120493896="" class="chip tagchip"><span _ngcontent-ng-c1120493896="" class="tag">&lt;IconButton /&gt;</span></span></div><!----></div><!----></docs-component-meta><!----><p _ngcontent-ng-c3368470368="" class="block-desc t-s"> sm 32 · md 40 (default) · lg 48 — aligned with the field / button scale. </p><div _ngcontent-ng-c3368470368="" class="row"><div _ngcontent-ng-c3368470368="" class="cell"><ds-icon-button _ngcontent-ng-c3368470368="" icon="settings" arialabel="Settings" variant="outlined" size="sm" _nghost-ng-c838688186=""><button _ngcontent-ng-c838688186="" class="icon-button outlined sm" type="button" aria-label="Settings"><ds-icon _ngcontent-ng-c838688186=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 16px;" width="16" height="16" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></ds-icon></button></ds-icon-button><code _ngcontent-ng-c3368470368="" class="t-mono-inline"> size="sm" </code></div><div _ngcontent-ng-c3368470368="" class="cell"><ds-icon-button _ngcontent-ng-c3368470368="" icon="settings" arialabel="Settings" variant="outlined" _nghost-ng-c838688186=""><button _ngcontent-ng-c838688186="" class="icon-button md outlined" type="button" aria-label="Settings"><ds-icon _ngcontent-ng-c838688186=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></ds-icon></button></ds-icon-button><code _ngcontent-ng-c3368470368="" class="t-mono-inline"> size="md" </code></div><div _ngcontent-ng-c3368470368="" class="cell"><ds-icon-button _ngcontent-ng-c3368470368="" icon="settings" arialabel="Settings" variant="outlined" size="lg" _nghost-ng-c838688186=""><button _ngcontent-ng-c838688186="" class="icon-button lg outlined" type="button" aria-label="Settings"><ds-icon _ngcontent-ng-c838688186=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 24px;" width="24" height="24" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></ds-icon></button></ds-icon-button><code _ngcontent-ng-c3368470368="" class="t-mono-inline"> size="lg" </code></div></div><!----><!----><!----></section></docs-section></ds-docs-components-icon-button></div>
   <!-- Sections only: a section renders DS components as Angular components, and registering those
        same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one.
-       Of the chapter's own header only the title is kept on every card. The eyebrow is a constant,
-       and the lede describes the CHAPTER — printing it on all seven Button cards is the same
-       paragraph seven times, so it rides the first card only. Removed rather than hidden: the pane
-       sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "";
-      var INDEX = 1;
-      var KEY = "icon-button";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "sizes";
-      var REACT = "IconButton";
-      /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
-         the title said "Buttons" and the lede described Button, and the card already names itself
-         in its block heading and in the pane's label. The lede rides the chapter's first card.
-         A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
-         slice and nothing repeated — it loses only the eyebrow. */
-      var WHOLE = OWNS === null;
-      /* The chapter's summary belongs to the chapter, so it rides its first card only - seven
-         copies of the same paragraph is what it was before. A whole-chapter card is that card. */
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-icon-button");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
+  
+  
+  
 
-        /* The h2 names what the card is ABOUT. It said "Buttons" on all seven Button cards and
-           said nothing at all on a part's card, while the block's own h3 carried the only specific
-           words on the page - so the h3's text moves up and the h3 itself goes. HEAD overrides the
-           chapter's name for a part, whose own name is not the chapter's. */
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-
-        /* A part's chip is rendered inside its `.api-sub` wrapper at the foot of the chapter, while
-           the chapter's own sits directly under the title. Same place on every card. An emptied
-           wrapper goes with it - it carries a margin of its own. */
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-
-/* To Claude Design this is a React design system, so the chip names the React tag and only that
-           one: an agent here cannot type `<ds-button>`, and the Angular name is on the docs site,
-           in the `.d.ts` and in the README for whoever translates. Rewritten in place, so ds-docs
-           renders its own chip untouched. A directive has no React tag and passes null. */
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
 </body></html>

@@ -1,10 +1,6 @@
 <!-- @dsCard group="foundations" viewport="1200x498" name="Elevation - shadow scale · semantic aliases" -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
-<html data-theme="light"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html data-theme="light" data-ds-sliced="8" data-ds-kept="1"><head><meta charset="utf-8">
   <title>Elevation</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
@@ -20,127 +16,13 @@
        wrapping wraps at the wrong width. */
     .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
   </style>
-</head><body>
-  <div class="ds-page"><ds-docs-foundations-elevation></ds-docs-foundations-elevation></div>
+<style>@charset "UTF-8";.shadow-grid[_ngcontent-ng-c3704796793]{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-6);margin-top:var(--space-4);padding:var(--space-8) var(--space-6);background:var(--surface-canvas);border-radius:var(--radius-lg)}.shadow-cell[_ngcontent-ng-c3704796793]{display:grid;gap:var(--space-2);justify-items:start}.shadow-card[_ngcontent-ng-c3704796793]{width:100%;aspect-ratio:1/1;max-width:160px;background:var(--surface-default);border-radius:var(--radius-lg)}.token-name[_ngcontent-ng-c3704796793]{font-size:12px;color:var(--text-primary)}.token-desc[_ngcontent-ng-c3704796793]{color:var(--text-secondary);line-height:1.5}.token-value[_ngcontent-ng-c3704796793]{font-size:11px;color:var(--text-tertiary)}.applied-grid[_ngcontent-ng-c3704796793]{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space-6);margin-top:var(--space-4)}.applied-cell[_ngcontent-ng-c3704796793]{display:grid;gap:var(--space-2)}.applied-stage[_ngcontent-ng-c3704796793]{display:flex;align-items:center;justify-content:center;padding:var(--space-8) var(--space-4);min-height:200px;background:var(--surface-canvas);border-radius:var(--radius-lg)}.applied-label[_ngcontent-ng-c3704796793]{color:var(--text-primary)}.demo-card[_ngcontent-ng-c3704796793]{width:100%;max-width:220px;padding:var(--space-4);background:var(--surface-default);border-radius:var(--radius-lg)}.demo-card-title[_ngcontent-ng-c3704796793]{font:var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-sans);color:var(--text-primary)}.demo-card-meta[_ngcontent-ng-c3704796793]{margin-top:var(--space-1);font:var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);color:var(--text-secondary)}.demo-popover[_ngcontent-ng-c3704796793]{width:100%;max-width:200px;padding:var(--space-1);background:var(--surface-overlay);border-radius:var(--radius-lg)}.demo-menu-item[_ngcontent-ng-c3704796793]{padding:var(--space-2) var(--space-3);font:var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);color:var(--text-primary);border-radius:var(--radius-md)}.demo-menu-item--error[_ngcontent-ng-c3704796793]{color:var(--error-text)}.demo-menu-sep[_ngcontent-ng-c3704796793]{height:var(--border-width-default);margin:var(--space-1) var(--space-2);background:var(--border-divider)}.demo-toast[_ngcontent-ng-c3704796793]{display:flex;gap:var(--space-3);width:100%;max-width:280px;padding:var(--space-3) var(--space-4);background:var(--surface-default);border-radius:var(--radius-lg);overflow:hidden}.demo-toast-bar[_ngcontent-ng-c3704796793]{width:var(--toast-bar-w, 3px);align-self:stretch;background:var(--success);border-radius:var(--radius-sm)}.demo-toast-title[_ngcontent-ng-c3704796793]{font:var(--font-weight-bold) var(--font-size-s)/var(--line-height-snug) var(--font-sans);color:var(--text-primary)}.demo-toast-msg[_ngcontent-ng-c3704796793]{margin-top:var(--space-0-5);font:var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);color:var(--text-secondary)}.demo-modal-scrim[_ngcontent-ng-c3704796793]{display:flex;align-items:center;justify-content:center;width:100%;padding:var(--space-4);background:var(--surface-scrim);border-radius:var(--radius-lg)}.demo-modal[_ngcontent-ng-c3704796793]{width:100%;max-width:240px;padding:var(--space-4);background:var(--surface-overlay);border-radius:var(--radius-lg)}.demo-modal-title[_ngcontent-ng-c3704796793]{font:var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-sans);color:var(--text-primary)}.demo-modal-body[_ngcontent-ng-c3704796793]{margin-top:var(--space-2);font:var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);color:var(--text-secondary)}.demo-modal-actions[_ngcontent-ng-c3704796793]{display:flex;gap:var(--space-2);justify-content:flex-end;margin-top:var(--space-4)}.demo-btn[_ngcontent-ng-c3704796793]{height:28px;padding:0 var(--space-3);background:var(--primary);color:var(--neutral-0);border:0;border-radius:var(--radius-md);font:var(--font-weight-bold) var(--font-size-xs)/1 var(--font-sans);cursor:pointer}.demo-btn--ghost[_ngcontent-ng-c3704796793]{background:transparent;color:var(--text-secondary)}</style><style>[_nghost-ng-c1634159993]{display:block}.section[_ngcontent-ng-c1634159993]{scroll-margin-top:calc(var(--topbar-h) + var(--space-4))}.eyebrow[_ngcontent-ng-c1634159993]{color:var(--primary);margin-bottom:var(--space-2)}.lede[_ngcontent-ng-c1634159993]{color:var(--text-secondary);margin-top:var(--space-2);max-width:var(--col-cap-text)}[_nghost-ng-c1634159993]     .block-title{margin-top:var(--space-8)}[_nghost-ng-c1634159993]     .block-desc{color:var(--text-secondary);margin-top:var(--space-5);max-width:var(--col-cap-text)}[_nghost-ng-c1634159993]     .block-title+.block-desc{margin-top:var(--space-1)}[_nghost-ng-c1634159993]     .block-desc+.block-desc{margin-top:var(--space-3)}.api-sub[_ngcontent-ng-c1634159993]{margin-top:var(--space-8)}</style><style>[_nghost-ng-c1028485821]{position:relative;display:inline-flex;vertical-align:middle;margin-left:var(--space-2)}.i[_ngcontent-ng-c1028485821]{display:inline-flex;padding:0;border:0;background:none;color:var(--text-secondary);cursor:help;border-radius:var(--radius-pill)}.i[_ngcontent-ng-c1028485821]:hover{color:var(--primary)}.i[_ngcontent-ng-c1028485821]:focus-visible{outline:var(--focus-ring);outline-offset:2px}.panel[_ngcontent-ng-c1028485821]{display:none;position:absolute;top:calc(100% + 8px);left:0;z-index:var(--layer-tooltip, 100);width:max-content;min-width:min(320px,calc(100vw - var(--space-8)));max-width:min(460px,calc(100vw - var(--space-8)));padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);background:var(--surface-default);border:var(--border-width-default) solid var(--border-default);box-shadow:var(--shadow-3, 0 8px 24px rgba(11, 14, 25, .16))}[_nghost-ng-c1028485821]:hover   .panel[_ngcontent-ng-c1028485821], [_nghost-ng-c1028485821]:focus-within   .panel[_ngcontent-ng-c1028485821]{display:block}.panel-title[_ngcontent-ng-c1028485821]{display:inline-flex;align-items:center;gap:var(--space-2);font:var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);letter-spacing:var(--letter-spacing-wider);text-transform:uppercase;color:var(--text-tertiary);margin-bottom:var(--space-3)}.list[_ngcontent-ng-c1028485821]{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-2)}.list[_ngcontent-ng-c1028485821]   li[_ngcontent-ng-c1028485821]{display:grid;grid-template-columns:150px 1fr;gap:var(--space-3);align-items:start}.field[_ngcontent-ng-c1028485821]{font:var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);color:var(--text-primary)}.behaviour[_ngcontent-ng-c1028485821]{font:var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);color:var(--text-secondary)}</style><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
+</style></head><body>
+  <div class="ds-page"><ds-docs-foundations-elevation ng-version="21.2.22" _nghost-ng-c3704796793=""><docs-section _ngcontent-ng-c3704796793="" anchor="elevation" eyebrow="Foundations" title="Elevation" _nghost-ng-c1634159993=""><section _ngcontent-ng-c1634159993="" class="section" id="section-elevation" data-anchor="elevation"><h2 _ngcontent-ng-c1634159993="" class="t-h2">Elevation - shadow scale · semantic aliases<docs-truncation _ngcontent-ng-c3704796793="" _nghost-ng-c1028485821=""><button _ngcontent-ng-c1028485821="" type="button" aria-label="Truncation rules" class="i"><ds-icon _ngcontent-ng-c1028485821="" name="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button><div _ngcontent-ng-c1028485821="" role="tooltip" class="panel"><div _ngcontent-ng-c1028485821="" class="panel-title"><ds-icon _ngcontent-ng-c1028485821="" name="filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 13px;" width="13" height="13" stroke-width="1.75" aria-hidden="true"><path d="M3 5h18l-7 9v6l-4-2v-4z"></path></svg></ds-icon> Truncation </div><ul _ngcontent-ng-c1028485821="" class="list"><li _ngcontent-ng-c1028485821=""><span _ngcontent-ng-c1028485821="" class="field"> Primitive vs semantic </span><span _ngcontent-ng-c1028485821="" class="behaviour"> Components consume semantic tokens (--shadow-popover, --shadow-modal). Never reach for --shadow-2 / --shadow-4 directly. </span></li><li _ngcontent-ng-c1028485821=""><span _ngcontent-ng-c1028485821="" class="field"> Theme tinting </span><span _ngcontent-ng-c1028485821="" class="behaviour"> Shadows are channel-split through --shadow-tint-h/s/l. Dark themes override --shadow-tint-l to render the same alphas as soft light glows. </span></li><li _ngcontent-ng-c1028485821=""><span _ngcontent-ng-c1028485821="" class="field"> Stacking </span><span _ngcontent-ng-c1028485821="" class="behaviour"> Elevation communicates depth visually. Use --layer-* tokens for actual z-index stacking — never compose your own. </span></li><!----></ul></div></docs-truncation></h2><!----><div _ngcontent-ng-c3704796793="" class="shadow-grid"><div _ngcontent-ng-c3704796793="" class="shadow-cell"><div _ngcontent-ng-c3704796793="" class="shadow-card" style="box-shadow: var(--shadow-card);"></div><code _ngcontent-ng-c3704796793="" class="t-mono-inline token-name"> --shadow-card </code><div _ngcontent-ng-c3704796793="" class="t-caption token-desc"> Card at rest </div><code _ngcontent-ng-c3704796793="" class="t-mono-inline token-value"> alias → --shadow-1 </code></div><div _ngcontent-ng-c3704796793="" class="shadow-cell"><div _ngcontent-ng-c3704796793="" class="shadow-card" style="box-shadow: var(--shadow-popover);"></div><code _ngcontent-ng-c3704796793="" class="t-mono-inline token-name"> --shadow-popover </code><div _ngcontent-ng-c3704796793="" class="t-caption token-desc"> Popovers, dropdowns, autocomplete </div><code _ngcontent-ng-c3704796793="" class="t-mono-inline token-value"> alias → --shadow-2 </code></div><div _ngcontent-ng-c3704796793="" class="shadow-cell"><div _ngcontent-ng-c3704796793="" class="shadow-card" style="box-shadow: var(--shadow-toast);"></div><code _ngcontent-ng-c3704796793="" class="t-mono-inline token-name"> --shadow-toast </code><div _ngcontent-ng-c3704796793="" class="t-caption token-desc"> Toasts, floating notifications </div><code _ngcontent-ng-c3704796793="" class="t-mono-inline token-value"> alias → --shadow-3 </code></div><div _ngcontent-ng-c3704796793="" class="shadow-cell"><div _ngcontent-ng-c3704796793="" class="shadow-card" style="box-shadow: var(--shadow-modal);"></div><code _ngcontent-ng-c3704796793="" class="t-mono-inline token-name"> --shadow-modal </code><div _ngcontent-ng-c3704796793="" class="t-caption token-desc"> Modals, drawers </div><code _ngcontent-ng-c3704796793="" class="t-mono-inline token-value"> alias → --shadow-4 </code></div><!----></div><!----><!----><!----></section></docs-section></ds-docs-foundations-elevation></div>
   <!-- Sections only: a section renders DS components as Angular components, and registering those
        same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one.
-       Of the chapter's own header only the title is kept on every card. The eyebrow is a constant,
-       and the lede describes the CHAPTER — printing it on all seven Button cards is the same
-       paragraph seven times, so it rides the first card only. Removed rather than hidden: the pane
-       sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "";
-      var INDEX = 1;
-      var KEY = "";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "shadow scale · semantic aliases";
-      var REACT = null;
-      /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
-         the title said "Buttons" and the lede described Button, and the card already names itself
-         in its block heading and in the pane's label. The lede rides the chapter's first card.
-         A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
-         slice and nothing repeated — it loses only the eyebrow. */
-      var WHOLE = OWNS === null;
-      /* The chapter's summary belongs to the chapter, so it rides its first card only - seven
-         copies of the same paragraph is what it was before. A whole-chapter card is that card. */
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-foundations-elevation");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
+  
+  
+  
 
-        /* The h2 names what the card is ABOUT. It said "Buttons" on all seven Button cards and
-           said nothing at all on a part's card, while the block's own h3 carried the only specific
-           words on the page - so the h3's text moves up and the h3 itself goes. HEAD overrides the
-           chapter's name for a part, whose own name is not the chapter's. */
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-
-        /* A part's chip is rendered inside its `.api-sub` wrapper at the foot of the chapter, while
-           the chapter's own sits directly under the title. Same place on every card. An emptied
-           wrapper goes with it - it carries a margin of its own. */
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-
-/* To Claude Design this is a React design system, so the chip names the React tag and only that
-           one: an agent here cannot type `<ds-button>`, and the Angular name is on the docs site,
-           in the `.d.ts` and in the README for whoever translates. Rewritten in place, so ds-docs
-           renders its own chip untouched. A directive has no React tag and passes null. */
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
 </body></html>
