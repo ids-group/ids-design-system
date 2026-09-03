@@ -11,7 +11,7 @@
 // and its hash recipes are unknown (`keyRecipe: 7` names a version we cannot reproduce). A wrong
 // value there is worse than a stale one: a hash that happens to match makes the next skill-driven
 // sync SKIP a file that did change. `_ds_manifest.json` IS ours — see build-manifest.mjs.
-import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -840,10 +840,40 @@ if (!cover) {
 }
 cpSync(join(syncDir, 'assets', cover), join(OUT, '.thumbnail'));
 
+/* Paths the project still holds and this build no longer produces. Only the project's OWNER can
+   delete (`bulk delete requires project ownership`, and a finalize_plan's `deletes` does not lift
+   it - the turn fence is server-side), and there is no rename. So the list travels WITH the
+   project, inside the README the build already writes, together with the one instruction that
+   clears it: nobody has to open the file tree and pick paths out of it. */
+const obsolete = readFileSync(join(syncDir, 'obsolete.txt'), 'utf8')
+  .split('\n')
+  .map((line) => line.trim())
+  .filter((line) => line && !line.startsWith('#'));
+
+const live = obsolete.filter((path) => existsSync(join(OUT, path)));
+if (live.length) {
+  throw new Error(
+    `.design-sync/obsolete.txt lists ${live.length} path(s) this build still produces, so they are`
+    + ` live cards and not obsolete files:\n  ${live.join('\n  ')}`,
+  );
+}
+
 // The project's own README, from the same conventions file the agent reads.
 writeFileSync(
   join(OUT, 'README.md'),
-  readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8'),
+  readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8')
+  + (obsolete.length
+    ? `\n## Obsolete paths — for the project owner\n\n`
+      + `The ${obsolete.length} path(s) below are left over from renames and withdrawals. None is`
+      + ` produced by the build, none is in \`_ds_manifest.json\`, so none renders a card — each`
+      + ` one's own content says \`[TO BE DELETED]\`. Only the project's OWNER can remove them.\n\n`
+      + `**To clear them, paste this into Claude:**\n\n`
+      + '```text\n'
+      + `In my Claude Design project, read README.md, take the paths listed under "Obsolete paths"`
+      + ` and delete exactly those files — then rewrite README.md without that section.\n`
+      + '```\n\n'
+      + `${obsolete.map((path) => `- \`${path}\``).join('\n')}\n`
+    : ''),
 );
 
 if (untagged.length) {

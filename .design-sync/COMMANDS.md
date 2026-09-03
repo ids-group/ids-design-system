@@ -192,8 +192,22 @@ delete_files { planId, paths }
 - **On a project you do not own, every write is permanent.** A helper file added to
   carry a list of what to delete becomes an item on that list: blanking it leaves a
   0-byte file with no explanation, which is worse than leaving it. `_TO_BE_DELETED.md`
-  was written for exactly that reason on 2026-09-03 and now names itself. Put a
-  list in the repo or the chat; never on the project.
+  was written for exactly that reason on 2026-09-03 and now names itself. The list
+  belongs in the repo, and reaches the project only inside a file the build already
+  writes.
+- **A finalize_plan that DECLARES the deletes does not lift the ownership check.**
+  The refusal names a "turn fence", which reads like something a plan could supply;
+  it is not. Tested 2026-09-03 with a plan whose `deletes` held the three exact
+  paths and no globs: `delete_files` answered the same 403. The fence is
+  server-side, so deleting is the owner's account and nothing else.
+- **The obsolete-path pipeline, so the owner never hunts for files.**
+  `.design-sync/obsolete.txt` (one project-relative path per line) is the source of
+  truth in the REPO; `build-cards` renders it into the project's own `README.md`
+  under "Obsolete paths", together with the single instruction the owner pastes
+  into Claude to delete exactly those paths and rewrite the README without the
+  section. The build FAILS if a listed path is one it still produces — that is a
+  live card, not an obsolete file. Add the line when a card is renamed or
+  withdrawn; remove it once `list_files` no longer shows the path.
 - `create_project` makes a project the USER owns, which is the only way to get
   delete rights back.
 - **A big `list_files` result is persisted to a file, not inlined** — the harness

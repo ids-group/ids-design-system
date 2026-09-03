@@ -1,0 +1,20 @@
+# Paths that still exist on the Claude Design project but the build no longer produces.
+#
+# WHY THIS FILE: `delete_files` answers `permission_denied: bulk delete requires project ownership`
+# for anyone but the project's owner, and there is no move or rename method. Declaring the deletes in
+# a finalize_plan does not help - the "turn fence" the error names is server-side (verified
+# 2026-09-03). So a rename or a withdrawal leaves the old path behind, and only the owner can remove
+# it. Nobody should have to hunt for those paths in the file list: they are listed HERE, the build
+# renders them into the project's own README, and the owner clears them in one pasted instruction
+# (the recipe is in that README block and in COMMANDS.md).
+#
+# ONE PATH PER LINE, project-relative, exactly as `list_files` reports it. `#` comments and blank
+# lines are ignored. A path the build still produces is a mistake, not an obsolete file, and
+# build-cards fails on it.
+#
+# Add a line the moment a card is renamed or withdrawn. Delete the line once the owner has removed
+# the file and `list_files` no longer shows it.
+
+components/actions/Button/Button - Refused, and why.html
+components/forms-inputs/TimeColumns/Time Columns.html
+_TO_BE_DELETED.md

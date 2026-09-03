@@ -57,3 +57,17 @@ import { Card, Stack, Input, Select, Button, Badge } from '@ids-group-ltd/ids-de
   </Stack>
 </Card>
 ```
+
+## Obsolete paths — for the project owner
+
+The 3 path(s) below are left over from renames and withdrawals. None is produced by the build, none is in `_ds_manifest.json`, so none renders a card — each one's own content says `[TO BE DELETED]`. Only the project's OWNER can remove them.
+
+**To clear them, paste this into Claude:**
+
+```text
+In my Claude Design project, read README.md, take the paths listed under "Obsolete paths" and delete exactly those files — then rewrite README.md without that section.
+```
+
+- `components/actions/Button/Button - Refused, and why.html`
+- `components/forms-inputs/TimeColumns/Time Columns.html`
+- `_TO_BE_DELETED.md`
