@@ -159,12 +159,9 @@
 
   <header class="masthead">
     <h1>Интеракции по формуле <b>v2</b>: калибровка по нарисованной рампе</h1>
-    <p>v1 глушила цвета, потому что смешивала с чёрным. v2 — та же единая формула, но <b>направление</b>
-       смешивания зависит от контекста: светлые брендовые тинты темнеют <b>в сторону бренда</b>,
-       нейтральные поверхности — в сторону холодных «чернил» <code class="tok">hsl(215, 35%, 45%)</code>,
-       тёмные базы — к белому. Проценты откалиброваны так, что формула попадает в нарисованные стопы рампы
-       почти точно (pressed-чернила = <b>ровно</b> neutral-150, tertiary = ровно blue-50/100).
-       Наводи мышь, <b>зажимай</b> для pressed, сравнивай триады «база / hover / pressed».</p>
+    <p><b>Проблема.</b> Состояния (hover / pressed / tint) прописаны руками в каждом компоненте, поэтому расходятся между собой и не следуют за темой. <b>Решение:</b> одна формула, направление смешивания зависит от контекста — светлые брендовые тинты темнеют <b>к бренду</b>, нейтральные поверхности <b>к холодным чернилам</b>, тёмные базы <b>к белому</b>. Проценты откалиброваны так, что формула попадает в нарисованные стопы почти точно (pressed-чернила = ровно <code>neutral-150</code>).</p>
+<p><b>Решить надо пять вопросов</b> — у каждого ниже живое сравнение А/Б, наводи и зажимай:</p>
+<table style="width:100%;border-collapse:collapse;font-size:13px;margin:14px 0 4px"><tbody><tr><td style="padding:6px 10px;border-bottom:1px solid #E6EAF2;white-space:nowrap"><b>В1</b></td><td style="padding:6px 10px;border-bottom:1px solid #E6EAF2">Шаг pressed для тинтов: <b>28%</b> (правило 2×hover) или <b>34%</b> (точное попадание в нарисованный <code>blue-300</code>)?</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E6EAF2"><b>В2</b></td><td style="padding:6px 10px;border-bottom:1px solid #E6EAF2">Нужен ли pressed нейтральным поверхностям? Сейчас у меню и строк его нет; формула даёт бесплатно.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E6EAF2"><b>В3</b></td><td style="padding:6px 10px;border-bottom:1px solid #E6EAF2">Danger-пункт меню: рукописный <code>--error-subtitle</code> против формулы. Должны совпасть — проверить глазами.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E6EAF2"><b>В4</b></td><td style="padding:6px 10px;border-bottom:1px solid #E6EAF2">Нужен ли override-слот — любой токен состояния можно задать руками, формула остаётся fallback?</td></tr><tr><td style="padding:6px 10px"><b>В5</b></td><td style="padding:6px 10px">Вводим ли pressed для success/warning кнопок? Сейчас его нет. Это <b>новое видимое состояние</b>.</td></tr></tbody></table>
   </header>
 
   <div class="card">
