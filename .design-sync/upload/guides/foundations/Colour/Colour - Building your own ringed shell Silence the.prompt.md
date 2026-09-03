@@ -1,0 +1,7 @@
+# Colour - building your own ringed shell? Silence the control inside — and name it
+
+The base rule is a box-shadow, so outline: 0 cannot cancel it. If your composite control paints a ring on :focus-within — a field box, a segmented row, a toolbar cell — the element inside it still gets the base ring, and the result is two: a tight one on the control and the halo on the box. This is the trap the DS itself fell into twice, in ds-input and ds-textarea, both found by measuring in a browser rather than by reading the styles.
+
+Silence one named control, never the whole box. A box-wide reset also hits the tab stops living inside — a clear button, a password toggle, a stepper arrow — and then tabbing from the field to that button changes nothing on screen, so a keyboard user cannot tell what has focus. That is a WCAG 2.4.7 failure, and it is the same defect seen from the other side. The DS ships focus.owns-the-focus-ring($control) for its own shells and fails its build when one is missing.
+
+outline is the one style that also emits a rule, because an outline cannot be carried by a box-shadow token; it is written at zero specificity with :where() so a component or your own CSS still wins. Separately, and regardless of which style is set: under forced-colors every focused element gets a CanvasText outline, because Windows High Contrast DROPS box-shadow and a shadow-only indicator disappears there completely. Consumers who @use the DS partials à la carte need @use 'styles/focus' to get either; the bundled styles/ds entry already includes it.

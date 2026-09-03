@@ -265,9 +265,14 @@ function blocksOf(slug) {
   // NEXT block so a chapter's later prose cannot leak into an earlier card's line.
   return found.map((block, index) => {
     const until = index + 1 < found.length ? found[index + 1].at : body.length;
-    const paragraph = body.slice(block.at, until).match(/<p[^>]*class="[^"]*block-desc[^"]*"[^>]*>([\s\S]*?)<\/p>/);
+    const slice = body.slice(block.at, until);
+    // Every class the sections use for PROSE, not just the shared one: the refusal block carries its
+    // paragraphs in `.refusal-copy`, do-dont in `.caption`, token-discipline in `.muted`.
+    const prose = [...slice.matchAll(/<p[^>]*class="[^"]*(?:block-desc|refusal-copy|caption|muted)[^"]*"[^>]*>([\s\S]*?)<\/p>/g)]
+      .map(([, inner]) => plainText(inner))
+      .filter(Boolean);
 
-    return { ...block, desc: paragraph ? plainText(paragraph[1]) : '' };
+    return { ...block, desc: prose[0] ?? '', prose };
   });
 }
 
@@ -355,13 +360,13 @@ function cardsFor(name) {
   const label = spacedName(name);
   if (owner === null && blocks.length) return [];
   if (owner === null || !blocks.length) {
-    return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '' }];
+    return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
   }
 
   const mine = blocks
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => block.owner === owner);
-  if (!mine.length) return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '' }];
+  if (!mine.length) return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
 
   return nameCards(label, mine, owner);
 }
@@ -378,7 +383,7 @@ function guideCardsFor(section) {
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => !block.owner);
   if (!blocks.length) {
-    return [{ file: chapter, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '' }];
+    return [{ file: chapter, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
   }
 
   return nameCards(chapter, blocks, '');
@@ -417,6 +422,7 @@ function nameCards(chapter, mine, owner) {
       chapterPosition: block.chapterPosition,
       title: block.title,
       desc: block.desc ?? '',
+      prose: block.prose ?? [],
     };
   });
 }
@@ -446,6 +452,23 @@ function readDoc(name) {
   return raw.slice(front[0].length).trimStart();
 }
 
+/** The card's usage note: the file the pane reads for "Usage notes for Claude", named after the
+ *  card and sitting beside it. Found by listing the project after a note was typed in the pane -
+ *  it appeared as `<card>.prompt.md` holding the raw text, so the build can write them.
+ *
+ *  It carries what will not fit in the one-line subtitle: the block's whole prose, and a pointer to
+ *  the component's own prompt and declaration. NOTE that the build now OWNS these files - a note
+ *  typed in the pane is replaced on the next upload. */
+const usageNote = ({ title, prose, component, contract }) => [
+  `# ${title}`,
+  '',
+  ...(prose.length ? [prose.join('\n\n'), ''] : []),
+  ...(component
+    ? [`Full API: \`${component}.d.ts\`. How to use the component anywhere: \`${component}.prompt.md\`.`
+      + (contract ? '' : ' This component is not exported by the package, so it has neither.'), '']
+    : []),
+].join('\n');
+
 /** The same words the card's own h2 shows, for the line the pane prints above the frame. */
 const paneTitle = (head, blockTitle) => {
   const shown = displayTitle(blockTitle);
@@ -468,12 +491,18 @@ const markerValue = (value) => (value ?? '')
   .replace(/\s+/g, ' ')
   .trim();
 
-/** What the pane prints ABOVE the frame. The subtitle is capped because the pane gives it one line
- *  and a sentence that runs past it is worse than one that stops at a word. */
-const SUBTITLE_CAP = 120;
-const capped = (sentence) => (sentence.length <= SUBTITLE_CAP
-  ? sentence
-  : `${sentence.slice(0, sentence.lastIndexOf(' ', SUBTITLE_CAP))}…`);
+/** What the pane prints ABOVE the frame. It clips around a hundred characters mid-word, so the
+ *  subtitle is ONE sentence: a whole thought that ends, rather than a paragraph that stops. The rest
+ *  of the block's prose is not lost - it becomes the card's usage note. */
+const SUBTITLE_CAP = 90;
+const capped = (paragraph) => {
+  const stop = paragraph.search(/[.!?](\s|$)/);
+  const sentence = stop < 0 ? paragraph : paragraph.slice(0, stop + 1);
+
+  return sentence.length <= SUBTITLE_CAP
+    ? sentence
+    : `${sentence.slice(0, sentence.lastIndexOf(' ', SUBTITLE_CAP))}…`;
+};
 
 function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTable, head, block, react, title, subtitle }) {
   const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''}`
@@ -767,6 +796,15 @@ for (const name of [...byName.keys()].sort()) {
     );
     // An empty key means the API extractor has no entry for this component at all, and then there
     // is no chip anywhere to show - the card correctly shows none rather than the chapter's.
+    writeFileSync(
+      join(dir, `${card.file}.prompt.md`),
+      usageNote({
+        title: paneTitle(card.owns ? spacedName(name) : chapterTitleOf(section.slug), card.title),
+        prose: card.prose,
+        component: name,
+        contract: publicExports.has(component.className),
+      }),
+    );
     if (card.owns && partKey && !declaredKeys(section.slug).has(partKey)) {
       untagged.push(`${card.file} (${section.slug} declares no '${partKey}')`);
     }
@@ -809,6 +847,15 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
         subtitle: card.desc,
         // A chapter with no component of its own renders no chip, so there is nothing to name.
         react: null,
+      }),
+    );
+    writeFileSync(
+      join(dir, `${card.file}.prompt.md`),
+      usageNote({
+        title: paneTitle(chapterTitleOf(section.slug), card.title),
+        prose: card.prose,
+        component: null,
+        contract: false,
       }),
     );
     written.push({

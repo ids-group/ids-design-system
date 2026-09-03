@@ -1,0 +1,5 @@
+# Colour - switching the focus style brand-wide
+
+The two families above are the default split — a soft halo on fields, a crisp double ring on controls. Set data-focus on <html> to change it everywhere at once: ring puts the double ring on fields too, field puts the halo on controls, edge is a hairline flush against the element, and outline swaps the shadow for a real outline. Omit the attribute and nothing changes. It works because 20 components already resolve through the --ds-field-focus-shadow / --ds-control-focus-shadow roles, so the switch only has to retarget two roles rather than reach every component.
+
+Anything focusable that styles nothing itself still gets a ring. The library emits one base rule — :where(:focus-visible) with --ds-control-focus-shadow — at zero specificity, so a component rule and your own CSS both out-rank it. Without it a close button inside ds-alert, a link in projected content, or a plain <button> of yours fell through to the browser default, which in Chrome is a black outline: auto — visibly foreign beside the DS ring. Audited across the docs: 247 focusable elements on one page, none left without an indicator.
