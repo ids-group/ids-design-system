@@ -167,6 +167,23 @@ delete_files { planId, paths }
   straight from disk, so file contents never enter the model context.
 - Max 256 files per call — split larger bundles across several `write_files`
   calls under the same `planId`.
+- **`finalize_plan` takes GLOBS, and the whole tree fits in one pattern.**
+  `writes: ["**/*"]` is accepted and authorises every path (`*` inside a segment,
+  `**` any depth, at most three wildcards per pattern). Verified against the live
+  project. Enumerating 410 paths per plan — which is what the first four uploads
+  did — costs thousands of tokens for nothing; `write_files` still needs one entry
+  per file, but the PLAN does not.
+- **`delete_files` is refused on a project someone else owns**, verbatim:
+  `bulk delete requires project ownership when called without a turn fence; this
+  project is owned by another user`. Writes are fine, deletes are not, so an
+  obsolete path can only be BLANKED (`data: ""` is accepted and leaves a 0-byte
+  file) until the owner deletes it. There is **no move or rename method** — the
+  full surface is list_projects, get_project, list_files, get_file, finalize_plan,
+  write_files, delete_files, register_assets, unregister_assets, create_project,
+  report_validate — so "move it to a trashcan folder" means copy plus blank, which
+  leaves the original in place and doubles the file count.
+- `create_project` makes a project the USER owns, which is the only way to get
+  delete rights back.
 - `register_assets` is **legacy**. The Design System pane builds its card index
   from each card's first-line `<!-- @dsCard group="…" -->` comment, compiled
   into `_ds_manifest.json`. Only hand-authored projects without those markers
