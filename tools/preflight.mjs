@@ -87,6 +87,19 @@ try {
   );
 }
 
+// The cut is the only moment this can be caught: once the block is published, a consumer has
+// already read the manifest's silence as "this release does not touch me".
+try {
+  execSync('node tools/check-manifest-coverage-selftest.mjs', { stdio: 'inherit' });
+  execSync('node tools/check-manifest-coverage.mjs', { stdio: 'inherit' });
+} catch {
+  fail(
+    'a documented change names public surface the manifest never mentions — the output above ' +
+      'says which entry and which token, tag or symbol. Name it: an item if a consumer must ' +
+      'edit code, an `informational` line otherwise.',
+  );
+}
+
 // The PR gate runs this too, but a release can be cut from a branch whose gate never ran,
 // and after publishing to the public registry there is nothing to fix.
 try {

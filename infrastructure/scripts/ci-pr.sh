@@ -20,6 +20,13 @@ node tools/migration-lint.mjs
 echo "===== migration-lint selftest ====="
 node tools/migration-lint-selftest.mjs
 
+# A change documented in the block and named nowhere in the manifest reads to a consumer as
+# "this release does not touch me". Only the block being cut is checked, so history is never
+# asked for a line it does not need.
+echo "===== manifest coverage ====="
+node tools/check-manifest-coverage-selftest.mjs
+node tools/check-manifest-coverage.mjs
+
 # The agent catalogue is derived from components.md; editing the source without regenerating
 # leaves the shipped leaves lying.
 echo "===== agent catalogue ====="

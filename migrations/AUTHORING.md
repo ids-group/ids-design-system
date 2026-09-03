@@ -374,6 +374,12 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
 - [ ] No key outside the allowlist. (lint, M042)
 - [ ] Nothing documented in the block is silently dropped (actionable → item; else → `informational`).
+      (`tools/check-manifest-coverage.mjs`, at the cut) It was the one line here with nothing
+      enforcing it, and six entries went missing across 0.11.3 and 0.11.4 before it got a gate. The
+      gate asks only where the reader can tell: an entry outside `### Added` naming a token, tag or
+      symbol that resolves against the library tree, and a manifest that mentions none of them. So
+      it cannot be answered with prose — name the surface, or the entry needed no line and is not
+      asked for one.
 
 ## Why the format is shaped this way
 
