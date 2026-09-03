@@ -42,6 +42,7 @@
       var TABLE = false;
       var HEAD = null;
       var BLOCK = "Helper / error text";
+      var REACT = "OtpInput";
       /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
          the title said "Buttons" and the lede described Button, and the card already names itself
          in its block heading and in the pane's label. The lede rides the chapter's first card.
@@ -123,6 +124,19 @@
         var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
         if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
         if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+
+        /* The agent reading this card writes React, and the chip names the Angular selector - a tag
+           it cannot type. The React name goes beside it rather than instead of it: the card is where
+           the two dialects meet, and an engineer translating needs the Angular one. The chip is
+           CLONED so the copy keeps Angular's encapsulation attributes and so its styling; ds-docs
+           renders one chip and is not touched. A directive has no React tag and passes null. */
+        var named = section.querySelector('docs-component-meta .chip');
+        if (REACT && named && named.parentNode) {
+          var reactChip = named.cloneNode(true);
+          var label = reactChip.querySelector('.tag') || reactChip;
+          label.textContent = '<' + REACT + ' />';
+          named.parentNode.insertBefore(reactChip, named.nextSibling);
+        }
         /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
            over an empty page because the chapter reported more blocks than the card could address,
            and a card that removes everything looks exactly like one that removed nothing. */

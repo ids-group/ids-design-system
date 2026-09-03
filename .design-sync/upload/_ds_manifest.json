@@ -1381,7 +1381,7 @@
     {
       "path": "components/data-display/Table/Table - Row interaction states.html",
       "group": "data-display",
-      "viewport": "1200x466"
+      "viewport": "1200x467"
     },
     {
       "path": "components/data-display/Table/Table - The cell that names what the row opens.html",
@@ -1696,7 +1696,7 @@
     {
       "path": "components/feedback-status/Toast/Toast - With action.html",
       "group": "feedback-status",
-      "viewport": "1200x385"
+      "viewport": "1200x386"
     },
     {
       "path": "components/feedback-status/Toast/Toast - Promise toast.html",
@@ -1821,7 +1821,7 @@
     {
       "path": "components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html",
       "group": "page-structure",
-      "viewport": "1200x597"
+      "viewport": "1200x596"
     },
     {
       "path": "components/page-structure/FilterBar/Filter Bar - What the width buys.html",

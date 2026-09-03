@@ -427,7 +427,7 @@ function readDoc(name) {
  *  There is no React on this page and no per-card script. A hand-written preview per component was
  *  the previous design and the showcase drifted from the components it showed, because a specimen
  *  nobody opens is a specimen nobody checks. The docs site is looked at every day. */
-function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTable, head, block }) {
+function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTable, head, block, react }) {
   const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''} -->`;
 
   return `${marker}
@@ -474,6 +474,7 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTa
       var TABLE = ${JSON.stringify(Boolean(withTable))};
       var HEAD = ${JSON.stringify(head)};
       var BLOCK = ${JSON.stringify(block)};
+      var REACT = ${JSON.stringify(react)};
       /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
          the title said "Buttons" and the lede described Button, and the card already names itself
          in its block heading and in the pane's label. The lede rides the chapter's first card.
@@ -555,6 +556,19 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTa
         var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
         if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
         if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+
+        /* The agent reading this card writes React, and the chip names the Angular selector - a tag
+           it cannot type. The React name goes beside it rather than instead of it: the card is where
+           the two dialects meet, and an engineer translating needs the Angular one. The chip is
+           CLONED so the copy keeps Angular's encapsulation attributes and so its styling; ds-docs
+           renders one chip and is not touched. A directive has no React tag and passes null. */
+        var named = section.querySelector('docs-component-meta .chip');
+        if (REACT && named && named.parentNode) {
+          var reactChip = named.cloneNode(true);
+          var label = reactChip.querySelector('.tag') || reactChip;
+          label.textContent = '<' + REACT + ' />';
+          named.parentNode.insertBefore(reactChip, named.nextSibling);
+        }
         /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
            over an empty page because the chapter reported more blocks than the card could address,
            and a card that removes everything looks exactly like one that removed nothing. */
@@ -699,6 +713,10 @@ for (const name of [...byName.keys()].sort()) {
         // to the chapter's own component, and then the chapter's own h2 text is already right.
         head: card.owns ? spacedName(name) : null,
         block: displayTitle(card.title),
+        // `name` IS the React name - it is what the wrapper, the declaration and the card directory
+        // are called. All 85 components in the surface are elements today; an attribute selector
+        // would be a directive, which has no React tag of its own.
+        react: component.selector.startsWith('[') ? null : name,
       }),
     );
     // An empty key means the API extractor has no entry for this component at all, and then there
@@ -741,6 +759,8 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
         withTable: card.ownedIndex <= 0,
         head: null,
         block: displayTitle(card.title),
+        // A chapter with no component of its own renders no chip, so there is nothing to name.
+        react: null,
       }),
     );
     written.push({
