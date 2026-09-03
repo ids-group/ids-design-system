@@ -44,6 +44,13 @@
       <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg win" style="width:24.6%"></span></span>
       <span class="v">108 КБ</span></div>
 
+    <div class="row"><span class="k">G — через корень</span>
+      <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg cost" style="width:71.8%"></span></span>
+      <span class="v">202 КБ</span></div>
+    <div class="row"><span class="k">G — глубокий специфер</span>
+      <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg win" style="width:11.6%"></span></span>
+      <span class="v">82 КБ</span></div>
+
     <div class="grp">Eager-корень — один компонент</div>
     <div class="row"><span class="k">сплющено, сегодня</span>
       <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg cost" style="width:66.2%"></span></span>
@@ -52,6 +59,12 @@
       <span class="bar"><span class="seg floor" style="width:29.4%"></span><span class="seg win" style="width:6.9%"></span></span>
       <span class="v">72 КБ</span></div>
   </div>
+
+  <p>
+    <b>G даёт то же, что F — но только если потребитель пишет глубокий специфер.</b> Через корень он
+    работает как сегодня: 11 тяжёлых компонентов из 11 в стартовом бандле. Причина — 98 общих чанков
+    связывают точки между собой, и корневой фасад делает достижимым всё сразу.
+  </p>
 
   <div class="kpis">
     <div class="kpi"><span class="n is-good">−83%</span><span class="k">доля DS при eager-сервисе: 140 → 24 КБ</span></div>
@@ -84,7 +97,8 @@
       <tr><th>Размещение по чанкам</th><td class="bad">нет</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
       <tr><th>Tree-shaking сохраняется</th><td class="ok">да</td><td class="bad">−50%</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
       <tr><th>Случай eager-шелла</th><td class="bad">нет</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
-      <tr><th><code>@defer</code> через корень</th><td class="bad">нет</td><td class="bad">нет</td><td class="ok">да<br /><small>глубокий специфер</small></td><td class="bad">нет</td><td class="ok">да</td></tr>
+      <tr><th><code>@defer</code> через корень</th><td class="bad">нет</td><td class="bad">нет</td><td class="ok">да<br /><small>глубокий специфер</small></td><td class="bad">нет</td><td class="ok">да<br /><small>глубокий специфер</small></td></tr>
+      <tr><th>Работает через корневой специфер<br /><small>то есть потребитель ничего не переписывает</small></th><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td><td class="bad">НЕТ<br /><small>измерено</small></td></tr>
       <tr><th>Потребитель не меняет импорты</th><td class="ok">да</td><td class="bad">нет</td><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td></tr>
       <tr><th>Собирается нашим ng-packagr</th><td class="ok">да</td><td class="ok">да</td><td class="ok">да</td><td class="mid">+ шаг</td><td class="bad">нет</td></tr>
     </tbody>
