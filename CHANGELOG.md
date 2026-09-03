@@ -84,13 +84,28 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A click between a boolean control and its label hit nothing.** `ds-radio`, `ds-checkbox` and
+  `ds-switch` set the space between control and label with a flex `gap`, which belongs to neither
+  box — so the 8px strip between them swallowed the click instead of toggling. That space is now
+  padding on the label, which extends its clickable box across the strip: the target grows from
+  18px to 26px tall while the text's start position and the row height stay put. No API or token
+  change.
+
+- **`ds-table`'s bulk-actions bar rendered its buttons invisible.** The bar is an inverted
+  surface, and its buttons were coloured through a bare `.button` rule that stopped applying once
+  the button became `ds-button` — which takes its label from `--ds-button-label-color` and ignores
+  inherited `color`, so the label sat on the bar's own colour and disappeared. The bar now sets
+  ds-button's public tokens for an inverted surface: label to `--text-inverted`, background to
+  `transparent`, and hover and active backgrounds to `--surface-inverted-hover`. No new token —
+  these are ds-button's existing hooks.
+
 - **The skeleton shimmer stepped instead of sweeping, on any page but a light one.** The travel was
-  one animated, registered, INHERITED custom property on `:root` that every skeleton read through
-  `mask-position`. A registered custom property is a computed value, so changing it invalidated
+  `--skeleton-shimmer-x`, one animated, registered, INHERITED custom property on `:root` that
+  every skeleton read through `mask-position`. A registered custom property is a computed value, so changing it invalidated
   style for the ENTIRE document on every frame and then repainted — fine on the docs site, visibly
-  jerky inside a heavy host application. The animation moved onto each skeleton's own band:
-  `getAnimations()` on the root now reports 0, nine skeletons report nine, and the document-wide
-  invalidation is gone. The trade is that a skeleton mounted mid-cycle starts its own pass instead
+  jerky inside a heavy host application. The animation moved onto each skeleton's own band,
+  animating `mask-position` per element; `--skeleton-shimmer-x` and the `:root` animation that drove
+  it are gone, so anything that referenced it now resolves to nothing. The trade is that a skeleton mounted mid-cycle starts its own pass instead
   of joining the one in flight; the old lock-step was never viewport-anchored anyway, because
   `mask-position` is measured from the host's own box.
 - **A focused row drew TWO rings, and neither was the focus colour.** `ds-list-item`, `ds-tree`,
@@ -105,17 +120,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   measured: `hsl(229 100% 59%)` outside, `hsl(0 75% 49%)` under `[ds-color="error"]`. Override it
   per brand with `--focus-ring-color`.
 - **A selected `ds-list-item` or `ds-tree` node retinted its label and left its icon behind.**
-  Measured on the list: label `rgb(29 67 237)`, icon `rgb(22 26 40)`. On the tree the row set
-  `color` correctly but `.node-icon` declared its own and won, leaving `rgb(107 115 136)` beside an
-  accent label. Both follow the label now, through new
+  On the list the icon stayed on its resting colour beside an accent label; on the tree the row
+  set `color` correctly but `.node-icon` declared its own and won. Both follow the label now,
+  through new
   `--ds-list-item-selected-icon-color` / `--ds-tree-row-selected-icon-color` hooks that default to
   the selected label colour.
 - **`ds-avatar-group` and `ds-button-group` styled their children by tag name, so a host that
   renames the tag got neither.** Both pierced encapsulation with `::ng-deep ds-avatar` /
   `::ng-deep ds-button`. Measured through the custom-element build, where a tag nested inside
   another component's template has to be renamed (angular/angular#24536), all three
-  avatars came back `margin-left: 0` with no ring and the button group lost every flattened
-  radius. They match the direct child now, so the grouping holds whatever the child is rendered
+  avatars came back `margin-left: 0` with no ring, and the joined buttons lost their overlap
+  margin and every flattened radius. They match the direct child now, so the grouping holds whatever the child is rendered
   as. Computed output in an ordinary Angular app is unchanged — verified identical before and
   after.
 
@@ -123,7 +138,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `-gap`, `-radius`, `-row-gap`, `--ds-option-bg-color-active` and `--ds-dropdown-panel-maxh` are read
   on the panel, which the CDK portals outside the component, so they only ever resolved from a global
   declaration: `ds-select { --ds-option-padding: … }` was silently ignored while
-  `ds-select { --ds-option-selected-bg-color: … }` beside it worked, because that one was on the
+  `ds-select { --ds-dropdown-panel-radius: … }` beside it worked, because that one was on the
   forwarded list and these were not. They join the shared list every connected picker forwards, so the
   family behaves one way. `--ds-dropdown-panel-maxh` was also the one token `ds-autocomplete` forwarded
   and its two siblings did not. Nothing moves unless you had written one of these on an element, where
