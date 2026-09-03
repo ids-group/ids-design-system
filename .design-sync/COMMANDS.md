@@ -184,6 +184,12 @@ delete_files { planId, paths }
   leaves the original in place and doubles the file count.
 - `create_project` makes a project the USER owns, which is the only way to get
   delete rights back.
+- **A big `list_files` result is persisted to a file, not inlined** — the harness
+  saves it under the session's `tool-results/` and prints the path. So the
+  structural diff is a SCRIPT over that file, not something to reason about in
+  prose or reconstruct from git history. Two earlier orphan counts were derived
+  from "the committed tree equals the remote" and were over-inclusive by design;
+  the file gives the exact set for a few hundred tokens.
 - `register_assets` is **legacy**. The Design System pane builds its card index
   from each card's first-line `<!-- @dsCard group="…" -->` comment, compiled
   into `_ds_manifest.json`. Only hand-authored projects without those markers
