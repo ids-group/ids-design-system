@@ -323,11 +323,14 @@ function cardsFor(name) {
   const blocks = blocksOf(section.slug);
   const marks = new Set(blocks.map((block) => block.owner).filter(Boolean));
   // Only the chapter's OWN component may claim the unmarked blocks. A part whose chapter marks
-  // nothing for it falls back to one whole-chapter card — giving it a card per block would republish
-  // the parent's demos under a second name, which is the duplication this whole design removes.
+  // nothing for it gets NO card: whatever documents it is already on the chapter's own cards, and a
+  // second copy under the part's name is the duplication this whole design removes. `TimeColumns`
+  // shipped the entire Time Picker chapter — all seven of its blocks — under the name
+  // "Time Columns". Only a chapter that publishes nothing at all falls back to a whole-chapter card.
   const primary = section.slug.startsWith('components/') && section.slug.slice(11) === own;
   const owner = marks.has(own) ? own : (primary ? '' : null);
   const label = spacedName(name);
+  if (owner === null && blocks.length) return [];
   if (owner === null || !blocks.length) {
     return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
   }
@@ -432,7 +435,7 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey }) {
        same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
   <script>window.__dsSectionsOnly = true</script>
   <script src="../../../_ds_bundle.js"></script>
-${owns === null ? '' : `  <script>
+  <script>
     /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
        than the same chapter twice. A block starts at a top-level child carrying \`data-for\` (which
        names the sub-component it belongs to) or at an h3.block-title (which belongs to the
@@ -447,10 +450,13 @@ ${owns === null ? '' : `  <script>
       var KEY = ${JSON.stringify(apiKey)};
       /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
          the title said "Buttons" and the lede described Button, and the card already names itself
-         in its block heading and in the pane's label. The lede rides the chapter's first card. */
+         in its block heading and in the pane's label. The lede rides the chapter's first card.
+         A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
+         slice and nothing repeated — it loses only the eyebrow. */
+      var WHOLE = OWNS === null;
       var OWN_CHAPTER = OWNS === '';
-      var KEEP = OWN_CHAPTER ? (INDEX === 0 ? 'h2, p.lede' : 'h2') : ':not(*)';
-      var DROP_ALWAYS = '.eyebrow' + (OWN_CHAPTER ? '' : ', h2, p.lede');
+      var KEEP = WHOLE ? 'h2, p.lede' : (OWN_CHAPTER ? (INDEX === 0 ? 'h2, p.lede' : 'h2') : ':not(*)');
+      var DROP_ALWAYS = '.eyebrow' + (WHOLE || OWN_CHAPTER ? '' : ', h2, p.lede');
       var API = '[data-key]';
       var host = document.querySelector(${JSON.stringify(tag)});
       var start = Date.now();
@@ -466,6 +472,7 @@ ${owns === null ? '' : `  <script>
         var ordinal = -1;
         for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
           if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
           if (node.matches(KEEP)) continue;
           if (node.matches(API)) { apis.push(node); continue; }
           var marked = node.getAttribute('data-for');
@@ -480,8 +487,10 @@ ${owns === null ? '' : `  <script>
            and then the chapter's table is the only one there is, so it stays. */
         var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
         var keepApi = KEY === null ? [] : (mine.length ? mine : apis.slice(0, 1));
-        for (var a = 0; a < apis.length; a++) {
-          if (keepApi.indexOf(apis[a]) < 0) doomed.push(apis[a]);
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) doomed.push(apis[a]);
+          }
         }
 
         for (var i = 0; i < doomed.length; i++) doomed[i].remove();
@@ -497,7 +506,7 @@ ${owns === null ? '' : `  <script>
       })();
     })();
   </script>
-`}</body></html>
+</body></html>
 `;
 }
 
@@ -763,7 +772,7 @@ writeFileSync(
 
 if (withheld.length) {
   console.log(
-    `· ${withheld.length} component(s) get cards but no contract — src/public-api.ts does not`
+    `· ${withheld.length} component(s) get no contract — src/public-api.ts does not`
       + ` export them: ${withheld.join(', ')}`,
   );
 }

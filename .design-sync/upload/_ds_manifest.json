@@ -651,7 +651,7 @@
     {
       "path": "components/forms-inputs/FieldMessage/Field Message - Messages error, warning, hint.html",
       "group": "forms-inputs",
-      "viewport": "1200x504"
+      "viewport": "1200x503"
     },
     {
       "path": "components/forms-inputs/FieldMessage/Field Message - The glyph on the message line.html",
@@ -977,11 +977,6 @@
       "path": "components/forms-inputs/TimePicker/Time Picker - Validation - reactive forms.html",
       "group": "forms-inputs",
       "viewport": "1200x349"
-    },
-    {
-      "path": "components/forms-inputs/TimeColumns/Time Columns.html",
-      "group": "forms-inputs",
-      "viewport": "1200x700"
     },
     {
       "path": "components/forms-inputs/W3w/W3w - Specimen.html",
@@ -1436,7 +1431,7 @@
     {
       "path": "components/data-display/Table/Table - Dense - zebra.html",
       "group": "data-display",
-      "viewport": "1200x566"
+      "viewport": "1200x585"
     },
     {
       "path": "components/data-display/Table/Table - Pagination - sticky column.html",
@@ -1456,7 +1451,7 @@
     {
       "path": "components/data-display/Table/Table - Clickable rows - drawer detail.html",
       "group": "data-display",
-      "viewport": "1200x655"
+      "viewport": "1200x654"
     },
     {
       "path": "components/data-display/Table/Table - Row actions - kebab menu.html",
@@ -1506,12 +1501,12 @@
     {
       "path": "components/data-display/Table/Table - Column filters.html",
       "group": "data-display",
-      "viewport": "1200x630"
+      "viewport": "1200x629"
     },
     {
       "path": "components/data-display/Table/Table - Truncation - full-text popover.html",
       "group": "data-display",
-      "viewport": "1200x556"
+      "viewport": "1200x554"
     },
     {
       "path": "components/data-display/Table/Table - Sticky horizontal scrollbar.html",
@@ -1521,7 +1516,7 @@
     {
       "path": "components/data-display/Table/Table - CSV export.html",
       "group": "data-display",
-      "viewport": "1200x686"
+      "viewport": "1200x685"
     },
     {
       "path": "components/data-display/Table/Table - Server-side filtering.html",
@@ -2136,7 +2131,7 @@
     {
       "path": "guides/foundations/Surface levels/Surface levels.html",
       "group": "foundations",
-      "viewport": "1200x648"
+      "viewport": "1200x625"
     },
     {
       "path": "guides/foundations/Theming & dark mode/Theming & dark mode - Activation.html",
@@ -2306,7 +2301,7 @@
     {
       "path": "guides/practice/Composition rules/Composition rules.html",
       "group": "practice",
-      "viewport": "1200x446"
+      "viewport": "1200x408"
     },
     {
       "path": "guides/practice/Do & Don't/Do & Don't - Button hierarchy.html",

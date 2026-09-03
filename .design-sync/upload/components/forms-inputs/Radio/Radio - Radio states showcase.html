@@ -38,10 +38,13 @@
       var KEY = "radio";
       /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
          the title said "Buttons" and the lede described Button, and the card already names itself
-         in its block heading and in the pane's label. The lede rides the chapter's first card. */
+         in its block heading and in the pane's label. The lede rides the chapter's first card.
+         A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
+         slice and nothing repeated — it loses only the eyebrow. */
+      var WHOLE = OWNS === null;
       var OWN_CHAPTER = OWNS === '';
-      var KEEP = OWN_CHAPTER ? (INDEX === 0 ? 'h2, p.lede' : 'h2') : ':not(*)';
-      var DROP_ALWAYS = '.eyebrow' + (OWN_CHAPTER ? '' : ', h2, p.lede');
+      var KEEP = WHOLE ? 'h2, p.lede' : (OWN_CHAPTER ? (INDEX === 0 ? 'h2, p.lede' : 'h2') : ':not(*)');
+      var DROP_ALWAYS = '.eyebrow' + (WHOLE || OWN_CHAPTER ? '' : ', h2, p.lede');
       var API = '[data-key]';
       var host = document.querySelector("ds-docs-components-radio");
       var start = Date.now();
@@ -57,6 +60,7 @@
         var ordinal = -1;
         for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
           if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
           if (node.matches(KEEP)) continue;
           if (node.matches(API)) { apis.push(node); continue; }
           var marked = node.getAttribute('data-for');
@@ -71,8 +75,10 @@
            and then the chapter's table is the only one there is, so it stays. */
         var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
         var keepApi = KEY === null ? [] : (mine.length ? mine : apis.slice(0, 1));
-        for (var a = 0; a < apis.length; a++) {
-          if (keepApi.indexOf(apis[a]) < 0) doomed.push(apis[a]);
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) doomed.push(apis[a]);
+          }
         }
 
         for (var i = 0; i < doomed.length; i++) doomed[i].remove();
