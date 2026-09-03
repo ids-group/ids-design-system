@@ -1,7 +1,7 @@
 <meta charset="utf-8">
-<title>Opt-in-шов — 31 КБ и три решения</title>
+<title>Opt-in-шов — платить только за включённое</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/basic-advanced-split-audit.md §9 - docs/packaging-diagnosis.md - .claude/local/seam-probe2">
+<meta name="ds-deck-evidence" content="docs/basic-advanced-split-audit.md §9 - .claude/local/seam-probe2 - абляция ds-table на probe/table-feature-directives">
 <link rel="stylesheet" href="ds.css">
 <link rel="stylesheet" href="deck.css">
 
@@ -9,133 +9,155 @@
   <header class="masthead">
     <div class="chips">
       <span class="chip is-open">нужно 3 вердикта</span>
-      <span class="chip">не зависит от деки 4</span>
+      <span class="chip">не зависит от A3</span>
     </div>
-    <h1>Opt-in-шов — 31 КБ и три решения</h1>
+    <h1>Opt-in-шов — платить только за включённое</h1>
     <p class="lede">
-      <b>Проблема.</b> Код опциональной фичи отгружается, даже если фича выключена. Это
-      <b>удержание</b>, а не размещение, — поэтому ничего здесь не ждёт решения по entry points.
+      <b>Проблема.</b> Код опциональной фичи отгружается, даже когда она выключена. Это
+      <b>удержание</b>, а не размещение — поэтому A3 здесь ни при чём и ждать его не надо.
     </p>
   </header>
 
-  <div class="kpis">
-    <div class="kpi">
-      <span class="n">18,9 КБ</span>
-      <span class="k"><b>№1</b> grid-фичи таблицы → директивы</span>
-    </div>
-    <div class="kpi">
-      <span class="n">11,3 КБ</span>
-      <span class="k"><b>№2</b> строка сообщения у кнопки</span>
-    </div>
-    <div class="kpi">
-      <span class="n">1 055 B</span>
-      <span class="k"><b>№3</b> CSS порталов → opt-in-импорт</span>
-    </div>
-    <div class="kpi">
-      <span class="n is-good">1,6 КБ</span>
-      <span class="k">уже в кармане: dev-варнинги, тот же паттерн</span>
-    </div>
+  <h2>Три куска, которые можно снять</h2>
+
+  <div class="chart">
+    <div class="row"><span class="k"><b>1.</b> grid-фичи таблицы</span>
+      <span class="bar"><span class="seg win" style="width:100%"></span></span><span class="v">18,9 КБ</span></div>
+    <div class="row"><span class="k"><b>2.</b> строка сообщения у кнопки</span>
+      <span class="bar"><span class="seg win" style="width:60%"></span></span><span class="v">11,3 КБ</span></div>
+    <div class="row"><span class="k"><b>3.</b> CSS порталов</span>
+      <span class="bar"><span class="seg warn" style="width:5.6%"></span></span><span class="v">1,1 КБ</span></div>
+    <div class="row"><span class="k">dev-варнинги <small>(уже в кармане)</small></span>
+      <span class="bar"><span class="seg floor" style="width:8.5%"></span></span><span class="v">1,6 КБ</span></div>
   </div>
 
   <h2>Риск один: не съест ли машинерия больше, чем фича даёт</h2>
 
-  <table>
-    <thead>
-      <tr><th>Размер фичи</th><th class="num">Внутри, input off</th><th class="num">За директивой, не импортирована</th><th class="num">Накладные шва</th></tr>
-    </thead>
+  <table class="matrix">
+    <thead><tr><th>Размер фичи</th><th class="opt">внутри,<br /><small>input off</small></th><th class="opt">за директивой,<br /><small>не импортирована</small></th><th class="opt">накладные<br /><small>шва</small></th></tr></thead>
     <tbody>
-      <tr><th>1,6 КБ</th><td class="num">34 592</td><td class="num">33 888</td><td class="num">923</td></tr>
-      <tr><th>5,9 КБ</th><td class="num">38 901</td><td class="num">33 888</td><td class="num">923</td></tr>
+      <tr><th>1,6 КБ</th><td>34 592</td><td class="ok">33 888</td><td>923</td></tr>
+      <tr><th>5,9 КБ</th><td>38 901</td><td class="ok">33 888</td><td>923</td></tr>
     </tbody>
   </table>
 
   <p>
     Колонка «не импортирована» <b>побайтово одинакова</b> при обоих размерах фичи — накладные
-    фиксированы, а возврат растёт 1:1. Для реальной таблицы оценка <b>1–2,5 КБ</b>, то есть шов
+    <b>фиксированы</b>, а возврат растёт 1:1. Для реальной таблицы оценка 1–2,5 КБ, то есть шов
     удерживает <b>~87–95%</b> приза. Обратная сторона: кто фичу <b>использует</b>, платит ~1 КБ больше.
   </p>
 
-  <h2>Решение №1 — форма opt-in для таблицы</h2>
+  <h2>Решение 1 — форма opt-in для таблицы</h2>
 
-  <table>
+  <div class="chart">
+    <div class="row"><span class="k"><code>ds-table</code> сегодня</span>
+      <span class="bar"><span class="seg cost" style="width:100%"></span></span><span class="v">31 428 B</span></div>
+    <div class="row"><span class="k">фичи вынесены</span>
+      <span class="bar"><span class="seg win" style="width:39%"></span></span><span class="v">12 125 B</span></div>
+  </div>
+
+  <p>
+    Удалили ресайз, переупорядочивание + пикер (вместе с <code>@angular/cdk/drag-drop</code>), фильтры
+    по колонкам, CSV-экспорт, сохранение раскладки, truncate + поповер — 1 063 строки.
+    <b>Это пол, а не потолок:</b> row actions и редактирование ячеек остались внутри.
+  </p>
+
+  <table class="matrix">
     <thead>
-      <tr><th></th><th>1a — директивы</th><th>1b — input <code>features</code></th><th>1c — провайдеры</th></tr>
+      <tr><th></th>
+        <th class="opt"><span class="vnum is-pick">a</span><br /><small>директивы</small></th>
+        <th class="opt"><span class="vnum">b</span><br /><small>input features</small></th>
+        <th class="opt"><span class="vnum">c</span><br /><small>провайдеры</small></th></tr>
     </thead>
     <tbody>
-      <tr>
-        <th>Как пишет потребитель</th>
-        <td><code>&lt;ds-table dsResizable dsExport&gt;</code></td>
+      <tr><th>Что пишет потребитель</th>
+        <td><code>&lt;ds-table dsResizable&gt;</code></td>
         <td><code>[features]="[withResize()]"</code></td>
-        <td><code>provideDsTable(withResize())</code></td>
-      </tr>
-      <tr>
-        <th>Скоуп</th>
-        <td class="yes">на экземпляр</td><td class="yes">на экземпляр</td>
-        <td class="no">на роут — <b>две таблицы на странице не смогут отличаться</b></td>
-      </tr>
-      <tr>
-        <th>Ловит неверные комбинации</th>
-        <td class="no">нет</td><td>в рантайме</td><td class="yes">да</td>
-      </tr>
+        <td><code>provideDsTable(withResize())</code></td></tr>
+      <tr><th>Скоуп</th><td class="ok">на экземпляр</td><td class="ok">на экземпляр</td><td class="bad">на роут</td></tr>
+      <tr><th>Две таблицы на странице могут отличаться</th><td class="ok">да</td><td class="ok">да</td><td class="bad">нет</td></tr>
+      <tr><th>Ловит неверные комбинации</th><td class="bad">нет</td><td class="mid">в рантайме</td><td class="ok">да</td></tr>
+      <tr><th>Размер</th><td colspan="3" class="ok" style="text-align:center">одинаковый — всё три tree-shake'ятся</td></tr>
+      <tr><th>Прецедент</th><td>идиома Angular</td><td>TanStack v9</td><td><code>provideRouter()</code></td></tr>
     </tbody>
   </table>
 
   <p>
-    Размер у всех трёх одинаковый — неимпортированная директива, невызванная фабрика и несосланный
-    провайдер равно мертвы. <b>Выбор про эргономику.</b> Грабли общие для всех трёх и неустранимы:
-    привязал фичу, которую не импортировал — получил тишину, без ошибки. У TanStack это лечится
-    сужением типов; в Angular инпуты заданы на классе, так что скопировать нельзя.
+    <b>Выбор про эргономику, не про размер.</b> Грабли общие для всех трёх и неустранимы: привязал
+    фичу, которую не импортировал — получил тишину без ошибки. У TanStack это лечится сужением типов;
+    в Angular инпуты заданы на классе, скопировать нельзя.
   </p>
 
+<pre><code>&lt;!-- прототип: ничего не импортировано, ничего не отгружено --&gt;
+&lt;ds-table [columns]="cols" [data]="rows" /&gt;
+
+&lt;!-- продакшен: фича приезжает вместе с директивой --&gt;
+imports: [DsTable, DsTableResizable, DsTableExport]
+&lt;ds-table dsResizable dsExport [columns]="cols" [data]="rows" /&gt;</code></pre>
+
   <section class="panel verdict">
-    <h3 style="margin-top:0">Рекомендую 1a</h3>
+    <h3 style="margin-top:0">Рекомендую <b>a</b> — директивы</h3>
     <p style="margin-bottom:0">
-      Контроль на экземпляр, идиома самого Angular, естественно читается в шаблоне. <b>1c</b> — если
-      важнее валидация комбинаций и роут-широкий скоуп приемлем.
+      Контроль на экземпляр, идиома самого Angular, естественно читается в шаблоне.
+      <b>c</b> — если важнее валидация комбинаций и роут-широкий скоуп приемлем.
     </p>
   </section>
 
-  <p>
-    <b>Почему реестр, а не «перенести методы».</b> Абляция всё время натыкалась на общие вычисления:
-    <code>clipWidth</code> обслуживает и обрезку, и ресайз; <code>visibleColumns</code> — цепочку, в
-    которую пишет пикер; <code>filteredData</code> сворачивает фильтры в поиск. Один паттерн: таблица
-    владеет производным значением, фича хочет внести в него вклад. Отсюда <code>DsTableLayout</code> —
-    реестр вкладов на экземпляр, и <b>таблица нигде не называет фичу</b>.
-  </p>
+  <section class="panel">
+    <h3 style="margin-top:0">Почему реестр, а не «перенести методы»</h3>
+    <p>
+      Абляция натыкалась на общие вычисления: <code>clipWidth</code> обслуживает и обрезку, и ресайз;
+      <code>visibleColumns</code> — цепочку, в которую пишет пикер; <code>filteredData</code>
+      сворачивает фильтры в поиск. Один паттерн: <b>таблица владеет производным значением, фича хочет
+      внести в него вклад</b>. Отсюда <code>DsTableLayout</code> — реестр вкладов на экземпляр, и
+      таблица <b>нигде не называет фичу</b>.
+    </p>
+    <p style="margin-bottom:0">
+      <b>Два сложных места, известны заранее:</b> директива не может вставить разметку (кнопка фильтра,
+      ручка ресайза, поповер пикера — это разметка, нужны слоты под <code>ng-template</code>), и
+      <code>clipWidth</code> распутывается только после переноса разрешения ширины в шов.
+    </p>
+  </section>
 
-  <p>
-    <b>Два сложных места, известны заранее:</b> директива не может вставить разметку (кнопка фильтра,
-    ручка ресайза, поповер пикера — это разметка, нужны слоты под <code>ng-template</code>), и
-    <code>clipWidth</code> распутывается только после переноса разрешения ширины в шов.
-  </p>
+  <h2>Решение 2 — строка сообщения у кнопки</h2>
 
-  <h2>Решение №2 — строка сообщения у кнопки</h2>
+  <div class="chart">
+    <div class="row"><span class="k">пустое Angular</span>
+      <span class="bar"><span class="seg floor" style="width:48.8%"></span></span><span class="v">30 646</span></div>
+    <div class="row"><span class="k">+ <code>ds-button</code> сегодня</span>
+      <span class="bar"><span class="seg floor" style="width:48.8%"></span><span class="seg cost" style="width:51.2%"></span></span><span class="v">62 733</span></div>
+    <div class="row"><span class="k">+ <code>ds-button</code> без строки</span>
+      <span class="bar"><span class="seg floor" style="width:48.8%"></span><span class="seg win" style="width:33.2%"></span></span><span class="v">51 438</span></div>
+  </div>
 
   <p>
     <code>ButtonComponent</code> тянет <code>FieldMessageComponent</code>, чтобы кнопка могла показать
-    hint/warning/error под собой. <b>11 295 B gzip — 35% цены кнопки</b>, платит каждый, кто рисует
-    хоть одну. <b>Entry points это не чинят:</b> ребро <code>button → field-message</code> статическое.
+    hint/warning/error под собой. <b>11 295 B — 35% цены кнопки</b>, платит каждый, кто рисует хоть
+    одну. <b>Entry points это не чинят:</b> ребро <code>button → field-message</code> статическое.
     Два выхода: выбросить фичу или спрятать за <code>DsButtonMessage</code> — тот же шов.
   </p>
 
-  <h2>Решение №3 — CSS порталов</h2>
+  <h2>Решение 3 — CSS порталов</h2>
 
-  <p>
-    Из глобального листа унести можно <b>только</b> портальную группу (<code>dropdown-overlay</code>,
-    <code>overlay-motion</code>, <code>toast-overlay</code>) — <b>1 055 B</b>. Остальное не двигается:
-    <code>link</code>, <code>page-grid</code>, <code>layout-utils</code> — публичные классы, то есть API;
-    <code>scrollbar</code> стилизует <code>html</code>; <code>skeleton-shimmer</code> держит все
-    скелетоны в такт одной <code>:root</code>-анимацией.
-  </p>
+  <table class="matrix">
+    <thead><tr><th>Партиал</th><th class="opt">gzip</th><th>Можно унести?</th></tr></thead>
+    <tbody>
+      <tr><th><code>link</code>, <code>page-grid</code>, <code>layout-utils</code></th><td>1 029</td><td class="bad">нет — публичные классы, это API</td></tr>
+      <tr><th><code>scrollbar</code></th><td>297</td><td class="bad">невозможно — стилизует <code>html</code></td></tr>
+      <tr><th><code>skeleton-shimmer</code>, <code>surface-motion</code></th><td>399</td><td class="bad">нет — одна <code>:root</code>-анимация на всех</td></tr>
+      <tr class="pick"><th><code>dropdown-overlay</code>, <code>overlay-motion</code>, <code>toast-overlay</code></th><td>1 055</td><td class="ok">только opt-in</td></tr>
+    </tbody>
+  </table>
 
   <p>
     Платит только потребитель <b>без</b> пикеров, тостов и модалок — редкость. <b>Самое мелкое из трёх
     и самое разумное отклонить.</b> Способ AG Grid (CSS внутри кода) отклонён: Angular инжектит стили
-    рантайм-тегами, под строгим CSP + SSR они блокируются, и это бремя падает на каждого потребителя.
+    рантайм-тегами, под SSR + строгим CSP они блокируются, и это бремя падает на каждого потребителя.
   </p>
 
   <p class="src">
-    Замеры шва, абляция таблицы и разбор AG Grid / TanStack — <code>docs/basic-advanced-split-audit.md</code> §9
-    и <code>docs/packaging-diagnosis.md</code>. Фикстура <code>.claude/local/seam-probe2</code>.
+    Абляция §9 — <code>docs/basic-advanced-split-audit.md</code>; накладные шва — фикстура
+    <code>.claude/local/seam-probe2</code>; разбор AG Grid и TanStack —
+    <code>docs/packaging-diagnosis.md</code>.
   </p>
 </main>
