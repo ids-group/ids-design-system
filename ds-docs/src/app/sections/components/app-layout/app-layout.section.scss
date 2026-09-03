@@ -23,3 +23,24 @@
   background: var(--surface-secondary);
   border-bottom: var(--border-width-default) solid var(--border-divider);
 }
+
+/* The footer is normally the last child of the rail, so on its own it has no width and no ground
+   to sit on. These two frames are the rail's own tokens, not numbers. */
+.footer-rails {
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+}
+
+.footer-rail {
+  width: var(--sidenav-w);
+  padding: var(--space-3) var(--space-2);
+  background: var(--surface-secondary);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--radius-lg);
+
+  &--collapsed {
+    width: var(--sidenav-w-collapsed);
+  }
+}

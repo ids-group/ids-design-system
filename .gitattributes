@@ -1,3 +1,14 @@
+# Every text file is stored LF and checked out LF, whatever a contributor sets locally.
+# The five rules below were each added after this bit someone; this line closes the class,
+# because relying on core.autocrlf makes the stored form depend on who ran the commit.
+# Binaries are named explicitly rather than left to content detection.
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.woff2 binary
+*.jpg binary
+*.pdf binary
+
 # Shell scripts must stay LF — CRLF breaks them on the alpine CI runner
 # (`/bin/sh^M: bad interpreter`), regardless of a contributor's core.autocrlf.
 *.sh text eol=lf
@@ -16,3 +27,6 @@ docs/agent/** text eol=lf
 # Pinning eol=lf keeps it LF in the worktree too, so no conversion step is left to
 # double, and the file diffs and merges like every other doc.
 docs/todo.md text eol=lf
+# A whole-file diff hides the real change and buries it in review. An edit that preserves
+# the working copy CRLF can land as a CRLF blob where the history is LF, rewriting every line.
+CHANGELOG.md text eol=lf

@@ -1,23 +1,12 @@
 #!/bin/sh
-# Cut a release from CI: merge dev into main (main is release-only), bump the
-# version, stamp the CHANGELOG, commit, tag, push main, then back-merge main into
-# dev so it carries the bump. It does NOT publish — pushing the vX.Y.Z tag triggers
-# the `tags: v*` pipeline, which publishes and then deploys the docs.
-# Triggered by the custom release-{patch,minor,major,beta} pipelines
-# (Bitbucket UI -> Run pipeline).
+# Cut a release: merge dev into main, bump, stamp the CHANGELOG, commit, tag, push main, then
+# back-merge main into dev. It does NOT publish — the pushed vX.Y.Z tag does, via `tags: v*`.
 #
-# Local `npm run release:*` is the equivalent fallback: same bump+tag, then the
-# same v* pipeline publishes the pushed tag.
+# Needs RELEASE_TOKEN (repository:write). `## Unreleased` must be filled first; the preversion
+# preflight fails the pipeline early otherwise.
 #
-# Secured repository variable required:
-#   RELEASE_TOKEN — Bitbucket Repository Access Token (repository:write) to push
-#                   the bump commit + tag back to main.
-#
-# Fill the `## Unreleased` CHANGELOG section before running; preflight (the
-# preversion hook) fails the pipeline early otherwise.
-#
-# No bun install or build here: `npm version` and its node-only hooks (preflight,
-# changelog stamp) need just git + node, both already in the image (+ apk git).
+# It installs because one of preflight's gates compiles the Sass to read colour roles out of the
+# compiled CSS.
 set -e
 
 level="$1"
@@ -30,12 +19,10 @@ cd "$(dirname "$0")/../.."
 
 [ -n "$RELEASE_TOKEN" ] || { echo "cut-release: RELEASE_TOKEN is not set."; exit 1; }
 
-# The node:22-alpine image ships without git; this script (and the preversion
-# preflight) need it to commit, tag, and push.
+# The image ships without git.
 command -v git > /dev/null || apk add --no-cache git > /dev/null
 
-# Bitbucket checks out a detached HEAD at the triggering commit; move onto main so
-# the bump commit and tag land on the branch and can be pushed.
+# Bitbucket checks out a detached HEAD, so the bump commit would land on no branch.
 git config user.name "${RELEASE_GIT_NAME:-IDS Release Bot}"
 git config user.email "${RELEASE_GIT_EMAIL:-ci@ids-group.co.uk}"
 git remote set-url origin "https://x-token-auth:${RELEASE_TOKEN}@bitbucket.org/itband/ids-design-system.git"
@@ -53,19 +40,28 @@ else
 fi
 git checkout -B main origin/main
 
-# Fold dev's work (incl. the ## Unreleased notes + migrations/unreleased.json) into
-# main before bumping — this merge IS the release. --no-ff because main is normally a
-# strict ancestor of dev, so a default merge would fast-forward and leave no release
-# boundary in main's history. A conflict means dev must be reconciled first, so fail
-# rather than guess.
+# This merge IS the release. --no-ff because main is normally a strict ancestor of dev, so a
+# default merge would fast-forward and leave no release boundary in main's history.
 git merge --no-edit --no-ff origin/dev || {
   git merge --abort 2>/dev/null || true
   echo "cut-release: merge of origin/dev into main conflicts — resolve on dev first."
   exit 1
 }
 
-# Bump: runs the preversion preflight (branch/clean/ancestor/changelog) + the
-# version hook (CHANGELOG stamp + migration promote + git add) + commit + tag.
+. infrastructure/scripts/_setup.sh
+setup_bun
+install_deps
+
+# The upload tree is committed, so the tag needs one. This build runs BEFORE the bump, because
+# preflight refuses to bump a dirty tree and everything build:elements writes is gitignored —
+# which means the bundle it produces is stamped with the OUTGOING version. after-release rebuilds
+# and commits the corrected tree; moving this into the version hook instead would put a full
+# Angular build inside `npm version`.
+echo "cut-release: rebuilding the Claude Design bundle for the release commit..."
+node .design-sync/tools/bootstrap.mjs
+CI=true npm run build:elements
+
+# Runs preflight, then the version hook (tools/prepare-release-commit.mjs), then commit + tag.
 if [ "$level" = "beta" ]; then
   npm version prerelease --preid=beta -m "release: %s"
 else
@@ -76,9 +72,8 @@ new_version=$(node -p "require('./package.json').version")
 echo "cut-release: tagged $new_version — pushing main + tag (the v* pipeline publishes + deploys docs)..."
 git push origin main --follow-tags
 
-# Back-sync dev with the bump commit (new version, emptied ## Unreleased, promoted
-# migration) so the next release doesn't re-emit the same notes. The release already
-# published; a conflict here is fix-forward on dev, not a rollback.
+# Back-sync dev so the next release does not re-emit the same notes. A conflict here is
+# fix-forward on dev: the release has already published.
 git checkout -B dev origin/dev
 git merge --no-edit --no-ff main || {
   git merge --abort 2>/dev/null || true

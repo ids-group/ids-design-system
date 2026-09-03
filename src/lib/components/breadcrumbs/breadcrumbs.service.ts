@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, type Signal, signal } from '@angular/core';
 import type { BreadcrumbItem } from './breadcrumbs.types';
 
 /**
@@ -9,7 +9,7 @@ import type { BreadcrumbItem } from './breadcrumbs.types';
 @Injectable({ providedIn: 'root' })
 export class BreadcrumbsService {
   private readonly _items = signal<BreadcrumbItem[]>([]);
-  readonly items = this._items.asReadonly();
+  readonly items: Signal<BreadcrumbItem[]> = this._items.asReadonly();
 
   set(items: BreadcrumbItem[]): void {
     this._items.set(items);

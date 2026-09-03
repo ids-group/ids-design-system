@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 
 :host {
@@ -7,6 +8,7 @@
   --_tree-row-hover-bg-color: var(--ds-tree-row-hover-bg-color, var(--surface-secondary));
   --_tree-row-selected-bg-color: var(--ds-tree-row-selected-bg-color, var(--accent-surface-tint));
   --_tree-row-selected-text-color: var(--ds-tree-row-selected-text-color, var(--accent-strong));
+  --_tree-row-selected-icon-color: var(--ds-tree-row-selected-icon-color, var(--_tree-row-selected-text-color));
   --_tree-row-text-color: var(--ds-tree-row-text-color, var(--text-primary));
   --_tree-caret-icon-color: var(--ds-tree-caret-icon-color, var(--text-tertiary));
 
@@ -40,8 +42,7 @@
   }
 
   &:focus-visible {
-    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
-    outline-offset: calc(-1 * var(--border-width-strong));
+    @include focus.outline-indicator(calc(-1 * var(--border-width-strong)));
   }
 
   &:disabled {
@@ -69,6 +70,12 @@
 .node-icon {
   flex: none;
   color: var(--icon-default, var(--text-secondary));
+}
+
+// `.row.selected` sets `color` on the row and it would cascade, but the rule above declares
+// its own and wins — so without this the label goes accent and the icon stays grey.
+.row.selected .node-icon {
+  color: var(--_tree-row-selected-icon-color);
 }
 
 .label {

@@ -3,7 +3,7 @@ category: Overlays
 ---
 Light surface overlay panel — port of `ds-popover`. This binding is the PANEL only: the trigger button is yours (bind `aria-haspopup`/`aria-expanded` on it and toggle `open`). The panel renders INLINE inside the host (no portal), so it flows where you place it rather than floating over the page.
 
-- `open` defaults to **true** — a Popover with no trigger wiring renders visible out of the box. Toggle it from your trigger for show/hide.
+- `staticPreview` renders the panel in flow, which is how a static card shows one. There is no `open` prop: in the app a trigger opens the real CDK overlay, and an overlay is portaled to `body` rather than rendered in place.
 - `placement`: `'top' | 'bottom' | 'left' | 'right'` (default `'bottom'`) — with `arrow: true` it sets the caret side via `data-placement`. Without `arrow` it has no inline effect.
 - `arrow: true` renders the small caret pointing at the trigger.
 - `panelRole="dialog"` + `panelLabel` for interactive popovers (forms, filter panels); leave `panelRole` unset for plain text content.
@@ -11,7 +11,7 @@ Light surface overlay panel — port of `ds-popover`. This binding is the PANEL 
 - A `Menu` child automatically loses its own border and the panel's padding (DS CSS), so `Popover > Menu > MenuItem` composes without double frames.
 
 ```tsx
-<Popover arrow placement="bottom" panelRole="dialog" panelLabel="Delay reason" open={open}>
+<Popover arrow placement="bottom" panelRole="dialog" panelLabel="Delay reason" staticPreview>
   <p>Trailer MAN-4419 held at Dover — customs check.</p>
 </Popover>
 ```

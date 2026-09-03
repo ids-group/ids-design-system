@@ -40,13 +40,12 @@
 - IconButton renders `variant`/`size` class parts unconditionally (unlike Button which omits defaults) — per the Angular sources.
 - Search is flat standalone markup, NOT an Input composition.
 
-## Preview conventions (folded from Wave 1 learnings)
-- Keep a story's natural height under ~650px (default 900×700 story viewport) or request a viewport override.
+## Static-specimen conventions
+The card is the ds-docs section now, so the per-story capture rules these were written for are gone.
+What survives is about the components themselves:
 - Glue text inherits `--font-sans` from the bundle's `html, body` rule; the bundle also ships docs typography utilities (`.t-overline`, `.t-h5`, `.t-s`, `.link`) — safe for realistic compositions.
-- StatusDot/Badge colour variety in previews: set `--ds-status-dot-color` / `--ds-badge-bg-color` inline on a wrapper (no `[data-status]` CSS is shipped by design).
-- Remote image URLs are blocked in capture; skip `imageUrl`-type stories (initials/fallback states cover visuals).
-- Animations (spinner, progress indeterminate, shimmer) freeze at a frame in capture — expected, gradeable.
-- SplitButton's open menu flows beside the control (`ds-popover` is `display:contents`) — fully visible, no card override needed.
+- StatusDot/Badge colour variety: set `--ds-status-dot-color` / `--ds-badge-bg-color` inline on a wrapper (no `[data-status]` CSS is shipped by design).
+- SplitButton's open menu flows beside the control (`ds-popover` is `display:contents`) — fully visible, no override needed.
 
 ## Upstream findings (report to DS maintainers someday)
 - Stat: `variant="error"` never recolours `.value` — `:host(.error) .value` ties on specificity with the later `.stat .value` rule and loses on source order (stat.component.scss:19). Port is parity.
@@ -100,9 +99,7 @@
 - `react-bindings/package.json` restates the DS's `name`/`version`; the parity gate fails when they diverge from the root `package.json`. A release bump has to touch both.
 - The 5-component calibration batch was first uploaded under `components/general/` and later regrouped — stale paths already deleted remotely; close-out reconciliation re-checks.
 
-## Known render warns (triaged legitimate)
-- `[RENDER_THIN] ModalCard, ModalConfirm` — their preview roots use the DS's `.modal-static` `display:contents` branch, so root offsetHeight is 0 by construction; the cards render fully (verified on sheets 2026-07-25). False positive of the height heuristic.
-- `[RENDER_THIN] AccordionItem` — derived card is a single collapsed accordion row (~40px), legitimately short.
+## Known warns (triaged legitimate)
 - `[TOKENS_MISSING] --error-strong, --success-strong, --warning-strong, --icon-disabled, --border-error` — upstream token gaps in the DS itself: the `[ds-color]` zone map in `_ds-color.scss` references `--<family>-strong` for status families that never define it, and `accordion-item.component.scss` uses `--icon-disabled` which nothing defines. Present in the production docs CSS too. Report upstream someday; not a sync defect.
 
 ## First-sync progress log

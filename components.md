@@ -306,7 +306,7 @@ Content slots: default (body text), `[actions]` (trailing CTAs)
 
 #### `<ds-alert>` — `AlertComponent`
 Inline message, `ds-banner`'s smaller twin — same anatomy, sized for placement inside a form or a card rather than across a page.
-Inputs: `variant: 'info' | 'success' | 'warning' | 'error' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
+Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
 Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 
@@ -584,16 +584,24 @@ this.crumbs.clear();
 #### `ToastService`
 `@Injectable({ providedIn: 'root' })`. Inject and call:
 - `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error' | 'loading', dismissible?, icon?, action?: ToastAction, durationMs? = 5000 }`. Returns `{ id, dismiss() }`. `durationMs: 0` (and any negative) means it never auto-dismisses, and it is counted from the moment the toast becomes VISIBLE, not from the call — a toast queued behind `maxVisible` keeps its full time on screen. A `loading` toast is forced to 0 and discards a supplied `durationMs`.
-- `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a non-dismissible `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), which cannot be overridden and which `dismissAll()` does not cancel.
+- `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), counted from the moment it becomes visible and not overridable; `dismissAll()` cancels it like any other.
 - `dismissAll(): void`
 
-Defaults are set with two injection tokens, NOT through `provideDsConfig`:
-- `DS_TOAST_CONFIG` — `{ maxVisible?: number }`. Unset or `0` means unlimited; extras queue and appear as earlier ones dismiss.
-- `DS_TOAST_POSITION` — `{ horizontalPosition?: 'left' | 'center' | 'right', verticalPosition?: 'top' | 'bottom', offset?: string }`. Defaults to `right` / `top` / `var(--space-6)`.
+Defaults come from `provideDsConfig({ toast: … })`:
+- `maxVisible?: number` — cap on concurrently visible toasts. Default `5`; `0` means unlimited. Extras queue and appear as earlier ones dismiss.
+- `position?: { horizontalPosition?: 'left' | 'center' | 'right', verticalPosition?: 'top' | 'bottom', offset?: string }` — merged field by field over `right` / `top` / `var(--space-6)`, so naming one key keeps the other two.
 
-Both resolve **once, at the root injector**, when the service is first used. Providing either on a `Route` or a component has no effect, and the position cannot change after the first `show()`.
+The `toast` section resolves **once, at the root injector**, when the service is first used — unlike every other section, which a `Route` or a component can narrow. `ToastService` is `providedIn: 'root'`, so a route-level `provideDsConfig` never reaches it, and the position cannot change after the first `show()`.
 
 On first `show()` the service lazily creates a CDK overlay and mounts a `<ds-toast-region>` into it. **Do not place `<ds-toast-region>` yourself** — the service only ever talks to the instance it created, so a hand-placed one is an invisible empty box that never receives a toast, with no warning. It appears in the generated API table only because the extractor lists every exported component.
+
+#### `BodyScrollLockService`
+
+`@Injectable({ providedIn: 'root' })`. Ref-counted lock on `document.body` scroll, shared by every overlay that covers the viewport — `ds-modal`, `ds-drawer`, `ds-bottom-sheet` all take one. Exported since 0.7.0 so a consumer's own full-screen overlay can participate in the same lock instead of fighting it.
+- `lock(): void` — the FIRST call saves the current `body` overflow and hides it.
+- `unlock(): void` — only the LAST one restores it, so closing one overlay cannot re-enable page scroll under another still open above it.
+
+Calls must be paired: one `unlock()` per `lock()`. An unmatched `unlock()` is a no-op rather than an error, so a leaked `lock()` leaves the page unscrollable with nothing to show why.
 
 ---
 

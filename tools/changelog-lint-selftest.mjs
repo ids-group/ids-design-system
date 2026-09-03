@@ -280,6 +280,23 @@ try {
     );
   }
 
+  // C012, the repeat half — a section opened twice ranks EQUAL, so the order test cannot see it.
+  const REPEATED_SECTION =
+    '# Fixture\n\n## Unreleased\n\n### Fixed\n\n- **A.** x\n\n### Fixed\n\n- **B.** y\n';
+  // 0.9.0's real shape: two breaking headings, one slot, both deliberate.
+  const TWO_BREAKING_HALVES =
+    '# Fixture\n\n## 0.9.0 — 2026-01-01\n\n### Changed (breaking, behaviour)\n\n- **A.** x\n\n### Changed (breaking, visual)\n\n- **B.** y\n';
+
+  writeFileSync(FIXTURE_PATH, REPEATED_SECTION);
+  const repeatCaught = run(FIXTURE).includes('  C012  ');
+  console.log(`${repeatCaught ? 'fires ' : 'DEAD  '} C012 on a section opened twice`);
+  if (!repeatCaught) dead.push('C012 repeat');
+
+  writeFileSync(FIXTURE_PATH, TWO_BREAKING_HALVES);
+  const halvesQuiet = !run(FIXTURE).includes('  C012  ');
+  console.log(`${halvesQuiet ? 'quiet ' : 'FALSE+'} C012 on two breaking halves in one slot`);
+  if (!halvesQuiet) dead.push('C012 false positive on the split breaking half');
+
   // C014 — an entry announcing that we repaired one of our own files. Three releases in a row
   // shipped one before the rule existed.
   const OUR_RECORD_ENTRY =
@@ -315,6 +332,14 @@ try {
   const realQuiet = !run(FIXTURE).includes('  C013  ');
   console.log(`${realQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol that resolves`);
   if (!realQuiet) dead.push('C013 false positive on a real symbol');
+
+  // Announcing a removal is the one entry that MUST name a symbol nothing declares.
+  const REMOVED =
+    '# Fixture\n\n## Unreleased\n\n### Breaking\n\n- **A.** The `DsToastConfig` interface is removed with its token.\n';
+  writeFileSync(FIXTURE_PATH, REMOVED);
+  const removalQuiet = !run(FIXTURE).includes('  C013  ');
+  console.log(`${removalQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol the entry says was removed`);
+  if (!removalQuiet) dead.push('C013 false positive on an announced removal');
 
   // C012 — the section order, which arrived wrong twice in two days before anything checked it.
   const WRONG_ORDER =

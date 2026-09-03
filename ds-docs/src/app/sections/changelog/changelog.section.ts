@@ -4,6 +4,20 @@ import { marked } from 'marked';
 import { DocsSectionComponent } from '../../shared/docs-section.component';
 import { DS_VERSION } from '../../shared/docs-stats';
 
+/**
+ * The cut EMPTIES `## Unreleased` rather than deleting it (`cut-release.sh`), and
+ * the docs deploy from the release — so on a published site that heading is
+ * always there and always bare. Notes accumulate under it on `dev`, which this
+ * page never renders. Drop the section only when it has nothing under it, so a
+ * docs build taken from `dev` still shows work in progress.
+ */
+function dropEmptyUnreleased(markdown: string): string {
+  return markdown.replace(
+    /^## Unreleased[^\S\n]*\n(?:[^\S\n]*\n)*(?=^## |(?![\s\S]))/m,
+    '',
+  );
+}
+
 @Component({
   selector: 'section-changelog',
   standalone: true,
@@ -62,7 +76,7 @@ export class ChangelogSection {
     // version is exactly the right key.
     fetch(new URL(`CHANGELOG.md?v=${DS_VERSION}`, document.baseURI))
       .then((response) => response.text())
-      .then((markdown) => Promise.resolve(marked.parse(markdown)))
+      .then((markdown) => Promise.resolve(marked.parse(dropEmptyUnreleased(markdown))))
       .then((rendered) => this.html.set(rendered))
       .catch(() => this.html.set('<p>Changelog is currently unavailable.</p>'));
   }

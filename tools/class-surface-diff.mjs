@@ -54,10 +54,22 @@ function show(ref, path) {
 // `readonly x = this.y.z` and every literal, and those collide in a subclass just the
 // same. `readonly` is illegal in an object literal, so class depth plus the keyword
 // is enough to be sure this is a member.
+// `readonly` is NOT required: a plain `private hovered = false` collides in a subclass exactly as
+// an annotated one does. Widening it is only safe because the scan is bounded to the class BODY —
+// see classBody() — so the module-level function bodies that share this indentation are out of
+// range before the pattern ever runs.
 const FIELD =
-  /^ {2}((?:protected |public |private )?)readonly (\w+)(\s*:[^=\n]+)? = /gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*:[^=\n]+)? = /gm;
+// A field can also be DECLARED and never assigned — `announceTimer: number | undefined;`. It
+// collides in a subclass like any other, and FIELD cannot see it because it requires an `=`.
+// Only safe inside the bounded class body, where a bare `name: Type;` is a declaration and
+// nothing else.
+const DECLARED_FIELD =
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*[?!]?\s*:[^=;\n]+)?;$/gm;
+// `get ` is matched here rather than in FIELD: a getter is a member and collides like one, and
+// `get name(` never matched `name(` because of the space.
 const METHOD =
-  /^ {2}((?:protected |public |private )?)(?:override )?(?:async )?(\w+)\(/gm;
+  /^ {2}((?:protected |public |private )?)(?:override )?(?:async )?(?:get |set )?(\w+)\(/gm;
 const NOT_A_MEMBER = new Set([
   'constructor',
   'if',
@@ -73,10 +85,71 @@ const FIRST_CLASS = /^export (?:abstract )?class /m;
 // text would flood the changed-types report, so those members stay name-only.
 const TYPE_BEARING_INIT = /^(?:input|model|output)(?:\.required)?[<(]/;
 
+// A comment sits INSIDE the captured statement — `statementText` runs to the closing `;` and an
+// `input()` options object routinely carries one — so editing one reads as a type change and sends
+// the release gate looking for a migration entry that would describe nothing. Must run before
+// whitespace is collapsed: that is what removes the newline ending a `//`.
+//
+// A `/` is read as a regex only where a value may start. A wrong guess there can hide a difference,
+// never invent one, so this errs toward reporting a change.
+function stripComments(text) {
+  const VALUE_MAY_START = /[([{,;:=!?&|+\-*%~^<>]$/;
+  let out = '';
+  let i = 0;
+  while (i < text.length) {
+    const char = text[i];
+    if (char === '/' && text[i + 1] === '/') {
+      while (i < text.length && text[i] !== '\n') i++;
+      continue;
+    }
+    if (char === '/' && text[i + 1] === '*') {
+      i += 2;
+      while (i < text.length && !(text[i] === '*' && text[i + 1] === '/')) i++;
+      i += 2;
+      out += ' ';
+      continue;
+    }
+    if (char === "'" || char === '"' || char === '`') {
+      out += char;
+      for (i++; i < text.length; i++) {
+        out += text[i];
+        if (text[i] === '\\' && i + 1 < text.length) {
+          out += text[++i];
+          continue;
+        }
+        if (text[i] === char) {
+          i++;
+          break;
+        }
+      }
+      continue;
+    }
+    const preceding = out.trimEnd();
+    if (char === '/' && (preceding === '' || VALUE_MAY_START.test(preceding))) {
+      out += char;
+      for (i++; i < text.length; i++) {
+        out += text[i];
+        if (text[i] === '\\' && i + 1 < text.length) {
+          out += text[++i];
+          continue;
+        }
+        if (text[i] === '/' || text[i] === '\n') {
+          i++;
+          break;
+        }
+      }
+      continue;
+    }
+    out += char;
+    i++;
+  }
+  return out;
+}
+
 // Whitespace inside brackets is collapsed too — a prettier rewrap of an unchanged
 // declaration (`input<\n  readonly RegExp[]…`) must not read as a type change.
 const normalize = (text) =>
-  text
+  stripComments(text)
     .replace(/\s+/g, ' ')
     .replace(/([<([{]) /g, '$1')
     .replace(/ ([>)\]},;])/g, '$1')
@@ -108,13 +181,31 @@ function blockText(source, openBraceIndex) {
   return source.slice(openBraceIndex + 1);
 }
 
+// Two-space depth means "class member" only inside a class body. Slicing from the class and
+// running to end of file left every module-level function AFTER it in range, which is what forced
+// FIELD to demand `readonly` as a proxy for "this is a member". The class ends at the first brace
+// back at column 0, which prettier guarantees here.
+//
+// Comments go, and template literals are blanked to spaces of the same length: a commented-out or
+// quoted declaration would otherwise read as a member, and a false positive blocks a release cut.
+// Same length, because statementText() reads offsets into this string.
+function classBody(source) {
+  const classStart = source.search(FIRST_CLASS);
+  if (classStart === -1) return null;
+  const body = source.slice(classStart);
+  const end = body.search(/^\}/m);
+  const bounded = end === -1 ? body : body.slice(0, end);
+
+  return stripComments(bounded).replace(
+    /`(?:[^`\\]|\\.)*`/g,
+    (literal) => literal.replace(/[^\n]/g, ' '),
+  );
+}
+
 function classSurface(source) {
   if (source === null) return null;
-  // Two-space depth means "class member" only inside a class — a module-level
-  // function body has the same indentation, and its calls are not members.
-  const classStart = source.search(FIRST_CLASS);
-  if (classStart === -1) return { names: new Set(), heads: new Map() };
-  source = source.slice(classStart);
+  source = classBody(source);
+  if (source === null) return { names: new Set(), heads: new Map() };
 
   const names = new Set();
   const heads = new Map();
@@ -128,6 +219,13 @@ function classSurface(source) {
     if (annotation || TYPE_BEARING_INIT.test(initializer)) {
       heads.set(name, normalize(`${annotation ?? ''} = ${initializer}`));
     }
+  }
+  for (const match of source.matchAll(DECLARED_FIELD)) {
+    const [, , name] = match;
+    if (NOT_A_MEMBER.has(name)) continue;
+    // Name only: an unassigned field carries no initializer to compare, and its annotation
+    // churns with implementation like every other non-input type.
+    names.add(name);
   }
   for (const match of source.matchAll(METHOD)) {
     const [, visibility, name] = match;

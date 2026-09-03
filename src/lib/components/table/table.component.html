@@ -22,7 +22,7 @@
 <ds-loading-overlay
   [loading]="isOverlayLoading()"
   [blur]="true"
-  [insetTop]="'var(--ds-table-head-h, 40px)'"
+  [insetTop]="'var(--ds-table-head-h, var(--_table-head-h, 40px))'"
   [inertContent]="false"
 >
   <div
@@ -53,7 +53,7 @@
         </caption>
       }
 
-      <thead>
+      <thead #tableHead>
         <tr>
           @if (selectable()) {
             <th

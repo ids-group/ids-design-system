@@ -8,37 +8,267 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.11.4 — 2026-09-03
+
+### Breaking
+
+- **`ds-banner` and `ds-alert` no longer announce themselves unless asked.** Both applied `role` and
+  `aria-live` unconditionally, and an `alert` region fires on INSERTION — so a static "maintenance on
+  Sunday" strip interrupted a screen reader on every client-side route into the page. MDN says it
+  outright: do not use `alert` on content the user has not interacted with. Measured on this site's own
+  pages: 12 assertive regions before, 0 now. Pass `[announce]="true"` for a banner the app raises in
+  response to an event; for anything transient use `ToastService`, which owns a region built for it.
+
+- **`<ds-toast>`'s `message` input is now `body`**, matching `ToastOptions.body` and `ToastEntry.body`.
+  One concept had three spellings across the family; `body` wins because it is the one every consumer
+  already passes to the service.
+
+- **Five toast border tokens gain the `-color` the rest of the library uses**:
+  `--ds-toast-border` → `--ds-toast-border-color`, and the four variant suffixes with it. They are
+  colours, and they were the last holdouts of the old naming.
+
+- **`maxVisible` defaults to 5 instead of unlimited.** An uncapped stack was more permissive than any
+  system this component is measured against — Material shows one snackbar and dismisses the previous,
+  Carbon and Halstack stack but expect a ceiling. `provideDsConfig({ toast: { maxVisible: n } })` still sets it, and `0` still means
+  no cap; a configured `0` is now forwarded rather than skipped, since it is the only way left to ask
+  for one.
+
+- **A screen reader was told nothing about a toast, for three of the five variants.** `aria-live` sat
+  on each toast, and a live region has to exist in the DOM *before* its text arrives — a node created
+  with its message already inside it is the one case NVDA and JAWS reliably do not announce. The
+  region host was `role="region"`, a landmark, not a live region. Announcements now go through the CDK
+  `LiveAnnouncer`, whose region is built once at service construction and only has its text replaced.
+  `error` and `warning` announce assertively, the rest politely. WCAG 2.2 SC 4.1.3.
+
+  A burst is coalesced into one announcement rather than queued, and that is forced rather than
+  chosen: `announce()` clears its region synchronously and writes on a 120ms timeout, resolving its
+  promise inside that callback — so even a strictly serialised chain loses all but the last message.
+  Measured: five announcements each landed and were cleared again in the same millisecond.
+
+  A `<ds-toast>` you place yourself is now silent to a reader. It is a specimen, not an event; use
+  `ToastService` for anything that should be announced.
+
+- **Toast defaults move into `provideDsConfig`, and the two toast tokens are gone.**
+  `DS_TOAST_CONFIG` and `DS_TOAST_POSITION` were the only configuration in the library that did not
+  go through `DsConfig` — thirteen other areas already did — so an app set everything in one call and
+  then remembered two bare `InjectionToken` providers for toasts. They are now
+  `provideDsConfig({ toast: { maxVisible, position } })`, and the `DsToastConfig` interface is
+  removed with its token.
+  `position` is PARTIAL and merged field by field over `right` / `top` / `var(--space-6)`: the old
+  token's type required all three fields, so moving the stack to the bottom meant restating the other
+  two. `DS_TOAST_POSITION_DEFAULT` is unchanged and still exported. One caveat, and it is not new:
+  `ToastService` is `providedIn: 'root'`, so the `toast` section resolves only at the root injector —
+  a route-level `provideDsConfig` cannot narrow it, unlike every other section.
+
 ### Changed
 
-- **The banner and toast icon now centres on the message block**, where it used to align to the first
-  line of text. The two rules agree on a one-line message — which is most toasts — and diverge as the
-  text grows: the icon sat 12px above the block centre at two lines and 21px at three. Measured after
-  the change: 0px on all twelve banner shapes and all eight toast shapes.
+- **Toast and table class internals moved again — only matters if you SUBCLASS one of them.**
+  Every name here is a `private` or `protected` internal, not public API and not a signal, but
+  `private` collides with TS2415 exactly as a public name does, so a member of yours sharing one
+  still stops the build. `ToastComponent` **lost `role`** — the component no longer sets one, so
+  an `override role` overrides nothing. `ToastRegionComponent` gained `leaveTimers`,
+  `slideNeighbours`, `toastNodes`, `measureTops` and `leaveDuration`, and **renamed
+  `promoteFromQueue` to `drainQueue`**; an override of the old name now runs never, so move it.
+  `ToastService` gained `announcer`, `pendingAnnouncements`, `pendingAssertive`, `announceTimer`,
+  `scrimWatcher`, `announce` and `keepAboveScrims`, and **lost `position`** with the token it
+  read. `TableComponent` gained `eventsAtExport`,
+  `eventMessages`, `tableHead`, `hostElement` and `announceExport`; its inputs, outputs, models
+  and exported types are unchanged. `BannerComponent` and `AlertComponent` each gained
+  `announce`, and their `ariaRole` and `ariaLive` now return `null` as well — a subclass that
+  narrowed either type back, or code that assumed the getter is never null, stops compiling.
+  The compiler enumerates every collision, so building after the upgrade is the whole check.
+
+- **The stack no longer jumps when a toast is added.** Its neighbours are put back where they were
+  with a `transform` and released, so the re-stack runs on the compositor instead of the browser
+  moving them all in one frame. Two new tokens tune it: `--ds-toast-shift-duration` (default
+  `--duration-fast`) and `--ds-toast-shift-easing`. A dismissal keeps its own, longer timing — a
+  re-stack and a leave are different motions.
+
+### Fixed
+
+- **A click between a boolean control and its label hit nothing.** `ds-radio`, `ds-checkbox` and
+  `ds-switch` set the space between control and label with a flex `gap`, which belongs to neither
+  box — so the 8px strip between them swallowed the click instead of toggling. That space is now
+  padding on the label, which extends its clickable box across the strip: the target grows from
+  18px to 26px tall while the text's start position and the row height stay put. No API or token
+  change.
+
+- **`ds-table`'s bulk-actions bar rendered its buttons invisible.** The bar is an inverted
+  surface, and its buttons were coloured through a bare `.button` rule that stopped applying once
+  the button became `ds-button` — which takes its label from `--ds-button-label-color` and ignores
+  inherited `color`, so the label sat on the bar's own colour and disappeared. The bar now sets
+  ds-button's public tokens for an inverted surface: label to `--text-inverted`, background to
+  `transparent`, and hover and active backgrounds to `--surface-inverted-hover`. No new token —
+  these are ds-button's existing hooks.
+
+- **The skeleton shimmer stepped instead of sweeping, on any page but a light one.** The travel was
+  `--skeleton-shimmer-x`, one animated, registered, INHERITED custom property on `:root` that
+  every skeleton read through `mask-position`. A registered custom property is a computed value, so changing it invalidated
+  style for the ENTIRE document on every frame and then repainted — fine on the docs site, visibly
+  jerky inside a heavy host application. The animation moved onto each skeleton's own band,
+  animating `mask-position` per element; `--skeleton-shimmer-x` and the `:root` animation that drove
+  it are gone, so anything that referenced it now resolves to nothing. The trade is that a skeleton mounted mid-cycle starts its own pass instead
+  of joining the one in flight; the old lock-step was never viewport-anchored anyway, because
+  `mask-position` is measured from the host's own box.
+- **A focused row drew TWO rings, and neither was the focus colour.** `ds-list-item`, `ds-tree`,
+  `ds-tag`, `ds-description-list` and `ds-color-picker` each drew their own `outline` on
+  `:focus-visible` while the blanket `:where(:focus-visible)` shadow kept painting under it — an
+  accent halo outside, their own outline inside. Worse, that outline asked for
+  `--focus-ring-color`, which **nothing defined**, so all seven call sites fell through to
+  `currentColor` and ringed themselves in their own text colour: near-black on a list row, grey on
+  a tree node. The token is defined now, from the same hue channels as the ring's outer halo, and
+  the seven sites share a `focus.outline-indicator` mixin that silences the shadow. The colour is
+  `--accent`, so it is the brand hue by default and the family's hue inside a `ds-color` zone —
+  measured: `hsl(229 100% 59%)` outside, `hsl(0 75% 49%)` under `[ds-color="error"]`. Override it
+  per brand with `--focus-ring-color`.
+- **A selected `ds-list-item` or `ds-tree` node retinted its label and left its icon behind.**
+  On the list the icon stayed on its resting colour beside an accent label; on the tree the row
+  set `color` correctly but `.node-icon` declared its own and won. Both follow the label now,
+  through new
+  `--ds-list-item-selected-icon-color` / `--ds-tree-row-selected-icon-color` hooks that default to
+  the selected label colour.
+- **`ds-avatar-group` and `ds-button-group` styled their children by tag name, so a host that
+  renames the tag got neither.** Both pierced encapsulation with `::ng-deep ds-avatar` /
+  `::ng-deep ds-button`. Measured through the custom-element build, where a tag nested inside
+  another component's template has to be renamed (angular/angular#24536), all three
+  avatars came back `margin-left: 0` with no ring, and the joined buttons lost their overlap
+  margin and every flattened radius. They match the direct child now, so the grouping holds whatever the child is rendered
+  as. Computed output in an ordinary Angular app is unchanged — verified identical before and
+  after.
+
+- **Six connected-panel tokens did nothing when scoped to one picker.** `--ds-option-padding`,
+  `-gap`, `-radius`, `-row-gap`, `--ds-option-bg-color-active` and `--ds-dropdown-panel-maxh` are read
+  on the panel, which the CDK portals outside the component, so they only ever resolved from a global
+  declaration: `ds-select { --ds-option-padding: … }` was silently ignored while
+  `ds-select { --ds-dropdown-panel-radius: … }` beside it worked, because that one was on the
+  forwarded list and these were not. They join the shared list every connected picker forwards, so the
+  family behaves one way. `--ds-dropdown-panel-maxh` was also the one token `ds-autocomplete` forwarded
+  and its two siblings did not. Nothing moves unless you had written one of these on an element, where
+  it now takes effect — if you reached for a global declaration because the scoped one did nothing, the
+  scoped one is the narrower fix.
+
+- **`ds-split-button`'s hover left its label unreadable inside a status zone.** The hover background defaulted to the family's readable ON-TINT colour — the one meant for text on light surfaces — and this was the only place in the library using it as a background, so the label landed at 1.87:1 on `success` in dark and 2.46:1 on `error`. It now defaults to `--accent-hover`, the family base mixed toward black in light and white in dark, so the hover follows the rest state instead of jumping to another hue: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31. `--ds-split-button-bg-hover-color` still overrides it.
+
+  This does not close the whole problem. The label colour on a family's solid background already falls below 4.5:1 at REST for `success` (3.30) and `secondary` (3.31), in both themes and on every solid button — a palette question, not this component's.
+
+- **A chip row could drop a chip, or fail to, when the field sat in a box that sizes itself to its content.** The budget for how many chips fit comes off the trigger's parent, which is only a fixed quantity while that parent takes its width from somewhere else. A parent at `fit-content`, an `inline-block` one, or a flex item that cannot grow all take their width from the chips instead, so the cut was reading back its own result. The parent is now asked whether its width depends on the trigger, and the trigger's own width is used only when it cannot answer. Affects `ds-multi-select` and `ds-autocomplete`.
+
+- **Eight defects the two-wave review confirmed and nobody had acted on.** The toast region and its
+  service never tore anything down, so every pending timer fired into a destroyed component — harmless
+  in a long-lived app, a stream of "N timers still in the queue" in a consumer's `fakeAsync` tests. The
+  180 ms leave timer was untracked and survived `dismissAll()`. `remove()` had no existence guard, so a
+  stale `ToastRef.dismiss()` ran the whole leave path on an id nothing held. `LEAVE_DURATION_MS` was
+  hardcoded against `--ds-toast-leave-duration`, a public token: the leave length is now READ off the
+  node, measured at 964 ms with the token set to 900, where it used to be 180 whatever the consumer
+  asked for. Raising `maxVisible` at runtime promoted nothing until the next dismissal; promotion is a
+  drain loop now. A negative `maxVisible` said the opposite of what it did and warns in dev. The
+  spinner inside a `loading` toast carried its own `role="status"`, which — now that announcements have
+  moved to the announcer — was the only live node left in there, so it is `aria-hidden`. And
+  `ToastPromiseMessages` is generic, so `promise<T>` stops discarding `T` and a `success` callback
+  receives the resolved value instead of `unknown`.
+
+
+- **A modal, drawer, confirm or bottom sheet opened after a toast covered it and swallowed its action
+  button.** `--layer-toast: 1500` could not prevent it and never could: CDK 21 gives every overlay host
+  `popover="manual"` and calls `showPopover()`, so hosts live in the browser's top layer, which paints
+  strictly in the order things were shown and ignores z-index and stacking contexts. The toast host is
+  now re-shown when a scrimmed overlay appears, which is the only thing that moves it back to the
+  front. Measured before and after on the same probe: the scrim was the topmost element at the toast's
+  centre, and is not any more.
+
+  Only *scrimmed* overlays trigger it. A tooltip or dropdown neither covers the toast meaningfully nor
+  eats a click, and the documented scale deliberately puts `--layer-tooltip` above the toast.
+
+
+- **Typing on a CLOSED `ds-select` did nothing.** Type-ahead landed with the jump wired only for
+  an open panel: the closed branch of the key handler returned before reaching it, so a letter
+  pressed on a collapsed trigger neither jumped nor committed. It now commits the first
+  matching option without opening the panel — `value` is a `model`, so `valueChange` fires —
+  the way a native `<select>` does; a key that matches nothing is ignored.
+- **A `ds-table` loading scrim covered the top of the first row, or overlapped the header.**
+  Its top edge assumed a 40px header. The header is 42.89px at the default density and
+  26.89px under `[data-density="ultra-compact"]`, so it cut 2.89px into the header normally
+  and started 13.11px too low under that density, where the first row showed through it. The
+  header is measured now, so the edge lands on it at every density and at any header font size
+  you set. `--ds-table-head-h` still overrides it if you set that, which you should no longer
+  need to.
+- **One export left `ds-table`'s live region stuck for the rest of the page's life.** The export
+  status outranked the sort, row-range and row-expansion lines and was never cleared, so from the
+  first export onwards a screen reader heard "Export ready" and nothing else: every later sort,
+  page change and bulk expansion was swallowed. The export line now holds the region only until
+  one of those lines has something new to say, so "Export failed" still stands until the reader
+  moves on, and everything after it is announced again.
+
+## 0.11.3 — 2026-09-02
+
+### Breaking
+
+- **`ds.color()` now refuses a family it does not know, and that stops your Sass build.**
+  `@include ds.color(brand)` used to compile and emit eleven `--accent-*` pointers at values that
+  could never resolve, so a zone painted itself with `unset` and the mistake looked like a theming
+  problem. It `@error`s now, naming the five families it takes: `secondary`, `tertiary`, `error`,
+  `success`, `warning`. Anything else fails the build at the `@include`. The `ds-color="…"`
+  attribute is untouched — no Sass runs for it.
+
+### Changed
+
+- **The banner and toast icon now centres on the message block**, where most shapes aligned it to
+  the first line of text. The two rules agree on a one-line message — which is most toasts — and
+  diverge as the text grows: the icon sat some 12px above the block centre at two lines and 21px at
+  three. A `compact` banner was already centred and does not move.
 
   It is `align-self` on the icon rather than `align-items` on the row, so the close button and the
-  action buttons keep the positions they had — measured: `align-items` would move the close button
-  10.95px in the default `layout-stacked` banner. `--banner-ic-mt` is **removed**; it existed only to
+  action buttons keep the positions they had. `--banner-ic-mt` is **removed**; it existed only to
   nudge the icon down by one border-width under the old rule.
 
   `ds-alert` follows, for the same reason: it carried the same nudge inlined as
-  `var(--border-width-default)` rather than through the token, so the sweep missed it and the two
-  components placed their icons 22.8px apart on the same content.
+  `var(--border-width-default)` rather than through the token.
 
   **Known limit.** The icon centres on the flex LINE, which equals the message block only while the
   message is the tallest thing in the row. A one-line toast with a close button is 0.53px off, and with
   a projected `[actions]` button 6–14px off depending on its size. `align-items: center` would be
   unconditional but moves the close button, which is the trade above.
 
+- **`ToastRegionComponent`'s member surface moved again — only matters if you SUBCLASS it.** The
+  timer and pause work gained `arm`, `focusWithin`, `host`, `hovered`, `onFocusWithin`, `onHover`,
+  `paused`, `pauseAll`, `remaining`, `resumeAll`, `startedAt` and `syncPause`, and **lost
+  `startCountdown`**: a countdown is armed when a toast becomes visible and re-armed from what is
+  left when a pause ends, where before the region started one timer per toast. Every one is a
+  `private` or `protected` internal — none is public API, none is a signal, and there is no
+  replacement to call for `startCountdown`, so an override of it should simply go. A member of
+  yours sharing one of those names still stops the build, because `private` collides with TS2415
+  exactly as a public name does. `host` is the one most likely to clash.
+  Rename yours — `override` is not a way out for ten of the twelve, because a member whose base
+  declaration is `private` rejects it with the same TS2415 as a plain redeclaration, and that
+  includes `host`. Only the two `protected` ones, `onHover` and `onFocusWithin`, accept it. The
+  compiler enumerates every
+  collision, so building after the upgrade is the whole check.
+
+  Worth flagging for anyone who followed 0.11.2's note: `startCountdown` was announced there as a
+  member the region had just gained, so an `override startCountdown` added one release ago now
+  overrides nothing and silently never runs. There is no public replacement to call — the countdown
+  is the region's own business now. Delete the override.
+
+- **`components.md` documented a component that does not exist and four events that never fired.**
+  It carried a `<ds-dropdown>` entry through nine releases; that component was absorbed into
+  `<ds-select>` and an import written from the document fails to compile. Four documented event
+  names were never identifiers here: `ds-banner` and `ds-toast` emit `(closed)`, not `(dismissed)`;
+  `ds-pagination` emits `(currentPageChange)`, not `(pageChange)`; `ds-table` emits `(rowClicked)`,
+  not `(rowClick)`. An unknown event binding registers a DOM listener and never fires, so those
+  four handlers were silently dead with nothing in the console. `<ds-alert>` was missing from the
+  document entirely and is now in it, `'neutral'` variant included.
+
 ### Fixed
 
 - **`ds-color="error"`, `="success"` and `="warning"` lost their accent colour.** Those zones map
   `--accent-strong` onto `--<family>-strong`, and the three status families never defined it — only
   the brand families did. The declaration was invalid at computed-value time, so inside a status
-  zone the sixteen places that read `--accent-strong` reset to `unset`: selected list and tree rows,
+  zone every place that reads `--accent-strong` reset to `unset`: selected list and tree rows,
   the active sidenav item and its rail, the active tab pill, avatar and avatar-group initials, the
   active tag, dropzone text, the date-picker range label, the toast's action label, the selected
-  toggle button, the split-button hover fill, and the tonal, ghost, outline and link variants of
-  `ds-button` and `ds-icon-button`. Text there fell through to the inherited body colour; the fill
+  toggle button, the split-button hover fill, the `tonal`, `ghost`, `outline` and `text` variants
+  of `ds-button`, and the `tonal` variant of `ds-icon-button`. Text there fell through to the
+  inherited body colour; the fill
   and the rail, which inherit nothing, disappeared.
 
   No new token was needed: a status family already carries its readable on-tint colour as `-text`,
@@ -47,8 +277,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the family's base for `-hover`, `-pressed` and `-strong`, to its `-muted` for the tint pointers,
   and to the theme-wide role for `-on` and the two focus pointers — so a role that goes missing in
   future degrades instead of disappearing.
-
-### Fixed
 
 - **`ToastService.promise()` could destroy its own result.** It ran the settled toast's
   auto-dismiss on a wall-clock timer started when the promise resolved, not when the toast became
@@ -59,14 +287,34 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **A toast carrying an `action` no longer auto-dismisses.** The overlay is the last child of `body`,
   so the region is dead last in tab order; a keyboard user cannot cross a real page in the five
-  seconds the button was alive. An `action` toast now waits, and is always dismissible.
+  seconds the button was alive. An `action` toast now waits, and is always dismissible. Note that
+  a `durationMs` you pass alongside an `action` is discarded — the toast waits regardless — and
+  `dismissible: false` is discarded on any toast that cannot expire, not only on a `loading` one.
 
 - **Hovering or focusing the region pauses every countdown**, resuming when the pointer or focus
-  leaves. A toast being read is not a toast that has been read.
+  leaves. A toast being read is not a toast that has been read. The pause is derived from both
+  sources rather than latched, so tabbing out of a region the pointer is still over does not
+  resume, moving focus between the action and the close button is not a leave, and a toast that
+  becomes visible under a stationary pointer — a burst past the cap, or a promise settling — is
+  banked rather than counted. A toast paused with almost nothing left resumes with at least 600ms, so
+  one hovered with
+  almost nothing left does not vanish as the pointer leaves.
 
-- **Nothing that cannot expire can also be unclosable.** A `loading` toast was created with
-  `dismissible: false` and no duration, so a promise that never settled held its slot for the life of
-  the page — with a cap of 3, three hung requests blocked the whole channel, including the error
+- **A disabled accordion item's chevron did not look disabled.** It asked for a colour token this
+  library does not define, so the declaration was invalid at computed-value time and the chevron
+  inherited whatever colour surrounded it — while the label beside it greyed correctly. It reads the
+  disabled text colour now, like the label.
+
+- **The `ds-banner` close button had no accessible name.** It announced as a bare "button", where
+  the same control on `ds-toast` and `ds-alert` already said "Dismiss". It says it now.
+
+- **A long unbroken word in a toast overflowed the pill.** A URL or an id with no break
+  opportunity ran past the rounded edge instead of wrapping inside it.
+
+- **Nothing that cannot expire can also be unclosable.** The rule is now that any toast with no
+  duration is dismissible, whatever you asked for — a `loading` variant, one carrying an `action`,
+  or an explicit `durationMs: 0`. A `loading` toast was created with `dismissible: false` and no
+  duration, so a promise that never settled held its slot for the life of the page — with a cap of 3, three hung requests blocked the whole channel, including the error
   toasts that would have explained the hang.
 
 ## 0.11.2 — 2026-09-01
@@ -2798,6 +3046,15 @@ genuine gap worth reporting.
 - **Fields no longer expose a `protected messageState`;** the resolved `message` (text + state) and
   `invalidResolved` replace it. Only reachable by subclassing a field component, which is not a
   supported extension point, but noted for parity with the class-member changes in 0.7.0.
+- **The `ds-time-picker` panel lost its corner radius.** It had drawn `--radius-md` (8px) while every
+  other floating surface — popovers, cards, modals and `ds-date-picker`'s own calendar — resolves the panel
+  role. The move onto that role reads a private `:host` token, which a CDK-portaled panel cannot see, so
+  `border-radius` resolves to its initial `0` and the panel renders SQUARE. The new
+  `--ds-time-picker-panel-radius` hook is inert for the same reason. Force the corner back with a global
+  `.cdk-overlay-container { --_time-picker-panel-radius: var(--radius-md); }`. It declares the
+  private token the panel already reads on an ancestor the panel DOES have, so it inherits down;
+  fighting the component’s own rule with a selector is not needed. A rule scoped under
+  `ds-time-picker` cannot reach the portaled panel at all. The trigger's radius is untouched.
 
 ### Fixed
 
@@ -2833,16 +3090,6 @@ genuine gap worth reporting.
   layout's open rail instead of beneath it. The host now sets `isolation: isolate`, giving each
   `ds-app-layout` its own stacking context — the same fix `ds-drawer` already carries. Nothing changes
   for a full-viewport shell with no layout embedded inside it.
-- **The `ds-time-picker` panel drew the CONTROL radius, so it did not match the date picker beside it.**
-  Its dropdown was the one floating panel left on `--radius-md` (8px) while every other surface — menus,
-  popovers, cards, modals, and `ds-date-picker`'s own calendar — resolves the panel role. Two pickers in
-  one form therefore rendered different corners. The panel now reads
-  `var(--ds-time-picker-panel-radius, var(--ds-radius-panel))`, which is 12px, and the new hook is
-  FORWARDED onto the portaled pane — a token declared without being forwarded is dead for per-instance
-  overrides, which is exactly the `--ds-overlay-enter-scale` bug fixed elsewhere in this release. It was
-  also the only property on that element without a hook, since fill, border and shadow all had one.
-  Restore the old corner with `ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }`; the
-  trigger's radius is untouched.
 - **A path change that only mirrors the reader's position no longer resets the content scroll.** A docs shell whose scroll spy rewrites `/area/section` as the user scrolls hit a loop: the rewrite looked like a page change, the layout scrolled to top, the spy saw the first section again and rewrote the path back. Such a navigation must now carry `state: { dsSamePage: true }`, which the layout skips for both the scroll reset and the rail close. Read from `Router.lastSuccessfulNavigation()` — `getCurrentNavigation()` is already cleared when `NavigationEnd` reaches a subscriber.
 - **Closing the rail by NAVIGATING no longer pulls focus back to the burger.** Restoring focus to the trigger is right for a dismissal — Escape, the scrim — and wrong for a link: the reader activated it, so focus belongs wherever the router put it, and handing it back announced "Open navigation" instead of the page they asked for. Dismissal keeps the restore; the navigation and breakpoint paths now clear `railOpen` directly. The breakpoint path had also depended on `compact` being written one line earlier to avoid focusing a trigger that is hidden on desktop — that ordering trap is gone with it.
 - **A closed compact `ds-app-layout` rail no longer holds focus behind the screen.** Below the

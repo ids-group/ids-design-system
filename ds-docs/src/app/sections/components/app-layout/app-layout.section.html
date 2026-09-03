@@ -292,4 +292,50 @@
     </code
     >.
   </p>
+
+  <h3
+    class="block-title t-h4"
+    data-for="sidenav-footer"
+  >
+    The rail footer on its own
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      &lt;ds-sidenav-footer&gt;
+    </code> is the one
+    part of the rail a consumer configures rather than composes: it owns the
+    profile row, the alert bell and the collapse handle. Both states below are
+    the same element &mdash;
+    <code class="t-mono-inline">
+      [collapsed]
+    </code> switches it. The width
+    comes from the sidenav, so a footer shown outside one needs a frame of its
+    own.
+  </p>
+
+  <div class="footer-rails">
+    <div class="footer-rail">
+      <ds-sidenav-footer
+        userName="Ada Lovelace"
+        userRole="Administrator"
+        [alerts]="unread()"
+        [alertItems]="alertItems"
+        [searchProvider]="searchProvider"
+        (alertsOpened)="markRead()"
+      />
+    </div>
+
+    <div class="footer-rail footer-rail--collapsed">
+      <ds-sidenav-footer
+        userName="Ada Lovelace"
+        userRole="Administrator"
+        [alerts]="unread()"
+        [alertItems]="alertItems"
+        [searchProvider]="searchProvider"
+        [collapsed]="true"
+        (alertsOpened)="markRead()"
+      />
+    </div>
+  </div>
 </docs-section>

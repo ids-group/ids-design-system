@@ -14,7 +14,6 @@ Date field with masked typing (`MM/DD/YYYY`-style per-slot editing) plus a calen
 <DatePicker
   label="Delivery date"
   value={new Date(2026, 6, 24)}
-  month={new Date(2026, 6, 1)}
   minDate={new Date(2026, 6, 1)}
   onValueChange={setDeliveryDate}
 />

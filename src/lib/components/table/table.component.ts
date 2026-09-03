@@ -166,8 +166,7 @@ export class TableComponent<T extends object> {
    *  `true` — the table picks: skeleton rows while it has nothing to show, overlay
    *  once rows are on screen. Prefer it; the right choice is a function of the row
    *  count, which only the table holds.
-   *  'skeleton' — first-load placeholder; rows are replaced with shimmer
-   *  rows that read the global --skeleton-shimmer-x driver.
+   *  'skeleton' — first-load placeholder; rows are replaced with shimmer rows.
    *  'overlay'  — re-fetch indicator; existing rows stay visible behind
    *  a translucent overlay with a centred spinner. Pin either one only to
    *  override the rule deliberately. */
@@ -326,6 +325,7 @@ export class TableComponent<T extends object> {
    *  can show the same in-flight state as the built-in one. */
   readonly exporting = this.exportingState.asReadonly();
   private readonly exportStatusState = signal('');
+  private readonly eventsAtExport = signal('');
   /** Announced in the table's live region while an export is running or after it
    *  failed, so the button's own disabled state is not the only signal. */
   readonly exportStatus = this.exportStatusState.asReadonly();
@@ -1200,18 +1200,22 @@ export class TableComponent<T extends object> {
     if (this.loadingMode() !== false) {
       return 'Loading…';
     }
-    const exportState = this.exportStatus();
-    if (exportState) {
-      return exportState;
+    const events = this.eventMessages();
+    // The export line holds the region until the events line has something NEW to say, so
+    // "Export failed" survives until the reader moves on rather than for a guessed interval.
+    // Compared against a snapshot rather than cleared, because a computed cannot write.
+    if (this.exportStatus() && events === this.eventsAtExport()) {
+      return this.exportStatus();
     }
-    const parts = [
-      this.sortMessage(),
-      this.rangeMessage(),
-      this.expansionMessage(),
-    ].filter(Boolean);
 
-    return parts.join('. ');
+    return events;
   });
+
+  private readonly eventMessages = computed<string>(() =>
+    [this.sortMessage(), this.rangeMessage(), this.expansionMessage()]
+      .filter(Boolean)
+      .join('. '),
+  );
 
   /** Only from two rows up: a single expander announces itself through its own
    *  `aria-expanded`, and repeating that here would say everything twice. */
@@ -1473,6 +1477,8 @@ export class TableComponent<T extends object> {
     viewChild.required<ElementRef<HTMLElement>>('scrollWrap');
   private readonly hscrollProxy =
     viewChild<ElementRef<HTMLElement>>('hscrollProxy');
+  private readonly tableHead = viewChild<ElementRef<HTMLElement>>('tableHead');
+  private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly hscrollContentWidth = signal(0);
   protected readonly hscrollNeeded = signal(false);
   private readonly scrollTop = signal(0);
@@ -1481,6 +1487,24 @@ export class TableComponent<T extends object> {
 
   constructor() {
     this.watchPointer();
+
+    // The scrim starts below the header, so it needs the header's height. Measured, not summed
+    // from padding and line-height: `vertical-align: middle` on the inline-flex label extends
+    // the line box past the strut by a font-metric amount no calc() can carry, and a sum is
+    // blind to a taller control in the header.
+    effect(() => {
+      if (!this.isOverlayLoading()) {
+        return;
+      }
+      const head = this.tableHead()?.nativeElement;
+      if (!head) {
+        return;
+      }
+      this.hostElement.nativeElement.style.setProperty(
+        '--_table-head-h',
+        `${head.getBoundingClientRect().height}px`,
+      );
+    });
     // One effect for both halves, because the restore CANNOT run in the
     // constructor: input signals are not set yet there, so storageKey() is still
     // '' and the restore silently no-ops. The first run with a usable key
@@ -2123,7 +2147,7 @@ export class TableComponent<T extends object> {
       return;
     }
     this.exportingState.set(true);
-    this.exportStatusState.set('Preparing export…');
+    this.announceExport('Preparing export…');
     try {
       const result = await fetcher();
       if (typeof result === 'string' || result instanceof Blob) {
@@ -2131,13 +2155,18 @@ export class TableComponent<T extends object> {
       } else {
         this.exportCsv(this.exportFilename(), result);
       }
-      this.exportStatusState.set('Export ready');
+      this.announceExport('Export ready');
     } catch (error) {
-      this.exportStatusState.set('Export failed');
+      this.announceExport('Export failed');
       this.exportFailed.emit(error);
     } finally {
       this.exportingState.set(false);
     }
+  }
+
+  private announceExport(status: string): void {
+    this.eventsAtExport.set(this.eventMessages());
+    this.exportStatusState.set(status);
   }
 
   /** Hands a ready-made file to the browser. Only a Blob gets its object URL

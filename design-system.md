@@ -321,7 +321,7 @@ components (measured 2026-09-01) show which one a given surface actually takes:
 | --- | --- | --- | --- |
 | `--ds-radius-inner` | `--radius-sm` (4px) | 37 | Something nested INSIDE a control — a tick, a kbd cap, a focus halo, a segment |
 | `--ds-radius-control` | `--radius-md` (8px) | 26 | The control itself — button, field, tag, tooltip, segmented, search |
-| `--ds-radius-panel` | `--radius-lg` (12px) | 16 | A surface that CONTAINS controls — card, menu, popover, modal, drawer, toast |
+| `--ds-radius-panel` | `--radius-lg` (12px) | 13 | A surface that CONTAINS controls — card, modal, bottom sheet, popover, the picker panels, page footer |
 | `--ds-radius-pill` | `--radius-pill` (999px) | 4 | Fully round by meaning, not by size — avatar, badge, radio, progress track |
 
 The raw steps (`--radius-sm` … `--radius-2xl`) are the scale the roles map onto. Using one
@@ -348,9 +348,11 @@ the next reader needs.
 
 ### Overriding
 
-Corner radius is a public knob on every component that has one — `--ds-<component>-radius`,
-declared on `:host`, resolving through the role. Retheming corners means moving the four
-roles, not editing components: set `--ds-radius-control` once and every control follows.
+Most components with a corner expose `--ds-<component>-radius` on `:host`, resolving through
+the role — but not all of them, and `ds-toast` is the one to know about: it reads `--radius-lg`
+directly, so only the raw step moves it. Retheming corners means moving the four roles rather
+than editing components: set `--ds-radius-control` once and every control that resolves it
+follows.
 
 ---
 

@@ -60,6 +60,8 @@ providers: [
     icon: { size: 18 },
     badge: { withDot: true },
     modal: { dividers: false },
+    picker: { searchable: 12 },            // threshold: filter row past 12 options
+    toast: { maxVisible: 3, position: { verticalPosition: 'bottom' } },
     field: {
       reserveMessage: true,
       // Per state, independent of each other: error / warning / success carry a

@@ -478,6 +478,11 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
     "notes": "Outer halo alpha."
   },
   {
+    "name": "--focus-ring-color",
+    "value": "var(--accent)",
+    "notes": ""
+  },
+  {
     "name": "--focus-ring",
     "value": "0 0 0 2px var(--focus-ring-inner),\n    0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
     "notes": "Default two-layer focus ring shadow (inner ring + outer glow)."
@@ -3672,6 +3677,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "List item label colour when selected (defaults to --accent-strong)."
       },
       {
+        "name": "--ds-list-item-selected-icon-color",
+        "value": "var(--_list-item-selected-label-color)",
+        "notes": ""
+      },
+      {
         "name": "--ds-list-item-label-color",
         "value": "var(--text-primary)",
         "notes": "List item label text colour (defaults to --text-primary)."
@@ -5159,8 +5169,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-split-button-bg-hover-color",
-        "value": "var(--accent-strong)",
-        "notes": "Split button hover fill (defaults to --accent-strong)."
+        "value": "var(--accent-hover)",
+        "notes": "Split button hover fill (defaults to --accent-hover). Not --accent-strong: that is the on-tint colour for text on a light surface, and as a fill it leaves the label unreadable."
       },
       {
         "name": "--ds-split-button-divider-color",
@@ -6393,11 +6403,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Trigger horizontal padding; follows the field family via --field-pad-x, so it tracks density like ds-input."
       },
       {
-        "name": "--ds-time-picker-panel-radius",
-        "value": "var(--ds-radius-panel)",
-        "notes": "Time panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
-      },
-      {
         "name": "--ds-time-picker-required-color",
         "value": "var(--error)",
         "notes": "Colour of the required asterisk beside the time label (default --error)."
@@ -6426,6 +6431,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-time-picker-border",
         "value": "var(--border-default)",
         "notes": "Panel border."
+      },
+      {
+        "name": "--ds-time-picker-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Time panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
       },
       {
         "name": "--ds-time-picker-shadow",
@@ -6507,12 +6517,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Toast dismiss easing (default --ease-standard)."
       },
       {
+        "name": "--ds-toast-shift-duration",
+        "value": "var(--duration-fast)",
+        "notes": "How long a toast takes to slide to its new place when one is added or removed above it — a re-stack, not a dismissal (default --duration-fast)."
+      },
+      {
+        "name": "--ds-toast-shift-easing",
+        "value": "var(--ease-standard)",
+        "notes": "Easing for that slide (default --ease-standard)."
+      },
+      {
         "name": "--ds-toast-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Base surface fill."
       },
       {
-        "name": "--ds-toast-border",
+        "name": "--ds-toast-border-color",
         "value": "var(--border-default)",
         "notes": "Base border."
       },
@@ -6572,8 +6592,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Info tint fill."
       },
       {
-        "name": "--ds-toast-border-info",
-        "value": "var(--ds-toast-border, var(--border-default))",
+        "name": "--ds-toast-border-color-info",
+        "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Info tint border."
       },
       {
@@ -6582,8 +6602,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Success tint fill."
       },
       {
-        "name": "--ds-toast-border-success",
-        "value": "var(--ds-toast-border, var(--border-default))",
+        "name": "--ds-toast-border-color-success",
+        "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Success tint border."
       },
       {
@@ -6592,8 +6612,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Warning tint fill."
       },
       {
-        "name": "--ds-toast-border-warning",
-        "value": "var(--ds-toast-border, var(--border-default))",
+        "name": "--ds-toast-border-color-warning",
+        "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Warning tint border."
       },
       {
@@ -6602,8 +6622,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Error tint fill."
       },
       {
-        "name": "--ds-toast-border-error",
-        "value": "var(--ds-toast-border, var(--border-default))",
+        "name": "--ds-toast-border-color-error",
+        "value": "var(--ds-toast-border-color, var(--border-default))",
         "notes": "Error tint border."
       },
       {
@@ -6798,6 +6818,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-tree-row-selected-text-color",
         "value": "var(--accent-strong)",
         "notes": "Selected tree row text colour (defaults to --accent-strong)."
+      },
+      {
+        "name": "--ds-tree-row-selected-icon-color",
+        "value": "var(--_tree-row-selected-text-color)",
+        "notes": ""
       },
       {
         "name": "--ds-tree-row-text-color",

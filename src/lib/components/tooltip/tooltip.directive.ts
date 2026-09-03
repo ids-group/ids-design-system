@@ -22,8 +22,15 @@ export class TooltipDirective implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly host = inject(ElementRef<HTMLElement>);
 
+  /** Tip text. An empty string is how you turn the tooltip off — a host bound to a
+   *  value that may be blank needs no separate condition. */
   readonly dsTooltip = input<string>('');
+  /** Which side the tip opens on. It does NOT flip: only the requested side is
+   *  offered to the overlay, so a tip with no room there is pushed rather than moved
+   *  to the opposite side. */
   readonly dsTooltipPlacement = input<TooltipPlacement>('top');
+  /** Milliseconds before the tip appears. Hiding is immediate — this delay only ever
+   *  suppresses a tip the pointer passed over on its way somewhere else. */
   readonly dsTooltipDelay = input<number>(120);
 
   private ref: OverlayRef | null = null;
