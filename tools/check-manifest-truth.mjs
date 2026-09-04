@@ -173,10 +173,9 @@ const manifests = readdirSync(join(ROOT, 'migrations'))
   .filter((f) => !ONLY || f === `${ONLY}.json`)
   .sort();
 
-// "Nothing was checkable" must never read as "nothing is wrong". A caller — the auto-update plugin
-// asks for one version before trusting its manifest — sees only the exit code, so a version whose
-// tag, predecessor or tree is missing has to fail rather than pass silently. A clone without tags
-// is the likely way to hit it: every version becomes unskippable-but-unchecked at once.
+// "Nothing was checkable" must never read as "nothing is wrong": a caller sees only the exit code,
+// and one asks per version before trusting that manifest. A clone without tags is the way to hit
+// it — `git tag --list` comes back empty, so every version is skipped at once.
 const skipped = [];
 let checked = 0;
 

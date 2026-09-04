@@ -117,8 +117,7 @@ for (const [version, what] of readOnly) {
   console.log(`${ok ? 'ok   ' : 'FAIL '} ${version} as it ships — ${what}: expected green, got ${got}`);
 }
 
-// A caller sees only the exit code, so a version the check could not look at has to fail. Both
-// shapes: no manifest of that name, and a manifest whose boundary does not exist.
+// A caller sees only the exit code, so a version the check could not look at has to fail.
 for (const [version, what] of [
   ['9.9.9', 'no manifest of that name'],
   ['0.1.0', 'the earliest tag, so no predecessor to diff against'],
