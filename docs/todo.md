@@ -225,6 +225,21 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 
 **Verification debts — each is one command away, none is a known defect.**
 
+- [ ] **`ds-table` selects rows with a RAW native checkbox.** `table.component.html` renders
+      `<input type="checkbox" class="check">` for both the select-all header and every row, and
+      `table.component.scss` styles `.check` nowhere at all — so the one control the design system
+      ships that the OS draws itself sits in the middle of a DS table. It has none of the DS
+      geometry, none of its colours and none of the mark's motion. The fix is `ds-checkbox`, whose
+      indeterminate state the header already needs. Not done here because another session holds
+      `table.component.scss`.
+
+- [ ] **The freeze spawns one chromium PER CARD — 410 cold starts.** `snapshot-cards.mjs` runs
+      `chrome --dump-dom` per card behind a lane queue, so every card pays a browser launch plus a
+      2.12 MB bundle boot from scratch. Driving one long-lived browser over 410 navigations through
+      CDP would cut the wall clock by roughly the launch cost each time, which is most of it. The
+      current shape is not wrong — process isolation is why one hung card cannot poison the rest —
+      it is just the slow way to buy that.
+
 - [ ] **The elements demo has not been opened in a real browser since the rebuilds.** `COMMANDS.md`
   says to serve `.design-sync/elements/demo` over http and look at it in a real tab, because a
   background or headless one freezes transitions and reports stale layout. Every measurement this
