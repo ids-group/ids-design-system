@@ -259,11 +259,13 @@
   @include check-mark.shown;
 }
 
-.checkbox .dash {
+// One element carries both marks, as in ds-checkbox: a second span would sit beside the tick in
+// the centred box rather than replacing it, and could not cross-fade with it.
+.checkbox.indeterminate .tick {
   width: var(--check-indet-w);
   height: var(--check-indet-h);
   border-radius: var(--ds-radius-inner);
-  background-color: var(--text-on-primary);
+  background: var(--text-on-primary);
 }
 
 @include field-state.field-state(

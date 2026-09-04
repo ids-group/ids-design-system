@@ -225,9 +225,7 @@
           [class.checked]="allFilteredSelected()"
           [class.indeterminate]="someFilteredSelected()"
         >
-          <span class="tick"></span> @else if (someFilteredSelected()) {
-            <span class="dash"></span>
-          }
+          <span class="tick"></span>
         </span>
 
         <span class="select-all-label">
@@ -290,9 +288,7 @@
                   [class.checked]="groupAllSelected(item)"
                   [class.indeterminate]="groupSomeSelected(item)"
                 >
-                  <span class="tick"></span> @else if (groupSomeSelected(item)) {
-                    <span class="dash"></span>
-                  }
+                  <span class="tick"></span>
                 </span>
 
                 All of {{ item.label }}
