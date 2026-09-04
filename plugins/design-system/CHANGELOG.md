@@ -31,6 +31,10 @@ validated by hand) against the repo as of 0.12.0.
   behavioral items from the re-check dispatch instead of feeding the forbidden fix loop.
 
 ### Changed
+- Step 1 runs the DS repo's `tools/check-manifest-truth.mjs` for each version when the clone
+  carries it — the tag-tree check of the same three assumptions this workflow executes; a flagged
+  item is reported as manifest evidence and its plan entry derives from prose instead (the check's
+  first run upstream removed seven items migrating from names no release ever shipped).
 - Ledger v2: per-target (monorepo runs were unrepresentable), stores each version's plan (id
   stability across resumes), head commit at start (a moved tree is flagged on resume), delete-pass
   progress, and is deleted on completion; dry-run writes its own suffixed path and never prompts.

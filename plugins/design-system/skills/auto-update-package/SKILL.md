@@ -243,7 +243,12 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    can consult V's real sources throughout this version. Dispatch `ds-migration-planner` with V's
    changelog block — **and, if a shipped manifest `migrations/<V>.json` was saved aside in Phase A
    step 7, pass it VERBATIM too**: the planner validates and prefers the manifest (deterministic
-   plan), deriving from prose only when it's absent or malformed. Parse the MigrationPlan. If
+   plan), deriving from prose only when it's absent or malformed. When the DS clone carries
+   `tools/check-manifest-truth.mjs`, run `node <clone>/tools/check-manifest-truth.mjs <V>` first —
+   it validates against the tag trees the same three assumptions this workflow executes (`old`
+   resolves at the previous tag; a rename/removal's `old` is gone at `v<V>`; `new` resolves at
+   `v<V>`); an item it flags is manifest evidence (report it with the locator-dead set) and its
+   plan entry is derived from prose instead of trusted. Parse the MigrationPlan. If
    `items` is empty → no-migration version: skip steps 2–3 and go to step 4 — but a non-empty
    `deleteList` still gets its step-8 pass before the commit.
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
