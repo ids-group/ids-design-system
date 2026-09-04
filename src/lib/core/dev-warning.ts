@@ -11,6 +11,17 @@ import { effect, isDevMode } from '@angular/core';
  * cannot happen any more.
  *
  * Must be called from an injection context.
+ *
+ * Callers wrap this in `if (typeof ngDevMode === 'undefined' || ngDevMode)`. That is
+ * a BUILD-time expression, not a repeat of the `isDevMode()` below: the intent is for
+ * a minifier to fold it and drop the message with it, which `isDevMode()` — an opaque
+ * call — can never allow. It cannot become a helper function for the same reason.
+ *
+ * **The intent is not currently delivered, and it is not understood why.** Measured on
+ * `dist/ds-docs` (a production app build) and on the elements bundle: `ds-split-button`'s
+ * guarded message is absent from both, while `ds-stat`'s — same guard — is present in
+ * both. `ngDevMode` itself appears nowhere in either, so the expression IS folded. Do
+ * not cite the guard as a size win until that difference is explained.
  * @internal
  */
 export function devWarn(message: () => string | null): void {
