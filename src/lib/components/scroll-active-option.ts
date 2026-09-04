@@ -1,4 +1,9 @@
-import { type Signal, afterRenderEffect, inject, DOCUMENT } from '@angular/core';
+import {
+  type Signal,
+  afterRenderEffect,
+  inject,
+  DOCUMENT,
+} from '@angular/core';
 
 /**
  * Keeps the keyboard cursor's row visible inside a scrolling panel.

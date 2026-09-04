@@ -31,9 +31,24 @@ export class SelectSection {
   protected readonly resetPlan = signal('team');
 
   protected readonly countryOptions: SelectOption[] = [
-    'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada',
-    'Chile', 'Denmark', 'Estonia', 'Finland', 'France', 'Germany',
-    'Greece', 'Iceland', 'Ireland', 'Italy', 'Japan', 'Latvia',
+    'Argentina',
+    'Australia',
+    'Austria',
+    'Belgium',
+    'Brazil',
+    'Canada',
+    'Chile',
+    'Denmark',
+    'Estonia',
+    'Finland',
+    'France',
+    'Germany',
+    'Greece',
+    'Iceland',
+    'Ireland',
+    'Italy',
+    'Japan',
+    'Latvia',
   ].map((name) => ({ value: name.toLowerCase(), label: name }));
 
   protected readonly planOptions: SelectOption[] = [

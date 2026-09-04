@@ -282,7 +282,7 @@
             (click)="onPick(option)"
             (mouseenter)="
               cursorFromKeyboard.set(false);
-                  option.disabled || activeIndex.set(flatIndexOf(option))
+              option.disabled || activeIndex.set(flatIndexOf(option))
             "
           >
             @if (multiple()) {
@@ -404,6 +404,5 @@
         />
       </div>
     }
-
   </div>
 </ng-template>

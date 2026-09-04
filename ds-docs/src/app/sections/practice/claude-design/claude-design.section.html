@@ -4,9 +4,10 @@
   title="Claude Design sync"
 >
   <span lede>
-    A Claude Design project can hold this library itself, so its agent builds screens out of
-    the real components rather than something in their style. This page is how that works,
-    what you run, and which files are authored versus generated.
+    A Claude Design project can hold this library itself, so its agent builds
+    screens out of the real components rather than something in their style.
+    This page is how that works, what you run, and which files are authored
+    versus generated.
   </span>
 
   <h3 class="block-title t-h4">
@@ -14,19 +15,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    A preview card in the project is a plain HTML page loading four classic scripts, in this
-    order, and rendering a React element from a global:
+    A preview card in the project is a plain HTML page loading four classic
+    scripts, in this order, and rendering a React element from a global:
   </p>
 
-  <pre class="cd-chain t-mono-block">_vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&lt;Name&gt;.js</pre>
+  <pre class="cd-chain t-mono-block">
+_vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&lt;Name&gt;.js
+  </pre>
 
   <p class="block-desc t-s">
-    So the contract is narrow: <strong>expose React components on
-    <code class="t-mono-inline">
-      window.IdsDs
-    </code>, and React arrives separately as a
-    global.</strong> React is deliberately NOT inside the library bundle. Nothing inspects
-    what else is in there, which is what makes the second route below possible.
+    So the contract is narrow:
+    <strong>
+      expose React components on
+      <code class="t-mono-inline">
+        window.IdsDs
+      </code>, and React arrives
+      separately as a global.
+    </strong>
+    React is deliberately NOT inside the library bundle. Nothing inspects what
+    else is in there, which is what makes the second route below possible.
   </p>
 
   <h3 class="block-title t-h4">
@@ -34,20 +41,31 @@
   </h3>
 
   <p class="block-desc t-s">
-    The first attempt re-implemented every component in React over the compiled CSS — around
-    11 000 hand-written lines. It was correct when written and needed a parity gate, because
-    nothing else can tell that a template has moved on. One month of upstream drift cost it
-    <strong>213 divergences</strong>: 53 components with changed sources, 122 missing props, 6
-    components with no counterpart at all. It was deleted on 2026-09-01.
+    The first attempt re-implemented every component in React over the compiled
+    CSS — around 11 000 hand-written lines. It was correct when written and
+    needed a parity gate, because nothing else can tell that a template has
+    moved on. One month of upstream drift cost it
+    <strong>
+      213 divergences
+    </strong>: 53 components with changed sources, 122
+    missing props, 6 components with no counterpart at all. It was deleted on
+    2026-09-01.
   </p>
 
   <p class="block-desc t-s">
-    What replaced it registers every component as a custom element and generates the React layer
-    from the AST. There is no second implementation, so there is nothing to drift: the same month of
-    upstream cost it one <code class="t-mono-inline">gen.mjs</code> run, and the surface grew from 81
-    elements to 85 on its own. The price is about <strong>135 KB gzip</strong> more over the wire for
-    the Angular runtime — fixed, while the library keeps growing.
+    What replaced it registers every component as a custom element and generates
+    the React layer from the AST. There is no second implementation, so there is
+    nothing to drift: the same month of upstream cost it one
+    <code class="t-mono-inline">
+      gen.mjs
+    </code> run, and the surface grew from
+    81 elements to 85 on its own. The price is about
+    <strong>
+      135 KB gzip
+    </strong> more over the wire for the Angular runtime —
+    fixed, while the library keeps growing.
   </p>
+
   <h3 class="block-title t-h4">
     The commands, in order
   </h3>
@@ -67,9 +85,9 @@
   </div>
 
   <p class="block-desc t-s">
-    Publishing is a separate, deliberately gated flow: read the project, lock a plan, then
-    write. The tool rejects any path outside the locked plan, and the plan is shown to a
-    human before anything is written.
+    Publishing is a separate, deliberately gated flow: read the project, lock a
+    plan, then write. The tool rejects any path outside the locked plan, and the
+    plan is shown to a human before anything is written.
   </p>
 
   <h3 class="block-title t-h4">
@@ -77,9 +95,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    The repository commits sync INPUTS only. Everything with an underscore prefix in the
-    project is an output of the publish step — reading their absence here as drift is a
-    mistake that has been made.
+    The repository commits sync INPUTS only. Everything with an underscore
+    prefix in the project is an output of the publish step — reading their
+    absence here as drift is a mistake that has been made.
   </p>
 
   <div class="cd-table">
@@ -89,7 +107,10 @@
           {{ file.path }}
         </code>
 
-        <span class="cd-tag" [class]="'cd-tag--' + file.role">
+        <span
+          class="cd-tag"
+          [class]="'cd-tag--' + file.role"
+        >
           {{ file.role }}
         </span>
 
@@ -107,38 +128,44 @@
   <ul class="cd-list t-s">
     <li>
       <strong>
-        A preview sets its state as INITIAL props — never toggles it after mount.
+        A preview sets its state as INITIAL props — never toggles it after
+        mount.
       </strong>
-      A slot behind a condition works, nested DS components included, as long as the gate is
-      true when the element connects. Toggle it later and the projected wrapper survives while
-      the custom elements inside it are destroyed. So an overlay preview passes
+      A slot behind a condition works, nested DS components included, as long as
+      the gate is true when the element connects. Toggle it later and the
+      projected wrapper survives while the custom elements inside it are
+      destroyed. So an overlay preview passes
       <code class="t-mono-inline">
         staticPreview
       </code> or
       <code class="t-mono-inline">
         open
-      </code> at creation, and a table preview that shows bulk
-      actions passes its selection at creation.
+      </code> at creation, and a table preview
+      that shows bulk actions passes its selection at creation.
     </li>
 
     <li>
       <strong>
-        A component used inside another component's template registers under an alias.
+        A component used inside another component's template registers under an
+        alias.
       </strong>
-      A custom element nested in another's template loses both its projected content and its
-      inputs, so the generator gives those an
+      A custom element nested in another's template loses both its projected
+      content and its inputs, so the generator gives those an
       <code class="t-mono-inline">
         ds-x-
-      </code> tag no template mentions — 31 of 85. The React
-      wrapper emits the alias, so nothing changes for a caller and the tag never surfaces in a
-      design.
+      </code> tag no template mentions — 31
+      of 85. The React wrapper emits the alias, so nothing changes for a caller
+      and the tag never surfaces in a design.
     </li>
   </ul>
 
   <p class="block-desc t-s">
-    Attribute directives have no tag to register, so the fifteen of them are absent from the
-    generated surface. Only <code class="t-mono-inline">dsTooltip</code> would be missed, and
-    a tooltip is hover-revealed — a static design card has no hover, so it would show nothing
-    anyway.
+    Attribute directives have no tag to register, so the fifteen of them are
+    absent from the generated surface. Only
+    <code class="t-mono-inline">
+      dsTooltip
+    </code> would be missed, and a
+    tooltip is hover-revealed — a static design card has no hover, so it would
+    show nothing anyway.
   </p>
 </docs-section>

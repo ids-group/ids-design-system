@@ -37,7 +37,10 @@ import {
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
-import { resolveFieldMessage, trimmedText } from '@ids-group-ltd/ids-design-system/components';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
@@ -56,7 +59,10 @@ import type {
   MultiSelectOptionGroup,
   MultiSelectWidth,
 } from './multi-select.types';
-import { flattenDsOptions, isDsOptionGroup } from '@ids-group-ltd/ids-design-system/core';
+import {
+  flattenDsOptions,
+  isDsOptionGroup,
+} from '@ids-group-ltd/ids-design-system/core';
 import {
   firstEnabledIndex as firstEnabledOf,
   lastEnabledIndex as lastEnabledOf,
@@ -614,7 +620,11 @@ export class MultiSelectComponent
   private readonly typeAhead = createTypeAhead();
 
   private handleTypeAhead(key: string): boolean {
-    const index = this.typeAhead.match(key, this.filteredOptions().map((option) => option.label), this.activeIndex());
+    const index = this.typeAhead.match(
+      key,
+      this.filteredOptions().map((option) => option.label),
+      this.activeIndex(),
+    );
     if (index < 0) {
       return false;
     }

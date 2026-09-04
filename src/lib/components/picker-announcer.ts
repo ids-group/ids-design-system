@@ -36,6 +36,10 @@ export function announceOptionCount(
     }
     const total = count();
     region.textContent =
-      total === 0 ? 'No results' : total === 1 ? '1 result' : `${total} results`;
+      total === 0
+        ? 'No results'
+        : total === 1
+          ? '1 result'
+          : `${total} results`;
   });
 }

@@ -2208,5 +2208,4 @@ export class TableComponent<T extends object> {
     coarse.addEventListener('change', sync);
     this.destroyRef.onDestroy(() => coarse.removeEventListener('change', sync));
   }
-
 }

@@ -1221,15 +1221,12 @@
   <p class="block-desc t-s">
     <strong>
       The handle answers the keyboard, and says where it is.
-    </strong> A drag
-    control that only answers a pointer makes a resizable column unusable
+    </strong> A
+    drag control that only answers a pointer makes a resizable column unusable
     without a mouse, so the handle is focusable: Arrow keys step by 16px,
     PageUp/PageDown by 64px, and Home hands the column back to automatic sizing.
-    It is a
-    <code class="t-mono-inline">
-      role="separator"
-    </code>, which ARIA reads as a
-    range widget, so while it holds focus it reports
+    It is a <code class="t-mono-inline"> role="separator" </code>, which ARIA
+    reads as a range widget, so while it holds focus it reports
     <code class="t-mono-inline">
       aria-valuenow
     </code>,
@@ -1239,10 +1236,10 @@
     <code class="t-mono-inline">
       aria-valuemax
     </code> in pixels — all three
-    together, because a value announced against no bounds is read against
-    ARIA's implicit 0–100. The maximum is the scroll viewport and it is
-    enforced, on the pointer path as well: a column wider than the viewport can
-    never be seen whole, and long text has its own answer here in
+    together, because a value announced against no bounds is read against ARIA's
+    implicit 0–100. The maximum is the scroll viewport and it is enforced, on
+    the pointer path as well: a column wider than the viewport can never be seen
+    whole, and long text has its own answer here in
     <code class="t-mono-inline">
       truncate
     </code> plus the clip popover.
@@ -1353,21 +1350,23 @@
   <p class="block-desc t-s">
     <strong>
       On a touch device the same table works differently, and deliberately.
-    </strong> The drag handle paints its line on
+    </strong>
+    The drag handle paints its line on
     <code class="t-mono-inline">
       :hover
     </code> and
     <code class="t-mono-inline">
       :focus-visible
-    </code>, neither of which a coarse pointer produces — so it was an invisible
-    8px strip at each header's right edge that still swallowed the horizontal
-    swipe used to scroll the table. It now stands down, and width moves into the
-    column panel: every row gets − / + / Fit alongside its visibility and order
-    controls, and the panel itself opens as a
+    </code>, neither of which a
+    coarse pointer produces — so it was an invisible 8px strip at each header's
+    right edge that still swallowed the horizontal swipe used to scroll the
+    table. It now stands down, and width moves into the column panel: every row
+    gets − / + / Fit alongside its visibility and order controls, and the panel
+    itself opens as a
     <code class="t-mono-inline">
       ds-bottom-sheet
-    </code> instead of a popover. The
-    steps are the handle's own keyboard steps, so all three routes — drag,
+    </code> instead of a popover.
+    The steps are the handle's own keyboard steps, so all three routes — drag,
     arrows, buttons — change width by the same amount. The buttons show on
     desktop too; there the handle stays the primary way.
   </p>

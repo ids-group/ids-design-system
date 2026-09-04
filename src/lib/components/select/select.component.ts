@@ -44,7 +44,10 @@ import {
 } from './select.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
-import { resolveFieldMessage, trimmedText } from '@ids-group-ltd/ids-design-system/components';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import { DsOptionTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
@@ -65,7 +68,12 @@ import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
 @Component({
   selector: 'ds-select',
   standalone: true,
-  imports: [SpinnerComponent, IconComponent, NgTemplateOutlet, FieldMessageComponent],
+  imports: [
+    SpinnerComponent,
+    IconComponent,
+    NgTemplateOutlet,
+    FieldMessageComponent,
+  ],
   host: {
     '[attr.data-field-state]': 'controlState()',
     '[class.in-group]': 'inGroup',
@@ -567,7 +575,11 @@ export class SelectComponent
   private readonly typeAhead = createTypeAhead();
 
   private handleTypeAhead(key: string): boolean {
-    const index = this.typeAhead.match(key, this.flatOptions().map((entry) => entry.option.label), this.activeIndex());
+    const index = this.typeAhead.match(
+      key,
+      this.flatOptions().map((entry) => entry.option.label),
+      this.activeIndex(),
+    );
     if (index < 0) {
       return false;
     }

@@ -20,7 +20,8 @@ const PATTERNS: readonly PagePattern[] = [
   },
   {
     name: 'Record detail',
-    madeOf: 'page header with [meta] · 8+4 grid — main left, meta sidebar right',
+    madeOf:
+      'page header with [meta] · 8+4 grid — main left, meta sidebar right',
     missed: 'The sidebar is metadata, never navigation',
   },
   {
@@ -35,7 +36,8 @@ const PATTERNS: readonly PagePattern[] = [
   },
   {
     name: 'Empty / error',
-    madeOf: 'an empty state centred in the region that would have held the data',
+    madeOf:
+      'an empty state centred in the region that would have held the data',
     missed: 'It replaces the region, not the page — header and filters stay',
   },
 ];
