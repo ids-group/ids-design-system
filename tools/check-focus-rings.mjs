@@ -40,6 +40,18 @@ const scssFilesIn = (path) => {
   });
 };
 
+// `ring-for` carries the whole contract — the keyboard-only selector AND the suppression — so a
+// file using it is a ringed shell that cannot have forgotten its half. Counted here rather than
+// skipped: a refactor onto the mixin dropped the shell count from 13 to 10 while the gate still
+// reported OK, which is the same blindness that let the box-shadow-only detection read green.
+const ringsThroughTheMixin = (text) => {
+  const lines = text.split(/\r?\n/);
+  const index = lines.findIndex((line) => /@include\s+focus\.ring-for\(/.test(line));
+  return index === -1
+    ? null
+    : { line: index + 1, declaration: lines[index].trim(), viaMixin: true };
+};
+
 const paintsRingOnFocusWithin = (text) => {
   const lines = text.split(/\r?\n/);
   for (let index = 0; index < lines.length; index += 1) {
@@ -160,9 +172,11 @@ for (const file of ROOTS.flatMap((root) => scssFilesIn(root))) {
   for (const site of suppressesWithoutTheMixin(code0)) {
     bareSuppressions.push({ file: name0, ...site });
   }
-  const painter = paintsRingOnFocusWithin(text);
+  const viaMixin = ringsThroughTheMixin(code0);
+  const painter = viaMixin ?? paintsRingOnFocusWithin(text);
   if (!painter) continue;
   shells += 1;
+  if (painter.viaMixin) continue;
   const name = relative(process.cwd(), file).replace(/\\/g, '/');
   const code = withoutComments(text);
   if (SUPPRESSORS.some((needle) => code.includes(needle))) continue;

@@ -39,13 +39,7 @@
   // through a gap, which reads as a target rather than as two states a keyboard user has
   // to tell apart. The shared `check-box.box` keeps its own ring: ds-table uses the same
   // partial for a bare cell checkbox that has no row to speak for it.
-  // `:has(:focus-visible)`, NOT `:focus-within`: the latter matches a MOUSE focus too, and a
-  // checkbox clicked with a pointer would keep the ring until focus moved elsewhere. A text
-  // input is granted `:focus-visible` on click, so the two are equivalent on a field shell and
-  // only diverge here, on a control the browser does not consider typing-into.
-  &:has(:focus-visible) {
-    @include focus.ring;
-  }
+  @include focus.ring-for('.check');
 
   // No label: the row collapses onto the glyph and the concentric read comes back, so the
   // ring stands further off. `.control-text:empty` is display:none, so the row IS the glyph.
@@ -87,5 +81,3 @@
 
 /* Dev-only detection sink for a projected caption (checkbox.component.html).
    Never rendered visible, so it cannot become a flex item in .control-line's gap. */
-
-@include focus.owns-the-focus-ring('.control-line .check');

@@ -38,16 +38,9 @@
 }
 
 // Surface keyboard focus on the zone when its (visually-hidden) input is focused.
-// `:has(:focus-visible)` and not `:focus-within`, which would also fire for the pointer:
-// clicking the zone to open the file dialog would leave the ring behind.
-.dropzone:has(:focus-visible) {
-  @include focus.ring;
+.dropzone {
+  @include focus.ring-for('.dz-input');
 }
-
-// The input is clipped to nothing, so its own ring is invisible rather than doubled —
-// silenced anyway, because the rule is the shell speaks for exactly one control and a
-// reader cannot tell a deliberate omission from a forgotten one.
-@include focus.owns-the-focus-ring('.dz-input');
 
 .dropzone {
   // Fill the host when it's placed in a flex parent — keeps the dropzone the
