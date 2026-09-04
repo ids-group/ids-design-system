@@ -126,6 +126,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A `ds-color` zone now recolours the focus halo of the fields inside it.** The two ways the
+  library adapts a focus indicator did not compose: a zone flipped only the `--accent-focus-*`
+  aliases, while `data-focus` retargeted only the `--ds-*-focus-shadow` roles — so a component
+  obeyed whichever spelling it happened to use and was deaf to the other. A zone sets the roles too
+  now, and because it declares them on its own element rather than at `:root`, a zone outranks the
+  global switch inside its own subtree and leaves it alone everywhere else. `ds-color-picker`,
+  `ds-multi-select`, `ds-otp-input` and the confirm dialog's field read the role rather than the
+  alias as a result, which is what makes them answer the switch for the first time.
+
 - **A `ds-date-picker` day outside the allowed range highlighted under the pointer as though it
   could be picked.** The day button is only ever `aria-disabled`, never natively disabled, so its
   hover rule still matched and offered an unselectable date. Hover now skips a disabled day; the

@@ -41,7 +41,7 @@
     @include focus.own-indicator;
 
     border-color: var(--_otp-cell-border-color-focus);
-    box-shadow: var(--accent-focus-field);
+    box-shadow: var(--ds-field-focus-shadow);
   }
 
   &:disabled {

@@ -36,6 +36,15 @@ $families: secondary, tertiary, error, success, warning;
   // outline colour has to be written again where the accent actually changed, or a focused row
   // inside an error zone rings brand-blue while every other accent around it is red.
   --focus-ring-color: var(--#{$family});
+
+  // The two shadow ROLES follow for the same reason, and this is what lets a component read the
+  // role instead of the `--accent-focus-*` alias. Before it, the two adaptivity mechanisms did not
+  // compose: a zone flipped only the aliases, `data-focus` retargeted only the roles, so a component
+  // obeyed whichever spelling it happened to use and was deaf to the other. Declared HERE rather
+  // than at :root, proximity decides — a zone is a deliberate local override and outranks the
+  // global switch inside its own subtree, which is the order a reader expects.
+  --ds-field-focus-shadow: var(--focus-field-#{$family}, var(--focus-field));
+  --ds-control-focus-shadow: var(--focus-ring-#{$family}, var(--focus-ring));
 }
 
 /// Recolour the DS accent for a type or scope from consumer SCSS, e.g.
