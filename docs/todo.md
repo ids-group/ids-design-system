@@ -103,9 +103,9 @@
 
 ## Decks awaiting a verdict (re-audited 2026-09-01)
 
-**Ten** decks carry `ds-deck-status: open` — counted on disk, not from this list, which had missed
-`basic-advanced-split` and then `banner-toast-icon-alignment`. The two picker decks closed: every
-question in them is answered and they moved to `presentations/implemented/`.
+**Eight** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+short before. The packaging lane closed and took three decks with it to
+`presentations/implemented/`, as the two picker decks did earlier.
 
 **The rank is now the filename.** An open deck is `<rank>-<slug>.html`, ranked by what answering it
 unblocks, so the folder listing is the queue — see `presentations/README.md`. Ranks are renumbered
