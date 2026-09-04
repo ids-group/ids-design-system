@@ -20,7 +20,8 @@
 // stay clean for preflight.
 import { execFileSync } from 'node:child_process';
 
-const run = (command, args) => execFileSync(command, args, { stdio: 'inherit' });
+const run = (command, args) =>
+  execFileSync(command, args, { stdio: 'inherit' });
 
 run(process.execPath, ['tools/changelog-release.mjs']);
 run(process.execPath, ['tools/sync-lib-package.mjs']);

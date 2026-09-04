@@ -20,7 +20,10 @@ copyFileSync(F, BAK);
 
 const run = () => {
   try {
-    execFileSync('node', ['tools/migration-lint.mjs'], { encoding: 'utf8', stdio: 'pipe' });
+    execFileSync('node', ['tools/migration-lint.mjs'], {
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
     return '';
   } catch (e) {
     return (e.stdout ?? '') + (e.stderr ?? '');
@@ -35,41 +38,101 @@ const mutations = {
   M010: (m) => (m.items[0].id = 'Bad_Id'),
   M011: (m) => (m.items[1].id = m.items[0].id),
   M012: (m) => (m.items[0].kind = 'nonsense'),
-  M013: (m) => { const i = m.items.find((x) => x.kind === 'behavior'); i.note = 'short'; },
-  M014: (m) => { const i = m.items.find((x) => x.kind === 'value-remap'); if (i) delete i.map; else m.items[0] = { ...m.items[0], kind: 'value-remap', map: undefined }; },
-  M015: (m) => { const i = m.items.find((x) => x.kind === 'behavior'); i.map = { a: 'b' }; },
-  M016: (m) => { const i = m.items.find((x) => x.kind === 'behavior'); i.new = 'something'; },
-  M017: (m) => { const i = m.items.find((x) => x.kind !== 'behavior'); delete i.searchHints; delete i.detect; },
-  M018: (m) => { const i = m.items.find((x) => x.kind.endsWith('-rename')); if (i) delete i.new; },
+  M013: (m) => {
+    const i = m.items.find((x) => x.kind === 'behavior');
+    i.note = 'short';
+  },
+  M014: (m) => {
+    const i = m.items.find((x) => x.kind === 'value-remap');
+    if (i) delete i.map;
+    else m.items[0] = { ...m.items[0], kind: 'value-remap', map: undefined };
+  },
+  M015: (m) => {
+    const i = m.items.find((x) => x.kind === 'behavior');
+    i.map = { a: 'b' };
+  },
+  M016: (m) => {
+    const i = m.items.find((x) => x.kind === 'behavior');
+    i.new = 'something';
+  },
+  M017: (m) => {
+    const i = m.items.find((x) => x.kind !== 'behavior');
+    delete i.searchHints;
+    delete i.detect;
+  },
+  M018: (m) => {
+    const i = m.items.find((x) => x.kind.endsWith('-rename'));
+    if (i) delete i.new;
+  },
   M020: (m) => delete m.items[0].surface,
   M021: (m) => (m.items[0].surface = 'nope'),
-  M022: (m) => { const i = m.items.find((x) => x.kind === 'behavior'); delete i.verify; },
-  M024: (m) => { const i = m.items.find((x) => x.kind === 'behavior'); i.note = i.note + ' The value now defaults to false.'; delete i.restore; },
+  M022: (m) => {
+    const i = m.items.find((x) => x.kind === 'behavior');
+    delete i.verify;
+  },
+  M024: (m) => {
+    const i = m.items.find((x) => x.kind === 'behavior');
+    i.note = i.note + ' The value now defaults to false.';
+    delete i.restore;
+  },
   M025: (m) => (m.items[0].supersedes = ['garbage']),
   M026: (m) => (m.items[0].supersedes = ['99.9.9#whatever']),
   M027: (m) => (m.items[0].supersedes = ['0.8.0#no-such-item']),
   M028: (m) => (m.items[0].supersededBy = '0.10.0#x'),
-  M029: (m) => { m.items[0].note = m.items[0].note + ' This is reversed later, in a future release.'; },
+  M029: (m) => {
+    m.items[0].note =
+      m.items[0].note + ' This is reversed later, in a future release.';
+  },
   M030: (m) => delete m.deleteList[0].find,
   M031: (m) => (m.deleteList[0].why = 'short'),
   M032: (m) => (m.deleteList[0].surface = 'nope'),
-  M023: (m) => { const i = m.items.find((x) => x.kind === 'behavior'); i.surface = 'typescript'; delete i.detect; },
+  M023: (m) => {
+    const i = m.items.find((x) => x.kind === 'behavior');
+    i.surface = 'typescript';
+    delete i.detect;
+  },
   M039: (m) => delete m.items[0].action,
-  M040: (m) => { const i = m.items.find((x) => x.note); i.note = i.note + ' ACTION: do the thing.'; },
-  M041: (m) => { const i = m.items.find((x) => x.note); i.note = (i.note + ' filler'.repeat(200)); },
+  M040: (m) => {
+    const i = m.items.find((x) => x.note);
+    i.note = i.note + ' ACTION: do the thing.';
+  },
+  M041: (m) => {
+    const i = m.items.find((x) => x.note);
+    i.note = i.note + ' filler'.repeat(200);
+  },
   M042: (m) => (m.items[0].pitfal = 'typo'),
   M037: (m) => delete m.deleteList,
   M035: (m) => delete m.deleteList[0].replaceWith,
   M036: (m) => (m.deleteList[0].id = 'Not_Kebab'),
-  M034: (m) => { const i = m.informational.findIndex((s) => s.includes('(delete list:')); m.informational[i] = m.informational[i].replace(/ \(delete list: [a-z0-9-]+\)/, ''); },
-  M043: (m) => { const i = m.items.find((x) => x.kind === 'value-remap') ?? m.items[0]; i.kind = 'value-remap'; i.old = 'ds-x[attr]'; i.map = { compact: 'count' }; },
-  M044: (m) => { const i = m.items.find((x) => x.kind === 'value-remap') ?? m.items[0]; i.kind = 'value-remap'; i.map = { a: 'attr="b"' }; i.old = 'attr="a"'; },
+  M034: (m) => {
+    const i = m.informational.findIndex((s) => s.includes('(delete list:'));
+    m.informational[i] = m.informational[i].replace(
+      / \(delete list: [a-z0-9-]+\)/,
+      '',
+    );
+  },
+  M043: (m) => {
+    const i = m.items.find((x) => x.kind === 'value-remap') ?? m.items[0];
+    i.kind = 'value-remap';
+    i.old = 'ds-x[attr]';
+    i.map = { compact: 'count' };
+  },
+  M044: (m) => {
+    const i = m.items.find((x) => x.kind === 'value-remap') ?? m.items[0];
+    i.kind = 'value-remap';
+    i.map = { a: 'attr="b"' };
+    i.old = 'attr="a"';
+  },
 };
 
 const dead = [];
 for (const [code, mutate] of Object.entries(mutations)) {
   const m = JSON.parse(readFileSync(BAK, 'utf8'));
-  try { mutate(m); } catch { /* mutation not applicable */ }
+  try {
+    mutate(m);
+  } catch {
+    /* mutation not applicable */
+  }
   writeFileSync(F, JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n');
   const out = run();
   const fired = out.includes(`  ${code}  `);
@@ -100,7 +163,10 @@ for (const { label, code, mutate, raw: text } of extraCases) {
   } else {
     const m = JSON.parse(readFileSync(BAK, 'utf8'));
     mutate(m);
-    writeFileSync(F, JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n');
+    writeFileSync(
+      F,
+      JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n',
+    );
   }
   const fired = run().includes(`  ${code}  `);
   if (!fired) dead.push(label);
@@ -109,4 +175,6 @@ for (const { label, code, mutate, raw: text } of extraCases) {
 
 copyFileSync(BAK, F);
 if (dead.length) process.exitCode = 1;
-console.log(`\n${dead.length ? 'RULES THAT DID NOT FIRE: ' + dead.join(', ') : 'every rule fired'}`);
+console.log(
+  `\n${dead.length ? 'RULES THAT DID NOT FIRE: ' + dead.join(', ') : 'every rule fired'}`,
+);

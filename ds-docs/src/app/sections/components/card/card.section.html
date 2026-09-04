@@ -187,9 +187,15 @@
     A child whose background runs to the card’s edge paints its square corners
     over the card’s radius, and the host cannot fix it: the rounded box is the
     card’s own inner element. Set
-    <code class="t-mono-inline">--ds-card-overflow: clip</code> on the card.
-    <code class="t-mono-inline">clip</code> rather than
-    <code class="t-mono-inline">hidden</code>, so the card does not become a
+    <code class="t-mono-inline">
+      --ds-card-overflow: clip
+    </code> on the card.
+    <code class="t-mono-inline">
+      clip
+    </code> rather than
+    <code class="t-mono-inline">
+      hidden
+    </code>, so the card does not become a
     scroll container.
   </p>
 
@@ -200,7 +206,9 @@
     A clipped card also cuts the focus ring off any child sitting at its edge —
     the ring is an outset shadow, and this is the exact case Foundations →
     Colour names. If the clipped card holds focusable content, put
-    <code class="t-mono-inline">data-focus="inset"</code> on it and the
+    <code class="t-mono-inline">
+      data-focus="inset"
+    </code> on it and the
     indicator moves inside the box instead of disappearing.
   </p>
 
@@ -223,7 +231,9 @@
     >
       <div class="bleed-demo">
         <div class="bleed-demo-body t-s">
-          <code class="t-mono-inline">--ds-card-overflow: clip</code>
+          <code class="t-mono-inline">
+            --ds-card-overflow: clip
+          </code>
         </div>
 
         <div class="bleed-demo-strip t-caption">

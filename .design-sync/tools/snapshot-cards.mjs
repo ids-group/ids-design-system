@@ -13,9 +13,7 @@
 // Run it LAST. It rewrites card files in place, and any later build-cards run replaces them with
 // live cards again.
 import { createServer } from 'node:http';
-import {
-  existsSync, readFileSync, statSync, writeFileSync,
-} from 'node:fs';
+import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launchBrowser } from './lib/browser.mjs';
@@ -38,17 +36,21 @@ const CHROME = [
   '/usr/bin/google-chrome',
   '/usr/bin/chromium',
   '/usr/bin/chromium-browser',
-].filter(Boolean).find((path) => existsSync(path));
+]
+  .filter(Boolean)
+  .find((path) => existsSync(path));
 
 if (!CHROME) {
   console.error('No Chrome found — snapshot-cards needs a headless browser.');
   process.exit(1);
 }
 
-const live = new Set(readFileSync(join(syncDir, 'live-chapters.txt'), 'utf8')
-  .split('\n')
-  .map((line) => line.trim())
-  .filter((line) => line && !line.startsWith('#')));
+const live = new Set(
+  readFileSync(join(syncDir, 'live-chapters.txt'), 'utf8')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#')),
+);
 
 /** The section a card renders, from its host tag: `ds-docs-components-toast` is `components/toast`.
  *  Read from the file rather than guessed from the path, because a card's directory is its
@@ -65,7 +67,8 @@ const chapterOf = (html) => {
 // Controls whose panel IS the documented thing. The panel was never VISIBLE in a card - a CDK
 // overlay is closed by default - but a frozen card has no click to open it either. Matched per
 // CARD: by chapter this keeps 130 cards live to cover the 85 that own a panel, Table 35 for 5.
-const PANEL_OWNERS = /<(ds-select|ds-multi-select|ds-autocomplete|ds-date-picker|ds-time-picker|ds-color-picker|ds-menu|ds-popover)[\s>]/;
+const PANEL_OWNERS =
+  /<(ds-select|ds-multi-select|ds-autocomplete|ds-date-picker|ds-time-picker|ds-color-picker|ds-menu|ds-popover)[\s>]/;
 
 // The surfaces no element name covers: Table builds its own column-filter panel instead of
 // composing `ds-popover`, and a tooltip is a directive with no element. Matched as an ATTRIBUTE -
@@ -73,7 +76,9 @@ const PANEL_OWNERS = /<(ds-select|ds-multi-select|ds-autocomplete|ds-date-picker
 // look interactive.
 const OPENS_ON_DEMAND = /\saria-haspopup="|\sdstooltip/i;
 
-const cards = JSON.parse(readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8')).cards;
+const cards = JSON.parse(
+  readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8'),
+).cards;
 
 // Template indentation reaches the snapshot as real text nodes. Collapsing it with a regexp over
 // the file would corrupt the places where whitespace is content - `white-space: pre` on the mono
@@ -128,7 +133,15 @@ const TIDY = `
   })();
 </script>`;
 
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.json': 'application/json', '.md': 'text/plain', '.png': 'image/png' };
+const TYPES = {
+  '.html': 'text/html',
+  '.js': 'text/javascript',
+  '.css': 'text/css',
+  '.woff2': 'font/woff2',
+  '.json': 'application/json',
+  '.md': 'text/plain',
+  '.png': 'image/png',
+};
 const server = createServer((request, response) => {
   const url = decodeURIComponent(request.url.split('?')[0]);
   const file = join(OUT, url);
@@ -142,7 +155,9 @@ const server = createServer((request, response) => {
 
     return response.end(readFileSync(file, 'utf8') + TIDY);
   }
-  response.writeHead(200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' });
+  response.writeHead(200, {
+    'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream',
+  });
 
   return response.end(readFileSync(file));
 });
@@ -161,12 +176,18 @@ const render = async (path) => {
     DUMP,
   );
 
-  return html ? `<!DOCTYPE html>
-${html}` : '';
+  return html
+    ? `<!DOCTYPE html>
+${html}`
+    : '';
 };
 
 server.listen(PORT);
-const browser = await launchBrowser({ chrome: CHROME, width: WIDTH, height: FRAME_HEIGHT });
+const browser = await launchBrowser({
+  chrome: CHROME,
+  width: WIDTH,
+  height: FRAME_HEIGHT,
+});
 
 const kept = [];
 const failed = [];
@@ -186,14 +207,16 @@ const queue = cards.filter((path) => {
 // card that is already static, re-prepends the marker and dumps the result, and some cards came
 // back with their section in twice - 6 buttons and two h2 where there had been 3 and one, which
 // only the height check caught, on 268 cards.
-const alreadyFrozen = queue.filter((path) => !readFileSync(join(OUT, path), 'utf8').includes('<script'));
+const alreadyFrozen = queue.filter(
+  (path) => !readFileSync(join(OUT, path), 'utf8').includes('<script'),
+);
 if (alreadyFrozen.length) {
   server.close();
   await browser.close();
   console.error(
-    `✗ ${alreadyFrozen.length} of ${queue.length} card(s) are already frozen — this has run once`
-    + ' already. Re-run `node .design-sync/tools/build-upload.mjs` first; freezing a frozen card'
-    + ' duplicates its content.',
+    `✗ ${alreadyFrozen.length} of ${queue.length} card(s) are already frozen — this has run once` +
+      ' already. Re-run `node .design-sync/tools/build-upload.mjs` first; freezing a frozen card' +
+      ' duplicates its content.',
   );
   process.exit(1);
 }
@@ -206,7 +229,8 @@ const report = (count) => {
 
     return;
   }
-  if (count % 20 === 0 || count === queue.length) console.error(`  rendered ${count}/${queue.length}`);
+  if (count % 20 === 0 || count === queue.length)
+    console.error(`  rendered ${count}/${queue.length}`);
 };
 
 let next = 0;
@@ -234,21 +258,25 @@ try {
 
 process.stderr.write('\r'.padEnd(90));
 if (failed.length) {
-  console.error(`\n✗ ${failed.length} card(s) never finished rendering, so nothing was written:`);
+  console.error(
+    `\n✗ ${failed.length} card(s) never finished rendering, so nothing was written:`,
+  );
   for (const path of failed.slice(0, 10)) console.error(`    ${path}`);
   process.exit(1);
 }
 
 // Angular inlines a component's styles into every document that renders it. Mostly the blocks are
 // scoped by the `_ngcontent`/`_nghost` attributes - but NOT entirely, see the union below.
-const isComponentStyle = (body) => body.includes('_nghost-') || body.includes('_ngcontent-');
+const isComponentStyle = (body) =>
+  body.includes('_nghost-') || body.includes('_ngcontent-');
 
 // Whitespace inside a `<style>` is never rendered, so this collapses unconditionally - unlike the
 // body text below, which has to ask the computed style first.
-const tidyCss = (body) => body
-  .replace(/\/\*[\s\S]*?\*\//g, '')
-  .replace(/\s*\n\s*/g, '\n')
-  .trim();
+const tidyCss = (body) =>
+  body
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\s*\n\s*/g, '\n')
+    .trim();
 
 // Five lanes finish out of order, so the Map's order is a race. `cards.json` order is what makes
 // the sheet and the shortened ids byte-identical run to run.
@@ -259,7 +287,8 @@ const rendered = queue.map((path) => [path, snapshots.get(path)]);
 // as build-cards wrote it.
 const ordered = [];
 for (const entry of rendered) {
-  if (PANEL_OWNERS.test(entry[1]) || OPENS_ON_DEMAND.test(entry[1])) kept.push(entry[0]);
+  if (PANEL_OWNERS.test(entry[1]) || OPENS_ON_DEMAND.test(entry[1]))
+    kept.push(entry[0]);
   else ordered.push(entry);
 }
 
@@ -276,11 +305,12 @@ for (const [, dom] of rendered) {
 // Renamed across the sheet and every card in one pass: the attribute IS the scope, so a rename
 // that reaches only one of them silently unstyles the component.
 const ids = new Map();
-const shorten = (text) => text.replace(/ng-c\d+/g, (id) => {
-  if (!ids.has(id)) ids.set(id, `c${ids.size.toString(36)}`);
+const shorten = (text) =>
+  text.replace(/ng-c\d+/g, (id) => {
+    if (!ids.has(id)) ids.set(id, `c${ids.size.toString(36)}`);
 
-  return ids.get(id);
-});
+    return ids.get(id);
+  });
 
 const sheet = shorten(blocks.join('\n').replace(/@charset "UTF-8";/g, ''));
 writeFileSync(join(OUT, SHARED_CSS), `${sheet.trim()}\n`);
@@ -321,15 +351,18 @@ for (const [path, dom] of ordered) {
 // What `check-frozen` asserts against, so the rule has one implementation rather than two.
 writeFileSync(
   join(syncDir, 'live-cards.txt'),
-  `# Written by snapshot-cards.mjs — the cards it left live. Do not edit; see live-chapters.txt.\n${
-    [...kept].sort().join('\n')}\n`,
+  `# Written by snapshot-cards.mjs — the cards it left live. Do not edit; see live-chapters.txt.\n${[
+    ...kept,
+  ]
+    .sort()
+    .join('\n')}\n`,
 );
 
 const kb = (bytes) => `${Math.round(bytes / 1024)} KB`;
 console.log(
-  `\n✓ ${ordered.length} card(s) frozen to static HTML, ${kept.length} left live`
-  + ` (${[...live].join(', ')} + every card with a panel)`
-  + `\n  ${blocks.length} distinct component style block(s) → ${SHARED_CSS} (${kb(Buffer.byteLength(sheet))}, fetched once)`
-  + `\n  ${ids.size} Angular component id(s) shortened`
-  + `\n  cards ${kb(before)} → ${kb(after)}`,
+  `\n✓ ${ordered.length} card(s) frozen to static HTML, ${kept.length} left live` +
+    ` (${[...live].join(', ')} + every card with a panel)` +
+    `\n  ${blocks.length} distinct component style block(s) → ${SHARED_CSS} (${kb(Buffer.byteLength(sheet))}, fetched once)` +
+    `\n  ${ids.size} Angular component id(s) shortened` +
+    `\n  cards ${kb(before)} → ${kb(after)}`,
 );

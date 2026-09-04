@@ -26,7 +26,11 @@ if (!existsSync(FACADE)) {
 }
 
 const asFile = (base) => {
-  for (const candidate of [`${base}.ts`, `${base}.d.ts`, join(base, 'index.ts')]) {
+  for (const candidate of [
+    `${base}.ts`,
+    `${base}.d.ts`,
+    join(base, 'index.ts'),
+  ]) {
     if (existsSync(candidate)) return candidate;
   }
 
@@ -70,7 +74,8 @@ export function entryPoints() {
  *  them from the .d.ts — the imports that forced the export still need them. */
 export function internalSymbols() {
   const marked = new Set();
-  const TAGGED = /\/\*\*[\s\S]*?@internal[\s\S]*?\*\/\s*(?:@[\w.]+\([\s\S]*?\)\s*)*export\s+(?:declare\s+)?(?:abstract\s+)?(?:class|const|function|interface|type|enum)\s+(\w+)/g;
+  const TAGGED =
+    /\/\*\*[\s\S]*?@internal[\s\S]*?\*\/\s*(?:@[\w.]+\([\s\S]*?\)\s*)*export\s+(?:declare\s+)?(?:abstract\s+)?(?:class|const|function|interface|type|enum)\s+(\w+)/g;
   const visit = (dir) => {
     for (const item of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, item.name);
@@ -78,8 +83,10 @@ export function internalSymbols() {
         visit(full);
         continue;
       }
-      if (!item.name.endsWith('.ts') || item.name.endsWith('.spec.ts')) continue;
-      for (const [, name] of readFileSync(full, 'utf8').matchAll(TAGGED)) marked.add(name);
+      if (!item.name.endsWith('.ts') || item.name.endsWith('.spec.ts'))
+        continue;
+      for (const [, name] of readFileSync(full, 'utf8').matchAll(TAGGED))
+        marked.add(name);
     }
   };
   visit(LIB_ROOT);

@@ -488,7 +488,9 @@ for (const service of services)
     if (!member.description)
       serviceGaps.push(`${service.className}.${member.name} — no description`);
     if (member.type === null)
-      serviceGaps.push(`${service.className}.${member.name} — no declared type`);
+      serviceGaps.push(
+        `${service.className}.${member.name} — no declared type`,
+      );
   }
 
 // Bare folder key goes to the component whose selector is `ds-<folder>`

@@ -289,12 +289,16 @@ try {
 
   writeFileSync(FIXTURE_PATH, REPEATED_SECTION);
   const repeatCaught = run(FIXTURE).includes('  C012  ');
-  console.log(`${repeatCaught ? 'fires ' : 'DEAD  '} C012 on a section opened twice`);
+  console.log(
+    `${repeatCaught ? 'fires ' : 'DEAD  '} C012 on a section opened twice`,
+  );
   if (!repeatCaught) dead.push('C012 repeat');
 
   writeFileSync(FIXTURE_PATH, TWO_BREAKING_HALVES);
   const halvesQuiet = !run(FIXTURE).includes('  C012  ');
-  console.log(`${halvesQuiet ? 'quiet ' : 'FALSE+'} C012 on two breaking halves in one slot`);
+  console.log(
+    `${halvesQuiet ? 'quiet ' : 'FALSE+'} C012 on two breaking halves in one slot`,
+  );
   if (!halvesQuiet) dead.push('C012 false positive on the split breaking half');
 
   // C014 — an entry announcing that we repaired one of our own files. Three releases in a row
@@ -306,12 +310,16 @@ try {
 
   writeFileSync(FIXTURE_PATH, OUR_RECORD_ENTRY);
   const recordCaught = run(FIXTURE).includes('  C014  ');
-  console.log(`${recordCaught ? 'fires ' : 'DEAD  '} C014 on an entry about our own bookkeeping`);
+  console.log(
+    `${recordCaught ? 'fires ' : 'DEAD  '} C014 on an entry about our own bookkeeping`,
+  );
   if (!recordCaught) dead.push('C014');
 
   writeFileSync(FIXTURE_PATH, REAL_DEFECT);
   const defectQuiet = !run(FIXTURE).includes('  C014  ');
-  console.log(`${defectQuiet ? 'quiet ' : 'FALSE+'} C014 on a plainly described defect`);
+  console.log(
+    `${defectQuiet ? 'quiet ' : 'FALSE+'} C014 on a plainly described defect`,
+  );
   if (!defectQuiet) dead.push('C014 false positive on a real defect');
 
   // C013 — a name that resolves to nothing. C010 walks the symbols that exist and are not
@@ -325,12 +333,16 @@ try {
 
   writeFileSync(FIXTURE_PATH, PHANTOM);
   const phantomCaught = run(FIXTURE).includes('  C013  ');
-  console.log(`${phantomCaught ? 'fires ' : 'DEAD  '} C013 on a symbol nothing declares`);
+  console.log(
+    `${phantomCaught ? 'fires ' : 'DEAD  '} C013 on a symbol nothing declares`,
+  );
   if (!phantomCaught) dead.push('C013');
 
   writeFileSync(FIXTURE_PATH, REAL);
   const realQuiet = !run(FIXTURE).includes('  C013  ');
-  console.log(`${realQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol that resolves`);
+  console.log(
+    `${realQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol that resolves`,
+  );
   if (!realQuiet) dead.push('C013 false positive on a real symbol');
 
   // Announcing a removal is the one entry that MUST name a symbol nothing declares.
@@ -338,7 +350,9 @@ try {
     '# Fixture\n\n## Unreleased\n\n### Breaking\n\n- **A.** The `DsToastConfig` interface is removed with its token.\n';
   writeFileSync(FIXTURE_PATH, REMOVED);
   const removalQuiet = !run(FIXTURE).includes('  C013  ');
-  console.log(`${removalQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol the entry says was removed`);
+  console.log(
+    `${removalQuiet ? 'quiet ' : 'FALSE+'} C013 on a symbol the entry says was removed`,
+  );
   if (!removalQuiet) dead.push('C013 false positive on an announced removal');
 
   // C012 — the section order, which arrived wrong twice in two days before anything checked it.

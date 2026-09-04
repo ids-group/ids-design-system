@@ -18,19 +18,25 @@ const syncDir = resolve(here, '..');
 const OUT = join(syncDir, 'upload', '_adherence.oxlintrc.json');
 
 if (!existsSync(join(syncDir, 'upload'))) {
-  console.error('build-adherence: .design-sync/upload is missing — run build-cards.mjs first.');
+  console.error(
+    'build-adherence: .design-sync/upload is missing — run build-cards.mjs first.',
+  );
   process.exit(1);
 }
 
 const config = JSON.parse(readFileSync(join(syncDir, 'config.json'), 'utf8'));
-const surface = JSON.parse(readFileSync(join(syncDir, 'elements/gen/surface.json'), 'utf8'));
+const surface = JSON.parse(
+  readFileSync(join(syncDir, 'elements/gen/surface.json'), 'utf8'),
+);
 const css = readFileSync(join(syncDir, 'elements/dist/ds-bundle.css'), 'utf8');
 
 // The stylesheet that ships is the only honest token list: a name declared in SCSS but compiled
 // away is not something a consumer can use, and the colour-families gate reads the same file for
 // the same reason.
 const tokenKinds = {};
-for (const [, name, value] of css.matchAll(/(--[a-zA-Z0-9-_]+)\s*:\s*([^;}]+)/g)) {
+for (const [, name, value] of css.matchAll(
+  /(--[a-zA-Z0-9-_]+)\s*:\s*([^;}]+)/g,
+)) {
   const raw = value.trim();
   const kind = /^#[0-9a-f]{3,8}$|^(?:rgb|hsl|oklch|color-mix)\(/i.test(raw)
     ? 'color'
@@ -43,7 +49,8 @@ for (const [, name, value] of css.matchAll(/(--[a-zA-Z0-9-_]+)\s*:\s*([^;}]+)/g)
           : 'other';
   // First declaration wins: a later theme block redeclares the same name with the same kind, and
   // an `other` from a var() chain must not overwrite a kind already established.
-  if (!(name in tokenKinds) || tokenKinds[name] === 'other') tokenKinds[name] = kind;
+  if (!(name in tokenKinds) || tokenKinds[name] === 'other')
+    tokenKinds[name] = kind;
 }
 
 // The public `--ds-*` hooks are the knobs a consumer SETS, so in this stylesheet they appear only
@@ -54,7 +61,9 @@ for (const [, name] of css.matchAll(/var\(\s*(--[a-zA-Z0-9-_]+)/g)) {
   if (name in tokenKinds) continue;
   tokenKinds[name] = /-(?:color|bg|fg)$/.test(name)
     ? 'color'
-    : /-(?:radius|size|minw|maxw|minh|maxh|gap|padding|width|height|mt|mb|ml|mr)$/.test(name)
+    : /-(?:radius|size|minw|maxw|minh|maxh|gap|padding|width|height|mt|mb|ml|mr)$/.test(
+          name,
+        )
       ? 'length'
       : /-shadow$/.test(name)
         ? 'shadow'
@@ -63,8 +72,11 @@ for (const [, name] of css.matchAll(/var\(\s*(--[a-zA-Z0-9-_]+)/g)) {
 
 const fontFamilies = [
   ...new Set(
-    [...css.matchAll(/@font-face[^}]*?font-family:\s*(?:'([^']+)'|"([^"]+)"|([^;]+))/g)]
-      .map((match) => (match[1] ?? match[2] ?? match[3]).trim()),
+    [
+      ...css.matchAll(
+        /@font-face[^}]*?font-family:\s*(?:'([^']+)'|"([^"]+)"|([^;]+))/g,
+      ),
+    ].map((match) => (match[1] ?? match[2] ?? match[3]).trim()),
   ),
 ].sort();
 
@@ -99,18 +111,21 @@ const propRules = components.map((component) => {
     ),
     ...component.api
       .filter((entry) => entry.kind === 'model')
-      .map((entry) => `on${entry.name[0].toUpperCase()}${entry.name.slice(1)}Change`),
+      .map(
+        (entry) =>
+          `on${entry.name[0].toUpperCase()}${entry.name.slice(1)}Change`,
+      ),
     ...component.slots.map((slot) => slot.prop),
   ];
   const allowed = [...declared, 'children', 'key', 'ref', 'className', 'style'];
 
   return {
     selector:
-      `JSXOpeningElement[name.name='${component.name}'] > JSXAttribute`
-      + ` > JSXIdentifier[name!=/^(?:${allowed.join('|')})$/]`,
+      `JSXOpeningElement[name.name='${component.name}'] > JSXAttribute` +
+      ` > JSXIdentifier[name!=/^(?:${allowed.join('|')})$/]`,
     message:
-      `<${component.name}> doesn't accept that prop.`
-      + ` Declared props: ${[...declared, 'children'].join(', ')}.`,
+      `<${component.name}> doesn't accept that prop.` +
+      ` Declared props: ${[...declared, 'children'].join(', ')}.`,
   };
 });
 
@@ -128,7 +143,8 @@ const oxlint = {
         patterns: [
           {
             group: internals,
-            message: "Import design-system components from 'index.js', not component internals.",
+            message:
+              "Import design-system components from 'index.js', not component internals.",
           },
         ],
       },
@@ -144,19 +160,23 @@ const oxlint = {
         message: 'Raw px value — use a design-system spacing token via var().',
       },
       {
-        selector:
-          `Literal[value=/font-family\\s*:\\s*(?!['\\"]?(?:${fontFamilies.join('|')}))/i]`,
+        selector: `Literal[value=/font-family\\s*:\\s*(?!['\\"]?(?:${fontFamilies.join('|')}))/i]`,
         message: `Font not provided by the design system. Available: ${fontFamilies.join(', ')}.`,
       },
       ...propRules,
     ],
   },
-  overrides: [{ files: ['**/index.js'], rules: { 'no-restricted-imports': 'off' } }],
+  overrides: [
+    { files: ['**/index.js'], rules: { 'no-restricted-imports': 'off' } },
+  ],
   // Carried the way the live copy carried it: the config is the only artefact in the project that
   // records what the design system offers, and the mapping was recoverable from here alone.
   'x-omelette': {
     components: Object.fromEntries(
-      components.map((component) => [component.name, { replaces: replaces[component.name] ?? [] }]),
+      components.map((component) => [
+        component.name,
+        { replaces: replaces[component.name] ?? [] },
+      ]),
     ),
     tokens: Object.keys(tokenKinds).sort(),
     tokenKinds,
@@ -166,7 +186,7 @@ const oxlint = {
 
 writeFileSync(OUT, `${JSON.stringify(oxlint, null, 2)}\n`);
 console.log(
-  `✓ _adherence.oxlintrc.json — ${forbid.length} forbidden element(s),`
-  + ` ${propRules.length} prop allowlist(s), ${Object.keys(tokenKinds).length} tokens,`
-  + ` fonts: ${fontFamilies.join(', ')}`,
+  `✓ _adherence.oxlintrc.json — ${forbid.length} forbidden element(s),` +
+    ` ${propRules.length} prop allowlist(s), ${Object.keys(tokenKinds).length} tokens,` +
+    ` fonts: ${fontFamilies.join(', ')}`,
 );

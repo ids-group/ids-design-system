@@ -30,7 +30,13 @@ export const config: SheriffConfig = {
     // library itself (its alias resolves to in-repo dist/ds). Everyone may use it.
     root: () => true,
     // A section composes core + shared + layout + the ds lib (root); NOT another section.
-    'docs:section': ['docs:core', 'docs:shared', 'docs:layout', 'root', 'ds:lib'],
+    'docs:section': [
+      'docs:core',
+      'docs:shared',
+      'docs:layout',
+      'root',
+      'ds:lib',
+    ],
     // The bottom tier: the nav config, which is data and depends on nothing.
     // It exists so `shared` and `layout` can both read it without pointing at
     // each other — that pair used to be a cycle (docs-stats reads nav.config
@@ -39,7 +45,7 @@ export const config: SheriffConfig = {
     'docs:shared': ['docs:core', 'root', 'ds:lib'],
     'docs:layout': ['docs:core', 'docs:shared', 'root', 'ds:lib'],
   },
-    // The library is not linted here (the sheriff block is scoped to ds-docs), but its
-    // entry points import each other, so the tag has to allow it.
-    'ds:lib': () => true,
+  // The library is not linted here (the sheriff block is scoped to ds-docs), but its
+  // entry points import each other, so the tag has to allow it.
+  'ds:lib': () => true,
 };

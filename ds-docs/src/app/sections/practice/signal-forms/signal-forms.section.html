@@ -14,12 +14,22 @@
   <p class="block-desc t-s">
     Describe the shape and the rules in the component, then point each control
     at a field. The DS side is <strong>one attribute</strong> —
-    <code class="t-mono-inline">[formField]</code> — and it comes from
-    <code class="t-mono-inline">&#64;angular/forms/signals</code>, not from
-    this library. That is the point: a DS control participates because it
-    exposes <code class="t-mono-inline">value</code> as a
-    <code class="t-mono-inline">model()</code>, which is the entire
-    <code class="t-mono-inline">FormValueControl</code> contract.
+    <code class="t-mono-inline">
+      [formField]
+    </code> — and it comes from
+    <code class="t-mono-inline">
+      &#64;angular/forms/signals
+    </code>, not from this
+    library. That is the point: a DS control participates because it exposes
+    <code class="t-mono-inline">
+      value
+    </code> as a
+    <code class="t-mono-inline">
+      model()
+    </code>, which is the entire
+    <code class="t-mono-inline">
+      FormValueControl
+    </code> contract.
   </p>
 
   <pre class="t-mono-block">{{ snippet }}</pre>
@@ -57,9 +67,10 @@
   <p class="block-desc t-s">
     Type an invalid address and leave the field: the message appears only after
     the field is touched, the border turns,
-    <code class="t-mono-inline">aria-invalid</code> flips, and the button
-    stays disabled until the form is valid. None of that is wired in the
-    template.
+    <code class="t-mono-inline">
+      aria-invalid
+    </code> flips, and the button stays
+    disabled until the form is valid. None of that is wired in the template.
   </p>
 
   <h3 class="block-title t-h4">
@@ -122,9 +133,15 @@
 
   <p class="block-desc t-s">
     Nothing here replaces anything. Every control still provides a
-    <code class="t-mono-inline">ControlValueAccessor</code>, so
-    <code class="t-mono-inline">formControlName</code> and
-    <code class="t-mono-inline">ngModel</code> bind exactly as before, and the
+    <code class="t-mono-inline">
+      ControlValueAccessor
+    </code>, so
+    <code class="t-mono-inline">
+      formControlName
+    </code> and
+    <code class="t-mono-inline">
+      ngModel
+    </code> bind exactly as before, and the
     same message row serves both. A given field is driven by one form system at
     a time, so the two cannot disagree.
   </p>

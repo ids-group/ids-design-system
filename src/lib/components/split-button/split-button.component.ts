@@ -31,9 +31,9 @@ export class SplitButtonComponent {
       devWarn(() =>
         this.menuItems().length
           ? null
-          : '[ds-split-button] has no `menuItems`, so the chevron is disabled — a chevron that opens'
-            + ' nothing reads as a broken control. Pass the items, or use `ds-button` for a single'
-            + ' action.',
+          : '[ds-split-button] has no `menuItems`, so the chevron is disabled — a chevron that opens' +
+            ' nothing reads as a broken control. Pass the items, or use `ds-button` for a single' +
+            ' action.',
       );
     }
   }

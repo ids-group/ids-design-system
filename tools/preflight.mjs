@@ -34,7 +34,7 @@ try {
 } catch {
   fail(
     "could not establish that 'origin/main' is reachable from HEAD. Either local 'main' is " +
-      "behind or diverged — pull — or the ref is not there at all, which a pull will not fix: " +
+      'behind or diverged — pull — or the ref is not there at all, which a pull will not fix: ' +
       'check the remote name and that a fetch has run.',
   );
 }
@@ -90,13 +90,17 @@ try {
 // The cut is the only moment this can be caught: once the block is published, a consumer has
 // already read the manifest's silence as "this release does not touch me".
 try {
-  execSync('node tools/check-manifest-coverage-selftest.mjs', { stdio: 'inherit' });
+  execSync('node tools/check-manifest-coverage-selftest.mjs', {
+    stdio: 'inherit',
+  });
   execSync('node tools/check-manifest-coverage.mjs', { stdio: 'inherit' });
   // The only check that reads the TREE at each published boundary. Everything above validates the
   // JSON and the prose, so an item can satisfy all of it and still name a token that never
   // existed. ~22s over the whole history, which is why it is here and in the PR gate but not in
   // `lint:all`, where the published manifests it reads cannot have changed.
-  execSync('node tools/check-manifest-truth-selftest.mjs', { stdio: 'inherit' });
+  execSync('node tools/check-manifest-truth-selftest.mjs', {
+    stdio: 'inherit',
+  });
   execSync('node tools/check-manifest-truth.mjs', { stdio: 'inherit' });
 } catch {
   fail(

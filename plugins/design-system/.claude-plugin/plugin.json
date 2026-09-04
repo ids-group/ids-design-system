@@ -7,5 +7,12 @@
   "homepage": "https://ids-ds.proto.ids-group.co.uk/",
   "repository": "https://bitbucket.org/itband/ids-design-system.git",
   "license": "MIT",
-  "keywords": ["design-system", "angular", "migration", "auto-update", "changelog", "ids"]
+  "keywords": [
+    "design-system",
+    "angular",
+    "migration",
+    "auto-update",
+    "changelog",
+    "ids"
+  ]
 }

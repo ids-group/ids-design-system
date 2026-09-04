@@ -18,12 +18,20 @@
 
   <p class="block-desc t-s">
     Three groups, brand mark at the top, one item active. Each item exposes an
-    <code class="t-mono-inline">(activate)</code> output (the click
-    <code class="t-mono-inline">MouseEvent</code>) —
-    <code class="t-mono-inline">preventDefault()</code> intercepts navigation
-    on an <code class="t-mono-inline">href</code> item (a
-    <code class="t-mono-inline">routerLink</code> navigates regardless), e.g.
-    to drive scroll-spy.
+    <code class="t-mono-inline">
+      (activate)
+    </code> output (the click
+    <code class="t-mono-inline">
+      MouseEvent
+    </code>) —
+    <code class="t-mono-inline">
+      preventDefault()
+    </code> intercepts navigation on
+    an <code class="t-mono-inline">href</code> item (a
+    <code class="t-mono-inline">
+      routerLink
+    </code> navigates regardless), e.g. to
+    drive scroll-spy.
   </p>
 
   <div class="stage stage--frame">
@@ -83,8 +91,12 @@
 
   <p class="block-desc t-s">
     Project a logo image or inline SVG into the
-    <code class="t-mono-inline">[brand]</code> slot instead of the string
-    <code class="t-mono-inline">brand</code> input — the auto letter-mark is
+    <code class="t-mono-inline">
+      [brand]
+    </code> slot instead of the string
+    <code class="t-mono-inline">
+      brand
+    </code> input — the auto letter-mark is
     skipped. When the rail collapses, the consumer hides its own wordmark and
     keeps the mark.
   </p>
@@ -179,28 +191,44 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">logoLetter</code> sets the tile glyph when it
+    <code class="t-mono-inline">
+      logoLetter
+    </code> sets the tile glyph when it
     differs from the brand's first letter, and markup marked
-    <code class="t-mono-inline">dsBrandName</code> projects a custom wordmark
-    in place of the plain <code class="t-mono-inline">brand</code> text — here
-    a two-tone "MyAdmin" whose accent slice matches the tile. Keep the string
+    <code class="t-mono-inline">
+      dsBrandName
+    </code> projects a custom wordmark in
+    place of the plain <code class="t-mono-inline">brand</code> text — here a
+    two-tone "MyAdmin" whose accent slice matches the tile. Keep the string
     input alongside as the fallback semantics.
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">brandRoute</code> makes the brand row a link —
+    <code class="t-mono-inline">
+      brandRoute
+    </code> makes the brand row a link —
     normally the app's home. Unset it stays a plain block, because a logo that
     goes nowhere should not be a link and every app decides for itself whether
     its mark is a way home. The row announces itself as
-    <code class="t-mono-inline">"&lt;brand&gt;, home"</code>; override that
-    with <code class="t-mono-inline">brandLinkLabel</code>. Router targets
-    only, and <code class="t-mono-inline">RouterLink</code> is instantiated
-    only once the input is set, so an app with no router still renders the
-    sidenav. Not demonstrated live here on purpose: a specimen that navigates
-    takes the page with it.
+    <code class="t-mono-inline">
+      "&lt;brand&gt;, home"
+    </code>; override that with
+    <code class="t-mono-inline">
+      brandLinkLabel
+    </code>. Router targets only, and
+    <code class="t-mono-inline">
+      RouterLink
+    </code> is instantiated only once the
+    input is set, so an app with no router still renders the sidenav. Not
+    demonstrated live here on purpose: a specimen that navigates takes the page
+    with it.
   </p>
 
-  <code class="t-mono-inline">&lt;ds-sidenav brand="Atlas" brandRoute="/"&gt;</code>
+  <code class="t-mono-inline"
+    >
+    &lt;ds-sidenav brand="Atlas" brandRoute="/"&gt;
+  </code
+  >
 
   <div class="stage stage--frame">
     <ds-sidenav
@@ -247,10 +275,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">&lt;ds-sidenav-group expandable&gt;</code>
+    <code class="t-mono-inline">
+      &lt;ds-sidenav-group expandable&gt;
+    </code>
     renders the header as a toggle button with a caret. Group body collapses
     when <code class="t-mono-inline">expanded=false</code>. Combine with the new
-    <code class="t-mono-inline">[icon]</code> input to set a group-level icon.
+    <code class="t-mono-inline">
+      [icon]
+    </code> input to set a group-level icon.
   </p>
 
   <div class="stage stage--frame">

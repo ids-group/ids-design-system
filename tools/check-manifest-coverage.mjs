@@ -38,7 +38,11 @@ function libraryFiles() {
     for (const item of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, item.name);
       if (item.isDirectory()) crawl(full);
-      else if (/\.(ts|scss)$/.test(item.name) && !item.name.endsWith('.spec.ts')) found.push(full);
+      else if (
+        /\.(ts|scss)$/.test(item.name) &&
+        !item.name.endsWith('.spec.ts')
+      )
+        found.push(full);
     }
   };
   crawl(join(ROOT, 'src/lib'));
@@ -65,7 +69,9 @@ function realHooks() {
       }
     }
     if (file.endsWith('.ts')) {
-      for (const decl of source.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(DECL_RE))
+      for (const decl of source
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .matchAll(DECL_RE))
         symbols.add(decl[1]);
     }
   }
@@ -79,7 +85,11 @@ const hooksIn = (body) => {
   const found = new Set();
   for (const span of body.matchAll(/`([^`]+)`/g)) {
     for (const piece of span[1].split(/[^A-Za-z0-9_-]+/)) {
-      if (HOOKS.tokens.has(piece) || HOOKS.tags.has(piece) || HOOKS.symbols.has(piece))
+      if (
+        HOOKS.tokens.has(piece) ||
+        HOOKS.tags.has(piece) ||
+        HOOKS.symbols.has(piece)
+      )
         found.add(piece);
     }
   }
@@ -94,7 +104,10 @@ const SAYS_NOTHING_CHANGED = [
   /\bnothing to change\b/i,
 ];
 
-const changelog = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8').replace(/\r\n/g, '\n');
+const changelog = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8').replace(
+  /\r\n/g,
+  '\n',
+);
 const lines = changelog.split('\n');
 
 function blocks() {
@@ -137,7 +150,9 @@ function entriesOf(block) {
 // matched as patterns.
 function patternsIn(text) {
   const patterns = [];
-  for (const match of text.matchAll(/--[a-z0-9-]*(?:\*|<[a-z]+>)[a-z0-9*<>-]*/gi)) {
+  for (const match of text.matchAll(
+    /--[a-z0-9-]*(?:\*|<[a-z]+>)[a-z0-9*<>-]*/gi,
+  )) {
     const source = match[0]
       .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
       .replace(/<[a-z]+>/gi, '[a-z0-9-]+')
@@ -157,7 +172,8 @@ function manifestFor(version) {
   const patterns = patternsIn(text);
   return {
     path,
-    names: (hook) => text.includes(hook) || patterns.some((pattern) => pattern.test(hook)),
+    names: (hook) =>
+      text.includes(hook) || patterns.some((pattern) => pattern.test(hook)),
   };
 }
 
@@ -167,12 +183,15 @@ function check(block) {
   const gaps = [];
 
   for (const entry of entries) {
-    if (SAYS_NOTHING_CHANGED.some((phrase) => phrase.test(entry.body))) continue;
+    if (SAYS_NOTHING_CHANGED.some((phrase) => phrase.test(entry.body)))
+      continue;
     const hooks = hooksIn(entry.body);
     if (!hooks.size) continue;
     // A missing manifest is only a gap once something in the block actually needs one; that
     // keeps a cycle with no actionable work from being told to create an empty file.
-    const mentioned = manifest ? [...hooks].filter((hook) => manifest.names(hook)) : [];
+    const mentioned = manifest
+      ? [...hooks].filter((hook) => manifest.names(hook))
+      : [];
     if (!mentioned.length) gaps.push({ ...entry, hooks: [...hooks] });
   }
   return { manifest, entries, gaps };
@@ -186,7 +205,9 @@ const chosen = ONLY
     : all.filter((block) => block.version === 'unreleased');
 
 if (ONLY && !chosen.length) {
-  console.error(`check-manifest-coverage: no \`## ${ONLY}\` block in CHANGELOG.md.`);
+  console.error(
+    `check-manifest-coverage: no \`## ${ONLY}\` block in CHANGELOG.md.`,
+  );
   process.exit(1);
 }
 
@@ -209,9 +230,13 @@ for (const block of chosen) {
   const where = manifest
     ? relative(ROOT, manifest.path).split('\\').join('/')
     : `migrations/${block.version}.json (does not exist)`;
-  console.error(`\n${label}: ${gaps.length} documented change(s) ${where} never names.`);
+  console.error(
+    `\n${label}: ${gaps.length} documented change(s) ${where} never names.`,
+  );
   for (const gap of gaps) {
-    console.error(`  CHANGELOG.md:${gap.line}  [${gap.section}] ${gap.headline.slice(0, 88)}`);
+    console.error(
+      `  CHANGELOG.md:${gap.line}  [${gap.section}] ${gap.headline.slice(0, 88)}`,
+    );
     console.error(`      names: ${gap.hooks.join(', ')}`);
   }
 }

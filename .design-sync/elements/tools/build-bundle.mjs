@@ -7,7 +7,15 @@
 // Stage 1 is `ng build ds-elements` — the Angular CLI is what runs AOT template
 // compilation and the partial-Ivy linker, which plain esbuild cannot do.
 import { createRequire } from 'node:module';
-import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import {
+  copyFileSync,
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,7 +23,9 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 const elements = resolve(here, '..');
 const repo = resolve(elements, '..', '..');
-const esbuild = createRequire(join(repo, '.ds-sync', 'package.json'))('esbuild');
+const esbuild = createRequire(join(repo, '.ds-sync', 'package.json'))(
+  'esbuild',
+);
 
 const ngOutput = join(elements, 'dist/browser/main.js');
 if (!existsSync(ngOutput)) {
@@ -46,7 +56,10 @@ const reactGlobals = {
   name: 'react-globals',
   setup(build) {
     const pattern = new RegExp(`^(${Object.keys(REACT_GLOBALS).join('|')})$`);
-    build.onResolve({ filter: pattern }, (args) => ({ path: args.path, namespace: 'react-global' }));
+    build.onResolve({ filter: pattern }, (args) => ({
+      path: args.path,
+      namespace: 'react-global',
+    }));
     build.onLoad({ filter: /.*/, namespace: 'react-global' }, (args) => ({
       contents: `module.exports = window.${REACT_GLOBALS[args.path]};`,
       loader: 'js',
@@ -92,10 +105,14 @@ await esbuild.build({
 // four generator bugs. Resolved from the lockfile, not via npx, for the reason recorded
 // in tools/build-schematics.mjs.
 const tsc = createRequire(import.meta.url).resolve('typescript/bin/tsc');
-execFileSync(process.execPath, [tsc, '-p', join(elements, 'tsconfig.types.json')], {
-  cwd: repo,
-  stdio: 'inherit',
-});
+execFileSync(
+  process.execPath,
+  [tsc, '-p', join(elements, 'tsconfig.types.json')],
+  {
+    cwd: repo,
+    stdio: 'inherit',
+  },
+);
 
 const styles = join(elements, 'dist/browser/styles.css');
 const media = join(elements, 'dist/browser/media');
@@ -113,12 +130,14 @@ cpSync(media, join(elements, 'demo/dist/media'), { recursive: true });
 const uploadCss = join(elements, 'dist/ds-bundle.css');
 const rewritten = readFileSync(styles, 'utf8').replaceAll('./media/', 'fonts/');
 if (rewritten.includes('./media/') || !rewritten.includes('fonts/')) {
-  console.error('✗ the font URLs did not rewrite — Angular changed how it emits them, and the upload CSS would 404 every face');
+  console.error(
+    '✗ the font URLs did not rewrite — Angular changed how it emits them, and the upload CSS would 404 every face',
+  );
   process.exit(1);
 }
 writeFileSync(uploadCss, rewritten);
 
 console.error(
-  `✓ ds-bundle.js ${kb(bundlePath)} (react from window) · angular main.js ${kb(ngOutput)}`
-  + ` · ds-bundle.css ${kb(uploadCss)} (fonts/ rewritten) · demo ${kb(demoPath)} · d.ts emitted`,
+  `✓ ds-bundle.js ${kb(bundlePath)} (react from window) · angular main.js ${kb(ngOutput)}` +
+    ` · ds-bundle.css ${kb(uploadCss)} (fonts/ rewritten) · demo ${kb(demoPath)} · d.ts emitted`,
 );

@@ -43,22 +43,22 @@ is poorer in four specific ways, and three of them cost the design agent capabil
 generated interface declares a slot. In the templates there are **55 named-slot declarations across
 26 components, 31 distinct names**:
 
-| component | slots |
-|---|---|
-| `modal`, `modal-card` | `eyebrow`, `title-badge`, `body`, `impact`, `actions` |
-| `page-header` | `breadcrumbs`, `title-badge`, `meta`, `actions`, `tabs` |
-| `topbar` | `title`, `breadcrumbs`, `search`, `actions` |
-| `page-footer` | `brand`, `nav`, `actions` |
-| `auth-layout` | `brand`, `dsBrandName`, `dsAuthSupport` |
-| `table` | `toolbar`, `empty`, `bulk-actions` |
-| `app-layout` | `sidenav`, `topbar` |
-| `input` | `dsInputPrefix`, `dsInputSuffix` |
-| `autocomplete` | `dsAutocompletePrefix`, `dsAutocompleteSuffix` |
-| `drawer` | `drawer-body`, `drawer-footer` |
-| `list-item`, `sidenav-item` | `leading`/`trailing`, `icon`/`trailing` |
-| `sidenav` | `brand`, `dsBrandName` |
-| `stat` | `dsStatValue`, `delta` |
-| `alert`, `banner`, `bottom-sheet`, `empty-state`, `toast` | `actions` |
+| component                                                                          | slots                                                                              |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `modal`, `modal-card`                                                              | `eyebrow`, `title-badge`, `body`, `impact`, `actions`                              |
+| `page-header`                                                                      | `breadcrumbs`, `title-badge`, `meta`, `actions`, `tabs`                            |
+| `topbar`                                                                           | `title`, `breadcrumbs`, `search`, `actions`                                        |
+| `page-footer`                                                                      | `brand`, `nav`, `actions`                                                          |
+| `auth-layout`                                                                      | `brand`, `dsBrandName`, `dsAuthSupport`                                            |
+| `table`                                                                            | `toolbar`, `empty`, `bulk-actions`                                                 |
+| `app-layout`                                                                       | `sidenav`, `topbar`                                                                |
+| `input`                                                                            | `dsInputPrefix`, `dsInputSuffix`                                                   |
+| `autocomplete`                                                                     | `dsAutocompletePrefix`, `dsAutocompleteSuffix`                                     |
+| `drawer`                                                                           | `drawer-body`, `drawer-footer`                                                     |
+| `list-item`, `sidenav-item`                                                        | `leading`/`trailing`, `icon`/`trailing`                                            |
+| `sidenav`                                                                          | `brand`, `dsBrandName`                                                             |
+| `stat`                                                                             | `dsStatValue`, `delta`                                                             |
+| `alert`, `banner`, `bottom-sheet`, `empty-state`, `toast`                          | `actions`                                                                          |
 | `accordion-item`, `dropzone`, `menu-item`, `button`, `filter-bar`, `sidenav-group` | `badge`, `hint`, `icon`, `dsButtonSubtext`, `dsFilterBarTrailing`, `ds-group-icon` |
 
 The port declared these as node props and said which slot each fed — its `Button.d.ts` carries

@@ -16,8 +16,8 @@
 for every filled brand/status role:
 
 ```scss
---primary-hover:   color-mix(in srgb, var(--primary) 88%, black);  /* −12% */
---primary-pressed: color-mix(in srgb, var(--primary) 76%, black);  /* −24% */
+--primary-hover: color-mix(in srgb, var(--primary) 88%, black); /* −12% */
+--primary-pressed: color-mix(in srgb, var(--primary) 76%, black); /* −24% */
 ```
 
 Same rule applied to `secondary` (:131-132), `tertiary` (:150-151), `success`
@@ -25,21 +25,21 @@ Same rule applied to `secondary` (:131-132), `tertiary` (:150-151), `success`
 
 Consumers of the derived chain:
 
-| Component | Usage |
-|---|---|
-| button | primary/error/success/warning variants → `--*-hover` / `--*-pressed` |
-| icon-button | primary + inverted-primary variants → `--primary-hover/-pressed` |
-| pagination | active page hover → `--primary-hover` |
-| date-picker | selected day hover → `--primary-selected-hover` |
-| button.text | hover → `--primary-pressed` |
+| Component   | Usage                                                                |
+| ----------- | -------------------------------------------------------------------- |
+| button      | primary/error/success/warning variants → `--*-hover` / `--*-pressed` |
+| icon-button | primary + inverted-primary variants → `--primary-hover/-pressed`     |
+| pagination  | active page hover → `--primary-hover`                                |
+| date-picker | selected day hover → `--primary-selected-hover`                      |
+| button.text | hover → `--primary-pressed`                                          |
 
 ### 2. Local inline formulas with their own constants (outliers)
 
-| Location | Formula | Deviation |
-|---|---|---|
-| `src/lib/styles/_link.scss:7-8` | `color-mix(in srgb, var(--text-link) 80%, black)` hover, `65%, black` active | Steps −20%/−35% instead of theme's −12%/−24%; pressed ≠ 2×hover |
-| `src/lib/components/sidenav/sidenav-item.component.scss:9` | `color-mix(in srgb, var(--ds-sidenav-item-bg-active) 88%, white)` | Same 88% constant but mixes toward **white** (base is dark); direction hardcoded locally |
-| `src/lib/components/button/button.component.scss:38` | `--ds-button-pressed-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent)` | One-off alpha formula (shadow, acceptable) |
+| Location                                                   | Formula                                                                                                 | Deviation                                                                                |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `src/lib/styles/_link.scss:7-8`                            | `color-mix(in srgb, var(--text-link) 80%, black)` hover, `65%, black` active                            | Steps −20%/−35% instead of theme's −12%/−24%; pressed ≠ 2×hover                          |
+| `src/lib/components/sidenav/sidenav-item.component.scss:9` | `color-mix(in srgb, var(--ds-sidenav-item-bg-active) 88%, white)`                                       | Same 88% constant but mixes toward **white** (base is dark); direction hardcoded locally |
+| `src/lib/components/button/button.component.scss:38`       | `--ds-button-pressed-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent)` | One-off alpha formula (shadow, acceptable)                                               |
 
 ### 3. Surface-swap — hover without a formula (the most common mechanism)
 
@@ -53,14 +53,14 @@ declarations:
 - borders: `--border-default → --border-strong` (input, textarea, select,
   combobox, date-picker trigger)
 - text: `--text-secondary/tertiary → --text-primary`; icons: `--icon-default →
-  --icon-strong` (modal/banner/drawer/dropzone close buttons)
+--icon-strong` (modal/banner/drawer/dropzone close buttons)
 - tonal buttons step the ramp: secondary `muted → muted-strong`, tertiary
   `subtle → muted`
 - selected states are ramp picks: `--primary-subtle` / `--primary-muted`
   (table.selected, dropdown-overlay .is-selected, tag.is-active, tabs pills)
 - hover jumps straight to a brand/status token (no derivation): w3w `:host:hover
-  → --primary-muted` (w3w.component.scss:17), number-stepper `.step:active →
-  --primary-muted` (:69-70), breadcrumbs/topbar/page-header crumb hover →
+→ --primary-muted` (w3w.component.scss:17), number-stepper `.step:active →
+--primary-muted` (:69-70), breadcrumbs/topbar/page-header crumb hover →
   `--primary`, menu-item.danger hover → `--error-subtle`
   (menu-item.component.scss:33)
 
@@ -74,14 +74,18 @@ In reality the **only** consumer is the tag close button
 while everything else uses `srgb`:
 
 ```scss
-background: color-mix(in oklab, currentColor calc(var(--opacity-state-hover) * 100%), transparent);
+background: color-mix(
+  in oklab,
+  currentColor calc(var(--opacity-state-hover) * 100%),
+  transparent
+);
 ```
 
 ### Absolute picks (theme/token level only — components are clean)
 
 - `--surface-inverted-hover: var(--neutral-800)` — `_theme.scss:31`
 - `--scrollbar-thumb-hover: var(--neutral-400)`, `--scrollbar-thumb-active:
-  var(--neutral-500)` — `_tokens.scss:206-207`
+var(--neutral-500)` — `_tokens.scss:206-207`
 
 No component hardcodes palette ramps or raw hex/hsl literals in state rules,
 with one fallback exception: `search.component.scss:85` uses

@@ -15,7 +15,9 @@ export function ngAdd(options: NgAddSchema): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const angularJson = tree.read('angular.json');
     if (!angularJson) {
-      context.logger.warn('ng-add: angular.json not found — skipping styles wiring.');
+      context.logger.warn(
+        'ng-add: angular.json not found — skipping styles wiring.',
+      );
 
       return tree;
     }
@@ -46,13 +48,17 @@ export function ngAdd(options: NgAddSchema): Rule {
 
     const current = tree.read(stylesEntry)!.toString();
     if (current.includes(DS_IMPORT)) {
-      context.logger.info('ng-add: design system already imported — nothing to do.');
+      context.logger.info(
+        'ng-add: design system already imported — nothing to do.',
+      );
 
       return tree;
     }
 
     tree.overwrite(stylesEntry, `${DS_IMPORT}\n${current}`);
-    context.logger.info(`ng-add: imported the design system into ${stylesEntry}.`);
+    context.logger.info(
+      `ng-add: imported the design system into ${stylesEntry}.`,
+    );
 
     return tree;
   };

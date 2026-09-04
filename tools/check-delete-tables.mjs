@@ -22,7 +22,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const HEADING = '### What you can now DELETE';
 const DRAFT = 'unreleased.json';
 
-const changelog = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8').replace(/\r\n/g, '\n');
+const changelog = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8').replace(
+  /\r\n/g,
+  '\n',
+);
 const problems = [];
 let checked = 0;
 
@@ -33,18 +36,26 @@ const manifests = readdirSync(join(ROOT, 'migrations'))
 
 if (existsSync(join(ROOT, 'migrations', DRAFT))) {
   // A released heading carries its date (`## 0.10.3 — …`); the draft's does not.
-  manifests.push({ file: DRAFT, label: 'unreleased', needle: '\n## Unreleased\n' });
+  manifests.push({
+    file: DRAFT,
+    label: 'unreleased',
+    needle: '\n## Unreleased\n',
+  });
 }
 
 for (const { file, label, needle } of manifests) {
-  const manifest = JSON.parse(readFileSync(join(ROOT, 'migrations', file), 'utf8'));
+  const manifest = JSON.parse(
+    readFileSync(join(ROOT, 'migrations', file), 'utf8'),
+  );
   const entries = manifest.deleteList ?? [];
   if (!entries.length) continue;
 
   // The trailing space is what keeps `## 0.1.0` from matching the start of `## 0.10.0`.
   const start = changelog.indexOf(needle ?? `\n## ${label} `);
   if (start < 0) {
-    problems.push(`${label}: ${entries.length} delete entr(ies) and no CHANGELOG block`);
+    problems.push(
+      `${label}: ${entries.length} delete entr(ies) and no CHANGELOG block`,
+    );
     continue;
   }
   let end = changelog.indexOf('\n## ', start + 1);
@@ -53,7 +64,9 @@ for (const { file, label, needle } of manifests) {
 
   const headingAt = block.indexOf(HEADING);
   if (headingAt < 0) {
-    problems.push(`${label}: ${entries.length} delete entr(ies) and no "${HEADING}" table`);
+    problems.push(
+      `${label}: ${entries.length} delete entr(ies) and no "${HEADING}" table`,
+    );
     continue;
   }
   // The FIRST column only. The second is the "Delete it, because" prose, which routinely names the
@@ -76,7 +89,9 @@ for (const { file, label, needle } of manifests) {
 
   for (const entry of entries) {
     checked++;
-    const distinctive = [entry.find ?? []].flat().filter((shape) => shapeUses.get(shape) === 1);
+    const distinctive = [entry.find ?? []]
+      .flat()
+      .filter((shape) => shapeUses.get(shape) === 1);
     if (!distinctive.length) {
       problems.push(
         `${label}#${entry.id}: every find shape is shared with a sibling entry, so no row can ` +
@@ -84,7 +99,9 @@ for (const { file, label, needle } of manifests) {
       );
       continue;
     }
-    if (!rows.some((cell) => distinctive.some((shape) => cell.includes(shape)))) {
+    if (
+      !rows.some((cell) => distinctive.some((shape) => cell.includes(shape)))
+    ) {
       problems.push(
         `${label}#${entry.id}: no table row names a shape unique to it ` +
           `(${distinctive.slice(0, 3).join(', ')})`,
@@ -93,11 +110,14 @@ for (const { file, label, needle } of manifests) {
   }
 }
 
-for (const line of problems) console.error(`check-delete-tables: ERROR  ${line}`);
+for (const line of problems)
+  console.error(`check-delete-tables: ERROR  ${line}`);
 
 if (problems.length) {
   console.error(`check-delete-tables: FAILED — ${problems.length} problem(s)`);
   process.exit(1);
 }
 
-console.log(`check-delete-tables: ${checked} delete entr(ies) all reachable from the CHANGELOG.`);
+console.log(
+  `check-delete-tables: ${checked} delete entr(ies) all reachable from the CHANGELOG.`,
+);

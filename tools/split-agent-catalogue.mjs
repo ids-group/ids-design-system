@@ -9,7 +9,14 @@
 // "how do I use ds-input" loads the whole catalogue. The leaves let it load the index
 // (a few KB) and one entry (a few hundred bytes). components.md stays the single place
 // a human edits — everything here is derived, so the two cannot drift.
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
+import {
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  rmSync,
+  existsSync,
+  readdirSync,
+} from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -63,7 +70,8 @@ function slugOf(heading) {
   const tag = /^`?<(ds-[a-z0-9-]+)>/.exec(heading);
   if (tag) return tag[1];
   const directive = /^`?\[(ds[A-Za-z]+)\]/.exec(heading);
-  if (directive) return directive[1].replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
+  if (directive)
+    return directive[1].replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
   const token = /`([A-Za-z_][\w]*)`/.exec(heading);
   if (token) {
     const name = token[1];
@@ -71,9 +79,15 @@ function slugOf(heading) {
     // `d-s_-c-o-n-f-i-g`, which is what it did until this was noticed.
     return /^[A-Z0-9_]+$/.test(name)
       ? name.toLowerCase().replace(/_/g, '-')
-      : name.replace(/[A-Z]/g, (c, index) => (index ? '-' : '') + c.toLowerCase());
+      : name.replace(
+          /[A-Z]/g,
+          (c, index) => (index ? '-' : '') + c.toLowerCase(),
+        );
   }
-  return heading.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return heading
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 const GROUP_DIR = {
@@ -89,7 +103,9 @@ const GROUP_DIR = {
 const blocks = parseBlocks(source).filter((block) => block.heading);
 const leaves = blocks.map((block) => {
   const slug = slugOf(block.heading);
-  const dir = GROUP_DIR[block.group] ?? (block.section === 'Components' ? 'other' : 'platform');
+  const dir =
+    GROUP_DIR[block.group] ??
+    (block.section === 'Components' ? 'other' : 'platform');
   return {
     ...block,
     slug,
@@ -105,27 +121,36 @@ const sourceFiles = (dir, out = []) => {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) sourceFiles(path, out);
-    else if (entry.name.endsWith('.ts') && !entry.name.endsWith('.d.ts')) out.push(path);
+    else if (entry.name.endsWith('.ts') && !entry.name.endsWith('.d.ts'))
+      out.push(path);
   }
   return out;
 };
 const liveTags = new Set();
 for (const file of sourceFiles(join(repo, 'src', 'lib'))) {
   const text = readFileSync(file, 'utf8');
-  for (const match of text.matchAll(/selector:\s*'(ds-[a-z0-9-]+)'/g)) liveTags.add(match[1]);
-  for (const match of text.matchAll(/selector:\s*'\[(ds[A-Za-z]+)\]'/g)) liveTags.add('[' + match[1] + ']');
+  for (const match of text.matchAll(/selector:\s*'(ds-[a-z0-9-]+)'/g))
+    liveTags.add(match[1]);
+  for (const match of text.matchAll(/selector:\s*'\[(ds[A-Za-z]+)\]'/g))
+    liveTags.add('[' + match[1] + ']');
 }
 const stale = [];
 for (const leaf of leaves) {
-  const named = [...leaf.heading.matchAll(/<(ds-[a-z0-9-]+)>/g)].map((m) => m[1]);
+  const named = [...leaf.heading.matchAll(/<(ds-[a-z0-9-]+)>/g)].map(
+    (m) => m[1],
+  );
   for (const tag of named) {
     if (!liveTags.has(tag)) stale.push(`${tag} (${leaf.path})`);
   }
 }
 if (stale.length) {
-  console.error(`✗ components.md documents ${stale.length} component(s) that no longer exist:`);
+  console.error(
+    `✗ components.md documents ${stale.length} component(s) that no longer exist:`,
+  );
   for (const entry of stale) console.error(`    ${entry}`);
-  console.error('  delete the entry — a doc for a removed component teaches an API that is not there');
+  console.error(
+    '  delete the entry — a doc for a removed component teaches an API that is not there',
+  );
   process.exit(1);
 }
 
@@ -133,7 +158,9 @@ const duplicates = leaves
   .map((leaf) => leaf.path)
   .filter((path, index, all) => all.indexOf(path) !== index);
 if (duplicates.length) {
-  console.error(`✗ two entries map to the same leaf: ${[...new Set(duplicates)].join(', ')}`);
+  console.error(
+    `✗ two entries map to the same leaf: ${[...new Set(duplicates)].join(', ')}`,
+  );
   process.exit(1);
 }
 
@@ -146,34 +173,46 @@ const FOUNDATION_PARTS = [
   'Grid',
   'Global helper classes',
 ];
-const foundationParts = [...source.matchAll(/\n### (.+)\n([\s\S]*?)(?=\n### |\n## )/g)]
+const foundationParts = [
+  ...source.matchAll(/\n### (.+)\n([\s\S]*?)(?=\n### |\n## )/g),
+]
   .filter(([, title]) => FOUNDATION_PARTS.includes(title.trim()))
   .map(([, title, body]) => ({
     title: title.trim(),
-    slug: title.trim().toLowerCase().replace(/\(.*\)/, '')
-      .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+    slug: title
+      .trim()
+      .toLowerCase()
+      .replace(/\(.*\)/, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, ''),
     body: body.trim(),
   }));
 for (const part of foundationParts) {
-  files.set(`foundations/${part.slug}.md`, [
-    '<!-- GENERATED by tools/split-agent-catalogue.mjs from components.md. Do not edit. -->',
-    `# Foundations — ${part.title}`,
-    '',
-    part.body,
-    '',
-  ].join('\n'));
+  files.set(
+    `foundations/${part.slug}.md`,
+    [
+      '<!-- GENERATED by tools/split-agent-catalogue.mjs from components.md. Do not edit. -->',
+      `# Foundations — ${part.title}`,
+      '',
+      part.body,
+      '',
+    ].join('\n'),
+  );
 }
 
 for (const leaf of leaves) {
-  files.set(leaf.path, [
-    '<!-- GENERATED by tools/split-agent-catalogue.mjs from components.md. Do not edit. -->',
-    `# ${leaf.heading}`,
-    '',
-    leaf.group ? `Group: ${leaf.group}` : `Section: ${leaf.section}`,
-    '',
-    leaf.body,
-    '',
-  ].join('\n'));
+  files.set(
+    leaf.path,
+    [
+      '<!-- GENERATED by tools/split-agent-catalogue.mjs from components.md. Do not edit. -->',
+      `# ${leaf.heading}`,
+      '',
+      leaf.group ? `Group: ${leaf.group}` : `Section: ${leaf.section}`,
+      '',
+      leaf.body,
+      '',
+    ].join('\n'),
+  );
 }
 
 const byDir = new Map();
@@ -199,17 +238,31 @@ const indexLines = [
   '**The generated API table on the documentation site is authoritative for exact inputs',
   'and token names.** These leaves are for orientation and usage.',
   '',
-  ...foundationParts.map((part) => `- [Foundations — ${part.title}](foundations/${part.slug}.md)`),
+  ...foundationParts.map(
+    (part) => `- [Foundations — ${part.title}](foundations/${part.slug}.md)`,
+  ),
   '',
 ];
 for (const [dir, group] of [...byDir].sort()) {
   indexLines.push(`## ${dir}`, '');
   for (const leaf of group) {
     // Prefer a prose line: many entries open with `Inputs:`, which describes nothing.
-    const bodyLines = leaf.body.split('\n').filter((line) => line.trim() && !line.startsWith('#'));
-    const prose = bodyLines.find((line) => !/^(Inputs?|Outputs?|Tokens?|Content slots|Example|New):/.test(line.trim()));
-    const gist = (prose ?? bodyLines[0] ?? '').replace(/`/g, '').replace(/\s+/g, ' ').slice(0, 110);
-    indexLines.push(`- [${leaf.heading.replace(/`/g, '')}](${leaf.path}) — ${gist}`);
+    const bodyLines = leaf.body
+      .split('\n')
+      .filter((line) => line.trim() && !line.startsWith('#'));
+    const prose = bodyLines.find(
+      (line) =>
+        !/^(Inputs?|Outputs?|Tokens?|Content slots|Example|New):/.test(
+          line.trim(),
+        ),
+    );
+    const gist = (prose ?? bodyLines[0] ?? '')
+      .replace(/`/g, '')
+      .replace(/\s+/g, ' ')
+      .slice(0, 110);
+    indexLines.push(
+      `- [${leaf.heading.replace(/`/g, '')}](${leaf.path}) — ${gist}`,
+    );
   }
   indexLines.push('');
 }
@@ -219,7 +272,10 @@ if (check) {
   const stale = [];
   for (const [path, content] of files) {
     const full = join(OUT, path);
-    if (!existsSync(full) || readFileSync(full, 'utf8').replace(/\r\n/g, '\n') !== content) {
+    if (
+      !existsSync(full) ||
+      readFileSync(full, 'utf8').replace(/\r\n/g, '\n') !== content
+    ) {
       stale.push(path);
     }
   }
@@ -234,9 +290,13 @@ if (check) {
   };
   const orphans = walk(OUT).filter((path) => !expected.has(path));
   if (stale.length || orphans.length) {
-    for (const path of stale) console.error(`✗ docs/agent/${path} is out of date`);
-    for (const path of orphans) console.error(`✗ docs/agent/${path} has no entry in components.md`);
-    console.error('  run `node tools/split-agent-catalogue.mjs` and commit the result');
+    for (const path of stale)
+      console.error(`✗ docs/agent/${path} is out of date`);
+    for (const path of orphans)
+      console.error(`✗ docs/agent/${path} has no entry in components.md`);
+    console.error(
+      '  run `node tools/split-agent-catalogue.mjs` and commit the result',
+    );
     process.exit(1);
   }
   console.log(`✓ agent catalogue: ${files.size} file(s) match components.md`);
@@ -250,10 +310,15 @@ for (const [path, content] of files) {
   writeFileSync(full, content);
 }
 
-const bytes = [...files.values()].reduce((total, content) => total + content.length, 0);
-const biggest = Math.max(...[...files.values()].map((content) => content.length));
+const bytes = [...files.values()].reduce(
+  (total, content) => total + content.length,
+  0,
+);
+const biggest = Math.max(
+  ...[...files.values()].map((content) => content.length),
+);
 console.log(
-  `✓ agent catalogue: ${files.size} file(s), ${Math.round(bytes / 1024)} KB total,`
-  + ` largest ${Math.round(biggest / 1024)} KB (components.md is`
-  + ` ${Math.round(source.length / 1024)} KB)`,
+  `✓ agent catalogue: ${files.size} file(s), ${Math.round(bytes / 1024)} KB total,` +
+    ` largest ${Math.round(biggest / 1024)} KB (components.md is` +
+    ` ${Math.round(source.length / 1024)} KB)`,
 );

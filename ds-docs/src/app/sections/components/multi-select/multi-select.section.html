@@ -106,12 +106,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">triggerDisplay="labels"</code> keeps the
-    compact footprint but names what is selected instead of counting it, cut to
-    the width with the rest behind &laquo;+N&raquo; — the same measurement the
-    chips use. <code class="t-mono-inline">selectAll</code> takes
-    <code class="t-mono-inline">'group'</code> or
-    <code class="t-mono-inline">'both'</code> to head each group with its own
+    <code class="t-mono-inline">
+      triggerDisplay="labels"
+    </code> keeps the compact
+    footprint but names what is selected instead of counting it, cut to the
+    width with the rest behind &laquo;+N&raquo; — the same measurement the chips
+    use. <code class="t-mono-inline">selectAll</code> takes
+    <code class="t-mono-inline">
+      'group'
+    </code> or
+    <code class="t-mono-inline">
+      'both'
+    </code> to head each group with its own
     row.
   </p>
 
@@ -142,21 +148,31 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">searchable</code> takes
-    <code class="t-mono-inline">true</code> (always, the default),
-    <code class="t-mono-inline">false</code> (never), or a
+    <code class="t-mono-inline">
+      searchable
+    </code> takes
+    <code class="t-mono-inline">
+      true
+    </code> (always, the default),
+    <code class="t-mono-inline">
+      false
+    </code> (never), or a
     <strong>
       number
     </strong> — the threshold at which the row appears, stated
     where it applies. Set
-    <code class="t-mono-inline">DS_CONFIG.picker.searchable</code> to give the
+    <code class="t-mono-inline">
+      DS_CONFIG.picker.searchable
+    </code> to give the
     whole app one threshold and override it per panel.
   </p>
 
   <p class="block-desc t-s">
     Hiding the row moves the panel's keyboard model onto the trigger: arrows,
     Enter, Escape and
-    <code class="t-mono-inline">aria-activedescendant</code> belong to the
+    <code class="t-mono-inline">
+      aria-activedescendant
+    </code> belong to the
     filter input when it is there.
   </p>
 
@@ -187,12 +203,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">triggerDisplay="count"</code> swaps the chip
+    <code class="t-mono-inline">
+      triggerDisplay="count"
+    </code> swaps the chip
     field for a caption and a selected-count badge at intrinsic width — a fixed
     footprint for a filter toolbar, where a field that grows with the selection
     does not fit. A projected
-    <code class="t-mono-inline">dsPickerTrigger</code> WINS over it, and
-    <code class="t-mono-inline">triggerDisplay</code> is then not read at all.
+    <code class="t-mono-inline">
+      dsPickerTrigger
+    </code> WINS over it, and
+    <code class="t-mono-inline">
+      triggerDisplay
+    </code> is then not read at all.
   </p>
 
   <div class="demo-panel">
@@ -235,19 +257,31 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">dsOptionTemplate</code> fills an option row's
+    <code class="t-mono-inline">
+      dsOptionTemplate
+    </code> fills an option row's
     label area, <code class="t-mono-inline">dsChipTemplate</code> fills the
     selected chip — so a visual that identifies the option does not vanish the
     moment it is picked. Both are honoured by
-    <code class="t-mono-inline">ds-select</code> (rows only),
-    <code class="t-mono-inline">ds-multi-select</code> and
-    <code class="t-mono-inline">ds-autocomplete</code>.
+    <code class="t-mono-inline">
+      ds-select
+    </code> (rows only),
+    <code class="t-mono-inline">
+      ds-multi-select
+    </code> and
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code>.
   </p>
 
   <p class="block-desc t-s">
     The row and the chip stay library-owned:
-    <code class="t-mono-inline">role="option"</code>,
-    <code class="t-mono-inline">aria-selected</code>, the checkbox, the check
+    <code class="t-mono-inline">
+      role="option"
+    </code>,
+    <code class="t-mono-inline">
+      aria-selected
+    </code>, the checkbox, the check
     glyph and the chip's close button are not projected.
   </p>
 
@@ -317,12 +351,18 @@
   <p class="block-desc t-s">
     Default <code class="t-mono-inline">width="fill"</code> stretches to the
     container and pins the panel to the trigger.
-    <code class="t-mono-inline">width="content"</code> hugs the trigger's own
+    <code class="t-mono-inline">
+      width="content"
+    </code> hugs the trigger's own
     content and takes that width as the panel's floor instead — so a short
     trigger no longer forces a panel too narrow to read.
-    <code class="t-mono-inline">--ds-dropdown-panel-minw</code> and
-    <code class="t-mono-inline">--ds-dropdown-panel-maxw</code> bound the
-    panel in that mode.
+    <code class="t-mono-inline">
+      --ds-dropdown-panel-minw
+    </code> and
+    <code class="t-mono-inline">
+      --ds-dropdown-panel-maxw
+    </code> bound the panel
+    in that mode.
   </p>
 
   <div style="display: flex; gap: var(--space-4); align-items: flex-start">
@@ -348,7 +388,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">hint</code> renders a helper line below the
+    <code class="t-mono-inline">
+      hint
+    </code> renders a helper line below the
     control. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
     switches to an error style with <code>role="alert"</code>.
   </p>
@@ -381,12 +423,20 @@
 
   <p class="block-desc t-s">
     An option carries an optional
-    <code class="t-mono-inline">icon</code>, rendered before its label at
-    16px. Same field and same markup as
-    <code class="t-mono-inline">ds-select</code> and
-    <code class="t-mono-inline">ds-autocomplete</code> — all three read one
-    <code class="t-mono-inline">DsOption</code> shape, so a field added for
-    one picker is not missing from the other two. Use it for a set the reader
+    <code class="t-mono-inline">
+      icon
+    </code>, rendered before its label at 16px.
+    Same field and same markup as
+    <code class="t-mono-inline">
+      ds-select
+    </code> and
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code> — all three read one
+    <code class="t-mono-inline">
+      DsOption
+    </code> shape, so a field added for one
+    picker is not missing from the other two. Use it for a set the reader
     recognises by glyph, like a priority scale; it is decoration for anything
     else, and an icon per row costs scanning speed.
   </p>
@@ -395,8 +445,9 @@
     The chips stay text-only. A glyph inside a chip eats the width the label
     needs, and the chips are already the part of the trigger that runs out of
     room —
-    <code class="t-mono-inline">maxVisibleChips</code> exists for exactly
-    that.
+    <code class="t-mono-inline">
+      maxVisibleChips
+    </code> exists for exactly that.
   </p>
 
   <div class="demo-panel">
@@ -415,13 +466,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">filterChange</code> reports what was typed and
-    <code class="t-mono-inline">filterWith="none"</code> stops the panel
+    <code class="t-mono-inline">
+      filterChange
+    </code> reports what was typed and
+    <code class="t-mono-inline">
+      filterWith="none"
+    </code> stops the panel
     narrowing the list a second time — the options you hand back are the ones
-    rendered. <code class="t-mono-inline">loading</code> replaces the empty
-    row with a spinner, because "No matches" during a request in flight is a
-    lie. The panel also emits <code class="t-mono-inline">opened</code>, which
-    is where the first fetch belongs.
+    rendered. <code class="t-mono-inline">loading</code> replaces the empty row
+    with a spinner, because "No matches" during a request in flight is a lie.
+    The panel also emits <code class="t-mono-inline">opened</code>, which is
+    where the first fetch belongs.
   </p>
 
   <div class="demo-panel">
@@ -448,12 +503,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">dsPanelHeaderTemplate</code> and
-    <code class="t-mono-inline">dsPanelFooterTemplate</code> fill a strip
-    above and below the options, with
-    <code class="t-mono-inline">count</code>,
-    <code class="t-mono-inline">total</code> and
-    <code class="t-mono-inline">query</code> in context. Both sit outside the
+    <code class="t-mono-inline">
+      dsPanelHeaderTemplate
+    </code> and
+    <code class="t-mono-inline">
+      dsPanelFooterTemplate
+    </code> fill a strip above
+    and below the options, with <code class="t-mono-inline">count</code>,
+    <code class="t-mono-inline">
+      total
+    </code> and
+    <code class="t-mono-inline">
+      query
+    </code> in context. Both sit outside the
     listbox, so nothing here is counted as an option, and neither scrolls with
     the list.
   </p>
@@ -494,11 +556,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">dsGroupLabelTemplate</code> fills a group's
+    <code class="t-mono-inline">
+      dsGroupLabelTemplate
+    </code> fills a group's
     heading — the element itself stays ours, so the id the group is named by
     cannot be detached from it. An option's
-    <code class="t-mono-inline">disabledReason</code> reaches the row as
-    <code class="t-mono-inline">aria-describedby</code>: the row already looks
+    <code class="t-mono-inline">
+      disabledReason
+    </code> reaches the row as
+    <code class="t-mono-inline">
+      aria-describedby
+    </code>: the row already looks
     disabled, the sentence is for whoever cannot see that. Open the panel and
     read the "On leave" rows with a screen reader.
   </p>
@@ -528,11 +596,17 @@
 
   <p class="block-desc t-s">
     The last three form-contract members that were
-    <code class="t-mono-inline">ds-select</code>'s alone.
-    <code class="t-mono-inline">readOnly</code> takes focus without opening,
-    <code class="t-mono-inline">clearable</code> shows the same clear button
-    the other fields use, and <code class="t-mono-inline">name</code> reaches
-    the trigger.
+    <code class="t-mono-inline">
+      ds-select
+    </code>'s alone.
+    <code class="t-mono-inline">
+      readOnly
+    </code> takes focus without opening,
+    <code class="t-mono-inline">
+      clearable
+    </code> shows the same clear button the
+    other fields use, and <code class="t-mono-inline">name</code> reaches the
+    trigger.
   </p>
 
   <div class="demo-panel">

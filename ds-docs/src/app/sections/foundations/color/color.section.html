@@ -17,13 +17,25 @@
     The <code class="t-mono-inline">--secondary</code> family is the DS's
     secondary colour role &mdash; a complementary tone for non-interactive
     emphasis (active rails, decorative indicators, accent pills). Defaults at
-    <code class="t-mono-inline">:root</code> alias
-    <code class="t-mono-inline">--secondary</code> to
-    <code class="t-mono-inline">--primary</code> so unbranded apps render
+    <code class="t-mono-inline">
+      :root
+    </code> alias
+    <code class="t-mono-inline">
+      --secondary
+    </code> to
+    <code class="t-mono-inline">
+      --primary
+    </code> so unbranded apps render
     unchanged; per-brand overrides introduce a true secondary hue. Secondary is
-    <em>not</em> a second CTA &mdash; primary action stays on
-    <code class="t-mono-inline">--primary</code>. Opt-in adoptions:
-    <code class="t-mono-inline">&lt;ds-tabs class="secondary"&gt;</code>,
+    <em>
+      not
+    </em> a second CTA &mdash; primary action stays on
+    <code class="t-mono-inline">
+      --primary
+    </code>. Opt-in adoptions:
+    <code class="t-mono-inline">
+      &lt;ds-tabs class="secondary"&gt;
+    </code>,
     <code class="t-mono-inline">
       &lt;ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
     </code
@@ -133,9 +145,13 @@
   <p class="block-desc t-s">
     Live opt-in adoptions of <code class="t-mono-inline">--secondary</code> — a
     distinct orange accent family (Tier-1), kept apart from
-    <code class="t-mono-inline">--primary</code> by default. Override
-    <code class="t-mono-inline">--secondary-h/s/l</code> (or a brand) to
-    reskin it.
+    <code class="t-mono-inline">
+      --primary
+    </code> by default. Override
+    <code class="t-mono-inline">
+      --secondary-h/s/l
+    </code> (or a brand) to reskin
+    it.
   </p>
 
   <div class="role-demos">
@@ -152,7 +168,9 @@
         <ds-tab label="History" />
       </ds-tabs>
 
-      <code class="t-mono-inline">&lt;ds-tabs class="secondary"&gt;</code>
+      <code class="t-mono-inline">
+        &lt;ds-tabs class="secondary"&gt;
+      </code>
     </div>
 
     <div class="demo">
@@ -178,7 +196,9 @@
         />
       </ds-sidenav>
 
-      <code class="t-mono-inline">&lt;ds-sidenav ds-color="secondary"&gt;</code>
+      <code class="t-mono-inline">
+        &lt;ds-sidenav ds-color="secondary"&gt;
+      </code>
     </div>
 
     <div class="demo">
@@ -193,7 +213,12 @@
         Custom state
       </div>
 
-      <code class="t-mono-inline">&lt;ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'"&gt;</code>
+      <code class="t-mono-inline"
+        >
+        &lt;ds-status-dot
+        [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
+      </code
+      >
     </div>
 
     <div class="demo">
@@ -208,7 +233,11 @@
         subtitle="Secondary-toned eyebrow"
       />
 
-      <code class="t-mono-inline">&lt;ds-page-header class="eyebrow-secondary"&gt;</code>
+      <code class="t-mono-inline"
+        >
+        &lt;ds-page-header class="eyebrow-secondary"&gt;
+      </code
+      >
     </div>
 
     <div class="demo">
@@ -227,7 +256,11 @@
         </span>
       </ds-stat>
 
-      <code class="t-mono-inline">&lt;ds-stat deltaTone="secondary"&gt; → .delta.secondary</code>
+      <code class="t-mono-inline"
+        >
+        &lt;ds-stat deltaTone="secondary"&gt; → .delta.secondary
+      </code
+      >
     </div>
 
     <div class="demo">
@@ -240,19 +273,31 @@
         inline — single-rule override, no new API surface:
       </p>
 
-      <code class="t-mono-inline">&lt;ds-card style="border-top: 3px solid var(--secondary)"&gt;</code>
+      <code class="t-mono-inline"
+        >
+        &lt;ds-card style="border-top: 3px solid var(--secondary)"&gt;
+      </code
+      >
     </div>
   </div>
 
   <p class="block-desc t-s">
     All adoptions are opt-in (use a class or variant input).
-    <code class="t-mono-inline">--secondary</code> maps to the orange palette
+    <code class="t-mono-inline">
+      --secondary
+    </code> maps to the orange palette
     family by default — distinct from
-    <code class="t-mono-inline">--primary</code>, so these examples already
-    read apart from the blue accent. Under
-    <code class="t-mono-inline">[data-brand="manage-my"]</code>
+    <code class="t-mono-inline">
+      --primary
+    </code>, so these examples already read
+    apart from the blue accent. Under
+    <code class="t-mono-inline">
+      [data-brand="manage-my"]
+    </code>
 
-    <code class="t-mono-inline">--secondary</code> becomes Coral (#FF6156).
+    <code class="t-mono-inline">
+      --secondary
+    </code> becomes Coral (#FF6156).
   </p>
 
   <h3 class="block-title t-h4">
@@ -260,8 +305,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">--tertiary</code> is the third brand hue
-    (violet family) with a full ramp (<code class="t-mono-inline"
+    <code class="t-mono-inline">
+      --tertiary
+    </code> is the third brand hue (violet
+    family) with a full ramp (<code class="t-mono-inline"
       >-hover / -strong / -subtitle / -muted</code
     >). Fewer touchpoints than <code class="t-mono-inline">--secondary</code> —
     today it drives the <code class="t-mono-inline">tertiary</code> button
@@ -294,7 +341,9 @@
         </ds-button>
       </div>
 
-      <code class="t-mono-inline">&lt;ds-button color="tertiary"&gt;</code>
+      <code class="t-mono-inline">
+        &lt;ds-button color="tertiary"&gt;
+      </code>
     </div>
 
     <div class="demo">
@@ -306,7 +355,12 @@
         Tonal chip
       </span>
 
-      <code class="t-mono-inline">background: var(--tertiary-subtitle); color: var(--tertiary-strong)</code>
+      <code class="t-mono-inline"
+        >
+        background: var(--tertiary-subtitle); color:
+        var(--tertiary-strong)
+      </code
+      >
     </div>
 
     <div class="demo">
@@ -326,7 +380,11 @@
         <span style="background: var(--tertiary-pressed)"></span>
       </div>
 
-      <code class="t-mono-inline">--tertiary-subtitle → -muted → base → -strong → -pressed</code>
+      <code class="t-mono-inline"
+        >
+        --tertiary-subtitle → -muted → base → -strong → -pressed
+      </code
+      >
     </div>
   </div>
 
@@ -386,7 +444,9 @@
 
   <p class="block-desc t-s">
     Raw colour ramps. Stop names map 1:1 to CSS custom properties (e.g.
-    <code class="t-mono-inline">--blue-600</code>).
+    <code class="t-mono-inline">
+      --blue-600
+    </code>).
   </p>
 
   @for (ramp of ramps; track ramp.prefix) {
@@ -428,9 +488,13 @@
 
   <p class="block-desc t-s">
     Outer halo is composed from brand HSL channels &mdash; a re-skin of
-    <code class="t-mono-inline">--primary-h</code> propagates straight into
+    <code class="t-mono-inline">
+      --primary-h
+    </code> propagates straight into
     focus state. Inner ring reads
-    <code class="t-mono-inline">--surface-canvas</code> so it stays visible
+    <code class="t-mono-inline">
+      --surface-canvas
+    </code> so it stays visible
     across themes.
   </p>
 
@@ -450,7 +514,9 @@
           --focus-ring
         </div>
 
-        <code class="t-mono-inline">2px canvas + 4px brand</code>
+        <code class="t-mono-inline">
+          2px canvas + 4px brand
+        </code>
       </div>
     </div>
 
@@ -469,7 +535,9 @@
           --focus-field
         </div>
 
-        <code class="t-mono-inline">3px brand &alpha; 0.22</code>
+        <code class="t-mono-inline">
+          3px brand &alpha; 0.22
+        </code>
       </div>
     </div>
 
@@ -488,7 +556,9 @@
           --focus-ring-error
         </div>
 
-        <code class="t-mono-inline">2px canvas + 4px danger</code>
+        <code class="t-mono-inline">
+          2px canvas + 4px danger
+        </code>
       </div>
     </div>
 
@@ -507,7 +577,9 @@
           --focus-ring-inverted
         </div>
 
-        <code class="t-mono-inline">on dark surface</code>
+        <code class="t-mono-inline">
+          on dark surface
+        </code>
       </div>
     </div>
   </div>
@@ -519,17 +591,26 @@
   <p class="block-desc t-s">
     The two families above are the default split — a soft halo on fields, a
     crisp double ring on controls. Set
-    <code class="t-mono-inline">data-focus</code> on
-    <code class="t-mono-inline">&lt;html&gt;</code> to change it everywhere at
-    once: <code class="t-mono-inline">ring</code> puts the double ring on
-    fields too, <code class="t-mono-inline">field</code> puts the halo on
-    controls, <code class="t-mono-inline">edge</code> is a hairline flush
-    against the element, and <code class="t-mono-inline">outline</code> swaps
-    the shadow for a real <code class="t-mono-inline">outline</code>. Omit the
-    attribute and nothing changes. It works because 20 components already
-    resolve through the
-    <code class="t-mono-inline">--ds-field-focus-shadow</code> /
-    <code class="t-mono-inline">--ds-control-focus-shadow</code> roles, so the
+    <code class="t-mono-inline">
+      data-focus
+    </code> on
+    <code class="t-mono-inline">
+      &lt;html&gt;
+    </code> to change it everywhere at
+    once: <code class="t-mono-inline">ring</code> puts the double ring on fields
+    too, <code class="t-mono-inline">field</code> puts the halo on controls,
+    <code class="t-mono-inline">
+      edge
+    </code> is a hairline flush against the
+    element, and <code class="t-mono-inline">outline</code> swaps the shadow for
+    a real <code class="t-mono-inline">outline</code>. Omit the attribute and
+    nothing changes. It works because 20 components already resolve through the
+    <code class="t-mono-inline">
+      --ds-field-focus-shadow
+    </code> /
+    <code class="t-mono-inline">
+      --ds-control-focus-shadow
+    </code> roles, so the
     switch only has to retarget two roles rather than reach every component.
   </p>
 
@@ -538,14 +619,22 @@
       Anything focusable that styles nothing itself still gets a ring.
     </strong>
     The library emits one base rule —
-    <code class="t-mono-inline">:where(:focus-visible)</code> with
-    <code class="t-mono-inline">--ds-control-focus-shadow</code> — at zero
+    <code class="t-mono-inline">
+      :where(:focus-visible)
+    </code> with
+    <code class="t-mono-inline">
+      --ds-control-focus-shadow
+    </code> — at zero
     specificity, so a component rule and your own CSS both out-rank it. Without
-    it a close button inside <code class="t-mono-inline">ds-alert</code>, a
-    link in projected content, or a plain
-    <code class="t-mono-inline">&lt;button&gt;</code> of yours fell through to
+    it a close button inside <code class="t-mono-inline">ds-alert</code>, a link
+    in projected content, or a plain
+    <code class="t-mono-inline">
+      &lt;button&gt;
+    </code> of yours fell through to
     the browser default, which in Chrome is a black
-    <code class="t-mono-inline">outline: auto</code> — visibly foreign beside
+    <code class="t-mono-inline">
+      outline: auto
+    </code> — visibly foreign beside
     the DS ring. Audited across the docs: 247 focusable elements on one page,
     none left without an indicator.
   </p>
@@ -557,16 +646,24 @@
   <p class="block-desc t-s">
     <strong>
       The base rule is a box-shadow, so
-      <code class="t-mono-inline">outline: 0</code> cannot cancel it.
+      <code class="t-mono-inline">
+        outline: 0
+      </code> cannot cancel it.
     </strong>
     If your composite control paints a ring on
-    <code class="t-mono-inline">:focus-within</code> — a field box, a
-    segmented row, a toolbar cell — the element inside it still gets the base
-    ring, and the result is two: a tight one on the control and the halo on the
-    box. This is the trap the DS itself fell into twice, in
-    <code class="t-mono-inline">ds-input</code> and
-    <code class="t-mono-inline">ds-textarea</code>, both found by measuring in
-    a browser rather than by reading the styles.
+    <code class="t-mono-inline">
+      :focus-within
+    </code> — a field box, a segmented
+    row, a toolbar cell — the element inside it still gets the base ring, and
+    the result is two: a tight one on the control and the halo on the box. This
+    is the trap the DS itself fell into twice, in
+    <code class="t-mono-inline">
+      ds-input
+    </code> and
+    <code class="t-mono-inline">
+      ds-textarea
+    </code>, both found by measuring in a
+    browser rather than by reading the styles.
   </p>
 
   <p class="block-desc t-s">
@@ -578,48 +675,68 @@
     button changes nothing on screen, so a keyboard user cannot tell what has
     focus. That is a WCAG 2.4.7 failure, and it is the same defect seen from the
     other side. The DS ships
-    <code class="t-mono-inline">focus.owns-the-focus-ring($control)</code> for
+    <code class="t-mono-inline">
+      focus.owns-the-focus-ring($control)
+    </code> for
     its own shells and fails its build when one is missing.
   </p>
 
   <pre class="t-mono-block">{{ shellRingSnippet }}</pre>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">outline</code> is the one style that also
-    emits a rule, because an outline cannot be carried by a box-shadow token; it
-    is written at zero specificity with
-    <code class="t-mono-inline">:where()</code> so a component or your own CSS
+    <code class="t-mono-inline">
+      outline
+    </code> is the one style that also emits
+    a rule, because an outline cannot be carried by a box-shadow token; it is
+    written at zero specificity with
+    <code class="t-mono-inline">
+      :where()
+    </code> so a component or your own CSS
     still wins. Separately, and regardless of which style is set: under
-    <code class="t-mono-inline">forced-colors</code> every focused element
-    gets a <code class="t-mono-inline">CanvasText</code> outline, because
-    Windows High Contrast DROPS box-shadow and a shadow-only indicator
-    disappears there completely. Consumers who
-    <code class="t-mono-inline">&#64;use</code> the DS partials à la carte
-    need <code class="t-mono-inline">&#64;use 'styles/focus'</code> to get
-    either; the bundled <code class="t-mono-inline">styles/ds</code> entry
-    already includes it.
+    <code class="t-mono-inline">
+      forced-colors
+    </code> every focused element gets
+    a <code class="t-mono-inline">CanvasText</code> outline, because Windows
+    High Contrast DROPS box-shadow and a shadow-only indicator disappears there
+    completely. Consumers who <code class="t-mono-inline">&#64;use</code> the DS
+    partials à la carte need
+    <code class="t-mono-inline">
+      &#64;use 'styles/focus'
+    </code> to get either;
+    the bundled <code class="t-mono-inline">styles/ds</code> entry already
+    includes it.
   </p>
 
   <h3 class="block-title t-h4">
     A clipping ancestor eats the ring —
-    <code class="t-mono-inline">data-focus="inset"</code> is the answer
+    <code class="t-mono-inline">
+      data-focus="inset"
+    </code> is the answer
   </h3>
 
   <p class="block-desc t-s">
     Every style above draws OUTSIDE the border box, so an ancestor with
-    <code class="t-mono-inline">overflow: hidden</code> cuts the indicator
-    away and leaves the element focusable with nothing to see. That ancestor is
-    not exotic: clipping a card is how a full-bleed child stays inside a rounded
+    <code class="t-mono-inline">
+      overflow: hidden
+    </code> cuts the indicator away
+    and leaves the element focusable with nothing to see. That ancestor is not
+    exotic: clipping a card is how a full-bleed child stays inside a rounded
     corner, and <code class="t-mono-inline">ds-card</code> with
-    <code class="t-mono-inline">padding="none"</code> invites it.
-    <code class="t-mono-inline">inset</code> draws the same two rings INSIDE
-    the box instead, where nothing can clip them.
+    <code class="t-mono-inline">
+      padding="none"
+    </code> invites it.
+    <code class="t-mono-inline">
+      inset
+    </code> draws the same two rings INSIDE the
+    box instead, where nothing can clip them.
   </p>
 
   <p class="block-desc t-s">
     <strong>
       It is the one style not pinned to
-      <code class="t-mono-inline">&lt;html&gt;</code>.
+      <code class="t-mono-inline">
+        &lt;html&gt;
+      </code>.
     </strong>
     A clip is local, so put the attribute on the clipping element and the two
     roles inherit into everything below it — Tab into both wells to see it.
@@ -643,7 +760,9 @@
           clipped, default
         </div>
 
-        <code class="t-mono-inline">overflow: hidden</code>
+        <code class="t-mono-inline">
+          overflow: hidden
+        </code>
       </div>
     </div>
 
@@ -665,7 +784,9 @@
           clipped, inset
         </div>
 
-        <code class="t-mono-inline">data-focus="inset"</code>
+        <code class="t-mono-inline">
+          data-focus="inset"
+        </code>
       </div>
     </div>
   </div>
@@ -676,8 +797,12 @@
 
   <p class="block-desc t-s">
     The "paper" surfaces.
-    <code class="t-mono-inline">--surface-default</code> is the card;
-    <code class="t-mono-inline">--surface-secondary</code> is the hover lane /
+    <code class="t-mono-inline">
+      --surface-default
+    </code> is the card;
+    <code class="t-mono-inline">
+      --surface-secondary
+    </code> is the hover lane /
     table head; <code class="t-mono-inline">--select-bg-color</code> is the
     text-selection tint derived from brand.
   </p>
@@ -691,7 +816,9 @@
         canvas
       </div>
 
-      <code class="t-mono-inline">--surface-canvas</code>
+      <code class="t-mono-inline">
+        --surface-canvas
+      </code>
     </div>
 
     <div
@@ -702,7 +829,9 @@
         default
       </div>
 
-      <code class="t-mono-inline">--surface-default</code>
+      <code class="t-mono-inline">
+        --surface-default
+      </code>
     </div>
 
     <div
@@ -713,7 +842,9 @@
         secondary
       </div>
 
-      <code class="t-mono-inline">--surface-secondary</code>
+      <code class="t-mono-inline">
+        --surface-secondary
+      </code>
     </div>
 
     <div
@@ -724,7 +855,9 @@
         tint
       </div>
 
-      <code class="t-mono-inline">--surface-tint</code>
+      <code class="t-mono-inline">
+        --surface-tint
+      </code>
     </div>
 
     <div class="surface-cell surface-cell--select">
@@ -732,7 +865,9 @@
         selection
       </div>
 
-      <code class="t-mono-inline">--select-bg-color</code>
+      <code class="t-mono-inline">
+        --select-bg-color
+      </code>
 
       <p class="surface-cell-sample t-s">
         The quick brown fox
@@ -750,7 +885,9 @@
         inverted
       </div>
 
-      <code class="t-mono-inline">--surface-inverted</code>
+      <code class="t-mono-inline">
+        --surface-inverted
+      </code>
     </div>
   </div>
 </docs-section>

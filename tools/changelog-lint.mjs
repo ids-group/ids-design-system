@@ -14,7 +14,11 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { FACADE, PRIMARY_NG_PACKAGE, resolveLibSpecifier } from './lib-entry-points.mjs';
+import {
+  FACADE,
+  PRIMARY_NG_PACKAGE,
+  resolveLibSpecifier,
+} from './lib-entry-points.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -88,7 +92,10 @@ function shippedSources() {
     if (!asset.input) continue;
     const before = found.length;
     crawl(join(dirname(ngPackage), asset.input), (n) => TEXT.test(n));
-    groups.push({ name: `assets:${asset.input}`, count: found.length - before });
+    groups.push({
+      name: `assets:${asset.input}`,
+      count: found.length - before,
+    });
   }
   const beforeSource = found.length;
   crawl(
@@ -233,7 +240,8 @@ function privateSymbols() {
 
   // Unreachable — lib-entry-points refuses to load without the facade. Kept as a throw because an
   // empty set here disarms C010 and C013 and still reports OK.
-  if (!existsSync(FACADE)) throw new Error(`changelog-lint: ${FACADE} is missing.`);
+  if (!existsSync(FACADE))
+    throw new Error(`changelog-lint: ${FACADE} is missing.`);
   walk(FACADE);
 
   const ours = new Map();
@@ -322,7 +330,9 @@ if (!requested.length) {
     'components.md',
   ];
   const missing = REQUIRED.filter((file) => !existsSync(join(ROOT, file)));
-  const manifests = targets.filter((t) => t.label.startsWith('migrations/')).length;
+  const manifests = targets.filter((t) =>
+    t.label.startsWith('migrations/'),
+  ).length;
   const groups = [
     ...shipped.groups,
     { name: 'migrations/*.json', count: manifests },

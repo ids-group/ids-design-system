@@ -40,11 +40,15 @@
         @for (s of stops; track s.token) {
           <tr>
             <td>
-              <code class="t-mono-inline">{{ s.token }}</code>
+              <code class="t-mono-inline">
+                {{ s.token }}
+              </code>
             </td>
 
             <td>
-              <code class="t-mono-inline">{{ s.value }}</code>
+              <code class="t-mono-inline">
+                {{ s.value }}
+              </code>
             </td>
 
             <td>
@@ -73,7 +77,9 @@
     directly — consume the parent token (<code class="t-mono-inline"
       >--shadow-modal</code
     >, <code class="t-mono-inline">--focus-field</code>,
-    <code class="t-mono-inline">--surface-scrim</code>).
+    <code class="t-mono-inline">
+      --surface-scrim
+    </code>).
   </p>
 
   <div class="scroll-wrap">
@@ -94,7 +100,9 @@
         @for (lit of literals; track lit.alpha) {
           <tr>
             <td>
-              <code class="t-mono-inline">{{ lit.alpha }}</code>
+              <code class="t-mono-inline">
+                {{ lit.alpha }}
+              </code>
             </td>
 
             <td>

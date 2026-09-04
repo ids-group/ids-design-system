@@ -47,25 +47,25 @@ as "upload the new name, ask the owner to remove the old one".
 
 ## Counts
 
-| | |
-|---|---|
-| components locally | **85** |
-| components on the remote | **79** |
-| new — locally, not remote | **8** |
-| stale — remote, not locally | **2** |
+|                             |        |
+| --------------------------- | ------ |
+| components locally          | **85** |
+| components on the remote    | **79** |
+| new — locally, not remote   | **8**  |
+| stale — remote, not locally | **2**  |
 
 ## New (8)
 
-| component | preview | card |
-|---|---|---|
-| `AppLayout` | yes | yes |
-| `AuthLayout` | yes | yes |
-| `FieldGroup` | yes | yes |
-| `FieldMessage` | yes | yes |
-| `FilterBar` | yes | yes |
-| `PasswordRules` | yes | yes |
-| `CalendarDay` | no — on `PREVIEW_EXEMPT` | none, by design (a day cell inside DatePicker) |
-| `TimeColumns` | no — on `PREVIEW_EXEMPT` | none, by design (the columns inside TimePicker) |
+| component       | preview                  | card                                            |
+| --------------- | ------------------------ | ----------------------------------------------- |
+| `AppLayout`     | yes                      | yes                                             |
+| `AuthLayout`    | yes                      | yes                                             |
+| `FieldGroup`    | yes                      | yes                                             |
+| `FieldMessage`  | yes                      | yes                                             |
+| `FilterBar`     | yes                      | yes                                             |
+| `PasswordRules` | yes                      | yes                                             |
+| `CalendarDay`   | no — on `PREVIEW_EXEMPT` | none, by design (a day cell inside DatePicker)  |
+| `TimeColumns`   | no — on `PREVIEW_EXEMPT` | none, by design (the columns inside TimePicker) |
 
 Each component needs its four remote files: `<Name>.jsx`, `<Name>.d.ts`,
 `<Name>.html`, `<Name>.prompt.md`.

@@ -5,7 +5,7 @@
 > Method: deep-research workflow, 2026-06-10 — 5 search angles, 24 sources fetched,
 > 115 claims extracted, top 25 adversarially verified (3 votes each, 2/3 refutes
 > kill), 18 confirmed → 11 synthesized findings. Confidence reflects vote splits:
-> *high* = anchored by unanimous 3-0 votes, *medium* = 2-1 splits or synthesis.
+> _high_ = anchored by unanimous 3-0 votes, _medium_ = 2-1 splits or synthesis.
 
 ## Executive summary
 
@@ -14,7 +14,7 @@ per state (`-hover` / `-active` / `-selected` / `-disabled` suffixes) — but
 **diverge on how values are produced**:
 
 - **Runtime-procedural**: only Material 3 (state layers — fixed-opacity overlay
-  in the component's *content* color).
+  in the component's _content_ color).
 - **Hand-picked ramp steps**: Fluent 2, Carbon, Radix, Polaris — states point at
   pre-chosen stops of designed ramps; zero runtime math.
 - **Build-time generated**: Adobe Spectrum — ramps generated from target
@@ -28,13 +28,13 @@ internally contradictory). Every system calibrates its own ratio.
 
 The "formula deadens the color" problem is solved by **direction, not magnitude**:
 M3 mixes toward the related on-color (same hue family), Carbon/Fluent flip
-direction on dark backgrounds (hover gets *lighter*), Spectrum works in a
+direction on dark backgrounds (hover gets _lighter_), Spectrum works in a
 perceptual space with a hand-tuned lightness curve. **Nobody darkens uniformly
 toward black.**
 
 ## Per-system findings
 
-### Material 3 — runtime state layers *(confidence: medium, 2-1 votes)*
+### Material 3 — runtime state layers _(confidence: medium, 2-1 votes)_
 
 - State = semi-transparent **state layer** with fixed opacity per state, painted
   over the unchanged enabled container color. No per-state color tokens.
@@ -50,7 +50,7 @@ toward black.**
   — the specific-numbers claim was REFUTED 1-2. Don't cite M3 numbers without
   checking current `md.sys.state.*` tokens.
 
-### Fluent 2 — hand-picked alias tokens *(confidence: high)*
+### Fluent 2 — hand-picked alias tokens _(confidence: high)_
 
 - Two-tier architecture: context-agnostic global ramp tokens + semantic alias
   tokens with the state as a name variant (`colorNeutralBackground1Hover` →
@@ -61,14 +61,14 @@ toward black.**
   - light: rest `white` → hover `grey[96]` → pressed `grey[88]` → selected `grey[92]`
   - dark: rest `grey[16]` → hover `grey[24]` (**lighter** than rest) → pressed
     `grey[12]` (darker) → selected `grey[22]`
-  A single lighten/darken formula cannot reproduce this (hover lighter AND
-  pressed darker from the same rest value).
+    A single lighten/darken formula cannot reproduce this (hover lighter AND
+    pressed darker from the same rest value).
 - Docs state only a directional rule:
   > "Generally, a component will get darker as someone interacts with it, from
   > the lightest rest state, to a darker hover, all the way to the darkest
   > selected state."
 
-### Carbon — ramp steps with hand-drawn half-steps *(confidence: medium, 2-1)*
+### Carbon — ramp steps with hand-drawn half-steps _(confidence: medium, 2-1)_
 
 - Per-state suffix tokens (`$background-hover`, `$button-primary-active`),
   five interaction states per theme, values hardcoded per theme.
@@ -85,7 +85,7 @@ toward black.**
   carbon repo issue #4049) — direct precedent for a calibrated formula replacing
   hand picks.
 
-### Radix Colors — purpose-assigned scale steps *(confidence: high)*
+### Radix Colors — purpose-assigned scale steps _(confidence: high)_
 
 - Hand-built 12-step scale with hard-wired state indices:
   > "Step 3 is for normal states. Step 4 is for hover states. Step 5 is for
@@ -95,47 +95,48 @@ toward black.**
   curated chroma, not a formula. No solid-fill pressed step exists (known
   community pain, radix-ui/colors#48).
 
-### Adobe Spectrum — build-time generation + curation *(confidence: high)*
+### Adobe Spectrum — build-time generation + curation _(confidence: high)_
 
 - v6.0 abandoned static hand-drawn swatches for an **adaptive color palette**:
   all gray values except the base background are generated from **target
   contrast ratios** against the theme background (open-source tool Leonardo).
-  Dark themes target *higher* ratios for perceptual parity. Generation is
+  Dark themes target _higher_ ratios for perceptual parity. Generation is
   build-time, never runtime.
 - States = uniform ramp increments:
   > "when a user enters a hover state, the component increases in contrast by
   > one unit. The down (pressed) state increases in contrast by one more unit."
 - Perceptual machinery: CIECAM02-UCS with lightness stops synchronized to
   contrast ratios.
-- **First-person trade-off evidence** *(medium — source article now 404s,
-  verified via corroborating snippets)*:
+- **First-person trade-off evidence** _(medium — source article now 404s,
+  verified via corroborating snippets)_:
   > "No color space, uniform or other, provided a lightness progression that
   > appeared visually balanced. This was especially true with lighter tints."
-  Their answer: per-scale choice of whichever space gives the smoothest
-  gradient + a custom polynomial lightness curve (Stevens' power law). Pure
-  algorithm failed aesthetically; calibrated formula + curation won.
+  > Their answer: per-scale choice of whichever space gives the smoothest
+  > gradient + a custom polynomial lightness curve (Stevens' power law). Pure
+  > algorithm failed aesthetically; calibrated formula + curation won.
 
-### Polaris — enumerated state tokens *(confidence: high)*
+### Polaris — enumerated state tokens _(confidence: high)_
 
 - > "Interaction states are communicated by adding -hover, -active, -selected,
   > or -disabled to the end of the semantic token."
-  Static rgba values (e.g. `--p-color-bg-surface-hover: rgba(247,247,247,1)`).
+  > Static rgba values (e.g. `--p-color-bg-surface-hover: rgba(247,247,247,1)`).
 
 ## Cross-cutting patterns
 
-**Architecture** *(high)*: the dominant public contract is a named token per
+**Architecture** _(high)_: the dominant public contract is a named token per
 state pointing at a static value. Runtime computation in production: only M3's
 alpha compositing. No verified system uses runtime `color-mix()`/OKLCH for
 states (absence of evidence ≠ evidence of absence; this remains our open
 question #4).
 
-**Anti-desaturation strategies** *(medium, synthesis)* — three verified moves:
+**Anti-desaturation strategies** _(medium, synthesis)_ — three verified moves:
+
 1. Mix toward a semantically related color, not black (M3 on-color).
 2. Direction depends on background lightness, always moving toward contrast
    (Carbon's Gray 70/60 flip; Fluent dark hover lighter than rest).
 3. Perceptual space + hand-tuned curve at generation time (Spectrum).
 
-**pressed : hover ratio** *(medium, synthesis)*: no universal constant.
+**pressed : hover ratio** _(medium, synthesis)_: no universal constant.
 M3 ≈ 1.25–1.5×, Carbon ≈ 4×, Radix 2× (discrete), Spectrum 1× (equal
 increments), Fluent non-monotonic. Treat any fixed ratio as a calibrated
 default, not a law.
@@ -156,7 +157,7 @@ default, not a law.
    = M3's on-color principle; "toward white on dark bases" = Carbon/Fluent
    direction flip; cool ink instead of black = the same anti-desaturation move.
 2. **Per-state custom properties as the public contract** match industry
-   consensus. Our `ds-interactive` contract still *exposes*
+   consensus. Our `ds-interactive` contract still _exposes_
    `--interactive-hover/-active` — components/themes can override them directly,
    which is exactly the "hand pick where the formula is too coarse" escape hatch
    (Carbon half-steps precedent).

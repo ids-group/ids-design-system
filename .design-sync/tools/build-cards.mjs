@@ -12,10 +12,21 @@
 // value there is worse than a stale one: a hash that happens to match makes the next skill-driven
 // sync SKIP a file that did change. `_ds_manifest.json` IS ours — see build-manifest.mjs.
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
+import {
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  rmSync,
+  cpSync,
+  readdirSync,
+  existsSync,
+} from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { internalSymbols, resolveLibSpecifier } from '../../tools/lib-entry-points.mjs';
+import {
+  internalSymbols,
+  resolveLibSpecifier,
+} from '../../tools/lib-entry-points.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -24,13 +35,24 @@ const elements = join(syncDir, 'elements');
 const OUT = join(syncDir, 'upload');
 
 const config = JSON.parse(readFileSync(join(syncDir, 'config.json'), 'utf8'));
-const viewports = JSON.parse(readFileSync(join(syncDir, 'viewports.json'), 'utf8'));
-const surface = JSON.parse(readFileSync(join(elements, 'gen', 'surface.json'), 'utf8'));
-const byName = new Map(surface.components.map((component) => [component.name, component]));
-const sections = JSON.parse(readFileSync(join(elements, 'gen', 'sections.json'), 'utf8')).sections;
-const sectionBySlug = new Map(sections.map((section) => [section.slug, section]));
+const viewports = JSON.parse(
+  readFileSync(join(syncDir, 'viewports.json'), 'utf8'),
+);
+const surface = JSON.parse(
+  readFileSync(join(elements, 'gen', 'surface.json'), 'utf8'),
+);
+const byName = new Map(
+  surface.components.map((component) => [component.name, component]),
+);
+const sections = JSON.parse(
+  readFileSync(join(elements, 'gen', 'sections.json'), 'utf8'),
+).sections;
+const sectionBySlug = new Map(
+  sections.map((section) => [section.slug, section]),
+);
 
-const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+const kebab = (name) =>
+  name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
 /** The component's name as a reader sees it. `ToggleButton` is an identifier — it belongs in the
  *  declaration and the directory, both of which keep it — but the card's filename IS its label in
@@ -57,7 +79,9 @@ const publicExports = (() => {
   const resolve = (from, specifier) => resolveLibSpecifier(from, specifier);
 
   const declaredIn = (source) => {
-    for (const [, name] of source.matchAll(/export\s+(?:abstract\s+)?class\s+(\w+)/g)) {
+    for (const [, name] of source.matchAll(
+      /export\s+(?:abstract\s+)?class\s+(\w+)/g,
+    )) {
       names.add(name);
     }
   };
@@ -72,14 +96,22 @@ const publicExports = (() => {
       return;
     }
     declaredIn(source);
-    for (const [, listed, specifier] of source.matchAll(/export\s*\{([^}]*)\}\s*from\s*'([^']+)'/g)) {
+    for (const [, listed, specifier] of source.matchAll(
+      /export\s*\{([^}]*)\}\s*from\s*'([^']+)'/g,
+    )) {
       for (const entry of listed.split(',')) {
-        const name = entry.replace(/\btype\b/, '').split(/\s+as\s+/).pop().trim();
+        const name = entry
+          .replace(/\btype\b/, '')
+          .split(/\s+as\s+/)
+          .pop()
+          .trim();
         if (name) names.add(name);
       }
       walk(resolve(file, specifier));
     }
-    for (const [, specifier] of source.matchAll(/export\s*\*\s*from\s*'([^']+)'/g)) {
+    for (const [, specifier] of source.matchAll(
+      /export\s*\*\s*from\s*'([^']+)'/g,
+    )) {
       const target = resolve(file, specifier);
       if (target) {
         try {
@@ -106,9 +138,9 @@ function sectionFor(name) {
   const section = sectionBySlug.get(slug);
   if (!section) {
     throw new Error(
-      `${name} resolves to the ds-docs section "${slug}", which GROUP_PAGES does not register.\n`
-        + `Either add a section for it in ds-docs, or point config.json's \`sections\` at the one `
-        + `that documents it.`,
+      `${name} resolves to the ds-docs section "${slug}", which GROUP_PAGES does not register.\n` +
+        `Either add a section for it in ds-docs, or point config.json's \`sections\` at the one ` +
+        `that documents it.`,
     );
   }
 
@@ -121,30 +153,52 @@ function sectionFor(name) {
  *  The comments have to go because they quote markup: Dropzone's says "every cell is a live
  *  <ds-dropzone>", which any scan of this file reads as an element that opens and never closes. */
 function templateOf(slug) {
-  const base = join(repo, 'ds-docs/src/app/sections', slug, `${slug.split('/').pop()}.section`);
-  const read = (file) => readFileSync(file, 'utf8').replace(/<!--[\s\S]*?-->/g, '');
+  const base = join(
+    repo,
+    'ds-docs/src/app/sections',
+    slug,
+    `${slug.split('/').pop()}.section`,
+  );
+  const read = (file) =>
+    readFileSync(file, 'utf8').replace(/<!--[\s\S]*?-->/g, '');
   try {
     return read(`${base}.html`);
   } catch {
     /* falls through to the inline template */
   }
   try {
-    return read(`${base}.ts`).match(/template:\s*`([\s\S]*?)`\s*[,}]/)?.[1] ?? '';
+    return (
+      read(`${base}.ts`).match(/template:\s*`([\s\S]*?)`\s*[,}]/)?.[1] ?? ''
+    );
   } catch {
     return '';
   }
 }
 
-const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', ndash: '–', mdash: '—', rarr: '→', times: '×', middot: '·' };
-const decode = (text) => text
-  .replace(/&(\w+);/g, (whole, name) => ENTITIES[name] ?? whole)
-  .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
+const ENTITIES = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+  ndash: '–',
+  mdash: '—',
+  rarr: '→',
+  times: '×',
+  middot: '·',
+};
+const decode = (text) =>
+  text
+    .replace(/&(\w+);/g, (whole, name) => ENTITIES[name] ?? whole)
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
 
 /** The chapter's own heading, which is what a card is named after. Taken from the template's
  *  `title=` rather than the slug: the slug says `color` where the page says `Colour`, and the
  *  page is what a reader recognises. */
-const chapterTitleOf = (slug) => decode(templateOf(slug).match(/title="([^"]*)"/)?.[1] ?? '')
-  || slug.split('/').pop();
+const chapterTitleOf = (slug) =>
+  decode(templateOf(slug).match(/title="([^"]*)"/)?.[1] ?? '') ||
+  slug.split('/').pop();
 
 /** Which sub-components each chapter marks a block for, so a card can tell its own blocks from the
  *  chapter's. Read from the templates because the marks live there and nowhere else. */
@@ -152,7 +206,11 @@ const markedInSection = new Map();
 for (const section of sections) {
   markedInSection.set(
     section.slug,
-    new Set([...templateOf(section.slug).matchAll(/data-for="([^"]+)"/g)].map((match) => match[1])),
+    new Set(
+      [...templateOf(section.slug).matchAll(/data-for="([^"]+)"/g)].map(
+        (match) => match[1],
+      ),
+    ),
   );
 }
 
@@ -163,7 +221,8 @@ for (const section of sections) {
  *  card with no API table at all. */
 const apiKeyBySelector = (() => {
   const source = readFileSync(
-    join(repo, 'ds-docs/src/app/shared/component-api.generated.ts'), 'utf8',
+    join(repo, 'ds-docs/src/app/shared/component-api.generated.ts'),
+    'utf8',
   );
   const map = new Map();
   // The ENTRY's own name, not its inner `key`. A part that shares its chapter's anchor is filed as
@@ -185,17 +244,28 @@ const apiKeyBySelector = (() => {
  *  carrying `data-for` when a set of demos is grouped without a heading of its own (Menu's item
  *  states). `owner` is the sub-component the block documents, or `''` for the chapter's own. */
 /** Template markup as a reader would hear it: tags out, entities resolved, bindings dropped. */
-const plainText = (markup) => decode(markup.replace(/<[^>]*>/g, ' '))
-  .replace(/\{\{[\s\S]*?\}\}/g, '')
-  .replace(/\s+/g, ' ')
-  // Only where the mark ENDS a word. Without the lookahead this ate the space in `the global .link`,
-  // because stripping the tags leaves the class name starting with a dot.
-  .replace(/\s+([,.;:!?)])(?=\s|$)/g, '$1')
-  .replace(/(\()\s+/g, '$1')
-  .replace(/\s+\)/g, ')')
-  .trim();
+const plainText = (markup) =>
+  decode(markup.replace(/<[^>]*>/g, ' '))
+    .replace(/\{\{[\s\S]*?\}\}/g, '')
+    .replace(/\s+/g, ' ')
+    // Only where the mark ENDS a word. Without the lookahead this ate the space in `the global .link`,
+    // because stripping the tags leaves the class name starting with a dot.
+    .replace(/\s+([,.;:!?)])(?=\s|$)/g, '$1')
+    .replace(/(\()\s+/g, '$1')
+    .replace(/\s+\)/g, ')')
+    .trim();
 
-const VOID_TAGS = new Set(['br', 'hr', 'img', 'input', 'meta', 'link', 'source', 'track', 'area']);
+const VOID_TAGS = new Set([
+  'br',
+  'hr',
+  'img',
+  'input',
+  'meta',
+  'link',
+  'source',
+  'track',
+  'area',
+]);
 const TAG = /<(\/?)([a-zA-Z][\w-]*)\b([^>]*)>/g;
 
 function blocksOf(slug) {
@@ -223,20 +293,27 @@ function blocksOf(slug) {
 
     const heading = /class="block-title/.test(attributes);
     const owner = attributes.match(/data-for="([^"]+)"/)?.[1] ?? null;
-    const empty = attributes.trimEnd().endsWith('/') || VOID_TAGS.has(name.toLowerCase());
+    const empty =
+      attributes.trimEnd().endsWith('/') || VOID_TAGS.has(name.toLowerCase());
 
     if (depth === 1 && heading) {
       // The heading's own text, which is what the card is named after.
       const opens = match.index + tag.length;
       const closes = body.indexOf('</h3>', opens);
-      const title = decode(body.slice(opens, closes < 0 ? opens : closes).replace(/<[^>]*>/g, ' '))
+      const title = decode(
+        body.slice(opens, closes < 0 ? opens : closes).replace(/<[^>]*>/g, ' '),
+      )
         .replace(/\s+/g, ' ')
         .trim();
       found.push({ title, owner: owner ?? '', at: match.index });
     } else if (depth === 1 && owner !== null) {
       // A set of demos grouped without a heading of its own — Menu's item states.
       found.push({ title: '', owner, at: match.index });
-    } else if (depth > 1 && (heading || owner !== null) && !insideMarkedContainer) {
+    } else if (
+      depth > 1 &&
+      (heading || owner !== null) &&
+      !insideMarkedContainer
+    ) {
       // Nested under a plain container, so the walk cannot address it: Empty-state lays four of its
       // five variants out in a `.blocks` grid. Slicing that chapter would silently drop them, so it
       // publishes as one whole-chapter card instead.
@@ -258,7 +335,11 @@ function blocksOf(slug) {
     const slice = body.slice(block.at, until);
     // Every class the sections use for PROSE, not just the shared one: the refusal block carries its
     // paragraphs in `.refusal-copy`, do-dont in `.caption`, token-discipline in `.muted`.
-    const prose = [...slice.matchAll(/<p[^>]*class="[^"]*(?:block-desc|refusal-copy|caption|muted)[^"]*"[^>]*>([\s\S]*?)<\/p>/g)]
+    const prose = [
+      ...slice.matchAll(
+        /<p[^>]*class="[^"]*(?:block-desc|refusal-copy|caption|muted)[^"]*"[^>]*>([\s\S]*?)<\/p>/g,
+      ),
+    ]
       .map(([, inner]) => plainText(inner))
       .filter(Boolean);
 
@@ -345,18 +426,40 @@ function cardsFor(name) {
   // second copy under the part's name is the duplication this whole design removes. `TimeColumns`
   // shipped the entire Time Picker chapter — all seven of its blocks — under the name
   // "Time Columns". Only a chapter that publishes nothing at all falls back to a whole-chapter card.
-  const primary = section.slug.startsWith('components/') && section.slug.slice(11) === own;
-  const owner = marks.has(own) ? own : (primary ? '' : null);
+  const primary =
+    section.slug.startsWith('components/') && section.slug.slice(11) === own;
+  const owner = marks.has(own) ? own : primary ? '' : null;
   const label = spacedName(name);
   if (owner === null && blocks.length) return [];
   if (owner === null || !blocks.length) {
-    return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
+    return [
+      {
+        file: label,
+        owns: null,
+        ownedIndex: -1,
+        chapterPosition: -1,
+        title: '',
+        desc: '',
+        prose: [],
+      },
+    ];
   }
 
   const mine = blocks
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => block.owner === owner);
-  if (!mine.length) return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
+  if (!mine.length)
+    return [
+      {
+        file: label,
+        owns: null,
+        ownedIndex: -1,
+        chapterPosition: -1,
+        title: '',
+        desc: '',
+        prose: [],
+      },
+    ];
 
   return nameCards(label, mine, owner);
 }
@@ -373,7 +476,17 @@ function guideCardsFor(section) {
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => !block.owner);
   if (!blocks.length) {
-    return [{ file: chapter, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
+    return [
+      {
+        file: chapter,
+        owns: null,
+        ownedIndex: -1,
+        chapterPosition: -1,
+        title: '',
+        desc: '',
+        prose: [],
+      },
+    ];
   }
 
   return nameCards(chapter, blocks, '');
@@ -382,13 +495,14 @@ function guideCardsFor(section) {
 /** A block title as it should READ, not as a filename: the folding to printable ASCII that
  *  `blockLabel` does exists because a path may not carry the multiplication sign or a middle dot,
  *  and the h2 inside the card is under no such constraint. Only a template binding has to go. */
-const displayTitle = (raw) => (raw ?? '')
-  .replace(/\{\{[\s\S]*?\}\}/g, '')
-  .replace(/\s+/g, ' ')
-  .trim()
-  // It follows a dash in `Buttons - with icon`, so it continues the line rather than starting one.
-  // Only an ordinary word is lowered: `CSV export`, `W3w`, `12-hour (AM PM)` keep their shape.
-  .replace(/^[A-Z](?=[a-z]|\s|$)/, (letter) => letter.toLowerCase());
+const displayTitle = (raw) =>
+  (raw ?? '')
+    .replace(/\{\{[\s\S]*?\}\}/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    // It follows a dash in `Buttons - with icon`, so it continues the line rather than starting one.
+    // Only an ordinary word is lowered: `CSV export`, `W3w`, `12-hour (AM PM)` keep their shape.
+    .replace(/^[A-Z](?=[a-z]|\s|$)/, (letter) => letter.toLowerCase());
 
 /** One card per owned block, each named `<chapter> - <block>`. */
 function nameCards(chapter, mine, owner) {
@@ -400,7 +514,9 @@ function nameCards(chapter, mine, owner) {
     // are several.
     const base = block.title
       ? blockLabel(block.title)
-      : (mine.length > 1 ? `States ${ownedIndex + 1}` : '');
+      : mine.length > 1
+        ? `States ${ownedIndex + 1}`
+        : '';
     const count = (seen.get(base) ?? 0) + 1;
     seen.set(base, count);
     const suffix = count > 1 ? `${base} ${count}` : base;
@@ -421,7 +537,8 @@ function nameCards(chapter, mine, owner) {
  *  A part outside that set has no `data-key` of its own on the page, and its card then keeps the
  *  chapter's - the Menu Item card printed `<ds-menu>`. */
 const declaredKeys = (slug) => {
-  const declared = templateOf(slug).match(/\[apiKeys\]="\[([^\]]*)\]"/)?.[1] ?? '';
+  const declared =
+    templateOf(slug).match(/\[apiKeys\]="\[([^\]]*)\]"/)?.[1] ?? '';
 
   return new Set([...declared.matchAll(/'([^']+)'/g)].map(([, key]) => key));
 };
@@ -435,7 +552,10 @@ const declaredKeys = (slug) => {
 const groupOf = (section) => section.group.replace(/^components\//, '');
 
 function readDoc(name) {
-  const raw = readFileSync(join(syncDir, 'docs', `${name}.md`), 'utf8').replace(/\r\n/g, '\n');
+  const raw = readFileSync(join(syncDir, 'docs', `${name}.md`), 'utf8').replace(
+    /\r\n/g,
+    '\n',
+  );
   const front = raw.match(/^---\n([\s\S]*?)\n---\n?/);
   if (!front) throw new Error(`${name}.md has no front matter.`);
 
@@ -449,15 +569,21 @@ function readDoc(name) {
  *  It carries what will not fit in the one-line subtitle: the block's whole prose, and a pointer to
  *  the component's own prompt and declaration. NOTE that the build now OWNS these files - a note
  *  typed in the pane is replaced on the next upload. */
-const usageNote = ({ title, prose, component, contract }) => [
-  `# ${title}`,
-  '',
-  ...(prose.length ? [prose.join('\n\n'), ''] : []),
-  ...(component
-    ? [`Full API: \`${component}.d.ts\`. How to use the component anywhere: \`${component}.prompt.md\`.`
-      + (contract ? '' : ' This component is not exported by the package, so it has neither.'), '']
-    : []),
-].join('\n');
+const usageNote = ({ title, prose, component, contract }) =>
+  [
+    `# ${title}`,
+    '',
+    ...(prose.length ? [prose.join('\n\n'), ''] : []),
+    ...(component
+      ? [
+          `Full API: \`${component}.d.ts\`. How to use the component anywhere: \`${component}.prompt.md\`.` +
+            (contract
+              ? ''
+              : ' This component is not exported by the package, so it has neither.'),
+          '',
+        ]
+      : []),
+  ].join('\n');
 
 /** The same words the card's own h2 shows, for the line the pane prints above the frame. */
 const paneTitle = (head, blockTitle) => {
@@ -474,12 +600,13 @@ const paneTitle = (head, blockTitle) => {
 /** Safe inside an HTML comment attribute. The angle brackets go because a `>` ends the marker for
  *  any parser that scans to the first one - thirteen subtitles quoting a tag or a loudness order
  *  did exactly that - and the app's own parser cannot be inspected from here. */
-const markerValue = (value) => (value ?? '')
-  .replace(/"/g, "'")
-  .replace(/[<>]/g, '')
-  .replace(/--+/g, '-')
-  .replace(/\s+/g, ' ')
-  .trim();
+const markerValue = (value) =>
+  (value ?? '')
+    .replace(/"/g, "'")
+    .replace(/[<>]/g, '')
+    .replace(/--+/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 /** What the pane prints ABOVE the frame: ONE sentence, a whole thought that ends rather than a
  *  paragraph that stops. The rest of the block's prose is not lost - it becomes the card's usage
@@ -501,17 +628,35 @@ const capped = (paragraph) => {
 
 /** A card is generated output nobody edits, so the reasons live here rather than in 410 copies of
  *  the page. The @dsCard marker is added back by the caller - the manifest is built from it. */
-const trimmed = (page) => page
-  .replace(/<!--[\s\S]*?-->/g, '')
-  .replace(/\/\*[\s\S]*?\*\//g, '')
-  .replace(/^[^\S\n]*\n/gm, '');
+const trimmed = (page) =>
+  page
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^[^\S\n]*\n/gm, '');
 
-function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTable, head, block, react, title, subtitle }) {
-  const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''}`
-    + `${title ? ` name="${markerValue(title)}"` : ''}`
-    + `${subtitle ? ` subtitle="${markerValue(capped(subtitle))}"` : ''} -->`;
+function cardHtml({
+  name,
+  group,
+  tag,
+  viewport,
+  owns,
+  ownedIndex,
+  apiKey,
+  withTable,
+  head,
+  block,
+  react,
+  title,
+  subtitle,
+}) {
+  const marker =
+    `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''}` +
+    `${title ? ` name="${markerValue(title)}"` : ''}` +
+    `${subtitle ? ` subtitle="${markerValue(capped(subtitle))}"` : ''} -->`;
 
-  return marker + trimmed(`
+  return (
+    marker +
+    trimmed(`
 <!doctype html>
 <!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
      automatic OS branch, so a host that sets it on this document flips every component's tokens
@@ -524,10 +669,14 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTa
   <style>
     /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
        all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}${block ? `
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}${
+      block
+        ? `
     /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
        title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}` : ''}
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}`
+        : ''
+    }
     /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
        for a capped, padded column stretches edge to edge without it, and every demo that relies on
        wrapping wraps at the wrong width. */
@@ -657,7 +806,8 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTa
     })();
   </script>
 </body></html>
-`);
+`)
+  );
 }
 
 /** Declarations for the agent. Richer than the deleted port's: the same per-prop docs plus the 55
@@ -665,12 +815,17 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTa
 function declaration({ name, component, doc }) {
   const lines = [];
   for (const { name: propName, kind, type, doc: propDoc } of component.api) {
-    const emitted = kind === 'output' ? `on${propName[0].toUpperCase()}${propName.slice(1)}` : propName;
+    const emitted =
+      kind === 'output'
+        ? `on${propName[0].toUpperCase()}${propName.slice(1)}`
+        : propName;
     const emittedType = kind === 'output' ? `(value: ${type}) => void` : type;
     if (propDoc) lines.push(`  /** ${propDoc} */`);
     lines.push(`  ${emitted}?: ${emittedType};`);
     if (kind === 'model') {
-      lines.push(`  on${propName[0].toUpperCase()}${propName.slice(1)}Change?: (value: ${type}) => void;`);
+      lines.push(
+        `  on${propName[0].toUpperCase()}${propName.slice(1)}Change?: (value: ${type}) => void;`,
+      );
     }
   }
   for (const slot of component.slots) {
@@ -700,10 +855,35 @@ export declare const ${name}: React.ComponentType<${name}Props>;
 // name that still refers to a library interface becomes `unknown`, which teaches an agent nothing
 // but at least does not break the project's own typecheck with a dangling import.
 const AMBIENT = new Set([
-  'boolean', 'number', 'string', 'void', 'unknown', 'null', 'undefined', 'true', 'false',
-  'readonly', 'Array', 'Record', 'Partial', 'Date', 'RegExp', 'File', 'FileList', 'Blob',
-  'Event', 'MouseEvent', 'KeyboardEvent', 'PointerEvent', 'FocusEvent', 'InputEvent', 'DragEvent',
-  'HTMLElement', 'Element', 'React', 'ReactNode',
+  'boolean',
+  'number',
+  'string',
+  'void',
+  'unknown',
+  'null',
+  'undefined',
+  'true',
+  'false',
+  'readonly',
+  'Array',
+  'Record',
+  'Partial',
+  'Date',
+  'RegExp',
+  'File',
+  'FileList',
+  'Blob',
+  'Event',
+  'MouseEvent',
+  'KeyboardEvent',
+  'PointerEvent',
+  'FocusEvent',
+  'InputEvent',
+  'DragEvent',
+  'HTMLElement',
+  'Element',
+  'React',
+  'ReactNode',
 ]);
 
 // The whole icon union on every icon prop is a wall of characters. It is kept long enough to show
@@ -711,10 +891,13 @@ const AMBIENT = new Set([
 const ICON_NAMES_SHOWN = 15;
 
 function declarationType(inlined) {
-  const bare = inlined
-    .replace(/'[^']*'/g, ' ')
-    .match(/[A-Za-z_$][\w$]*/g) ?? [];
-  if (bare.some((name) => !AMBIENT.has(name) && name !== 'keyof' && name !== 'typeof')) {
+  const bare =
+    inlined.replace(/'[^']*'/g, ' ').match(/[A-Za-z_$][\w$]*/g) ?? [];
+  if (
+    bare.some(
+      (name) => !AMBIENT.has(name) && name !== 'keyof' && name !== 'typeof',
+    )
+  ) {
     return 'unknown';
   }
   const literals = inlined.match(/'[^']*'/g) ?? [];
@@ -746,8 +929,8 @@ for (const name of [...byName.keys()].sort()) {
   if (publicExports.has(component.className)) {
     writeFileSync(
       join(dir, `${name}.jsx`),
-      `// Re-export of ${config.pkg} ${name}. Implementation is in the root _ds_bundle.js (window.IdsDs).\n`
-      + `Object.assign(window, { ${name}: window.IdsDs.${name} });\n`,
+      `// Re-export of ${config.pkg} ${name}. Implementation is in the root _ds_bundle.js (window.IdsDs).\n` +
+        `Object.assign(window, { ${name}: window.IdsDs.${name} });\n`,
     );
     writeFileSync(
       join(dir, `${name}.d.ts`),
@@ -756,7 +939,10 @@ for (const name of [...byName.keys()].sort()) {
         doc: body,
         component: {
           ...component,
-          api: component.api.map((entry) => ({ ...entry, type: declarationType(entry.inlined) })),
+          api: component.api.map((entry) => ({
+            ...entry,
+            type: declarationType(entry.inlined),
+          })),
         },
       }),
     );
@@ -776,7 +962,9 @@ for (const name of [...byName.keys()].sort()) {
         name,
         group,
         tag: section.tag,
-        viewport: height ? `${viewports.width}x${declaredHeight(height)}` : null,
+        viewport: height
+          ? `${viewports.width}x${declaredHeight(height)}`
+          : null,
         owns: card.owns,
         ownedIndex: card.ownedIndex,
         apiKey: apiKeyBySelector.get(component.selector) ?? '',
@@ -787,7 +975,10 @@ for (const name of [...byName.keys()].sort()) {
         // to the chapter's own component, and then the chapter's own h2 text is already right.
         head: card.owns ? spacedName(name) : null,
         block: displayTitle(card.title),
-        title: paneTitle(card.owns ? spacedName(name) : chapterTitleOf(section.slug), card.title),
+        title: paneTitle(
+          card.owns ? spacedName(name) : chapterTitleOf(section.slug),
+          card.title,
+        ),
         subtitle: card.desc,
         // `name` IS the React name - it is what the wrapper, the declaration and the card directory
         // are called. All 85 components in the surface are elements today; an attribute selector
@@ -800,7 +991,10 @@ for (const name of [...byName.keys()].sort()) {
     writeFileSync(
       join(dir, `${card.file}.prompt.md`),
       usageNote({
-        title: paneTitle(card.owns ? spacedName(name) : chapterTitleOf(section.slug), card.title),
+        title: paneTitle(
+          card.owns ? spacedName(name) : chapterTitleOf(section.slug),
+          card.title,
+        ),
         prose: card.prose,
         component: name,
         contract: publicExports.has(component.className),
@@ -821,7 +1015,9 @@ for (const name of [...byName.keys()].sort()) {
 
 // Chapters with no component of their own. Link keeps its place among the components because that
 // is where a reader looks for it; the rest are guides and get a tree of their own.
-const claimed = new Set([...byName.keys()].map((name) => sectionFor(name).slug));
+const claimed = new Set(
+  [...byName.keys()].map((name) => sectionFor(name).slug),
+);
 for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
   const group = groupOf(section);
   const chapter = blockLabel(chapterTitleOf(section.slug));
@@ -837,7 +1033,9 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
         name: chapter,
         group,
         tag: section.tag,
-        viewport: height ? `${viewports.width}x${declaredHeight(height)}` : null,
+        viewport: height
+          ? `${viewports.width}x${declaredHeight(height)}`
+          : null,
         owns: card.owns,
         ownedIndex: card.ownedIndex,
         apiKey: '',
@@ -873,14 +1071,20 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
 // GROUP_PAGES lists them, chapters within a group, blocks within a chapter. Written for
 // build-manifest, because walking the built tree only ever yields alphabetical, which put Button's
 // "Color × variant" nowhere near the top of the Buttons chapter where it opens.
-const sectionOrder = new Map(sections.map((section, index) => [section.slug, index]));
+const sectionOrder = new Map(
+  sections.map((section, index) => [section.slug, index]),
+);
 const ordered = written.map((card) => ({
   path: card.path,
   section: sectionOrder.get(card.slug) ?? Number.MAX_SAFE_INTEGER,
-  block: card.chapterPosition < 0 ? Number.MAX_SAFE_INTEGER : card.chapterPosition,
+  block:
+    card.chapterPosition < 0 ? Number.MAX_SAFE_INTEGER : card.chapterPosition,
   name: card.name,
 }));
-ordered.sort((a, b) => a.section - b.section || a.block - b.block || a.name.localeCompare(b.name));
+ordered.sort(
+  (a, b) =>
+    a.section - b.section || a.block - b.block || a.name.localeCompare(b.name),
+);
 writeFileSync(
   join(elements, 'gen', 'cards.json'),
   `${JSON.stringify({ generatedBy: 'build-cards.mjs', cards: ordered.map((entry) => entry.path) }, null, 2)}\n`,
@@ -891,10 +1095,16 @@ writeFileSync(
 // time. Fingerprinted as THIS script leaves them, which such a build reproduces.
 const fingerprints = {};
 const fingerprint = (dir, rel) => {
-  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  )) {
     const next = `${rel}/${entry.name}`;
     if (entry.isDirectory()) fingerprint(join(dir, entry.name), next);
-    else fingerprints[next] = createHash('sha256').update(readFileSync(join(dir, entry.name))).digest('hex').slice(0, 16);
+    else
+      fingerprints[next] = createHash('sha256')
+        .update(readFileSync(join(dir, entry.name)))
+        .digest('hex')
+        .slice(0, 16);
   }
 };
 for (const top of ['components', 'guides']) fingerprint(join(OUT, top), top);
@@ -911,13 +1121,19 @@ writeFileSync(join(OUT, '_ds_bundle.css'), bundleCss);
 // depended on files nothing in this repo could rebuild: a font could not be added, React could not
 // be pinned, and a wipe-and-reupload was unsafe because half the tree had no source.
 mkdirSync(join(OUT, 'fonts'), { recursive: true });
-const faces = readdirSync(join(elements, 'dist', 'browser', 'media'))
-  .filter((file) => file.endsWith('.woff2'));
+const faces = readdirSync(join(elements, 'dist', 'browser', 'media')).filter(
+  (file) => file.endsWith('.woff2'),
+);
 if (!faces.length) {
-  throw new Error('no .woff2 in dist/browser/media — the Angular build did not emit the faces.');
+  throw new Error(
+    'no .woff2 in dist/browser/media — the Angular build did not emit the faces.',
+  );
 }
 for (const face of faces) {
-  cpSync(join(elements, 'dist', 'browser', 'media', face), join(OUT, 'fonts', face));
+  cpSync(
+    join(elements, 'dist', 'browser', 'media', face),
+    join(OUT, 'fonts', face),
+  );
 }
 
 // The @font-face rules already ship inside the bundle, pointing at `fonts/`. fonts.css exists
@@ -926,8 +1142,8 @@ for (const face of faces) {
 const fontFaces = bundleCss.match(/@font-face\s*\{[^}]*\}/g) ?? [];
 if (fontFaces.length < faces.length) {
   throw new Error(
-    `${faces.length} face file(s) but ${fontFaces.length} @font-face rule(s) in the bundle`
-    + ' — one of the two is out of step.',
+    `${faces.length} face file(s) but ${fontFaces.length} @font-face rule(s) in the bundle` +
+      ' — one of the two is out of step.',
   );
 }
 writeFileSync(
@@ -937,7 +1153,10 @@ writeFileSync(
 
 // The stylesheet the cards link first. Reproduced rather than reinvented: this is what the project
 // already served, so the load order the pane relies on does not change.
-writeFileSync(join(OUT, 'styles.css'), '@import "./fonts/fonts.css";\n@import "./_ds_bundle.css";\n');
+writeFileSync(
+  join(OUT, 'styles.css'),
+  '@import "./fonts/fonts.css";\n@import "./_ds_bundle.css";\n',
+);
 
 // The React the cards load as a classic script. Shipping it is the point: the host's copy is
 // outside our control, and the wrappers are compiled against a known version — 18.3.1 is what
@@ -948,7 +1167,10 @@ const vendored = [
   ['react-dom', 'umd/react-dom.production.min.js', 'react-dom.js'],
 ];
 for (const [pkg, file, target] of vendored) {
-  cpSync(join(syncDir, 'node_modules', pkg, file), join(OUT, '_vendor', target));
+  cpSync(
+    join(syncDir, 'node_modules', pkg, file),
+    join(OUT, '_vendor', target),
+  );
 }
 
 // Images pasted into the project by hand. They are not design system content, but the point of
@@ -967,9 +1189,13 @@ for (const file of readdirSync(pasted)) {
 //
 // Any extension is accepted because the project file is called `.thumbnail` and carries none:
 // dropping a replacement into assets/ should not also mean editing this line.
-const cover = readdirSync(join(syncDir, 'assets')).find((file) => /^thumbnail\./.test(file));
+const cover = readdirSync(join(syncDir, 'assets')).find((file) =>
+  /^thumbnail\./.test(file),
+);
 if (!cover) {
-  throw new Error('no assets/thumbnail.* — the project tile would publish blank.');
+  throw new Error(
+    'no assets/thumbnail.* — the project tile would publish blank.',
+  );
 }
 cpSync(join(syncDir, 'assets', cover), join(OUT, '.thumbnail'));
 
@@ -984,42 +1210,45 @@ const obsolete = readFileSync(join(syncDir, 'obsolete.txt'), 'utf8')
 const live = obsolete.filter((path) => existsSync(join(OUT, path)));
 if (live.length) {
   throw new Error(
-    `.design-sync/obsolete.txt lists ${live.length} path(s) this build still produces, so they are`
-    + ` live cards and not obsolete files:\n  ${live.join('\n  ')}`,
+    `.design-sync/obsolete.txt lists ${live.length} path(s) this build still produces, so they are` +
+      ` live cards and not obsolete files:\n  ${live.join('\n  ')}`,
   );
 }
 
 // The project's own README, from the same conventions file the agent reads.
 writeFileSync(
   join(OUT, 'README.md'),
-  readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8'),
+  readFileSync(
+    join(syncDir, config.readmeHeader.replace('.design-sync/', '')),
+    'utf8',
+  ),
 );
 
 if (obsolete.length) {
   console.log(
-    `· ${obsolete.length} obsolete path(s) still on the project, owner-only to delete:`
-    + `\n  ${obsolete.join('\n  ')}`,
+    `· ${obsolete.length} obsolete path(s) still on the project, owner-only to delete:` +
+      `\n  ${obsolete.join('\n  ')}`,
   );
 }
 
 if (untagged.length) {
   throw new Error(
-    `${untagged.length} part card(s) would print their CHAPTER's tag, having none of their own.`
-    + ` Add the key to that section's \`[apiKeys]\` input so docs-section renders its chip and`
-    + ` table:\n  ${untagged.join('\n  ')}`,
+    `${untagged.length} part card(s) would print their CHAPTER's tag, having none of their own.` +
+      ` Add the key to that section's \`[apiKeys]\` input so docs-section renders its chip and` +
+      ` table:\n  ${untagged.join('\n  ')}`,
   );
 }
 
 if (withheld.length) {
   console.log(
-    `· ${withheld.length} component(s) get no contract — src/lib/public-api.ts does not`
-      + ` export them: ${withheld.join(', ')}`,
+    `· ${withheld.length} component(s) get no contract — src/lib/public-api.ts does not` +
+      ` export them: ${withheld.join(', ')}`,
   );
 }
 
 const distinctSections = new Set(written.map((card) => card.slug));
 console.log(
-  `✓ ${written.length} card(s) over ${distinctSections.size} ds-docs section(s)`
-    + ` + ${byName.size - withheld.length} declaration(s) + ${readdirSync(pasted).length} pasted image(s)`
-    + ` into ${OUT.replace(repo, '.')}`,
+  `✓ ${written.length} card(s) over ${distinctSections.size} ds-docs section(s)` +
+    ` + ${byName.size - withheld.length} declaration(s) + ${readdirSync(pasted).length} pasted image(s)` +
+    ` into ${OUT.replace(repo, '.')}`,
 );

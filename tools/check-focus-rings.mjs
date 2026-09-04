@@ -46,7 +46,9 @@ const scssFilesIn = (path) => {
 // reported OK, which is the same blindness that let the box-shadow-only detection read green.
 const ringsThroughTheMixin = (text) => {
   const lines = text.split(/\r?\n/);
-  const index = lines.findIndex((line) => /@include\s+focus\.ring-for\(/.test(line));
+  const index = lines.findIndex((line) =>
+    /@include\s+focus\.ring-for\(/.test(line),
+  );
   return index === -1
     ? null
     : { line: index + 1, declaration: lines[index].trim(), viaMixin: true };
@@ -124,7 +126,8 @@ const killsTheOutlineAndPaintsNothing = (text) => {
       end = inner;
       if (depth <= 0 && inner > index) break;
     }
-    if (killsOutline && !paints) found.push({ line: index + 1, declaration: lines[index].trim(), end });
+    if (killsOutline && !paints)
+      found.push({ line: index + 1, declaration: lines[index].trim(), end });
   }
   return found;
 };
@@ -223,7 +226,11 @@ for (const site of bareSuppressions) {
   );
 }
 
-if (failures.length > 0 || unindicated.length > 0 || bareSuppressions.length > 0) {
+if (
+  failures.length > 0 ||
+  unindicated.length > 0 ||
+  bareSuppressions.length > 0
+) {
   if (unindicated.length > 0) {
     console.error(
       `check-focus-rings: FAILED — ${unindicated.length} focus rule(s) leave the control with no indicator`,

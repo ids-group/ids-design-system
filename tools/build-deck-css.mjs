@@ -9,7 +9,14 @@
 // reached src/lib/styles/fonts — it cannot catch a missing copy, because the copy
 // happens two lines above it.
 
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as sass from 'sass';
@@ -38,7 +45,10 @@ const missing = [...new Set(referenced)].filter(
 );
 
 if (missing.length > 0) {
-  for (const href of missing) console.error(`build:deck-css: ERROR  ds.css references ${href}, which is not next to it`);
+  for (const href of missing)
+    console.error(
+      `build:deck-css: ERROR  ds.css references ${href}, which is not next to it`,
+    );
   process.exit(1);
 }
 

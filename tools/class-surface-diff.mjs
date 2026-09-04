@@ -196,9 +196,8 @@ function classBody(source) {
   const end = body.search(/^\}/m);
   const bounded = end === -1 ? body : body.slice(0, end);
 
-  return stripComments(bounded).replace(
-    /`(?:[^`\\]|\\.)*`/g,
-    (literal) => literal.replace(/[^\n]/g, ' '),
+  return stripComments(bounded).replace(/`(?:[^`\\]|\\.)*`/g, (literal) =>
+    literal.replace(/[^\n]/g, ' '),
   );
 }
 
@@ -283,9 +282,14 @@ const files = git(['diff', '--name-only', `${base}..${head}`, '--', 'src/lib'])
 // members that had not changed. Git's own rename detection decides it rather than a basename
 // guess, so a class that genuinely did not exist at `base` still arrives as an addition.
 const renamedFrom = new Map();
-for (const row of git(['diff', '-M', '--name-status', `${base}..${head}`, '--', 'src/lib']).split(
-  '\n',
-)) {
+for (const row of git([
+  'diff',
+  '-M',
+  '--name-status',
+  `${base}..${head}`,
+  '--',
+  'src/lib',
+]).split('\n')) {
   const [status, from, to] = row.split('\t');
   if (status?.startsWith('R') && to) renamedFrom.set(to, from);
 }

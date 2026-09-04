@@ -7,9 +7,11 @@
 
   <span lede>
     Four density tiers, applied via
-    <code class="t-mono-inline">[data-density]</code> on a route container.
-    They rewrite hit-target and component-scoped tokens — components consume the
-    same role tokens, so no component CSS changes.
+    <code class="t-mono-inline">
+      [data-density]
+    </code> on a route container. They
+    rewrite hit-target and component-scoped tokens — components consume the same
+    role tokens, so no component CSS changes.
   </span>
 
   <h3 class="block-title t-h4">
@@ -48,7 +50,9 @@
             </td>
 
             <td>
-              <code class="t-mono-inline">{{ t.hit }}</code>
+              <code class="t-mono-inline">
+                {{ t.hit }}
+              </code>
             </td>
 
             <td>
@@ -70,7 +74,9 @@
 
   <p class="block-desc t-s">
     Each sandbox wraps content in a
-    <code class="t-mono-inline">[data-density]</code> container. The same UI
+    <code class="t-mono-inline">
+      [data-density]
+    </code> container. The same UI
     renders at four tiers — only the hit-target token changes.
   </p>
 
@@ -199,7 +205,9 @@
   <p class="block-desc t-s">
     Density is a <strong>screen-level decision</strong>, not user-global. The
     Tweaks panel exposes it for prototyping — in the product, set
-    <code class="t-mono-inline">[data-density]</code> on the route container,
+    <code class="t-mono-inline">
+      [data-density]
+    </code> on the route container,
     not on <code class="t-mono-inline">&lt;html&gt;</code>.
   </p>
 
@@ -209,7 +217,9 @@
 
   <p class="block-desc t-s">
     <strong>
-      <code class="t-mono-inline">density="compact"</code> levels a toolbar at
+      <code class="t-mono-inline">
+        density="compact"
+      </code> levels a toolbar at
       32px, and it is the supported way to get one.
     </strong>
     Measured on a nine-control row at default size: search, input, select,
@@ -219,7 +229,9 @@
       32px
     </strong> under compact. So a screen whose controls should be
     32px sets density once on its container, rather than pinning
-    <code class="t-mono-inline">--ds-search-height</code> and its siblings per
+    <code class="t-mono-inline">
+      --ds-search-height
+    </code> and its siblings per
     component — which is what the height contract exists to remove.
   </p>
 
@@ -243,15 +255,27 @@
       Padding follows the tier only at the bottom.
     </strong>
 
-    <code class="t-mono-inline">compact</code> and
-    <code class="t-mono-inline">comfy</code> resize controls and leave padding
+    <code class="t-mono-inline">
+      compact
+    </code> and
+    <code class="t-mono-inline">
+      comfy
+    </code> resize controls and leave padding
     alone; <code class="t-mono-inline">ultra-compact</code> also compresses
     field padding, table cells and
-    <code class="t-mono-inline">--ds-container-pad</code> — the inner padding
-    <code class="t-mono-inline">ds-card</code> and
-    <code class="t-mono-inline">ds-stat</code> share — from 24px to 16px. For
-    a surface padding between the two rungs, set that one token at
-    <code class="t-mono-inline">:root</code>; it is the lever both components
+    <code class="t-mono-inline">
+      --ds-container-pad
+    </code> — the inner padding
+    <code class="t-mono-inline">
+      ds-card
+    </code> and
+    <code class="t-mono-inline">
+      ds-stat
+    </code> share — from 24px to 16px. For a
+    surface padding between the two rungs, set that one token at
+    <code class="t-mono-inline">
+      :root
+    </code>; it is the lever both components
     default to.
   </p>
 </docs-section>

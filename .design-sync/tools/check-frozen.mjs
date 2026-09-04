@@ -17,14 +17,18 @@ const OUT = join(syncDir, 'upload');
 const RECORD = join(syncDir, 'live-cards.txt');
 
 if (!existsSync(RECORD)) {
-  console.error('✗ .design-sync/live-cards.txt is missing — run node .design-sync/tools/snapshot-cards.mjs');
+  console.error(
+    '✗ .design-sync/live-cards.txt is missing — run node .design-sync/tools/snapshot-cards.mjs',
+  );
   process.exit(1);
 }
 
-const shouldBeLive = new Set(readFileSync(RECORD, 'utf8')
-  .split('\n')
-  .map((line) => line.trim())
-  .filter((line) => line && !line.startsWith('#')));
+const shouldBeLive = new Set(
+  readFileSync(RECORD, 'utf8')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#')),
+);
 
 const cards = [];
 const walk = (dir, rel) => {
@@ -54,20 +58,31 @@ const report = (label, list, advice) => {
 };
 
 if (thawed.length) {
-  report('still boot Angular but are not in live-cards.txt', thawed,
-    'The tree was built but never frozen. Run, LAST and on a machine with Chrome:\n'
-    + '    node .design-sync/tools/snapshot-cards.mjs');
+  report(
+    'still boot Angular but are not in live-cards.txt',
+    thawed,
+    'The tree was built but never frozen. Run, LAST and on a machine with Chrome:\n' +
+      '    node .design-sync/tools/snapshot-cards.mjs',
+  );
 }
 
 if (unexpectedlyFrozen.length) {
-  report('are frozen although live-cards.txt records them live', unexpectedlyFrozen,
-    'The record and the tree came from different runs — re-run snapshot-cards and commit both.');
+  report(
+    'are frozen although live-cards.txt records them live',
+    unexpectedlyFrozen,
+    'The record and the tree came from different runs — re-run snapshot-cards and commit both.',
+  );
 }
 
 const missing = [...shouldBeLive].filter((path) => !cards.includes(path));
 if (missing.length) {
-  report('are recorded live but no longer exist', missing,
-    'A card was renamed or withdrawn after the record was written — re-run snapshot-cards.');
+  report(
+    'are recorded live but no longer exist',
+    missing,
+    'A card was renamed or withdrawn after the record was written — re-run snapshot-cards.',
+  );
 }
 
-console.log(`${cards.length - stillLive} of ${cards.length} cards are frozen; the ${stillLive} live ones are exactly what live-cards.txt records`);
+console.log(
+  `${cards.length - stillLive} of ${cards.length} cards are frozen; the ${stillLive} live ones are exactly what live-cards.txt records`,
+);

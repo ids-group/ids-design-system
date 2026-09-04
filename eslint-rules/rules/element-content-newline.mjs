@@ -28,13 +28,15 @@ export default {
     // Inside these, whitespace IS content — the indentation this rule adds renders.
     // Matched by source range, not node name: a <code> inside a <pre> is exempt too.
     const WHITESPACE_SENSITIVE = /<(pre|textarea)\b[\s\S]*?<\/\1>/gi;
-    const exemptRanges = Array.from(text.matchAll(WHITESPACE_SENSITIVE), (m) => [
-      m.index,
-      m.index + m[0].length,
-    ]);
+    const exemptRanges = Array.from(
+      text.matchAll(WHITESPACE_SENSITIVE),
+      (m) => [m.index, m.index + m[0].length],
+    );
 
     function isWhitespaceSensitive(offset) {
-      return exemptRanges.some(([start, end]) => offset >= start && offset < end);
+      return exemptRanges.some(
+        ([start, end]) => offset >= start && offset < end,
+      );
     }
 
     function isSelfClosing(node) {

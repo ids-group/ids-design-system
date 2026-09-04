@@ -33,14 +33,18 @@
     </li>
 
     <li>
-      <code class="t-mono-inline">&lt;html data-theme="dark"&gt;</code> —
+      <code class="t-mono-inline">
+        &lt;html data-theme="dark"&gt;
+      </code> —
       <strong>
         dark
       </strong>
     </li>
 
     <li>
-      <code class="t-mono-inline">&lt;html data-theme="light"&gt;</code> —
+      <code class="t-mono-inline">
+        &lt;html data-theme="light"&gt;
+      </code> —
       explicit light (same as the default)
     </li>
   </ul>
@@ -49,7 +53,9 @@
     There is
     <strong>
       no automatic
-      <code class="t-mono-inline">prefers-color-scheme</code> switch
+      <code class="t-mono-inline">
+        prefers-color-scheme
+      </code> switch
     </strong>
     — light is deterministic by default. To follow the OS, opt in from your app
     bootstrap; set the attribute before first paint to avoid a flash:
@@ -67,8 +73,12 @@
     </strong> (<code class="t-mono-inline"
       >themes/_base-palette</code
     >) — theme-independent primitives at
-    <code class="t-mono-inline">:root</code>: hue ramps + HSL channels,
-    <code class="t-mono-inline">--static-ink</code> (never flips), fonts.
+    <code class="t-mono-inline">
+      :root
+    </code>: hue ramps + HSL channels,
+    <code class="t-mono-inline">
+      --static-ink
+    </code> (never flips), fonts.
     <br />
 
     <strong>
@@ -76,14 +86,26 @@
     </strong> (<code class="t-mono-inline"
       >themes/_semantic</code
     >
-    + <code class="t-mono-inline">themes/&lt;t&gt;/</code>) — the semantic
-    role map (<code class="t-mono-inline">--primary</code>,
-    <code class="t-mono-inline">--surface-*</code>,
-    <code class="t-mono-inline">--text-*</code>,
-    <code class="t-mono-inline">--neutral-*</code>,
-    <code class="t-mono-inline">--focus-ring</code>). Light at
-    <code class="t-mono-inline">:root</code>, dark at
-    <code class="t-mono-inline">:root[data-theme='dark']</code>.
+    + <code class="t-mono-inline">themes/&lt;t&gt;/</code>) — the semantic role
+    map (<code class="t-mono-inline">--primary</code>,
+    <code class="t-mono-inline">
+      --surface-*
+    </code>,
+    <code class="t-mono-inline">
+      --text-*
+    </code>,
+    <code class="t-mono-inline">
+      --neutral-*
+    </code>,
+    <code class="t-mono-inline">
+      --focus-ring
+    </code>). Light at
+    <code class="t-mono-inline">
+      :root
+    </code>, dark at
+    <code class="t-mono-inline">
+      :root[data-theme='dark']
+    </code>.
     <br />
 
     <strong>
@@ -91,9 +113,15 @@
     </strong> (<code class="t-mono-inline"
       >styles/_tokens</code
     >, <code class="t-mono-inline">*.component.scss</code>) —
-    <code class="t-mono-inline">--space-*</code>,
-    <code class="t-mono-inline">--radius-*</code>,
-    <code class="t-mono-inline">--ds-*</code>, motion. Theme-independent.
+    <code class="t-mono-inline">
+      --space-*
+    </code>,
+    <code class="t-mono-inline">
+      --radius-*
+    </code>,
+    <code class="t-mono-inline">
+      --ds-*
+    </code>, motion. Theme-independent.
   </p>
 
   <p class="block-desc t-s">
@@ -102,7 +130,9 @@
     </strong> components never read base-palette primitives
     (<code class="t-mono-inline">--blue-600</code>) directly — only Tier-2 roles
     (<code class="t-mono-inline">--primary</code>,
-    <code class="t-mono-inline">--text-secondary</code>) or component tokens.
+    <code class="t-mono-inline">
+      --text-secondary
+    </code>) or component tokens.
   </p>
 
   <h3 class="block-title t-h4">
@@ -115,11 +145,17 @@
     <strong>
       complete
     </strong> token set, so
-    <code class="t-mono-inline">:root[data-theme='dark']</code> fully
-    <em>replaces</em> light rather than delta-patching it. On-fill text is the
+    <code class="t-mono-inline">
+      :root[data-theme='dark']
+    </code> fully
+    <em>
+      replaces
+    </em> light rather than delta-patching it. On-fill text is the
     literal <code class="t-mono-inline">white</code>, or the theme-stable
-    <code class="t-mono-inline">--static-ink</code> where the fill is light,
-    so neither flips with the neutrals.
+    <code class="t-mono-inline">
+      --static-ink
+    </code> where the fill is light, so
+    neither flips with the neutrals.
   </p>
 
   <pre class="t-mono-block">{{ activationSnippet }}</pre>
@@ -132,7 +168,9 @@
     Two levers. A <strong>brand</strong> is a thin overlay scoped by attribute
     (<code class="t-mono-inline">[data-brand="X"]</code>) — override the brand
     hue ramp (<code class="t-mono-inline">--blue-*</code>) and/or
-    <code class="t-mono-inline">--primary</code> plus a few roles. A full
+    <code class="t-mono-inline">
+      --primary
+    </code> plus a few roles. A full
     <strong>
       theme
     </strong> is a new sibling role map.
@@ -147,7 +185,9 @@
       not
     </strong> automatically carry into dark. If the brand must also
     restyle dark, add a separate
-    <code class="t-mono-inline">[data-theme='dark'][data-brand="X"]</code>
+    <code class="t-mono-inline">
+      [data-theme='dark'][data-brand="X"]
+    </code>
     block.
   </p>
 
@@ -155,10 +195,16 @@
 
   <p class="theming-note t-xs">
     Leave <code class="t-mono-inline">--primary-hover</code> /
-    <code class="t-mono-inline">--primary-pressed</code> to the DS
-    <code class="t-mono-inline">color-mix()</code> derivation (toward black in
+    <code class="t-mono-inline">
+      --primary-pressed
+    </code> to the DS
+    <code class="t-mono-inline">
+      color-mix()
+    </code> derivation (toward black in
     light, toward white in dark). Full guide:
-    <code class="t-mono-inline">themes/README.md</code>.
+    <code class="t-mono-inline">
+      themes/README.md
+    </code>.
   </p>
 
   <h3 class="block-title t-h4">
@@ -177,10 +223,12 @@
       an input whose value an app writes identically on every element.
     </strong>
     One consumer binds
-    <code class="t-mono-inline">[stickyScrollbar]="true"</code> on all 35 of
-    its tables and <code class="t-mono-inline">size="sm"</code> on 146 buttons
-    — not a per-element decision, a house default restated 146 times, and every
-    new element is one forgotten binding away from looking wrong.
+    <code class="t-mono-inline">
+      [stickyScrollbar]="true"
+    </code> on all 35 of its
+    tables and <code class="t-mono-inline">size="sm"</code> on 146 buttons — not
+    a per-element decision, a house default restated 146 times, and every new
+    element is one forgotten binding away from looking wrong.
   </p>
 
   <p class="block-desc t-s">
@@ -196,8 +244,12 @@
 
   <p class="block-desc t-s">
     <strong>
-      <code class="t-mono-inline">control.size</code> is not the same axis as
-      <code class="t-mono-inline">[data-density]</code>.
+      <code class="t-mono-inline">
+        control.size
+      </code> is not the same axis as
+      <code class="t-mono-inline">
+        [data-density]
+      </code>.
     </strong>
     The density tier rewrites hit targets and padding in CSS for a route; this
     picks which of the three declared sizes a control renders at. An app can use
@@ -211,7 +263,9 @@
   <p class="block-desc t-s">
     The most common whole-brand change, and the one most often done the long
     way: a consumer audit found <strong>twelve</strong> scattered
-    <code class="t-mono-inline">--ds-&lt;component&gt;-radius: 0</code>
+    <code class="t-mono-inline">
+      --ds-&lt;component&gt;-radius: 0
+    </code>
     declarations written one component at a time. Four lines replace all of
     them.
   </p>
@@ -223,9 +277,15 @@
       Three role declarations do it, and as of 2026-08-10 that is finally true.
     </strong>
     Measured: on a component page, zeroing
-    <code class="t-mono-inline">--ds-radius-inner</code>,
-    <code class="t-mono-inline">-control</code> and
-    <code class="t-mono-inline">-panel</code> squares
+    <code class="t-mono-inline">
+      --ds-radius-inner
+    </code>,
+    <code class="t-mono-inline">
+      -control
+    </code> and
+    <code class="t-mono-inline">
+      -panel
+    </code> squares
     <strong>
       most
     </strong> rounded surfaces, and it is worth knowing which ones
@@ -234,9 +294,10 @@
     split-button and button-group segment corners, the sidenav footer, the
     colour-picker swatches and a dozen others. Zeroing the three roles leaves
     those at their scale value.
-    <code class="t-mono-inline">--radius-pill</code> is out of scope by
-    design: switch tracks, avatars and status dots are round by shape, not by
-    style.
+    <code class="t-mono-inline">
+      --radius-pill
+    </code> is out of scope by design:
+    switch tracks, avatars and status dots are round by shape, not by style.
   </p>
 
   <p class="block-desc t-s">
@@ -252,7 +313,9 @@
   <p class="block-desc t-s">
     <strong>
       Leave
-      <code class="t-mono-inline">--radius-pill</code> alone either way.
+      <code class="t-mono-inline">
+        --radius-pill
+      </code> alone either way.
     </strong>
     A switch track, an avatar and a status dot are round because of what they
     are, not because of the brand — verified: with the scale zeroed, the switch

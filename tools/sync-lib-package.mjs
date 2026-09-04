@@ -38,7 +38,9 @@ if (process.argv.includes('--check')) {
   try {
     current = readFileSync(libPath, 'utf8');
   } catch {
-    console.error('sync-lib-package: src/lib/package.json is missing. Run `npm run sync-lib-package`.');
+    console.error(
+      'sync-lib-package: src/lib/package.json is missing. Run `npm run sync-lib-package`.',
+    );
     process.exit(1);
   }
   if (current !== serialised) {
@@ -48,8 +50,12 @@ if (process.argv.includes('--check')) {
     );
     process.exit(1);
   }
-  console.log('sync-lib-package: OK — src/lib/package.json matches the root manifest.');
+  console.log(
+    'sync-lib-package: OK — src/lib/package.json matches the root manifest.',
+  );
 } else {
   writeFileSync(libPath, serialised);
-  console.log(`sync-lib-package: wrote src/lib/package.json (${root.name}@${root.version}).`);
+  console.log(
+    `sync-lib-package: wrote src/lib/package.json (${root.name}@${root.version}).`,
+  );
 }

@@ -9,12 +9,18 @@
     current render as done (with check icon); the current node fills with brand;
     later nodes stay as outlined numerals. Each label shows beneath its node,
     with the current step emphasised — or set
-    <code class="t-mono-inline">labelPosition="inline"</code> for a compact
-    row with the caption beside each node (e.g. a header progress bar). Set
-    <code class="t-mono-inline">orientation="vertical"</code> to stack steps
+    <code class="t-mono-inline">
+      labelPosition="inline"
+    </code> for a compact row
+    with the caption beside each node (e.g. a header progress bar). Set
+    <code class="t-mono-inline">
+      orientation="vertical"
+    </code> to stack steps
     top-to-bottom, <code class="t-mono-inline">[clickable]="true"</code> to make
     nodes interactive, and
-    <code class="t-mono-inline">[errorSteps]="[...]"</code> to mark steps in
+    <code class="t-mono-inline">
+      [errorSteps]="[...]"
+    </code> to mark steps in
     error.
   </span>
 
@@ -128,7 +134,9 @@
         [current]="-1"
       />
 
-      <code class="t-mono-inline">.node · pending</code>
+      <code class="t-mono-inline">
+        .node · pending
+      </code>
     </div>
 
     <div class="single-cell">
@@ -137,7 +145,9 @@
         [current]="0"
       />
 
-      <code class="t-mono-inline">.node.active</code>
+      <code class="t-mono-inline">
+        .node.active
+      </code>
     </div>
 
     <div class="single-cell">
@@ -146,7 +156,9 @@
         [current]="1"
       />
 
-      <code class="t-mono-inline">.node.done</code>
+      <code class="t-mono-inline">
+        .node.done
+      </code>
     </div>
 
     <div class="single-cell">
@@ -156,7 +168,9 @@
         [errorSteps]="[0]"
       />
 
-      <code class="t-mono-inline">.node.error</code>
+      <code class="t-mono-inline">
+        .node.error
+      </code>
     </div>
   </div>
 </docs-section>

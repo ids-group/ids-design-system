@@ -84,7 +84,9 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">{{ '{Record} · {Section} · Acme' }}</code>
+      <code class="t-mono-inline">
+        {{ '{Record} · {Section} · Acme' }}
+      </code>
       — leaf first, brand last so multi-tab triage works. Index pages:
       <code class="t-mono-inline">
         {{ '{Section} · Acme' }}
@@ -110,11 +112,14 @@
 
     <dd>
       Brand letter on brand surface; alert dot via
-      <code class="t-mono-inline">.fav.alert</code> nested under
-      <code class="t-mono-inline">.tab-spec</code> for unread count or
-      attention state. Size matches
-      <code class="t-mono-inline">--icon-md</code> so it reads legibly at
-      retina + sub-retina densities.
+      <code class="t-mono-inline">
+        .fav.alert
+      </code> nested under
+      <code class="t-mono-inline">
+        .tab-spec
+      </code> for unread count or attention
+      state. Size matches <code class="t-mono-inline">--icon-md</code> so it
+      reads legibly at retina + sub-retina densities.
     </dd>
 
     <dt>
@@ -122,10 +127,12 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">&lt;meta name="theme-color"&gt;</code>
+      <code class="t-mono-inline">
+        &lt;meta name="theme-color"&gt;
+      </code>
       matches <code class="t-mono-inline">--primary</code> for branded chrome;
-      reset to <code class="t-mono-inline">--surface-default</code> on logout
-      to avoid carry-over branding.
+      reset to <code class="t-mono-inline">--surface-default</code> on logout to
+      avoid carry-over branding.
     </dd>
 
     <dt>

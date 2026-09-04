@@ -30,7 +30,9 @@ export class MenuComponent {
 
   /** One item with an icon makes every item reserve the slot, so the labels share one axis. The
    *  menu owns the decision because an item would have to know its siblings to take it. */
-  protected readonly anyIcon = computed(() => this.items().some((item) => item.icon() !== null));
+  protected readonly anyIcon = computed(() =>
+    this.items().some((item) => item.icon() !== null),
+  );
   /** Index of the roving-focus item — the single item reachable via Tab. */
   private readonly activeIndex = signal(0);
 

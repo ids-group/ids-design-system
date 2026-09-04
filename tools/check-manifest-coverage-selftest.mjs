@@ -41,31 +41,36 @@ const cases = [
   {
     name: 'FIRES on a Fixed entry naming a real token no manifest covers',
     section: 'Fixed',
-    entry: '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost.',
+    entry:
+      '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost.',
     expect: 'red',
   },
   {
     name: 'EXEMPT: the same entry under Added is not asked for a line',
     section: 'Added',
-    entry: '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost.',
+    entry:
+      '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost.',
     expect: 'green',
   },
   {
     name: 'EXEMPT: a Fixed entry naming no real surface is not asked for a line',
     section: 'Fixed',
-    entry: '- **The shimmer stepped instead of sweeping.** Purely visual, nothing to name.',
+    entry:
+      '- **The shimmer stepped instead of sweeping.** Purely visual, nothing to name.',
     expect: 'green',
   },
   {
     name: 'EXEMPT: prose that merely looks like surface (`Enter`, `ACTION`, `Router`)',
     section: 'Fixed',
-    entry: '- **`Enter` did nothing.** The `Router` never fired and `ACTION` was ignored.',
+    entry:
+      '- **`Enter` did nothing.** The `Router` never fired and `ACTION` was ignored.',
     expect: 'green',
   },
   {
     name: 'FIRES on a real tag, not only a token',
     section: 'Changed',
-    entry: '- **`ds-accordion` collapses its body fully.** The padding moved off the wrapper.',
+    entry:
+      '- **`ds-accordion` collapses its body fully.** The padding moved off the wrapper.',
     expect: 'red',
   },
   {
@@ -79,7 +84,8 @@ const cases = [
   {
     name: 'the exemption needs the phrase — the same entry without it still FIRES',
     section: 'Fixed',
-    entry: '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost. No API change.',
+    entry:
+      '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost. No API change.',
     expect: 'red',
   },
 ];
@@ -121,13 +127,19 @@ try {
       testCase.entry,
       '',
     ].join(eol);
-    writeFileSync(CHANGELOG, original.replace(/^## Unreleased\r?\n/m, `${block}`), 'utf8');
+    writeFileSync(
+      CHANGELOG,
+      original.replace(/^## Unreleased\r?\n/m, `${block}`),
+      'utf8',
+    );
 
     const { red } = run();
     const got = red ? 'red' : 'green';
     const ok = got === testCase.expect;
     if (!ok) failed++;
-    console.log(`${ok ? 'ok   ' : 'FAIL '} ${testCase.name} — expected ${testCase.expect}, got ${got}`);
+    console.log(
+      `${ok ? 'ok   ' : 'FAIL '} ${testCase.name} — expected ${testCase.expect}, got ${got}`,
+    );
   }
 } finally {
   writeFileSync(CHANGELOG, original, 'utf8');

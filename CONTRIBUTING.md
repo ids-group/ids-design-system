@@ -179,6 +179,7 @@ judgment half is yours.
   was wrong: where the release fixes the thing, the new entry already carries everything the reader
   acts on, and where it does not, the people at risk are the ones still on the old version, who are
   not reading this release either.
+
 - **Decision archaeology.** How we chose, what we first believed, which alternative we
   rejected, that an earlier note of ours was wrong, that a note was added after the release.
   The line: describing the DEFECT is what a release note is for and stays — "an override

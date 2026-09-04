@@ -27,8 +27,8 @@ comes from the item; don't assume anything about particular components.
   a hit anywhere contradicts the manifest and must be reported, never suppressed.
 - **Every zero-hit item returns the `{ "hits": [], "searched": [...] }` form** — never a bare `[]` —
   so the orchestrator can classify the zero instead of trusting it: a rename whose broad hints
-  matched the surrounding feature is *not applicable*; an item where `old`, every `detect` shape and
-  every `searchHint` matched NOTHING repo-wide is *locator-dead* — a claim about the manifest, not
+  matched the surrounding feature is _not applicable_; an item where `old`, every `detect` shape and
+  every `searchHint` matched NOTHING repo-wide is _locator-dead_ — a claim about the manifest, not
   the consumer. For a `behavior` / `removed-api` item whose surface is not the template, zero hits can
   also just mean the shapes did not match how THIS consumer spells it — the orchestrator sends those
   to a semantic pass instead of writing them off.
@@ -63,10 +63,10 @@ comes from the item; don't assume anything about particular components.
 Return ONLY a fenced ```json block mapping each item id to a list of hits:
 
 { "<item-id>": [ { "loc": "<path:line>", "match": "<exact matched text>", "el": "<enclosing element or null>" },
-                 { "loc": "<path:line>", "match": "<binding text>", "el": "<element>", "dynamic": true },
-                 { "loc": "<path:line>", "match": "<text>", "el": null, "outOfSurface": true } ],
-  "<zero-hit-item-id>": { "hits": [], "searched": ["projects/**/*.ts", "projects/**/*.html", "projects/**/*.scss"],
-                          "rawMatches": { "<each locator string>": <match count BEFORE element-scoping/filtering> } } }
+{ "loc": "<path:line>", "match": "<binding text>", "el": "<element>", "dynamic": true },
+{ "loc": "<path:line>", "match": "<text>", "el": null, "outOfSurface": true } ],
+"<zero-hit-item-id>": { "hits": [], "searched": ["projects/**/*.ts", "projects/**/*.html", "projects/**/*.scss"],
+"rawMatches": { "<each locator string>": <match count BEFORE element-scoping/filtering> } } }
 
 `loc` is `path:line`; `match` is the exact matched text; `el` is the enclosing element (recorded so
 the scoping is auditable — non-target hits are already filtered out, see above) or null when the

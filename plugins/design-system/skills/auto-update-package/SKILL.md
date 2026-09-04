@@ -1,11 +1,11 @@
 ---
 description: Update @ids-group-ltd/ids-design-system in this repo from its installed version up to the latest, one version at a time, applying documented changelog migrations with checks and re-checks.
 model: opus
-argument-hint: "[target-version | dry-run]"
+argument-hint: '[target-version | dry-run]'
 allowed-tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, AskUserQuestion
 hooks:
   PreToolUse:
-    - matcher: "Bash"
+    - matcher: 'Bash'
       hooks:
         - type: command
           command: "grep -qE '\\bgit\\b[^|&;]*\\bpush\\b' && { echo 'BLOCKED by auto-update-package: pushing is forbidden during a migration run — review the branch and push yourself.' >&2; exit 2; } || exit 0"
@@ -58,15 +58,15 @@ for behavioral fixes. Manual review is a LAST RESORT (Phase B step 10).
 ## MigrationPlan schema
 
 { "version": "X.Y.Z",
-  "items": [ { "id", "kind", "old", "new", "searchHints": [],
-               "map": { "<oldValue>": "<full replacement token | null>" },
-               "action": "<the imperative to execute>", "appliesWhen": "<the boundary>",
-               "pitfall": "<how a correct application still breaks>", "note": "<the why>",
-               "surface": "template|typescript|style|config|none (or an array)", "detect": [],
-               "verify": "...", "restore": "...|null",
-               "supersedes": ["<version>#<id>"] } ],
-  "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
-  "informational": [ "..." ] }
+"items": [ { "id", "kind", "old", "new", "searchHints": [],
+"map": { "<oldValue>": "<full replacement token | null>" },
+"action": "<the imperative to execute>", "appliesWhen": "<the boundary>",
+"pitfall": "<how a correct application still breaks>", "note": "<the why>",
+"surface": "template|typescript|style|config|none (or an array)", "detect": [],
+"verify": "...", "restore": "...|null",
+"supersedes": ["<version>#<id>"] } ],
+"deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
+"informational": [ "..." ] }
 
 `kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
 class-rename | value-remap | scss-api | code-add | removed-api | behavior.
@@ -94,6 +94,7 @@ fields: when those are missing, the planner enriches the items from their own `n
 passing them through undetectable.
 
 Every actionable item is **auto-applied**; items differ only in how they're VERIFIED:
+
 - **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → verified by grep
   (`ds-recheck`); a `value-remap` ALSO carries a `verify` the re-check tests — it changes what a
   binding MEANS with no symbol removed, so a clean grep alone proves nothing there. Element-scoped items (a `value-remap` targeting `element[attr]`) MUST be
@@ -200,16 +201,16 @@ step 1, never skipping past it.
    manifests if present (per-version tag checkouts change the clone's tree).
    Fallbacks if the clone fails (no git access):
    (a) `<target>/node_modules/@ids-group-ltd/ids-design-system/CHANGELOG.md` — OR the **workspace-root**
-       `node_modules/...` (hoisted monorepos install the dependency at the root, not under the
-       target). This is the OLD version's copy — for a multi-version chain it usually lacks the
-       newest blocks;
+   `node_modules/...` (hoisted monorepos install the dependency at the root, not under the
+   target). This is the OLD version's copy — for a multi-version chain it usually lacks the
+   newest blocks;
    (b) Bitbucket raw `https://bitbucket.org/itband/ids-design-system/raw/main/CHANGELOG.md`
-       (WebFetch — a private repo may return a login page; reject any body with no version headings).
+   (WebFetch — a private repo may return a login page; reject any body with no version headings).
    **Validate per-chain, not per-run:** accept a source only if it has a version heading for EVERY
    version in the computed chain (accept common variants — `## 1.2.3`, `## [1.2.3]`, with or without
    a date suffix; the goal is locating each version's block, not enforcing one heading style). If a
    chain version's block is missing, fall through to the next source (don't settle for a source that
-   merely has *some* headings, or a mid-chain version silently becomes a no-migration step). If no
+   merely has _some_ headings, or a mid-chain version silently becomes a no-migration step). If no
    source covers the whole chain → report and stop. Parse each version's block (its heading to the
    next `## ` or EOF).
    **Migration manifests (deterministic bonus, same source priority).** The DS ships a structured
@@ -271,26 +272,26 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
      not-applicable total) and carry the whole set into the Phase C report.
      The two exceptions below still run FIRST — locator-dead is the classification of a zero that
      SURVIVES them, never a reason to skip the code-add site resolution or the semantic pass.
-   **Exception:** zero hits
-   prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
-   removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
-   finder couldn't locate the insertion site; resolve the site yourself from the `action`/`note` (step 3
-   dispatches it by `action`), and record it not-applicable only when this consumer genuinely lacks the
-   thing the addition extends, stating that reason.
-   **Second exception: a `behavior` / `removed-api` item whose `surface` is not `template` or
-   `none` is NEVER dropped on zero hits.** Its `old` may be a DS symbol the affected code does not
-   mention (the defect can live in the consumer's own store logic), so zero hits means the shapes
-   did not match THIS consumer's spelling, not that they are unaffected. Read the
-   item's `verify` and go look yourself over the named surface (you are opus; this is a semantic
-   pass, not a grep). When that pass too finds nothing to do, classify the surviving zero by the
-   same rule — locator-dead if every `rawMatches` count is 0, not-applicable otherwise — and
-   record it with the reason you satisfied yourself of it.
-   An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here with
-   that reason recorded — the later item is the one to act on, and doing both means doing work the
-   next version undoes. The link only points back, so build the skip set by reading every
-   `supersedes` in the manifests saved aside in Phase A; nothing marks an item from its own file,
-   and a chain version with no manifest contributes nothing — note in the report that supersession
-   coverage is partial past it.
+     **Exception:** zero hits
+     prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
+     removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
+     finder couldn't locate the insertion site; resolve the site yourself from the `action`/`note` (step 3
+     dispatches it by `action`), and record it not-applicable only when this consumer genuinely lacks the
+     thing the addition extends, stating that reason.
+     **Second exception: a `behavior` / `removed-api` item whose `surface` is not `template` or
+     `none` is NEVER dropped on zero hits.** Its `old` may be a DS symbol the affected code does not
+     mention (the defect can live in the consumer's own store logic), so zero hits means the shapes
+     did not match THIS consumer's spelling, not that they are unaffected. Read the
+     item's `verify` and go look yourself over the named surface (you are opus; this is a semantic
+     pass, not a grep). When that pass too finds nothing to do, classify the surviving zero by the
+     same rule — locator-dead if every `rawMatches` count is 0, not-applicable otherwise — and
+     record it with the reason you satisfied yourself of it.
+     An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here with
+     that reason recorded — the later item is the one to act on, and doing both means doing work the
+     next version undoes. The link only points back, so build the skip set by reading every
+     `supersedes` in the manifests saved aside in Phase A; nothing marks an item from its own file,
+     and a chain version with no manifest contributes nothing — note in the report that supersession
+     coverage is partial past it.
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
@@ -332,7 +333,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    lockfile now resolves the dependency to `V`; if it did not move, correct the spec and
    re-install before continuing.
    **Peer check:** read V's peers (`npm view @ids-group-ltd/ids-design-system@V peerDependencies
-   --json`). If the target's installed `@angular/*` (or any other peer) does not satisfy V's
+--json`). If the target's installed `@angular/*` (or any other peer) does not satisfy V's
    range, STOP at step 10 with the distinct reason "peer dependency unsatisfied — bump <peer> to
    <range> first". An install that itself fails on a peer conflict (npm ≥7 refuses up front) IS this
    stop — do not "correct the spec and re-install" against it. Do NOT auto-upgrade Angular.
@@ -425,15 +426,15 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    Re-run the verify command after any deletion, before the commit. A deletion that changes
    rendering belongs in "applied — human should eyeball".
 9. **Green → commit.** Stage EXACTLY the touched-files union (step 3) + the target's `package.json`
-   + the lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
-   `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
-   (`-m` subject, `-m` body). Do not run any git command containing the word "push". Next version.
+   - the lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
+     `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
+     (`-m` subject, `-m` body). Do not run any git command containing the word "push". Next version.
 10. **Stuck — LAST RESORT (cap hit, an identical-edit short-circuit, re-check still disagrees, or
-   peer unsatisfied).** **Stop the
-   run.** Leave the partial edits in the working tree (do NOT roll back). Report the version reached,
-   the failing output, and the specific items that couldn't be auto-resolved (with why) as the
-   manual-review list. Await the user. (A peer-dependency mismatch stops here immediately — no
-   applier can fix it.)
+    peer unsatisfied).** **Stop the
+    run.** Leave the partial edits in the working tree (do NOT roll back). Report the version reached,
+    the failing output, and the specific items that couldn't be auto-resolved (with why) as the
+    manual-review list. Await the user. (A peer-dependency mismatch stops here immediately — no
+    applier can fix it.)
 
 ## Phase C — Final report
 

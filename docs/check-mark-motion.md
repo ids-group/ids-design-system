@@ -7,18 +7,18 @@ before, and the exact line that puts the old behaviour back.
 
 `src/lib/styles/_check-mark.scss` is the single source. It exports two mixins:
 
-| Mixin | Applied to | What it sets |
-| --- | --- | --- |
-| `mark` | the resting element | size, the SVG tick, `scale(0.6)`, `opacity: 0`, and the **exit** transition |
-| `shown` | the same element in its checked state | `scale(1)`, `opacity: 1`, and the **enter** transition |
+| Mixin   | Applied to                            | What it sets                                                                |
+| ------- | ------------------------------------- | --------------------------------------------------------------------------- |
+| `mark`  | the resting element                   | size, the SVG tick, `scale(0.6)`, `opacity: 0`, and the **exit** transition |
+| `shown` | the same element in its checked state | `scale(1)`, `opacity: 1`, and the **enter** transition                      |
 
 Three components include it, and there is no fourth copy:
 
-| Component | Element | Checked selector |
-| --- | --- | --- |
-| `ds-checkbox` | `.checkbox::after` | `:checked` and `:indeterminate` |
-| `ds-multi-select` | `.checkbox .tick` | `.checkbox.checked` and `.checkbox.indeterminate` |
-| `ds-autocomplete` | `.checkbox .tick` | `.checkbox.checked` |
+| Component         | Element            | Checked selector                                  |
+| ----------------- | ------------------ | ------------------------------------------------- |
+| `ds-checkbox`     | `.checkbox::after` | `:checked` and `:indeterminate`                   |
+| `ds-multi-select` | `.checkbox .tick`  | `.checkbox.checked` and `.checkbox.indeterminate` |
+| `ds-autocomplete` | `.checkbox .tick`  | `.checkbox.checked`                               |
 
 The element is **always rendered** — it is not created on check. An element that does not exist has
 no resting state to transition from, so a checked-only mark pops in instead of scaling.
@@ -41,12 +41,12 @@ Three layers, so a consumer can override at whichever level matches their intent
             └─ --_check-mark-enter-easing               private, read by the mixin
 ```
 
-| Role token | Default | Meaning |
-| --- | --- | --- |
-| `--ds-motion-check-enter-duration` | `var(--duration-base)` — 180ms | how long the mark takes to land |
-| `--ds-motion-check-enter-easing` | `var(--ease-spring)` — `cubic-bezier(.5, 1.5, .5, 1)` | overshoots ~15% and settles |
-| `--ds-motion-check-exit-duration` | `var(--duration-fast)` — 120ms | how long it takes to leave |
-| `--ds-motion-check-exit-easing` | `var(--ease-accelerate)` — `cubic-bezier(.3, 0, 1, 1)` | leaves without overshooting |
+| Role token                         | Default                                                | Meaning                         |
+| ---------------------------------- | ------------------------------------------------------ | ------------------------------- |
+| `--ds-motion-check-enter-duration` | `var(--duration-base)` — 180ms                         | how long the mark takes to land |
+| `--ds-motion-check-enter-easing`   | `var(--ease-spring)` — `cubic-bezier(.5, 1.5, .5, 1)`  | overshoots ~15% and settles     |
+| `--ds-motion-check-exit-duration`  | `var(--duration-fast)` — 120ms                         | how long it takes to leave      |
+| `--ds-motion-check-exit-easing`    | `var(--ease-accelerate)` — `cubic-bezier(.3, 0, 1, 1)` | leaves without overshooting     |
 
 Setting the ROLE moves every mark in the app at once. Setting the component hook
 (`--ds-check-mark-enter-easing` and its three siblings) moves only the marks under that scope, so a
@@ -58,8 +58,9 @@ A single transition on the resting rule, the same curve in both directions, and 
 without editing the partial:
 
 ```scss
-transition: transform var(--duration-fast) var(--ease-standard),
-            opacity var(--duration-fast) var(--ease-standard);
+transition:
+  transform var(--duration-fast) var(--ease-standard),
+  opacity var(--duration-fast) var(--ease-standard);
 ```
 
 That is **120ms on `cubic-bezier(.2, 0, 0, 1)`** — a flat decelerating ease with no overshoot, in and

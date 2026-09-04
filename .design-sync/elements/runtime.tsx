@@ -37,7 +37,9 @@ export function useDsElement<Props extends object>(
   React.useLayoutEffect(() => {
     let cancelled = false;
     const assign = () => {
-      const element = ref.current as (Record<string, unknown> & HTMLElement) | null;
+      const element = ref.current as
+        | (Record<string, unknown> & HTMLElement)
+        | null;
       if (cancelled || !element) return;
       for (const name of inputNames) {
         if (props[name] !== undefined) element[name] = props[name];
@@ -51,7 +53,9 @@ export function useDsElement<Props extends object>(
     if (customElements.get(tag)) assign();
     else void customElements.whenDefined(tag).then(assign);
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, inputValues);
 
@@ -63,13 +67,15 @@ export function useDsElement<Props extends object>(
     for (const [eventName, propName] of events) {
       const handler = props[propName] as ((value: unknown) => void) | undefined;
       if (!handler) continue;
-      const listener: EventListener = (event) => handler((event as CustomEvent).detail);
+      const listener: EventListener = (event) =>
+        handler((event as CustomEvent).detail);
       element.addEventListener(eventName, listener);
       attached.push([eventName, listener]);
     }
 
     return () => {
-      for (const [eventName, listener] of attached) element.removeEventListener(eventName, listener);
+      for (const [eventName, listener] of attached)
+        element.removeEventListener(eventName, listener);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, handlers);
@@ -100,7 +106,11 @@ export function useDsElement<Props extends object>(
         // Lowercased deliberately: React warns on any non-lowercase attribute it does not know, and
         // the HTML parser would lowercase it anyway. Attribute NAMES match case-insensitively in an
         // HTML document, so `[dsStatValue]` still claims a node carrying `dsstatvalue` — measured.
-        { key: attribute, [attribute.toLowerCase()]: '', style: { display: 'contents' } },
+        {
+          key: attribute,
+          [attribute.toLowerCase()]: '',
+          style: { display: 'contents' },
+        },
         props[prop] as React.ReactNode,
       ),
     );
@@ -108,4 +118,5 @@ export function useDsElement<Props extends object>(
   return React.createElement(tag, hostProps, ...slotChildren, children);
 }
 
-const SETS_PROPERTIES_ON_CUSTOM_ELEMENTS = Number.parseInt(React.version, 10) >= 19;
+const SETS_PROPERTIES_ON_CUSTOM_ELEMENTS =
+  Number.parseInt(React.version, 10) >= 19;

@@ -81,7 +81,8 @@ const isDsSymbol = (hint) =>
 const FORWARD_PROSE =
   /next release|later release|a later version|the release after|read the next|reversed later|in a future (release|version)/i;
 
-const DEFAULT_CHANGE = /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults|\bwas [^,.]{1,40}, now\b/i;
+const DEFAULT_CHANGE =
+  /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults|\bwas [^,.]{1,40}, now\b/i;
 
 // A field's worth of structure typed into prose, which is what a missing field looks like from
 // the outside.
@@ -90,8 +91,21 @@ const STRUCTURAL_MARKER =
 
 // Nothing outside these reads a key, so an unlisted one is a typo that fails silently.
 const ITEM_KEYS = new Set([
-  'id', 'kind', 'old', 'new', 'action', 'appliesWhen', 'pitfall', 'note',
-  'surface', 'searchHints', 'detect', 'verify', 'restore', 'map', 'supersedes',
+  'id',
+  'kind',
+  'old',
+  'new',
+  'action',
+  'appliesWhen',
+  'pitfall',
+  'note',
+  'surface',
+  'searchHints',
+  'detect',
+  'verify',
+  'restore',
+  'map',
+  'supersedes',
 ]);
 const DELETE_KEYS = new Set(['id', 'surface', 'find', 'why', 'replaceWith']);
 const TOP_KEYS = new Set(['version', 'items', 'informational', 'deleteList']);
@@ -106,9 +120,10 @@ const everyManifest = () =>
 // because it was pointed at one manifest is a lint people stop running.
 const requested = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 const targets = new Set(
-  (requested.length ? requested.map((arg) => join(ROOT, arg)) : everyManifest()).map((path) =>
-    basename(path).replace(/\.json$/, ''),
-  ),
+  (requested.length
+    ? requested.map((arg) => join(ROOT, arg))
+    : everyManifest()
+  ).map((path) => basename(path).replace(/\.json$/, '')),
 );
 
 const errors = [];
@@ -139,33 +154,57 @@ for (const [name, manifest] of manifests) {
   if (typeof version !== 'string') {
     report(errors, file, 'M002', 'no `version` string');
   } else if (!unreleased && version !== name) {
-    report(errors, file, 'M003', `version "${version}" does not match the filename`);
+    report(
+      errors,
+      file,
+      'M003',
+      `version "${version}" does not match the filename`,
+    );
   }
 
-  if (!Array.isArray(manifest.items)) report(errors, file, 'M004', 'no `items` array');
+  if (!Array.isArray(manifest.items))
+    report(errors, file, 'M004', 'no `items` array');
   if (!Array.isArray(manifest.informational)) {
-    report(errors, file, 'M005', 'no `informational` array (use [] when there is nothing)');
+    report(
+      errors,
+      file,
+      'M005',
+      'no `informational` array (use [] when there is nothing)',
+    );
   }
   if (!Array.isArray(manifest.deleteList)) {
-    report(errors, file, 'M037', 'no `deleteList` array (use [] when this release made nothing redundant) — an absent key reads as "nobody looked"');
+    report(
+      errors,
+      file,
+      'M037',
+      'no `deleteList` array (use [] when this release made nothing redundant) — an absent key reads as "nobody looked"',
+    );
   }
   for (const key of Object.keys(manifest)) {
-    if (!TOP_KEYS.has(key)) report(errors, file, 'M042', `unknown top-level key \`${key}\``);
+    if (!TOP_KEYS.has(key))
+      report(errors, file, 'M042', `unknown top-level key \`${key}\``);
   }
 
   const seen = new Set();
   for (const item of manifest.items ?? []) {
     const id = item.id ?? '<no id>';
-    const at = (code, message) => report(errors, file, code, `${id}: ${message}`);
+    const at = (code, message) =>
+      report(errors, file, code, `${id}: ${message}`);
 
-    if (typeof item.id !== 'string' || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(item.id)) {
+    if (
+      typeof item.id !== 'string' ||
+      !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(item.id)
+    ) {
       at('M010', 'id is not a stable kebab slug');
     }
     if (seen.has(item.id)) at('M011', 'duplicate id');
     seen.add(item.id);
 
     if (!KINDS.has(item.kind)) at('M012', `unknown kind "${item.kind}"`);
-    if (!RENAMES.has(item.kind) && (typeof item.note !== 'string' || item.note.trim().length < 40)) {
+    if (
+      !RENAMES.has(item.kind) &&
+      (typeof item.note !== 'string' || item.note.trim().length < 40)
+    ) {
       at('M013', 'note is missing or too short to act on');
     }
     if (RENAMES.has(item.kind) && !(item.old && item.new)) {
@@ -173,18 +212,32 @@ for (const [name, manifest] of manifests) {
     }
 
     if (item.kind === 'value-remap') {
-      if (!item.map || typeof item.map !== 'object') at('M014', 'value-remap without a `map`');
+      if (!item.map || typeof item.map !== 'object')
+        at('M014', 'value-remap without a `map`');
       // A bare map value differing from its key is undecidable for an applier: full token
       // (contains `=`), null (drop), or key==value (the bare-boolean-attribute convention) are
       // the three legal shapes. Shipped once (0.11.1) and it read as "replace the token with
       // a dead word".
       for (const [key, value] of Object.entries(item.map ?? {})) {
-        if (value !== null && !String(value).includes('=') && String(value) !== key) {
-          at('M043', `map["${key}"] is a bare value that is not the key — use the full-token form`);
+        if (
+          value !== null &&
+          !String(value).includes('=') &&
+          String(value) !== key
+        ) {
+          at(
+            'M043',
+            `map["${key}"] is a bare value that is not the key — use the full-token form`,
+          );
         }
       }
-      if (typeof item.old === 'string' && !/^[a-z][a-z0-9-]*\[[^\]]+\]$/.test(item.old)) {
-        at('M044', 'a value-remap `old` must be element-scoped (`element[attr]`) — a shared attribute name false-positives on other components');
+      if (
+        typeof item.old === 'string' &&
+        !/^[a-z][a-z0-9-]*\[[^\]]+\]$/.test(item.old)
+      ) {
+        at(
+          'M044',
+          'a value-remap `old` must be element-scoped (`element[attr]`) — a shared attribute name false-positives on other components',
+        );
       }
     } else if (item.map) {
       at('M015', '`map` is only for value-remap');
@@ -194,7 +247,10 @@ for (const [name, manifest] of manifests) {
     // a `behavior` item has no single replacement token, so prose is the only
     // honest place for it and `new` stays null.
     if (item.kind === 'behavior' && item.new !== null) {
-      at('M016', 'behavior must carry "new": null — the steps belong in `note`');
+      at(
+        'M016',
+        'behavior must carry "new": null — the steps belong in `note`',
+      );
     }
 
     const hints = Array.isArray(item.searchHints) ? item.searchHints : [];
@@ -205,7 +261,7 @@ for (const [name, manifest] of manifests) {
 
     const surfaces = [item.surface ?? []].flat();
     if (item.surface === undefined) {
-      at('M020', 'no `surface` — say where the consumer\'s code changes');
+      at('M020', "no `surface` — say where the consumer's code changes");
     } else if (!surfaces.length || surfaces.some((one) => !SURFACES.has(one))) {
       at('M021', `unknown surface ${JSON.stringify(item.surface)}`);
     }
@@ -267,7 +323,10 @@ for (const [name, manifest] of manifests) {
     // `action` is the one field an applier executes, so it cannot be optional. `note` is the WHY
     // that survives once the instruction, the scope and the trap have their own homes.
     if (typeof item.action !== 'string' || item.action.trim().length < 10) {
-      at('M039', 'no `action` — say the imperative on its own, separate from the reasoning in `note`');
+      at(
+        'M039',
+        'no `action` — say the imperative on its own, separate from the reasoning in `note`',
+      );
     }
     if (STRUCTURAL_MARKER.test(item.note ?? '')) {
       at(
@@ -276,12 +335,21 @@ for (const [name, manifest] of manifests) {
           'the instruction belongs in `action`, the scope in `appliesWhen`, the trap in `pitfall`',
       );
     }
-    const noteWords = String(item.note ?? '').split(/\s+/).filter(Boolean).length;
+    const noteWords = String(item.note ?? '')
+      .split(/\s+/)
+      .filter(Boolean).length;
     if (noteWords > 120) {
-      at('M041', `note is ${noteWords} words — over the 120-word ceiling; the instruction, the scope and the trap have their own fields`);
+      at(
+        'M041',
+        `note is ${noteWords} words — over the 120-word ceiling; the instruction, the scope and the trap have their own fields`,
+      );
     }
     for (const key of Object.keys(item)) {
-      if (!ITEM_KEYS.has(key)) at('M042', `unknown key \`${key}\` — nothing validates or reads it, so a typo here is silent`);
+      if (!ITEM_KEYS.has(key))
+        at(
+          'M042',
+          `unknown key \`${key}\` — nothing validates or reads it, so a typo here is silent`,
+        );
     }
 
     for (const field of ['supersedes']) {
@@ -291,9 +359,17 @@ for (const [name, manifest] of manifests) {
         if (!otherId || !otherVersion) {
           at('M025', `${field} "${reference}" is not <version>#<id>`);
         } else if (!other) {
-          at('M026', `${field} "${reference}" — no manifest for ${otherVersion}`);
-        } else if (!(other.items ?? []).some((candidate) => candidate.id === otherId)) {
-          at('M027', `${field} "${reference}" — ${otherVersion} has no item "${otherId}"`);
+          at(
+            'M026',
+            `${field} "${reference}" — no manifest for ${otherVersion}`,
+          );
+        } else if (
+          !(other.items ?? []).some((candidate) => candidate.id === otherId)
+        ) {
+          at(
+            'M027',
+            `${field} "${reference}" — ${otherVersion} has no item "${otherId}"`,
+          );
         }
       }
     }
@@ -306,24 +382,56 @@ for (const [name, manifest] of manifests) {
   for (const entry of manifest.deleteList ?? []) {
     const id = entry.id ?? '<no id>';
     const finds = [entry.find ?? []].flat();
-    if (!finds.length || finds.some((one) => typeof one !== 'string' || !one.trim())) {
-      report(errors, file, 'M030', `${id}: delete entry needs \`find\` (a string or an array)`);
+    if (
+      !finds.length ||
+      finds.some((one) => typeof one !== 'string' || !one.trim())
+    ) {
+      report(
+        errors,
+        file,
+        'M030',
+        `${id}: delete entry needs \`find\` (a string or an array)`,
+      );
     }
     if (typeof entry.why !== 'string' || entry.why.trim().length < 20) {
       report(errors, file, 'M031', `${id}: delete entry without a \`why\``);
     }
     const entrySurfaces = [entry.surface ?? []].flat();
-    if (entry.surface !== undefined && entrySurfaces.some((one) => !SURFACES.has(one))) {
-      report(errors, file, 'M032', `${id}: unknown surface ${JSON.stringify(entry.surface)}`);
+    if (
+      entry.surface !== undefined &&
+      entrySurfaces.some((one) => !SURFACES.has(one))
+    ) {
+      report(
+        errors,
+        file,
+        'M032',
+        `${id}: unknown surface ${JSON.stringify(entry.surface)}`,
+      );
     }
     for (const key of Object.keys(entry)) {
-      if (!DELETE_KEYS.has(key)) report(errors, file, 'M042', `${id}: unknown key \`${key}\` on a delete entry`);
+      if (!DELETE_KEYS.has(key))
+        report(
+          errors,
+          file,
+          'M042',
+          `${id}: unknown key \`${key}\` on a delete entry`,
+        );
     }
     if (typeof entry.replaceWith !== 'string' || !entry.replaceWith.trim()) {
-      report(errors, file, 'M035', `${id}: delete entry without a \`replaceWith\` — say the API that replaces it, or the literal word "nothing"`);
+      report(
+        errors,
+        file,
+        'M035',
+        `${id}: delete entry without a \`replaceWith\` — say the API that replaces it, or the literal word "nothing"`,
+      );
     }
     if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(String(entry.id ?? ''))) {
-      report(errors, file, 'M036', `${id}: delete entry id is not a stable kebab slug — M034 citations resolve against it`);
+      report(
+        errors,
+        file,
+        'M036',
+        `${id}: delete entry id is not a stable kebab slug — M034 citations resolve against it`,
+      );
     }
     if (seenDeleteIds.has(entry.id)) {
       report(errors, file, 'M036', `${id}: duplicate delete entry id`);
@@ -344,18 +452,25 @@ for (const [name, manifest] of manifests) {
   const DELETE_BY_SUBJECT =
     /\b(?:you|consumers?|apps?|callers?) (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b/i;
   const DELETE_MARKER = /\(DELETE-LIST\)|DELETE-LIST MATERIAL|^DELETE-LIST/;
-  const knownDeleteIds = new Set((manifest.deleteList ?? []).map((entry) => entry.id));
+  const knownDeleteIds = new Set(
+    (manifest.deleteList ?? []).map((entry) => entry.id),
+  );
   const deleteProse = [
     ...(manifest.informational ?? []).map((line) => ['informational', line]),
     ...(manifest.items ?? []).flatMap((item) =>
-      ['note', 'action', 'pitfall'].map((field) => [`item ${item.id} ${field}`, item[field] ?? '']),
+      ['note', 'action', 'pitfall'].map((field) => [
+        `item ${item.id} ${field}`,
+        item[field] ?? '',
+      ]),
     ),
   ];
   for (const [where, line] of deleteProse) {
     const sentences = String(line).split(/(?<=\.)\s+/);
     const guilty = sentences.find(
       (one) =>
-        DELETE_MARKER.test(one) || DELETE_SELF.test(one) || DELETE_BY_SUBJECT.test(one),
+        DELETE_MARKER.test(one) ||
+        DELETE_SELF.test(one) ||
+        DELETE_BY_SUBJECT.test(one),
     );
     if (!guilty) continue;
     const cited = String(line).match(/\(delete list: ([a-z0-9-]+)\)/);
@@ -364,11 +479,20 @@ for (const [name, manifest] of manifests) {
         errors,
         file,
         'M034',
-        where + ' tells the consumer to delete something but names no row — add a `deleteList` entry and cite it as "(delete list: <id>)": ' +
+        where +
+          ' tells the consumer to delete something but names no row — add a `deleteList` entry and cite it as "(delete list: <id>)": ' +
           JSON.stringify(guilty.trim().slice(0, 70)),
       );
     } else if (!knownDeleteIds.has(cited[1])) {
-      report(errors, file, 'M034', where + ' cites "' + cited[1] + '", which is no `deleteList` id in this file');
+      report(
+        errors,
+        file,
+        'M034',
+        where +
+          ' cites "' +
+          cited[1] +
+          '", which is no `deleteList` id in this file',
+      );
     }
   }
 }

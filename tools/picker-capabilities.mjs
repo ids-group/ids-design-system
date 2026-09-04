@@ -60,7 +60,8 @@ const probes = {
   'clearing the value from outside': /\bclear\(\)/,
   // Matches the shared helper too, not just an inline call: the behaviour moved
   // into components/scroll-active-option.ts and this probe kept reporting —.
-  'scroll the active row into view': /scrollIntoView|scrollActiveOptionIntoView/,
+  'scroll the active row into view':
+    /scrollIntoView|scrollActiveOptionIntoView/,
 };
 
 const rows = Object.entries(probes).map(([label, re]) => ({
