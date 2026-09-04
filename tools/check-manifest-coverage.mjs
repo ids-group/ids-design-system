@@ -15,12 +15,10 @@
 //     written as a placeholder out, with no stopword list to maintain.
 //   * An entry that names no public hook is never flagged. Purely visual or internal work needs
 //     no line, and is not asked for one.
-//   * An entry that SAYS FOR ITSELF that nothing changed for the consumer is exempt. What this
-//     check is really for is DISAGREEMENT between the two records — the block documents a change
-//     and the manifest is silent about it. When the block says "nothing to do on your side", the
-//     manifest's silence agrees with it and there is nothing to reconcile. Measured before it was
-//     added: 6 of 297 published non-Added entries carry such a phrase, so it is not a habitual
-//     escape hatch, and a wrong one is a defect in the changelog rather than in the manifest.
+//   * An entry that SAYS FOR ITSELF that nothing changed for the consumer is exempt. What is being
+//     caught is DISAGREEMENT between the two records, and a block saying "nothing to do on your
+//     side" agrees with a silent manifest. 6 of 297 published non-Added entries carry such a
+//     phrase, so it is not a habitual escape hatch; a wrong one is a defect in the changelog.
 //
 // So the minimum way to pass is to NAME the hook, which is the part worth having: a consumer
 // grepping the manifest for `--layer-toast` then finds the line and learns there is nothing to do.

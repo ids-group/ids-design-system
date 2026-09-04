@@ -231,9 +231,8 @@ function privateSymbols() {
     }
   };
 
-  // lib-entry-points refuses to load without the facade, so this cannot be reached; it stays as a
-  // throw rather than the empty set it used to return, because an empty set here disarms C010 and
-  // C013 and reports OK while doing it.
+  // Unreachable — lib-entry-points refuses to load without the facade. Kept as a throw because an
+  // empty set here disarms C010 and C013 and still reports OK.
   if (!existsSync(FACADE)) throw new Error(`changelog-lint: ${FACADE} is missing.`);
   walk(FACADE);
 

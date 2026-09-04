@@ -14,10 +14,8 @@ export const PACKAGE_NAME = JSON.parse(
   readFileSync(join(REPO_ROOT, 'package.json'), 'utf8'),
 ).name;
 
-// Every consumer of this module walks the export graph FROM the facade, and each of them treated
-// its absence as "no public symbols" — which reads as a clean bill of health rather than as a
-// failure, so the checks built on it would go quiet instead of red. The facade has already moved
-// once (out of `src/` into `src/lib/` when the entry points landed), so this is not hypothetical.
+// Absence has to be fatal here: every consumer walks the export graph FROM the facade, so an
+// empty result is indistinguishable from a library with nothing public and reports OK.
 if (!existsSync(FACADE)) {
   console.error(
     `lib-entry-points: ${relative(REPO_ROOT, FACADE).split('\\').join('/')} does not exist, so ` +
