@@ -152,7 +152,8 @@
     "ds-table's column resize now stops at the width of the scroll viewport, on both the pointer and the keyboard path. It was unbounded before. The bound exists so the handle's aria-valuemax is true — a focusable role=\"separator\" is a range widget, and it had been announcing a ceiling nothing applied.",
     "ds-table hides its column-resize handle under `(hover: none) and (pointer: coarse)` and puts −/+/Fit width controls in the column panel instead, which opens as a ds-bottom-sheet there. Nothing to change in a consumer app; a screenshot test taken on a touch profile will differ.",
     "A ds-table loading scrim used to be sized to one viewport of the table and travelled with the content, so horizontal scrolling left the revealed columns uncovered. The overlay wraps the scroll container now and the scrim covers what is on screen at any offset. NO ACTION.",
-    "maxVisibleChips=\"fit\" on ds-multi-select and ds-autocomplete under-showed chips on a trigger that hugs its content: the width it measured was decided by the chips it was about to cut. It reads the space available now. A width=\"fill\" trigger is unaffected. NO ACTION."
+    "maxVisibleChips=\"fit\" on ds-multi-select and ds-autocomplete under-showed chips on a trigger that hugs its content: the width it measured was decided by the chips it was about to cut. It reads the space available now. A width=\"fill\" trigger is unaffected. NO ACTION.",
+    "Dev-mode warnings no longer reach an optimized production build. The guard was a function call a bundler cannot prove dead, so the warning sites and the strings they build were shipped to production; it is the ngDevMode constant now, which the Angular build folds away. Warnings still fire in a development build exactly as before, and a build that leaves ngDevMode undefined still runs them, matching how Angular’s own dev-mode checks behave. NO ACTION."
   ],
   "deleteList": []
 }
