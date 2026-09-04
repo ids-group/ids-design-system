@@ -10,7 +10,7 @@ import * as angularElements from '../dist/browser/main.js';
 // directive has no element to register — see README "Directives".
 import {
   Button, Checkbox, Input, Modal, Select, Table, Card, Badge, Switch,
-  Alert, Stat, Tabs, Tab, Menu, MenuItem, Popover, Icon,
+  Alert, Stat, Tabs, Tab, Menu, MenuItem, Popover, Icon, SplitButton,
 } from '../gen';
 
 const log: string[] = [];
@@ -105,6 +105,20 @@ function Demo() {
             </Card>
           </Popover>
         </div>
+      </Panel>
+
+      <Panel title="A control whose own template nests custom elements" hint="ds-split-button renders ds-popover + ds-menu inside itself. Those register under ds-x- aliases, so the nested elements stay Angular components and the menu keeps its items — angular/angular#24536 otherwise empties it.">
+        <SplitButton
+          label="Save"
+          menuLabel="More save options"
+          menuItems={[
+            { label: 'Save as…', value: 'save-as', icon: 'copy' },
+            { label: 'Save a copy', value: 'copy' },
+            { label: 'Discard changes', value: 'discard', icon: 'trash', error: true },
+          ]}
+          onPressed={() => push('split → save')}
+          onItemSelected={(item) => push(`split → ${String((item as { value?: string }).value)}`)}
+        />
       </Panel>
 
       <Panel title="Dialog with focus trap + scroll lock" hint="Tab cycles inside the dialog, Escape closes, the body stops scrolling — all CDK behaviour the port drops.">
