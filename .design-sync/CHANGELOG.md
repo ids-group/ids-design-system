@@ -27,10 +27,9 @@ the release commit — one timeline, two audiences.
 - **The last five cards lose the eyebrow**, and a part no longer republishes the chapter it
   belongs to.
 - **376 of 409 cards ship as static HTML instead of an Angular application.** A card is a whole
-  document, and every one of them downloaded the 2.12 MB bundle and booted its own application:
-  807 ms for a Table card, 450 ms for a Button one, in every tile of the grid at once.
-  `snapshot-cards.mjs` renders each card and writes back the settled DOM with the scripts stripped,
-  which takes a card to 35 ms and, warm, to about 20 ms and zero bytes. Nothing renders
+  document, and every one of them downloaded the 2.12 MB bundle and booted its own application, in
+  every tile of the grid at once. `snapshot-cards.mjs` renders each card and writes back the settled
+  DOM with the scripts stripped, so a frozen card fetches no bundle at all. Nothing renders
   differently — the theme tokens stay in `_ds_bundle.css`, so the pane switching `data-theme` still
   recolours a frozen card, and all 409 declared heights are unchanged. What is lost is behaviour,
   so the chapters whose demos open on a click are listed in `live-chapters.txt` and stay live:
