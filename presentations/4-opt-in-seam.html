@@ -144,7 +144,7 @@ imports: [DsTable, DsTableResizable, DsTableExport]
     </p>
   </section>
 
-  <h2>Решение 2 — строка сообщения у кнопки <span class="chip is-done">РЕШЕНО — директива</span></h2>
+  <h2>Решение 2 — строка сообщения у кнопки <span class="chip is-dead">ПРИЗ НЕ ПОДТВЕРДИЛСЯ</span></h2>
 
   <p class="lede" style="margin-top:0">
     <code>ds-button</code> умеет показать под собой hint/warning/error. Ради этого она тянет
@@ -175,8 +175,28 @@ imports: [DsTable, DsTableResizable, DsTableExport]
     </tbody>
   </table>
 
-  <section class="panel verdict is-done">
-    <h3 style="margin-top:0">РЕШЕНО 2026-09-04 — за директиву <code>DsButtonMessage</code></h3>
+  <section class="panel verdict is-dead">
+    <h3 style="margin-top:0">ПОСТРОЕНО И ОТКАЧЕНО — приза больше нет</h3>
+    <p>
+      <b>Замерено 2026-09-04 на пакете после A3: вынос строки экономит ноль, а шов стоит +308 B
+      gzip.</b> Кнопка перестала статически ссылаться на <code>FieldMessageComponent</code> —
+      проверено по собранному FESM, ссылки нет, — и бандл пробы не сдвинулся: 63 374 против
+      63 066 B, то есть стало хуже на величину самого шва.
+    </p>
+    <p>
+      <b>Почему 11 295 B испарились.</b> Та цифра снята абляцией <b>до A3</b>, на сплющенном
+      пакете. Сейчас <code>field-message</code> — своя точка входа, а всё, что ей нужно (иконки,
+      core, стили), уже лежит в бандле ради самой кнопки. Маргинальная цена строки оказалась
+      порядка сотен байт, и шов её съедает.
+    </p>
+    <p style="margin-bottom:0">
+      Решение 2026-09-04 было «за директиву», работа сделана и <b>откачена по замеру</b>. Строка
+      сообщения остаётся в кнопке.
+    </p>
+  </section>
+
+  <section class="panel" hidden>
+    <h3 style="margin-top:0">Исходное решение — за директиву <code>DsButtonMessage</code></h3>
     <p>
       Кнопка перестаёт импортировать <code>FieldMessageComponent</code>; директива приносит его сама
       и рисует в слот кнопки через <code>ViewContainerRef</code>. Кто строкой не пользуется, платит 0.
