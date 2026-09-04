@@ -40,7 +40,7 @@ export class RadioComponent extends DsFieldBase {
    *  ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it
    *  would leave the group with no value through a gesture the group cannot see. */
   readonly deselectable = input(false, { transform: booleanAttribute });
-  /** Disables the radio; a disabled parent `ds-radio-group` also disables it. */
+  /** A disabled parent `ds-radio-group` also disables it, whatever this is set to. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Native `name` attribute — overridden by the group's name when inside `ds-radio-group`. */
   readonly name = input<string>('');
@@ -48,8 +48,7 @@ export class RadioComponent extends DsFieldBase {
   readonly value = input<unknown>('');
   /** Overrides the auto-generated id used for the input and its label's `for`. */
   readonly inputId = input<string | null>(null);
-  /** Control size — sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,

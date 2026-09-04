@@ -52,7 +52,7 @@ export class SplitButtonComponent {
   readonly menuLabel = input<string>('More actions');
   /** Fires when the main button (not the dropdown trigger) is clicked. */
   readonly pressed = output<MouseEvent>();
-  /** Fires with the chosen menu item. */
+  /** The menu half only — a press on the main button is `pressed`, never this. */
   readonly itemSelected = output<SplitButtonItem>();
 
   protected onItemSelect(item: SplitButtonItem): void {

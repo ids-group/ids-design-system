@@ -28,10 +28,8 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
 export class MenuComponent {
   private readonly items = contentChildren(MenuItemComponent);
 
-  /** Whether any item carries an icon, which makes every item reserve the slot so the labels
-   *  align on one axis. An item cannot decide this — it would have to know its siblings — and a
-   *  ragged left text edge in a vertical list costs a fixation per row and reads as if the
-   *  unindented row were a different kind of thing. */
+  /** One item with an icon makes every item reserve the slot, so the labels share one axis. The
+   *  menu owns the decision because an item would have to know its siblings to take it. */
   protected readonly anyIcon = computed(() => this.items().some((item) => item.icon() !== null));
   /** Index of the roving-focus item — the single item reachable via Tab. */
   private readonly activeIndex = signal(0);

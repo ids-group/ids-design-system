@@ -4730,7 +4730,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Disables the radio; a disabled parent `ds-radio-group` also disables it."
+        "description": "A disabled parent `ds-radio-group` also disables it, whatever this is set to."
       },
       {
         "name": "name",
@@ -4770,7 +4770,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Control size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -6126,7 +6126,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires with the chosen menu item."
+        "description": "The menu half only — a press on the main button is `pressed`, never this."
       }
     ]
   },

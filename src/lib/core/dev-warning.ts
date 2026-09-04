@@ -1,10 +1,9 @@
 import { effect, isDevMode } from '@angular/core';
 
 /**
- * Once per message, not once per recomputation: the hand-written copies of this
- * re-ran whenever ANY signal they read changed, so a warning about a static
- * misconfiguration could log again on every keystroke, and a console repeating
- * one line is a console people stop reading.
+ * Warns once per distinct message, not once per recomputation: the effect re-runs whenever any
+ * signal the condition reads changes, so without that a static misconfiguration would log again
+ * on every keystroke.
  *
  * Returning the message from the condition keeps the two together — a condition
  * that drifts from its message is how a warning ends up describing a state that
