@@ -11,8 +11,12 @@
       > * { flex: 1; }
     }
 
-    /* Showcase-only: pin focus-within visual without real interaction. */
+    /* Showcase-only: pin the focus-within visual without real interaction. Reads the
+       component's own resolver, so the specimen cannot drift from what focus paints —
+       hardcoding `--focus-ring` here drew the CONTROL ring while ds-search resolves the
+       field halo, and the showcase was the only place that ring ever appeared.
+       Shadow only, because that is all a real focus changes: the border keeps its
+       default colour, the field-state layer out-ranking the component's own focus rule. */
     .state-cell-stage.force-focus ::ng-deep .search {
-      border-color: var(--primary);
-      box-shadow: var(--focus-ring);
+      box-shadow: var(--_search-focus-shadow);
     }
