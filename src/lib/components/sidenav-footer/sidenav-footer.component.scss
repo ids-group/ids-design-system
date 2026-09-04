@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 
 :host {
@@ -156,9 +157,15 @@
   border-radius: var(--radius-md);
   color: var(--text-tertiary);
 
+  // The border tint alone was the whole indicator, and 1px is under the WCAG 2.4.13
+  // floor for a perimeter. It stays as a second signal; the ring carries the weight.
   &:focus-within {
     border-color: var(--accent);
+
+    @include focus.ring;
   }
+
+  @include focus.owns-the-focus-ring('.search-input');
 
   .search-input {
     flex: 1 1 auto;

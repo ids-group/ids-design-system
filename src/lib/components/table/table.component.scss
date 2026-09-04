@@ -617,8 +617,9 @@
   background-color: var(--surface-default);
 
   &:focus-visible {
-    outline: 0;
     border-color: var(--accent);
+
+    @include focus.ring;
   }
 }
 
@@ -676,8 +677,9 @@
   color: var(--text-primary);
   background-color: var(--surface-default);
 
+  // The accent border is this field's resting chrome, so it says nothing about focus.
   &:focus-visible {
-    outline: 0;
+    @include focus.ring;
   }
 }
 

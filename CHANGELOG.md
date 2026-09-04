@@ -85,6 +85,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Three fields answered focus with a one-pixel border tint and nothing else.** The sidenav
+  footer's search box, the table's column filter and the table's inline cell editor each turned the
+  outline off to make room for a border colour change — one pixel, under the WCAG 2.4.13 floor of a
+  2px perimeter, and on the cell editor the accent border is already its resting chrome, so focus
+  changed nothing at all. All three ring properly now and keep the tint as a second signal.
+
 - **The search field inside a `ds-multi-select` panel showed no focus indicator at all.** It zeroed
   its own outline and no ancestor painted one, so a keyboard user opening the panel and tabbing to
   the filter had nothing on screen telling them where they were. The row around it rings now, drawn

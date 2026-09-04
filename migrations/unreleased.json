@@ -104,6 +104,7 @@
   "deleteList": [],
   "informational": [
     "The focus ring now eases its colour in over `--duration-fast`, as a CSS animation rather than a transition so a component's own transition list is untouched. Geometry does not animate, so nothing moves and no layout shifts. `--duration-fast` is already 0ms under `prefers-reduced-motion: reduce`, so there is nothing to opt out of.",
-    "`ds-multi-select`'s panel search field had no focus indicator — it zeroed its own outline and nothing above it painted one. The row around it rings now, drawn inward because the panel clips. Nothing to change on your side."
+    "`ds-multi-select`'s panel search field had no focus indicator — it zeroed its own outline and nothing above it painted one. The row around it rings now, drawn inward because the panel clips. Nothing to change on your side.",
+    "Three fields whose only focus indicator was a 1px border tint now draw the standard ring: `ds-sidenav-footer`'s search box, and `ds-table`'s column filter and inline cell editor. Nothing to change on your side."
   ]
 }
