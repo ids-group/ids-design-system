@@ -62,8 +62,10 @@ fi
 
 # The lock matched, so the cards did not change and the frozen copies in git are still the right
 # ones. Putting them back is what keeps the rest of this script — including the release commit —
-# looking at the tree a publish actually sends.
-git checkout -- .design-sync/upload/components .design-sync/upload/guides
+# looking at the tree a publish actually sends. `_ds_cards.css` belongs to the freeze as much as the
+# cards do: build-cards wipes the directory and only snapshot-cards writes that file, so without it
+# here the next line would see a deletion and the release bot would commit it.
+git checkout -- .design-sync/upload/components .design-sync/upload/guides .design-sync/upload/_ds_cards.css
 node .design-sync/tools/check-frozen.mjs
 
 # A release bumps the version, DS_VERSION carries it into the bundle, and the bundle is committed
