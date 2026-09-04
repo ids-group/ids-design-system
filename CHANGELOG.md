@@ -17,8 +17,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the label carries the hit area. A control with no label has no row to speak of, so there the ring
   keeps its distance instead (`--space-1-5` rather than the usual 2px offset). It is keyboard-only:
   the row matches `:has(:focus-visible)`, so clicking a checkbox with the pointer leaves no ring
-  behind. `ds-table`'s cell
-  checkbox is unchanged — it has no row, and it keeps ringing its own box.
+  behind. A `ds-table` selection checkbox has no row to ring, so it rings its own box.
 
 - **Every hand-written `outline: none` in the library became `focus.own-indicator`.** The declaration
   is the same everywhere except in forced colours, where it is now skipped. Windows High Contrast
@@ -86,9 +85,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   is a floor, so in the default `width="fill"` the input still stretches across the row and only the
   chip case changes; under `width="content"` it is what an empty field measures. Set the hook back to
   `80px` to keep the old footprint.
-- **A group's select-all row clips its label like the option rows do.** `.select-all-label` carried no
-  clip at all, so a long group name wrapped and made that one row two lines tall beside single-line
-  options.
+- **A multi-select panel's "Select all" row clips its label like the option rows do.**
+  `.select-all-label` carried no clip at all, so a narrow panel wrapped that one row to two lines
+  beside single-line options. The per-group "All of …" row is not wrapped in an element, so it is
+  not clipped and a long group name still wraps there.
 - **`ds-radio` accepts `[deselectable]`,** which lets a checked STANDALONE radio be cleared by
   clicking it again. Off by default and ignored inside `ds-radio-group`, where clearing the one
   selected option would leave the group with no value through a gesture the group cannot see.
@@ -103,8 +103,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   colours, no mark. The box is a shared partial now, so it cannot drift from `ds-checkbox`, and it
   answers the same hooks: `--ds-checkbox-bg-color`, `--ds-checkbox-border-color`,
   `--ds-checkbox-selected-bg-color` and their siblings reach a table's selection column where they
-  previously did nothing. CSS of your own that targeted the bare `input[type="checkbox"]` inside a
-  `ds-table` no longer matches anything.
+  previously did nothing. The element is still an `<input type="checkbox">`, so a selector of your
+  own aimed at it still matches — but it is now competing with the library's own rule instead of
+  styling something nothing else touched, and the box sets `appearance: none`.
 
 - **Two classes gained members — only matters if you SUBCLASS one.** `MenuComponent` gained
   `anyIcon`, which it computes over its content children, and `RadioComponent` gained `onClick`
@@ -161,7 +162,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the gap stayed, so a mixed menu had two text axes and an unindented row read as a different kind of
   thing. The menu decides it now rather than the item — an item cannot see its siblings — so one
   item with an icon makes every item reserve the slot. A menu with no icons anywhere is unchanged and
-  stays flush to its padding. `--ds-menu-item-icon-size` still sets the width the slot reserves.
+  stays flush to its padding. The new `--ds-menu-item-icon-size` sets the width the slot reserves.
 
 - **`ds-split-button` answers a press on either half.** Both segments were missing the darken-plus-
   micro-scale that every other button in the library gives a press, so the one control built from two

@@ -1997,7 +1997,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-autocomplete-input-minw",
         "value": "40px",
-        "notes": "Autocomplete input minimum width (80px)."
+        "notes": "Autocomplete input minimum width (40px)."
       },
       {
         "name": "--ds-autocomplete-bg-color",
