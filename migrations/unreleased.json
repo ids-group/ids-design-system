@@ -76,6 +76,29 @@
         "data-focus=\"field\"",
         "data-focus=\"outline\""
       ]
+    },
+    {
+      "id": "menu-subclass-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "class MyMenu extends MenuComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
+      "appliesWhen": "Only a class that extends MenuComponent. Template users need nothing, and no input, output or token changed.",
+      "pitfall": "The new member is not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and an `override anyIcon` that predates this release compiles clean while overriding nothing.",
+      "note": "MenuComponent gained `anyIcon`, a computed over its content children that decides whether every row reserves the icon slot. It is neither an input nor an output.",
+      "verify": "The app builds with no TS4114 / TS2415 / TS2416 naming MenuComponent, and no override of anyIcon remains in your source.",
+      "searchHints": [
+        "extends MenuComponent",
+        "anyIcon",
+        "TS2415",
+        "TS4114"
+      ],
+      "detect": [
+        "extends MenuComponent",
+        "override anyIcon"
+      ],
+      "restore": null
     }
   ],
   "deleteList": [],
