@@ -1474,6 +1474,19 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 ## Component API / portfolio
 
+- [ ] **[P2] The button's colour-family slots are named `--c-*`, which is not an acceptable name.**
+  Seven of them — `--c-base`, `--c-on`, `--c-strong`, `--c-subtitle`, `--c-muted`, `--c-muted-strong`,
+  `--c-outline-border` — declared on `.button` in `button.component.scss` and read by `button` and
+  `icon-button`. Two things are wrong with the name and each on its own is enough: `c` is a
+  one-letter abbreviation where the house rule is a spelled-out word, and these are INTERNAL slots
+  that carry none of the `--_` marker this library uses to say so, so they read like a public hook
+  a consumer may set. The `.c-*` colour classes that override them have the same defect.
+  Rename to the spelled-out internal form (`--_family-base` / `-on` / `-strong` / …) and the classes
+  with them. Not a public break — `components.md` names none of them and only those two components
+  read them — but `0.10.1.json` mentions `--c-on` inside an `informational` line explaining a
+  disabled-icon recipe, so that sentence needs the new name too. Check `.design-sync/` and the docs
+  specimens as well: both pin component internals in places `src/lib` does not reach.
+
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
 
 ## Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)
