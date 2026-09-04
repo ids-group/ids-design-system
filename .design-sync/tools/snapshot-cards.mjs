@@ -219,8 +219,8 @@ const tidyCss = (body) => body
 
 // Five lanes finish out of order, so the Map's own order is a race. Reading it back in the order
 // `cards.json` declares is what makes the sheet and the shortened ids byte-identical run to run -
-// otherwise every snapshot rewrites all 377 files with no change in them, and the committed tree
-// CI diffs against is noise.
+// otherwise every snapshot rewrites all 376 cards and the shared sheet with no change in them, and
+// the committed tree CI diffs against is noise.
 const ordered = queue.map((path) => [path, snapshots.get(path)]);
 
 const blocks = [];

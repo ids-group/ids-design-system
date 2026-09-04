@@ -188,8 +188,9 @@ comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
   and `snapshot-cards` then re-freezes already-frozen cards into nonsense.
 - **The output is reproducible, and that is deliberate.** Five lanes finish out of
   order, so the results are read back in `cards.json` order — otherwise the sheet's
-  block order and the id renumbering differ every run, and all 377 files rewrite
-  with no change in them. Two consecutive freezes must leave `git status` empty.
+  block order and the id renumbering differ every run, and all 376 cards plus the
+  shared sheet rewrite with no change in them. Two consecutive freezes must leave
+  `git status` empty.
 - **A built section is not a settled one.** Components that measure write their
   result later — Table's sticky scrollbar pins `.scroll-wrap` to a computed height —
   so the tidy pass waits for `document.fonts.ready` and then for the DOM to stop

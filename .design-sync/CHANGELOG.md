@@ -35,18 +35,17 @@ the release commit — one timeline, two audiences.
   so the chapters whose demos open on a click are listed in `live-chapters.txt` and stay live:
   toast, drawer, modal, popover, bottom-sheet, tree, loading-overlay, scrollbar.
 - **The 185 distinct component stylesheets are one linked file.** Angular inlines a component's
-  styles into every document that renders it — 4005 `<style>` tags across the tree, 10.3 MB, only
-  473 KB of them distinct. They are scoped by attribute and therefore position-independent, so they
-  concatenate into `_ds_cards.css`, fetched once for the whole grid instead of parsed inside each
-  card. With the scaffolding comments and the Angular component ids trimmed too, the tree is
-  20 MB → 9.0 MB.
+  styles into every document that renders it, so the same block arrived in card after card. They
+  are scoped by attribute and therefore position-independent, so they concatenate into
+  `_ds_cards.css`, fetched once for the whole grid instead of parsed inside each card. With the
+  scaffolding comments and the Angular component ids trimmed too, the tree is 20 MB → 9.0 MB.
 
 ### Removing a file from the shared project
 
 - **An obsolete path now reaches the owner as one pasted instruction.** A write to a project the
   uploader does not own cannot be taken back by the uploader: `delete_files` refuses without
-  project ownership. Every route was tested and the working one is a single instruction the owner
-  executes, including the unregister step that a rename or a delete alone leaves behind.
+  project ownership. What works is a single instruction the owner executes, including the unregister
+  step that a rename or a delete alone leaves behind.
 
 ### Build
 
@@ -62,6 +61,6 @@ the release commit — one timeline, two audiences.
   outside `live-chapters.txt` really is static.
 - **The freeze is reproducible.** Five render lanes finish out of order, so the results are read
   back in `cards.json` order; without that the shared stylesheet's block order and the shortened
-  component ids differed every run and rewrote all 377 files with no change in them. The tidy pass
-  also waits for the DOM to stop changing rather than counting frames — the sticky-scrollbar card
-  had frozen three different ways in three runs.
+  component ids differed every run, rewriting all 376 cards and the stylesheet with no change in
+  them. The tidy pass also waits for the DOM to stop changing rather than counting frames — the
+  sticky-scrollbar card had frozen three different ways in three runs.
