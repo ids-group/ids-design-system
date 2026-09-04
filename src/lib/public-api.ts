@@ -1,74 +1,339 @@
-export * from '@ids-group-ltd/ids-design-system/components';
-export * from '@ids-group-ltd/ids-design-system/components/accordion';
-export * from '@ids-group-ltd/ids-design-system/components/alert';
-export * from '@ids-group-ltd/ids-design-system/components/app-layout';
-export * from '@ids-group-ltd/ids-design-system/components/auth-layout';
-export * from '@ids-group-ltd/ids-design-system/components/autocomplete';
-export * from '@ids-group-ltd/ids-design-system/components/avatar';
-export * from '@ids-group-ltd/ids-design-system/components/avatar-group';
-export * from '@ids-group-ltd/ids-design-system/components/badge';
-export * from '@ids-group-ltd/ids-design-system/components/banner';
-export * from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
-export * from '@ids-group-ltd/ids-design-system/components/breadcrumbs';
-export * from '@ids-group-ltd/ids-design-system/components/button';
-export * from '@ids-group-ltd/ids-design-system/components/button-group';
-export * from '@ids-group-ltd/ids-design-system/components/calendar-day';
-export * from '@ids-group-ltd/ids-design-system/components/card';
-export * from '@ids-group-ltd/ids-design-system/components/checkbox';
-export * from '@ids-group-ltd/ids-design-system/components/color-picker';
-export * from '@ids-group-ltd/ids-design-system/components/date-picker';
-export * from '@ids-group-ltd/ids-design-system/components/description-list';
-export * from '@ids-group-ltd/ids-design-system/components/divider';
-export * from '@ids-group-ltd/ids-design-system/components/drawer';
-export * from '@ids-group-ltd/ids-design-system/components/dropzone';
-export * from '@ids-group-ltd/ids-design-system/components/empty-state';
-export * from '@ids-group-ltd/ids-design-system/components/field-group';
-export * from '@ids-group-ltd/ids-design-system/components/field-message';
-export * from '@ids-group-ltd/ids-design-system/components/filter-bar';
-export * from '@ids-group-ltd/ids-design-system/components/icon-button';
-export * from '@ids-group-ltd/ids-design-system/components/input';
-export * from '@ids-group-ltd/ids-design-system/components/layout';
-export * from '@ids-group-ltd/ids-design-system/components/list';
-export * from '@ids-group-ltd/ids-design-system/components/loading-overlay';
-export * from '@ids-group-ltd/ids-design-system/components/menu';
-export * from '@ids-group-ltd/ids-design-system/components/modal';
-export * from '@ids-group-ltd/ids-design-system/components/multi-select';
-export * from '@ids-group-ltd/ids-design-system/components/number-stepper';
-export * from '@ids-group-ltd/ids-design-system/components/otp-input';
-export * from '@ids-group-ltd/ids-design-system/components/page-footer';
-export * from '@ids-group-ltd/ids-design-system/components/page-header';
-export * from '@ids-group-ltd/ids-design-system/components/pagination';
-export * from '@ids-group-ltd/ids-design-system/components/password-rules';
-export * from '@ids-group-ltd/ids-design-system/components/popover';
-export * from '@ids-group-ltd/ids-design-system/components/progress';
-export * from '@ids-group-ltd/ids-design-system/components/radio-group';
-export * from '@ids-group-ltd/ids-design-system/components/reserve-messages';
-export * from '@ids-group-ltd/ids-design-system/components/search';
-export * from '@ids-group-ltd/ids-design-system/components/segmented';
-export * from '@ids-group-ltd/ids-design-system/components/select';
-export * from '@ids-group-ltd/ids-design-system/components/sidenav';
-export * from '@ids-group-ltd/ids-design-system/components/sidenav-footer';
-export * from '@ids-group-ltd/ids-design-system/components/skeleton';
-export * from '@ids-group-ltd/ids-design-system/components/slider';
-export * from '@ids-group-ltd/ids-design-system/components/spinner';
-export * from '@ids-group-ltd/ids-design-system/components/split-button';
-export * from '@ids-group-ltd/ids-design-system/components/stat';
-export * from '@ids-group-ltd/ids-design-system/components/status-dot';
-export * from '@ids-group-ltd/ids-design-system/components/stepper';
-export * from '@ids-group-ltd/ids-design-system/components/switch';
-export * from '@ids-group-ltd/ids-design-system/components/table';
-export * from '@ids-group-ltd/ids-design-system/components/tabs';
-export * from '@ids-group-ltd/ids-design-system/components/tag';
-export * from '@ids-group-ltd/ids-design-system/components/textarea';
-export * from '@ids-group-ltd/ids-design-system/components/time-picker';
-export * from '@ids-group-ltd/ids-design-system/components/timeline';
-export * from '@ids-group-ltd/ids-design-system/components/toast';
-export * from '@ids-group-ltd/ids-design-system/components/toggle-button';
-export * from '@ids-group-ltd/ids-design-system/components/tooltip';
-export * from '@ids-group-ltd/ids-design-system/components/topbar';
-export * from '@ids-group-ltd/ids-design-system/components/tree';
-export * from '@ids-group-ltd/ids-design-system/components/w3w';
-export * from '@ids-group-ltd/ids-design-system/core';
-export * from '@ids-group-ltd/ids-design-system/icons';
-export * from '@ids-group-ltd/ids-design-system/overlay';
-export * from '@ids-group-ltd/ids-design-system/theme';
+export {
+  DS_FIELD_WARNING_KIND,
+  DsChipTemplateDirective,
+  DsCreateTemplateDirective,
+  DsEmptyTemplateDirective,
+  DsGroupLabelTemplateDirective,
+  DsOptionTemplateDirective,
+  DsPanelFooterTemplateDirective,
+  DsPanelHeaderTemplateDirective,
+  DsPickerTriggerDirective,
+  DsStaticPreview,
+  FieldClickFocusDirective,
+} from '@ids-group-ltd/ids-design-system/components';
+export type {
+  DsFieldError,
+  DsFieldErrorsInput,
+} from '@ids-group-ltd/ids-design-system/components';
+export {
+  ACCORDION,
+  AccordionComponent,
+  AccordionItemComponent,
+} from '@ids-group-ltd/ids-design-system/components/accordion';
+export type {
+  AccordionContract,
+  AccordionItemRef,
+} from '@ids-group-ltd/ids-design-system/components/accordion';
+export { AlertComponent } from '@ids-group-ltd/ids-design-system/components/alert';
+export type { AlertVariant } from '@ids-group-ltd/ids-design-system/components/alert';
+export {
+  AppLayoutComponent,
+  LayoutNavigationService,
+  LayoutScrollService,
+  RailTriggerDirective,
+} from '@ids-group-ltd/ids-design-system/components/app-layout';
+export type { DsScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
+export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout';
+export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete';
+export type {
+  AutocompleteItem,
+  AutocompleteOption,
+  AutocompleteOptionGroup,
+  AutocompleteValueOverflow,
+  AutocompleteWidth,
+} from '@ids-group-ltd/ids-design-system/components/autocomplete';
+export {
+  AvatarComponent,
+  avatarTint,
+  initialsFrom,
+} from '@ids-group-ltd/ids-design-system/components/avatar';
+export type {
+  AvatarSize,
+  AvatarStatus,
+  AvatarTintOptions,
+} from '@ids-group-ltd/ids-design-system/components/avatar';
+export { AvatarGroupComponent } from '@ids-group-ltd/ids-design-system/components/avatar-group';
+export { BadgeComponent } from '@ids-group-ltd/ids-design-system/components/badge';
+export { BannerComponent } from '@ids-group-ltd/ids-design-system/components/banner';
+export type { BannerVariant } from '@ids-group-ltd/ids-design-system/components/banner';
+export { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
+export {
+  BreadcrumbsComponent,
+  BreadcrumbsService,
+} from '@ids-group-ltd/ids-design-system/components/breadcrumbs';
+export type { BreadcrumbItem } from '@ids-group-ltd/ids-design-system/components/breadcrumbs';
+export { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
+export type {
+  ButtonColor,
+  ButtonType,
+  ButtonVariant,
+} from '@ids-group-ltd/ids-design-system/components/button';
+export { ButtonGroupComponent } from '@ids-group-ltd/ids-design-system/components/button-group';
+export { CardComponent } from '@ids-group-ltd/ids-design-system/components/card';
+export type {
+  CardElevation,
+  CardPadding,
+} from '@ids-group-ltd/ids-design-system/components/card';
+export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
+export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
+export { DatePickerComponent } from '@ids-group-ltd/ids-design-system/components/date-picker';
+export type {
+  DatePickerMode,
+  DatePickerPreset,
+  DatePickerValue,
+  DateValue,
+  RangeValue,
+} from '@ids-group-ltd/ids-design-system/components/date-picker';
+export {
+  DescriptionItemComponent,
+  DescriptionListComponent,
+} from '@ids-group-ltd/ids-design-system/components/description-list';
+export type { DescriptionListOrientation } from '@ids-group-ltd/ids-design-system/components/description-list';
+export { DividerComponent } from '@ids-group-ltd/ids-design-system/components/divider';
+export type {
+  DividerSpacing,
+  DividerVariant,
+} from '@ids-group-ltd/ids-design-system/components/divider';
+export { DrawerComponent } from '@ids-group-ltd/ids-design-system/components/drawer';
+export type { DrawerPlacement } from '@ids-group-ltd/ids-design-system/components/drawer';
+export { DropzoneComponent } from '@ids-group-ltd/ids-design-system/components/dropzone';
+export type {
+  DropzoneFile,
+  DropzoneFileState,
+} from '@ids-group-ltd/ids-design-system/components/dropzone';
+export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state';
+export type { EmptyStateVariant } from '@ids-group-ltd/ids-design-system/components/empty-state';
+export {
+  DS_FIELD_GROUP,
+  FieldGroupComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-group';
+export type { DsFieldGroupContext } from '@ids-group-ltd/ids-design-system/components/field-group';
+export {
+  FilterBarComponent,
+  FilterItemDirective,
+} from '@ids-group-ltd/ids-design-system/components/filter-bar';
+export { IconButtonComponent } from '@ids-group-ltd/ids-design-system/components/icon-button';
+export type {
+  IconButtonType,
+  IconButtonVariant,
+} from '@ids-group-ltd/ids-design-system/components/icon-button';
+export { InputComponent } from '@ids-group-ltd/ids-design-system/components/input';
+export type { InputType } from '@ids-group-ltd/ids-design-system/components/input';
+export {
+  ContainerComponent,
+  InlineComponent,
+  StackComponent,
+} from '@ids-group-ltd/ids-design-system/components/layout';
+export type {
+  ContainerSize,
+  LayoutAlign,
+  LayoutGap,
+  LayoutJustify,
+} from '@ids-group-ltd/ids-design-system/components/layout';
+export {
+  ListComponent,
+  ListItemComponent,
+} from '@ids-group-ltd/ids-design-system/components/list';
+export { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
+export {
+  MenuComponent,
+  MenuDividerComponent,
+  MenuItemComponent,
+} from '@ids-group-ltd/ids-design-system/components/menu';
+export {
+  ModalCardComponent,
+  ModalComponent,
+  ModalService,
+} from '@ids-group-ltd/ids-design-system/components/modal';
+export type {
+  ModalConfirmOptions,
+  ModalConfirmTone,
+  ModalSize,
+} from '@ids-group-ltd/ids-design-system/components/modal';
+export { MultiSelectComponent } from '@ids-group-ltd/ids-design-system/components/multi-select';
+export type {
+  MultiSelectItem,
+  MultiSelectOption,
+  MultiSelectOptionGroup,
+  MultiSelectWidth,
+} from '@ids-group-ltd/ids-design-system/components/multi-select';
+export { NumberStepperComponent } from '@ids-group-ltd/ids-design-system/components/number-stepper';
+export { OtpInputComponent } from '@ids-group-ltd/ids-design-system/components/otp-input';
+export type { OtpMode } from '@ids-group-ltd/ids-design-system/components/otp-input';
+export { PageFooterComponent } from '@ids-group-ltd/ids-design-system/components/page-footer';
+export type { PageFooterVariant } from '@ids-group-ltd/ids-design-system/components/page-footer';
+export { PageHeaderComponent } from '@ids-group-ltd/ids-design-system/components/page-header';
+export { PaginationComponent } from '@ids-group-ltd/ids-design-system/components/pagination';
+export {
+  PasswordRulesComponent,
+  passwordRulesMet,
+} from '@ids-group-ltd/ids-design-system/components/password-rules';
+export type {
+  DsPasswordRule,
+  DsPasswordRuleState,
+} from '@ids-group-ltd/ids-design-system/components/password-rules';
+export { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
+export type {
+  PopoverAlign,
+  PopoverPlacement,
+} from '@ids-group-ltd/ids-design-system/components/popover';
+export { ProgressComponent } from '@ids-group-ltd/ids-design-system/components/progress';
+export type { ProgressVariant } from '@ids-group-ltd/ids-design-system/components/progress';
+export {
+  RADIO_GROUP,
+  RadioComponent,
+  RadioGroupComponent,
+} from '@ids-group-ltd/ids-design-system/components/radio-group';
+export type {
+  RadioGroupChild,
+  RadioGroupContract,
+} from '@ids-group-ltd/ids-design-system/components/radio-group';
+export { ReserveMessagesDirective } from '@ids-group-ltd/ids-design-system/components/reserve-messages';
+export { SearchComponent } from '@ids-group-ltd/ids-design-system/components/search';
+export { SegmentedComponent } from '@ids-group-ltd/ids-design-system/components/segmented';
+export type { SegmentedOption } from '@ids-group-ltd/ids-design-system/components/segmented';
+export {
+  SelectComponent,
+  isSelectOptionGroup,
+} from '@ids-group-ltd/ids-design-system/components/select';
+export type {
+  SelectItem,
+  SelectOption,
+  SelectOptionGroup,
+  SelectWidth,
+} from '@ids-group-ltd/ids-design-system/components/select';
+export {
+  BrandNameDirective,
+  SIDENAV,
+  SidenavComponent,
+  SidenavGroupComponent,
+  SidenavItemComponent,
+} from '@ids-group-ltd/ids-design-system/components/sidenav';
+export type {
+  SidenavContract,
+  SidenavItemModel,
+} from '@ids-group-ltd/ids-design-system/components/sidenav';
+export { SidenavFooterComponent } from '@ids-group-ltd/ids-design-system/components/sidenav-footer';
+export type {
+  SidenavAlertItem,
+  SidenavSearchProvider,
+  SidenavSearchResult,
+} from '@ids-group-ltd/ids-design-system/components/sidenav-footer';
+export { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+export { SliderComponent } from '@ids-group-ltd/ids-design-system/components/slider';
+export { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+export { SplitButtonComponent } from '@ids-group-ltd/ids-design-system/components/split-button';
+export type {
+  SplitButtonItem,
+  SplitButtonVariant,
+} from '@ids-group-ltd/ids-design-system/components/split-button';
+export { StatComponent } from '@ids-group-ltd/ids-design-system/components/stat';
+export { StatusDotComponent } from '@ids-group-ltd/ids-design-system/components/status-dot';
+export { StepperComponent } from '@ids-group-ltd/ids-design-system/components/stepper';
+export type {
+  StepperLabelPosition,
+  StepperOrientation,
+} from '@ids-group-ltd/ids-design-system/components/stepper';
+export { SwitchComponent } from '@ids-group-ltd/ids-design-system/components/switch';
+export {
+  CellTemplateDirective,
+  HeaderFilterDirective,
+  TableComponent,
+} from '@ids-group-ltd/ids-design-system/components/table';
+export type {
+  HeaderFilterContext,
+  SortChangeEvent,
+  SortDir,
+  TableCellEditEvent,
+  TableColumn,
+  TableExpandMode,
+  TableFilterMode,
+  TableRowAction,
+  TableRowActionEvent,
+  TableSortMode,
+} from '@ids-group-ltd/ids-design-system/components/table';
+export {
+  TabComponent,
+  TabsComponent,
+} from '@ids-group-ltd/ids-design-system/components/tabs';
+export type {
+  TabsOrientation,
+  TabsVariant,
+} from '@ids-group-ltd/ids-design-system/components/tabs';
+export { TagComponent } from '@ids-group-ltd/ids-design-system/components/tag';
+export type { TagVariant } from '@ids-group-ltd/ids-design-system/components/tag';
+export { TextareaComponent } from '@ids-group-ltd/ids-design-system/components/textarea';
+export type { TextareaResize } from '@ids-group-ltd/ids-design-system/components/textarea';
+export { TimePickerComponent } from '@ids-group-ltd/ids-design-system/components/time-picker';
+export type {
+  TimeFormat,
+  TimePickerMode,
+  TimePickerValue,
+  TimeRangeValue,
+  TimeValue,
+} from '@ids-group-ltd/ids-design-system/components/time-picker';
+export {
+  TimelineComponent,
+  TimelineItemComponent,
+} from '@ids-group-ltd/ids-design-system/components/timeline';
+export type { TimelineTone } from '@ids-group-ltd/ids-design-system/components/timeline';
+export {
+  DS_TOAST_POSITION_DEFAULT,
+  ToastComponent,
+  ToastRegionComponent,
+  ToastService,
+} from '@ids-group-ltd/ids-design-system/components/toast';
+export type {
+  DsToastHorizontalPosition,
+  DsToastPosition,
+  DsToastVerticalPosition,
+  ToastAction,
+  ToastEntry,
+  ToastOptions,
+  ToastPromiseMessages,
+  ToastRef,
+  ToastVariant,
+} from '@ids-group-ltd/ids-design-system/components/toast';
+export { ToggleButtonComponent } from '@ids-group-ltd/ids-design-system/components/toggle-button';
+export {
+  TooltipDirective,
+  TooltipPanelComponent,
+} from '@ids-group-ltd/ids-design-system/components/tooltip';
+export type { TooltipPlacement } from '@ids-group-ltd/ids-design-system/components/tooltip';
+export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar';
+export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree';
+export type { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree';
+export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w';
+export {
+  DS_CONFIG,
+  ICONS,
+  flattenDsOptions,
+  inheritDsConfig,
+  isDsOptionGroup,
+  provideDsConfig,
+} from '@ids-group-ltd/ids-design-system/core';
+export type {
+  DsConfig,
+  DsControlWidth,
+  DsOption,
+  DsOptionGroup,
+  DsOptionItem,
+  DsSize,
+  DsStatus,
+  DsStatusKey,
+  DsStatusRegistry,
+  DsTriggerDisplay,
+  IconName,
+} from '@ids-group-ltd/ids-design-system/core';
+export {
+  DS_ICON_REGISTRY,
+  IconComponent,
+  provideDsIcons,
+} from '@ids-group-ltd/ids-design-system/icons';
+export type { DsIconRegistry } from '@ids-group-ltd/ids-design-system/icons';
+export {
+  BodyScrollLockService,
+  DsOverlayCloseRef,
+} from '@ids-group-ltd/ids-design-system/overlay';
+export { provideDsTheme } from '@ids-group-ltd/ids-design-system/theme';
+export type { DsThemeOptions } from '@ids-group-ltd/ids-design-system/theme';

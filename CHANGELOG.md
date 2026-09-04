@@ -38,11 +38,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
-- **Some helpers are importable that are not API, and they say so.** An entry point has to export
-  whatever another entry point imports, which made 37 internal helpers, base classes and shared types
-  reachable — `devWarn`, `DsFieldBase`, `CalendarDayComponent` and the like. Each carries `@internal`, none
-  appears in the component reference, and none is covered by the versioning promise: they can change
-  or disappear in any release. Build on what the reference documents.
+- **The package root exports exactly what it exported before, name by name.** An entry point has to
+  export whatever another entry point imports, so 37 helpers, base classes and shared types are
+  reachable inside the package that were not reachable before — every one of them internal, each
+  carrying `@internal`, and none in the component reference. **None of them reaches the root:** it
+  re-exports the documented surface by name rather than re-exporting whole entry points, so
+  `import * as ds` and a barrel of your own see the same names as before and nothing new can collide.
+  Two subpaths, `…/components` and `…/core`, hold what the other entry points share; they exist so
+  those can resolve, they are internal, and nothing in them is covered by the versioning promise.
 
 ### What you can now DELETE
 
