@@ -333,14 +333,14 @@ this package ships under `migrations/`.
   overrides nothing and silently never runs. There is no public replacement to call — the countdown
   is the region's own business now. Delete the override.
 
-- **`components.md` documented a component that does not exist and four events that never fired.**
-  It carried a `<ds-dropdown>` entry through nine releases; that component was absorbed into
-  `<ds-select>` and an import written from the document fails to compile. Four documented event
-  names were never identifiers here: `ds-banner` and `ds-toast` emit `(closed)`, not `(dismissed)`;
-  `ds-pagination` emits `(currentPageChange)`, not `(pageChange)`; `ds-table` emits `(rowClicked)`,
-  not `(rowClick)`. An unknown event binding registers a DOM listener and never fires, so those
-  four handlers were silently dead with nothing in the console. `<ds-alert>` was missing from the
-  document entirely and is now in it, `'neutral'` variant included.
+- **Four event bindings are silently dead, and there is no `<ds-dropdown>`.** `ds-banner` and
+  `ds-toast` emit `(closed)`, not `(dismissed)`; `ds-pagination` emits `(currentPageChange)`, not
+  `(pageChange)`; `ds-table` emits `(rowClicked)`, not `(rowClick)`. An unknown event binding
+  registers a DOM listener and never fires, so a handler on one of those four runs never, with
+  nothing in the console — check your templates for them. `<ds-dropdown>` is not a component of
+  this library; its work is `<ds-select>`, and an import naming the other one does not compile.
+  `components.md` names the shipped identifiers throughout, and carries `<ds-alert>` with its
+  `'neutral'` variant.
 
 ### Fixed
 
@@ -1101,8 +1101,8 @@ workaround written against a hook that only landed in this release.
   a single ring, and the reset stays scoped to the field element, so `clear-btn` and
   `password-toggle` inside the same box keep their own rings; they are real tab stops.
 - **Fourteen public override tokens are now listed in the token reference.** They were always
-  overridable and nothing in the components changed — only the reference was missing them. Newly
-  listed and described: `--ds-container-pad-x`, `--ds-multi-select-border-color`
+  overridable and nothing in the components changed. Listed and described:
+  `--ds-container-pad-x`, `--ds-multi-select-border-color`
   (+`-focus`), `--ds-segmented-selected-bg-color` / `-label-color` / `--ds-segmented-radius`,
   `--ds-time-picker-option-bg-color-selected` / `-text-color-selected` / `-bg-color-hover`,
   `--ds-time-picker-trigger-bg-color` / `-border` / `-color`, `--ds-field-message-icon-offset` and
@@ -2207,8 +2207,7 @@ None of this is required — skipping it leaves working code that is merely redu
   `--ds-*` tokens it named no longer exist** (`--ds-button-fg`, `--ds-sidenav-item-bg-hover`, the
   whole `--ds-pagehdr-*` family, …), `ds-button` was described with its pre-2026-06 single `variant`
   axis (`'primary' | 'secondary' | 'tertiary' | …`) instead of `color` × `variant`, and the topbar
-  section documented a `--ds-topbar-margin-b` that **has never existed** — telling readers the
-  topbar owns the gap below it and that pages must not add their own.
+  section named a `--ds-topbar-margin-b` that this library does not define.
   Every name in the body is now the shipped one, and the two paragraphs are rewritten from the
   components' actual API.
 
