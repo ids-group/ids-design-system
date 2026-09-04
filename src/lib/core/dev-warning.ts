@@ -17,11 +17,11 @@ import { effect, isDevMode } from '@angular/core';
  * a minifier to fold it and drop the message with it, which `isDevMode()` — an opaque
  * call — can never allow. It cannot become a helper function for the same reason.
  *
- * **The intent is not currently delivered, and it is not understood why.** Measured on
- * `dist/ds-docs` (a production app build) and on the elements bundle: `ds-split-button`'s
- * guarded message is absent from both, while `ds-stat`'s — same guard — is present in
- * both. `ngDevMode` itself appears nowhere in either, so the expression IS folded. Do
- * not cite the guard as a size win until that difference is explained.
+ * It does work: in the shipped elements bundle both `ds-stat` and `ds-split-button`
+ * compile to `constructor(){}` — guard, closure and message all gone. `ds-toast-region`
+ * was the one caller without it and its message was in there as live code; the guard is
+ * now added, but the rebuilt bundle came out byte-identical, so that one strip is
+ * UNVERIFIED — re-check it on a clean `.angular/cache`.
  * @internal
  */
 export function devWarn(message: () => string | null): void {
