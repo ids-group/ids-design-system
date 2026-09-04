@@ -2,6 +2,24 @@
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
+- [x] **The "wrong element focuses" sweep, and what a gate can and cannot decide.** Ran 2026-09-04
+  after a consumer screenshot showed `ds-multi-select`'s panel filter ringing its bare input rather
+  than the row that carries the search icon. Confirmed against the tag rather than guessed: v0.12.0's
+  blanket was `outline: none; box-shadow: var(--ds-control-focus-shadow)`, and `.search-input` reset
+  only `outline`, which cannot cancel a shadow — so the base ring landed on the inner input.
+  Swept every `<input>` in the library against whether its component rings a shell, which found four
+  more of the same family, all now fixed: `ds-sidenav-footer`'s search box, `ds-table`'s column filter
+  and inline cell editor (each answering focus with a 1px border tint after killing the outline), and
+  `ds-dropzone`'s hidden input.
+  Two mechanical halves of this are now gated, each verified by planting a defect and watching the
+  gate exit 1: a shell that rings without silencing its control, and a focus rule that turns the
+  outline off and paints nothing. The gate also reads ds-docs and the portaled-panel sheet now,
+  because the sidebar toggle's clipped ring lived in neither of its old roots.
+  **What no gate decides:** whether the ringed element is the RIGHT one. A control that rings itself
+  correctly can still be the wrong choice — the selection-control bullseye is exactly that, and it
+  needs the deck's verdict, not a rule.
+
+
 - [ ] **[P2] `.design-sync/upload/_ds_bundle.css` is frozen against a rule the library no longer
   has.** `ddae60e0` regenerated it while `_focus.scss` still carried the resting transparent-outline
   rule; `5be96212` replaced that whole mechanism with `animation: ds-focus-ring-in`. The frozen
