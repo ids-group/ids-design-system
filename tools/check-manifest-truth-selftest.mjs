@@ -97,20 +97,36 @@ const readOnly = [
   ['0.11.3', 'four phantom output renames'],
   ['0.11.4', 'a widened type, filed as behavior rather than as a rename'],
 ];
-for (const [version, what] of readOnly) {
-  let got = 'green';
+const run = (version) => {
   try {
     execFileSync('node', ['tools/check-manifest-truth.mjs', version], {
       cwd: ROOT,
       encoding: 'utf8',
       stdio: 'pipe',
     });
+    return 'green';
   } catch {
-    got = 'red';
+    return 'red';
   }
+};
+
+for (const [version, what] of readOnly) {
+  const got = run(version);
   const ok = got === 'green';
   if (!ok) failed++;
   console.log(`${ok ? 'ok   ' : 'FAIL '} ${version} as it ships — ${what}: expected green, got ${got}`);
+}
+
+// A caller sees only the exit code, so a version the check could not look at has to fail. Both
+// shapes: no manifest of that name, and a manifest whose boundary does not exist.
+for (const [version, what] of [
+  ['9.9.9', 'no manifest of that name'],
+  ['0.1.0', 'the earliest tag, so no predecessor to diff against'],
+]) {
+  const got = run(version);
+  const ok = got === 'red';
+  if (!ok) failed++;
+  console.log(`${ok ? 'ok   ' : 'FAIL '} ${version} is uncheckable — ${what}: expected red, got ${got}`);
 }
 
 const fires = rules.filter((r) => r.expect === 'fire').length;

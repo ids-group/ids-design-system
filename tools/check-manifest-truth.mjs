@@ -173,14 +173,32 @@ const manifests = readdirSync(join(ROOT, 'migrations'))
   .filter((f) => !ONLY || f === `${ONLY}.json`)
   .sort();
 
+// "Nothing was checkable" must never read as "nothing is wrong". A caller — the auto-update plugin
+// asks for one version before trusting its manifest — sees only the exit code, so a version whose
+// tag, predecessor or tree is missing has to fail rather than pass silently. A clone without tags
+// is the likely way to hit it: every version becomes unskippable-but-unchecked at once.
+const skipped = [];
+let checked = 0;
+
 for (const file of manifests) {
   const version = file.replace('.json', '');
   const index = tags.indexOf(`v${version}`);
-  if (index < 1) continue;
+  if (index < 0) {
+    skipped.push(`${file}: no tag v${version} in this checkout`);
+    continue;
+  }
+  if (index === 0) {
+    skipped.push(`${file}: v${version} is the earliest tag, so there is no boundary to check`);
+    continue;
+  }
   const prev = tags[index - 1];
   const before = surfaceAt(prev);
   const after = surfaceAt(`v${version}`);
-  if (!before || !after) continue;
+  if (!before || !after) {
+    skipped.push(`${file}: could not read src/lib at ${!before ? prev : `v${version}`}`);
+    continue;
+  }
+  checked++;
 
   const doc = JSON.parse(readFileSync(join(ROOT, 'migrations', file), 'utf8'));
   for (const item of doc.items ?? []) {
@@ -189,7 +207,18 @@ for (const file of manifests) {
     unresolved.push(...verdict.unresolved.map((line) => `${file} ${item.id}: ${line}`));
   }
 }
-report(defects, unresolved, manifests.length);
+if (ONLY && !manifests.length) {
+  console.error(`check-manifest-truth: there is no migrations/${ONLY}.json to check.`);
+  process.exit(1);
+}
+if (!checked) {
+  console.error(
+    'check-manifest-truth: nothing could be checked, which is not the same as nothing being ' +
+      `wrong:\n  ${skipped.join('\n  ') || 'no published manifest found'}`,
+  );
+  process.exit(1);
+}
+report(defects, unresolved, checked, skipped);
 }
 
 // Exported so the selftest can exercise the rules against synthetic surfaces: the checkout is
@@ -256,8 +285,12 @@ export function checkItem(item, before, after, prevTag, tag) {
   return { defects, unresolved };
 }
 
-function report(defects, unresolved, count) {
+function report(defects, unresolved, count, skipped = []) {
   console.log(`check-manifest-truth: ${count} manifest(s) against ${surfaceCache.size} tree(s).`);
+  if (skipped.length) {
+    console.log(`\n${skipped.length} manifest(s) not checked:`);
+    for (const line of skipped) console.log(`  ${line}`);
+  }
   if (unresolved.length) {
     console.log(`\n${unresolved.length} name(s) neither tag declares — consumer examples, not checked:`);
     for (const line of unresolved) console.log(`  ${line}`);
