@@ -8,7 +8,7 @@
 <main>
   <header class="masthead">
     <div class="chips">
-      <span class="chip is-done">РЕШЕНО 2026-09-04 — директивы</span><span class="chip is-open">2 вердикта открыты</span>
+      <span class="chip is-done">РЕШЕНО 2026-09-04 — директивы</span><span class="chip is-done">РЕШЕНО 2026-09-04 — все три</span>
       <span class="chip">A3 построен, это отдельная работа</span>
     </div>
     <h1>Opt-in-шов — платить только за включённое</h1>
@@ -144,7 +144,7 @@ imports: [DsTable, DsTableResizable, DsTableExport]
     </p>
   </section>
 
-  <h2>Решение 2 — строка сообщения у кнопки</h2>
+  <h2>Решение 2 — строка сообщения у кнопки <span class="chip is-done">РЕШЕНО — директива</span></h2>
 
   <p class="lede" style="margin-top:0">
     <code>ds-button</code> умеет показать под собой hint/warning/error. Ради этого она тянет
@@ -175,9 +175,24 @@ imports: [DsTable, DsTableResizable, DsTableExport]
     </tbody>
   </table>
 
-  <p><b>Вердикт нужен один: директива или оставить.</b> Шов тот же, что у таблицы.</p>
+  <section class="panel verdict is-done">
+    <h3 style="margin-top:0">РЕШЕНО 2026-09-04 — за директиву <code>DsButtonMessage</code></h3>
+    <p>
+      Кнопка перестаёт импортировать <code>FieldMessageComponent</code>; директива приносит его сама
+      и рисует в слот кнопки через <code>ViewContainerRef</code>. Кто строкой не пользуется, платит 0.
+    </p>
+    <p style="margin-bottom:0">
+      <b><code>DS_CONFIG</code> заменить импорт не может</b>, и это не ограничение реализации:
+      флаг конфига — рантайм-значение, бандлер его не видит. Пока кнопка статически ссылается на
+      <code>FieldMessageComponent</code>, 11,3 кБ уезжают независимо от флага — в этом и весь
+      механизм экономии. Конфиг полезен после импорта: он несёт <b>дефолты</b> фичи, как это уже
+      сделано у <code>dsReserveMessages</code>, поэтому опции не повторяются на каждой кнопке.
+      Неснижаемая цена — одна строка в <code>imports</code> того компонента, чьи кнопки показывают
+      строку.
+    </p>
+  </section>
 
-  <h2>Решение 3 — CSS порталов</h2>
+  <h2>Решение 3 — CSS порталов <span class="chip">ОТЛОЖЕНО</span></h2>
 
   <p class="lede" style="margin-top:0">
     Глобальная таблица стилей везёт <b>2,8 кБ gzip</b>. Проверил, что из этого можно сделать
@@ -202,7 +217,7 @@ imports: [DsTable, DsTableResizable, DsTableExport]
   </p>
 
   <section class="panel verdict is-dead">
-    <h3 style="margin-top:0">Рекомендую отклонить</h3>
+    <h3 style="margin-top:0">ОТЛОЖЕНО 2026-09-04</h3>
     <p style="margin-bottom:0">
       1 кБ для гипотетического потребителя против ещё одного импорта в стартовом файле у всех остальных.
       Запись о том, что мерили и почему нет, остаётся.
