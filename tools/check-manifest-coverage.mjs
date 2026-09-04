@@ -17,8 +17,8 @@
 //   * An entry naming no public hook at all — purely visual or internal work needs no line.
 //   * An entry that SAYS FOR ITSELF that nothing changed for the consumer is exempt. What is being
 //     caught is DISAGREEMENT between the two records, and a block saying "nothing to do on your
-//     side" agrees with a silent manifest. 6 of 297 published non-Added entries carry such a
-//     phrase, so it is not a habitual escape hatch; a wrong one is a defect in the changelog.
+//     side" agrees with a silent manifest. Measured at about 2% of published non-Added entries, so
+//     it is not a habitual escape hatch; a wrong one is a defect in the changelog.
 //
 //   node tools/check-manifest-coverage.mjs              # the version being cut
 //   node tools/check-manifest-coverage.mjs --audit      # every published block, reports only
