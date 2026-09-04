@@ -123,7 +123,7 @@ node .design-sync/tools/check-section-coverage.mjs
 sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html .design-sync/upload/guides/*/*/*.html | sort -u | wc -l)
 echo "Upload artefacts: $cards card(s) for $declarations component(s) over $sections ds-docs section(s)"
 
-GENERATED=".design-sync/upload .design-sync/viewports.json .design-sync/live-cards.txt .design-sync/cards.lock.json"
+GENERATED=".design-sync/upload .design-sync/viewports.json .design-sync/live-cards.txt"
 
 # A release bumps the version, DS_VERSION carries it into the bundle, and the bundle is committed
 # — so every release leaves this tree a version behind. In CI that is committed; run by hand it

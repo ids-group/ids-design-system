@@ -11,7 +11,6 @@
 // and its hash recipes are unknown (`keyRecipe: 7` names a version we cannot reproduce). A wrong
 // value there is worse than a stale one: a hash that happens to match makes the next skill-driven
 // sync SKIP a file that did change. `_ds_manifest.json` IS ours — see build-manifest.mjs.
-import { createHash } from 'node:crypto';
 import {
   readFileSync,
   writeFileSync,
@@ -1116,29 +1115,6 @@ ordered.sort(
 writeFileSync(
   join(elements, 'gen', 'cards.json'),
   `${JSON.stringify({ generatedBy: 'build-cards.mjs', cards: ordered.map((entry) => entry.path) }, null, 2)}\n`,
-);
-
-// What CI compares INSTEAD of the card bytes: this repo commits them frozen, freezing needs a
-// browser, so a browserless build always produces live ones and comparing those says "stale" every
-// time. Fingerprinted as THIS script leaves them, which such a build reproduces.
-const fingerprints = {};
-const fingerprint = (dir, rel) => {
-  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) =>
-    a.name.localeCompare(b.name),
-  )) {
-    const next = `${rel}/${entry.name}`;
-    if (entry.isDirectory()) fingerprint(join(dir, entry.name), next);
-    else
-      fingerprints[next] = createHash('sha256')
-        .update(readFileSync(join(dir, entry.name)))
-        .digest('hex')
-        .slice(0, 16);
-  }
-};
-for (const top of ['components', 'guides']) fingerprint(join(OUT, top), top);
-writeFileSync(
-  join(syncDir, 'cards.lock.json'),
-  `${JSON.stringify({ generatedBy: 'build-cards.mjs', files: fingerprints }, null, 2)}\n`,
 );
 
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
