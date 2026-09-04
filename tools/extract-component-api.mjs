@@ -11,6 +11,7 @@ import {
   statSync,
   existsSync,
 } from 'node:fs';
+import { entryPoints } from './lib-entry-points.mjs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -272,20 +273,13 @@ function collectProps(classInfo, classIndex, aliases, seen = new Map()) {
   return seen;
 }
 
-// Class names the package actually exports, read from public-api.ts and the barrels
-// it names. Without it every @Component under src/lib/components lands in the
-// reference, including internal ones a consumer cannot import.
+// Class names the package actually exports. Every entry point's index is a barrel of
+// exactly what that entry point publishes, so the set of them is the public surface.
+// Without it every @Component under src/lib/components lands in the reference,
+// including internal ones a consumer cannot import.
 function exportedClassNames() {
-  const publicApi = join(ROOT, 'src/public-api.ts');
-  const barrels = [
-    ...readFileSync(publicApi, 'utf8').matchAll(/from '\.\/(lib\/[^']+)'/g),
-  ]
-    .map(([, relative]) => join(ROOT, `src/${relative}`))
-    // A specifier can be a folder barrel OR a bare module (`./lib/overlay/body-scroll-lock.service`).
-    // Only the folder form was tried, so a module-specifier export resolved to nothing.
-    .flatMap((base) =>
-      base.endsWith('.ts') ? [base] : [`${base}.ts`, join(base, 'index.ts')],
-    )
+  const barrels = entryPoints()
+    .map(({ index }) => index)
     .filter((candidate) => existsSync(candidate));
   const names = new Set();
   for (const barrel of barrels) {

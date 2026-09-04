@@ -1361,6 +1361,128 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "calendar-day": {
+    "key": "calendar-day",
+    "selector": "ds-calendar-day",
+    "isElement": true,
+    "className": "CalendarDayComponent",
+    "status": "stable",
+    "importName": "CalendarDayComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "selected",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The chosen day in single mode, or an end of the range in range mode. Drives `aria-selected`."
+      },
+      {
+        "name": "inRange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "A day BETWEEN the two ends of a range — tinted, but not itself selected."
+      },
+      {
+        "name": "rangeStart",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "First day of a range: rounds the leading corners and counts as selected."
+      },
+      {
+        "name": "rangeEnd",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Last day of a range: rounds the trailing corners and counts as selected."
+      },
+      {
+        "name": "today",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the current date. Independent of selection — today can be unselected."
+      },
+      {
+        "name": "muted",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Day from an adjacent month — dimmed."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Outside `minDate`/`maxDate` or rejected by `disabledDate` — dimmed and not clickable."
+      },
+      {
+        "name": "dataDay",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Stable key the date-picker uses to focus a specific day (roving tabindex)."
+      },
+      {
+        "name": "tabIndex",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "-1",
+        "required": false,
+        "description": "Roving tabindex: exactly one day in the grid carries 0, the rest -1, so Tab enters the grid once and arrows move within it."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Full spoken date (\"12 March 2026\"), since the cell text is only the day number."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "daySelected",
+        "kind": "output",
+        "type": "MouseEvent",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Click on an enabled day. Carries the event so the host can read modifier keys."
+      },
+      {
+        "name": "dayKeydown",
+        "kind": "output",
+        "type": "KeyboardEvent",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Key press on the focused day — the grid owns arrow/Home/End navigation, not the cell."
+      }
+    ]
+  },
   "card": {
     "key": "card",
     "selector": "ds-card",
@@ -2414,6 +2536,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Fills the container instead of hugging its segments."
+      }
+    ],
+    "outputs": []
+  },
+  "field-message": {
+    "key": "field-message",
+    "selector": "ds-field-message",
+    "isElement": true,
+    "className": "FieldMessageComponent",
+    "status": "stable",
+    "importName": "FieldMessageComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "text",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The one line under a field. Empty renders nothing (or reserved space, if the field asks)."
+      },
+      {
+        "name": "state",
+        "kind": "input",
+        "type": "FieldMessageState",
+        "union": [
+          "default",
+          "error",
+          "warning",
+          "success"
+        ],
+        "default": "'default'",
+        "required": false,
+        "description": "Which role the line is playing — hint, error, warning or success. Decides the colour."
+      },
+      {
+        "name": "messageId",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Id the field points `aria-describedby` at, so the message is announced with the control."
+      },
+      {
+        "name": "icon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Leading glyph. Unset resolves from the state through `DS_CONFIG.field.stateIcons` — error, warning and success carry one by default and the hint line does not. A name here overrides that for this message; `false` removes it."
+      },
+      {
+        "name": "reserve",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Reserve one line of height even when there's no `text`, so a field that gains/loses a message doesn't shift the layout below it."
       }
     ],
     "outputs": []
@@ -4619,6 +4804,37 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the progress bar (e.g. \"Upload progress\")."
+      }
+    ],
+    "outputs": []
+  },
+  "projection-dropped": {
+    "key": "projection-dropped",
+    "selector": "[dsProjectionDropped]",
+    "isElement": false,
+    "className": "ProjectionDroppedDirective",
+    "status": "stable",
+    "importName": "ProjectionDroppedDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsProjectionDropped",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "The host component's selector, named in the warning."
+      },
+      {
+        "name": "reason",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Overrides the `[label]` explanation for a host that drops content for another reason. Ends up after \"renders nothing — \"."
       }
     ],
     "outputs": []

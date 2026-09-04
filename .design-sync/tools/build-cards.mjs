@@ -14,6 +14,7 @@
 import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { resolveLibSpecifier } from '../../tools/lib-entry-points.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -52,20 +53,7 @@ const publicExports = (() => {
   const names = new Set();
   const seen = new Set();
 
-  const resolve = (from, specifier) => {
-    const base = join(dirname(from), specifier);
-    for (const candidate of [`${base}.ts`, join(base, 'index.ts')]) {
-      try {
-        readFileSync(candidate);
-
-        return candidate;
-      } catch {
-        /* try the next shape */
-      }
-    }
-
-    return null;
-  };
+  const resolve = (from, specifier) => resolveLibSpecifier(from, specifier);
 
   const declaredIn = (source) => {
     for (const [, name] of source.matchAll(/export\s+(?:abstract\s+)?class\s+(\w+)/g)) {
