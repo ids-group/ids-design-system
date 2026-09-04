@@ -111,7 +111,7 @@
   reduced motion does not touch.
 
 
-- [ ] **[P1] A selected radio, checkbox or switch reads as a bullseye while focused.** Measured from
+- [x] **[P1] A selected radio, checkbox or switch reads as a bullseye while focused.** FIXED — Measured from
   the tokens, not from a screenshot: on a 20px glyph the checked+focused radio paints, centre outward,
   a 10px accent dot, 3px of white, a 2px accent border, a 2px unpainted gap and a 2px accent outline —
   three brand bands separated by two white ones, concentric and equally spaced. It passes WCAG 2.4.13:
@@ -139,7 +139,7 @@ fix. The record cannot be corrected (a published manifest is frozen, `AUTHORING.
 `CONTRIBUTING.md:168-174` forbids describing it in a new entry, so the new item carries `supersedes`
 and says nothing about the old one. Measured on three grounds: `presentations/focus-ring-gap.png`.
 
-- [ ] **[P1] Move the focus ring from `box-shadow` to `outline` + `outline-offset` (major).** The gap
+- [x] **[P1] Move the focus ring from `box-shadow` to `outline` + `outline-offset` (major).** DONE The gap
   now painted by `--focus-ring-inner: var(--surface-default)` is a GUESS: it is right on a card and
   visibly wrong on the canvas or any tinted band, because a shadow layer can only cover, never let
   the real ground through. An outline's offset region is simply not painted, so the gap shows
@@ -150,7 +150,7 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   after the switch. Note it does not fix the six clipped-ring findings — an outline is clipped by an
   ancestor's `overflow` exactly like a shadow.
 
-- [ ] **[P1] forced-colors needs the cause removed, not the symptom overpowered.** The floor rule in
+- [x] **[P1] forced-colors needs the cause removed, not the symptom overpowered.** DONE — the The floor rule in
   `styles/_focus.scss` now carries `!important`, which contradicts that file's own stated contract —
   it is written at zero specificity precisely so a component or a consumer still wins. The honest
   shape is an `own-indicator` mixin emitting `outline: none` inside
