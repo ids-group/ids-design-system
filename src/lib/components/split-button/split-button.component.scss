@@ -15,6 +15,11 @@
      half must adopt the surface it sits on. */
   --_split-button-outline-bg-color: var(--ds-split-button-outline-bg-color, transparent);
   --_split-button-outline-border-color: var(--ds-split-button-outline-border-color, var(--border-default));
+
+  /* Press mirrors ds-button: darken plus a micro scale-down. */
+  --_split-button-bg-color-active: var(--ds-split-button-bg-color-active, color-mix(in srgb, var(--_split-button-bg-color) 76%, black));
+  --_split-button-outline-bg-color-active: var(--ds-split-button-outline-bg-color-active, var(--surface-muted));
+  --_split-button-press-scale: var(--ds-split-button-press-scale, 0.98);
 }
 
 .main,
@@ -37,6 +42,12 @@
     background-color var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard);
 
+  /* Scaled away from the seam, not about the half's own centre: a centred scale pulls the
+     pressed half's inner edge inward and opens a hairline gap in the joint. */
+  &:active:not(:disabled) {
+    transform: scale(var(--_split-button-press-scale));
+  }
+
   &:focus-visible {
     @include focus.ring;
 
@@ -55,6 +66,7 @@
   padding: 0 var(--space-4);
   border-top-left-radius: var(--radius-md);
   border-bottom-left-radius: var(--radius-md);
+  transform-origin: right center;
 }
 
 .toggle {
@@ -62,6 +74,7 @@
   margin-left: var(--btn-group-overlap);
   border-top-right-radius: var(--radius-md);
   border-bottom-right-radius: var(--radius-md);
+  transform-origin: left center;
 }
 
 .chevron {
@@ -82,6 +95,10 @@
 :host(.primary) .toggle:not(:disabled):hover {
   background: var(--_split-button-bg-hover-color);
 }
+:host(.primary) .main:not(:disabled):active,
+:host(.primary) .toggle:not(:disabled):active {
+  background: var(--_split-button-bg-color-active);
+}
 :host(.primary) .toggle:not(:disabled) {
   border-left: var(--border-width-default) solid var(--_split-button-divider-color);
 }
@@ -96,4 +113,8 @@
 :host(.outline) .main:not(:disabled):hover,
 :host(.outline) .toggle:not(:disabled):hover {
   background: var(--surface-secondary);
+}
+:host(.outline) .main:not(:disabled):active,
+:host(.outline) .toggle:not(:disabled):active {
+  background: var(--_split-button-outline-bg-color-active);
 }

@@ -43,6 +43,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`ds-menu`'s class gained a member — only matters if you SUBCLASS it.** `MenuComponent` gained
+  `anyIcon`, which it computes over its content children. It is not public API and not a signal
+  input; a subclass that declares the same name stops building.
+
+
 - **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the
   ring's geometry is already in place, so nothing shifts and the indicator lands where it will stay.
   `outline-offset` is deliberately not animated: an expanding ring lags the caret on a fast Tab, and
@@ -60,6 +65,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   The panel can only ever be the `ds-menu` built from `menuItems` — nothing projects into it, and
   anything else composes from `ds-button` and `ds-popover`. Content you project into
   `ds-split-button` itself still lands on the main button, as before.
+
+### Fixed
+
+- **A `ds-menu` row without an icon started one icon-width left of its neighbours.** `.menu-item` is
+  a flex row with a gap, and an item that projected no icon collapsed its wrapper to zero width while
+  the gap stayed, so a mixed menu had two text axes and an unindented row read as a different kind of
+  thing. The menu decides it now rather than the item — an item cannot see its siblings — so one
+  item with an icon makes every item reserve the slot. A menu with no icons anywhere is unchanged and
+  stays flush to its padding. `--ds-menu-item-icon-size` still sets the width the slot reserves.
+
+- **`ds-split-button` answers a press on either half.** Both segments were missing the darken-plus-
+  micro-scale that every other button in the library gives a press, so the one control built from two
+  buttons was the one that felt dead under the finger. Each half now darkens through
+  `--ds-split-button-bg-color-active` (or `--ds-split-button-outline-bg-color-active` on the outline
+  variant) and scales by `--ds-split-button-press-scale`. The scale runs AWAY from the seam —
+  `transform-origin` is the inner edge on each half — because a centred scale pulls the pressed half's
+  inner edge inward and opens a hairline gap in the joint.
 
 ## 0.12.0 — 2026-09-04
 
@@ -774,10 +796,9 @@ this package ships under `migrations/`.
   component's own tokens. Its option row carries only `[disabled]` where `ds-select` sets
   `.is-disabled` beside it, which is why it still declares an `.option:disabled` of its own.
 
-- **BREAKING if you set it: `triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name
-  says what the trigger shows, which matters once `labels` sits beside it. The union is exported as
-  `DsTriggerDisplay` — `'full' | 'count' | 'labels'` — so a variable typed against it fails to
-  compile rather than passing a dead string.
+- **The `triggerDisplay` union is exported as `DsTriggerDisplay`** — `'full' | 'count' | 'labels'`.
+  A variable typed against it fails to compile rather than passing a dead string, and each name says
+  what the trigger shows, which is what matters once `labels` sits beside `count`.
 
 - **Every single-line label clips through one mixin now.** Seven rules hand-rolled
   `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — the `ds-select` trigger text,
@@ -3543,7 +3564,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 ### Changed
 
 - **BREAKING: the control `size` scale is unified into one shared `DsSize` type.** The per-component
-  size types (`InputSize`, `ButtonSize`, `SelectSize`, `SearchSize`, `CheckboxSize`, `RadioSize`,
+  size types (`InputSize`, `ButtonSize`, `SelectSize`, `CheckboxSize`, `RadioSize`,
   `SwitchSize`, `SpinnerSize`, `TextareaSize`, `NumberStepperSize`, `DatePickerSize`, `TimePickerSize`,
   `DrawerSize`, `IconButtonSize`, `AutocompleteSize`) are removed from the public API — import
   `DsSize` instead (`type DsSize = 'sm' | 'md' | 'lg'`, exported from the package root). `AvatarSize`,
@@ -4076,17 +4097,16 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   type-to-pick control; "combobox" survives only as the ARIA role — which the select-only
   `ds-select` trigger also carries. Renames: selector `ds-combobox` → `ds-autocomplete`;
   `ComboboxComponent` → `AutocompleteComponent`; exported types `ComboboxOption` /
-  `ComboboxOptionGroup` / `ComboboxSize` / `ComboboxWidth` → `AutocompleteOption` /
-  `AutocompleteOptionGroup` / `AutocompleteSize` / `AutocompleteWidth`; public tokens
+  `ComboboxSize` → `AutocompleteOption` / `AutocompleteSize`; public tokens
   `--ds-combobox-focus-shadow` / `--ds-combobox-maxw` / `--ds-combobox-input-minw` →
   `--ds-autocomplete-*`. Behavior unchanged.
 - **`ds-dropdown` removed — use `ds-select`.** The two were near-identical select-only single
   pickers (same trigger, same panel, same keyboard model); `ds-select` is the richer canonical
   form field (`ControlValueAccessor`, `invalid` + `hint` via `ds-field-message`, `required` /
   `optional`, per-option icons, group-level `disabled`). Migration: `<ds-dropdown>` →
-  `<ds-select>`; `[error]` → `[invalid]`; `[optionGroups]="groups"` → pass groups inline in
-  `[options]` (`SelectItem = SelectOption | SelectOptionGroup`); `DropdownOption` /
-  `DropdownOptionGroup` / `DropdownSize` → `SelectOption` / `SelectOptionGroup` / `SelectSize`.
+  `<ds-select>`; `[error]` → `[invalid]`; `DropdownOption` / `DropdownSize` → `SelectOption` /
+  `SelectSize`. Groups go inline in `[options]`, which is what `ds-select` already took
+  (`SelectItem = SelectOption | SelectOptionGroup`).
   `readOnly` moved to `ds-select` (see Added).
 - **Public token prefixes normalized to match the selector (not aliased).** Four components had
   their `--ds-*` token name fragments hyphenated to align with the Angular selector; the old

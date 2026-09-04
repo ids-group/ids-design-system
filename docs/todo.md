@@ -2,6 +2,26 @@
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
+- [ ] **[P2] `_focus.scss` ships a full copy of its top-level CSS in every component bundle.**
+  Measured 2026-09-04 in `dist/ds/fesm2022/…-components-card.mjs`: the card bundle carries the
+  blanket `:where(:focus-visible)` rule, the resting-ring rule, the whole `data-focus` switch and
+  the forced-colors block — none of which the card uses. 48 component stylesheets `@use` the
+  partial for its mixins, and each is a separate Sass compilation, so each emits the module's
+  top-level CSS again. `docs/agent/foundations/global-helper-classes.md` states the opposite in
+  writing: "reaching for the mixin adds no CSS." Same shape for any partial that mixes mixins with
+  top-level rules — check `_press.scss`, `_dropdown-overlay.scss` and `_link.scss` before deciding
+  the fix. The split is the likely answer: mixins in one partial, emitted rules in another that only
+  the global aggregate uses.
+
+- [ ] **[P3] Motion cannot be verified on this machine, and it fails silently.** Windows reports
+  `SPI_GETCLIENTAREAANIMATION = False` (Settings → Accessibility → Visual effects → Animation
+  effects is off), so every Chrome here answers `prefers-reduced-motion: reduce` and drops CSS
+  transitions wholesale — `getAnimations()` returns empty even with a 600ms duration forced past the
+  token. A 0ms-vs-600ms control shows no difference, so a run reads as "no animation" whether the
+  CSS is right or wrong: the measurement is void, not negative. Anything animated has to be verified
+  with that setting on, or by reading the cascade (`transitionProperty`) rather than the result.
+
+
 - [ ] **[P1] A selected radio, checkbox or switch reads as a bullseye while focused.** Measured from
   the tokens, not from a screenshot: on a 20px glyph the checked+focused radio paints, centre outward,
   a 10px accent dot, 3px of white, a 2px accent border, a 2px unpainted gap and a 2px accent outline —
