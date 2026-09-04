@@ -174,6 +174,18 @@ for (const [name, manifest] of manifests) {
 
     if (item.kind === 'value-remap') {
       if (!item.map || typeof item.map !== 'object') at('M014', 'value-remap without a `map`');
+      // A bare map value differing from its key is undecidable for an applier: full token
+      // (contains `=`), null (drop), or key==value (the bare-boolean-attribute convention) are
+      // the three legal shapes. Shipped once (0.11.1) and it read as "replace the token with
+      // a dead word".
+      for (const [key, value] of Object.entries(item.map ?? {})) {
+        if (value !== null && !String(value).includes('=') && String(value) !== key) {
+          at('M043', `map["${key}"] is a bare value that is not the key — use the full-token form`);
+        }
+      }
+      if (typeof item.old === 'string' && !/^[a-z][a-z0-9-]*\[[^\]]+\]$/.test(item.old)) {
+        at('M044', 'a value-remap `old` must be element-scoped (`element[attr]`) — a shared attribute name false-positives on other components');
+      }
     } else if (item.map) {
       at('M015', '`map` is only for value-remap');
     }
@@ -325,8 +337,10 @@ for (const [name, manifest] of manifests) {
   // holds any unrelated `deleteList` entry.
   // Two patterns, not one: a phrasing that names WHAT goes needs no subject, and requiring one
   // is what kept every third-person spelling from ever matching.
+  // The subject and "can go" may be separated by a clause ("that override was doing nothing and
+  // can go") — a contiguous-only match shipped exactly that instruction with an empty deleteList.
   const DELETE_SELF =
-    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround) can go\b|\bcan now be removed\b|\b(?:is|are) no longer needed\b|\bdelete that\b|\bremove it\b/i;
+    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround)\b[^.;!?]{0,60}\bcan go\b|\bcan now be removed\b|\b(?:is|are) no longer needed\b|\bdelete that\b|\bremove it\b/i;
   const DELETE_BY_SUBJECT =
     /\b(?:you|consumers?|apps?|callers?) (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b/i;
   const DELETE_MARKER = /\(DELETE-LIST\)|DELETE-LIST MATERIAL|^DELETE-LIST/;

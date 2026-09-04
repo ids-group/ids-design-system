@@ -62,6 +62,8 @@ const mutations = {
   M035: (m) => delete m.deleteList[0].replaceWith,
   M036: (m) => (m.deleteList[0].id = 'Not_Kebab'),
   M034: (m) => { const i = m.informational.findIndex((s) => s.includes('(delete list:')); m.informational[i] = m.informational[i].replace(/ \(delete list: [a-z0-9-]+\)/, ''); },
+  M043: (m) => { const i = m.items.find((x) => x.kind === 'value-remap') ?? m.items[0]; i.kind = 'value-remap'; i.old = 'ds-x[attr]'; i.map = { compact: 'count' }; },
+  M044: (m) => { const i = m.items.find((x) => x.kind === 'value-remap') ?? m.items[0]; i.kind = 'value-remap'; i.map = { a: 'attr="b"' }; i.old = 'attr="a"'; },
 };
 
 const dead = [];

@@ -154,14 +154,14 @@
     {
       "id": "trigger-display-compact-renamed",
       "kind": "value-remap",
-      "old": "triggerDisplay=\"compact\"",
+      "old": "ds-multi-select[triggerDisplay]",
       "new": "triggerDisplay=\"count\"",
       "map": {
-        "compact": "count"
+        "compact": "triggerDisplay=\"count\""
       },
       "action": "Replace the value `compact` with `count`.",
       "note": "A third value, `labels`, now sits beside it and names the selection instead of counting it, so the old name no longer said which of the two it was.",
-      "appliesWhen": "You set triggerDisplay on a ds-multi-select. The input shipped inside this same unreleased block, so only work in flight is affected.",
+      "appliesWhen": "You set triggerDisplay on a ds-multi-select. The input itself first shipped in 0.11.1, so only code written against a pre-release build can carry the old value.",
       "pitfall": "None — the rendering of `count` is exactly what `compact` did.",
       "searchHints": [
         "triggerDisplay"
