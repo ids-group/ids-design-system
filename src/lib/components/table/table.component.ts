@@ -40,6 +40,7 @@ import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu'
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { CellTemplateDirective } from './cell-template.directive';
 import { HeaderFilterDirective } from './header-filter.directive';
+import { DsTableLayout } from './table-layout';
 import type {
   SortChangeEvent,
   SortDir,
@@ -141,6 +142,7 @@ function compareSortValues(
     '[class.sticky-scrollbar]': 'stickyScrollbarResolved()',
     '[class.resizable]': 'resizableColumns()',
   },
+  providers: [DsTableLayout],
 })
 export class TableComponent<T extends object> {
   /** Rows to render. */
@@ -581,9 +583,13 @@ export class TableComponent<T extends object> {
     },
   );
 
+  protected readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
+
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
-    this.orderedColumns().filter(
-      (col) => !this.effectiveHiddenKeys().has(col.key),
+    this.layout.foldColumns(
+      this.orderedColumns().filter(
+        (col) => !this.effectiveHiddenKeys().has(col.key),
+      ),
     ),
   );
 
@@ -1099,7 +1105,7 @@ export class TableComponent<T extends object> {
         : new Map<string, ReadonlySet<string>>();
     const columns = this.columns();
     if (!query && setFilters.size === 0) {
-      return this.data();
+      return this.layout.foldRows(this.data());
     }
     const marked = columns.filter((col) => col.filterable);
     const scope = marked.length ? marked : columns;
@@ -1199,6 +1205,10 @@ export class TableComponent<T extends object> {
   protected readonly statusMessage = computed<string>(() => {
     if (this.loadingMode() !== false) {
       return 'Loading…';
+    }
+    const contributed = this.layout.status();
+    if (contributed) {
+      return contributed;
     }
     const events = this.eventMessages();
     // The export line holds the region until the events line has something NEW to say, so
