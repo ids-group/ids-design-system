@@ -99,37 +99,26 @@
   // scales + fades in/out — a checked-only ::after would just pop in.
   &::after {
     content: "";
-    transform: scale(0.6);
-    opacity: 0;
-    transform-origin: center;
-    transition: transform var(--duration-fast) var(--ease-standard),
-                opacity var(--duration-fast) var(--ease-standard);
+
+    @include check-mark.mark;
   }
 
   &:checked {
     background: var(--_checkbox-selected-bg);
     border-color: var(--_checkbox-selected-border);
-    &::after {
-      content: "";
-
-      @include check-mark.mark;
-
-      transform: scale(1);
-      opacity: 1;
-    }
+    &::after { @include check-mark.shown; }
   }
 
   &:indeterminate {
     background: var(--_checkbox-selected-bg);
     border-color: var(--_checkbox-selected-border);
     &::after {
-      content: "";
+      @include check-mark.shown;
+
       width: var(--check-indet-w);
       height: var(--check-indet-h);
       background: var(--icon-on-primary);
       border-radius: var(--ds-radius-inner);
-      transform: scale(1);
-      opacity: 1;
     }
   }
 }

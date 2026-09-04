@@ -41,6 +41,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   does. `ring`, `edge` and `inset` keep their meaning, and `edge` is the tight-ring answer that
   `field` was reached for. An unknown value matches nothing and is ignored in silence.
 
+### Added
+
+- **The check mark overshoots as it lands, and its motion is now four tokens.** A tick that scaled
+  in on a flat ease read as a state flag; it now arrives on `--ease-spring` over 180ms and leaves on
+  `--ease-accelerate` over 120ms, so it settles rather than snaps. The timing is a motion ROLE —
+  `--ds-motion-check-enter-duration`, `--ds-motion-check-enter-easing`, `--ds-motion-check-exit-duration`,
+  `--ds-motion-check-exit-easing` — with per-scope hooks `--ds-check-mark-*` beneath it, so a dense
+  option list can stay calm while forms overshoot. The previous motion and the one block that restores
+  it are written down in `docs/check-mark-motion.md`. Both durations resolve through the `--duration-*`
+  scale, which `prefers-reduced-motion` already zeroes, so the mark goes instant on its own.
+- **`ds-radio` accepts `[deselectable]`,** which lets a checked STANDALONE radio be cleared by
+  clicking it again. Off by default and ignored inside `ds-radio-group`, where clearing the one
+  selected option would leave the group with no value through a gesture the group cannot see.
+
 ### Changed
 
 - **`ds-menu`'s class gained a member — only matters if you SUBCLASS it.** `MenuComponent` gained

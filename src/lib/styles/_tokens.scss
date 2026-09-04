@@ -152,6 +152,15 @@
   --ds-motion-exit-large-duration:    var(--duration-base);
   --ds-motion-exit-large-easing:      var(--ease-accelerate);
 
+  /* The check mark landing in a box. Its own role because the mark overshoots and
+     nothing else at this scale does: --ease-spring exists for exactly this and is
+     documented as sparing. Enter and exit differ so the mark leaves faster than it
+     arrives, which is what makes the overshoot read as weight rather than as lag. */
+  --ds-motion-check-enter-duration:   var(--duration-base);
+  --ds-motion-check-enter-easing:     var(--ease-spring);
+  --ds-motion-check-exit-duration:    var(--duration-fast);
+  --ds-motion-check-exit-easing:      var(--ease-accelerate);
+
   --opacity-disabled:        0.5;
   --opacity-text-disabled:   0.38;  /* WCAG-derived */
   --opacity-scrim:           0.55;
