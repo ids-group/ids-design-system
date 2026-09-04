@@ -191,9 +191,30 @@ comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
   block order and the id renumbering differ every run, and all 377 files rewrite
   with no change in them. Two consecutive freezes must leave `git status` empty.
 - **A built section is not a settled one.** Components that measure write their
-  result a frame or two later — Table's sticky scrollbar pins `.scroll-wrap` to a
-  computed height — so the tidy pass waits for `document.fonts.ready` and two
-  frames before it marks the page. Without that, one card in 376 froze mid-measure.
+  result later — Table's sticky scrollbar pins `.scroll-wrap` to a computed height —
+  so the tidy pass waits for `document.fonts.ready` and then for the DOM to stop
+  changing (a MutationObserver with a 150 ms quiet window, 5 s cap). Counting frames
+  instead froze that one card three different ways in three runs.
+
+### The two gates that keep CI from thawing it
+
+CI runs `build:upload` in an image with no browser, so its cards come out LIVE while
+this repo commits them FROZEN. Byte-comparing those said "stale" on every run, and on
+the branch where `BITBUCKET_BUILD_NUMBER` is set the script does not fail on that — it
+COMMITS, as the release bot. So the next release would have undone the freeze.
+
+- **`.design-sync/cards.lock.json` is what CI compares instead.** `build-cards` writes
+  it: a sha256 prefix per file it generates under `components/` and `guides/`. It
+  fingerprints the cards as build-cards leaves them, which is exactly what a browserless
+  build reproduces — so it moves when a card's SOURCE moves and stays put when only the
+  freeze is missing. If it moved, CI fails and names the local commands to run; it must
+  not try to build the frozen cards itself.
+- **`check-frozen.mjs` asserts the split.** Every card outside `live-chapters.txt` must
+  have no `<script>`, every card inside it must have one. No browser needed, so CI runs
+  it after restoring the frozen copies from git.
+- **`_ds_cards.css` is restored with the cards.** `build-cards` wipes the directory and
+  only `snapshot-cards` writes that file, so restoring `components/` and `guides/` alone
+  leaves a DELETION for the release commit to pick up.
 - **Whitespace is collapsed IN THE PAGE, never by a regexp over the file.**
   `white-space: pre|pre-wrap|pre-line` is live in five places here, so the tidy
   pass walks text nodes and asks `getComputedStyle` which is which. A file-level
@@ -388,7 +409,7 @@ the plan. The upload stays a local step with a human approving the paths.
 ## What lives remotely, and what this repo commits
 
 The repo commits the sync inputs — `docs/`, `elements/`, `tools/`,
-`config.json`, `viewports.json`, `conventions.md` — **and** the built tree at
+`config.json`, `viewports.json`, `cards.lock.json`, `conventions.md` — **and** the built tree at
 `upload/`, so a release commit carries exactly what a publish sends and CI can
 fail on a stale copy. `_ds_manifest.json` is in there too since we started writing
 it ourselves. `_ds_sync.json` is the only file in the project this repo does not

@@ -26,6 +26,21 @@ the release commit — one timeline, two audiences.
   anything longer in the note.
 - **The last five cards lose the eyebrow**, and a part no longer republishes the chapter it
   belongs to.
+- **376 of 409 cards ship as static HTML instead of an Angular application.** A card is a whole
+  document, and every one of them downloaded the 2.12 MB bundle and booted its own application:
+  807 ms for a Table card, 450 ms for a Button one, in every tile of the grid at once.
+  `snapshot-cards.mjs` renders each card and writes back the settled DOM with the scripts stripped,
+  which takes a card to 35 ms and, warm, to about 20 ms and zero bytes. Nothing renders
+  differently — the theme tokens stay in `_ds_bundle.css`, so the pane switching `data-theme` still
+  recolours a frozen card, and all 409 declared heights are unchanged. What is lost is behaviour,
+  so the chapters whose demos open on a click are listed in `live-chapters.txt` and stay live:
+  toast, drawer, modal, popover, bottom-sheet, tree, loading-overlay, scrollbar.
+- **The 185 distinct component stylesheets are one linked file.** Angular inlines a component's
+  styles into every document that renders it — 4005 `<style>` tags across the tree, 10.3 MB, only
+  473 KB of them distinct. They are scoped by attribute and therefore position-independent, so they
+  concatenate into `_ds_cards.css`, fetched once for the whole grid instead of parsed inside each
+  card. With the scaffolding comments and the Angular component ids trimmed too, the tree is
+  20 MB → 9.0 MB.
 
 ### Removing a file from the shared project
 
@@ -38,3 +53,16 @@ the release commit — one timeline, two audiences.
 
 - **The upload tree is rebuilt against each release** inside the release commit, so the tag and
   the shipped cards agree.
+- **A release build can no longer thaw the committed cards.** Freezing needs a browser the CI image
+  does not have, so a CI build produces live cards while this repo commits frozen ones — and the
+  byte comparison that followed said "stale" every time, which on the release branch means the bot
+  COMMITS rather than fails. `build-cards` now writes `.design-sync/cards.lock.json`, a fingerprint
+  per generated file that a browserless build reproduces exactly, and CI compares that instead: it
+  moves when a card's source moves and stays put when only the freeze is missing. The frozen copies
+  and `_ds_cards.css` are then restored from git, and `check-frozen.mjs` asserts that every card
+  outside `live-chapters.txt` really is static.
+- **The freeze is reproducible.** Five render lanes finish out of order, so the results are read
+  back in `cards.json` order; without that the shared stylesheet's block order and the shortened
+  component ids differed every run and rewrote all 377 files with no change in them. The tidy pass
+  also waits for the DOM to stop changing rather than counting frames — the sticky-scrollbar card
+  had frozen three different ways in three runs.
