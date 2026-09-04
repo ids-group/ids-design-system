@@ -211,6 +211,10 @@
     .tick {
       @include check-mark.mark;
     }
+
+    &.checked .tick {
+      @include check-mark.shown;
+    }
   }
 
   .create-row {

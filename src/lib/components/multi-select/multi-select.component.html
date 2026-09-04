@@ -225,9 +225,7 @@
           [class.checked]="allFilteredSelected()"
           [class.indeterminate]="someFilteredSelected()"
         >
-          @if (allFilteredSelected()) {
-            <span class="tick"></span>
-          } @else if (someFilteredSelected()) {
+          <span class="tick"></span> @else if (someFilteredSelected()) {
             <span class="dash"></span>
           }
         </span>
@@ -292,9 +290,7 @@
                   [class.checked]="groupAllSelected(item)"
                   [class.indeterminate]="groupSomeSelected(item)"
                 >
-                  @if (groupAllSelected(item)) {
-                    <span class="tick"></span>
-                  } @else if (groupSomeSelected(item)) {
+                  <span class="tick"></span> @else if (groupSomeSelected(item)) {
                     <span class="dash"></span>
                   }
                 </span>
@@ -328,9 +324,7 @@
                       class="checkbox"
                       [class.checked]="isSelected(option.value)"
                     >
-                      @if (isSelected(option.value)) {
-                        <span class="tick"></span>
-                      }
+                      <span class="tick"></span>
                     </span>
 
                     @if (option.icon) {
@@ -382,9 +376,7 @@
                 class="checkbox"
                 [class.checked]="isSelected(option.value)"
               >
-                @if (isSelected(option.value)) {
-                  <span class="tick"></span>
-                }
+                <span class="tick"></span>
               </span>
 
               @if (option.icon) {

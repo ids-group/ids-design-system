@@ -7,5 +7,19 @@
 @mixin mark {
   width: var(--check-tick-size);
   height: var(--check-tick-size);
+
+  // Always rendered, so it can scale and fade rather than pop: an element that does not exist has
+  // no resting state to transition from. `.checked` on the box is what brings it in.
+  transform: scale(0.6);
+  opacity: 0;
+  transform-origin: center;
+  transition: transform var(--duration-fast) var(--ease-standard),
+              opacity var(--duration-fast) var(--ease-standard);
   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+}
+
+// The entered state, for a box that carries `.checked` rather than a `:checked` input.
+@mixin shown {
+  transform: scale(1);
+  opacity: 1;
 }

@@ -254,6 +254,11 @@
   @include check-mark.mark;
 }
 
+.checkbox.checked .tick,
+.checkbox.indeterminate .tick {
+  @include check-mark.shown;
+}
+
 .checkbox .dash {
   width: var(--check-indet-w);
   height: var(--check-indet-h);
