@@ -1,20 +1,17 @@
 #!/usr/bin/env node
 // Every other manifest check reads the JSON. This one reads the TREE, at the boundary the manifest
 // describes: `migrations/X.json` is checked against `v<prev>..vX`, never against HEAD. An item can
-// be perfectly shaped and still name a token that never existed — 0.2.0 shipped that and it was
-// found by hand, after the rule had been written into three documents and no tool.
+// be perfectly shaped and still name a token that never existed — 0.2.0 shipped that.
 //
 // Three claims per item, and each one is a different way of being wrong:
 //   * `old` must resolve at v<prev>            — or there is nothing to migrate FROM
 //   * `old` must be GONE at vX, for a rename or a removal   — or the change did not happen
 //   * `new` must resolve at vX                 — or the target does not exist
 //
-// Resolution is STRUCTURAL, not a text search, because the first attempt at this was textual and
-// produced 77 findings that were nearly all its own fault: it asked whether `ds-tabs` had vanished
-// for an item that renames one of its OUTPUTS, and `variant` as a bare word lives on a dozen
-// components. So each tag is parsed into a surface — selectors with their inputs and outputs,
-// exported symbols, custom properties, CSS class names — and `ds-tabs[tabClose]` is asked of
-// `ds-tabs` specifically.
+// Resolution has to be STRUCTURAL rather than textual: `variant` as a bare word lives on a dozen
+// components, and an item that renames one of `ds-tabs`'s OUTPUTS leaves the element itself in
+// place. So each tag is parsed into a surface — selectors with their inputs and outputs, exported
+// symbols, custom properties, CSS class names — and `ds-tabs[tabClose]` is asked of `ds-tabs`.
 //
 //   node tools/check-manifest-truth.mjs             # every published manifest
 //   node tools/check-manifest-truth.mjs 0.11.4      # one of them
@@ -36,8 +33,7 @@ const git = (args) =>
 const tags = git(['tag', '--list', 'v*', '--sort=v:refname']).split('\n').filter(Boolean);
 
 // One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
-// and the per-spawn cost dominates everything else. Nothing is written to disk — `git archive`
-// piped to `tar` was the first shape and `tar` will not take the buffer on Windows.
+// and the per-spawn cost dominates everything else. Nothing is written to disk.
 function readTreeAt(tag) {
   let paths;
   try {
@@ -120,7 +116,6 @@ function surfaceAt(tag) {
   return surface;
 }
 
-// What an `old`/`new` value claims, and how to ask the surface about it.
 function claims(value) {
   if (typeof value !== 'string' || !value.trim()) return [];
   const text = value.trim();
@@ -189,11 +184,6 @@ for (const file of manifests) {
 
   const doc = JSON.parse(readFileSync(join(ROOT, 'migrations', file), 'utf8'));
   for (const item of doc.items ?? []) {
-    // An item may legitimately name something that never existed: four 0.11.3 items rename an
-    // output the catalogue promised and the component never had. The tell is that `new` DOES
-    // resolve — the consumer is being moved off a phantom onto the real name.
-    // For a member rename `new` is a bare member name on the SAME element — `ds-banner[dismissed]`
-    // becomes `"closed"`, not a second element-scoped string — so it is read against that element.
     const verdict = checkItem(item, before, after, prev, `v${version}`);
     defects.push(...verdict.defects.map((line) => `${file}  ${item.id}\n      ${line}`));
     unresolved.push(...verdict.unresolved.map((line) => `${file} ${item.id}: ${line}`));
@@ -202,10 +192,8 @@ for (const file of manifests) {
 report(defects, unresolved, manifests.length);
 }
 
-// Exported so the selftest can exercise the rules against synthetic surfaces. Mutating a real
-// manifest to test them is the obvious alternative and the wrong one here: the checkout is shared
-// with other sessions, and the first attempt at that failed mid-run on a file lock with the
-// restore in a `finally` that could not write either.
+// Exported so the selftest can exercise the rules against synthetic surfaces: the checkout is
+// shared with other sessions, so a test that mutates a real manifest can lose a race for the file.
 export function checkItem(item, before, after, prevTag, tag) {
   const defects = [];
   const unresolved = [];
@@ -236,8 +224,6 @@ export function checkItem(item, before, after, prevTag, tag) {
         continue;
       }
       if (wasThere === null) {
-        // Neither tag knows the name. Almost always a consumer's own example in a detect shape,
-        // so it is reported apart rather than called a defect.
         if (resolves(after, claim) === null)
           unresolved.push(`old \`${label(claim)}\` — cannot be resolved at either tag`);
         continue;
@@ -246,7 +232,7 @@ export function checkItem(item, before, after, prevTag, tag) {
         // The phantom exemption is for a name a consumer could actually have WRITTEN. It does not
         // cover an imported one: `ComboboxWidth` -> `AutocompleteWidth` reads as a rename, but the
         // old type is absent from the whole predecessor tree, so no import of it ever compiled and
-        // there is no consumer to migrate. Three items in 0.5.0 are that shape.
+        // there is no consumer to migrate.
         if (targetExists && !(isImportedName && claim.bare)) continue;
         defects.push(
           `old \`${label(claim)}\` does not exist at ${prevTag}, and \`new\` names nothing that does — the item migrates from nowhere to nowhere`,
@@ -295,7 +281,6 @@ function report(defects, unresolved, count) {
   console.log('every old/new resolves against its own boundary.');
 }
 
-// Guarded so the selftest can import `checkItem` without triggering a 27-tree sweep: module
-// top-level code runs on import, and the first version of that selftest swept the whole history
-// before printing its own first line.
+// Guarded so importing `checkItem` does not trigger a 27-tree sweep: module top-level code runs
+// on import.
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) sweep();

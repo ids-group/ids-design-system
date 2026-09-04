@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 // Can the boundary check still FIRE, and do its exemptions still HOLD? Both halves earn their
-// place: the check went through five rounds before it was trustworthy — the first, textual version
-// reported 77 findings and nearly every one was its own fault — so each exemption below exists
-// because a real item was wrongly accused, and a regression in any of them puts the noise back.
+// place: every exemption below exists because a real published item was wrongly accused by an
+// earlier shape of the rule, so a regression in any of them puts that noise back.
 //
-// Nothing here writes to the repository. Mutating a real manifest to test the rules is the obvious
-// design and the wrong one in a checkout shared with other sessions: the first attempt did that and
-// died mid-run on a file lock, with the restore in a `finally` that could not write either. So the
-// rules are exercised through the exported `checkItem` against synthetic surfaces, and the parts
-// that depend on reading a tree are asserted by running the real check over one version, read-only.
+// Nothing here writes to the repository — the checkout is shared with other sessions, so a test
+// that mutates a real manifest can lose a race for the file. The rules run through the exported
+// `checkItem` against synthetic surfaces; what depends on reading a tree is asserted by running
+// the real check over one version, read-only.
 //
 //   node tools/check-manifest-truth-selftest.mjs
 import { execFileSync } from 'node:child_process';
