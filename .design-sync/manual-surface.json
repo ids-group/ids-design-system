@@ -9,7 +9,7 @@
     "src/lib/components/filter-bar/filter-bar.component.html",
     "src/lib/components/menu/menu-item.component.html",
     "src/lib/components/modal/modal.component.html",
-    "src/lib/components/radio/radio.component.html",
+    "src/lib/components/radio-group/radio/radio.component.html",
     "src/lib/components/sidenav/sidenav-group.component.html",
     "src/lib/components/sidenav/sidenav-item.component.html",
     "src/lib/components/sidenav/sidenav.component.html",

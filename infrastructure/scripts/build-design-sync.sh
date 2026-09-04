@@ -106,6 +106,10 @@ fi
 
 [ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
 [ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }
+# The one artifact build-cards does NOT regenerate: it wipes the directory and only snapshot-cards
+# writes the shared sheet. Every frozen card links it, so its absence unstyles 376 of them — and it
+# did go missing in a working tree this cycle, noticed by eye rather than by a check.
+[ -f .design-sync/upload/_ds_cards.css ] || { echo "Expected artifact missing: .design-sync/upload/_ds_cards.css — run 'node .design-sync/tools/snapshot-cards.mjs'"; exit 1; }
 
 # The pane indexes from the manifest, so a card the manifest omits is not in the project at all.
 [ -f .design-sync/upload/_ds_manifest.json ] || { echo "Expected artifact missing: .design-sync/upload/_ds_manifest.json"; exit 1; }

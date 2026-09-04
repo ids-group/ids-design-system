@@ -123,7 +123,7 @@ The sixteen, each with the gate its `<ng-content>` sits behind:
 | `auth-layout` | `letterGlyph()` | ✅ |
 | `badge` | `count()` | projection in the live @else; ✅ |
 | `checkbox` | `label()` | projection in the live @else; ✅ |
-| `radio` | `label()` | projection in the live @else; ✅ |
+| `radio` | `label()` | projection in the live @else; ✅ — moved under `radio-group/` by the entry-point split, same component |
 | `switch` | `label()` | projection in the live @else; ✅ |
 | `dropzone` | `files()` | ✅ |
 | `menu-item` | `icon()` | ✅ |

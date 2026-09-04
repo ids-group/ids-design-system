@@ -19,9 +19,12 @@ const live = new Set(readFileSync(join(syncDir, 'live-chapters.txt'), 'utf8')
   .map((line) => line.trim())
   .filter((line) => line && !line.startsWith('#')));
 
-/** The section a card renders, from its host tag: `ds-docs-components-toast` is `components/toast`. */
+/** The section a card renders, from its host tag: `ds-docs-components-toast` is `components/toast`.
+ *  The tag ends at whitespace, not only at `>`: a FROZEN card carries Angular's scope attribute on
+ *  the host (`<ds-docs-components-button _nghost-c0="">`), and a pattern anchored on `>` silently
+ *  returned null for all 376 of them. */
 const chapterOf = (html) => {
-  const tag = html.match(/<(ds-docs-[a-z0-9-]+)>/)?.[1];
+  const tag = html.match(/<(ds-docs-[a-z0-9-]+)[\s>]/)?.[1];
   if (!tag) return null;
   const rest = tag.replace('ds-docs-', '');
   const cut = rest.indexOf('-');

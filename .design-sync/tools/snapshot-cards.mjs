@@ -57,7 +57,7 @@ const live = new Set(readFileSync(join(syncDir, 'live-chapters.txt'), 'utf8')
  *  Read from the file rather than guessed from the path, because a card's directory is its
  *  COMPONENT and a chapter can publish cards under several of them. */
 const chapterOf = (html) => {
-  const tag = html.match(/<(ds-docs-[a-z0-9-]+)>/)?.[1];
+  const tag = html.match(/<(ds-docs-[a-z0-9-]+)[\s>]/)?.[1];
   if (!tag) return null;
   const rest = tag.replace('ds-docs-', '');
   const cut = rest.indexOf('-');
@@ -204,7 +204,7 @@ if (failed.length) {
 }
 
 // Angular inlines a component's styles into every document that renders it, so the same block
-// arrives in card after card: 4005 style tags across the tree, 190 of them distinct, 10.3 MB inlined
+// arrives in card after card: 4005 style tags across the tree, 185 of them distinct, 10.3 MB inlined
 // against 473 KB of union. They are scoped by `_ngcontent`/`_nghost` attributes and therefore
 // position-independent, so concatenating them into one linked sheet is safe - and the browser then
 // fetches it once for the whole grid instead of parsing 27 KB inside each card.
