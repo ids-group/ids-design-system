@@ -157,8 +157,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   inward because the panel clips, and the input is silenced so only one ring appears.
 
 - **A focused `ds-icon-button` sitting flush inside a clipping box lost three sides of its ring.**
-  Seen on the documentation sidebar's collapse toggle, whose row clips to animate its label: the
-  ring had zero room outward and read as sitting behind the button. Any box that clips can now flip
+  Seen first on the documentation sidebar's collapse toggle, then swept: a `ds-table` row sits flush
+  inside the horizontal scroller, and a collapsed `ds-sidenav` clips its own brand link. In each the
+  ring had zero room outward and read as sitting behind the control. Any box that clips can now flip
   `--focus-ring-offset` negative on itself and everything focusable inside keeps a whole ring.
 
 - **A `ds-menu` row without an icon started one icon-width left of its neighbours.** `.menu-item` is

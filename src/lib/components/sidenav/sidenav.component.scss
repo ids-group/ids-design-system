@@ -81,6 +81,9 @@
 }
 
 :host(.collapsed) {
+// Collapsed, the rail clips its own content, and the brand link fills it edge to edge.
+--focus-ring-offset: calc(-1 * var(--focus-ring-width));
+
   width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
   overflow-x: clip;

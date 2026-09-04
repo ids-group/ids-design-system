@@ -34,6 +34,10 @@
 
   width: 100%;
   overflow: auto hidden;
+
+  // Rows and header buttons sit flush against this box, so a ring drawn outward is eaten.
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+
   -webkit-overflow-scrolling: touch;
   background: var(--surface-default);
   box-sizing: border-box;
