@@ -37,7 +37,9 @@
   color: var(--_date-picker-day-label-color);
   transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
-  &:hover {
+  // Guarded: the button is only ever aria-disabled, never natively disabled, so :hover
+  // still matches on a day that cannot be picked and offered it as selectable.
+  &:hover:not(.disabled) {
     background-color: var(--_date-picker-day-hover-bg-color);
   }
 
