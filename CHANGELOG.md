@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.12.0 — 2026-09-04
+
 ### Added
 
 - **The library no longer forces itself into your initial bundle, and your imports stay as they are.**
