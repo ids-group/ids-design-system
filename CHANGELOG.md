@@ -20,9 +20,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   duplicated; 102 kB simply moved to the routes that use it.
 
 - **Keep importing from the package root — that is the supported spelling and it costs nothing
-  extra.** The same app measured the same 138 kB either way. The root is a re-export of the entry
-  points and nothing else, so a bundler sees straight through it. There is no migration here and no
-  reason to rewrite an import.
+  extra.** The same app measured the same 138 kB either way. The root is a re-export and nothing
+  else, so a bundler sees straight through it. There is no migration here and no reason to rewrite
+  an import.
 
 - **Per-component specifiers do resolve** (`@ids-group-ltd/ids-design-system/button`), for a codebase
   that prefers a file's dependencies spelled out. They are not the recommended form and they buy no
