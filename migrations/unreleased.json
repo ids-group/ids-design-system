@@ -79,5 +79,7 @@
     }
   ],
   "deleteList": [],
-  "informational": []
+  "informational": [
+    "The focus ring now eases its colour in over `--duration-fast` rather than appearing at full strength. Geometry does not animate, so nothing moves and no layout shifts. `--duration-fast` is already 0ms under `prefers-reduced-motion: reduce`, so there is nothing to opt out of."
+  ]
 }

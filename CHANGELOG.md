@@ -41,6 +41,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   does. `ring`, `edge` and `inset` keep their meaning, and `edge` is the tight-ring answer that
   `field` was reached for. An unknown value matches nothing and is ignored in silence.
 
+### Changed
+
+- **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the
+  ring's geometry is already in place, so nothing shifts and the indicator lands where it will stay.
+  `outline-offset` is deliberately not animated: an expanding ring lags the caret on a fast Tab, and
+  the indicator is a keyboard user's only signal of where they are. The duration is `--duration-fast`,
+  which the library already zeroes under `prefers-reduced-motion: reduce`, so a reduced-motion user
+  sees the ring appear instantly with no separate opt-out to wire up.
+
 - **`ds-split-button` with an empty `menuItems` disables its chevron instead of opening an empty
   menu.** The template carried no guard, so a split button configured with nothing to list still
   opened a panel with nothing in it — a chevron is a promise that there is more, and an empty panel
@@ -293,6 +302,16 @@ this package ships under `migrations/`.
   page change and bulk expansion was swallowed. The export line now holds the region only until
   one of those lines has something new to say, so "Export failed" still stands until the reader
   moves on, and everything after it is announced again.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the `deleteList` in the release manifest
+this package ships under `migrations/`.
+
+| If you have | Delete it, because |
+| --- | --- |
+| a raised `--layer-toast` or `--layer-tooltip` | It never worked: overlay hosts live in the browser's top layer, which paints in the order hosts were shown and ignores z-index entirely. The library re-shows the toast host itself now. |
 
 ## 0.11.3 — 2026-09-02
 
@@ -2815,6 +2834,7 @@ skipping it leaves working code that is merely redundant.
 | If you have | Delete it, because |
 | --- | --- |
 | `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary` | `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant="outline"]` |
+| your own vertical-padding override on a `sm`/`lg` textarea (a `--ds-input-pad-y` retune or a local rule compensating the wrong padding) | sm/lg textareas rendered the md vertical padding; they are corrected now, so the compensation stacks on top of the fix. |
 | `--radius-sm: 0` to square a checkbox | `--ds-checkbox-radius` |
 | `.title.title { font-size }` inside a modal | `--ds-modal-title-font-size` |
 | Pagination label type overrides — a rule on `ds-pagination` setting `--ds-pagination-label-*` | `--ds-pagination-label-*` |

@@ -11,14 +11,6 @@
 // the guess is wrong. A negative offset draws the ring inside the element, where an
 // `overflow` ancestor cannot clip it.
 
-// Catches anything focusable that styles nothing itself, so it cannot fall through to
-// the browser default. Same mechanism as `ring`, so a shell that rings on `:focus-within`
-// silences its control with `owns-the-focus-ring` and no second ring appears.
-:where(:focus-visible) {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  outline-offset: var(--focus-ring-offset);
-}
-
 // The control indicator.
 //
 // Does NOT touch box-shadow: a focused card keeps its elevation, and a selected segment
@@ -32,6 +24,28 @@
 @mixin ring($offset: var(--focus-ring-offset)) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: $offset;
+
+  // Declared HERE, not in the resting rule: a component's own `transition` list would replace a
+  // blanket one outright (46 of them set the property), and the after-change style is what the
+  // browser reads to decide whether the entry animates. Colour only — animating `outline-offset`
+  // makes the ring lag the caret on a fast Tab, and the indicator is a keyboard user's only signal.
+  transition: outline-color var(--duration-fast) var(--ease-standard);
+}
+
+// The ring's resting state, so the colour has something to fade FROM. `outline-style` is not
+// animatable, so `none` -> `solid` snaps however the transition is written; declaring the ring
+// here, transparent, is the only way it can ease in. Costs no layout (an outline is outside the
+// box model) and paints nothing.
+:where(a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex='-1'])) {
+  outline: var(--focus-ring-width) solid transparent;
+  outline-offset: var(--focus-ring-offset);
+}
+
+// Catches anything focusable that styles nothing itself, so it cannot fall through to
+// the browser default. Same mechanism as `ring`, so a shell that rings on `:focus-within`
+// silences its control with `owns-the-focus-ring` and no second ring appears.
+:where(:focus-visible) {
+  @include ring;
 }
 
 // `$control` names ONE control and must never be a blanket: a box-wide reset also

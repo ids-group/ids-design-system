@@ -2,6 +2,21 @@
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
+- [ ] **[P1] A selected radio, checkbox or switch reads as a bullseye while focused.** Measured from
+  the tokens, not from a screenshot: on a 20px glyph the checked+focused radio paints, centre outward,
+  a 10px accent dot, 3px of white, a 2px accent border, a 2px unpainted gap and a 2px accent outline —
+  three brand bands separated by two white ones, concentric and equally spaced. It passes WCAG 2.4.13:
+  the ring is 2px and contrasts with the white gap beside it. What fails is legibility. Focus and
+  `selected` are drawn in the SAME colour and the SAME shape, so on a selection control the two states
+  stop being distinguishable — and those are exactly the two a keyboard user must tell apart while
+  moving through a group. Material does not put a hard ring on a radio by default for this reason: it
+  uses a translucent state layer behind the glyph and keeps the outline for forced colours.
+  Agreed fix (Stas, 2026-09-04): ring the ROW, not the glyph — `.control-line:focus-within` draws the
+  indicator around glyph and label together while `focus.owns-the-focus-ring('.radio')` silences the
+  input, so the ring stops being concentric with the dot. The label already carries the hit area.
+  Gated on a concept deck first.
+
+
 Six defects from that review are fixed (`a5af6ba8`, `38764f81`, `29532e27`, `e88de757`). Everything
 below survived wave 2's attack and is NOT fixed. Each claim was traced in emitted CSS from a linked
 app build rather than from SCSS; none was verified in a browser.
@@ -535,6 +550,28 @@ rather than re-reading our own API.
 # Bugs — something shipped misbehaves
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
+
+## Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)
+
+- [x] **[P2] DONE 2026-09-04 — four shipped manifest shapes the upgrade machinery could not
+  execute, all violating `AUTHORING.md`'s own rules, none caught by the lint.** Fixed in place,
+  validated against the tag trees, all five gates green: `0.11.4#toast-promise-messages-generic`
+  reclassified `type-rename` → `behavior` (a widened type, not a rename — the bare name still
+  compiles via `<T = unknown>`, and "old count must reach 0" false-fails every correct migration);
+  `0.11.4#toast-message-input-renamed-body` `old` element-scoped to `ds-toast[message]` (a bare
+  `message` perma-fails a repo-wide zero-count on any real app); `0.11.1#trigger-display-compact-renamed`
+  map made full-token (`{"compact": "triggerDisplay=\"count\""}`), `old` scoped, and its released
+  `appliesWhen` no longer says "this same unreleased block". Lint hardened so the class cannot
+  ship again: **M043** (a bare map value that is not its key), **M044** (a `value-remap` `old`
+  must be `element[attr]`), M034's subject-to-"can go" gap closed (an intervening clause hid the
+  0.11.4 `--layer-toast` delete instruction) — which surfaced a second silent one in 0.9.0
+  (`--ds-input-pad-y` compensation); both now have `deleteList` rows + CHANGELOG table rows.
+  Selftest extended, every rule fires.
+- [ ] **[P3] Prose-shaped `old` values in 0.11.x remain (hygiene, not breakage):** comma-joined
+  token lists (`0.11.4#toast-border-tokens-gain-color`), a full sentence as `old`
+  (`0.11.1`), a ~95-word `restore` paragraph (`0.11.3` — README wants "a literal snippet or
+  `null`"). The plugin now treats a non-token `old` as a non-locator, so these degrade safely;
+  tidy them when those manifests are next touched, and consider a lint rule for `restore` length.
 
 - [ ] **[P2] The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold.** `src/lib/styles/_status.scss:54` pairs `bg: var(--warning-subtitle)` with `text: var(--warning-text)`. Resolved in the default theme that is `#8A7400` on `#FFFBEA`, which computes to **4.42:1** by the WCAG relative-luminance formula — under AA for text below 18.66px/700. **It is the only status pair that fails:** error measures **5.92**, success **6.42** and primary **6.16** on their own subtitle backgrounds, so this is one colour out of step, not a palette-wide problem.
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.

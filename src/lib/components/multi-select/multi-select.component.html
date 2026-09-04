@@ -226,10 +226,7 @@
           [class.indeterminate]="someFilteredSelected()"
         >
           @if (allFilteredSelected()) {
-            <ds-icon
-              name="check"
-              [size]="13"
-            />
+            <span class="tick"></span>
           } @else if (someFilteredSelected()) {
             <span class="dash"></span>
           }
@@ -296,10 +293,7 @@
                   [class.indeterminate]="groupSomeSelected(item)"
                 >
                   @if (groupAllSelected(item)) {
-                    <ds-icon
-                      name="check"
-                      [size]="13"
-                    />
+                    <span class="tick"></span>
                   } @else if (groupSomeSelected(item)) {
                     <span class="dash"></span>
                   }
@@ -335,10 +329,7 @@
                       [class.checked]="isSelected(option.value)"
                     >
                       @if (isSelected(option.value)) {
-                        <ds-icon
-                          name="check"
-                          [size]="13"
-                        />
+                        <span class="tick"></span>
                       }
                     </span>
 
@@ -392,10 +383,7 @@
                 [class.checked]="isSelected(option.value)"
               >
                 @if (isSelected(option.value)) {
-                  <ds-icon
-                    name="check"
-                    [size]="13"
-                  />
+                  <span class="tick"></span>
                 }
               </span>
 

@@ -228,10 +228,7 @@
                     [class.checked]="isSelected(option)"
                   >
                     @if (isSelected(option)) {
-                      <ds-icon
-                        name="check"
-                        [size]="13"
-                      />
+                      <span class="tick"></span>
                     }
                   </span>
                 }
@@ -291,10 +288,7 @@
                 [class.checked]="isSelected(option)"
               >
                 @if (isSelected(option)) {
-                  <ds-icon
-                    name="check"
-                    [size]="13"
-                  />
+                  <span class="tick"></span>
                 }
               </span>
             }

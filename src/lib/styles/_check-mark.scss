@@ -1,0 +1,11 @@
+// The tick a checked box draws, in one place.
+//
+// ds-checkbox owns the canonical mark; multi-select and autocomplete draw their own box in an
+// option row rather than composing ds-checkbox, and both used `ds-icon name="check"` instead.
+// That icon is a 24-viewBox path at stroke 1.75, so at a 13px glyph it painted a 0.95px line
+// against this mark's 2px — the same box carrying two different ticks.
+@mixin mark {
+  width: var(--check-tick-size);
+  height: var(--check-tick-size);
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+}

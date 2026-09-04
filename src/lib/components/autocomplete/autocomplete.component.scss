@@ -2,6 +2,7 @@
    this component's encapsulation attributes — which is why both halves are styled
    here rather than the panel living in a global partial. */
 @use '../../styles/field-box' as field-box;
+@use '../../styles/check-mark';
 @use '../../styles/field-label' as field-label;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/focus' as focus;
@@ -196,11 +197,19 @@
     height: var(--check-size);
     border: var(--check-bw) solid var(--border-strong);
     border-radius: var(--ds-radius-inner);
+
+    // ds-checkbox paints its own surface, so an unchecked box stays white over a hovered or
+    // selected row instead of letting the row's tint through it.
+    background-color: var(--surface-default);
     color: var(--text-on-primary);
 
     &.checked {
       background-color: var(--accent);
       border-color: var(--accent);
+    }
+
+    .tick {
+      @include check-mark.mark;
     }
   }
 
