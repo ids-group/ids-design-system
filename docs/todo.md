@@ -2,6 +2,19 @@
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
+- [ ] **[P3] A whole-page keyboard walk is not measurable with the tools here, and the failed
+  attempt is worth not repeating.** Tried 2026-09-05 to assert an indicator on all 262 focusables of
+  one docs page by focusing each in turn. Void: `element.focus()` inherits keyboard modality from the
+  last REAL input, and the first call spends it — from the second element on, `:focus-visible` reads
+  false for everything and the walk reports almost nothing indicated whether the CSS is right or
+  wrong. Same shape as the reduced-motion trap.
+  What would work: read the AUTHORED cascade instead of the focused state — for each focusable, find
+  the `:focus-visible` rules that match it with the pseudo stripped, and ask whether any paints. That
+  needs no focus at all, so no modality to lose. Until then the static gate is the coverage claim:
+  88 files, three rejected failure classes, each controlled by planting a defect and watching it
+  exit 1.
+
+
 - [ ] **[P2] Nothing catches a shell that rings on `:focus-within` when it means the keyboard.**
   Shipped and caught by Stas in a screenshot, 2026-09-05: the row ring on checkbox/radio/switch used
   `:focus-within`, which matches a POINTER focus too — and a checkbox, unlike a text input, is not
