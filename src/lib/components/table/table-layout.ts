@@ -26,6 +26,21 @@ export interface DsTableView<T> {
   readonly toolbarAnchor: Signal<ViewContainerRef | undefined>;
 }
 
+/**
+ * One named piece of the persisted column layout.
+ *
+ * The stored shape stays `{ order, widths, hidden }`, so a layout saved by an earlier version
+ * still restores — the key IS the JSON key. Persistence walks whatever is registered instead of
+ * naming the three inputs, which is what lets reorder, the picker and resize move out from under
+ * it without the storage code changing.
+ */
+export interface DsTablePersistedSlice {
+  readonly key: string;
+  /** Serialisable. Read inside the caller's effect, so whatever it touches is tracked. */
+  readonly read: () => unknown;
+  readonly write: (value: unknown) => void;
+}
+
 /** What an export feature hands the table, so `runExport()` and `exporting()` stay public API
  *  while the implementation lives outside the component. */
 export interface DsTableExportContribution<T> {
@@ -63,6 +78,16 @@ export class DsTableLayout<T = unknown> {
 
   addRowStage(stage: DsTableRowStage<T>): void {
     this.rowStages.update((stages) => [...stages, stage]);
+  }
+
+  private readonly slices = signal<readonly DsTablePersistedSlice[]>([]);
+
+  addPersistedSlice(slice: DsTablePersistedSlice): void {
+    this.slices.update((registered) => [...registered, slice]);
+  }
+
+  persistedSlices(): readonly DsTablePersistedSlice[] {
+    return this.slices();
   }
 
   /** A line for the live region, folded in ahead of the table's own events. */

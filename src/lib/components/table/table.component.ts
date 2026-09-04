@@ -1465,6 +1465,26 @@ export class TableComponent<T extends object> {
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
+    // Registered by the table only while it still owns these inputs. As reorder, the picker and
+    // resize move out, each registers its own slice and drops out of here — the storage code
+    // above never learns about it.
+    this.layout.addPersistedSlice({
+      key: 'order',
+      read: () => this.columnOrder(),
+      write: (value) => this.columnOrder.set(value as string[]),
+    });
+    this.layout.addPersistedSlice({
+      key: 'widths',
+      read: () => [...this.columnWidths()],
+      write: (value) =>
+        this.columnWidths.set(new Map(value as [string, number][])),
+    });
+    this.layout.addPersistedSlice({
+      key: 'hidden',
+      read: () => (this.hiddenKeys() ? [...this.hiddenKeys()!] : null),
+      write: (value) => this.hiddenKeys.set(new Set(value as string[])),
+    });
+
     // Published here rather than from an init hook: a directive on the same element is
     // constructed after this component, so by the time a feature asks, the view is here. The
     // anchor goes over as a signal — a viewChild is undefined until the view exists, and a
@@ -1501,9 +1521,10 @@ export class TableComponent<T extends object> {
     // restores; every later run saves.
     effect(() => {
       const key = this.layoutKey();
-      const order = this.columnOrder();
-      const widths = this.columnWidths();
-      const hidden = this.hiddenKeys();
+      // Read every slice so the effect tracks them, whichever feature owns them.
+      const stored = Object.fromEntries(
+        this.layout.persistedSlices().map((slice) => [slice.key, slice.read()]),
+      );
       if (!key) {
         return;
       }
@@ -1513,7 +1534,7 @@ export class TableComponent<T extends object> {
 
         return;
       }
-      this.saveLayout(key, order, widths, hidden);
+      this.saveLayout(key, stored);
     });
 
     // A table holding ALL its rows is the exception, and `total` unbound is how
@@ -2055,42 +2076,24 @@ export class TableComponent<T extends object> {
       if (!raw) {
         return;
       }
-      const saved = JSON.parse(raw) as {
-        order?: string[] | null;
-        widths?: [string, number][];
-        hidden?: string[] | null;
-      };
-      // Only apply what was actually stored: a table that has never been
-      // rearranged must keep its declaration order and `hidden` flags.
-      if (saved.order) {
-        this.columnOrder.set(saved.order);
-      }
-      if (saved.widths) {
-        this.columnWidths.set(new Map(saved.widths));
-      }
-      if (saved.hidden) {
-        this.hiddenKeys.set(new Set(saved.hidden));
+      const saved = JSON.parse(raw) as Record<string, unknown>;
+      // Only apply what was actually stored, and only what something owns: a table that has
+      // never been rearranged must keep its declaration order and `hidden` flags, and a layout
+      // saved when a feature was present must not be forced on a table that no longer has it.
+      for (const slice of this.layout.persistedSlices()) {
+        const value = saved[slice.key];
+        if (value !== undefined && value !== null) {
+          slice.write(value);
+        }
       }
     } catch {
       // Unreadable or from an older shape: fall back to the declared layout.
     }
   }
 
-  private saveLayout(
-    key: string,
-    order: string[] | null,
-    widths: Map<string, number>,
-    hidden: Set<string> | null,
-  ): void {
+  private saveLayout(key: string, stored: Record<string, unknown>): void {
     try {
-      localStorage.setItem(
-        key,
-        JSON.stringify({
-          order,
-          widths: [...widths],
-          hidden: hidden ? [...hidden] : null,
-        }),
-      );
+      localStorage.setItem(key, JSON.stringify(stored));
     } catch {
       // Full or blocked: a lost column layout is not worth an error.
     }
