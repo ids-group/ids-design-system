@@ -373,6 +373,10 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] The boundary is in `appliesWhen` and the silent-failure mode in `pitfall`, not buried in the note.
 - [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
 - [ ] No key outside the allowlist. (lint, M042)
+- [ ] A published record that described something which never worked is resolved by one question —
+      does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
+      voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line
+      saying our earlier note was wrong. (`CONTRIBUTING.md`, "Never in a published artefact")
 - [ ] Nothing documented in the block is silently dropped (actionable → item; else → `informational`).
       (`tools/check-manifest-coverage.mjs`, at the cut) It was the one line here with nothing
       enforcing it, and six entries went missing across 0.11.3 and 0.11.4 before it got a gate. The
