@@ -139,7 +139,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   micro-scale that every other button in the library gives a press, so the one control built from two
   buttons was the one that felt dead under the finger. Each half now darkens through
   `--ds-split-button-bg-color-active` (or `--ds-split-button-outline-bg-color-active` on the outline
-  variant) and scales by `--ds-split-button-press-scale`. The scale runs AWAY from the seam —
+  variant) and scales by `--ds-split-button-press-scale`, with the same opt-in pressed halo hook the
+  button has (`--ds-split-button-pressed-shadow`, default none). The scale runs AWAY from the seam —
   `transform-origin` is the inner edge on each half — because a centred scale pulls the pressed half's
   inner edge inward and opens a hairline gap in the joint.
 

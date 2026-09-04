@@ -20,6 +20,7 @@
   --_split-button-bg-color-active: var(--ds-split-button-bg-color-active, color-mix(in srgb, var(--_split-button-bg-color) 76%, black));
   --_split-button-outline-bg-color-active: var(--ds-split-button-outline-bg-color-active, var(--surface-muted));
   --_split-button-press-scale: var(--ds-split-button-press-scale, 0.98);
+  --_split-button-pressed-shadow: var(--ds-split-button-pressed-shadow, none);
 }
 
 .main,
@@ -46,6 +47,7 @@
   /* Scaled away from the seam, not about the half's own centre: a centred scale pulls the
      pressed half's inner edge inward and opens a hairline gap in the joint. */
   &:active:not(:disabled) {
+    box-shadow: var(--_split-button-pressed-shadow);
     transform: scale(var(--_split-button-press-scale));
   }
 

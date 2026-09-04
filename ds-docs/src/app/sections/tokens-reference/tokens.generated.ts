@@ -1996,7 +1996,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-input-minw",
-        "value": "80px",
+        "value": "40px",
         "notes": "Autocomplete input minimum width (80px)."
       },
       {
@@ -2634,36 +2634,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".checkbox",
     "description": "",
     "tokens": [
-      {
-        "name": "--ds-checkbox-bg-color",
-        "value": "var(--surface-default)",
-        "notes": "Checkbox unchecked surface fill."
-      },
-      {
-        "name": "--ds-checkbox-border-color",
-        "value": "var(--border-strong)",
-        "notes": "Checkbox unchecked border colour."
-      },
-      {
-        "name": "--ds-checkbox-hover-border-color",
-        "value": "var(--accent)",
-        "notes": "Checkbox border colour on hover (defaults to --accent)."
-      },
-      {
-        "name": "--ds-checkbox-selected-bg-color",
-        "value": "var(--accent)",
-        "notes": "Checked box fill (defaults to --accent)."
-      },
-      {
-        "name": "--ds-checkbox-selected-border-color",
-        "value": "var(--accent)",
-        "notes": "Checked box border colour (defaults to --accent)."
-      },
-      {
-        "name": "--ds-checkbox-radius",
-        "value": "var(--ds-radius-inner)",
-        "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
-      },
       {
         "name": "--ds-checkbox-label-weight",
         "value": "var(--font-weight-regular)",
@@ -5131,6 +5101,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-split-button-press-scale",
         "value": "0.98",
         "notes": ""
+      },
+      {
+        "name": "--ds-split-button-pressed-shadow",
+        "value": "none",
+        "notes": ""
       }
     ]
   },
@@ -7050,6 +7025,26 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow-error",
     "value": "var(--focus-field-error)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-check-enter-duration",
+    "value": "var(--duration-base)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-check-enter-easing",
+    "value": "var(--ease-spring)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-check-exit-duration",
+    "value": "var(--duration-fast)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-check-exit-easing",
+    "value": "var(--ease-accelerate)",
+    "kind": "other"
   },
   {
     "name": "--ds-motion-enter-large-duration",
