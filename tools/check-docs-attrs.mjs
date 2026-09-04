@@ -70,9 +70,15 @@ for (const file of walk('src/lib')) {
   if (file.endsWith('.html')) {
     for (const m of text.matchAll(/select="\[([\w-]+)\]"/g)) slots.add(m[1]);
   }
-  // A styling hook is a contract too: field-group takes the slack with `> [grow]` and documents it.
+  // A styling hook is a contract too: field-group takes the slack with `::ng-deep > [grow]` and
+  // documents it. Only hooks reached through a combinator count — every `[attr]` in a stylesheet
+  // would hand back `label`, `hint`, `size` and `icon`, which are real input names, and the check
+  // would then wave them through on any element that does not have them.
   if (file.endsWith('.scss')) {
-    for (const m of text.matchAll(/\[([a-z][\w-]*)\]/g)) slots.add(m[1]);
+    for (const m of text.matchAll(
+      /(?:::ng-deep\s*>?\s*|>\s*)\[([a-z][\w-]*)\]/g,
+    ))
+      slots.add(m[1]);
   }
   if (file.endsWith('.ts')) {
     for (const m of text.matchAll(/selector:\s*'([^']*)'/g)) {
