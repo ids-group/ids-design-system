@@ -2,6 +2,15 @@
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
+- [ ] **[P2] `.design-sync/upload/_ds_bundle.css` is frozen against a rule the library no longer
+  has.** `ddae60e0` regenerated it while `_focus.scss` still carried the resting transparent-outline
+  rule; `5be96212` replaced that whole mechanism with `animation: ds-focus-ring-in`. The frozen
+  bundle now contains one `solid transparent` outline rule and zero mentions of the keyframe, so the
+  cards render a focus mechanism that no longer exists. Owned by the design-sync pipeline, which
+  regenerates and freezes in CI (`bf949c62`) — do NOT regenerate the 410 files by hand in the shared
+  checkout, since committing them unfrozen has already been a real bug once.
+
+
 - [ ] **[P2] `_focus.scss`'s top-level CSS is copied into 33 component style strings.** Measured
   2026-09-04 on `dist/ds/fesm2022/`: 33 of 75 built bundles each carry the blanket
   `:where(:focus-visible)` rule, all three `data-focus` blocks, the `@keyframes` and the
