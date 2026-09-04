@@ -33,10 +33,11 @@ Two verification modes:
      component (from `appliesWhen`/`searchHints`) — `message` repo-wide is not a defect count.
   3. When `new` CONTAINS `old` as the same token (`Foo` → `Foo<T>`): count only occurrences of
      `old` standing WITHOUT the addition — migrated code still contains the old token by design.
-     An `old` that is not a single greppable token (prose, a comma-joined list) is not a locator —
-     judge by `searchHints`/`detect` and the `verify` assertion instead.
-     Respect token boundaries — a longer identifier that merely CONTAINS `old` (e.g. `foo-bar` for a
-     `foo` rename) is NOT a remaining usage.
+
+  Two rules for the whole rename mode, not only case 3: an `old` that is not a single greppable
+  token (prose, a comma-joined list) is not a locator — judge by `searchHints`/`detect` and the
+  `verify` assertion instead. And respect token boundaries — a longer identifier that merely
+  CONTAINS `old` (e.g. `foo-bar` for a `foo` rename) is NOT a remaining usage.
 - **`value-remap`:** complete only when none of the **removed** old values still appear — subject to
   two rules that will make you wrong if you skip them:
   1. **Scope to the item's target element.** An attribute/class NAME can exist on other components,
