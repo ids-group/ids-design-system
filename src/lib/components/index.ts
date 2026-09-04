@@ -15,7 +15,11 @@ export {
   resolveFieldMessage,
   trimmedText,
 } from './field-errors';
-export type { DsFieldError, DsFieldErrorsInput } from './field-errors';
+export type {
+  DsFieldError,
+  DsFieldErrorsInput,
+  DsFieldMessage,
+} from './field-errors';
 export { nextControlId } from './field-ids';
 export { DsGroupLabelTemplateDirective } from './group-label-template.directive';
 export { DsMessageBase } from './message-base';
