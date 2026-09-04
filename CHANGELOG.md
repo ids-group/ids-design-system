@@ -11,8 +11,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ### Added
 
 - **The library no longer forces itself into your initial bundle, and your imports stay as they are.**
-  Every component became its own entry point internally, so a bundler can place each one in the chunk
-  that actually uses it. Until now the package was a single flattened module: one eager import of any
+  Every component became its own entry point, so a bundler can place each one in the chunk that
+  actually uses it. Until now the package was a single flattened module: one eager import of any
   part of it — a service in a composition root is the usual one — made the whole library reachable
   from the initial bundle, and no amount of lazy routing moved it out. Measured on a documentation app
   of 90 sections that changed not one import line: its initial bundle fell from **240 kB to 138 kB
@@ -20,10 +20,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   duplicated; 102 kB simply moved to the routes that use it.
 
 - **Keep importing from the package root — that is the supported spelling and it costs nothing
-  extra.** The same app measured 138.37 kB importing everything from the root against 138.36 kB
-  importing each component from its own entry point. The root is a re-export of the entry points and
-  nothing else, so a bundler sees straight through it. There is no migration here and no reason to
-  rewrite an import.
+  extra.** The same app measured the same 138 kB either way. The root is a re-export of the entry
+  points and nothing else, so a bundler sees straight through it. There is no migration here and no
+  reason to rewrite an import.
 
 - **Per-component specifiers do resolve** (`@ids-group-ltd/ids-design-system/button`), for a codebase
   that prefers a file's dependencies spelled out. They are not the recommended form and they buy no
@@ -41,7 +40,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Some helpers are importable that are not API, and they say so.** An entry point has to export
   whatever another entry point imports, which made 37 internal helpers, base classes and shared types
-  reachable — `devWarn`, `DsFieldBase`, `ds-calendar-day` and the like. Each carries `@internal`, none
+  reachable — `devWarn`, `DsFieldBase`, `CalendarDayComponent` and the like. Each carries `@internal`, none
   appears in the component reference, and none is covered by the versioning promise: they can change
   or disappear in any release. Build on what the reference documents.
 
