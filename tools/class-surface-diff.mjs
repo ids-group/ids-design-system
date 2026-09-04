@@ -278,11 +278,23 @@ const files = git(['diff', '--name-only', `${base}..${head}`, '--', 'src/lib'])
   .split('\n')
   .filter((path) => path.endsWith('.ts') && !path.endsWith('.spec.ts'));
 
+// A moved class has to be read at its OLD path, or every member it already had counts as gained:
+// the entry-point split moved two components and the report asked for a behavior entry on 48
+// members that had not changed. Git's own rename detection decides it rather than a basename
+// guess, so a class that genuinely did not exist at `base` still arrives as an addition.
+const renamedFrom = new Map();
+for (const row of git(['diff', '-M', '--name-status', `${base}..${head}`, '--', 'src/lib']).split(
+  '\n',
+)) {
+  const [status, from, to] = row.split('\t');
+  if (status?.startsWith('R') && to) renamedFrom.set(to, from);
+}
+
 const grew = [];
 const shrank = [];
 const changed = [];
 for (const path of files) {
-  const beforeSource = show(base, path);
+  const beforeSource = show(base, renamedFrom.get(path) ?? path);
   const afterSource = show(head, path);
   const before = classSurface(beforeSource);
   const after = classSurface(afterSource);
@@ -342,7 +354,7 @@ if (grew.length) {
     'GAINED members — a subclass declaring the same name stops building:',
   );
   for (const [label, names, isNew] of grew) {
-    console.log(`  ${label}${isNew ? '  (new or renamed file)' : ''}`);
+    console.log(`  ${label}${isNew ? '  (new file)' : ''}`);
     console.log(`    ${names.join(', ')}`);
   }
   console.log('');
