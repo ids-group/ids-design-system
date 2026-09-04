@@ -13,7 +13,7 @@ export interface SplitButtonProps {
   icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
   /** Disables both the main button and the dropdown trigger. */
   disabled?: boolean;
-  /** Items listed in the dropdown menu. */
+  /** Items listed in the dropdown menu. Empty disables the chevron. */
   menuItems?: unknown;
   /** Accessible name for the dropdown trigger. */
   menuLabel?: string;

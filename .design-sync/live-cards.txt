@@ -1,6 +1,7 @@
 # Written by snapshot-cards.mjs — the cards it left live. Do not edit; see live-chapters.txt.
 components/actions/SplitButton/Split Button - Outline variant.html
 components/actions/SplitButton/Split Button - Primary variant.html
+components/actions/SplitButton/Split Button - Without menu items.html
 components/data-display/Table/Table - Column filters.html
 components/data-display/Table/Table - Column picker - reorder.html
 components/data-display/Table/Table - Pagination - sticky column.html

@@ -6088,7 +6088,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Items listed in the dropdown menu."
+        "description": "Items listed in the dropdown menu. Empty disables the chevron."
       },
       {
         "name": "menuLabel",

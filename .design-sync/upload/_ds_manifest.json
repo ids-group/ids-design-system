@@ -441,6 +441,13 @@
       "subtitle": "Use the outline variant when the split button sits alongside a primary action."
     },
     {
+      "path": "components/actions/SplitButton/Split Button - Without menu items.html",
+      "group": "actions",
+      "viewport": "1200x378",
+      "name": "Split button - without menu items",
+      "subtitle": "An empty [menuItems] disables the chevron: one that opens an empty panel reads as a broken control."
+    },
+    {
       "path": "components/actions/Link/Link - States.html",
       "group": "actions",
       "viewport": "1200x312",

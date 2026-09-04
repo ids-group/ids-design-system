@@ -6,6 +6,7 @@ import {
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
@@ -25,6 +26,18 @@ import type { SplitButtonItem, SplitButtonVariant } from './split-button.types';
   },
 })
 export class SplitButtonComponent {
+  constructor() {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      devWarn(() =>
+        this.menuItems().length
+          ? null
+          : '[ds-split-button] has no `menuItems`, so the chevron is disabled — a chevron that opens'
+            + ' nothing reads as a broken control. Pass the items, or use `ds-button` for a single'
+            + ' action.',
+      );
+    }
+  }
+
   /** Label text on the main button. */
   readonly label = input<string>('');
   /** Visual style — primary (solid) or outline. */
@@ -33,7 +46,7 @@ export class SplitButtonComponent {
   readonly icon = input<IconName | null>(null);
   /** Disables both the main button and the dropdown trigger. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Items listed in the dropdown menu. */
+  /** Items listed in the dropdown menu. Empty disables the chevron. */
   readonly menuItems = input<readonly SplitButtonItem[]>([]);
   /** Accessible name for the dropdown trigger. */
   readonly menuLabel = input<string>('More actions');
