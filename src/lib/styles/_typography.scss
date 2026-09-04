@@ -139,6 +139,10 @@
 }
 
 .t-mono {
+  // JetBrains Mono ligates operators by default, so `===` paints as one triple-bar glyph
+  // and `!=` as a struck equals: prose that NAMES an operator then shows something other
+  // than the characters it discusses. Set --ds-t-mono-ligatures to `normal` to get them back.
+  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
   font-weight: var(--ds-t-mono-font-weight, var(--font-weight-medium));
   font-size: var(--ds-t-mono-font-size, var(--font-size-mono));
   line-height: var(--ds-t-mono-line-height, var(--line-height-base));
@@ -146,6 +150,7 @@
 }
 
 .t-mono-inline {
+  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
   font-weight: var(--ds-t-mono-inline-font-weight, var(--font-weight-regular));
   font-size: var(--ds-t-mono-inline-font-size, var(--font-size-mono));
   line-height: var(--ds-t-mono-inline-line-height, 1);
@@ -157,6 +162,7 @@
 }
 
 .t-mono-block {
+  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
   font-weight: var(--ds-t-mono-block-font-weight, var(--font-weight-regular));
   font-size: var(--ds-t-mono-block-font-size, var(--font-size-mono));
   line-height: var(--ds-t-mono-block-line-height, var(--line-height-loose));

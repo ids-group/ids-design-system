@@ -95,6 +95,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **Mono type no longer ligates operators.** JetBrains Mono draws `===` as one triple-bar glyph and
+  `!=` as a struck equals, so any prose naming an operator showed something other than the characters
+  it was discussing. `--ds-t-mono-ligatures` puts them back for a consumer who wants them.
 - **`ds-table` selects rows with the design system's checkbox, not the browser's.** Its
   `<input type="checkbox">` was styled nowhere at all, so the OS drew it — no DS geometry, no DS
   colours, no mark. The box is a shared partial now, so it cannot drift from `ds-checkbox`, and it
