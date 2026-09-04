@@ -13,19 +13,32 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-const COMPONENTS = 'src/lib/components';
+// ds-docs is in scope because it is the dogfood app: a control that loses its indicator
+// there is the example a consumer copies, and the sidebar's collapse toggle shipped
+// exactly that. Global sheets that style portaled panels are in scope for the same
+// reason — nothing else can reach a panel that leaves the host's subtree.
+const ROOTS = [
+  'src/lib/components',
+  'src/lib/styles/_dropdown-overlay.scss',
+  'ds-docs/src/app',
+];
 const SUPPRESSORS = ['owns-the-focus-ring', ':where(:focus-visible)'];
 // A shell whose ring covers OTHER components' controls has nothing of its own to
 // silence, and says so as `focus-ring-guard: <reason>` — an exemption that has to be
 // written down and argued for.
 const WAIVER = /focus-ring-guard:\s*(.+)/;
 
-const scssFilesIn = (directory) =>
-  readdirSync(directory).flatMap((entry) => {
-    const full = join(directory, entry);
+// A mixin partial is skipped on purpose: it paints into whichever shell includes it, so
+// the obligation belongs to that shell. A sheet named outright in ROOTS is not a partial
+// in that sense — it styles real elements — so it is read whatever it is called.
+const scssFilesIn = (path) => {
+  if (!statSync(path).isDirectory()) return [path];
+  return readdirSync(path).flatMap((entry) => {
+    const full = join(path, entry);
     if (statSync(full).isDirectory()) return scssFilesIn(full);
     return entry.endsWith('.component.scss') ? [full] : [];
   });
+};
 
 const paintsRingOnFocusWithin = (text) => {
   const lines = text.split(/\r?\n/);
@@ -109,7 +122,7 @@ const unindicated = [];
 const waived = [];
 let shells = 0;
 
-for (const file of scssFilesIn(COMPONENTS)) {
+for (const file of ROOTS.flatMap((root) => scssFilesIn(root))) {
   const text = readFileSync(file, 'utf8');
   const name0 = relative(process.cwd(), file).replace(/\\/g, '/');
   const code0 = withoutComments(text);
