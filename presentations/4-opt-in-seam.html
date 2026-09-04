@@ -183,11 +183,30 @@ imports: [DsTable, DsTableResizable, DsTableExport]
       проверено по собранному FESM, ссылки нет, — и бандл пробы не сдвинулся: 63 374 против
       63 066 B, то есть стало хуже на величину самого шва.
     </p>
+    <p><b>Почему 11 295 B испарились — четыре замера на одной сборке:</b></p>
+
+    <div class="chart">
+      <div class="row"><span class="k">пустое Angular</span>
+        <span class="bar"><span class="seg floor" style="width:48.7%"></span></span><span class="v">30 871</span></div>
+      <div class="row"><span class="k">только <code>ds-field-message</code></span>
+        <span class="bar"><span class="seg floor" style="width:48.7%"></span><span class="seg cost" style="width:22.2%"></span></span><span class="v">44 909</span></div>
+      <div class="row"><span class="k">только <code>ds-button</code></span>
+        <span class="bar"><span class="seg floor" style="width:48.7%"></span><span class="seg cost" style="width:51.3%"></span></span><span class="v">63 374</span></div>
+      <div class="row"><span class="k"><b>кнопка + строка вместе</b></span>
+        <span class="bar"><span class="seg floor" style="width:48.7%"></span><span class="seg win" style="width:50.8%"></span></span><span class="v"><b>63 066</b></span></div>
+    </div>
+
     <p>
-      <b>Почему 11 295 B испарились.</b> Та цифра снята абляцией <b>до A3</b>, на сплющенном
-      пакете. Сейчас <code>field-message</code> — своя точка входа, а всё, что ей нужно (иконки,
-      core, стили), уже лежит в бандле ради самой кнопки. Маргинальная цена строки оказалась
-      порядка сотен байт, и шов её съедает.
+      Строка <b>сама по себе стоит 14 038 B</b>. Кнопка сама по себе — 32 503 B. А вместе они
+      стоят <b>32 195 B</b>, то есть <b>меньше, чем одна кнопка</b>: почти всё, что нужно строке,
+      кнопка и так тащит — иконки, <code>core</code>, тот же конвейер стилей. Общий код считается
+      один раз, поэтому <b>убирать строку не из чего</b>.
+    </p>
+
+    <p style="margin-bottom:0">
+      Старые 11 295 B сняты <b>до A3</b>, когда пакет был одним сплющенным модулем. Тогда абляция
+      вырезала код строки из собственного модуля кнопки, и он считался целиком. После разделения
+      на точки входа тот же код лежит отдельно и делится с кнопкой.
     </p>
     <p style="margin-bottom:0">
       Решение 2026-09-04 было «за директиву», работа сделана и <b>откачена по замеру</b>. Строка
