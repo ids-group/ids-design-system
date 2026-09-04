@@ -176,6 +176,21 @@ const queue = cards.filter((path) => {
   return true;
 });
 
+// Running this twice without a build-cards between corrupts the tree: the second pass renders a
+// card that is already static, re-prepends the marker and dumps the result, and some cards came
+// back with their section in twice - 6 buttons and two h2 where there had been 3 and one, which
+// only the height check caught, on 268 cards.
+const alreadyFrozen = queue.filter((path) => !readFileSync(join(OUT, path), 'utf8').includes('<script'));
+if (alreadyFrozen.length) {
+  server.close();
+  console.error(
+    `✗ ${alreadyFrozen.length} of ${queue.length} card(s) are already frozen — this has run once`
+    + ' already. Re-run `node .design-sync/tools/build-upload.mjs` first; freezing a frozen card'
+    + ' duplicates its content.',
+  );
+  process.exit(1);
+}
+
 let next = 0;
 async function lane() {
   while (next < queue.length) {
