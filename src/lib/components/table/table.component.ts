@@ -16,6 +16,7 @@ import {
   model,
   output,
   signal,
+  ViewContainerRef,
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -584,6 +585,10 @@ export class TableComponent<T extends object> {
   );
 
   protected readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
+
+  private readonly toolbarAnchor = viewChild('toolbarAnchor', {
+    read: ViewContainerRef,
+  });
 
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
     this.layout.foldColumns(
@@ -1496,6 +1501,17 @@ export class TableComponent<T extends object> {
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
+    // Published here rather than from an init hook: a directive on the same element is
+    // constructed after this component, so by the time a feature asks, the view is here. The
+    // anchor goes over as a signal — a viewChild is undefined until the view exists, and a
+    // feature that renders a control of its own has to wait for it.
+    this.layout.publish({
+      visibleColumns: this.visibleColumns,
+      sortedRows: this.sortedData,
+      cellText: (row, column) => this.cellValue(row, column),
+      toolbarAnchor: this.toolbarAnchor,
+    });
+
     this.watchPointer();
 
     // The scrim starts below the header, so it needs the header's height. Measured, not summed

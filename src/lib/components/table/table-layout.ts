@@ -1,4 +1,4 @@
-import { Injectable, Signal, signal } from '@angular/core';
+import { Injectable, Signal, ViewContainerRef, signal } from '@angular/core';
 import type { TableColumn } from './table.types';
 
 /** A stage in the column pipeline: ordering, hiding, widths. */
@@ -8,6 +8,23 @@ export type DsTableColumnStage<T> = (
 
 /** A stage in the row pipeline: the set filters, ahead of the substring search. */
 export type DsTableRowStage<T> = (rows: readonly T[]) => readonly T[];
+
+/**
+ * What a feature is allowed to read back out of the table, and where it may put markup.
+ *
+ * A feature needs the table's derived state — the export serialises `visibleColumns` and
+ * `sortedRows` through `cellText`. Those live on the component as `protected`, which a directive
+ * cannot reach, so the contract is published here rather than by widening the component's surface:
+ * this way the table's public API does not grow one member per feature.
+ */
+export interface DsTableView<T> {
+  readonly visibleColumns: Signal<readonly TableColumn<T>[]>;
+  readonly sortedRows: Signal<readonly T[]>;
+  readonly cellText: (row: T, column: TableColumn<T>) => string;
+  /** An anchor inside the toolbar. A directive cannot insert markup into another component's
+   *  template, so a feature with a control of its own creates it here. */
+  readonly toolbarAnchor: Signal<ViewContainerRef | undefined>;
+}
 
 /**
  * The seam an opt-in table feature writes into, so the table never names the feature.
@@ -62,5 +79,48 @@ export class DsTableLayout<T = unknown> {
       .map((fragment) => fragment())
       .filter(Boolean)
       .join('. ');
+  }
+
+  private published: DsTableView<T> | null = null;
+  private readonly exportContribution = signal<(() => Promise<void>) | null>(
+    null,
+  );
+  private readonly exportingContribution = signal<Signal<boolean> | null>(null);
+
+  /** Called by the table itself, before any directive can ask for it: a directive on the same
+   *  element is constructed after the component that provides this service. */
+  publish(view: DsTableView<T>): void {
+    this.published = view;
+  }
+
+  view(): DsTableView<T> {
+    if (!this.published) {
+      throw new Error(
+        'DsTableLayout was read before ds-table published its view — a feature directive must sit on the ds-table element.',
+      );
+    }
+
+    return this.published;
+  }
+
+  /** The table keeps `runExport()` and `exporting()` as public API, because their docblocks
+   *  promise a button outside the table can drive them. The implementation is the feature's, so
+   *  the table asks here and can tell the difference between "no export directive" and "nothing
+   *  to export" — which is the one silent failure this whole shape is prone to. */
+  setExport(run: () => Promise<void>, exporting: Signal<boolean>): void {
+    this.exportContribution.set(run);
+    this.exportingContribution.set(exporting);
+  }
+
+  runExport(): Promise<void> | null {
+    return this.exportContribution()?.() ?? null;
+  }
+
+  exporting(): boolean {
+    return this.exportingContribution()?.() ?? false;
+  }
+
+  hasExport(): boolean {
+    return this.exportContribution() !== null;
   }
 }
