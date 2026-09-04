@@ -88,8 +88,8 @@ export class DsTableExport<T extends object> {
     inject(DestroyRef).onDestroy(() => created?.destroy());
   }
 
-  /** Awaits `exportFetcher` when one is given, downloads the result, drives `exporting`, writes
-   *  the live region and emits `exportFailed`. */
+  /** Without `exportFetcher` this serialises only what the table holds, which on a server-paged
+   *  table is one page. */
   async runExport(): Promise<void> {
     const fetcher = this.exportFetcher();
     if (!fetcher) {
