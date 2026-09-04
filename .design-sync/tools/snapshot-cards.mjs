@@ -11,8 +11,11 @@
 // and no colour is baked into an inline style - theme tokens stay in `_ds_bundle.css`, which the
 // static card still links, so the pane switching `data-theme` still recolours it.
 //
-// What is lost is BEHAVIOUR, everywhere - a Select no longer opens, a Tab no longer switches. The
-// chapters that need it are listed in `live-chapters.txt` and are left alone.
+// What is lost is BEHAVIOUR, everywhere - a Select no longer opens, a Tab no longer switches. Two
+// kinds of card are therefore left alone: the chapters named in `live-chapters.txt`, whose demos
+// only exist once opened, and every card that renders a control whose panel IS the thing being
+// documented. The second set is decided from the rendered dom, not from the list, and what a run
+// kept is recorded in `live-cards.txt`.
 //
 //   node .design-sync/tools/snapshot-cards.mjs      # after build-cards has stamped the heights
 //
@@ -64,6 +67,13 @@ const chapterOf = (html) => {
 
   return cut < 0 ? rest : `${rest.slice(0, cut)}/${rest.slice(cut + 1)}`;
 };
+
+// A dropdown is a CDK overlay: closed by default and portaled to `document.body`, so a card never
+// SHOWED one — verified against the pre-freeze cards, which held no overlay either. What a frozen
+// card loses is the click that opens it, and the panel is the whole point of these controls. So any
+// card rendering one of them stays live, whatever chapter it belongs to: the chapter list would drag
+// 130 cards live to keep the 85 that actually have a panel — Table alone is 35 for 5.
+const PANEL_OWNERS = /<(ds-select|ds-multi-select|ds-autocomplete|ds-date-picker|ds-time-picker|ds-color-picker|ds-menu|ds-popover)[\s>]/;
 
 const cards = JSON.parse(readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8')).cards;
 
@@ -205,9 +215,10 @@ if (failed.length) {
 
 // Angular inlines a component's styles into every document that renders it, so the same block
 // arrives in card after card: 4005 style tags across the tree, 185 of them distinct, 10.3 MB inlined
-// against 473 KB of union. They are scoped by `_ngcontent`/`_nghost` attributes and therefore
-// position-independent, so concatenating them into one linked sheet is safe - and the browser then
-// fetches it once for the whole grid instead of parsing 27 KB inside each card.
+// against 473 KB of union. Concatenating them into one linked sheet lets the browser fetch it once
+// for the whole grid instead of parsing 27 KB inside each card. Mostly they are scoped by the
+// `_ngcontent`/`_nghost` attributes, but NOT entirely - see the union below, which is why the sheet
+// is built from every rendered card in `cards.json` order rather than from an arbitrary subset.
 const isComponentStyle = (body) => body.includes('_nghost-') || body.includes('_ngcontent-');
 
 // Whitespace inside a `<style>` is never rendered, so this collapses unconditionally - unlike the
@@ -221,10 +232,26 @@ const tidyCss = (body) => body
 // `cards.json` declares is what makes the sheet and the shortened ids byte-identical run to run -
 // otherwise every snapshot rewrites all 376 cards and the shared sheet with no change in them, and
 // the committed tree CI diffs against is noise.
-const ordered = queue.map((path) => [path, snapshots.get(path)]);
+const rendered = queue.map((path) => [path, snapshots.get(path)]);
 
+// Whether a card owns a panel can only be told from the RENDERED dom: a live card's own HTML holds
+// just `<ds-docs-components-select>`, and every element inside it appears when Angular renders. So
+// the decision comes after the render, and a card that turns out to own one is left exactly as
+// build-cards wrote it.
+const ordered = [];
+for (const entry of rendered) {
+  if (PANEL_OWNERS.test(entry[1])) kept.push(entry[0]);
+  else ordered.push(entry);
+}
+
+// Collected from EVERY rendered card, not only the frozen ones. A block qualifies on containing a
+// scope attribute anywhere in it, and some carry document-level rules alongside — `:root` custom
+// properties, keyframes, `::ng-deep` output. Building the union from the frozen set alone dropped
+// the blocks that only a now-live card contributed, and 80 frozen cards moved by 4-32px: the rules
+// they need are not all attribute-scoped, whatever the scoping suggests. A live card does not link
+// the sheet, so the extra blocks cost the grid one larger fetch and nothing else.
 const blocks = [];
-for (const [, dom] of ordered) {
+for (const [, dom] of rendered) {
   for (const [, body] of dom.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
     if (isComponentStyle(body) && !blocks.includes(body)) blocks.push(body);
   }
@@ -262,7 +289,7 @@ for (const [path, dom] of ordered) {
   });
   html = shorten(html)
     // The card's own comments explain the LIVE card to whoever reads the generator's output; a
-    // frozen card is generated output that nobody edits, and they are in all 376 of them.
+    // frozen card is generated output that nobody edits.
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/\sng-version="[^"]*"/g, '')
     .replace(/\sdata-ds-(?:tidied|sliced|kept)="[^"]*"/g, '');
@@ -275,10 +302,19 @@ for (const [path, dom] of ordered) {
   writeFileSync(join(OUT, path), written);
 }
 
+// The record of what this run left live, so `check-frozen` asserts against it instead of
+// re-deriving the rule. Two implementations of "which cards stay live" is how they drift, and the
+// gate went a whole day passing vacuously the last time it re-derived something.
+writeFileSync(
+  join(syncDir, 'live-cards.txt'),
+  `# Written by snapshot-cards.mjs — the cards it left live. Do not edit; see live-chapters.txt.\n${
+    [...kept].sort().join('\n')}\n`,
+);
+
 const kb = (bytes) => `${Math.round(bytes / 1024)} KB`;
 console.log(
-  `\n✓ ${snapshots.size} card(s) frozen to static HTML, ${kept.length} left live`
-  + ` (${[...live].join(', ')})`
+  `\n✓ ${ordered.length} card(s) frozen to static HTML, ${kept.length} left live`
+  + ` (${[...live].join(', ')} + every card with a panel)`
   + `\n  ${blocks.length} distinct component style block(s) → ${SHARED_CSS} (${kb(Buffer.byteLength(sheet))}, fetched once)`
   + `\n  ${ids.size} Angular component id(s) shortened`
   + `\n  cards ${kb(before)} → ${kb(after)}`,

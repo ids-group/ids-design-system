@@ -166,16 +166,36 @@ tags by then, and no colour is baked in — the theme tokens stay in
 `_ds_bundle.css`, which the frozen card still links, so the pane switching
 `data-theme` still recolours it.
 
-What is lost is BEHAVIOUR. The chapters that need it are in
-`live-chapters.txt` — toast, drawer, modal, popover, bottom-sheet, tree,
-loading-overlay, scrollbar — and are left as live Angular. 376 frozen, 33 live.
+What is lost is BEHAVIOUR, and two kinds of card need it, so two rules decide:
+
+- **`live-chapters.txt`** names the chapters whose demo only exists once opened —
+  toast, drawer, modal, popover, bottom-sheet, tree, loading-overlay, scrollbar.
+- **Any card that renders a control whose PANEL is the point** is left live too:
+  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`,
+  `ds-time-picker`, `ds-color-picker`, `ds-menu`, `ds-popover`. A dropdown is a CDK
+  overlay — closed by default and portaled to `document.body` — so a card never
+  displayed one even before the freeze; verified against the pre-freeze cards,
+  which held no overlay either. What freezing took away was the click that opens
+  it. Measured on the live cards afterwards: Select opens 20 options, MultiSelect
+  6, Autocomplete 4, the date picker 42 day cells, the colour picker its panel.
+
+That second rule is decided **from the rendered dom**, because a live card's own
+HTML holds nothing but `<ds-docs-components-select>` — every element inside it
+appears when Angular renders. Per CARD, not per chapter: the chapter list would
+drag 130 cards live to keep the 85 that have a panel, and Table alone is 35 for 5.
+What a run kept is written to `live-cards.txt`, which is what `check-frozen`
+asserts against rather than re-deriving the rule. **291 frozen, 118 live.**
 
 Angular inlines a component's styles into every document that renders it, so the
 same block arrived in card after card: 185 distinct blocks against 4005 tags.
-They are scoped by `_ngcontent`/`_nghost` attributes and therefore
-position-independent, which is what makes concatenating them into `_ds_cards.css`
-safe — the browser fetches 428 KB once for the whole grid instead of parsing 27 KB
-inside each card. The `ng-cNNNN` ids are shortened across the sheet and every card
+Concatenated into `_ds_cards.css`, the browser fetches 428 KB once for the whole
+grid instead of parsing 27 KB inside each card. **The union is taken over every
+rendered card, in `cards.json` order** — not over the frozen ones only. A block
+qualifies on carrying a scope attribute anywhere in it, and some carry
+document-level rules alongside; building the union from the frozen subset dropped
+what only a live card contributed and moved 80 frozen cards by 4–32px. So the
+scoping is mostly true and not entirely, and the order is load-bearing: measure
+after changing either. The `ng-cNNNN` ids are shortened across the sheet and every card
 **in one pass**: the attribute IS the scope, so a rename reaching only one of them
 silently unstyles the component. The scaffolding's own `/* … */` goes with the HTML
 comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
@@ -410,7 +430,7 @@ the plan. The upload stays a local step with a human approving the paths.
 ## What lives remotely, and what this repo commits
 
 The repo commits the sync inputs — `docs/`, `elements/`, `tools/`,
-`config.json`, `viewports.json`, `cards.lock.json`, `conventions.md` — **and** the built tree at
+`config.json`, `viewports.json`, `cards.lock.json`, `live-cards.txt`, `conventions.md` — **and** the built tree at
 `upload/`, so a release commit carries exactly what a publish sends and CI can
 fail on a stale copy. `_ds_manifest.json` is in there too since we started writing
 it ourselves. `_ds_sync.json` is the only file in the project this repo does not

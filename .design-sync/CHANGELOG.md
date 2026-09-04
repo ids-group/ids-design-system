@@ -26,14 +26,20 @@ the release commit — one timeline, two audiences.
   anything longer in the note.
 - **The last five cards lose the eyebrow**, and a part no longer republishes the chapter it
   belongs to.
-- **376 of 409 cards ship as static HTML instead of an Angular application.** A card is a whole
+- **291 of 409 cards ship as static HTML instead of an Angular application.** A card is a whole
   document, and every one of them downloaded the 2.12 MB bundle and booted its own application, in
   every tile of the grid at once. `snapshot-cards.mjs` renders each card and writes back the settled
   DOM with the scripts stripped, so a frozen card fetches no bundle at all. Nothing renders
   differently — the theme tokens stay in `_ds_bundle.css`, so the pane switching `data-theme` still
-  recolours a frozen card, and all 409 declared heights are unchanged. What is lost is behaviour,
-  so the chapters whose demos open on a click are listed in `live-chapters.txt` and stay live:
-  toast, drawer, modal, popover, bottom-sheet, tree, loading-overlay, scrollbar.
+  recolours a frozen card, and all 409 declared heights are unchanged.
+- **A card whose control owns a dropdown stays live, so the dropdown still opens.** What freezing
+  takes away is behaviour, and for Select, MultiSelect, Autocomplete, the date and time pickers, the
+  colour picker and Menu the panel IS the documented thing. It was never VISIBLE in a card — a CDK
+  overlay is closed by default and portaled to `document.body` — but it was one click away, and a
+  frozen card has no click. The rule is per card and read from the rendered dom rather than from a
+  list of chapters, which would drag 130 cards live to keep the 85 that have a panel. The other
+  chapters that need behaviour are named in `live-chapters.txt`: toast, drawer, modal, popover,
+  bottom-sheet, tree, loading-overlay, scrollbar.
 - **The 185 distinct component stylesheets are one linked file.** Angular inlines a component's
   styles into every document that renders it, so the same block arrived in card after card. They
   are scoped by attribute and therefore position-independent, so they concatenate into
