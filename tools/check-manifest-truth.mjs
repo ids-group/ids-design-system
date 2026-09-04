@@ -257,10 +257,8 @@ export function checkItem(item, before, after, prevTag, tag) {
         continue;
       }
       if (!wasThere) {
-        // The phantom exemption is for a name a consumer could actually have WRITTEN. It does not
-        // cover an imported one: `ComboboxWidth` -> `AutocompleteWidth` reads as a rename, but the
-        // old type is absent from the whole predecessor tree, so no import of it ever compiled and
-        // there is no consumer to migrate.
+        // Same distinction as above: the phantom exemption is only for a name a consumer could
+        // have written, which an imported one never was.
         if (targetExists && !(isImportedName && claim.bare)) continue;
         defects.push(
           `old \`${label(claim)}\` does not exist at ${prevTag}, and \`new\` names nothing that does — the item migrates from nowhere to nowhere`,

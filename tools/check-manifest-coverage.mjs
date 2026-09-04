@@ -133,8 +133,8 @@ function entriesOf(block) {
 
 // A family-wide rename is filed as one item with a placeholder — `--ds-*-bg` → `--ds-*-bg-color`,
 // `--<role>-subtle` → `--<role>-subtitle` — which is the right way to file it: enumerating every
-// member would be worse. A literal substring test cannot see through that, so it read the whole of
-// 0.3.0 as uncovered. Placeholders are matched as patterns.
+// member would be worse. A literal substring test cannot see through it, so placeholders are
+// matched as patterns.
 function patternsIn(text) {
   const patterns = [];
   for (const match of text.matchAll(/--[a-z0-9-]*(?:\*|<[a-z]+>)[a-z0-9*<>-]*/gi)) {
