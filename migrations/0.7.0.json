@@ -48,17 +48,6 @@
       "surface": "typescript"
     },
     {
-      "id": "size-type-search-to-dssize",
-      "kind": "type-rename",
-      "old": "SearchSize",
-      "new": "DsSize",
-      "action": "Replace `SearchSize` with `DsSize`, imported from the package root.",
-      "searchHints": [
-        "SearchSize"
-      ],
-      "surface": "typescript"
-    },
-    {
       "id": "size-type-checkbox-to-dssize",
       "kind": "type-rename",
       "old": "CheckboxSize",

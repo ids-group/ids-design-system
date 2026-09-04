@@ -316,35 +316,6 @@
       "verify": "Every field showing error / warning / success renders a 14px glyph before its message text and hint rows render none; an app that set stateIcons:false shows no glyph on any state; a field with [messageIcon]=\"false\" shows none while its neighbours do."
     },
     {
-      "id": "search-drops-the-message-inputs",
-      "kind": "removed-api",
-      "old": "ds-search[hint]",
-      "new": null,
-      "action": "Delete the binding. If the field genuinely needs a label or a validation line, use ds-input — ds-search is a toolbar filter and deliberately has no message row.",
-      "appliesWhen": "Not affected: `value`, `disabled`, `hidden`, `size`, `debounce`, `clearable`, `placeholder`, `shortcut`, `showIcon`, `ariaLabel`.",
-      "pitfall": "It used to compile and do NOTHING, and it is a template type error now — which is the whole point of the change, but it means the upgrade surfaces bindings that looked fine for releases.",
-      "note": "Removed from ds-search, which never rendered any of them: `hint`, `error`, `warning`, `errors`, `invalid`, `touched`, `reserveMessage`, `messageIcon` and the `reserveMessageResolved` readback. They arrived by inheritance when search gained form binding, so the API reference advertised eight inputs whose values nothing read.",
-      "surface": [
-        "template",
-        "typescript"
-      ],
-      "verify": "Binding hint/error/warning/errors/invalid/touched/reserveMessage/messageIcon on a ds-search fails to compile, while formControl binding and the disabled surface still work.",
-      "searchHints": [
-        "ds-search",
-        "<ds-search",
-        "error=",
-        "hint=",
-        "reserveMessage",
-        "messageIcon"
-      ],
-      "detect": [
-        "<ds-search",
-        "error=",
-        "hint=",
-        "[errors]"
-      ]
-    },
-    {
       "id": "one-focus-ring-per-field",
       "kind": "behavior",
       "old": "ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper, ds-field-group",
