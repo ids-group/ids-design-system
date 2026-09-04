@@ -16,9 +16,8 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
   encapsulation: ViewEncapsulation.Emulated,
   // Keyboard nav bubbles up from the focused menuitem button. Hand-rolled roving
   // (mirrors ds-tabs) — kept signal-based and consistent with the rest of the DS.
-  // data-focus: the panel clips (`overflow: hidden` rounds the flush rows), so every
-  // focus ring inside it has to be drawn inward. This is the local switch _focus.scss
-  // documents for exactly that, set on the clipping element itself.
+  // data-focus="inset": the panel clips, so a ring drawn outward is lost. Belongs on the
+  // clipping element — see styles/_focus.scss.
   host: { '(keydown)': 'onKeydown($event)', 'data-focus': 'inset' },
 })
 export class MenuComponent {

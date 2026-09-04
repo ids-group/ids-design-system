@@ -41,6 +41,22 @@
   box-shadow: none;
 }
 
+// For a persistent state — selected, active, current — that paints its own box-shadow on
+// the element that also carries the focus ring. One property cannot hold both, so the
+// later rule wins and one signal vanishes silently; this hands the ring the tie by
+// intent rather than by line order.
+//
+// Only for a state whose OTHER properties keep it identifiable while focused (a fill, a
+// label colour). A state carried by the shadow ALONE must not use it — the state would
+// go unreadable exactly while the user stands on it.
+//
+// Usage: `&.active { @include focus.state-shadow(inset 3px 0 0 var(--_rail)); }`
+@mixin state-shadow($shadow) {
+  &:not(:focus-visible) {
+    box-shadow: $shadow;
+  }
+}
+
 :root[data-focus='ring'] {
   --ds-field-focus-shadow: var(--focus-ring);
   --ds-field-focus-shadow-error: var(--focus-ring-error);
@@ -87,12 +103,10 @@
 @media (forced-colors: active) {
   // CanvasText, not a brand colour: the palette is replaced, and a system keyword is
   // the only value guaranteed to contrast with the forced background.
-  // `!important`, and only here: this rule was written at zero specificity, so all 42
-  // component `outline: none` declarations and the seven unconditional `outline: 0` on
-  // inner inputs out-ranked it — forced colours dropped their box-shadow ring and this
-  // replacement never landed, leaving every text field with no indicator at all. In
-  // this mode there is no author intent to preserve: the palette is replaced and an
-  // indicator is mandatory, so the floor has to win outright.
+  // `!important` here only: every component that draws its own ring declares
+  // `outline: none`, and each of those out-ranks this rule, so without it the mode
+  // leaves the elements it exists for with no indicator at all. Nothing of the author's
+  // is lost — forced colours replaces the palette, and an indicator is mandatory.
   :where(:focus-visible) {
     outline: var(--border-width-strong) solid CanvasText !important;
     outline-offset: var(--focus-ring-offset);

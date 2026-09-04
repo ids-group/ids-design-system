@@ -11,9 +11,9 @@
       > * { flex: 1; }
     }
 
-    /* Showcase-only: pin focus-within without real interaction. Mirrors all three
-       properties the component's own :focus-within sets, through its resolvers, so the
-       specimen cannot drift from it — a pin that sets fewer understates the state. */
+    /* Showcase-only: pin focus-within without real interaction. Mirror every property
+       the component's own :focus-within sets, through its resolvers — a pin that sets
+       fewer understates the state, and a hardcoded value drifts from it. */
     .state-cell-stage.force-focus ::ng-deep .search {
       background-color: var(--_search-bg-color-focus);
       border-color: var(--_search-border-focus);

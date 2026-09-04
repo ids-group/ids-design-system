@@ -57,9 +57,9 @@
 
   &:active:not(.disabled) { background: var(--surface-muted); }
 
-  // No `inset` keyword here: it binds to the FIRST layer of a shadow list only, and the
-  // ring's first layer is the transparent one — so `inset var(…)` left the visible layer
-  // outset, where the panel's clip ate it. The menu host carries data-focus="inset".
+  // Do NOT add `inset` here: it binds to a shadow list's first layer only, and the ring's
+  // first layer is transparent, so it would leave the visible layer outset and clipped.
+  // The menu host carries data-focus="inset" instead.
   &:focus-visible { outline: none; box-shadow: var(--_menu-item-focus-shadow); }
 
   &.disabled {

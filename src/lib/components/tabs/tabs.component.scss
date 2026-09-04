@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
 :host {
@@ -156,18 +157,14 @@
         color: var(--_tab-label-color-hover);
       }
 
-      /* Not on `.active` itself: its elevation and the focus ring are both box-shadow,
-         and the more specific `.pills .tab.active` beat the focus rule — so in pills
-         mode the active tab, which roving tabindex makes the ONLY tab stop, had no
-         ring in any keyboard state. */
-      &.active:not(:focus-visible) {
-        box-shadow: var(--shadow-1);
-      }
-
       &.active {
         background-color: var(--_tab-pill-bg-color-active);
         color: var(--_tab-pill-label-color-active);
         border-bottom: 0;
+
+        // Roving tabindex leaves the active tab as the only stop, so its elevation must
+        // never be what wins the box-shadow tie.
+        @include focus.state-shadow(var(--shadow-1));
 
         &:hover {
           background-color: var(--_tab-pill-bg-color-active-hover);
