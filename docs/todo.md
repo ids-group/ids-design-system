@@ -2,6 +2,32 @@
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
+- [ ] **[P2] Overlays should grow, not drop in from above (Stas, 2026-09-04).** Every CDK panel
+  carrying `ds-overlay-pane` enters with `ds-slide-in`: `_overlay-motion.scss` sets
+  `--_ds-enter-y: calc(-1 * var(--_overlay-enter-offset))`, so a panel below its trigger starts 4px
+  high and drops into place. Across selects, menus, popovers, tooltips and the pickers that reads as
+  a small jump from the top on everything at once. Wanted instead: scale plus opacity, no travel.
+  Most of the parts are already there — `ds-scale-in` exists in `_surface-motion.scss`, reads
+  `--_ds-enter-scale` (0.96), and `--_overlay-enter-origin` is ALREADY computed per placement
+  (`top center` / `bottom center` / `center left` / `center right`), so a scaled panel would still
+  grow out of its trigger edge. The change is the default keyframe name, one line.
+  Check before shipping it: the four panels that opt out of the shared enter (drawer, bottom-sheet,
+  alert, banner set their own `--_ds-enter-y`) must keep travelling — an edge panel that scales
+  instead of sliding reads as a glitch. And `prepareOverlayEnter()` stamps `data-ds-placement`
+  BEFORE attach specifically so a mid-scroll CDK flip redirects rather than restarts; a scale
+  entrance has to survive the same flip.
+
+- [ ] **[P2] Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04).**
+  Asked for as a sweep: add the ones that are absent, correct the ones that are wrong. Two mechanical
+  traps are already known and should shape the sweep rather than be rediscovered. First, `transition`
+  is ONE property: whichever rule wins REPLACES the other's list, it never adds to it, and 46
+  component stylesheets declare their own — this is why `focus.ring` uses an `animation` instead, and
+  why `_press.scss` deliberately declares no transition at all. Second, a state that appears and
+  disappears cannot transition unless its resting state exists in the DOM: an element rendered only
+  while active has nothing to travel from and will pop in whatever is written. Verify with animations
+  ON — see the reduced-motion item below for how a void run reads exactly like a working one.
+
+
 - [x] **The "wrong element focuses" sweep, and what a gate can and cannot decide.** Ran 2026-09-04
   after a consumer screenshot showed `ds-multi-select`'s panel filter ringing its bare input rather
   than the row that carries the search icon. Confirmed against the tag rather than guessed: v0.12.0's
