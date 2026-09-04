@@ -116,6 +116,49 @@ const rules = [
     expect: 'hold',
     unresolved: 1,
   },
+  {
+    // A bare custom element reached none of the branches and passed unread, along with 127 other
+    // values. It resolves against the element map like any other name.
+    name: 'FIRES when a removed element still answers at its own tag',
+    item: { id: 'x', kind: 'selector-rename', old: 'ds-old-sheet', new: 'ds-sheet' },
+    before: surface({ elements: { 'ds-old-sheet': [] } }),
+    after: surface({ elements: { 'ds-old-sheet': [], 'ds-sheet': [] } }),
+    expect: 'fire',
+  },
+  {
+    name: 'HOLDS: an element that really went away',
+    item: { id: 'x', kind: 'selector-rename', old: 'ds-old-sheet', new: 'ds-sheet' },
+    before: surface({ elements: { 'ds-old-sheet': [] } }),
+    after: surface({ elements: { 'ds-sheet': [] } }),
+    expect: 'hold',
+  },
+  {
+    // `ds-button[variant=outline]` names the same input as `ds-button[variant]`; before the value
+    // form was read, an item written this way asserted nothing.
+    name: 'FIRES on an attribute selector carrying a value, like the bare form',
+    item: {
+      id: 'x',
+      kind: 'input-rename',
+      old: 'ds-button[variant=outline]',
+      new: 'appearance',
+    },
+    before: surface({ elements: { 'ds-button': ['variant'] } }),
+    after: surface({ elements: { 'ds-button': ['variant', 'appearance'] } }),
+    expect: 'fire',
+  },
+  {
+    // The component writes `data-*` itself, so it is not an input and must not be looked up as one.
+    name: 'HOLDS: a data-* attribute is not treated as a missing input',
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: "ds-color-picker[data-field-state='error']",
+      new: null,
+    },
+    before: surface({ elements: { 'ds-color-picker': [] } }),
+    after: surface({ elements: { 'ds-color-picker': [] } }),
+    expect: 'hold',
+  },
 ];
 
 let failed = 0;

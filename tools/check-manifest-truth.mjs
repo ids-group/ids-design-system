@@ -65,10 +65,16 @@ function readTreeAt(tag) {
   let at = 0;
   for (const path of paths) {
     const newline = batch.indexOf(10, at);
-    if (newline === -1) break;
-    const header = batch.toString('utf8', at, newline);
+    const header = newline === -1 ? '' : batch.toString('utf8', at, newline);
     const size = Number(header.split(' ')[2]);
-    if (!Number.isFinite(size)) break;
+    // Bailing out quietly here truncates the tag's surface, and a truncated surface is what a
+    // removal claim wants to see: `old` reads as gone because the file holding it was dropped.
+    if (newline === -1 || !Number.isFinite(size))
+      throw new Error(
+        `check-manifest-truth: cat-file gave no readable record for ${tag}:${path} ` +
+          `(${files.length} of ${paths.length} read). The surface would be short, and a ` +
+          'removal claim passes against a short surface.',
+      );
     const start = newline + 1;
     files.push({ path, text: batch.toString('utf8', start, start + size) });
     at = start + size + 1;
@@ -80,7 +86,7 @@ const DECL =
   /^export\s+(?:default\s+)?(?:declare\s+)?(?:abstract\s+)?(?:class|interface|type|const|function|enum)\s+([A-Za-z_][A-Za-z0-9_]*)/gm;
 
 const surfaceCache = new Map();
-function surfaceAt(tag) {
+export function surfaceAt(tag) {
   if (surfaceCache.has(tag)) return surfaceCache.get(tag);
   const files = readTreeAt(tag);
   if (!files) return null;
@@ -93,9 +99,24 @@ function surfaceAt(tag) {
   for (const { path: file, text } of files) {
     for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))
       if (!match[0].endsWith('-')) tokens.add(match[0]);
-    for (const match of text.matchAll(/\.([a-z][a-z0-9-]*)\s*[,{:.[]/g))
-      classes.add(match[1]);
-    if (!file.endsWith('.ts')) continue;
+    if (!file.endsWith('.ts')) {
+      // Two precise readings rather than one loose one. A template's `items().length,` and a
+      // comment naming `input.component.scss` both match a bare `.name` pattern, and a
+      // `class-rename` claiming a class that never existed would resolve against that noise.
+      if (file.endsWith('.scss'))
+        for (const match of text
+          .replace(/\/\*[\s\S]*?\*\//g, '')
+          .replace(/(^|\s)\/\/.*$/gm, '$1')
+          .matchAll(/\.([a-z][a-z0-9-]*)\s*[,{:.[]/g))
+          classes.add(match[1]);
+      // Sixteen classes reach the DOM from a template and are never selected in a stylesheet,
+      // so a consumer can target them and the stylesheets alone do not know they exist.
+      else
+        for (const attribute of text.matchAll(/\bclass="([^"]*)"/g))
+          for (const name of attribute[1].split(/\s+/))
+            if (/^[a-z][a-z0-9-]*$/.test(name)) classes.add(name);
+      continue;
+    }
     for (const decl of text.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(DECL))
       symbols.add(decl[1]);
 
@@ -134,9 +155,17 @@ function claims(value) {
   // `bare` marks a value that IS the identifier, as opposed to one lifted out of a sentence.
   // Only a bare claim can be asked to have disappeared: `class MyTable extends TableComponent`
   // mentions TableComponent, but the item removes a member of it, not the class.
-  const attr = /^([a-z][\w-]*)\[([\w-]+)\]$/.exec(text);
-  if (attr)
+  // The value form too — `ds-button[variant=outline]` names the same input as `ds-button[variant]`.
+  // `data-*` is excluded: the component writes those itself, so they are not inputs to resolve.
+  const attr = /^([a-z][\w-]*)\[([\w-]+)(?:\s*[~|^$*]?=\s*['"]?[^\]'"]*['"]?)?\]$/.exec(text);
+  if (attr && !attr[2].startsWith('data-'))
     return [{ kind: 'member', element: attr[1], name: attr[2], bare: true }];
+
+  // A custom element is a claim in its own right: `ds-bottom-sheet` was reaching none of the
+  // branches below and passed unchecked, as did 127 other values.
+  const bareTag = /^([a-z][a-z0-9]*(?:-[a-z0-9]+)+)$/.exec(text);
+  if (bareTag)
+    return [{ kind: 'element', name: bareTag[1], bare: true }];
 
   const found = [];
   for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))
@@ -156,6 +185,7 @@ function resolves(surface, claim) {
   if (claim.kind === 'token') return surface.tokens.has(claim.name);
   if (claim.kind === 'symbol') return surface.symbols.has(claim.name);
   if (claim.kind === 'class') return surface.classes.has(claim.name);
+  if (claim.kind === 'element') return surface.elements.has(claim.name);
   if (claim.kind === 'member') {
     const members = surface.elements.get(claim.element);
     return members ? members.has(claim.name) : null; // null: the element itself is unknown here
@@ -170,6 +200,9 @@ const GONE_AFTER = new Set([
   'class-rename',
   'type-rename',
   'removed-api',
+  // Renaming a custom element is a disappearance like any other, and it was the one kind
+  // never asked to prove it: five published items claim one and none was read.
+  'selector-rename',
 ]);
 
 const label = (claim) =>
@@ -188,6 +221,7 @@ function sweep() {
   // and one asks per version before trusting that manifest. A clone without tags is the way to hit
   // it — `git tag --list` comes back empty, so every version is skipped at once.
   const skipped = [];
+  const unchecked = [];
   let checked = 0;
 
   for (const file of manifests) {
@@ -225,6 +259,7 @@ function sweep() {
       unresolved.push(
         ...verdict.unresolved.map((line) => `${file} ${item.id}: ${line}`),
       );
+      unchecked.push(...verdict.unchecked.map((line) => `${file} ${line}`));
     }
   }
   if (ONLY && !manifests.length) {
@@ -240,7 +275,7 @@ function sweep() {
     );
     process.exit(1);
   }
-  report(defects, unresolved, checked, skipped);
+  report(defects, unresolved, checked, skipped, unchecked);
 }
 
 // Exported so the selftest can exercise the rules against synthetic surfaces: the checkout is
@@ -248,6 +283,15 @@ function sweep() {
 export function checkItem(item, before, after, prevTag, tag) {
   const defects = [];
   const unresolved = [];
+  // A composite selector (`ds-list-item ::ng-deep .activator`) or a call signature
+  // (`avatarTint(seed, { chroma })`) yields no single name to look up. Counting them is the
+  // difference between a green that means "verified" and one that means "nothing was read".
+  const unchecked = [];
+  for (const field of ['old', 'new']) {
+    const value = item[field];
+    if (typeof value === 'string' && value.trim() && !claims(value).length)
+      unchecked.push(`${item.id}: ${field} \`${value.trim()}\``);
+  }
 
   const oldMember = claims(item.old).find((claim) => claim.kind === 'member');
   const newClaims =
@@ -320,16 +364,23 @@ export function checkItem(item, before, after, prevTag, tag) {
         `new \`${label(claim)}\` does not exist at ${tag} — the target is not there`,
       );
   }
-  return { defects, unresolved };
+  return { defects, unresolved, unchecked };
 }
 
-function report(defects, unresolved, count, skipped = []) {
+function report(defects, unresolved, count, skipped = [], unchecked = []) {
   console.log(
     `check-manifest-truth: ${count} manifest(s) against ${surfaceCache.size} tree(s).`,
   );
   if (skipped.length) {
     console.log(`\n${skipped.length} manifest(s) not checked:`);
     for (const line of skipped) console.log(`  ${line}`);
+  }
+  if (unchecked.length) {
+    console.log(
+      `\n${unchecked.length} value(s) hold no single name to look up — composite selectors and ` +
+        'call signatures. Nothing was verified about these:',
+    );
+    for (const line of unchecked) console.log(`  ${line}`);
   }
   if (unresolved.length) {
     console.log(
@@ -346,7 +397,12 @@ function report(defects, unresolved, count, skipped = []) {
     );
     process.exit(1);
   }
-  console.log('every old/new resolves against its own boundary.');
+  console.log(
+    unchecked.length
+      ? `every old/new that holds a name resolves against its own boundary; ${unchecked.length} ` +
+          'listed above hold none.'
+      : 'every old/new resolves against its own boundary.',
+  );
 }
 
 // Guarded so importing `checkItem` does not trigger a 27-tree sweep: module top-level code runs
