@@ -17,6 +17,7 @@
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
       (change)="onSelect()"
+      (click)="onClick()"
     />
 
     <label

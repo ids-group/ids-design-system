@@ -5,24 +5,25 @@
   [apiKeys]="['radio-group']"
 >
   <div class="stack">
-    <ds-radio
+    <ds-radio-group
       name="r"
-      value="single"
-      label="Single date"
-    />
+      [value]="'range'"
+    >
+      <ds-radio
+        value="single"
+        label="Single date"
+      />
 
-    <ds-radio
-      name="r"
-      value="range"
-      label="Date range"
-      [checked]="true"
-    />
+      <ds-radio
+        value="range"
+        label="Date range"
+      />
 
-    <ds-radio
-      name="r"
-      value="recurring"
-      label="Recurring"
-    />
+      <ds-radio
+        value="recurring"
+        label="Recurring"
+      />
+    </ds-radio-group>
 
     <ds-radio
       label="Disabled"
@@ -38,7 +39,7 @@
   <div class="states states--cols-4">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-radio />
+        <ds-radio [deselectable]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -48,7 +49,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-hover">
-        <ds-radio />
+        <ds-radio [deselectable]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -58,7 +59,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
-        <ds-radio />
+        <ds-radio [deselectable]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -68,7 +69,10 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-radio [checked]="true" />
+        <ds-radio
+          [checked]="true"
+          [deselectable]="true"
+        />
       </div>
 
       <div class="state-cell-label">
@@ -78,7 +82,10 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
-        <ds-radio [checked]="true" />
+        <ds-radio
+          [checked]="true"
+          [deselectable]="true"
+        />
       </div>
 
       <div class="state-cell-label">
@@ -118,16 +125,19 @@
     <ds-radio
       size="sm"
       label="Small"
+      [deselectable]="true"
     />
 
     <ds-radio
       size="md"
       label="Medium"
+      [deselectable]="true"
     />
 
     <ds-radio
       size="lg"
       label="Large"
+      [deselectable]="true"
     />
   </div>
 
@@ -139,6 +149,7 @@
     <ds-radio
       label="Confirm selection"
       [required]="true"
+      [deselectable]="true"
     />
   </div>
 
@@ -158,11 +169,13 @@
     <ds-radio
       label="Preferred contact"
       hint="We will only use this for account alerts."
+      [deselectable]="true"
     />
 
     <ds-radio
       label="Preferred contact"
       error="A selection is required to continue."
+      [deselectable]="true"
     />
   </div>
 
