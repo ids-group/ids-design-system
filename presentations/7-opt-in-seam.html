@@ -8,7 +8,7 @@
 <main>
   <header class="masthead">
     <div class="chips">
-      <span class="chip is-open">нужно 3 вердикта</span>
+      <span class="chip is-done">РЕШЕНО 2026-09-04 — директивы</span><span class="chip is-open">2 вердикта открыты</span>
       <span class="chip">не зависит от A3</span>
     </div>
     <h1>Opt-in-шов — платить только за включённое</h1>
@@ -47,7 +47,7 @@
     удерживает <b>~87–95%</b> приза. Обратная сторона: кто фичу <b>использует</b>, платит ~1 КБ больше.
   </p>
 
-  <h2>Решение 1 — форма opt-in для таблицы</h2>
+  <h2>Решение 1 — форма opt-in для таблицы <span class="chip is-done">РЕШЕНО — a</span></h2>
 
   <div class="chart">
     <div class="row"><span class="k"><code>ds-table</code> сегодня</span>
@@ -116,8 +116,8 @@
 imports: [DsTable, DsTableResizable, DsTableExport]
 &lt;ds-table dsResizable dsExport [columns]="cols" [data]="rows" /&gt;</code></pre>
 
-  <section class="panel verdict">
-    <h3 style="margin-top:0">Рекомендую <b>a</b> — директивы</h3>
+  <section class="panel verdict is-done">
+    <h3 style="margin-top:0">РЕШЕНО 2026-09-04 — <b>a</b>, директивы</h3>
     <p style="margin-bottom:0">
       Размер у всех трёх одинаковый, так что выбор решается двумя строками выше: у <b>a</b> опция фичи —
       обычный input на директиве, у <b>b</b> она внутри литерала массива, который Angular пересобирает
