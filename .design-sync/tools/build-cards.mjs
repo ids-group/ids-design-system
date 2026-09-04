@@ -499,12 +499,19 @@ const capped = (paragraph) => {
     : `${sentence.slice(0, sentence.lastIndexOf(' ', SUBTITLE_CAP))}…`;
 };
 
+/** A card is generated output nobody edits, so the reasons live here rather than in 410 copies of
+ *  the page. The @dsCard marker is added back by the caller - the manifest is built from it. */
+const trimmed = (page) => page
+  .replace(/<!--[\s\S]*?-->/g, '')
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/^[^\S\n]*\n/gm, '');
+
 function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTable, head, block, react, title, subtitle }) {
   const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''}`
     + `${title ? ` name="${markerValue(title)}"` : ''}`
     + `${subtitle ? ` subtitle="${markerValue(capped(subtitle))}"` : ''} -->`;
 
-  return `${marker}
+  return marker + trimmed(`
 <!doctype html>
 <!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
      automatic OS branch, so a host that sets it on this document flips every component's tokens
@@ -650,7 +657,7 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTa
     })();
   </script>
 </body></html>
-`;
+`);
 }
 
 /** Declarations for the agent. Richer than the deleted port's: the same per-prop docs plus the 55

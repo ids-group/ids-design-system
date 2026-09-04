@@ -31,10 +31,12 @@ const FRAME_HEIGHT = 24000;
 const LANES = 5;
 
 const CHROME = [
+  process.env.CHROME_BIN,
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   '/usr/bin/google-chrome',
   '/usr/bin/chromium',
+  '/usr/bin/chromium-browser',
 ].find((path) => existsSync(path));
 
 if (!CHROME) {

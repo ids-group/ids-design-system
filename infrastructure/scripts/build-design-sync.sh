@@ -42,43 +42,45 @@ bun run build:upload
 command -v git > /dev/null || apk add --no-cache git > /dev/null 2>&1 || true
 command -v git > /dev/null || { echo "git is not available, so the upload tree cannot be compared or committed"; exit 1; }
 
-# This repo commits the cards FROZEN, freezing needs a browser this image does not have, so the
-# build above just replaced them with live ones. Comparing THOSE bytes against the commit says
-# "stale" every run — and with RELEASE_TOKEN set this script does not fail on stale, it commits:
-# 0.12.0 shipped a thawed tree that way. `cards.lock.json` is what to compare instead, because a
-# browserless build reproduces it exactly.
-if [ -n "$(git status --porcelain .design-sync/cards.lock.json)" ]; then
-  echo "The cards changed, and this build cannot freeze them — the image has no browser."
-  echo ""
-  echo "Run locally, in this order, and commit .design-sync:"
-  echo "  node .design-sync/tools/build-upload.mjs"
-  echo "  node .design-sync/tools/measure-cards.mjs    # only if a card's height moved"
-  echo "  node .design-sync/tools/snapshot-cards.mjs   # LAST — it is what freezes them"
-  exit 1
+# The cards are committed FROZEN: `snapshot-cards` renders each one and writes the settled DOM
+# back with the scripts stripped. Without a browser the build below leaves them LIVE, and a
+# release commits that — which is how 0.12.0 shipped a thawed tree. So install one.
+CHROME_BIN="$(command -v chromium-browser || command -v chromium || true)"
+if [ -z "$CHROME_BIN" ]; then
+  apk add --no-cache chromium nss freetype harfbuzz ttf-freefont > /dev/null
+  CHROME_BIN="$(command -v chromium-browser || command -v chromium || true)"
 fi
+export CHROME_BIN
+[ -n "$CHROME_BIN" ] || { echo "chromium is not available, so the cards cannot be frozen"; exit 1; }
 
-# The lock matched, so the frozen copies in git still stand — putting them back keeps everything
-# below, the release commit included, looking at the tree a publish sends. `_ds_cards.css` belongs
-# to the freeze too: only snapshot-cards writes it, so leaving it out commits its deletion.
-git checkout -- .design-sync/upload/components .design-sync/upload/guides .design-sync/upload/_ds_cards.css
+# A card's height is measured from the rendered page, and the marker that carries it is written by
+# build-upload — so the measurement sits between two builds, not after the last one.
+echo "Measuring the card heights..."
+node .design-sync/tools/measure-cards.mjs
+bun run build:upload
+
+echo "Freezing the cards..."
+node .design-sync/tools/snapshot-cards.mjs
 node .design-sync/tools/check-frozen.mjs
+
+GENERATED=".design-sync/upload .design-sync/viewports.json .design-sync/live-cards.txt .design-sync/cards.lock.json"
 
 # A release bumps the version, DS_VERSION carries it into the bundle, and the bundle is committed
 # — so every release leaves this tree a version behind. In CI that is committed; run by hand it
 # fails, because a script must not push on a developer's behalf.
-if [ -z "$(git status --porcelain .design-sync/upload)" ]; then
+if [ -z "$(git status --porcelain $GENERATED)" ]; then
   echo "Committed upload tree matches the build"
 elif [ -z "$BITBUCKET_BUILD_NUMBER" ]; then
   echo "The committed upload tree is stale — this build regenerated different files:"
-  git status --porcelain .design-sync/upload
+  git status --porcelain $GENERATED
   echo ""
-  echo "Run 'npm run build:upload' and commit .design-sync/upload — it is what a publish"
-  echo "sends, so a stale copy publishes the previous release's contract."
+  echo "Commit what this run regenerated — it is what a publish sends, so a stale copy"
+  echo "publishes the previous release's contract."
   exit 1
 else
   [ -n "$RELEASE_TOKEN" ] || { echo "the upload tree needs committing but RELEASE_TOKEN is unset"; exit 1; }
   echo "The upload tree changed; committing it as the release bot..."
-  git status --porcelain .design-sync/upload
+  git status --porcelain $GENERATED
 
   git config user.name "${RELEASE_GIT_NAME:-IDS Release Bot}"
   git config user.email "${RELEASE_GIT_EMAIL:-ci@ids-group.co.uk}"
@@ -93,7 +95,7 @@ else
   # `-B main HEAD` only names the branch. Resetting it to origin/main would throw the rebuild away
   # and commit nothing.
   git checkout -B main HEAD --quiet
-  git add .design-sync/upload
+  git add $GENERATED
   git commit --quiet -m "chore(design-sync): rebuild the upload tree for $(node -p "require('./package.json').version")"
   git push origin main
   echo "Upload tree committed to main; sync-dev.sh carries it to dev"

@@ -38,10 +38,12 @@ const FRAME_HEIGHT = 24000;
 const PORT = 4577;
 
 const CHROME = [
+  process.env.CHROME_BIN,
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   '/usr/bin/google-chrome',
   '/usr/bin/chromium',
+  '/usr/bin/chromium-browser',
 ].find((path) => existsSync(path));
 
 const TYPES = {
