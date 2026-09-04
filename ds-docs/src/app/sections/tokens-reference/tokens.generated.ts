@@ -5698,6 +5698,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "`.t-caption` text colour."
       },
       {
+        "name": "--ds-t-mono-ligatures",
+        "value": "none",
+        "notes": ""
+      },
+      {
         "name": "--ds-t-mono-font-weight",
         "value": "var(--font-weight-medium)",
         "notes": "`.t-mono` font weight."

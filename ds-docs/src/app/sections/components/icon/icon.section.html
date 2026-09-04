@@ -7,11 +7,9 @@
 
   <span lede>
     Inline SVG icons rendered through
-    <code class="t-mono-inline">
-      &lt;ds-icon&gt;
-    </code>. 1.75-px stroke,
+    <code class="t-mono-inline">&lt;ds-icon&gt;</code>. 1.75-px stroke,
     rounded caps, <code class="t-mono-inline">currentColor</code> fills. Driven
-    by the <code class="t-mono-inline"> name </code> input and a fixed size
+    by the <code class="t-mono-inline">name</code> input and a fixed size
     scale.
   </span>
 
@@ -21,9 +19,7 @@
 
   <p class="block-desc t-s">
     Five canonical sizes. Every glyph renders inside a 24-unit viewBox at
-    <code class="t-mono-inline">
-      stroke-width: 1.75
-    </code>.
+    <code class="t-mono-inline">stroke-width: 1.75</code>.
   </p>
 
   <div class="size-row">
@@ -57,9 +53,7 @@
   <p class="block-desc t-s">
     Same glyphs at <code class="t-mono-inline">stroke</code> 1.5 / 1.75 / 2,
     each across 16 / 20 / 24px. Default is
-    <code class="t-mono-inline">
-      1.75
-    </code>. Pick the weight that reads best
+    <code class="t-mono-inline">1.75</code>. Pick the weight that reads best
     against text at small sizes.
   </p>
 
@@ -70,9 +64,7 @@
         [class.is-default]="s === 1.75"
       >
         <div class="stroke-row-label">
-          <code class="t-mono-inline">
-            stroke {{ s }}
-          </code>
+          <code class="t-mono-inline">stroke {{ s }}</code>
 
           @if (s === 1.75) {
             <span class="t-caption">

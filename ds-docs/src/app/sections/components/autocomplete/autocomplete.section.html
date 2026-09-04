@@ -10,9 +10,7 @@
     Text input that filters a token-tagged list. Single-select for picking a
     record (a Member, a venue); multi-select for picking a set (allowed
     products, audience tags). Distinct from
-    <code class="t-mono-inline">
-      &lt;ds-select&gt;
-    </code> (fixed-list dropdown)
+    <code class="t-mono-inline">&lt;ds-select&gt;</code> (fixed-list dropdown)
     and Command palette (global search).
   </span>
 
@@ -26,9 +24,7 @@
     when the set is too big to scan and typing is how you narrow it — a member,
     a venue, a product out of thousands; its value is the filter, and the chips
     are how it reports what typing found. Reach for
-    <code class="t-mono-inline">
-      ds-multi-select
-    </code> when the options are
+    <code class="t-mono-inline">ds-multi-select</code> when the options are
     few enough to read: it shows them as a checkbox list, so a reader sees the
     whole choice at once and what is NOT selected, which typing hides. A rule of
     thumb that holds in practice: if a user could not name the options without
@@ -37,9 +33,7 @@
 
   <p class="block-desc t-s">
     The same rule settles single-value picking against
-    <code class="t-mono-inline">
-      ds-select
-    </code>, which is the comparison that
+    <code class="t-mono-inline">ds-select</code>, which is the comparison that
     actually comes up: the LIST decides, not the count and not the look. Once a
     value is chosen the two are deliberately close — autocomplete shows the
     label and collapses its filter input away, so a settled field reads as a
@@ -90,16 +84,12 @@
       The trigger stays one line by default.
     </strong>
 
-    <code class="t-mono-inline">
-      maxVisibleChips
-    </code> defaults to
-    <code class="t-mono-inline">
-      "fit"
-    </code> — it measures and keeps as many
+    <code class="t-mono-inline">maxVisibleChips</code> defaults to
+    <code class="t-mono-inline">"fit"</code> — it measures and keeps as many
     chips as the trigger is wide, with the rest behind "+N more", re-split
     whenever the trigger resizes. Left to grow, a multi-value trigger gains a
     line per selection and pushes the rest of the form down the page. Same input
-    and same default on <code class="t-mono-inline"> ds-multi-select </code>, so
+    and same default on <code class="t-mono-inline">ds-multi-select</code>, so
     the two multi-value pickers do not diverge. Backspace still removes the last
     SELECTED chip, not the last visible one.
   </p>
@@ -110,9 +100,7 @@
     hold them beside the count and the typing area. It measures for the same
     reason the default does: honouring the count on a phone pushed the text
     input onto a second line, which is the growth the cap exists to prevent.
-    <code class="t-mono-inline">
-      maxVisibleChips="all"
-    </code> is the one mode
+    <code class="t-mono-inline">maxVisibleChips="all"</code> is the one mode
     that does not measure — it shows every chip and lets the trigger grow.
   </p>
 
@@ -159,13 +147,9 @@
     container. <code class="t-mono-inline">width="content"</code> hugs the
     chips/value plus a minimum typing area — for filter toolbars where a
     full-width trigger looks broken next to one short chip.
-    <code class="t-mono-inline">
-      --ds-autocomplete-input-minw
-    </code> tunes the
+    <code class="t-mono-inline">--ds-autocomplete-input-minw</code> tunes the
     typing area (default 80px),
-    <code class="t-mono-inline">
-      --ds-autocomplete-maxw
-    </code>
+    <code class="t-mono-inline">--ds-autocomplete-maxw</code>
     caps the trigger in either mode.
   </p>
 
@@ -191,9 +175,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      hint
-    </code> renders a helper line below the
+    <code class="t-mono-inline">hint</code> renders a helper line below the
     field; <code class="t-mono-inline">[invalid]="true"</code> switches it to an
     error; <code class="t-mono-inline">[disabled]="true"</code> makes the
     control inert.
@@ -264,9 +246,7 @@
 
   <p class="block-desc t-s">
     Add <code class="t-mono-inline">allowCreate</code> to show a
-    <em>
-      Create «text»
-    </em> row when the typed text has no exact match.
+    <em>Create «text»</em> row when the typed text has no exact match.
     Selecting it emits a <code class="t-mono-inline">create</code> output — the
     consumer decides how to add the item. In this demo the new tag is appended
     to the list and auto-selected.
@@ -293,52 +273,32 @@
 
   <p class="block-desc t-s">
     An option carries an optional
-    <code class="t-mono-inline">
-      icon
-    </code>, rendered before its label at 16px
+    <code class="t-mono-inline">icon</code>, rendered before its label at 16px
     in the panel rows. Same field and same markup as
-    <code class="t-mono-inline">
-      ds-select
-    </code> and
-    <code class="t-mono-inline">
-      ds-multi-select
-    </code>: all three read one
-    <code class="t-mono-inline">
-      DsOption
-    </code> shape. Use it for a set the
+    <code class="t-mono-inline">ds-select</code> and
+    <code class="t-mono-inline">ds-multi-select</code>: all three read one
+    <code class="t-mono-inline">DsOption</code> shape. Use it for a set the
     reader recognises by glyph, like a channel or a priority scale; an icon per
     row costs scanning speed everywhere else.
   </p>
 
   <p class="block-desc t-s">
     An option can also carry
-    <code class="t-mono-inline">
-      disabled
-    </code> — the row greys out, says
-    <code class="t-mono-inline">
-      aria-disabled
-    </code>, refuses the click, and
+    <code class="t-mono-inline">disabled</code> — the row greys out, says
+    <code class="t-mono-inline">aria-disabled</code>, refuses the click, and
     the arrow keys step OVER it rather than parking on a row that Enter would
     ignore. Same field and same behaviour as
-    <code class="t-mono-inline">
-      ds-select
-    </code> and
-    <code class="t-mono-inline">
-      ds-multi-select
-    </code>.
+    <code class="t-mono-inline">ds-select</code> and
+    <code class="t-mono-inline">ds-multi-select</code>.
   </p>
 
   <p class="block-desc t-s">
     Only
-    <code class="t-mono-inline">
-      ds-select
-    </code> repeats the icon in its
+    <code class="t-mono-inline">ds-select</code> repeats the icon in its
     trigger, because its trigger is a button showing one label and has room for
     it. Here the trigger is the text input the reader types into, and its
     leading slot belongs to
-    <code class="t-mono-inline">
-      [dsAutocompletePrefix]
-    </code> — the DS will
+    <code class="t-mono-inline">[dsAutocompletePrefix]</code> — the DS will
     not put a glyph in it uninvited.
   </p>
 
@@ -359,17 +319,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      compareWith
-    </code> decides when two values are
-    the same one. The default is <code class="t-mono-inline"> === </code>, which
+    <code class="t-mono-inline">compareWith</code> decides when two values are
+    the same one. The default is <code class="t-mono-inline">===</code>, which
     for an object is reference identity — so a re-fetch returning equal data as
     new objects would drop the selection. Key the comparator on whatever
-    identifies the value. Press <em> Refetch </em>: the selection survives.
+    identifies the value. Press <em>Refetch</em>: the selection survives.
   </p>
 
   <div class="demo-panel">
-    <div class="ac-demo">
+    <div class="autocomplete-field-wrap">
       <ds-autocomplete
         label="Owner"
         [options]="ownerOptions()"
@@ -380,7 +338,7 @@
 
     <ds-button
       size="sm"
-      fill="ghost"
+      variant="ghost"
       (clicked)="refetchOwners()"
     >
       Refetch
@@ -396,18 +354,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      placeholder
-    </code> was doing two jobs: the
+    <code class="t-mono-inline">placeholder</code> was doing two jobs: the
     empty-field caption and the hint for typing over a value already chosen.
-    <code class="t-mono-inline">
-      searchPlaceholder
-    </code> is the second one.
+    <code class="t-mono-inline">searchPlaceholder</code> is the second one.
     Pick a city, then focus the field again.
   </p>
 
   <div class="demo-panel">
-    <div class="ac-demo">
+    <div class="autocomplete-field-wrap">
       <ds-autocomplete
         label="City"
         placeholder="Where to?"

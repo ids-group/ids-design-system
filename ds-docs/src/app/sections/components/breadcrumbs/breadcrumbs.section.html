@@ -28,17 +28,11 @@
 
   <p class="block-desc t-s">
     Six levels, capped with
-    <code class="t-mono-inline">
-      [maxItems]="4"
-    </code> — the first and the LAST
+    <code class="t-mono-inline">[maxItems]="4"</code> — the first and the LAST
     always survive, and the collapsed crumb says how many it stands for. Worth
     setting on any trail that can get deep: the row is
-    <code class="t-mono-inline">
-      nowrap
-    </code> with
-    <code class="t-mono-inline">
-      overflow: hidden
-    </code>, so an uncapped
+    <code class="t-mono-inline">nowrap</code> with
+    <code class="t-mono-inline">overflow: hidden</code>, so an uncapped
     overlong trail is clipped from the END — the current page, the one crumb the
     reader needs most.
   </p>
@@ -99,9 +93,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [clickable]="false"
-    </code> disables item
+    <code class="t-mono-inline">[clickable]="false"</code> disables item
     activation — useful for read-only trails (audit logs, archived snapshots)
     where you want the path visible but not navigable.
   </p>
@@ -119,9 +111,7 @@
 
   <p class="block-desc t-s">
     Omit <code class="t-mono-inline">[items]</code> and the component reads from
-    <code class="t-mono-inline">
-      BreadcrumbsService.items
-    </code> — apps push
+    <code class="t-mono-inline">BreadcrumbsService.items</code> — apps push
     crumbs from route data or an effect when the page model resolves.
   </p>
 

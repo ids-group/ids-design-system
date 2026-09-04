@@ -18,26 +18,14 @@
 
   <p class="block-desc t-s">
     A custom property can't be read inside an
-    <code class="t-mono-inline">
-      &#64;media
-    </code>
+    <code class="t-mono-inline">&#64;media</code>
     condition, so for media queries use the compile-time Sass aliases instead:
     after
-    <code class="t-mono-inline">
-      &#64;use 'breakpoints' as bp
-    </code> write
-    <code class="t-mono-inline">
-      &#64;include bp.up(md)
-    </code> or
-    <code class="t-mono-inline">
-      bp.down(sm)
-    </code>, or read
-    <code class="t-mono-inline">
-      bp.$bp-md
-    </code> directly. The
-    <code class="t-mono-inline">
-      --bp-*
-    </code> custom properties below stay for
+    <code class="t-mono-inline">&#64;use 'breakpoints' as bp</code> write
+    <code class="t-mono-inline">&#64;include bp.up(md)</code> or
+    <code class="t-mono-inline">bp.down(sm)</code>, or read
+    <code class="t-mono-inline">bp.$bp-md</code> directly. The
+    <code class="t-mono-inline">--bp-*</code> custom properties below stay for
     regular rules and JS.
   </p>
 
@@ -109,9 +97,7 @@
           </dt>
 
           <dd>
-            <code class="t-mono-inline">
-              var({{ t.gutter }})
-            </code>
+            <code class="t-mono-inline">var({{ t.gutter }})</code>
           </dd>
 
           <dt>
@@ -119,9 +105,7 @@
           </dt>
 
           <dd>
-            <code class="t-mono-inline">
-              var({{ t.margin }})
-            </code>
+            <code class="t-mono-inline">var({{ t.margin }})</code>
           </dd>
 
           <dt>
@@ -129,9 +113,7 @@
           </dt>
 
           <dd>
-            <code class="t-mono-inline">
-              {{ t.cap }}
-            </code>
+            <code class="t-mono-inline">{{ t.cap }}</code>
           </dd>
         </dl>
       </div>
@@ -192,9 +174,7 @@
         Content cap.
       </strong> Body text never exceeds 720 px width
       regardless of grid — use
-      <code class="t-mono-inline">
-        --col-cap-text
-      </code>.
+      <code class="t-mono-inline">--col-cap-text</code>.
     </li>
 
     <li>

@@ -27,9 +27,7 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
     So the contract is narrow:
     <strong>
       expose React components on
-      <code class="t-mono-inline">
-        window.IdsDs
-      </code>, and React arrives
+      <code class="t-mono-inline">window.IdsDs</code>, and React arrives
       separately as a global.
     </strong>
     React is deliberately NOT inside the library bundle. Nothing inspects what
@@ -56,9 +54,7 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
     What replaced it registers every component as a custom element and generates
     the React layer from the AST. There is no second implementation, so there is
     nothing to drift: the same month of upstream cost it one
-    <code class="t-mono-inline">
-      gen.mjs
-    </code> run, and the surface grew from
+    <code class="t-mono-inline">gen.mjs</code> run, and the surface grew from
     81 elements to 85 on its own. The price is about
     <strong>
       135 KB gzip
@@ -103,9 +99,7 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
   <div class="cd-table">
     @for (file of files; track file.path) {
       <div class="cd-row">
-        <code class="t-mono-inline">
-          {{ file.path }}
-        </code>
+        <code class="t-mono-inline">{{ file.path }}</code>
 
         <span
           class="cd-tag"
@@ -135,12 +129,8 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
       the gate is true when the element connects. Toggle it later and the
       projected wrapper survives while the custom elements inside it are
       destroyed. So an overlay preview passes
-      <code class="t-mono-inline">
-        staticPreview
-      </code> or
-      <code class="t-mono-inline">
-        open
-      </code> at creation, and a table preview
+      <code class="t-mono-inline">staticPreview</code> or
+      <code class="t-mono-inline">open</code> at creation, and a table preview
       that shows bulk actions passes its selection at creation.
     </li>
 
@@ -151,9 +141,7 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
       </strong>
       A custom element nested in another's template loses both its projected
       content and its inputs, so the generator gives those an
-      <code class="t-mono-inline">
-        ds-x-
-      </code> tag no template mentions — 31
+      <code class="t-mono-inline">ds-x-</code> tag no template mentions — 31
       of 85. The React wrapper emits the alias, so nothing changes for a caller
       and the tag never surfaces in a design.
     </li>
@@ -162,9 +150,7 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
   <p class="block-desc t-s">
     Attribute directives have no tag to register, so the fifteen of them are
     absent from the generated surface. Only
-    <code class="t-mono-inline">
-      dsTooltip
-    </code> would be missed, and a
+    <code class="t-mono-inline">dsTooltip</code> would be missed, and a
     tooltip is hover-revealed — a static design card has no hover, so it would
     show nothing anyway.
   </p>

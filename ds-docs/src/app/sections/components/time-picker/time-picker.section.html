@@ -6,9 +6,7 @@
   <span lede>
     A time field (HH:MM) that opens column wheels — Hours / Minutes (and AM·PM
     in 12-hour mode). Value is a canonical 24-hour
-    <code class="t-mono-inline">
-      "HH:MM"
-    </code>
+    <code class="t-mono-inline">"HH:MM"</code>
     string; 24h vs 12h display is chosen app-wide via
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} timePicker: {{ '{' }} format {{ '}' }}
@@ -25,12 +23,8 @@
 
   <p class="block-desc t-s">
     Click the trigger, pick an hour and a minute; the value updates live.
-    <code class="t-mono-inline">
-      label
-    </code> renders the same label row a
-    <code class="t-mono-inline">
-      ds-date-picker
-    </code> uses, so date + time in
+    <code class="t-mono-inline">label</code> renders the same label row a
+    <code class="t-mono-inline">ds-date-picker</code> uses, so date + time in
     one form row line up without a hand-rolled label above the trigger.
   </p>
 
@@ -51,9 +45,7 @@
 
   <p class="block-desc t-s">
     Normally set globally via
-    <code class="t-mono-inline">
-      DsConfig.timePicker.format
-    </code>; the
+    <code class="t-mono-inline">DsConfig.timePicker.format</code>; the
     per-instance <code class="t-mono-inline">[format]</code> input overrides it
     here.
   </p>
@@ -70,9 +62,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [minuteStep]="15"
-    </code> lists only
+    <code class="t-mono-inline">[minuteStep]="15"</code> lists only
     quarter-hour slots.
   </p>
 
@@ -92,15 +82,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [minTime]
-    </code> /
-    <code class="t-mono-inline">
-      [maxTime]
-    </code> bound the range;
-    <code class="t-mono-inline">
-      [disabledTime]
-    </code> is a predicate — here it
+    <code class="t-mono-inline">[minTime]</code> /
+    <code class="t-mono-inline">[maxTime]</code> bound the range;
+    <code class="t-mono-inline">[disabledTime]</code> is a predicate — here it
     blocks the lunch hour (12:00–12:59).
   </p>
 
@@ -123,9 +107,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [clearable]="true"
-    </code> shows a clear button
+    <code class="t-mono-inline">[clearable]="true"</code> shows a clear button
     when a value is set. Heights follow the field scale (sm 32 / md 40 / lg 48).
   </p>
 
@@ -154,9 +136,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      mode="range"
-    </code> renders a from–to pair;
+    <code class="t-mono-inline">mode="range"</code> renders a from–to pair;
     the end cannot precede the chosen start.
   </p>
 
@@ -184,12 +164,8 @@
 
   <p class="block-desc t-s">
     Binds with <code class="t-mono-inline">[formControl]</code>;
-    <code class="t-mono-inline">
-      [invalid]
-    </code> switches the
-    <code class="t-mono-inline">
-      [hint]
-    </code> to an error line.
+    <code class="t-mono-inline">[invalid]</code> switches the
+    <code class="t-mono-inline">[hint]</code> to an error line.
   </p>
 
   <div class="row">

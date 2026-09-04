@@ -6,26 +6,14 @@
   <span lede>
     Five-stop scale (0 / sm / md / lg / 2xl) plus pill — but reach for a ROLE,
     not a stop:
-    <code class="t-mono-inline">
-      --ds-radius-inner
-    </code>,
-    <code class="t-mono-inline">
-      --ds-radius-control
-    </code>,
-    <code class="t-mono-inline">
-      --ds-radius-panel
-    </code> and
-    <code class="t-mono-inline">
-      --ds-radius-pill
-    </code> are what components
+    <code class="t-mono-inline">--ds-radius-inner</code>,
+    <code class="t-mono-inline">--ds-radius-control</code>,
+    <code class="t-mono-inline">--ds-radius-panel</code> and
+    <code class="t-mono-inline">--ds-radius-pill</code> are what components
     actually resolve, and they nest in that order. Retheming corners means
     moving the four roles, not editing components.
-    <code class="t-mono-inline">
-      --radius-pill
-    </code> is themable via
-    <code class="t-mono-inline">
-      --radius-pill-value
-    </code>.
+    <code class="t-mono-inline">--radius-pill</code> is themable via
+    <code class="t-mono-inline">--radius-pill-value</code>.
   </span>
 
   <h3 class="block-title t-h4">
@@ -94,9 +82,7 @@
           class="radius-role-swatch"
           [style.borderRadius]="'var(' + role.token + ')'"
         >
-          <code class="t-mono-inline">
-            {{ role.token }}
-          </code>
+          <code class="t-mono-inline">{{ role.token }}</code>
         </div>
 
         <code class="t-mono-inline radius-role-resolves">

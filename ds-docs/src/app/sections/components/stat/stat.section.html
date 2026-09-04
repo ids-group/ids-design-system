@@ -52,9 +52,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [size]
-    </code> scales the value typography for
+    <code class="t-mono-inline">[size]</code> scales the value typography for
     dense dashboards (<code class="t-mono-inline">sm</code>) or hero KPIs (<code
       class="t-mono-inline"
       >lg</code
@@ -89,16 +87,12 @@
 
   <p class="block-desc t-s">
     Project into
-    <code class="t-mono-inline">
-      [dsStatValue]
-    </code> when the headline is a
+    <code class="t-mono-inline">[dsStatValue]</code> when the headline is a
     badge, a status dot or anything else a number slot cannot hold — the tile
     keeps its geometry, so it sits level with the numeric tiles beside it
     instead of being hand-built. Same shape as the
-    <code class="t-mono-inline">
-      [delta]
-    </code> slot: the input is the
-    fallback. <code class="t-mono-inline"> unit </code> applies to the INPUT
+    <code class="t-mono-inline">[delta]</code> slot: the input is the
+    fallback. <code class="t-mono-inline">unit</code> applies to the INPUT
     value only, so put any suffix inside the projected content.
   </p>
 
@@ -122,18 +116,12 @@
 
   <p class="block-desc t-s">
     The value line is
-    <code class="t-mono-inline">
-      white-space: nowrap
-    </code>, which is right for
+    <code class="t-mono-inline">white-space: nowrap</code>, which is right for
     the number this tile was built around and wrong for a date range or a status
     phrase — that used to be a reason to reach for the slot above and undo it.
     Two hooks instead:
-    <code class="t-mono-inline">
-      --ds-stat-value-white-space
-    </code> and
-    <code class="t-mono-inline">
-      --ds-stat-value-font-size
-    </code>, the second
+    <code class="t-mono-inline">--ds-stat-value-white-space</code> and
+    <code class="t-mono-inline">--ds-stat-value-font-size</code>, the second
     working at every <code class="t-mono-inline">size</code> rather than only
     the default.
   </p>
@@ -153,12 +141,8 @@
 
   <p class="block-desc t-s">
     Left: both hooks set. Right: the same value untouched — with
-    <code class="t-mono-inline">
-      nowrap
-    </code> and no
-    <code class="t-mono-inline">
-      overflow
-    </code> on the card, the phrase spills
+    <code class="t-mono-inline">nowrap</code> and no
+    <code class="t-mono-inline">overflow</code> on the card, the phrase spills
     straight past the tile's edge. That is the behaviour every existing tile
     keeps, since the defaults did not move.
   </p>
@@ -168,36 +152,20 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      value
-    </code> takes
-    <code class="t-mono-inline">
-      string | number | null
-    </code>, so the
-    <code class="t-mono-inline">
-      number
-    </code>,
-    <code class="t-mono-inline">
-      percent
-    </code> and
-    <code class="t-mono-inline">
-      date
-    </code> pipes bind directly — they are
-    typed <code class="t-mono-inline"> string | null </code>, and before the
-    null they failed <code class="t-mono-inline"> strictTemplates </code> with
+    <code class="t-mono-inline">value</code> takes
+    <code class="t-mono-inline">string | number | null</code>, so the
+    <code class="t-mono-inline">number</code>,
+    <code class="t-mono-inline">percent</code> and
+    <code class="t-mono-inline">date</code> pipes bind directly — they are
+    typed <code class="t-mono-inline">string | null</code>, and before the
+    null they failed <code class="t-mono-inline">strictTemplates</code> with
     TS2322. Prefer this to
-    <code class="t-mono-inline">
-      toLocaleString('en-US')
-    </code> in the
+    <code class="t-mono-inline">toLocaleString('en-US')</code> in the
     template, which pins a locale instead of reading
-    <code class="t-mono-inline">
-      LOCALE_ID
-    </code> and re-runs on every
+    <code class="t-mono-inline">LOCALE_ID</code> and re-runs on every
     change-detection pass where a pure pipe is cached. These four tiles are the
     proof: the section compiles under
-    <code class="t-mono-inline">
-      strictTemplates
-    </code>.
+    <code class="t-mono-inline">strictTemplates</code>.
   </p>
 
   <div class="grid-4">

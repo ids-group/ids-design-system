@@ -28,9 +28,7 @@
         Live tokens the generator could not file into a section below. They are
         surfaced here so a newly-added token can never silently go missing — add
         a prefix rule in
-        <code class="t-mono-inline">
-          tools/extract-tokens.mjs
-        </code> to route
+        <code class="t-mono-inline">tools/extract-tokens.mjs</code> to route
         each into its proper section.
       </p>
 
@@ -56,15 +54,11 @@
             @for (row of newTokens; track row.name) {
               <tr>
                 <td>
-                  <code class="t-mono-inline">
-                    {{ row.name }}
-                  </code>
+                  <code class="t-mono-inline">{{ row.name }}</code>
                 </td>
 
                 <td>
-                  <code class="t-mono-inline">
-                    {{ row.value }}
-                  </code>
+                  <code class="t-mono-inline">{{ row.value }}</code>
                 </td>
 
                 <td>
@@ -120,15 +114,11 @@
         @for (row of primarySemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -180,15 +170,11 @@
           @for (row of secondarySemantic; track row.name) {
             <tr>
               <td>
-                <code class="t-mono-inline">
-                  {{ row.name }}
-                </code>
+                <code class="t-mono-inline">{{ row.name }}</code>
               </td>
 
               <td>
-                <code class="t-mono-inline">
-                  {{ row.value }}
-                </code>
+                <code class="t-mono-inline">{{ row.value }}</code>
               </td>
 
               <td>
@@ -217,10 +203,8 @@
   <p class="block-desc t-s">
     Third brand hue — tertiary button fill, tonal chips, hierarchy tones,
     indicators. Ships a distinct default hue (a cool violet), independent of
-    <code class="t-mono-inline">
-      --primary
-    </code>; brands reskin it by
-    overriding <code class="t-mono-inline"> --tertiary-h/s/l </code>.
+    <code class="t-mono-inline">--primary</code>; brands reskin it by
+    overriding <code class="t-mono-inline">--tertiary-h/s/l</code>.
   </p>
 
   <div class="scroll-wrap">
@@ -249,15 +233,11 @@
         @for (row of tertiarySemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -309,15 +289,11 @@
           @for (row of accentSemantic; track row.name) {
             <tr>
               <td>
-                <code class="t-mono-inline">
-                  {{ row.name }}
-                </code>
+                <code class="t-mono-inline">{{ row.name }}</code>
               </td>
 
               <td>
-                <code class="t-mono-inline">
-                  {{ row.value }}
-                </code>
+                <code class="t-mono-inline">{{ row.value }}</code>
               </td>
 
               <td>
@@ -369,15 +345,11 @@
         @for (row of errorSemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -427,15 +399,11 @@
         @for (row of successSemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -485,15 +453,11 @@
         @for (row of warningSemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -543,15 +507,11 @@
         @for (row of infoSemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -602,15 +562,11 @@
           @for (row of statusSemantic; track row.name) {
             <tr>
               <td>
-                <code class="t-mono-inline">
-                  {{ row.name }}
-                </code>
+                <code class="t-mono-inline">{{ row.name }}</code>
               </td>
 
               <td>
-                <code class="t-mono-inline">
-                  {{ row.value }}
-                </code>
+                <code class="t-mono-inline">{{ row.value }}</code>
               </td>
 
               <td>
@@ -669,15 +625,11 @@
           @for (row of linkSemantic; track row.name) {
             <tr>
               <td>
-                <code class="t-mono-inline">
-                  {{ row.name }}
-                </code>
+                <code class="t-mono-inline">{{ row.name }}</code>
               </td>
 
               <td>
-                <code class="t-mono-inline">
-                  {{ row.value }}
-                </code>
+                <code class="t-mono-inline">{{ row.value }}</code>
               </td>
 
               <td>
@@ -729,15 +681,11 @@
         @for (row of textSemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -788,15 +736,11 @@
         @for (row of surfaceSemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -847,15 +791,11 @@
         @for (row of borderSemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -906,15 +846,11 @@
         @for (row of focusSemantic; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -931,15 +867,11 @@
 
         <tr>
           <td>
-            <code class="t-mono-inline">
-              --focus-ring
-            </code>
+            <code class="t-mono-inline">--focus-ring</code>
           </td>
 
           <td>
-            <code class="t-mono-inline">
-              composed shadow
-            </code>
+            <code class="t-mono-inline">composed shadow</code>
           </td>
 
           <td>
@@ -953,15 +885,11 @@
 
         <tr>
           <td>
-            <code class="t-mono-inline">
-              --focus-field
-            </code>
+            <code class="t-mono-inline">--focus-field</code>
           </td>
 
           <td>
-            <code class="t-mono-inline">
-              composed shadow
-            </code>
+            <code class="t-mono-inline">composed shadow</code>
           </td>
 
           <td>
@@ -975,15 +903,11 @@
 
         <tr>
           <td>
-            <code class="t-mono-inline">
-              --focus-ring-error
-            </code>
+            <code class="t-mono-inline">--focus-ring-error</code>
           </td>
 
           <td>
-            <code class="t-mono-inline">
-              composed shadow
-            </code>
+            <code class="t-mono-inline">composed shadow</code>
           </td>
 
           <td>
@@ -1007,9 +931,7 @@
 
   <p class="block-desc t-s">
     Raw primitive ramps. Stop names map 1:1 to CSS custom properties (e.g.
-    <code class="t-mono-inline">
-      --blue-600
-    </code>).
+    <code class="t-mono-inline">--blue-600</code>).
   </p>
 
   @for (ramp of ramps; track ramp.prefix) {
@@ -1043,15 +965,11 @@
           @for (stop of ramp.stops; track stop) {
             <tr>
               <td>
-                <code class="t-mono-inline">
-                  --{{ ramp.prefix }}-{{ stop }}
-                </code>
+                <code class="t-mono-inline">--{{ ramp.prefix }}-{{ stop }}</code>
               </td>
 
               <td>
-                <code class="t-mono-inline">
-                  {{ stop }}
-                </code>
+                <code class="t-mono-inline">{{ stop }}</code>
               </td>
 
               <td>
@@ -1113,15 +1031,11 @@
         @for (row of typeFont; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1172,15 +1086,11 @@
         @for (row of typeSize; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1231,15 +1141,11 @@
         @for (row of typeLh; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1290,15 +1196,11 @@
         @for (row of typeLs; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1349,15 +1251,11 @@
         @for (row of typeFw; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1416,15 +1314,11 @@
         @for (row of spacing; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1481,15 +1375,11 @@
         @for (row of radius; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1547,15 +1437,11 @@
         @for (row of shadows; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.alias || 'composed' }}
-              </code>
+              <code class="t-mono-inline">{{ row.alias || 'composed' }}</code>
             </td>
 
             <td>
@@ -1623,15 +1509,11 @@
         @for (row of motionDur; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1679,15 +1561,11 @@
         @for (row of motionEase; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1714,12 +1592,8 @@
 
   <p class="block-desc t-s">
     Canonical size scale for interactive height. Density tiers rewrite these at
-    <code class="t-mono-inline">
-      :root
-    </code> via
-    <code class="t-mono-inline">
-      [data-density]
-    </code>.
+    <code class="t-mono-inline">:root</code> via
+    <code class="t-mono-inline">[data-density]</code>.
   </p>
 
   <div class="cat-sub t-overline">
@@ -1752,15 +1626,11 @@
         @for (row of densityHit; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1811,15 +1681,11 @@
         @for (row of densityTiers; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                [data-density=&quot;{{ row.name }}&quot;]
-              </code>
+              <code class="t-mono-inline">[data-density=&quot;{{ row.name }}&quot;]</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1878,15 +1744,11 @@
         @for (row of layoutBp; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1934,15 +1796,11 @@
         @for (row of layoutCol; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -1997,15 +1855,11 @@
         @for (row of icons; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -2067,15 +1921,11 @@
         @for (row of miscBw; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -2125,15 +1975,11 @@
         @for (row of miscOpacity; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -2184,15 +2030,11 @@
         @for (row of miscBlur; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
+              <code class="t-mono-inline">{{ row.name }}</code>
             </td>
 
             <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
+              <code class="t-mono-inline">{{ row.value }}</code>
             </td>
 
             <td>
@@ -2261,15 +2103,11 @@
             @for (row of charts; track row.name) {
               <tr>
                 <td>
-                  <code class="t-mono-inline">
-                    {{ row.name }}
-                  </code>
+                  <code class="t-mono-inline">{{ row.name }}</code>
                 </td>
 
                 <td>
-                  <code class="t-mono-inline">
-                    {{ row.value }}
-                  </code>
+                  <code class="t-mono-inline">{{ row.value }}</code>
                 </td>
 
                 <td>
@@ -2308,9 +2146,7 @@
 
   <p class="block-desc t-s">
     Per-component
-    <code class="t-mono-inline">
-      --ds-&lt;component&gt;-*
-    </code> custom
+    <code class="t-mono-inline">--ds-&lt;component&gt;-*</code> custom
     properties. Each defaults to a global semantic token (see above). Override
     at <code class="t-mono-inline">:root</code>, on a scoped ancestor, or inline
     on the host to re-skin a component without forking its class internals.
@@ -2362,15 +2198,11 @@
             @for (row of group.tokens; track row.name) {
               <tr>
                 <td>
-                  <code class="t-mono-inline">
-                    {{ row.name }}
-                  </code>
+                  <code class="t-mono-inline">{{ row.name }}</code>
                 </td>
 
                 <td>
-                  <code class="t-mono-inline">
-                    {{ row.value }}
-                  </code>
+                  <code class="t-mono-inline">{{ row.value }}</code>
                 </td>
 
                 <td>
