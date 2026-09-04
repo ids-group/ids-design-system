@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { DS_ICON_REGISTRY } from './icon-registry';
-import { ICONS, type IconName } from './icons.data';
-import { resolveWithConfig } from '../core/config-defaults';
+import { ICONS, type IconName } from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-icon',

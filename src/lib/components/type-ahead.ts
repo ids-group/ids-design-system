@@ -14,6 +14,7 @@ export interface DsTypeAhead {
   match: (key: string, labels: readonly string[], from: number) => number;
 }
 
+/** @internal */
 export function createTypeAhead(): DsTypeAhead {
   let buffer = '';
   let last = 0;
@@ -31,7 +32,9 @@ export function createTypeAhead(): DsTypeAhead {
       last = now;
 
       const query = buffer.toLowerCase();
-      const cycling = buffer.length > 1 && [...buffer].every((character) => character === buffer[0]);
+      const cycling =
+        buffer.length > 1 &&
+        [...buffer].every((character) => character === buffer[0]);
       const needle = cycling ? buffer[0].toLowerCase() : query;
       const start = cycling || buffer.length === 1 ? from + 1 : 0;
 

@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BadgeComponent } from 'ds';
+import { BadgeComponent } from 'ds/badge';
 import {
   COMPONENT_COUNT,
   FOUNDATION_COUNT,

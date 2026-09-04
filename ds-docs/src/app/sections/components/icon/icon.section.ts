@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IconComponent, type IconName } from 'ds';
+import type { IconName } from 'ds/core';
+import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

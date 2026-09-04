@@ -55,9 +55,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Click a button to trigger a toast. It dismisses itself after 5 s, and the clock
-    stops while the pointer or the keyboard is inside the stack — a toast being read
-    is not a toast that has been read. Pass
+    Click a button to trigger a toast. It dismisses itself after 5 s, and the
+    clock stops while the pointer or the keyboard is inside the stack — a toast
+    being read is not a toast that has been read. Pass
     <code class="t-mono-inline">
       durationMs
     </code> to change it, or
@@ -114,11 +114,13 @@
       action: {{ '{' }} label, handler {{ '}' }}
     </code>
     to <code class="t-mono-inline">ToastService.show()</code> to render a
-    trailing action button (e.g. Undo). An action toast <strong>does not
-    auto-dismiss</strong> and is always dismissible: the button is the only way to take
-    the action, and the region is the last child of
-    <code class="t-mono-inline">body</code>, so a keyboard user cannot cross a page to
-    reach it inside five seconds.
+    trailing action button (e.g. Undo). An action toast
+    <strong>
+      does not auto-dismiss
+    </strong> and is always dismissible: the
+    button is the only way to take the action, and the region is the last child
+    of <code class="t-mono-inline"> body </code>, so a keyboard user cannot
+    cross a page to reach it inside five seconds.
   </p>
 
   <div class="demo">
@@ -164,23 +166,32 @@
   </h3>
 
   <p class="block-desc t-s">
-    Announcements do <strong>not</strong> ride the toast element. A live region has to
-    exist before its text arrives, and a toast is created with its message already in
-    it — which announces nothing in NVDA or JAWS. So
-    <code class="t-mono-inline">ToastService</code> speaks through the CDK
-    <code class="t-mono-inline">LiveAnnouncer</code>: errors and warnings assertively,
-    the rest politely, and a burst is read as one announcement.
+    Announcements do <strong>not</strong> ride the toast element. A live region
+    has to exist before its text arrives, and a toast is created with its
+    message already in it — which announces nothing in NVDA or JAWS. So
+    <code class="t-mono-inline">
+      ToastService
+    </code> speaks through the CDK
+    <code class="t-mono-inline">
+      LiveAnnouncer
+    </code>: errors and warnings
+    assertively, the rest politely, and a burst is read as one announcement.
   </p>
 
   <p class="block-desc t-s">
     Two consequences. A
-    <code class="t-mono-inline">&lt;ds-toast&gt;</code> you place yourself carries no
-    <code class="t-mono-inline">role</code> or
-    <code class="t-mono-inline">aria-live</code> and is silent to a reader — it is a
-    specimen, not an event, so route anything that should be announced through the
-    service. And the stack stays above a modal, drawer or confirm opened after it:
-    <code class="t-mono-inline">--layer-toast</code> cannot do that on its own, because
-    overlays live in the browser's top layer where z-index does not apply.
+    <code class="t-mono-inline">
+      &lt;ds-toast&gt;
+    </code> you place yourself
+    carries no <code class="t-mono-inline">role</code> or
+    <code class="t-mono-inline">
+      aria-live
+    </code> and is silent to a reader —
+    it is a specimen, not an event, so route anything that should be announced
+    through the service. And the stack stays above a modal, drawer or confirm
+    opened after it: <code class="t-mono-inline">--layer-toast</code> cannot do
+    that on its own, because overlays live in the browser's top layer where
+    z-index does not apply.
   </p>
 
   <h3
@@ -197,16 +208,13 @@
     </code> through
     <code class="t-mono-inline">
       provideDsConfig
-    </code> to cap concurrent toasts.
-    Extras queue and appear as earlier ones dismiss. A region shows
+    </code> to cap concurrent
+    toasts. Extras queue and appear as earlier ones dismiss. A region shows
     <code class="t-mono-inline">
       maxVisible
-    </code> at once, five by default — fire
-    the button below twice and the sixth onwards wait their turn. Change it there, or
-    pass
-    <code class="t-mono-inline">
-      0
-    </code> for no cap at all.
+    </code> at once, five by default —
+    fire the button below twice and the sixth onwards wait their turn. Change it
+    there, or pass <code class="t-mono-inline"> 0 </code> for no cap at all.
   </p>
 
   <div class="demo">

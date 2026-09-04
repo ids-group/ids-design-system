@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { LoadingOverlayComponent, ButtonComponent } from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { LoadingOverlayComponent } from 'ds/loading-overlay';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

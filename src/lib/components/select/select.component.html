@@ -129,7 +129,6 @@
       </div>
     }
 
-
     <ul
       class="dropdown-list"
       role="listbox"
@@ -188,7 +187,10 @@
                     [class.is-disabled]="isOptionDisabled(opt, item.disabled)"
                     [disabled]="isOptionDisabled(opt, item.disabled)"
                     (click)="pick(opt, item.disabled)"
-                    (mouseenter)="cursorFromKeyboard.set(false); activeIndex.set(flatIndexOf(opt))"
+                    (mouseenter)="
+                      cursorFromKeyboard.set(false);
+                      activeIndex.set(flatIndexOf(opt))
+                    "
                   >
                     @if (opt.icon) {
                       <ds-icon
@@ -248,7 +250,10 @@
               [class.is-disabled]="item.disabled"
               [disabled]="item.disabled"
               (click)="pick(item)"
-              (mouseenter)="cursorFromKeyboard.set(false); activeIndex.set(flatIndexOf(item))"
+              (mouseenter)="
+                cursorFromKeyboard.set(false);
+                activeIndex.set(flatIndexOf(item))
+              "
             >
               @if (item.icon) {
                 <ds-icon
@@ -317,6 +322,5 @@
         />
       </div>
     }
-
   </div>
 </ng-template>

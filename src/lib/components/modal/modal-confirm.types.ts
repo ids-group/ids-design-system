@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import type { IconName } from '../../icons/icons.data';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 
 export type ModalConfirmTone = 'default' | 'error';
 

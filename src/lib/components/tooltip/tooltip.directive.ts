@@ -9,7 +9,7 @@ import {
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
-import { prepareOverlayEnter } from '../overlay-motion';
+import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components';
 import type { TooltipPlacement } from './tooltip.types';
 
 let nextId = 0;

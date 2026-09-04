@@ -6,7 +6,7 @@ import {
   input,
   viewChild,
 } from '@angular/core';
-import type { IconName } from '../../icons/icons.data';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-tab',

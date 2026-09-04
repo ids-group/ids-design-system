@@ -1,17 +1,16 @@
 import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
-import {
-  BadgeComponent,
-  ButtonComponent,
-  CellTemplateDirective,
-  DrawerComponent,
-  EmptyStateComponent,
-  SearchComponent,
-  TableComponent,
-  type TableCellEditEvent,
-  type TableColumn,
-  type TableRowAction,
-  type TableRowActionEvent,
-} from 'ds';
+import { BadgeComponent } from 'ds/badge';
+import { ButtonComponent } from 'ds/button';
+import { DrawerComponent } from 'ds/drawer';
+import { EmptyStateComponent } from 'ds/empty-state';
+import { SearchComponent } from 'ds/search';
+import { CellTemplateDirective, TableComponent } from 'ds/table';
+import type {
+  TableCellEditEvent,
+  TableColumn,
+  TableRowAction,
+  TableRowActionEvent,
+} from 'ds/table';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

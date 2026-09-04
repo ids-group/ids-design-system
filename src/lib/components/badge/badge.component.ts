@@ -6,8 +6,8 @@ import {
   input,
   numberAttribute,
 } from '@angular/core';
-import type { DsStatusKey } from '../../core/status';
-import { resolveWithConfig } from '../../core/config-defaults';
+import type { DsStatusKey } from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-badge',

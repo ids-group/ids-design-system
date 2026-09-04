@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, computed, input } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import { LoadingOverlayComponent } from '../loading-overlay/loading-overlay.component';
-import type { IconName } from '../../icons/icons.data';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { EmptyStateVariant } from './empty-state.types';
 
 @Component({

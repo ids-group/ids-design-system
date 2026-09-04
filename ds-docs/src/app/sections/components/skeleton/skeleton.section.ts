@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { SkeletonComponent } from 'ds';
+import { SkeletonComponent } from 'ds/skeleton';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

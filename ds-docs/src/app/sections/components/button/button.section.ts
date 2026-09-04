@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  ButtonComponent,
-  SwitchComponent,
-  ToggleButtonComponent,
-  type ButtonVariant,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import type { ButtonVariant } from 'ds/button';
+import { SwitchComponent } from 'ds/switch';
+import { ToggleButtonComponent } from 'ds/toggle-button';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsMatrixComponent,

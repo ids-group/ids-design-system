@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { DividerComponent } from 'ds';
+import { DividerComponent } from 'ds/divider';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface WidthRow {

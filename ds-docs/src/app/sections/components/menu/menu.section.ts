@@ -1,12 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { ButtonComponent } from 'ds/button';
 import {
-  ButtonComponent,
   MenuComponent,
   MenuDividerComponent,
   MenuItemComponent,
-  PopoverComponent,
-  TooltipDirective,
-} from 'ds';
+} from 'ds/menu';
+import { PopoverComponent } from 'ds/popover';
+import { TooltipDirective } from 'ds/tooltip';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

@@ -1,5 +1,5 @@
-@use '../../styles/control-label' as control-label;
-@use '../../styles/press' as press;
+@use '../../../styles/control-label' as control-label;
+@use '../../../styles/press' as press;
 
 :host {
   --_radio-focus-shadow: var(--ds-radio-focus-shadow, var(--ds-control-focus-shadow));

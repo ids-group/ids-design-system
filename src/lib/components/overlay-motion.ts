@@ -48,6 +48,7 @@ const DROPDOWN_PANEL_TOKENS = [
  * Why a panel is closing. `'select'` is a deliberate action that produced a
  * result — an option chosen, a date picked, the trigger pressed again, Tab moving
  * on; `'dismiss'` is ambient — Escape, a press outside, the page scrolling away.
+ * @internal
  */
 export type DsOverlayCloseCause = 'select' | 'dismiss';
 
@@ -57,6 +58,7 @@ const DROPDOWN_GAP = 4;
  * The geometry every DS dropdown shares. Width is deliberately NOT set here —
  * each caller has its own policy (the exact trigger width, or the trigger as a
  * floor).
+ * @internal
  */
 export function dropdownOverlay(
   overlay: Overlay,
@@ -112,6 +114,7 @@ const LEAVE_TIMEOUT_MS = 400;
  *
  * NOTE: teardown paths dispose directly instead — a destroyed host has no time to
  * animate, and `ModalService` owns its own scrim-and-card leave.
+ * @internal
  */
 export function disposeWithLeave(
   overlayRef: OverlayRef | null | undefined,
@@ -156,6 +159,7 @@ export function disposeWithLeave(
  * down to it. Only non-empty values are set, so an unset token still falls
  * through to the panel's own `var(--ds-*, <default>)`. Call once per open, right
  * after `overlay.create()`.
+ * @internal
  */
 export function forwardOverlayTokens(
   overlayRef: OverlayRef,
@@ -185,7 +189,9 @@ export function forwardOverlayTokens(
 }
 
 /** Read a CDK connection pair as the panel's placement. `overlayY` is the panel
- *  edge pinned to the trigger, so `top` means the panel hangs BELOW the trigger. */
+ *  edge pinned to the trigger, so `top` means the panel hangs BELOW the trigger.
+ * @internal
+ */
 export function overlayPlacementOf(
   overlayY: string,
   overlayX: string,
@@ -211,6 +217,7 @@ export function overlayPlacementOf(
  *
  * The subscription needs no teardown — disposing the overlay disposes the
  * strategy, which completes `positionChanges`.
+ * @internal
  */
 export function prepareOverlayEnter(
   overlayRef: OverlayRef,
@@ -229,7 +236,9 @@ export function prepareOverlayEnter(
 
 /** Close a non-modal overlay on a pointer press outside it, EXCEPT when the press
  *  lands on its trigger — so the trigger stays interactive (caret, re-focus) while
- *  open. Use with `hasBackdrop: false` so hover/cursor/pointer reach the live page. */
+ *  open. Use with `hasBackdrop: false` so hover/cursor/pointer reach the live page.
+ * @internal
+ */
 export function closeOnOutsidePointer(
   overlayRef: OverlayRef,
   isInsideTrigger: (target: Node) => boolean,
@@ -248,7 +257,9 @@ export function closeOnOutsidePointer(
  *  observe `window` + registered `cdkScrollable`s, so they miss a plain
  *  `overflow:auto` container (e.g. an app's scrolling `<main>`); this listens on
  *  the document in the CAPTURE phase, which catches the non-bubbling `scroll`
- *  event from ANY nested container. A scroll inside the panel itself is ignored. */
+ *  event from ANY nested container. A scroll inside the panel itself is ignored.
+ * @internal
+ */
 export function closeOnScroll(
   overlayRef: OverlayRef,
   close: () => void,
@@ -280,7 +291,9 @@ export function closeOnScroll(
  *  BEFORE disposing, to decide whether the close has to refocus the trigger
  *  rather than strand focus on `<body>`. An outside-pointer close leaves focus on
  *  the clicked element (mousedown moved it out of the pane first), so this
- *  returns false there and focus is correctly left alone. */
+ *  returns false there and focus is correctly left alone.
+ * @internal
+ */
 export function focusIsInside(overlayRef: OverlayRef): boolean {
   const doc = overlayRef.overlayElement.ownerDocument;
 

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import type { DsStatusKey } from '../../core/status';
+import type { DsStatusKey } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-status-dot',

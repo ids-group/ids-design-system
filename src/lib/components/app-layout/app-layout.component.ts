@@ -22,7 +22,7 @@ import {
   LayoutScrollService,
   type DsScrollReset,
 } from './layout-scroll.service';
-import { nextControlId } from '../field-ids';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 
 /**
  * Fixed-frame application layout: the host is pinned to the viewport

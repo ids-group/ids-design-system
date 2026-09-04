@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { DropzoneComponent, type DropzoneFile } from 'ds';
+import { DropzoneComponent } from 'ds/dropzone';
+import type { DropzoneFile } from 'ds/dropzone';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

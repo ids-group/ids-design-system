@@ -1,4 +1,4 @@
-import type { IconName } from '../icons/icons.data';
+import type { IconName } from './icon-names';
 
 /**
  * The shape every picker's option shares — select, multi-select, autocomplete.

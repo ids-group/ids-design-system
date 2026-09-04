@@ -4,16 +4,18 @@ import {
   ViewEncapsulation,
   signal,
 } from '@angular/core';
+import { AppLayoutComponent } from 'ds/app-layout';
 import {
-  AppLayoutComponent,
   BrandNameDirective,
   SidenavComponent,
-  SidenavFooterComponent,
   SidenavItemComponent,
-  TopBarComponent,
-  type SidenavAlertItem,
-  type SidenavSearchProvider,
-} from 'ds';
+} from 'ds/sidenav';
+import { SidenavFooterComponent } from 'ds/sidenav-footer';
+import type {
+  SidenavAlertItem,
+  SidenavSearchProvider,
+} from 'ds/sidenav-footer';
+import { TopBarComponent } from 'ds/topbar';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

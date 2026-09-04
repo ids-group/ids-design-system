@@ -1,5 +1,5 @@
 import { Signal, computed, inject } from '@angular/core';
-import { DS_CONFIG } from '../core/ds-config';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 
 /**
  * Resolve one brand string against the app-level default. `ds-sidenav` and
@@ -9,6 +9,7 @@ import { DS_CONFIG } from '../core/ds-config';
  *
  * Same `null`-means-unset shape as `resolveReserveMessage` — here `''` is an
  * explicit "this screen has no brand", and each field resolves on its own.
+ * @internal
  */
 export function resolveBrandValue(
   value: Signal<string | null>,

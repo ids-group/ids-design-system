@@ -25,7 +25,7 @@ export type TableSortMode = 'client' | 'server' | 'none';
  *  leaves every expanded row open. */
 export type TableExpandMode = 'multiple' | 'single';
 
-import type { IconName } from '../../icons/icons.data';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 
 export interface TableColumn<T = unknown> {
   key: string;

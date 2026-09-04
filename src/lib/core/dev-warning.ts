@@ -11,6 +11,7 @@ import { effect, isDevMode } from '@angular/core';
  * cannot happen any more.
  *
  * Must be called from an injection context.
+ * @internal
  */
 export function devWarn(message: () => string | null): void {
   if (!isDevMode()) {

@@ -8,6 +8,47 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **Every component is now its own entry point, so a bundler can put it in the chunk that uses it.**
+  `@ids-group-ltd/ids-design-system/button`, `/table`, `/toast` and 66 more resolve alongside the
+  package root, which still exports everything it did. Until now the package was one flattened
+  module: one eager import of any part of it — a service in a composition root is the usual one —
+  made the whole library reachable from the initial bundle, and no amount of lazy routing moved it
+  out. Measured on a documentation app of 90 sections: its initial bundle fell from **240 kB to
+  138 kB gzip**, with the total across initial and lazy chunks moving under a percent — nothing was
+  duplicated, 102 kB simply moved to the routes that use it.
+
+- **The root import costs nothing, so there is no migration.** The same app measured 138.36 kB
+  importing every component from its own entry point and 138.37 kB importing them all from the
+  package root. Deep specifiers are worth using for what they say about a file's dependencies, not
+  for the bundle. Both spellings resolve to the same file, so a component imported one way and the
+  same component imported the other are one class, and `instanceof` holds across them.
+
+- **A longer form of each specifier also resolves**, naming the folder the component lives in
+  (`@ids-group-ltd/ids-design-system/components/button`). The short one is the supported spelling —
+  it is what keeps a component's location free to change — and the long one exists because that is
+  the name the package build derives.
+
+### Changed
+
+- **Some helpers are importable that are not API, and they say so.** An entry point has to export
+  whatever another entry point imports, which made 37 internal helpers, base classes and shared types
+  reachable — `devWarn`, `DsFieldBase`, `ds-calendar-day` and the like. Each carries `@internal`, none
+  appears in the component reference, and none is covered by the versioning promise: they can change
+  or disappear in any release. Build on what the reference documents.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the `deleteList` in the release manifest
+this package ships under `migrations/`.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `await import('@ids-group-ltd/ids-design-system')` | A dynamic import of the whole package was the only way to keep it out of the initial bundle, and it bought that at the cost of an async boundary in your own code. A plain static import of the entry point you need now lands in the chunk that uses it. Replace with: a static import from the component's own entry point. Still legitimate where the lazy boundary is there for its own sake — a feature area you genuinely want off the critical path. |
+
+
 ## 0.11.4 — 2026-09-03
 
 ### Breaking

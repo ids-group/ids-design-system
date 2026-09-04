@@ -1,9 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { BadgeComponent } from 'ds/badge';
 import {
-  BadgeComponent,
   DescriptionItemComponent,
   DescriptionListComponent,
-} from 'ds';
+} from 'ds/description-list';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

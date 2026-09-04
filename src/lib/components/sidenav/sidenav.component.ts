@@ -9,7 +9,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BrandNameDirective } from './brand-name.directive';
-import { resolveBrandValue } from '../brand-defaults';
+import { resolveBrandValue } from '@ids-group-ltd/ids-design-system/components';
 import { SIDENAV, type SidenavContract } from './sidenav.token';
 
 @Component({

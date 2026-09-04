@@ -1,11 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {
-  AvatarComponent,
-  BadgeComponent,
-  ButtonComponent,
-  IconComponent,
-  type DsStatusKey,
-} from 'ds';
+import { AvatarComponent } from 'ds/avatar';
+import { BadgeComponent } from 'ds/badge';
+import { ButtonComponent } from 'ds/button';
+import type { DsStatusKey } from 'ds/core';
+import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface ActivityEntry {

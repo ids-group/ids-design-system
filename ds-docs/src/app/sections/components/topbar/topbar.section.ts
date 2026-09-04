@@ -1,12 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {
-  AvatarComponent,
-  BreadcrumbsComponent,
-  IconButtonComponent,
-  SearchComponent,
-  TopBarComponent,
-  type BreadcrumbItem,
-} from 'ds';
+import { AvatarComponent } from 'ds/avatar';
+import { BreadcrumbsComponent } from 'ds/breadcrumbs';
+import type { BreadcrumbItem } from 'ds/breadcrumbs';
+import { IconButtonComponent } from 'ds/icon-button';
+import { SearchComponent } from 'ds/search';
+import { TopBarComponent } from 'ds/topbar';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

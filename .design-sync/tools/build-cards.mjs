@@ -15,6 +15,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { internalSymbols, resolveLibSpecifier } from '../../tools/lib-entry-points.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -37,7 +38,7 @@ const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase(
  *  the split is only ever at a lowercase-or-digit followed by an uppercase. */
 const spacedName = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
 
-/** Every name `src/public-api.ts` exports, by walking the re-export graph.
+/** Every name `src/lib/public-api.ts` exports, by walking the re-export graph.
  *
  *  This decides what gets a published CONTRACT. The README the project ships says it outright:
  *  "Engineers translate what you build here… anything with no Angular counterpart can't be handed
@@ -47,26 +48,13 @@ const spacedName = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
  *  ModalConfirmComponent while exporting the service that opens it, and CalendarDay was never
  *  re-exported at all.
  *
- *  The lever is `public-api.ts` and nothing here: export a component and it is published on the
+ *  The lever is `src/lib/public-api.ts` and nothing here: export a component and it is published on the
  *  next build. There is deliberately no allowlist to drift. */
 const publicExports = (() => {
   const names = new Set();
   const seen = new Set();
 
-  const resolve = (from, specifier) => {
-    const base = join(dirname(from), specifier);
-    for (const candidate of [`${base}.ts`, join(base, 'index.ts')]) {
-      try {
-        readFileSync(candidate);
-
-        return candidate;
-      } catch {
-        /* try the next shape */
-      }
-    }
-
-    return null;
-  };
+  const resolve = (from, specifier) => resolveLibSpecifier(from, specifier);
 
   const declaredIn = (source) => {
     for (const [, name] of source.matchAll(/export\s+(?:abstract\s+)?class\s+(\w+)/g)) {
@@ -102,7 +90,8 @@ const publicExports = (() => {
       }
       walk(target);
     }
-  })(join(repo, 'src', 'public-api.ts'));
+  })(join(repo, 'src', 'lib', 'public-api.ts'));
+  for (const name of internalSymbols()) names.delete(name);
 
   return names;
 })();
@@ -1019,7 +1008,7 @@ if (untagged.length) {
 
 if (withheld.length) {
   console.log(
-    `· ${withheld.length} component(s) get no contract — src/public-api.ts does not`
+    `· ${withheld.length} component(s) get no contract — src/lib/public-api.ts does not`
       + ` export them: ${withheld.join(', ')}`,
   );
 }

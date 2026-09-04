@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {
-  ButtonComponent,
-  CardComponent,
-  EmptyStateComponent,
-  IconComponent,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { CardComponent } from 'ds/card';
+import { EmptyStateComponent } from 'ds/empty-state';
+import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

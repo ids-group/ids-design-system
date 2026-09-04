@@ -28,13 +28,13 @@ import {
   type DsOverlayCloseCause,
   forwardOverlayTokens,
   prepareOverlayEnter,
-} from '../overlay-motion';
+} from '@ids-group-ltd/ids-design-system/components';
 import { NgTemplateOutlet } from '@angular/common';
-import { IconComponent } from '../../icons/icon.component';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import { DsControlValueAccessor } from '../control-value-accessor';
-import { inFieldGroup } from '../field-group/field-group.token';
-import { DsStaticPreview } from '../static-preview.directive';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 import {
   isSelectOptionGroup,
   type SelectItem,
@@ -42,30 +42,38 @@ import {
   type SelectOptionGroup,
   type SelectWidth,
 } from './select.types';
-import type { DsSize } from '../../core/size';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage, trimmedText } from '../field-errors';
-import { nextControlId } from '../field-ids';
-import { resolveWithConfig } from '../../core/config-defaults';
-import { DsOptionTemplateDirective } from '../option-template.directive';
-import { DsPickerTriggerDirective } from '../picker-trigger.directive';
-import { DsEmptyTemplateDirective } from '../empty-template.directive';
-import { DsPanelHeaderTemplateDirective } from '../panel-header-template.directive';
-import { DsPanelFooterTemplateDirective } from '../panel-footer-template.directive';
-import { DsGroupLabelTemplateDirective } from '../group-label-template.directive';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { DsOptionTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPickerTriggerDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsEmptyTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPanelHeaderTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPanelFooterTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsGroupLabelTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
 import {
   firstEnabledIndex as firstEnabledOf,
   lastEnabledIndex as lastEnabledOf,
   nextEnabledIndex,
-} from '../../core/list-cursor';
-import { scrollActiveOptionIntoView } from '../scroll-active-option';
-import { announceOptionCount } from '../picker-announcer';
-import { createTypeAhead } from '../type-ahead';
+} from '@ids-group-ltd/ids-design-system/core';
+import { scrollActiveOptionIntoView } from '@ids-group-ltd/ids-design-system/components';
+import { announceOptionCount } from '@ids-group-ltd/ids-design-system/components';
+import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
 
 @Component({
   selector: 'ds-select',
   standalone: true,
-  imports: [SpinnerComponent, IconComponent, NgTemplateOutlet, FieldMessageComponent],
+  imports: [
+    SpinnerComponent,
+    IconComponent,
+    NgTemplateOutlet,
+    FieldMessageComponent,
+  ],
   host: {
     '[attr.data-field-state]': 'controlState()',
     '[class.in-group]': 'inGroup',
@@ -567,7 +575,11 @@ export class SelectComponent
   private readonly typeAhead = createTypeAhead();
 
   private handleTypeAhead(key: string): boolean {
-    const index = this.typeAhead.match(key, this.flatOptions().map((entry) => entry.option.label), this.activeIndex());
+    const index = this.typeAhead.match(
+      key,
+      this.flatOptions().map((entry) => entry.option.label),
+      this.activeIndex(),
+    );
     if (index < 0) {
       return false;
     }

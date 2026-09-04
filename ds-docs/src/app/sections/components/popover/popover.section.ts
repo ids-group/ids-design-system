@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, PopoverComponent } from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { PopoverComponent } from 'ds/popover';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 

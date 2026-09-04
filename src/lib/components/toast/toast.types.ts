@@ -2,7 +2,7 @@ export type {
   DsToastHorizontalPosition,
   DsToastVerticalPosition,
   DsToastPosition,
-} from '../../core/toast-position';
+} from '@ids-group-ltd/ids-design-system/core';
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'loading';
 

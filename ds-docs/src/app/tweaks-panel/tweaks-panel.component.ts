@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  ButtonComponent,
-  DrawerComponent,
-  SegmentedComponent,
-  SliderComponent,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { DrawerComponent } from 'ds/drawer';
+import { SegmentedComponent } from 'ds/segmented';
+import { SliderComponent } from 'ds/slider';
 
 type BrandPreview = 'default' | 'manage-my';
 

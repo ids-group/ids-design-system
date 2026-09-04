@@ -10,19 +10,22 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { optionalBound } from '../../core/field-bounds';
+import { optionalBound } from '@ids-group-ltd/ids-design-system/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IconComponent } from '../../icons/icon.component';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage, trimmedText } from '../field-errors';
-import { nextControlId } from '../field-ids';
-import { FieldClickFocusDirective } from '../field-click-focus.directive';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
 import type { InputType } from './input.types';
-import type { DsSize } from '../../core/size';
-import { inFieldGroup } from '../field-group/field-group.token';
-import { resolveWithConfig } from '../../core/config-defaults';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-input',

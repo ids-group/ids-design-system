@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { DatePickerComponent, type DatePickerPreset } from 'ds';
+import { DatePickerComponent } from 'ds/date-picker';
+import type { DatePickerPreset } from 'ds/date-picker';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 import {

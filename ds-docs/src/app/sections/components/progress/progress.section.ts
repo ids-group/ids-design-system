@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ProgressComponent } from 'ds';
+import { ProgressComponent } from 'ds/progress';
 import {
   DocsTruncationComponent,
   TruncationRule,

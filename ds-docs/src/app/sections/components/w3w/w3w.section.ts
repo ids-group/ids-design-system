@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { W3wComponent } from 'ds';
+import { W3wComponent } from 'ds/w3w';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

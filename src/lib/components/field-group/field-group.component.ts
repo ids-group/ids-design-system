@@ -6,9 +6,9 @@ import {
   forwardRef,
   input,
 } from '@angular/core';
-import type { DsSize } from '../../core/size';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { DS_FIELD_GROUP, type DsFieldGroupContext } from './field-group.token';
-import { resolveWithConfig } from '../../core/config-defaults';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 /**
  * One bordered control out of several: `select + input`, `search + button`,

@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
+import { BadgeComponent } from 'ds/badge';
+import { ButtonComponent } from 'ds/button';
+import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

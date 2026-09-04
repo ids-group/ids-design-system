@@ -8,12 +8,12 @@ import {
   model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DsBooleanControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage } from '../field-errors';
-import { nextControlId } from '../field-ids';
-import type { DsSize } from '../../core/size';
-import { resolveWithConfig } from '../../core/config-defaults';
+import { DsBooleanControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import { resolveFieldMessage } from '@ids-group-ltd/ids-design-system/components';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-switch',

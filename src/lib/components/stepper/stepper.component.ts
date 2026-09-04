@@ -5,7 +5,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 /** Where the step caption sits relative to its node: stacked beneath it
  *  (`bottom`, full-width wizard) or beside it (`inline`, compact header row). */

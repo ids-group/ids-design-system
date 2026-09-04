@@ -76,7 +76,9 @@ export class ChangelogSection {
     // version is exactly the right key.
     fetch(new URL(`CHANGELOG.md?v=${DS_VERSION}`, document.baseURI))
       .then((response) => response.text())
-      .then((markdown) => Promise.resolve(marked.parse(dropEmptyUnreleased(markdown))))
+      .then((markdown) =>
+        Promise.resolve(marked.parse(dropEmptyUnreleased(markdown))),
+      )
       .then((rendered) => this.html.set(rendered))
       .catch(() => this.html.set('<p>Changelog is currently unavailable.</p>'));
   }

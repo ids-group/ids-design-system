@@ -14,11 +14,11 @@ import {
 } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { IconComponent } from '../../icons/icon.component';
-import { nextControlId } from '../field-ids';
-import type { IconName } from '../../icons/icons.data';
-import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
-import { prepareOverlayEnter } from '../overlay-motion';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
+import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components';
 
 @Component({
   selector: 'ds-menu-item',

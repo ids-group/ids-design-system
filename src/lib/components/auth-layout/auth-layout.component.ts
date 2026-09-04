@@ -6,10 +6,13 @@ import {
   contentChild,
   input,
 } from '@angular/core';
-import { CardComponent } from '../card/card.component';
-import type { CardElevation, CardPadding } from '../../core/card.types';
-import { BrandNameDirective } from '../sidenav/brand-name.directive';
-import { resolveBrandValue } from '../brand-defaults';
+import { CardComponent } from '@ids-group-ltd/ids-design-system/components/card';
+import type {
+  CardElevation,
+  CardPadding,
+} from '@ids-group-ltd/ids-design-system/core';
+import { BrandNameDirective } from '@ids-group-ltd/ids-design-system/components/sidenav';
+import { resolveBrandValue } from '@ids-group-ltd/ids-design-system/components';
 
 /**
  * Scaffold for the UNauthenticated screens — sign-in, forgot password, reset,

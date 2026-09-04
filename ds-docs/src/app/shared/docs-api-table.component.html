@@ -169,7 +169,10 @@
 @if (methods().length) {
   <details class="api">
     <summary>
-      {{ serviceData()?.className }} methods <span class="count">{{ methods().length }}</span>
+      {{ serviceData()?.className }} methods
+      <span class="count">
+        {{ methods().length }}
+      </span>
     </summary>
 
     <div class="scroll">
@@ -233,7 +236,10 @@
 @if (properties().length) {
   <details class="api">
     <summary>
-      {{ serviceData()?.className }} properties <span class="count">{{ properties().length }}</span>
+      {{ serviceData()?.className }} properties
+      <span class="count">
+        {{ properties().length }}
+      </span>
     </summary>
 
     <div class="scroll">

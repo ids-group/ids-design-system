@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { IconButtonComponent, type IconButtonVariant } from 'ds';
+import { IconButtonComponent } from 'ds/icon-button';
+import type { IconButtonVariant } from 'ds/icon-button';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsMatrixComponent,

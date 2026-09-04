@@ -1,13 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {
-  BadgeComponent,
-  BreadcrumbsComponent,
-  ButtonComponent,
-  PageHeaderComponent,
-  TabsComponent,
-  TabComponent,
-  type BreadcrumbItem,
-} from 'ds';
+import { BadgeComponent } from 'ds/badge';
+import { BreadcrumbsComponent } from 'ds/breadcrumbs';
+import type { BreadcrumbItem } from 'ds/breadcrumbs';
+import { ButtonComponent } from 'ds/button';
+import { PageHeaderComponent } from 'ds/page-header';
+import { TabComponent, TabsComponent } from 'ds/tabs';
 import {
   DocsTruncationComponent,
   TruncationRule,

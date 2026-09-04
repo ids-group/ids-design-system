@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { RadioComponent, RadioGroupComponent } from 'ds';
+import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

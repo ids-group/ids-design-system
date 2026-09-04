@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { SplitButtonComponent, SplitButtonItem } from 'ds';
+import { SplitButtonComponent, SplitButtonItem } from 'ds/split-button';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

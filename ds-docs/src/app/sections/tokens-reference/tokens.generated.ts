@@ -4623,26 +4623,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-radio-label-font-size",
         "value": "var(--_radio-label-fs)",
         "notes": "Radio caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
-      },
-      {
-        "name": "--radio-dot-size",
-        "value": "10px",
-        "notes": "Radio checked dot diameter (10px)."
-      },
-      {
-        "name": "--radio-bw-checked",
-        "value": "var(--border-width-strong)",
-        "notes": "Radio ring width when checked (defaults to --border-width-strong)."
-      },
-      {
-        "name": "--radio-glyph-sm",
-        "value": "14px",
-        "notes": "Radio control diameter — small size (14px)."
-      },
-      {
-        "name": "--radio-glyph-lg",
-        "value": "24px",
-        "notes": "Radio control diameter — large size (24px)."
       }
     ]
   },
@@ -7469,6 +7449,26 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--picker-offset",
     "value": "var(--space-1)",
+    "kind": "length"
+  },
+  {
+    "name": "--radio-bw-checked",
+    "value": "var(--border-width-strong)",
+    "kind": "color"
+  },
+  {
+    "name": "--radio-dot-size",
+    "value": "10px",
+    "kind": "length"
+  },
+  {
+    "name": "--radio-glyph-lg",
+    "value": "24px",
+    "kind": "length"
+  },
+  {
+    "name": "--radio-glyph-sm",
+    "value": "14px",
     "kind": "length"
   },
   {

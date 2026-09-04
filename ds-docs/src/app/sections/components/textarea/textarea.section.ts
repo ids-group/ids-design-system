@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { TextareaComponent } from 'ds';
+import { TextareaComponent } from 'ds/textarea';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

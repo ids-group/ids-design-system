@@ -9,16 +9,19 @@ import {
   model,
   viewChild,
 } from '@angular/core';
-import { optionalBound } from '../../core/field-bounds';
+import { optionalBound } from '@ids-group-ltd/ids-design-system/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DsControlValueAccessor } from '../control-value-accessor';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import type { TextareaResize } from './textarea.types';
-import type { DsSize } from '../../core/size';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage, trimmedText } from '../field-errors';
-import { nextControlId } from '../field-ids';
-import { FieldClickFocusDirective } from '../field-click-focus.directive';
-import { resolveWithConfig } from '../../core/config-defaults';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-textarea',

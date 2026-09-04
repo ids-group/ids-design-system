@@ -9,17 +9,17 @@ import {
   model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage } from '../field-errors';
-import { nextControlId } from '../field-ids';
-import { RadioComponent } from '../radio/radio.component';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import { resolveFieldMessage } from '@ids-group-ltd/ids-design-system/components';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import { RadioComponent } from './radio/radio.component';
 import {
   RADIO_GROUP,
   type RadioGroupChild,
   type RadioGroupContract,
 } from './radio-group.token';
-import { isTextEntryTarget } from '../../core/key-target';
+import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-radio-group',
