@@ -80,6 +80,16 @@ const TIDY = `
       if (!document.documentElement.hasAttribute('data-ds-sliced') && Date.now() - t0 < 20000) {
         return setTimeout(ready, 25);
       }
+      // The section is built, which is not the same as settled: components that MEASURE write their
+      // result a frame or two later. Table's sticky scrollbar pins '.scroll-wrap' to a computed
+      // height, and catching that card before the write froze it without one - the only file of 376
+      // that differed between two runs. Fonts first, because a measure taken against the fallback
+      // face is the wrong number.
+      return document.fonts.ready.then(function () {
+        requestAnimationFrame(function () { requestAnimationFrame(tidy); });
+      });
+    })();
+    function tidy() {
       var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       var pending = [];
       for (var node = walker.nextNode(); node; node = walker.nextNode()) {
@@ -92,7 +102,7 @@ const TIDY = `
         pending[i].nodeValue = pending[i].nodeValue.replace(/\s+/g, ' ');
       }
       document.documentElement.setAttribute('data-ds-tidied', String(pending.length));
-    })();
+    }
   })();
 </script>`;
 
