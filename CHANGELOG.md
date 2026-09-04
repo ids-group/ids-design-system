@@ -51,9 +51,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the
   ring's geometry is already in place, so nothing shifts and the indicator lands where it will stay.
   `outline-offset` is deliberately not animated: an expanding ring lags the caret on a fast Tab, and
-  the indicator is a keyboard user's only signal of where they are. The duration is `--duration-fast`,
-  which the library already zeroes under `prefers-reduced-motion: reduce`, so a reduced-motion user
-  sees the ring appear instantly with no separate opt-out to wire up.
+  the indicator is a keyboard user's only signal of where they are. It runs as an `animation` rather
+  than a transition, because `transition` is a single property and a component that declares its own
+  list would have had it replaced for as long as the element held focus — a focused button would have
+  lost its background easing. The duration is `--duration-fast`, which the library already zeroes
+  under `prefers-reduced-motion: reduce`, so a reduced-motion user sees the ring appear instantly
+  with no separate opt-out to wire up.
 
 - **`ds-split-button` with an empty `menuItems` disables its chevron instead of opening an empty
   menu.** The template carried no guard, so a split button configured with nothing to list still

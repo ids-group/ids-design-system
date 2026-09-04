@@ -2,16 +2,43 @@
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
-- [ ] **[P2] `_focus.scss` ships a full copy of its top-level CSS in every component bundle.**
-  Measured 2026-09-04 in `dist/ds/fesm2022/…-components-card.mjs`: the card bundle carries the
-  blanket `:where(:focus-visible)` rule, the resting-ring rule, the whole `data-focus` switch and
-  the forced-colors block — none of which the card uses. 48 component stylesheets `@use` the
-  partial for its mixins, and each is a separate Sass compilation, so each emits the module's
-  top-level CSS again. `docs/agent/foundations/global-helper-classes.md` states the opposite in
-  writing: "reaching for the mixin adds no CSS." Same shape for any partial that mixes mixins with
-  top-level rules — check `_press.scss`, `_dropdown-overlay.scss` and `_link.scss` before deciding
-  the fix. The split is the likely answer: mixins in one partial, emitted rules in another that only
-  the global aggregate uses.
+- [ ] **[P2] `_focus.scss`'s top-level CSS is copied into 33 component style strings.** Measured
+  2026-09-04 on `dist/ds/fesm2022/`: 33 of 75 built bundles each carry the blanket
+  `:where(:focus-visible)` rule, all three `data-focus` blocks, the `@keyframes` and the
+  forced-colors block — 4 to 6 copies of the blanket selector per bundle, none of which the
+  component uses. 48 component stylesheets `@use` the partial for its mixins, and each is a
+  separate Sass compilation, so each re-emits the module's top-level rules.
+  `docs/agent/foundations/global-helper-classes.md` states the opposite in writing: "reaching for
+  the mixin adds no CSS." That sentence is wrong either way and should go.
+  **What is NOT measured, and must be before sizing this:** what the copies do in a running app.
+  A library build ships styles UNSHIMMED (`.button{` appears with no `_ngcontent` attribute), so
+  the consumer's AOT compiler is what scopes them — whether these copies end up scoped, global or
+  deduped is decided there, not here. A first attempt to read it in a browser failed for an
+  unrelated reason (dev server would not start; see the NG5002 note below), so the runtime half is
+  open. Do not quote a byte cost until it is measured in a consumer build.
+  Same shape wherever a partial mixes mixins with top-level rules — check `_press.scss`,
+  `_dropdown-overlay.scss`, `_link.scss` and `_check-mark.scss` before choosing the fix. Splitting
+  the partial (mixins in one file, emitted rules in another that only the global aggregate uses) is
+  the likely answer.
+
+- [x] **[P1] A `transition` declared in a focus rule silently deletes the component's own.** Found
+  and fixed the same day, 2026-09-04, in `focus.ring`. `transition` is ONE property, so the rule
+  that wins REPLACES the other's list rather than adding to it — and 46 component stylesheets
+  declare their own. A `transition: outline-color` in `:focus-visible` therefore dropped the
+  component's background and border easing for as long as the element held focus. Measured before
+  the fix: a focused `ds-number-stepper` button reported `transitionProperty: "outline-color"`
+  while its base rule declares `background-color`. Fixed by using `animation` instead — a separate
+  property that nothing on a focusable element sets, so both survive; the keyframe declares only
+  `from { outline-color: transparent }`, and the global resting-outline rule it needed is gone.
+  `_press.scss` already carries a comment warning about exactly this and is why it declares no
+  `transition` of its own. **Worth a gate:** nothing catches the next one, and it fails silently —
+  the ring still animates, so the change looks like it worked.
+
+- [ ] **[P2] `dev` is red: `a5cb916c` committed a `@else if` with no opening `@if`.**
+  `multi-select.component.html:228` and `:293` — `<span class="tick"></span> @else if (…) {` with
+  the `@if` that should open the chain missing, so `CI=true npm run build:lib` fails NG5002 twice
+  and `ng serve` never binds. Owned by the parallel session that committed it; recorded here so it
+  is not rediscovered as an environment problem, which is what it looked like for two attempts.
 
 - [ ] **[P3] Motion cannot be verified on this machine, and it fails silently.** Windows reports
   `SPI_GETCLIENTAREAANIMATION = False` (Settings → Accessibility → Visual effects → Animation
