@@ -82,6 +82,26 @@ const cases = [
     expect: 'green',
   },
   {
+    // A token the cycle INTRODUCED is the one a consumer greps for and finds nothing, so one
+    // mention of an unrelated tag must not answer for it.
+    name: 'FIRES on a token this cycle introduced, even beside a covered tag',
+    section: 'Fixed',
+    entry:
+      '- **`ds-table` selection got a mark.** It animates over ' +
+      '`--ds-check-mark-enter-duration`.',
+    expect: 'red',
+  },
+  {
+    // The `--space-1-5` shape: a token the library already had, read by the change rather than
+    // introduced by it. Demanding a line here is filler, and points at a knob that is not the
+    // supported one.
+    name: 'EXEMPT: a pre-existing token beside a covered tag is not asked for a line',
+    section: 'Fixed',
+    entry:
+      '- **`ds-table` selection got a mark.** It sits under `--layer-toast`.',
+    expect: 'green',
+  },
+  {
     name: 'the exemption needs the phrase — the same entry without it still FIRES',
     section: 'Fixed',
     entry:
@@ -91,6 +111,7 @@ const cases = [
 ];
 
 let failed = 0;
+let ran = 0;
 
 // A family-wide rename is filed once with a placeholder, so a literal substring test reads the
 // whole family as uncovered — it did, for both of 0.3.0's token renames. This is the case that
@@ -109,6 +130,7 @@ let failed = 0;
     }
   };
   const got = versionMode('0.3.0');
+  ran++;
   const ok = got === 'green';
   if (!ok) failed++;
   console.log(
@@ -134,11 +156,33 @@ try {
     );
 
     const { red } = run();
+    ran++;
     const got = red ? 'red' : 'green';
     const ok = got === testCase.expect;
     if (!ok) failed++;
     console.log(
       `${ok ? 'ok   ' : 'FAIL '} ${testCase.name} — expected ${testCase.expect}, got ${got}`,
+    );
+  }
+
+  // An unreadable `## ` heading does not skip its block, it MERGES the entries into the block
+  // above, which then answers to the previous version's manifest. Silence is the failure mode
+  // this check exists to catch, so it must not have one of its own.
+  {
+    const merged = original.replace(
+      /^## Unreleased\r?\n/m,
+      '## 0.99.0 - 2026-01-01' + eol + eol,
+    );
+    writeFileSync(CHANGELOG, merged, 'utf8');
+    const { red, out } = run();
+    ran++;
+    const ok = red && out.includes('cannot read');
+    if (!ok) failed++;
+    console.log(
+      (ok ? 'ok   ' : 'FAIL ') +
+        'a version heading with a plain hyphen is refused, not silently merged into the ' +
+        'block above — expected red naming the line, got ' +
+        (red ? 'red' : 'green'),
     );
   }
 } finally {
@@ -154,9 +198,9 @@ if (failed) {
   console.error(`\n${failed} case(s) wrong.`);
   process.exit(1);
 }
-// Counted, not written down: the tally said three while a fourth exemption was already in the list.
-const fires = cases.filter((testCase) => testCase.expect === 'red').length;
-const exempt = cases.filter((testCase) => testCase.expect === 'green').length;
+// Counted from what actually ran, never from the `cases` array: two checks live outside it, and
+// a tally read off the array reported seven while nine had run.
+const fires = cases.filter((testCase) => testCase.expect === 'red').length + 1;
 console.log(
-  `\nevery case behaved: ${fires} case(s) fire, ${exempt} exemption(s) hold`,
+  `\nevery case behaved: ${ran} check(s) ran, ${fires} of them expected red`,
 );

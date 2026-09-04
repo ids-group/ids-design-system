@@ -15,6 +15,10 @@
 //     never from the prose. That is what keeps `Enter`, `ACTION`, `README`, `Router` and a `ds-x`
 //     written as a placeholder out, with no stopword list to maintain.
 //   * An entry naming no public hook at all — purely visual or internal work needs no line.
+//   * A token the cycle INTRODUCED must be named by itself, because that is the one a consumer
+//     greps for and finds nothing; one mention of an unrelated tag no longer answers for it. A
+//     token that already existed at the boundary is exempt — the row ring reads `--space-1-5`,
+//     and a line about it is filler pointing at a knob that is not the supported one.
 //   * An entry that SAYS FOR ITSELF that nothing changed for the consumer is exempt. What is being
 //     caught is DISAGREEMENT between the two records, and a block saying "nothing to do on your
 //     side" agrees with a silent manifest. Measured at about 2% of published non-Added entries, so
@@ -23,6 +27,7 @@
 //   node tools/check-manifest-coverage.mjs              # the version being cut
 //   node tools/check-manifest-coverage.mjs --audit      # every published block, reports only
 //   node tools/check-manifest-coverage.mjs 0.11.4       # one published block
+import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -117,6 +122,16 @@ function blocks() {
     const unreleased = /^## Unreleased\s*$/.exec(lines[i]);
     if (released) found.push({ version: released[1], start: i });
     else if (unreleased) found.push({ version: 'unreleased', start: i });
+    else if (/^## /.test(lines[i])) {
+      // Not a skip: an unrecognised heading merges its entries into the block ABOVE it, so they
+      // are checked against the previous version's manifest and pass for the wrong reason.
+      console.error(
+        `check-manifest-coverage: CHANGELOG.md line ${i + 1} is a \`## \` heading this check ` +
+          `cannot read: ${JSON.stringify(lines[i])}. Expected \`## Unreleased\` or ` +
+          '`## <x.y.z> — <date>` with an em dash.',
+      );
+      process.exit(1);
+    }
   }
   for (let b = 0; b < found.length; b++)
     found[b].end = b + 1 < found.length ? found[b + 1].start : lines.length;
@@ -162,6 +177,57 @@ function patternsIn(text) {
   return patterns;
 }
 
+// The tokens the library already had at the boundary this block describes. A token present there
+// is not what this block introduced, whatever the entry says about it.
+const TAGS = (() => {
+  try {
+    return execFileSync('git', ['-C', ROOT, 'tag', '--list', 'v*'], {
+      encoding: 'utf8',
+    })
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .sort((a, b) =>
+        a
+          .slice(1)
+          .localeCompare(b.slice(1), undefined, { numeric: true }),
+      );
+  } catch {
+    return [];
+  }
+})();
+
+function boundaryTag(version) {
+  if (!TAGS.length) return null;
+  if (version === 'unreleased') return TAGS.at(-1);
+  const at = TAGS.indexOf(`v${version}`);
+  return at > 0 ? TAGS[at - 1] : null;
+}
+
+const tokenCache = new Map();
+
+function tokensAt(tag) {
+  // No tag to read means nothing is known to pre-exist, so every token reads as introduced. That
+  // is the noisy direction rather than the silent one, which is the right way round for a gate.
+  if (!tag) return new Set();
+  if (tokenCache.has(tag)) return tokenCache.get(tag);
+  const found = new Set();
+  try {
+    const out = execFileSync(
+      'git',
+      ['-C', ROOT, 'grep', '-oh', '-e', '--[a-z][a-z0-9-]*', tag, '--', 'src/lib'],
+      { encoding: 'utf8', maxBuffer: 1 << 28 },
+    );
+    for (const match of out.matchAll(/--[a-z][a-z0-9-]*/g))
+      if (!match[0].endsWith('-')) found.add(match[0]);
+  } catch {
+    // `git grep` exits 1 when it matches nothing, which for a real tag means the tree is not
+    // there to read; an empty set then makes every token read as introduced, as above.
+  }
+  tokenCache.set(tag, found);
+  return found;
+}
+
 function manifestFor(version) {
   const path =
     version === 'unreleased'
@@ -179,6 +245,7 @@ function manifestFor(version) {
 
 function check(block) {
   const manifest = manifestFor(block.version);
+  const tokensBefore = tokensAt(boundaryTag(block.version));
   const entries = entriesOf(block).filter((entry) => entry.section !== 'Added');
   const gaps = [];
 
@@ -192,7 +259,20 @@ function check(block) {
     const mentioned = manifest
       ? [...hooks].filter((hook) => manifest.names(hook))
       : [];
-    if (!mentioned.length) gaps.push({ ...entry, hooks: [...hooks] });
+    // One mention covering the whole entry lets an UNRELATED item carry it: an entry naming
+    // `ds-table` and a new token passed because some other item mentioned `ds-table`. A token
+    // the cycle INTRODUCED answers for itself, because that is the one a consumer greps for and
+    // finds nothing. A token that already existed does not: the row ring reads `--space-1-5`,
+    // and a line about it would be filler pointing at a knob that is not the supported one.
+    // Requiring every hook regardless was measured and rejected — 55 flags, nearly all filler.
+    const introduced = [...hooks].filter(
+      (hook) => hook.startsWith('--') && !tokensBefore.has(hook),
+    );
+    if (
+      !mentioned.length ||
+      (introduced.length && !introduced.every((hook) => manifest?.names(hook)))
+    )
+      gaps.push({ ...entry, hooks: [...hooks] });
   }
   return { manifest, entries, gaps };
 }
