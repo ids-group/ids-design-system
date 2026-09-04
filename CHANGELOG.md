@@ -17,8 +17,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   development build warns once and names `ds-button` as the control for a single action. It is
   disabled rather than hidden, so the button keeps its geometry: a `ds-split-button` whose items
   arrive asynchronously shows a disabled chevron until they do and enables itself when they land.
-  The panel can only ever be the `ds-menu` built from `menuItems` — there is no slot for arbitrary
-  content, and anything else composes from `ds-button` and `ds-popover`.
+  The panel can only ever be the `ds-menu` built from `menuItems` — nothing projects into it, and
+  anything else composes from `ds-button` and `ds-popover`. Content you project into
+  `ds-split-button` itself still lands on the main button, as before.
 
 ## 0.12.0 — 2026-09-04
 
