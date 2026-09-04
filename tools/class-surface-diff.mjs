@@ -36,8 +36,8 @@ function git(args) {
 
 function show(ref, path) {
   try {
-    // stdio pipe on stderr: a path that did not exist at `ref` is the normal case
-    // for a new or renamed file, and git says so on stderr rather than exiting quietly.
+    // stdio pipe on stderr: a genuinely new file has no path at `ref`, and git says so on stderr
+    // rather than exiting quietly. A moved one is resolved before this, through `renamedFrom`.
     return execFileSync('git', ['show', `${ref}:${path}`], {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],

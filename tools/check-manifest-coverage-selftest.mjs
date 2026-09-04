@@ -1,12 +1,10 @@
 #!/usr/bin/env node
-// Does the coverage check still FIRE, and do its three exemptions still HOLD? Both halves matter
-// equally here: the rule is narrow on purpose, and a narrowing that silently widened would start
-// demanding the filler the gate exists to avoid, while one that silently broke would go green on
-// the six entries that shipped uncovered.
+// Does the coverage check still FIRE, and do its exemptions still HOLD? Both halves matter equally:
+// the rule is narrow on purpose, so a narrowing that silently widened would start demanding the
+// filler the gate exists to avoid, and one that silently broke would go green on the entries that
+// shipped uncovered.
 //
-// Each case writes one entry into `## Unreleased`, runs the check, and asserts the verdict. The
-// changelog is restored from a backup at the end, and the run asserts the restore byte-for-byte;
-// a crash leaves it mutated, with the backup at the path printed below.
+// A crash leaves CHANGELOG.md mutated, with the backup at the path printed below.
 //
 //   node tools/check-manifest-coverage-selftest.mjs
 import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
@@ -144,4 +142,9 @@ if (failed) {
   console.error(`\n${failed} case(s) wrong.`);
   process.exit(1);
 }
-console.log('\nevery case behaved: the check fires, and all three exemptions hold');
+// Counted, not written down: the tally said three while a fourth exemption was already in the list.
+const fires = cases.filter((testCase) => testCase.expect === 'red').length;
+const exempt = cases.filter((testCase) => testCase.expect === 'green').length;
+console.log(
+  `\nevery case behaved: ${fires} case(s) fire, ${exempt} exemption(s) hold`,
+);

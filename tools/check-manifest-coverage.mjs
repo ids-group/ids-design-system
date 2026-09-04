@@ -2,10 +2,11 @@
 // A release block that documents a change to existing public surface, and a manifest that never
 // names that surface. The reader takes the manifest's silence for "safe", so a dropped entry is
 // not a gap in bookkeeping — it is a wrong answer to "does this release touch me". Six entries
-// shipped that way across 0.11.3 and 0.11.4 and passed all five other gates.
+// shipped that way across 0.11.3 and 0.11.4 and every other gate passed them.
 //
-// The rule is deliberately narrow, because a gate that can only be satisfied by filler produces
-// filler, and `informational` lines written to make a check green dilute the ones that matter:
+// The rule is narrow because a gate that can be satisfied by filler gets filler, and the only way
+// to pass is to NAME the hook — which is the part worth having, since that is what a consumer
+// greps for. Prose does not satisfy it. What is exempt:
 //
 //   * `### Added` is EXEMPT. A component or token that did not exist cannot break an existing
 //     consumer, so a manifest that stays silent about it says the true thing. Left in, this alone
@@ -13,16 +14,11 @@
 //   * A hook counts only if it is REAL — a token, tag or symbol resolved from the library tree,
 //     never from the prose. That is what keeps `Enter`, `ACTION`, `README`, `Router` and a `ds-x`
 //     written as a placeholder out, with no stopword list to maintain.
-//   * An entry that names no public hook is never flagged. Purely visual or internal work needs
-//     no line, and is not asked for one.
+//   * An entry naming no public hook at all — purely visual or internal work needs no line.
 //   * An entry that SAYS FOR ITSELF that nothing changed for the consumer is exempt. What is being
 //     caught is DISAGREEMENT between the two records, and a block saying "nothing to do on your
 //     side" agrees with a silent manifest. 6 of 297 published non-Added entries carry such a
 //     phrase, so it is not a habitual escape hatch; a wrong one is a defect in the changelog.
-//
-// So the minimum way to pass is to NAME the hook, which is the part worth having: a consumer
-// grepping the manifest for `--layer-toast` then finds the line and learns there is nothing to do.
-// Prose alone does not satisfy it.
 //
 //   node tools/check-manifest-coverage.mjs              # the version being cut
 //   node tools/check-manifest-coverage.mjs --audit      # every published block, reports only
@@ -49,7 +45,6 @@ function libraryFiles() {
   return found;
 }
 
-// One pass over the library for the three shapes a changelog entry can name.
 function realHooks() {
   const tokens = new Set();
   const tags = new Set();
@@ -115,7 +110,6 @@ function blocks() {
   return found;
 }
 
-// A headline entry is a `- **` line plus its continuations, carrying the `###` it sits under.
 function entriesOf(block) {
   const found = [];
   let section = '';
