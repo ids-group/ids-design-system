@@ -17,11 +17,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `outline-offset` does not paint its gap at all, so the ring now floats over whatever the control
   actually sits on. Two things follow. A negative offset draws the ring INSIDE the element, which is
   how a row inside a clipping panel keeps an indicator that `overflow: hidden` used to eat — `ds-menu`
-  and the dropdown panels do this. And focus no longer touches `box-shadow`, so a focused card keeps
-  its elevation and a selected segment keeps the shadow that says it is selected; the two signals
-  stopped competing for one property.
-  — Restyle the ring through `--focus-ring-width` (2px, the WCAG 2.4.13 floor for a perimeter
-  indicator), `--focus-ring-color` and `--focus-ring-offset`. Components author it through one mixin,
+  and the dropdown panels do this. And the ring no longer competes with `box-shadow`: a focused card
+  keeps its elevation, where before the two signals fought for one property. A state carried partly
+  by a shadow — the selected segment, the active pill, the sidenav item's rail — still drops that
+  shadow while focused, deliberately, because its fill and label colour go on saying which one it is.
+  — Restyle the ring through the new `--focus-ring-width` (2px, the WCAG 2.4.13 floor for a
+  perimeter indicator), plus `--focus-ring-color` and `--focus-ring-offset`, which are unchanged. Components author it through one mixin,
   `focus.ring($offset)`, so there is a single place to change it.
   — If you set `--focus-ring-inner` to a colour to get a visible ring back, remove it: the token no
   longer reaches a control's ring. It still composes the field halo that `data-focus="ring"` opts into.
@@ -51,12 +52,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   option list can stay calm while forms overshoot. The previous motion and the one block that restores
   it are written down in `docs/check-mark-motion.md`. Both durations resolve through the `--duration-*`
   scale, which `prefers-reduced-motion` already zeroes, so the mark goes instant on its own.
-- **The selected option in `ds-select` and single-mode `ds-autocomplete` now draws the SAME mark as
-  every checkbox,** and animates with it. It was a `ds-icon name="check"` rendered only while
-  selected, so it had no resting state to move from and popped in — the one selection mark in the
-  library that did. The mark is painted as a mask over `currentColor`, which is what lets one path
-  serve a filled box (white on the accent) and a bare option row (accent on the surface).
-  `--ds-option-check-color` still picks its colour.
+- **Every option mark in a picker panel is now the SAME mark as a checkbox's,** and animates with
+  it: the selected row in `ds-select` and single-mode `ds-autocomplete`, the option boxes in
+  multi-mode `ds-autocomplete`, and every box in a `ds-multi-select` panel — option rows, group-all
+  and select-all. Each was a `ds-icon name="check"` rendered only while selected, so it had no
+  resting state to move from and popped in. The indeterminate bar animates on the same tokens now,
+  instead of appearing as a separate element. The mark is painted as a mask over `currentColor`,
+  which is what lets one path serve a filled box (white on the accent) and a bare option row
+  (accent on the surface). `--ds-option-check-color` still picks its colour.
+
+- **A picker panel's option box is drawn at the checkbox's own border weight.** It used
+  `--border-width-strong` where `ds-checkbox` and `ds-radio` read `--check-bw`, so the same control
+  shipped at two thicknesses; the panel boxes in `ds-multi-select` and multi-mode `ds-autocomplete`
+  are 1px now, on the unchanged 20px `--check-size`.
 - **The typing area beside an autocomplete's chips is 40px, not 80px.** `--ds-autocomplete-input-minw`
   is a floor, so in the default `width="fill"` the input still stretches across the row and only the
   chip case changes; under `width="content"` it is what an empty field measures. Set the hook back to
@@ -98,6 +106,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `ds-split-button` itself still lands on the main button, as before.
 
 ### Fixed
+
+- **A `ds-date-picker` day outside the allowed range highlighted under the pointer as though it
+  could be picked.** The day button is only ever `aria-disabled`, never natively disabled, so its
+  hover rule still matched and offered an unselectable date. Hover now skips a disabled day; the
+  colour and cursor it already carried are unchanged.
 
 - **Three fields answered focus with a one-pixel border tint and nothing else.** The sidenav
   footer's search box, the table's column filter and the table's inline cell editor each turned the
