@@ -143,12 +143,13 @@
   align-items: center;
 }
 
-/* Paints every glyph the field shows, sitting ABOVE a fully transparent input, so
-   the native caret and click-to-position still work against the real value while
-   only this overlay is visible. Shares the input's font or the two drift apart. */
+/* Paints every glyph the field shows; the fully transparent input floats OVER it, so the native
+   caret and click-to-position still work against the real value. It sits in the flow because it is
+   also what the field measures: the input's `size` attribute counts CHARACTERS, and a mask's
+   slashes, spaces and dash are all narrower than a digit — over a 23-character range that reserved
+   two digits' worth of dead space between the value and the calendar button. Shares the input's
+   font or the two drift apart. */
 .mask-ghost {
-  position: absolute;
-  inset: 0;
   display: flex;
   align-items: center;
   font: inherit;
@@ -190,6 +191,9 @@
   /* Transparent, not hidden: the value must stay in the DOM for the native caret
      and click-to-position to land on the right slot. */
   &.masked {
+    position: absolute;
+    inset: 0;
+    width: 100%;
     color: transparent;
     caret-color: var(--_date-picker-trigger-label-color);
   }

@@ -95,6 +95,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **A date field is as wide as its date.** The trigger sized its input with the HTML `size`
+  attribute, which counts CHARACTERS — and a mask's slashes, spaces and dash are all narrower than a
+  digit, so a range reserved roughly two digits of dead space between the value and the calendar
+  button. The painted overlay now sits in the flow and measures the field with the real glyphs.
 - **Mono type no longer ligates operators.** JetBrains Mono draws `===` as one triple-bar glyph and
   `!=` as a struck equals, so any prose naming an operator showed something other than the characters
   it was discussing. `--ds-t-mono-ligatures` puts them back for a consumer who wants them.
