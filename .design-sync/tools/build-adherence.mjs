@@ -46,10 +46,10 @@ for (const [, name, value] of css.matchAll(/(--[a-zA-Z0-9-_]+)\s*:\s*([^;}]+)/g)
   if (!(name in tokenKinds) || tokenKinds[name] === 'other') tokenKinds[name] = kind;
 }
 
-// The 120 public `--ds-*` hooks are the knobs a consumer SETS, so they appear only inside the
-// var() that reads them and never as a declaration. Extracting declarations alone shipped a token
-// list with the entire public surface missing, which is the opposite of what this file is for.
-// Their kind comes from the name, which this library's convention makes reliable.
+// The public `--ds-*` hooks are the knobs a consumer SETS, so in this stylesheet they appear only
+// inside the var() that reads them and never as a declaration. Extracting declarations alone
+// shipped a token list with the entire public surface missing, which is the opposite of what this
+// file is for. Their kind comes from the name, which this library's convention makes reliable.
 for (const [, name] of css.matchAll(/var\(\s*(--[a-zA-Z0-9-_]+)/g)) {
   if (name in tokenKinds) continue;
   tokenKinds[name] = /-(?:color|bg|fg)$/.test(name)

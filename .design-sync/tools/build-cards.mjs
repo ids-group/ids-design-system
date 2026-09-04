@@ -699,9 +699,8 @@ const AMBIENT = new Set([
   'HTMLElement', 'Element', 'React', 'ReactNode',
 ]);
 
-// 86 icon names is 881 characters on every icon prop. The union is kept long enough to show the
-// naming convention and closed with `string & {}` so any name still type-checks — the same trade
-// the deleted port made, and the reason it read as a usable declaration.
+// The whole icon union on every icon prop is a wall of characters. It is kept long enough to show
+// the naming convention and closed with `string & {}` so any name still type-checks.
 const ICON_NAMES_SHOWN = 15;
 
 function declarationType(inlined) {

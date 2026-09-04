@@ -138,22 +138,11 @@ documented thing or their chapter's demo only exists once opened. Everything bel
   background or headless one freezes transitions and reports stale layout. Every measurement this
   cycle was headless. Nothing suggests a problem — the 127 live cards render and their panels open —
   but the one check the runbook asks for has not been done.
-- [ ] **`ds-menu`'s trigger-opened menu is unproven.** The open probe reported five of six controls
-  opening (Select 20 options, MultiSelect 6, Autocomplete 4, the date picker 42 day cells, the
-  colour picker its panel). For `ds-menu` the probe found no trigger to click: a trigger-opened menu
-  is driven by a sibling button carrying a directive, outside the element the probe searched. Not
-  failing — unmeasured.
 - [ ] **`ds-toast-region`'s dev-warning strip is unverified.** It was the one `devWarn` caller
   without the `ngDevMode` guard and its message shipped as live code; the guard is now there, but
   the rebuilt bundle came out byte-identical, which points at a stale `.angular/cache` rather than
   at the guard. Re-check on a clean cache. `ds-stat` and `ds-split-button` both compile to
   `constructor(){}`, so the pattern itself is known to work.
-- [ ] **Two numbers in tool comments do not match a second measurement** (raised by the /changelog
-  session, both in `.design-sync` files, neither changes the argument its comment makes):
-  `build-cards.mjs` says "86 icon names", a recount of `src/lib/core/icon-names.ts` gives 83;
-  `build-adherence.mjs` says "120 public `--ds-*` hooks", and measuring that definition over
-  `src/lib/**/*.scss` gives 783 read-only names. The second gap is too large to be drift — the 120
-  probably means a curated subset, and the sentence should say which.
 
 **Standing conditions, not tasks.**
 
@@ -188,6 +177,14 @@ documented thing or their chapter's demo only exists once opened. Everything bel
   unknowns behind it still stand: whether the pane keeps off-screen cards in the DOM, and whether it
   screenshots them for the grid thumbnails, where a deferred card would thumbnail blank. The cheaper
   lever is the live list above.
+- **All six panel-owning controls are proven to open.** Select 20 options, MultiSelect 6,
+  Autocomplete 4, the date picker 42 day cells, the colour picker its panel, and `ds-menu` one pane
+  with its items — that last one needed the probe pointed at the SIBLING button carrying
+  `aria-haspopup`, because a trigger-opened menu's trigger is not inside the panel.
+- **The two disputed comment numbers are gone rather than corrected.** The icon count was 86 against
+  an actual 83, and "120 public `--ds-*` hooks" measured 128 over `_ds_bundle.css` — the /changelog
+  session's 783 came from `src/lib/**/*.scss`, a different corpus, which explains the whole gap.
+  Neither number was acted on by a reader, so both comments now state the constraint without one.
 - **A dropdown was never visible in a card, before or after the freeze.** It is a CDK overlay:
   closed by default, portaled to `document.body`. Verified against the pre-freeze cards, which held
   no overlay either. What freezing took away was the click, which is why the panel owners are live.

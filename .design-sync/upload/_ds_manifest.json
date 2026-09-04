@@ -4606,7 +4606,7 @@
     },
     {
       "name": "--focus-ring-inner",
-      "value": "transparent",
+      "value": "var(--surface-default)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -5770,7 +5770,7 @@
     },
     {
       "name": "--focus-ring-inner",
-      "value": "transparent",
+      "value": "var(--surface-default)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ":root[data-theme=dark]"
