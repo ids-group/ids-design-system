@@ -12,8 +12,6 @@
   position: relative;
 }
 
-// Row selection used a bare native checkbox: `class="check"` was styled nowhere, so the one control
-// the OS drew itself sat in the middle of a design-system table.
 .check {
   @include check-box.box;
 }

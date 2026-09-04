@@ -105,8 +105,7 @@
 
   // Consumer-provided secondary hint (e.g. "Max file size: 5GB | CSV | UTF-8").
   // Project via `<p hint>...</p>`; styled separately from .hint so consumers
-  // don't have to fight the host "or click to browse" line. Subtle top border
-  // visually separates the meta hint from the dropzone's main affordance.
+  // don't have to fight the host "or click to browse" line.
   [hint] {
     margin: var(--space-3) calc(var(--space-6) * -1) 0;
     padding: var(--space-3) var(--space-6) 0;

@@ -1,9 +1,9 @@
 // The tick a selection draws, in one place.
 //
 // ds-checkbox owns the canonical mark; multi-select and autocomplete draw their own box in an
-// option row rather than composing ds-checkbox, and both used `ds-icon name="check"` instead.
-// That icon is a 24-viewBox path at stroke 1.75, so at a 13px glyph it painted a 0.95px line
-// against this mark's 2px — the same box carrying two different ticks.
+// option row rather than composing ds-checkbox, so they need the mark on its own. Do not reach
+// for `ds-icon name="check"` in those boxes: it is a 24-viewBox path at stroke 1.75, which at a
+// 13px glyph paints a 0.95px line against this mark's 2px — one box, two different ticks.
 //
 // Painted as a MASK over `currentColor`, not as a coloured image: the same mark then serves a
 // filled box (white on the accent) and a bare trailing indicator in a select row (accent on the
