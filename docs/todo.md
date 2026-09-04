@@ -40,13 +40,19 @@
   and `ng serve` never binds. Owned by the parallel session that committed it; recorded here so it
   is not rediscovered as an environment problem, which is what it looked like for two attempts.
 
-- [ ] **[P3] Motion cannot be verified on this machine, and it fails silently.** Windows reports
-  `SPI_GETCLIENTAREAANIMATION = False` (Settings → Accessibility → Visual effects → Animation
-  effects is off), so every Chrome here answers `prefers-reduced-motion: reduce` and drops CSS
-  transitions wholesale — `getAnimations()` returns empty even with a 600ms duration forced past the
-  token. A 0ms-vs-600ms control shows no difference, so a run reads as "no animation" whether the
-  CSS is right or wrong: the measurement is void, not negative. Anything animated has to be verified
-  with that setting on, or by reading the cascade (`transitionProperty`) rather than the result.
+- [x] **[P3] Motion could not be verified on this machine — the setting was off, and is now on.**
+  Windows reported `SPI_GETCLIENTAREAANIMATION = False` (Settings → Accessibility → Visual effects
+  → Animation effects), so every Chrome here answered `prefers-reduced-motion: reduce` and dropped
+  CSS transitions wholesale: `getAnimations()` came back empty even with a 600ms duration forced
+  past the token. Stas turned it back on the same day and the same probe now reads
+  `prefers-reduced-motion: false`, `--duration-fast: 120ms`, and the focus ring interpolating
+  `rgba(0,0,0,0)` → `rgba(46,84,255,0.714)` → `0.945` → `rgb(46,84,255)`.
+  The durable half is the trap, not the setting: under reduced motion a 0ms-vs-600ms control shows
+  NO difference, so the run reads identically whether the CSS is right or wrong. That is a VOID
+  measurement, not a negative one, and reporting "the animation does not work" from it would be a
+  false finding. Check `matchMedia('(prefers-reduced-motion: reduce)')` before trusting any motion
+  measurement, and fall back to reading the cascade (`transitionProperty` / `animationName`), which
+  reduced motion does not touch.
 
 
 - [ ] **[P1] A selected radio, checkbox or switch reads as a bullseye while focused.** Measured from
@@ -188,6 +194,11 @@ The cards are static HTML now: 283 of 410 frozen, 127 left live because their pa
 documented thing or their chapter's demo only exists once opened. Everything below is NOT fixed.
 
 **Verification debts — each is one command away, none is a known defect.**
+
+- [ ] **`checkbox.component.scss:100` hand-rolls `check-mark.mark`.** It repeats the transform,
+      opacity, transform-origin and transition pair verbatim, and `:checked &::after` includes the
+      mixin then overrides transform/opacity inline instead of including `check-mark.shown`. Both
+      render correctly; this is the duplication the partial exists to remove.
 
 - [ ] **The elements demo has not been opened in a real browser since the rebuilds.** `COMMANDS.md`
   says to serve `.design-sync/elements/demo` over http and look at it in a real tab, because a
