@@ -13,8 +13,25 @@
       "note": "The chevron previously opened a `ds-menu` with nothing in it. It is now disabled while `menuItems` is empty and enables itself when items arrive — disabled rather than hidden, so the control keeps its geometry either way. A development build warns and names `ds-button` as the control for a single action. The panel can only ever be the `ds-menu` built from `menuItems`; anything else composes from `ds-button` and `ds-popover`.",
       "verify": "A split button with an empty `menuItems` shows a disabled chevron and opens no panel, and one with items opens its menu as before.",
       "searchHints": ["ds-split-button", "menuItems", "SplitButtonItem", "SplitButtonComponent"]
+    },
+    {
+      "id": "focus-ring-inner-is-a-colour-again",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--focus-ring-inner",
+      "new": null,
+      "action": "None to make it work. If you set `--focus-ring-inner` to a colour of your own to get a visible ring back, remove that override — it now fights the default. Keep it only on a scope whose ground is genuinely neither the surface nor the canvas.",
+      "appliesWhen": "Every focused control in the library, because both focus roles compose from this token. Nothing else reads it, and no component token changes name or type.",
+      "pitfall": "The gap is OPAQUE, so it paints the surface colour rather than letting the real ground through. On a control standing on a tinted band or an image the gap is a surface-coloured rim, not a hole — the same class of mismatch that made the previous value `--surface-canvas` draw a dark rim around a light card. Only `outline` + `outline-offset` gives a see-through gap, and a box-shadow token cannot carry an outline.",
+      "note": "`--focus-ring-inner` was `transparent`, which paints nothing and reserves nothing, so the outer layer filled the whole 4px and the ring rendered as one solid brand band flush against the control — invisible against a brand-filled button and a heavy frame on a light one. It is `var(--surface-default)` again, so the ring is 2px of brand held 2px off the control, which is what the token has always described.",
+      "verify": "Focus a solid-filled button and an outline button: both show a thin brand ring separated from the control by a gap, and the solid one is no longer distinguishable only by being slightly larger.",
+      "restore": "--focus-ring-inner: transparent;",
+      "supersedes": ["0.10.2#focus-ring-inner-transparent"],
+      "searchHints": ["--focus-ring-inner", "focus-ring", "--ds-control-focus-shadow", "--ds-field-focus-shadow"]
     }
   ],
   "deleteList": [],
-  "informational": []
+  "informational": [
+    "The 0.10.2 note for `--focus-ring-inner` said the transparent gap `shows whatever is actually behind it` and that `the same pixels show through`. That is not what a transparent box-shadow layer does: it paints nothing and reserves nothing, so the layer beneath it covered the full width and there was no gap at all. Measured on three grounds before this change. Nothing you were told to do in that release was wrong — the action there was `none` unless you wanted an opaque gap — but if you read it as a promise that the ring stood off the control, it never did between 0.10.2 and this release."
+  ]
 }

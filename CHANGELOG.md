@@ -10,6 +10,26 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Breaking
 
+- **Every focus ring in the library changes shape: the gap between a control and its ring is drawn
+  again.** `--focus-ring-inner` was `transparent`, and a transparent shadow layer paints nothing —
+  it does not reserve the 2px it names, so the outer layer filled the whole 4px and the "double
+  ring" rendered as ONE solid brand band flush against the element. Measured on four button fills
+  and three grounds: against a brand-filled control that band is the same colour as the fill and is
+  effectively invisible — a focused solid button read only as slightly larger — while on a light
+  control it reads as a heavy 4px frame. Neither is a ring. The inner layer is now
+  `var(--surface-default)`, so what ships is what the token always described: a 2px brand ring held
+  2px off the control.
+  — `--surface-default` and NOT `--surface-canvas`, which is what the gap used to be: the page
+  ground drew a dark rim around a light card in a dark app, which is why it was removed. A control
+  sits on the surface, so the surface is the closer guess.
+  — It is a guess all the same, and worth knowing before you rely on it: the gap is opaque, so a
+  control standing on neither the surface nor the canvas — a tinted band, a photo — gets a
+  surface-coloured gap rather than its own background. A true see-through gap needs `outline` +
+  `outline-offset`, and a box-shadow token cannot carry an outline, so that is a later change.
+  — If you set `--focus-ring-inner` to a real colour to get a visible ring back, that override now
+  fights the default instead of fixing it — drop it, or keep it only where the ground genuinely is
+  neither surface nor canvas.
+
 - **`ds-split-button` with an empty `menuItems` disables its chevron instead of opening an empty
   menu.** The template carried no guard, so a split button configured with nothing to list still
   opened a panel with nothing in it — a chevron is a promise that there is more, and an empty panel
