@@ -11,6 +11,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   styleUrls: ['../../../shared/section-demo.scss', './radio.section.scss'],
 })
 export class RadioSection {
+  protected readonly dateModeValue = signal<string | null>('range');
   protected readonly scheduleValue = signal<string | null>('single');
   protected readonly invalidGroupValue = signal<string | null>(null);
 }
