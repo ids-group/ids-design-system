@@ -1,5 +1,188 @@
 # DS — improvements backlog
 
+## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
+
+Six defects from that review are fixed (`a5af6ba8`, `38764f81`, `29532e27`, `e88de757`). Everything
+below survived wave 2's attack and is NOT fixed. Each claim was traced in emitted CSS from a linked
+app build rather than from SCSS; none was verified in a browser.
+
+- [ ] **[P1] Move the focus ring from `box-shadow` to `outline` + `outline-offset` (major).** The gap
+  now painted by `--focus-ring-inner: var(--surface-default)` is a GUESS: it is right on a card and
+  visibly wrong on the canvas or any tinted band, because a shadow layer can only cover, never let
+  the real ground through. An outline's offset region is simply not painted, so the gap shows
+  whatever is actually behind — measured on three grounds, `presentations/focus-ring-gap.png`. The
+  library is already half-way: `focus.outline-indicator` is adopted by seven components and takes a
+  negative offset for clipping ancestors. What makes it a MAJOR: `--ds-*-focus-shadow` and the two
+  roles are public and documented as shadow VALUES, and a consumer who overrides one gets nothing
+  after the switch. Note it does not fix the six clipped-ring findings — an outline is clipped by an
+  ancestor's `overflow` exactly like a shadow.
+
+- [ ] **[P1] forced-colors needs the cause removed, not the symptom overpowered.** The floor rule in
+  `styles/_focus.scss` now carries `!important`, which contradicts that file's own stated contract —
+  it is written at zero specificity precisely so a component or a consumer still wins. The honest
+  shape is an `own-indicator` mixin emitting `outline: none` inside
+  `@media not (forced-colors: active)`, adopted by the ~49 declarations that suppress the UA ring,
+  plus a gate in `tools/check-focus-rings.mjs` so a new component cannot forget. Then the
+  `!important` comes out. Agreed with Stas 2026-09-04: the edit count is not an argument against.
+
+- [ ] **[P1] `field-state` out-ranks `disabled` and `read-only` in nine field components.** A field
+  that is both disabled and invalid paints the error border and error fill, keeping only the disabled
+  text colour and `not-allowed` cursor. Measured: ds-input and ds-textarea are an exact (0,5,0) tie
+  won by source order; the other seven lose outright at (0,3,0). The `form.disable()` path does NOT
+  reproduce it — disabling clears the control's errors — so it needs the component's own `disabled`
+  plus `invalid`/`error`/`errors`. ds-checkbox shows the fix: it re-points its `--_*` resolvers per
+  state instead of declaring final properties, and gets the precedence right. 0.10.0 inverted this
+  for select, autocomplete, both pickers, color-picker and otp-input; input and textarea always were.
+
+- [ ] **[P2] `ds-field-group[invalid]` loses its error border on hover and on focus,** and that border
+  is the group's ONLY error affordance — segment labels and messages are hidden by `.in-group`.
+  `:host(:hover:not(.disabled))` and `:host(:focus-within:not(.disabled))` are (0,3,0) against
+  `:host(.invalid)` at (0,2,0). Worse, in the same file: the group sets no `aria-invalid` at all, so
+  an invalid group is never invalid to a screen reader. Note it gets disabled-vs-invalid the RIGHT
+  way round — the anomaly is the nine single fields above.
+
+- [ ] **[P2] Warning and success fields show a mismatched halo.** `_field-state.scss` gives error a
+  nested focus block and gives warning/success none, so a focused warning field is a yellow border
+  with a blue halo. `--focus-field-warning` and `--focus-field-success` already exist in
+  `themes/_semantic.scss` and are documented, and nothing in `src/` reads either — the tokens for the
+  fix are already shipped. The mixin also takes no `$warning-focus-shadow` / `$success-focus-shadow`,
+  so a component cannot pass its own.
+
+- [ ] **[P2] Six focus rules draw two indicators at once.** accordion-item `.head`, stepper
+  `button.node`, table `button.th-label` / `.col-resize` / the three icon buttons, plus table
+  `.col-filter-search` and `.cell-edit` and multi-select `.search-input`: each declares its own
+  `outline` (or `outline: 0`) and never resets `box-shadow`, so the blanket paints a 4px ring under
+  it. `focus.outline-indicator` exists for exactly this and is adopted in seven other places; these
+  were missed because they spell the colour `var(--accent)` rather than `--focus-ring-color`, so the
+  last sweep's grep did not see them. Verified from compiled output that none carries a competing
+  shadow, so the reset is safe. `.col-resize` is the sharpest: its comment says the ring was dropped
+  deliberately, and the blanket paints it anyway.
+
+- [ ] **[P2] Ten components hard-code `--accent-focus-ring` / `--accent-focus-field`** instead of the
+  two roles: calendar-day, color-picker (twice), modal-confirm, multi-select, otp-input, segmented,
+  slider, split-button, toggle-button. They ignore the `data-focus` switch entirely and publish no
+  `--ds-<name>-focus-shadow`, so a consumer cannot reach them by the documented path either. The
+  sharpest consequence is `inset`: the docs tell a consumer to pair a clipped ds-card with
+  `data-focus="inset"`, and a ds-segmented or ds-slider inside it keeps an outset ring the clip eats.
+  Inconsistent even within one component — multi-select's ERROR focus goes through the role while its
+  normal focus does not.
+
+- [ ] **[P2] Focus rings are clipped in six components.** ds-number-stepper (the ± buttons, three
+  sides of four, `.stepper` is `overflow: hidden`), ds-tabs[scrollable], ds-breadcrumbs,
+  ds-sidenav-group `.group-body`, ds-time-columns `.opt` (2px of 4px, asymmetric) and
+  ds-sidenav-footer's result and alert rows. ds-menu was the seventh and is fixed — it is now the
+  only component using `[data-focus='inset']`, which is the mechanism the rest of these want.
+  ds-bottom-sheet shows the other remedy: reserve the ring's room with padding + negative margin.
+
+- [ ] **[P3] `ds-date-picker` takes the CONTROL focus role while being a text field.** Its `.trigger`
+  wraps a real masked `<input>`, and every other text field takes `--ds-field-focus-shadow`, so a date
+  beside an input in one row shows a crisp 4px ring next to a soft 3px halo. One resolver serves both
+  the trigger and the panel's buttons, so splitting them needs a second token.
+
+- [ ] **[P3] `--ds-multi-select-option-bg-color-active` is documented and dead.** The alias is
+  re-declared on `.dropdown-panel`, a DESCENDANT of the pane where `_dropdown-overlay.scss` has
+  already substituted `--_option-bg-color-active`, so nothing reads it. The forwarding half works —
+  the token is in `panelTokens`; only the declaration site is wrong, and ds-autocomplete shows the
+  working shape (declare the alias on `:host`). Its description is also wrong: it says "while
+  pressed", while the token drives hover and keyboard-active and pressed is hard-coded with no hook.
+
+- [ ] **[P3] `--ds-time-picker-focus-shadow` is read by the portaled panel and forwarded by nobody.**
+  `time-picker.component.scss` reads it on `.time-action` and it is absent from that component's
+  `panelTokens`, so a host-scoped value never reaches the panel. The token reference states the
+  opposite in writing. Same class as the six tokens fixed in `c013e08c`.
+
+- [ ] **[P3] `data-focus="outline"` leaves ~20 components with no indicator at all.** The mode zeroes
+  the four shadow roles and draws its replacement at (0,2,0), which every component focus rule
+  out-ranks while declaring `outline: none`. Opt-in only, so nothing ships broken by default. The
+  real defect is a contradiction inside one docs page: it promises the outline replaces the shadow
+  and, some eighty lines later, guarantees the replacement cannot reach a component. Same root cause
+  as the forced-colors item — fixing that fixes this.
+
+- [ ] **[P3] color-picker's selected swatch stops reading as selected while focused** — a regression
+  from `e9b0ef16` (2026-09-02), which adopted `outline-indicator` and with it `box-shadow: none`. The
+  preset button is empty, so selection is carried by the shadow ALONE in the visual channel:
+  `focus.state-shadow` must NOT be used here. Selection needs another channel — a check glyph, a
+  border — before the ring can take the shadow.
+
+- [ ] **[P3] Thirteen ds-docs forced-state pins misrepresent their component.** Three change pixels
+  today: the dropzone pin invents a text colour from a token nothing else reads (itself a published
+  no-op), the button `pin-active` omits the press scale while `pin-hover` omits the hover shadow, and
+  the table `pin-hover-th` invents a header background the component never paints — while the
+  component's own header hover is a no-op, both sides being `--text-secondary`. Six pin comments
+  claim "no `--_*` resolvers" where resolvers exist; they were true when written and the resolvers
+  landed six days later. `ds-docs/src/styles/specimens/_day.scss` is a hand-written mirror of
+  calendar-day with seven or more divergences.
+
+- [ ] **[P3] `ds-tag` marked `interactive` is mouse-only.** It takes a click handler but no
+  `tabindex`, no `role` and no keydown, so the affordance is unreachable by keyboard. Found while
+  auditing its focus ring, which is moot until this is fixed.
+
+## Claude Design upload — what the freeze left open (recorded 2026-09-04)
+
+The cards are static HTML now: 283 of 410 frozen, 127 left live because their panel is the
+documented thing or their chapter's demo only exists once opened. Everything below is NOT fixed.
+
+**Verification debts — each is one command away, none is a known defect.**
+
+- [ ] **The elements demo has not been opened in a real browser since the rebuilds.** `COMMANDS.md`
+  says to serve `.design-sync/elements/demo` over http and look at it in a real tab, because a
+  background or headless one freezes transitions and reports stale layout. Every measurement this
+  cycle was headless. Nothing suggests a problem — the 127 live cards render and their panels open —
+  but the one check the runbook asks for has not been done.
+- [ ] **`ds-menu`'s trigger-opened menu is unproven.** The open probe reported five of six controls
+  opening (Select 20 options, MultiSelect 6, Autocomplete 4, the date picker 42 day cells, the
+  colour picker its panel). For `ds-menu` the probe found no trigger to click: a trigger-opened menu
+  is driven by a sibling button carrying a directive, outside the element the probe searched. Not
+  failing — unmeasured.
+- [ ] **`ds-toast-region`'s dev-warning strip is unverified.** It was the one `devWarn` caller
+  without the `ngDevMode` guard and its message shipped as live code; the guard is now there, but
+  the rebuilt bundle came out byte-identical, which points at a stale `.angular/cache` rather than
+  at the guard. Re-check on a clean cache. `ds-stat` and `ds-split-button` both compile to
+  `constructor(){}`, so the pattern itself is known to work.
+- [ ] **Two numbers in tool comments do not match a second measurement** (raised by the /changelog
+  session, both in `.design-sync` files, neither changes the argument its comment makes):
+  `build-cards.mjs` says "86 icon names", a recount of `src/lib/core/icon-names.ts` gives 83;
+  `build-adherence.mjs` says "120 public `--ds-*` hooks", and measuring that definition over
+  `src/lib/**/*.scss` gives 783 read-only names. The second gap is too large to be drift — the 120
+  probably means a curated subset, and the sentence should say which.
+
+**Standing conditions, not tasks.**
+
+- [ ] **The upload tree tracks `src/lib`, and only a machine with Chrome can bring it back into
+  line.** Any change to a component's template or SCSS moves what a card renders, so each one needs
+  `build-upload` → `snapshot-cards` → the height check before the tree matches the library again.
+  CI cannot do it: the image has no browser, which is why `cards.lock.json` and `check-frozen.mjs`
+  exist. In a shared checkout this means the tree is briefly stale after every library commit.
+- [ ] **Three obsolete paths on the project can only be deleted by its owner.** Listed in
+  `.design-sync/obsolete.txt`, printed by every build with the instruction to paste:
+  `components/actions/Button/Button - Refused, and why.html`,
+  `components/forms-inputs/TimeColumns/Time Columns.html`, `_TO_BE_DELETED.md`. Blanked and
+  unregistered from here; `delete_files` answers 403 for a non-owner by every route tested.
+
+**Decisions waiting on Stas.**
+
+- [ ] **Which of the 8 live chapters can also be frozen.** `live-chapters.txt` keeps toast, drawer,
+  modal, popover, bottom-sheet, tree, loading-overlay and scrollbar live because their demo only
+  exists once opened. Removing a line freezes that chapter's cards on the next run — 350 ms and
+  2.1 MB per card become about 35 ms and no bundle. Stas asked to look at the list himself.
+- [ ] **`templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty.** The
+  pane is server-side and the CLI binary carries only the tool description, so what fills them
+  cannot be determined from here. Nothing is known to be missing because of it.
+- [ ] **`.thumbnail` — the project's cover image — has no source that regenerates it.** It lives at
+  `assets/thumbnail.webp` and is copied into the tree; re-rendering it from a card is still open.
+
+**Closed by measurement, recorded so it is not reopened.**
+
+- **Lazy card rendering is no longer worth building.** The backlog item assumed every card in the
+  grid boots its own Angular application; that is now true for 127 of 410. A frozen card costs about
+  20 ms and zero bytes warm, so an `IntersectionObserver` would buy only the live ones and the two
+  unknowns behind it still stand: whether the pane keeps off-screen cards in the DOM, and whether it
+  screenshots them for the grid thumbnails, where a deferred card would thumbnail blank. The cheaper
+  lever is the live list above.
+- **A dropdown was never visible in a card, before or after the freeze.** It is a CDK overlay:
+  closed by default, portaled to `document.body`. Verified against the pre-freeze cards, which held
+  no overlay either. What freezing took away was the click, which is why the panel owners are live.
+
 ## The hex readout rolls its glyphs like a mechanical board (recorded 2026-09-02, Stas)
 
 - [ ] **[P3] Dragging the picker retypes the hex value instantly; each glyph should ROLL to its new

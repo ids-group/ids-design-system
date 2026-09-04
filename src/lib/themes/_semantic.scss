@@ -211,7 +211,12 @@
      drew a dark rim around a white card in a dark app, reading as a rendering
      artifact rather than a focus state. Transparent costs nothing on a canvas
      ground (the same pixels show through) and is correct on every other. */
-  --focus-ring-inner:        transparent;
+  /* The separator that makes the ring read as a ring. It cannot be `transparent`: a
+     transparent shadow layer is a no-op, not a hole, so the outer layer showed through
+     it as one solid 4px band — invisible against a brand-filled control and heavy on a
+     light one. `--surface-default` and not `--surface-canvas`: controls sit on the
+     surface, and painting the page ground here drew a dark rim around a light card. */
+  --focus-ring-inner:        var(--surface-default);
   --focus-ring-outer-h:      var(--primary-h);
   --focus-ring-outer-s:      var(--primary-s);
   --focus-ring-outer-l:      var(--primary-l);
