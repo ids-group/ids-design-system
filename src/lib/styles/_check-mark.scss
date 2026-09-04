@@ -1,9 +1,13 @@
-// The tick a checked box draws, in one place.
+// The tick a selection draws, in one place.
 //
 // ds-checkbox owns the canonical mark; multi-select and autocomplete draw their own box in an
 // option row rather than composing ds-checkbox, and both used `ds-icon name="check"` instead.
 // That icon is a 24-viewBox path at stroke 1.75, so at a 13px glyph it painted a 0.95px line
 // against this mark's 2px — the same box carrying two different ticks.
+//
+// Painted as a MASK over `currentColor`, not as a coloured image: the same mark then serves a
+// filled box (white on the accent) and a bare trailing indicator in a select row (accent on the
+// surface) without a second copy of the path.
 @mixin mark {
   --_check-mark-enter-duration: var(--ds-check-mark-enter-duration, var(--ds-motion-check-enter-duration));
   --_check-mark-enter-easing: var(--ds-check-mark-enter-easing, var(--ds-motion-check-enter-easing));
@@ -24,7 +28,8 @@
   // different curves in the two directions.
   transition: transform var(--_check-mark-exit-duration) var(--_check-mark-exit-easing),
               opacity var(--_check-mark-exit-duration) var(--_check-mark-exit-easing);
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+  background-color: currentcolor;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
 }
 
 // The entered state, for a box that carries `.checked` rather than a `:checked` input.
@@ -33,4 +38,13 @@
   opacity: 1;
   transition: transform var(--_check-mark-enter-duration) var(--_check-mark-enter-easing),
               opacity var(--_check-mark-enter-duration) var(--_check-mark-enter-easing);
+}
+
+// The bar a mixed selection draws, on the SAME element as the tick: a second span would sit beside
+// it in the centred box rather than replacing it, and the two could not cross-fade.
+@mixin dash {
+  width: var(--check-indet-w);
+  height: var(--check-indet-h);
+  border-radius: var(--ds-radius-inner);
+  mask: none;
 }

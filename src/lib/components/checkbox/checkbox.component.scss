@@ -97,6 +97,10 @@
 
   // Persistent pseudo (content always set) so the check/indeterminate mark
   // scales + fades in/out — a checked-only ::after would just pop in.
+  // The mark paints in currentColor, and an input inherits the label's text colour — so without
+  // this the tick would come out dark on the filled box.
+  color: var(--icon-on-primary);
+
   &::after {
     content: "";
 
@@ -114,11 +118,7 @@
     border-color: var(--_checkbox-selected-border);
     &::after {
       @include check-mark.shown;
-
-      width: var(--check-indet-w);
-      height: var(--check-indet-h);
-      background: var(--icon-on-primary);
-      border-radius: var(--ds-radius-inner);
+      @include check-mark.dash;
     }
   }
 }

@@ -223,13 +223,10 @@
                       }
                     </span>
 
-                    @if (isSelected(opt)) {
-                      <ds-icon
-                        class="option-check"
-                        name="check"
-                        [size]="14"
-                      />
-                    }
+                    <span
+                      class="option-check"
+                      [class.is-shown]="isSelected(opt)"
+                    ></span>
                   </button>
                 </li>
               }
@@ -277,13 +274,10 @@
                 }
               </span>
 
-              @if (isSelected(item)) {
-                <ds-icon
-                  class="option-check"
-                  name="check"
-                  [size]="14"
-                />
-              }
+              <span
+                class="option-check"
+                [class.is-shown]="isSelected(item)"
+              ></span>
             </button>
           </li>
         }

@@ -51,6 +51,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   option list can stay calm while forms overshoot. The previous motion and the one block that restores
   it are written down in `docs/check-mark-motion.md`. Both durations resolve through the `--duration-*`
   scale, which `prefers-reduced-motion` already zeroes, so the mark goes instant on its own.
+- **The selected option in `ds-select` and single-mode `ds-autocomplete` now draws the SAME mark as
+  every checkbox,** and animates with it. It was a `ds-icon name="check"` rendered only while
+  selected, so it had no resting state to move from and popped in — the one selection mark in the
+  library that did. The mark is painted as a mask over `currentColor`, which is what lets one path
+  serve a filled box (white on the accent) and a bare option row (accent on the surface).
+  `--ds-option-check-color` still picks its colour.
 - **`ds-radio` accepts `[deselectable]`,** which lets a checked STANDALONE radio be cleared by
   clicking it again. Off by default and ignored inside `ds-radio-group`, where clearing the one
   selected option would leave the group with no value through a gesture the group cannot see.

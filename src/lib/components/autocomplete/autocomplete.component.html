@@ -253,12 +253,11 @@
                   }
                 </span>
 
-                @if (!multiple() && isSelected(option)) {
-                  <ds-icon
-                    name="check"
+                @if (!multiple()) {
+                  <span
                     class="option-check"
-                    [size]="14"
-                  />
+                    [class.is-shown]="isSelected(option)"
+                  ></span>
                 }
               </div>
             }
@@ -311,12 +310,11 @@
               }
             </span>
 
-            @if (!multiple() && isSelected(option)) {
-              <ds-icon
-                name="check"
+            @if (!multiple()) {
+              <span
                 class="option-check"
-                [size]="14"
-              />
+                [class.is-shown]="isSelected(option)"
+              ></span>
             }
           </li>
         }

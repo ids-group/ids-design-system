@@ -5,6 +5,7 @@
 // selector) cannot reach it. The component sets `panelClass: 'ds-dropdown-panel'`
 // on the overlay config; this partial declares the matching rules.
 
+@use 'check-mark' as check-mark;
 @use 'text-clip' as text-clip;
 @use 'visually-hidden' as visually-hidden;
 
@@ -142,9 +143,17 @@
       @include visually-hidden.visually-hidden;
     }
 
+    // Persistent, not rendered only when selected: an element that does not exist has no resting
+    // state to transition from, which is why this was the one selection mark that popped in.
     .option-check {
+      @include check-mark.mark;
+
       color: var(--_option-check-color);
       flex: 0 0 auto;
+    }
+
+    .option-check.is-shown {
+      @include check-mark.shown;
     }
 
     &:disabled {
