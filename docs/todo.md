@@ -207,11 +207,6 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 
 **Verification debts — each is one command away, none is a known defect.**
 
-- [ ] **`checkbox.component.scss:100` hand-rolls `check-mark.mark`.** It repeats the transform,
-      opacity, transform-origin and transition pair verbatim, and `:checked &::after` includes the
-      mixin then overrides transform/opacity inline instead of including `check-mark.shown`. Both
-      render correctly; this is the duplication the partial exists to remove.
-
 - [ ] **The elements demo has not been opened in a real browser since the rebuilds.** `COMMANDS.md`
   says to serve `.design-sync/elements/demo` over http and look at it in a real tab, because a
   background or headless one freezes transitions and reports stale layout. Every measurement this
