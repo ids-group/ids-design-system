@@ -6,8 +6,8 @@
 // cards render, the manifest is right, the heights match. This is what notices, and it needs no
 // browser, so CI can run it.
 //
-// It compares against that record rather than re-deriving which cards stay live. Deriving it twice
-// is how the two drift, and this gate has already spent a day passing vacuously on a rule it
+// It compares against that record rather than re-deriving which cards stay live: two
+// implementations of the rule drift, and this gate has already passed vacuously on one it
 // recomputed slightly wrong.
 //
 //   node .design-sync/tools/check-frozen.mjs

@@ -1,21 +1,17 @@
 #!/usr/bin/env node
 // Freezes every card that does not need to be live into static HTML, then minifies the result.
 //
-// A card is a whole document that downloads a 2.12 MB bundle and boots its own Angular application,
-// and the pane shows a grid of them. Measured on this tree: 89 of the 90 custom-element definitions
-// cost 0.3 ms between them - the expense is parsing the bundle in each document and constructing
-// the one section whose tag is on the page. A snapshot removes both.
+// A card is a whole document that downloads the 2.12 MB bundle and boots its own Angular
+// application, and the pane shows a grid of them.
 //
-// The snapshot is the SETTLED DOM with every script stripped. It is identical to the live card, not
-// similar: Angular's emulated-encapsulation styles are already `<style>` tags in the head by then,
-// and no colour is baked into an inline style - theme tokens stay in `_ds_bundle.css`, which the
-// static card still links, so the pane switching `data-theme` still recolours it.
+// The snapshot is the SETTLED DOM with every script stripped, which renders identically: Angular's
+// emulated-encapsulation styles are already `<style>` tags by then, and no colour is baked into an
+// inline style - theme tokens stay in `_ds_bundle.css`, which the static card still links, so the
+// pane switching `data-theme` still recolours it.
 //
-// What is lost is BEHAVIOUR, everywhere - a Select no longer opens, a Tab no longer switches. Two
-// kinds of card are therefore left alone: the chapters named in `live-chapters.txt`, whose demos
-// only exist once opened, and every card that renders a control whose panel IS the thing being
-// documented. The second set is decided from the rendered dom, not from the list, and what a run
-// kept is recorded in `live-cards.txt`.
+// What is lost is BEHAVIOUR. Two kinds of card keep it: the chapters in `live-chapters.txt`, whose
+// demo only exists once opened, and every card owning a panel (see PANEL_OWNERS). What a run kept
+// is recorded in `live-cards.txt`.
 //
 //   node .design-sync/tools/snapshot-cards.mjs      # after build-cards has stamped the heights
 //
@@ -68,11 +64,10 @@ const chapterOf = (html) => {
   return cut < 0 ? rest : `${rest.slice(0, cut)}/${rest.slice(cut + 1)}`;
 };
 
-// A dropdown is a CDK overlay: closed by default and portaled to `document.body`, so a card never
-// SHOWED one — verified against the pre-freeze cards, which held no overlay either. What a frozen
-// card loses is the click that opens it, and the panel is the whole point of these controls. So any
-// card rendering one of them stays live, whatever chapter it belongs to: the chapter list would drag
-// 130 cards live to keep the 85 that actually have a panel — Table alone is 35 for 5.
+// Controls whose panel IS the documented thing. A dropdown is a CDK overlay, so it was never
+// VISIBLE in a card — closed by default, portaled to `document.body` — but a frozen card also has
+// no click to open it. Matched per CARD rather than per chapter: by chapter this keeps 130 cards
+// live to cover the 85 that own a panel, Table alone being 35 for 5.
 const PANEL_OWNERS = /<(ds-select|ds-multi-select|ds-autocomplete|ds-date-picker|ds-time-picker|ds-color-picker|ds-menu|ds-popover)[\s>]/;
 
 const cards = JSON.parse(readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8')).cards;
@@ -90,11 +85,10 @@ const TIDY = `
       if (!document.documentElement.hasAttribute('data-ds-sliced') && Date.now() - t0 < 20000) {
         return setTimeout(ready, 25);
       }
-      // The section is built, which is not the same as settled: components that MEASURE write their
-      // result later - Table's sticky scrollbar pins '.scroll-wrap' to a computed height, and that
-      // one card froze three different ways across three runs. Counting frames guessed at how many;
-      // this waits for the DOM to stop changing instead, which is what "settled" actually means.
-      // Fonts first, because a measure taken against the fallback face is the wrong number.
+      // Built is not settled: a component that MEASURES writes its result later, and Table's sticky
+      // scrollbar pins '.scroll-wrap' to a computed height. Counting frames only guesses how many,
+      // so this waits for the DOM to stop changing. Fonts first - a measure taken against the
+      // fallback face is the wrong number.
       return document.fonts.ready.then(function () {
         var quiet = null;
         var observer = new MutationObserver(function () {
@@ -214,11 +208,9 @@ if (failed.length) {
 }
 
 // Angular inlines a component's styles into every document that renders it, so the same block
-// arrives in card after card: 4005 style tags across the tree, 185 of them distinct, 10.3 MB inlined
-// against 473 KB of union. Concatenating them into one linked sheet lets the browser fetch it once
-// for the whole grid instead of parsing 27 KB inside each card. Mostly they are scoped by the
-// `_ngcontent`/`_nghost` attributes, but NOT entirely - see the union below, which is why the sheet
-// is built from every rendered card in `cards.json` order rather than from an arbitrary subset.
+// arrives in card after card. One linked sheet is fetched once for the whole grid instead. Mostly
+// the blocks are scoped by the `_ngcontent`/`_nghost` attributes, but NOT entirely - see the union
+// below.
 const isComponentStyle = (body) => body.includes('_nghost-') || body.includes('_ngcontent-');
 
 // Whitespace inside a `<style>` is never rendered, so this collapses unconditionally - unlike the
@@ -228,28 +220,24 @@ const tidyCss = (body) => body
   .replace(/\s*\n\s*/g, '\n')
   .trim();
 
-// Five lanes finish out of order, so the Map's own order is a race. Reading it back in the order
-// `cards.json` declares is what makes the sheet and the shortened ids byte-identical run to run -
-// otherwise every snapshot rewrites all 376 cards and the shared sheet with no change in them, and
-// the committed tree CI diffs against is noise.
+// Five lanes finish out of order, so the Map's order is a race. Reading it back in `cards.json`
+// order is what makes the sheet and the shortened ids byte-identical run to run; without it every
+// snapshot rewrites every file with no change in it.
 const rendered = queue.map((path) => [path, snapshots.get(path)]);
 
-// Whether a card owns a panel can only be told from the RENDERED dom: a live card's own HTML holds
-// just `<ds-docs-components-select>`, and every element inside it appears when Angular renders. So
-// the decision comes after the render, and a card that turns out to own one is left exactly as
-// build-cards wrote it.
+// Only the RENDERED dom can tell: a live card's own HTML holds just `<ds-docs-components-select>`,
+// and everything inside it appears when Angular renders. A card that owns a panel is left exactly
+// as build-cards wrote it.
 const ordered = [];
 for (const entry of rendered) {
   if (PANEL_OWNERS.test(entry[1])) kept.push(entry[0]);
   else ordered.push(entry);
 }
 
-// Collected from EVERY rendered card, not only the frozen ones. A block qualifies on containing a
-// scope attribute anywhere in it, and some carry document-level rules alongside — `:root` custom
-// properties, keyframes, `::ng-deep` output. Building the union from the frozen set alone dropped
-// the blocks that only a now-live card contributed, and 80 frozen cards moved by 4-32px: the rules
-// they need are not all attribute-scoped, whatever the scoping suggests. A live card does not link
-// the sheet, so the extra blocks cost the grid one larger fetch and nothing else.
+// EVERY rendered card, not only the frozen ones. A block qualifies on carrying a scope attribute
+// anywhere in it, and some carry document-level rules alongside - `:root` custom properties,
+// keyframes, `::ng-deep` output. Narrowing this to the frozen set dropped what only a live card
+// contributed and moved 80 frozen cards by 4-32px.
 const blocks = [];
 for (const [, dom] of rendered) {
   for (const [, body] of dom.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
@@ -302,9 +290,7 @@ for (const [path, dom] of ordered) {
   writeFileSync(join(OUT, path), written);
 }
 
-// The record of what this run left live, so `check-frozen` asserts against it instead of
-// re-deriving the rule. Two implementations of "which cards stay live" is how they drift, and the
-// gate went a whole day passing vacuously the last time it re-derived something.
+// What `check-frozen` asserts against, so the rule has one implementation rather than two.
 writeFileSync(
   join(syncDir, 'live-cards.txt'),
   `# Written by snapshot-cards.mjs — the cards it left live. Do not edit; see live-chapters.txt.\n${

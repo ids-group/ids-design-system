@@ -880,11 +880,10 @@ writeFileSync(
   `${JSON.stringify({ generatedBy: 'build-cards.mjs', cards: ordered.map((entry) => entry.path) }, null, 2)}\n`,
 );
 
-// What CI compares INSTEAD of the card bytes. This repo commits the cards frozen, and freezing
-// needs a browser, so a CI build always produces live ones and a byte comparison between the two
-// says "stale" every time — which ended with the release bot committing the live tree over the
-// freeze. The lock fingerprints the cards as THIS script leaves them, which is exactly what CI
-// reproduces: it matching means the cards did not change and the frozen copies in git still stand.
+// What CI compares INSTEAD of the card bytes. This repo commits the cards frozen and freezing needs
+// a browser, so a browserless build always produces live ones and comparing those says "stale"
+// every time. This fingerprints the cards as THIS script leaves them, which such a build
+// reproduces: matching means the cards did not change and the frozen copies in git still stand.
 const fingerprints = {};
 const fingerprint = (dir, rel) => {
   for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
