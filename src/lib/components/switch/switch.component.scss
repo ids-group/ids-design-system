@@ -46,7 +46,11 @@
   // ring of its own, and a focus ring around the glyph lands concentric with it — three
   // brand bands through two gaps, which reads as a target rather than as two states a
   // keyboard user has to tell apart.
-  &:focus-within {
+  // `:has(:focus-visible)`, NOT `:focus-within`: the latter matches a MOUSE focus too, and a
+  // checkbox clicked with a pointer would keep the ring until focus moved elsewhere. A text
+  // input is granted `:focus-visible` on click, so the two are equivalent on a field shell and
+  // only diverge here, on a control the browser does not consider typing-into.
+  &:has(:focus-visible) {
     @include focus.ring;
   }
 

@@ -38,7 +38,9 @@
 }
 
 // Surface keyboard focus on the zone when its (visually-hidden) input is focused.
-.dropzone:focus-within {
+// `:has(:focus-visible)` and not `:focus-within`, which would also fire for the pointer:
+// clicking the zone to open the file dialog would leave the ring behind.
+.dropzone:has(:focus-visible) {
   @include focus.ring;
 }
 

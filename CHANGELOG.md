@@ -15,7 +15,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   already draws — three bands through two gaps, a target rather than two states a keyboard user has
   to tell apart while moving through a group. The row is also what the pointer already hits, since
   the label carries the hit area. A control with no label has no row to speak of, so there the ring
-  keeps its distance instead (`--space-1-5` rather than the usual 2px offset). `ds-table`'s cell
+  keeps its distance instead (`--space-1-5` rather than the usual 2px offset). It is keyboard-only:
+  the row matches `:has(:focus-visible)`, so clicking a checkbox with the pointer leaves no ring
+  behind. `ds-table`'s cell
   checkbox is unchanged — it has no row, and it keeps ringing its own box.
 
 - **Every hand-written `outline: none` in the library became `focus.own-indicator`.** The declaration
