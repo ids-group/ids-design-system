@@ -28,8 +28,8 @@ const SHARED_CSS = '_ds_cards.css';
 const PORT = 4579;
 const WIDTH = 1200;
 const FRAME_HEIGHT = 24000;
-// Each lane is a chromium rendering a 2 MB Angular bundle, so the ceiling is the container's RAM,
-// not its cores: five of them OOM a 4 GB CI runner.
+// One chromium PROCESS per card, so peak memory is LANES wide however long the queue is. The
+// ceiling is the container's RAM, not its cores: five of these OOM a 4 GB CI runner.
 const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
 const CHROME = [

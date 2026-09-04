@@ -168,8 +168,6 @@ pipelines:
                 --paths "/ids-ds/index.html" "/ids-ds/CHANGELOG.md" "/ids-ds/favicon.ico" "/ids-ds/favicon.svg" "/ids-ds/apple-touch-icon.png"
         - step:
             name: Build Claude Design bundle
-            # The freeze runs headless chromium over 410 cards; 4 GB is not enough for that.
-            size: 2x
             caches:
               - npm
               - bun-bin
@@ -178,7 +176,9 @@ pipelines:
             artifacts:
               - .design-sync/elements/dist/**
             script:
-              - export SNAPSHOT_LANES=4
+              # One chromium PROCESS per card, so peak memory is LANES wide, not 410. Two fit a 4 GB
+              # runner; more would need size: 2x, which bills at double the rate for the whole step.
+              - export SNAPSHOT_LANES=2
               - sh infrastructure/scripts/build-design-sync.sh
       - step:
           name: Sync dev with main
