@@ -13,9 +13,12 @@
   **What is NOT measured, and must be before sizing this:** what the copies do in a running app.
   A library build ships styles UNSHIMMED (`.button{` appears with no `_ngcontent` attribute), so
   the consumer's AOT compiler is what scopes them — whether these copies end up scoped, global or
-  deduped is decided there, not here. A first attempt to read it in a browser failed for an
-  unrelated reason (dev server would not start; see the NG5002 note below), so the runtime half is
-  open. Do not quote a byte cost until it is measured in a consumer build.
+  deduped is decided there, not here. One runtime fact is now in hand, and it is not the whole
+  answer: in ds-docs, which compiles the library FROM SOURCE, a component's copy comes back
+  scoped — `animationName` on a focused ds-icon-button read
+  `_ngcontent-ng-c838688186_ds-focus-ring-in`. So the shim does run and the copies are
+  per-component rather than global. What that costs a consumer of the PUBLISHED package is still
+  unmeasured. Do not quote a byte cost until it is measured in a real consumer build.
   Same shape wherever a partial mixes mixins with top-level rules — check `_press.scss`,
   `_dropdown-overlay.scss`, `_link.scss` and `_check-mark.scss` before choosing the fix. Splitting
   the partial (mixins in one file, emitted rules in another that only the global aggregate uses) is
@@ -34,11 +37,11 @@
   `transition` of its own. **Worth a gate:** nothing catches the next one, and it fails silently —
   the ring still animates, so the change looks like it worked.
 
-- [ ] **[P2] `dev` is red: `a5cb916c` committed a `@else if` with no opening `@if`.**
-  `multi-select.component.html:228` and `:293` — `<span class="tick"></span> @else if (…) {` with
-  the `@if` that should open the chain missing, so `CI=true npm run build:lib` fails NG5002 twice
-  and `ng serve` never binds. Owned by the parallel session that committed it; recorded here so it
-  is not rediscovered as an environment problem, which is what it looked like for two attempts.
+- [x] **[P2] `dev` was red: `a5cb916c` committed an `@else if` with no opening `@if`.** Fixed by the
+  session that shipped it, in `b6913f00`. Its unwrap regex matched `@if` up to the first closing
+  paren, so a condition with a nested one — `someFilteredSelected()` — had its `@if` head eaten and
+  left the `@else if` orphaned. Recorded because it cost two `ng serve` attempts that read as an
+  environment problem: a broken template makes the dev server never bind its port, with an empty log.
 
 - [x] **[P3] Motion could not be verified on this machine — the setting was off, and is now on.**
   Windows reported `SPI_GETCLIENTAREAANIMATION = False` (Settings → Accessibility → Visual effects
