@@ -43,6 +43,8 @@
     "check-entry-point-imports": "node tools/check-entry-point-imports.mjs",
     "check-focus-rings": "node tools/check-focus-rings.mjs",
     "check-manifest-coverage": "node tools/check-manifest-coverage.mjs",
+    "check-manifest-truth": "node tools/check-manifest-truth.mjs",
+    "check-manifest-truth:selftest": "node tools/check-manifest-truth-selftest.mjs",
     "check-manifest-coverage:audit": "node tools/check-manifest-coverage.mjs --audit",
     "check-manifest-coverage:selftest": "node tools/check-manifest-coverage-selftest.mjs",
     "check-tools-parse": "node tools/check-tools-parse.mjs",

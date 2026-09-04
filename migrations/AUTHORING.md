@@ -373,6 +373,10 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] The boundary is in `appliesWhen` and the silent-failure mode in `pitfall`, not buried in the note.
 - [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
 - [ ] No key outside the allowlist. (lint, M042)
+- [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`
+      resolves at this one. Checked against the trees, not against HEAD — `0.2.0` named a ninth
+      `-subtle` token that never existed and every other check passed it.
+      (`tools/check-manifest-truth.mjs`, in the PR gate and the preflight)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line
