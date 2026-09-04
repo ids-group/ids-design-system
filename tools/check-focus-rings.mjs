@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 // A component that paints its own focus ring on `:focus-within` must also silence
-// the base indicator on the control it speaks for. `styles/_focus.scss` sets that
-// indicator as a box-shadow, and `outline: 0` — the reset an author reaches for —
-// cannot cancel a shadow, so leaving it out paints TWO rings.
+// the base indicator on the control it speaks for, or the field paints TWO rings.
+//
+// A shell rings one of two ways and BOTH have to be recognised here: the field family
+// paints a `box-shadow` halo, the control family draws an outline through `focus.ring`.
+// A checker that knows only about shadows reads green while covering half the library —
+// which is exactly what it did for a while after the control family moved to outlines.
 //
 // Only `*.component.scss` is read. A partial like `_field-state.scss` paints its
 // shadow into whichever shell includes it, so the obligation is that shell's.
@@ -37,10 +40,14 @@ const paintsRingOnFocusWithin = (text) => {
     ) {
       if (lines[inner].includes('}')) break;
       const declaration = lines[inner].trim();
-      if (
+      const paintsShadow =
         declaration.startsWith('box-shadow:') &&
-        !/box-shadow:\s*none/.test(declaration)
-      ) {
+        !/box-shadow:\s*none/.test(declaration);
+      const paintsOutline =
+        /@include\s+focus\.ring\b/.test(declaration) ||
+        (declaration.startsWith('outline:') &&
+          !/outline:\s*(none|0)\b/.test(declaration));
+      if (paintsShadow || paintsOutline) {
         return { line: inner + 1, declaration };
       }
     }

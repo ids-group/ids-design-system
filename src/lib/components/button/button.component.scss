@@ -41,7 +41,6 @@
   --c-muted:          var(--accent-muted);
   --c-muted-strong:   var(--accent-muted-strong);
   --c-outline-border: var(--c-muted-strong);
-  --c-ring:           var(--ds-control-focus-shadow);
 
   --_button-bg-color:        var(--ds-button-bg-color,        var(--c-base));
   --_button-label-color:     var(--ds-button-label-color,     var(--c-on));
@@ -223,7 +222,6 @@
   &.c-error {
     --c-base: var(--error); --c-on: var(--text-on-error); --c-strong: var(--error-text);
     --c-subtitle: var(--error-subtitle); --c-muted: var(--error-muted); --c-muted-strong: var(--error-muted-strong);
-    --c-ring: var(--ds-control-focus-shadow-error);
   }
   &.c-success {
     --c-base: var(--success); --c-on: var(--text-on-success); --c-strong: var(--success-text);

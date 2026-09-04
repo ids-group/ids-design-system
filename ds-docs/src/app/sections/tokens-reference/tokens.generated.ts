@@ -2394,11 +2394,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-control-focus-shadow",
-        "value": "—",
-        "notes": "Shared focus ring shadow reused across interactive controls."
-      },
-      {
         "name": "--ds-button-bg-color",
         "value": "var(--c-base)",
         "notes": "Surface fill — variants re-point the default."
@@ -2492,11 +2487,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-button-border-disabled",
         "value": "oklch(from var(--_button-accent) 86% 0.04 h)",
         "notes": "Disabled border — a pale tint of the accent for solid, color-mix(border 55%, surface-disabled) for outline."
-      },
-      {
-        "name": "--ds-control-focus-shadow-error",
-        "value": "—",
-        "notes": "Focus ring shadow for controls in error state (defaults to --focus-field-error)."
       },
       {
         "name": "--btn-focus-z",
@@ -5126,6 +5116,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-split-button-outline-border-color",
         "value": "var(--border-default)",
         "notes": "Outline split button border colour."
+      },
+      {
+        "name": "--ds-split-button-bg-color-active",
+        "value": "color-mix(in srgb, var(--_split-button-bg-color) 76%, black)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-split-button-outline-bg-color-active",
+        "value": "var(--surface-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-split-button-press-scale",
+        "value": "0.98",
+        "notes": ""
       }
     ]
   },
@@ -7005,6 +7010,16 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--dodont-stage-minh",
     "value": "100px",
     "kind": "length"
+  },
+  {
+    "name": "--ds-control-focus-shadow",
+    "value": "var(--focus-ring)",
+    "kind": "color"
+  },
+  {
+    "name": "--ds-control-focus-shadow-error",
+    "value": "var(--focus-ring-error)",
+    "kind": "color"
   },
   {
     "name": "--ds-elevation-floating",

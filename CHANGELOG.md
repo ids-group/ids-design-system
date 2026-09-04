@@ -71,6 +71,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **The search field inside a `ds-multi-select` panel showed no focus indicator at all.** It zeroed
+  its own outline and no ancestor painted one, so a keyboard user opening the panel and tabbing to
+  the filter had nothing on screen telling them where they were. The row around it rings now, drawn
+  inward because the panel clips, and the input is silenced so only one ring appears.
+
+- **A focused `ds-icon-button` sitting flush inside a clipping box lost three sides of its ring.**
+  Seen on the documentation sidebar's collapse toggle, whose row clips to animate its label: the
+  ring had zero room outward and read as sitting behind the button. Any box that clips can now flip
+  `--focus-ring-offset` negative on itself and everything focusable inside keeps a whole ring.
+
 - **A `ds-menu` row without an icon started one icon-width left of its neighbours.** `.menu-item` is
   a flex row with a gap, and an item that projected no icon collapsed its wrapper to zero width while
   the gap stayed, so a mixed menu had two text axes and an unindented row read as a different kind of
