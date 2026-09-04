@@ -154,4 +154,26 @@ try {
   );
 }
 
+// The published manifest lives in src/lib, so a bump that never reached it would publish the
+// outgoing version. The version hook copies it; this is what notices when that stops happening.
+try {
+  execSync('node tools/sync-lib-package.mjs --check', { stdio: 'inherit' });
+} catch {
+  fail(
+    'src/lib/package.json is out of step with the root manifest — `npm run sync-lib-package` ' +
+      'and commit the result. ng-packagr publishes the src/lib copy, so a stale one ships the ' +
+      'wrong version.',
+  );
+}
+
+try {
+  execSync('node tools/check-entry-point-imports.mjs', { stdio: 'inherit' });
+} catch {
+  fail(
+    'a cross-entry-point import does not name a real entry point (errors above). Left ' +
+      'unfixed it type-checks here and ships as an unresolvable external import in the FESM, ' +
+      'which no consumer build can resolve.',
+  );
+}
+
 console.log('preflight: all checks passed.');

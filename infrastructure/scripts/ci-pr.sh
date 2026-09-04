@@ -60,7 +60,7 @@ log_dir="$(mktemp -d)"
 
 echo "Building (lib -> docs) and linting in parallel..."
 # ds-docs needs the built dist/ds, so the build is ordered inside its own subshell.
-( bun run build:lib && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
+( bun run check-entry-point-imports && bun run check:lib-package && bun run build:lib && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
 bun run check:manual-surface            > "$log_dir/surface.log"   2>&1 &  pid_surface=$!
 bun run format                          > "$log_dir/format.log"    2>&1 &  pid_format=$!
 bun run lint:styles                     > "$log_dir/stylelint.log" 2>&1 &  pid_styles=$!
