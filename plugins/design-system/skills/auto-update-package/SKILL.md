@@ -192,7 +192,8 @@ step 1, never skipping past it.
    exists among the published stables and end the chain there instead of the latest.
 7. **Clone the DS sources + load the changelog.** Clone
    `https://bitbucket.org/itband/ids-design-system.git` into your scratchpad (NEVER inside the
-   consumer repo). One clone serves as BOTH the changelog source and the per-version sources
+   consumer repo) — a FULL clone with tags (no `--depth`, no `--no-tags`): the per-version tag
+   checkouts and the manifest-truth check both die without them, the latter loudly per version. One clone serves as BOTH the changelog source and the per-version sources
    reference (see "Reading the DS sources"). On the clone's default branch read `CHANGELOG.md` —
    the complete newest changelog, covering every chain version — and save ASIDE (scratchpad,
    outside the clone) what you need across tag checkouts: the changelog text and the `migrations/`
@@ -247,8 +248,12 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    `tools/check-manifest-truth.mjs`, run `node <clone>/tools/check-manifest-truth.mjs <V>` first —
    it validates against the tag trees the same three assumptions this workflow executes (`old`
    resolves at the previous tag; a rename/removal's `old` is gone at `v<V>`; `new` resolves at
-   `v<V>`); an item it flags is manifest evidence (report it with the locator-dead set) and its
-   plan entry is derived from prose instead of trusted. Parse the MigrationPlan. If
+   `v<V>`). Read its OUTPUT, not just the exit code — three outcomes, two of them non-clean:
+   "N claim(s) the tree does not support" = a manifest DEFECT — report it with the locator-dead
+   set and derive that item's plan entry from prose (a fallback, not verified ground: the prose can
+   carry the same phantom, so the item keeps its full `verify` obligations); "nothing could be
+   checked" (or a skipped-versions list) = UNVERIFIED, not clean — proceed on the manifest as
+   normal and say so in the report. The two are different evidence and are never merged. Parse the MigrationPlan. If
    `items` is empty → no-migration version: skip steps 2–3 and go to step 4 — but a non-empty
    `deleteList` still gets its step-8 pass before the commit.
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
