@@ -42,6 +42,30 @@ bun run build:upload
 command -v git > /dev/null || apk add --no-cache git > /dev/null 2>&1 || true
 command -v git > /dev/null || { echo "git is not available, so the upload tree cannot be compared or committed"; exit 1; }
 
+# This repo commits the cards FROZEN — static HTML with the Angular boot removed — and freezing
+# needs a browser this image does not have. So the build above just replaced 376 frozen cards with
+# live ones, and comparing those bytes against the commit would say "stale" on every run: with
+# RELEASE_TOKEN set that ended in the release bot committing the live tree over the freeze.
+#
+# `cards.lock.json` is what CI can compare instead. build-cards writes it from the cards as IT
+# leaves them, which is exactly what this build reproduces, so it moves when a card's source moves
+# and not when the freeze is missing.
+if [ -n "$(git status --porcelain .design-sync/cards.lock.json)" ]; then
+  echo "The cards changed, and this build cannot freeze them — the image has no browser."
+  echo ""
+  echo "Run locally, in this order, and commit .design-sync:"
+  echo "  node .design-sync/tools/build-upload.mjs"
+  echo "  node .design-sync/tools/measure-cards.mjs    # only if a card's height moved"
+  echo "  node .design-sync/tools/snapshot-cards.mjs   # LAST — it is what freezes them"
+  exit 1
+fi
+
+# The lock matched, so the cards did not change and the frozen copies in git are still the right
+# ones. Putting them back is what keeps the rest of this script — including the release commit —
+# looking at the tree a publish actually sends.
+git checkout -- .design-sync/upload/components .design-sync/upload/guides
+node .design-sync/tools/check-frozen.mjs
+
 # A release bumps the version, DS_VERSION carries it into the bundle, and the bundle is committed
 # — so every release leaves this tree a version behind. In CI that is committed; run by hand it
 # fails, because a script must not push on a developer's behalf.

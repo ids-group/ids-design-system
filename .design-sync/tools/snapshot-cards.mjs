@@ -81,12 +81,28 @@ const TIDY = `
         return setTimeout(ready, 25);
       }
       // The section is built, which is not the same as settled: components that MEASURE write their
-      // result a frame or two later. Table's sticky scrollbar pins '.scroll-wrap' to a computed
-      // height, and catching that card before the write froze it without one - the only file of 376
-      // that differed between two runs. Fonts first, because a measure taken against the fallback
-      // face is the wrong number.
+      // result later - Table's sticky scrollbar pins '.scroll-wrap' to a computed height, and that
+      // one card froze three different ways across three runs. Counting frames guessed at how many;
+      // this waits for the DOM to stop changing instead, which is what "settled" actually means.
+      // Fonts first, because a measure taken against the fallback face is the wrong number.
       return document.fonts.ready.then(function () {
-        requestAnimationFrame(function () { requestAnimationFrame(tidy); });
+        var quiet = null;
+        var observer = new MutationObserver(function () {
+          clearTimeout(quiet);
+          quiet = setTimeout(done, 150);
+        });
+        observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+        quiet = setTimeout(done, 150);
+        var hardStop = setTimeout(done, 5000);
+        var finished = false;
+        function done() {
+          if (finished) return;
+          finished = true;
+          clearTimeout(quiet);
+          clearTimeout(hardStop);
+          observer.disconnect();
+          tidy();
+        }
       });
     })();
     function tidy() {

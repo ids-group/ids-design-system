@@ -11,6 +11,7 @@
 // and its hash recipes are unknown (`keyRecipe: 7` names a version we cannot reproduce). A wrong
 // value there is worse than a stale one: a hash that happens to match makes the next skill-driven
 // sync SKIP a file that did change. `_ds_manifest.json` IS ours — see build-manifest.mjs.
+import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -877,6 +878,25 @@ ordered.sort((a, b) => a.section - b.section || a.block - b.block || a.name.loca
 writeFileSync(
   join(elements, 'gen', 'cards.json'),
   `${JSON.stringify({ generatedBy: 'build-cards.mjs', cards: ordered.map((entry) => entry.path) }, null, 2)}\n`,
+);
+
+// What CI compares INSTEAD of the card bytes. This repo commits the cards frozen, and freezing
+// needs a browser, so a CI build always produces live ones and a byte comparison between the two
+// says "stale" every time — which ended with the release bot committing the live tree over the
+// freeze. The lock fingerprints the cards as THIS script leaves them, which is exactly what CI
+// reproduces: it matching means the cards did not change and the frozen copies in git still stand.
+const fingerprints = {};
+const fingerprint = (dir, rel) => {
+  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const next = `${rel}/${entry.name}`;
+    if (entry.isDirectory()) fingerprint(join(dir, entry.name), next);
+    else fingerprints[next] = createHash('sha256').update(readFileSync(join(dir, entry.name))).digest('hex').slice(0, 16);
+  }
+};
+for (const top of ['components', 'guides']) fingerprint(join(OUT, top), top);
+writeFileSync(
+  join(syncDir, 'cards.lock.json'),
+  `${JSON.stringify({ generatedBy: 'build-cards.mjs', files: fingerprints }, null, 2)}\n`,
 );
 
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
