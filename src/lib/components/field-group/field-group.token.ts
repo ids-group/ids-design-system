@@ -1,5 +1,5 @@
 import { InjectionToken, inject } from '@angular/core';
-import type { DsSize } from '../../core/size';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 /** What a grouped control can read off the group that encloses it. */
 export interface DsFieldGroupContext {

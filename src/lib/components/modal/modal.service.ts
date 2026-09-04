@@ -2,7 +2,7 @@ import { Injectable, Injector, inject } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ModalConfirmComponent } from './modal-confirm.component';
-import { disposeWithLeave } from '../overlay-motion';
+import { disposeWithLeave } from '@ids-group-ltd/ids-design-system/components';
 import {
   MODAL_CONFIRM_DATA,
   type ModalConfirmContext,

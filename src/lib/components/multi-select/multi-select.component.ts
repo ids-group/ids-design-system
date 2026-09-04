@@ -21,11 +21,11 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { chipFit } from '../chip-overflow';
-import { IconComponent } from '../../icons/icon.component';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import { TagComponent } from '../tag/tag.component';
-import { DsControlValueAccessor } from '../control-value-accessor';
+import { chipFit } from '@ids-group-ltd/ids-design-system/components';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import { TagComponent } from '@ids-group-ltd/ids-design-system/components/tag';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import {
   closeOnOutsidePointer,
   closeOnScroll,
@@ -35,36 +35,36 @@ import {
   forwardOverlayTokens,
   dropdownOverlay,
   prepareOverlayEnter,
-} from '../overlay-motion';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage, trimmedText } from '../field-errors';
-import { nextControlId } from '../field-ids';
-import { resolveWithConfig } from '../../core/config-defaults';
-import type { DsSize } from '../../core/size';
-import { DsOptionTemplateDirective } from '../option-template.directive';
-import { DsChipTemplateDirective } from '../chip-template.directive';
-import { DsPickerTriggerDirective } from '../picker-trigger.directive';
-import { DsEmptyTemplateDirective } from '../empty-template.directive';
-import { DsPanelHeaderTemplateDirective } from '../panel-header-template.directive';
-import { DsPanelFooterTemplateDirective } from '../panel-footer-template.directive';
-import { DsGroupLabelTemplateDirective } from '../group-label-template.directive';
-import { BadgeComponent } from '../badge/badge.component';
-import type { DsTriggerDisplay } from '../../core/trigger-display';
+} from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import { resolveFieldMessage, trimmedText } from '@ids-group-ltd/ids-design-system/components';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { DsOptionTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsChipTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPickerTriggerDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsEmptyTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPanelHeaderTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPanelFooterTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsGroupLabelTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { BadgeComponent } from '@ids-group-ltd/ids-design-system/components/badge';
+import type { DsTriggerDisplay } from '@ids-group-ltd/ids-design-system/core';
 import type {
   MultiSelectItem,
   MultiSelectOption,
   MultiSelectOptionGroup,
   MultiSelectWidth,
 } from './multi-select.types';
-import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
+import { flattenDsOptions, isDsOptionGroup } from '@ids-group-ltd/ids-design-system/core';
 import {
   firstEnabledIndex as firstEnabledOf,
   lastEnabledIndex as lastEnabledOf,
   nextEnabledIndex,
-} from '../../core/list-cursor';
-import { scrollActiveOptionIntoView } from '../scroll-active-option';
-import { announceOptionCount } from '../picker-announcer';
-import { createTypeAhead } from '../type-ahead';
+} from '@ids-group-ltd/ids-design-system/core';
+import { scrollActiveOptionIntoView } from '@ids-group-ltd/ids-design-system/components';
+import { announceOptionCount } from '@ids-group-ltd/ids-design-system/components';
+import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
 
 @Component({
   selector: 'ds-multi-select',

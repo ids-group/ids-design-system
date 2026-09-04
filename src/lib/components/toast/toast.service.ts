@@ -6,7 +6,7 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { DS_CONFIG } from '../../core/ds-config';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 import { ToastRegionComponent } from './toast-region.component';
 import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import type {

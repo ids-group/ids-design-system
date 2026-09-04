@@ -7,7 +7,7 @@ import {
   input,
   model,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { ACCORDION, type AccordionItemRef } from './accordion.token';
 
 let nextId = 0;

@@ -4,8 +4,8 @@ import {
   booleanAttribute,
   input,
 } from '@angular/core';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import type { DsSize } from '../../core/size';
+import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-loading-overlay',

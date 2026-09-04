@@ -11,10 +11,10 @@ import {
   signal,
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
-import { IconComponent } from '../../icons/icon.component';
-import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
 import type { DrawerPlacement } from './drawer.types';
-import type { DsSize } from '../../core/size';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
 

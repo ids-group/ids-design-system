@@ -29,16 +29,19 @@ import {
   forwardOverlayTokens,
   dropdownOverlay,
   prepareOverlayEnter,
-} from '../overlay-motion';
-import { IconComponent } from '../../icons/icon.component';
-import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage, trimmedText } from '../field-errors';
+} from '@ids-group-ltd/ids-design-system/components';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   TimeColumnsComponent,
   type TimeColumnId,
-} from '../time-columns/time-columns.component';
-import { DS_CONFIG } from '../../core/ds-config';
+} from './time-columns/time-columns.component';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 import {
   clampToRange,
   formatTime,
@@ -52,8 +55,8 @@ import type {
   TimePickerMode,
   TimeRangeValue,
 } from './time-picker.types';
-import type { DsSize } from '../../core/size';
-import { resolveWithConfig } from '../../core/config-defaults';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 type Segment = 'single' | 'start' | 'end';
 let nextId = 0;

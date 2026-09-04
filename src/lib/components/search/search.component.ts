@@ -18,12 +18,12 @@ import {
   NG_VALUE_ACCESSOR,
   type ControlValueAccessor,
 } from '@angular/forms';
-import { IconComponent } from '../../icons/icon.component';
-import { valueControlBridge } from '../control-value-accessor';
-import { FieldClickFocusDirective } from '../field-click-focus.directive';
-import type { DsSize } from '../../core/size';
-import { inFieldGroup } from '../field-group/field-group.token';
-import { resolveWithConfig } from '../../core/config-defaults';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { valueControlBridge } from '@ids-group-ltd/ids-design-system/components';
+import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-search',

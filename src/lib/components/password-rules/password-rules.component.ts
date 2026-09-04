@@ -6,9 +6,9 @@ import {
   computed,
   input,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import type { IconName } from '../../icons/icons.data';
-import { nextControlId } from '../field-ids';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import type {
   DsPasswordRule,
   DsPasswordRuleState,

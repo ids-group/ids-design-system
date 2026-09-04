@@ -9,13 +9,13 @@ import {
   model,
   viewChild,
 } from '@angular/core';
-import { DsFieldBase } from '../field-base';
-import { nextControlId } from '../field-ids';
-import { RADIO_GROUP } from '../radio-group/radio-group.token';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage } from '../field-errors';
-import type { DsSize } from '../../core/size';
-import { resolveWithConfig } from '../../core/config-defaults';
+import { DsFieldBase } from '@ids-group-ltd/ids-design-system/components';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import { RADIO_GROUP } from '../../radio-group/radio-group.token';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import { resolveFieldMessage } from '@ids-group-ltd/ids-design-system/components';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-radio',

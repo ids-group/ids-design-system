@@ -1,6 +1,6 @@
 import { Directive, booleanAttribute, input } from '@angular/core';
 import { resolveReserveMessage } from './field-defaults';
-import type { IconName } from '../icons/icons.data';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { trimmedText } from './field-errors';
 
 /**

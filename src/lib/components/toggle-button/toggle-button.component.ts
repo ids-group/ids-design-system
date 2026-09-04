@@ -5,7 +5,7 @@ import {
   input,
   model,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 /** A single binary toggle button (pressed / not pressed) with an optional
  *  leading icon and a projected label. Distinct from `ds-segmented` (a

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, computed, input } from '@angular/core';
-import { devWarn } from '../../core/dev-warning';
-import { IconComponent } from '../../icons/icon.component';
+import { devWarn } from '@ids-group-ltd/ids-design-system/core';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 @Component({
   selector: 'ds-stat',

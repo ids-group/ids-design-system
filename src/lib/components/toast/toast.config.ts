@@ -1,4 +1,4 @@
-import type { DsToastPosition } from '../../core/toast-position';
+import type { DsToastPosition } from '@ids-group-ltd/ids-design-system/core';
 
 export const DS_TOAST_POSITION_DEFAULT: DsToastPosition = {
   horizontalPosition: 'right',

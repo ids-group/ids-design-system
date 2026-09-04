@@ -7,9 +7,9 @@ import {
   input,
   model,
 } from '@angular/core';
-import { optionalBound, boundOr } from '../../core/field-bounds';
-import type { DsSize } from '../../core/size';
-import { resolveWithConfig } from '../../core/config-defaults';
+import { optionalBound, boundOr } from '@ids-group-ltd/ids-design-system/core';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-number-stepper',

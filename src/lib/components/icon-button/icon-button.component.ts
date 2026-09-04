@@ -6,12 +6,12 @@ import {
   input,
   output,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import type { IconName } from '../../icons/icons.data';
-import type { ButtonColor } from '../button/button.types';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import type { ButtonColor } from '@ids-group-ltd/ids-design-system/components/button';
 import type { IconButtonType, IconButtonVariant } from './icon-button.types';
-import type { DsSize } from '../../core/size';
-import { resolveWithConfig } from '../../core/config-defaults';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 /**
  * Icon-only action button with its own variant taxonomy (standard / filled /

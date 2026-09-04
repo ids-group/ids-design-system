@@ -1,5 +1,5 @@
 import { Signal, computed, inject } from '@angular/core';
-import { DS_CONFIG } from '../../core/ds-config';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 
 /**
  * Resolve `dividers` against the app-level default — same `null`-means-unset

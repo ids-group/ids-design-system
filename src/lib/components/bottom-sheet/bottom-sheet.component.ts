@@ -14,8 +14,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
-import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
-import { backdropDismiss } from '../../core/backdrop-dismiss';
+import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
+import { backdropDismiss } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
 

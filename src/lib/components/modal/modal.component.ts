@@ -13,11 +13,11 @@ import {
 import { A11yModule } from '@angular/cdk/a11y';
 import { ModalCardComponent } from './modal-card.component';
 import { resolveDividers } from './modal-defaults';
-import { DsStaticPreview } from '../static-preview.directive';
-import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
+import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
+import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
 import type { ModalSize } from './modal.types';
-import type { DsStatus } from '../../core/status';
-import { backdropDismiss } from '../../core/backdrop-dismiss';
+import type { DsStatus } from '@ids-group-ltd/ids-design-system/core';
+import { backdropDismiss } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-modal',

@@ -9,12 +9,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { IconComponent } from '../../icons/icon.component';
-import { AvatarComponent } from '../avatar/avatar.component';
-import { MenuComponent } from '../menu/menu.component';
-import { MenuItemComponent } from '../menu/menu-item.component';
-import { MenuDividerComponent } from '../menu/menu-divider.component';
-import { PopoverComponent } from '../popover/popover.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { AvatarComponent } from '@ids-group-ltd/ids-design-system/components/avatar';
+import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+import { MenuDividerComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 import type {
   SidenavAlertItem,
   SidenavSearchProvider,

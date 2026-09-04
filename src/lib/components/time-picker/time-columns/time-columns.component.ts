@@ -16,11 +16,11 @@ import {
   pad2,
   parseTime,
   to12h,
-} from '../time-picker/time.util';
+} from '../../time-picker/time.util';
 import type {
   TimeConstraints,
   TimeFormat,
-} from '../time-picker/time-picker.types';
+} from '../../time-picker/time-picker.types';
 
 /** Which of the panel's listbox columns a pick came from. */
 export type TimeColumnId = 'hours' | 'minutes' | 'period';

@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { MenuItemComponent } from './menu-item.component';
-import { isTextEntryTarget } from '../../core/key-target';
+import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-menu',

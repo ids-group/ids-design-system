@@ -9,21 +9,21 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { devWarn } from '../../core/dev-warning';
-import { IconComponent } from '../../icons/icon.component';
-import type { IconName } from '../../icons/icons.data';
+import { devWarn } from '@ids-group-ltd/ids-design-system/core';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
-import type { DsSize } from '../../core/size';
-import { inFieldGroup } from '../field-group/field-group.token';
-import { resolveWithConfig } from '../../core/config-defaults';
-import { DsMessageBase } from '../message-base';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { DsMessageBase } from '@ids-group-ltd/ids-design-system/components';
 import {
   resolveFieldMessage,
   trimmedText,
   type DsFieldError,
-} from '../field-errors';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { nextControlId } from '../field-ids';
+} from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 
 // `resolveFieldMessage` reads a form control's validation state; a button has
 // none, so these stand in for the two sources a field feeds in from its control.

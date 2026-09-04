@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import type { DsSize } from '../../core/size';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-spinner',

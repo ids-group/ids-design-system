@@ -12,10 +12,10 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { ButtonComponent } from '../button/button.component';
-import { PopoverComponent } from '../popover/popover.component';
-import { ProjectionDroppedDirective } from '../projection-dropped.directive';
-import type { DsSize } from '../../core/size';
+import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
+import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
+import { ProjectionDroppedDirective } from '@ids-group-ltd/ids-design-system/components';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { FilterItemDirective } from './filter-item.directive';
 
 // Room kept for the "+N more" trigger, which only exists once something has

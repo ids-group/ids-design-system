@@ -9,7 +9,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { TreeNode } from './tree.types';
 
 interface VisibleNode {

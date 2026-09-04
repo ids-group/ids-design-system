@@ -1,0 +1,34 @@
+{
+  "name": "@ids-group-ltd/ids-design-system",
+  "version": "0.11.4",
+  "description": "IDS Group Angular design system: components, tokens, themes",
+  "license": "MIT",
+  "homepage": "https://ids-ds.proto.ids-group.co.uk/",
+  "keywords": [
+    "angular",
+    "design-system",
+    "components",
+    "ui",
+    "ids-group"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    "./styles/*": "./styles/*",
+    "./themes/*": "./themes/*",
+    "./migrations/*": "./migrations/*"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "^21.2.0",
+    "@angular/common": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

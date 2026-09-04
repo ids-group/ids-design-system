@@ -29,11 +29,11 @@ import {
   forwardOverlayTokens,
   overlayPlacementOf,
   prepareOverlayEnter,
-} from '../overlay-motion';
+} from '@ids-group-ltd/ids-design-system/components';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
-import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
-import { DsStaticPreview } from '../static-preview.directive';
+import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
+import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 
 export type PopoverAlign = 'start' | 'end';
 export type PopoverPlacement = 'top' | 'bottom' | 'left' | 'right';

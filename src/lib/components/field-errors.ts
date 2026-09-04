@@ -15,8 +15,8 @@ import {
   NgForm,
   type ValidationErrors,
 } from '@angular/forms';
-import { DS_CONFIG } from '../core/ds-config';
-import type { FieldMessageState } from './field-message/field-message.component';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import type { FieldMessageState } from '@ids-group-ltd/ids-design-system/components/field-message';
 
 /**
  * One validation error, structurally identical to Angular's signal-forms

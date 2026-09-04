@@ -6,7 +6,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { DescriptionListComponent } from './description-list.component';
 
 @Component({
