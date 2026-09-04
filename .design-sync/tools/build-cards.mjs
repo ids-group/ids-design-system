@@ -627,12 +627,28 @@ const capped = (paragraph) => {
 };
 
 /** A card is generated output nobody edits, so the reasons live here rather than in 410 copies of
- *  the page. The @dsCard marker is added back by the caller - the manifest is built from it. */
+ *  the page. The @dsCard marker is added back by the caller - the manifest is built from it.
+ *
+ *  The strip runs over the whole page, the live inline script included, so a comment opener inside
+ *  an interpolated VALUE would eat from there to the next closer and leave a card that renders
+ *  nothing and reports no error. Today every value is a component name or a card title;
+ *  `guardInterpolated` is what keeps that true rather than hoped for. */
 const trimmed = (page) =>
   page
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/^[^\S\n]*\n/gm, '');
+
+const COMMENT_TOKEN = /\/\*|\*\/|<!--|-->/;
+const guardInterpolated = (card, values) => {
+  for (const [key, value] of Object.entries(values)) {
+    if (typeof value !== 'string' || !COMMENT_TOKEN.test(value)) continue;
+    throw new Error(
+      `${card}: \`${key}\` carries ${value.match(COMMENT_TOKEN)[0]}, which the comment strip would` +
+        ' follow to the next closer and cut the card apart.',
+    );
+  }
+};
 
 function cardHtml({
   name,
@@ -649,6 +665,18 @@ function cardHtml({
   title,
   subtitle,
 }) {
+  guardInterpolated(name, {
+    group,
+    tag,
+    owns,
+    apiKey,
+    head,
+    block,
+    react,
+    title,
+    subtitle,
+  });
+
   const marker =
     `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''}` +
     `${title ? ` name="${markerValue(title)}"` : ''}` +
