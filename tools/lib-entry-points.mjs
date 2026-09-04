@@ -14,6 +14,19 @@ export const PACKAGE_NAME = JSON.parse(
   readFileSync(join(REPO_ROOT, 'package.json'), 'utf8'),
 ).name;
 
+// Every consumer of this module walks the export graph FROM the facade, and each of them treated
+// its absence as "no public symbols" — which reads as a clean bill of health rather than as a
+// failure, so the checks built on it would go quiet instead of red. The facade has already moved
+// once (out of `src/` into `src/lib/` when the entry points landed), so this is not hypothetical.
+if (!existsSync(FACADE)) {
+  console.error(
+    `lib-entry-points: ${relative(REPO_ROOT, FACADE).split('\\').join('/')} does not exist, so ` +
+      'the public surface cannot be resolved. Every check that walks it would pass on an empty ' +
+      'set. If the primary entry point moved, point FACADE at its new entryFile.',
+  );
+  process.exit(1);
+}
+
 const asFile = (base) => {
   for (const candidate of [`${base}.ts`, `${base}.d.ts`, join(base, 'index.ts')]) {
     if (existsSync(candidate)) return candidate;

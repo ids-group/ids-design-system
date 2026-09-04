@@ -231,9 +231,11 @@ function privateSymbols() {
     }
   };
 
-  const entry = FACADE;
-  if (!existsSync(entry)) return { private: new Set(), publicCount: 0 };
-  walk(entry);
+  // lib-entry-points refuses to load without the facade, so this cannot be reached; it stays as a
+  // throw rather than the empty set it used to return, because an empty set here disarms C010 and
+  // C013 and reports OK while doing it.
+  if (!existsSync(FACADE)) throw new Error(`changelog-lint: ${FACADE} is missing.`);
+  walk(FACADE);
 
   const ours = new Map();
   const crawl = (dir) => {

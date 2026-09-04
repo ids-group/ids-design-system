@@ -15,6 +15,12 @@
 //     written as a placeholder out, with no stopword list to maintain.
 //   * An entry that names no public hook is never flagged. Purely visual or internal work needs
 //     no line, and is not asked for one.
+//   * An entry that SAYS FOR ITSELF that nothing changed for the consumer is exempt. What this
+//     check is really for is DISAGREEMENT between the two records — the block documents a change
+//     and the manifest is silent about it. When the block says "nothing to do on your side", the
+//     manifest's silence agrees with it and there is nothing to reconcile. Measured before it was
+//     added: 6 of 297 published non-Added entries carry such a phrase, so it is not a habitual
+//     escape hatch, and a wrong one is a defect in the changelog rather than in the manifest.
 //
 // So the minimum way to pass is to NAME the hook, which is the part worth having: a consumer
 // grepping the manifest for `--layer-toast` then finds the line and learns there is nothing to do.
@@ -86,6 +92,14 @@ const hooksIn = (body) => {
   }
   return found;
 };
+
+const SAYS_NOTHING_CHANGED = [
+  /\bnothing in the package\b/i,
+  /\bno API,? no behaviour\b/i,
+  /\bnothing to do on your side\b/i,
+  /\bnothing changes for you\b/i,
+  /\bnothing to change\b/i,
+];
 
 const changelog = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8').replace(/\r\n/g, '\n');
 const lines = changelog.split('\n');
@@ -161,6 +175,7 @@ function check(block) {
   const gaps = [];
 
   for (const entry of entries) {
+    if (SAYS_NOTHING_CHANGED.some((phrase) => phrase.test(entry.body))) continue;
     const hooks = hooksIn(entry.body);
     if (!hooks.size) continue;
     // A missing manifest is only a gap once something in the block actually needs one; that

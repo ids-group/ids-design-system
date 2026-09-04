@@ -70,6 +70,20 @@ const cases = [
     entry: '- **`ds-accordion` collapses its body fully.** The padding moved off the wrapper.',
     expect: 'red',
   },
+  {
+    name: 'EXEMPT: the entry says for itself that nothing changed for the consumer',
+    section: 'Fixed',
+    entry:
+      '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost. No API change, ' +
+      'and nothing to do on your side.',
+    expect: 'green',
+  },
+  {
+    name: 'the exemption needs the phrase — the same entry without it still FIRES',
+    section: 'Fixed',
+    entry: '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost. No API change.',
+    expect: 'red',
+  },
 ];
 
 let failed = 0;
