@@ -188,13 +188,18 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   Table's `.col-resize` and `.cell-edit` keep a bare `outline: 0` — both already carry an accent
   border as their indicator, so they are deliberate, not misses.
 
-- [ ] **[P2] Five components still hard-code `--accent-focus-field`** instead of the field role:
-  color-picker (twice), modal-confirm, multi-select and otp-input. The control half of this finding
-  closed with the outline migration — calendar-day, segmented, slider, split-button, toggle-button
-  and color-picker's swatches now go through `focus.ring`. What is left is the FIELD family, which
-  still resolves a shadow, so these five bypass `--ds-field-focus-shadow` and publish no token of
-  their own. multi-select is inconsistent inside one component: its error focus goes through the
-  role, its normal focus does not.
+- [x] **[P2] Two adaptivity mechanisms for one indicator, and they did not compose.** What looked
+  like five components bypassing the field role was the roles and the `--accent-focus-*` aliases
+  being separate systems: a `ds-color` zone flipped only the aliases, `data-focus` retargeted only
+  the roles, so a component obeyed whichever spelling it used and was deaf to the other. Neither
+  spelling was wrong; picking one always lost something. Fixed at the cause — `family-vars` sets
+  `--ds-field-focus-shadow` and `--ds-control-focus-shadow` alongside the aliases, on the zone's own
+  element, so proximity gives the zone its subtree and leaves the global switch everywhere else.
+  color-picker, modal-confirm, multi-select and otp-input read the role now and answer the switch
+  for the first time. Measured in Chrome, all three ways: outside a zone the role is
+  `hsl(229 100% 59% / .22)`, inside `[ds-color="error"]` it is `hsl(0 75% 49% / .22)`, and with
+  `data-focus="ring"` set at the same time the zone still wins in its subtree while the switch
+  applies outside it.
 
 - [x] **[P2] Focus rings are clipped in six components.** Fixed on the element that clips rather than
   on each control inside it: ds-tabs[scrollable], ds-breadcrumbs, ds-sidenav-group, ds-number-stepper
