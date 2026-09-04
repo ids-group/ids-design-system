@@ -13,13 +13,12 @@
 // Run it LAST. It rewrites card files in place, and any later build-cards run replaces them with
 // live cards again.
 import { createServer } from 'node:http';
-import { execFile } from 'node:child_process';
 import {
-  existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync,
+  existsSync, readFileSync, statSync, writeFileSync,
 } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { launchBrowser } from './lib/browser.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -28,8 +27,8 @@ const SHARED_CSS = '_ds_cards.css';
 const PORT = 4579;
 const WIDTH = 1200;
 const FRAME_HEIGHT = 24000;
-// One chromium PROCESS per card, so peak memory is LANES wide however long the queue is. The
-// ceiling is the container's RAM, not its cores: five of these OOM a 4 GB CI runner.
+// Concurrent TABS in one browser, not processes: a tab costs a fraction of a chromium, so this is
+// about how much the render queue may hold at once rather than about the container's RAM.
 const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
 const CHROME = [
@@ -148,23 +147,26 @@ const server = createServer((request, response) => {
   return response.end(readFileSync(file));
 });
 
-const render = (path) => new Promise((done) => {
-  execFile(
-    CHROME,
-    [
-      '--headless=new', '--disable-gpu', '--no-sandbox',
-      `--user-data-dir=${join(profile, Math.random().toString(36).slice(2))}`,
-      '--virtual-time-budget=25000',
-      `--window-size=${WIDTH},${FRAME_HEIGHT}`,
-      '--dump-dom', `http://127.0.0.1:${PORT}/${path.split('/').map(encodeURIComponent).join('/')}`,
-    ],
-    { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
-    (error, stdout) => done(error ? '' : stdout),
+// Read after the virtual clock has stopped, so it cannot wait for anything — the tidied attribute
+// is either there or the card did not settle, and the caller treats the latter as a failure.
+// The doctype is prepended HERE rather than in the page: `--dump-dom` printed one and
+// `outerHTML` does not, and building the string in the page needs an escaped newline that the
+// template literal around it silently turns into a real one — an unterminated string literal,
+// which is a page-side SyntaxError that returns an empty card for every single one of them.
+const DUMP = 'document.documentElement.outerHTML';
+
+const render = async (path) => {
+  const html = await browser.render(
+    `http://127.0.0.1:${PORT}/${path.split('/').map(encodeURIComponent).join('/')}`,
+    DUMP,
   );
-});
+
+  return html ? `<!DOCTYPE html>
+${html}` : '';
+};
 
 server.listen(PORT);
-const profile = mkdtempSync(join(tmpdir(), 'ds-snapshot-'));
+const browser = await launchBrowser({ chrome: CHROME, width: WIDTH, height: FRAME_HEIGHT });
 
 const kept = [];
 const failed = [];
@@ -187,6 +189,7 @@ const queue = cards.filter((path) => {
 const alreadyFrozen = queue.filter((path) => !readFileSync(join(OUT, path), 'utf8').includes('<script'));
 if (alreadyFrozen.length) {
   server.close();
+  await browser.close();
   console.error(
     `✗ ${alreadyFrozen.length} of ${queue.length} card(s) are already frozen — this has run once`
     + ' already. Re-run `node .design-sync/tools/build-upload.mjs` first; freezing a frozen card'
@@ -194,6 +197,17 @@ if (alreadyFrozen.length) {
   );
   process.exit(1);
 }
+
+// A lone carriage return never flushes into a pipe, so a CI log and a captured run both showed
+// NOTHING for the whole render — twice mistaken here for a hang. Off a TTY it prints lines instead.
+const report = (count) => {
+  if (process.stderr.isTTY) {
+    process.stderr.write(`  rendered ${count}/${queue.length}        \r`);
+
+    return;
+  }
+  if (count % 20 === 0 || count === queue.length) console.error(`  rendered ${count}/${queue.length}`);
+};
 
 let next = 0;
 async function lane() {
@@ -207,7 +221,7 @@ async function lane() {
       continue;
     }
     snapshots.set(path, dom);
-    process.stderr.write(`  rendered ${snapshots.size + failed.length}/${queue.length}        \r`);
+    report(snapshots.size + failed.length);
   }
 }
 
@@ -215,7 +229,7 @@ try {
   await Promise.all(Array.from({ length: LANES }, lane));
 } finally {
   server.close();
-  rmSync(profile, { recursive: true, force: true });
+  await browser.close();
 }
 
 process.stderr.write('\r'.padEnd(90));
