@@ -27,6 +27,20 @@
 }
 
 .control-line {
+  // The ring goes on the ROW, not the glyph. A checked control already draws a brand
+  // ring of its own, and a focus ring around the glyph lands concentric with it — three
+  // brand bands through two gaps, which reads as a target rather than as two states a
+  // keyboard user has to tell apart.
+  &:focus-within {
+    @include focus.ring;
+  }
+
+  // No label: the row collapses onto the glyph and the concentric read comes back, so the
+  // ring stands further off. `.control-text:empty` is display:none, so the row IS the glyph.
+  &:has(.control-text:empty) {
+    --focus-ring-offset: var(--space-1-5);
+  }
+
   display: inline-flex;
   align-items: center;
 
@@ -72,7 +86,6 @@
               border-width var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) { border-color: var(--accent); }
-  &:focus-visible        { @include focus.ring; }
 
   @include press.feedback;
   &:disabled {
@@ -106,3 +119,5 @@
     }
   }
 }
+
+@include focus.owns-the-focus-ring('.control-line .radio');

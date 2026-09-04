@@ -112,7 +112,8 @@
 
   &.open,
   &:focus-visible {
-    outline: none;
+    @include focus.own-indicator;
+
     border-color: var(--_trigger-border-color-focus);
     box-shadow: var(--accent-focus-field);
   }

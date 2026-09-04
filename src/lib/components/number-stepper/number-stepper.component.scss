@@ -104,7 +104,9 @@
   text-align: center;
   font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
-  outline: 0;
+
+  @include focus.own-indicator;
+
   padding: 0;
   appearance: textfield;
 

@@ -112,7 +112,8 @@
   &:focus-within:not(.disabled) {
     border-color: var(--_autocomplete-border-color-focus);
     box-shadow: var(--_autocomplete-focus-shadow);
-    outline: 0;
+
+    @include focus.own-indicator;
   }
 
   &.disabled {
@@ -170,7 +171,9 @@
   }
 
   border: 0;
-  outline: 0;
+
+  @include focus.own-indicator;
+
   background: transparent;
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);

@@ -109,7 +109,8 @@
 
   &:focus-within,
   &.open {
-    outline: none;
+    @include focus.own-indicator;
+
     box-shadow: var(--_date-picker-focus-shadow);
   }
 
@@ -183,7 +184,8 @@
      proportional sans — without it the value drifts off the ghost mask. */
   font-variant-numeric: tabular-nums;
   padding: 0;
-  outline: none;
+
+  @include focus.own-indicator;
 
   /* Transparent, not hidden: the value must stay in the DOM for the native caret
      and click-to-position to land on the right slot. */

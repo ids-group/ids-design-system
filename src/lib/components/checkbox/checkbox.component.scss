@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/check-box' as check-box;
 @use '../../styles/control-label' as control-label;
 
@@ -33,6 +34,21 @@
 }
 
 .control-line {
+  // The ring goes on the ROW, not the glyph. A checked box already draws a brand box of
+  // its own, and a focus ring around the glyph lands concentric with it — brand bands
+  // through a gap, which reads as a target rather than as two states a keyboard user has
+  // to tell apart. The shared `check-box.box` keeps its own ring: ds-table uses the same
+  // partial for a bare cell checkbox that has no row to speak for it.
+  &:focus-within {
+    @include focus.ring;
+  }
+
+  // No label: the row collapses onto the glyph and the concentric read comes back, so the
+  // ring stands further off. `.control-text:empty` is display:none, so the row IS the glyph.
+  &:has(.control-text:empty) {
+    --focus-ring-offset: var(--space-1-5);
+  }
+
   display: inline-flex;
   align-items: center;
 
@@ -67,3 +83,5 @@
 
 /* Dev-only detection sink for a projected caption (checkbox.component.html).
    Never rendered visible, so it cannot become a flex item in .control-line's gap. */
+
+@include focus.owns-the-focus-ring('.control-line .check');

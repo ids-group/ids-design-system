@@ -175,7 +175,8 @@
     font-family: inherit;
     font-size: var(--font-size-s);
     background: transparent;
-    outline: none;
+
+    @include focus.own-indicator;
   }
 
   .clear {

@@ -101,7 +101,7 @@
      line IS the focus indicator here, and the outline is dropped rather than
      doubled. */
   &:focus-visible {
-    outline: none;
+    @include focus.own-indicator;
 
     &::after {
       width: var(--border-width-strong);

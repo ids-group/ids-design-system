@@ -102,7 +102,8 @@
   }
 
   &:focus-visible {
-    outline: none;
+    @include focus.own-indicator;
+
     box-shadow: var(--_time-picker-focus-shadow);
   }
 

@@ -13,9 +13,9 @@
 
 // The control indicator.
 //
-// Does NOT touch box-shadow: a focused card keeps its elevation, and a selected segment
-// keeps the shadow that says it is selected. Use `state-shadow` below where the two
-// genuinely share the property.
+// Does NOT touch box-shadow, so a focused card keeps its elevation. Where a state paints its
+// own shadow on the same element, that one still has to yield — `state-shadow` below, and its
+// conditions.
 //
 // Usage — @include inside the element's own `&:focus-visible` block:
 //   @use '../../styles/focus' as focus;
@@ -56,6 +56,19 @@
 // then tabbing from the field to that button changes nothing on screen.
 @mixin owns-the-focus-ring($control) {
   #{$control}:where(:focus-visible) {
+    @include own-indicator;
+  }
+}
+
+// Turns the base indicator off, for a control whose SHELL rings on its behalf.
+//
+// The media query is the whole point and a bare `outline: none` is the bug it replaces.
+// Forced colours drops `box-shadow` entirely, so a field whose shell rings with the halo
+// has nothing left once the control is silenced — the one mode where an indicator is
+// mandatory is the one where it disappeared. Skipping the suppression there costs a
+// second ring in a palette the author does not control anyway, which is the cheaper wrong.
+@mixin own-indicator {
+  @media not (forced-colors: active) {
     outline: none;
   }
 }

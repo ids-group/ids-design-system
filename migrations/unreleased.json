@@ -105,6 +105,25 @@
         "override deselectable"
       ],
       "restore": null
+    },
+    {
+      "id": "selection-controls-ring-the-row",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--ds-checkbox-focus-shadow",
+      "new": null,
+      "action": "If you positioned anything against a checkbox, radio or switch focus ring, re-measure it against the row rather than the glyph.",
+      "appliesWhen": "Only `ds-checkbox`, `ds-radio` and `ds-switch`. `ds-table`'s cell checkbox is unchanged — it has no label row, so it keeps ringing its own box.",
+      "pitfall": "Nothing errors and the control still rings, so this shows up only as a ring that is wider than it was and starts at the label's far edge. A layout that reserved space for a 24px ring around a 20px glyph now has a ring as wide as the label.",
+      "note": "Ringing the glyph drew a brand ring concentric with the brand ring the checked state already paints, which reads as a target rather than as two states a keyboard user must tell apart while moving through a group. The row is what the pointer already hits, because the label carries the hit area. A control with no label collapses back onto the glyph, and there the ring stands further off instead.",
+      "verify": "Tab to a checked radio: the ring surrounds glyph and label together, and is not concentric with the dot.",
+      "searchHints": [
+        "ds-checkbox",
+        "ds-radio",
+        "ds-switch",
+        "control-line",
+        "--focus-ring-offset"
+      ]
     }
   ],
   "deleteList": [],
@@ -112,6 +131,7 @@
     "The focus ring now eases its colour in over `--duration-fast`, as a CSS animation rather than a transition so a component's own transition list is untouched. Geometry does not animate, so nothing moves and no layout shifts. `--duration-fast` is already 0ms under `prefers-reduced-motion: reduce`, so there is nothing to opt out of.",
     "`ds-multi-select`'s panel search field had no focus indicator — it zeroed its own outline and nothing above it painted one. The row around it rings now, drawn inward because the panel clips. Nothing to change on your side.",
     "Three fields whose only focus indicator was a 1px border tint now draw the standard ring: `ds-sidenav-footer`'s search box, and `ds-table`'s column filter and inline cell editor. Nothing to change on your side.",
-    "A ds-date-picker day outside the allowed range no longer highlights under the pointer. The day button is only aria-disabled and never natively disabled, so its hover rule matched a date that could not be picked; hover skips a disabled day now, and the colour and cursor it already carried are unchanged. NO ACTION."
+    "A ds-date-picker day outside the allowed range no longer highlights under the pointer. The day button is only aria-disabled and never natively disabled, so its hover rule matched a date that could not be picked; hover skips a disabled day now, and the colour and cursor it already carried are unchanged. NO ACTION.",
+    "Every hand-written `outline: none` in the library is now `focus.own-indicator`, which skips the suppression under forced colours. Silencing a DS control in your own stylesheet should be wrapped the same way: `@media not (forced-colors: active)`."
   ]
 }

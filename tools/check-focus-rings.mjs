@@ -117,8 +117,34 @@ const killsTheOutlineAndPaintsNothing = (text) => {
   return found;
 };
 
+// Forced colours DROPS box-shadow, so a control silenced with a literal `outline: none`
+// is left with nothing in the one mode where an indicator is mandatory — the shell that
+// was ringing for it rings with a shadow that no longer paints. `focus.own-indicator`
+// wraps the suppression in `@media not (forced-colors: active)`; writing the declaration
+// by hand skips that, and skips it invisibly, because every other mode looks correct.
+const suppressesWithoutTheMixin = (text) => {
+  const lines = text.split(/\r?\n/);
+  const found = [];
+  let guarded = 0;
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (/@media\s+not\s*\(forced-colors/.test(line)) guarded = 1;
+    else if (guarded > 0) {
+      guarded += (line.match(/\{/g) ?? []).length;
+      guarded -= (line.match(/\}/g) ?? []).length;
+      if (guarded <= 0) guarded = 0;
+    }
+    if (guarded > 0) continue;
+    if (/^\s*outline:\s*(none|0);\s*$/.test(line)) {
+      found.push({ line: index + 1, declaration: line.trim() });
+    }
+  }
+  return found;
+};
+
 const failures = [];
 const unindicated = [];
+const bareSuppressions = [];
 const waived = [];
 let shells = 0;
 
@@ -130,6 +156,9 @@ for (const file of ROOTS.flatMap((root) => scssFilesIn(root))) {
     for (const site of killsTheOutlineAndPaintsNothing(code0)) {
       unindicated.push({ file: name0, ...site });
     }
+  }
+  for (const site of suppressesWithoutTheMixin(code0)) {
+    bareSuppressions.push({ file: name0, ...site });
   }
   const painter = paintsRingOnFocusWithin(text);
   if (!painter) continue;
@@ -172,10 +201,23 @@ if (failures.length > 0) {
   );
 }
 
-if (failures.length > 0 || unindicated.length > 0) {
+for (const site of bareSuppressions) {
+  console.error(
+    `check-focus-rings: ERROR  ${site.file}:${site.line}  \`${site.declaration}\` is written by hand. ` +
+      `Use \`@include focus.own-indicator\`, which skips the suppression under forced colours — ` +
+      `where the shell's shadow does not paint and this would leave the control with nothing.`,
+  );
+}
+
+if (failures.length > 0 || unindicated.length > 0 || bareSuppressions.length > 0) {
   if (unindicated.length > 0) {
     console.error(
       `check-focus-rings: FAILED — ${unindicated.length} focus rule(s) leave the control with no indicator`,
+    );
+  }
+  if (bareSuppressions.length > 0) {
+    console.error(
+      `check-focus-rings: FAILED — ${bareSuppressions.length} hand-written outline suppression(s)`,
     );
   }
   process.exit(1);

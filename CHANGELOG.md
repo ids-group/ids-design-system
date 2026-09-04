@@ -10,6 +10,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Breaking
 
+- **A focused `ds-checkbox`, `ds-radio` or `ds-switch` rings the whole row, label included, instead
+  of the glyph.** Ringing the glyph put a brand ring concentric with the brand ring the CHECKED state
+  already draws — three bands through two gaps, a target rather than two states a keyboard user has
+  to tell apart while moving through a group. The row is also what the pointer already hits, since
+  the label carries the hit area. A control with no label has no row to speak of, so there the ring
+  keeps its distance instead (`--space-1-5` rather than the usual 2px offset). `ds-table`'s cell
+  checkbox is unchanged — it has no row, and it keeps ringing its own box.
+
+- **Every hand-written `outline: none` in the library became `focus.own-indicator`.** The declaration
+  is the same everywhere except in forced colours, where it is now skipped. Windows High Contrast
+  drops `box-shadow`, so a field whose shell rings with the halo had nothing left once its inner
+  control was silenced — the one mode where an indicator is mandatory was the one mode without one.
+  If you silence a DS control in your own stylesheet, wrap it the same way:
+  `@media not (forced-colors: active) { outline: none; }`.
+
 - **Every focus ring on a control is an `outline` now, not a box-shadow, and its gap is genuinely
   see-through.** A shadow cannot leave a hole: the gap had to be painted with a guessed colour, and
   that guess was a coloured rim everywhere it was wrong — a control standing on a tinted band, a

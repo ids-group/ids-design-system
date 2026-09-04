@@ -50,7 +50,8 @@
   }
 
   &:focus-visible {
-    outline: none;
+    @include focus.own-indicator;
+
     border-color: var(--accent);
     box-shadow: var(--accent-focus-field);
   }
@@ -211,7 +212,8 @@
   text-transform: uppercase;
 
   &:focus {
-    outline: none;
+    @include focus.own-indicator;
+
     border-color: var(--accent);
     box-shadow: var(--accent-focus-field);
   }
