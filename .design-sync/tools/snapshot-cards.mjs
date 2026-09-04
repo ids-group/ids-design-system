@@ -70,6 +70,12 @@ const chapterOf = (html) => {
 // live to cover the 85 that own a panel, Table alone being 35 for 5.
 const PANEL_OWNERS = /<(ds-select|ds-multi-select|ds-autocomplete|ds-date-picker|ds-time-picker|ds-color-picker|ds-menu|ds-popover)[\s>]/;
 
+// What the card itself says opens on demand, for the surfaces no element name covers: Table builds
+// its own column-filter panel rather than composing `ds-popover`, and a tooltip is a directive with
+// no element at all. Matched as an ATTRIBUTE - `aria-haspopup` also appears as prose in the API
+// tables, and matching the bare word made a Button card look interactive.
+const OPENS_ON_DEMAND = /\saria-haspopup="|\sdstooltip/i;
+
 const cards = JSON.parse(readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8')).cards;
 
 // Template indentation reaches the snapshot as real text nodes. Collapsing it with a regexp over
@@ -230,7 +236,7 @@ const rendered = queue.map((path) => [path, snapshots.get(path)]);
 // as build-cards wrote it.
 const ordered = [];
 for (const entry of rendered) {
-  if (PANEL_OWNERS.test(entry[1])) kept.push(entry[0]);
+  if (PANEL_OWNERS.test(entry[1]) || OPENS_ON_DEMAND.test(entry[1])) kept.push(entry[0]);
   else ordered.push(entry);
 }
 

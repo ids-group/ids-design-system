@@ -1,6 +1,7 @@
 # Written by snapshot-cards.mjs — the cards it left live. Do not edit; see live-chapters.txt.
 components/actions/SplitButton/Split Button - Outline variant.html
 components/actions/SplitButton/Split Button - Primary variant.html
+components/data-display/Table/Table - Column filters.html
 components/data-display/Table/Table - Column picker - reorder.html
 components/data-display/Table/Table - Pagination - sticky column.html
 components/data-display/Table/Table - Persisted layout & export.html
@@ -86,7 +87,13 @@ components/navigation/Pagination/Pagination - Default.html
 components/navigation/Pagination/Pagination - Ranges.html
 components/navigation/Pagination/Pagination - States showcase.html
 components/navigation/Pagination/Pagination - With page-size select.html
+components/navigation/Sidenav/Sidenav - Collapsed.html
+components/navigation/Sidenav/Sidenav - Custom brand logo.html
+components/navigation/Sidenav/Sidenav - Default.html
+components/navigation/Sidenav/Sidenav - Letter-mark & accent wordmark.html
 components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own.html
+components/navigation/SidenavGroup/Sidenav Group - Expandable groups.html
+components/navigation/SidenavItem/Sidenav Item - Item states showcase.html
 components/overlays/BottomSheet/Bottom Sheet - Live demo.html
 components/overlays/BottomSheet/Bottom Sheet - Snap points.html
 components/overlays/BottomSheet/Bottom Sheet - The home indicator needs one line from YOUR.html
@@ -108,6 +115,7 @@ components/overlays/Popover/Popover - Live demo.html
 components/overlays/Popover/Popover - Placement.html
 components/overlays/Popover/Popover - Static specimen.html
 components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html
+guides/foundations/Colour/Colour - Secondary in use.html
 guides/foundations/Motion/Motion - Entrance presets - customizing a surface.html
 guides/foundations/Scrollbar/Scrollbar - Live demo.html
 guides/foundations/Scrollbar/Scrollbar - Specification.html
