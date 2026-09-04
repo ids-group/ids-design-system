@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  ButtonComponent,
-  DsPanelFooterTemplateDirective,
-  SelectComponent,
-  type SelectOption,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { DsPanelFooterTemplateDirective } from 'ds/components';
+import { SelectComponent } from 'ds/select';
+import type { SelectOption } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 import {

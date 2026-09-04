@@ -14,7 +14,7 @@ import {
   RouterLink,
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { LayoutScrollService } from 'ds';
+import { LayoutScrollService } from 'ds/app-layout';
 import { GROUP_PAGES } from '../group-pages';
 import { groupForAnchor, urlForGroupPath } from '../core/nav.config';
 

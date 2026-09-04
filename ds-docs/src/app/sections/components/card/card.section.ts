@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { CardComponent, type CardElevation, type CardPadding } from 'ds';
+import { CardComponent } from 'ds/card';
+import type { CardElevation, CardPadding } from 'ds/core';
 import {
   DocsTruncationComponent,
   TruncationRule,

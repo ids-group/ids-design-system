@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { SpinnerComponent } from 'ds';
+import { SpinnerComponent } from 'ds/spinner';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

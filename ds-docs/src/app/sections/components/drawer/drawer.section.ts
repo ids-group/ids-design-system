@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  ButtonComponent,
-  DrawerComponent,
-  type DrawerPlacement,
-  type DsSize,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import type { DsSize } from 'ds/core';
+import { DrawerComponent } from 'ds/drawer';
+import type { DrawerPlacement } from 'ds/drawer';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

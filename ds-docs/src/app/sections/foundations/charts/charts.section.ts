@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, computed } from '@angular/core';
-import { IconComponent, SkeletonComponent } from 'ds';
+import { IconComponent } from 'ds/icons';
+import { SkeletonComponent } from 'ds/skeleton';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface AxisToken {

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { OtpInputComponent } from 'ds';
+import { OtpInputComponent } from 'ds/otp-input';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

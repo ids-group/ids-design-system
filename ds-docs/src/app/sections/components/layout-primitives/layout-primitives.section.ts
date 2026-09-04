@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ContainerComponent, InlineComponent, StackComponent } from 'ds';
+import { ContainerComponent, InlineComponent, StackComponent } from 'ds/layout';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

@@ -1,15 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  ButtonComponent,
-  PageHeaderComponent,
-  SidenavComponent,
-  SidenavItemComponent,
-  StatComponent,
-  StatusDotComponent,
-  TabComponent,
-  TabsComponent,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { PageHeaderComponent } from 'ds/page-header';
+import { SidenavComponent, SidenavItemComponent } from 'ds/sidenav';
+import { StatComponent } from 'ds/stat';
+import { StatusDotComponent } from 'ds/status-dot';
+import { TabComponent, TabsComponent } from 'ds/tabs';
 
 interface SemanticSwatch {
   readonly name: string;

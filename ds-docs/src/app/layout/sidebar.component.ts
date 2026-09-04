@@ -17,12 +17,9 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import {
-  AppLayoutComponent,
-  IconButtonComponent,
-  LayoutScrollService,
-  SearchComponent,
-} from 'ds';
+import { AppLayoutComponent, LayoutScrollService } from 'ds/app-layout';
+import { IconButtonComponent } from 'ds/icon-button';
+import { SearchComponent } from 'ds/search';
 import {
   NAV,
   type NavGroup,

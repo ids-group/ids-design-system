@@ -1,11 +1,9 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {
-  AppLayoutComponent,
-  ButtonComponent,
-  IconButtonComponent,
-  TopBarComponent,
-} from 'ds';
+import { AppLayoutComponent } from 'ds/app-layout';
+import { ButtonComponent } from 'ds/button';
+import { IconButtonComponent } from 'ds/icon-button';
+import { TopBarComponent } from 'ds/topbar';
 import { SidebarComponent } from './layout/sidebar.component';
 import { TweaksPanelComponent } from './tweaks-panel/tweaks-panel.component';
 

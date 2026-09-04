@@ -5,13 +5,11 @@ import {
   Validators,
   type ValidationErrors,
 } from '@angular/forms';
-import {
-  DS_FIELD_WARNING_KIND,
-  IconComponent,
-  InputComponent,
-  ReserveMessagesDirective,
-  provideDsConfig,
-} from 'ds';
+import { DS_FIELD_WARNING_KIND } from 'ds/components';
+import { provideDsConfig } from 'ds/core';
+import { IconComponent } from 'ds/icons';
+import { InputComponent } from 'ds/input';
+import { ReserveMessagesDirective } from 'ds/reserve-messages';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

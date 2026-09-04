@@ -3,13 +3,11 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  AuthLayoutComponent,
-  BrandNameDirective,
-  ButtonComponent,
-  CheckboxComponent,
-  InputComponent,
-} from 'ds';
+import { AuthLayoutComponent } from 'ds/auth-layout';
+import { ButtonComponent } from 'ds/button';
+import { CheckboxComponent } from 'ds/checkbox';
+import { InputComponent } from 'ds/input';
+import { BrandNameDirective } from 'ds/sidenav';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

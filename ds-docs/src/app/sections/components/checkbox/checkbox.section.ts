@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { CheckboxComponent, SwitchComponent } from 'ds';
+import { CheckboxComponent } from 'ds/checkbox';
+import { SwitchComponent } from 'ds/switch';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

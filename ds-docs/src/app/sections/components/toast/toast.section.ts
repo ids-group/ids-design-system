@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
-import { ButtonComponent, ToastComponent, ToastService } from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { ToastComponent, ToastService } from 'ds/toast';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

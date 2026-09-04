@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ButtonComponent, EmptyStateComponent, IconComponent } from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { EmptyStateComponent } from 'ds/empty-state';
+import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

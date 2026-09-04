@@ -1,11 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  AutocompleteComponent,
-  ButtonComponent,
-  type AutocompleteItem,
-  type AutocompleteOption,
-  type AutocompleteOptionGroup,
-} from 'ds';
+import { AutocompleteComponent } from 'ds/autocomplete';
+import type { AutocompleteItem, AutocompleteOption, AutocompleteOptionGroup } from 'ds/autocomplete';
+import { ButtonComponent } from 'ds/button';
 import {
   DocsTruncationComponent,
   TruncationRule,

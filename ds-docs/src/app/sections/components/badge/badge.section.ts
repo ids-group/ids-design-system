@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BadgeComponent } from 'ds';
+import { BadgeComponent } from 'ds/badge';
 import {
   DocsTruncationComponent,
   TruncationRule,

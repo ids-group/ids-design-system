@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TimePickerComponent, type TimePickerValue } from 'ds';
+import { TimePickerComponent } from 'ds/time-picker';
+import type { TimePickerValue } from 'ds/time-picker';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 

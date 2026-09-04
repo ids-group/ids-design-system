@@ -1,18 +1,19 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { ButtonComponent } from 'ds/button';
 import {
-  ButtonComponent,
   DsChipTemplateDirective,
   DsGroupLabelTemplateDirective,
+  DsOptionTemplateDirective,
   DsPanelFooterTemplateDirective,
   DsPanelHeaderTemplateDirective,
   DsPickerTriggerDirective,
-  DsOptionTemplateDirective,
+} from 'ds/components';
+import {
   MultiSelectComponent,
   MultiSelectItem,
   MultiSelectOption,
-  SelectComponent,
-  SelectOption,
-} from 'ds';
+} from 'ds/multi-select';
+import { SelectComponent, SelectOption } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 

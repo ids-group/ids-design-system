@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { AccordionComponent, AccordionItemComponent } from 'ds';
+import { AccordionComponent, AccordionItemComponent } from 'ds/accordion';
 import {
   DocsTruncationComponent,
   TruncationRule,

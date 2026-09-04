@@ -4,7 +4,7 @@ import {
   SidenavComponent,
   SidenavGroupComponent,
   SidenavItemComponent,
-} from 'ds';
+} from 'ds/sidenav';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

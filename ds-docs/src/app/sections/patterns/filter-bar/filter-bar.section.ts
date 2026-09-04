@@ -1,14 +1,12 @@
 import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
-import {
-  SearchComponent,
-  ButtonComponent,
-  IconComponent,
-  SelectComponent,
-  TableComponent,
-  TagComponent,
-  type SelectOption,
-  type TableColumn,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { IconComponent } from 'ds/icons';
+import { SearchComponent } from 'ds/search';
+import { SelectComponent } from 'ds/select';
+import type { SelectOption } from 'ds/select';
+import { TableComponent } from 'ds/table';
+import type { TableColumn } from 'ds/table';
+import { TagComponent } from 'ds/tag';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface RecordRow {
