@@ -42,14 +42,11 @@ bun run build:upload
 command -v git > /dev/null || apk add --no-cache git > /dev/null 2>&1 || true
 command -v git > /dev/null || { echo "git is not available, so the upload tree cannot be compared or committed"; exit 1; }
 
-# This repo commits the cards FROZEN — static HTML with the Angular boot removed — and freezing
-# needs a browser this image does not have, so the build above just replaced them with live ones.
-# Comparing THOSE bytes against the commit says "stale" every run, and with RELEASE_TOKEN set this
-# script does not fail on stale, it commits: 0.12.0 shipped a thawed tree that way.
-#
-# `cards.lock.json` is what to compare instead. build-cards writes it from the cards as IT leaves
-# them, which is what this build reproduces — so it moves when a card's source moves and not when
-# the freeze is missing.
+# This repo commits the cards FROZEN, freezing needs a browser this image does not have, so the
+# build above just replaced them with live ones. Comparing THOSE bytes against the commit says
+# "stale" every run — and with RELEASE_TOKEN set this script does not fail on stale, it commits:
+# 0.12.0 shipped a thawed tree that way. `cards.lock.json` is what to compare instead, because a
+# browserless build reproduces it exactly.
 if [ -n "$(git status --porcelain .design-sync/cards.lock.json)" ]; then
   echo "The cards changed, and this build cannot freeze them — the image has no browser."
   echo ""
@@ -60,10 +57,9 @@ if [ -n "$(git status --porcelain .design-sync/cards.lock.json)" ]; then
   exit 1
 fi
 
-# The lock matched, so the cards did not change and the frozen copies in git still stand. Putting
-# them back is what keeps everything below — the release commit included — looking at the tree a
-# publish sends. `_ds_cards.css` belongs to the freeze too: build-cards wipes the directory and only
-# snapshot-cards writes that file, so leaving it out means committing its deletion.
+# The lock matched, so the frozen copies in git still stand — putting them back keeps everything
+# below, the release commit included, looking at the tree a publish sends. `_ds_cards.css` belongs
+# to the freeze too: only snapshot-cards writes it, so leaving it out commits its deletion.
 git checkout -- .design-sync/upload/components .design-sync/upload/guides .design-sync/upload/_ds_cards.css
 node .design-sync/tools/check-frozen.mjs
 

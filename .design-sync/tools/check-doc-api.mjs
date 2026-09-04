@@ -62,15 +62,13 @@ function scan(label, source) {
   }
 }
 
-// A controlled-prop claim in PROSE, which the tag scan above cannot see. Six docs promised
-// `open` + `onOpenChange` on components that have neither - leftovers from the deleted React port,
-// where the panels really were controlled and rendered in flow. An agent passing `open` gets a
-// dropdown that never opens, which is indistinguishable from a broken component.
+// A controlled-prop claim in PROSE, which the tag scan above cannot see: seven docs promised
+// `open` + `onOpenChange` on components that have neither, and an agent passing `open` gets a
+// dropdown that never opens.
 //
-// Only `on…Change` is checked, and only inside backticks. Wider shapes are pure noise: prose
-// legitimately backticks value names (`error`, `warning`), the fields of an item object, another
-// component's props, and the name of a prop it is saying does NOT exist. Measured on this tree,
-// every backticked identifier gives 46 findings and almost none are defects; this gives 0.
+// Only `on…Change`, and only inside backticks. Wider shapes are noise - prose legitimately
+// backticks value names, an item object's fields, and the name of a prop it says does NOT exist:
+// every backticked identifier gives 46 findings on this tree, this one gives 0.
 const HANDLER_CLAIM = /`(on[A-Z][A-Za-z0-9]*Change)`/g;
 
 for (const file of readdirSync(join(syncDir, 'docs')).filter((name) => name.endsWith('.md'))) {

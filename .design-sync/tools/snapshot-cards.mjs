@@ -1,17 +1,12 @@
 #!/usr/bin/env node
 // Freezes every card that does not need to be live into static HTML, then minifies the result.
 //
-// A card is a whole document that downloads the 2.12 MB bundle and boots its own Angular
-// application, and the pane shows a grid of them.
+// A card is a whole document that boots its own Angular application over the 2.12 MB bundle, and
+// the pane shows a grid of them. The snapshot renders identically because no colour is baked in:
+// the theme tokens stay in `_ds_bundle.css`, which the static card still links.
 //
-// The snapshot is the SETTLED DOM with every script stripped, which renders identically: Angular's
-// emulated-encapsulation styles are already `<style>` tags by then, and no colour is baked into an
-// inline style - theme tokens stay in `_ds_bundle.css`, which the static card still links, so the
-// pane switching `data-theme` still recolours it.
-//
-// What is lost is BEHAVIOUR. Two kinds of card keep it: the chapters in `live-chapters.txt`, whose
-// demo only exists once opened, and every card owning a panel (see PANEL_OWNERS). What a run kept
-// is recorded in `live-cards.txt`.
+// What is lost is BEHAVIOUR. Two kinds of card keep it: the chapters in `live-chapters.txt` and
+// every card owning a panel (see PANEL_OWNERS). What a run kept is recorded in `live-cards.txt`.
 //
 //   node .design-sync/tools/snapshot-cards.mjs      # after build-cards has stamped the heights
 //
@@ -64,16 +59,15 @@ const chapterOf = (html) => {
   return cut < 0 ? rest : `${rest.slice(0, cut)}/${rest.slice(cut + 1)}`;
 };
 
-// Controls whose panel IS the documented thing. A dropdown is a CDK overlay, so it was never
-// VISIBLE in a card — closed by default, portaled to `document.body` — but a frozen card also has
-// no click to open it. Matched per CARD rather than per chapter: by chapter this keeps 130 cards
-// live to cover the 85 that own a panel, Table alone being 35 for 5.
+// Controls whose panel IS the documented thing. The panel was never VISIBLE in a card - a CDK
+// overlay is closed by default - but a frozen card has no click to open it either. Matched per
+// CARD: by chapter this keeps 130 cards live to cover the 85 that own a panel, Table 35 for 5.
 const PANEL_OWNERS = /<(ds-select|ds-multi-select|ds-autocomplete|ds-date-picker|ds-time-picker|ds-color-picker|ds-menu|ds-popover)[\s>]/;
 
-// What the card itself says opens on demand, for the surfaces no element name covers: Table builds
-// its own column-filter panel rather than composing `ds-popover`, and a tooltip is a directive with
-// no element at all. Matched as an ATTRIBUTE - `aria-haspopup` also appears as prose in the API
-// tables, and matching the bare word made a Button card look interactive.
+// The surfaces no element name covers: Table builds its own column-filter panel instead of
+// composing `ds-popover`, and a tooltip is a directive with no element. Matched as an ATTRIBUTE -
+// `aria-haspopup` appears as prose in the API tables too, and the bare word made a Button card
+// look interactive.
 const OPENS_ON_DEMAND = /\saria-haspopup="|\sdstooltip/i;
 
 const cards = JSON.parse(readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8')).cards;
@@ -91,10 +85,9 @@ const TIDY = `
       if (!document.documentElement.hasAttribute('data-ds-sliced') && Date.now() - t0 < 20000) {
         return setTimeout(ready, 25);
       }
-      // Built is not settled: a component that MEASURES writes its result later, and Table's sticky
-      // scrollbar pins '.scroll-wrap' to a computed height. Counting frames only guesses how many,
-      // so this waits for the DOM to stop changing. Fonts first - a measure taken against the
-      // fallback face is the wrong number.
+      // Built is not settled: a component that MEASURES writes its result later - Table's sticky
+      // scrollbar pins '.scroll-wrap' to a computed height. Fonts first, because a measure taken
+      // against the fallback face is the wrong number.
       return document.fonts.ready.then(function () {
         var quiet = null;
         var observer = new MutationObserver(function () {
@@ -213,10 +206,8 @@ if (failed.length) {
   process.exit(1);
 }
 
-// Angular inlines a component's styles into every document that renders it, so the same block
-// arrives in card after card. One linked sheet is fetched once for the whole grid instead. Mostly
-// the blocks are scoped by the `_ngcontent`/`_nghost` attributes, but NOT entirely - see the union
-// below.
+// Angular inlines a component's styles into every document that renders it. Mostly the blocks are
+// scoped by the `_ngcontent`/`_nghost` attributes - but NOT entirely, see the union below.
 const isComponentStyle = (body) => body.includes('_nghost-') || body.includes('_ngcontent-');
 
 // Whitespace inside a `<style>` is never rendered, so this collapses unconditionally - unlike the
@@ -226,9 +217,8 @@ const tidyCss = (body) => body
   .replace(/\s*\n\s*/g, '\n')
   .trim();
 
-// Five lanes finish out of order, so the Map's order is a race. Reading it back in `cards.json`
-// order is what makes the sheet and the shortened ids byte-identical run to run; without it every
-// snapshot rewrites every file with no change in it.
+// Five lanes finish out of order, so the Map's order is a race. `cards.json` order is what makes
+// the sheet and the shortened ids byte-identical run to run.
 const rendered = queue.map((path) => [path, snapshots.get(path)]);
 
 // Only the RENDERED dom can tell: a live card's own HTML holds just `<ds-docs-components-select>`,
@@ -240,10 +230,9 @@ for (const entry of rendered) {
   else ordered.push(entry);
 }
 
-// EVERY rendered card, not only the frozen ones. A block qualifies on carrying a scope attribute
-// anywhere in it, and some carry document-level rules alongside - `:root` custom properties,
-// keyframes, `::ng-deep` output. Narrowing this to the frozen set dropped what only a live card
-// contributed and moved 80 frozen cards by 4-32px.
+// EVERY rendered card, not only the frozen ones: a block qualifies on carrying a scope attribute
+// anywhere in it, and some carry document-level rules alongside. Narrowing this to the frozen set
+// moved 80 frozen cards by 4-32px.
 const blocks = [];
 for (const [, dom] of rendered) {
   for (const [, body] of dom.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {

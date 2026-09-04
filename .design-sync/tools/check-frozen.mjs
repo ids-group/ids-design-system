@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 // Asserts the committed upload tree is the FROZEN one — the thing CI cannot rebuild.
 //
-// `snapshot-cards` turns a card into static HTML unless it needs to stay live, and records the ones
-// it kept in `live-cards.txt`. A tree built but never frozen looks fine to every other gate: the
-// cards render, the manifest is right, the heights match. This is what notices, and it needs no
-// browser, so CI can run it.
+// A tree built but never frozen looks fine to every other gate: the cards render, the manifest is
+// right, the heights match. This needs no browser, so CI can run it.
 //
-// It compares against that record rather than re-deriving which cards stay live: two
-// implementations of the rule drift, and this gate has already passed vacuously on one it
-// recomputed slightly wrong.
+// It compares against `live-cards.txt` rather than re-deriving which cards stay live - two
+// implementations of that rule drift, and this gate has already passed vacuously on one.
 //
 //   node .design-sync/tools/check-frozen.mjs
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
