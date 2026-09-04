@@ -302,36 +302,9 @@ export class TableComponent<T extends object> {
    *  table, not per route instance. */
   readonly storageKey = input<string>('');
 
-  /** Render an export button in the table's toolbar row. Off by default. Leave it
-   *  off and drive `runExport()` from your own button — in a page header, a filter
-   *  bar, the `[toolbar]` slot — reading `exporting()` for its loading state. */
-  readonly exportButton = input(false, { transform: booleanAttribute });
-  /** Filename the export button downloads as. */
-  readonly exportFilename = input<string>('table.csv');
-  /**
-   * Where the export button gets its data. A server-paged table only HAS the
-   * current page, so exporting without this silently exports one page.
-   *
-   * Return ROWS and the table serializes them the same way it serializes its
-   * own. Return a `Blob` (or a URL string) and the table just downloads it —
-   * which is what you want when the backend already formatted the file with its
-   * own number formats, its own columns, or a sheet the table never held.
-   */
-  readonly exportFetcher = input<
-    (() => Promise<readonly T[] | Blob | string>) | null
-  >(null);
-  /** Fires when `exportFetcher` rejects. Without it a failed export is silent —
-   *  the button simply re-enables and no file arrives. */
-  readonly exportFailed = output<unknown>();
-  private readonly exportingState = signal(false);
-  /** True while `exportFetcher` is in flight. Public so a button OUTSIDE the table
-   *  can show the same in-flight state as the built-in one. */
-  readonly exporting = this.exportingState.asReadonly();
-  private readonly exportStatusState = signal('');
-  private readonly eventsAtExport = signal('');
-  /** Announced in the table's live region while an export is running or after it
-   *  failed, so the button's own disabled state is not the only signal. */
-  readonly exportStatus = this.exportStatusState.asReadonly();
+  /** True while an export is in flight. Public so a button OUTSIDE the table can show the same
+   *  state as the built-in one. `false` when no export directive is present. */
+  readonly exporting = computed(() => this.layout.exporting());
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
@@ -1211,19 +1184,10 @@ export class TableComponent<T extends object> {
     if (this.loadingMode() !== false) {
       return 'Loading…';
     }
-    const contributed = this.layout.status();
-    if (contributed) {
-      return contributed;
-    }
-    const events = this.eventMessages();
-    // The export line holds the region until the events line has something NEW to say, so
-    // "Export failed" survives until the reader moves on rather than for a guessed interval.
-    // Compared against a snapshot rather than cleared, because a computed cannot write.
-    if (this.exportStatus() && events === this.eventsAtExport()) {
-      return this.exportStatus();
-    }
 
-    return events;
+    // A contributed line wins while it has one: an "Export failed" has to survive until the
+    // reader moves on, and the feature that raised it is what clears it.
+    return this.layout.status() || this.eventMessages();
   });
 
   private readonly eventMessages = computed<string>(() =>
@@ -2074,34 +2038,6 @@ export class TableComponent<T extends object> {
     return col.link?.(row) ?? null;
   }
 
-  /** Serialises the visible columns of the rows the TABLE HOLDS as a CSV download.
-   *  On a server-paged table that is one page — prefer `runExport()`, which goes
-   *  through `exportFetcher` and exports the whole set. Pass `rows` to serialise a
-   *  set you fetched yourself. */
-  exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
-    if (typeof document === 'undefined') {
-      return;
-    }
-    const columns = this.visibleColumns();
-    const escapeCell = (value: string): string =>
-      /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
-    const header = columns.map((col) => escapeCell(col.label));
-    const body = (rows ?? this.sortedData()).map((row) =>
-      columns.map((col) => escapeCell(this.cellValue(row, col))),
-    );
-    // Leading BOM so Excel reads UTF-8 (accented labels/values) correctly.
-    const csv =
-      '﻿' + [header, ...body].map((cells) => cells.join(',')).join('\r\n');
-    const url = URL.createObjectURL(
-      new Blob([csv], { type: 'text/csv;charset=utf-8;' }),
-    );
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(url);
-  }
-
   // localStorage, not session: a column layout the reader arranged should still
   // be there tomorrow. Every access is guarded — Safari private mode throws on
   // write, and a quota error must not take the table down with it.
@@ -2160,55 +2096,34 @@ export class TableComponent<T extends object> {
     }
   }
 
-  /** Runs the export the built-in button runs: awaits `exportFetcher` when one is
-   *  given — so a server-paged table exports the whole set rather than the page it
-   *  holds — downloads the result, drives `exporting`, writes the live region and
-   *  emits `exportFailed`. Public so the button can live anywhere:
-   *  `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`. */
+  /** Serialises the visible columns as a CSV download, through whichever export feature is on the
+   *  table. Pass `rows` to serialise a set you fetched yourself. Needs `dsTableExport`. */
+  exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
+    if (!this.layout.exportCsv(filename, rows)) {
+      this.warnNoExport('exportCsv');
+    }
+  }
+
+  /** Runs the export: awaits the feature's `exportFetcher` when one is given, downloads the
+   *  result, drives `exporting()` and emits its `exportFailed`. Public so the button can live
+   *  anywhere: `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`. */
   async runExport(): Promise<void> {
-    const fetcher = this.exportFetcher();
-    if (!fetcher) {
-      this.exportCsv(this.exportFilename());
+    const running = this.layout.runExport();
+    if (!running) {
+      this.warnNoExport('runExport');
 
       return;
     }
-    this.exportingState.set(true);
-    this.announceExport('Preparing export…');
-    try {
-      const result = await fetcher();
-      if (typeof result === 'string' || result instanceof Blob) {
-        this.downloadFile(result, this.exportFilename());
-      } else {
-        this.exportCsv(this.exportFilename(), result);
-      }
-      this.announceExport('Export ready');
-    } catch (error) {
-      this.announceExport('Export failed');
-      this.exportFailed.emit(error);
-    } finally {
-      this.exportingState.set(false);
-    }
+    await running;
   }
 
-  private announceExport(status: string): void {
-    this.eventsAtExport.set(this.eventMessages());
-    this.exportStatusState.set(status);
-  }
-
-  /** Hands a ready-made file to the browser. Only a Blob gets its object URL
-   *  revoked — a URL the caller supplied is theirs to manage. */
-  private downloadFile(source: Blob | string, filename: string): void {
-    if (typeof document === 'undefined') {
-      return;
-    }
-    const url = source instanceof Blob ? URL.createObjectURL(source) : source;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    if (source instanceof Blob) {
-      URL.revokeObjectURL(url);
-    }
+  // The one failure this shape is prone to: a call that finds no feature is a silent no-op, and
+  // the table is the only place that knows whether one registered.
+  private warnNoExport(called: string): void {
+    devWarn(
+      () =>
+        `ds-table: ${called}() found no export feature. Add the dsTableExport directive to the table.`,
+    );
   }
 
   /** Deterministic per-cell width so skeleton rows look organic but stable

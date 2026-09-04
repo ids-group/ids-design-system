@@ -5,6 +5,7 @@ import { DrawerComponent } from 'ds/drawer';
 import { EmptyStateComponent } from 'ds/empty-state';
 import { SearchComponent } from 'ds/search';
 import { CellTemplateDirective, TableComponent } from 'ds/table';
+import { DsTableExport } from 'ds/table-export';
 import type {
   TableCellEditEvent,
   TableColumn,
@@ -64,6 +65,7 @@ const BULK_STATUSES = ['Open', 'Pending', 'Closed'];
     EmptyStateComponent,
     SearchComponent,
     TableComponent,
+    DsTableExport,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './table.section.html',

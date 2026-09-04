@@ -26,6 +26,14 @@ export interface DsTableView<T> {
   readonly toolbarAnchor: Signal<ViewContainerRef | undefined>;
 }
 
+/** What an export feature hands the table, so `runExport()` and `exporting()` stay public API
+ *  while the implementation lives outside the component. */
+export interface DsTableExportContribution<T> {
+  readonly run: () => Promise<void>;
+  readonly csv: (filename?: string, rows?: readonly T[]) => void;
+  readonly exporting: Signal<boolean>;
+}
+
 /**
  * The seam an opt-in table feature writes into, so the table never names the feature.
  *
@@ -82,10 +90,8 @@ export class DsTableLayout<T = unknown> {
   }
 
   private published: DsTableView<T> | null = null;
-  private readonly exportContribution = signal<(() => Promise<void>) | null>(
-    null,
-  );
-  private readonly exportingContribution = signal<Signal<boolean> | null>(null);
+  private readonly exportContribution =
+    signal<DsTableExportContribution<T> | null>(null);
 
   /** Called by the table itself, before any directive can ask for it: a directive on the same
    *  element is constructed after the component that provides this service. */
@@ -107,20 +113,23 @@ export class DsTableLayout<T = unknown> {
    *  promise a button outside the table can drive them. The implementation is the feature's, so
    *  the table asks here and can tell the difference between "no export directive" and "nothing
    *  to export" — which is the one silent failure this whole shape is prone to. */
-  setExport(run: () => Promise<void>, exporting: Signal<boolean>): void {
-    this.exportContribution.set(run);
-    this.exportingContribution.set(exporting);
+  setExport(contribution: DsTableExportContribution<T>): void {
+    this.exportContribution.set(contribution);
   }
 
   runExport(): Promise<void> | null {
-    return this.exportContribution()?.() ?? null;
+    return this.exportContribution()?.run() ?? null;
+  }
+
+  /** True when it ran, so the caller can tell "no feature" from "nothing to export". */
+  exportCsv(filename?: string, rows?: readonly T[]): boolean {
+    const contribution = this.exportContribution();
+    contribution?.csv(filename, rows);
+
+    return contribution !== null;
   }
 
   exporting(): boolean {
-    return this.exportingContribution()?.() ?? false;
-  }
-
-  hasExport(): boolean {
-    return this.exportContribution() !== null;
+    return this.exportContribution()?.exporting() ?? false;
   }
 }

@@ -1326,7 +1326,7 @@
     hide one, reload the page, and it stays. Without a key nothing is stored —
     two tables would otherwise overwrite each other.
     <code class="t-mono-inline">
-      [exportButton]="true"
+      dsTableExport
     </code> renders the CSV
     button; a server-paged table passes
     <code class="t-mono-inline">
@@ -1339,10 +1339,10 @@
     caption="Projects"
     storageKey="docs-demo-projects"
     sortMode="client"
+    dsTableExport
     [data]="projectRows"
     [columns]="projectColumns"
     [persistLayout]="true"
-    [exportButton]="true"
     [reorderableColumns]="true"
     [resizableColumns]="true"
   />
@@ -1386,7 +1386,7 @@
     and the layout is entirely yours; the row's flex then has a single child and
     stays out of the way. It disappears when nothing filled it and
     <code class="t-mono-inline">
-      exportButton
+      dsTableExport
     </code> is off, so a table that
     uses neither is unchanged. Filters that belong to the PAGE still belong in a
     <code class="t-mono-inline">
@@ -1428,7 +1428,7 @@
     </code> call, the download, the
     in-flight state and the live-region announcement. Leave
     <code class="t-mono-inline">
-      exportButton
+      dsTableExport
     </code> off and drive it yourself.
   </p>
 
@@ -1438,6 +1438,7 @@
     sortMode="client"
     [data]="projectRows"
     [columns]="projectColumns"
+    [dsTableExport]="false"
     [exportFetcher]="slowExportFetcher"
   >
     <ds-search

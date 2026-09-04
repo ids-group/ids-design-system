@@ -240,6 +240,7 @@ export {
   HeaderFilterDirective,
   TableComponent,
 } from '@ids-group-ltd/ids-design-system/components/table';
+export { DsTableExport } from '@ids-group-ltd/ids-design-system/components/table-export';
 export type {
   HeaderFilterContext,
   SortChangeEvent,

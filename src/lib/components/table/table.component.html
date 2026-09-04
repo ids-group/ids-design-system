@@ -4,18 +4,6 @@
   </div>
 
   <ng-container #toolbarAnchor />
-
-  @if (exportButton()) {
-    <ds-button
-      color="neutral"
-      variant="outline"
-      size="sm"
-      [disabled]="exporting()"
-      (pressed)="runExport()"
-    >
-      {{ exporting() ? 'Preparing…' : 'Export CSV' }}
-    </ds-button>
-  }
 </div>
 
 <!-- Wraps the SCROLL CONTAINER, not the table inside it: the scrim is
@@ -205,7 +193,9 @@
                   />
                 </button>
               } @else {
-                <span class="visually-hidden"> Actions </span>
+                <span class="visually-hidden">
+                  Actions
+                </span>
               }
             </th>
           }
@@ -246,7 +236,8 @@
               class="spacer"
               aria-hidden="true"
               [style.height.px]="window.padTop"
-            ></tr>
+            >
+            </tr>
           }
 
           @for (slot of rowSlots(); track slot.index) {
@@ -415,11 +406,11 @@
               </tr>
 
               @if (
-                expandableRows() &&
-                isExpanded(row) &&
-                rowExpandTemplate() &&
-                !virtualizing()
-              ) {
+                  expandableRows() &&
+                  isExpanded(row) &&
+                  rowExpandTemplate() &&
+                  !virtualizing()
+                ) {
                 <tr class="expand-panel-row">
                   <td
                     class="expand-panel-cell"
@@ -447,7 +438,8 @@
               class="spacer"
               aria-hidden="true"
               [style.height.px]="window.padBottom"
-            ></tr>
+            >
+            </tr>
           }
         }
       </tbody>
@@ -465,7 +457,8 @@
     <div
       class="hscroll-spacer"
       [style.width.px]="hscrollContentWidth()"
-    ></div>
+    >
+    </div>
   </div>
 }
 
@@ -528,7 +521,9 @@
               {{ value || '(empty)' }}
             </label>
           } @empty {
-            <div class="col-filter-empty">No matches</div>
+            <div class="col-filter-empty">
+              No matches
+            </div>
           }
         </div>
 
@@ -711,7 +706,9 @@
 
 @if (selectable() && someSelected()) {
   <div class="bulk-bar">
-    <span class="count"> {{ selectedIds().size }} selected </span>
+    <span class="count">
+      {{ selectedIds().size }} selected
+    </span>
 
     <span class="sep"></span>
 
@@ -741,7 +738,8 @@
       <td
         class="expand-col"
         [class.pin-expand]="stickyFirstColumn()"
-      ></td>
+      >
+      </td>
     }
 
     @for (col of visibleColumns(); track col.key; let first = $first) {

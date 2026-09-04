@@ -6853,33 +6853,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Screen id the persisted layout is stored under. Pick something stable per table, not per route instance."
       },
       {
-        "name": "exportButton",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Render an export button in the table's toolbar row. Off by default. Leave it off and drive `runExport()` from your own button — in a page header, a filter bar, the `[toolbar]` slot — reading `exporting()` for its loading state."
-      },
-      {
-        "name": "exportFilename",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "'table.csv'",
-        "required": false,
-        "description": "Filename the export button downloads as."
-      },
-      {
-        "name": "exportFetcher",
-        "kind": "input",
-        "type": "(() => Promise<readonly T[] | Blob | string>) | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Where the export button gets its data. A server-paged table only HAS the current page, so exporting without this silently exports one page. Return ROWS and the table serializes them the same way it serializes its own. Return a `Blob` (or a URL string) and the table just downloads it — which is what you want when the backend already formatted the file with its own number formats, its own columns, or a sheet the table never held."
-      },
-      {
         "name": "stickyScrollbar",
         "kind": "input",
         "type": "boolean | null",
@@ -7121,15 +7094,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Emitted for `[(sortDir)]`."
       },
       {
-        "name": "exportFailed",
-        "kind": "output",
-        "type": "unknown",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Fires when `exportFetcher` rejects. Without it a failed export is silent — the button simply re-enables and no file arrives."
-      },
-      {
         "name": "lazyLoad",
         "kind": "output",
         "type": "{ first: number; rows: number }",
@@ -7191,6 +7155,56 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires with the row when an expander closes it, the row auto-closed by `expandMode=\"single\"` included. It carries a row, so it cannot speak for an id whose row is no longer in `data()` — under server-side paging that id is cleared silently. `expandedIds` is the complete signal; this one is the convenient one."
+      }
+    ]
+  },
+  "table-export": {
+    "key": "table-export",
+    "selector": "[dsTableExport]",
+    "isElement": false,
+    "className": "DsTableExport",
+    "status": "stable",
+    "importName": "DsTableExport",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsTableExport",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Renders the built-in toolbar button. `false` keeps the feature and hides the control, for a table whose export is driven from somewhere else on the page."
+      },
+      {
+        "name": "exportFilename",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'table.csv'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "exportFetcher",
+        "kind": "input",
+        "type": "(() => Promise<readonly T[] | Blob | string>) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Fetches the rows to export. Without it the export serialises what the table holds, which on a server-paged table is one page."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "exportFailed",
+        "kind": "output",
+        "type": "unknown",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Without it a rejected `exportFetcher` is silent."
       }
     ]
   },
