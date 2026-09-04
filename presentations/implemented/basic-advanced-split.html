@@ -1,14 +1,15 @@
 <meta charset="utf-8">
 <title>basic + advanced — два пакета не нужны</title>
-<meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/basic-advanced-split-audit.md - лестница на dist/ds 0.11.1, абляция ds-table §9">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-04">
+<meta name="ds-deck-evidence" content="docs/todo.md - docs/basic-advanced-split-audit.md - лестница на dist/ds 0.11.1, абляция ds-table §9">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <main>
   <header class="masthead">
     <div class="chips">
-      <span class="chip is-done">РЕШЕНО 2026-09-04 — не делим</span>
+      <span class="chip is-done">ЗАКРЫТО 2026-09-04 — не делим</span>
       <span class="chip">Стас, по этой деке</span>
     </div>
     <h1>basic + advanced — два пакета не нужны</h1>
@@ -55,13 +56,13 @@
   <p>
     <b>−19 303 B, −61%</b> — больше, чем весь потолок пакетного сплита, внутри одного компонента и без
     вечного зеркала. И это <b>пол</b>: row actions и редактирование ячеек остались внутри. Как делать —
-    <b>дека 7</b>.
+    <b>дека «Opt-in-шов»</b>.
   </p>
 
   <h2>Сплит против выноса опций</h2>
 
   <table class="matrix">
-    <thead><tr><th></th><th class="opt">два пакета</th><th class="opt">директивы<br /><small>дека 7</small></th></tr></thead>
+    <thead><tr><th></th><th class="opt">два пакета</th><th class="opt">директивы<br /><small>дека «Opt-in-шов»</small></th></tr></thead>
     <tbody>
       <tr><th>Экономит прототипу без таблицы</th><td class="bad">0</td><td class="ok">19 КБ</td></tr>
       <tr><th>Экономит прототипу с таблицей</th><td class="bad">0</td><td class="ok">19 КБ</td></tr>
@@ -85,6 +86,6 @@
 
   <p class="src">
     Лестница §1, абляция §9 и построчная сверка списка — <code>docs/basic-advanced-split-audit.md</code>.
-    Размещение по чанкам — дека 4, вынос опций — дека 7.
+    Размещение по чанкам — дека «Одна entry point», вынос опций — дека «Opt-in-шов».
   </p>
 </main>

@@ -1,14 +1,15 @@
 <meta charset="utf-8">
 <title>Одна entry point — и пять выходов</title>
-<meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/packaging-diagnosis.md - docs/packaging-chunking-audit.md - замеры .claude/local/{bundle,scale}-probe, вариант F проверен на настоящей библиотеке">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-04">
+<meta name="ds-deck-evidence" content="src/lib/ng-package.json - tools/check-entry-point-imports.mjs - CHANGELOG.md - docs/packaging-diagnosis.md - docs/packaging-chunking-audit.md - замеры .claude/local/{bundle,scale}-probe, вариант F проверен на настоящей библиотеке">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <main>
   <header class="masthead">
     <div class="chips">
-      <span class="chip is-done">РЕШЕНО 2026-09-04 — вариант D</span>
+      <span class="chip is-done">ПОСТРОЕНО 2026-09-04 — вариант D</span>
       <span class="chip">MBP-133</span>
     </div>
     <h1>Одна entry point — и пять выходов</h1>
@@ -49,30 +50,74 @@
   <h2>Настоящее приложение: <code>ds-docs</code></h2>
 
   <p>
-    80+ компонентов, ленивые роуты по разделам. Здесь варианты расходятся, и это <b>решающий замер</b>.
+    90 разделов, ленивые роуты. Здесь варианты расходятся, и это <b>решающий замер</b>.
+  </p>
+
+  <p class="lede" style="margin-top:0">
+    <b>Замер на том, что уехало в <code>dev</code>.</b> Одна и та же команда на обеих ветках, одна
+    машина, и в приложении <b>не поменяли ни одной строки импорта</b>.
   </p>
 
   <div class="chart">
-    <div class="row"><span class="k">сплющено, сегодня</span>
-      <span class="bar"><span class="seg cost" style="width:95.2%"></span></span><span class="v">273 КБ</span></div>
-    <div class="row"><span class="k">F — не сплющивать</span>
-      <span class="bar"><span class="seg warn" style="width:100%"></span></span><span class="v">287 КБ · +5%</span></div>
-    <div class="row"><span class="k"><b>D — 73 entry point</b></span>
-      <span class="bar"><span class="seg win" style="width:47.3%"></span></span><span class="v"><b>136 КБ · −50%</b></span></div>
+    <div class="row"><span class="k">сплющено, было</span>
+      <span class="bar"><span class="seg cost" style="width:100%"></span></span><span class="v">240,03 КБ</span></div>
+    <div class="row"><span class="k"><b>74 entry point, стало</b></span>
+      <span class="bar"><span class="seg win" style="width:57.6%"></span></span><span class="v"><b>138,29 КБ · −42%</b></span></div>
   </div>
 
   <div class="kpis">
-    <div class="kpi"><span class="n is-good">−50%</span><span class="k">стартовый бандл <code>ds-docs</code> при D: 273 → 136 КБ gzip</span></div>
-    <div class="kpi"><span class="n is-bad">+5%</span><span class="k">F настоящему приложению <b>не помогает</b>, а немного вредит</span></div>
-    <div class="kpi"><span class="n">+0,07%</span><span class="k">общий вес при D не изменился — ничего не задублировано и не потеряно</span></div>
+    <div class="kpi"><span class="n is-good">−42%</span><span class="k">стартовый бандл <code>ds-docs</code>: 240,03 → 138,29 КБ gzip</span></div>
+    <div class="kpi"><span class="n">+0,9%</span><span class="k">initial + lazy вместе — 102 КБ просто переехали в роуты, которые их используют</span></div>
+    <div class="kpi"><span class="n is-good">0</span><span class="k">дублей классов: <code>ds-table</code> определён ровно один раз</span></div>
+  </div>
+
+  <h2>Два нулевых результата, которые важнее третьего замера</h2>
+
+  <div class="chart">
+    <div class="row"><span class="k">только разрыв циклов, без entry point</span>
+      <span class="bar"><span class="seg cost" style="width:100%"></span></span><span class="v">240,06 КБ</span></div>
+    <div class="row"><span class="k">через корневой фасад</span>
+      <span class="bar"><span class="seg win" style="width:57.6%"></span></span><span class="v">138,37 КБ</span></div>
+    <div class="row"><span class="k">глубокими специферами</span>
+      <span class="bar"><span class="seg win" style="width:57.6%"></span></span><span class="v">138,36 КБ</span></div>
   </div>
 
   <p>
-    <b>Почему F проигрывает здесь.</b> Корневая бочка над 256 мелкими модулями всё равно оказывается
-    достижимой из eager-графа целиком. У D корень реэкспортирует <b>73 отдельных FESM</b>, и каждый —
-    самостоятельный модуль, который бандлер размещает отдельно. Проверено: <code>ds-table</code>
-    определён ровно один раз во всех трёх сборках, общий вес совпадает.
+    <b>Разрыв циклов не даёт ничего.</b> Ветка от той же базы, где разорваны все три цикла и точек
+    входа нет: 240,06 против 240,03 — шум. Цикл <code>core ↔ icons</code> сидел под каждым
+    компонентом и выглядел очевидным виновником; весь выигрыш даёт сам сплит.
   </p>
+
+  <p>
+    <b>Корневой фасад тоже ничего не стоит.</b> 138,37 против 138,36 — собранный фасад это
+    5 272 байта из 74 строк <code>export * from</code> и больше ничего, бандлер видит его насквозь.
+    Поэтому <b>миграции нет</b>: потребитель импортирует из корня, как раньше, и получает
+    тот же бандл.
+  </p>
+
+  <h2>Что решило спор с F и G</h2>
+
+  <p>
+    Оба собраны и замерены на копиях <code>src/</code>, потому что иначе их не отличить:
+  </p>
+
+  <div class="chart">
+    <div class="row"><span class="k">сплющено</span>
+      <span class="bar"><span class="seg cost" style="width:95.2%"></span></span><span class="v">273 КБ</span></div>
+    <div class="row"><span class="k">F — не сплющивать</span>
+      <span class="bar"><span class="seg warn" style="width:100%"></span></span><span class="v">287 КБ · +5%</span></div>
+    <div class="row"><span class="k">D — точка на компонент</span>
+      <span class="bar"><span class="seg win" style="width:47.3%"></span></span><span class="v">136 КБ · −50%</span></div>
+  </div>
+
+  <p>
+    <b>На синтетике F и D были в пределах 6%</b> — остановись там, и рекомендация была бы неверной.
+    <b>F проигрывает именно здесь:</b> корневая бочка над 256 мелкими модулями всё равно достижима
+    из eager-графа целиком. G (входы + общие чанки, способ Material) работает только через глубокие
+    специферы — через корень он так же плох, как было.
+  </p>
+
+
 
   <h2>Куда попадают компоненты</h2>
 
@@ -121,44 +166,44 @@
     </tbody>
   </table>
 
-  <section class="panel verdict">
-    <h2 style="margin-top:0">Рекомендация: D</h2>
+  <section class="panel verdict is-done">
+    <h2 style="margin-top:0">РЕШЕНО и построено — D</h2>
     <p>
-      <b>73 entry point, корень остаётся фасадом.</b> Потребитель не переписывает ни одного импорта, а
-      настоящее приложение получает <b>вдвое меньший стартовый бандл</b>. F даёт тот же результат
-      только на синтетике; на <code>ds-docs</code> он не помогает.
+      <b>74 entry point, корень остаётся фасадом.</b> Потребитель не переписывает ни одного импорта,
+      а стартовый бандл падает на 42%. Влито в <code>dev</code> мержем <code>a18d20c4</code>.
     </p>
     <p style="margin-bottom:0">
-      Сверху D даёт то, чего нет ни у кого: <b>глубокие специферы</b> — единственное, что заставляет
-      работать <code>@defer</code>, и Material-подобный публичный API.
+      Форма — <b>короткие алиасы</b>, дека «Форма точки входа». Глубокие специферы работают, но <b>не рекомендуются</b>:
+      байтов они не дают, и корневой импорт остаётся поддерживаемым спеллингом.
     </p>
   </section>
 
   <h2>Во что D обошёлся на самом деле</h2>
 
-  <p>Собрано настоящим ng-packagr из копии <code>src/</code>, репозиторий не тронут:</p>
-
   <table class="matrix">
     <tbody>
-      <tr><th>Entry point</th><td>73</td></tr>
-      <tr><th>Импортов переписано на специфер пакета</th><td>316</td></tr>
-      <tr><th>Циклов разорвано переносом папок</th><td>3 — <code>icons</code> → <code>core/icons</code>, <code>radio</code> → <code>radio-group/radio</code>, <code>time-columns</code> → <code>time-picker/time-columns</code></td></tr>
-      <tr><th>Правок в SCSS</th><td>1 — глубина пути у перенесённого файла</td></tr>
-      <tr><th>Время сборки библиотеки</th><td>120 с</td></tr>
+      <tr><th>Entry point</th><td>74</td></tr>
+      <tr><th>Импортов переписано на специфер пакета</th><td>318 в 93 файлах</td></tr>
+      <tr><th>Циклов разорвано</th><td>3 — <code>radio</code> → <code>radio-group/radio</code>, <code>time-columns</code> → <code>time-picker/time-columns</code>, а <code>core ↔ icons</code> переносом <code>icons.data.ts</code> → <code>core/icon-names.ts</code></td></tr>
+      <tr><th>Первичный <code>ng-package.json</code></th><td>переехал в <code>src/lib</code> — module id точки входа это её путь относительно первичного</td></tr>
+      <tr><th>Символов стало публичными</th><td>37, все помечены <code>@internal</code></td></tr>
+      <tr><th>Потеряно из публичного API</th><td class="ok">0</td></tr>
       <tr><th>Дублей классов в пакете</th><td class="ok">0</td></tr>
     </tbody>
   </table>
 
   <p>
-    <b>Соседние папки «со-локировать» нельзя:</b> entry point — это директория. Цикл
-    <code>core ↔ icons</code> ломается только физическим переносом. Первая попытка без переноса дала
-    ровно ту криптическую ошибку, ради которой написано правило
-    <code>entry-point-boundary</code>: <code>Cannot destructure property 'pos'</code>.
+    <b>Соседние папки «со-локировать» нельзя:</b> entry point — это директория. И оба ребра
+    <code>core → icons</code> были <code>import type</code> — <b>они всё равно считаются</b>:
+    ng-packagr ищет цикл через <code>resolveModuleNames</code>, куда TypeScript заходит и за типами.
   </p>
 
-  <h2>Единственное, что D даёт сверх F</h2>
+  <h2>Единственное, ради чего глубокий специфер всё-таки нужен</h2>
 
-  <p>Этот код компилируется без предупреждений и <b>ничего не откладывает</b> — при любой упаковке:</p>
+  <p>
+    Обычные ленивые роуты раскладываются и через корень — это замерено выше. Исключение одно:
+    <code>@defer</code>. Этот код компилируется без предупреждений и <b>ничего не откладывает</b>:
+  </p>
 
 <pre><code>import { TableComponent } from '@ids-group-ltd/ids-design-system';   // ← через корень
 
@@ -215,6 +260,6 @@
     <a href="https://github.com/angular/angular-cli/issues/13635">#13635</a> и закрыт как <b>not planned</b>;
     <a href="https://github.com/angular/angular-cli/issues/14830">#14830</a> — та же проблема другими словами.
     Замеры, фикстуры и то, чего они не доказывают — <code>docs/packaging-diagnosis.md</code>,
-    <code>docs/packaging-chunking-audit.md</code>. Форма раскладки — дека 6, opt-in-шов — дека 7.
+    <code>docs/packaging-chunking-audit.md</code>. Форма раскладки — дека «Форма точки входа», opt-in-шов — дека «Opt-in-шов».
   </p>
 </main>
