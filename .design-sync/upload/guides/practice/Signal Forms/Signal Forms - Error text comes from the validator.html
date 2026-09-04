@@ -1,25 +1,146 @@
 <!-- @dsCard group="practice" viewport="1200x535" name="Signal Forms - error text comes from the validator" subtitle="A field knows it is invalid, but only your validator knows what to say." -->
-<!DOCTYPE html>
+<!doctype html>
+<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
+     automatic OS branch, so a host that sets it on this document flips every component's tokens
+     while the page keeps its own background. Measured on the live cards: a light page whose tonal
+     buttons came out dark navy with white labels and whose outline labels went invisible. -->
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Signal Forms</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
-  <div class="ds-page"><ds-docs-practice-signal-forms _nghost-c4k=""><docs-section _ngcontent-c4k="" anchor="practice-signal-forms" eyebrow="Practice" title="Signal Forms" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-practice-signal-forms" data-anchor="practice-signal-forms"><h2 _ngcontent-c1="" class="t-h2">Signal Forms - error text comes from the validator</h2><p _ngcontent-c4k="" class="block-desc t-s"> A field knows it is invalid, but only your validator knows what to say. Without a message the field turns red with no words — deliberately, since the alternative is the library inventing copy for your domain. Two ways to supply it: per rule, as <code _ngcontent-c4k="" class="t-mono-inline"> required(path.email, { message: '…' }) </code>, or once per app for the built-in kinds: </p><pre _ngcontent-c4k="" class="t-mono-block">provideDsConfig({
-  field: {
-    errorMessages: {
-      required: 'This field is required',
-      email: 'Enter a valid email address',
-    },
-  },
-})</pre><p _ngcontent-c4k="" class="block-desc t-s"> In dev, a field that is invalid with no resolvable message logs a warning naming the error kinds it could not resolve, so this fails loudly rather than silently. </p></section></docs-section></ds-docs-practice-signal-forms></div>
-  
-  
-  <div aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px; margin: -1px; padding: 0px;"></div>
-  
+  <style>
+    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
+       all, because the components followed the theme and the page did not. */
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
+       title and takes the tight gap a heading gives, not the loose one that separates demos. */
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
+       for a capped, padded column stretches edge to edge without it, and every demo that relies on
+       wrapping wraps at the wrong width. */
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
+  </style>
+</head><body>
+  <div class="ds-page"><ds-docs-practice-signal-forms></ds-docs-practice-signal-forms></div>
+  <!-- Sections only: a section renders DS components as Angular components, and registering those
+       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
+  <script>window.__dsSectionsOnly = true</script>
+  <script src="../../../_ds_bundle.js"></script>
+  <script>
+    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
+       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
+       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
+       chapter's own component), and runs until the next one.
+       Of the chapter's own header only the title is kept on every card. The eyebrow is a constant,
+       and the lede describes the CHAPTER — printing it on all seven Button cards is the same
+       paragraph seven times, so it rides the first card only. Removed rather than hidden: the pane
+       sizes a card from its rendered height. */
+    (function () {
+      var OWNS = "";
+      var INDEX = 1;
+      var KEY = "";
+      var TABLE = false;
+      var HEAD = null;
+      var BLOCK = "error text comes from the validator";
+      var REACT = null;
+      /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
+         the title said "Buttons" and the lede described Button, and the card already names itself
+         in its block heading and in the pane's label. The lede rides the chapter's first card.
+         A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
+         slice and nothing repeated — it loses only the eyebrow. */
+      var WHOLE = OWNS === null;
+      /* The chapter's summary belongs to the chapter, so it rides its first card only - seven
+         copies of the same paragraph is what it was before. A whole-chapter card is that card. */
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var API = '[data-key]';
+      var host = document.querySelector("ds-docs-practice-signal-forms");
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        var heading = null;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
+          if (node.matches(KEEP)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
+        }
+        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
+           part by the anchor plus its class name. A part the extractor left out has no key at all,
+           and then the chapter's table is the only one there is, so it stays. */
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
+          }
+        }
 
+        /* The h2 names what the card is ABOUT. It said "Buttons" on all seven Button cards and
+           said nothing at all on a part's card, while the block's own h3 carried the only specific
+           words on the page - so the h3's text moves up and the h3 itself goes. HEAD overrides the
+           chapter's name for a part, whose own name is not the chapter's. */
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
 
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+
+        /* A part's chip is rendered inside its `.api-sub` wrapper at the foot of the chapter, while
+           the chapter's own sits directly under the title. Same place on every card. An emptied
+           wrapper goes with it - it carries a margin of its own. */
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+
+/* To Claude Design this is a React design system, so the chip names the React tag and only that
+           one: an agent here cannot type `<ds-button>`, and the Angular name is on the docs site,
+           in the `.d.ts` and in the README for whoever translates. Rewritten in place, so ds-docs
+           renders its own chip untouched. A directive has no React tag and passes null. */
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
+        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
+           over an empty page because the chapter reported more blocks than the card could address,
+           and a card that removes everything looks exactly like one that removed nothing. */
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
+        }
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
+      })();
+    })();
+  </script>
 </body></html>
