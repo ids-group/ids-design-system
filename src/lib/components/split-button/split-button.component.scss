@@ -40,7 +40,8 @@
   position: relative;
   transition:
     background-color var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard);
+    border-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-instant) var(--ease-standard);
 
   /* Scaled away from the seam, not about the half's own centre: a centred scale pulls the
      pressed half's inner edge inward and opens a hairline gap in the joint. */
