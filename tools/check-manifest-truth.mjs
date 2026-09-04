@@ -237,17 +237,10 @@ export function checkItem(item, before, after, prevTag, tag) {
         defects.push(
           `old \`${label(claim)}\` does not exist at ${prevTag}, and \`new\` names nothing that does — the item migrates from nowhere to nowhere`,
         );
-      } else if (
-        claim.bare &&
-        GONE_AFTER.has(item.kind) &&
-        // `ToastPromiseMessages` -> `ToastPromiseMessages<T>` gains a type parameter; the name is
-        // meant to survive. A suffix rename (`--x` -> `--x-color`) is a different thing and the
-        // old name does have to go, so only a generic argument list exempts it.
-        !String(item.new ?? '')
-          .trim()
-          .startsWith(`${claim.name}<`) &&
-        resolves(after, claim) === true
-      ) {
+      } else if (claim.bare && GONE_AFTER.has(item.kind) && resolves(after, claim) === true) {
+        // Reached by `X` -> `X<T>` too, and that is deliberate: a type that gains a parameter with
+        // a default is not a rename, so the bare name is meant to survive and the item is
+        // mis-filed. Firing here is what says so; the fix is `behavior`, not an exemption.
         defects.push(
           `old \`${label(claim)}\` still resolves at ${tag} — the ${item.kind} did not happen`,
         );

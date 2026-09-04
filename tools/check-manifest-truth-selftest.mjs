@@ -53,11 +53,11 @@ const rules = [
     expect: 'hold',
   },
   {
-    name: 'HOLDS: a generic parameterisation is not a rename',
+    name: 'FIRES on `X` -> `X<T>` filed as a rename: the bare name survives, so it is not one',
     item: { id: 'x', kind: 'type-rename', old: 'ToastPromiseMessages', new: 'ToastPromiseMessages<T>' },
     before: surface({ symbols: ['ToastPromiseMessages'] }),
     after: surface({ symbols: ['ToastPromiseMessages'] }),
-    expect: 'hold',
+    expect: 'fire',
   },
   {
     name: 'HOLDS: a suffix rename still has to lose the old token',
@@ -95,7 +95,7 @@ const readOnly = [
   ['0.7.0', "a model()'s implicit Change output"],
   ['0.11.2', 'a consumer example in a detect shape'],
   ['0.11.3', 'four phantom output renames'],
-  ['0.11.4', 'a generic parameterisation'],
+  ['0.11.4', 'a widened type, filed as behavior rather than as a rename'],
 ];
 for (const [version, what] of readOnly) {
   let got = 'green';
