@@ -6,6 +6,15 @@ Six defects from that review are fixed (`a5af6ba8`, `38764f81`, `29532e27`, `e88
 below survived wave 2's attack and is NOT fixed. Each claim was traced in emitted CSS from a linked
 app build rather than from SCSS; none was verified in a browser.
 
+Context that cannot go in a published file, kept here instead: `--focus-ring-inner` was
+`var(--surface-canvas)` until `7c37a8f9` (v0.10.2) made it `transparent`, which collapsed the
+two-layer ring into one solid band. That release's manifest item promises the opposite — "the 2px
+gap ... shows whatever is actually behind it" and "the same pixels show through" — and a transparent
+box-shadow layer paints nothing and reserves nothing, so there was no gap between v0.10.2 and the
+fix. The record cannot be corrected (a published manifest is frozen, `AUTHORING.md:183`) and
+`CONTRIBUTING.md:168-174` forbids describing it in a new entry, so the new item carries `supersedes`
+and says nothing about the old one. Measured on three grounds: `presentations/focus-ring-gap.png`.
+
 - [ ] **[P1] Move the focus ring from `box-shadow` to `outline` + `outline-offset` (major).** The gap
   now painted by `--focus-ring-inner: var(--surface-default)` is a GUESS: it is right on a card and
   visibly wrong on the canvas or any tinted band, because a shadow layer can only cover, never let

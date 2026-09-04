@@ -31,7 +31,5 @@
     }
   ],
   "deleteList": [],
-  "informational": [
-    "The 0.10.2 note for `--focus-ring-inner` said the transparent gap `shows whatever is actually behind it` and that `the same pixels show through`. That is not what a transparent box-shadow layer does: it paints nothing and reserves nothing, so the layer beneath it covered the full width and there was no gap at all. Measured on three grounds before this change. Nothing you were told to do in that release was wrong — the action there was `none` unless you wanted an opaque gap — but if you read it as a promise that the ring stood off the control, it never did between 0.10.2 and this release."
-  ]
+  "informational": []
 }
