@@ -62,10 +62,30 @@ function scan(label, source) {
   }
 }
 
+// A controlled-prop claim in PROSE, which the tag scan above cannot see. Six docs promised
+// `open` + `onOpenChange` on components that have neither - leftovers from the deleted React port,
+// where the panels really were controlled and rendered in flow. An agent passing `open` gets a
+// dropdown that never opens, which is indistinguishable from a broken component.
+//
+// Only `on…Change` is checked, and only inside backticks. Wider shapes are pure noise: prose
+// legitimately backticks value names (`error`, `warning`), the fields of an item object, another
+// component's props, and the name of a prop it is saying does NOT exist. Measured on this tree,
+// every backticked identifier gives 46 findings and almost none are defects; this gives 0.
+const HANDLER_CLAIM = /`(on[A-Z][A-Za-z0-9]*Change)`/g;
+
 for (const file of readdirSync(join(syncDir, 'docs')).filter((name) => name.endsWith('.md'))) {
   const name = file.replace(/\.md$/, '');
   const text = readFileSync(join(syncDir, 'docs', file), 'utf8').replace(/\r\n/g, '\n');
   for (const [, fence] of text.matchAll(/```tsx\n([\s\S]*?)```/g)) scan(`docs/${file}`, fence);
+
+  const names = accepted.get(name);
+  if (names) {
+    const prose = text.replace(/```[\s\S]*?```/g, '');
+    for (const [, handler] of prose.matchAll(HANDLER_CLAIM)) {
+      if (names.has(handler)) continue;
+      problems.push(`docs/${file} — prose offers \`${handler}\`, which ${name} does not have`);
+    }
+  }
   if (!accepted.has(name)) {
     problems.push(`docs/${file} — no component named ${name}; the doc would upload with nothing to describe`);
   }

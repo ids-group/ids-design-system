@@ -4,7 +4,7 @@ Single-choice dropdown field. Trigger button + listbox panel; `label` above, hel
 
 - Value: pass `value` + `onValueChange` (controlled) or just an initial `value`. Values are the option `value` strings.
 - `options` is a data prop: flat `{ label, value, disabled?, icon? }` items and/or groups `{ label, options: [...], disabled? }` — groups render uppercase section headers; group `disabled` disables every option in it.
-- `open` + `onOpenChange` control the panel (uncontrolled fallback otherwise); the open panel renders inline inside the host — use `open` to show the dropdown statically.
+- **There is no `open` prop** — the trigger owns its open state and the panel is a CDK overlay PORTALED to `document.body`. `staticPreview` is the one way to render the panel in flow, which is how a static card shows one; `onOpened` fires when a real one opens.
 - `clearable` shows an inline × when a value is selected; `readOnly` blocks opening and hides the chevron; `required` shows an asterisk, `optional` shows "(optional)".
 - Selected option's `icon` also renders in the trigger. Keyboard: arrows/Home/End navigate, Enter/Space picks, Escape closes.
 

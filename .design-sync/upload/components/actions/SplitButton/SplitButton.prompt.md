@@ -4,7 +4,8 @@ Main action button + chevron dropdown trigger fused into one control. The main b
 
 - `menuItems: SplitButtonItem[]` — `{ label, value?, icon?, disabled?, error? }`; `error: true` styles a destructive item.
 - `label` is the main button text; optional `icon` renders before it. `menuLabel` (default "More actions") names the chevron trigger for assistive tech.
-- `open`/`onOpenChange` control the dropdown; uncontrolled toggling works out of the box. The open menu renders INLINE inside the host (no portal) — it flows next to the buttons rather than floating.
+- **The chevron owns its own open state — there is no `open` prop.** It toggles on click and on ArrowDown, and the menu is a CDK popover PORTALED to `document.body`, so it floats over the layout rather than flowing next to the buttons. A card cannot show it open.
+- **Without `menuItems` the chevron opens an empty panel.** Pass the items or the control looks broken.
 - `disabled` disables both halves.
 
 ```tsx
