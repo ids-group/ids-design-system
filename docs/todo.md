@@ -251,13 +251,26 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 
 **Verification debts — each is one command away, none is a known defect.**
 
-- [ ] **`ds-table` selects rows with a RAW native checkbox.** `table.component.html` renders
-      `<input type="checkbox" class="check">` for both the select-all header and every row, and
-      `table.component.scss` styles `.check` nowhere at all — so the one control the design system
-      ships that the OS draws itself sits in the middle of a DS table. It has none of the DS
-      geometry, none of its colours and none of the mark's motion. The fix is `ds-checkbox`, whose
-      indeterminate state the header already needs. Not done here because another session holds
-      `table.component.scss`.
+- [ ] **Where a check mark is drawn, and which ones are the shared one.** Kept here because the
+      answer is not derivable from one file — the marks live in three partials and two of the eight
+      sites are deliberately different.
+
+      | Where | Draws with | Shared mark | Animated |
+      | --- | --- | --- | --- |
+      | `ds-checkbox` | `.check::after`, `check-box.box` | yes | yes |
+      | `ds-multi-select` — option, select-all, group | `.tick` | yes | yes |
+      | `ds-autocomplete` — multi | `.tick` | yes | yes |
+      | `ds-autocomplete` — single | `.option-check` | yes | yes |
+      | `ds-select` | `.option-check` | yes | yes |
+      | `ds-table` — row selection | `.check`, `check-box.box` | yes | yes |
+      | `ds-stepper` — completed step | `ds-icon name="check"` | **no, on purpose** | no |
+      | `description-item` — copied | `ds-icon name="check"` | **no, on purpose** | no |
+
+      The last two are confirmations of an ACTION, not marks of a selection: a stepper's completed
+      step and a "copied to clipboard" flash are not checkboxes, and giving them a checkbox's mark
+      and overshoot would say they can be unticked. `_check-mark.scss` owns the tick and the
+      indeterminate bar; `_check-box.scss` owns the box around them; the motion is four tokens,
+      written up in `docs/check-mark-motion.md`.
 
 - [ ] **The freeze spawns one chromium PER CARD — 410 cold starts.** `snapshot-cards.mjs` runs
       `chrome --dump-dom` per card behind a lane queue, so every card pays a browser launch plus a

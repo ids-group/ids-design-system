@@ -1,3 +1,4 @@
+@use '../../styles/check-box' as check-box;
 @use '../../styles/focus' as focus;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
@@ -5,8 +6,16 @@
 // Positioned to contain the absolute `.visually-hidden` nodes below; without it they resolve against
 // the initial containing block and grow the consuming PAGE's root scroller into a second scrollbar.
 :host {
+  @include check-box.resolvers;
+
   display: block;
   position: relative;
+}
+
+// Row selection used a bare native checkbox: `class="check"` was styled nowhere, so the one control
+// the OS drew itself sat in the middle of a design-system table.
+.check {
+  @include check-box.box;
 }
 
 .visually-hidden {

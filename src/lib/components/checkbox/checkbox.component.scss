@@ -1,19 +1,10 @@
-@use '../../styles/focus' as focus;
-@use '../../styles/check-mark';
+@use '../../styles/check-box' as check-box;
 @use '../../styles/control-label' as control-label;
-@use '../../styles/press' as press;
 
 :host {
-  --_checkbox-bg: var(--ds-checkbox-bg-color, var(--surface-default));
-  --_checkbox-border: var(--ds-checkbox-border-color, var(--border-strong));
-  --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
-  --_checkbox-selected-bg: var(--ds-checkbox-selected-bg-color, var(--accent));
-  --_checkbox-selected-border: var(--ds-checkbox-selected-border-color, var(--accent));
-  --_checkbox-radius: var(--ds-checkbox-radius, var(--ds-radius-inner));
+  @include check-box.resolvers;
 
-  // Local resolvers for size scaling; md references the global token so it stays
-  // density-responsive. sm/lg are explicit per-instance overrides.
-  --_checkbox-glyph: var(--check-size);
+  // sm/lg are explicit per-instance overrides of the glyph the mixin defaults.
   --_checkbox-label-fs: var(--font-size-s);
 
   display: inline-flex;
@@ -71,56 +62,7 @@
 }
 
 .check {
-  appearance: none;
-  width: var(--_checkbox-glyph);
-  height: var(--_checkbox-glyph);
-  border: var(--check-bw) solid var(--_checkbox-border);
-  background: var(--_checkbox-bg);
-  cursor: pointer;
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  margin: 0;
-  border-radius: var(--_checkbox-radius);
-  transition: background-color var(--duration-fast) var(--ease-standard),
-              border-color var(--duration-fast) var(--ease-standard);
-
-  &:hover:not(:disabled) { border-color: var(--_checkbox-hover-border); }
-  &:focus-visible        { @include focus.ring; }
-
-  @include press.feedback;
-  &:disabled {
-    background: var(--surface-disabled);
-    border-color: var(--border-disabled);
-    cursor: not-allowed;
-  }
-
-  // Persistent pseudo (content always set) so the check/indeterminate mark
-  // scales + fades in/out — a checked-only ::after would just pop in.
-  // The mark paints in currentColor, and an input inherits the label's text colour — so without
-  // this the tick would come out dark on the filled box.
-  color: var(--icon-on-primary);
-
-  &::after {
-    content: "";
-
-    @include check-mark.mark;
-  }
-
-  &:checked {
-    background: var(--_checkbox-selected-bg);
-    border-color: var(--_checkbox-selected-border);
-    &::after { @include check-mark.shown; }
-  }
-
-  &:indeterminate {
-    background: var(--_checkbox-selected-bg);
-    border-color: var(--_checkbox-selected-border);
-    &::after {
-      @include check-mark.shown;
-      @include check-mark.dash;
-    }
-  }
+  @include check-box.box;
 }
 
 /* Dev-only detection sink for a projected caption (checkbox.component.html).

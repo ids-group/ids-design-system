@@ -72,6 +72,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **A group's select-all row clips its label like the option rows do.** `.select-all-label` carried no
   clip at all, so a long group name wrapped and made that one row two lines tall beside single-line
   options.
+- **`ds-table` selects rows with the design system's checkbox, not the browser's.** Its
+  `<input type="checkbox">` was styled nowhere at all, so the OS drew it — no DS geometry, no DS
+  colours, no mark. The box is now a partial, `styles/_check-box.scss`, that ds-checkbox and the
+  table both include, so the two cannot drift.
 - **`ds-radio` accepts `[deselectable]`,** which lets a checked STANDALONE radio be cleared by
   clicking it again. Off by default and ignored inside `ds-radio-group`, where clearing the one
   selected option would leave the group with no value through a gesture the group cannot see.

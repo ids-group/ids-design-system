@@ -1,0 +1,76 @@
+@use 'check-mark' as check-mark;
+@use 'focus' as focus;
+@use 'press' as press;
+
+// The box a checkbox draws, in one place.
+//
+// ds-checkbox is a native `<input type="checkbox">` with `appearance: none` and a styled `::after`,
+// so anything else that already renders a native checkbox — ds-table's row selection — becomes the
+// design system's checkbox by including this, without swapping in a component or rewiring an
+// event.
+
+// Declared on the SCOPE rather than on the box, so a state override on the host (error, warning)
+// still reaches the box through the cascade: a declaration on the element itself would outrank the
+// inherited one and pin the resting colour.
+@mixin resolvers {
+  --_checkbox-bg: var(--ds-checkbox-bg-color, var(--surface-default));
+  --_checkbox-border: var(--ds-checkbox-border-color, var(--border-strong));
+  --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
+  --_checkbox-selected-bg: var(--ds-checkbox-selected-bg-color, var(--accent));
+  --_checkbox-selected-border: var(--ds-checkbox-selected-border-color, var(--accent));
+  --_checkbox-radius: var(--ds-checkbox-radius, var(--ds-radius-inner));
+  --_checkbox-glyph: var(--check-size);
+}
+
+@mixin box {
+  appearance: none;
+  width: var(--_checkbox-glyph);
+  height: var(--_checkbox-glyph);
+  border: var(--check-bw) solid var(--_checkbox-border);
+  background: var(--_checkbox-bg);
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin: 0;
+  border-radius: var(--_checkbox-radius);
+  transition: background-color var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard);
+
+  &:hover:not(:disabled) { border-color: var(--_checkbox-hover-border); }
+  &:focus-visible        { @include focus.ring; }
+
+  @include press.feedback;
+  &:disabled {
+    background: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    cursor: not-allowed;
+  }
+
+  // The mark paints in currentColor, and an input inherits the label's text colour — so without
+  // this the tick would come out dark on the filled box.
+  color: var(--icon-on-primary);
+
+  // Persistent pseudo (content always set) so the check/indeterminate mark scales + fades in and
+  // out — a checked-only ::after would just pop in.
+  &::after {
+    content: "";
+
+    @include check-mark.mark;
+  }
+
+  &:checked {
+    background: var(--_checkbox-selected-bg);
+    border-color: var(--_checkbox-selected-border);
+    &::after { @include check-mark.shown; }
+  }
+
+  &:indeterminate {
+    background: var(--_checkbox-selected-bg);
+    border-color: var(--_checkbox-selected-border);
+    &::after {
+      @include check-mark.shown;
+      @include check-mark.dash;
+    }
+  }
+}
