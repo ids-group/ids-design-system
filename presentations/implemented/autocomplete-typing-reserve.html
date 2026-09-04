@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
 <title>Резерв под ввод в автокомплите — 80px, которые видно всегда</title>
-<meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="src/lib/components/autocomplete/autocomplete.component.scss:26 объявляет --_autocomplete-input-minw: var(--ds-autocomplete-input-minw, 80px); :158 применяет его к .autocomplete-input; autocomplete.component.html:101 схлопывает поле только при [class.collapsed]=&quot;displayLabel() &amp;&amp; !isOpen()&quot;, то есть в single-режиме с выбранным значением.">
-<link rel="stylesheet" href="ds.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-05">
+<meta name="ds-deck-evidence" content="Выбран вариант B: src/lib/components/autocomplete/autocomplete.component.scss:26 объявляет --_autocomplete-input-minw: var(--ds-autocomplete-input-minw, 40px) — было 80px; :158 применяет его к .autocomplete-input; autocomplete.component.html:101 схлопывает поле только при [class.collapsed]=&quot;displayLabel() &amp;&amp; !isOpen()&quot;, то есть в single-режиме с выбранным значением.">
+<link rel="stylesheet" href="../ds.css">
 <style>
   body {
     margin: 0;

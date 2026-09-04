@@ -57,6 +57,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   library that did. The mark is painted as a mask over `currentColor`, which is what lets one path
   serve a filled box (white on the accent) and a bare option row (accent on the surface).
   `--ds-option-check-color` still picks its colour.
+- **The typing area beside an autocomplete's chips is 40px, not 80px.** `--ds-autocomplete-input-minw`
+  is a floor, so in the default `width="fill"` the input still stretches across the row and only the
+  chip case changes; under `width="content"` it is what an empty field measures. Set the hook back to
+  `80px` to keep the old footprint.
+- **A group's select-all row clips its label like the option rows do.** `.select-all-label` carried no
+  clip at all, so a long group name wrapped and made that one row two lines tall beside single-line
+  options.
 - **`ds-radio` accepts `[deselectable]`,** which lets a checked STANDALONE radio be cleared by
   clicking it again. Off by default and ignored inside `ds-radio-group`, where clearing the one
   selected option would leave the group with no value through a gesture the group cannot see.

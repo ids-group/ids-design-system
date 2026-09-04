@@ -1,6 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/check-mark';
+@use '../../styles/text-clip' as text-clip;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/field-state' as field-state;
@@ -201,6 +202,14 @@
   font:
     var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
     var(--font-sans);
+}
+
+// The option rows clip their label; without the same treatment a long group name wraps and makes
+// its select-all row two lines tall next to single-line options.
+.select-all-label {
+  min-width: 0;
+
+  @include text-clip.single-line-ellipsis;
 }
 
 .select-all {
