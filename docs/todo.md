@@ -2,6 +2,18 @@
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
+- [ ] **[P2] Nothing catches a shell that rings on `:focus-within` when it means the keyboard.**
+  Shipped and caught by Stas in a screenshot, 2026-09-05: the row ring on checkbox/radio/switch used
+  `:focus-within`, which matches a POINTER focus too — and a checkbox, unlike a text input, is not
+  granted `:focus-visible` on click, so clicking one left the ring behind until focus moved. Fixed
+  with `:has(:focus-visible)`, but only on the four shells that were looked at.
+  A gate is not obvious here, because `:focus-within` is CORRECT on a text-field shell — clicking
+  into an input does grant `:focus-visible`, so the two selectors agree there. The rule a checker
+  would need is "does the focusable inside this shell take `:focus-visible` from a pointer", which
+  is about the element type, not the selector. Candidate: flag `:focus-within` in a component whose
+  template has `type="checkbox"`, `type="radio"`, or a `button`, and leave text fields alone.
+
+
 - [ ] **[P2] Overlays should grow, not drop in from above (Stas, 2026-09-04).** Every CDK panel
   carrying `ds-overlay-pane` enters with `ds-slide-in`: `_overlay-motion.scss` sets
   `--_ds-enter-y: calc(-1 * var(--_overlay-enter-offset))`, so a panel below its trigger starts 4px
