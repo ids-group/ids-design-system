@@ -562,6 +562,12 @@ export class TableComponent<T extends object> {
   private readonly toolbarAnchor = viewChild('toolbarAnchor', {
     read: ViewContainerRef,
   });
+  private readonly headerUtilityAnchor = viewChild('headerUtilityAnchor', {
+    read: ViewContainerRef,
+  });
+  private readonly overlaysAnchor = viewChild('overlaysAnchor', {
+    read: ViewContainerRef,
+  });
 
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
     this.layout.foldColumns(
@@ -1493,7 +1499,12 @@ export class TableComponent<T extends object> {
       visibleColumns: this.visibleColumns,
       sortedRows: this.sortedData,
       cellText: (row, column) => this.cellValue(row, column),
-      toolbarAnchor: this.toolbarAnchor,
+      anchor: (name) =>
+        name === 'toolbar'
+          ? this.toolbarAnchor
+          : name === 'header-utility'
+            ? this.headerUtilityAnchor
+            : this.overlaysAnchor,
     });
 
     this.watchPointer();

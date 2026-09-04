@@ -178,6 +178,8 @@
               scope="col"
               class="actions-col"
             >
+              <ng-container #headerUtilityAnchor />
+
               @if (hasColumnPicker()) {
                 <button
                   type="button"
@@ -544,6 +546,8 @@
     }
   </ds-popover>
 }
+
+<ng-container #overlaysAnchor />
 
 @if (hasColumnPicker()) {
   <ds-popover

@@ -17,13 +17,24 @@ export type DsTableRowStage<T> = (rows: readonly T[]) => readonly T[];
  * cannot reach, so the contract is published here rather than by widening the component's surface:
  * this way the table's public API does not grow one member per feature.
  */
+/**
+ * Where in the table a feature may put markup.
+ *
+ * Three, because the column picker needs three: a trigger in the utility header cell, and its
+ * popover and bottom sheet at the end of the host where an overlay belongs. One
+ * `ViewContainerRef` was enough for the export button and is not enough for anything else.
+ */
+export type DsTableAnchor = 'toolbar' | 'header-utility' | 'overlays';
+
 export interface DsTableView<T> {
   readonly visibleColumns: Signal<readonly TableColumn<T>[]>;
   readonly sortedRows: Signal<readonly T[]>;
   readonly cellText: (row: T, column: TableColumn<T>) => string;
-  /** An anchor inside the toolbar. A directive cannot insert markup into another component's
-   *  template, so a feature with a control of its own creates it here. */
-  readonly toolbarAnchor: Signal<ViewContainerRef | undefined>;
+  /** A directive cannot insert markup into another component's template, so a feature with a
+   *  control of its own creates it in one of these. Undefined until the view exists. */
+  readonly anchor: (
+    name: DsTableAnchor,
+  ) => Signal<ViewContainerRef | undefined>;
 }
 
 /**
@@ -78,6 +89,19 @@ export class DsTableLayout<T = unknown> {
 
   addRowStage(stage: DsTableRowStage<T>): void {
     this.rowStages.update((stages) => [...stages, stage]);
+  }
+
+  private readonly utilityColumnWanted = signal(false);
+
+  /** The utility column carries the row-action kebab and the picker trigger. The table knows
+   *  about the first and must be told about the second, or the cell it anchors into is never
+   *  rendered and the feature has nowhere to go. */
+  requestUtilityColumn(): void {
+    this.utilityColumnWanted.set(true);
+  }
+
+  wantsUtilityColumn(): boolean {
+    return this.utilityColumnWanted();
   }
 
   private readonly slices = signal<readonly DsTablePersistedSlice[]>([]);

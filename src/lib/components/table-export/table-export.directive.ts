@@ -68,7 +68,7 @@ export class DsTableExport<T extends object> {
     });
     this.layout.addStatusFragment(this.announcement.asReadonly());
 
-    const anchor = this.layout.view().toolbarAnchor;
+    const anchor = this.layout.view().anchor('toolbar');
     let created: ComponentRef<TableExportButtonComponent> | null = null;
     effect(() => {
       const host = anchor();
