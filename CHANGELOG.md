@@ -1028,36 +1028,6 @@ this package ships under `migrations/`.
   container now, which drops whitespace-only text nodes outright, so the identifier renders flush and
   the template stays free to be formatted for reading. No API change, and nothing to do on your side.
 
-- **Nine defects in six already-published manifests, and a repo upgraded before today may be holding
-  the result.** The prose split above rewrote every item; this is the separate, smaller set where the
-  DATA was wrong. It matters
-  because these files are executed: your upgrade tooling read them, acted, and reported done.
-  **Two changes had no item at all.** `0.9.0` never filed the six inputs whose declared type
-  widened from `InputSignal` to
-  `InputSignalWithTransform` (`min`/`max`/`maxLength` on `ds-input`, `min`/`max` on
-  `ds-number-stepper`, `maxLength` on `ds-textarea`) — the TS2322 an explicit annotation hits and the
-  TS2416 a subclass hits had no explanation anywhere. `0.10.0` never filed
-  `ModalService.confirm({ tone: 'error' })` gaining the modal's error badge in the header.
-  **Two instructions were wrong, so following them edited the wrong thing.** `0.7.1`’s à-la-carte
-  `@use` lines were written as bare `styles/…` specifiers, which resolve only inside the library's own build and
-  fail from an app; they are package-qualified now. And `0.7.1`’s modal `.title` was filed as a
-  `class-rename` to `.heading` when no rename happened — it is a `behavior` item now, so anyone who
-  renamed that class did so on our word and can put it back.
-  **One `verify` certified a bug as correct.** `0.8.0` said an unset `sortMode` resolves to `server`.
-  It resolves to `client`, so a server-paged table left unset sorts only the rows in hand — and the
-  check passed anyway. That release’s item now says to declare `sortMode="server"` explicitly.
-  **Three items searched too few file types.** `0.5.1`’s two `variant` remaps and `0.10.0`’s
-  `floating` removal were marked template-only, so a `variant=` sitting in a stylesheet or a `.ts`,
-  and the five dead floating-label tokens (`--field-h-floating` and the four `--field-floating-*`),
-  were never looked for. Their `surface` now names style and TypeScript too.
-  **What to do:** if your last upgrade ran before this release AND crossed one of those six versions,
-  re-run just those items — `migrations/<version>.json` now carries them right, and nothing else in
-  those files changed meaning. Also corrected: `0.10.2`’s two `maxVisibleChips` items now declare
-  that they supersede `0.10.0#max-visible-chips-zero-inverted`, which an upgrade stepping through both
-  had been applying for nothing.
-  **Sixteen more rows** in the "What you can now DELETE" tables of
-  0.6.1, 0.7.1, 0.8.0, 0.9.0, 0.10.0 and 0.10.3 — workarounds those releases made redundant and never
-  listed.
 
 ### What you can now DELETE
 
