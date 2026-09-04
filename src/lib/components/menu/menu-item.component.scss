@@ -12,6 +12,10 @@
   --_menu-item-description-font-size: var(--ds-menu-item-description-font-size, var(--font-size-2xs));
   --_menu-item-description-max-width: var(--ds-menu-item-description-max-width, 14rem);
 
+  // Mirrors the template's `[size]="16"` on ds-icon: it is the width the empty slot reserves, so
+  // the two have to agree or the labels align to nothing.
+  --_menu-item-icon-size: var(--ds-menu-item-icon-size, 16px);
+
   display: block;
 }
 
@@ -20,6 +24,22 @@
   flex-direction: column;
   align-items: flex-start;
   min-width: 0;
+}
+
+// The wrapper for a PROJECTED `[icon]`, and empty when there is neither input nor projection.
+// `display: contents` is what keeps an empty one from costing the row's flex gap: the element
+// generates no box at all, so a menu with no icons anywhere has its labels flush to the padding.
+.menu-item-icon {
+  display: contents;
+}
+
+// One item with an icon makes every item reserve the slot, so the labels land on one axis. Without
+// it the empty wrapper collapsed while the gap stayed, and a row without an icon started exactly
+// one icon-width to the left of its neighbours.
+:host-context(ds-menu.has-icons) .menu-item-icon {
+  display: block;
+  flex: none;
+  width: var(--_menu-item-icon-size);
 }
 
 .menu-item-description {
