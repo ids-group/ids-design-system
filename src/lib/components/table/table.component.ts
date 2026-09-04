@@ -127,7 +127,7 @@ function compareSortValues(
     '[class.pinned]': 'stickyFirstColumn()',
     '[class.expandable]': 'expandableRows()',
     '[class.sticky-scrollbar]': 'stickyScrollbarResolved()',
-    '[class.resizable]': 'resizableColumns()',
+    '[class.resizable]': 'layout.resize() !== null',
   },
   providers: [DsTableLayout],
 })
@@ -262,11 +262,6 @@ export class TableComponent<T extends object> {
    *  A column absent from the map (or with every value checked) is unfiltered. */
   readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
 
-  /** Enables drag-to-resize handles on each column header. */
-  readonly resizableColumns = input(false, { transform: booleanAttribute });
-  /** Two-way per-column pixel width overrides (keyed by column key), set by
-   *  dragging a resize handle. Seeded from `column.width` where unset. */
-  readonly columnWidths = model<Map<string, number>>(new Map());
   /** Round-trip whatever the column features persist (order, widths, hidden keys) through
    *  `localStorage`, so a reader's column layout survives a reload. Needs
    *  `storageKey` — without one there is nothing to key a screen by, and two
@@ -515,6 +510,25 @@ export class TableComponent<T extends object> {
     this.layout.foldColumns(this.columns()),
   );
 
+  /** `'content'` is not a pixel value — it is carried by a class instead, see `fitsContent`. */
+  protected columnWidth(col: TableColumn<T>): number | null {
+    const dragged = this.layout.resize()?.widthOverride(col.key);
+    if (dragged !== undefined) {
+      return dragged;
+    }
+
+    return typeof col.width === 'number' ? col.width : null;
+  }
+
+  /** Shrink-to-content mode, unless the reader has dragged this column — a drag is a deliberate
+   *  pixel width and must win over the declared intent. */
+  protected fitsContent(col: TableColumn<T>): boolean {
+    return (
+      col.width === 'content' &&
+      this.layout.resize()?.widthOverride(col.key) === undefined
+    );
+  }
+
   protected readonly hasUtilityColumn = computed(
     () => this.hasRowActions() || this.layout.wantsUtilityColumn(),
   );
@@ -713,33 +727,6 @@ export class TableComponent<T extends object> {
     this.editingCell.set(null);
   }
 
-  // One notch is a comfortable nudge; a page is roughly a short column.
-  private static readonly RESIZE_STEP = 16;
-  private static readonly RESIZE_PAGE = 64;
-  private static readonly MIN_COLUMN_WIDTH = 48;
-  private resizeState: {
-    key: string;
-    startX: number;
-    startWidth: number;
-  } | null = null;
-
-  /** `'content'` is not a pixel value — it is carried by a class instead, see
-   *  `fitsContent`. */
-  protected columnWidth(col: TableColumn<T>): number | null {
-    const dragged = this.columnWidths().get(col.key);
-    if (dragged !== undefined) {
-      return dragged;
-    }
-
-    return typeof col.width === 'number' ? col.width : null;
-  }
-
-  /** Shrink-to-content mode, unless the user has dragged this column — a drag is a
-   *  deliberate pixel width and must win over the declared intent. */
-  protected fitsContent(col: TableColumn<T>): boolean {
-    return col.width === 'content' && !this.columnWidths().has(col.key);
-  }
-
   /** Clip width for `truncate`. `'content'` has no clip width — the column is as
    *  wide as its widest cell, so there is nothing to ellipsis against. */
   protected clipWidth(col: TableColumn<T>): number | null {
@@ -749,221 +736,6 @@ export class TableComponent<T extends object> {
         ? null
         : 240;
   }
-
-  protected onResizeStart(col: TableColumn<T>, event: PointerEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    const header = (event.target as HTMLElement).closest('th');
-    if (!header) {
-      return;
-    }
-    this.lockMeasuredWidths(header);
-    this.resizeState = {
-      key: col.key,
-      startX: event.clientX,
-      startWidth: header.offsetWidth,
-    };
-    (event.target as HTMLElement).setPointerCapture(event.pointerId);
-  }
-
-  /**
-   * Freeze the columns at what they currently measure, once, before the first
-   * drag moves anything.
-   *
-   * Without it only the dragged column has a width and the rest are still
-   * auto-sized, so the browser redistributes the remainder across them and
-   * columns the reader never touched visibly jump. Measuring first means the
-   * drag changes one column and leaves the others where they were — the
-   * auto-sized geometry is kept rather than lost at the first grab.
-   *
-   * Reads the header row that is actually on screen rather than assuming a
-   * column order.
-   */
-  private lockMeasuredWidths(from: HTMLElement): void {
-    const columns = this.visibleColumns();
-    if (columns.every((col) => this.columnWidth(col) !== null)) {
-      return;
-    }
-    const headerRow = from.parentElement;
-    if (!headerRow) {
-      return;
-    }
-    const widths = new Map(this.columnWidths());
-    for (const col of columns) {
-      if (this.columnWidth(col) !== null) {
-        continue;
-      }
-      const cell = headerRow.querySelector<HTMLElement>(
-        `th[data-col-key="${CSS.escape(col.key)}"]`,
-      );
-      if (cell) {
-        widths.set(
-          col.key,
-          Math.max(TableComponent.MIN_COLUMN_WIDTH, cell.offsetWidth),
-        );
-      }
-    }
-    this.columnWidths.set(widths);
-  }
-
-  protected onResizeMove(event: PointerEvent): void {
-    if (!this.resizeState) {
-      return;
-    }
-    const width = this.clampColumnWidth(
-      this.resizeState.startWidth + (event.clientX - this.resizeState.startX),
-    );
-    const next = new Map(this.columnWidths());
-    next.set(this.resizeState.key, Math.round(width));
-    this.columnWidths.set(next);
-  }
-
-  protected onResizeEnd(): void {
-    this.resizeState = null;
-  }
-
-  private readonly resizeFocus = signal<{
-    key: string;
-    measured: number;
-    max: number;
-  } | null>(null);
-
-  /**
-   * The widest a single column may be dragged: the scroll viewport.
-   *
-   * A column wider than the viewport can never be seen whole, and long text has
-   * its own affordance here — `truncate` clips it and the clip popover shows the
-   * rest — so nothing is lost by stopping at the edge. The ceiling exists at all
-   * because `aria-valuemax` has to be TRUE: a focusable `role="separator"` is a
-   * range widget, and announcing a bound that neither resize path applies is
-   * worse than announcing none.
-   */
-  private columnWidthCeiling(): number {
-    return Math.max(
-      TableComponent.MIN_COLUMN_WIDTH,
-      this.scrollWrap().nativeElement.clientWidth,
-    );
-  }
-
-  private clampColumnWidth(width: number): number {
-    return Math.min(
-      this.columnWidthCeiling(),
-      Math.max(TableComponent.MIN_COLUMN_WIDTH, width),
-    );
-  }
-
-  protected onResizeFocus(col: TableColumn<T>, event: FocusEvent): void {
-    const target = event.target as HTMLElement;
-
-    this.resizeFocus.set({
-      key: col.key,
-      measured: this.resolvedColumnWidth(col, target),
-      max: this.columnWidthCeiling(),
-    });
-  }
-
-  protected onResizeBlur(): void {
-    this.resizeFocus.set(null);
-  }
-
-  /**
-   * The separator's range, and only while it holds focus — that is when a range
-   * widget is announced, and an auto-sized column has no width to report until
-   * something measures one. Measuring on every change detection to fill an
-   * attribute nothing is reading would force layout once per resizable column.
-   *
-   * `now` prefers `columnWidth`, which the first arrow key makes known and keeps
-   * live; the focus measurement only covers the moment before that.
-   */
-  protected resizeRange(
-    col: TableColumn<T>,
-  ): { now: number; min: number; max: number } | null {
-    const focused = this.resizeFocus();
-    if (focused?.key !== col.key) {
-      return null;
-    }
-
-    return {
-      now: this.columnWidth(col) ?? focused.measured,
-      min: TableComponent.MIN_COLUMN_WIDTH,
-      max: focused.max,
-    };
-  }
-
-  protected resolvedColumnWidth(
-    col: TableColumn<T>,
-    from?: HTMLElement,
-  ): number {
-    const known = this.columnWidth(col);
-    if (known !== null) {
-      return known;
-    }
-
-    return from?.closest('th')?.offsetWidth ?? TableComponent.MIN_COLUMN_WIDTH;
-  }
-
-  protected onResizeKey(col: TableColumn<T>, event: KeyboardEvent): void {
-    const target = event.target as HTMLElement;
-    const step = TableComponent.RESIZE_STEP;
-    const page = TableComponent.RESIZE_PAGE;
-    const delta: number | 'auto' | null =
-      event.key === 'ArrowLeft'
-        ? -step
-        : event.key === 'ArrowRight'
-          ? step
-          : event.key === 'PageDown'
-            ? -page
-            : event.key === 'PageUp'
-              ? page
-              : event.key === 'Home'
-                ? 'auto'
-                : null;
-    if (delta === null) {
-      return;
-    }
-    event.preventDefault();
-    this.stepColumnWidth(col, delta, target.closest('th'));
-  }
-
-  /**
-   * The header cell is passed when the caller has it — the column panel does
-   * not, so it is looked up by `data-col-key`, and the measurement matters:
-   * stepping an auto-sized column has to start from what it currently RENDERS,
-   * not from the minimum.
-   */
-  private stepColumnWidth(
-    col: TableColumn<T>,
-    delta: number | 'auto',
-    from: HTMLElement | null,
-  ): void {
-    const header = from ?? this.headerCellFor(col);
-    if (header) {
-      this.lockMeasuredWidths(header);
-    }
-    const widths = new Map(this.columnWidths());
-    if (delta === 'auto') {
-      widths.delete(col.key);
-    } else {
-      const current = this.resolvedColumnWidth(col, header ?? undefined);
-      widths.set(col.key, this.clampColumnWidth(Math.round(current + delta)));
-    }
-    this.columnWidths.set(widths);
-  }
-
-  private headerCellFor(col: TableColumn<T>): HTMLElement | null {
-    return this.scrollWrap().nativeElement.querySelector<HTMLElement>(
-      `th[data-col-key="${CSS.escape(col.key)}"]`,
-    );
-  }
-
-  protected onColumnWidthStep(
-    col: TableColumn<T>,
-    delta: number | 'auto',
-  ): void {
-    this.stepColumnWidth(col, delta, null);
-  }
-
-  protected readonly resizeStep = TableComponent.RESIZE_STEP;
 
   protected readonly filteredData = computed<readonly T[]>(() => {
     const query = this.filterQuery().trim().toLowerCase();
@@ -1334,24 +1106,14 @@ export class TableComponent<T extends object> {
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
-    // Resize still lives here, and its width buttons belong in a panel the table no longer
-    // owns — so the template goes over the seam, the same way order and hidden left.
+    // The width buttons the column panel renders are still declared in this template, because a
+    // directive has no view to declare an ng-template in — so the table hands the template over
+    // and the resize feature owns everything the buttons DO.
     effect(() => {
       const template = this.columnWidthControls();
       if (template) {
         this.layout.registerPanelRowTemplate(template);
       }
-    });
-
-    // Registered by the table only while it still owns these inputs. As reorder, the picker and
-    // resize move out, each registers its own slice and drops out of here — the storage code
-    // above never learns about it.
-    this.layout.addPersistedSlice({
-      key: 'widths',
-      read: () => [...this.columnWidths()],
-      write: (value) =>
-        this.columnWidths.set(new Map(value as [string, number][])),
-      reset: () => this.columnWidths.set(new Map()),
     });
 
     // Published here rather than from an init hook: a directive on the same element is
@@ -1362,6 +1124,7 @@ export class TableComponent<T extends object> {
       visibleColumns: this.visibleColumns,
       sortedRows: this.sortedData,
       declaredColumns: this.columns,
+      scrollViewport: computed(() => this.scrollWrap()?.nativeElement),
       cellText: (row, column) => this.cellValue(row, column),
       anchor: (name) =>
         name === 'toolbar'

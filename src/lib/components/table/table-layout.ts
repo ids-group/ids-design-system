@@ -24,6 +24,23 @@ export type DsTableRowStage<T> = (rows: readonly T[]) => readonly T[];
  */
 export type DsTableAnchor = 'toolbar' | 'header-utility' | 'overlays';
 
+/** Everything a resize feature hands the table: the width it overrides, and the handlers the
+ *  header's separator calls. The markup stays in the table because a directive has no view to
+ *  declare it in, so the table needs somewhere to send the events. */
+export interface DsTableResizeContribution<T> {
+  readonly widthOverride: (key: string) => number | undefined;
+  readonly range: (
+    column: TableColumn<T>,
+  ) => { now: number; min: number; max: number } | null;
+  readonly onStart: (column: TableColumn<T>, event: PointerEvent) => void;
+  readonly onMove: (event: PointerEvent) => void;
+  readonly onEnd: () => void;
+  readonly onFocus: (column: TableColumn<T>, event: FocusEvent) => void;
+  readonly onBlur: () => void;
+  readonly onKey: (column: TableColumn<T>, event: KeyboardEvent) => void;
+  readonly step: (column: TableColumn<T>, delta: number | 'auto') => void;
+}
+
 /**
  * What a feature is allowed to read back out of the table, and where it may put markup.
  *
@@ -44,6 +61,9 @@ export interface DsTableView<T> {
   readonly anchor: (
     name: DsTableAnchor,
   ) => Signal<ViewContainerRef | undefined>;
+  /** The scroll container. A width ceiling has to be the viewport, and the header cells are
+   *  looked up inside it. */
+  readonly scrollViewport: Signal<HTMLElement | undefined>;
 }
 
 /**
@@ -214,5 +234,17 @@ export class DsTableLayout<T = unknown> {
 
   exporting(): boolean {
     return this.exportContribution()?.exporting() ?? false;
+  }
+
+  private readonly resizeContribution =
+    signal<DsTableResizeContribution<T> | null>(null);
+
+  setResize(contribution: DsTableResizeContribution<T>): void {
+    this.resizeContribution.set(contribution);
+  }
+
+  /** Null when no resize feature is present, which is what the header's `@if` reads. */
+  resize(): DsTableResizeContribution<T> | null {
+    return this.resizeContribution();
   }
 }

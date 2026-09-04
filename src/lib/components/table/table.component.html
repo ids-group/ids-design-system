@@ -148,8 +148,8 @@
                 </button>
               }
 
-              @if (resizableColumns()) {
-                @let range = resizeRange(col);
+              @if (layout.resize(); as resize) {
+                @let range = resize.range(col);
 
                 <span
                   class="col-resize"
@@ -160,13 +160,13 @@
                   [attr.aria-valuenow]="range?.now ?? null"
                   [attr.aria-valuemin]="range?.min ?? null"
                   [attr.aria-valuemax]="range?.max ?? null"
-                  (focus)="onResizeFocus(col, $event)"
-                  (blur)="onResizeBlur()"
-                  (pointerdown)="onResizeStart(col, $event)"
-                  (pointermove)="onResizeMove($event)"
-                  (pointerup)="onResizeEnd()"
-                  (pointercancel)="onResizeEnd()"
-                  (keydown)="onResizeKey(col, $event)"
+                  (focus)="resize.onFocus(col, $event)"
+                  (blur)="resize.onBlur()"
+                  (pointerdown)="resize.onStart(col, $event)"
+                  (pointermove)="resize.onMove($event)"
+                  (pointerup)="resize.onEnd()"
+                  (pointercancel)="resize.onEnd()"
+                  (keydown)="resize.onKey(col, $event)"
                 >
                 </span>
               }
@@ -539,13 +539,13 @@
   #columnWidthControls
   let-col
 >
-  @if (resizableColumns()) {
+  @if (layout.resize(); as resize) {
     <span class="col-width">
       <button
         type="button"
         class="col-width-btn"
         [attr.aria-label]="'Narrow ' + col.label"
-        (click)="onColumnWidthStep(col, -resizeStep)"
+        (click)="resize.step(col, -16)"
       >
         <ds-icon
           name="minus"
@@ -557,7 +557,7 @@
         type="button"
         class="col-width-btn"
         [attr.aria-label]="'Widen ' + col.label"
-        (click)="onColumnWidthStep(col, resizeStep)"
+        (click)="resize.step(col, 16)"
       >
         <ds-icon
           name="plus"
@@ -569,7 +569,7 @@
         type="button"
         class="col-width-btn col-width-auto"
         [attr.aria-label]="'Fit ' + col.label + ' to its content'"
-        (click)="onColumnWidthStep(col, 'auto')"
+        (click)="resize.step(col, 'auto')"
       >
         Fit
       </button>

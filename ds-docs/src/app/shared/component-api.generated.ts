@@ -6790,24 +6790,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way per-column set-filters: column key → the still-checked values. A column absent from the map (or with every value checked) is unfiltered."
       },
       {
-        "name": "resizableColumns",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Enables drag-to-resize handles on each column header."
-      },
-      {
-        "name": "columnWidths",
-        "kind": "model",
-        "type": "Map<string, number>",
-        "union": null,
-        "default": "new Map()",
-        "required": false,
-        "description": "Two-way per-column pixel width overrides (keyed by column key), set by dragging a resize handle. Seeded from `column.width` where unset."
-      },
-      {
         "name": "persistLayout",
         "kind": "input",
         "type": "boolean",
@@ -7220,6 +7202,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Without it a rejected `exportFetcher` is silent."
       }
     ]
+  },
+  "table-resize": {
+    "key": "table-resize",
+    "selector": "[dsTableResize]",
+    "isElement": false,
+    "className": "DsTableResize",
+    "status": "stable",
+    "importName": "DsTableResize",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "tabs:TabComponent": {
     "key": "tabs",

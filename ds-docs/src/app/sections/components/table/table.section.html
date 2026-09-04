@@ -1189,9 +1189,9 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      [resizableColumns]="true"
-    </code> adds a drag
-    handle to each header's right edge. Widths are two-way bindable via
+      dsTableResize
+    </code> adds a drag handle to
+    each header's right edge. Widths are two-way bindable via
     <code class="t-mono-inline">
       [(columnWidths)]
     </code> (a
@@ -1246,9 +1246,9 @@
 
   <ds-table
     caption="Records"
+    dsTableResize
     [data]="events"
     [columns]="defaultColumns"
-    [resizableColumns]="true"
     [stickyHeader]="false"
   >
     <ng-template
@@ -1340,11 +1340,11 @@
     sortMode="client"
     dsTableExport
     dsTableColumns
+    dsTableResize
     [data]="projectRows"
     [columns]="projectColumns"
     [persistLayout]="true"
     [reorderableColumns]="true"
-    [resizableColumns]="true"
   />
 
   <p class="block-desc t-s">
@@ -1488,9 +1488,9 @@
 
   <ds-table
     caption="Projects"
+    dsTableResize
     [data]="projectRows"
     [columns]="fitColumns"
-    [resizableColumns]="true"
   />
 
   <h3 class="block-title t-h4">

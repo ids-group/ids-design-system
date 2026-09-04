@@ -242,6 +242,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/components/table';
 export { DsTableColumns } from '@ids-group-ltd/ids-design-system/components/table-columns';
 export { DsTableExport } from '@ids-group-ltd/ids-design-system/components/table-export';
+export { DsTableResize } from '@ids-group-ltd/ids-design-system/components/table-resize';
 export type {
   HeaderFilterContext,
   SortChangeEvent,
