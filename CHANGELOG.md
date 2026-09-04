@@ -140,6 +140,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **The bulk-action bar vanished exactly when every row was selected.** It was gated on the header
+  checkbox's INDETERMINATE predicate — "some rows, but not all" — so selecting the last row hid the
+  bar with the selection still live, which is when a bulk action is most likely. It answers the
+  selection being non-empty now.
+
+- **The skeleton shimmer stuttered and ended on a hard cut.** The band was a viewport-sized mask
+  sliding 200vw per cycle: on a 280px skeleton it sat off the element for most of the loop, flicked
+  through, then jumped 3278px back in a single frame. It slides the element's own width now, ending
+  where the band is fully outside the box, so the loop has no edge to show — and it animates
+  `transform`, which the compositor handles, rather than `mask-position`, which it does not.
+
+- **A focused first or last `ds-accordion-item` drew a square ring inside the rounded box.** An
+  outline follows its own element's radius, and the rounded corner belongs to `ds-accordion`, not to
+  the header button. The first and last header take that corner now; the rows between stay square,
+  because there is no corner there to follow.
+
 - **A `ds-date-picker` day outside the allowed range highlighted under the pointer as though it
   could be picked.** The day button is only ever `aria-disabled`, never natively disabled, so its
   hover rule still matched and offered an unselectable date. Hover now skips a disabled day; the

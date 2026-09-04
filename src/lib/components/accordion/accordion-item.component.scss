@@ -14,6 +14,19 @@
     border-top: var(--border-width-default) solid var(--_accordion-divider-color);
   }
 
+  // An `outline` follows the ELEMENT's border-radius, and the rounded corner belongs to
+  // <ds-accordion>, not to this button — so a focused first or last row drew a square ring
+  // inside a rounded box. `--radius-lg` is what the parent paints; the inner rows stay square
+  // because there is no corner there to follow.
+  &:first-of-type .head {
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+  }
+
+  &:last-of-type .head {
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
+  }
   .head {
     display: flex;
     align-items: center;

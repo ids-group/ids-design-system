@@ -1,9 +1,8 @@
 /* Skeleton — shimmer placeholder.
 
    Base layer    : solid --surface-secondary on host.
-   Shimmer layer : ::after solid --surface-muted, clipped by a viewport-
-                   anchored mask gradient whose position tracks the shared
-                   custom property.
+   Shimmer layer : ::after, a transparent-to--surface-muted-to-transparent band that
+                   slides across the host's own width.
    Container has overflow: hidden so the ::after stays inside the skeleton.
 
    Variants: .circle (avatars / dots), .inline (inline-block flow). */
@@ -26,28 +25,35 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--_skeleton-shimmer-color);
-  pointer-events: none;
-  will-change: mask-position;
-  mask-image: linear-gradient(
+
+  /* Both ends of the gradient are fully transparent, which is what makes the loop seamless: the
+     band leaves the box on one side and re-enters on the other with nothing visible in between,
+     so the restart has no edge to show. */
+  background: linear-gradient(
     90deg,
-    transparent 30%,
-    #000 50%,
-    transparent 70%
+    transparent 0%,
+    var(--_skeleton-shimmer-color) 50%,
+    transparent 100%
   );
-  mask-size: 200vw 100%;
-  mask-repeat: no-repeat;
+  pointer-events: none;
+  will-change: transform;
 
   /* Declared HERE, not in the global partial: Angular's emulated encapsulation rewrites the
      animation name inside a component stylesheet, so a reference to a globally-declared
-     `@keyframes` resolves to a name that does not exist and the element simply never animates.
-     Every component copy carries its own prefixed keyframes, which is the same animation.
-
-     The keyframes moved out of :root for the frame rate — see styles/_skeleton-shimmer.scss. */
+     `@keyframes` resolves to a name that does not exist and the element simply never animates. */
   animation: ds-skeleton-shimmer-loop var(--duration-loop-slow, 1400ms) linear infinite;
 }
 
+/* Travel is the ELEMENT's own width, not the viewport's. A viewport-sized mask sliding 200vw per
+   cycle left a 280px skeleton dark for most of it and then jumped 3278px back in one frame — the
+   band flicked through and the loop ended on a hard cut. `transform` is also composited, which
+   `mask-position` is not. */
 @keyframes ds-skeleton-shimmer-loop {
-  from { mask-position: 100vw 0; }
-  to   { mask-position: -100vw 0; }
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
 }

@@ -1340,12 +1340,18 @@ export class TableComponent<T extends object> {
     return data.every((row) => sel.has(this.rowKey(row)));
   });
 
+  // PART of the page selected, and deliberately false when ALL of it is: this is the header
+  // checkbox's indeterminate predicate and nothing else. Anything asking "is a selection live"
+  // wants `anySelected` — gating the bulk bar on this one hid it at full selection, which is
+  // exactly when a bulk action is most likely.
   protected readonly someSelected = computed(() => {
     const data = this.displayData();
     const sel = this.selectedIds();
 
     return data.some((row) => sel.has(this.rowKey(row))) && !this.allSelected();
   });
+
+  protected readonly anySelected = computed(() => this.selectedIds().size > 0);
 
   protected readonly selectAllLabel = computed(() =>
     this.pageSize() !== null

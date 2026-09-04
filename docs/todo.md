@@ -1,5 +1,18 @@
 # DS — improvements backlog
 
+## Reported by Stas from the docs site, 2026-09-05
+
+- [ ] **[P2] A `ds-stat` value longer than its tile spills straight out of the card.** `.value`
+  carries `white-space: var(--_stat-value-white-space)` defaulting to `nowrap`, and nothing clips or
+  wraps — so a date range or a status phrase runs past the tile's edge and over whatever is beside
+  it. The two hooks `--ds-stat-value-white-space` and `--ds-stat-value-font-size` let a consumer fix
+  it per tile, and the docs demonstrate the unfixed default on purpose as the other half of a pair.
+  Open question, and it is a visual breaking change either way: should the DEFAULT still be a value
+  that escapes its own card? Candidates — wrap by default (`normal`), or keep `nowrap` and add
+  `min-width: 0` plus `text-overflow: ellipsis` so it truncates instead of escaping. Both change how
+  every existing tile renders, which is why nothing was touched.
+
+
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
 - [ ] **[P3] A whole-page keyboard walk is not measurable with the tools here, and the failed
