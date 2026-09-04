@@ -4,6 +4,42 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.7.0 — 2026-09-04
+
+Two-wave adversarial review (4 sceptics on the files, 2 on their findings, every survivor
+validated by hand) against the repo as of 0.12.0.
+
+### Fixed
+- **Restart-after-failure is now sound.** The chain starts at the ledger's unfinished version, not
+  the lockfile's (a post-bump failure left the lockfile at a version that never went green, and its
+  partial edits rode into the next version's commit); "fresh" re-runs that version, never skips it.
+  The half-migrated-tree idempotence guard (an old value standing inside its applied replacement)
+  now lives in the finder too, not only the re-check.
+- **The re-check's rename mode gained the scoping it always needed:** `element[attr]` is parsed as
+  a scope (a literal grep matched nothing and false-GREENed every element-scoped rename),
+  `input-rename`/`output-rename` bare-word `old`s count only on the host component, `new ⊃ old`
+  (a type gaining a generic) no longer fails correct code, non-token `old`s stop being locators,
+  `detect` shapes joined the grep list, and the not-applicable confirmation runs under the same
+  scoping instead of re-importing the finder's filtered matches.
+- The value-remap tables (planner/applier/re-check) learned the bare-value map rows: key==value is
+  the bare-boolean-attribute convention (never "repaired" into an identity token, never read as
+  leave-untouched), key!=value replaces the value inside the attribute.
+- The planner enriches only REQUIRED fields — `pitfall`/`appliesWhen` are optional by contract and
+  are never invented; a contract-clean manifest is no longer branded legacy.
+- The excusal of an unresolvable dynamic binding now covers the `verify` leg too; a `no-op` mode is
+  forwarded and re-checked by testing the condition; DEGRADED targets exclude their unattempted
+  behavioral items from the re-check dispatch instead of feeding the forbidden fix loop.
+
+### Changed
+- Ledger v2: per-target (monorepo runs were unrepresentable), stores each version's plan (id
+  stability across resumes), head commit at start (a moved tree is flagged on resume), delete-pass
+  progress, and is deleted on completion; dry-run writes its own suffixed path and never prompts.
+- Peer preflight moved to Phase A (`npm view` needs no install); an install that fails on a peer
+  conflict reads as the peer stop. Verify commands are discovered per target; a mixed
+  DEGRADED/normal fleet is supported. `code-add` may create the described file; step-5 spot-greps
+  skip `code-add` anchors; deletions honour `replaceWith`; `restore` is the sanctioned
+  old-behaviour snippet; the frontmatter hook catches `git -C <path> push` spellings.
+
 ## 1.6.0 — 2026-09-01
 
 Three validation gaps closed, each grounded in a manifest defect the plugin could not distinguish

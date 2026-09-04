@@ -28,7 +28,9 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
     `token-rename` / `class-rename`): replace `old` with `new` at every usage, respecting word/token
     boundaries so you don't corrupt a longer identifier that merely CONTAINS `old` (a `foo` rename
     must not touch `foo-bar`; a token/class prefix must be replaced in every full suffixed name,
-    since `-` is not a regex word boundary — match full names). Defensive branch — the shape only
+    since `-` is not a regex word boundary — match full names). A `new` that embeds a type
+    parameter (`Foo<T>`) is annotated per `action` with the consumer's concrete type — never paste
+    the literal `<T>`. Defensive branch — the shape only
     reaches you from an un-enriched old-manifest item: **if `new` is null the API was removed** —
     delete the usage/override; if deleting isn't safe standalone, record `needsReview`.
   - **`value-remap`** (has a `map`): only the attribute's VALUES change, and only on the item's
@@ -39,7 +41,9 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
     |---|---|
     | a replacement token (`attr="newVal"` / `otherAttr="val"`) | replace the WHOLE `attr="oldValue"` token with it |
     | `null` | DROP the attribute |
-    | maps to itself (same token) | leave untouched — still valid |
+    | maps to itself (same FULL token, e.g. `"text": "variant=\"text\""`) | leave untouched — still valid |
+    | a BARE value (no `=`): equal to the key | the attribute becomes the bare boolean attribute (`variant="indeterminate"` → `indeterminate`) |
+    | a BARE value (no `=`): different from the key | replace only the VALUE inside the attribute |
     | ABSENT from `map` | leave untouched — the changelog documented no change for it; never guess |
 
     **Dynamic bindings** (`[attr]="expr"`): if the `action`/`note` says the value moved to a different
@@ -54,7 +58,9 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
     Report which mode you used (`modes` in the output).
   - **`code-add`**: insert the snippet from `new` at the location `action`/`note` describes — but ONLY if
     THIS file is that location (e.g. the app config, the global styles entry, the relevant usage).
-    If you're not sure this is the right file, record `needsReview` instead of guessing. Same
+    A file you were dispatched for that does not exist yet is CREATED — the creation is the
+    insertion, when `action` names it as the place. If you're not sure this is the right file,
+    record `needsReview` instead of guessing. Same
     missing-`old` rule as `scss-api`: no match means insert, not skip; report the mode.
   - **`removed-api`** and **`behavior`**: these need judgement, not a find/replace — but you ATTEMPT
     them. Follow the migration the `action`
@@ -87,7 +93,7 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
 
 Return ONLY a fenced ```json block — one object per file (an array when you were given a batch):
 
-[ { "file": "<path>", "applied": ["<item-id>"], "modes": { "<scss-api-or-code-add-id>": "replaced | inserted" },
+[ { "file": "<path>", "applied": ["<item-id>"], "modes": { "<item-id>": "replaced | inserted | no-op" },
     "needsReview": [ { "id": "<item-id>", "why": "<reason>", "locs": ["<path:line> of each occurrence left in place"] } ] } ]
 
 `modes` says, per item id: `replaced` (edit at a matched site) / `inserted` (snippet placed at the

@@ -24,10 +24,11 @@ enrich `informational` and APPEND items for documented changes the manifest miss
 appended item's `note`), but never silently rewrite the manifest's own items. Manifest missing or
 malformed → derive the plan from the prose block as below.
 
-**A manifest that carries no `surface` / `detect` / `verify` — or no `action` / `appliesWhen` /
-`pitfall` — predates the current contract (every manifest in the DS repo carries them; an older
-`node_modules` copy may not), and passing those items through as-is is how an undetectable one
-reaches the finder.** So for
+**An item missing a REQUIRED field — `action`, `surface`, or `detect`/`verify` where the contract
+demands them — predates the current contract (an older `node_modules` copy), and passing it through
+as-is is how an undetectable item reaches the finder.** `pitfall` and `appliesWhen` are OPTIONAL:
+most shipped items legitimately omit them — their absence is never grounds to enrich, and inventing
+either is forbidden. So for
 every item that lacks them, ADD the fields from what the item's own `note` already says — this is enrichment, not a
 rewrite: you are not changing the migration, you are stating where to look for it (and, for
 `action`, lifting the imperative out of the note so the applier executes a field, not a paragraph). Read the note for
@@ -103,8 +104,12 @@ it doesn't fit a kind. Reading the changelog completely matters more than perfec
       treats a maps-to-itself entry as still-valid, not as "old to remove".
     - a value the changelog does NOT mention → simply absent from `map`; the applier and re-checker
       leave such values untouched. Only enumerate values the changelog actually addresses.
-- If the changelog says values move to a different attribute, note that DYNAMIC bindings
-  (`[attr]="expr"`) resolving to those values must be rebound too — flag it in `note`.
+- If the changelog says values move to a different attribute, state in `action` that DYNAMIC
+  bindings (`[attr]="expr"`) resolving to those values must be rebound too.
+- **A bare map value equal to its key is the bare-boolean-attribute convention**
+  (`{ "indeterminate": "indeterminate" }` = the value becomes a bare attribute) — it is legitimate;
+  never "repair" it into an identity token. Repair a bare value DIFFERENT from its key into the
+  full-token form only when the target attribute is unambiguous.
 
 ## The prose fields: `action`, `appliesWhen`, `pitfall`, `note`
 
