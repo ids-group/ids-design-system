@@ -8,7 +8,7 @@
 <main>
   <header class="masthead">
     <div class="chips">
-      <span class="chip is-done">РЕШЕНО 2026-09-04 — директивы</span><span class="chip is-done">РЕШЕНО 2026-09-04 — все три</span>
+      <span class="chip is-done">РЕШЕНО 2026-09-04 — директивы</span><span class="chip is-done">ПОСТРОЕНО — таблица −54%</span><span class="chip is-open">фильтры: нужен вердикт</span>
       <span class="chip">A3 построен, это отдельная работа</span>
     </div>
     <h1>Opt-in-шов — платить только за включённое</h1>
@@ -50,17 +50,56 @@
 
   <h2>Решение 1 — форма opt-in для таблицы <span class="chip is-done">РЕШЕНО — a</span></h2>
 
+  <p class="lede" style="margin-top:0">
+    <b>Построено. Замер на пробе, не абляция:</b> маргинальная цена <code>ds-table</code> для
+    приложения, которое grid-фичами не пользуется.
+  </p>
+
   <div class="chart">
-    <div class="row"><span class="k"><code>ds-table</code> сегодня</span>
-      <span class="bar"><span class="seg cost" style="width:100%"></span></span><span class="v">31 428 B</span></div>
-    <div class="row"><span class="k">фичи вынесены</span>
-      <span class="bar"><span class="seg win" style="width:39%"></span></span><span class="v">12 125 B</span></div>
+    <div class="row"><span class="k">до выноса</span>
+      <span class="bar"><span class="seg cost" style="width:100%"></span></span><span class="v">35 647 B</span></div>
+    <div class="row"><span class="k">+ CSV-экспорт вынесен</span>
+      <span class="bar"><span class="seg cost" style="width:99.6%"></span></span><span class="v">35 499 B</span></div>
+    <div class="row"><span class="k">+ перестановка и пикер</span>
+      <span class="bar"><span class="seg win" style="width:48.2%"></span></span><span class="v">17 193 B</span></div>
+    <div class="row"><span class="k"><b>+ ресайз</b></span>
+      <span class="bar"><span class="seg win" style="width:46%"></span></span><span class="v"><b>16 410 B · −54%</b></span></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><span class="n is-good">−54%</span><span class="k">маргинальная цена таблицы: 35 647 → 16 410 B gzip</span></div>
+    <div class="kpi"><span class="n">−12,7 КБ</span><span class="k">FESM таблицы raw, и <code>@angular/cdk/drag-drop</code> уехал вместе с ручкой</span></div>
+    <div class="kpi"><span class="n is-bad">+148 B</span><span class="k">экспорт: самая мелкая фича, накладные шва её съели</span></div>
   </div>
 
   <p>
-    Удалили ресайз, переупорядочивание + пикер (вместе с <code>@angular/cdk/drag-drop</code>), фильтры
-    по колонкам, CSV-экспорт, сохранение раскладки, truncate + поповер — 1 063 строки.
-    <b>Это пол, а не потолок:</b> row actions и редактирование ячеек остались внутри.
+    <b>Почти всё дала одна фича.</b> Перестановка с пикером сняли 18,3 кБ из 19,2 — потому что
+    вместе с ручкой перетаскивания уехал <code>@angular/cdk/drag-drop</code>. Экспорт и ресайз по
+    отдельности дают сотни байт: накладные шва фиксированы, а фича должна быть достаточно
+    крупной, чтобы их окупить.
+  </p>
+
+  <section class="panel">
+    <h3 style="margin-top:0">Фильтры колонок — <b>1 094 B</b>, и чисто не выносятся</h3>
+    <p>
+      Абляция на ветке: <code>proto_table</code> <b>183 296 → 182 202 B gzip</b>, FESM таблицы
+      181 107 → 168 451 B raw. То есть 6,7% оставшейся цены.
+    </p>
+    <p style="margin-bottom:0">
+      <b>Блокер структурный.</b> Попап фильтра общий: один <code>ds-popover</code> рисует и
+      встроенный список галочек, и спроецированный шаблон <code>dsHeaderFilter</code>, которому в
+      контекст передаётся <code>close()</code> этого попапа. <code>dsHeaderFilter</code> —
+      публичный API таблицы и работает проекцией контента, значит уехать не может. Вынести
+      встроенную половину — это либо якорь <b>внутри</b> попапа, который существует только пока
+      фильтр открыт, либо разделение одного оверлея на два. <b>Вердикт за тобой.</b>
+    </p>
+  </section>
+
+  <p>
+    <b>Абляция обещала 19 303 B, вынос дал 19 237 B</b> — совпало, хотя truncate так и не уехал:
+    выяснилось, что <code>clipWidth</code> читает только объявленную ширину, а truncate мерит DOM,
+    так что от ресайза он не зависит и остался в таблице. <b>Это пол, а не потолок:</b> row
+    actions и редактирование ячеек тоже внутри.
   </p>
 
   <table class="matrix">
