@@ -38,7 +38,7 @@ const CHROME = [
   '/usr/bin/google-chrome',
   '/usr/bin/chromium',
   '/usr/bin/chromium-browser',
-].find((path) => existsSync(path));
+].filter(Boolean).find((path) => existsSync(path));
 
 if (!CHROME) {
   console.error('No Chrome found — snapshot-cards needs a headless browser.');

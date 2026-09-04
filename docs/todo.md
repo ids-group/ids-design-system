@@ -188,18 +188,25 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   Table's `.col-resize` and `.cell-edit` keep a bare `outline: 0` — both already carry an accent
   border as their indicator, so they are deliberate, not misses.
 
-- [x] **[P2] Two adaptivity mechanisms for one indicator, and they did not compose.** What looked
-  like five components bypassing the field role was the roles and the `--accent-focus-*` aliases
-  being separate systems: a `ds-color` zone flipped only the aliases, `data-focus` retargeted only
-  the roles, so a component obeyed whichever spelling it used and was deaf to the other. Neither
-  spelling was wrong; picking one always lost something. Fixed at the cause — `family-vars` sets
-  `--ds-field-focus-shadow` and `--ds-control-focus-shadow` alongside the aliases, on the zone's own
-  element, so proximity gives the zone its subtree and leaves the global switch everywhere else.
-  color-picker, modal-confirm, multi-select and otp-input read the role now and answer the switch
-  for the first time. Measured in Chrome, all three ways: outside a zone the role is
-  `hsl(229 100% 59% / .22)`, inside `[ds-color="error"]` it is `hsl(0 75% 49% / .22)`, and with
-  `data-focus="ring"` set at the same time the zone still wins in its subtree while the switch
-  applies outside it.
+- [ ] **[P2] Zone COLOUR and `data-focus` SHAPE cannot both reach one role, and the reason is a
+  language rule.** A `var()` inside a custom property is substituted where that property is
+  DECLARED, not where it is read. Every role and every alias is declared on `:root`, so its value
+  is frozen with `:root`'s inputs and a `ds-color` zone deeper in the tree can never reach inside
+  it. Measured three times, 2026-09-05, each attempt failing differently:
+  1. Zone re-declares the roles → colour follows the zone, but the zone now out-ranks
+     `data-focus` by proximity, so `edge` and `ring` silently revert to the halo inside every zone.
+     The SHAPE is lost.
+  2. `--focus-field` composed off `var(--accent)` → shape is safe, but the substitution happens on
+     `:root` where `--accent` is still the brand, so the colour stops following the zone entirely.
+  3. Role points at `--accent-focus-field` → same trap one level further out; the alias is also
+     declared on `:root`.
+  So the two are mutually exclusive at this indirection, and today's split is the honest one:
+  color-picker, modal-confirm, multi-select and otp-input read the ALIAS and adapt to a zone;
+  everything else reads the ROLE and answers the switch. Neither spelling is a bug.
+  What would actually solve it: the zone re-emitting the shape recipes as well as the colour, which
+  is the per-scope composite `_semantic.scss` deliberately avoided by pre-composing
+  `--focus-ring-<family>` / `--focus-field-<family>`; or a `@property`-registered colour the recipes
+  read, which IS substituted per element. Both are real work, not a token edit.
 
 - [x] **[P2] Focus rings are clipped in six components.** Fixed on the element that clips rather than
   on each control inside it: ds-tabs[scrollable], ds-breadcrumbs, ds-sidenav-group, ds-number-stepper
@@ -276,13 +283,6 @@ documented thing or their chapter's demo only exists once opened. Everything bel
       and overshoot would say they can be unticked. `_check-mark.scss` owns the tick and the
       indeterminate bar; `_check-box.scss` owns the box around them; the motion is four tokens,
       written up in `docs/check-mark-motion.md`.
-
-- [ ] **The freeze spawns one chromium PER CARD — 410 cold starts.** `snapshot-cards.mjs` runs
-      `chrome --dump-dom` per card behind a lane queue, so every card pays a browser launch plus a
-      2.12 MB bundle boot from scratch. Driving one long-lived browser over 410 navigations through
-      CDP would cut the wall clock by roughly the launch cost each time, which is most of it. The
-      current shape is not wrong — process isolation is why one hung card cannot poison the rest —
-      it is just the slow way to buy that.
 
 - [ ] **The elements demo has not been opened in a real browser since the rebuilds.** `COMMANDS.md`
   says to serve `.design-sync/elements/demo` over http and look at it in a real tab, because a

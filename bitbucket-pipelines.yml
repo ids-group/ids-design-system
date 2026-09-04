@@ -176,9 +176,6 @@ pipelines:
             artifacts:
               - .design-sync/elements/dist/**
             script:
-              # One chromium PROCESS per card, so peak memory is LANES wide, not 410. Two fit a 4 GB
-              # runner; more would need size: 2x, which bills at double the rate for the whole step.
-              - export SNAPSHOT_LANES=2
               - sh infrastructure/scripts/build-design-sync.sh
       - step:
           name: Sync dev with main

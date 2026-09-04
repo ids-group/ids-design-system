@@ -19,13 +19,12 @@
 // leave its card unsized. Run build-cards first, then this, then build-cards again to stamp the
 // numbers into the markers.
 import { createServer } from 'node:http';
-import { execFile } from 'node:child_process';
 import {
-  existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync,
+  existsSync, readFileSync, statSync, writeFileSync,
 } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { launchBrowser } from './lib/browser.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -44,7 +43,7 @@ const CHROME = [
   '/usr/bin/google-chrome',
   '/usr/bin/chromium',
   '/usr/bin/chromium-browser',
-].find((path) => existsSync(path));
+].filter(Boolean).find((path) => existsSync(path));
 
 const TYPES = {
   '.html': 'text/html',
@@ -127,38 +126,23 @@ if (!CHROME) {
 
 const all = cards();
 server.listen(PORT);
-const profile = mkdtempSync(join(tmpdir(), 'ds-measure-'));
+const browser = await launchBrowser({ chrome: CHROME, width: WIDTH, height: FRAME_HEIGHT });
 const heights = {};
 
-// A browser per card is the only shape that works (see the header), so the wall clock is entirely
-// browser start-up — four hundred cards one at a time is an hour. They are independent, so run a
-// few at once; more than this and the machine's own scheduling starts to dominate.
-// One chromium PROCESS per card, so peak memory is LANES wide however long the queue is. The
-// ceiling is the container's RAM, not its cores: five of these OOM a 4 GB CI runner.
+// Concurrent TABS in one browser. Cards are independent, so several run at once; more than this
+// and the machine's own scheduling starts to dominate.
 const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
-function measure(card) {
-  return new Promise((done) => {
-    execFile(
-      CHROME,
-      [
-        '--headless=new', '--disable-gpu', '--no-sandbox',
-        `--user-data-dir=${join(profile, card.name)}`,
-        '--virtual-time-budget=25000',
-        `--window-size=${WIDTH},${FRAME_HEIGHT}`,
-        '--dump-dom', `http://127.0.0.1:${PORT}${card.url}`,
-      ],
-      { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
-      (error, stdout) => {
-        const reported = error ? null : stdout.match(/<title>H=(\d+);K=(\d+|-)<\/title>/);
+// The probe writes its numbers into the title, which is one small string to read back rather than
+// a whole DOM. Read after the virtual clock stops, so it must not wait for anything.
+async function measure(card) {
+  const title = await browser.render(`http://127.0.0.1:${PORT}${card.url}`, 'document.title');
+  const reported = title.match(/^H=(\d+);K=(\d+|-)$/);
 
-        return done({
-          height: Number(reported?.[1] ?? 0),
-          kept: reported?.[2] === '-' ? null : Number(reported?.[2] ?? 0),
-        });
-      },
-    );
-  });
+  return {
+    height: Number(reported?.[1] ?? 0),
+    kept: reported?.[2] === '-' ? null : Number(reported?.[2] ?? 0),
+  };
 }
 
 const blank = [];
@@ -180,7 +164,7 @@ try {
   await Promise.all(Array.from({ length: LANES }, lane));
 } finally {
   server.close();
-  rmSync(profile, { recursive: true, force: true });
+  await browser.close();
 }
 
 // A card that renders nothing still has a height, so a run where the bundle was half-built came in
