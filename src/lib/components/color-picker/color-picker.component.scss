@@ -126,7 +126,7 @@
   }
 
   &:focus-visible {
-    @include focus.outline-indicator;
+    @include focus.ring;
   }
 }
 
@@ -163,7 +163,7 @@
   );
 
   &:focus-visible {
-    @include focus.outline-indicator;
+    @include focus.ring;
   }
 }
 
@@ -238,7 +238,7 @@
   }
 
   &:focus-visible {
-    @include focus.outline-indicator(var(--border-width-strong));
+    @include focus.ring;
   }
 }
 

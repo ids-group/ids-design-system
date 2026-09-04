@@ -57,31 +57,27 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   fix are already shipped. The mixin also takes no `$warning-focus-shadow` / `$success-focus-shadow`,
   so a component cannot pass its own.
 
-- [ ] **[P2] Six focus rules draw two indicators at once.** accordion-item `.head`, stepper
-  `button.node`, table `button.th-label` / `.col-resize` / the three icon buttons, plus table
-  `.col-filter-search` and `.cell-edit` and multi-select `.search-input`: each declares its own
-  `outline` (or `outline: 0`) and never resets `box-shadow`, so the blanket paints a 4px ring under
-  it. `focus.outline-indicator` exists for exactly this and is adopted in seven other places; these
-  were missed because they spell the colour `var(--accent)` rather than `--focus-ring-color`, so the
-  last sweep's grep did not see them. Verified from compiled output that none carries a competing
-  shadow, so the reset is safe. `.col-resize` is the sharpest: its comment says the ring was dropped
-  deliberately, and the blanket paints it anyway.
+- [x] **[P2] Six focus rules draw two indicators at once.** Closed by the outline migration: the
+  blanket indicator is an `outline` now, so an element declaring its own outline replaces it instead
+  of drawing over it. accordion-item, stepper, table's header label / clickable row / icon buttons
+  and dropzone were rewritten onto `focus.ring`, which also retired their hard-coded `var(--accent)`.
+  Table's `.col-resize` and `.cell-edit` keep a bare `outline: 0` — both already carry an accent
+  border as their indicator, so they are deliberate, not misses.
 
-- [ ] **[P2] Ten components hard-code `--accent-focus-ring` / `--accent-focus-field`** instead of the
-  two roles: calendar-day, color-picker (twice), modal-confirm, multi-select, otp-input, segmented,
-  slider, split-button, toggle-button. They ignore the `data-focus` switch entirely and publish no
-  `--ds-<name>-focus-shadow`, so a consumer cannot reach them by the documented path either. The
-  sharpest consequence is `inset`: the docs tell a consumer to pair a clipped ds-card with
-  `data-focus="inset"`, and a ds-segmented or ds-slider inside it keeps an outset ring the clip eats.
-  Inconsistent even within one component — multi-select's ERROR focus goes through the role while its
-  normal focus does not.
+- [ ] **[P2] Five components still hard-code `--accent-focus-field`** instead of the field role:
+  color-picker (twice), modal-confirm, multi-select and otp-input. The control half of this finding
+  closed with the outline migration — calendar-day, segmented, slider, split-button, toggle-button
+  and color-picker's swatches now go through `focus.ring`. What is left is the FIELD family, which
+  still resolves a shadow, so these five bypass `--ds-field-focus-shadow` and publish no token of
+  their own. multi-select is inconsistent inside one component: its error focus goes through the
+  role, its normal focus does not.
 
-- [ ] **[P2] Focus rings are clipped in six components.** ds-number-stepper (the ± buttons, three
-  sides of four, `.stepper` is `overflow: hidden`), ds-tabs[scrollable], ds-breadcrumbs,
-  ds-sidenav-group `.group-body`, ds-time-columns `.opt` (2px of 4px, asymmetric) and
-  ds-sidenav-footer's result and alert rows. ds-menu was the seventh and is fixed — it is now the
-  only component using `[data-focus='inset']`, which is the mechanism the rest of these want.
-  ds-bottom-sheet shows the other remedy: reserve the ring's room with padding + negative margin.
+- [x] **[P2] Focus rings are clipped in six components.** Fixed on the element that clips rather than
+  on each control inside it: ds-tabs[scrollable], ds-breadcrumbs, ds-sidenav-group, ds-number-stepper
+  and ds-sidenav-footer each set `--focus-ring-offset` to a negative value on their own overflow box,
+  which is what `data-focus="inset"` now does globally. ds-time-columns, ds-menu and the dropdown
+  panels pass the negative offset to `focus.ring` directly. Measured in Chrome on ds-number-stepper:
+  scoped token `calc(-1 * 2px)`, computed `outline-offset: -1.92px`, unfocused control `none`.
 
 - [ ] **[P3] `ds-date-picker` takes the CONTROL focus role while being a text field.** Its `.trigger`
   wraps a real masked `<input>`, and every other text field takes `--ds-field-focus-shadow`, so a date
@@ -100,12 +96,10 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   `panelTokens`, so a host-scoped value never reaches the panel. The token reference states the
   opposite in writing. Same class as the six tokens fixed in `c013e08c`.
 
-- [ ] **[P3] `data-focus="outline"` leaves ~20 components with no indicator at all.** The mode zeroes
-  the four shadow roles and draws its replacement at (0,2,0), which every component focus rule
-  out-ranks while declaring `outline: none`. Opt-in only, so nothing ships broken by default. The
-  real defect is a contradiction inside one docs page: it promises the outline replaces the shadow
-  and, some eighty lines later, guarantees the replacement cannot reach a component. Same root cause
-  as the forced-colors item — fixing that fixes this.
+- [x] **[P3] `data-focus="outline"` leaves ~20 components with no indicator at all.** The mode is
+  removed — an outline is what every control draws by default now, so the value described nothing.
+  `data-focus="field"` went with it for the same reason in reverse: it swapped one box-shadow for
+  another, and controls no longer paint a shadow on focus at all.
 
 - [ ] **[P3] color-picker's selected swatch stops reading as selected while focused** — a regression
   from `e9b0ef16` (2026-09-02), which adopted `outline-indicator` and with it `box-shadow: none`. The

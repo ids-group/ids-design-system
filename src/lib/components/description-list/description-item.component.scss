@@ -84,7 +84,7 @@
   &:focus-visible {
     opacity: 1;
 
-    @include focus.outline-indicator(1px);
+    @include focus.ring(1px);
   }
 }
 

@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/field-group-segment' as field-group-segment;
 
 :host {
@@ -51,7 +52,6 @@
      accent for tonal/ghost/outline (set on those fill classes). */
   --_button-accent: var(--_button-bg-color);
   --_button-border:    var(--ds-button-border,    transparent);
-  --_button-focus-shadow: var(--ds-button-focus-shadow, var(--c-ring));
 
   /* Press = darken (--_button-bg-color-active) + a micro scale-down. The old
      pressed halo is opt-in now (default none) — set --ds-button-pressed-shadow. */
@@ -142,7 +142,7 @@
      receive the click for `onClick` to be the thing that refuses it. */
   &[disabled] { pointer-events: none; }
 
-  &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
+  &:focus-visible { @include focus.ring; z-index: var(--btn-focus-z); }
 
   .icon { width: var(--icon-md); height: var(--icon-md); flex-shrink: 0; }
 

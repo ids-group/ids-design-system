@@ -18,6 +18,9 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 
+  // Clips, so the ring has to be drawn inward or the overflow eats it.
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+
   @include focus.owns-the-focus-ring('.qty');
   &:focus-within {
     border-color: var(--accent);

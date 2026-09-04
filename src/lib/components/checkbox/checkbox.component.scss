@@ -1,8 +1,8 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/control-label' as control-label;
 @use '../../styles/press' as press;
 
 :host {
-  --_checkbox-focus-shadow: var(--ds-checkbox-focus-shadow, var(--ds-control-focus-shadow));
   --_checkbox-bg: var(--ds-checkbox-bg-color, var(--surface-default));
   --_checkbox-border: var(--ds-checkbox-border-color, var(--border-strong));
   --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
@@ -85,7 +85,7 @@
               border-color var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) { border-color: var(--_checkbox-hover-border); }
-  &:focus-visible        { outline: none; box-shadow: var(--_checkbox-focus-shadow); }
+  &:focus-visible        { @include focus.ring; }
 
   @include press.feedback;
   &:disabled {

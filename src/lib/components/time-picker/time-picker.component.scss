@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
@@ -169,8 +170,7 @@
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--_time-picker-focus-shadow);
+    @include focus.ring;
   }
 
   @include press.feedback;
@@ -228,8 +228,7 @@
 
   /* Public token, for the portal reason spelled out on .time-panel above. */
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--ds-time-picker-focus-shadow, var(--ds-control-focus-shadow));
+    @include focus.ring;
   }
 }
 

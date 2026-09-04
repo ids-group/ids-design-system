@@ -235,7 +235,7 @@
   width: var(--check-size);
   height: var(--check-size);
   border-radius: var(--ds-radius-inner);
-  border: var(--border-width-strong) solid var(--border-strong);
+  border: var(--check-bw) solid var(--border-strong);
   color: var(--text-on-primary);
 
   &.checked,

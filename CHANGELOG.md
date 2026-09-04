@@ -10,23 +10,36 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Breaking
 
-- **Every focus ring in the library changes shape: the gap between a control and its ring is drawn
-  again.** `--focus-ring-inner` was `transparent`, and a transparent shadow layer paints nothing —
-  it does not reserve the 2px it names, so the outer layer filled the whole 4px and the "double
-  ring" rendered as ONE solid brand band flush against the element. Measured on four button fills
-  and three grounds: against a brand-filled control that band is the same colour as the fill and is
-  effectively invisible — a focused solid button read only as slightly larger — while on a light
-  control it reads as a heavy 4px frame. Neither is a ring. The inner layer is now
-  `var(--surface-default)`, so the ring ships as a 2px brand ring held 2px off the control.
-  — `--surface-default` and NOT `--surface-canvas`: a control sits on the surface, and the page
-  ground draws a dark rim around a light card in a dark app.
-  — It is a guess all the same, and worth knowing before you rely on it: the gap is opaque, so a
-  control standing on neither the surface nor the canvas — a tinted band, a photo — gets a
-  surface-coloured gap rather than its own background. A true see-through gap needs `outline` +
-  `outline-offset`, and a box-shadow token cannot carry an outline, so that is a later change.
-  — If you set `--focus-ring-inner` to a real colour to get a visible ring back, that override now
-  fights the default instead of fixing it — drop it, or keep it only where the ground genuinely is
-  neither surface nor canvas.
+- **Every focus ring on a control is an `outline` now, not a box-shadow, and its gap is genuinely
+  see-through.** A shadow cannot leave a hole: the gap had to be painted with a guessed colour, and
+  that guess was a coloured rim everywhere it was wrong — a control standing on a tinted band, a
+  photo or a card of another shade got a surface-coloured band around it rather than its own ground.
+  `outline-offset` does not paint its gap at all, so the ring now floats over whatever the control
+  actually sits on. Two things follow. A negative offset draws the ring INSIDE the element, which is
+  how a row inside a clipping panel keeps an indicator that `overflow: hidden` used to eat — `ds-menu`
+  and the dropdown panels do this. And focus no longer touches `box-shadow`, so a focused card keeps
+  its elevation and a selected segment keeps the shadow that says it is selected; the two signals
+  stopped competing for one property.
+  — Restyle the ring through `--focus-ring-width` (2px, the WCAG 2.4.13 floor for a perimeter
+  indicator), `--focus-ring-color` and `--focus-ring-offset`. Components author it through one mixin,
+  `focus.ring($offset)`, so there is a single place to change it.
+  — If you set `--focus-ring-inner` to a colour to get a visible ring back, remove it: the token no
+  longer reaches a control's ring. It still composes the field halo that `data-focus="ring"` opts into.
+  — Watch for an `outline: none` of your own on a DS control. It used to remove nothing, because the
+  ring was a shadow; it now removes the indicator outright, and nothing warns.
+
+- **Thirteen `--ds-<component>-focus-shadow` tokens are gone**, on button, icon-button, card,
+  checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group and
+  menu-item. Each resolved to `--ds-control-focus-shadow`, which controls no longer read. Set
+  `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the component's own scope
+  instead. Field tokens — `--ds-input-focus-shadow` and its siblings — are unchanged, because fields
+  keep the soft halo. An override of a removed token still parses and cascades and changes nothing,
+  so this fails silently.
+
+- **`data-focus="field"` and `data-focus="outline"` are removed** from the one-place focus switch.
+  Both described swapping one box-shadow for another, which no longer describes anything a control
+  does. `ring`, `edge` and `inset` keep their meaning, and `edge` is the tight-ring answer that
+  `field` was reached for. An unknown value matches nothing and is ignored in silence.
 
 - **`ds-split-button` with an empty `menuItems` disables its chevron instead of opening an empty
   menu.** The template carried no guard, so a split button configured with nothing to list still

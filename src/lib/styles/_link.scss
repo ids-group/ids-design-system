@@ -1,3 +1,5 @@
+@use 'focus' as focus;
+
 /* Global .link helper — pure CSS class (no Angular wrapper) so consumers
    can apply it to inline anchors inside <p> text without disrupting line
    flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
@@ -28,8 +30,8 @@
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--ds-control-focus-shadow);
+    @include focus.ring;
+
     border-radius: var(--radius-sm);
     text-decoration-color: var(--_link-color);
   }

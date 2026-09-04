@@ -23,7 +23,6 @@
   --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--accent-strong));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--ds-radius-control));
   --_sidenav-alert-color:          var(--ds-sidenav-alert-color,          var(--error));
-  --_sidenav-item-focus-shadow:    var(--ds-sidenav-item-focus-shadow,    var(--ds-control-focus-shadow));
 
   display: block;
 }
@@ -56,8 +55,7 @@
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--_sidenav-item-focus-shadow);
+    @include focus.ring;
   }
 
   @include press.feedback;

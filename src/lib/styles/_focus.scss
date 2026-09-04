@@ -1,19 +1,37 @@
 // Focus-indicator style, switched in ONE place: `<html data-focus="…">`.
 //
-// Two families — a soft halo on fields (`--focus-field`), a crisp double ring on
-// controls (`--focus-ring`) — and every component resolves through the
-// `--ds-field-focus-shadow` / `--ds-control-focus-shadow` roles, so a brand-wide
-// switch only has to retarget two roles. No attribute keeps the default split.
+// Two families, two mechanisms, because one property cannot give both:
+//   controls — an `outline`, drawn by the `ring` mixin off `--focus-ring-width`
+//              / `--focus-ring-color` / `--focus-ring-offset`;
+//   fields   — a soft halo, resolved through the `--ds-field-focus-shadow` role.
+//
+// An outline is what the control family needs: `outline-offset` leaves its gap
+// UNPAINTED, so the ring floats over whatever the control actually sits on, while a
+// shadow gap has to be filled with a guessed colour that is a coloured rim everywhere
+// the guess is wrong. A negative offset draws the ring inside the element, where an
+// `overflow` ancestor cannot clip it.
 
 // Catches anything focusable that styles nothing itself, so it cannot fall through to
-// the browser default.
-//
-// CONSEQUENCE inside a shell that rings on `:focus-within`: the shell must silence
-// the control, and `outline: 0` cannot do it because what this sets is a SHADOW.
-// Leave it and the field paints two rings. `owns-the-focus-ring` below is the reset.
+// the browser default. Same mechanism as `ring`, so a shell that rings on `:focus-within`
+// silences its control with `owns-the-focus-ring` and no second ring appears.
 :where(:focus-visible) {
-  outline: none;
-  box-shadow: var(--ds-control-focus-shadow);
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+// The control indicator.
+//
+// Does NOT touch box-shadow: a focused card keeps its elevation, and a selected segment
+// keeps the shadow that says it is selected. Use `state-shadow` below where the two
+// genuinely share the property.
+//
+// Usage — @include inside the element's own `&:focus-visible` block:
+//   @use '../../styles/focus' as focus;
+//   &:focus-visible { @include focus.ring; }
+//   &:focus-visible { @include focus.ring(calc(-1 * var(--focus-ring-offset))); } // clipped
+@mixin ring($offset: var(--focus-ring-offset)) {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: $offset;
 }
 
 // `$control` names ONE control and must never be a blanket: a box-wide reset also
@@ -21,24 +39,8 @@
 // then tabbing from the field to that button changes nothing on screen.
 @mixin owns-the-focus-ring($control) {
   #{$control}:where(:focus-visible) {
-    box-shadow: none;
+    outline: none;
   }
-}
-
-// The indicator for something that must ring with an `outline` rather than the shadow — a
-// row inside a clipping list, a swatch in a grid — where the outset halo is eaten by the
-// `overflow` ancestor.
-//
-// `box-shadow: none` is the load-bearing line: the blanket rule above still paints, so five
-// components drew BOTH, an accent halo outside and their own outline inside it.
-//
-// Usage — @include inside the element's own `&:focus-visible` block:
-//   @use '../../styles/focus' as focus;
-//   &:focus-visible { @include focus.outline-indicator(calc(-1 * var(--border-width-strong))); }
-@mixin outline-indicator($offset: var(--focus-ring-offset)) {
-  outline: var(--border-width-strong) solid var(--focus-ring-color);
-  outline-offset: $offset;
-  box-shadow: none;
 }
 
 // For a persistent state — selected, active, current — that paints its own box-shadow on
@@ -57,58 +59,35 @@
   }
 }
 
+// Fields ring like controls: the halo role is retargeted at the ring token so both
+// families read the same colour and thickness.
 :root[data-focus='ring'] {
   --ds-field-focus-shadow: var(--focus-ring);
   --ds-field-focus-shadow-error: var(--focus-ring-error);
 }
 
-:root[data-focus='field'] {
-  --ds-control-focus-shadow: var(--focus-field);
-  --ds-control-focus-shadow-error: var(--focus-field-error);
-}
-
+// Hairline flush against the element — no gap in either family.
 :root[data-focus='edge'] {
+  --focus-ring-offset: 0px;
   --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
   --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
-  --ds-control-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
-  --ds-control-focus-shadow-error: 0 0 0 var(--border-width-default)
-    var(--error);
 }
 
 // The one style NOT pinned to :root, because a clipping ancestor is a local problem:
 // set it on the clipping element and everything inside keeps an indicator.
 [data-focus='inset'] {
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
   --ds-field-focus-shadow: var(--focus-ring-inset);
   --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
-  --ds-control-focus-shadow: var(--focus-ring-inset);
-  --ds-control-focus-shadow-error: var(--focus-ring-inset-error);
-}
-
-:root[data-focus='outline'] {
-  --ds-field-focus-shadow: none;
-  --ds-field-focus-shadow-error: none;
-  --ds-control-focus-shadow: none;
-  --ds-control-focus-shadow-error: none;
-}
-
-// The only style that emits a rule of its own: an `outline` cannot be carried by a
-// box-shadow token, so the roles go to `none` above and this draws the indicator.
-:root[data-focus='outline'] :where(:focus-visible) {
-  outline: var(--border-width-strong) solid var(--primary);
-  outline-offset: var(--focus-ring-offset);
 }
 
 // Not part of the switch — it applies under every style, because Windows High
-// Contrast DROPS box-shadow and a shadow-only indicator vanishes there completely.
+// Contrast DROPS box-shadow and the field family's halo vanishes there completely.
 @media (forced-colors: active) {
   // CanvasText, not a brand colour: the palette is replaced, and a system keyword is
   // the only value guaranteed to contrast with the forced background.
-  // `!important` here only: every component that draws its own ring declares
-  // `outline: none`, and each of those out-ranks this rule, so without it the mode
-  // leaves the elements it exists for with no indicator at all. Nothing of the author's
-  // is lost — forced colours replaces the palette, and an indicator is mandatory.
   :where(:focus-visible) {
-    outline: var(--border-width-strong) solid CanvasText !important;
+    outline: var(--focus-ring-width) solid CanvasText;
     outline-offset: var(--focus-ring-offset);
   }
 }

@@ -1,9 +1,8 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/control-label' as control-label;
 @use '../../styles/press' as press;
 
 :host {
-  --_switch-focus-shadow: var(--ds-switch-focus-shadow, var(--ds-control-focus-shadow));
-
   // Local resolvers for size scaling; md references the global tokens so it stays
   // density-responsive. sm/lg are explicit per-instance overrides. Thumb travel
   // is derived via calc() from the track/thumb/pad so it's always correct.
@@ -99,7 +98,7 @@
 
   &:checked         { background: var(--_switch-track-on-bg-color); }
   &:checked::after  { transform: translateX(calc(var(--_switch-track-w) - var(--_switch-thumb-size) - 2 * var(--_switch-thumb-pad))); }
-  &:focus-visible   { outline: none; box-shadow: var(--_switch-focus-shadow); }
+  &:focus-visible   { @include focus.ring; }
 
   @include press.feedback;
   &:disabled        { opacity: var(--opacity-disabled); cursor: not-allowed; }

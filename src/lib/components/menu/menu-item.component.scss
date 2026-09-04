@@ -1,6 +1,6 @@
+@use '../../styles/focus' as focus;
 :host {
   --_menu-item-label-color: var(--ds-menu-item-label-color, var(--text-primary));
-  --_menu-item-focus-shadow: var(--ds-menu-item-focus-shadow, var(--ds-control-focus-shadow));
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));
   --_menu-item-error-label-color: var(--ds-menu-item-error-label-color, var(--error-text));
   --_menu-item-quiet-label-color: var(--ds-menu-item-quiet-label-color, var(--text-secondary));
@@ -77,10 +77,9 @@
 
   &:active:not(.disabled) { background: var(--surface-muted); }
 
-  // Do NOT add `inset` here: it binds to a shadow list's first layer only, and the ring's
-  // first layer is transparent, so it would leave the visible layer outset and clipped.
-  // The menu host carries data-focus="inset" instead.
-  &:focus-visible { outline: none; box-shadow: var(--_menu-item-focus-shadow); }
+  // Offset comes from the menu host's data-focus="inset" � the panel clips, so the ring
+  // has to be drawn inward, and the host is what knows that.
+  &:focus-visible { @include focus.ring; }
 
   &.disabled {
     color: var(--text-disabled);

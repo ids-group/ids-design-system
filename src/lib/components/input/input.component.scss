@@ -114,8 +114,8 @@
 
       &:hover { background-color: var(--text-primary); }
       &:focus-visible {
-        outline: none;
-        box-shadow: var(--ds-control-focus-shadow);
+        @include focus.ring;
+
         border-radius: var(--radius-sm);
       }
 
@@ -137,8 +137,8 @@
 
       &:hover { color: var(--text-primary); }
       &:focus-visible {
-        outline: none;
-        box-shadow: var(--ds-control-focus-shadow);
+        @include focus.ring;
+
         border-radius: var(--radius-sm);
       }
     }

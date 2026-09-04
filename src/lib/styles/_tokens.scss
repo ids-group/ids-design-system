@@ -61,6 +61,10 @@
   --border-width-default: 1px;
   --border-width-strong:  2px;
 
+  /* 2px is the floor WCAG 2.4.13 measures against, and only the CONTRASTING part counts —
+     an indicator whose 2px is half gap does not meet it. The offset is a real gap: the
+     outline is not painted there, so whatever the control sits on shows through. */
+  --focus-ring-width:     2px;
   --focus-ring-offset:    2px;
 
   /* Shadows are composed from a channel-split tint so a theme can re-colour them:

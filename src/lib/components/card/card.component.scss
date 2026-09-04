@@ -1,3 +1,5 @@
+@use '../../styles/focus' as focus;
+
 /* Ported verbatim from vendor/claude-design-ds/components.css (lines 603-614).
    padding-none/-sm/-md/-lg are our addition; base .card's padding already equals .padding-md. */
 :host {
@@ -9,7 +11,6 @@
   --_card-pad:          var(--ds-card-pad,          var(--ds-container-pad));
   --_card-shadow:       var(--ds-card-shadow,       none);
   --_card-shadow-hover: var(--ds-card-shadow-hover, var(--shadow-1));
-  --_card-focus-shadow: var(--ds-card-focus-shadow, var(--ds-control-focus-shadow));
   --_card-hover-lift:   var(--ds-card-hover-lift,   var(--card-hover-lift));
   --_card-overflow:     var(--ds-card-overflow,     visible);
 }
@@ -41,7 +42,7 @@
     transform: translateY(calc(var(--_card-hover-lift) * -1));
   }
   &.interactive { cursor: pointer; }
-  &.interactive:focus-visible { outline: none; box-shadow: var(--_card-focus-shadow); }
+  &.interactive:focus-visible { @include focus.ring; }
 
   // Padding presets re-bind the resolver; a consumer --ds-card-pad still wins.
   &.padding-none { --_card-pad: var(--ds-card-pad, 0); }

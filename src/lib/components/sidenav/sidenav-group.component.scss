@@ -1,9 +1,9 @@
+@use '../../styles/focus' as focus;
 :host {
   --_sidenav-group-open-bg-color:      var(--ds-sidenav-group-open-bg-color,      var(--surface-secondary));
   --_sidenav-group-child-indent: var(--ds-sidenav-group-child-indent, var(--space-3));
   --_sidenav-group-radius:       var(--ds-sidenav-group-radius,       var(--ds-radius-control));
   --_sidenav-group-label-color:  var(--ds-sidenav-group-label-color,  var(--text-tertiary));
-  --_sidenav-group-focus-shadow: var(--ds-sidenav-group-focus-shadow, var(--ds-control-focus-shadow));
 
   display: flex;
   flex-direction: column;
@@ -45,8 +45,7 @@
   &:hover { background: var(--surface-secondary); }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--_sidenav-group-focus-shadow);
+    @include focus.ring;
   }
 }
 
@@ -76,6 +75,10 @@
   gap: var(--space-1);
   padding-left: var(--_sidenav-group-child-indent);
   overflow: hidden;
+
+  // Clips, so the ring has to be drawn inward or the overflow eats it.
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+
   height: auto;
   transition: height var(--duration-base) var(--ease-standard);
 

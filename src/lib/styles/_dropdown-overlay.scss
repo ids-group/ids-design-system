@@ -1,3 +1,5 @@
+@use 'focus' as focus;
+
 // GLOBAL because the panel is portaled via CDK Overlay outside the host
 // component's DOM tree, so emulated encapsulation (and any `:host ::ng-deep`
 // selector) cannot reach it. The component sets `panelClass: 'ds-dropdown-panel'`
@@ -166,8 +168,7 @@
     }
 
     &:focus-visible {
-      outline: none;
-      box-shadow: var(--ds-control-focus-shadow);
+      @include focus.ring(calc(-1 * var(--focus-ring-width)));
     }
 
     &.is-selected {

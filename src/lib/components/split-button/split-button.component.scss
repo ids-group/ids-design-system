@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/field-box' as field-box;
 
 :host {
@@ -37,8 +38,8 @@
     border-color var(--duration-fast) var(--ease-standard);
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--accent-focus-ring);
+    @include focus.ring;
+
     z-index: var(--btn-group-focus-z);
   }
 
