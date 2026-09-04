@@ -23,20 +23,11 @@ import { RouterLink } from '@angular/router';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  CdkDrag,
-  CdkDragDrop,
-  CdkDragHandle,
-  CdkDropList,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
-import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { PaginationComponent } from '@ids-group-ltd/ids-design-system/components/pagination';
 import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
-import { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
 import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { CellTemplateDirective } from './cell-template.directive';
@@ -115,19 +106,14 @@ function compareSortValues(
   selector: 'ds-table',
   standalone: true,
   imports: [
-    ButtonComponent,
     IconComponent,
     NgTemplateOutlet,
     SkeletonComponent,
     PaginationComponent,
     LoadingOverlayComponent,
     PopoverComponent,
-    BottomSheetComponent,
     MenuComponent,
     MenuItemComponent,
-    CdkDropList,
-    CdkDrag,
-    CdkDragHandle,
     // Only instantiated when a column sets `link`, so a consumer app with no router
     // provided still renders the table — the directive is never constructed.
     RouterLink,
@@ -276,24 +262,12 @@ export class TableComponent<T extends object> {
    *  A column absent from the map (or with every value checked) is unfiltered. */
   readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
 
-  /** Two-way set of hidden column keys. `null` (default) derives the set from
-   *  each column's `hidden` flag; the column picker then owns it. Binding a
-   *  Set takes over — `hidden` flags are ignored. */
-  readonly hiddenKeys = model<Set<string> | null>(null);
-
   /** Enables drag-to-resize handles on each column header. */
   readonly resizableColumns = input(false, { transform: booleanAttribute });
   /** Two-way per-column pixel width overrides (keyed by column key), set by
    *  dragging a resize handle. Seeded from `column.width` where unset. */
   readonly columnWidths = model<Map<string, number>>(new Map());
-  /** Enables drag + up/down reordering in the column panel. */
-  readonly reorderableColumns = input(false, { transform: booleanAttribute });
-  /** Two-way column order as a list of keys. `null` (default) keeps declaration
-   *  order; the column panel owns it once the user reorders. Keys absent from
-   *  the list fall back to declaration order after the listed ones. */
-  readonly columnOrder = model<string[] | null>(null);
-
-  /** Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through
+  /** Round-trip whatever the column features persist (order, widths, hidden keys) through
    *  `localStorage`, so a reader's column layout survives a reload. Needs
    *  `storageKey` — without one there is nothing to key a screen by, and two
    *  tables would overwrite each other. Off by default. */
@@ -520,43 +494,6 @@ export class TableComponent<T extends object> {
     () => this.loadingMode() === false && !this.filteredData().length,
   );
 
-  protected readonly effectiveHiddenKeys = computed<ReadonlySet<string>>(
-    () =>
-      this.hiddenKeys() ??
-      new Set(
-        this.columns()
-          .filter((col) => col.hidden)
-          .map((col) => col.key),
-      ),
-  );
-
-  protected readonly orderedColumns = computed<readonly TableColumn<T>[]>(
-    () => {
-      const order = this.columnOrder();
-      const columns = this.columns();
-      if (!order) {
-        return columns;
-      }
-      const byKey = new Map(columns.map((col) => [col.key, col]));
-      const placed = new Set<string>();
-      const out: TableColumn<T>[] = [];
-      for (const key of order) {
-        const col = byKey.get(key);
-        if (col && !placed.has(key)) {
-          out.push(col);
-          placed.add(key);
-        }
-      }
-      for (const col of columns) {
-        if (!placed.has(col.key)) {
-          out.push(col);
-        }
-      }
-
-      return out;
-    },
-  );
-
   protected readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
 
   private readonly toolbarAnchor = viewChild('toolbarAnchor', {
@@ -568,69 +505,19 @@ export class TableComponent<T extends object> {
   private readonly overlaysAnchor = viewChild('overlaysAnchor', {
     read: ViewContainerRef,
   });
+  private readonly columnWidthControls = viewChild<
+    TemplateRef<{ $implicit: TableColumn<T> }>
+  >('columnWidthControls');
 
+  // Ordering and hiding are stages a feature contributes, so this is the whole chain: the
+  // declared list folded through whatever registered.
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
-    this.layout.foldColumns(
-      this.orderedColumns().filter(
-        (col) => !this.effectiveHiddenKeys().has(col.key),
-      ),
-    ),
+    this.layout.foldColumns(this.columns()),
   );
 
-  protected readonly hideableColumns = computed<readonly TableColumn<T>[]>(() =>
-    this.columns().filter((col) => col.hideable),
-  );
-  protected readonly hasColumnPicker = computed(
-    () => this.hideableColumns().length > 0 || this.reorderableColumns(),
-  );
   protected readonly hasUtilityColumn = computed(
-    () => this.hasRowActions() || this.hasColumnPicker(),
+    () => this.hasRowActions() || this.layout.wantsUtilityColumn(),
   );
-
-  protected isColumnVisible(col: TableColumn<T>): boolean {
-    return !this.effectiveHiddenKeys().has(col.key);
-  }
-
-  /** The last visible column can't be hidden — an all-hidden grid is useless. */
-  protected isColumnLocked(col: TableColumn<T>): boolean {
-    return this.isColumnVisible(col) && this.visibleColumns().length === 1;
-  }
-
-  protected toggleColumn(col: TableColumn<T>): void {
-    if (!col.hideable || this.isColumnLocked(col)) {
-      return;
-    }
-    const next = new Set(this.effectiveHiddenKeys());
-    if (next.has(col.key)) {
-      next.delete(col.key);
-    } else {
-      next.add(col.key);
-    }
-    this.hiddenKeys.set(next);
-  }
-
-  protected moveColumn(col: TableColumn<T>, delta: -1 | 1): void {
-    const keys = this.orderedColumns().map((column) => column.key);
-    const from = keys.indexOf(col.key);
-    const to = from + delta;
-    if (from < 0 || to < 0 || to >= keys.length) {
-      return;
-    }
-    moveItemInArray(keys, from, to);
-    this.columnOrder.set(keys);
-  }
-
-  protected onColumnDrop(event: CdkDragDrop<unknown>): void {
-    const keys = this.orderedColumns().map((column) => column.key);
-    moveItemInArray(keys, event.previousIndex, event.currentIndex);
-    this.columnOrder.set(keys);
-  }
-
-  protected resetColumns(): void {
-    this.columnOrder.set(null);
-    this.hiddenKeys.set(null);
-    this.columnWidths.set(new Map());
-  }
 
   private readonly columnFilterPopover = viewChild<PopoverComponent>(
     'columnFilterPopover',
@@ -1389,30 +1276,6 @@ export class TableComponent<T extends object> {
     'columnPickerPopover',
   );
 
-  protected readonly columnSheetOpen = signal(false);
-
-  private readonly coarsePointerState = signal(false);
-
-  /** Whether the column panel opens as a sheet and the drag handle stands down.
-   *  Keyed on the pointer, not the viewport — see the matching media query in
-   *  `table.component.scss`. */
-  protected readonly coarsePointer = this.coarsePointerState.asReadonly();
-
-  protected readonly columnPickerOpened = computed(() =>
-    this.coarsePointer()
-      ? this.columnSheetOpen()
-      : (this.columnPickerPopover()?.opened() ?? false),
-  );
-
-  protected onColumnPickerClick(event: Event): void {
-    if (this.coarsePointer()) {
-      this.columnSheetOpen.set(true);
-
-      return;
-    }
-    this.columnPickerPopover()?.toggle(event.currentTarget as HTMLElement);
-  }
-
   protected readonly hasTruncate = computed(() =>
     this.columns().some((col) => col.truncate),
   );
@@ -1471,24 +1334,24 @@ export class TableComponent<T extends object> {
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
+    // Resize still lives here, and its width buttons belong in a panel the table no longer
+    // owns — so the template goes over the seam, the same way order and hidden left.
+    effect(() => {
+      const template = this.columnWidthControls();
+      if (template) {
+        this.layout.registerPanelRowTemplate(template);
+      }
+    });
+
     // Registered by the table only while it still owns these inputs. As reorder, the picker and
     // resize move out, each registers its own slice and drops out of here — the storage code
     // above never learns about it.
-    this.layout.addPersistedSlice({
-      key: 'order',
-      read: () => this.columnOrder(),
-      write: (value) => this.columnOrder.set(value as string[]),
-    });
     this.layout.addPersistedSlice({
       key: 'widths',
       read: () => [...this.columnWidths()],
       write: (value) =>
         this.columnWidths.set(new Map(value as [string, number][])),
-    });
-    this.layout.addPersistedSlice({
-      key: 'hidden',
-      read: () => (this.hiddenKeys() ? [...this.hiddenKeys()!] : null),
-      write: (value) => this.hiddenKeys.set(new Set(value as string[])),
+      reset: () => this.columnWidths.set(new Map()),
     });
 
     // Published here rather than from an init hook: a directive on the same element is
@@ -1498,6 +1361,7 @@ export class TableComponent<T extends object> {
     this.layout.publish({
       visibleColumns: this.visibleColumns,
       sortedRows: this.sortedData,
+      declaredColumns: this.columns,
       cellText: (row, column) => this.cellValue(row, column),
       anchor: (name) =>
         name === 'toolbar'
@@ -1506,8 +1370,6 @@ export class TableComponent<T extends object> {
             ? this.headerUtilityAnchor
             : this.overlaysAnchor,
     });
-
-    this.watchPointer();
 
     // The scrim starts below the header, so it needs the header's height. Measured, not summed
     // from padding and line-height: `vertical-align: middle` on the inline-flex label extends
@@ -2151,16 +2013,5 @@ export class TableComponent<T extends object> {
     const widths = ['45%', '55%', '65%', '75%', '85%'];
 
     return widths[Math.abs(hash) % widths.length] ?? '70%';
-  }
-
-  private watchPointer(): void {
-    if (typeof window === 'undefined' || !window.matchMedia) {
-      return;
-    }
-    const coarse = window.matchMedia('(hover: none) and (pointer: coarse)');
-    const sync = (): void => this.coarsePointerState.set(coarse.matches);
-    sync();
-    coarse.addEventListener('change', sync);
-    this.destroyRef.onDestroy(() => coarse.removeEventListener('change', sync));
   }
 }

@@ -1,4 +1,10 @@
-import { Injectable, Signal, ViewContainerRef, signal } from '@angular/core';
+import {
+  Injectable,
+  Signal,
+  TemplateRef,
+  ViewContainerRef,
+  signal,
+} from '@angular/core';
 import type { TableColumn } from './table.types';
 
 /** A stage in the column pipeline: ordering, hiding, widths. */
@@ -10,14 +16,6 @@ export type DsTableColumnStage<T> = (
 export type DsTableRowStage<T> = (rows: readonly T[]) => readonly T[];
 
 /**
- * What a feature is allowed to read back out of the table, and where it may put markup.
- *
- * A feature needs the table's derived state — the export serialises `visibleColumns` and
- * `sortedRows` through `cellText`. Those live on the component as `protected`, which a directive
- * cannot reach, so the contract is published here rather than by widening the component's surface:
- * this way the table's public API does not grow one member per feature.
- */
-/**
  * Where in the table a feature may put markup.
  *
  * Three, because the column picker needs three: a trigger in the utility header cell, and its
@@ -26,7 +24,18 @@ export type DsTableRowStage<T> = (rows: readonly T[]) => readonly T[];
  */
 export type DsTableAnchor = 'toolbar' | 'header-utility' | 'overlays';
 
+/**
+ * What a feature is allowed to read back out of the table, and where it may put markup.
+ *
+ * A feature needs the table's derived state — the export serialises `visibleColumns` and
+ * `sortedRows` through `cellText`. Those live on the component as `protected`, which a directive
+ * cannot reach, so the contract is published here rather than by widening the component's surface:
+ * this way the table's public API does not grow one member per feature.
+ */
 export interface DsTableView<T> {
+  /** As declared, before any feature reorders or hides. A feature that OWNS the order needs the
+   *  unfolded list - reading `visibleColumns` would fold its own stage back in. */
+  readonly declaredColumns: Signal<readonly TableColumn<T>[]>;
   readonly visibleColumns: Signal<readonly TableColumn<T>[]>;
   readonly sortedRows: Signal<readonly T[]>;
   readonly cellText: (row: T, column: TableColumn<T>) => string;
@@ -50,6 +59,9 @@ export interface DsTablePersistedSlice {
   /** Serialisable. Read inside the caller's effect, so whatever it touches is tracked. */
   readonly read: () => unknown;
   readonly write: (value: unknown) => void;
+  /** Back to the declared layout. "Reset to default" has to reach every slice, and only the
+   *  slice knows what its own default is. */
+  readonly reset: () => void;
 }
 
 /** What an export feature hands the table, so `runExport()` and `exporting()` stay public API
@@ -112,6 +124,28 @@ export class DsTableLayout<T = unknown> {
 
   persistedSlices(): readonly DsTablePersistedSlice[] {
     return this.slices();
+  }
+
+  resetPersisted(): void {
+    for (const slice of this.slices()) {
+      slice.reset();
+    }
+  }
+
+  private readonly rowTemplate = signal<TemplateRef<{
+    $implicit: TableColumn<T>;
+  }> | null>(null);
+
+  /** A per-column control in the column panel, for a feature the panel must not name - resize
+   *  puts its width buttons there. */
+  registerPanelRowTemplate(
+    template: TemplateRef<{ $implicit: TableColumn<T> }>,
+  ): void {
+    this.rowTemplate.set(template);
+  }
+
+  panelRowTemplate(): TemplateRef<{ $implicit: TableColumn<T> }> | null {
+    return this.rowTemplate();
   }
 
   /** A line for the live region, folded in ahead of the table's own events. */

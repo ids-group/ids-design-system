@@ -6790,15 +6790,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way per-column set-filters: column key → the still-checked values. A column absent from the map (or with every value checked) is unfiltered."
       },
       {
-        "name": "hiddenKeys",
-        "kind": "model",
-        "type": "Set<string> | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Two-way set of hidden column keys. `null` (default) derives the set from each column's `hidden` flag; the column picker then owns it. Binding a Set takes over — `hidden` flags are ignored."
-      },
-      {
         "name": "resizableColumns",
         "kind": "input",
         "type": "boolean",
@@ -6817,31 +6808,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way per-column pixel width overrides (keyed by column key), set by dragging a resize handle. Seeded from `column.width` where unset."
       },
       {
-        "name": "reorderableColumns",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Enables drag + up/down reordering in the column panel."
-      },
-      {
-        "name": "columnOrder",
-        "kind": "model",
-        "type": "string[] | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Two-way column order as a list of keys. `null` (default) keeps declaration order; the column panel owns it once the user reorders. Keys absent from the list fall back to declaration order after the listed ones."
-      },
-      {
         "name": "persistLayout",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default."
+        "description": "Round-trip whatever the column features persist (order, widths, hidden keys) through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default."
       },
       {
         "name": "storageKey",
@@ -7157,6 +7130,46 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires with the row when an expander closes it, the row auto-closed by `expandMode=\"single\"` included. It carries a row, so it cannot speak for an id whose row is no longer in `data()` — under server-side paging that id is cleared silently. `expandedIds` is the complete signal; this one is the convenient one."
       }
     ]
+  },
+  "table-columns": {
+    "key": "table-columns",
+    "selector": "[dsTableColumns]",
+    "isElement": false,
+    "className": "DsTableColumns",
+    "status": "stable",
+    "importName": "DsTableColumns",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "reorderableColumns",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Adds the drag handle and the move buttons. Hiding works without it."
+      },
+      {
+        "name": "hiddenKeys",
+        "kind": "model",
+        "type": "Set<string> | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Keys the reader has hidden. Unset falls back to the columns' own `hidden` flags."
+      },
+      {
+        "name": "columnOrder",
+        "kind": "model",
+        "type": "string[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Column keys in the reader's order. Unset keeps the declaration order."
+      }
+    ],
+    "outputs": []
   },
   "table-export": {
     "key": "table-export",

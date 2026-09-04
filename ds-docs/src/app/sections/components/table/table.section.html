@@ -1165,12 +1165,10 @@
     </code> is the initial state, the
     last visible column is locked). With
     <code class="t-mono-inline">
-      [reorderableColumns]="true"
-    </code> each row
-    gains a drag handle and up/down buttons — order is two-way bindable via
-    <code class="t-mono-inline">
-      [(columnOrder)]
-    </code>, and
+      dsTableColumns [reorderableColumns]="true"
+    </code>
+    each row gains a drag handle and up/down buttons — order is two-way bindable
+    via <code class="t-mono-inline"> [(columnOrder)] </code>, and
     <code class="t-mono-inline">
       Reset to default
     </code> clears both.
@@ -1178,6 +1176,7 @@
 
   <ds-table
     caption="Records"
+    dsTableColumns
     [data]="events"
     [columns]="pickerColumns"
     [reorderableColumns]="true"
@@ -1327,8 +1326,8 @@
     two tables would otherwise overwrite each other.
     <code class="t-mono-inline">
       dsTableExport
-    </code> renders the CSV
-    button; a server-paged table passes
+    </code> renders the CSV button; a
+    server-paged table passes
     <code class="t-mono-inline">
       [exportFetcher]
     </code> so the export covers
@@ -1340,6 +1339,7 @@
     storageKey="docs-demo-projects"
     sortMode="client"
     dsTableExport
+    dsTableColumns
     [data]="projectRows"
     [columns]="projectColumns"
     [persistLayout]="true"
@@ -1429,7 +1429,8 @@
     in-flight state and the live-region announcement. Leave
     <code class="t-mono-inline">
       dsTableExport
-    </code> off and drive it yourself.
+    </code> off and drive it
+    yourself.
   </p>
 
   <ds-table
