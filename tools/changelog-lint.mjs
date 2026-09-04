@@ -14,7 +14,7 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { FACADE, resolveLibSpecifier } from './lib-entry-points.mjs';
+import { FACADE, PRIMARY_NG_PACKAGE, resolveLibSpecifier } from './lib-entry-points.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -79,7 +79,7 @@ function shippedSources() {
   };
   // Read the asset inputs from ng-package.json rather than hardcoding them: its glob is
   // `**/*`, so a hardcoded `.scss` filter silently skips every `.md` beside them.
-  const ngPackage = join(ROOT, 'ng-package.json');
+  const ngPackage = PRIMARY_NG_PACKAGE;
   const assets = existsSync(ngPackage)
     ? (JSON.parse(readFileSync(ngPackage, 'utf8')).assets ?? [])
     : [];
@@ -87,7 +87,7 @@ function shippedSources() {
   for (const asset of assets) {
     if (!asset.input) continue;
     const before = found.length;
-    crawl(join(ROOT, asset.input), (n) => TEXT.test(n));
+    crawl(join(dirname(ngPackage), asset.input), (n) => TEXT.test(n));
     groups.push({ name: `assets:${asset.input}`, count: found.length - before });
   }
   const beforeSource = found.length;

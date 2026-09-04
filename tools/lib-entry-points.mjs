@@ -9,6 +9,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 export const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const LIB_ROOT = join(REPO_ROOT, 'src', 'lib');
 export const FACADE = join(LIB_ROOT, 'public-api.ts');
+export const PRIMARY_NG_PACKAGE = join(LIB_ROOT, 'ng-package.json');
 export const PACKAGE_NAME = JSON.parse(
   readFileSync(join(REPO_ROOT, 'package.json'), 'utf8'),
 ).name;
