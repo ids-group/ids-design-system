@@ -48,6 +48,6 @@
     @include focus.own-indicator;
 
     border-color: var(--accent);
-    box-shadow: var(--ds-field-focus-shadow);
+    box-shadow: var(--accent-focus-field);
   }
 }

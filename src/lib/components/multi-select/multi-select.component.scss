@@ -115,7 +115,7 @@
     @include focus.own-indicator;
 
     border-color: var(--_trigger-border-color-focus);
-    box-shadow: var(--ds-field-focus-shadow);
+    box-shadow: var(--accent-focus-field);
   }
 
   &.disabled {

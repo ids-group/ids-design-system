@@ -132,7 +132,6 @@
     "`ds-multi-select`'s panel search field had no focus indicator — it zeroed its own outline and nothing above it painted one. The row around it rings now, drawn inward because the panel clips. Nothing to change on your side.",
     "Three fields whose only focus indicator was a 1px border tint now draw the standard ring: `ds-sidenav-footer`'s search box, and `ds-table`'s column filter and inline cell editor. Nothing to change on your side.",
     "A ds-date-picker day outside the allowed range no longer highlights under the pointer. The day button is only aria-disabled and never natively disabled, so its hover rule matched a date that could not be picked; hover skips a disabled day now, and the colour and cursor it already carried are unchanged. NO ACTION.",
-    "Every hand-written `outline: none` in the library is now `focus.own-indicator`, which skips the suppression under forced colours. Silencing a DS control in your own stylesheet should be wrapped the same way: `@media not (forced-colors: active)`.",
-    "A `ds-color` zone now sets `--ds-field-focus-shadow` and `--ds-control-focus-shadow` as well as the `--accent-focus-*` aliases, so a field inside a zone takes that family's halo and still answers `data-focus` outside one. If you set a role INSIDE a zone yourself, the zone declares it on its own element and your `:root` value no longer reaches that subtree — move the override onto the zone."
+    "Every hand-written `outline: none` in the library is now `focus.own-indicator`, which skips the suppression under forced colours. Silencing a DS control in your own stylesheet should be wrapped the same way: `@media not (forced-colors: active)`."
   ]
 }
