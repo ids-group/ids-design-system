@@ -133,7 +133,9 @@ const heights = {};
 // A browser per card is the only shape that works (see the header), so the wall clock is entirely
 // browser start-up — four hundred cards one at a time is an hour. They are independent, so run a
 // few at once; more than this and the machine's own scheduling starts to dominate.
-const LANES = 5;
+// Each lane is a chromium rendering a 2 MB Angular bundle, so the ceiling is the container's RAM,
+// not its cores: five of them OOM a 4 GB CI runner.
+const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
 function measure(card) {
   return new Promise((done) => {

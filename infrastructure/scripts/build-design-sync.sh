@@ -63,6 +63,66 @@ echo "Freezing the cards..."
 node .design-sync/tools/snapshot-cards.mjs
 node .design-sync/tools/check-frozen.mjs
 
+[ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
+[ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }
+# The one artifact build-cards does NOT regenerate: it wipes the directory and only snapshot-cards
+# writes the shared sheet. Every frozen card links it, so its absence unstyles 376 of them — and it
+# did go missing in a working tree this cycle, noticed by eye rather than by a check.
+[ -f .design-sync/upload/_ds_cards.css ] || { echo "Expected artifact missing: .design-sync/upload/_ds_cards.css — run 'node .design-sync/tools/snapshot-cards.mjs'"; exit 1; }
+
+# The pane indexes from the manifest, so a card the manifest omits is not in the project at all.
+[ -f .design-sync/upload/_ds_manifest.json ] || { echo "Expected artifact missing: .design-sync/upload/_ds_manifest.json"; exit 1; }
+# `"path"` alone also matches brandFonts, which is how this first reported 316 against 314.
+indexed=$(grep -cE '"path": "(components|guides)/' .design-sync/upload/_ds_manifest.json)
+pages=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' | wc -l)
+[ "$indexed" = "$pages" ] || { echo "Manifest indexes $indexed card(s) against $pages page(s) in the tree"; exit 1; }
+echo "Manifest indexes all $indexed card(s)"
+
+# A card with no viewport silently loses everything below the fold.
+# `-exec ... +` rather than `$(find)`: card names carry spaces and word-splitting invents paths.
+unsized=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' -exec grep -L 'viewport="' {} + | wc -l)
+[ "$unsized" = "0" ] || {
+  echo "$unsized card(s) carry no viewport in their @dsCard marker:"
+  find .design-sync/upload/components .design-sync/upload/guides -name '*.html' -exec grep -L 'viewport="' {} +
+  echo ""
+  echo "measure-cards.mjs ran above, so this means it skipped them."
+  exit 1
+}
+echo "Every card carries a measured viewport"
+
+# The project must hold nothing this repo cannot rebuild, or a wipe-and-reupload loses it.
+for f in styles.css README.md _vendor/react.js _vendor/react-dom.js fonts/fonts.css; do
+  [ -f ".design-sync/upload/$f" ] || { echo "Expected artifact missing: .design-sync/upload/$f"; exit 1; }
+done
+sources=$(find .design-sync/assets/uploads -type f | wc -l)
+copies=$(find .design-sync/upload/uploads -type f | wc -l)
+[ "$sources" = "$copies" ] || { echo "Pasted-image mismatch: $sources source(s) against $copies in the upload tree"; exit 1; }
+[ -f .design-sync/upload/.thumbnail ] || { echo "Expected artifact missing: .design-sync/upload/.thumbnail — it is copied from .design-sync/assets/thumbnail.webp"; exit 1; }
+faces=$(find .design-sync/upload/fonts -name '*.woff2' | wc -l)
+rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
+[ "$faces" = "$rules" ] || { echo "Font mismatch: $faces face file(s) against $rules @font-face rule(s) - the missing side 404s silently"; exit 1; }
+# fonts.css lives INSIDE fonts/, so the bundle's `fonts/` prefix has to be rewritten one level down.
+grep -q 'url("./' .design-sync/upload/fonts/fonts.css || { echo "fonts.css still points outside its own directory"; exit 1; }
+echo "Self-contained: $faces face(s), React vendored, styles.css and README generated"
+
+# Cards outnumber components — one per documented block — but a component with none is invisible.
+cards=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' | wc -l)
+declarations=$(find .design-sync/upload/components -name '*.d.ts' | wc -l)
+cardless=0
+for decl in $(find .design-sync/upload/components -name '*.d.ts'); do
+  dir=$(dirname "$decl")
+  if [ -z "$(find "$dir" -name '*.html' -print -quit)" ]; then
+    echo "No card for $(basename "$dir")"
+    cardless=$((cardless + 1))
+  fi
+done
+[ "$cardless" = "0" ] || { echo "$cardless component(s) would ship with no card at all"; exit 1; }
+# A chapter compiled into the bundle and shown on no card costs its bytes and is reachable
+# from nothing.
+node .design-sync/tools/check-section-coverage.mjs
+sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html .design-sync/upload/guides/*/*/*.html | sort -u | wc -l)
+echo "Upload artefacts: $cards card(s) for $declarations component(s) over $sections ds-docs section(s)"
+
 GENERATED=".design-sync/upload .design-sync/viewports.json .design-sync/live-cards.txt .design-sync/cards.lock.json"
 
 # A release bumps the version, DS_VERSION carries it into the bundle, and the bundle is committed
@@ -100,64 +160,3 @@ else
   git push origin main
   echo "Upload tree committed to main; sync-dev.sh carries it to dev"
 fi
-
-[ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
-[ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }
-# The one artifact build-cards does NOT regenerate: it wipes the directory and only snapshot-cards
-# writes the shared sheet. Every frozen card links it, so its absence unstyles 376 of them — and it
-# did go missing in a working tree this cycle, noticed by eye rather than by a check.
-[ -f .design-sync/upload/_ds_cards.css ] || { echo "Expected artifact missing: .design-sync/upload/_ds_cards.css — run 'node .design-sync/tools/snapshot-cards.mjs'"; exit 1; }
-
-# The pane indexes from the manifest, so a card the manifest omits is not in the project at all.
-[ -f .design-sync/upload/_ds_manifest.json ] || { echo "Expected artifact missing: .design-sync/upload/_ds_manifest.json"; exit 1; }
-# `"path"` alone also matches brandFonts, which is how this first reported 316 against 314.
-indexed=$(grep -cE '"path": "(components|guides)/' .design-sync/upload/_ds_manifest.json)
-pages=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' | wc -l)
-[ "$indexed" = "$pages" ] || { echo "Manifest indexes $indexed card(s) against $pages page(s) in the tree"; exit 1; }
-echo "Manifest indexes all $indexed card(s)"
-
-# A card with no viewport silently loses everything below the fold. The numbers come from
-# measure-cards.mjs, which needs a browser and so runs locally; this checks somebody ran it.
-# `-exec ... +` rather than `$(find)`: card names carry spaces and word-splitting invents paths.
-unsized=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' -exec grep -L 'viewport="' {} + | wc -l)
-[ "$unsized" = "0" ] || {
-  echo "$unsized card(s) carry no viewport in their @dsCard marker:"
-  find .design-sync/upload/components .design-sync/upload/guides -name '*.html' -exec grep -L 'viewport="' {} +
-  echo ""
-  echo "Run 'node .design-sync/tools/measure-cards.mjs' and commit .design-sync/viewports.json."
-  exit 1
-}
-echo "Every card carries a measured viewport"
-
-# The project must hold nothing this repo cannot rebuild, or a wipe-and-reupload loses it.
-for f in styles.css README.md _vendor/react.js _vendor/react-dom.js fonts/fonts.css; do
-  [ -f ".design-sync/upload/$f" ] || { echo "Expected artifact missing: .design-sync/upload/$f"; exit 1; }
-done
-sources=$(find .design-sync/assets/uploads -type f | wc -l)
-copies=$(find .design-sync/upload/uploads -type f | wc -l)
-[ "$sources" = "$copies" ] || { echo "Pasted-image mismatch: $sources source(s) against $copies in the upload tree"; exit 1; }
-[ -f .design-sync/upload/.thumbnail ] || { echo "Expected artifact missing: .design-sync/upload/.thumbnail — it is copied from .design-sync/assets/thumbnail.webp"; exit 1; }
-faces=$(find .design-sync/upload/fonts -name '*.woff2' | wc -l)
-rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
-[ "$faces" = "$rules" ] || { echo "Font mismatch: $faces face file(s) against $rules @font-face rule(s) - the missing side 404s silently"; exit 1; }
-# fonts.css lives INSIDE fonts/, so the bundle's `fonts/` prefix has to be rewritten one level down.
-grep -q 'url("./' .design-sync/upload/fonts/fonts.css || { echo "fonts.css still points outside its own directory"; exit 1; }
-echo "Self-contained: $faces face(s), React vendored, styles.css and README generated"
-
-# Cards outnumber components — one per documented block — but a component with none is invisible.
-cards=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' | wc -l)
-declarations=$(find .design-sync/upload/components -name '*.d.ts' | wc -l)
-cardless=0
-for decl in $(find .design-sync/upload/components -name '*.d.ts'); do
-  dir=$(dirname "$decl")
-  if [ -z "$(find "$dir" -name '*.html' -print -quit)" ]; then
-    echo "No card for $(basename "$dir")"
-    cardless=$((cardless + 1))
-  fi
-done
-[ "$cardless" = "0" ] || { echo "$cardless component(s) would ship with no card at all"; exit 1; }
-# A chapter compiled into the bundle and shown on no card costs its bytes and is reachable
-# from nothing.
-node .design-sync/tools/check-section-coverage.mjs
-sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html .design-sync/upload/guides/*/*/*.html | sort -u | wc -l)
-echo "Upload artefacts: $cards card(s) for $declarations component(s) over $sections ds-docs section(s)"
