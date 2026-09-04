@@ -4,8 +4,8 @@
 //
 // A shell rings one of two ways and BOTH have to be recognised here: the field family
 // paints a `box-shadow` halo, the control family draws an outline through `focus.ring`.
-// A checker that knows only about shadows reads green while covering half the library —
-// which is exactly what it did for a while after the control family moved to outlines.
+// Narrow the detection to one of them and this reads green while covering half the
+// library, which is the failure mode a checker cannot report about itself.
 //
 // Only `*.component.scss` is read. A partial like `_field-state.scss` paints its
 // shadow into whichever shell includes it, so the obligation is that shell's.
