@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { PaginationComponent } from 'ds';
+import { PaginationComponent } from 'ds/pagination';
 import {
   DocsTruncationComponent,
   TruncationRule,

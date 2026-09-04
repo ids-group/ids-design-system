@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { StatusDotComponent } from 'ds';
+import { StatusDotComponent } from 'ds/status-dot';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

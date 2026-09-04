@@ -1,81 +1,37 @@
-<!-- @dsCard group="navigation" viewport="1200x700" -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
-<html data-theme="light"><head><meta charset="utf-8">
+<!-- @dsCard group="navigation" viewport="1200x700" name="App layout - full-span topbar" subtitle="topbarSpan='full' lifts the topbar across the whole width; the rail and content sit beneath it." -->
+<!DOCTYPE html>
+<html data-theme="light" style="--ds-scrollbar-width: 15px;"><head><meta charset="utf-8">
   <title>AppLayout</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-app-layout></ds-docs-components-app-layout></div>
-  <!-- Sections only: a section renders DS components as Angular components, and registering those
-       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one. CHROME is docs-section's own template
-       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
-       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "";
-      var INDEX = 1;
-      var KEY = null;
-      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-app-layout");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(CHROME)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
-        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<style></style><link rel="stylesheet" href="../../../_ds_cards.css"><style>.cdk-visually-hidden {
+border: 0;
+clip: rect(0 0 0 0);
+height: 1px;
+margin: -1px;
+overflow: hidden;
+padding: 0;
+position: absolute;
+width: 1px;
+white-space: nowrap;
+outline: 0;
+-webkit-appearance: none;
+-moz-appearance: none;
+left: 0;
+}
+[dir=rtl] .cdk-visually-hidden {
+left: auto;
+right: 0;
+}</style><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-app-layout _nghost-c1r=""><docs-section _ngcontent-c1r="" anchor="app-layout" eyebrow="Components" title="App layout" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-app-layout" data-anchor="app-layout"><h2 _ngcontent-c1="" class="t-h2">App layout - full-span topbar</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="app-layout"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;AppLayout /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1r="" class="block-desc t-s"><code _ngcontent-c1r="" class="t-mono-inline"> topbarSpan="full" </code> lifts the topbar across the whole width; the rail and content sit beneath it. Same projected chrome as above. </p><div _ngcontent-c1r="" class="layout-demo"><ds-app-layout _ngcontent-c1r="" topbarspan="full" _nghost-c1s="" class="app-layout topbar-full"><div _ngcontent-c1s="" class="scrim"></div><div class="cdk-visually-hidden cdk-focus-trap-anchor" aria-hidden="true"></div><div _ngcontent-c1s="" class="rail" id="ds-rail-2"><ds-sidenav _ngcontent-c1r="" sidenav="" brand="MyAdmin" logoletter="A" _nghost-c1t="" class="sidenav"><div _ngcontent-c1t="" class="brand"><span _ngcontent-c1t="" aria-hidden="true" class="mark"> A </span><span _ngcontent-c1t="" class="brand-name"><span _ngcontent-c1r="" dsbrandname="" class="wordmark"><span _ngcontent-c1r="" class="accent"> My </span><span _ngcontent-c1r=""> Admin </span></span></span></div><ds-sidenav-item _ngcontent-c1r="" icon="home" label="Dashboard" _nghost-c1u=""><button _ngcontent-c1u="" type="button" dstooltipplacement="right" class="active item" aria-current="page"><ds-icon _ngcontent-c1u="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></ds-icon><span _ngcontent-c1u="" class="item-label"> Dashboard </span><span _ngcontent-c1u="" class="trailing"></span></button></ds-sidenav-item><ds-sidenav-item _ngcontent-c1r="" icon="chart" label="Reports" _nghost-c1u=""><button _ngcontent-c1u="" type="button" dstooltipplacement="right" class="item"><ds-icon _ngcontent-c1u="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 14l4-4 4 4 5-5"></path></svg></ds-icon><span _ngcontent-c1u="" class="item-label"> Reports </span><span _ngcontent-c1u="" class="trailing"></span></button></ds-sidenav-item><ds-sidenav-item _ngcontent-c1r="" icon="settings" label="Settings" _nghost-c1u=""><button _ngcontent-c1u="" type="button" dstooltipplacement="right" class="item"><ds-icon _ngcontent-c1u="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></ds-icon><span _ngcontent-c1u="" class="item-label"> Settings </span><span _ngcontent-c1u="" class="trailing"></span><span _ngcontent-c1u="" class="count"> 3 </span></button></ds-sidenav-item><ds-sidenav-footer _ngcontent-c1r="" username="Ada Lovelace" userrole="Administrator" _nghost-c1v=""><button _ngcontent-c1v="" type="button" aria-label="Search" class="row" aria-expanded="false"><ds-icon _ngcontent-c1v="" name="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></ds-icon><span _ngcontent-c1v="" class="label"> Search </span></button><ds-popover _ngcontent-c1v="" align="start" panelrole="dialog" panellabel="Search" _nghost-ch=""></ds-popover><button _ngcontent-c1v="" type="button" aria-label="Alerts" class="row" aria-expanded="false"><ds-icon _ngcontent-c1v="" name="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg></ds-icon><span _ngcontent-c1v="" class="label"> Alerts </span><span _ngcontent-c1v="" aria-hidden="true" class="dot"></span></button><ds-popover _ngcontent-c1v="" align="start" panelrole="dialog" panellabel="Alerts" _nghost-ch=""></ds-popover><button _ngcontent-c1v="" type="button" class="row"><ds-icon _ngcontent-c1v=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg></ds-icon><span _ngcontent-c1v="" class="label"> Collapse </span></button><div _ngcontent-c1v="" class="divider"></div><div _ngcontent-c1v="" class="profile"><ds-avatar _ngcontent-c1v="" size="sm" _nghost-c1x="" aria-hidden="true" class="sm"> AL
+</ds-avatar><span _ngcontent-c1v="" class="profile-text"><span _ngcontent-c1v="" class="name"> Ada Lovelace </span><span _ngcontent-c1v="" class="role"> Administrator </span></span><button _ngcontent-c1v="" type="button" aria-label="Account menu" class="more" aria-expanded="false"><ds-icon _ngcontent-c1v="" name="moreV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></svg></ds-icon></button><ds-popover _ngcontent-c1v="" align="end" panelrole="menu" panellabel="Account" _nghost-ch=""></ds-popover></div></ds-sidenav-footer></ds-sidenav></div><div class="cdk-visually-hidden cdk-focus-trap-anchor" aria-hidden="true"></div><div _ngcontent-c1s="" class="bar"><ds-topbar _ngcontent-c1r="" topbar="" _nghost-c1w=""><header _ngcontent-c1w="" class="topbar"><div _ngcontent-c1w="" class="title"><span _ngcontent-c1r="" title=""> Dashboard </span></div><div _ngcontent-c1w="" class="spacer"></div><div _ngcontent-c1w="" class="actions"></div></header></ds-topbar></div><main _ngcontent-c1s="" tabindex="-1" class="content"><div _ngcontent-c1s="" class="inner"><div _ngcontent-c1r="" class="filler"> Scroll me — the rail and topbar stay put; only this region scrolls. </div></div></main></ds-app-layout></div></section></docs-section></ds-docs-components-app-layout></div>
+  
+  
+  
+  
 
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+
 </body></html>

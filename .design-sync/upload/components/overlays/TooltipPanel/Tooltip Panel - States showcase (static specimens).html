@@ -1,81 +1,18 @@
-<!-- @dsCard group="overlays" viewport="1200x581" -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
+<!-- @dsCard group="overlays" viewport="1200x454" name="Tooltip Panel - states showcase (static specimens)" -->
+<!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>TooltipPanel</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-tooltip></ds-docs-components-tooltip></div>
-  <!-- Sections only: a section renders DS components as Angular components, and registering those
-       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one. CHROME is docs-section's own template
-       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
-       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "tooltip-panel";
-      var INDEX = 0;
-      var KEY = "tooltip";
-      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-tooltip");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(CHROME)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
-        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-components-tooltip _nghost-c3i=""><docs-section _ngcontent-c3i="" anchor="tooltip" eyebrow="Components" title="Tooltip" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-tooltip" data-anchor="tooltip"><h2 _ngcontent-c1="" class="t-h2">Tooltip Panel - states showcase (static specimens)</h2><docs-component-meta _ngcontent-c1="" _nghost-c8=""><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;TooltipPanel /&gt;</span></span></div></div></docs-component-meta><div _ngcontent-c3i="" class="states"><div _ngcontent-c3i="" class="state"><code _ngcontent-c3i="" class="t-mono-inline state-lbl"> placement="top" </code><div _ngcontent-c3i="" class="state-stage"><ds-tooltip-panel _ngcontent-c3i="" role="tooltip" text="Recompute pending — 3 affected" placement="top" _nghost-c3j="" id="" class="top">Recompute pending — 3 affected</ds-tooltip-panel><span _ngcontent-c3i="" class="anchor t-xs"> Anchor </span></div></div><div _ngcontent-c3i="" class="state"><code _ngcontent-c3i="" class="t-mono-inline state-lbl"> placement="bottom" </code><div _ngcontent-c3i="" class="state-stage"><span _ngcontent-c3i="" class="anchor t-xs"> Anchor </span><ds-tooltip-panel _ngcontent-c3i="" role="tooltip" text="Last synced 14m ago" placement="bottom" _nghost-c3j="" id="" class="bottom">Last synced 14m ago</ds-tooltip-panel></div></div><div _ngcontent-c3i="" class="state"><code _ngcontent-c3i="" class="t-mono-inline state-lbl"> placement="left" </code><div _ngcontent-c3i="" class="state-stage state-stage--horiz"><ds-tooltip-panel _ngcontent-c3i="" role="tooltip" text="Locked" placement="left" _nghost-c3j="" id="" class="left">Locked</ds-tooltip-panel><span _ngcontent-c3i="" class="anchor t-xs"> Anchor </span></div></div><div _ngcontent-c3i="" class="state"><code _ngcontent-c3i="" class="t-mono-inline state-lbl"> placement="right" </code><div _ngcontent-c3i="" class="state-stage state-stage--horiz"><span _ngcontent-c3i="" class="anchor t-xs"> Anchor </span><ds-tooltip-panel _ngcontent-c3i="" role="tooltip" text="3 affected" placement="right" _nghost-c3j="" id="" class="right">3 affected</ds-tooltip-panel></div></div></div><div _ngcontent-c1="" class="api-sub" data-key="tooltip:TooltipPanelComponent"><docs-api-table _ngcontent-c1="" _nghost-c9=""><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Inputs <span _ngcontent-c9="" class="count">3</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Default </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> text </span><span _ngcontent-c9="" title="required" class="req"> * </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> — </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Tooltip text content. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> placement </span><span _ngcontent-c9="" title="required" class="req"> * </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="uni"><code _ngcontent-c9="" class="mono chip"> top </code><code _ngcontent-c9="" class="mono chip"> bottom </code><code _ngcontent-c9="" class="mono chip"> left </code><code _ngcontent-c9="" class="mono chip"> right </code></span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> — </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Side of the trigger the panel is positioned on; also drives the arrow class. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> panelId </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Element `id`, referenced by the trigger's `aria-describedby`. </span></td></tr></tbody></table></div></details></docs-api-table></div></section></docs-section></ds-docs-components-tooltip></div>
+  
+  
+  
+  
 
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+
 </body></html>

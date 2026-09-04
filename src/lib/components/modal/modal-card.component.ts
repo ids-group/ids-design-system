@@ -6,11 +6,11 @@ import {
   input,
   output,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import type { IconName } from '../../icons/icons.data';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { resolveDividers } from './modal-defaults';
 import type { ModalSize } from './modal.types';
-import type { DsStatus } from '../../core/status';
+import type { DsStatus } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
 

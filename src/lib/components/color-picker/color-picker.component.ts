@@ -17,12 +17,15 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { IconComponent } from '../../icons/icon.component';
-import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
-import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage, trimmedText } from '../field-errors';
-import { nextControlId } from '../field-ids';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import {
   closeOnOutsidePointer,
   closeOnScroll,
@@ -32,7 +35,7 @@ import {
   forwardOverlayTokens,
   dropdownOverlay,
   prepareOverlayEnter,
-} from '../overlay-motion';
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   type Hsv,
   hexToHsv,

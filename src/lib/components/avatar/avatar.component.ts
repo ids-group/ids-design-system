@@ -5,11 +5,11 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import type { IconName } from '../../icons/icons.data';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { avatarTint, initialsFrom } from './avatar-tint';
 import type { AvatarSize, AvatarStatus } from './avatar.types';
-import { DS_CONFIG } from '../../core/ds-config';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 
 const STATUS_ARIA_LABELS: Record<AvatarStatus, string> = {
   online: 'Online',

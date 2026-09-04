@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { TagComponent } from 'ds';
+import { TagComponent } from 'ds/tag';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

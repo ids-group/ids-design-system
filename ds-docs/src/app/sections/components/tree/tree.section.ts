@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { TreeComponent, type TreeNode } from 'ds';
+import { TreeComponent } from 'ds/tree';
+import type { TreeNode } from 'ds/tree';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

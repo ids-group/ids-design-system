@@ -1,11 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  CheckboxComponent,
-  IconButtonComponent,
-  IconComponent,
-  ListComponent,
-  ListItemComponent,
-} from 'ds';
+import { CheckboxComponent } from 'ds/checkbox';
+import { IconButtonComponent } from 'ds/icon-button';
+import { IconComponent } from 'ds/icons';
+import { ListComponent, ListItemComponent } from 'ds/list';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

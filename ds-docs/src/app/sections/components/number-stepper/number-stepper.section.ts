@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { NumberStepperComponent } from 'ds';
+import { NumberStepperComponent } from 'ds/number-stepper';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

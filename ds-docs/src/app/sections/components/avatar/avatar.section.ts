@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { AvatarComponent, AvatarGroupComponent, initialsFrom } from 'ds';
+import { AvatarComponent, initialsFrom } from 'ds/avatar';
+import { AvatarGroupComponent } from 'ds/avatar-group';
 import {
   DocsTruncationComponent,
   TruncationRule,

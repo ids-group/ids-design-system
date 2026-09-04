@@ -5,8 +5,11 @@ import {
   input,
   output,
 } from '@angular/core';
-import type { CardElevation, CardPadding } from '../../core/card.types';
-import { resolveWithConfig } from '../../core/config-defaults';
+import type {
+  CardElevation,
+  CardPadding,
+} from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-card',

@@ -16,7 +16,10 @@
     "module": "preserve",
     "baseUrl": "./",
     "paths": {
-      "ds": ["./src/public-api.ts"]
+      "ds": ["./src/lib/public-api.ts"],
+      "ds/*": ["./src/lib/*", "./src/lib/components/*"],
+      "@ids-group-ltd/ids-design-system": ["./src/lib/public-api.ts"],
+      "@ids-group-ltd/ids-design-system/*": ["./src/lib/*"]
     }
   },
   "angularCompilerOptions": {

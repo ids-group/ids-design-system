@@ -1,81 +1,18 @@
-<!-- @dsCard group="forms-inputs" viewport="1200x483" -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
+<!-- @dsCard group="forms-inputs" viewport="1200x375" name="OTP input - 4-digit masked PIN" subtitle="Set [mask]='true' to obscure digits as they are typed, suitable for PIN entry." -->
+<!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>OtpInput</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-otp-input></ds-docs-components-otp-input></div>
-  <!-- Sections only: a section renders DS components as Angular components, and registering those
-       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one. CHROME is docs-section's own template
-       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
-       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "";
-      var INDEX = 1;
-      var KEY = null;
-      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-otp-input");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(CHROME)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
-        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-otp-input _nghost-c19=""><docs-section _ngcontent-c19="" anchor="otp-input" eyebrow="Components" title="OTP input" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-otp-input" data-anchor="otp-input"><h2 _ngcontent-c1="" class="t-h2">OTP input - 4-digit masked PIN</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="otp-input"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;OtpInput /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c19="" class="block-desc t-s"> Set <code _ngcontent-c19="">[mask]="true"</code> to obscure digits as they are typed, suitable for PIN entry. </p><div _ngcontent-c19="" class="demo-panel"><ds-otp-input _ngcontent-c19="" role="group" _nghost-c1a="" aria-label="Verification code"><div _ngcontent-c1a="" class="cells"><input _ngcontent-c1a="" class="cell" type="password" inputmode="numeric" autocomplete="one-time-code" aria-label="Digit 1"><input _ngcontent-c1a="" class="cell" type="password" inputmode="numeric" autocomplete="off" aria-label="Digit 2"><input _ngcontent-c1a="" class="cell" type="password" inputmode="numeric" autocomplete="off" aria-label="Digit 3"><input _ngcontent-c1a="" class="cell" type="password" inputmode="numeric" autocomplete="off" aria-label="Digit 4"></div><ds-field-message _ngcontent-c1a="" _nghost-c7=""></ds-field-message></ds-otp-input></div></section></docs-section></ds-docs-components-otp-input></div>
+  
+  
+  
+  
 
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+
 </body></html>

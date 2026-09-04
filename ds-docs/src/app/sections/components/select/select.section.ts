@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  ButtonComponent,
-  DsPanelFooterTemplateDirective,
-  SelectComponent,
-  type SelectOption,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { DsPanelFooterTemplateDirective } from 'ds/components';
+import { SelectComponent } from 'ds/select';
+import type { SelectOption } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 import {
@@ -33,9 +31,24 @@ export class SelectSection {
   protected readonly resetPlan = signal('team');
 
   protected readonly countryOptions: SelectOption[] = [
-    'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada',
-    'Chile', 'Denmark', 'Estonia', 'Finland', 'France', 'Germany',
-    'Greece', 'Iceland', 'Ireland', 'Italy', 'Japan', 'Latvia',
+    'Argentina',
+    'Australia',
+    'Austria',
+    'Belgium',
+    'Brazil',
+    'Canada',
+    'Chile',
+    'Denmark',
+    'Estonia',
+    'Finland',
+    'France',
+    'Germany',
+    'Greece',
+    'Iceland',
+    'Ireland',
+    'Italy',
+    'Japan',
+    'Latvia',
   ].map((name) => ({ value: name.toLowerCase(), label: name }));
 
   protected readonly planOptions: SelectOption[] = [

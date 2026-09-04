@@ -4,15 +4,12 @@ import {
   ViewEncapsulation,
   signal,
 } from '@angular/core';
-import {
-  ButtonComponent,
-  DatePickerComponent,
-  FilterBarComponent,
-  FilterItemDirective,
-  SearchComponent,
-  SelectComponent,
-  type SelectOption,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { DatePickerComponent } from 'ds/date-picker';
+import { FilterBarComponent, FilterItemDirective } from 'ds/filter-bar';
+import { SearchComponent } from 'ds/search';
+import { SelectComponent } from 'ds/select';
+import type { SelectOption } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

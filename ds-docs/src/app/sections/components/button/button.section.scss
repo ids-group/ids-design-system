@@ -9,6 +9,51 @@
       border-radius: var(--radius-lg);
     }
 
+    /* Three refusal treatments side by side, after the shape practice/do-dont uses for its
+       alternatives: a framed cell each, a pill naming it, its prose, and its own stage. An h3 per
+       treatment would read the same on the docs page but split the Claude Design card three ways. */
+    .refusals {
+      margin-top: var(--space-4);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-4);
+    }
+    .refusal {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      min-width: 0;
+      padding: var(--space-5);
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+    }
+    .refusal-tag {
+      align-self: flex-start;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-wider);
+      font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-sans);
+    }
+    .refusal-tag--standing { background: var(--error-subtitle); color: var(--error-text); }
+    .refusal-tag--temporary { background: var(--warning-subtitle); color: var(--warning-text); }
+    .refusal-tag--room { background: var(--surface-secondary); color: var(--text-secondary); }
+    .refusal-copy {
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .refusal-stage {
+      margin-top: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-md);
+    }
+
     /* ---------- states matrix (button-specific; color × variant uses docs-matrix) ---------- */
     .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
     .matrix {

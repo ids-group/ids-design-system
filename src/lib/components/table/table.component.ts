@@ -19,8 +19,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { devWarn } from '../../core/dev-warning';
-import { resolveWithConfig } from '../../core/config-defaults';
+import { devWarn } from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CdkDrag,
@@ -29,15 +29,15 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ButtonComponent } from '../button/button.component';
-import { IconComponent } from '../../icons/icon.component';
-import { SkeletonComponent } from '../skeleton/skeleton.component';
-import { PaginationComponent } from '../pagination/pagination.component';
-import { LoadingOverlayComponent } from '../loading-overlay/loading-overlay.component';
-import { PopoverComponent } from '../popover/popover.component';
-import { BottomSheetComponent } from '../bottom-sheet/bottom-sheet.component';
-import { MenuComponent } from '../menu/menu.component';
-import { MenuItemComponent } from '../menu/menu-item.component';
+import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { PaginationComponent } from '@ids-group-ltd/ids-design-system/components/pagination';
+import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
+import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
+import { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
+import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { CellTemplateDirective } from './cell-template.directive';
 import { HeaderFilterDirective } from './header-filter.directive';
 import type {
@@ -2208,5 +2208,4 @@ export class TableComponent<T extends object> {
     coarse.addEventListener('change', sync);
     this.destroyRef.onDestroy(() => coarse.removeEventListener('change', sync));
   }
-
 }

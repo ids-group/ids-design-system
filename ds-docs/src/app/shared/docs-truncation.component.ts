@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import { IconComponent } from 'ds';
+import { IconComponent } from 'ds/icons';
 
 /** One truncation rule row: a field/element and how it behaves on overflow. */
 export interface TruncationRule {

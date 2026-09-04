@@ -664,7 +664,7 @@ function inlineAliases(type, depth = 0) {
 // Every key of the icon registry, so an agent reading the declaration can see the real names rather
 // than a type it has no way to resolve.
 const iconNameUnion = (() => {
-  const source = readFileSync(join(repo, 'src/lib/icons/icons.data.ts'), 'utf8');
+  const source = readFileSync(join(repo, 'src/lib/core/icon-names.ts'), 'utf8');
   const body = source.slice(source.indexOf('export const ICONS'));
   const names = [...body.matchAll(/^\s{2}([A-Za-z][\w]*):/gm)].map((match) => match[1]);
 

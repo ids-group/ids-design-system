@@ -5,11 +5,11 @@ import {
   input,
   output,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import type { IconName } from '../../icons/icons.data';
-import { MenuComponent } from '../menu/menu.component';
-import { MenuItemComponent } from '../menu/menu-item.component';
-import { PopoverComponent } from '../popover/popover.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 import type { SplitButtonItem, SplitButtonVariant } from './split-button.types';
 
 @Component({

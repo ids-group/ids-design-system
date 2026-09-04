@@ -1,11 +1,8 @@
 #!/bin/sh
-# Final step of the tag (v*) pipeline: after publish.sh, start the separate
-# after-release custom pipeline via the Bitbucket REST API, so a release rebuilds and
-# redeploys everything that is generated from source — the ds-docs showcase and the
-# Claude Design bundle. Skipped for prereleases (public docs track latest stable).
-# Auth: DOCS_DEPLOY_TOKEN — a dedicated repo access token scoped to pipeline:write
-# only (least privilege; RELEASE_TOKEN keeps just repository:write). It is a
-# repository variable, so it is visible to this tag pipeline.
+# Last step of the tag (v*) pipeline: start the after-release pipeline over the REST API.
+#
+# DOCS_DEPLOY_TOKEN is scoped to pipeline:write only, so RELEASE_TOKEN can stay
+# repository:write and neither token carries the other's rights.
 set -e
 
 cd "$(dirname "$0")/../.."

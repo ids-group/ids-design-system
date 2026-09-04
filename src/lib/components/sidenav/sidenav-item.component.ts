@@ -9,9 +9,9 @@ import {
   output,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { IconComponent } from '../../icons/icon.component';
-import { TooltipDirective } from '../tooltip/tooltip.directive';
-import type { IconName } from '../../icons/icons.data';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { SIDENAV } from './sidenav.token';
 
 @Component({

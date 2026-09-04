@@ -1,6 +1,6 @@
 import { Directive, booleanAttribute, input } from '@angular/core';
 import { resolveReserveMessage } from './field-defaults';
-import type { IconName } from '../icons/icons.data';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { trimmedText } from './field-errors';
 
 /**
@@ -11,6 +11,7 @@ import { trimmedText } from './field-errors';
  *
  * `@Directive()` is required, not decoration: Angular refuses to compile a base
  * class that declares inputs without it.
+ * @internal
  */
 @Directive()
 export abstract class DsMessageBase {

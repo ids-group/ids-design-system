@@ -17,6 +17,35 @@ npm start            # serve the docs app
 npm run build:docs   # build the docs app
 ```
 
+## Adding a component means adding an entry point
+
+Every component is its own ng-packagr entry point, so a new one needs three things and the build
+tells you about none of them until it fails:
+
+1. **`src/lib/components/<name>/index.ts`** — the barrel, naming what the component publishes.
+2. **`src/lib/components/<name>/ng-package.json`** — `{ "lib": { "entryFile": "./index.ts" } }`.
+   This file is what makes the folder an entry point; ng-packagr finds them by globbing for it.
+3. **A line in `src/lib/public-api.ts`** naming the symbols the root should re-export. The facade
+   names its exports rather than re-exporting whole entry points, which is what keeps the shared
+   internals off the root — so a component that is not listed there is not public.
+
+Two rules the entry-point boundary imposes on the code itself, both gated by
+`npm run check-entry-point-imports`:
+
+- **Reaching into another entry point is a package specifier, never a relative path.** Write
+  `from '@ids-group-ltd/ids-design-system/core'`, not `from '../../core/size'`. A relative path
+  across the boundary compiles here and makes ng-packagr copy the target into two bundles, which
+  duplicates the class.
+- **The short form is for `ds-docs` and the tools, never for the library.** `ds/core` resolves in
+  the editor and then ships as an unresolvable external import in the FESM, because ng-packagr
+  recognises an entry-point dependency only by the exact package name.
+
+**Entry points may not form a cycle, and a type-only import still counts.** ng-packagr resolves
+through TypeScript's own module resolution, which visits `import type` as well, so two entry points
+that only exchange types still fail the build. Break it by moving the smaller side inside the
+larger one — an entry point IS a directory, so sibling folders cannot be co-located — or by moving
+the shared declaration down into `core`.
+
 ## Releasing
 
 Releases follow [SemVer](https://semver.org): `fix` → patch, new backwards-compatible
@@ -129,9 +158,12 @@ judgment half is yours.
   `styles/`, `themes/`, `migrations/` and `schematics/`, plus the four root documents.
 - **One of our npm scripts.** `npm run class-surface` does not exist for the reader —
   state the result, or an instruction they can follow, instead.
-- **A symbol the package root does not export.** If it is not in `src/public-api.ts`, the
-  reader cannot import it. Naming one is allowed only where the text also says it is
-  internal — a subclasser meets these names in their own compiler errors.
+- **A symbol the package root does not export, or one tagged `@internal`.** The root facade is
+  `src/lib/public-api.ts` and it names every export, so a name reaches a consumer only by being
+  listed there. Plenty of names sit in an entry point’s `index.ts` without being API: an entry
+  point has to export whatever another entry point imports, and those carry `@internal`. Naming
+  either is allowed only where the text also says it is internal — a subclasser meets these names
+  in their own compiler errors.
 - **An internal rule id** (`M0…`), a commit hash, or `HEAD`.
 - **A correction to one of our own records, as an entry of its own.** A manifest says what a
   consumer changes in THEIR code; a changelog says what changed in the library. Neither reports

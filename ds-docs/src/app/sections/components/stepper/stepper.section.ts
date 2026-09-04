@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { StepperComponent } from 'ds';
+import { StepperComponent } from 'ds/stepper';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

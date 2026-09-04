@@ -6,15 +6,18 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import type { IconName } from '../../icons/icons.data';
-import { DS_CONFIG } from '../../core/ds-config';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 
+/** @internal */
 export type FieldMessageState = 'default' | 'error' | 'warning' | 'success';
 
 /** Internal shared helper/error line for form fields. Renders nothing when
  *  `text` is empty. The host field owns the `aria-describedby` relationship
- *  and passes `messageId`; this only renders the element that carries it. */
+ *  and passes `messageId`; this only renders the element that carries it.
+ * @internal
+ */
 @Component({
   selector: 'ds-field-message',
   standalone: true,

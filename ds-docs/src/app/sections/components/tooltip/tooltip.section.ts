@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, TooltipDirective, TooltipPanelComponent } from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { TooltipDirective, TooltipPanelComponent } from 'ds/tooltip';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

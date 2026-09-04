@@ -8,6 +8,55 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **The library no longer forces itself into your initial bundle, and your imports stay as they are.**
+  Every component became its own entry point, so a bundler can place each one in the chunk that
+  actually uses it. Until now the package was a single flattened module: one eager import of any
+  part of it — a service in a composition root is the usual one — made the whole library reachable
+  from the initial bundle, and no amount of lazy routing moved it out. Measured on a documentation app
+  of 90 sections that changed not one import line: its initial bundle fell from **240 kB to 138 kB
+  gzip**, with the total across initial and lazy chunks moving under a percent. Nothing was
+  duplicated; 102 kB simply moved to the routes that use it.
+
+- **Keep importing from the package root — that is the supported spelling and it costs nothing
+  extra.** The same app measured the same 138 kB either way. The root is a re-export and nothing
+  else, so a bundler sees straight through it. There is no migration here and no reason to rewrite
+  an import.
+
+- **Per-component specifiers do resolve** (`@ids-group-ltd/ids-design-system/button`), for a codebase
+  that prefers a file's dependencies spelled out. They are not the recommended form and they buy no
+  bytes. If you want them shorter, one line in your own `tsconfig.json` does it, with no change on
+  our side:
+
+  ```json
+  "paths": { "ds/*": ["node_modules/@ids-group-ltd/ids-design-system/*"] }
+  ```
+
+  `ds/button` then resolves to the same file as the full specifier, so a component imported one way
+  and the same component imported the other are one class and `instanceof` holds across them.
+
+### Changed
+
+- **The package root exports exactly what it exported before, name by name.** An entry point has to
+  export whatever another entry point imports, so 37 helpers, base classes and shared types are
+  reachable inside the package that were not reachable before — every one of them internal, each
+  carrying `@internal`, and none in the component reference. **None of them reaches the root:** it
+  re-exports the documented surface by name rather than re-exporting whole entry points, so
+  `import * as ds` and a barrel of your own see the same names as before and nothing new can collide.
+  Two subpaths, `…/components` and `…/core`, hold what the other entry points share; they exist so
+  those can resolve, they are internal, and nothing in them is covered by the versioning promise.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the `deleteList` in the release manifest
+this package ships under `migrations/`.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `await import('@ids-group-ltd/ids-design-system')` | A dynamic import of the whole package was the only way to keep it out of the initial bundle, and it bought that at the cost of an async boundary in your own code. An ordinary static import from the package root now lands in the chunk that uses it. Replace with: a plain static import from the package root. Still legitimate where the lazy boundary is there for its own sake — a feature area you genuinely want off the critical path. |
+
 ## 0.11.4 — 2026-09-03
 
 ### Breaking
@@ -981,9 +1030,8 @@ this package ships under `migrations/`.
   the result.** The prose split above rewrote every item; this is the separate, smaller set where the
   DATA was wrong. It matters
   because these files are executed: your upgrade tooling read them, acted, and reported done.
-  **Three changes had no item at all.** `0.2.0` never filed the `--surface-subtle` →
-  `--surface-subtitle` rename, so an override still naming the old token resolves to nothing and says
-  nothing. `0.9.0` never filed the six inputs whose declared type widened from `InputSignal` to
+  **Two changes had no item at all.** `0.9.0` never filed the six inputs whose declared type
+  widened from `InputSignal` to
   `InputSignalWithTransform` (`min`/`max`/`maxLength` on `ds-input`, `min`/`max` on
   `ds-number-stepper`, `maxLength` on `ds-textarea`) — the TS2322 an explicit annotation hits and the
   TS2416 a subclass hits had no explanation anywhere. `0.10.0` never filed

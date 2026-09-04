@@ -17,10 +17,19 @@
 :host ::ng-deep .block-title {
   margin-top: var(--space-8);
 }
+
+// The tight gap belongs only directly under a heading; a paragraph that follows a demo reads as
+// glued to it. Collapsing these three back into one rule brings that back.
 :host ::ng-deep .block-desc {
   color: var(--text-secondary);
-  margin-top: var(--space-1);
+  margin-top: var(--space-5);
   max-width: var(--col-cap-text);
+}
+:host ::ng-deep .block-title + .block-desc {
+  margin-top: var(--space-1);
+}
+:host ::ng-deep .block-desc + .block-desc {
+  margin-top: var(--space-3);
 }
 
 .api-sub {

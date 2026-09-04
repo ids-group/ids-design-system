@@ -1,81 +1,18 @@
-<!-- @dsCard group="patterns" viewport="1200x700" -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
+<!-- @dsCard group="patterns" viewport="1200x700" name="Form layout - multi-column form" subtitle="Two-column section pattern: title and description on the left, fields on the right." -->
+<!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Form layout</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-patterns-form-layout></ds-docs-patterns-form-layout></div>
-  <!-- Sections only: a section renders DS components as Angular components, and registering those
-       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one. CHROME is docs-section's own template
-       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
-       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "";
-      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-patterns-form-layout");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(CHROME)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
-        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-patterns-form-layout _nghost-c4f=""><docs-section _ngcontent-c4f="" anchor="pattern-form-layout" eyebrow="Patterns" title="Form layout" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-pattern-form-layout" data-anchor="pattern-form-layout"><h2 _ngcontent-c1="" class="t-h2">Form layout - multi-column form</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c4f="" lede=""> Two-column form section, side-by-side date pairs, a 6/12 city/country split, and an inline-edit row for one-field changes. Footer with Discard and Save anchors every full form. </span></p><p _ngcontent-c4f="" class="block-desc t-s"> Two-column section pattern: title and description on the left, fields on the right. Fields stack vertically; naturally-paired controls (Start / End, City / Country) sit side-by-side. A footer anchors every form with a secondary Discard and a primary Save. </p><div _ngcontent-c4f="" class="stage"><form _ngcontent-c4f="" class="form"><div _ngcontent-c4f="" class="form-section"><div _ngcontent-c4f="" class="form-section-head"><h4 _ngcontent-c4f="" class="t-h5"> Record identity </h4><p _ngcontent-c4f="" class="t-s muted"> The display name and ID used across the operations stack. </p></div><div _ngcontent-c4f="" class="form-section-body"><div _ngcontent-c4f="" class="row row--2"><ds-input _ngcontent-c4f="" label="Name" placeholder="Project Alpha" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-1"> Name <span _ngcontent-c10="" aria-hidden="true" class="req"> * </span></label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-1" type="text" placeholder="Project Alpha" aria-required="true" class="ng-untouched ng-pristine ng-valid" required=""><span _ngcontent-c10="" class="addon-slot suffix"></span></div></div></ds-input><ds-input _ngcontent-c4f="" label="ID (auto)" placeholder="EVT-2026-0142" _nghost-c10=""><div _ngcontent-c10="" class="disabled field"><label _ngcontent-c10="" class="label" for="ds-input-2"> ID (auto) </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-2" type="text" placeholder="EVT-2026-0142" class="ng-untouched ng-pristine" disabled=""><span _ngcontent-c10="" class="addon-slot suffix"></span></div></div></ds-input></div><ds-select _ngcontent-c4f="" label="Member" _nghost-cz=""><span _ngcontent-cz="" class="label" id="ds-select-3-label"> Member </span><div _ngcontent-cz="" role="combobox" aria-haspopup="listbox" class="dropdown" tabindex="0" aria-expanded="false" aria-controls="ds-select-3-listbox" aria-labelledby="ds-select-3-label"><span _ngcontent-cz="" class="trigger-text"> Acme Holdings </span><span _ngcontent-cz="" class="chevron"><ds-icon _ngcontent-cz="" name="chevronDown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></ds-icon></span></div><ds-field-message _ngcontent-cz="" _nghost-c7=""></ds-field-message></ds-select></div></div><div _ngcontent-c4f="" class="form-section"><div _ngcontent-c4f="" class="form-section-head"><h4 _ngcontent-c4f="" class="t-h5"> Schedule </h4><p _ngcontent-c4f="" class="t-s muted"> Three discrete date blocks — Build, Live, and Strike. Editing any of them triggers an impact preview on save. </p></div><div _ngcontent-c4f="" class="form-section-body"><fieldset _ngcontent-c4f="" class="fieldset"><legend _ngcontent-c4f=""> Build </legend><div _ngcontent-c4f="" class="row row--2"><ds-input _ngcontent-c4f="" label="Start" placeholder="27 Jul 2026 06:00" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-4"> Start </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-4" type="text" placeholder="27 Jul 2026 06:00" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div></div></ds-input><ds-input _ngcontent-c4f="" label="Complete" placeholder="30 Jul 2026 12:00" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-5"> Complete </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-5" type="text" placeholder="30 Jul 2026 12:00" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div></div></ds-input></div></fieldset><fieldset _ngcontent-c4f="" class="fieldset"><legend _ngcontent-c4f=""> Live </legend><div _ngcontent-c4f="" class="row row--2"><ds-input _ngcontent-c4f="" label="Open" placeholder="30 Jul 2026 14:00" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-6"> Open </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-6" type="text" placeholder="30 Jul 2026 14:00" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div></div></ds-input><ds-input _ngcontent-c4f="" label="Close" placeholder="3 Aug 2026 23:00" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-7"> Close </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-7" type="text" placeholder="3 Aug 2026 23:00" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div></div></ds-input></div></fieldset></div></div><div _ngcontent-c4f="" class="form-section"><div _ngcontent-c4f="" class="form-section-head"><h4 _ngcontent-c4f="" class="t-h5"> Address </h4><p _ngcontent-c4f="" class="t-s muted"> Six / twelve split — city plus country on a single 12-col row. </p></div><div _ngcontent-c4f="" class="form-section-body"><div _ngcontent-c4f="" class="row row--6-12"><ds-input _ngcontent-c4f="" label="City" placeholder="Suffolk" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-8"> City </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-8" type="text" placeholder="Suffolk" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div></div></ds-input><ds-input _ngcontent-c4f="" label="Country" placeholder="United Kingdom" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-9"> Country </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-9" type="text" placeholder="United Kingdom" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div></div></ds-input></div></div></div><div _ngcontent-c4f="" class="form-footer"><ds-button _ngcontent-c4f="" color="neutral" variant="outline" _nghost-c5="" data-variant="outline" data-color="neutral"><button _ngcontent-c5="" class="button c-neutral md v-outline" type="button"><span _ngcontent-c5="" class="button-main"> Discard </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button><ds-button _ngcontent-c4f="" _nghost-c5="" data-variant="solid" data-color="primary"><button _ngcontent-c5="" class="button md" type="button"><span _ngcontent-c5="" class="button-main"> Save changes </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button></div></form></div></section></docs-section></ds-docs-patterns-form-layout></div>
+  
+  
+  <div aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px; margin: -1px; padding: 0px;"></div>
+  
 
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+
 </body></html>

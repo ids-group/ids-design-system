@@ -6,9 +6,9 @@ import {
   input,
   output,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import type { IconName } from '../../icons/icons.data';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { ToastAction, ToastVariant } from './toast.types';
 
 /**

@@ -10,7 +10,12 @@
     "emitDeclarationOnly": true,
     "outDir": "dist/types",
     "rootDir": "../..",
-    "types": []
+    "types": [],
+    "baseUrl": "../..",
+    "paths": {
+      "@ids-group-ltd/ids-design-system": ["./src/lib/public-api.ts"],
+      "@ids-group-ltd/ids-design-system/*": ["./src/lib/*", "./src/lib/components/*"]
+    }
   },
   "include": ["gen/wrappers.tsx", "gen/index.ts", "runtime.tsx"]
 }

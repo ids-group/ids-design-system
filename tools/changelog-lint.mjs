@@ -14,6 +14,7 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { FACADE, PRIMARY_NG_PACKAGE, resolveLibSpecifier } from './lib-entry-points.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -78,7 +79,7 @@ function shippedSources() {
   };
   // Read the asset inputs from ng-package.json rather than hardcoding them: its glob is
   // `**/*`, so a hardcoded `.scss` filter silently skips every `.md` beside them.
-  const ngPackage = join(ROOT, 'ng-package.json');
+  const ngPackage = PRIMARY_NG_PACKAGE;
   const assets = existsSync(ngPackage)
     ? (JSON.parse(readFileSync(ngPackage, 'utf8')).assets ?? [])
     : [];
@@ -86,7 +87,7 @@ function shippedSources() {
   for (const asset of assets) {
     if (!asset.input) continue;
     const before = found.length;
-    crawl(join(ROOT, asset.input), (n) => TEXT.test(n));
+    crawl(join(dirname(ngPackage), asset.input), (n) => TEXT.test(n));
     groups.push({ name: `assets:${asset.input}`, count: found.length - before });
   }
   const beforeSource = found.length;
@@ -127,7 +128,6 @@ const CLIENTS = [
 // root documents, so none of those belong here.
 const INTERNAL_PATHS = [
   'src/lib/',
-  'src/public-api',
   'tools/',
   'presentations/',
   'ds-docs/',
@@ -182,18 +182,7 @@ const SECTION_ORDER =
 // Subtracting the public set from OUR OWN exports is what keeps it quiet: a name Angular
 // or PrimeNG owns is defined nowhere in `src/`, so it can never be flagged.
 function privateSymbols() {
-  const moduleFile = (fromFile, spec) => {
-    const base = resolve(dirname(fromFile), spec);
-    for (const candidate of [
-      `${base}.ts`,
-      `${base}.d.ts`,
-      join(base, 'index.ts'),
-    ]) {
-      if (existsSync(candidate)) return candidate;
-    }
-
-    return null;
-  };
+  const moduleFile = (fromFile, spec) => resolveLibSpecifier(fromFile, spec);
 
   // DECL_RE is line-anchored, so an `export` line inside a JSDoc example would read as a
   // live export — which in the public walk marks a private symbol public and lets a
@@ -242,7 +231,7 @@ function privateSymbols() {
     }
   };
 
-  const entry = join(ROOT, 'src/public-api.ts');
+  const entry = FACADE;
   if (!existsSync(entry)) return { private: new Set(), publicCount: 0 };
   walk(entry);
 

@@ -1,5 +1,5 @@
 import { InjectionToken, inject } from '@angular/core';
-import type { DsSize } from '../../core/size';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 /** What a grouped control can read off the group that encloses it. */
 export interface DsFieldGroupContext {
@@ -30,6 +30,7 @@ export const DS_FIELD_GROUP = new InjectionToken<DsFieldGroupContext>(
  *
  * A function so the six supported controls share one line instead of six copies
  * of the same optional inject — and so the contract has one place to change.
+ * @internal
  */
 export function inFieldGroup(): boolean {
   return !!inject(DS_FIELD_GROUP, { optional: true });

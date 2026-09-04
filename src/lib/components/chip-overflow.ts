@@ -73,6 +73,7 @@ function reservedWidth(element: HTMLElement): number {
     : element.offsetWidth;
 }
 
+/** @internal */
 export function chipFit(
   count: Signal<number>,
   chipRow: Signal<ElementRef<HTMLElement> | undefined>,

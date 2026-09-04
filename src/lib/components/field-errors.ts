@@ -15,8 +15,8 @@ import {
   NgForm,
   type ValidationErrors,
 } from '@angular/forms';
-import { DS_CONFIG } from '../core/ds-config';
-import type { FieldMessageState } from './field-message/field-message.component';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import type { FieldMessageState } from '@ids-group-ltd/ids-design-system/components/field-message';
 
 /**
  * One validation error, structurally identical to Angular's signal-forms
@@ -71,11 +71,14 @@ export function normalizeFieldErrors(
   return Array.isArray(value) ? value : [value as DsFieldError];
 }
 
+/** @internal */
 export function trimmedText(value: string | null | undefined): string {
   return value?.trim() ?? '';
 }
 
-/** The single line a field shows below itself, already resolved. */
+/** The single line a field shows below itself, already resolved.
+ * @internal
+ */
 export interface DsFieldMessage {
   readonly text: string;
   readonly state: FieldMessageState;
@@ -143,6 +146,7 @@ const NO_CONTROL: ControlState = { errors: NO_ERRORS, touched: false };
  * form-level error summary, or one message for a whole field group.
  *
  * Call from a field initializer (an injection context).
+ * @internal
  */
 export function resolveFieldMessage(
   sources: DsFieldMessageSources,

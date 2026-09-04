@@ -11,9 +11,11 @@
 // and its hash recipes are unknown (`keyRecipe: 7` names a version we cannot reproduce). A wrong
 // value there is worse than a stale one: a hash that happens to match makes the next skill-driven
 // sync SKIP a file that did change. `_ds_manifest.json` IS ours — see build-manifest.mjs.
-import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { internalSymbols, resolveLibSpecifier } from '../../tools/lib-entry-points.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -36,7 +38,7 @@ const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase(
  *  the split is only ever at a lowercase-or-digit followed by an uppercase. */
 const spacedName = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
 
-/** Every name `src/public-api.ts` exports, by walking the re-export graph.
+/** Every name `src/lib/public-api.ts` exports, by walking the re-export graph.
  *
  *  This decides what gets a published CONTRACT. The README the project ships says it outright:
  *  "Engineers translate what you build here… anything with no Angular counterpart can't be handed
@@ -46,26 +48,13 @@ const spacedName = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
  *  ModalConfirmComponent while exporting the service that opens it, and CalendarDay was never
  *  re-exported at all.
  *
- *  The lever is `public-api.ts` and nothing here: export a component and it is published on the
+ *  The lever is `src/lib/public-api.ts` and nothing here: export a component and it is published on the
  *  next build. There is deliberately no allowlist to drift. */
 const publicExports = (() => {
   const names = new Set();
   const seen = new Set();
 
-  const resolve = (from, specifier) => {
-    const base = join(dirname(from), specifier);
-    for (const candidate of [`${base}.ts`, join(base, 'index.ts')]) {
-      try {
-        readFileSync(candidate);
-
-        return candidate;
-      } catch {
-        /* try the next shape */
-      }
-    }
-
-    return null;
-  };
+  const resolve = (from, specifier) => resolveLibSpecifier(from, specifier);
 
   const declaredIn = (source) => {
     for (const [, name] of source.matchAll(/export\s+(?:abstract\s+)?class\s+(\w+)/g)) {
@@ -101,7 +90,8 @@ const publicExports = (() => {
       }
       walk(target);
     }
-  })(join(repo, 'src', 'public-api.ts'));
+  })(join(repo, 'src', 'lib', 'public-api.ts'));
+  for (const name of internalSymbols()) names.delete(name);
 
   return names;
 })();
@@ -176,11 +166,14 @@ const apiKeyBySelector = (() => {
     join(repo, 'ds-docs/src/app/shared/component-api.generated.ts'), 'utf8',
   );
   const map = new Map();
-  // Each entry opens with its own `key` and `selector` on adjacent lines.
-  for (const [, key, selector] of source.matchAll(
-    /"key":\s*"([^"]+)",\s*\n\s*"selector":\s*"([^"]+)"/g,
+  // The ENTRY's own name, not its inner `key`. A part that shares its chapter's anchor is filed as
+  // `menu:MenuItemComponent` while its `key` field holds the bare anchor `menu`, and it is the
+  // entry name that `docs-section` renders into `data-key`. Reading the field tagged every part
+  // with its chapter: the Menu Item card printed `<ds-menu>`.
+  for (const [, entry, selector] of source.matchAll(
+    /"([^"]+)":\s*\{\s*\n\s*"key":\s*"[^"]+",\s*\n\s*"selector":\s*"([^"]+)"/g,
   )) {
-    if (!map.has(selector)) map.set(selector, key);
+    if (!map.has(selector)) map.set(selector, entry);
   }
 
   return map;
@@ -191,6 +184,17 @@ const apiKeyBySelector = (() => {
  *  A block is a demo with its own `<h3 class="block-title">` and description, or a container
  *  carrying `data-for` when a set of demos is grouped without a heading of its own (Menu's item
  *  states). `owner` is the sub-component the block documents, or `''` for the chapter's own. */
+/** Template markup as a reader would hear it: tags out, entities resolved, bindings dropped. */
+const plainText = (markup) => decode(markup.replace(/<[^>]*>/g, ' '))
+  .replace(/\{\{[\s\S]*?\}\}/g, '')
+  .replace(/\s+/g, ' ')
+  // Only where the mark ENDS a word. Without the lookahead this ate the space in `the global .link`,
+  // because stripping the tags leaves the class name starting with a dot.
+  .replace(/\s+([,.;:!?)])(?=\s|$)/g, '$1')
+  .replace(/(\()\s+/g, '$1')
+  .replace(/\s+\)/g, ')')
+  .trim();
+
 const VOID_TAGS = new Set(['br', 'hr', 'img', 'input', 'meta', 'link', 'source', 'track', 'area']);
 const TAG = /<(\/?)([a-zA-Z][\w-]*)\b([^>]*)>/g;
 
@@ -228,10 +232,10 @@ function blocksOf(slug) {
       const title = decode(body.slice(opens, closes < 0 ? opens : closes).replace(/<[^>]*>/g, ' '))
         .replace(/\s+/g, ' ')
         .trim();
-      found.push({ title, owner: owner ?? '' });
+      found.push({ title, owner: owner ?? '', at: match.index });
     } else if (depth === 1 && owner !== null) {
       // A set of demos grouped without a heading of its own — Menu's item states.
-      found.push({ title: '', owner });
+      found.push({ title: '', owner, at: match.index });
     } else if (depth > 1 && (heading || owner !== null) && !insideMarkedContainer) {
       // Nested under a plain container, so the walk cannot address it: Empty-state lays four of its
       // five variants out in a `.blocks` grid. Slicing that chapter would silently drop them, so it
@@ -245,7 +249,21 @@ function blocksOf(slug) {
     }
   }
 
-  return sliceable ? found : [];
+  if (!sliceable) return [];
+
+  // The block's own first paragraph, which becomes the card's subtitle in the pane. Bounded by the
+  // NEXT block so a chapter's later prose cannot leak into an earlier card's line.
+  return found.map((block, index) => {
+    const until = index + 1 < found.length ? found[index + 1].at : body.length;
+    const slice = body.slice(block.at, until);
+    // Every class the sections use for PROSE, not just the shared one: the refusal block carries its
+    // paragraphs in `.refusal-copy`, do-dont in `.caption`, token-discipline in `.muted`.
+    const prose = [...slice.matchAll(/<p[^>]*class="[^"]*(?:block-desc|refusal-copy|caption|muted)[^"]*"[^>]*>([\s\S]*?)<\/p>/g)]
+      .map(([, inner]) => plainText(inner))
+      .filter(Boolean);
+
+    return { ...block, desc: prose[0] ?? '', prose };
+  });
 }
 
 // The pane fits the declared viewport into its tile — `scale = min(tileW/1200, tileH/declaredH)` —
@@ -323,19 +341,22 @@ function cardsFor(name) {
   const blocks = blocksOf(section.slug);
   const marks = new Set(blocks.map((block) => block.owner).filter(Boolean));
   // Only the chapter's OWN component may claim the unmarked blocks. A part whose chapter marks
-  // nothing for it falls back to one whole-chapter card — giving it a card per block would republish
-  // the parent's demos under a second name, which is the duplication this whole design removes.
+  // nothing for it gets NO card: whatever documents it is already on the chapter's own cards, and a
+  // second copy under the part's name is the duplication this whole design removes. `TimeColumns`
+  // shipped the entire Time Picker chapter — all seven of its blocks — under the name
+  // "Time Columns". Only a chapter that publishes nothing at all falls back to a whole-chapter card.
   const primary = section.slug.startsWith('components/') && section.slug.slice(11) === own;
   const owner = marks.has(own) ? own : (primary ? '' : null);
   const label = spacedName(name);
+  if (owner === null && blocks.length) return [];
   if (owner === null || !blocks.length) {
-    return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+    return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
   }
 
   const mine = blocks
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => block.owner === owner);
-  if (!mine.length) return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+  if (!mine.length) return [{ file: label, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
 
   return nameCards(label, mine, owner);
 }
@@ -352,11 +373,22 @@ function guideCardsFor(section) {
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => !block.owner);
   if (!blocks.length) {
-    return [{ file: chapter, owns: null, ownedIndex: -1, chapterPosition: -1, title: '' }];
+    return [{ file: chapter, owns: null, ownedIndex: -1, chapterPosition: -1, title: '', desc: '', prose: [] }];
   }
 
   return nameCards(chapter, blocks, '');
 }
+
+/** A block title as it should READ, not as a filename: the folding to printable ASCII that
+ *  `blockLabel` does exists because a path may not carry the multiplication sign or a middle dot,
+ *  and the h2 inside the card is under no such constraint. Only a template binding has to go. */
+const displayTitle = (raw) => (raw ?? '')
+  .replace(/\{\{[\s\S]*?\}\}/g, '')
+  .replace(/\s+/g, ' ')
+  .trim()
+  // It follows a dash in `Buttons - with icon`, so it continues the line rather than starting one.
+  // Only an ordinary word is lowered: `CSV export`, `W3w`, `12-hour (AM PM)` keep their shape.
+  .replace(/^[A-Z](?=[a-z]|\s|$)/, (letter) => letter.toLowerCase());
 
 /** One card per owned block, each named `<chapter> - <block>`. */
 function nameCards(chapter, mine, owner) {
@@ -379,9 +411,20 @@ function nameCards(chapter, mine, owner) {
       ownedIndex,
       chapterPosition: block.chapterPosition,
       title: block.title,
+      desc: block.desc ?? '',
+      prose: block.prose ?? [],
     };
   });
 }
+
+/** The API keys a chapter declares, which is the set of parts it renders a chip and a table for.
+ *  A part outside that set has no `data-key` of its own on the page, and its card then keeps the
+ *  chapter's - the Menu Item card printed `<ds-menu>`. */
+const declaredKeys = (slug) => {
+  const declared = templateOf(slug).match(/\[apiKeys\]="\[([^\]]*)\]"/)?.[1] ?? '';
+
+  return new Set([...declared.matchAll(/'([^']+)'/g)].map(([, key]) => key));
+};
 
 /** The card's group, taken from the ds-docs group page that renders its section.
  *
@@ -399,13 +442,67 @@ function readDoc(name) {
   return raw.slice(front[0].length).trimStart();
 }
 
+/** The card's usage note: the file the pane reads for "Usage notes for Claude", named after the
+ *  card and sitting beside it. Found by listing the project after a note was typed in the pane -
+ *  it appeared as `<card>.prompt.md` holding the raw text, so the build can write them.
+ *
+ *  It carries what will not fit in the one-line subtitle: the block's whole prose, and a pointer to
+ *  the component's own prompt and declaration. NOTE that the build now OWNS these files - a note
+ *  typed in the pane is replaced on the next upload. */
+const usageNote = ({ title, prose, component, contract }) => [
+  `# ${title}`,
+  '',
+  ...(prose.length ? [prose.join('\n\n'), ''] : []),
+  ...(component
+    ? [`Full API: \`${component}.d.ts\`. How to use the component anywhere: \`${component}.prompt.md\`.`
+      + (contract ? '' : ' This component is not exported by the package, so it has neither.'), '']
+    : []),
+].join('\n');
+
+/** The same words the card's own h2 shows, for the line the pane prints above the frame. */
+const paneTitle = (head, blockTitle) => {
+  const shown = displayTitle(blockTitle);
+
+  return shown ? `${head} - ${shown}` : head;
+};
+
 /** The card page: the ds-docs section for this component, and nothing else.
  *
  *  There is no React on this page and no per-card script. A hand-written preview per component was
  *  the previous design and the showcase drifted from the components it showed, because a specimen
  *  nobody opens is a specimen nobody checks. The docs site is looked at every day. */
-function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey }) {
-  const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''} -->`;
+/** Safe inside an HTML comment attribute. The angle brackets go because a `>` ends the marker for
+ *  any parser that scans to the first one - thirteen subtitles quoting a tag or a loudness order
+ *  did exactly that - and the app's own parser cannot be inspected from here. */
+const markerValue = (value) => (value ?? '')
+  .replace(/"/g, "'")
+  .replace(/[<>]/g, '')
+  .replace(/--+/g, '-')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+/** What the pane prints ABOVE the frame: ONE sentence, a whole thought that ends rather than a
+ *  paragraph that stops. The rest of the block's prose is not lost - it becomes the card's usage
+ *  note.
+ *
+ *  Measured, not guessed: a 2003-character probe was stored by the API in full and the pane showed
+ *  it up to character 193, so the pane's own limit is about 195. This cap sits under it so the cut
+ *  is OURS - on a word, with an ellipsis - rather than the pane's mid-word. The median first
+ *  sentence is 76 characters and the ninetieth percentile 168, so 180 lets 93% through whole. */
+const SUBTITLE_CAP = 180;
+const capped = (paragraph) => {
+  const stop = paragraph.search(/[.!?](\s|$)/);
+  const sentence = stop < 0 ? paragraph : paragraph.slice(0, stop + 1);
+
+  return sentence.length <= SUBTITLE_CAP
+    ? sentence
+    : `${sentence.slice(0, sentence.lastIndexOf(' ', SUBTITLE_CAP))}…`;
+};
+
+function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey, withTable, head, block, react, title, subtitle }) {
+  const marker = `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''}`
+    + `${title ? ` name="${markerValue(title)}"` : ''}`
+    + `${subtitle ? ` subtitle="${markerValue(capped(subtitle))}"` : ''} -->`;
 
   return `${marker}
 <!doctype html>
@@ -420,7 +517,10 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey }) {
   <style>
     /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
        all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}${block ? `
+    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
+       title and takes the tight gap a heading gives, not the loose one that separates demos. */
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}` : ''}
     /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
        for a capped, padded column stretches edge to edge without it, and every demo that relies on
        wrapping wraps at the wrong width. */
@@ -432,18 +532,34 @@ function cardHtml({ name, group, tag, viewport, owns, ownedIndex, apiKey }) {
        same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
   <script>window.__dsSectionsOnly = true</script>
   <script src="../../../_ds_bundle.js"></script>
-${owns === null ? '' : `  <script>
+  <script>
     /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
        than the same chapter twice. A block starts at a top-level child carrying \`data-for\` (which
        names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one. CHROME is docs-section's own template
-       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
-       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
+       chapter's own component), and runs until the next one.
+       Of the chapter's own header only the title is kept on every card. The eyebrow is a constant,
+       and the lede describes the CHAPTER — printing it on all seven Button cards is the same
+       paragraph seven times, so it rides the first card only. Removed rather than hidden: the pane
+       sizes a card from its rendered height. */
     (function () {
       var OWNS = ${JSON.stringify(owns)};
       var INDEX = ${JSON.stringify(ownedIndex)};
       var KEY = ${JSON.stringify(apiKey)};
-      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
+      var TABLE = ${JSON.stringify(Boolean(withTable))};
+      var HEAD = ${JSON.stringify(head)};
+      var BLOCK = ${JSON.stringify(block)};
+      var REACT = ${JSON.stringify(react)};
+      /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
+         the title said "Buttons" and the lede described Button, and the card already names itself
+         in its block heading and in the pane's label. The lede rides the chapter's first card.
+         A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
+         slice and nothing repeated — it loses only the eyebrow. */
+      var WHOLE = OWNS === null;
+      /* The chapter's summary belongs to the chapter, so it rides its first card only - seven
+         copies of the same paragraph is what it was before. A whole-chapter card is that card. */
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
       var host = document.querySelector(${JSON.stringify(tag)});
       var start = Date.now();
@@ -457,8 +573,11 @@ ${owns === null ? '' : `  <script>
         var doomed = [];
         var apis = [];
         var ordinal = -1;
+        var heading = null;
         for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(CHROME)) continue;
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
+          if (node.matches(KEEP)) continue;
           if (node.matches(API)) { apis.push(node); continue; }
           var marked = node.getAttribute('data-for');
           var starts = marked !== null || node.matches('h3.block-title');
@@ -466,28 +585,71 @@ ${owns === null ? '' : `  <script>
           else if (node.matches('h3.block-title')) owner = '';
           if (starts && owner === OWNS) ordinal += 1;
           if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
         }
         /* One API table per card: its own. The chapter's component is keyed by the anchor and a
            part by the anchor plus its class name. A part the extractor left out has no key at all,
            and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
-        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
+          }
+        }
+
+        /* The h2 names what the card is ABOUT. It said "Buttons" on all seven Button cards and
+           said nothing at all on a part's card, while the block's own h3 carried the only specific
+           words on the page - so the h3's text moves up and the h3 itself goes. HEAD overrides the
+           chapter's name for a part, whose own name is not the chapter's. */
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
 
         for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+
+        /* A part's chip is rendered inside its \`.api-sub\` wrapper at the foot of the chapter, while
+           the chapter's own sits directly under the title. Same place on every card. An emptied
+           wrapper goes with it - it carries a margin of its own. */
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+
+/* To Claude Design this is a React design system, so the chip names the React tag and only that
+           one: an agent here cannot type \`<ds-button>\`, and the Angular name is on the docs site,
+           in the \`.d.ts\` and in the README for whoever translates. Rewritten in place, so ds-docs
+           renders its own chip untouched. A directive has no React tag and passes null. */
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
         /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
            over an empty page because the chapter reported more blocks than the card could address,
            and a card that removes everything looks exactly like one that removed nothing. */
         var kept = 0;
         for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
         }
         document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
         document.documentElement.setAttribute('data-ds-kept', String(kept));
       })();
     })();
   </script>
-`}</body></html>
+</body></html>
 `;
 }
 
@@ -564,6 +726,7 @@ mkdirSync(OUT, { recursive: true });
 
 const written = [];
 const withheld = [];
+const untagged = [];
 for (const name of [...byName.keys()].sort()) {
   const component = byName.get(name);
   const body = readDoc(name);
@@ -598,6 +761,7 @@ for (const name of [...byName.keys()].sort()) {
 
   // Keyed by the card FILE, not the component: a component publishes one card per block it owns and
   // each is a different height. measure-cards.mjs writes these keys.
+  const partKey = apiKeyBySelector.get(component.selector) ?? '';
   for (const card of cardsFor(name)) {
     const height = viewports.heights[card.file];
     writeFileSync(
@@ -609,11 +773,36 @@ for (const name of [...byName.keys()].sort()) {
         viewport: height ? `${viewports.width}x${declaredHeight(height)}` : null,
         owns: card.owns,
         ownedIndex: card.ownedIndex,
-        // Only the first card of a component carries the API table. On Table that is the difference
-        // between one table and thirty-five copies of it.
-        apiKey: card.ownedIndex <= 0 ? apiKeyBySelector.get(component.selector) ?? '' : null,
+        apiKey: apiKeyBySelector.get(component.selector) ?? '',
+        // The tag is on every card; only the first carries the API table. On Table that is the
+        // difference between one table and thirty-five copies of it.
+        withTable: card.ownedIndex <= 0,
+        // A part's card is titled after the PART. `card.owns` is empty exactly when the card belongs
+        // to the chapter's own component, and then the chapter's own h2 text is already right.
+        head: card.owns ? spacedName(name) : null,
+        block: displayTitle(card.title),
+        title: paneTitle(card.owns ? spacedName(name) : chapterTitleOf(section.slug), card.title),
+        subtitle: card.desc,
+        // `name` IS the React name - it is what the wrapper, the declaration and the card directory
+        // are called. All 85 components in the surface are elements today; an attribute selector
+        // would be a directive, which has no React tag of its own.
+        react: component.selector.startsWith('[') ? null : name,
       }),
     );
+    // An empty key means the API extractor has no entry for this component at all, and then there
+    // is no chip anywhere to show - the card correctly shows none rather than the chapter's.
+    writeFileSync(
+      join(dir, `${card.file}.prompt.md`),
+      usageNote({
+        title: paneTitle(card.owns ? spacedName(name) : chapterTitleOf(section.slug), card.title),
+        prose: card.prose,
+        component: name,
+        contract: publicExports.has(component.className),
+      }),
+    );
+    if (card.owns && partKey && !declaredKeys(section.slug).has(partKey)) {
+      untagged.push(`${card.file} (${section.slug} declares no '${partKey}')`);
+    }
     written.push({
       file: card.file,
       path: `components/${group}/${name}/${card.file}.html`,
@@ -645,7 +834,23 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
         viewport: height ? `${viewports.width}x${declaredHeight(height)}` : null,
         owns: card.owns,
         ownedIndex: card.ownedIndex,
-        apiKey: card.ownedIndex <= 0 ? '' : null,
+        apiKey: '',
+        withTable: card.ownedIndex <= 0,
+        head: null,
+        block: displayTitle(card.title),
+        title: paneTitle(chapterTitleOf(section.slug), card.title),
+        subtitle: card.desc,
+        // A chapter with no component of its own renders no chip, so there is nothing to name.
+        react: null,
+      }),
+    );
+    writeFileSync(
+      join(dir, `${card.file}.prompt.md`),
+      usageNote({
+        title: paneTitle(chapterTitleOf(section.slug), card.title),
+        prose: card.prose,
+        component: null,
+        contract: false,
       }),
     );
     written.push({
@@ -673,6 +878,25 @@ ordered.sort((a, b) => a.section - b.section || a.block - b.block || a.name.loca
 writeFileSync(
   join(elements, 'gen', 'cards.json'),
   `${JSON.stringify({ generatedBy: 'build-cards.mjs', cards: ordered.map((entry) => entry.path) }, null, 2)}\n`,
+);
+
+// What CI compares INSTEAD of the card bytes. This repo commits the cards frozen, and freezing
+// needs a browser, so a CI build always produces live ones and a byte comparison between the two
+// says "stale" every time — which ended with the release bot committing the live tree over the
+// freeze. The lock fingerprints the cards as THIS script leaves them, which is exactly what CI
+// reproduces: it matching means the cards did not change and the frozen copies in git still stand.
+const fingerprints = {};
+const fingerprint = (dir, rel) => {
+  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const next = `${rel}/${entry.name}`;
+    if (entry.isDirectory()) fingerprint(join(dir, entry.name), next);
+    else fingerprints[next] = createHash('sha256').update(readFileSync(join(dir, entry.name))).digest('hex').slice(0, 16);
+  }
+};
+for (const top of ['components', 'guides']) fingerprint(join(OUT, top), top);
+writeFileSync(
+  join(syncDir, 'cards.lock.json'),
+  `${JSON.stringify({ generatedBy: 'build-cards.mjs', files: fingerprints }, null, 2)}\n`,
 );
 
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
@@ -745,15 +969,46 @@ if (!cover) {
 }
 cpSync(join(syncDir, 'assets', cover), join(OUT, '.thumbnail'));
 
+/* Paths the project still holds and this build no longer produces. The list stays in the REPO and
+   is printed for whoever is running the upload - it must NOT reach the project. The README there is
+   the front door a designer and an agent read, and our clean-up list has no business in it. */
+const obsolete = readFileSync(join(syncDir, 'obsolete.txt'), 'utf8')
+  .split('\n')
+  .map((line) => line.trim())
+  .filter((line) => line && !line.startsWith('#'));
+
+const live = obsolete.filter((path) => existsSync(join(OUT, path)));
+if (live.length) {
+  throw new Error(
+    `.design-sync/obsolete.txt lists ${live.length} path(s) this build still produces, so they are`
+    + ` live cards and not obsolete files:\n  ${live.join('\n  ')}`,
+  );
+}
+
 // The project's own README, from the same conventions file the agent reads.
 writeFileSync(
   join(OUT, 'README.md'),
   readFileSync(join(syncDir, config.readmeHeader.replace('.design-sync/', '')), 'utf8'),
 );
 
+if (obsolete.length) {
+  console.log(
+    `· ${obsolete.length} obsolete path(s) still on the project, owner-only to delete:`
+    + `\n  ${obsolete.join('\n  ')}`,
+  );
+}
+
+if (untagged.length) {
+  throw new Error(
+    `${untagged.length} part card(s) would print their CHAPTER's tag, having none of their own.`
+    + ` Add the key to that section's \`[apiKeys]\` input so docs-section renders its chip and`
+    + ` table:\n  ${untagged.join('\n  ')}`,
+  );
+}
+
 if (withheld.length) {
   console.log(
-    `· ${withheld.length} component(s) get cards but no contract — src/public-api.ts does not`
+    `· ${withheld.length} component(s) get no contract — src/lib/public-api.ts does not`
       + ` export them: ${withheld.join(', ')}`,
   );
 }

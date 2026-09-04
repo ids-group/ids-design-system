@@ -325,7 +325,10 @@
                     [attr.aria-selected]="isSelected(option.value)"
                     [disabled]="option.disabled"
                     (click)="toggleValue(option)"
-                    (mouseenter)="cursorFromKeyboard.set(false); activeIndex.set(flatIndexOf(option))"
+                    (mouseenter)="
+                      cursorFromKeyboard.set(false);
+                      activeIndex.set(flatIndexOf(option))
+                    "
                   >
                     <span
                       class="checkbox"
@@ -379,7 +382,10 @@
               [attr.aria-selected]="isSelected(option.value)"
               [disabled]="option.disabled"
               (click)="toggleValue(option)"
-              (mouseenter)="cursorFromKeyboard.set(false); activeIndex.set(flatIndexOf(option))"
+              (mouseenter)="
+                cursorFromKeyboard.set(false);
+                activeIndex.set(flatIndexOf(option))
+              "
             >
               <span
                 class="checkbox"
@@ -458,6 +464,5 @@
         />
       </div>
     }
-
   </div>
 </ng-template>

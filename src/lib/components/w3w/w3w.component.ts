@@ -5,7 +5,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 @Component({
   selector: 'ds-w3w',

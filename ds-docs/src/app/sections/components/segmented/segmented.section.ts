@@ -1,10 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  SegmentedComponent,
-  SegmentedOption,
-  ButtonGroupComponent,
-  ButtonComponent,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { ButtonGroupComponent } from 'ds/button-group';
+import { SegmentedComponent, SegmentedOption } from 'ds/segmented';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

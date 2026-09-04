@@ -17,6 +17,7 @@ import {
  * The message half lives one level up in `DsMessageBase`, which anything with a
  * message line can take. What stays here is the validation state a form control
  * has and a plain control does not.
+ * @internal
  */
 @Directive()
 export abstract class DsFieldBase extends DsMessageBase {

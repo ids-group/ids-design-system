@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  ButtonComponent,
-  SwitchComponent,
-  ToggleButtonComponent,
-  type ButtonVariant,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import type { ButtonVariant } from 'ds/button';
+import { SwitchComponent } from 'ds/switch';
+import { ToggleButtonComponent } from 'ds/toggle-button';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsMatrixComponent,
@@ -44,8 +42,8 @@ export class ButtonSection {
   protected readonly variants: readonly ButtonVariant[] = [
     'solid',
     'tonal',
-    'ghost',
     'outline',
+    'ghost',
     'text',
   ];
 
@@ -93,14 +91,14 @@ export class ButtonSection {
       label: 'Success',
       note: 'status',
       dot: 'var(--success)',
-      discouraged: ['ghost', 'outline', 'text'],
+      discouraged: ['outline', 'ghost', 'text'],
     },
     {
       key: 'warning',
       label: 'Warning',
       note: 'status',
       dot: 'var(--warning)',
-      discouraged: ['ghost', 'outline', 'text'],
+      discouraged: ['outline', 'ghost', 'text'],
     },
   ];
 
@@ -108,8 +106,8 @@ export class ButtonSection {
   protected readonly stateVariants: readonly VariantSpec[] = [
     { label: 'Solid', variant: 'solid' },
     { label: 'Tonal', variant: 'tonal' },
-    { label: 'Ghost', variant: 'ghost' },
     { label: 'Outline', variant: 'outline' },
+    { label: 'Ghost', variant: 'ghost' },
   ];
 
   /** Horizontal axis of the states matrix. hover/focus/active are pinned for display. */

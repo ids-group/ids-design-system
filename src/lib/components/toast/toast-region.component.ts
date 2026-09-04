@@ -8,8 +8,8 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { DS_CONFIG } from '../../core/ds-config';
-import { devWarn } from '../../core/dev-warning';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';

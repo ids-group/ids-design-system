@@ -1,11 +1,11 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  AutocompleteComponent,
-  ButtonComponent,
-  type AutocompleteItem,
-  type AutocompleteOption,
-  type AutocompleteOptionGroup,
-} from 'ds';
+import { AutocompleteComponent } from 'ds/autocomplete';
+import type {
+  AutocompleteItem,
+  AutocompleteOption,
+  AutocompleteOptionGroup,
+} from 'ds/autocomplete';
+import { ButtonComponent } from 'ds/button';
 import {
   DocsTruncationComponent,
   TruncationRule,
@@ -104,9 +104,8 @@ export class AutocompleteSection {
   protected readonly owner = signal<DemoOwner | null>(null);
   protected readonly searchCity = signal<string | null>(null);
 
-  protected readonly ownerOptions = signal<AutocompleteItem<DemoOwner>[]>(
-    buildOwners(),
-  );
+  protected readonly ownerOptions =
+    signal<AutocompleteItem<DemoOwner>[]>(buildOwners());
 
   protected readonly sameOwner = (
     first: DemoOwner | null,

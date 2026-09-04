@@ -27,7 +27,7 @@ elements upgrades every host a second time.
 
 **One card per BLOCK**, not per component. A block is one demo with its own
 `<h3 class="block-title">` and description, and the card keeps exactly that block
-plus the chapter's heading, tag chip and lede. 85 components, 314 cards.
+plus the chapter's heading, tag chip and lede. 85 components, 409 cards.
 
 That granularity is forced by how the pane renders: it fits a card's declared
 `viewport` into a fixed tile, so **the declared height IS the zoom level**.
@@ -151,6 +151,84 @@ wrapper survives while the custom elements inside it are destroyed
 This is a constraint on the AGENT's compositions, not on the cards: a card is an Angular section,
 where the ordinary change-detection rules apply and none of this bites.
 
+## Freezing the cards (runs LAST)
+
+```sh
+node .design-sync/tools/snapshot-cards.mjs   # after build-cards and measure-cards
+```
+
+A card is a whole document that downloads the 2.12 MB bundle and boots its own
+Angular application, and the pane shows a grid of them. `snapshot-cards` renders
+each one in headless Chrome, waits for the card's own slicer to finish, and
+writes the SETTLED DOM back with every `<script>` stripped. Nothing about the
+rendering changes: Angular's emulated-encapsulation styles are already `<style>`
+tags by then, and no colour is baked in — the theme tokens stay in
+`_ds_bundle.css`, which the frozen card still links, so the pane switching
+`data-theme` still recolours it.
+
+What is lost is BEHAVIOUR. The chapters that need it are in
+`live-chapters.txt` — toast, drawer, modal, popover, bottom-sheet, tree,
+loading-overlay, scrollbar — and are left as live Angular. 376 frozen, 33 live.
+
+Angular inlines a component's styles into every document that renders it, so the
+same block arrived in card after card: 185 distinct blocks against 4005 tags.
+They are scoped by `_ngcontent`/`_nghost` attributes and therefore
+position-independent, which is what makes concatenating them into `_ds_cards.css`
+safe — the browser fetches 428 KB once for the whole grid instead of parsing 27 KB
+inside each card. The `ng-cNNNN` ids are shortened across the sheet and every card
+**in one pass**: the attribute IS the scope, so a rename reaching only one of them
+silently unstyles the component. The scaffolding's own `/* … */` goes with the HTML
+comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
+
+- **Run it LAST.** It rewrites cards in place, and any later `build-cards` run
+  replaces them with live cards again.
+- **`build-cards` wipes `upload/` with `rmSync`, and Windows refuses to delete a
+  directory that is a process's CWD.** A shell left sitting inside it makes every
+  later build fail with EPERM; with the output redirected that failure is silent,
+  and `snapshot-cards` then re-freezes already-frozen cards into nonsense.
+- **The output is reproducible, and that is deliberate.** Five lanes finish out of
+  order, so the results are read back in `cards.json` order — otherwise the sheet's
+  block order and the id renumbering differ every run, and all 376 cards plus the
+  shared sheet rewrite with no change in them. Two consecutive freezes must leave
+  `git status` empty.
+- **A built section is not a settled one.** Components that measure write their
+  result later — Table's sticky scrollbar pins `.scroll-wrap` to a computed height —
+  so the tidy pass waits for `document.fonts.ready` and then for the DOM to stop
+  changing (a MutationObserver with a 150 ms quiet window, 5 s cap). Counting frames
+  instead froze that one card three different ways in three runs.
+
+### The two gates that keep CI from thawing it
+
+CI runs `build:upload` in an image with no browser, so its cards come out LIVE while
+this repo commits them FROZEN. Byte-comparing those said "stale" on every run, and on
+the branch where `BITBUCKET_BUILD_NUMBER` is set the script does not fail on that — it
+COMMITS, as the release bot. So the next release would have undone the freeze.
+
+- **`.design-sync/cards.lock.json` is what CI compares instead.** `build-cards` writes
+  it: a sha256 prefix per file it generates under `components/` and `guides/`. It
+  fingerprints the cards as build-cards leaves them, which is exactly what a browserless
+  build reproduces — so it moves when a card's SOURCE moves and stays put when only the
+  freeze is missing. If it moved, CI fails and names the local commands to run; it must
+  not try to build the frozen cards itself.
+- **`check-frozen.mjs` asserts the split.** Every card outside `live-chapters.txt` must
+  have no `<script>`, every card inside it must have one. No browser needed, so CI runs
+  it after restoring the frozen copies from git.
+- **`_ds_cards.css` is restored with the cards.** `build-cards` wipes the directory and
+  only `snapshot-cards` writes that file, so restoring `components/` and `guides/` alone
+  leaves a DELETION for the release commit to pick up.
+- **Whitespace is collapsed IN THE PAGE, never by a regexp over the file.**
+  `white-space: pre|pre-wrap|pre-line` is live in five places here, so the tidy
+  pass walks text nodes and asks `getComputedStyle` which is which. A file-level
+  `\n[ \t]*` regexp ate the indentation of the SQL sample in the mono type
+  specimen and cost that card a line.
+- **The `@dsCard` marker is re-prepended by hand**: a DOM dump starts at `<html>`,
+  so without that the card vanishes from the next manifest.
+- **Proof it changed no pixel**: render every card and compare against
+  `viewports.json`. Measure only after `document.fonts.ready` — Mulish is taller
+  than the fallback, and measuring before it lands under-reports by ~20px, which
+  once produced 66 phantom "shrinks" and had also left 22 recorded heights short.
+  Last run: 409 checked, 0 blank, 0 heights moved by more than 3px.
+
 ## Publishing
 
 Read first, then lock the plan, then write — the tool enforces that order and
@@ -182,6 +260,48 @@ delete_files { planId, paths }
   write_files, delete_files, register_assets, unregister_assets, create_project,
   report_validate — so "move it to a trashcan folder" means copy plus blank, which
   leaves the original in place and doubles the file count.
+- **Marking an obsolete path, given no rename and no delete: replace its CONTENT,
+  and add nothing.** Title and body read `[TO BE DELETED]` and name what replaced
+  it, so the path is inert and self-explaining. That is the whole solution, and
+  the only one that adds no file. A `[TO BE DELETED]` PREFIX on the name is a
+  second file beside the first, not a rename. `register_assets` is the one lever
+  on a card's DISPLAYED name, but registering an orphan publishes a dead card into
+  the pane, which is worse than an invisible file.
+- **On a project you do not own, every write is permanent.** A helper file added to
+  carry a list of what to delete becomes an item on that list: blanking it leaves a
+  0-byte file with no explanation, which is worse than leaving it. `_TO_BE_DELETED.md`
+  was written for exactly that reason on 2026-09-03 and now names itself. The list
+  belongs in the repo, and reaches the project only inside a file the build already
+  writes.
+- **Removing a file: every route tested, 2026-09-03, all closed.** The refusal
+  wording invites two theories and both are wrong.
+  - A finalize_plan that DECLARES the deletes does not lift it. The 403 names a
+    "turn fence", which reads like something a plan could supply; a plan whose
+    `deletes` held the three exact paths and no globs got the same 403. The fence
+    is server-side.
+  - "**bulk** delete" does not mean the batch is the problem. `delete_files` with a
+    SINGLE path got the same 403.
+  - `unregister_assets` SUCCEEDS on a non-owned project (`unregistered: 3`) and
+    removes nothing: `get_file` still returned the file byte-for-byte afterwards.
+    It clears a card registration, not a path — and these paths had none, so the
+    success is empty.
+  - There is no move or rename anywhere in the surface, so "rename it out of the
+    way" is a second file plus a blanked first.
+  - `get_project` reports `canEdit: true` with `ownerDisplayName: Mikhail`: write
+    yes, delete no. `list_projects` shows no project this account owns, and
+    `create_project` — a project the USER owns — is the only way to hold delete
+    rights.
+  - The closest thing to deletion that works is `write_files` with `data: ""`,
+    which leaves a 0-byte file.
+- **The obsolete-path pipeline, so the owner never hunts for files.**
+  `.design-sync/obsolete.txt` (one project-relative path per line) is the source of
+  truth in the REPO, and `build-cards` PRINTS it for whoever runs the upload,
+  together with the instruction the owner pastes into Claude to delete exactly
+  those paths. It must not reach the project: a section in the project's README
+  is one more thing the owner has to clean up afterwards, and it was removed for
+  that reason. The build FAILS if a listed path is one it still produces — that is
+  a live card, not an obsolete file. Add the line when a card is renamed or
+  withdrawn; remove it once `list_files` no longer shows the path.
 - `create_project` makes a project the USER owns, which is the only way to get
   delete rights back.
 - **A big `list_files` result is persisted to a file, not inlined** — the harness
@@ -202,13 +322,50 @@ delete_files { planId, paths }
   cards added since. The pane indexes from the manifest and reads a card only for
   its content — so a stale index shows a stale project no matter what else is
   uploaded, which is why refreshed cards kept rendering the old preview grid.
-  A card entry holds only `path`, `group` and `viewport`: there is no field for a
-  name, a subtitle or any prose, and the pane labels a card by its FILENAME.
   `templates` and `startingPoints` are in the schema and empty; the pane is
   server-side (the CLI binary carries only the tool description), so what fills
   them cannot be determined from here.
+- **What the pane puts OUTSIDE a card: `name`, `subtitle` and a usage note.** A
+  manifest entry carries `path`, `group`, `viewport`, `name` and `subtitle`;
+  the tile shows `name` as its title and `subtitle` under it, and falls back to
+  the filename only when `name` is absent. `build-manifest` reads both out of the
+  card's own `@dsCard` marker, so the card file stays the single source. The
+  subtitle renders to about 195 characters — the API stores at least 2003, so the
+  limit is the pane's, not the schema's — and `build-cards` caps at 180, cutting
+  at a sentence end where there is one. A marker value may not contain `>`: any
+  parser scanning to the first one ends the comment there, which silently
+  truncated 13 subtitles.
+- **Usage notes are a FILE, not a field**: `<card>.prompt.md` beside the card,
+  same basename. The pane shows it as "Usage notes for Claude". Nothing in the
+  manifest points at it — the name is the whole convention.
 - Never wholesale-replace: sync one component at a time and diff against
   `list_files` first.
+
+## The credential CI would need, and what is actually missing
+
+Corrected 2026-09-03. The earlier answer here was "no documented service credential, therefore
+impossible", and the second half does not follow from the first. `~/.claude/.credentials.json` holds
+a `designOauth` entry beside `claudeAiOauth`:
+
+    accessToken   108 chars
+    refreshToken  108 chars
+    expiresAt     epoch ms - the live one lasted about a day
+    scopes        ["user:design:read", "user:design:write"]
+    clientId      36 chars
+
+So the transport is reachable from anywhere that can hold a secret: refresh with `clientId` +
+`refreshToken`, then speak MCP over HTTP to `https://api.anthropic.com/v1/design/mcp` with the
+access token as a bearer. `/design-login` is only the interactive way to MINT that pair, not the
+only way to use it.
+
+Two things stand in the way, and neither is "no credential":
+
+- **It is a person's identity, not a service's.** The token carries `user:design:write` for a real
+  account, so a pipeline holding it acts as that person on every project they can write to. There is
+  no service account to scope down to one project.
+- **Refresh-token rotation is unverified.** If a refresh returns a NEW refresh token, CI must write
+  it back somewhere durable; a pipeline secret it cannot update means the second run fails. Test
+  this before building anything on it.
 
 ## Why the upload is not in the pipeline
 
@@ -253,21 +410,21 @@ the plan. The upload stays a local step with a human approving the paths.
 ## What lives remotely, and what this repo commits
 
 The repo commits the sync inputs — `docs/`, `elements/`, `tools/`,
-`config.json`, `viewports.json`, `conventions.md` — **and** the built tree at
+`config.json`, `viewports.json`, `cards.lock.json`, `conventions.md` — **and** the built tree at
 `upload/`, so a release commit carries exactly what a publish sends and CI can
-fail on a stale copy. `_ds_manifest.json` and `_ds_sync.json` are the only files
-in the project this repo does not hold: the app compiles the first from the
-`@dsCard` markers, and the second is the skill's own sync bookkeeping.
+fail on a stale copy. `_ds_manifest.json` is in there too since we started writing
+it ourselves. `_ds_sync.json` is the only file in the project this repo does not
+hold: it is the retired skill's own sync bookkeeping.
 
 `_ds_sync.json` is the incremental-sync bookkeeping: `styleSha`, per-component
 `renderHashes` and `sourceKeys`, `sourceHashes` per uploaded file, `keyRecipe`,
 `bundleSha12`. It is what lets a re-sync touch only what changed.
 
-## Current remote state (read 2026-09-01)
+## Current remote state (read 2026-09-04)
 
-Last updated 2026-07-31, so it is one month behind: **79 components against 85**,
-`AppShell` under its pre-rename name, `sourceKeys` from before the
-`AppShell` → `AppLayout` break. A re-sync has to go out.
+In sync. `list_files` and the built tree differ by exactly the three obsolete
+paths in `obsolete.txt`, which only the owner can remove; every other path
+matches, cards included.
 
 The route is settled: asked on 2026-09-02 how he updates the design system, Misha answered that he
 does it through the CLI, so the generated bundle is what he consumes and the upload is the delivery

@@ -1,30 +1,8 @@
-# CI/CD for @ids-group-ltd/ids-design-system.
+# CI/CD for @ids-group-ltd/ids-design-system. Build and lint logic lives in
+# infrastructure/scripts/*.sh — see its README for the branch model and the release flow.
 #
-# Build/lint logic lives in infrastructure/scripts/*.sh (see its README); this
-# file only wires images, caches, and triggers.
-#
-# Branch model: develop on `dev` (default); `main` is release-only. A release merges
-# dev->main, tags vX.Y.Z, publishes, then rebuilds what is generated from source.
-# Triggers:
-#   tags v*           -> build + publish to npm, then trigger after-release (3rd stage)
-#   custom release-*  -> cut a release from `dev` (merge dev->main, bump, tag, push)
-#   custom validate   -> on-demand build (gate) + lint (report-only)
-#   custom after-release -> rebuild everything generated from source: deploy the
-#                       ds-docs showcase to the IDS prototypes CDN, build the Claude
-#                       Design bundle
-#
-# Publish auth: a Secured repository variable NPM_TOKEN — an npm granular access
-# token with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
-# Write-enabled granular tokens expire in 90 days max (npm policy since Oct 2025),
-# so NPM_TOKEN must be rotated quarterly. Bitbucket is not yet an npm trusted
-# publisher (no OIDC), so a token is currently the only option. The .npmrc below
-# stores the literal string ${NPM_TOKEN}; npm substitutes the env var at runtime,
-# so the token value is never written to disk.
-#
-# Release flow (one-click): Pipelines -> Run pipeline -> branch `dev` -> release-*.
-# cut-release.sh merges dev->main, bumps, tags, pushes main + tag, back-syncs dev.
-# The tag runs the v* pipeline (publish -> trigger-after-release), which starts the
-# after-release pipeline over the REST API. Three runs: release, publish, after-release.
+# NPM_TOKEN must be rotated quarterly: npm caps a write-enabled granular token at 90 days, and
+# Bitbucket is not an npm trusted publisher, so there is no OIDC route that would avoid it.
 
 image: node:22-alpine
 
@@ -85,10 +63,8 @@ pipelines:
             - sh infrastructure/scripts/trigger-after-release.sh
 
   custom:
-    # PR validation, run on demand (Bitbucket UI "Run pipeline" or API) rather
-    # than automatically on every PR — one container builds (hard gate) and lints
-    # (report-only) in parallel. To make it automatic again, add a top-level
-    # `pull-requests:` section pointing a step at infrastructure/scripts/ci-pr.sh.
+    # On demand, not on every PR. To make it automatic, add a top-level `pull-requests:` section
+    # pointing a step at ci-pr.sh.
     validate:
       - step:
           name: Validate (build + lint)
@@ -101,17 +77,9 @@ pipelines:
           script:
             - sh infrastructure/scripts/ci-pr.sh
 
-    # One-click releases, run on demand from the Bitbucket UI (Run pipeline ->
-    # branch dev -> pick the level). cut-release.sh merges dev->main, bumps the version,
-    # stamps the CHANGELOG, commits, tags, and pushes main + the vX.Y.Z tag, then
-    # back-syncs dev. It does NOT publish: the pushed tag triggers the `tags: v*`
-    # pipeline above, which is the single publisher and in turn starts after-release.
-    # So a one-click release shows three runs — this one, `Publish to npm`, then
-    # `after-release` (skipped for beta prereleases). Requires Secured variable
-    # RELEASE_TOKEN (repository:write, to push main) and DOCS_DEPLOY_TOKEN
-    # (pipeline:write, to start after-release); NPM_TOKEN is used by the v* publish
-    # step. Fill `## Unreleased` on dev first — preflight enforces it. No caches:
-    # cut-release runs no install/build.
+    # Run from branch `dev`. These do NOT publish — the tag they push does, via `tags: v*`.
+    # Needs Secured RELEASE_TOKEN (repository:write) and DOCS_DEPLOY_TOKEN (pipeline:write).
+    # `## Unreleased` must be filled on dev; preflight enforces it.
     release-patch:
       - step:
           name: Release (patch)
@@ -145,76 +113,71 @@ pipelines:
           script:
             - sh infrastructure/scripts/cut-release.sh beta
 
-    # Everything that is REGENERATED from source after a release, in one pipeline:
-    # the ds-docs showcase (built, deployed to the IDS prototypes CDN) and the Claude
-    # Design bundle. Started automatically by the v* tag pipeline, and runnable by hand
-    # from the UI. Deliberately not folded into cut-release.sh: that script pushes main
-    # halfway through, so it must stay a git-and-node step that cannot fail on an
-    # install or a build, and generated output has no business entering a release commit
-    # unreviewed.
+    # Rebuilds what is generated from source. Kept out of cut-release.sh because that script
+    # pushes main halfway through and must not be able to fail on an install or a build.
     #
-    # Docs deploy mirrors the pinkmoon prototype deploy: shared bucket ids-prototypes +
-    # CloudFront E1P3IR95745IWV in eu-west-2, served under /ids-ds/ alongside /pm-admin
-    # and /pm-field. Requires the same Secured repository variables pinkmoon uses:
-    # IDS_DOCKER_AWS_ACCESS_KEY_ID, IDS_DOCKER_AWS_SECRET_ACCESS_KEY.
+    # Needs the AWS keys pinkmoon uses (IDS_DOCKER_AWS_ACCESS_KEY_ID, ..._SECRET_ACCESS_KEY) and
+    # RELEASE_TOKEN, because the bundle step commits the tree it regenerates. That push starts
+    # nothing: there is no `branches:` trigger.
     #
-    # The design-sync step is last on purpose: it is the slow half and nothing else
-    # waits on it, so a failure there leaves the published docs already deployed.
+    # The bundle runs beside the DEPLOY, not beside the docs build. A parallel group must finish
+    # before the next step, so pairing it with the build would let a bundle failure block the
+    # deploy — the thing this ordering exists to prevent.
     after-release:
       - step:
           <<: *build
           name: Build ds-docs showcase
           artifacts:
             - dist/ds-docs/**
+      - parallel:
+        - step:
+            name: Deploy ds-docs to IDS prototypes CDN
+            image: amazon/aws-cli
+            script:
+              - export AWS_ACCESS_KEY_ID=$IDS_DOCKER_AWS_ACCESS_KEY_ID
+              - export AWS_SECRET_ACCESS_KEY=$IDS_DOCKER_AWS_SECRET_ACCESS_KEY
+              - export AWS_DEFAULT_REGION=eu-west-2
+              - PROTO_S3_BUCKET="ids-prototypes"
+              - PROTO_CF_DISTRIBUTION_ID="E1P3IR95745IWV"
+              # Only hashed filenames may be immutable. A stable name cached for a year
+              # cannot be dislodged by any redeploy — that is what served a stale /changelog.
+              - >
+                aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
+                --delete
+                --cache-control "public, max-age=31536000, immutable"
+                --exclude "index.html"
+                --exclude "CHANGELOG.md"
+                --exclude "favicon.ico"
+                --exclude "favicon.svg"
+                --exclude "apple-touch-icon.png"
+              - >
+                aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
+                --cache-control "public, max-age=0, must-revalidate"
+                --exclude "*"
+                --include "CHANGELOG.md"
+                --include "favicon.ico"
+                --include "favicon.svg"
+                --include "apple-touch-icon.png"
+              - >
+                aws s3 cp dist/ds-docs/browser/index.html s3://$PROTO_S3_BUCKET/ids-ds/index.html
+                --cache-control "public, max-age=0, must-revalidate"
+                --content-type "text/html"
+              - >
+                aws cloudfront create-invalidation
+                --distribution-id $PROTO_CF_DISTRIBUTION_ID
+                --paths "/ids-ds/index.html" "/ids-ds/CHANGELOG.md" "/ids-ds/favicon.ico" "/ids-ds/favicon.svg" "/ids-ds/apple-touch-icon.png"
+        - step:
+            name: Build Claude Design bundle
+            caches:
+              - npm
+              - bun-bin
+              - bun-cache
+              - angular
+            artifacts:
+              - .design-sync/elements/dist/**
+            script:
+              - sh infrastructure/scripts/build-design-sync.sh
       - step:
-          name: Deploy ds-docs to IDS prototypes CDN
-          image: amazon/aws-cli
+          name: Sync dev with main
           script:
-            - export AWS_ACCESS_KEY_ID=$IDS_DOCKER_AWS_ACCESS_KEY_ID
-            - export AWS_SECRET_ACCESS_KEY=$IDS_DOCKER_AWS_SECRET_ACCESS_KEY
-            - export AWS_DEFAULT_REGION=eu-west-2
-            - PROTO_S3_BUCKET="ids-prototypes"
-            - PROTO_CF_DISTRIBUTION_ID="E1P3IR95745IWV"
-            # Hashed assets — long immutable cache. Everything Angular copies
-            # verbatim is excluded: those keep a STABLE name, so `immutable`
-            # pinned each visitor's first copy for a year and no redeploy could
-            # dislodge it — that is what served a stale /changelog.
-            - >
-              aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
-              --delete
-              --cache-control "public, max-age=31536000, immutable"
-              --exclude "index.html"
-              --exclude "CHANGELOG.md"
-              --exclude "favicon.ico"
-              --exclude "favicon.svg"
-              --exclude "apple-touch-icon.png"
-            # Stable-name assets — always revalidate
-            - >
-              aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
-              --cache-control "public, max-age=0, must-revalidate"
-              --exclude "*"
-              --include "CHANGELOG.md"
-              --include "favicon.ico"
-              --include "favicon.svg"
-              --include "apple-touch-icon.png"
-            # SPA entry point — always revalidate
-            - >
-              aws s3 cp dist/ds-docs/browser/index.html s3://$PROTO_S3_BUCKET/ids-ds/index.html
-              --cache-control "public, max-age=0, must-revalidate"
-              --content-type "text/html"
-            # Invalidate every stable-name path (hashed assets need none)
-            - >
-              aws cloudfront create-invalidation
-              --distribution-id $PROTO_CF_DISTRIBUTION_ID
-              --paths "/ids-ds/index.html" "/ids-ds/CHANGELOG.md" "/ids-ds/favicon.ico" "/ids-ds/favicon.svg" "/ids-ds/apple-touch-icon.png"
-      - step:
-          name: Build Claude Design bundle
-          caches:
-            - npm
-            - bun-bin
-            - bun-cache
-            - angular
-          artifacts:
-            - .design-sync/elements/dist/**
-          script:
-            - sh infrastructure/scripts/build-design-sync.sh
+            - sh infrastructure/scripts/sync-dev.sh

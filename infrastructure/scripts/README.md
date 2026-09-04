@@ -16,7 +16,8 @@ adapted to a design-system repo (library `ds` + showcase `ds-docs`).
 | `ci-pr.sh`     | PR validation in one container: build ∥ `check:manual-surface` (what design-sync generation cannot cover — see `.design-sync/MANUAL-SURFACE.md`), both hard gates, ∥ lint (report-only), plus the manifest/changelog/catalogue checks up front. Used by the `validate` pipeline. |
 | `publish.sh`   | The single npm publisher. Guards: tag↔version match (`BITBUCKET_TAG`), refuse double-publish, prereleases → `next` dist-tag. Called by the tag (`v*`) pipeline after `build-lib.sh`, for both one-click and local releases. |
 | `cut-release.sh`| One-click release `<patch\|minor\|major\|beta>`: merge `dev`->`main` + bump + stamp CHANGELOG + commit + tag + push `main` + tag, then back-merge `main`->`dev`. Does **not** publish — the pushed tag triggers the `v*` pipeline. Run by the `release-*` custom pipelines. Needs `RELEASE_TOKEN`. No install/build. |
-| `build-design-sync.sh`| Build the Claude Design bundle: `gen.mjs` → `ng build ds-elements` → `build-bundle.mjs`, then `check:manual-surface`. Asserts the bundle, the stylesheet and the font `media/` dir all landed. Run by the `after-release` pipeline. |
+| `build-design-sync.sh`| Build the Claude Design bundle and the tree uploaded with it, then gate both. **In the pipeline it commits `.design-sync/upload` to main** as the release bot; run by hand it fails on a stale tree instead of pushing. The tree goes stale on every release because `cut-release.sh` compiles the bundle before the bump, so `DS_VERSION` stamps the outgoing version. Needs `RELEASE_TOKEN`, and installs git — the image has none, which is why the staleness check silently passed for its whole life. |
+| `sync-dev.sh`  | Last step of `after-release`: merge main into dev, once, after every step that writes to main. |
 | `trigger-after-release.sh`| Final step of the `v*` pipeline: after `publish.sh`, start the `after-release` custom pipeline via the Bitbucket REST API. Skips prereleases. Needs `DOCS_DEPLOY_TOKEN` (a dedicated token scoped to `pipeline:write`). |
 
 Invoke as `sh infrastructure/scripts/<name>.sh` (no executable bit needed, which
@@ -75,13 +76,13 @@ worth auto-firing on our cadence.
   (`repository:write`); the `v*` step also needs `DOCS_DEPLOY_TOKEN` (`pipeline:write`)
   for the after-release trigger. Local `npm run release:*` is the fallback (merge
   `dev`->`main` yourself first).
-- **Custom `after-release`**: everything regenerated from source once a release is
-  out — build and deploy the ds-docs showcase to the IDS prototypes CDN, then build
-  the Claude Design bundle. Started by the `v*` pipeline, also runnable by hand.
-  Regeneration lives here rather than in `cut-release.sh` on purpose: that script
-  pushes `main` halfway through, so it must stay a git-and-node step that cannot fail
-  on an install or a build, and generated output should not enter a release commit
-  unreviewed.
+- **Custom `after-release`**: everything regenerated from source once a release is out. Builds the
+  ds-docs showcase, then runs the CDN deploy and the Claude Design bundle **in parallel**, then
+  `sync-dev.sh` merges `main` into `dev`. The bundle is paired with the deploy rather than with the
+  docs build because a parallel group must finish before the next step: pairing it with the build
+  would let a bundle failure block the deploy. Started by the `v*` pipeline, also runnable by hand.
+  Regeneration lives here rather than in `cut-release.sh` on purpose: that script pushes `main`
+  halfway through, so it must stay a git-and-node step that cannot fail on an install or a build.
 
 ## Caches
 

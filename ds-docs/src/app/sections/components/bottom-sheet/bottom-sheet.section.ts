@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { BottomSheetComponent, ButtonComponent } from 'ds';
+import { BottomSheetComponent } from 'ds/bottom-sheet';
+import { ButtonComponent } from 'ds/button';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

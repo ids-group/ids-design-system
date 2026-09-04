@@ -1,0 +1,3 @@
+# Checkbox - required
+
+Full API: `Checkbox.d.ts`. How to use the component anywhere: `Checkbox.prompt.md`.

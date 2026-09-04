@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BannerComponent, ButtonComponent } from 'ds';
+import { BannerComponent } from 'ds/banner';
+import { ButtonComponent } from 'ds/button';
 import {
   DocsTruncationComponent,
   TruncationRule,

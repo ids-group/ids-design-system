@@ -10,7 +10,11 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const ROOTS = ['tools', 'eslint-rules'];
+// `.design-sync/tools` belongs here too: those scripts emit a card's inline script from a
+// template literal, so a stray backtick in a COMMENT closes the literal and the file stops
+// parsing. It happened twice, and both times this gate said everything was fine because it was
+// not looking at that directory.
+const ROOTS = ['tools', 'eslint-rules', '.design-sync/tools'];
 
 const scripts = [];
 const walk = (dir) => {

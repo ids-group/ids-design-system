@@ -1,5 +1,5 @@
 import { InjectionToken, Provider, inject } from '@angular/core';
-import type { IconName } from '../icons/icons.data';
+import type { IconName } from './icon-names';
 import type { DsSize } from './size';
 import type { CardElevation, CardPadding } from './card.types';
 import type { DsToastPosition } from './toast-position';

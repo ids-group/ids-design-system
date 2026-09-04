@@ -1,13 +1,11 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  InputComponent,
-  SelectComponent,
-  ButtonComponent,
-  IconComponent,
-  StackComponent,
-  SwitchComponent,
-  type SelectOption,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { IconComponent } from 'ds/icons';
+import { InputComponent } from 'ds/input';
+import { StackComponent } from 'ds/layout';
+import { SelectComponent } from 'ds/select';
+import type { SelectOption } from 'ds/select';
+import { SwitchComponent } from 'ds/switch';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

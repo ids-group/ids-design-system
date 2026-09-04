@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { TimelineComponent, TimelineItemComponent } from 'ds';
+import { TimelineComponent, TimelineItemComponent } from 'ds/timeline';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

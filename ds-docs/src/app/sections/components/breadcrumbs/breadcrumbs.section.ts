@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BreadcrumbsComponent, type BreadcrumbItem } from 'ds';
+import { BreadcrumbsComponent } from 'ds/breadcrumbs';
+import type { BreadcrumbItem } from 'ds/breadcrumbs';
 import {
   DocsTruncationComponent,
   TruncationRule,

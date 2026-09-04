@@ -11,7 +11,7 @@ neither writes is `_ds_sync.json`: its hash recipes are unknown (`keyRecipe: 7`)
 happens to match would make a later sync SKIP a file that did change.
 
 **Superseded, twice.** Every count below is the 2026-09-02 state, kept as the record of what was
-sent; what the tree holds now is different in three ways.
+sent; what the tree holds now is different in four ways.
 
 1. **The showcase is the ds-docs sections.** A card is the chapter that documents its component,
    sliced to its own blocks. Thirteen components that had no card at all now have one, and the whole
@@ -25,6 +25,10 @@ sent; what the tree holds now is different in three ways.
 3. **`_ds_manifest.json` is ours.** `build-manifest.mjs` writes it. The copy on the project came
    from the retired CLI and had gone stale — 79 components including `AppShell` — and since the pane
    indexes from the manifest, that alone was enough to keep showing the previous showcase.
+4. **376 of the cards are static HTML.** `snapshot-cards.mjs` freezes every chapter except the ones
+   in `live-chapters.txt`, and the 185 distinct component stylesheets became the single
+   `_ds_cards.css` the cards link. See COMMANDS.md — this file is the record of the first upload,
+   not the description of the tree.
 
 **The deletions did NOT land, and only Misha can make them.** `delete_files` refuses every path on
 this project — one at a time as readily as in bulk:

@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, PageFooterComponent } from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { PageFooterComponent } from 'ds/page-footer';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

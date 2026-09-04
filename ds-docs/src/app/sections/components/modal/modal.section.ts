@@ -1,16 +1,12 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
-import {
-  BadgeComponent,
-  BannerComponent,
-  ButtonComponent,
-  SelectComponent,
-  type SelectOption,
-  InputComponent,
-  ModalCardComponent,
-  ModalComponent,
-  ModalService,
-  type DsStatus,
-} from 'ds';
+import { BadgeComponent } from 'ds/badge';
+import { BannerComponent } from 'ds/banner';
+import { ButtonComponent } from 'ds/button';
+import type { DsStatus } from 'ds/core';
+import { InputComponent } from 'ds/input';
+import { ModalCardComponent, ModalComponent, ModalService } from 'ds/modal';
+import { SelectComponent } from 'ds/select';
+import type { SelectOption } from 'ds/select';
 import {
   DocsTruncationComponent,
   TruncationRule,

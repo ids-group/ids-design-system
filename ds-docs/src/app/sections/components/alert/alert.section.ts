@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { AlertComponent, ButtonComponent } from 'ds';
+import { AlertComponent } from 'ds/alert';
+import { ButtonComponent } from 'ds/button';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

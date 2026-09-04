@@ -1,81 +1,18 @@
-<!-- @dsCard group="foundations" viewport="1200x700" -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
+<!-- @dsCard group="foundations" viewport="1200x661" name="Radius - scale" subtitle="One tile per stop." -->
+<!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Radius</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-foundations-radius></ds-docs-foundations-radius></div>
-  <!-- Sections only: a section renders DS components as Angular components, and registering those
-       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
-       than the same chapter twice. A block starts at a top-level child carrying `data-for` (which
-       names the sub-component it belongs to) or at an h3.block-title (which belongs to the
-       chapter's own component), and runs until the next one. CHROME is docs-section's own template
-       — heading, lede, API tables — and is never touched, so a part's card still says which chapter
-       it came from. Removed rather than hidden: the pane sizes a card from its rendered height. */
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "";
-      var CHROME = '.eyebrow, h2, docs-component-meta, p.lede';
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-foundations-radius");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(CHROME)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-        }
-        /* One API table per card: its own. The chapter's component is keyed by the anchor and a
-           part by the anchor plus its class name. A part the extractor left out has no key at all,
-           and then the chapter's table is the only one there is, so it stays. */
-        var mine = KEY === null ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var survivor = KEY === null ? null : (mine.length ? mine[0] : apis[0]);
-        for (var a = 0; a < apis.length; a++) if (apis[a] !== survivor) doomed.push(apis[a]);
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-foundations-radius _nghost-c45=""><docs-section _ngcontent-c45="" anchor="radius" eyebrow="Foundations" title="Radius" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-radius" data-anchor="radius"><h2 _ngcontent-c1="" class="t-h2">Radius - scale</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c45="" lede=""> Five-stop scale (0 / sm / md / lg / 2xl) plus pill — but reach for a ROLE, not a stop: <code _ngcontent-c45="" class="t-mono-inline"> --ds-radius-inner </code>, <code _ngcontent-c45="" class="t-mono-inline"> --ds-radius-control </code>, <code _ngcontent-c45="" class="t-mono-inline"> --ds-radius-panel </code> and <code _ngcontent-c45="" class="t-mono-inline"> --ds-radius-pill </code> are what components actually resolve, and they nest in that order. Retheming corners means moving the four roles, not editing components. <code _ngcontent-c45="" class="t-mono-inline"> --radius-pill </code> is themable via <code _ngcontent-c45="" class="t-mono-inline"> --radius-pill-value </code>. </span></p><p _ngcontent-c45="" class="block-desc t-s"> One tile per stop. Top-left corner is the truthful one — tiles share the same dimensions so adjacent steps stay comparable. </p><div _ngcontent-c45="" class="radius-grid"><div _ngcontent-c45="" class="radius-tile" style="border-radius: var(--radius-0);"><code _ngcontent-c45="" class="t-mono-inline token-name"> --radius-0 </code><div _ngcontent-c45="" class="t-h5 token-px"> 0px </div><div _ngcontent-c45="" class="t-caption token-desc"> Squared surfaces — middle of btn-group, in-range datepicker </div></div><div _ngcontent-c45="" class="radius-tile" style="border-radius: var(--radius-sm);"><code _ngcontent-c45="" class="t-mono-inline token-name"> --radius-sm </code><div _ngcontent-c45="" class="t-h5 token-px"> 4px </div><div _ngcontent-c45="" class="t-caption token-desc"> kbd, indeterminate-checkbox tick, link focus halo </div></div><div _ngcontent-c45="" class="radius-tile" style="border-radius: var(--radius-md);"><code _ngcontent-c45="" class="t-mono-inline token-name"> --radius-md </code><div _ngcontent-c45="" class="t-h5 token-px"> 8px </div><div _ngcontent-c45="" class="t-caption token-desc"> Buttons, fields, tooltips, search, segmented, tags </div></div><div _ngcontent-c45="" class="radius-tile" style="border-radius: var(--radius-lg);"><code _ngcontent-c45="" class="t-mono-inline token-name"> --radius-lg </code><div _ngcontent-c45="" class="t-h5 token-px"> 12px </div><div _ngcontent-c45="" class="t-caption token-desc"> Menus, popovers, dropdowns, cards, modals, drawers, toasts, empty-state icons </div></div><div _ngcontent-c45="" class="radius-tile" style="border-radius: var(--radius-2xl);"><code _ngcontent-c45="" class="t-mono-inline token-name"> --radius-2xl </code><div _ngcontent-c45="" class="t-h5 token-px"> 24px </div><div _ngcontent-c45="" class="t-caption token-desc"> Heroic surfaces — reserved, no current consumer </div></div><div _ngcontent-c45="" class="radius-tile" style="border-radius: var(--radius-pill);"><code _ngcontent-c45="" class="t-mono-inline token-name"> --radius-pill </code><div _ngcontent-c45="" class="t-h5 token-px"> 999px </div><div _ngcontent-c45="" class="t-caption token-desc"> Pills, status chips, switches, avatars, segmented thumb </div></div></div></section></docs-section></ds-docs-foundations-radius></div>
+  
+  
+  
+  
 
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        /* What SURVIVED, which is the number that matters: four Menu cards shipped with a heading
-           over an empty page because the chapter reported more blocks than the card could address,
-           and a card that removes everything looks exactly like one that removed nothing. */
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(CHROME) && !k.matches(API)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+
 </body></html>

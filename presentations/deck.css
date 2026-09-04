@@ -374,3 +374,175 @@ li {
     text-align: left;
   }
 }
+
+/* ---- comparison charts ------------------------------------------------- */
+/* Fills stay inline linear-gradients for the same reason as .fill above:
+   a force-dark browser repaints a flat colour and would alter a judged figure. */
+
+.chart {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
+}
+
+.chart .grp {
+  margin-top: var(--space-3);
+  font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans);
+  color: var(--text-secondary);
+}
+
+.chart .row {
+  display: grid;
+  grid-template-columns: minmax(11ch, 17ch) 1fr minmax(12ch, 15ch);
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.chart .row > .k {
+  font: var(--font-weight-medium) var(--font-size-xs) / 1.3 var(--font-sans);
+  color: var(--text-primary);
+}
+
+.chart .row > .v {
+  font: var(--font-weight-bold) var(--font-size-xs) / 1.3 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text-primary);
+}
+
+.chart .bar {
+  display: flex;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background-image: linear-gradient(#eef1f6, #eef1f6);
+}
+
+.chart .seg {
+  height: 100%;
+}
+.chart .seg.floor {
+  background-image: linear-gradient(#b9c2d0, #b9c2d0);
+}
+.chart .seg.cost {
+  background-image: linear-gradient(#db1f1f, #db1f1f);
+}
+.chart .seg.win {
+  background-image: linear-gradient(#22a33a, #22a33a);
+}
+.chart .seg.warn {
+  background-image: linear-gradient(#f4a63a, #f4a63a);
+}
+
+/* ---- the fix matrix ---------------------------------------------------- */
+
+table.matrix td,
+table.matrix th.opt {
+  text-align: center;
+  white-space: nowrap;
+}
+table.matrix tbody th:first-child {
+  text-align: left;
+  white-space: normal;
+  min-width: 22ch;
+}
+table.matrix .ok {
+  color: var(--success-text);
+  font-weight: var(--font-weight-bold);
+}
+table.matrix .bad {
+  color: var(--error-text);
+  font-weight: var(--font-weight-bold);
+}
+table.matrix .mid {
+  color: var(--warning-text);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ---- where the code lands --------------------------------------------- */
+
+.lands {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+
+.lands .col {
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  background: var(--surface-default);
+}
+
+.lands h4 {
+  margin: 0 0 var(--space-3);
+  font: var(--font-weight-semibold) var(--font-size-xs) / 1.3 var(--font-sans);
+  color: var(--text-secondary);
+}
+
+.lands .box {
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-2);
+  font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-mono);
+}
+
+.lands .box.eager {
+  background-image: linear-gradient(#fdeaea, #fdeaea);
+  color: #7a1414;
+  border: 1px solid #f0bcbc;
+}
+.lands .box.lazy {
+  background-image: linear-gradient(#e9f7ec, #e9f7ec);
+  color: #14521f;
+  border: 1px solid #b6e0c1;
+}
+.lands .box small {
+  display: block;
+  font-weight: var(--font-weight-regular);
+  opacity: 0.8;
+}
+
+/* ---- option badges: a plain digit in a circle, because ①②③ is unreadable --- */
+
+.vnum {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(#1f3d8a, #1f3d8a);
+  color: #fff;
+  font: var(--font-weight-extrabold) var(--font-size-xs) / 1 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  margin-right: var(--space-2);
+  vertical-align: -6px;
+}
+
+.vnum.is-dead {
+  background-image: linear-gradient(#b0b7c3, #b0b7c3);
+}
+.vnum.is-pick {
+  background-image: linear-gradient(#1a7f37, #1a7f37);
+}
+
+th .vnum {
+  margin: 0 0 var(--space-1);
+  vertical-align: baseline;
+}
+
+.lands .col h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-s);
+  color: var(--text-primary);
+}
+
+/* `b` inside a dark pre inherits the light text colour, or it paints dark on dark */
+pre b,
+pre strong {
+  color: #9fe6b4;
+  font-weight: var(--font-weight-bold);
+}

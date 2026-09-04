@@ -922,7 +922,7 @@ Nothing moves until a verdict; the work behind each is scoped.
   — the message decides. Deleted, along with the comment. The behaviour is now documented as what it is:
   a message longer than the label widens the pair, button included, exactly as a field's control spans
   its own message.
-  Docs: `/components/button` § "Refused, and why" (standing, transient, long reason, `reserveMessage`),
+  Docs: `/components/button` § "Refused with reason" (standing, transient, long reason, `reserveMessage`),
   `components.md` § `ds-button`, and a `deleteList` entry retiring the `[dsTooltip]`-on-a-disabled-button
   workaround.
   ORIGINAL: - [ ] **[P3] `ds-menu-item` got `[description]` in 0.10.2 and it closed this for menus; a disabled

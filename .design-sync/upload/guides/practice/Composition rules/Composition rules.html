@@ -1,26 +1,18 @@
-<!-- @dsCard group="practice" viewport="1200x446" -->
-<!doctype html>
-<!-- The theme is PINNED. The design system switches on the data-theme attribute and has no
-     automatic OS branch, so a host that sets it on this document flips every component's tokens
-     while the page keeps its own background. Measured on the live cards: a light page whose tonal
-     buttons came out dark navy with white labels and whose outline labels went invisible. -->
+<!-- @dsCard group="practice" viewport="1200x423" name="Composition rules" -->
+<!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Composition rules</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-practice-rules></ds-docs-practice-rules></div>
-  <!-- Sections only: a section renders DS components as Angular components, and registering those
-       same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-practice-rules _nghost-c4h=""><docs-section _ngcontent-c4h="" anchor="practice-rules" eyebrow="Practice" title="Composition rules" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-practice-rules" data-anchor="practice-rules"><h2 _ngcontent-c1="" class="t-h2">Composition rules</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c4h="" lede=""> Which spacing goes between what, which type role a piece of text takes, which colour role does which job, and when a transition earns its place. Knowing the tokens is not enough to build a page with them — the tokens are a vocabulary, and these are the rules that decide which word. </span></p><p _ngcontent-c4h="" class="rules-source t-s"> Rendered from <code _ngcontent-c4h="" class="t-mono-inline">design-system.md</code>, the same file shipped in the npm package so a consumer's agents read exactly this. <strong _ngcontent-c4h=""> One source, two renderings </strong> — a second hand-maintained copy would disagree with this one inside a release. </p><div _ngcontent-c4h="" class="rules-body"><p>nf</p>
+</div></section></docs-section></ds-docs-practice-rules></div>
+  
+  
+  
+  
+
+
 </body></html>

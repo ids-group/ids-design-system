@@ -20,7 +20,9 @@ const { cards } = read('elements', 'gen', 'cards.json');
 
 const shown = new Set();
 for (const path of cards) {
-  const tag = readFileSync(join(syncDir, 'upload', path), 'utf8').match(/<(ds-docs-[a-z0-9-]+)>/);
+  // The tag ends at whitespace, not only at `>`: a frozen card carries Angular's scope attribute on
+  // the host, and anchoring on `>` reported 82 of 90 sections as backing no card.
+  const tag = readFileSync(join(syncDir, 'upload', path), 'utf8').match(/<(ds-docs-[a-z0-9-]+)[\s>]/);
   if (tag) shown.add(tag[1]);
 }
 

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { SliderComponent } from 'ds';
+import { SliderComponent } from 'ds/slider';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

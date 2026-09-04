@@ -5,8 +5,8 @@ import {
   input,
   model,
 } from '@angular/core';
-import { IconComponent } from '../../icons/icon.component';
-import type { IconName } from '../../icons/icons.data';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-sidenav-group',

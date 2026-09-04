@@ -30,13 +30,16 @@ import {
   forwardOverlayTokens,
   dropdownOverlay,
   prepareOverlayEnter,
-} from '../overlay-motion';
-import { IconComponent } from '../../icons/icon.component';
-import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
-import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage, trimmedText } from '../field-errors';
-import { DS_CONFIG } from '../../core/ds-config';
+} from '@ids-group-ltd/ids-design-system/components';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { CalendarDayComponent } from '@ids-group-ltd/ids-design-system/components/calendar-day';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
+import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 import {
   type DateFormatSpec,
   type DisplayPart,
@@ -66,9 +69,9 @@ import type {
   DatePickerPreset,
   RangeValue,
 } from './date-picker.types';
-import type { DsSize } from '../../core/size';
-import { inFieldGroup } from '../field-group/field-group.token';
-import { resolveWithConfig } from '../../core/config-defaults';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
 const YEAR_PAGE_SIZE = 12;

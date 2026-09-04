@@ -16,7 +16,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router, type ParamMap } from '@angular/router';
-import { IconComponent } from '../../icons/icon.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { TabComponent } from './tab.component';
 import type { TabsOrientation, TabsVariant } from './tabs.types';
 

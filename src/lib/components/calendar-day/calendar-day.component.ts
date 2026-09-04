@@ -11,7 +11,9 @@ import {
  *  also usable standalone (e.g. a state showcase). Renders a focusable
  *  `<button class="day">` whose state classes are driven by inputs. The host is
  *  `display: contents` so the inner button is the grid item, and the date-picker
- *  can still focus a specific day via `[data-day]` (roving tabindex). */
+ *  can still focus a specific day via `[data-day]` (roving tabindex).
+ * @internal
+ */
 @Component({
   selector: 'ds-calendar-day',
   standalone: true,

@@ -14,27 +14,27 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
-| 4 | `4-packaging-entry-points` | a consumer IS blocked on bundle size, and the modelled prize is about -59% of the DS's share of their initial bundle |
-| 5 | `5-basic-advanced-split` | the other half of the packaging question, priced against the same audit |
-| 6 | `6-entry-point-shape` | which layout A3 actually builds — four real ng-packagr builds behind it |
-| 7 | `7-opt-in-seam` | ~31 KB of opt-in surface, three ways to cut it, nothing blocking |
-| 8 | `8-rejected-with-numbers` | every idea this backlog has rejected, with the measurement that rejected it and what would reopen it |
-| 9 | `9-migration-manifest-audit` | ten format practices to ratify - tooling, no consumer pulling on it |
-| 10 | `10-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+| 4 | `4-opt-in-seam` | ~31 KB of opt-in surface. Its first verdict is in (directives); two are open and nothing blocks them |
+| 5 | `5-rejected-with-numbers` | every idea this backlog has rejected, with the measurement that rejected it and what would reopen it |
+| 6 | `6-migration-manifest-audit` | eight format practices to ratify - tooling, no consumer pulling on it |
+| 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
+| 8 | `8-warning-text-colour` | one colour on one tint, each candidate rendered in itself |
 
-**Ranks 4-8 are one lane and are kept contiguous** — packaging, read in that order: the mechanism,
-the split question, the layout, the opt-in seam, then what was rejected and why. Scattering them
-across the queue made the reader jump 4, 5, 8, 9, 10 for one argument. Those five are written in
-Russian and share `deck.css`, which sits beside `ds.css` and carries the shell all five use; the
-other decks keep their own inline styles.
+**Ranks 4 and 5 are what is left of the packaging lane and are kept adjacent** — the opt-in seam,
+then what was rejected and why. The three that closed on 2026-09-04 are in `implemented/`
+(`packaging-entry-points`, `basic-advanced-split`, `entry-point-shape`); read them in that order for
+the mechanism, the split question and the layout. All of them are written in Russian and share
+`deck.css`, which sits beside `ds.css` and carries the shell they use; the other decks keep their own
+inline styles.
 
 **A `tool` here takes no number.** `backlog-board.html` is the only one left — it is read whenever
 rather than at a moment, so it stays unnumbered and sorts below the queue. A tool that is RUN rather
 than read does not belong in this folder at all: `tools/overlay-guard-harness.html` moved out on
 2026-09-02 for exactly that reason.
 
-**Ranks are renumbered when the queue changes** — a closed deck moves to `implemented/` and takes its
-number with it, and the rest close the gap. The number is the rank and nothing else: it is not an id,
+**Ranks are renumbered when the queue changes** — a closed deck moves to `implemented/` and DROPS its
+number on the way (D009: a rank is a queue position and it has left the queue), and the rest close the
+gap. The number is the rank and nothing else: it is not an id,
 so never keep a stale one to preserve a link. There is deliberately no `ds-deck-rank` meta — one more
 marker is one more thing to drift, and the filename cannot drift from itself.
 

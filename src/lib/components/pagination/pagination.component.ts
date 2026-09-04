@@ -7,8 +7,8 @@ import {
   model,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IconComponent } from '../../icons/icon.component';
-import { SelectComponent } from '../select/select.component';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { SelectComponent } from '@ids-group-ltd/ids-design-system/components/select';
 
 @Component({
   selector: 'ds-pagination',

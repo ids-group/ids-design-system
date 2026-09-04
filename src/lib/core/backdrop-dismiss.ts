@@ -7,6 +7,7 @@
  * `target === currentTarget` check waves it through. Hence tracking the press:
  * dismiss only when press AND release both land on the backdrop itself. `ds-drawer` needs none of this because its scrim
  * is a SIBLING of the panel, which makes their common ancestor a third element.
+ * @internal
  */
 export function backdropDismiss(): {
   down: (event: PointerEvent) => void;

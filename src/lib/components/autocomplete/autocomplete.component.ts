@@ -29,14 +29,17 @@ import {
   forwardOverlayTokens,
   dropdownOverlay,
   prepareOverlayEnter,
-} from '../overlay-motion';
-import { chipFit } from '../chip-overflow';
-import { IconComponent } from '../../icons/icon.component';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import { TagComponent } from '../tag/tag.component';
-import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent } from '../field-message/field-message.component';
-import { resolveFieldMessage, trimmedText } from '../field-errors';
+} from '@ids-group-ltd/ids-design-system/components';
+import { chipFit } from '@ids-group-ltd/ids-design-system/components';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import { TagComponent } from '@ids-group-ltd/ids-design-system/components/tag';
+import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  resolveFieldMessage,
+  trimmedText,
+} from '@ids-group-ltd/ids-design-system/components';
 import type {
   AutocompleteItem,
   AutocompleteOption,
@@ -44,25 +47,28 @@ import type {
   AutocompleteValueOverflow,
   AutocompleteWidth,
 } from './autocomplete.types';
-import { flattenDsOptions, isDsOptionGroup } from '../../core/option';
+import {
+  flattenDsOptions,
+  isDsOptionGroup,
+} from '@ids-group-ltd/ids-design-system/core';
 import {
   firstEnabledIndex as firstEnabledOf,
   lastEnabledIndex as lastEnabledOf,
   nextEnabledIndex,
-} from '../../core/list-cursor';
-import { scrollActiveOptionIntoView } from '../scroll-active-option';
-import { announceOptionCount } from '../picker-announcer';
-import { DsOptionTemplateDirective } from '../option-template.directive';
-import { DsChipTemplateDirective } from '../chip-template.directive';
-import { DsPickerTriggerDirective } from '../picker-trigger.directive';
-import { DsEmptyTemplateDirective } from '../empty-template.directive';
-import { DsPanelHeaderTemplateDirective } from '../panel-header-template.directive';
-import { DsPanelFooterTemplateDirective } from '../panel-footer-template.directive';
-import { DsGroupLabelTemplateDirective } from '../group-label-template.directive';
-import { DsCreateTemplateDirective } from '../create-template.directive';
-import type { DsSize } from '../../core/size';
-import { inFieldGroup } from '../field-group/field-group.token';
-import { resolveWithConfig } from '../../core/config-defaults';
+} from '@ids-group-ltd/ids-design-system/core';
+import { scrollActiveOptionIntoView } from '@ids-group-ltd/ids-design-system/components';
+import { announceOptionCount } from '@ids-group-ltd/ids-design-system/components';
+import { DsOptionTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsChipTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPickerTriggerDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsEmptyTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPanelHeaderTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsPanelFooterTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsGroupLabelTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DsCreateTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
 

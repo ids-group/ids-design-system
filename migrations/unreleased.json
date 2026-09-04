@@ -1,0 +1,22 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "deleteList": [
+    {
+      "id": "dynamic-import-of-whole-package",
+      "surface": "typescript",
+      "find": [
+        "await import('@ids-group-ltd/ids-design-system')",
+        "import('@ids-group-ltd/ids-design-system').then"
+      ],
+      "why": "The package was one flattened module, so an eager import of any part of it made the whole library reachable from the initial bundle. A dynamic import of the package was the only lever that moved it out, and it paid for that with an async boundary in the consumer's own code. Each component is now its own entry point internally, so an ordinary static import from the package root lands in the chunk that uses it. Still legitimate where the lazy boundary exists for its own sake — a feature area deliberately kept off the critical path.",
+      "replaceWith": "a plain static import from the package root, @ids-group-ltd/ids-design-system"
+    }
+  ],
+  "informational": [
+    "The library no longer forces itself into the initial bundle, and no import has to change: every component became its own entry point, so a bundler places each one in the chunk that uses it. Measured on a documentation app of 90 sections that changed not one import line, the initial bundle fell from 240 kB to 138 kB gzip with the total across initial and lazy chunks moving under a percent.",
+    "Keep importing from the package root — that is the supported spelling and it costs nothing extra. The same app measured the same 138 kB either way, because the root is a re-export and nothing else.",
+    "Per-component specifiers do resolve (@ids-group-ltd/ids-design-system/button) for a codebase that prefers a file's dependencies spelled out, but they are not the recommended form and buy no bytes. A consumer who wants them shorter adds one paths line to their own tsconfig.json — \"ds/*\": [\"node_modules/@ids-group-ltd/ids-design-system/*\"] — and ds/button resolves to the same file, so one component imported two ways is one class and instanceof holds across them.",
+    "The package root exports exactly what it exported before, name by name, so nothing new can collide with a barrel of your own. An entry point must export whatever another entry point imports, so 37 helpers, base classes and shared types are reachable inside the package that were not before — all of them internal, each carrying @internal, none in the component reference. None reaches the root: it re-exports the documented surface by name rather than whole entry points. What the entry points share sits at two internal subpaths, …/components and …/core, which exist so the others can resolve; nothing there is API and nothing there is covered by the versioning promise."
+  ]
+}

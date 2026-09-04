@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  ButtonComponent,
-  InputComponent,
-  PasswordRulesComponent,
-  type DsPasswordRule,
-} from 'ds';
+import { ButtonComponent } from 'ds/button';
+import { InputComponent } from 'ds/input';
+import { PasswordRulesComponent } from 'ds/password-rules';
+import type { DsPasswordRule } from 'ds/password-rules';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({

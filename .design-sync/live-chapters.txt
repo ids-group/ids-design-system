@@ -1,0 +1,23 @@
+# Chapters whose cards keep their Angular application. Everything else is snapshotted to static HTML
+# by `snapshot-cards.mjs`, which is what stops four hundred cards each booting a 2.12 MB bundle.
+#
+# WHAT A STATIC CARD LOSES: all behaviour, not only the obvious demos. A Select stops opening its
+# panel, a Tab stops switching, an Accordion stops expanding - that behaviour lives in the Angular
+# runtime, not in a snippet beside the template, so there is no middle setting. A chapter is either
+# live or a picture. The LOOK is identical either way: the snapshot is the settled DOM, and Angular's
+# style tags are already in the head by then.
+#
+# ONE SECTION SLUG PER LINE, as it appears in the card's host tag: `ds-docs-components-toast` is
+# `components/toast`. `#` comments and blank lines are ignored.
+#
+# Listed here 2026-09-03 because the interaction IS the demo. Stas will revisit which of these
+# genuinely need it.
+
+components/toast
+components/drawer
+components/modal
+components/popover
+components/bottom-sheet
+components/tree
+components/loading-overlay
+foundations/scrollbar

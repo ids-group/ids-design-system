@@ -1,12 +1,10 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import {
-  AlertComponent,
-  ButtonComponent,
-  SegmentedComponent,
-  SelectComponent,
-  type SegmentedOption,
-  type SelectItem,
-} from 'ds';
+import { AlertComponent } from 'ds/alert';
+import { ButtonComponent } from 'ds/button';
+import { SegmentedComponent } from 'ds/segmented';
+import type { SegmentedOption } from 'ds/segmented';
+import { SelectComponent } from 'ds/select';
+import type { SelectItem } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,

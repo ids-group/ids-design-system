@@ -6,8 +6,8 @@ import {
   signal,
 } from '@angular/core';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { ButtonComponent } from '../button/button.component';
-import type { ButtonColor } from '../button/button.types';
+import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
+import type { ButtonColor } from '@ids-group-ltd/ids-design-system/components/button';
 import { ModalCardComponent } from './modal-card.component';
 import { MODAL_CONFIRM_DATA } from './modal-confirm.types';
 
