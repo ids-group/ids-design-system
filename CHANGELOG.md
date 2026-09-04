@@ -70,9 +70,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
-- **`ds-menu`'s class gained a member — only matters if you SUBCLASS it.** `MenuComponent` gained
-  `anyIcon`, which it computes over its content children. It is not public API and not a signal
-  input; a subclass that declares the same name stops building.
+- **Two classes gained members — only matters if you SUBCLASS one.** `MenuComponent` gained
+  `anyIcon`, which it computes over its content children, and `RadioComponent` gained `onClick`
+  alongside the new `deselectable` input. A subclass that declares any of those names stops
+  building, whether or not the member is public API.
 
 
 - **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the
