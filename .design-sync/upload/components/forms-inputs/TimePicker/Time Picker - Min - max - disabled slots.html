@@ -4,20 +4,10 @@
   <title>TimePicker</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-components-time-picker _nghost-c1n=""><docs-section _ngcontent-c1n="" anchor="time-picker" eyebrow="Components" title="Time picker" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-time-picker" data-anchor="time-picker"><h2 _ngcontent-c1="" class="t-h2">Time picker - min · max · disabled slots</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="time-picker"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;TimePicker /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1n="" class="block-desc t-s"><code _ngcontent-c1n="" class="t-mono-inline"> [minTime] </code> / <code _ngcontent-c1n="" class="t-mono-inline"> [maxTime] </code> bound the range; <code _ngcontent-c1n="" class="t-mono-inline"> [disabledTime] </code> is a predicate — here it blocks the lunch hour (12:00–12:59). </p><div _ngcontent-c1n="" class="row"><ds-time-picker _ngcontent-c1n="" mintime="09:00" maxtime="18:00" _nghost-c1o=""><div _ngcontent-c1o="" class="field"><div _ngcontent-c1o="" class="trigger-wrap"><button _ngcontent-c1o="" type="button" aria-haspopup="dialog" class="trigger" aria-expanded="false" aria-label="Select time"><span _ngcontent-c1o="" class="time-value"> --:-- </span><ds-icon _ngcontent-c1o="" name="clock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 16px;" width="16" height="16" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></ds-icon></button></div><ds-field-message _ngcontent-c1o="" _nghost-c7=""></ds-field-message></div></ds-time-picker><span _ngcontent-c1n="" class="value-tag t-mono-inline"> — </span></div></section></docs-section></ds-docs-components-time-picker></div>
   
   

@@ -4,18 +4,9 @@
   <title>Opacity &amp; alpha tokens</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
 <link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
   <div class="ds-page"><ds-docs-foundations-opacity _nghost-c44=""><docs-section _ngcontent-c44="" anchor="opacity" eyebrow="Foundations" title="Opacity &amp; alpha tokens" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-opacity" data-anchor="opacity"><h2 _ngcontent-c1="" class="t-h2">Opacity &amp; alpha tokens - literal alphas in tokens (reference)</h2><p _ngcontent-c44="" class="block-desc t-s"> Non-tokenised alphas used inside other tokens. Don't reach for these directly — consume the parent token (<code _ngcontent-c44="" class="t-mono-inline">--shadow-modal</code>, <code _ngcontent-c44="" class="t-mono-inline">--focus-field</code>, <code _ngcontent-c44="" class="t-mono-inline"> --surface-scrim </code>). </p><div _ngcontent-c44="" class="scroll-wrap"><table _ngcontent-c44="" class="literals"><thead _ngcontent-c44=""><tr _ngcontent-c44=""><th _ngcontent-c44=""> Alpha </th><th _ngcontent-c44=""> Where it appears </th></tr></thead><tbody _ngcontent-c44=""><tr _ngcontent-c44=""><td _ngcontent-c44=""><code _ngcontent-c44="" class="t-mono-inline"> --shadow-tint-h/s/l </code></td><td _ngcontent-c44=""> Channel-split substrate for --shadow-1..--shadow-4. Light: 225 / 39% / 7%. Re-skin propagates through HSL channels. </td></tr><tr _ngcontent-c44=""><td _ngcontent-c44=""><code _ngcontent-c44="" class="t-mono-inline"> --focus-field-alpha (0.22) </code></td><td _ngcontent-c44=""> Field focus halo alpha; composes hsla(--primary-h, --primary-s, --primary-l, …) inside --focus-field. Dark themes may override it. </td></tr><tr _ngcontent-c44=""><td _ngcontent-c44=""><code _ngcontent-c44="" class="t-mono-inline"> --surface-scrim </code></td><td _ngcontent-c44=""> Modal / drawer backdrop. Consumes --opacity-scrim (0.55) over neutral substrate. </td></tr></tbody></table></div></section></docs-section></ds-docs-foundations-opacity></div>
   

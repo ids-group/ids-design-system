@@ -4,20 +4,10 @@
   <title>Filter bar</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<style type="text/css"></style><link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<style></style><link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-patterns-filter-bar _nghost-c4e=""><docs-section _ngcontent-c4e="" anchor="pattern-filter-bar" eyebrow="Patterns" title="Filter bar" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-pattern-filter-bar" data-anchor="pattern-filter-bar"><h2 _ngcontent-c1="" class="t-h2">Filter bar - usage</h2><ul _ngcontent-c4e="" class="rules"><li _ngcontent-c4e=""> Sits above the list it filters, never below — search is read top-down. </li><li _ngcontent-c4e=""> Don't mix free-text search with non-text facets inside the same input. Expose facets as siblings. </li><li _ngcontent-c4e=""> Each applied tag is individually removable; the right-side link is the escape hatch for everything at once. </li><li _ngcontent-c4e=""> On narrow widths, collapse the facets that do not fit into an overflow panel — that is what <code _ngcontent-c4e="" class="t-mono-inline"> ds-filter-bar </code> does — rather than wrapping a single facet onto a second line. </li></ul></section></docs-section></ds-docs-patterns-filter-bar></div>
   
   

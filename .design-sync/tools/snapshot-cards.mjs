@@ -80,6 +80,16 @@ const TIDY = `
       if (!document.documentElement.hasAttribute('data-ds-sliced') && Date.now() - t0 < 20000) {
         return setTimeout(ready, 25);
       }
+      // The section is built, which is not the same as settled: components that MEASURE write their
+      // result a frame or two later. Table's sticky scrollbar pins '.scroll-wrap' to a computed
+      // height, and catching that card before the write froze it without one - the only file of 376
+      // that differed between two runs. Fonts first, because a measure taken against the fallback
+      // face is the wrong number.
+      return document.fonts.ready.then(function () {
+        requestAnimationFrame(function () { requestAnimationFrame(tidy); });
+      });
+    })();
+    function tidy() {
       var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       var pending = [];
       for (var node = walker.nextNode(); node; node = walker.nextNode()) {
@@ -92,7 +102,7 @@ const TIDY = `
         pending[i].nodeValue = pending[i].nodeValue.replace(/\s+/g, ' ');
       }
       document.documentElement.setAttribute('data-ds-tidied', String(pending.length));
-    })();
+    }
   })();
 </script>`;
 
@@ -184,8 +194,21 @@ if (failed.length) {
 // fetches it once for the whole grid instead of parsing 27 KB inside each card.
 const isComponentStyle = (body) => body.includes('_nghost-') || body.includes('_ngcontent-');
 
+// Whitespace inside a `<style>` is never rendered, so this collapses unconditionally - unlike the
+// body text below, which has to ask the computed style first.
+const tidyCss = (body) => body
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/\s*\n\s*/g, '\n')
+  .trim();
+
+// Five lanes finish out of order, so the Map's own order is a race. Reading it back in the order
+// `cards.json` declares is what makes the sheet and the shortened ids byte-identical run to run -
+// otherwise every snapshot rewrites all 377 files with no change in them, and the committed tree
+// CI diffs against is noise.
+const ordered = queue.map((path) => [path, snapshots.get(path)]);
+
 const blocks = [];
-for (const dom of snapshots.values()) {
+for (const [, dom] of ordered) {
   for (const [, body] of dom.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
     if (isComponentStyle(body) && !blocks.includes(body)) blocks.push(body);
   }
@@ -205,7 +228,7 @@ writeFileSync(join(OUT, SHARED_CSS), `${sheet.trim()}\n`);
 
 let before = 0;
 let after = 0;
-for (const [path, dom] of snapshots) {
+for (const [path, dom] of ordered) {
   const source = readFileSync(join(OUT, path), 'utf8');
   // Everything before `<!doctype`: the @dsCard marker lives there and a DOM dump starts at
   // `<html>`, so without this the card would vanish from the manifest the next build reads.
@@ -214,8 +237,8 @@ for (const [path, dom] of snapshots) {
 
   let html = dom.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
   let linked = false;
-  html = html.replace(/<style[^>]*>([\s\S]*?)<\/style>/g, (whole, body) => {
-    if (!isComponentStyle(body)) return whole;
+  html = html.replace(/<style[^>]*>([\s\S]*?)<\/style>/g, (_whole, body) => {
+    if (!isComponentStyle(body)) return `<style>${tidyCss(body)}</style>`;
     if (linked) return '';
     linked = true;
 

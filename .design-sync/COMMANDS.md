@@ -177,10 +177,23 @@ position-independent, which is what makes concatenating them into `_ds_cards.css
 safe — the browser fetches 428 KB once for the whole grid instead of parsing 27 KB
 inside each card. The `ng-cNNNN` ids are shortened across the sheet and every card
 **in one pass**: the attribute IS the scope, so a rename reaching only one of them
-silently unstyles the component. Tree 20 MB → 9.2 MB.
+silently unstyles the component. The scaffolding's own `/* … */` goes with the HTML
+comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
 
 - **Run it LAST.** It rewrites cards in place, and any later `build-cards` run
   replaces them with live cards again.
+- **`build-cards` wipes `upload/` with `rmSync`, and Windows refuses to delete a
+  directory that is a process's CWD.** A shell left sitting inside it makes every
+  later build fail with EPERM; with the output redirected that failure is silent,
+  and `snapshot-cards` then re-freezes already-frozen cards into nonsense.
+- **The output is reproducible, and that is deliberate.** Five lanes finish out of
+  order, so the results are read back in `cards.json` order — otherwise the sheet's
+  block order and the id renumbering differ every run, and all 377 files rewrite
+  with no change in them. Two consecutive freezes must leave `git status` empty.
+- **A built section is not a settled one.** Components that measure write their
+  result a frame or two later — Table's sticky scrollbar pins `.scroll-wrap` to a
+  computed height — so the tidy pass waits for `document.fonts.ready` and two
+  frames before it marks the page. Without that, one card in 376 froze mid-measure.
 - **Whitespace is collapsed IN THE PAGE, never by a regexp over the file.**
   `white-space: pre|pre-wrap|pre-line` is live in five places here, so the tidy
   pass walks text nodes and asks `getComputedStyle` which is which. A file-level

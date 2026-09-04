@@ -4,18 +4,9 @@
   <title>NumberStepper</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
 <link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
   <div class="ds-page"><ds-docs-components-number-stepper _nghost-c17=""><docs-section _ngcontent-c17="" anchor="number-stepper" eyebrow="Components" title="Number stepper" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-number-stepper" data-anchor="number-stepper"><h2 _ngcontent-c1="" class="t-h2">Number stepper - bounds &amp; step</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="number-stepper"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;NumberStepper /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c17="" class="block-desc t-s"><code _ngcontent-c17="" class="t-mono-inline"> [min] </code> / <code _ngcontent-c17="" class="t-mono-inline"> [max] </code> clamp the value; the buttons disable at the bounds. <code _ngcontent-c17="" class="t-mono-inline">[step]</code> sets the increment. </p><div _ngcontent-c17="" class="row"><div _ngcontent-c17="" class="cell"><ds-number-stepper _ngcontent-c17="" _nghost-c18=""><div _ngcontent-c18="" class="size-md stepper"><button _ngcontent-c18="" type="button" aria-label="Decrease" class="step minus"> − </button><input _ngcontent-c18="" type="number" class="qty" min="0" max="10"><button _ngcontent-c18="" type="button" aria-label="Increase" class="step plus"> + </button></div></ds-number-stepper><code _ngcontent-c17="" class="t-mono-inline"> min=0 max=10 · value 5 </code></div><div _ngcontent-c17="" class="cell"><ds-number-stepper _ngcontent-c17="" _nghost-c18=""><div _ngcontent-c18="" class="size-md stepper"><button _ngcontent-c18="" type="button" aria-label="Decrease" class="step minus"> − </button><input _ngcontent-c18="" type="number" class="qty" min="0" max="100"><button _ngcontent-c18="" type="button" aria-label="Increase" class="step plus"> + </button></div></ds-number-stepper><code _ngcontent-c17="" class="t-mono-inline"> step=5 · value 25 </code></div></div></section></docs-section></ds-docs-components-number-stepper></div>
   

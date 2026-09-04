@@ -67,26 +67,47 @@
       <tr><th></th>
         <th class="opt"><span class="vnum is-pick">a</span><br /><small>директивы</small></th>
         <th class="opt"><span class="vnum">b</span><br /><small>input features</small></th>
-        <th class="opt"><span class="vnum">c</span><br /><small>провайдеры</small></th></tr>
+        <th class="opt"><span class="vnum is-dead">c</span><br /><small>провайдеры</small></th></tr>
     </thead>
     <tbody>
       <tr><th>Что пишет потребитель</th>
         <td><code>&lt;ds-table dsResizable&gt;</code></td>
         <td><code>[features]="[withResize()]"</code></td>
         <td><code>provideDsTable(withResize())</code></td></tr>
-      <tr><th>Скоуп</th><td class="ok">на экземпляр</td><td class="ok">на экземпляр</td><td class="bad">на роут</td></tr>
-      <tr><th>Две таблицы на странице могут отличаться</th><td class="ok">да</td><td class="ok">да</td><td class="bad">нет</td></tr>
+      <tr><th>Скоуп</th><td class="ok">экземпляр</td><td class="ok">экземпляр</td><td class="bad">роут — две таблицы на странице не различаются</td></tr>
+      <tr class="pick"><th>Где живут опции фичи</th>
+        <td class="ok">на самой директиве:<br /><code>[resizeMode]</code></td>
+        <td class="mid">внутри фабрики:<br /><code>withResize({mode})</code></td>
+        <td class="mid">то же</td></tr>
+      <tr class="pick"><th>Менять опцию на лету</th>
+        <td class="ok">обычный input — сигнал обновился, и всё</td>
+        <td class="bad">литерал массива пересоздаётся на каждый CD — нужен <code>computed</code></td>
+        <td class="bad">то же</td></tr>
+      <tr><th>Включить по условию</th>
+        <td class="mid"><code>@if</code> на обёртке</td>
+        <td class="ok">тернарник в массиве</td>
+        <td class="bad">только при создании роута</td></tr>
       <tr><th>Ловит неверные комбинации</th><td class="bad">нет</td><td class="mid">в рантайме</td><td class="ok">да</td></tr>
-      <tr><th>Размер</th><td colspan="3" class="ok" style="text-align:center">одинаковый — всё три tree-shake'ятся</td></tr>
-      <tr><th>Прецедент</th><td>идиома Angular</td><td>TanStack v9</td><td><code>provideRouter()</code></td></tr>
+      <tr><th>Размер</th><td colspan="3" class="ok" style="text-align:center">одинаковый — все три tree-shake'ятся</td></tr>
+      <tr><th>Прецедент</th><td>идиома Angular</td><td>TanStack v9 (React)</td><td><code>provideRouter()</code></td></tr>
     </tbody>
   </table>
 
-  <p>
-    <b>Выбор про эргономику, не про размер.</b> Грабли общие для всех трёх и неустранимы: привязал
-    фичу, которую не импортировал — получил тишину без ошибки. У TanStack это лечится сужением типов;
-    в Angular инпуты заданы на классе, скопировать нельзя.
-  </p>
+  <section class="panel">
+    <h3 style="margin-top:0">«Не ловит неверные комбинации» — минус настоящий, но чинится</h3>
+    <p>
+      Отказ тихий: написал <code>[resizeMode]</code>, а <code>DsTableResizable</code> в <code>imports</code>
+      не положил — атрибут никуда не привязался, ошибки нет, фичи нет. Но таблица <b>знает, какие вклады
+      в неё зарегистрированы</b>, и может в dev-режиме сказать прямо: «колонка помечена
+      <code>resizable</code>, а <code>DsTableResizable</code> не подключён». В репо это уже есть —
+      dev-варнинги на 1,6 кБ, которые вырезаются из прода.
+    </p>
+    <p style="margin-bottom:0">
+      У <b>c</b> проверка строгая, но цена её — роут-широкий скоуп, то есть невозможность сделать
+      две разные таблицы на одном экране. <b>Меняем всегдашнее ограничение на разовую ошибку,
+      которую варнинг и так поймает.</b>
+    </p>
+  </section>
 
 <pre><code>&lt;!-- прототип: ничего не импортировано, ничего не отгружено --&gt;
 &lt;ds-table [columns]="cols" [data]="rows" /&gt;
@@ -98,8 +119,11 @@ imports: [DsTable, DsTableResizable, DsTableExport]
   <section class="panel verdict">
     <h3 style="margin-top:0">Рекомендую <b>a</b> — директивы</h3>
     <p style="margin-bottom:0">
-      Контроль на экземпляр, идиома самого Angular, естественно читается в шаблоне.
-      <b>c</b> — если важнее валидация комбинаций и роут-широкий скоуп приемлем.
+      Размер у всех трёх одинаковый, так что выбор решается двумя строками выше: у <b>a</b> опция фичи —
+      обычный input на директиве, у <b>b</b> она внутри литерала массива, который Angular пересобирает
+      на каждый цикл — то есть в <b>b</b> каждая живая настройка требует от потребителя помнить про
+      <code>computed</code>. <b>c</b> — худший: единственный, где две таблицы на странице не могут быть
+      настроены по-разному.
     </p>
   </section>
 
@@ -121,8 +145,13 @@ imports: [DsTable, DsTableResizable, DsTableExport]
 
   <h2>Решение 2 — строка сообщения у кнопки</h2>
 
+  <p class="lede" style="margin-top:0">
+    <code>ds-button</code> умеет показать под собой hint/warning/error. Ради этого она тянет
+    <code>FieldMessageComponent</code> — <b>всегда</b>, даже если сообщение никогда не задано.
+  </p>
+
   <div class="chart">
-    <div class="row"><span class="k">пустое Angular</span>
+    <div class="row"><span class="k">пустое Angular-приложение</span>
       <span class="bar"><span class="seg floor" style="width:48.8%"></span></span><span class="v">30 646</span></div>
     <div class="row"><span class="k">+ <code>ds-button</code> сегодня</span>
       <span class="bar"><span class="seg floor" style="width:48.8%"></span><span class="seg cost" style="width:51.2%"></span></span><span class="v">62 733</span></div>
@@ -131,29 +160,53 @@ imports: [DsTable, DsTableResizable, DsTableExport]
   </div>
 
   <p>
-    <code>ButtonComponent</code> тянет <code>FieldMessageComponent</code>, чтобы кнопка могла показать
-    hint/warning/error под собой. <b>11 295 B — 35% цены кнопки</b>, платит каждый, кто рисует хоть
-    одну. <b>Entry points это не чинят:</b> ребро <code>button → field-message</code> статическое.
-    Два выхода: выбросить фичу или спрятать за <code>DsButtonMessage</code> — тот же шов.
+    <b>11 295 B — 35% цены кнопки.</b> Платит каждый, кто рисует хоть одну.
+    <b>Точки входа (A3) это не чинят</b> — ребро <code>button → field-message</code> статическое,
+    оно переедет в тот же чанк.
   </p>
 
-  <h2>Решение 3 — CSS порталов</h2>
-
   <table class="matrix">
-    <thead><tr><th>Партиал</th><th class="opt">gzip</th><th>Можно унести?</th></tr></thead>
+    <thead><tr><th>Вариант</th><th class="opt">Цена для тех, кто строкой не пользуется</th><th>Кого ломает</th></tr></thead>
     <tbody>
-      <tr><th><code>link</code>, <code>page-grid</code>, <code>layout-utils</code></th><td>1 029</td><td class="bad">нет — публичные классы, это API</td></tr>
-      <tr><th><code>scrollbar</code></th><td>297</td><td class="bad">невозможно — стилизует <code>html</code></td></tr>
-      <tr><th><code>skeleton-shimmer</code>, <code>surface-motion</code></th><td>399</td><td class="bad">нет — одна <code>:root</code>-анимация на всех</td></tr>
-      <tr class="pick"><th><code>dropdown-overlay</code>, <code>overlay-motion</code>, <code>toast-overlay</code></th><td>1 055</td><td class="ok">только opt-in</td></tr>
+      <tr><th>Оставить как есть</th><td class="bad">+11,3 кБ всегда</td><td class="ok">никого</td></tr>
+      <tr class="pick"><th>За директиву <code>DsButtonMessage</code></th><td class="ok">0</td><td class="mid">тех, кто строкой пользуется — добавят импорт</td></tr>
+      <tr><th>Выбросить фичу</th><td class="ok">0</td><td class="bad">тех же, и восстановить нечем</td></tr>
     </tbody>
   </table>
 
-  <p>
-    Платит только потребитель <b>без</b> пикеров, тостов и модалок — редкость. <b>Самое мелкое из трёх
-    и самое разумное отклонить.</b> Способ AG Grid (CSS внутри кода) отклонён: Angular инжектит стили
-    рантайм-тегами, под SSR + строгим CSP они блокируются, и это бремя падает на каждого потребителя.
+  <p><b>Вердикт нужен один: директива или оставить.</b> Шов тот же, что у таблицы.</p>
+
+  <h2>Решение 3 — CSS порталов</h2>
+
+  <p class="lede" style="margin-top:0">
+    Глобальная таблица стилей везёт <b>2,8 кБ gzip</b>. Проверил, что из этого можно сделать
+    опциональным. Ответ: <b>почти ничего.</b>
   </p>
+
+  <div class="chart">
+    <div class="row"><span class="k">публичные классы — это API</span>
+      <span class="bar"><span class="seg cost" style="width:36.4%"></span></span><span class="v">1 029</span></div>
+    <div class="row"><span class="k">скроллбар — стилит <code>html</code></span>
+      <span class="bar"><span class="seg cost" style="width:10.5%"></span></span><span class="v">297</span></div>
+    <div class="row"><span class="k">анимации — одна на всех в <code>:root</code></span>
+      <span class="bar"><span class="seg cost" style="width:14.1%"></span></span><span class="v">399</span></div>
+    <div class="row"><span class="k"><b>порталы — единственное, что уносится</b></span>
+      <span class="bar"><span class="seg win" style="width:37.3%"></span></span><span class="v">1 055</span></div>
+  </div>
+
+  <p>
+    И эти 1 055 B сэкономит только тот, у кого <b>нет ни одного дропдауна, тоста или модалки</b> —
+    такого потребителя практически не бывает. Способ AG Grid (CSS внутрь кода компонента) отклонён:
+    Angular вставляет такие стили рантайм-тегами, а под SSR со строгим CSP их блокируют.
+  </p>
+
+  <section class="panel verdict is-dead">
+    <h3 style="margin-top:0">Рекомендую отклонить</h3>
+    <p style="margin-bottom:0">
+      1 кБ для гипотетического потребителя против ещё одного импорта в стартовом файле у всех остальных.
+      Запись о том, что мерили и почему нет, остаётся.
+    </p>
+  </section>
 
   <p class="src">
     Абляция §9 — <code>docs/basic-advanced-split-audit.md</code>; накладные шва — фикстура

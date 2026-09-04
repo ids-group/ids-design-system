@@ -4,20 +4,10 @@
   <title>MultiSelect</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-components-multi-select _nghost-c14=""><docs-section _ngcontent-c14="" anchor="multi-select" eyebrow="Components" title="Multi-select" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-multi-select" data-anchor="multi-select"><h2 _ngcontent-c1="" class="t-h2">Multi-select - option groups</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="multi-select"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;MultiSelect /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c14="" class="block-desc t-s"> Groups go in the same <code _ngcontent-c14="" class="t-mono-inline">options</code> input as flat options and render in the order given, so the two may be mixed. A group's own <code _ngcontent-c14="" class="t-mono-inline">disabled</code> disables every option in it. Filtering hides a group whose options all fail the query. </p><div _ngcontent-c14="" class="demo-panel"><div _ngcontent-c14="" class="ms-demo"><ds-multi-select _ngcontent-c14="" data-testid="ms-groups" placeholder="Assignees…" arialabel="Assignees" _nghost-c15=""><div _ngcontent-c15="" aria-haspopup="listbox" role="combobox" class="field-trigger md" aria-expanded="false" aria-controls="ds-multi-select-11-listbox" aria-label="Assignees" tabindex="0" style=""><span _ngcontent-c15="" class="chip-row fit"><ds-tag _ngcontent-c15="" data-chip="" variant="neutral" closable="" _nghost-co="" class="neutral closable"> Jordan Lee <button _ngcontent-co="" type="button" class="close" aria-label="Remove Jordan Lee"><ds-icon _ngcontent-co="" name="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 12px;" width="12" height="12" stroke-width="1.75" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></ds-icon></button></ds-tag></span><ds-icon _ngcontent-c15="" name="chevronDown" class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></ds-icon></div><ds-field-message _ngcontent-c15="" _nghost-c7=""></ds-field-message></ds-multi-select></div></div></section></docs-section></ds-docs-components-multi-select></div>
   
   

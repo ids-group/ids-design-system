@@ -4,20 +4,10 @@
   <title>Form layout</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    /* From the token, not a literal: the hardcoded white is what made that mismatch possible at
-       all, because the components followed the theme and the page did not. */
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    /* The block's own h3 is gone - the h2 says it now - so its first paragraph sits under the
-       title and takes the tight gap a heading gives, not the loose one that separates demos. */
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    /* The same column ds-docs renders a section in (section-group.page.scss). A section laid out
-       for a capped, padded column stretches edge to edge without it, and every demo that relies on
-       wrapping wraps at the wrong width. */
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}
-</style></head><body>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
   <div class="ds-page"><ds-docs-patterns-form-layout _nghost-c4f=""><docs-section _ngcontent-c4f="" anchor="pattern-form-layout" eyebrow="Patterns" title="Form layout" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-pattern-form-layout" data-anchor="pattern-form-layout"><h2 _ngcontent-c1="" class="t-h2">Form layout - usage</h2><ul _ngcontent-c4f="" class="rules"><li _ngcontent-c4f=""> Section description fits on one line — if you need two, the section is doing too much. </li><li _ngcontent-c4f=""> Pair natural counterparts (Start/End, City/Country) horizontally; everything else stacks. </li><li _ngcontent-c4f=""> Footer stays visible without scroll on common viewports; sticky-footer is acceptable on tall forms. </li><li _ngcontent-c4f=""> Inline edit is for single-field changes. Promote to a full form once two or more fields move together. </li></ul></section></docs-section></ds-docs-patterns-form-layout></div>
   
   
