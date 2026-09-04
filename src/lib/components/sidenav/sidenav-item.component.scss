@@ -64,12 +64,18 @@
   &.active {
     background-color: var(--_sidenav-item-bg-color-active);
     color: var(--_sidenav-item-label-color-active);
+  }
 
+  /* The rail and the focus ring are the same property, and `.active` used to win the
+     tie by coming later — so focusing the current item (the first stop a keyboard user
+     reaches) repainted the rail and showed nothing. The fill and label colour stay
+     unguarded, so the item still reads as current while focused. */
+  &.active:not(:focus-visible) {
     /* inset box-shadow follows the item's rounded corners */
     box-shadow: inset var(--sidenav-item-rail-width) 0 0 var(--_sidenav-item-rail);
   }
 
-  &.active.no-rail {
+  &.active.no-rail:not(:focus-visible) {
     box-shadow: none;
   }
 
