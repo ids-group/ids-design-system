@@ -168,9 +168,15 @@ async function lane() {
     heights[card.name] = height;
     if (kept === 0) blank.push(card.name);
     finished += 1;
-    process.stderr.write(
-      `  ${finished}/${all.length} ${card.name} = ${height}px        \r`,
-    );
+    // A lone carriage return never flushes into a pipe: redirected, this printed all 410 cards as
+    // one 60 KB line, which is what a CI log would have shown instead of progress.
+    if (process.stderr.isTTY) {
+      process.stderr.write(
+        `  ${finished}/${all.length} ${card.name} = ${height}px        \r`,
+      );
+    } else if (finished % 20 === 0 || finished === all.length) {
+      console.error(`  measured ${finished}/${all.length}`);
+    }
   }
 }
 

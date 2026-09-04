@@ -9,12 +9,25 @@ cd "$(dirname "$0")/../.."
 . infrastructure/scripts/_setup.sh
 
 setup_bun
+
+# Twelve phases, three of which take minutes on their own. Without a heading and a running clock the
+# whole step reads as one silent twenty-minute hang, and there is no way to tell a slow build from a
+# wedged one.
+STEPS=12
+STEP=0
+STARTED=$(date +%s)
+step() {
+  STEP=$((STEP + 1))
+  printf '\n=== [%s/%s] %s  (%ss elapsed)\n' "$STEP" "$STEPS" "$1" "$(($(date +%s) - STARTED))"
+}
+
+step "Installing dependencies"
 install_deps
 
-echo "Bootstrapping design-sync deps..."
+step "Bootstrapping design-sync deps"
 node .design-sync/tools/bootstrap.mjs
 
-echo "Building design-sync bundle..."
+step "Slicing the sections and building the design-sync bundle"
 CI=true bun run build:elements
 
 [ -f .design-sync/elements/dist/ds-bundle.js ] || { echo "Expected artifact missing: .design-sync/elements/dist/ds-bundle.js"; exit 1; }
@@ -25,16 +38,16 @@ CI=true bun run build:elements
 grep -q 'url("fonts/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bundle.css carries no fonts/ URL - the rewrite did not run"; exit 1; }
 ! grep -q './media/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bundle.css still points at ./media/ - the rewrite was incomplete"; exit 1; }
 
-echo "Checking the hand-maintained surface..."
+step "Checking the hand-maintained surface"
 bun run check:manual-surface
 
 # The docs are the agent's instructions, so a prop that no longer exists gets executed, not read.
-echo "Checking the docs against the real surface..."
+step "Checking the docs against the real surface"
 node .design-sync/tools/check-doc-api.mjs
 
 # The publish itself cannot run here: finalize_plan is a permission gate bound to a claude.ai
 # login.
-echo "Building the upload artefacts..."
+step "Building the upload artefacts"
 bun run build:upload
 
 # The image ships without git, and this check ran `git status` anyway: empty output, test passed,
@@ -45,6 +58,7 @@ command -v git > /dev/null || { echo "git is not available, so the upload tree c
 # The cards are committed FROZEN: `snapshot-cards` renders each one and writes the settled DOM
 # back with the scripts stripped. Without a browser the build below leaves them LIVE, and a
 # release commits that — which is how 0.12.0 shipped a thawed tree. So install one.
+step "Making a browser available"
 CHROME_BIN="$(command -v chromium-browser || command -v chromium || true)"
 if [ -z "$CHROME_BIN" ]; then
   apk add --no-cache chromium nss freetype harfbuzz ttf-freefont > /dev/null
@@ -55,13 +69,17 @@ export CHROME_BIN
 
 # A card's height is measured from the rendered page, and the marker that carries it is written by
 # build-upload — so the measurement sits between two builds, not after the last one.
-echo "Measuring the card heights..."
+step "Measuring the card heights"
 node .design-sync/tools/measure-cards.mjs
+
+step "Stamping the heights back into the cards"
 bun run build:upload
 
-echo "Freezing the cards..."
+step "Freezing the cards"
 node .design-sync/tools/snapshot-cards.mjs
 node .design-sync/tools/check-frozen.mjs
+
+step "Verifying the upload tree"
 
 [ -f .design-sync/upload/_adherence.oxlintrc.json ] || { echo "Expected artifact missing: .design-sync/upload/_adherence.oxlintrc.json"; exit 1; }
 [ -f .design-sync/upload/_ds_bundle.js ] || { echo "Expected artifact missing: .design-sync/upload/_ds_bundle.js"; exit 1; }
@@ -123,6 +141,7 @@ node .design-sync/tools/check-section-coverage.mjs
 sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html .design-sync/upload/guides/*/*/*.html | sort -u | wc -l)
 echo "Upload artefacts: $cards card(s) for $declarations component(s) over $sections ds-docs section(s)"
 
+step "Committing what the release regenerated"
 GENERATED=".design-sync/upload .design-sync/viewports.json .design-sync/live-cards.txt"
 
 # A release bumps the version, DS_VERSION carries it into the bundle, and the bundle is committed
@@ -160,3 +179,6 @@ else
   git push origin main
   echo "Upload tree committed to main; sync-dev.sh carries it to dev"
 fi
+
+printf '\n=== done in %ss: the Claude Design bundle, %s card(s) and the tree they ship with\n' \
+  "$(($(date +%s) - STARTED))" "$cards"
