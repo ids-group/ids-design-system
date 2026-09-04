@@ -26,6 +26,17 @@ the release commit — one timeline, two audiences.
   chapters that need behaviour are named in `live-chapters.txt`: toast, drawer, modal, popover,
   bottom-sheet, tree, loading-overlay, scrollbar.
 
+### Docs
+
+- **Seven component docs promised an `open` prop that does not exist.** Autocomplete, ColorPicker,
+  DatePicker, MultiSelect, Select, SplitButton and TimePicker each documented it, so an agent
+  writing against the doc got a dropdown that never opened. Behind the custom elements the trigger
+  owns its own open state and the panel is a CDK overlay portaled to `document.body`; `Select`'s
+  `staticPreview` is the one way to render a panel in flow. `check-doc-api.mjs` now reads the prose
+  for a backticked `on…Change` the component does not have, not only the tsx examples — that shape
+  alone, because every backticked identifier reports 46 findings on this tree and almost none are
+  defects, while this reports none.
+
 ### Build
 
 - **The shared stylesheet is the union over every rendered card, not the frozen ones.** A block

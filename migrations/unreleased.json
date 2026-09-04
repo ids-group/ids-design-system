@@ -1,0 +1,20 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "split-button-empty-menu-items-disables-chevron",
+      "kind": "behavior",
+      "surface": "template",
+      "old": "ds-split-button[menuItems]",
+      "new": null,
+      "action": "On every `<ds-split-button>` whose `menuItems` can be empty, pass the items or replace the control with `<ds-button>`.",
+      "appliesWhen": "Only a `<ds-split-button>` that renders with `menuItems` empty — a list filled after the first render, a list built by a filter that can return nothing, or a split button used for one action. A split button whose items are always present behaves exactly as before.",
+      "pitfall": "Nothing errors and the main button keeps working, so this is only visible on the chevron: it is disabled while the list is empty. Items fetched after the first render therefore leave a disabled chevron for as long as the fetch takes, which reads as a broken control to anyone who does not know it is waiting. Render the split button once the items are in hand, or keep the interval deliberately.",
+      "note": "The chevron previously opened a `ds-menu` with nothing in it. It is now disabled while `menuItems` is empty and enables itself when items arrive — disabled rather than hidden, so the control keeps its geometry either way. A development build warns and names `ds-button` as the control for a single action. The panel can only ever be the `ds-menu` built from `menuItems`; anything else composes from `ds-button` and `ds-popover`.",
+      "verify": "A split button with an empty `menuItems` shows a disabled chevron and opens no panel, and one with items opens its menu as before.",
+      "searchHints": ["ds-split-button", "menuItems", "SplitButtonItem", "SplitButtonComponent"]
+    }
+  ],
+  "deleteList": [],
+  "informational": []
+}

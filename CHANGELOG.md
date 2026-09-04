@@ -8,6 +8,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`ds-split-button` with an empty `menuItems` disables its chevron instead of opening an empty
+  menu.** The template carried no guard, so a split button configured with nothing to list still
+  opened a panel with nothing in it — a chevron is a promise that there is more, and an empty panel
+  reads as a broken control. The trigger is now disabled whenever `menuItems` is empty, and a
+  development build warns once and names `ds-button` as the control for a single action. It is
+  disabled rather than hidden, so the button keeps its geometry: a `ds-split-button` whose items
+  arrive asynchronously shows a disabled chevron until they do and enables itself when they land.
+  The panel can only ever be the `ds-menu` built from `menuItems` — there is no slot for arbitrary
+  content, and anything else composes from `ds-button` and `ds-popover`.
+
 ## 0.12.0 — 2026-09-04
 
 ### Added
