@@ -10,25 +10,32 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
-- **Every component is now its own entry point, so a bundler can put it in the chunk that uses it.**
-  `@ids-group-ltd/ids-design-system/button`, `/table`, `/toast` and 66 more resolve alongside the
-  package root, which still exports everything it did. Until now the package was one flattened
-  module: one eager import of any part of it — a service in a composition root is the usual one —
-  made the whole library reachable from the initial bundle, and no amount of lazy routing moved it
-  out. Measured on a documentation app of 90 sections: its initial bundle fell from **240 kB to
-  138 kB gzip**, with the total across initial and lazy chunks moving under a percent — nothing was
-  duplicated, 102 kB simply moved to the routes that use it.
+- **The library no longer forces itself into your initial bundle, and your imports stay as they are.**
+  Every component became its own entry point internally, so a bundler can place each one in the chunk
+  that actually uses it. Until now the package was a single flattened module: one eager import of any
+  part of it — a service in a composition root is the usual one — made the whole library reachable
+  from the initial bundle, and no amount of lazy routing moved it out. Measured on a documentation app
+  of 90 sections that changed not one import line: its initial bundle fell from **240 kB to 138 kB
+  gzip**, with the total across initial and lazy chunks moving under a percent. Nothing was
+  duplicated; 102 kB simply moved to the routes that use it.
 
-- **The root import costs nothing, so there is no migration.** The same app measured 138.36 kB
-  importing every component from its own entry point and 138.37 kB importing them all from the
-  package root. Deep specifiers are worth using for what they say about a file's dependencies, not
-  for the bundle. Both spellings resolve to the same file, so a component imported one way and the
-  same component imported the other are one class, and `instanceof` holds across them.
+- **Keep importing from the package root — that is the supported spelling and it costs nothing
+  extra.** The same app measured 138.37 kB importing everything from the root against 138.36 kB
+  importing each component from its own entry point. The root is a re-export of the entry points and
+  nothing else, so a bundler sees straight through it. There is no migration here and no reason to
+  rewrite an import.
 
-- **A longer form of each specifier also resolves**, naming the folder the component lives in
-  (`@ids-group-ltd/ids-design-system/components/button`). The short one is the supported spelling —
-  it is what keeps a component's location free to change — and the long one exists because that is
-  the name the package build derives.
+- **Per-component specifiers do resolve** (`@ids-group-ltd/ids-design-system/button`), for a codebase
+  that prefers a file's dependencies spelled out. They are not the recommended form and they buy no
+  bytes. If you want them shorter, one line in your own `tsconfig.json` does it, with no change on
+  our side:
+
+  ```json
+  "paths": { "ds/*": ["node_modules/@ids-group-ltd/ids-design-system/*"] }
+  ```
+
+  `ds/button` then resolves to the same file as the full specifier, so a component imported one way
+  and the same component imported the other are one class and `instanceof` holds across them.
 
 ### Changed
 
@@ -46,8 +53,7 @@ this package ships under `migrations/`.
 
 | If you have | Delete it, because |
 | --- | --- |
-| `await import('@ids-group-ltd/ids-design-system')` | A dynamic import of the whole package was the only way to keep it out of the initial bundle, and it bought that at the cost of an async boundary in your own code. A plain static import of the entry point you need now lands in the chunk that uses it. Replace with: a static import from the component's own entry point. Still legitimate where the lazy boundary is there for its own sake — a feature area you genuinely want off the critical path. |
-
+| `await import('@ids-group-ltd/ids-design-system')` | A dynamic import of the whole package was the only way to keep it out of the initial bundle, and it bought that at the cost of an async boundary in your own code. An ordinary static import from the package root now lands in the chunk that uses it. Replace with: a plain static import from the package root. Still legitimate where the lazy boundary is there for its own sake — a feature area you genuinely want off the critical path. |
 
 ## 0.11.4 — 2026-09-03
 
