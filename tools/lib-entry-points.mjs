@@ -52,3 +52,26 @@ export function entryPoints() {
 
   return found.sort((a, b) => a.moduleId.localeCompare(b.moduleId));
 }
+
+/** Names carrying an `@internal` tag. An entry point has to export whatever another entry
+ *  point imports, so some helpers are reachable that no consumer should build on; the tag
+ *  is what keeps them out of the reference and the design-sync contracts. It does NOT strip
+ *  them from the .d.ts — the imports that forced the export still need them. */
+export function internalSymbols() {
+  const marked = new Set();
+  const TAGGED = /\/\*\*[\s\S]*?@internal[\s\S]*?\*\/\s*(?:@[\w.]+\([\s\S]*?\)\s*)*export\s+(?:declare\s+)?(?:abstract\s+)?(?:class|const|function|interface|type|enum)\s+(\w+)/g;
+  const visit = (dir) => {
+    for (const item of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, item.name);
+      if (item.isDirectory()) {
+        visit(full);
+        continue;
+      }
+      if (!item.name.endsWith('.ts') || item.name.endsWith('.spec.ts')) continue;
+      for (const [, name] of readFileSync(full, 'utf8').matchAll(TAGGED)) marked.add(name);
+    }
+  };
+  visit(LIB_ROOT);
+
+  return marked;
+}

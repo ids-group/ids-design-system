@@ -14,6 +14,7 @@ export interface DsTypeAhead {
   match: (key: string, labels: readonly string[], from: number) => number;
 }
 
+/** @internal */
 export function createTypeAhead(): DsTypeAhead {
   let buffer = '';
   let last = 0;

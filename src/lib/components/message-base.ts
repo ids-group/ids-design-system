@@ -11,6 +11,7 @@ import { trimmedText } from './field-errors';
  *
  * `@Directive()` is required, not decoration: Angular refuses to compile a base
  * class that declares inputs without it.
+ * @internal
  */
 @Directive()
 export abstract class DsMessageBase {

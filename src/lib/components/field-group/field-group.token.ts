@@ -30,6 +30,7 @@ export const DS_FIELD_GROUP = new InjectionToken<DsFieldGroupContext>(
  *
  * A function so the six supported controls share one line instead of six copies
  * of the same optional inject — and so the contract has one place to change.
+ * @internal
  */
 export function inFieldGroup(): boolean {
   return !!inject(DS_FIELD_GROUP, { optional: true });

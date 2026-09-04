@@ -129,9 +129,12 @@ judgment half is yours.
   `styles/`, `themes/`, `migrations/` and `schematics/`, plus the four root documents.
 - **One of our npm scripts.** `npm run class-surface` does not exist for the reader —
   state the result, or an instruction they can follow, instead.
-- **A symbol the package root does not export.** If it is not in `src/public-api.ts`, the
-  reader cannot import it. Naming one is allowed only where the text also says it is
-  internal — a subclasser meets these names in their own compiler errors.
+- **A symbol the package root does not export, or one tagged `@internal`.** The root facade is
+  `src/lib/public-api.ts` and it re-exports every entry point, so a name reaches a consumer only
+  by sitting in some entry point’s `index.ts`. Some do sit there without being API: an entry
+  point has to export whatever another entry point imports, and those carry `@internal`. Naming
+  either is allowed only where the text also says it is internal — a subclasser meets these names
+  in their own compiler errors.
 - **An internal rule id** (`M0…`), a commit hash, or `HEAD`.
 - **A correction to one of our own records, as an entry of its own.** A manifest says what a
   consumer changes in THEIR code; a changelog says what changed in the library. Neither reports

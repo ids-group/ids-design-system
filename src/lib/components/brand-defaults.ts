@@ -9,6 +9,7 @@ import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
  *
  * Same `null`-means-unset shape as `resolveReserveMessage` — here `''` is an
  * explicit "this screen has no brand", and each field resolves on its own.
+ * @internal
  */
 export function resolveBrandValue(
   value: Signal<string | null>,

@@ -11,6 +11,7 @@ import { type Signal, afterRenderEffect, inject, DOCUMENT } from '@angular/core'
  * Rows are looked up by id rather than through a `viewChildren` query because they
  * live in a portaled template — and the id is the one `aria-activedescendant`
  * already points at, so a failed lookup means that reference is broken too.
+ * @internal
  */
 export function scrollActiveOptionIntoView(
   activeDescendantId: Signal<string | null>,

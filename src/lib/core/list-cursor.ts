@@ -9,7 +9,9 @@ export interface DsListCursorList {
   isEnabled: (index: number) => boolean;
 }
 
-/** Where the cursor lands, or -1 when nothing in the list can take it. */
+/** Where the cursor lands, or -1 when nothing in the list can take it.
+ * @internal
+ */
 export function firstEnabledIndex(list: DsListCursorList): number {
   for (let index = 0; index < list.length; index += 1) {
     if (list.isEnabled(index)) {
@@ -20,6 +22,7 @@ export function firstEnabledIndex(list: DsListCursorList): number {
   return -1;
 }
 
+/** @internal */
 export function lastEnabledIndex(list: DsListCursorList): number {
   for (let index = list.length - 1; index >= 0; index -= 1) {
     if (list.isEnabled(index)) {
@@ -36,6 +39,7 @@ export function lastEnabledIndex(list: DsListCursorList): number {
  * `from` of -1 means "no cursor yet": stepping forward lands on the first
  * enabled entry and stepping back on the last, which is what a reader expects
  * from a freshly opened panel.
+ * @internal
  */
 export function nextEnabledIndex(
   list: DsListCursorList,

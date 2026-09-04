@@ -11,7 +11,7 @@ import {
   statSync,
   existsSync,
 } from 'node:fs';
-import { entryPoints } from './lib-entry-points.mjs';
+import { entryPoints, internalSymbols } from './lib-entry-points.mjs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -304,6 +304,7 @@ function exportedClassNames() {
       names.add(name);
     }
   }
+  for (const name of internalSymbols()) names.delete(name);
 
   return names;
 }

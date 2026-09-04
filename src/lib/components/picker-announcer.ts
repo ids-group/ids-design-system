@@ -11,6 +11,7 @@ import { type Signal, effect, inject, DOCUMENT } from '@angular/core';
  * The text is English, which is the same debt every other library-invented string
  * in this package carries (see the localization item in `docs/todo.md`). It is a
  * count, so it is the cheapest of them to swap once a provider lands.
+ * @internal
  */
 export function announceOptionCount(
   count: Signal<number>,

@@ -11,7 +11,9 @@ const NON_TEXT_INPUT_TYPES = new Set([
 ]);
 
 /** True when the key landed on a control that consumes its own keystrokes, so a
- *  container listening on the way up must leave the event alone. */
+ *  container listening on the way up must leave the event alone.
+ * @internal
+ */
 export function isTextEntryTarget(event: Event): boolean {
   const target = event.target;
   if (!(target instanceof HTMLElement)) {

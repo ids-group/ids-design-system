@@ -26,6 +26,7 @@ import {
  * `reason` replaces the default `[label]` wording for a host that drops content
  * for a different reason — `ds-filter-bar` drops anything that carries neither of
  * its slot attributes.
+ * @internal
  */
 @Directive({
   selector: '[dsProjectionDropped]',

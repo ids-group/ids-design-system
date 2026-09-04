@@ -35,6 +35,7 @@ const TRIGGER_ELEMENTS = `button${NOT_ROVED}, [tabindex="0"]${NOT_ROVED}`;
  * runs. Every read defers to call time, which is also when the effect first runs.
  *
  * Must be called from an injection context (it owns an `effect`).
+ * @internal
  */
 export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   readonly formDisabled: WritableSignal<boolean>;
@@ -111,6 +112,7 @@ function focusOwnControl(host: HTMLElement, options?: FocusOptions): void {
  * A subclass must expose the `value` model and OR `formDisabled()` into its
  * effective disabled state so `FormControl.disable()` actually reaches the
  * control; it should also call `markTouched()` from a blur handler.
+ * @internal
  */
 @Directive({
   host: { '[style.display]': 'hidden() ? "none" : null' },
@@ -177,6 +179,7 @@ export abstract class DsControlValueAccessor<T>
  * with Angular forms in both directions without affecting the `[(checked)]`
  * signal API. Subclasses must OR `formDisabled()` into their effective disabled
  * state and call `markTouched()` from a blur handler.
+ * @internal
  */
 @Directive({
   host: { '[style.display]': 'hidden() ? "none" : null' },
