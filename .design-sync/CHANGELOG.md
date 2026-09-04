@@ -4,7 +4,7 @@ What changed in the Claude Design upload — the cards, their metadata, the gene
 them, and the routes for getting a file out of the shared project.
 
 **This is not the package changelog and must never be merged into it.** Nothing under
-`.design-sync/` reaches the npm tarball: `ng-package.json` copies only `src/lib/styles` and
+`.design-sync/` reaches the npm tarball: `src/lib/ng-package.json` copies only `src/lib/styles` and
 `src/lib/themes` as assets, and `package.json` declares no `files` field that would pull anything
 else in. A consumer installing the package cannot observe any of it. The published `CHANGELOG.md`
 is also linted against naming a path outside the published tree, so an entry about this directory
