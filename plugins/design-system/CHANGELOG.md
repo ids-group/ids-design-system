@@ -4,6 +4,33 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.8.0 — 2026-09-06
+
+Grounded in the first 0.11.4 → 0.12.1 field run (ai-sdlc-prototype): the run's one real find was a
+silently-truncated generated artifact, and three of the ten manifest defects it filed upstream were
+false — all three asserting a removal from absence in one file.
+
+### Added
+
+- **Generated-from-package artifacts joined the drift check (step 5).** Consumer tooling that reads
+  the installed package to generate a committed catalogue/map breaks with no error when a release
+  changes the installed tree's SHAPE (0.12.0's per-entry-point split): the reader reports a
+  complete-looking fraction. The orchestrator now greps for the package path outside imports,
+  re-runs each such tool after install, fixes truncated readers as drift fixes (count-checked
+  against the committed previous output), and gates with the tool's own `--check` when it has one.
+
+### Changed
+
+- **A defect claim about the DS side needs evidence at both tag boundaries** (planner + Phase C):
+  asserting a symbol removed/voided requires file:line at the previous tag AND at `v<V>` — a token
+  can leave the painting file yet stay declared and load-bearing elsewhere, and a mixin can be
+  updated rather than voided. A `supersedes` proposal must name an existing item id (lint-resolved);
+  prose recommendations are recorded not-linkable, never invented.
+- **A filed defect proposing `deleteList` rows also names the paired CHANGELOG edit** — the DS's
+  `check-delete-tables` gate wants each row's `find` verbatim in that version's "What you can now
+  DELETE" table, so a rows-only ask fails the release. The planner may also derive rows when a
+  shipped manifest's `deleteList` is empty against redundancy-creating prose, marking them derived.
+
 ## 1.7.0 — 2026-09-04
 
 Two-wave adversarial review (4 sceptics on the files, 2 on their findings, every survivor

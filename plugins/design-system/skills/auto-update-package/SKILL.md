@@ -391,6 +391,18 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    assertion — to confirm `new` exists on the new version's real surface (the sources checkout /
    installed bundle) and no dead `old` remains. A silent typo in a retargeted selector compiles
    clean and is invisible otherwise.
+   **Generated-from-package artifacts (the second silent-drift class):** consumer tooling that
+   READS the installed package — a script walking `node_modules/@ids-group-ltd/ids-design-system/`
+   to generate a committed catalogue, API map or reference doc. A release that changes the
+   installed TREE SHAPE (0.12.0 turned one types file and one fesm bundle into one per entry
+   point) breaks such a reader with no error: it reads one entry point's worth and reports a
+   complete-looking result. After install, grep the consumer for the package path OUTSIDE import
+   statements (in `.mjs`/`.js` tooling: `readdirSync`/`readFileSync`/glob over the package dir);
+   for each such tool, re-run it, fix the reader itself when the new layout truncates it (an
+   ordinary drift fix — the re-check above applies; sanity-check the regenerated output's counts
+   against the committed previous version), and put the regenerated output in the touched-files
+   union. Gate with the tool's own `--check`/stale mode when it has one. A committed generated
+   artifact still stamped with an old DS version is the tell that earlier upgrades skipped this.
    **Visual-only changes:** if a behavioral change's correctness is observable ONLY in rendered
    output (no build or grep signal — spacing/size/animation/restyle), the edit can't be machine-
    verified. Do NOT silently green it: keep the edit, but list it in the report under **"applied —
@@ -457,6 +469,12 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
   matched nothing repo-wide, with version and id. One can be a consumer quirk; several in one chain
   mean the manifests are wrong — say explicitly that this list should be filed back to the
   design-system repo, and never fold it into the not-applicable total.
+  **A defect filed back must be complete and evidenced:** any claim that the DS removed or voided
+  something carries file:line at BOTH tag boundaries (see the planner's both-boundaries rule) —
+  removal asserted from absence in one file is the known false-positive class; and a defect that
+  proposes `deleteList` rows also names the paired CHANGELOG edit, because the DS's
+  `check-delete-tables` gate requires every row's `find` shape verbatim in that version's "What you
+  can now DELETE" table — a rows-only ask fails the release.
 - **Informational (FYI, no action):** documented changes needing no consumer code edit (from the
   plan's `informational`) — listed so the human is aware, NOT a to-do.
 - **Applied — human should eyeball:** behavioral edits that were applied but whose correctness is

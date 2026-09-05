@@ -38,8 +38,21 @@ is null" is handing you both `surface: "typescript"` and two `detect` strings.
 A top-level `deleteList` is DATA, not something to reconstruct: every published manifest carries
 it as `{ id, surface, find, why, replaceWith }` rows — pass them through verbatim (the
 orchestrator's delete-list pass runs each `find`, not you). Build one from prose only when
-planning a version that ships no manifest at all, taking the `find` from whatever consumer-side
-shape the sentence names.
+planning a version that ships no manifest at all — or when a shipped manifest's `deleteList` is
+empty while the prose plainly creates redundancy — taking the `find` from whatever consumer-side
+shape the sentence names, and marking each derived row's `why` as planner-derived.
+
+**A defect claim about the DS side needs evidence at BOTH tag boundaries.** Whenever you assert —
+in an appended item's `note`, a validation verdict, or a proposed `supersedes` — that a symbol,
+token or mixin was REMOVED, voided or reversed, check it at the previous tag AND at `v<V>` in the
+DS sources (the orchestrator's checkout, or `git show <tag>:<file>`) and cite file:line at each
+boundary. Absence in ONE file is not removal: a token can leave the file that painted with it and
+stay declared in the token sheet with other components still reading it — the correct claim there
+is "silent no-op for X, still load-bearing for Y", and telling a consumer to delete the override
+would break Y. A mixin can be UPDATED in the same release rather than voided — diff its body across
+the two tags before calling its rationale dead. And a `supersedes` proposal must name an item id
+that exists in a shipped manifest — the reference is lint-resolved, so a changelog-prose
+recommendation with no id is recorded as not-linkable, never invented.
 
 ## What to read
 
