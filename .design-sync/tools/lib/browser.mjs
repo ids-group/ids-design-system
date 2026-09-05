@@ -109,8 +109,32 @@ export async function launchBrowser({
     }
   });
 
+  // A command is only ever settled by a reply carrying its id, so a browser that dies mid-run left
+  // every lane awaiting a reply that can no longer come: the queue stopped, the HTTP server held the
+  // event loop, and the process hung until CI timed the step out — indistinguishable from slow.
+  let dead = null;
+  const die = (reason) => {
+    if (dead) return;
+    dead = new Error(reason);
+    for (const [, settle] of pending) settle.reject(dead);
+    pending.clear();
+    for (const waiter of waiters.splice(0)) waiter.reject(dead);
+  };
+  socket.addEventListener('close', () => die('the CDP socket closed'), {
+    once: true,
+  });
+  socket.addEventListener('error', () => die('the CDP socket errored'), {
+    once: true,
+  });
+  child.on('exit', (code) => die(`Chrome exited with ${code}`));
+
   const send = (method, params, sessionId) =>
     new Promise((resolve, reject) => {
+      if (dead) {
+        reject(dead);
+
+        return;
+      }
       const id = (nextId += 1);
       pending.set(id, { resolve, reject, method });
       socket.send(
@@ -124,7 +148,7 @@ export async function launchBrowser({
 
   const once = (method, sessionId, timeout) =>
     new Promise((resolve, reject) => {
-      const waiter = { method, sessionId, resolve };
+      const waiter = { method, sessionId, resolve, reject };
       waiters.push(waiter);
       setTimeout(() => {
         const index = waiters.indexOf(waiter);
@@ -139,11 +163,15 @@ export async function launchBrowser({
      *  passed, then evaluates `expression` and closes the tab. `expression` is read AFTER time has
      *  stopped, so it must be synchronous — a Promise on a paused clock never settles. */
     async render(url, expression, { timeout = 60000, budget = 25000 } = {}) {
-      const { targetId } = await send('Target.createTarget', {
-        url: 'about:blank',
-      });
+      // Inside the try with everything else: opening the tab used to throw past the caller, which
+      // rejected its lane and tore the browser down under the four still rendering — losing the
+      // whole run and the tool's own report of what failed.
+      let targetId = null;
       let sessionId = null;
       try {
+        ({ targetId } = await send('Target.createTarget', {
+          url: 'about:blank',
+        }));
         ({ sessionId } = await send('Target.attachToTarget', {
           targetId,
           flatten: true,
@@ -156,11 +184,16 @@ export async function launchBrowser({
           { policy: 'pause' },
           sessionId,
         );
+        // The catch is on the WAITER, not on the await below: if navigating or granting the budget
+        // rejects first, control leaves before `await expired`, and its own timeout then rejects a
+        // promise nobody is holding — an unhandled rejection, which Node turns into a dead process
+        // a minute later, in the middle of an otherwise fine run.
         const expired = once(
           'Emulation.virtualTimeBudgetExpired',
           sessionId,
           timeout,
         );
+        expired.catch(() => {});
         await send('Page.navigate', { url }, sessionId);
         await send(
           'Emulation.setVirtualTimePolicy',
@@ -199,7 +232,9 @@ export async function launchBrowser({
 
         return '';
       } finally {
-        await send('Target.closeTarget', { targetId }).catch(() => {});
+        if (targetId) {
+          await send('Target.closeTarget', { targetId }).catch(() => {});
+        }
       }
     },
 
