@@ -4,10 +4,11 @@
 // filler the gate exists to avoid, and one that silently broke would go green on the entries that
 // shipped uncovered.
 //
-// A crash leaves CHANGELOG.md mutated, with the backup at the path printed below.
+// The tracked CHANGELOG.md is never written: fixtures go to a per-process copy under the temp
+// directory, so a crash leaves the repository untouched and two sessions cannot collide.
 //
 //   node tools/check-manifest-coverage-selftest.mjs
-import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, rmSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,20 +16,116 @@ import { execFileSync } from 'node:child_process';
 import { patternsIn } from './check-manifest-coverage.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const CHANGELOG = join(ROOT, 'CHANGELOG.md');
-const BAK = join(tmpdir(), 'check-manifest-coverage-selftest.bak.md');
-copyFileSync(CHANGELOG, BAK);
-console.log(`backup: ${BAK}`);
+// Fixtures go to a private copy, never to the tracked file. Writing CHANGELOG.md and restoring it
+// afterwards is safe alone and corrupting in parallel: a second run backs up the first run's
+// fixture and then "restores" that, leaving a red gate with no bad commit behind it. The path is
+// per-process so two runs cannot meet.
+const CHANGELOG = join(
+  tmpdir(),
+  `check-manifest-coverage-selftest.${process.pid}.md`,
+);
+const MIGRATIONS = join(
+  tmpdir(),
+  `check-manifest-coverage-selftest.${process.pid}.migrations`,
+);
 
-const original = readFileSync(CHANGELOG, 'utf8');
+const original = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8');
+writeFileSync(CHANGELOG, original, 'utf8');
 const eol = original.includes('\r\n') ? '\r\n' : '\n';
 
-const run = () => {
+// A token this cycle really introduced. The case that uses it writes its own manifest naming a
+// DIFFERENT hook, so what is proved is the introduced rule and not the blunter "no hook mentioned
+// at all" one. A cycle that introduced nothing is normal, so the case skips rather than fails.
+const introducedToken = (() => {
+  const at = (ref) => {
+    const found = new Set();
+    try {
+      const out = execFileSync(
+        'git',
+        [
+          'grep',
+          '-oh',
+          '-e',
+          '--ds-[a-z0-9-]*',
+          ...(ref ? [ref] : []),
+          '--',
+          'src/lib',
+        ],
+        { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 28 },
+      );
+      for (const match of out.matchAll(/--ds-[a-z0-9-]*/g))
+        if (!match[0].endsWith('-')) found.add(match[0]);
+    } catch {
+      /* no such tag, or nothing matched */
+    }
+    return found;
+  };
+  const tags = execFileSync(
+    'git',
+    ['tag', '--list', 'v*', '--sort=v:refname'],
+    { cwd: ROOT, encoding: 'utf8' },
+  )
+    .split('\n')
+    .filter(Boolean);
+  if (!tags.length) return '';
+  const before = at(tags.at(-1));
+  return [...at('')].find((token) => !before.has(token)) ?? '';
+})();
+
+// Two real library tokens where one name contains the other. The boundary case writes a manifest
+// naming only the LONGER one and an entry naming only the shorter: a working word boundary reports
+// the shorter as uncovered, a loosened one lets the longer answer for it. Both halves have to be
+// real hooks or the entry resolves nothing and the case proves nothing.
+const [shortHook, longHook] = (() => {
+  const hooks = new Set();
+  try {
+    const out = execFileSync(
+      'git',
+      ['grep', '-oh', '-e', '--[a-z][a-z0-9-]*', '--', 'src/lib'],
+      { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 28 },
+    );
+    for (const match of out.matchAll(/--[a-z][a-z0-9-]*/g))
+      if (!match[0].endsWith('-')) hooks.add(match[0]);
+  } catch {
+    return ['', ''];
+  }
+  const all = [...hooks];
+  for (const short of all) {
+    // The next character must be a LETTER, not a hyphen: a hyphen sits in both the correct
+    // boundary class and the degraded one, so a pair like `--error` inside `--error-subtitle`
+    // answers the same either way and proves nothing.
+    const long = all.find(
+      (candidate) =>
+        candidate.length > short.length &&
+        candidate.startsWith(short) &&
+        /[a-z0-9]/.test(candidate[short.length]),
+    );
+    if (long) return [short, long];
+  }
+  return ['', ''];
+})();
+
+const run = (manifest) => {
+  const env = { ...process.env, DS_CHANGELOG_PATH: CHANGELOG };
+  if (manifest) {
+    mkdirSync(MIGRATIONS, { recursive: true });
+    writeFileSync(
+      join(MIGRATIONS, 'unreleased.json'),
+      JSON.stringify(
+        { version: 'unreleased', items: [], ...manifest },
+        null,
+        2,
+      ),
+      'utf8',
+    );
+    env.DS_MIGRATIONS_DIR = MIGRATIONS;
+  }
   try {
     execFileSync('node', ['tools/check-manifest-coverage.mjs'], {
       cwd: ROOT,
       encoding: 'utf8',
       stdio: 'pipe',
+      env,
     });
     return { red: false, out: '' };
   } catch (e) {
@@ -84,35 +181,42 @@ const cases = [
   },
   {
     // A token the cycle INTRODUCED is the one a consumer greps for and finds nothing, so one
-    // mention of an unrelated tag must not answer for it.
-    name: 'FIRES on a token this cycle introduced, even beside a covered tag',
+    // mention of a hook the manifest DOES carry must not answer for it. The covered half has to
+    // be there, or the entry goes red through "no hook mentioned at all" and proves nothing about
+    // this rule.
+    name: 'FIRES on a token this cycle introduced, even beside a covered hook',
     section: 'Fixed',
-    entry:
-      '- **`ds-table` selection got a mark.** It animates over ' +
-      '`--ds-check-mark-enter-duration`.',
+    entry: `- **A control gained a mark.** It reads \`${longHook}\` and animates over \`${introducedToken}\`.`,
     expect: 'red',
+    manifest: { informational: [`Only ${longHook} is documented here.`] },
+    skipWhen: () => !longHook || !introducedToken,
   },
   {
     // The `--space-1-5` shape: a token the library already had, read by the change rather than
     // introduced by it. Demanding a line here is filler, and points at a knob that is not the
-    // supported one.
-    name: 'EXEMPT: a pre-existing token beside a covered tag is not asked for a line',
+    // supported one. The covered half is read from the manifest AT RUN TIME — naming a fixed one
+    // made the case answer to whatever the current cycle happens to document, and a release cut
+    // empties the file, so it went red on a tree nobody had touched.
+    name: 'EXEMPT: a pre-existing token beside a covered hook is not asked for a line',
     section: 'Fixed',
-    entry:
-      '- **`ds-table` selection got a mark.** It sits under `--layer-toast`.',
+    entry: `- **A control moved a pixel.** It reads \`${longHook}\` and sits under \`--layer-toast\`.`,
     expect: 'green',
+    manifest: { informational: [`Only ${longHook} is documented here.`] },
+    skipWhen: () => !longHook,
   },
   {
-    // The boundary itself. `ds-tab` is a real element the manifest never spells; it says
-    // `ds-table` and `ds-tabs`. Every other red case here fires because NO hook is mentioned, so
-    // none of them can see a boundary that has been loosened rather than removed — which is how
-    // a `\w` written inside a plain template literal, where it degrades to the letter `w`,
-    // shipped as a working fix.
-    name: 'FIRES on a tag the manifest only ever spells as a longer name',
+    // The boundary itself: a real hook the manifest never spells on its own, only inside a longer
+    // name. Every other red case fires because NO hook is mentioned, so none of them can see a
+    // boundary that has been loosened rather than removed — which is how a `\w` written inside a
+    // plain template literal, where it degrades to the letter `w`, shipped as a working fix. The
+    // pair is derived from the live manifest, because a hardcoded one stops being a substring the
+    // first time the documented surface changes.
+    name: 'FIRES on a hook the manifest only ever spells as a longer name',
     section: 'Fixed',
-    entry:
-      '- **A `ds-tab` header lost its ring.** The indicator sat under the panel edge.',
+    entry: `- **A control lost its ring.** The indicator read \`${shortHook}\`.`,
     expect: 'red',
+    manifest: { informational: [`Only ${longHook} is documented here.`] },
+    skipWhen: () => !shortHook,
   },
   {
     name: 'the exemption needs the phrase — the same entry without it still FIRES',
@@ -135,12 +239,32 @@ let ran = 0;
     patternsIn(placeholder).some((pattern) => pattern.test(token));
   const cases = [
     ['--ds-*-bg covers a member', '--ds-*-bg', '--ds-avatar-bg', true],
-    ['--ds-*-bg does not reach the renamed name', '--ds-*-bg', '--ds-avatar-bg-color', false],
-    ['<component> placeholders resolve', '--ds-<component>-focus-shadow', '--ds-button-focus-shadow', true],
-    ['a placeholder stays inside its family', '--ds-segmented-*', '--ds-modal-pad-y', false],
+    [
+      '--ds-*-bg does not reach the renamed name',
+      '--ds-*-bg',
+      '--ds-avatar-bg-color',
+      false,
+    ],
+    [
+      '<component> placeholders resolve',
+      '--ds-<component>-focus-shadow',
+      '--ds-button-focus-shadow',
+      true,
+    ],
+    [
+      'a placeholder stays inside its family',
+      '--ds-segmented-*',
+      '--ds-modal-pad-y',
+      false,
+    ],
     // Prose, not a placeholder: eight published manifests say "not a `--ds-*` component hook" in
     // a note, and each was answering for all 836 tokens in the namespace.
-    ['a bare --ds-* names nothing and is refused', '--ds-*', '--ds-avatar-bg', false],
+    [
+      'a bare --ds-* names nothing and is refused',
+      '--ds-*',
+      '--ds-avatar-bg',
+      false,
+    ],
   ];
   for (const [name, placeholder, token, expected] of cases) {
     ran++;
@@ -155,6 +279,12 @@ let ran = 0;
 
 try {
   for (const testCase of cases) {
+    if (testCase.skipWhen?.()) {
+      console.log(
+        `skip  ${testCase.name} — the manifest names no hook to build it from`,
+      );
+      continue;
+    }
     const block = [
       '## Unreleased',
       '',
@@ -163,13 +293,18 @@ try {
       testCase.entry,
       '',
     ].join(eol);
+    // A case that brings its own manifest gets a changelog holding ONLY its block: dropping the
+    // real manifest strands every other entry in the live block, and the run then goes red on
+    // somebody else's line rather than on the one under test.
     writeFileSync(
       CHANGELOG,
-      original.replace(/^## Unreleased\r?\n/m, `${block}`),
+      testCase.manifest
+        ? [block, '## 0.0.0 — 2000-01-01', ''].join(eol)
+        : original.replace(/^## Unreleased\r?\n/m, `${block}`),
       'utf8',
     );
 
-    const { red } = run();
+    const { red } = run(testCase.manifest);
     ran++;
     const got = red ? 'red' : 'green';
     const ok = got === testCase.expect;
@@ -200,12 +335,16 @@ try {
     );
   }
 } finally {
-  writeFileSync(CHANGELOG, original, 'utf8');
-  if (readFileSync(CHANGELOG, 'utf8') !== original) {
-    console.error(`RESTORE FAILED — recover CHANGELOG.md from ${BAK}`);
+  rmSync(CHANGELOG, { force: true });
+  const tracked = join(ROOT, 'CHANGELOG.md');
+  if (readFileSync(tracked, 'utf8') !== original) {
+    console.error(
+      'CHANGELOG.md changed while the selftest ran — it writes only its own copy, so this is ' +
+        'another session editing the file, not this run.',
+    );
     process.exit(1);
   }
-  console.log('restored: CHANGELOG.md is back, byte for byte');
+  console.log('the tracked CHANGELOG.md was never written');
 }
 
 if (failed) {

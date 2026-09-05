@@ -178,10 +178,14 @@ const SAYS_NOTHING_CHANGED = [
   /\bnothing to change\b/i,
 ];
 
-const changelog = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8').replace(
-  /\r\n/g,
-  '\n',
-);
+// The selftest points this at a temporary copy so it never edits the tracked file. It used to
+// write its fixtures into CHANGELOG.md and restore afterwards, which two sessions sharing the
+// checkout corrupt: one backs up what the other has already mutated, and the fixture is what gets
+// restored. That leaves a stretch of red with no bad commit behind it.
+const changelog = readFileSync(
+  process.env.DS_CHANGELOG_PATH || join(ROOT, 'CHANGELOG.md'),
+  'utf8',
+).replace(/\r\n/g, '\n');
 const lines = changelog.split('\n');
 
 function blocks() {
@@ -327,10 +331,14 @@ function tokensAt(tag) {
 }
 
 function manifestFor(version) {
+  // Overridable for the same reason as the changelog: a selftest that owns both inputs can assert
+  // the word boundary itself, instead of hoping the current cycle happens to document a name that
+  // contains a shorter one.
+  const migrations = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
   const path =
     version === 'unreleased'
-      ? join(ROOT, 'migrations/unreleased.json')
-      : join(ROOT, `migrations/${version}.json`);
+      ? join(migrations, 'unreleased.json')
+      : join(migrations, `${version}.json`);
   if (!existsSync(path)) return null;
   const text = readFileSync(path, 'utf8');
   const patterns = patternsIn(text);
