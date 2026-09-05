@@ -2795,7 +2795,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-date-picker-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
+        "value": "var(--ds-field-focus-shadow)",
         "notes": "Date picker focus ring shadow (defaults to --ds-control-focus-shadow)."
       },
       {
@@ -3649,7 +3649,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-list-item-selected-icon-color",
         "value": "var(--_list-item-selected-label-color)",
-        "notes": ""
+        "notes": "Icon colour in a selected list row. Defaults to the row's selected label colour, so icon and text move together."
       },
       {
         "name": "--ds-list-item-label-color",
@@ -3793,7 +3793,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-item-icon-size",
         "value": "16px",
-        "notes": ""
+        "notes": "Menu-item icon box. Defaults to 16px, and it is the width every item reserves once any item in the menu has an icon, so the labels line up."
       },
       {
         "name": "--ds-menu-item-radius",
@@ -4983,8 +4983,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-skeleton-shimmer-color",
-        "value": "var(--surface-muted)",
+        "value": "var(--surface-default)",
         "notes": "Skeleton shimmer sweep colour (defaults to --surface-muted)."
+      },
+      {
+        "name": "--ds-skeleton-wave-width",
+        "value": "11rem",
+        "notes": ""
+      },
+      {
+        "name": "--ds-skeleton-wave-trough-color",
+        "value": "var(--border-default)",
+        "notes": ""
       }
     ]
   },
@@ -5120,22 +5130,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-split-button-bg-color-active",
         "value": "color-mix(in srgb, var(--_split-button-bg-color) 76%, black)",
-        "notes": ""
+        "notes": "Split-button fill while pressed. Defaults to its own fill mixed 76% with black."
       },
       {
         "name": "--ds-split-button-outline-bg-color-active",
         "value": "var(--surface-muted)",
-        "notes": ""
+        "notes": "Pressed fill for the outline variant, which has no fill of its own to darken. Defaults to --surface-muted."
       },
       {
         "name": "--ds-split-button-press-scale",
         "value": "0.98",
-        "notes": ""
+        "notes": "How far the button shrinks under the pointer. Defaults to 0.98, matching ds-button."
       },
       {
         "name": "--ds-split-button-pressed-shadow",
         "value": "none",
-        "notes": ""
+        "notes": "Shadow while pressed. Defaults to `none` — the scale carries the press on its own."
       }
     ]
   },
@@ -6762,7 +6772,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-tree-row-selected-icon-color",
         "value": "var(--_tree-row-selected-text-color)",
-        "notes": ""
+        "notes": "Icon colour in a selected tree row. Defaults to the row's selected text colour."
       },
       {
         "name": "--ds-tree-row-text-color",

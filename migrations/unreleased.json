@@ -1,0 +1,8 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    "The `ds-skeleton` shimmer wave has a size of its own — `--ds-skeleton-wave-width`, 11rem — instead of a share of the viewport, and carries a trough (`--ds-skeleton-wave-trough-color`) as well as a crest so the band has a visible edge. Both are new hooks with defaults; a skeleton you never tuned simply reads as a wave crossing the page rather than a wash. NO ACTION."
+  ],
+  "deleteList": []
+}

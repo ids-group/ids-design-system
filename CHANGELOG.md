@@ -8,6 +8,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **The skeleton shimmer reads as a wave now, not a wash.** The band has a size of its own —
+  `--ds-skeleton-wave-width`, 11rem — instead of a share of the viewport. Sized as a fraction it
+  grew with the monitor, so on a wide screen it covered everything at once and nothing appeared to
+  move. It also carries a trough as well as a crest (`--ds-skeleton-wave-trough-color`): a crest
+  alone against the base was one step of the neutral ramp and read as haze, and the dip gives the
+  eye an edge to follow. Measured on a 1639px viewport: the band is 352px, and contrast across it
+  went from 1.1 to 1.31. Both hooks have defaults, so a skeleton you never tuned simply reads
+  better.
+
+
 ## 0.12.1 — 2026-09-05
 
 ### Breaking
