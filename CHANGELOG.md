@@ -10,15 +10,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
-- **The skeleton shimmer reads as a wave now, not a wash.** The band has a size of its own —
-  `--ds-skeleton-wave-width`, 11rem — instead of a share of the viewport. Sized as a fraction it
-  grew with the monitor, so on a wide screen it covered everything at once and nothing appeared to
-  move. It also carries a trough as well as a crest (`--ds-skeleton-wave-trough-color`): a crest
-  alone against the base was one step of the neutral ramp and read as haze, and the dip gives the
-  eye an edge to follow. Measured on a 1639px viewport: the band is 352px, and contrast across it
-  went from 1.1 to 1.31. Both hooks have defaults, so a skeleton you never tuned simply reads
-  better.
-
+- **The skeleton shimmer reads as a wave now, not a wash.** It travels diagonally, down and to the
+  right at about 42°, so it arrives at the top of one placeholder and the bottom of another instead
+  of sweeping every row in step. The band has a size of its own — `--ds-skeleton-wave-width`, 26rem
+  — rather than a share of the viewport: sized as a fraction it grew with the monitor, covered a
+  wide screen all at once, and nothing appeared to move. Most of that width is ramp and only a
+  quarter is the tone at full strength, which is what makes it arrive and leave rather than switch.
+  It runs on its own `--ds-skeleton-wave-duration`, 2800ms, instead of the shared loop token,
+  because a placeholder is background and should never pull the eye. The tone is one soft step
+  darker than the base, unchanged from before — a shadow moving over the placeholders, not a light
+  switched on over them. `--ds-skeleton-wave-angle` tilts the band itself.
 
 ## 0.12.1 — 2026-09-05
 

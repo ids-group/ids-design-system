@@ -4983,18 +4983,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-skeleton-shimmer-color",
-        "value": "var(--surface-default)",
+        "value": "var(--surface-muted)",
         "notes": "Skeleton shimmer sweep colour (defaults to --surface-muted)."
       },
       {
         "name": "--ds-skeleton-wave-width",
-        "value": "11rem",
-        "notes": ""
+        "value": "26rem",
+        "notes": "26rem — how wide the shimmer wave is, ramps included. A size of its own rather than a share of the viewport, which grew with the monitor and read as a flat wash."
       },
       {
-        "name": "--ds-skeleton-wave-trough-color",
-        "value": "var(--border-default)",
-        "notes": ""
+        "name": "--ds-skeleton-wave-duration",
+        "value": "2800ms",
+        "notes": "2800ms — one pass of the shimmer wave. Slower than the shared loop token on purpose: a placeholder is background and should not pull the eye."
+      },
+      {
+        "name": "--ds-skeleton-wave-angle",
+        "value": "135deg",
+        "notes": "135deg — the tilt of the wave's own band. The path it travels is diagonal regardless; this is the angle of the band across it."
       }
     ]
   },

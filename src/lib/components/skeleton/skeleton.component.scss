@@ -10,20 +10,22 @@
 :host {
   --_skeleton-bg-color:      var(--ds-skeleton-bg-color,      var(--surface-secondary));
 
-  /* --surface-default, not --surface-muted: the old default was one step along the neutral ramp
-     from the base, which on a 280px placeholder is a difference you have to look for. The wave has
-     to be legible as a THING crossing the screen. */
-  --_skeleton-shimmer-color: var(--ds-skeleton-shimmer-color, var(--surface-default));
+  /* ONE tone, darker than the base — the pass is a shadow moving over the placeholders, not a
+     light. A crest brighter than the base was tried and read as a flash. */
+  --_skeleton-shimmer-color: var(--ds-skeleton-shimmer-color, var(--surface-muted));
 
   /* The wave has a SIZE of its own, in rem — not a fraction of the viewport. Sized as a fraction it
      grew with the monitor, so on a wide screen the band spanned everything and the gradient read as
-     a flat wash: nothing appeared to move because every point changed at once. */
-  --_skeleton-wave-width: var(--ds-skeleton-wave-width, 11rem);
+     a flat wash: nothing appeared to move because every point changed at once. Wide, because a
+     narrow band crossing quickly reads as a twitch rather than a swell. */
+  --_skeleton-wave-width: var(--ds-skeleton-wave-width, 26rem);
+  --_skeleton-wave-duration: var(--ds-skeleton-wave-duration, 2800ms);
 
-  /* The trough. A crest alone against the base is one step of the neutral ramp and reads as haze;
-     dipping BELOW the base just before and after it doubles the step across the band, so the eye
-     catches an edge and the band becomes a thing that moves rather than a brightening. */
-  --_skeleton-wave-trough-color: var(--ds-skeleton-wave-trough-color, var(--border-default));
+  /* Down and to the right rather than straight across. A band square to its travel sweeps the whole
+     height of every placeholder at once; tilted, it arrives at the top of one and the bottom of
+     another, which is what makes the movement read as one wave over a page rather than as rows
+     blinking in step. */
+  --_skeleton-wave-angle: var(--ds-skeleton-wave-angle, 135deg);
 
   display: block;
   position: relative;
@@ -49,34 +51,36 @@
 
      Two tones of the same surface rather than a bright band: the wave should read as colour
      washing across the placeholders, not as a light being shone on them. */
+
+  /* Long ramps, short core: most of the band is the transition, which is what makes the tone
+     arrive and leave rather than switch. */
   background-image: linear-gradient(
-    100deg,
+    var(--_skeleton-wave-angle),
     transparent calc(50% - var(--_skeleton-wave-width)),
-    var(--_skeleton-wave-trough-color) calc(50% - var(--_skeleton-wave-width) / 1.7),
-    var(--_skeleton-shimmer-color) calc(50% - var(--_skeleton-wave-width) / 5),
-    var(--_skeleton-shimmer-color) calc(50% + var(--_skeleton-wave-width) / 5),
-    var(--_skeleton-wave-trough-color) calc(50% + var(--_skeleton-wave-width) / 1.7),
+    var(--_skeleton-shimmer-color) calc(50% - var(--_skeleton-wave-width) / 4),
+    var(--_skeleton-shimmer-color) calc(50% + var(--_skeleton-wave-width) / 4),
     transparent calc(50% + var(--_skeleton-wave-width))
   );
   background-attachment: fixed;
-  background-size: 100vw 100%;
+  background-size: 100vw 400vh;
   background-repeat: no-repeat;
   will-change: background-position;
 
   /* Declared HERE, not in the global partial: Angular's emulated encapsulation rewrites the
      animation name inside a component stylesheet, so a reference to a globally-declared
      `@keyframes` resolves to a name that does not exist and the element simply never animates. */
-  animation: ds-skeleton-shimmer-loop var(--duration-loop-slow, 1400ms) linear infinite;
+  animation: ds-skeleton-shimmer-loop var(--_skeleton-wave-duration) linear infinite;
 }
 
 /* A full viewport of travel each way, so the tile is entirely off-screen at both ends and the
-   restart has nothing visible to cut. The wave crosses, the screen rests, the wave crosses again. */
+   restart has nothing visible to cut. The vertical half is what tilts the path: the band travels
+   down as it crosses, so it arrives diagonally rather than sweeping the whole page height at once. */
 @keyframes ds-skeleton-shimmer-loop {
   from {
-    background-position: -100vw 0;
+    background-position: -100vw -200vh;
   }
 
   to {
-    background-position: 100vw 0;
+    background-position: 100vw 200vh;
   }
 }
