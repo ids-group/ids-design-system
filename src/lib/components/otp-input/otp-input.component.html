@@ -14,8 +14,7 @@
       (keydown)="onKeydown($event, i)"
       (paste)="onPaste($event, i)"
       (focus)="onFocus($event, i)"
-      (blur)="onBlur()"
-    />
+      (blur)="onBlur()" />
   }
 </div>
 
@@ -24,5 +23,4 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()"
-/>
+  [reserve]="reserveMessageResolved()" />

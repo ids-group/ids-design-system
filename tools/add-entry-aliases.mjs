@@ -18,7 +18,9 @@ const manifestPath = join(dist, 'package.json');
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 const exportsMap = manifest.exports;
 if (!exportsMap) {
-  console.error('add-entry-aliases: dist/ds/package.json has no exports map — run the library build first.');
+  console.error(
+    'add-entry-aliases: dist/ds/package.json has no exports map — run the library build first.',
+  );
   process.exit(1);
 }
 
@@ -40,7 +42,10 @@ for (const [key, value] of Object.entries({ ...exportsMap })) {
 }
 
 if (collisions.length) {
-  console.error('add-entry-aliases: two entry points want the same short name:\n  ' + collisions.join('\n  '));
+  console.error(
+    'add-entry-aliases: two entry points want the same short name:\n  ' +
+      collisions.join('\n  '),
+  );
   process.exit(1);
 }
 
@@ -48,13 +53,21 @@ if (collisions.length) {
 const oneLevelUp = (path) => path.replace(/^(?:\.\.\/)+/, '../');
 for (const [alias, key] of added) {
   const aliasDir = join(dist, alias.slice(2));
-  const stub = JSON.parse(readFileSync(join(dist, key.slice(2), 'package.json'), 'utf8'));
+  const stub = JSON.parse(
+    readFileSync(join(dist, key.slice(2), 'package.json'), 'utf8'),
+  );
   if (!existsSync(aliasDir)) mkdirSync(aliasDir, { recursive: true });
   writeFileSync(
     join(aliasDir, 'package.json'),
-    JSON.stringify({ module: oneLevelUp(stub.module), typings: oneLevelUp(stub.typings) }, null, 2) + '\n',
+    JSON.stringify(
+      { module: oneLevelUp(stub.module), typings: oneLevelUp(stub.typings) },
+      null,
+      2,
+    ) + '\n',
   );
 }
 
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-console.log(`add-entry-aliases: ${added.length} short names added (e.g. ${added[0]?.[0]} -> ${added[0]?.[1]}).`);
+console.log(
+  `add-entry-aliases: ${added.length} short names added (e.g. ${added[0]?.[0]} -> ${added[0]?.[1]}).`,
+);

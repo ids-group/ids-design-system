@@ -5,7 +5,7 @@
        hover: --primary (border-color)
        focus: --focus-ring (box-shadow) */
     :host ::ng-deep .pin-hover .radio:not(:disabled) { border-color: var(--primary); }
-    :host ::ng-deep .pin-focus .radio { outline: none; box-shadow: var(--focus-ring); }
+    :host ::ng-deep .pin-focus .control-line { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
 
     /* ---------- Size row ---------- */
     .radio-size-row {

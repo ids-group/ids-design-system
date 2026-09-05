@@ -6,8 +6,7 @@
   [attr.aria-controls]="bodyId"
   [disabled]="disabled() || null"
   [attr.aria-disabled]="disabled() ? 'true' : null"
-  (click)="toggle()"
->
+  (click)="toggle()">
   <span>
     {{ title() }}
   </span>
@@ -17,8 +16,7 @@
   <ds-icon
     name="chevronRight"
     class="chev"
-    [size]="16"
-  />
+    [size]="16" />
 </button>
 
 <div
@@ -27,8 +25,7 @@
   [id]="bodyId"
   [attr.aria-labelledby]="headId"
   [class.is-open]="expanded()"
-  [attr.inert]="expanded() ? null : ''"
->
+  [attr.inert]="expanded() ? null : ''">
   <div class="body-inner">
     <div class="body-content">
       <ng-content></ng-content>

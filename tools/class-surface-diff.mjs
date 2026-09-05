@@ -36,8 +36,8 @@ function git(args) {
 
 function show(ref, path) {
   try {
-    // stdio pipe on stderr: a path that did not exist at `ref` is the normal case
-    // for a new or renamed file, and git says so on stderr rather than exiting quietly.
+    // stdio pipe on stderr: a genuinely new file has no path at `ref`, and git says so on stderr
+    // rather than exiting quietly. A moved one is resolved before this, through `renamedFrom`.
     return execFileSync('git', ['show', `${ref}:${path}`], {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
@@ -58,18 +58,21 @@ function show(ref, path) {
 // an annotated one does. Widening it is only safe because the scan is bounded to the class BODY —
 // see classBody() — so the module-level function bodies that share this indentation are out of
 // range before the pattern ever runs.
+// The annotation may itself contain `=>` — a function-typed field
+// (`onChange: (v: boolean) => void = …`) must not end the annotation at the arrow's `=`,
+// only at the standalone initializer `=`.
 const FIELD =
-  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*:[^=\n]+)? = /gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*:(?:[^=\n]|=>)+)? = /gm;
 // A field can also be DECLARED and never assigned — `announceTimer: number | undefined;`. It
 // collides in a subclass like any other, and FIELD cannot see it because it requires an `=`.
 // Only safe inside the bounded class body, where a bare `name: Type;` is a declaration and
 // nothing else.
 const DECLARED_FIELD =
-  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*[?!]?\s*:[^=;\n]+)?;$/gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*[?!]?\s*:(?:[^=;\n]|=>)+)?;$/gm;
 // `get ` is matched here rather than in FIELD: a getter is a member and collides like one, and
 // `get name(` never matched `name(` because of the space.
 const METHOD =
-  /^ {2}((?:protected |public |private )?)(?:override )?(?:async )?(?:get |set )?(\w+)\(/gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:override )?(?:async )?(?:get |set )?(\w+)\(/gm;
 const NOT_A_MEMBER = new Set([
   'constructor',
   'if',
@@ -79,7 +82,6 @@ const NOT_A_MEMBER = new Set([
   'catch',
   'return',
 ]);
-const FIRST_CLASS = /^export (?:abstract )?class /m;
 // The initializer families that DEFINE a member's public type. Other initializers
 // (computed, plain signals, literals) churn with implementation — comparing their
 // text would flood the changed-types report, so those members stay name-only.
@@ -125,7 +127,16 @@ function stripComments(text) {
       continue;
     }
     const preceding = out.trimEnd();
-    if (char === '/' && (preceding === '' || VALUE_MAY_START.test(preceding))) {
+    if (
+      char === '/' &&
+      (preceding === '' ||
+        VALUE_MAY_START.test(preceding) ||
+        // A regex may also follow a keyword (`return /x/.test(…)`) — reading it as
+        // division there eats the rest of the line as a comment.
+        /\b(?:return|typeof|case|instanceof|new|delete|void|throw|do|else|yield|await|in|of)$/.test(
+          preceding,
+        ))
+    ) {
       out += char;
       for (i++; i < text.length; i++) {
         out += text[i];
@@ -148,11 +159,20 @@ function stripComments(text) {
 
 // Whitespace inside brackets is collapsed too — a prettier rewrap of an unchanged
 // declaration (`input<\n  readonly RegExp[]…`) must not read as a type change.
+// …but never inside a string literal: collapsing there reads `'No  data'` and `'No data'`
+// as the same default.
 const normalize = (text) =>
   stripComments(text)
-    .replace(/\s+/g, ' ')
-    .replace(/([<([{]) /g, '$1')
-    .replace(/ ([>)\]},;])/g, '$1')
+    .split(/('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*")/)
+    .map((part, index) =>
+      index % 2
+        ? part
+        : part
+            .replace(/\s+/g, ' ')
+            .replace(/([<([{]) /g, '$1')
+            .replace(/ ([>)\]},;])/g, '$1'),
+    )
+    .join('')
     .trim();
 const clip = (text) => (text.length > 100 ? `${text.slice(0, 97)}…` : text);
 
@@ -189,14 +209,18 @@ function blockText(source, openBraceIndex) {
 // Comments go, and template literals are blanked to spaces of the same length: a commented-out or
 // quoted declaration would otherwise read as a member, and a false positive blocks a release cut.
 // Same length, because statementText() reads offsets into this string.
+// EVERY exported class, not the first one — control-value-accessor.ts exports two consumer
+// extension bases, and a first-class-only scan left the second invisible.
 function classBody(source) {
-  const classStart = source.search(FIRST_CLASS);
-  if (classStart === -1) return null;
-  const body = source.slice(classStart);
-  const end = body.search(/^\}/m);
-  const bounded = end === -1 ? body : body.slice(0, end);
-
-  return stripComments(bounded).replace(
+  const bodies = [];
+  const opens = [...source.matchAll(/^export (?:abstract )?class /gm)];
+  if (!opens.length) return null;
+  for (const open of opens) {
+    const body = source.slice(open.index);
+    const end = body.search(/^\}/m);
+    bodies.push(end === -1 ? body : body.slice(0, end));
+  }
+  return stripComments(bodies.join('\n')).replace(
     /`(?:[^`\\]|\\.)*`/g,
     (literal) => literal.replace(/[^\n]/g, ' '),
   );
@@ -278,15 +302,42 @@ const files = git(['diff', '--name-only', `${base}..${head}`, '--', 'src/lib'])
   .split('\n')
   .filter((path) => path.endsWith('.ts') && !path.endsWith('.spec.ts'));
 
+// A moved class has to be read at its OLD path, or every member it already had counts as gained:
+// the entry-point split moved two components and the report asked for a behavior entry on 48
+// members that had not changed. Git's own rename detection decides it rather than a basename
+// guess, so a class that genuinely did not exist at `base` still arrives as an addition.
+const renamedFrom = new Map();
+for (const row of git([
+  'diff',
+  '-M',
+  '--name-status',
+  `${base}..${head}`,
+  '--',
+  'src/lib',
+]).split('\n')) {
+  const [status, from, to] = row.split('\t');
+  if (status?.startsWith('R') && to) renamedFrom.set(to, from);
+}
+
 const grew = [];
 const shrank = [];
 const changed = [];
 for (const path of files) {
-  const beforeSource = show(base, path);
+  const beforeSource = show(base, renamedFrom.get(path) ?? path);
   const afterSource = show(head, path);
   const before = classSurface(beforeSource);
   const after = classSurface(afterSource);
-  if (after === null) continue;
+  if (after === null) {
+    // A deleted file is the loudest LOST there is — skipping it printed
+    // "no exported member changed" over a removed consumer-extension base.
+    if (before?.names.size) {
+      shrank.push([
+        `${path.replace('src/lib/', '')}  (file deleted)`,
+        [...before.names].sort(),
+      ]);
+    }
+    continue;
+  }
   const known = before?.names ?? new Set();
   const added = [...after.names].filter((name) => !known.has(name)).sort();
   const removed = [...known].filter((name) => !after.names.has(name)).sort();
@@ -310,11 +361,15 @@ for (const path of files) {
       changedHere.push(`${key}: ${clip(oldDecl)}  →  ${clip(decl)}`);
     }
   }
-  for (const [name, clause] of typesAfter.heritage) {
+  for (const name of new Set([
+    ...typesBefore.heritage.keys(),
+    ...typesAfter.heritage.keys(),
+  ])) {
     const oldClause = typesBefore.heritage.get(name);
+    const clause = typesAfter.heritage.get(name);
     if (oldClause !== clause)
       changedHere.push(
-        `${name}: ${oldClause ?? '(no heritage)'}  →  ${clause}`,
+        `${name}: ${oldClause ?? '(no heritage)'}  →  ${clause ?? '(heritage removed — its inherited members are gone)'}`,
       );
   }
   for (const key of typesBefore.decls.keys()) {
@@ -342,7 +397,7 @@ if (grew.length) {
     'GAINED members — a subclass declaring the same name stops building:',
   );
   for (const [label, names, isNew] of grew) {
-    console.log(`  ${label}${isNew ? '  (new or renamed file)' : ''}`);
+    console.log(`  ${label}${isNew ? '  (new file)' : ''}`);
     console.log(`    ${names.join(', ')}`);
   }
   console.log('');

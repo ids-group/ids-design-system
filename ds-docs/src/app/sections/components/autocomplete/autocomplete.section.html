@@ -2,8 +2,7 @@
   anchor="autocomplete"
   eyebrow="Components"
   title="Autocomplete"
-  [apiKeys]="['create-template']"
->
+  [apiKeys]="['create-template']">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -60,8 +59,7 @@
     <ds-autocomplete
       placeholder="Pick a member…"
       [options]="members"
-      [(value)]="memberValue"
-    />
+      [(value)]="memberValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -77,8 +75,7 @@
       placeholder="Add product…"
       [options]="products"
       [multiple]="true"
-      [(value)]="productsValue"
-    />
+      [(value)]="productsValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -99,7 +96,7 @@
     chips as the trigger is wide, with the rest behind "+N more", re-split
     whenever the trigger resizes. Left to grow, a multi-value trigger gains a
     line per selection and pushes the rest of the form down the page. Same input
-    and same default on <code class="t-mono-inline"> ds-multi-select </code>, so
+    and same default on <code class="t-mono-inline">ds-multi-select</code>, so
     the two multi-value pickers do not diverge. Backspace still removes the last
     SELECTED chip, not the last visible one.
   </p>
@@ -126,8 +123,7 @@
       [options]="products"
       [multiple]="true"
       [maxVisibleChips]="2"
-      [(value)]="cappedProductsValue"
-    />
+      [(value)]="cappedProductsValue" />
   </div>
 
   <p class="block-desc t-s">
@@ -145,8 +141,7 @@
         maxVisibleChips="fit"
         [options]="products"
         [multiple]="true"
-        [(value)]="fitProductsValue"
-      />
+        [(value)]="fitProductsValue" />
     </div>
   </div>
 
@@ -175,15 +170,13 @@
       placeholder="Add product…"
       [options]="products"
       [multiple]="true"
-      [(value)]="toolbarProductsValue"
-    />
+      [(value)]="toolbarProductsValue" />
 
     <ds-autocomplete
       width="content"
       placeholder="Venue…"
       [options]="venueGroups"
-      [(value)]="toolbarVenueValue"
-    />
+      [(value)]="toolbarVenueValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -208,8 +201,7 @@
       placeholder="Pick a member…"
       hint="Start typing to filter the member list."
       [options]="members"
-      [(value)]="memberValue"
-    />
+      [(value)]="memberValue" />
   </div>
 
   <div class="autocomplete-field-wrap">
@@ -220,8 +212,7 @@
     <ds-autocomplete
       placeholder="Pick a member…"
       error="A member is required."
-      [options]="members"
-    />
+      [options]="members" />
   </div>
 
   <div class="autocomplete-field-wrap">
@@ -232,8 +223,7 @@
     <ds-autocomplete
       placeholder="Pick a member…"
       [options]="members"
-      [disabled]="true"
-    />
+      [disabled]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -254,8 +244,7 @@
     <ds-autocomplete
       placeholder="Search venues…"
       [options]="venueGroups"
-      [(value)]="venueValue"
-    />
+      [(value)]="venueValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -283,8 +272,7 @@
       [multiple]="true"
       [allowCreate]="true"
       [(value)]="tagValue"
-      (create)="onCreateTag($event)"
-    />
+      (create)="onCreateTag($event)" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -350,8 +338,7 @@
     <ds-autocomplete
       placeholder="Search channels…"
       [options]="channels"
-      [(value)]="channelValue"
-    />
+      [(value)]="channelValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -362,27 +349,25 @@
     <code class="t-mono-inline">
       compareWith
     </code> decides when two values are
-    the same one. The default is <code class="t-mono-inline"> === </code>, which
+    the same one. The default is <code class="t-mono-inline">===</code>, which
     for an object is reference identity — so a re-fetch returning equal data as
     new objects would drop the selection. Key the comparator on whatever
-    identifies the value. Press <em> Refetch </em>: the selection survives.
+    identifies the value. Press <em>Refetch</em>: the selection survives.
   </p>
 
   <div class="demo-panel">
-    <div class="ac-demo">
+    <div class="autocomplete-field-wrap">
       <ds-autocomplete
         label="Owner"
         [options]="ownerOptions()"
         [compareWith]="sameOwner"
-        [(value)]="owner"
-      />
+        [(value)]="owner" />
     </div>
 
     <ds-button
       size="sm"
-      fill="ghost"
-      (clicked)="refetchOwners()"
-    >
+      variant="ghost"
+      (clicked)="refetchOwners()">
       Refetch
     </ds-button>
 
@@ -407,14 +392,13 @@
   </p>
 
   <div class="demo-panel">
-    <div class="ac-demo">
+    <div class="autocomplete-field-wrap">
       <ds-autocomplete
         label="City"
         placeholder="Where to?"
         searchPlaceholder="Type to search again"
         [options]="members"
-        [(value)]="searchCity"
-      />
+        [(value)]="searchCity" />
     </div>
   </div>
 </docs-section>

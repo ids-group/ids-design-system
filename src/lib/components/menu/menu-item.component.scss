@@ -1,6 +1,6 @@
+@use '../../styles/focus' as focus;
 :host {
   --_menu-item-label-color: var(--ds-menu-item-label-color, var(--text-primary));
-  --_menu-item-focus-shadow: var(--ds-menu-item-focus-shadow, var(--ds-control-focus-shadow));
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));
   --_menu-item-error-label-color: var(--ds-menu-item-error-label-color, var(--error-text));
   --_menu-item-quiet-label-color: var(--ds-menu-item-quiet-label-color, var(--text-secondary));
@@ -12,6 +12,10 @@
   --_menu-item-description-font-size: var(--ds-menu-item-description-font-size, var(--font-size-2xs));
   --_menu-item-description-max-width: var(--ds-menu-item-description-max-width, 14rem);
 
+  // Mirrors the template's `[size]="16"` on ds-icon: it is the width the empty slot reserves, so
+  // the two have to agree or the labels align to nothing.
+  --_menu-item-icon-size: var(--ds-menu-item-icon-size, 16px);
+
   display: block;
 }
 
@@ -20,6 +24,22 @@
   flex-direction: column;
   align-items: flex-start;
   min-width: 0;
+}
+
+// The wrapper for a PROJECTED `[icon]`, and empty when there is neither input nor projection.
+// `display: contents` is what keeps an empty one from costing the row's flex gap: the element
+// generates no box at all, so a menu with no icons anywhere has its labels flush to the padding.
+.menu-item-icon {
+  display: contents;
+}
+
+// One item with an icon makes every item reserve the slot, so the labels land on one axis. Without
+// it the empty wrapper collapsed while the gap stayed, and a row without an icon started exactly
+// one icon-width to the left of its neighbours.
+:host-context(ds-menu.has-icons) .menu-item-icon {
+  display: block;
+  flex: none;
+  width: var(--_menu-item-icon-size);
 }
 
 .menu-item-description {
@@ -57,7 +77,9 @@
 
   &:active:not(.disabled) { background: var(--surface-muted); }
 
-  &:focus-visible { outline: none; box-shadow: inset var(--_menu-item-focus-shadow); }
+  // Offset comes from the menu host's data-focus="inset" � the panel clips, so the ring
+  // has to be drawn inward, and the host is what knows that.
+  &:focus-visible { @include focus.ring; }
 
   &.disabled {
     color: var(--text-disabled);

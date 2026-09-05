@@ -2,14 +2,13 @@
   anchor="menu"
   eyebrow="Components"
   title="Menu"
-  [apiKeys]="['menu:MenuDividerComponent', 'menu:MenuItemComponent']"
->
+  [apiKeys]="['menu:MenuDividerComponent', 'menu:MenuItemComponent']">
   <span lede>
     Inline list of actions. Used inside modals, popovers, or any container that
     already provides its own surface. Each item is a full-width button with an
     optional leading icon. <code>error</code> turns the item red for destructive
     actions (Sign out, Delete); <code>disabled</code> dims it and blocks clicks.
-    To float it from a trigger, host it in a <code> ds-popover </code> — see the
+    To float it from a trigger, host it in a <code>ds-popover</code> — see the
     first demo.
   </span>
 
@@ -30,15 +29,13 @@
       variant="outline"
       ariaHasPopup="menu"
       [ariaExpanded]="acct.opened()"
-      (pressed)="acct.toggle(acctTrigger.buttonRef().nativeElement)"
-    >
+      (pressed)="acct.toggle(acctTrigger.buttonRef().nativeElement)">
       Account ▾
     </ds-button>
 
     <ds-popover
       #acct
-      align="start"
-    >
+      align="start">
       <ds-menu>
         <ds-menu-item icon="users">
           Profile settings
@@ -54,8 +51,7 @@
 
         <ds-menu-item
           icon="x"
-          [error]="true"
-        >
+          [error]="true">
           Sign out
         </ds-menu-item>
       </ds-menu>
@@ -96,16 +92,14 @@
 
           <ds-menu-item
             icon="file"
-            description="Only the first 1,000 rows"
-          >
+            description="Only the first 1,000 rows">
             Export as PDF
           </ds-menu-item>
 
           <ds-menu-item
             icon="link"
             description="Read-only in this workspace"
-            [disabled]="true"
-          >
+            [disabled]="true">
             Share a link
           </ds-menu-item>
         </ds-menu>
@@ -119,8 +113,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="menu-divider"
-  >
+    data-for="menu-divider">
     Dividers
   </h3>
 
@@ -155,8 +148,7 @@
 
           <ds-menu-item
             icon="x"
-            [error]="true"
-          >
+            [error]="true">
             Sign out
           </ds-menu-item>
         </ds-menu>
@@ -192,8 +184,7 @@
 
           <ds-menu-item
             icon="copy"
-            [submenu]="exportSubmenu"
-          >
+            [submenu]="exportSubmenu">
             Export as
           </ds-menu-item>
 
@@ -205,8 +196,7 @@
 
           <ds-menu-item
             icon="x"
-            [error]="true"
-          >
+            [error]="true">
             Delete
           </ds-menu-item>
         </ds-menu>
@@ -232,8 +222,7 @@
 
   <div
     class="showcase-grid"
-    data-for="menu-item"
-  >
+    data-for="menu-item">
     <div class="showcase-cell">
       <h3 class="block-title t-h4">
         Default
@@ -259,8 +248,7 @@
 
           <ds-menu-item
             icon="x"
-            [error]="true"
-          >
+            [error]="true">
             Sign out
           </ds-menu-item>
         </ds-menu>
@@ -276,8 +264,8 @@
         A row blocked from interaction — still keyboard-focusable (<code
           class="t-mono-inline"
           >aria-disabled</code
-        >), so a <code class="t-mono-inline"> dsTooltip </code> can explain why
-        on hover/focus. Activation stays blocked.
+        >), so a <code class="t-mono-inline">dsTooltip</code> can explain why on
+        hover/focus. Activation stays blocked.
       </p>
 
       <div class="stage">
@@ -289,8 +277,7 @@
           <ds-menu-item
             icon="copy"
             dsTooltip="Save the record before duplicating it"
-            [disabled]="true"
-          >
+            [disabled]="true">
             Duplicate
           </ds-menu-item>
 
@@ -314,8 +301,7 @@
         <ds-menu>
           <ds-menu-item
             icon="x"
-            [error]="true"
-          >
+            [error]="true">
             Delete project
           </ds-menu-item>
         </ds-menu>

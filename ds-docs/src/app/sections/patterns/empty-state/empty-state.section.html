@@ -1,8 +1,7 @@
 <docs-section
   anchor="pattern-empty-state"
   eyebrow="Patterns"
-  title="Empty-state variants"
->
+  title="Empty-state variants">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -23,16 +22,13 @@
         <ds-empty-state
           variant="none"
           title="No asset allocated yet"
-          body="Pick from the asset register to start building this Sub-record."
-        >
+          body="Pick from the asset register to start building this Sub-record.">
           <ds-button
             actions
-            size="sm"
-          >
+            size="sm">
             <ds-icon
               name="plus"
-              [size]="14"
-            />
+              [size]="14" />
             Allocate resources
           </ds-button>
         </ds-empty-state>
@@ -53,8 +49,7 @@
         <ds-empty-state
           variant="loading"
           title="12 asset lines"
-          body="LED walls · Sub bass stacks · …"
-        >
+          body="LED walls · Sub bass stacks · …">
         </ds-empty-state>
       </ds-card>
     </div>
@@ -72,16 +67,13 @@
         <ds-empty-state
           variant="error"
           title="Couldn't load resource allocations"
-          body="Network error — the request timed out after 30 seconds."
-        >
+          body="Network error — the request timed out after 30 seconds.">
           <ds-button
             actions
-            size="sm"
-          >
+            size="sm">
             <ds-icon
               name="rotate"
-              [size]="14"
-            />
+              [size]="14" />
             Retry
           </ds-button>
 
@@ -89,8 +81,7 @@
             actions
             color="neutral"
             variant="outline"
-            size="sm"
-          >
+            size="sm">
             Report issue
           </ds-button>
         </ds-empty-state>
@@ -111,14 +102,12 @@
         <ds-empty-state
           variant="locked"
           title="You don't have access to this Logistics plan"
-          body="Logistics plans are restricted to Logistics and Producer roles. Ask Alex Park or your team lead."
-        >
+          body="Logistics plans are restricted to Logistics and Producer roles. Ask Alex Park or your team lead.">
           <ds-button
             actions
             color="neutral"
             variant="outline"
-            size="sm"
-          >
+            size="sm">
             Back to dashboard
           </ds-button>
 
@@ -126,8 +115,7 @@
             actions
             color="neutral"
             variant="outline"
-            size="sm"
-          >
+            size="sm">
             Request access
           </ds-button>
         </ds-empty-state>

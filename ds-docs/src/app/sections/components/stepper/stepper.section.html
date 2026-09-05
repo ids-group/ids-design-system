@@ -1,8 +1,7 @@
 <docs-section
   anchor="stepper"
   eyebrow="Components"
-  title="Stepper"
->
+  title="Stepper">
   <span lede>
     Visual indicator of multi-step progress. Pass an array of step labels and a
     zero-indexed <code class="t-mono-inline">current</code>. Nodes before
@@ -31,8 +30,7 @@
   <div class="demo">
     <ds-stepper
       [steps]="brief"
-      [current]="2"
-    />
+      [current]="2" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -43,8 +41,7 @@
     <ds-stepper
       labelPosition="inline"
       [steps]="brief"
-      [current]="2"
-    />
+      [current]="2" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -56,8 +53,7 @@
       [steps]="brief"
       [current]="clickableCurrent()"
       [clickable]="true"
-      (stepClicked)="clickableCurrent.set($event)"
-    />
+      (stepClicked)="clickableCurrent.set($event)" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -68,8 +64,7 @@
     <ds-stepper
       [steps]="brief"
       [current]="3"
-      [errorSteps]="[1, 2]"
-    />
+      [errorSteps]="[1, 2]" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -80,8 +75,7 @@
     <ds-stepper
       orientation="vertical"
       [steps]="brief"
-      [current]="2"
-    />
+      [current]="2" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -96,8 +90,7 @@
 
       <ds-stepper
         [steps]="brief"
-        [current]="0"
-      />
+        [current]="0" />
     </div>
 
     <div class="state">
@@ -107,8 +100,7 @@
 
       <ds-stepper
         [steps]="brief"
-        [current]="2"
-      />
+        [current]="2" />
     </div>
 
     <div class="state">
@@ -118,8 +110,7 @@
 
       <ds-stepper
         [steps]="brief"
-        [current]="5"
-      />
+        [current]="5" />
     </div>
   </div>
 
@@ -131,8 +122,7 @@
     <div class="single-cell">
       <ds-stepper
         [steps]="['Step']"
-        [current]="-1"
-      />
+        [current]="-1" />
 
       <code class="t-mono-inline">
         .node · pending
@@ -142,8 +132,7 @@
     <div class="single-cell">
       <ds-stepper
         [steps]="['Step']"
-        [current]="0"
-      />
+        [current]="0" />
 
       <code class="t-mono-inline">
         .node.active
@@ -153,8 +142,7 @@
     <div class="single-cell">
       <ds-stepper
         [steps]="['Step']"
-        [current]="1"
-      />
+        [current]="1" />
 
       <code class="t-mono-inline">
         .node.done
@@ -165,8 +153,7 @@
       <ds-stepper
         [steps]="['Step']"
         [current]="0"
-        [errorSteps]="[0]"
-      />
+        [errorSteps]="[0]" />
 
       <code class="t-mono-inline">
         .node.error

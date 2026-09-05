@@ -1,8 +1,7 @@
 <docs-section
   anchor="date-picker"
   eyebrow="Components"
-  title="Date picker"
->
+  title="Date picker">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -29,8 +28,7 @@
   <div class="row">
     <ds-date-picker
       mode="single"
-      placeholder="Pick a date"
-    />
+      placeholder="Pick a date" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -44,8 +42,7 @@
   <div class="row">
     <ds-date-picker
       mode="range"
-      placeholder="Pick a range"
-    />
+      placeholder="Pick a range" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -69,16 +66,14 @@
       label="Build start"
       hint="The day crews begin set-up on site."
       placeholder="Pick a date"
-      [required]="true"
-    />
+      [required]="true" />
 
     <ds-date-picker
       mode="range"
       label="Show window"
       hint="Public open days."
       placeholder="Pick a range"
-      [optional]="true"
-    />
+      [optional]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -98,16 +93,14 @@
       mode="single"
       label="Build start"
       error="A start date is required."
-      placeholder="Pick a date"
-    />
+      placeholder="Pick a date" />
 
     <ds-date-picker
       mode="range"
       label="Show window"
       hint="Locked for this event."
       placeholder="Pick a range"
-      [disabled]="true"
-    />
+      [disabled]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -132,8 +125,7 @@
       label="Build start (bounded)"
       placeholder="Pick a date"
       [minDate]="minDateToday"
-      [maxDate]="maxDateThirtyDays"
-    />
+      [maxDate]="maxDateThirtyDays" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -155,15 +147,13 @@
       mode="single"
       label="Working days only"
       placeholder="Pick a weekday"
-      [disabledDate]="disableWeekends"
-    />
+      [disabledDate]="disableWeekends" />
 
     <ds-date-picker
       mode="range"
       label="Working day range"
       placeholder="Pick a range"
-      [disabledDate]="disableWeekends"
-    />
+      [disabledDate]="disableWeekends" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -198,8 +188,7 @@
       mode="range"
       label="Show window"
       placeholder="Pick a range"
-      [presets]="rangePresets"
-    />
+      [presets]="rangePresets" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -220,15 +209,13 @@
       mode="single"
       label="Planned start"
       hint="Type MM/DD/YYYY or pick from the calendar."
-      placeholder="Pick a date"
-    />
+      placeholder="Pick a date" />
 
     <ds-date-picker
       mode="range"
       label="Period"
       hint="Type both ends, or pick a range."
-      placeholder="Pick a range"
-    />
+      placeholder="Pick a range" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -239,8 +226,8 @@
     <code class="t-mono-inline">
       [maxDate]="today"
     </code> rejects future dates,
-    and <code class="t-mono-inline"> [defaultDate] </code> opens the panel on
-    that date instead of the current month — the calendar focuses its exact day
+    and <code class="t-mono-inline">[defaultDate]</code> opens the panel on that
+    date instead of the current month — the calendar focuses its exact day
     without selecting it.
   </p>
 
@@ -250,8 +237,7 @@
       label="Date of birth"
       placeholder="MM/DD/YYYY"
       [maxDate]="today"
-      [defaultDate]="birthDefaultDate"
-    />
+      [defaultDate]="birthDefaultDate" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -277,16 +263,14 @@
       mode="single"
       label="Дата (ru-RU)"
       placeholder="ДД.ММ.ГГГГ"
-      locale="ru-RU"
-    />
+      locale="ru-RU" />
 
     <ds-date-picker
       mode="single"
       label="Date (en-US, Sunday-first)"
       placeholder="Pick a date"
       locale="en-US"
-      [firstDayOfWeek]="0"
-    />
+      [firstDayOfWeek]="0" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -312,8 +296,7 @@
       mode="single"
       label="ISO-ish (YYYY-MM-DD)"
       placeholder="YYYY-MM-DD"
-      dateFormat="YYYY-MM-DD"
-    />
+      dateFormat="YYYY-MM-DD" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -332,14 +315,12 @@
       mode="single"
       label="Pick from calendar"
       placeholder="Pick a date"
-      [allowInput]="false"
-    />
+      [allowInput]="false" />
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="calendar-day"
-  >
+    data-for="calendar-day">
     Day states
   </h3>
 
@@ -355,8 +336,7 @@
       <div class="state-cell-stage">
         <button
           type="button"
-          class="day-specimen"
-        >
+          class="day-specimen">
           12
         </button>
       </div>
@@ -370,8 +350,7 @@
       <div class="state-cell-stage">
         <button
           type="button"
-          class="day-specimen is-forced-hover"
-        >
+          class="day-specimen is-forced-hover">
           12
         </button>
       </div>
@@ -385,8 +364,7 @@
       <div class="state-cell-stage">
         <button
           type="button"
-          class="day-specimen is-forced-focus"
-        >
+          class="day-specimen is-forced-focus">
           12
         </button>
       </div>
@@ -400,8 +378,7 @@
       <div class="state-cell-stage">
         <button
           type="button"
-          class="day-specimen selected"
-        >
+          class="day-specimen selected">
           12
         </button>
       </div>
@@ -415,8 +392,7 @@
       <div class="state-cell-stage">
         <button
           type="button"
-          class="day-specimen selected is-forced-hover"
-        >
+          class="day-specimen selected is-forced-hover">
           12
         </button>
       </div>
@@ -430,8 +406,7 @@
       <div class="state-cell-stage">
         <button
           type="button"
-          class="day-specimen in-range"
-        >
+          class="day-specimen in-range">
           12
         </button>
       </div>
@@ -445,8 +420,7 @@
       <div class="state-cell-stage">
         <button
           type="button"
-          class="day-specimen today"
-        >
+          class="day-specimen today">
           17
         </button>
       </div>
@@ -461,8 +435,7 @@
         <button
           type="button"
           class="day-specimen disabled"
-          disabled
-        >
+          disabled>
           12
         </button>
       </div>

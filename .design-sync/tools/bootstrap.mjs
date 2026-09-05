@@ -8,7 +8,13 @@
 // (package-build.mjs, ts-morph, the playwright pin) is installed by the
 // /design-sync skill itself — see NOTES.md for those pins.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync, symlinkSync, readFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  writeFileSync,
+  symlinkSync,
+  readFileSync,
+} from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -56,8 +62,12 @@ if (existsSync(link)) {
 
 const typescript = join(repo, 'node_modules', 'typescript', 'bin', 'tsc');
 if (!existsSync(typescript)) {
-  console.error('! repo deps missing — run `bun install --frozen-lockfile` too (tsc comes from there)');
+  console.error(
+    '! repo deps missing — run `bun install --frozen-lockfile` too (tsc comes from there)',
+  );
   process.exit(1);
 }
-const { buildCmd } = JSON.parse(readFileSync(join(repo, '.design-sync', 'config.json'), 'utf8'));
+const { buildCmd } = JSON.parse(
+  readFileSync(join(repo, '.design-sync', 'config.json'), 'utf8'),
+);
 console.error(`✓ ready — run: ${buildCmd}`);

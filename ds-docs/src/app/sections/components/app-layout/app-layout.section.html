@@ -2,8 +2,7 @@
   anchor="app-layout"
   eyebrow="Components"
   title="App layout"
-  [apiKeys]="['sidenav-footer']"
->
+  [apiKeys]="['sidenav-footer']">
   <span lede>
     The fixed application frame: the rail and topbar stay pinned while only the
     content region scrolls. Consumers project their own chrome into the
@@ -13,7 +12,7 @@
     <code class="t-mono-inline">
       [topbar]
     </code> and default slots — the layout
-    renders the <code class="t-mono-inline"> &lt;main&gt; </code> landmark and
+    renders the <code class="t-mono-inline">&lt;main&gt;</code> landmark and
     compensates the scrollbar so the content insets stay symmetric.
   </span>
 
@@ -34,12 +33,10 @@
         sidenav
         brand="MyAdmin"
         logoLetter="A"
-        [collapsed]="collapsedContentSpan()"
-      >
+        [collapsed]="collapsedContentSpan()">
         <span
           dsBrandName
-          class="wordmark"
-        >
+          class="wordmark">
           <span class="accent">
             My
           </span>
@@ -52,19 +49,16 @@
         <ds-sidenav-item
           icon="home"
           label="Dashboard"
-          [active]="true"
-        />
+          [active]="true" />
 
         <ds-sidenav-item
           icon="chart"
-          label="Reports"
-        />
+          label="Reports" />
 
         <ds-sidenav-item
           icon="settings"
           label="Settings"
-          [badge]="3"
-        />
+          [badge]="3" />
 
         <ds-sidenav-footer
           userName="Ada Lovelace"
@@ -75,8 +69,7 @@
           [collapsed]="collapsedContentSpan()"
           (collapseToggled)="toggleCollapsedContentSpan()"
           (alertsOpened)="markRead()"
-          (signOutSelected)="markRead()"
-        />
+          (signOutSelected)="markRead()" />
       </ds-sidenav>
 
       <ds-topbar topbar>
@@ -109,12 +102,10 @@
         sidenav
         brand="MyAdmin"
         logoLetter="A"
-        [collapsed]="collapsedFullSpan()"
-      >
+        [collapsed]="collapsedFullSpan()">
         <span
           dsBrandName
-          class="wordmark"
-        >
+          class="wordmark">
           <span class="accent">
             My
           </span>
@@ -127,19 +118,16 @@
         <ds-sidenav-item
           icon="home"
           label="Dashboard"
-          [active]="true"
-        />
+          [active]="true" />
 
         <ds-sidenav-item
           icon="chart"
-          label="Reports"
-        />
+          label="Reports" />
 
         <ds-sidenav-item
           icon="settings"
           label="Settings"
-          [badge]="3"
-        />
+          [badge]="3" />
 
         <ds-sidenav-footer
           userName="Ada Lovelace"
@@ -150,8 +138,7 @@
           [collapsed]="collapsedFullSpan()"
           (collapseToggled)="toggleCollapsedFullSpan()"
           (alertsOpened)="markRead()"
-          (signOutSelected)="markRead()"
-        />
+          (signOutSelected)="markRead()" />
       </ds-sidenav>
 
       <ds-topbar topbar>
@@ -198,9 +185,9 @@
     <code class="t-mono-inline">
       [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"
     </code>
-    and <code class="t-mono-inline"> [ariaControls]="layout.railId" </code>.
-    These docs use the second route — the burger at the top of this page on a
-    narrow screen is it.
+    and <code class="t-mono-inline">[ariaControls]="layout.railId"</code>. These
+    docs use the second route — the burger at the top of this page on a narrow
+    screen is it.
   </p>
 
   <p class="block-desc t-s">
@@ -263,7 +250,7 @@
     <code class="t-mono-inline">
       LayoutNavigationService
     </code> is public for
-    the same reason. Its <code class="t-mono-inline"> pathChanged </code> stream
+    the same reason. Its <code class="t-mono-inline">pathChanged</code> stream
     is the layout's own answer to "did we go somewhere else?" — `NavigationEnd`,
     path only, de-duplicated, and skipping any navigation that carries
     <code class="t-mono-inline">
@@ -296,8 +283,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="sidenav-footer"
-  >
+    data-for="sidenav-footer">
     The rail footer on its own
   </h3>
 
@@ -323,8 +309,7 @@
         [alerts]="unread()"
         [alertItems]="alertItems"
         [searchProvider]="searchProvider"
-        (alertsOpened)="markRead()"
-      />
+        (alertsOpened)="markRead()" />
     </div>
 
     <div class="footer-rail footer-rail--collapsed">
@@ -335,8 +320,7 @@
         [alertItems]="alertItems"
         [searchProvider]="searchProvider"
         [collapsed]="true"
-        (alertsOpened)="markRead()"
-      />
+        (alertsOpened)="markRead()" />
     </div>
   </div>
 </docs-section>

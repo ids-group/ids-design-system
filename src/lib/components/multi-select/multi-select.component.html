@@ -1,21 +1,18 @@
 @if (label()) {
   <span
     class="label"
-    [id]="labelId"
-  >
+    [id]="labelId">
     {{ label() }}
     @if (required()) {
       <span
         class="req"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         *
       </span>
     } @else if (optional()) {
       <span
         class="optional-marker"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         (optional)
       </span>
     }
@@ -42,8 +39,7 @@
   [attr.aria-activedescendant]="triggerActiveDescendant()"
   [attr.tabindex]="isDisabled() ? -1 : 0"
   (click)="onTriggerClick()"
-  (keydown)="onTriggerKeydown($event)"
->
+  (keydown)="onTriggerKeydown($event)">
   @if (pickerTrigger(); as tpl) {
     <ng-container
       [ngTemplateOutlet]="tpl"
@@ -53,8 +49,7 @@
         count: selectedOptions().length,
         open: open(),
         disabled: isDisabled(),
-      }"
-    />
+      }" />
   } @else if (showsCompactTrigger()) {
     <span class="trigger-caption">
       {{ triggerCaption() }}
@@ -64,13 +59,11 @@
       <span
         #chipRow
         class="chip-row"
-        [class.fit]="fitsChipsToWidth()"
-      >
+        [class.fit]="fitsChipsToWidth()">
         @for (option of visibleChips(); track option.value) {
           <span
             data-chip
-            class="trigger-label"
-          >
+            class="trigger-label">
             {{ option.label }}
           </span>
         }
@@ -78,8 +71,7 @@
         @if (overflowCount() > 0) {
           <span
             class="overflow"
-            data-chip-overflow
-          >
+            data-chip-overflow>
             +{{ overflowCount() }}
           </span>
         }
@@ -87,8 +79,7 @@
     } @else if (selectedOptions().length > 0) {
       <ds-badge
         [count]="selectedOptions().length"
-        [countLabel]="'selected'"
-      />
+        [countLabel]="'selected'" />
     }
   } @else if (selectedOptions().length === 0) {
     <span class="placeholder">
@@ -98,21 +89,21 @@
     <span
       #chipRow
       class="chip-row"
-      [class.fit]="fitsChipsToWidth()"
-    >
+      [class.fit]="fitsChipsToWidth()">
       @for (option of visibleChips(); track option.value) {
         <ds-tag
           data-chip
           variant="neutral"
           closable
           [closeLabel]="'Remove ' + option.label"
-          (closed)="removeValue(option.value)"
-        >
+          (closed)="removeValue(option.value)">
           @if (chipTemplate(); as tpl) {
             <ng-container
               [ngTemplateOutlet]="tpl"
-              [ngTemplateOutletContext]="{ $implicit: option, option: option }"
-            />
+              [ngTemplateOutletContext]="{
+                $implicit: option,
+                option: option,
+              }" />
           } @else {
             {{ option.label }}
           }
@@ -122,8 +113,7 @@
       @if (overflowCount() > 0) {
         <span
           class="overflow"
-          data-chip-overflow
-        >
+          data-chip-overflow>
           +{{ overflowCount() }} more
         </span>
       }
@@ -140,20 +130,17 @@
       type="button"
       class="clear-btn"
       aria-label="Clear selection"
-      (click)="clearValue($event)"
-    >
+      (click)="clearValue($event)">
       <ds-icon
         name="x"
-        [size]="14"
-      />
+        [size]="14" />
     </button>
   }
 
   <ds-icon
     class="chevron"
     name="chevronDown"
-    [size]="18"
-  />
+    [size]="18" />
 </div>
 
 <ds-field-message
@@ -161,8 +148,7 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()"
-/>
+  [reserve]="reserveMessageResolved()" />
 
 <ng-template #panel>
   <div class="dropdown-panel">
@@ -174,8 +160,7 @@
             count: filteredOptions().length,
             total: allOptions().length,
             query: filter(),
-          }"
-        />
+          }" />
       </div>
     }
 
@@ -184,8 +169,7 @@
         <ds-icon
           class="search-icon"
           name="search"
-          [size]="16"
-        />
+          [size]="16" />
 
         <input
           #search
@@ -201,8 +185,7 @@
           [attr.aria-controls]="listboxId"
           [attr.aria-activedescendant]="activeDescendant()"
           (input)="onFilter($event)"
-          (keydown)="onSearchKeydown($event)"
-        />
+          (keydown)="onSearchKeydown($event)" />
       </div>
     }
 
@@ -218,21 +201,12 @@
               ? 'mixed'
               : 'false'
         "
-        (click)="toggleSelectAll()"
-      >
+        (click)="toggleSelectAll()">
         <span
           class="checkbox"
           [class.checked]="allFilteredSelected()"
-          [class.indeterminate]="someFilteredSelected()"
-        >
-          @if (allFilteredSelected()) {
-            <ds-icon
-              name="check"
-              [size]="13"
-            />
-          } @else if (someFilteredSelected()) {
-            <span class="dash"></span>
-          }
+          [class.indeterminate]="someFilteredSelected()">
+          <span class="tick"></span>
         </span>
 
         <span class="select-all-label">
@@ -246,19 +220,16 @@
       role="listbox"
       aria-multiselectable="true"
       [attr.aria-busy]="loading() ? 'true' : null"
-      [id]="listboxId"
-    >
+      [id]="listboxId">
       @for (item of filteredItems(); track $index; let itemIdx = $index) {
         @if (isGroup(item)) {
           <li
             class="optgroup"
             role="group"
-            [attr.aria-label]="item.label"
-          >
+            [attr.aria-label]="item.label">
             <span
               class="optgroup-label"
-              [class.is-first]="itemIdx === 0"
-            >
+              [class.is-first]="itemIdx === 0">
               @if (groupLabelTemplate(); as tpl) {
                 <ng-container
                   [ngTemplateOutlet]="tpl"
@@ -266,8 +237,7 @@
                     $implicit: item,
                     group: item,
                     count: item.options.length,
-                  }"
-                />
+                  }" />
               } @else {
                 {{ item.label }}
               }
@@ -288,21 +258,12 @@
                       ? 'mixed'
                       : 'false'
                 "
-                (click)="toggleGroup(item)"
-              >
+                (click)="toggleGroup(item)">
                 <span
                   class="checkbox"
                   [class.checked]="groupAllSelected(item)"
-                  [class.indeterminate]="groupSomeSelected(item)"
-                >
-                  @if (groupAllSelected(item)) {
-                    <ds-icon
-                      name="check"
-                      [size]="13"
-                    />
-                  } @else if (groupSomeSelected(item)) {
-                    <span class="dash"></span>
-                  }
+                  [class.indeterminate]="groupSomeSelected(item)">
+                  <span class="tick"></span>
                 </span>
 
                 All of {{ item.label }}
@@ -311,8 +272,7 @@
 
             <ul
               class="optgroup-list"
-              role="presentation"
-            >
+              role="presentation">
               @for (option of item.options; track option.value) {
                 <li role="presentation">
                   <button
@@ -328,26 +288,18 @@
                     (mouseenter)="
                       cursorFromKeyboard.set(false);
                       activeIndex.set(flatIndexOf(option))
-                    "
-                  >
+                    ">
                     <span
                       class="checkbox"
-                      [class.checked]="isSelected(option.value)"
-                    >
-                      @if (isSelected(option.value)) {
-                        <ds-icon
-                          name="check"
-                          [size]="13"
-                        />
-                      }
+                      [class.checked]="isSelected(option.value)">
+                      <span class="tick"></span>
                     </span>
 
                     @if (option.icon) {
                       <ds-icon
                         class="option-icon"
                         [name]="option.icon"
-                        [size]="16"
-                      />
+                        [size]="16" />
                     }
 
                     <span class="option-label">
@@ -357,8 +309,7 @@
                           [ngTemplateOutletContext]="{
                             $implicit: option,
                             option: option,
-                          }"
-                        />
+                          }" />
                       } @else {
                         {{ option.label }}
                       }
@@ -385,26 +336,18 @@
               (mouseenter)="
                 cursorFromKeyboard.set(false);
                 activeIndex.set(flatIndexOf(option))
-              "
-            >
+              ">
               <span
                 class="checkbox"
-                [class.checked]="isSelected(option.value)"
-              >
-                @if (isSelected(option.value)) {
-                  <ds-icon
-                    name="check"
-                    [size]="13"
-                  />
-                }
+                [class.checked]="isSelected(option.value)">
+                <span class="tick"></span>
               </span>
 
               @if (option.icon) {
                 <ds-icon
                   class="option-icon"
                   [name]="option.icon"
-                  [size]="16"
-                />
+                  [size]="16" />
               }
 
               <span class="option-label">
@@ -414,8 +357,7 @@
                     [ngTemplateOutletContext]="{
                       $implicit: option,
                       option: option,
-                    }"
-                  />
+                    }" />
                 } @else {
                   {{ option.label }}
                 }
@@ -428,23 +370,20 @@
       @if (loading()) {
         <li
           class="empty t-s"
-          role="presentation"
-        >
+          role="presentation">
           <ds-spinner size="sm" />
         </li>
       } @else if (filteredOptions().length === 0) {
         <li
           class="empty t-s"
-          role="presentation"
-        >
+          role="presentation">
           @if (emptyTemplate(); as tpl) {
             <ng-container
               [ngTemplateOutlet]="tpl"
               [ngTemplateOutletContext]="{
                 $implicit: filter(),
                 query: filter(),
-              }"
-            />
+              }" />
           } @else {
             No matches
           }
@@ -460,8 +399,7 @@
             count: filteredOptions().length,
             total: allOptions().length,
             query: filter(),
-          }"
-        />
+          }" />
       </div>
     }
   </div>

@@ -147,7 +147,7 @@
     "The toast region's hover/focus pause is derived from both sources rather than latched, so tabbing out of a region the pointer still covers does not resume, focus moving inside it is not a leave, and a toast that becomes visible while paused is banked rather than counted. A resumed toast always gets at least 600ms. NO ACTION.",
     "ds-config and the card types moved inside the library. Every symbol still reaches the package root unchanged, and no import path of yours could have named the old location: there is one entry point and no subpath resolves into lib/. NO ACTION.",
     "A disabled ds-accordion-item's chevron asked for a colour token this library does not define, so the declaration was invalid and the chevron inherited the surrounding colour while its label greyed correctly. It reads the disabled text colour now. NO ACTION.",
-    "The component catalogue shipped with the package listed a <ds-dropdown> this library does not export — it was absorbed into <ds-select> — and omitted <ds-alert> entirely. Both are corrected in components.md, ds-alert with its 'neutral' variant. An import written from the old document failed to compile, so nothing was silently wrong. NO ACTION."
+    "The component catalogue shipped with the package names <ds-select> for the work a <ds-dropdown> would do - this library exports no such component, and an import naming it does not compile - and carries <ds-alert> with its 'neutral' variant. NO ACTION."
   ],
   "deleteList": []
 }

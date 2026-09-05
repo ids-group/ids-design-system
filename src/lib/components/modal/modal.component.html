@@ -6,8 +6,7 @@
     (pointerdown)="backdropPress.down($event)"
     (pointerup)="onBackdropRelease($event)"
     (keydown.escape)="onEscape()"
-    (animationend)="onLeaveEnd($event)"
-  >
+    (animationend)="onLeaveEnd($event)">
     <ds-modal-card
       [cdkTrapFocus]="!preview.staticPreview()"
       [cdkTrapFocusAutoCapture]="!preview.staticPreview()"
@@ -16,8 +15,7 @@
       [title]="title()"
       [subtitle]="subtitle()"
       [dividers]="dividersResolved()"
-      (closed)="onClose()"
-    >
+      (closed)="onClose()">
       <ng-container eyebrow>
         <ng-content select="[eyebrow]"></ng-content>
       </ng-container>

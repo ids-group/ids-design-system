@@ -2,8 +2,7 @@
   class="tweaks-trigger"
   color="neutral"
   variant="ghost"
-  (pressed)="open.set(true)"
->
+  (pressed)="open.set(true)">
   ⚙ Tweaks
 </ds-button>
 
@@ -11,8 +10,7 @@
   title="Tweaks"
   placement="right"
   size="sm"
-  [(open)]="open"
->
+  [(open)]="open">
   <ng-container drawer-body>
     <div class="row">
       <label class="label">
@@ -23,8 +21,7 @@
         ariaLabel="Theme"
         [options]="themeOptions"
         [value]="theme()"
-        (valueChange)="setTheme($any($event))"
-      />
+        (valueChange)="setTheme($any($event))" />
     </div>
 
     <div class="row">
@@ -36,8 +33,7 @@
         ariaLabel="Density"
         [options]="densityOptions"
         [value]="density()"
-        (valueChange)="setDensity($any($event))"
-      />
+        (valueChange)="setDensity($any($event))" />
     </div>
 
     <div class="row">
@@ -49,8 +45,7 @@
         ariaLabel="Brand preview"
         [options]="brandOptions"
         [value]="brand()"
-        (valueChange)="setBrand($any($event))"
-      />
+        (valueChange)="setBrand($any($event))" />
     </div>
 
     <div class="row">
@@ -62,8 +57,7 @@
         ariaLabel="Neutrals"
         [options]="neutralsOptions"
         [value]="neutrals()"
-        (valueChange)="setNeutrals($any($event))"
-      />
+        (valueChange)="setNeutrals($any($event))" />
     </div>
 
     <div class="row">
@@ -76,8 +70,7 @@
         [min]="0"
         [max]="360"
         [value]="primaryH()"
-        (valueChange)="setPrimaryH($any($event))"
-      />
+        (valueChange)="setPrimaryH($any($event))" />
     </div>
 
     <div class="row">
@@ -90,8 +83,7 @@
         [min]="0"
         [max]="100"
         [value]="primaryS()"
-        (valueChange)="setPrimaryS($any($event))"
-      />
+        (valueChange)="setPrimaryS($any($event))" />
     </div>
 
     <div class="row">
@@ -104,8 +96,7 @@
         [min]="0"
         [max]="100"
         [value]="primaryL()"
-        (valueChange)="setPrimaryL($any($event))"
-      />
+        (valueChange)="setPrimaryL($any($event))" />
     </div>
 
     <div class="row">
@@ -118,8 +109,7 @@
         [min]="0"
         [max]="360"
         [value]="secondaryH()"
-        (valueChange)="setSecondaryH($any($event))"
-      />
+        (valueChange)="setSecondaryH($any($event))" />
     </div>
 
     <div class="row">
@@ -132,8 +122,7 @@
         [min]="0"
         [max]="100"
         [value]="secondaryS()"
-        (valueChange)="setSecondaryS($any($event))"
-      />
+        (valueChange)="setSecondaryS($any($event))" />
     </div>
 
     <div class="row">
@@ -146,8 +135,7 @@
         [min]="0"
         [max]="100"
         [value]="secondaryL()"
-        (valueChange)="setSecondaryL($any($event))"
-      />
+        (valueChange)="setSecondaryL($any($event))" />
     </div>
 
     <div class="row">
@@ -160,8 +148,7 @@
         [min]="12"
         [max]="20"
         [value]="rootFs()"
-        (valueChange)="setFs($any($event))"
-      />
+        (valueChange)="setFs($any($event))" />
     </div>
   </ng-container>
 
@@ -169,8 +156,7 @@
     <ds-button
       color="neutral"
       variant="outline"
-      (pressed)="reset()"
-    >
+      (pressed)="reset()">
       Reset
     </ds-button>
   </ng-container>

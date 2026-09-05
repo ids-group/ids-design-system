@@ -12,8 +12,7 @@
     type="button"
     class="activator"
     [disabled]="disabled()"
-    (click)="activated.emit()"
-  >
+    (click)="activated.emit()">
     <ng-container [ngTemplateOutlet]="body"></ng-container>
   </button>
 } @else {

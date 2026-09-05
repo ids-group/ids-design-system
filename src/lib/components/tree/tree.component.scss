@@ -42,7 +42,7 @@
   }
 
   &:focus-visible {
-    @include focus.outline-indicator(calc(-1 * var(--border-width-strong)));
+    @include focus.ring(calc(-1 * var(--focus-ring-width)));
   }
 
   &:disabled {

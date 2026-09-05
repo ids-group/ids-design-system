@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="Modal"
   [apiKeys]="['modal:ModalCardComponent']"
-  [serviceKeys]="['BodyScrollLockService']"
->
+  [serviceKeys]="['BodyScrollLockService']">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -15,8 +14,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="modal-card"
-  >
+    data-for="modal-card">
     Eyebrow · context above the title
   </h3>
 
@@ -35,8 +33,7 @@
         <ds-modal-card
           title="Deactivate policyholder"
           size="sm"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <span eyebrow>
             My activity · Robert Thompson
           </span>
@@ -49,8 +46,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -69,8 +65,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="modal-card"
-  >
+    data-for="modal-card">
     Title badge · subtitle
   </h3>
 
@@ -83,7 +78,7 @@
     <code class="t-mono-inline">
       subtitle
     </code> for the line under it. The
-    accessible name stays the <code class="t-mono-inline"> title </code> string
+    accessible name stays the <code class="t-mono-inline">title</code> string
     either way — projected markup never enters
     <code class="t-mono-inline">
       aria-labelledby
@@ -100,12 +95,10 @@
           title="Fleet cover — commercial"
           subtitle="Aviva · Motor fleet · renews 12 Mar"
           size="md"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <ds-badge
             title-badge
-            status="success"
-          >
+            status="success">
             Active
           </ds-badge>
 
@@ -117,8 +110,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Close
             </ds-button>
           </ng-container>
@@ -133,8 +125,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="modal-card"
-  >
+    data-for="modal-card">
     Status
   </h3>
 
@@ -148,8 +139,8 @@
     library, and one word drives four things: the icon-badge tint, the title
     colour, the DEFAULT icon and the ARIA role. The icon comes with the status
     on purpose — a tint alone signals by colour only, which a colour-blind
-    reader cannot act on. Pass <code class="t-mono-inline"> icon </code> to
-    override the glyph, or <code class="t-mono-inline"> dialogRole </code> to
+    reader cannot act on. Pass <code class="t-mono-inline">icon</code> to
+    override the glyph, or <code class="t-mono-inline">dialogRole</code> to
     override the role.
   </p>
 
@@ -184,8 +175,7 @@
             size="sm"
             [title]="specimen.title"
             [status]="specimen.status"
-            [showClose]="false"
-          >
+            [showClose]="false">
             <span body>
               {{ specimen.body }}
             </span>
@@ -193,8 +183,7 @@
             <ng-container actions>
               <ds-button
                 color="neutral"
-                variant="outline"
-              >
+                variant="outline">
                 Close
               </ds-button>
             </ng-container>
@@ -210,8 +199,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="modal-card"
-  >
+    data-for="modal-card">
     Without dividers
   </h3>
 
@@ -263,8 +251,7 @@
         <ds-modal-card
           title="Archive this record"
           size="sm"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <span body>
             Archived records stay searchable and can be restored for 30 days.
           </span>
@@ -272,8 +259,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -295,8 +281,7 @@
           title="Archive this record"
           size="sm"
           [showClose]="false"
-          [dividers]="false"
-        >
+          [dividers]="false">
           <span body>
             Archived records stay searchable and can be restored for 30 days.
           </span>
@@ -304,8 +289,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -336,8 +320,7 @@
         <ds-modal-card
           title="Quick confirm"
           size="sm"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <span body>
             Tight modal for binary confirmations and short messages.
           </span>
@@ -345,8 +328,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -367,8 +349,7 @@
         <ds-modal-card
           title="Edit Project Alpha"
           size="md"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <span body>
             Default size. Most edits, detail dialogs, and confirmations with a
             paragraph of context.
@@ -377,8 +358,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -399,8 +379,7 @@
         <ds-modal-card
           title="Run report"
           size="lg"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <span body>
             Wider canvas for forms, multi-column previews, and bulk-edit
             dialogs.
@@ -409,8 +388,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -433,16 +411,14 @@
       <div class="state-cell-stage">
         <ds-button
           size="sm"
-          (pressed)="xlOpen.set(true)"
-        >
+          (pressed)="xlOpen.set(true)">
           Open xl modal
         </ds-button>
 
         <ds-modal
           title="Wide report view"
           size="xl"
-          [(open)]="xlOpen"
-        >
+          [(open)]="xlOpen">
           <span body>
             xl size — 1024 px. Use for data-dense previews, multi-column forms,
             or side-by-side comparisons.
@@ -452,8 +428,7 @@
             <ds-button
               color="neutral"
               variant="outline"
-              (pressed)="xlOpen.set(false)"
-            >
+              (pressed)="xlOpen.set(false)">
               Close
             </ds-button>
           </ng-container>
@@ -469,16 +444,14 @@
       <div class="state-cell-stage">
         <ds-button
           size="sm"
-          (pressed)="fullscreenOpen.set(true)"
-        >
+          (pressed)="fullscreenOpen.set(true)">
           Open fullscreen modal
         </ds-button>
 
         <ds-modal
           title="Fullscreen editor"
           size="fullscreen"
-          [(open)]="fullscreenOpen"
-        >
+          [(open)]="fullscreenOpen">
           <span body>
             Fullscreen — near-viewport width and height. Use for immersive
             editors, step-through wizards, or document previews.
@@ -488,8 +461,7 @@
             <ds-button
               color="neutral"
               variant="outline"
-              (pressed)="fullscreenOpen.set(false)"
-            >
+              (pressed)="fullscreenOpen.set(false)">
               Close
             </ds-button>
           </ng-container>
@@ -544,8 +516,7 @@
       <div class="state-cell-stage">
         <ds-button
           size="sm"
-          (pressed)="persistentOpen.set(true)"
-        >
+          (pressed)="persistentOpen.set(true)">
           Open persistent modal
         </ds-button>
 
@@ -553,8 +524,7 @@
           title="Step 1 of 3 — Project details"
           size="md"
           [persistent]="true"
-          [(open)]="persistentOpen"
-        >
+          [(open)]="persistentOpen">
           <span body>
             This modal is persistent: clicking the backdrop or pressing
             <kbd>
@@ -567,8 +537,7 @@
             <ds-button
               color="neutral"
               variant="outline"
-              (pressed)="persistentOpen.set(false)"
-            >
+              (pressed)="persistentOpen.set(false)">
               Close
             </ds-button>
 
@@ -587,8 +556,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="modal-card"
-  >
+    data-for="modal-card">
     Variants
   </h3>
 
@@ -602,8 +570,7 @@
         <ds-modal-card
           title="Save changes?"
           size="sm"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <span body>
             Apply schedule changes to all 24 records?
           </span>
@@ -611,8 +578,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -634,8 +600,7 @@
           title="Delete record?"
           size="sm"
           status="error"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <span body>
             This cannot be undone. 12 resource allocations will be released.
           </span>
@@ -643,8 +608,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -665,8 +629,7 @@
         <ds-modal-card
           title="Confirm recompute"
           size="md"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <span body>
             Saving these dates will recompute downstream allocations across
             three projects.
@@ -675,8 +638,7 @@
           <ds-banner
             impact
             variant="severe"
-            title="Affected records"
-          >
+            title="Affected records">
             <ul class="list">
               <li>
                 Project Alpha · 3 Logistics plans
@@ -695,8 +657,7 @@
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -715,8 +676,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="modal-card"
-  >
+    data-for="modal-card">
     With form
   </h3>
 
@@ -730,35 +690,29 @@
         <ds-modal-card
           title="Edit sub-record"
           size="md"
-          [showClose]="false"
-        >
+          [showClose]="false">
           <div
             body
-            class="form-stack"
-          >
+            class="form-stack">
             <ds-input
               label="Sub-record name"
-              value="Project Alpha · Phase 1"
-            />
+              value="Project Alpha · Phase 1" />
 
             <ds-input
               label="Capacity"
               type="number"
-              value="60"
-            />
+              value="60" />
 
             <ds-select
               label="Owner"
               value="brooks"
-              [options]="ownerOptions"
-            />
+              [options]="ownerOptions" />
           </div>
 
           <ng-container actions>
             <ds-button
               color="neutral"
-              variant="outline"
-            >
+              variant="outline">
               Cancel
             </ds-button>
 
@@ -777,8 +731,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="modal-confirm"
-  >
+    data-for="modal-confirm">
     Confirmation
   </h3>
 
@@ -799,16 +752,14 @@
           <ds-button
             color="neutral"
             variant="outline"
-            (pressed)="askDelete()"
-          >
+            (pressed)="askDelete()">
             Delete project
           </ds-button>
 
           <ds-button
             color="neutral"
             variant="outline"
-            (pressed)="askTypeToConfirm()"
-          >
+            (pressed)="askTypeToConfirm()">
             Delete with type-to-confirm
           </ds-button>
         </div>

@@ -11,13 +11,20 @@
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
-const base = process.argv[2] ?? execSync('git describe --tags --abbrev=0', { encoding: 'utf8' }).trim();
+const base =
+  process.argv[2] ??
+  execSync('git describe --tags --abbrev=0', { encoding: 'utf8' }).trim();
 
 let report;
 try {
-  report = execSync(`node tools/class-surface-diff.mjs ${base} HEAD`, { encoding: 'utf8', maxBuffer: 1 << 26 });
+  report = execSync(`node tools/class-surface-diff.mjs ${base} HEAD`, {
+    encoding: 'utf8',
+    maxBuffer: 1 << 26,
+  });
 } catch (error) {
-  console.error(`check-class-surface-entry: class-surface-diff failed — ${error.message}`);
+  console.error(
+    `check-class-surface-entry: class-surface-diff failed — ${error.message}`,
+  );
   process.exit(1);
 }
 
@@ -35,14 +42,20 @@ const files = [
 ];
 
 if (!files.length) {
-  console.log('check-class-surface-entry: no class member surface moved since ' + base + '.');
+  console.log(
+    'check-class-surface-entry: no class member surface moved since ' +
+      base +
+      '.',
+  );
   process.exit(0);
 }
 
 const changelog = readFileSync('CHANGELOG.md', 'utf8').replace(/\r\n/g, '\n');
 const unreleased = changelog.match(/^## Unreleased$\n([\s\S]*?)(?=^## )/m);
 if (!unreleased) {
-  console.error("check-class-surface-entry: no '## Unreleased' section in CHANGELOG.md.");
+  console.error(
+    "check-class-surface-entry: no '## Unreleased' section in CHANGELOG.md.",
+  );
   process.exit(1);
 }
 const block = unreleased[1];
@@ -52,7 +65,9 @@ const block = unreleased[1];
 let draftDetect = null;
 try {
   const draft = JSON.parse(readFileSync('migrations/unreleased.json', 'utf8'));
-  draftDetect = (draft.items ?? []).flatMap((item) => item.detect ?? []).join('\n');
+  draftDetect = (draft.items ?? [])
+    .flatMap((item) => item.detect ?? [])
+    .join('\n');
 } catch {
   draftDetect = null;
 }
@@ -64,17 +79,24 @@ for (const file of files) {
   try {
     source = readFileSync(`src/lib/${file}`, 'utf8');
   } catch {
-    console.error(`check-class-surface-entry: cannot read src/lib/${file} — the report names a file that is gone.`);
+    console.error(
+      `check-class-surface-entry: cannot read src/lib/${file} — the report names a file that is gone.`,
+    );
     process.exit(1);
   }
-  const named = [...source.matchAll(/export\s+(?:abstract\s+)?class\s+(\w+)/g)].map((m) => m[1]);
+  const named = [
+    ...source.matchAll(/export\s+(?:abstract\s+)?class\s+(\w+)/g),
+  ].map((m) => m[1]);
   if (!named.length) continue;
   // Any exported class in the file counts: a file can hold more than one, and the entry only has
   // to name the one it is talking about.
   if (!named.some((name) => block.includes(name))) {
     missingProse.push(`${file} — ${named.join(' / ')}`);
   }
-  if (draftDetect !== null && !named.some((name) => draftDetect.includes(name))) {
+  if (
+    draftDetect !== null &&
+    !named.some((name) => draftDetect.includes(name))
+  ) {
     missingDetect.push(`${file} — ${named.join(' / ')}`);
   }
 }
@@ -85,8 +107,12 @@ if (missingProse.length) {
       `${missingProse.length} class(es) whose member surface moved since ${base}:`,
   );
   for (const line of missingProse) console.error(`  ${line}`);
-  console.error(`  Re-run \`npm run class-surface ${base} HEAD\` and extend the entry — an unnamed class`);
-  console.error('  is a consumer whose build stops with nothing in the release notes to explain it.');
+  console.error(
+    `  Re-run \`npm run class-surface ${base} HEAD\` and extend the entry — an unnamed class`,
+  );
+  console.error(
+    '  is a consumer whose build stops with nothing in the release notes to explain it.',
+  );
 }
 
 if (missingDetect.length) {
@@ -95,8 +121,10 @@ if (missingDetect.length) {
       `${missingDetect.length} class(es) whose member surface moved since ${base}:`,
   );
   for (const line of missingDetect) console.error(`  ${line}`);
-  console.error('  Add it to the subclass item\'s `detect` — the prose naming a class is not enough,');
-  console.error('  `detect` is what the consumer\'s updater greps with.');
+  console.error(
+    "  Add it to the subclass item's `detect` — the prose naming a class is not enough,",
+  );
+  console.error("  `detect` is what the consumer's updater greps with.");
 }
 
 if (missingProse.length || missingDetect.length) process.exit(1);

@@ -119,7 +119,8 @@ function typographyNote(name) {
   const prop = T_PROPS.find((p) => rest.endsWith('-' + p));
   if (!prop) return null;
   const util = rest.slice(0, rest.length - prop.length - 1);
-  const label = prop === 'bg-color' ? 'background color' : prop.replace(/-/g, ' ');
+  const label =
+    prop === 'bg-color' ? 'background color' : prop.replace(/-/g, ' ');
   return `Per-axis override for the \`.t-${util}\` utility's ${label}.`;
 }
 
@@ -176,7 +177,9 @@ const comp = compFiles.flatMap((f) =>
 
 // findScss only walks *.component.scss, so a public hook exposed by a shared partial
 // has to be listed here or the reference never sees it.
-const sharedPartials = [['src/lib/styles/_dropdown-overlay.scss', 'dropdown-panel']];
+const sharedPartials = [
+  ['src/lib/styles/_dropdown-overlay.scss', 'dropdown-panel'],
+];
 comp.push(
   ...sharedPartials.flatMap(([path, group]) =>
     extractComponentTokens(readIf(join(ROOT, path)), group),
@@ -632,6 +635,7 @@ const summary = {
 // Prefixed because these keys are export NAMES: an unprefixed `SEMANTIC_ERROR: 10`
 // in a CI log reads as a build failure, and a grep for /error/i finds it.
 console.log('wrote tokens.generated.ts — per-export counts:');
-for (const [k, v] of Object.entries(summary)) console.log(`  rows in ${k}: ${v}`);
+for (const [k, v] of Object.entries(summary))
+  console.log(`  rows in ${k}: ${v}`);
 console.log(`  NEW_TOKENS: ${NEW_TOKENS.length}`);
 console.log(`(of ${all.length} live tokens; ${used.size} placed)`);

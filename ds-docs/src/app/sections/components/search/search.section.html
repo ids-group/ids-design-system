@@ -1,8 +1,7 @@
 <docs-section
   anchor="search"
   eyebrow="Components"
-  title="Search"
->
+  title="Search">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -63,8 +62,7 @@
     <ds-search
       class="wide"
       placeholder="Search projects, resources, people…"
-      shortcut="⌘ K"
-    />
+      shortcut="⌘ K" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -80,8 +78,7 @@
       class="wide"
       placeholder="Search projects, resources, people…"
       shortcut="⌘ K"
-      [showIcon]="false"
-    />
+      [showIcon]="false" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -125,18 +122,15 @@
   <div class="row">
     <ds-search
       size="sm"
-      placeholder="Small"
-    />
+      placeholder="Small" />
 
     <ds-search
       size="md"
-      placeholder="Medium (default)"
-    />
+      placeholder="Medium (default)" />
 
     <ds-search
       size="lg"
-      placeholder="Large"
-    />
+      placeholder="Large" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -195,8 +189,7 @@
       clearable
       placeholder="Type here — value lags 600ms"
       [debounce]="600"
-      [(value)]="debounced"
-    />
+      [(value)]="debounced" />
 
     <p class="t-s">
       <code class="t-mono-inline">
@@ -220,10 +213,10 @@
     <code class="t-mono-inline">
       [(ngModel)]
     </code> and a signal form all reach
-    it, and its own <code class="t-mono-inline"> [(value)] </code> keeps
-    working. A <code class="t-mono-inline"> disabled </code> input folds
-    together with the form's own disabled state, and the shell paints the
-    disabled surface — it used to look live and still take a click.
+    it, and its own <code class="t-mono-inline">[(value)]</code> keeps working.
+    A <code class="t-mono-inline">disabled</code> input folds together with the
+    form's own disabled state, and the shell paints the disabled surface — it
+    used to look live and still take a click.
   </p>
 
   <p class="block-desc t-s">
@@ -242,8 +235,7 @@
     <ds-search
       clearable
       placeholder="Bound to a FormControl"
-      [formControl]="queryControl"
-    />
+      [formControl]="queryControl" />
 
     <p class="t-s">
       <code class="t-mono-inline">
@@ -255,7 +247,6 @@
     <ds-search
       disabled
       placeholder="Disabled"
-      value="Cannot type here"
-    />
+      value="Cannot type here" />
   </div>
 </docs-section>

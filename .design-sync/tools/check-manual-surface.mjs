@@ -42,7 +42,12 @@ function hasConditionalProjection(template) {
   let depth = 0;
   let pendingBlock = false;
   for (let i = 0; i < text.length; i += 1) {
-    if (text[i] === '@' && /^@(if|else|for|switch|case|default|empty|placeholder|loading|error)\b/.test(text.slice(i))) {
+    if (
+      text[i] === '@' &&
+      /^@(if|else|for|switch|case|default|empty|placeholder|loading|error)\b/.test(
+        text.slice(i),
+      )
+    ) {
       pendingBlock = true;
       continue;
     }
@@ -66,7 +71,9 @@ const templates = walk(join(repo, 'src', 'lib'), '.component.html');
 const conditionalProjection = templates
   .filter((file) => {
     const template = readFileSync(file, 'utf8');
-    return template.includes('<ng-content') && hasConditionalProjection(template);
+    return (
+      template.includes('<ng-content') && hasConditionalProjection(template)
+    );
   })
   .map(relPath)
   .sort();
@@ -74,8 +81,11 @@ const conditionalProjection = templates
 const directiveSelector = /selector:\s*'(\[[A-Za-z][\w-]*\])'/g;
 const attributeDirectives = [
   ...new Set(
-    walk(join(repo, 'src', 'lib'), '.ts')
-      .flatMap((file) => [...readFileSync(file, 'utf8').matchAll(directiveSelector)].map((m) => m[1])),
+    walk(join(repo, 'src', 'lib'), '.ts').flatMap((file) =>
+      [...readFileSync(file, 'utf8').matchAll(directiveSelector)].map(
+        (m) => m[1],
+      ),
+    ),
   ),
 ].sort();
 
@@ -83,7 +93,10 @@ const found = { conditionalProjection, attributeDirectives };
 
 if (bless) {
   const previous = JSON.parse(readFileSync(MANIFEST, 'utf8'));
-  writeFileSync(MANIFEST, `${JSON.stringify({ ...previous, ...found }, null, 2)}\n`);
+  writeFileSync(
+    MANIFEST,
+    `${JSON.stringify({ ...previous, ...found }, null, 2)}\n`,
+  );
   console.log(
     `blessed: ${conditionalProjection.length} conditional-projection template(s), ${attributeDirectives.length} attribute directive(s)`,
   );
@@ -94,19 +107,26 @@ const recorded = JSON.parse(readFileSync(MANIFEST, 'utf8'));
 const errors = [];
 
 for (const [key, label] of [
-  ['conditionalProjection', 'component template with <ng-content> inside a control-flow block'],
+  [
+    'conditionalProjection',
+    'component template with <ng-content> inside a control-flow block',
+  ],
   ['attributeDirectives', 'attribute directive with no element to register'],
 ]) {
   const before = new Set(recorded[key] ?? []);
   const after = new Set(found[key]);
   for (const entry of after) {
     if (!before.has(entry)) {
-      errors.push(`✗ NEW ${label}: ${entry} — decide how the elements route covers it, note it in MANUAL-SURFACE.md, then --bless`);
+      errors.push(
+        `✗ NEW ${label}: ${entry} — decide how the elements route covers it, note it in MANUAL-SURFACE.md, then --bless`,
+      );
     }
   }
   for (const entry of before) {
     if (!after.has(entry)) {
-      errors.push(`✗ GONE ${label}: ${entry} — its MANUAL-SURFACE.md entry is now stale, delete it, then --bless`);
+      errors.push(
+        `✗ GONE ${label}: ${entry} — its MANUAL-SURFACE.md entry is now stale, delete it, then --bless`,
+      );
     }
   }
 }
@@ -115,14 +135,22 @@ for (const [key, label] of [
 // resolving against it the way they did against react-bindings/ — the skill reads them
 // relative to the nearest package.json above `entry`. Its version is therefore load-bearing
 // for nothing except honesty, which is exactly why it drifts unnoticed. Gate it.
-const rootVersion = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf8')).version;
+const rootVersion = JSON.parse(
+  readFileSync(join(repo, 'package.json'), 'utf8'),
+).version;
 const elementsPackage = join(repo, '.design-sync', 'elements', 'package.json');
 if (!existsSync(elementsPackage)) {
-  errors.push('✗ .design-sync/elements/package.json is missing — config.json resolves cssEntry and docsDir against it, and without it they resolve somewhere else silently');
+  errors.push(
+    '✗ .design-sync/elements/package.json is missing — config.json resolves cssEntry and docsDir against it, and without it they resolve somewhere else silently',
+  );
 } else {
-  const elementsVersion = JSON.parse(readFileSync(elementsPackage, 'utf8')).version;
+  const elementsVersion = JSON.parse(
+    readFileSync(elementsPackage, 'utf8'),
+  ).version;
   if (elementsVersion !== rootVersion) {
-    errors.push(`✗ .design-sync/elements/package.json says ${elementsVersion}, the DS ships ${rootVersion} — sync it`);
+    errors.push(
+      `✗ .design-sync/elements/package.json says ${elementsVersion}, the DS ships ${rootVersion} — sync it`,
+    );
   }
 }
 
@@ -130,11 +158,28 @@ if (!existsSync(elementsPackage)) {
 // component that ships without one is invisible to it. Previews are deliberately not
 // gated — a child component (ListItem, Tab, MenuItem) appears inside its parent's
 // preview and has none of its own.
-const pascalOfTag = (tag) => tag.replace(/^ds-/, '').replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
+const pascalOfTag = (tag) =>
+  tag
+    .replace(/^ds-/, '')
+    .replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
+// Every template we ship, so a component can be asked whether anything of ours renders it.
+const libTemplates = walk(join(repo, 'src', 'lib'), '.component.html').map(
+  (file) => readFileSync(file, 'utf8'),
+);
 const componentTags = new Set();
 for (const file of walk(join(repo, 'src', 'lib'), '.component.ts')) {
-  const match = /selector:\s*'(ds-[a-z0-9-]+)'/.exec(readFileSync(file, 'utf8'));
-  if (match) componentTags.add(match[1]);
+  const source = readFileSync(file, 'utf8');
+  const match = /selector:\s*'(ds-[a-z0-9-]+)'/.exec(source);
+  if (!match) continue;
+  // Marked internal AND rendered by no template of ours: a directive creates it imperatively,
+  // so it can never appear in a consumer's markup or inside another component's preview. There
+  // is no usage for the design agent to read and no section to point at. A component that is
+  // merely internal still counts - CalendarDay and FieldMessage render inside their parents.
+  const renderedByUs = libTemplates.some((template) =>
+    template.includes(`<${match[1]}`),
+  );
+  if (source.includes('@internal') && !renderedByUs) continue;
+  componentTags.add(match[1]);
 }
 const docNames = new Set(
   readdirSync(join(repo, '.design-sync', 'docs'))
@@ -143,7 +188,9 @@ const docNames = new Set(
 );
 for (const tag of [...componentTags].sort()) {
   if (!docNames.has(pascalOfTag(tag))) {
-    errors.push(`✗ ${tag} has no .design-sync/docs/${pascalOfTag(tag)}.md — the design agent reads these, so an undocumented component is unusable to it`);
+    errors.push(
+      `✗ ${tag} has no .design-sync/docs/${pascalOfTag(tag)}.md — the design agent reads these, so an undocumented component is unusable to it`,
+    );
   }
 }
 
@@ -152,21 +199,29 @@ for (const tag of [...componentTags].sort()) {
 // the section documenting its parent. Checked here so the failure lands on a PR rather than on the
 // person running the release build.
 const sectionSlugs = new Set(
-  JSON.parse(readFileSync(join(repo, '.design-sync', 'elements', 'gen', 'sections.json'), 'utf8'))
-    .sections.map((section) => section.slug),
+  JSON.parse(
+    readFileSync(
+      join(repo, '.design-sync', 'elements', 'gen', 'sections.json'),
+      'utf8',
+    ),
+  ).sections.map((section) => section.slug),
 );
-const sectionMap = JSON.parse(
-  readFileSync(join(repo, '.design-sync', 'config.json'), 'utf8'),
-).sections ?? {};
+const sectionMap =
+  JSON.parse(readFileSync(join(repo, '.design-sync', 'config.json'), 'utf8'))
+    .sections ?? {};
 for (const tag of [...componentTags].sort()) {
   const name = pascalOfTag(tag);
   const slug = sectionMap[name] ?? `components/${tag.replace(/^ds-/, '')}`;
   if (sectionSlugs.has(slug)) continue;
-  errors.push(`✗ ${tag} resolves to the ds-docs section "${slug}", which GROUP_PAGES does not register — its card would be empty. Add a section in ds-docs, or point config.json's \`sections\` at the one that documents it`);
+  errors.push(
+    `✗ ${tag} resolves to the ds-docs section "${slug}", which GROUP_PAGES does not register — its card would be empty. Add a section in ds-docs, or point config.json's \`sections\` at the one that documents it`,
+  );
 }
 for (const [name, slug] of Object.entries(sectionMap).sort()) {
   if (!sectionSlugs.has(slug)) {
-    errors.push(`✗ config.json maps ${name} to the ds-docs section "${slug}", which does not exist`);
+    errors.push(
+      `✗ config.json maps ${name} to the ds-docs section "${slug}", which does not exist`,
+    );
   }
 }
 
@@ -184,7 +239,9 @@ const heights = JSON.parse(
 ).heights;
 const tall = Object.entries(heights).filter(([, height]) => height > TALL);
 for (const [card, height] of tall.sort((a, b) => b[1] - a[1])) {
-  console.log(`· ${card} renders ${height}px of content — past ${TALL}px that is a long scroll inside the card; consider giving it a block of its own in ds-docs`);
+  console.log(
+    `· ${card} renders ${height}px of content — past ${TALL}px that is a long scroll inside the card; consider giving it a block of its own in ds-docs`,
+  );
 }
 
 // Both directions, because only one of them was checked until 2026-09-01 and two orphans sat
@@ -194,30 +251,42 @@ for (const [card, height] of tall.sort((a, b) => b[1] - a[1])) {
 const liveNames = new Set([...componentTags].map(pascalOfTag));
 for (const name of [...docNames].sort()) {
   if (!liveNames.has(name)) {
-    errors.push(`✗ .design-sync/docs/${name}.md documents no live component — delete it, or the design agent is taught an API that does not exist`);
+    errors.push(
+      `✗ .design-sync/docs/${name}.md documents no live component — delete it, or the design agent is taught an API that does not exist`,
+    );
   }
 }
 for (const name of Object.keys(sectionMap).sort()) {
   if (!liveNames.has(name)) {
-    errors.push(`✗ config.json's \`sections\` maps "${name}", which is no live component — drop the key`);
+    errors.push(
+      `✗ config.json's \`sections\` maps "${name}", which is no live component — drop the key`,
+    );
   }
 }
 const overrideNames = Object.keys(
-  JSON.parse(readFileSync(join(repo, '.design-sync', 'config.json'), 'utf8')).overrides ?? {},
+  JSON.parse(readFileSync(join(repo, '.design-sync', 'config.json'), 'utf8'))
+    .overrides ?? {},
 );
 for (const name of overrideNames.sort()) {
   if (!liveNames.has(name)) {
-    errors.push(`✗ config.json overrides "${name}", which is no live component — drop the key`);
+    errors.push(
+      `✗ config.json overrides "${name}", which is no live component — drop the key`,
+    );
   }
 }
 
 // Matched as a backticked token, not a bare substring: `badge` would otherwise
 // be satisfied by the word "title-badge" appearing anywhere in the prose.
-const docs = readFileSync(join(repo, '.design-sync', 'MANUAL-SURFACE.md'), 'utf8');
+const docs = readFileSync(
+  join(repo, '.design-sync', 'MANUAL-SURFACE.md'),
+  'utf8',
+);
 for (const entry of conditionalProjection) {
   const component = entry.split('/').pop().replace('.component.html', '');
   if (!docs.includes(`\`${component}\``)) {
-    errors.push(`✗ ${component} is in the manifest but MANUAL-SURFACE.md never mentions it — an unexplained entry is an excuse, not a record`);
+    errors.push(
+      `✗ ${component} is in the manifest but MANUAL-SURFACE.md never mentions it — an unexplained entry is an excuse, not a record`,
+    );
   }
 }
 

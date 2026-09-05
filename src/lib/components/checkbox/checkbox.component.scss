@@ -1,18 +1,11 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/check-box' as check-box;
 @use '../../styles/control-label' as control-label;
-@use '../../styles/press' as press;
 
 :host {
-  --_checkbox-focus-shadow: var(--ds-checkbox-focus-shadow, var(--ds-control-focus-shadow));
-  --_checkbox-bg: var(--ds-checkbox-bg-color, var(--surface-default));
-  --_checkbox-border: var(--ds-checkbox-border-color, var(--border-strong));
-  --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
-  --_checkbox-selected-bg: var(--ds-checkbox-selected-bg-color, var(--accent));
-  --_checkbox-selected-border: var(--ds-checkbox-selected-border-color, var(--accent));
-  --_checkbox-radius: var(--ds-checkbox-radius, var(--ds-radius-inner));
+  @include check-box.resolvers;
 
-  // Local resolvers for size scaling; md references the global token so it stays
-  // density-responsive. sm/lg are explicit per-instance overrides.
-  --_checkbox-glyph: var(--check-size);
+  // sm/lg are explicit per-instance overrides of the glyph the mixin defaults.
   --_checkbox-label-fs: var(--font-size-s);
 
   display: inline-flex;
@@ -41,6 +34,19 @@
 }
 
 .control-line {
+  // The ring goes on the ROW, not the glyph. A checked box already draws a brand box of
+  // its own, and a focus ring around the glyph lands concentric with it — brand bands
+  // through a gap, which reads as a target rather than as two states a keyboard user has
+  // to tell apart. The shared `check-box.box` draws no ring of its own — a control that has a
+  // shell to speak for it must not, and ds-table adds one itself because it has none.
+  @include focus.ring-for('.check');
+
+  // No label: the row collapses onto the glyph and the concentric read comes back, so the
+  // ring stands further off. `.control-text:empty` is display:none, so the row IS the glyph.
+  &:has(.control-text:empty) {
+    --focus-ring-offset: var(--space-1-5);
+  }
+
   display: inline-flex;
   align-items: center;
 
@@ -70,67 +76,7 @@
 }
 
 .check {
-  appearance: none;
-  width: var(--_checkbox-glyph);
-  height: var(--_checkbox-glyph);
-  border: var(--check-bw) solid var(--_checkbox-border);
-  background: var(--_checkbox-bg);
-  cursor: pointer;
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  margin: 0;
-  border-radius: var(--_checkbox-radius);
-  transition: background-color var(--duration-fast) var(--ease-standard),
-              border-color var(--duration-fast) var(--ease-standard);
-
-  &:hover:not(:disabled) { border-color: var(--_checkbox-hover-border); }
-  &:focus-visible        { outline: none; box-shadow: var(--_checkbox-focus-shadow); }
-
-  @include press.feedback;
-  &:disabled {
-    background: var(--surface-disabled);
-    border-color: var(--border-disabled);
-    cursor: not-allowed;
-  }
-
-  // Persistent pseudo (content always set) so the check/indeterminate mark
-  // scales + fades in/out — a checked-only ::after would just pop in.
-  &::after {
-    content: "";
-    transform: scale(0.6);
-    opacity: 0;
-    transform-origin: center;
-    transition: transform var(--duration-fast) var(--ease-standard),
-                opacity var(--duration-fast) var(--ease-standard);
-  }
-
-  &:checked {
-    background: var(--_checkbox-selected-bg);
-    border-color: var(--_checkbox-selected-border);
-    &::after {
-      content: "";
-      width: var(--check-tick-size);
-      height: var(--check-tick-size);
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  &:indeterminate {
-    background: var(--_checkbox-selected-bg);
-    border-color: var(--_checkbox-selected-border);
-    &::after {
-      content: "";
-      width: var(--check-indet-w);
-      height: var(--check-indet-h);
-      background: var(--icon-on-primary);
-      border-radius: var(--ds-radius-inner);
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
+  @include check-box.box;
 }
 
 /* Dev-only detection sink for a projected caption (checkbox.component.html).

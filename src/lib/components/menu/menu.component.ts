@@ -1,6 +1,7 @@
 import {
   Component,
   ViewEncapsulation,
+  computed,
   contentChildren,
   effect,
   signal,
@@ -16,10 +17,22 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
   encapsulation: ViewEncapsulation.Emulated,
   // Keyboard nav bubbles up from the focused menuitem button. Hand-rolled roving
   // (mirrors ds-tabs) — kept signal-based and consistent with the rest of the DS.
-  host: { '(keydown)': 'onKeydown($event)' },
+  // data-focus="inset": the panel clips, so a ring drawn outward is lost. Belongs on the
+  // clipping element — see styles/_focus.scss.
+  host: {
+    '(keydown)': 'onKeydown($event)',
+    'data-focus': 'inset',
+    '[class.has-icons]': 'anyIcon()',
+  },
 })
 export class MenuComponent {
   private readonly items = contentChildren(MenuItemComponent);
+
+  /** One item with an icon makes every item reserve the slot, so the labels share one axis. The
+   *  menu owns the decision because an item would have to know its siblings to take it. */
+  protected readonly anyIcon = computed(() =>
+    this.items().some((item) => item.icon() !== null),
+  );
   /** Index of the roving-focus item — the single item reachable via Tab. */
   private readonly activeIndex = signal(0);
 

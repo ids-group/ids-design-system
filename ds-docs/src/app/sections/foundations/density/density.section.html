@@ -1,8 +1,7 @@
 <docs-section
   anchor="density"
   eyebrow="Foundations"
-  title="Density"
->
+  title="Density">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -84,8 +83,7 @@
     @for (t of tiers; track t.key) {
       <div
         class="dens-sandbox"
-        [attr.data-density]="t.key"
-      >
+        [attr.data-density]="t.key">
         <div class="dens-sandbox-head">
           <div class="t-overline">
             {{ t.label }}
@@ -99,16 +97,14 @@
         <div class="dens-sandbox-body">
           <button
             type="button"
-            class="dens-btn"
-          >
+            class="dens-btn">
             Save changes
           </button>
 
           <input
             class="dens-input"
             type="text"
-            placeholder="Search resources…"
-          />
+            placeholder="Search resources…" />
 
           <div class="dens-chips">
             <span class="dens-chip">
@@ -224,7 +220,7 @@
     </strong>
     Measured on a nine-control row at default size: search, input, select,
     autocomplete, date picker, time picker, multi-select, number stepper and
-    button are all <strong> 40px </strong> out of the box and all
+    button are all <strong>40px</strong> out of the box and all
     <strong>
       32px
     </strong> under compact. So a screen whose controls should be
@@ -261,7 +257,7 @@
     <code class="t-mono-inline">
       comfy
     </code> resize controls and leave padding
-    alone; <code class="t-mono-inline"> ultra-compact </code> also compresses
+    alone; <code class="t-mono-inline">ultra-compact</code> also compresses
     field padding, table cells and
     <code class="t-mono-inline">
       --ds-container-pad

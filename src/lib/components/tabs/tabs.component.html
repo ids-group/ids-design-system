@@ -1,8 +1,7 @@
 <div
   role="tablist"
   [class]="tablistClasses()"
-  [attr.aria-orientation]="orientation()"
->
+  [attr.aria-orientation]="orientation()">
   @for (tab of tabs(); track $index) {
     <button
       type="button"
@@ -14,13 +13,11 @@
       [attr.tabindex]="$index === selectedIndex() ? 0 : -1"
       [disabled]="tab.disabled()"
       (click)="select($index, tab.disabled())"
-      (keydown)="onKeydown($event, $index)"
-    >
+      (keydown)="onKeydown($event, $index)">
       @if (tab.icon()) {
         <ds-icon
           [name]="tab.icon()!"
-          [size]="14"
-        >
+          [size]="14">
         </ds-icon>
       }
 
@@ -39,12 +36,10 @@
         <span
           class="tab-close"
           [attr.aria-label]="'Close ' + tab.label()"
-          (click)="onCloseClick($event, $index)"
-        >
+          (click)="onCloseClick($event, $index)">
           <ds-icon
             name="x"
-            [size]="12"
-          >
+            [size]="12">
           </ds-icon>
         </span>
       }
@@ -60,8 +55,7 @@
       tabindex="0"
       [id]="panelId($index)"
       [attr.aria-labelledby]="tabId($index)"
-      [hidden]="$index !== selectedIndex()"
-    >
+      [hidden]="$index !== selectedIndex()">
       <ng-container *ngTemplateOutlet="tab.content()"></ng-container>
     </div>
   }

@@ -1,8 +1,7 @@
 <docs-section
   anchor="split-button"
   eyebrow="Components"
-  title="Split button"
->
+  title="Split button">
   <span lede>
     Combines a primary action button with a dropdown of secondary actions in a
     single cohesive control.
@@ -25,8 +24,7 @@
         [variant]="'primary'"
         [menuItems]="saveActions"
         (pressed)="onSave()"
-        (itemSelected)="onPick($event)"
-      />
+        (itemSelected)="onPick($event)" />
 
       <p class="t-s">
         Last action: {{ lastAction() }}
@@ -50,7 +48,29 @@
       [variant]="'outline'"
       [menuItems]="exportActions"
       (pressed)="onSave()"
-      (itemSelected)="onPick($event)"
-    />
+      (itemSelected)="onPick($event)" />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Without menu items
+  </h3>
+
+  <p class="block-desc t-s">
+    An empty
+    <code class="t-mono-inline">
+      [menuItems]
+    </code> disables the chevron: one
+    that opens an empty panel reads as a broken control. A dev-mode warning says
+    so, and a single action belongs in
+    <code class="t-mono-inline">
+      ds-button
+    </code> instead.
+  </p>
+
+  <div class="demo-panel">
+    <ds-split-button
+      label="Save"
+      [variant]="'primary'"
+      (pressed)="onSave()" />
   </div>
 </docs-section>

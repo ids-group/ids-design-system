@@ -4715,13 +4715,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Standalone two-way binding, and the ONLY way to drive a lone radio: this component is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form control — a radio is one option of a choice, not a value of its own — and a second accessor on the option would fight it. A lone radio in a form binds through `[(checked)]`, or becomes a one-option `ds-radio-group`. When inside `ds-radio-group`, `isChecked()` derives from the group value and this input is not read."
       },
       {
+        "name": "deselectable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Lets a checked standalone radio be cleared by clicking it again. Off by default, and ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it would leave the group with no value through a gesture the group cannot see."
+      },
+      {
         "name": "disabled",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Disables the radio; a disabled parent `ds-radio-group` also disables it."
+        "description": "A disabled parent `ds-radio-group` also disables it, whatever this is set to."
       },
       {
         "name": "name",
@@ -4761,7 +4770,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Control size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -6088,7 +6097,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Items listed in the dropdown menu."
+        "description": "Items listed in the dropdown menu. Empty disables the chevron."
       },
       {
         "name": "menuLabel",
@@ -6117,7 +6126,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires with the chosen menu item."
+        "description": "The menu half only — a press on the main button is `pressed`, never this."
       }
     ]
   },
@@ -6790,58 +6799,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way per-column set-filters: column key → the still-checked values. A column absent from the map (or with every value checked) is unfiltered."
       },
       {
-        "name": "hiddenKeys",
-        "kind": "model",
-        "type": "Set<string> | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Two-way set of hidden column keys. `null` (default) derives the set from each column's `hidden` flag; the column picker then owns it. Binding a Set takes over — `hidden` flags are ignored."
-      },
-      {
-        "name": "resizableColumns",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Enables drag-to-resize handles on each column header."
-      },
-      {
-        "name": "columnWidths",
-        "kind": "model",
-        "type": "Map<string, number>",
-        "union": null,
-        "default": "new Map()",
-        "required": false,
-        "description": "Two-way per-column pixel width overrides (keyed by column key), set by dragging a resize handle. Seeded from `column.width` where unset."
-      },
-      {
-        "name": "reorderableColumns",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Enables drag + up/down reordering in the column panel."
-      },
-      {
-        "name": "columnOrder",
-        "kind": "model",
-        "type": "string[] | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Two-way column order as a list of keys. `null` (default) keeps declaration order; the column panel owns it once the user reorders. Keys absent from the list fall back to declaration order after the listed ones."
-      },
-      {
         "name": "persistLayout",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default."
+        "description": "Round-trip whatever the column features persist (order, widths, hidden keys) through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default."
       },
       {
         "name": "storageKey",
@@ -6851,33 +6815,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Screen id the persisted layout is stored under. Pick something stable per table, not per route instance."
-      },
-      {
-        "name": "exportButton",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Render an export button in the table's toolbar row. Off by default. Leave it off and drive `runExport()` from your own button — in a page header, a filter bar, the `[toolbar]` slot — reading `exporting()` for its loading state."
-      },
-      {
-        "name": "exportFilename",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "'table.csv'",
-        "required": false,
-        "description": "Filename the export button downloads as."
-      },
-      {
-        "name": "exportFetcher",
-        "kind": "input",
-        "type": "(() => Promise<readonly T[] | Blob | string>) | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Where the export button gets its data. A server-paged table only HAS the current page, so exporting without this silently exports one page. Return ROWS and the table serializes them the same way it serializes its own. Return a `Blob` (or a URL string) and the table just downloads it — which is what you want when the backend already formatted the file with its own number formats, its own columns, or a sheet the table never held."
       },
       {
         "name": "stickyScrollbar",
@@ -7121,15 +7058,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Emitted for `[(sortDir)]`."
       },
       {
-        "name": "exportFailed",
-        "kind": "output",
-        "type": "unknown",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Fires when `exportFetcher` rejects. Without it a failed export is silent — the button simply re-enables and no file arrives."
-      },
-      {
         "name": "lazyLoad",
         "kind": "output",
         "type": "{ first: number; rows: number }",
@@ -7193,6 +7121,108 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires with the row when an expander closes it, the row auto-closed by `expandMode=\"single\"` included. It carries a row, so it cannot speak for an id whose row is no longer in `data()` — under server-side paging that id is cleared silently. `expandedIds` is the complete signal; this one is the convenient one."
       }
     ]
+  },
+  "table-columns": {
+    "key": "table-columns",
+    "selector": "[dsTableColumns]",
+    "isElement": false,
+    "className": "DsTableColumns",
+    "status": "stable",
+    "importName": "DsTableColumns",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "reorderableColumns",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Adds the drag handle and the move buttons. Hiding works without it."
+      },
+      {
+        "name": "hiddenKeys",
+        "kind": "model",
+        "type": "Set<string> | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Keys the reader has hidden. Unset falls back to the columns' own `hidden` flags."
+      },
+      {
+        "name": "columnOrder",
+        "kind": "model",
+        "type": "string[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Column keys in the reader's order. Unset keeps the declaration order."
+      }
+    ],
+    "outputs": []
+  },
+  "table-export": {
+    "key": "table-export",
+    "selector": "[dsTableExport]",
+    "isElement": false,
+    "className": "DsTableExport",
+    "status": "stable",
+    "importName": "DsTableExport",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsTableExport",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Renders the built-in toolbar button. `false` keeps the feature and hides the control, for a table whose export is driven from somewhere else on the page."
+      },
+      {
+        "name": "exportFilename",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'table.csv'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "exportFetcher",
+        "kind": "input",
+        "type": "(() => Promise<readonly T[] | Blob | string>) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Fetches the rows to export. Without it the export serialises what the table holds, which on a server-paged table is one page."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "exportFailed",
+        "kind": "output",
+        "type": "unknown",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Without it a rejected `exportFetcher` is silent."
+      }
+    ]
+  },
+  "table-resize": {
+    "key": "table-resize",
+    "selector": "[dsTableResize]",
+    "isElement": false,
+    "className": "DsTableResize",
+    "status": "stable",
+    "importName": "DsTableResize",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "tabs:TabComponent": {
     "key": "tabs",

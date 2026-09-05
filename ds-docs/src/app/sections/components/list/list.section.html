@@ -2,8 +2,7 @@
   anchor="list"
   eyebrow="Components"
   title="List"
-  [apiKeys]="['list:ListItemComponent']"
->
+  [apiKeys]="['list:ListItemComponent']">
   <span lede>
     A vertically stacked set of content rows — supports
     <code class="t-mono-inline">
@@ -28,8 +27,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use the <code> [leading] </code> and <code> [trailing] </code> slots for
-    icons or avatars. Set <code>[dividers]="true"</code> for a separator between
+    Use the <code>[leading]</code> and <code>[trailing]</code> slots for icons
+    or avatars. Set <code>[dividers]="true"</code> for a separator between
     items.
   </p>
 
@@ -38,53 +37,44 @@
       <ds-list-item
         title="Account settings"
         subtitle="Manage profile and security"
-        [clickable]="true"
-      >
+        [clickable]="true">
         <ds-icon
           leading
           name="user"
-          [size]="18"
-        />
+          [size]="18" />
 
         <ds-icon
           trailing
           name="chevronRight"
-          [size]="18"
-        />
+          [size]="18" />
       </ds-list-item>
 
       <ds-list-item
         title="Notifications"
-        subtitle="Email and push preferences"
-      >
+        subtitle="Email and push preferences">
         <ds-icon
           leading
           name="bell"
-          [size]="18"
-        />
+          [size]="18" />
 
         <ds-icon
           trailing
           name="chevronRight"
-          [size]="18"
-        />
+          [size]="18" />
       </ds-list-item>
 
       <ds-list-item
         title="Documents"
-        subtitle="Uploaded files and exports"
-      >
+        subtitle="Uploaded files and exports">
         <ds-icon
           leading
           name="folder"
-          [size]="18"
-        />
+          [size]="18" />
 
         <ds-icon
           trailing
           name="chevronRight"
-          [size]="18"
-        />
+          [size]="18" />
       </ds-list-item>
     </ds-list>
   </div>
@@ -104,54 +94,47 @@
         title="Notifications"
         subtitle="Email and push preferences"
         [selected]="selectedItem() === 'notifications'"
-        [clickable]="true"
-      >
+        [clickable]="true">
         <ds-icon
           leading
           name="bell"
-          [size]="18"
-        />
+          [size]="18" />
       </ds-list-item>
 
       <ds-list-item
         title="Documents"
         subtitle="Uploaded files and exports"
         [selected]="selectedItem() === 'documents'"
-        [clickable]="true"
-      >
+        [clickable]="true">
         <ds-icon
           leading
           name="folder"
-          [size]="18"
-        />
+          [size]="18" />
       </ds-list-item>
 
       <ds-list-item
         title="Starred"
         subtitle="Items you have bookmarked"
         [selected]="selectedItem() === 'starred'"
-        [clickable]="true"
-      >
+        [clickable]="true">
         <ds-icon
           leading
           name="star"
-          [size]="18"
-        />
+          [size]="18" />
       </ds-list-item>
     </ds-list>
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="list-item"
-  >
+    data-for="list-item">
     A row with its own control
   </h3>
 
   <p class="block-desc t-s">
     <code>
       [leading]
-    </code> and <code> [trailing] </code> sit OUTSIDE the row's
+    </code> and <code>[trailing]</code> sit OUTSIDE the row's
     button, so a row can carry its own controls and still be the thing that
     selects. That is the master–detail shape: a checkbox per row for a bulk
     action, the row itself choosing what the detail pane shows. Two independent
@@ -159,16 +142,16 @@
   </p>
 
   <p class="block-desc t-s">
-    This is why the row is not a single <code> &lt;button&gt; </code>: a
-    checkbox nested in one is invalid HTML, its click would bubble into
+    This is why the row is not a single <code>&lt;button&gt;</code>: a checkbox
+    nested in one is invalid HTML, its click would bubble into
     <code>
       activated
     </code>, and a screen reader would fold it into the
     button's name and never announce its checked state. Note it is a
     <code>
       role="list"
-    </code> and NOT a <code> listbox </code> — the ARIA spec
-    says a <code> listbox </code> option cannot hold interactive content at all.
+    </code> and NOT a <code>listbox</code> — the ARIA spec
+    says a <code>listbox</code> option cannot hold interactive content at all.
   </p>
 
   <div class="demo-panel">
@@ -181,22 +164,19 @@
           "
           [selected]="viewing() === carrier"
           [clickable]="true"
-          (activated)="viewing.set(carrier)"
-        >
+          (activated)="viewing.set(carrier)">
           <ds-checkbox
             leading
             [label]="'Include ' + carrier"
             [checked]="picked().has(carrier)"
-            (checkedChange)="toggleCarrier(carrier)"
-          />
+            (checkedChange)="toggleCarrier(carrier)" />
 
           <ds-icon-button
             trailing
             icon="chevron-right"
             variant="standard"
             size="sm"
-            [ariaLabel]="'Open ' + carrier"
-          />
+            [ariaLabel]="'Open ' + carrier" />
         </ds-list-item>
       }
     </ds-list>

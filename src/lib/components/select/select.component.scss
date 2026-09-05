@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
@@ -108,7 +109,8 @@
   }
 
   &:focus-visible {
-    outline: none;
+    @include focus.own-indicator;
+
     border-color: var(--accent);
     box-shadow: var(--_select-focus-shadow);
   }

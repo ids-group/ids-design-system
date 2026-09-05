@@ -2,8 +2,7 @@
   anchor="sidenav"
   eyebrow="Components"
   title="Sidenav"
-  [apiKeys]="['sidenav:SidenavGroupComponent', 'sidenav:SidenavItemComponent']"
->
+  [apiKeys]="['sidenav:SidenavGroupComponent', 'sidenav:SidenavItemComponent']">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -39,48 +38,40 @@
       <ds-sidenav-item
         icon="home"
         label="Dashboard"
-        [active]="true"
-      />
+        [active]="true" />
 
       <ds-sidenav-item
         icon="calendar"
         label="Records"
-        [badge]="12"
-      />
+        [badge]="12" />
 
       <ds-sidenav-item
         icon="package"
-        label="Asset register"
-      />
+        label="Asset register" />
 
       <ds-sidenav-item
         icon="truck"
         label="Logistics plans"
-        [hasAlert]="true"
-      />
+        [hasAlert]="true" />
 
       <ds-sidenav-group label="Workspace">
         <ds-sidenav-item
           icon="users"
-          label="Members"
-        />
+          label="Members" />
 
         <ds-sidenav-item
           icon="map"
-          label="Sites"
-        />
+          label="Sites" />
       </ds-sidenav-group>
 
       <ds-sidenav-group label="Admin">
         <ds-sidenav-item
           icon="activity"
-          label="Activity"
-        />
+          label="Activity" />
 
         <ds-sidenav-item
           icon="settings"
-          label="Settings"
-        />
+          label="Settings" />
       </ds-sidenav-group>
     </ds-sidenav>
   </div>
@@ -106,18 +97,15 @@
       <ds-sidenav>
         <span
           brand
-          class="brand-logo"
-        >
+          class="brand-logo">
           <svg
             class="brand-logo-mark"
             viewBox="0 0 24 24"
             width="28"
             height="28"
-            aria-hidden="true"
-          >
+            aria-hidden="true">
             <path
-              d="M12 2 2 7l10 5 10-5-10-5Zm0 20 10-5V7l-10 5-10-5v10l10 5Z"
-            />
+              d="M12 2 2 7l10 5 10-5-10-5Zm0 20 10-5V7l-10 5-10-5v10l10 5Z" />
           </svg>
 
           <span class="brand-logo-name">
@@ -128,19 +116,16 @@
         <ds-sidenav-item
           icon="home"
           label="Dashboard"
-          [active]="true"
-        />
+          [active]="true" />
 
         <ds-sidenav-item
           icon="calendar"
           label="Records"
-          [badge]="12"
-        />
+          [badge]="12" />
 
         <ds-sidenav-item
           icon="package"
-          label="Asset register"
-        />
+          label="Asset register" />
       </ds-sidenav>
     </div>
 
@@ -148,18 +133,15 @@
       <ds-sidenav [collapsed]="true">
         <span
           brand
-          class="brand-logo"
-        >
+          class="brand-logo">
           <svg
             class="brand-logo-mark"
             viewBox="0 0 24 24"
             width="28"
             height="28"
-            aria-hidden="true"
-          >
+            aria-hidden="true">
             <path
-              d="M12 2 2 7l10 5 10-5-10-5Zm0 20 10-5V7l-10 5-10-5v10l10 5Z"
-            />
+              d="M12 2 2 7l10 5 10-5-10-5Zm0 20 10-5V7l-10 5-10-5v10l10 5Z" />
           </svg>
 
           <span class="brand-logo-name">
@@ -170,18 +152,15 @@
         <ds-sidenav-item
           icon="home"
           label="Dashboard"
-          [active]="true"
-        />
+          [active]="true" />
 
         <ds-sidenav-item
           icon="calendar"
-          label="Records"
-        />
+          label="Records" />
 
         <ds-sidenav-item
           icon="package"
-          label="Asset register"
-        />
+          label="Asset register" />
       </ds-sidenav>
     </div>
   </div>
@@ -198,8 +177,8 @@
     <code class="t-mono-inline">
       dsBrandName
     </code> projects a custom wordmark
-    in place of the plain <code class="t-mono-inline"> brand </code> text — here
-    a two-tone "MyAdmin" whose accent slice matches the tile. Keep the string
+    in place of the plain <code class="t-mono-inline">brand</code> text — here a
+    two-tone "MyAdmin" whose accent slice matches the tile. Keep the string
     input alongside as the fallback semantics.
   </p>
 
@@ -227,12 +206,10 @@
   <div class="stage stage--frame">
     <ds-sidenav
       brand="MyAdmin"
-      logoLetter="A"
-    >
+      logoLetter="A">
       <span
         dsBrandName
-        class="wordmark"
-      >
+        class="wordmark">
         <span class="accent">
           My
         </span>
@@ -245,26 +222,22 @@
       <ds-sidenav-item
         icon="home"
         label="Dashboard"
-        [active]="true"
-      />
+        [active]="true" />
 
       <ds-sidenav-item
         icon="calendar"
         label="Records"
-        [badge]="12"
-      />
+        [badge]="12" />
 
       <ds-sidenav-item
         icon="package"
-        label="Asset register"
-      />
+        label="Asset register" />
     </ds-sidenav>
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="sidenav-group"
-  >
+    data-for="sidenav-group">
     Expandable groups
   </h3>
 
@@ -284,45 +257,37 @@
       <ds-sidenav-item
         icon="home"
         label="Dashboard"
-        [active]="true"
-      />
+        [active]="true" />
 
       <ds-sidenav-group
         label="Operations"
         icon="truck"
-        [expandable]="true"
-      >
+        [expandable]="true">
         <ds-sidenav-item
           icon="calendar"
-          label="Records"
-        />
+          label="Records" />
 
         <ds-sidenav-item
           icon="package"
-          label="Asset register"
-        />
+          label="Asset register" />
 
         <ds-sidenav-item
           icon="map"
-          label="Sites"
-        />
+          label="Sites" />
       </ds-sidenav-group>
 
       <ds-sidenav-group
         label="Admin"
         icon="settings"
         [expandable]="true"
-        [expanded]="false"
-      >
+        [expanded]="false">
         <ds-sidenav-item
           icon="users"
-          label="Members"
-        />
+          label="Members" />
 
         <ds-sidenav-item
           icon="activity"
-          label="Activity"
-        />
+          label="Activity" />
       </ds-sidenav-group>
     </ds-sidenav>
   </div>
@@ -339,46 +304,38 @@
   <div class="stage stage--frame">
     <ds-sidenav
       brand="Atlas"
-      [collapsed]="true"
-    >
+      [collapsed]="true">
       <ds-sidenav-item
         icon="home"
         label="Dashboard"
-        [active]="true"
-      />
+        [active]="true" />
 
       <ds-sidenav-item
         icon="calendar"
-        label="Records"
-      />
+        label="Records" />
 
       <ds-sidenav-item
         icon="package"
-        label="Asset register"
-      />
+        label="Asset register" />
 
       <ds-sidenav-item
         icon="truck"
         label="Logistics plans"
-        [hasAlert]="true"
-      />
+        [hasAlert]="true" />
 
       <ds-sidenav-item
         icon="users"
-        label="Members"
-      />
+        label="Members" />
 
       <ds-sidenav-item
         icon="map"
-        label="Sites"
-      />
+        label="Sites" />
     </ds-sidenav>
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="sidenav-item"
-  >
+    data-for="sidenav-item">
     Item states showcase
   </h3>
 
@@ -392,8 +349,7 @@
         <ds-sidenav>
           <ds-sidenav-item
             icon="calendar"
-            label="Records"
-          />
+            label="Records" />
         </ds-sidenav>
       </div>
 
@@ -409,8 +365,7 @@
         <ds-sidenav>
           <ds-sidenav-item
             icon="calendar"
-            label="Records"
-          />
+            label="Records" />
         </ds-sidenav>
       </div>
 
@@ -424,8 +379,7 @@
         <ds-sidenav>
           <ds-sidenav-item
             icon="calendar"
-            label="Records"
-          />
+            label="Records" />
         </ds-sidenav>
       </div>
 
@@ -440,8 +394,7 @@
           <ds-sidenav-item
             icon="calendar"
             label="Records"
-            [active]="true"
-          />
+            [active]="true" />
         </ds-sidenav>
       </div>
 
@@ -456,8 +409,7 @@
           <ds-sidenav-item
             icon="calendar"
             label="Records"
-            [disabled]="true"
-          />
+            [disabled]="true" />
         </ds-sidenav>
       </div>
 
@@ -473,8 +425,7 @@
             icon="bell"
             label="Notifications"
             [active]="true"
-            [badge]="3"
-          />
+            [badge]="3" />
         </ds-sidenav>
       </div>
 
@@ -489,8 +440,7 @@
           <ds-sidenav-item
             icon="truck"
             label="Logistics"
-            [hasAlert]="true"
-          />
+            [hasAlert]="true" />
         </ds-sidenav>
       </div>
 
@@ -504,8 +454,7 @@
         <ds-sidenav [collapsed]="true">
           <ds-sidenav-item
             icon="calendar"
-            label="Records"
-          />
+            label="Records" />
         </ds-sidenav>
       </div>
 

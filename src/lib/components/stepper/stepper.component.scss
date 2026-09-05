@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/visually-hidden' as visually-hidden;
 
 :host {
@@ -68,8 +69,7 @@
     cursor: pointer;
 
     &:focus-visible {
-      outline: var(--border-width-strong, 2px) solid var(--accent);
-      outline-offset: var(--focus-ring-offset);
+      @include focus.ring;
     }
   }
 
@@ -135,7 +135,6 @@
   }
 }
 
-// Vertical variant — steps stack top-to-bottom; connector runs downward.
 :host(.is-vertical) {
   flex-direction: column;
   align-items: stretch;

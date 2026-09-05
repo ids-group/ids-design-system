@@ -1,8 +1,7 @@
 <docs-section
   anchor="bottom-sheet"
   eyebrow="Components"
-  title="Bottom sheet"
->
+  title="Bottom sheet">
   <span lede>
     Mobile-first panel anchored to the bottom edge — the touch equivalent of a
     drawer / modal. Drag the grab strip down or tap the scrim to dismiss;
@@ -31,8 +30,7 @@
     <ds-bottom-sheet
       title="Edit registration"
       [(open)]="open"
-      (closed)="open.set(false)"
-    >
+      (closed)="open.set(false)">
       <p class="t-s sheet-body">
         Update the vehicle registration. Changes apply to the current event
         only.
@@ -41,8 +39,7 @@
       <ng-container actions>
         <ds-button
           class="full-width"
-          (pressed)="open.set(false)"
-        >
+          (pressed)="open.set(false)">
           Save
         </ds-button>
 
@@ -50,8 +47,7 @@
           class="full-width"
           color="neutral"
           variant="outline"
-          (pressed)="open.set(false)"
-        >
+          (pressed)="open.set(false)">
           Cancel
         </ds-button>
       </ng-container>
@@ -79,8 +75,7 @@
       title="Filter results"
       [snapPoints]="snapPoints"
       [(open)]="snapOpen"
-      (closed)="snapOpen.set(false)"
-    >
+      (closed)="snapOpen.set(false)">
       <p class="t-s sheet-body">
         Drag the handle up or down to snap between 35 %, 65 %, and 90 % of the
         viewport height. Drag past the lowest stop or flick down to close.
@@ -103,8 +98,7 @@
       <ng-container actions>
         <ds-button
           class="full-width"
-          (pressed)="snapOpen.set(false)"
-        >
+          (pressed)="snapOpen.set(false)">
           Apply filters
         </ds-button>
 
@@ -112,8 +106,7 @@
           class="full-width"
           color="neutral"
           variant="outline"
-          (pressed)="snapOpen.set(false)"
-        >
+          (pressed)="snapOpen.set(false)">
           Clear all
         </ds-button>
       </ng-container>
@@ -144,6 +137,5 @@
   </p>
 
   <pre
-    class="t-mono-block"
-  ><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /&gt;</code></pre>
+    class="t-mono-block"><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /&gt;</code></pre>
 </docs-section>

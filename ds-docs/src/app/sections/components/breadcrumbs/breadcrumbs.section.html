@@ -1,8 +1,7 @@
 <docs-section
   anchor="breadcrumbs"
   eyebrow="Components"
-  title="Breadcrumbs"
->
+  title="Breadcrumbs">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -46,8 +45,7 @@
   <div class="stage">
     <ds-breadcrumbs
       [items]="longTrail"
-      [maxItems]="4"
-    />
+      [maxItems]="4" />
   </div>
 
   <div class="legend t-s">
@@ -90,8 +88,7 @@
   <div class="stage">
     <ds-breadcrumbs
       separator="arrowRight"
-      [items]="defaultTrail"
-    />
+      [items]="defaultTrail" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -109,8 +106,7 @@
   <div class="stage">
     <ds-breadcrumbs
       [items]="defaultTrail"
-      [clickable]="false"
-    />
+      [clickable]="false" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -126,8 +122,7 @@
   </p>
 
   <pre
-    class="snippet t-mono"
-  ><code>{{ '// in a page component or route effect' }}
+    class="snippet t-mono"><code>{{ '// in a page component or route effect' }}
 import {{ '{' }} BreadcrumbsService {{ '}' }} from 'ds';
 private readonly crumbs = inject(BreadcrumbsService);
 this.crumbs.set([

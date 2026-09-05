@@ -1,31 +1,22 @@
 #!/usr/bin/env node
 // Freezes every card that does not need to be live into static HTML, then minifies the result.
 //
-// A card is a whole document that downloads a 2.12 MB bundle and boots its own Angular application,
-// and the pane shows a grid of them. Measured on this tree: 89 of the 90 custom-element definitions
-// cost 0.3 ms between them - the expense is parsing the bundle in each document and constructing
-// the one section whose tag is on the page. A snapshot removes both.
+// A card is a whole document that boots its own Angular application over the 2.12 MB bundle, and
+// the pane shows a grid of them. The snapshot renders identically because no colour is baked in:
+// the theme tokens stay in `_ds_bundle.css`, which the static card still links.
 //
-// The snapshot is the SETTLED DOM with every script stripped. It is identical to the live card, not
-// similar: Angular's emulated-encapsulation styles are already `<style>` tags in the head by then,
-// and no colour is baked into an inline style - theme tokens stay in `_ds_bundle.css`, which the
-// static card still links, so the pane switching `data-theme` still recolours it.
-//
-// What is lost is BEHAVIOUR, everywhere - a Select no longer opens, a Tab no longer switches. The
-// chapters that need it are listed in `live-chapters.txt` and are left alone.
+// What is lost is BEHAVIOUR. Two kinds of card keep it: the chapters in `live-chapters.txt` and
+// every card owning a panel (see PANEL_OWNERS). What a run kept is recorded in `live-cards.txt`.
 //
 //   node .design-sync/tools/snapshot-cards.mjs      # after build-cards has stamped the heights
 //
 // Run it LAST. It rewrites card files in place, and any later build-cards run replaces them with
 // live cards again.
 import { createServer } from 'node:http';
-import { execFile } from 'node:child_process';
-import {
-  existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { launchBrowser } from './lib/browser.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -34,24 +25,32 @@ const SHARED_CSS = '_ds_cards.css';
 const PORT = 4579;
 const WIDTH = 1200;
 const FRAME_HEIGHT = 24000;
-const LANES = 5;
+// Concurrent TABS in one browser, not processes: a tab costs a fraction of a chromium, so this is
+// about how much the render queue may hold at once rather than about the container's RAM.
+const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
 const CHROME = [
+  process.env.CHROME_BIN,
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   '/usr/bin/google-chrome',
   '/usr/bin/chromium',
-].find((path) => existsSync(path));
+  '/usr/bin/chromium-browser',
+]
+  .filter(Boolean)
+  .find((path) => existsSync(path));
 
 if (!CHROME) {
   console.error('No Chrome found — snapshot-cards needs a headless browser.');
   process.exit(1);
 }
 
-const live = new Set(readFileSync(join(syncDir, 'live-chapters.txt'), 'utf8')
-  .split('\n')
-  .map((line) => line.trim())
-  .filter((line) => line && !line.startsWith('#')));
+const live = new Set(
+  readFileSync(join(syncDir, 'live-chapters.txt'), 'utf8')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#')),
+);
 
 /** The section a card renders, from its host tag: `ds-docs-components-toast` is `components/toast`.
  *  Read from the file rather than guessed from the path, because a card's directory is its
@@ -65,7 +64,21 @@ const chapterOf = (html) => {
   return cut < 0 ? rest : `${rest.slice(0, cut)}/${rest.slice(cut + 1)}`;
 };
 
-const cards = JSON.parse(readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8')).cards;
+// Controls whose panel IS the documented thing. The panel was never VISIBLE in a card - a CDK
+// overlay is closed by default - but a frozen card has no click to open it either. Matched per
+// CARD: by chapter this keeps 130 cards live to cover the 85 that own a panel, Table 35 for 5.
+const PANEL_OWNERS =
+  /<(ds-select|ds-multi-select|ds-autocomplete|ds-date-picker|ds-time-picker|ds-color-picker|ds-menu|ds-popover)[\s>]/;
+
+// The surfaces no element name covers: Table builds its own column-filter panel instead of
+// composing `ds-popover`, and a tooltip is a directive with no element. Matched as an ATTRIBUTE -
+// `aria-haspopup` appears as prose in the API tables too, and the bare word made a Button card
+// look interactive.
+const OPENS_ON_DEMAND = /\saria-haspopup="|\sdstooltip/i;
+
+const cards = JSON.parse(
+  readFileSync(join(syncDir, 'elements', 'gen', 'cards.json'), 'utf8'),
+).cards;
 
 // Template indentation reaches the snapshot as real text nodes. Collapsing it with a regexp over
 // the file would corrupt the places where whitespace is content - `white-space: pre` on the mono
@@ -80,11 +93,9 @@ const TIDY = `
       if (!document.documentElement.hasAttribute('data-ds-sliced') && Date.now() - t0 < 20000) {
         return setTimeout(ready, 25);
       }
-      // The section is built, which is not the same as settled: components that MEASURE write their
-      // result later - Table's sticky scrollbar pins '.scroll-wrap' to a computed height, and that
-      // one card froze three different ways across three runs. Counting frames guessed at how many;
-      // this waits for the DOM to stop changing instead, which is what "settled" actually means.
-      // Fonts first, because a measure taken against the fallback face is the wrong number.
+      // Built is not settled: a component that MEASURES writes its result later - Table's sticky
+      // scrollbar pins '.scroll-wrap' to a computed height. Fonts first, because a measure taken
+      // against the fallback face is the wrong number.
       return document.fonts.ready.then(function () {
         var quiet = null;
         var observer = new MutationObserver(function () {
@@ -122,7 +133,15 @@ const TIDY = `
   })();
 </script>`;
 
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.json': 'application/json', '.md': 'text/plain', '.png': 'image/png' };
+const TYPES = {
+  '.html': 'text/html',
+  '.js': 'text/javascript',
+  '.css': 'text/css',
+  '.woff2': 'font/woff2',
+  '.json': 'application/json',
+  '.md': 'text/plain',
+  '.png': 'image/png',
+};
 const server = createServer((request, response) => {
   const url = decodeURIComponent(request.url.split('?')[0]);
   const file = join(OUT, url);
@@ -136,28 +155,43 @@ const server = createServer((request, response) => {
 
     return response.end(readFileSync(file, 'utf8') + TIDY);
   }
-  response.writeHead(200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' });
+  response.writeHead(200, {
+    'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream',
+  });
 
   return response.end(readFileSync(file));
 });
 
-const render = (path) => new Promise((done) => {
-  execFile(
-    CHROME,
-    [
-      '--headless=new', '--disable-gpu', '--no-sandbox',
-      `--user-data-dir=${join(profile, Math.random().toString(36).slice(2))}`,
-      '--virtual-time-budget=25000',
-      `--window-size=${WIDTH},${FRAME_HEIGHT}`,
-      '--dump-dom', `http://127.0.0.1:${PORT}/${path.split('/').map(encodeURIComponent).join('/')}`,
-    ],
-    { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
-    (error, stdout) => done(error ? '' : stdout),
+// Read after the virtual clock has stopped, so it cannot wait for anything — the tidied attribute
+// is either there or the card did not settle, and the caller treats the latter as a failure.
+// The doctype is prepended HERE rather than in the page: `--dump-dom` printed one and
+// `outerHTML` does not, and building the string in the page needs an escaped newline that the
+// template literal around it silently turns into a real one — an unterminated string literal,
+// which is a page-side SyntaxError that returns an empty card for every single one of them.
+const DUMP = 'document.documentElement.outerHTML';
+
+const render = async (path) => {
+  const html = await browser.render(
+    `http://127.0.0.1:${PORT}/${path.split('/').map(encodeURIComponent).join('/')}`,
+    DUMP,
   );
-});
+
+  // The trailing newline matters as much as the doctype: `--dump-dom` printed one, every frozen
+  // card in git ends with it, and dropping it rewrites all 280 of them on the next release for a
+  // single byte each.
+  return html
+    ? `<!DOCTYPE html>
+${html}
+`
+    : '';
+};
 
 server.listen(PORT);
-const profile = mkdtempSync(join(tmpdir(), 'ds-snapshot-'));
+const browser = await launchBrowser({
+  chrome: CHROME,
+  width: WIDTH,
+  height: FRAME_HEIGHT,
+});
 
 const kept = [];
 const failed = [];
@@ -173,6 +207,36 @@ const queue = cards.filter((path) => {
   return true;
 });
 
+// Running this twice without a build-cards between corrupts the tree: the second pass renders a
+// card that is already static, re-prepends the marker and dumps the result, and some cards came
+// back with their section in twice - 6 buttons and two h2 where there had been 3 and one, which
+// only the height check caught, on 268 cards.
+const alreadyFrozen = queue.filter(
+  (path) => !readFileSync(join(OUT, path), 'utf8').includes('<script'),
+);
+if (alreadyFrozen.length) {
+  server.close();
+  await browser.close();
+  console.error(
+    `✗ ${alreadyFrozen.length} of ${queue.length} card(s) are already frozen — this has run once` +
+      ' already. Re-run `node .design-sync/tools/build-upload.mjs` first; freezing a frozen card' +
+      ' duplicates its content.',
+  );
+  process.exit(1);
+}
+
+// A lone carriage return never flushes into a pipe, so a CI log and a captured run both showed
+// NOTHING for the whole render — twice mistaken here for a hang. Off a TTY it prints lines instead.
+const report = (count) => {
+  if (process.stderr.isTTY) {
+    process.stderr.write(`  rendered ${count}/${queue.length}        \r`);
+
+    return;
+  }
+  if (count % 20 === 0 || count === queue.length)
+    console.error(`  rendered ${count}/${queue.length}`);
+};
+
 let next = 0;
 async function lane() {
   while (next < queue.length) {
@@ -185,7 +249,7 @@ async function lane() {
       continue;
     }
     snapshots.set(path, dom);
-    process.stderr.write(`  rendered ${snapshots.size + failed.length}/${queue.length}        \r`);
+    report(snapshots.size + failed.length);
   }
 }
 
@@ -193,38 +257,50 @@ try {
   await Promise.all(Array.from({ length: LANES }, lane));
 } finally {
   server.close();
-  rmSync(profile, { recursive: true, force: true });
+  await browser.close();
 }
 
 process.stderr.write('\r'.padEnd(90));
 if (failed.length) {
-  console.error(`\n✗ ${failed.length} card(s) never finished rendering, so nothing was written:`);
+  console.error(
+    `\n✗ ${failed.length} card(s) never finished rendering, so nothing was written:`,
+  );
   for (const path of failed.slice(0, 10)) console.error(`    ${path}`);
   process.exit(1);
 }
 
-// Angular inlines a component's styles into every document that renders it, so the same block
-// arrives in card after card: 4005 style tags across the tree, 185 of them distinct, 10.3 MB inlined
-// against 473 KB of union. They are scoped by `_ngcontent`/`_nghost` attributes and therefore
-// position-independent, so concatenating them into one linked sheet is safe - and the browser then
-// fetches it once for the whole grid instead of parsing 27 KB inside each card.
-const isComponentStyle = (body) => body.includes('_nghost-') || body.includes('_ngcontent-');
+// Angular inlines a component's styles into every document that renders it. Mostly the blocks are
+// scoped by the `_ngcontent`/`_nghost` attributes - but NOT entirely, see the union below.
+const isComponentStyle = (body) =>
+  body.includes('_nghost-') || body.includes('_ngcontent-');
 
 // Whitespace inside a `<style>` is never rendered, so this collapses unconditionally - unlike the
 // body text below, which has to ask the computed style first.
-const tidyCss = (body) => body
-  .replace(/\/\*[\s\S]*?\*\//g, '')
-  .replace(/\s*\n\s*/g, '\n')
-  .trim();
+const tidyCss = (body) =>
+  body
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\s*\n\s*/g, '\n')
+    .trim();
 
-// Five lanes finish out of order, so the Map's own order is a race. Reading it back in the order
-// `cards.json` declares is what makes the sheet and the shortened ids byte-identical run to run -
-// otherwise every snapshot rewrites all 376 cards and the shared sheet with no change in them, and
-// the committed tree CI diffs against is noise.
-const ordered = queue.map((path) => [path, snapshots.get(path)]);
+// Five lanes finish out of order, so the Map's order is a race. `cards.json` order is what makes
+// the sheet and the shortened ids byte-identical run to run.
+const rendered = queue.map((path) => [path, snapshots.get(path)]);
 
+// Only the RENDERED dom can tell: a live card's own HTML holds just `<ds-docs-components-select>`,
+// and everything inside it appears when Angular renders. A card that owns a panel is left exactly
+// as build-cards wrote it.
+const ordered = [];
+for (const entry of rendered) {
+  if (PANEL_OWNERS.test(entry[1]) || OPENS_ON_DEMAND.test(entry[1]))
+    kept.push(entry[0]);
+  else ordered.push(entry);
+}
+
+// EVERY rendered card, not only the frozen ones: a block qualifies on carrying a scope attribute
+// anywhere in it, and some carry document-level rules alongside. Narrowing this to the frozen set
+// moved 80 frozen cards by 4-32px.
 const blocks = [];
-for (const [, dom] of ordered) {
+for (const [, dom] of rendered) {
   for (const [, body] of dom.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
     if (isComponentStyle(body) && !blocks.includes(body)) blocks.push(body);
   }
@@ -233,11 +309,12 @@ for (const [, dom] of ordered) {
 // Renamed across the sheet and every card in one pass: the attribute IS the scope, so a rename
 // that reaches only one of them silently unstyles the component.
 const ids = new Map();
-const shorten = (text) => text.replace(/ng-c\d+/g, (id) => {
-  if (!ids.has(id)) ids.set(id, `c${ids.size.toString(36)}`);
+const shorten = (text) =>
+  text.replace(/ng-c\d+/g, (id) => {
+    if (!ids.has(id)) ids.set(id, `c${ids.size.toString(36)}`);
 
-  return ids.get(id);
-});
+    return ids.get(id);
+  });
 
 const sheet = shorten(blocks.join('\n').replace(/@charset "UTF-8";/g, ''));
 writeFileSync(join(OUT, SHARED_CSS), `${sheet.trim()}\n`);
@@ -262,7 +339,7 @@ for (const [path, dom] of ordered) {
   });
   html = shorten(html)
     // The card's own comments explain the LIVE card to whoever reads the generator's output; a
-    // frozen card is generated output that nobody edits, and they are in all 376 of them.
+    // frozen card is generated output that nobody edits.
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/\sng-version="[^"]*"/g, '')
     .replace(/\sdata-ds-(?:tidied|sliced|kept)="[^"]*"/g, '');
@@ -275,11 +352,21 @@ for (const [path, dom] of ordered) {
   writeFileSync(join(OUT, path), written);
 }
 
+// What `check-frozen` asserts against, so the rule has one implementation rather than two.
+writeFileSync(
+  join(syncDir, 'live-cards.txt'),
+  `# Written by snapshot-cards.mjs — the cards it left live. Do not edit; see live-chapters.txt.\n${[
+    ...kept,
+  ]
+    .sort()
+    .join('\n')}\n`,
+);
+
 const kb = (bytes) => `${Math.round(bytes / 1024)} KB`;
 console.log(
-  `\n✓ ${snapshots.size} card(s) frozen to static HTML, ${kept.length} left live`
-  + ` (${[...live].join(', ')})`
-  + `\n  ${blocks.length} distinct component style block(s) → ${SHARED_CSS} (${kb(Buffer.byteLength(sheet))}, fetched once)`
-  + `\n  ${ids.size} Angular component id(s) shortened`
-  + `\n  cards ${kb(before)} → ${kb(after)}`,
+  `\n✓ ${ordered.length} card(s) frozen to static HTML, ${kept.length} left live` +
+    ` (${[...live].join(', ')} + every card with a panel)` +
+    `\n  ${blocks.length} distinct component style block(s) → ${SHARED_CSS} (${kb(Buffer.byteLength(sheet))}, fetched once)` +
+    `\n  ${ids.size} Angular component id(s) shortened` +
+    `\n  cards ${kb(before)} → ${kb(after)}`,
 );

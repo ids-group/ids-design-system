@@ -1,8 +1,7 @@
 <docs-section
   anchor="filter-bar"
   eyebrow="Components"
-  title="Filter bar"
->
+  title="Filter bar">
   <span lede>
     Priority+ filter row: as many filters as fit, the rest behind "+N more".
   </span>
@@ -67,7 +66,7 @@
     <code class="t-mono-inline">
       triggerSize
     </code> matches the trigger to the
-    filters beside it — default <code class="t-mono-inline"> md </code>. The bar
+    filters beside it — default <code class="t-mono-inline">md</code>. The bar
     cannot work this out on its own:
     <code class="t-mono-inline">
       dsFilterItem
@@ -88,8 +87,7 @@
   <div class="width-control">
     <label
       class="t-s"
-      for="filter-bar-width"
-    >
+      for="filter-bar-width">
       Frame width
     </label>
 
@@ -100,8 +98,7 @@
       max="1100"
       step="10"
       [value]="frameWidth()"
-      (input)="frameWidth.set(+$any($event.target).value)"
-    />
+      (input)="frameWidth.set(+$any($event.target).value)" />
 
     <span class="t-mono-inline">
       {{ frameWidth() }}px
@@ -110,16 +107,14 @@
 
   <div
     class="bar-demo"
-    [style.width.px]="frameWidth()"
-  >
+    [style.width.px]="frameWidth()">
     <ds-filter-bar>
       <ng-template [dsFilterItem]="170">
         <ds-select
           label="Status"
           placeholder="Any"
           [options]="statuses"
-          [(value)]="status"
-        />
+          [(value)]="status" />
       </ng-template>
 
       <ng-template [dsFilterItem]="190">
@@ -127,8 +122,7 @@
           label="Owner"
           placeholder="Anyone"
           [options]="owners"
-          [(value)]="owner"
-        />
+          [(value)]="owner" />
       </ng-template>
 
       <ng-template [dsFilterItem]="170">
@@ -136,30 +130,26 @@
           label="Region"
           placeholder="All"
           [options]="regions"
-          [(value)]="region"
-        />
+          [(value)]="region" />
       </ng-template>
 
       <ng-template [dsFilterItem]="200">
         <ds-date-picker
           label="Opened"
           [fullWidth]="true"
-          [(value)]="opened"
-        />
+          [(value)]="opened" />
       </ng-template>
 
       <ds-search
         dsFilterBarTrailing
         placeholder="Search claims"
-        [(value)]="term"
-      />
+        [(value)]="term" />
 
       <ds-button
         dsFilterBarTrailing
         color="neutral"
         variant="text"
-        (pressed)="clear()"
-      >
+        (pressed)="clear()">
         Clear
       </ds-button>
     </ds-filter-bar>

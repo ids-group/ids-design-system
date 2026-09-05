@@ -32,6 +32,9 @@
     "[dsProjectionDropped]",
     "[dsRailTrigger]",
     "[dsReserveMessages]",
+    "[dsTableColumns]",
+    "[dsTableExport]",
+    "[dsTableResize]",
     "[dsTooltip]"
   ]
 }

@@ -4,8 +4,7 @@
     <div
       class="drawer-scrim"
       [class.closing]="closing()"
-      (click)="onClose()"
-    >
+      (click)="onClose()">
     </div>
 
     <div
@@ -17,13 +16,11 @@
       [class.closing]="closing()"
       [attr.aria-labelledby]="title() ? titleId : null"
       (keydown.escape)="onClose()"
-      (animationend)="onLeaveEnd($event)"
-    >
+      (animationend)="onLeaveEnd($event)">
       <header class="header">
         <h4
           class="title"
-          [id]="titleId"
-        >
+          [id]="titleId">
           {{ title() }}
         </h4>
 
@@ -31,12 +28,10 @@
           type="button"
           class="close"
           aria-label="Close"
-          (click)="onClose()"
-        >
+          (click)="onClose()">
           <ds-icon
             name="x"
-            [size]="16"
-          />
+            [size]="16" />
         </button>
       </header>
 

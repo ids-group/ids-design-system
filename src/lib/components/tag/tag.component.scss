@@ -86,6 +86,6 @@
   @include press.feedback;
 
   &:focus-visible {
-    @include focus.outline-indicator(1px);
+    @include focus.ring(1px);
   }
 }

@@ -2,8 +2,7 @@
   anchor="tabs"
   eyebrow="Components"
   title="Tabs"
-  [apiKeys]="['tabs:TabComponent']"
->
+  [apiKeys]="['tabs:TabComponent']">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -66,8 +65,7 @@
 
     <ds-tabs
       class="variant-row-stage"
-      variant="pills"
-    >
+      variant="pills">
       <ds-tab label="All">
         <p class="t-s muted pad">
           All records.
@@ -109,8 +107,7 @@
         <ds-tab
           label="Inbox"
           icon="inbox"
-          [count]="12"
-        >
+          [count]="12">
           <p class="t-s muted pad">
             Inbox items.
           </p>
@@ -118,8 +115,7 @@
 
         <ds-tab
           label="Flagged"
-          icon="flag"
-        >
+          icon="flag">
           <p class="t-s muted pad">
             Flagged items.
           </p>
@@ -127,8 +123,7 @@
 
         <ds-tab
           label="Drafts"
-          [count]="3"
-        >
+          [count]="3">
           <p class="t-s muted pad">
             Draft items.
           </p>
@@ -137,8 +132,7 @@
         <ds-tab
           label="Archive"
           icon="archive"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </ds-tabs>
     </div>
   </div>
@@ -160,8 +154,7 @@
 
     <ds-tabs
       class="variant-row-stage scrollable-demo"
-      scrollable
-    >
+      scrollable>
       <ds-tab label="Dashboard">
         <p class="t-s muted pad">
           Dashboard panel.
@@ -232,8 +225,7 @@
     <ds-tabs
       class="variant-row-stage scrollable-demo"
       variant="pills"
-      scrollable
-    >
+      scrollable>
       <ds-tab label="All">
         <p class="t-s muted pad">
           All records.
@@ -305,13 +297,11 @@
     <div class="variant-row-stage">
       <ds-tabs
         closable
-        (tabClosed)="onTabClose($event)"
-      >
+        (tabClosed)="onTabClose($event)">
         @for (tab of closableTabs(); track tab.value) {
           <ds-tab
             [label]="tab.label"
-            [value]="tab.value"
-          >
+            [value]="tab.value">
             <p class="t-s muted pad">
               {{ tab.label }} panel.
             </p>
@@ -399,8 +389,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="tab"
-  >
+    data-for="tab">
     States showcase
   </h3>
 
@@ -471,8 +460,7 @@
         <ds-tabs [selectedIndex]="0">
           <ds-tab
             label="Overview"
-            [disabled]="true"
-          />
+            [disabled]="true" />
         </ds-tabs>
       </div>
 
@@ -495,8 +483,7 @@
       <div class="state-cell-stage">
         <ds-tabs
           variant="pills"
-          [selectedIndex]="1"
-        >
+          [selectedIndex]="1">
           <ds-tab label="All" />
 
           <ds-tab label="." />
@@ -512,8 +499,7 @@
       <div class="state-cell-stage pin-hover">
         <ds-tabs
           variant="pills"
-          [selectedIndex]="1"
-        >
+          [selectedIndex]="1">
           <ds-tab label="All" />
 
           <ds-tab label="." />
@@ -529,8 +515,7 @@
       <div class="state-cell-stage pin-focus">
         <ds-tabs
           variant="pills"
-          [selectedIndex]="1"
-        >
+          [selectedIndex]="1">
           <ds-tab label="All" />
 
           <ds-tab label="." />
@@ -546,8 +531,7 @@
       <div class="state-cell-stage">
         <ds-tabs
           variant="pills"
-          [selectedIndex]="0"
-        >
+          [selectedIndex]="0">
           <ds-tab label="All" />
         </ds-tabs>
       </div>
@@ -561,12 +545,10 @@
       <div class="state-cell-stage">
         <ds-tabs
           variant="pills"
-          [selectedIndex]="0"
-        >
+          [selectedIndex]="0">
           <ds-tab
             label="All"
-            [disabled]="true"
-          />
+            [disabled]="true" />
         </ds-tabs>
       </div>
 
@@ -667,7 +649,7 @@
     </code> sharing a name on the same
     screen erase each other — both write the same parameter, and a reload
     restores whichever wrote last. It is the easy mistake to make when turning
-    this on across an app, because <code class="t-mono-inline"> "tab" </code> is
+    this on across an app, because <code class="t-mono-inline">"tab"</code> is
     the obvious name every time, so a dev-mode warning names the clash. Nested
     or sibling strips need distinct names —
     <code class="t-mono-inline">

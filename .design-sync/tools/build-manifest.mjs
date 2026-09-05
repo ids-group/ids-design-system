@@ -19,7 +19,9 @@ const elements = join(syncDir, 'elements');
 const OUT = join(syncDir, 'upload');
 
 const config = JSON.parse(readFileSync(join(syncDir, 'config.json'), 'utf8'));
-const surface = JSON.parse(readFileSync(join(elements, 'gen', 'surface.json'), 'utf8'));
+const surface = JSON.parse(
+  readFileSync(join(elements, 'gen', 'surface.json'), 'utf8'),
+);
 
 function walk(dir, out = []) {
   for (const entry of readdirSync(dir)) {
@@ -44,7 +46,9 @@ const order = JSON.parse(
 ).cards;
 const cards = [];
 for (const path of order) {
-  const marker = readFileSync(join(OUT, path), 'utf8').match(/<!--\s*@dsCard([\s\S]*?)-->/);
+  const marker = readFileSync(join(OUT, path), 'utf8').match(
+    /<!--\s*@dsCard([\s\S]*?)-->/,
+  );
   if (!marker) continue;
   const group = marker[1].match(/group="([^"]*)"/)?.[1];
   const viewport = marker[1].match(/viewport="([^"]*)"/)?.[1];
@@ -64,7 +68,9 @@ const onDisk = ['components', 'guides']
   .flatMap((root) => walk(join(OUT, root)))
   .filter((file) => file.endsWith('.html')).length;
 if (cards.length !== onDisk) {
-  throw new Error(`cards.json lists ${cards.length} card(s) against ${onDisk} on disk`);
+  throw new Error(
+    `cards.json lists ${cards.length} card(s) against ${onDisk} on disk`,
+  );
 }
 
 // From the emitted `.jsx` files, not from a card: a component publishes one card per documented
@@ -72,11 +78,20 @@ if (cards.length !== onDisk) {
 const sources = new Map(
   walk(join(OUT, 'components'))
     .filter((file) => file.endsWith('.jsx'))
-    .map((file) => [posix(file).split('/').pop().replace(/\.jsx$/, ''), posix(file)]),
+    .map((file) => [
+      posix(file)
+        .split('/')
+        .pop()
+        .replace(/\.jsx$/, ''),
+      posix(file),
+    ]),
 );
 const components = [...surface.components]
   .sort((a, b) => a.name.localeCompare(b.name))
-  .map((component) => ({ name: component.name, sourcePath: sources.get(component.name) }))
+  .map((component) => ({
+    name: component.name,
+    sourcePath: sources.get(component.name),
+  }))
   .filter((entry) => entry.sourcePath);
 
 // ── tokens ───────────────────────────────────────────────────────────────
@@ -124,7 +139,11 @@ function classify(name, value, depth = 0) {
     const target = declared.get(reference[1]);
     if (target !== undefined) return classify(reference[1], target, depth + 1);
   }
-  if (/space|gap|pad|gutter|margin|inset|width|height|size|indent|offset/.test(name)) {
+  if (
+    /space|gap|pad|gutter|margin|inset|width|height|size|indent|offset/.test(
+      name,
+    )
+  ) {
     return 'spacing';
   }
   if (/duration|layer|opacity|ease|alpha|-[hsl]$/.test(name)) return 'other';
@@ -140,7 +159,12 @@ for (const [selector, body] of ruleBlocks(bundleCss)) {
   }
 }
 const withKind = tokens.map(({ name, value, selector }) => {
-  const entry = { name, value, kind: classify(name, value), definedIn: '_ds_bundle.css' };
+  const entry = {
+    name,
+    value,
+    kind: classify(name, value),
+    definedIn: '_ds_bundle.css',
+  };
   if (selector !== ':root') entry.scope = selector;
 
   return entry;
@@ -161,21 +185,26 @@ const label = (selector) =>
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(' ');
 
-const themes = [...new Set(withKind.map((token) => token.scope).filter(Boolean))]
+const themes = [
+  ...new Set(withKind.map((token) => token.scope).filter(Boolean)),
+]
   .filter((selector) => THEME_SELECTOR.test(selector))
   .map((selector) => ({ selector, label: label(selector) }));
 
 // ── fonts ────────────────────────────────────────────────────────────────
 const fontsCss = readFileSync(join(OUT, 'fonts', 'fonts.css'), 'utf8');
 const fonts = (fontsCss.match(/@font-face\s*\{[^}]*\}/g) ?? []).map((face) => {
-  const field = (name) => face.match(new RegExp(`${name}\\s*:\\s*([^;]+)`))?.[1].trim();
+  const field = (name) =>
+    face.match(new RegExp(`${name}\\s*:\\s*([^;]+)`))?.[1].trim();
 
   return {
     family: (field('font-family') ?? '').replace(/['"]/g, ''),
     weight: field('font-weight') ?? '400',
     style: field('font-style') ?? 'normal',
     cssPath: 'fonts/fonts.css',
-    files: [...face.matchAll(/url\("\.\/([^"]+)"\)/g)].map((match) => `fonts/${match[1]}`),
+    files: [...face.matchAll(/url\("\.\/([^"]+)"\)/g)].map(
+      (match) => `fonts/${match[1]}`,
+    ),
   };
 });
 
@@ -212,7 +241,10 @@ const manifest = {
   source: 'ids-design-system',
 };
 
-writeFileSync(join(OUT, '_ds_manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+writeFileSync(
+  join(OUT, '_ds_manifest.json'),
+  `${JSON.stringify(manifest, null, 2)}\n`,
+);
 
 const kinds = withKind.reduce((counts, token) => {
   counts[token.kind] = (counts[token.kind] ?? 0) + 1;
@@ -220,8 +252,10 @@ const kinds = withKind.reduce((counts, token) => {
   return counts;
 }, {});
 console.log(
-  `✓ _ds_manifest.json — ${components.length} component(s), ${cards.length} card(s)`
-    + ` (${cards.filter((card) => card.viewport).length} with a viewport), ${withKind.length} token(s)`
-    + ` [${Object.entries(kinds).map(([kind, count]) => `${kind} ${count}`).join(', ')}],`
-    + ` ${themes.length} theme(s), ${fonts.length} face(s)`,
+  `✓ _ds_manifest.json — ${components.length} component(s), ${cards.length} card(s)` +
+    ` (${cards.filter((card) => card.viewport).length} with a viewport), ${withKind.length} token(s)` +
+    ` [${Object.entries(kinds)
+      .map(([kind, count]) => `${kind} ${count}`)
+      .join(', ')}],` +
+    ` ${themes.length} theme(s), ${fonts.length} face(s)`,
 );

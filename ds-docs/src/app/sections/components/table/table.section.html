@@ -1,8 +1,7 @@
 <docs-section
   anchor="table"
   eyebrow="Components"
-  title="Table"
->
+  title="Table">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -23,12 +22,10 @@
     caption="Records"
     [data]="events"
     [columns]="defaultColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -36,8 +33,7 @@
 
     <ng-template
       let-row
-      dsCellTemplate="id"
-    >
+      dsCellTemplate="id">
       <span class="mono muted">
         {{ asEvent(row).id }}
       </span>
@@ -45,12 +41,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -61,7 +55,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Mark columns <code class="t-mono-inline"> sortable: true </code> and add
+    Mark columns <code class="t-mono-inline">sortable: true</code> and add
     <code class="t-mono-inline">
       sortMode="client"
     </code> to let the table
@@ -79,12 +73,10 @@
     sortMode="client"
     [data]="sortableRows"
     [columns]="sortableColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -106,8 +98,7 @@
           caption="Sortable idle"
           [data]="stateRow"
           [columns]="sortStateColumns"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -123,8 +114,7 @@
           sortDir="asc"
           [data]="stateRow"
           [columns]="sortStateColumns"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -140,8 +130,7 @@
           sortDir="desc"
           [data]="stateRow"
           [columns]="sortStateColumns"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -155,8 +144,7 @@
           caption="Header hover"
           [data]="stateRow"
           [columns]="sortStateColumns"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -170,12 +158,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Row tints on a <code class="t-mono-inline"> [rowInteractive] </code> table —
+    Row tints on a <code class="t-mono-inline">[rowInteractive]</code> table —
     hover and pressed only appear when rows are clickable, so a passive table
     stays static. Selected (checkbox column) and active (<code
       class="t-mono-inline"
-    >
-      [activeRowId] </code
+      >[activeRowId]</code
     >, the open detail row) persist regardless of pointer.
   </p>
 
@@ -187,8 +174,7 @@
           [data]="stateRow"
           [columns]="stateColumns"
           [rowInteractive]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -203,8 +189,7 @@
           [data]="stateRow"
           [columns]="stateColumns"
           [rowInteractive]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -220,8 +205,7 @@
           [columns]="stateColumns"
           [selectable]="true"
           [stickyHeader]="false"
-          [(selectedIds)]="stateSelectedIds"
-        />
+          [(selectedIds)]="stateSelectedIds" />
       </div>
 
       <div class="state-cell-label">
@@ -237,8 +221,7 @@
           [columns]="stateColumns"
           [rowInteractive]="true"
           [activeRowId]="stateRow[0].id"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -273,7 +256,7 @@
     reason the tint is: nothing should promise a click that does not happen.
   </p>
 
-  <div class="states states--cols-4">
+  <div class="states states--cols-1">
     <div class="state-cell">
       <div class="state-cell-stage state-cell-stage--tbl pin-cell-link">
         <ds-table
@@ -281,8 +264,7 @@
           [data]="stateRow"
           [columns]="linkCellColumns"
           [rowInteractive]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -354,8 +336,7 @@
     [data]="events"
     [columns]="linkColumns"
     [rowInteractive]="true"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Row selection · bulk-action bar
@@ -372,12 +353,10 @@
     [columns]="selectionColumns"
     [selectable]="true"
     [stickyHeader]="false"
-    [(selectedIds)]="bulkSelected"
-  >
+    [(selectedIds)]="bulkSelected">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -385,12 +364,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -400,8 +377,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      icon="archive"
-    >
+      icon="archive">
       Archive
     </ds-button>
 
@@ -410,8 +386,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      icon="download"
-    >
+      icon="download">
       Export
     </ds-button>
 
@@ -419,8 +394,7 @@
       bulk-actions
       color="neutral"
       variant="outline"
-      size="sm"
-    >
+      size="sm">
       Clear
     </ds-button>
   </ds-table>
@@ -434,7 +408,7 @@
     <code class="t-mono-inline">
       maxHeight="220px"
     </code> caps the scroll
-    region and <code class="t-mono-inline"> [stickyHeader]="true" </code> (the
+    region and <code class="t-mono-inline">[stickyHeader]="true"</code> (the
     default) pins the header inside it.
   </p>
 
@@ -443,12 +417,10 @@
     maxHeight="220px"
     [data]="longList"
     [columns]="selectionColumns"
-    [stickyHeader]="true"
-  >
+    [stickyHeader]="true">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -456,12 +428,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -486,8 +456,7 @@
     [data]="events"
     [columns]="loadingColumns"
     [bordered]="true"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Loading · skeleton
@@ -509,8 +478,7 @@
     [data]="events"
     [columns]="loadingColumns"
     [loading]="'skeleton'"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Loading · overlay
@@ -529,8 +497,7 @@
     [data]="events"
     [columns]="loadingColumns"
     [loading]="'overlay'"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Loading · let the table choose
@@ -541,7 +508,7 @@
       [loading]="true"
     </code> resolves the two above
     by the row count: skeleton while there is nothing on screen, overlay once
-    there is. <strong> Prefer it. </strong> Which treatment is right is not a
+    there is. <strong>Prefer it.</strong> Which treatment is right is not a
     preference — replacing visible rows with placeholders throws away what the
     reader is looking at, and dimming an empty card announces nothing about what
     is coming — and the table is the only place that holds both halves of the
@@ -567,8 +534,7 @@
           [data]="noRows"
           [columns]="loadingColumns"
           [loading]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -582,8 +548,7 @@
           [data]="events"
           [columns]="loadingColumns"
           [loading]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -606,7 +571,7 @@
   </div>
 
   <p class="block-desc t-s">
-    A single tertiary line in the <code class="t-mono-inline"> [empty] </code>
+    A single tertiary line in the <code class="t-mono-inline">[empty]</code>
     slot. Use when the empty state is transient or context-obvious.
   </p>
 
@@ -614,8 +579,7 @@
     caption="Records"
     [data]="noRows"
     [columns]="loadingColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <span empty>
       No records match your filters
     </span>
@@ -633,21 +597,18 @@
     caption="Records"
     [data]="noRows"
     [columns]="loadingColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ds-empty-state
       empty
       variant="none"
       icon="inbox"
       title="No records yet"
-      body="Create your first record to start tracking schedules, venues and capacity."
-    >
+      body="Create your first record to start tracking schedules, venues and capacity.">
       <ds-button
         actions
         variant="tonal"
         size="sm"
-        icon="plus"
-      >
+        icon="plus">
         New record
       </ds-button>
     </ds-empty-state>
@@ -665,21 +626,18 @@
     caption="Records"
     [data]="noRows"
     [columns]="loadingColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ds-empty-state
       empty
       variant="none"
       icon="search"
       title="No matches for your filters"
-      body="Try a broader query or clear the active filters to see every record."
-    >
+      body="Try a broader query or clear the active filters to see every record.">
       <ds-button
         actions
         color="neutral"
         variant="outline"
-        size="sm"
-      >
+        size="sm">
         Clear filters
       </ds-button>
     </ds-empty-state>
@@ -698,20 +656,17 @@
     caption="Records"
     [data]="noRows"
     [columns]="loadingColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ds-empty-state
       empty
       variant="error"
       title="Couldn't load records"
-      body="Network error — the request timed out after 30 seconds."
-    >
+      body="Network error — the request timed out after 30 seconds.">
       <ds-button
         actions
         variant="tonal"
         size="sm"
-        icon="refresh"
-      >
+        icon="refresh">
         Retry
       </ds-button>
     </ds-empty-state>
@@ -743,15 +698,13 @@
     [data]="noRows"
     [columns]="loadingColumns"
     [loading]="'overlay'"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ds-empty-state
       empty
       variant="none"
       icon="search"
       title="No matches for your filters"
-      body="This message is bound, and deliberately not shown while the load is in flight."
-    />
+      body="This message is bound, and deliberately not shown while the load is in flight." />
   </ds-table>
 
   <h3 class="block-title t-h4">
@@ -762,7 +715,7 @@
     <code class="t-mono-inline">
       density="compact"
     </code> tightens cell padding
-    and <code class="t-mono-inline"> [zebra]="true" </code> tints odd rows for
+    and <code class="t-mono-inline">[zebra]="true"</code> tints odd rows for
     spreadsheet-style scanning.
   </p>
 
@@ -772,12 +725,10 @@
     [data]="events"
     [columns]="defaultColumns"
     [zebra]="true"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -785,8 +736,7 @@
 
     <ng-template
       let-row
-      dsCellTemplate="id"
-    >
+      dsCellTemplate="id">
       <span class="mono muted">
         {{ asEvent(row).id }}
       </span>
@@ -794,12 +744,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -840,15 +788,12 @@
       [animateHeight]
     </code> tweens the body height
     between pages (page 3 has only two rows) instead of snapping. For
-    server-side paging, bind <code class="t-mono-inline"> [total] </code> to the
+    server-side paging, bind <code class="t-mono-inline">[total]</code> to the
     full row count and hand the table one page at a time — it then drives the
-    pager off <code class="t-mono-inline"> total </code> and skips its own
-    slicing. Add
-    <code class="t-mono-inline">
-      [scrollToTopOnPageChange]
-    </code> to scroll the
-    table back into view on a page change — handy when the pager sits below a
-    long table.
+    pager off <code class="t-mono-inline">total</code> and skips its own
+    slicing. Add <code class="t-mono-inline">[scrollToTopOnPageChange]</code> to
+    scroll the table back into view on a page change — handy when the pager sits
+    below a long table.
   </p>
 
   <ds-table
@@ -860,8 +805,7 @@
     [stickyFirstColumn]="true"
     [pageSize]="5"
     [animateHeight]="true"
-    [(selectedIds)]="projectSelected"
-  />
+    [(selectedIds)]="projectSelected" />
 
   <p class="block-desc t-s">
     Selected: {{ projectSelected().size }}
@@ -876,7 +820,7 @@
       [expandableRows]="true"
     </code> adds a leading
     chevron column. Clicking it toggles an inline panel below the row. Pass a
-    template via <code class="t-mono-inline"> [rowExpandTemplate] </code> to
+    template via <code class="t-mono-inline">[rowExpandTemplate]</code> to
     control the panel content. Expanded ids are two-way bindable via
     <code class="t-mono-inline">
       [(expandedIds)]
@@ -888,19 +832,13 @@
       [expandAllToggle]="true"
     </code> puts an
     expand-all chevron in the column header — page-scoped when paginating, the
-    same way select-all is.
-    <code class="t-mono-inline">
-      (rowExpanded)
-    </code> and
+    same way select-all is. <code class="t-mono-inline">(rowExpanded)</code> and
     <code class="t-mono-inline">
       (rowCollapsed)
     </code> report each row as it
     opens or closes, expand-all included, which is where panel content gets
-    lazy-loaded. Writing
-    <code class="t-mono-inline">
-      expandedIds
-    </code> yourself stays silent — you
-    already know.
+    lazy-loaded. Writing <code class="t-mono-inline">expandedIds</code> yourself
+    stays silent — you already know.
   </p>
 
   <ds-table
@@ -912,12 +850,10 @@
     [rowExpandTemplate]="rowExpand"
     [stickyHeader]="false"
     (rowExpanded)="onRowExpanded($event)"
-    (rowCollapsed)="onRowCollapsed($event)"
-  >
+    (rowCollapsed)="onRowCollapsed($event)">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -926,8 +862,7 @@
 
   <ng-template
     #rowExpand
-    let-row
-  >
+    let-row>
     <div class="expand-detail">
       <span class="expand-detail-label">
         Order ID
@@ -975,12 +910,10 @@
     [expandableRows]="true"
     [rowExpandTemplate]="rowExpand"
     [stickyHeader]="false"
-    [(expandedIds)]="singleExpanded"
-  >
+    [(expandedIds)]="singleExpanded">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -1007,10 +940,10 @@
     <code class="t-mono-inline">
       [activeRowId]
     </code> keeps that row
-    highlighted (plus <code class="t-mono-inline"> aria-current </code>) while
-    the drawer is open. Controls inside cells (checkboxes, menus) stop
-    propagation, so they never trigger the row click — and neither does
-    finishing a text selection, so cell values stay copyable by mouse.
+    highlighted (plus <code class="t-mono-inline">aria-current</code>) while the
+    drawer is open. Controls inside cells (checkboxes, menus) stop propagation,
+    so they never trigger the row click — and neither does finishing a text
+    selection, so cell values stay copyable by mouse.
   </p>
 
   <ds-table
@@ -1020,13 +953,11 @@
     [rowInteractive]="true"
     [activeRowId]="detailOpen() ? (detailRow()?.id ?? null) : null"
     [stickyHeader]="false"
-    (rowClicked)="openDetail($event)"
-  />
+    (rowClicked)="openDetail($event)" />
 
   <ds-drawer
     [title]="detailRow()?.project ?? 'Record'"
-    [(open)]="detailOpen"
-  >
+    [(open)]="detailOpen">
     <ng-container drawer-body>
       @if (detailRow(); as row) {
         <div class="expand-detail">
@@ -1061,8 +992,7 @@
           <span class="expand-detail-value">
             <ds-badge
               [status]="row.status"
-              [withDot]="true"
-            >
+              [withDot]="true">
               {{ row.statusLabel }}
             </ds-badge>
           </span>
@@ -1120,7 +1050,7 @@
     <code class="t-mono-inline">
       [rowInteractive]
     </code> table a menu click
-    never fires <code class="t-mono-inline"> (rowClicked) </code>. A hand-built
+    never fires <code class="t-mono-inline">(rowClicked)</code>. A hand-built
     action column with no visible header should give its
     <code class="t-mono-inline">
       TableColumn
@@ -1139,8 +1069,7 @@
     [rowActions]="rowActions"
     [stickyHeader]="false"
     (rowClicked)="lastRowClick.set($event.project)"
-    (rowActionSelected)="onRowAction($event)"
-  />
+    (rowActionSelected)="onRowAction($event)" />
 
   <p class="block-desc t-s">
     Row clicked: {{ lastRowClick() ?? '—' }} · Action:
@@ -1152,7 +1081,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    The header <code class="t-mono-inline"> Columns </code> button opens a panel
+    The header <code class="t-mono-inline">Columns</code> button opens a panel
     that toggles visibility for
     <code class="t-mono-inline">
       hideable: true
@@ -1165,12 +1094,10 @@
     </code> is the initial state, the
     last visible column is locked). With
     <code class="t-mono-inline">
-      [reorderableColumns]="true"
-    </code> each row
-    gains a drag handle and up/down buttons — order is two-way bindable via
-    <code class="t-mono-inline">
-      [(columnOrder)]
-    </code>, and
+      dsTableColumns [reorderableColumns]="true"
+    </code>
+    each row gains a drag handle and up/down buttons — order is two-way bindable
+    via <code class="t-mono-inline"> [(columnOrder)] </code>, and
     <code class="t-mono-inline">
       Reset to default
     </code> clears both.
@@ -1178,11 +1105,11 @@
 
   <ds-table
     caption="Records"
+    dsTableColumns
     [data]="events"
     [columns]="pickerColumns"
     [reorderableColumns]="true"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Resizable columns
@@ -1190,9 +1117,9 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      [resizableColumns]="true"
-    </code> adds a drag
-    handle to each header's right edge. Widths are two-way bindable via
+      dsTableResize
+    </code> adds a drag handle to
+    each header's right edge. Widths are two-way bindable via
     <code class="t-mono-inline">
       [(columnWidths)]
     </code> (a
@@ -1213,9 +1140,9 @@
     redistributes whatever the dragged column gives up and columns nobody
     touched visibly jump. Measuring them all once, at the first grab, keeps the
     auto-sized geometry instead of losing it. The consequence to expect: if you
-    persist <code class="t-mono-inline"> [(columnWidths)] </code>, one drag
-    fills the map for the whole row. That is the saved layout, not a leak — and
-    a second drag adds nothing further.
+    persist <code class="t-mono-inline">[(columnWidths)]</code>, one drag fills
+    the map for the whole row. That is the saved layout, not a leak — and a
+    second drag adds nothing further.
   </p>
 
   <p class="block-desc t-s">
@@ -1225,7 +1152,7 @@
     drag control that only answers a pointer makes a resizable column unusable
     without a mouse, so the handle is focusable: Arrow keys step by 16px,
     PageUp/PageDown by 64px, and Home hands the column back to automatic sizing.
-    It is a <code class="t-mono-inline"> role="separator" </code>, which ARIA
+    It is a <code class="t-mono-inline">role="separator"</code>, which ARIA
     reads as a range widget, so while it holds focus it reports
     <code class="t-mono-inline">
       aria-valuenow
@@ -1247,15 +1174,13 @@
 
   <ds-table
     caption="Records"
+    dsTableResize
     [data]="events"
     [columns]="defaultColumns"
-    [resizableColumns]="true"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -1263,8 +1188,7 @@
 
     <ng-template
       let-row
-      dsCellTemplate="id"
-    >
+      dsCellTemplate="id">
       <span class="mono muted">
         {{ asEvent(row).id }}
       </span>
@@ -1272,12 +1196,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -1288,7 +1210,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Columns marked <code class="t-mono-inline"> editable: true </code>
+    Columns marked <code class="t-mono-inline">editable: true</code>
     (Record, Venue, Capacity here) turn into an input on double-click; Enter or
     blur commits, Escape cancels. The table stays data-agnostic — it emits
     <code class="t-mono-inline">
@@ -1305,8 +1227,7 @@
     [data]="editRows()"
     [columns]="editColumns"
     [stickyHeader]="false"
-    (cellEdited)="onCellEdited($event)"
-  />
+    (cellEdited)="onCellEdited($event)" />
 
   <h3 class="block-title t-h4">
     Persisted layout &amp; export
@@ -1326,9 +1247,9 @@
     hide one, reload the page, and it stays. Without a key nothing is stored —
     two tables would otherwise overwrite each other.
     <code class="t-mono-inline">
-      [exportButton]="true"
-    </code> renders the CSV
-    button; a server-paged table passes
+      dsTableExport
+    </code> renders the CSV button; a
+    server-paged table passes
     <code class="t-mono-inline">
       [exportFetcher]
     </code> so the export covers
@@ -1339,13 +1260,13 @@
     caption="Projects"
     storageKey="docs-demo-projects"
     sortMode="client"
+    dsTableExport
+    dsTableColumns
+    dsTableResize
     [data]="projectRows"
     [columns]="projectColumns"
     [persistLayout]="true"
-    [exportButton]="true"
-    [reorderableColumns]="true"
-    [resizableColumns]="true"
-  />
+    [reorderableColumns]="true" />
 
   <p class="block-desc t-s">
     <strong>
@@ -1362,13 +1283,10 @@
     right edge that still swallowed the horizontal swipe used to scroll the
     table. It now stands down, and width moves into the column panel: every row
     gets − / + / Fit alongside its visibility and order controls, and the panel
-    itself opens as a
-    <code class="t-mono-inline">
-      ds-bottom-sheet
-    </code> instead of a popover.
-    The steps are the handle's own keyboard steps, so all three routes — drag,
-    arrows, buttons — change width by the same amount. The buttons show on
-    desktop too; there the handle stays the primary way.
+    itself opens as a <code class="t-mono-inline">ds-bottom-sheet</code> instead
+    of a popover. The steps are the handle's own keyboard steps, so all three
+    routes — drag, arrows, buttons — change width by the same amount. The
+    buttons show on desktop too; there the handle stays the primary way.
   </p>
 
   <h3 class="block-title t-h4">
@@ -1386,7 +1304,7 @@
     and the layout is entirely yours; the row's flex then has a single child and
     stays out of the way. It disappears when nothing filled it and
     <code class="t-mono-inline">
-      exportButton
+      dsTableExport
     </code> is off, so a table that
     uses neither is unchanged. Filters that belong to the PAGE still belong in a
     <code class="t-mono-inline">
@@ -1428,8 +1346,9 @@
     </code> call, the download, the
     in-flight state and the live-region announcement. Leave
     <code class="t-mono-inline">
-      exportButton
-    </code> off and drive it yourself.
+      dsTableExport
+    </code> off and drive it
+    yourself.
   </p>
 
   <ds-table
@@ -1438,15 +1357,14 @@
     sortMode="client"
     [data]="projectRows"
     [columns]="projectColumns"
-    [exportFetcher]="slowExportFetcher"
-  >
+    [dsTableExport]="false"
+    [exportFetcher]="slowExportFetcher">
     <ds-search
       toolbar
       size="sm"
       placeholder="Search projects…"
       ariaLabel="Search projects"
-      [debounce]="300"
-    />
+      [debounce]="300" />
 
     <ds-button
       toolbar
@@ -1455,8 +1373,7 @@
       size="sm"
       icon="download"
       [loading]="toolbarTable.exporting()"
-      (pressed)="toolbarTable.runExport()"
-    >
+      (pressed)="toolbarTable.runExport()">
       Export
     </ds-button>
   </ds-table>
@@ -1486,10 +1403,9 @@
 
   <ds-table
     caption="Projects"
+    dsTableResize
     [data]="projectRows"
-    [columns]="fitColumns"
-    [resizableColumns]="true"
-  />
+    [columns]="fitColumns" />
 
   <h3 class="block-title t-h4">
     Server sort · a host that answers with its own default
@@ -1507,7 +1423,7 @@
     <code class="t-mono-inline">
       (sortChange)
     </code> is where it hears about a
-    click. This host's default is <strong> Owner descending </strong>, and it
+    click. This host's default is <strong>Owner descending</strong>, and it
     answers a cleared sort by returning to it — the case that used to leave the
     header marking nothing over sorted rows.
   </p>
@@ -1530,8 +1446,7 @@
     [columns]="serverSortColumns"
     [sortKey]="serverSortKey()"
     [sortDir]="serverSortDir()"
-    (sortChange)="onServerSort($event)"
-  />
+    (sortChange)="onServerSort($event)" />
 
   <h3 class="block-title t-h4">
     The same thing two-way, when the host has no opinion to defend
@@ -1586,15 +1501,14 @@
     [data]="twoWaySortedRows()"
     [columns]="serverSortColumns"
     [(sortKey)]="twoWaySortKey"
-    [(sortDir)]="twoWaySortDir"
-  />
+    [(sortDir)]="twoWaySortDir" />
 
   <h3 class="block-title t-h4">
     Column filters
   </h3>
 
   <p class="block-desc t-s">
-    A column marked <code class="t-mono-inline"> filter: 'set' </code> gets a
+    A column marked <code class="t-mono-inline">filter: 'set'</code> gets a
     funnel button in its header — a searchable checkbox list of the column's
     distinct values (here Venue and Status). Unchecking narrows the rows; the
     funnel highlights while a filter is active. State is two-way bindable via
@@ -1610,12 +1524,10 @@
     caption="Records"
     [data]="events"
     [columns]="filterColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -1630,7 +1542,7 @@
     <code class="t-mono-inline">
       truncate: true
     </code> ellipsis-clips a text
-    column at its <code class="t-mono-inline"> width </code> (240px when unset).
+    column at its <code class="t-mono-inline">width</code> (240px when unset).
     The full value sits in the hover tooltip, and clicking a clipped cell opens
     it in a popover — an unclipped cell passes the click through to the row.
   </p>
@@ -1648,7 +1560,7 @@
       &lt;td&gt;
     </code> would swallow the row click
     on an interactive table. Within such a column it does look deeper than the
-    cell itself — a <code class="t-mono-inline"> dsCellTemplate </code> puts the
+    cell itself — a <code class="t-mono-inline">dsCellTemplate</code> puts the
     ellipsis on a descendant, so testing only the wrapper would miss it.
   </p>
 
@@ -1656,8 +1568,7 @@
     caption="Records"
     [data]="truncateRows"
     [columns]="truncateColumns"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Sticky horizontal scrollbar
@@ -1678,8 +1589,7 @@
     [data]="longList"
     [columns]="wideColumns"
     [stickyScrollbar]="true"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     CSV export
@@ -1700,8 +1610,7 @@
       variant="outline"
       size="sm"
       icon="download"
-      (pressed)="exportTable.exportCsv('records.csv')"
-    >
+      (pressed)="exportTable.exportCsv('records.csv')">
       Export CSV
     </ds-button>
   </div>
@@ -1711,12 +1620,10 @@
     caption="Records"
     [data]="events"
     [columns]="defaultColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -1724,8 +1631,7 @@
 
     <ng-template
       let-row
-      dsCellTemplate="id"
-    >
+      dsCellTemplate="id">
       <span class="mono muted">
         {{ asEvent(row).id }}
       </span>
@@ -1733,12 +1639,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -1762,7 +1666,7 @@
     </code>. That is the right
     default because a paged table filtering locally would filter what the server
     already filtered, over a checklist offering only the values on THIS page.
-    Declare <code class="t-mono-inline"> filterMode="client" </code> when the
+    Declare <code class="t-mono-inline">filterMode="client"</code> when the
     table holds every row and should filter them itself — there is a dev warning
     for the giveaway case, a filterable column on a table that binds no `total`
     and declares no mode.
@@ -1783,8 +1687,7 @@
   </p>
 
   <pre
-    class="t-mono-block"
-  ><code>&lt;ng-template dsHeaderFilter="opened" [active]="!!range()" let-close="close"&gt;
+    class="t-mono-block"><code>&lt;ng-template dsHeaderFilter="opened" [active]="!!range()" let-close="close"&gt;
   &lt;ds-date-picker mode="range" [(value)]="range" /&gt;
   &lt;ds-button size="sm" (pressed)="apply(); close()"&gt;Apply&lt;/ds-button&gt;
 &lt;/ng-template&gt;</code></pre>
@@ -1802,7 +1705,7 @@
     Owner, ascending" and "Showing 1–25 of 240", with loading taking precedence
     while it lasts — announcing a new sort order over rows that are still being
     replaced describes a state the reader cannot inspect. Both strings are
-    inputs (<code class="t-mono-inline"> sortAnnouncement </code>,
+    inputs (<code class="t-mono-inline">sortAnnouncement</code>,
     <code class="t-mono-inline">
       rangeAnnouncement
     </code>) taking the facts and
@@ -1858,8 +1761,7 @@
     [virtualRowSize]="44"
     [selectable]="true"
     [zebra]="true"
-    [stickyFirstColumn]="true"
-  />
+    [stickyFirstColumn]="true" />
 
   <h3 class="block-title t-h4">
     Lazy loading
@@ -1910,6 +1812,5 @@
     [virtualScroll]="true"
     [virtualRowSize]="44"
     [zebra]="true"
-    (lazyLoad)="onLazyLoad($event)"
-  />
+    (lazyLoad)="onLazyLoad($event)" />
 </docs-section>

@@ -2,8 +2,7 @@
   anchor="segmented"
   eyebrow="Components"
   title="Segmented &amp; button group"
-  [apiKeys]="['button-group']"
->
+  [apiKeys]="['button-group']">
   <span lede>
     Segmented control for switching between mutually exclusive views; button
     group for toggling related inline actions.
@@ -22,8 +21,7 @@
       <ds-segmented
         ariaLabel="View mode"
         [options]="viewOptions"
-        [(value)]="view"
-      />
+        [(value)]="view" />
 
       <p class="t-s">
         Selected: {{ view() }}
@@ -33,8 +31,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="button-group"
-  >
+    data-for="button-group">
     Button group
   </h3>
 
@@ -46,22 +43,19 @@
     <ds-button-group>
       <ds-button
         color="neutral"
-        variant="outline"
-      >
+        variant="outline">
         Bold
       </ds-button>
 
       <ds-button
         color="neutral"
-        variant="outline"
-      >
+        variant="outline">
         Italic
       </ds-button>
 
       <ds-button
         color="neutral"
-        variant="outline"
-      >
+        variant="outline">
         Underline
       </ds-button>
     </ds-button-group>

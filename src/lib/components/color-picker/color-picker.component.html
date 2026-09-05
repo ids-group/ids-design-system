@@ -8,12 +8,10 @@
   [attr.aria-invalid]="invalidResolved() ? 'true' : null"
   [attr.aria-describedby]="hintId()"
   [disabled]="isDisabled()"
-  (click)="toggle()"
->
+  (click)="toggle()">
   <span
     class="swatch"
-    [style.background-color]="displayHex()"
-  >
+    [style.background-color]="displayHex()">
   </span>
 
   <span class="hex">
@@ -23,8 +21,7 @@
   <ds-icon
     class="chevron"
     name="chevronDown"
-    [size]="16"
-  />
+    [size]="16" />
 </button>
 
 <ds-field-message
@@ -32,15 +29,13 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()"
-/>
+  [reserve]="reserveMessageResolved()" />
 
 <ng-template #panel>
   <div
     class="panel"
     role="dialog"
-    [attr.aria-label]="ariaLabel()"
-  >
+    [attr.aria-label]="ariaLabel()">
     <div
       class="sv-plane"
       tabindex="0"
@@ -50,13 +45,11 @@
       (pointermove)="onSvPointerMove($event)"
       (pointerup)="onSvPointerUp($event)"
       (pointercancel)="onSvPointerUp($event)"
-      (keydown)="onSvKeydown($event)"
-    >
+      (keydown)="onSvKeydown($event)">
       <span
         class="sv-thumb"
         [style.left.%]="svThumb().left"
-        [style.top.%]="svThumb().top"
-      >
+        [style.top.%]="svThumb().top">
       </span>
     </div>
 
@@ -72,20 +65,17 @@
       (pointermove)="onHuePointerMove($event)"
       (pointerup)="onHuePointerUp($event)"
       (pointercancel)="onHuePointerUp($event)"
-      (keydown)="onHueKeydown($event)"
-    >
+      (keydown)="onHueKeydown($event)">
       <span
         class="hue-thumb"
-        [style.left.%]="huePercent()"
-      >
+        [style.left.%]="huePercent()">
       </span>
     </div>
 
     <div class="fields">
       <span
         class="preview"
-        [style.background-color]="displayHex()"
-      >
+        [style.background-color]="displayHex()">
       </span>
 
       <input
@@ -95,15 +85,13 @@
         autocomplete="off"
         aria-label="Hex colour value"
         [value]="displayHex()"
-        (input)="onHexInput($event)"
-      />
+        (input)="onHexInput($event)" />
     </div>
 
     <div
       class="presets"
       role="group"
-      aria-label="Preset colours"
-    >
+      aria-label="Preset colours">
       @for (preset of presets(); track preset) {
         <button
           type="button"
@@ -112,8 +100,7 @@
           [style.background-color]="preset"
           [attr.aria-label]="preset"
           [attr.aria-pressed]="isSelected(preset)"
-          (click)="selectPreset(preset)"
-        >
+          (click)="selectPreset(preset)">
         </button>
       }
     </div>

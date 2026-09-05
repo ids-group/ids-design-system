@@ -17,6 +17,29 @@ npm start            # serve the docs app
 npm run build:docs   # build the docs app
 ```
 
+## A `>` alone on a line is deliberate — do not tidy it away
+
+`bracketSameLine` keeps the closing bracket of a multi-attribute tag on the last attribute line, so a
+lone `>` is not prettier's normal line-breaking. Where one survives — 57 sites, all of them inline
+`<code>`, `<span>` or `<strong>` — it is prettier protecting RENDERED whitespace:
+
+```html
+Entrance played with
+<code class="t-mono-inline">
+  {{ preset() }}
+</code
+>.
+```
+
+`<code>` is inline, so a break between `</code>` and the `.` would print a space before the period.
+Prettier hides the break inside the tag instead, where whitespace is not rendered. Close it by hand
+and the next `fix:all` puts it back; force it shut and the page gains a gap before its punctuation.
+
+The setting that would remove the last 57 is `htmlWhitespaceSensitivity: "ignore"`, and it costs more
+than it buys: measured over ds-docs it drops the count 741 → 684 on its own, and pushes 101 pieces of
+punctuation onto their own line — the very space it was avoiding. `bracketSameLine` alone took the
+same 741 down to 57 and rendered nothing differently.
+
 ## Adding a component means adding an entry point
 
 Every component is its own ng-packagr entry point, so a new one needs three things and the build
@@ -170,6 +193,16 @@ judgment half is yours.
   that we fixed a manifest, rewrote a note, or re-ran our own items. Correct the file so it reads
   as though it had always been right, and ship that — the reader wants the current instruction, not
   its history. Three releases in a row carried an entry of this shape before it was named here.
+
+  When a published record turns out to have described something that never worked, one question
+  settles it: **does anything the consumer DOES change?** If yes, it is an item with an `action` in
+  the current release, in the library's voice — "the ring had no gap and has one now; if you set
+  `--focus-ring-inner` to a colour to get one back, remove it". If no, say nothing, and correct the
+  old file quietly if it still misleads. What never helps is a line announcing that our earlier note
+  was wrong: where the release fixes the thing, the new entry already carries everything the reader
+  acts on, and where it does not, the people at risk are the ones still on the old version, who are
+  not reading this release either.
+
 - **Decision archaeology.** How we chose, what we first believed, which alternative we
   rejected, that an earlier note of ours was wrong, that a note was added after the release.
   The line: describing the DEFECT is what a release note is for and stays — "an override

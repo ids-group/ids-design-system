@@ -6,6 +6,5 @@
     [dismissible]="entry.dismissible"
     [action]="entry.action ?? null"
     [class.leaving]="isLeaving(entry.id)"
-    (closed)="remove(entry.id)"
-  />
+    (closed)="remove(entry.id)" />
 }

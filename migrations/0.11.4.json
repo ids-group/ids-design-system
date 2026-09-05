@@ -3,9 +3,9 @@
   "items": [
     {
       "id": "toast-promise-messages-generic",
-      "kind": "type-rename",
+      "kind": "behavior",
       "old": "ToastPromiseMessages",
-      "new": "ToastPromiseMessages<T>",
+      "new": null,
       "appliesWhen": "You name the type explicitly, e.g. in a variable or a helper that builds the messages object. Calling toast.promise(p, {...}) inline needs no change - T is inferred.",
       "pitfall": "The parameter defaults to unknown, so an un-parameterised annotation still compiles - and still hands your success callback `unknown`, which is the defect. Passing the type is what fixes it, not the compile.",
       "searchHints": [
@@ -17,13 +17,13 @@
       ],
       "verify": "A success callback receives the resolved value with its real type: toast.promise(loadOrder(), { success: (order) => `Saved #${order.id}` }) compiles without a cast.",
       "restore": null,
-      "note": "promise<T> declared a type parameter and then threw it away, because the messages interface hardcoded unknown. Every call site that wanted the resolved value had to cast.",
+      "note": "promise<T> declared a type parameter and then threw it away, because the messages interface hardcoded unknown. Every call site that wanted the resolved value had to cast. A widened exported type, not a rename: the bare name still compiles (T defaults to unknown), but a typed success/error callback against the bare annotation stops compiling — annotate with your concrete T.",
       "action": "Annotate as ToastPromiseMessages<T> where you name the type; inline object literals need no change."
     },
     {
       "id": "toast-message-input-renamed-body",
       "kind": "input-rename",
-      "old": "message",
+      "old": "ds-toast[message]",
       "new": "body",
       "appliesWhen": "You render <ds-toast> yourself and bind message. ToastService callers pass body already and change nothing.",
       "pitfall": "An unknown input on a component is a template error under strictTemplates, but a plain attribute is not - message=\"…\" without brackets keeps compiling and silently renders an empty toast.",
@@ -240,8 +240,28 @@
     "A selected ds-list-item or ds-tree node now retints its leading icon along with its label, where the icon stayed on its resting colour. Two new hooks control it if you want them apart: --ds-list-item-selected-icon-color and --ds-tree-row-selected-icon-color, each defaulting to the selected label colour. NO ACTION.",
     "ds-avatar-group and ds-button-group match their children as the direct child rather than by tag name. Computed output in an ordinary Angular application is unchanged — this only restores the avatar overlap and ring, and the joined buttons’ overlap and flattened radii, in a build that registers the library as custom elements, where a nested tag has to be renamed and a tag selector matched none of the children. NO ACTION.",
     "ds-split-button hovers with --accent-hover instead of the family’s readable on-tint colour, which was never meant as a background and left the label near-unreadable inside a status zone. The hover now follows the rest state instead of jumping to another hue. --ds-split-button-bg-hover-color still overrides it. NO ACTION.",
-    "A ds-table loading scrim starts at the measured header height instead of an assumed 40px, so it no longer cuts into the header at the default density nor leaves the first row showing through it under [data-density=\"ultra-compact\"]. It lands correctly at any density and any header font size you set. --ds-table-head-h still overrides the value, which you should no longer need. NO ACTION.",
-    "A toast no longer sits under a modal, drawer, confirm or bottom sheet opened after it, so its action button stays reachable. Raising --layer-toast never fixed this and could not: every overlay host lives in the browser’s top layer, which paints strictly in the order hosts were shown and ignores z-index and stacking contexts altogether. The library re-shows the toast host itself now. If you raised --layer-toast or --layer-tooltip to work around this, that override was doing nothing and can go. NO ACTION otherwise."
+    "A ds-table loading scrim starts at the measured header height instead of an assumed 40px, so it no longer cuts into the header at the default density nor leaves the first row showing through it under [data-density=\"ultra-compact\"]. It lands correctly at any density and any header font size you set. --ds-table-head-h still overrides the value, which you should no longer need for the scrim (delete list: table-head-h-scrim-compensation). NO ACTION otherwise.",
+    "A toast no longer sits under a modal, drawer, confirm or bottom sheet opened after it, so its action button stays reachable. Raising --layer-toast never fixed this and could not: every overlay host lives in the browser’s top layer, which paints strictly in the order hosts were shown and ignores z-index and stacking contexts altogether. The library re-shows the toast host itself now. If you raised --layer-toast or --layer-tooltip to work around this, that override was doing nothing and can go (delete list: layer-toast-tooltip-overrides). NO ACTION otherwise."
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "layer-toast-tooltip-overrides",
+      "surface": "style",
+      "find": [
+        "--layer-toast",
+        "--layer-tooltip"
+      ],
+      "why": "Raising these never fixed toast-under-modal: overlay hosts are top-layer popovers, painting in show order and ignoring z-index; the library re-shows the toast host itself now. A layer-scale retune for your own stacking, or for browsers without popover support, is still load-bearing and stays.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "table-head-h-scrim-compensation",
+      "surface": "style",
+      "find": [
+        "--ds-table-head-h"
+      ],
+      "why": "The loading scrim now measures the real header height; an override added to stop the scrim cutting into the header compensates for nothing. Sizing the header itself with this token is its normal use and stays.",
+      "replaceWith": "nothing"
+    }
+  ]
 }

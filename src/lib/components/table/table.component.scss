@@ -1,11 +1,28 @@
+@use '../../styles/check-box' as check-box;
+@use '../../styles/focus' as focus;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
 
 // Positioned to contain the absolute `.visually-hidden` nodes below; without it they resolve against
 // the initial containing block and grow the consuming PAGE's root scroller into a second scrollbar.
 :host {
+  @include check-box.resolvers;
+
   display: block;
   position: relative;
+}
+
+// The ring is stated here rather than inside the shared box, because a control WITH a shell — every
+// ds-checkbox — has that shell ring for it, and a second ring in the mixin is one the shell then has
+// to suppress. A table cell has no shell, so this is the only place it can come from. (It did not
+// previously draw twice: Angular's encapsulation attribute makes the shell's suppression outrank the
+// mixin's ring, so the two never tied. The move is about where the rule belongs, not a repair.)
+.check {
+  @include check-box.box;
+
+  &:focus-visible {
+    @include focus.ring;
+  }
 }
 
 .visually-hidden {
@@ -26,6 +43,10 @@
 
   width: 100%;
   overflow: auto hidden;
+
+  // Rows and header buttons sit flush against this box, so a ring drawn outward is eaten.
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+
   -webkit-overflow-scrolling: touch;
   background: var(--surface-default);
   box-sizing: border-box;
@@ -93,7 +114,7 @@
      line IS the focus indicator here, and the outline is dropped rather than
      doubled. */
   &:focus-visible {
-    outline: none;
+    @include focus.own-indicator;
 
     &::after {
       width: var(--border-width-strong);
@@ -209,8 +230,8 @@
       }
 
       &:focus-visible {
-        outline: var(--border-width-strong, 2px) solid var(--accent);
-        outline-offset: var(--focus-ring-offset);
+        @include focus.ring;
+
         border-radius: var(--radius-sm);
       }
     }
@@ -343,8 +364,7 @@
       }
 
       &.clickable:focus-visible {
-        outline: var(--border-width-strong, 2px) solid var(--accent);
-        outline-offset: -2px;
+        @include focus.ring(calc(-1 * var(--focus-ring-width)));
       }
     }
 
@@ -405,8 +425,9 @@
     }
 
     &:focus-visible {
-      outline: var(--border-width-strong, 2px) solid var(--_table-icon-btn-focus-color);
-      outline-offset: var(--focus-ring-offset);
+      --focus-ring-color: var(--_table-icon-btn-focus-color);
+
+      @include focus.ring;
     }
   }
 
@@ -616,8 +637,9 @@
   background-color: var(--surface-default);
 
   &:focus-visible {
-    outline: 0;
     border-color: var(--accent);
+
+    @include focus.ring;
   }
 }
 
@@ -675,8 +697,9 @@
   color: var(--text-primary);
   background-color: var(--surface-default);
 
+  // The accent border is this field's resting chrome, so it says nothing about focus.
   &:focus-visible {
-    outline: 0;
+    @include focus.ring;
   }
 }
 

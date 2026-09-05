@@ -1,8 +1,7 @@
 <docs-section
   anchor="field-group"
   eyebrow="Components"
-  title="Field group"
->
+  title="Field group">
   <span lede>
     Several controls, one bordered box — scope + search, amount + unit, input +
     action.
@@ -30,14 +29,12 @@
     <ds-field-group>
       <ds-select
         [options]="scopes"
-        [(value)]="scope"
-      />
+        [(value)]="scope" />
 
       <ds-input
         grow
         placeholder="Search…"
-        [(value)]="term"
-      />
+        [(value)]="term" />
     </ds-field-group>
   </div>
 
@@ -50,7 +47,7 @@
     <code class="t-mono-inline">
       ds-button
     </code> at the end is the same
-    mechanism as a <code class="t-mono-inline"> ds-select </code> at the start.
+    mechanism as a <code class="t-mono-inline">ds-select</code> at the start.
   </p>
 
   <div class="demo-row">
@@ -58,8 +55,7 @@
       <ds-input
         grow
         placeholder="Search…"
-        [(value)]="term"
-      />
+        [(value)]="term" />
 
       <ds-button variant="ghost">
         Go
@@ -70,13 +66,11 @@
       <ds-input
         grow
         placeholder="0"
-        [(value)]="amount"
-      />
+        [(value)]="amount" />
 
       <ds-select
         [options]="units"
-        [(value)]="unit"
-      />
+        [(value)]="unit" />
     </ds-field-group>
   </div>
 
@@ -107,8 +101,8 @@
     <code class="t-mono-inline">
       ds-number-stepper
     </code> (already a composite
-    of its own) or <code class="t-mono-inline"> ds-multi-select </code> (its
-    chips wrap, which a fixed-height row cannot take).
+    of its own) or <code class="t-mono-inline">ds-multi-select</code> (its chips
+    wrap, which a fixed-height row cannot take).
   </p>
 
   <div class="demo-row">
@@ -116,8 +110,7 @@
       <ds-search
         grow
         placeholder="Quick find"
-        [(value)]="quickFind"
-      />
+        [(value)]="quickFind" />
 
       <ds-date-picker [(value)]="since" />
     </ds-field-group>
@@ -142,43 +135,36 @@
     <ds-field-group size="sm">
       <ds-select
         [options]="scopes"
-        [(value)]="scope"
-      />
+        [(value)]="scope" />
 
       <ds-input
         grow
         placeholder="Small"
-        [(value)]="term"
-      />
+        [(value)]="term" />
     </ds-field-group>
 
     <ds-field-group size="lg">
       <ds-select
         [options]="scopes"
-        [(value)]="scope"
-      />
+        [(value)]="scope" />
 
       <ds-input
         grow
         placeholder="Large"
-        [(value)]="term"
-      />
+        [(value)]="term" />
     </ds-field-group>
 
     <ds-field-group
       [invalid]="true"
-      [fullWidth]="true"
-    >
+      [fullWidth]="true">
       <ds-select
         [options]="scopes"
-        [(value)]="scope"
-      />
+        [(value)]="scope" />
 
       <ds-input
         grow
         placeholder="Full width, in error"
-        [(value)]="invalidTerm"
-      />
+        [(value)]="invalidTerm" />
     </ds-field-group>
   </div>
 

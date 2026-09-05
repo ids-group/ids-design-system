@@ -1,8 +1,7 @@
 <docs-section
   anchor="tree"
   eyebrow="Components"
-  title="Tree view"
->
+  title="Tree view">
   <span lede>
     Hierarchical node tree for navigating nested structures such as file
     systems, category trees, and organisation charts.
@@ -22,8 +21,7 @@
       [nodes]="nodes"
       [(expandedIds)]="expanded"
       [(selectedId)]="selected"
-      (nodeSelected)="onSelect($event)"
-    />
+      (nodeSelected)="onSelect($event)" />
 
     <p class="block-desc t-s">
       Selected: {{ selected() }}
@@ -59,8 +57,7 @@
       <div class="state-cell-stage pin-selected">
         <ds-tree
           [nodes]="singleNode"
-          [selectedId]="'node'"
-        />
+          [selectedId]="'node'" />
       </div>
 
       <div class="state-cell-label">

@@ -152,29 +152,6 @@
       "restore": null
     },
     {
-      "id": "trigger-display-compact-renamed",
-      "kind": "value-remap",
-      "old": "triggerDisplay=\"compact\"",
-      "new": "triggerDisplay=\"count\"",
-      "map": {
-        "compact": "count"
-      },
-      "action": "Replace the value `compact` with `count`.",
-      "note": "A third value, `labels`, now sits beside it and names the selection instead of counting it, so the old name no longer said which of the two it was.",
-      "appliesWhen": "You set triggerDisplay on a ds-multi-select. The input shipped inside this same unreleased block, so only work in flight is affected.",
-      "pitfall": "None — the rendering of `count` is exactly what `compact` did.",
-      "searchHints": [
-        "triggerDisplay"
-      ],
-      "surface": "template",
-      "detect": [
-        "triggerDisplay=\"compact\"",
-        "triggerDisplay: 'compact'"
-      ],
-      "verify": "The trigger still shows a caption and a count badge.",
-      "restore": null
-    },
-    {
       "id": "autocomplete-options-element-type-widened",
       "kind": "behavior",
       "old": "ds-autocomplete [options] typed readonly AutocompleteOption<T>[]",

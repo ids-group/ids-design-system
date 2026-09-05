@@ -40,8 +40,7 @@
                   @if (p.required) {
                     <span
                       class="req"
-                      title="required"
-                    >
+                      title="required">
                       *
                     </span>
                   }
@@ -56,8 +55,7 @@
                 <td>
                   <ng-container
                     [ngTemplateOutlet]="typeCell"
-                    [ngTemplateOutletContext]="{ $implicit: p }"
-                  />
+                    [ngTemplateOutletContext]="{ $implicit: p }" />
                 </td>
 
                 <td>
@@ -308,8 +306,7 @@
 
 <ng-template
   #typeCell
-  let-p
->
+  let-p>
   @if (p.union) {
     <span class="uni">
       @for (v of p.union; track v) {

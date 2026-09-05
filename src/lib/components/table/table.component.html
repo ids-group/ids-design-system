@@ -3,17 +3,7 @@
     <ng-content select="[toolbar]"></ng-content>
   </div>
 
-  @if (exportButton()) {
-    <ds-button
-      color="neutral"
-      variant="outline"
-      size="sm"
-      [disabled]="exporting()"
-      (pressed)="runExport()"
-    >
-      {{ exporting() ? 'Preparing…' : 'Export CSV' }}
-    </ds-button>
-  }
+  <ng-container #toolbarAnchor />
 </div>
 
 <!-- Wraps the SCROLL CONTAINER, not the table inside it: the scrim is
@@ -23,19 +13,16 @@
   [loading]="isOverlayLoading()"
   [blur]="true"
   [insetTop]="'var(--ds-table-head-h, var(--_table-head-h, 40px))'"
-  [inertContent]="false"
->
+  [inertContent]="false">
   <div
     #scrollWrap
     class="scroll-wrap"
     [class.scroll-y]="maxHeight()"
-    [style.max-height]="maxHeight()"
-  >
+    [style.max-height]="maxHeight()">
     <div
       class="visually-hidden"
       role="status"
-      aria-live="polite"
-    >
+      aria-live="polite">
       {{ statusMessage() }}
     </div>
 
@@ -43,8 +30,7 @@
       [class]="tableClasses()"
       [style.--_table-virtual-row-h]="virtualRowHeight()"
       [attr.role]="rowInteractive() ? 'grid' : null"
-      [attr.aria-busy]="loading() !== false ? 'true' : null"
-    >
+      [attr.aria-busy]="loading() !== false ? 'true' : null">
       @if (caption()) {
         <caption class="visually-hidden">
           {{
@@ -58,16 +44,14 @@
           @if (selectable()) {
             <th
               scope="col"
-              class="select-col pin-select"
-            >
+              class="select-col pin-select">
               <input
                 type="checkbox"
                 class="check"
                 [attr.aria-label]="selectAllLabel()"
                 [checked]="allSelected()"
                 [indeterminate]="someSelected()"
-                (change)="onToggleAll($event)"
-              />
+                (change)="onToggleAll($event)" />
             </th>
           }
 
@@ -75,21 +59,18 @@
             <th
               scope="col"
               class="expand-col"
-              [class.pin-expand]="stickyFirstColumn()"
-            >
+              [class.pin-expand]="stickyFirstColumn()">
               @if (expandAllVisible()) {
                 <button
                   type="button"
                   class="expand-btn"
                   [attr.aria-label]="expandAllLabel()"
-                  (click)="onToggleExpandAll()"
-                >
+                  (click)="onToggleExpandAll()">
                   <ds-icon
                     class="expand-chev"
                     name="chevronRight"
                     [class.is-expanded]="allExpanded()"
-                    [size]="16"
-                  />
+                    [size]="16" />
                 </button>
               }
             </th>
@@ -107,14 +88,12 @@
               [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
               [attr.data-col-key]="col.key"
-              (pointerenter)="onHeaderEnter($event, col)"
-            >
+              (pointerenter)="onHeaderEnter($event, col)">
               @if (sortableCol(col)) {
                 <button
                   type="button"
                   class="th-label"
-                  (click)="onSort(col)"
-                >
+                  (click)="onSort(col)">
                   @if (col.label) {
                     {{ col.label }}
                   } @else if (col.srLabel) {
@@ -126,8 +105,7 @@
                   <ds-icon
                     class="sort-icon"
                     [name]="sortIcon(col)"
-                    [size]="12"
-                  >
+                    [size]="12">
                   </ds-icon>
                 </button>
               } @else {
@@ -149,17 +127,15 @@
                   aria-haspopup="dialog"
                   [class.active]="isColumnFiltered(col)"
                   [attr.aria-label]="'Filter ' + col.label"
-                  (click)="onColumnFilterClick(col, $event)"
-                >
+                  (click)="onColumnFilterClick(col, $event)">
                   <ds-icon
                     name="filter"
-                    [size]="12"
-                  />
+                    [size]="12" />
                 </button>
               }
 
-              @if (resizableColumns()) {
-                @let range = resizeRange(col);
+              @if (layout.resize(); as resize) {
+                @let range = resize.range(col);
 
                 <span
                   class="col-resize"
@@ -170,14 +146,13 @@
                   [attr.aria-valuenow]="range?.now ?? null"
                   [attr.aria-valuemin]="range?.min ?? null"
                   [attr.aria-valuemax]="range?.max ?? null"
-                  (focus)="onResizeFocus(col, $event)"
-                  (blur)="onResizeBlur()"
-                  (pointerdown)="onResizeStart(col, $event)"
-                  (pointermove)="onResizeMove($event)"
-                  (pointerup)="onResizeEnd()"
-                  (pointercancel)="onResizeEnd()"
-                  (keydown)="onResizeKey(col, $event)"
-                >
+                  (focus)="resize.onFocus(col, $event)"
+                  (blur)="resize.onBlur()"
+                  (pointerdown)="resize.onStart(col, $event)"
+                  (pointermove)="resize.onMove($event)"
+                  (pointerup)="resize.onEnd()"
+                  (pointercancel)="resize.onEnd()"
+                  (keydown)="resize.onKey(col, $event)">
                 </span>
               }
             </th>
@@ -186,23 +161,10 @@
           @if (hasUtilityColumn()) {
             <th
               scope="col"
-              class="actions-col"
-            >
-              @if (hasColumnPicker()) {
-                <button
-                  type="button"
-                  class="col-picker-btn"
-                  aria-haspopup="dialog"
-                  aria-label="Choose columns"
-                  [attr.aria-expanded]="columnPickerOpened()"
-                  (click)="onColumnPickerClick($event)"
-                >
-                  <ds-icon
-                    name="grid"
-                    [size]="14"
-                  />
-                </button>
-              } @else {
+              class="actions-col">
+              <ng-container #headerUtilityAnchor />
+
+              @if (!layout.wantsUtilityColumn()) {
                 <span class="visually-hidden">
                   Actions
                 </span>
@@ -222,16 +184,14 @@
           @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
             <ng-container
               [ngTemplateOutlet]="skeletonRow"
-              [ngTemplateOutletContext]="{ $implicit: rowIndex }"
-            >
+              [ngTemplateOutletContext]="{ $implicit: rowIndex }">
             </ng-container>
           }
         } @else if (showsEmptyRow()) {
           <tr>
             <td
               class="empty"
-              [attr.colspan]="expandedColspan()"
-            >
+              [attr.colspan]="expandedColspan()">
               @if (emptyTemplate()) {
                 <ng-container [ngTemplateOutlet]="emptyTemplate()!">
                 </ng-container>
@@ -245,8 +205,7 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padTop"
-            >
+              [style.height.px]="window.padTop">
             </tr>
           }
 
@@ -266,8 +225,7 @@
                 (mousedown)="onRowMousedown()"
                 (click)="onRowClick(row, $event)"
                 (keydown.enter)="onRowKey(row, $event)"
-                (keydown.space)="onRowKey(row, $event)"
-              >
+                (keydown.space)="onRowKey(row, $event)">
                 @if (selectable()) {
                   <td class="select-col pin-select">
                     <input
@@ -276,16 +234,14 @@
                       [attr.aria-label]="'Select ' + rowAriaLabel(row)"
                       [checked]="isSelected(row)"
                       (change)="onToggleRow(row, $event)"
-                      (click)="$event.stopPropagation()"
-                    />
+                      (click)="$event.stopPropagation()" />
                   </td>
                 }
 
                 @if (expandableRows()) {
                   <td
                     class="expand-col"
-                    [class.pin-expand]="stickyFirstColumn()"
-                  >
+                    [class.pin-expand]="stickyFirstColumn()">
                     <button
                       type="button"
                       class="expand-btn"
@@ -293,14 +249,12 @@
                       [attr.aria-label]="
                         isExpanded(row) ? 'Collapse row' : 'Expand row'
                       "
-                      (click)="onToggleExpand(row, $event)"
-                    >
+                      (click)="onToggleExpand(row, $event)">
                       <ds-icon
                         class="expand-chev"
                         name="chevronRight"
                         [class.is-expanded]="isExpanded(row)"
-                        [size]="16"
-                      />
+                        [size]="16" />
                     </button>
                   </td>
                 }
@@ -316,8 +270,7 @@
                     [class.editable-cell]="col.editable"
                     [class.interactive-cell]="col.interactive"
                     [class.fit-content]="fitsContent(col)"
-                    (dblclick)="startEdit(row, col, $event)"
-                  >
+                    (dblclick)="startEdit(row, col, $event)">
                     @if (isEditing(row, col)) {
                       <input
                         #editInput
@@ -328,8 +281,7 @@
                         (click)="$event.stopPropagation()"
                         (keydown.enter)="commitEdit(row, col)"
                         (keydown.escape)="cancelEdit()"
-                        (blur)="commitEdit(row, col)"
-                      />
+                        (blur)="commitEdit(row, col)" />
                     } @else if (cellTemplate(col); as tpl) {
                       @if (col.truncate) {
                         <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- same pointer-only enhancement as the plain truncate branch below; the value stays in the DOM for AT -->
@@ -337,15 +289,13 @@
                           class="cell-clip"
                           [style.max-width.px]="clipWidth(col)"
                           [attr.title]="cellValue(row, col)"
-                          (click)="onCellClipClick(row, col, $event)"
-                        >
+                          (click)="onCellClipClick(row, col, $event)">
                           <ng-container
                             [ngTemplateOutlet]="tpl"
                             [ngTemplateOutletContext]="{
                               $implicit: row,
                               row: row,
-                            }"
-                          >
+                            }">
                           </ng-container>
                         </span>
                       } @else {
@@ -354,8 +304,7 @@
                           [ngTemplateOutletContext]="{
                             $implicit: row,
                             row: row,
-                          }"
-                        >
+                          }">
                         </ng-container>
                       }
                     } @else if (col.truncate) {
@@ -364,14 +313,12 @@
                         class="cell-clip"
                         [style.max-width.px]="clipWidth(col)"
                         [attr.title]="cellValue(row, col)"
-                        (click)="onCellClipClick(row, col, $event)"
-                      >
+                        (click)="onCellClipClick(row, col, $event)">
                         @if (cellLink(row, col); as target) {
                           <a
                             class="cell-link"
                             [routerLink]="target"
-                            (click)="$event.stopPropagation()"
-                          >
+                            (click)="$event.stopPropagation()">
                             {{ cellValue(row, col) }}
                           </a>
                         } @else {
@@ -382,8 +329,7 @@
                       <a
                         class="cell-link"
                         [routerLink]="target"
-                        (click)="$event.stopPropagation()"
-                      >
+                        (click)="$event.stopPropagation()">
                         {{ cellValue(row, col) }}
                       </a>
                     } @else {
@@ -403,12 +349,10 @@
                         [attr.aria-label]="'Actions for ' + rowAriaLabel(row)"
                         (click)="onRowMenuClick(row, $event)"
                         (keydown.enter)="$event.stopPropagation()"
-                        (keydown.space)="$event.stopPropagation()"
-                      >
+                        (keydown.space)="$event.stopPropagation()">
                         <ds-icon
                           name="moreV"
-                          [size]="16"
-                        />
+                          [size]="16" />
                       </button>
                     }
                   </td>
@@ -424,12 +368,10 @@
                 <tr class="expand-panel-row">
                   <td
                     class="expand-panel-cell"
-                    [attr.colspan]="expandedColspan()"
-                  >
+                    [attr.colspan]="expandedColspan()">
                     <ng-container
                       [ngTemplateOutlet]="rowExpandTemplate()!"
-                      [ngTemplateOutletContext]="{ $implicit: row, row: row }"
-                    >
+                      [ngTemplateOutletContext]="{ $implicit: row, row: row }">
                     </ng-container>
                   </td>
                 </tr>
@@ -437,8 +379,7 @@
             } @else {
               <ng-container
                 [ngTemplateOutlet]="skeletonRow"
-                [ngTemplateOutletContext]="{ $implicit: slot.index }"
-              >
+                [ngTemplateOutletContext]="{ $implicit: slot.index }">
               </ng-container>
             }
           }
@@ -447,8 +388,7 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padBottom"
-            >
+              [style.height.px]="window.padBottom">
             </tr>
           }
         }
@@ -462,12 +402,10 @@
     #hscrollProxy
     class="hscroll-proxy"
     aria-hidden="true"
-    [class.hscroll-hidden]="!hscrollNeeded()"
-  >
+    [class.hscroll-hidden]="!hscrollNeeded()">
     <div
       class="hscroll-spacer"
-      [style.width.px]="hscrollContentWidth()"
-    >
+      [style.width.px]="hscrollContentWidth()">
     </div>
   </div>
 }
@@ -481,8 +419,7 @@
       [showPageSize]="showPageSize()"
       [showLabel]="showLabel()"
       [(currentPage)]="page"
-      (pageSizeChange)="pageSize.set($event)"
-    />
+      (pageSizeChange)="pageSize.set($event)" />
   </div>
 }
 
@@ -499,14 +436,12 @@
     #columnFilterPopover
     align="start"
     panelRole="dialog"
-    panelLabel="Filter values"
-  >
+    panelLabel="Filter values">
     @if (headerFilterFor(filterColumn()!); as projected) {
       <div class="col-filter col-filter-custom">
         <ng-container
           [ngTemplateOutlet]="projected.template"
-          [ngTemplateOutletContext]="headerFilterContext(filterColumn()!)"
-        />
+          [ngTemplateOutletContext]="headerFilterContext(filterColumn()!)" />
       </div>
     } @else {
       <div class="col-filter">
@@ -516,8 +451,7 @@
           placeholder="Search…"
           [value]="filterSearch()"
           (input)="onFilterSearch($event)"
-          (click)="$event.stopPropagation()"
-        />
+          (click)="$event.stopPropagation()" />
 
         <div class="col-filter-list">
           @for (value of filterValues(); track value) {
@@ -526,8 +460,7 @@
                 type="checkbox"
                 class="check"
                 [checked]="isFilterValueChecked(value)"
-                (change)="toggleFilterValue(value)"
-              />
+                (change)="toggleFilterValue(value)" />
               {{ value || '(empty)' }}
             </label>
           } @empty {
@@ -545,8 +478,7 @@
           <button
             type="button"
             class="col-reset"
-            (click)="clearColumnFilter()"
-          >
+            (click)="clearColumnFilter()">
             Clear
           </button>
         </div>
@@ -555,149 +487,48 @@
   </ds-popover>
 }
 
-@if (hasColumnPicker()) {
-  <ds-popover
-    #columnPickerPopover
-    align="end"
-    panelRole="dialog"
-    panelLabel="Column visibility"
-  >
-    <ng-container [ngTemplateOutlet]="columnPanel"></ng-container>
-  </ds-popover>
+<ng-container #overlaysAnchor />
 
-  <ds-bottom-sheet
-    title="Columns"
-    [(open)]="columnSheetOpen"
-  >
-    <ng-container [ngTemplateOutlet]="columnPanel"></ng-container>
-  </ds-bottom-sheet>
-
-  <ng-template #columnPanel>
-    <div
-      class="col-picker"
-      cdkDropList
-      (cdkDropListDropped)="onColumnDrop($event)"
-    >
-      @for (
-        col of orderedColumns();
-        track col.key;
-        let first = $first;
-        let last = $last
-      ) {
-        <div
-          class="col-picker-row"
-          cdkDrag
-          [cdkDragDisabled]="!reorderableColumns()"
-        >
-          @if (reorderableColumns()) {
-            <span
-              class="col-drag"
-              cdkDragHandle
-              aria-hidden="true"
-            >
-              <ds-icon
-                name="drag"
-                [size]="14"
-              />
-            </span>
-          }
-
-          <label class="col-picker-option">
-            <input
-              type="checkbox"
-              class="check"
-              [checked]="isColumnVisible(col)"
-              [disabled]="!col.hideable || isColumnLocked(col)"
-              (change)="toggleColumn(col)"
-            />
-            {{ col.label }}
-          </label>
-
-          @if (resizableColumns()) {
-            <span class="col-width">
-              <button
-                type="button"
-                class="col-width-btn"
-                [attr.aria-label]="'Narrow ' + col.label"
-                (click)="onColumnWidthStep(col, -resizeStep)"
-              >
-                <ds-icon
-                  name="minus"
-                  [size]="14"
-                />
-              </button>
-
-              <button
-                type="button"
-                class="col-width-btn"
-                [attr.aria-label]="'Widen ' + col.label"
-                (click)="onColumnWidthStep(col, resizeStep)"
-              >
-                <ds-icon
-                  name="plus"
-                  [size]="14"
-                />
-              </button>
-
-              <button
-                type="button"
-                class="col-width-btn col-width-auto"
-                [attr.aria-label]="'Fit ' + col.label + ' to its content'"
-                (click)="onColumnWidthStep(col, 'auto')"
-              >
-                Fit
-              </button>
-            </span>
-          }
-
-          @if (reorderableColumns()) {
-            <span class="col-move">
-              <button
-                type="button"
-                class="col-move-btn"
-                aria-label="Move up"
-                [disabled]="first"
-                (click)="moveColumn(col, -1)"
-              >
-                <ds-icon
-                  name="chevronUp"
-                  [size]="14"
-                />
-              </button>
-
-              <button
-                type="button"
-                class="col-move-btn"
-                aria-label="Move down"
-                [disabled]="last"
-                (click)="moveColumn(col, 1)"
-              >
-                <ds-icon
-                  name="chevronDown"
-                  [size]="14"
-                />
-              </button>
-            </span>
-          }
-        </div>
-      }
+<ng-template
+  #columnWidthControls
+  let-col>
+  @if (layout.resize(); as resize) {
+    <span class="col-width">
+      <button
+        type="button"
+        class="col-width-btn"
+        [attr.aria-label]="'Narrow ' + col.label"
+        (click)="resize.step(col, -16)">
+        <ds-icon
+          name="minus"
+          [size]="14" />
+      </button>
 
       <button
         type="button"
-        class="col-reset"
-        (click)="resetColumns()"
-      >
-        Reset to default
+        class="col-width-btn"
+        [attr.aria-label]="'Widen ' + col.label"
+        (click)="resize.step(col, 16)">
+        <ds-icon
+          name="plus"
+          [size]="14" />
       </button>
-    </div>
-  </ng-template>
-}
+
+      <button
+        type="button"
+        class="col-width-btn col-width-auto"
+        [attr.aria-label]="'Fit ' + col.label + ' to its content'"
+        (click)="resize.step(col, 'auto')">
+        Fit
+      </button>
+    </span>
+  }
+</ng-template>
 
 @if (hasRowActions()) {
   <ds-popover
     #rowMenuPopover
-    align="end"
-  >
+    align="end">
     <ds-menu>
       @for (action of visibleRowActions(); track action.id) {
         <ds-menu-item
@@ -705,8 +536,7 @@
           [error]="action.error ?? false"
           [disabled]="isActionDisabled(action)"
           [description]="actionReason(action)"
-          (pressed)="onRowAction(action)"
-        >
+          (pressed)="onRowAction(action)">
           {{ action.label }}
         </ds-menu-item>
       }
@@ -714,7 +544,7 @@
   </ds-popover>
 }
 
-@if (selectable() && someSelected()) {
+@if (selectable() && anySelected()) {
   <div class="bulk-bar">
     <span class="count">
       {{ selectedIds().size }} selected
@@ -731,37 +561,32 @@
      varies the bar lengths from it, so a block of them does not read as a grid. -->
 <ng-template
   #skeletonRow
-  let-rowIndex
->
+  let-rowIndex>
   <tr>
     @if (selectable()) {
       <td class="select-col pin-select">
         <ds-skeleton
           width="14px"
           height="14px"
-          [inline]="true"
-        />
+          [inline]="true" />
       </td>
     }
 
     @if (expandableRows()) {
       <td
         class="expand-col"
-        [class.pin-expand]="stickyFirstColumn()"
-      >
+        [class.pin-expand]="stickyFirstColumn()">
       </td>
     }
 
     @for (col of visibleColumns(); track col.key; let first = $first) {
       <td
         [class.numeric]="col.align === 'right'"
-        [class.pin-first]="first && stickyFirstColumn()"
-      >
+        [class.pin-first]="first && stickyFirstColumn()">
         <ds-skeleton
           height="14px"
           [width]="skeletonWidth(col, rowIndex)"
-          [inline]="true"
-        />
+          [inline]="true" />
       </td>
     }
 

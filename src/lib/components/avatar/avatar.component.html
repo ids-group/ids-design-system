@@ -1,22 +1,19 @@
 @if (imageUrl()) {
   <img
     alt=""
-    [src]="imageUrl()"
-  />
+    [src]="imageUrl()" />
 } @else if (initialsText()) {
   {{ initialsText() }}
 } @else if (fallbackIcon()) {
   <ds-icon
     [name]="fallbackIcon()!"
-    [size]="16"
-  />
+    [size]="16" />
 }
 
 @if (status()) {
   <span
     role="img"
     [class]="'status-dot status-dot--' + status()"
-    [attr.aria-label]="statusAriaLabel()"
-  >
+    [attr.aria-label]="statusAriaLabel()">
   </span>
 }

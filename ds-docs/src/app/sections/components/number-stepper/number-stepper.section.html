@@ -1,8 +1,7 @@
 <docs-section
   anchor="number-stepper"
   eyebrow="Components"
-  title="Number stepper"
->
+  title="Number stepper">
   <span lede>
     Spinbox for small bounded quantities — increment / decrement buttons around
     a numeric value. Respects <code class="t-mono-inline">min</code> /
@@ -30,8 +29,7 @@
     <div class="cell">
       <ds-number-stepper
         size="sm"
-        [(value)]="qtySm"
-      />
+        [(value)]="qtySm" />
 
       <code class="t-mono-inline">
         size="sm"
@@ -49,8 +47,7 @@
     <div class="cell">
       <ds-number-stepper
         size="lg"
-        [(value)]="qtyLg"
-      />
+        [(value)]="qtyLg" />
 
       <code class="t-mono-inline">
         size="lg"
@@ -78,8 +75,7 @@
       <ds-number-stepper
         [min]="0"
         [max]="10"
-        [(value)]="bounded"
-      />
+        [(value)]="bounded" />
 
       <code class="t-mono-inline">
         min=0 max=10 · value {{ bounded() }}
@@ -91,8 +87,7 @@
         [step]="5"
         [min]="0"
         [max]="100"
-        [(value)]="stepped"
-      />
+        [(value)]="stepped" />
 
       <code class="t-mono-inline">
         step=5 · value {{ stepped() }}
@@ -108,8 +103,7 @@
     <div class="cell">
       <ds-number-stepper
         [value]="3"
-        [disabled]="true"
-      />
+        [disabled]="true" />
 
       <code class="t-mono-inline">
         [disabled]="true"

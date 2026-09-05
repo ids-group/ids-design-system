@@ -10,7 +10,7 @@
 - **No standard prohibits "neutral" at tier 1.** W3C DTCG format is explicitly
   non-prescriptive on names; Style Dictionary: "no restrictions"; Brad Frost
   takes no position.
-- **Nathan Curtis (EightShapes)** uses *both* in his own writing:
+- **Nathan Curtis (EightShapes)** uses _both_ in his own writing:
   `$esds-color-neutral-42` (neutral as primitive) in one system and
   `$color-gray-05` in another. Never flags either as wrong.
 - The implicit principle several sources state: tier 1 is "named by what they
@@ -19,30 +19,30 @@
 
 ## What real systems do (verified against docs/repos)
 
-| "neutral" as primitive ramp name | "gray"/"slate" as primitive ramp name |
-|---|---|
-| **Tailwind v4** (`neutral` is literally one of the gray families) | **Radix** (`gray`, `slate`, `mauve`, `sage`, `olive`, `sand`) |
-| **Material 3** (`md.ref.palette.neutral`, `neutral-variant`) | **Carbon** (`gray`, `cool-gray`, `warm-gray`) |
-| **Atlassian** (`Neutral0`–`Neutral1100`) | **Spectrum** (`gray-50…900`) |
-| **shadcn** (inherits Tailwind `neutral`) | **Primer** (`base.color.gray.0–13`) |
-| | **Polaris** (`gray-N`; historically `ink`+`sky`) |
-| | **Fluent 2** (`grey[N]`; "neutral" appears only at alias tier: `colorNeutralBackground1`) |
+| "neutral" as primitive ramp name                                  | "gray"/"slate" as primitive ramp name                                                     |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Tailwind v4** (`neutral` is literally one of the gray families) | **Radix** (`gray`, `slate`, `mauve`, `sage`, `olive`, `sand`)                             |
+| **Material 3** (`md.ref.palette.neutral`, `neutral-variant`)      | **Carbon** (`gray`, `cool-gray`, `warm-gray`)                                             |
+| **Atlassian** (`Neutral0`–`Neutral1100`)                          | **Spectrum** (`gray-50…900`)                                                              |
+| **shadcn** (inherits Tailwind `neutral`)                          | **Primer** (`base.color.gray.0–13`)                                                       |
+|                                                                   | **Polaris** (`gray-N`; historically `ink`+`sky`)                                          |
+|                                                                   | **Fluent 2** (`grey[N]`; "neutral" appears only at alias tier: `colorNeutralBackground1`) |
 
 Roughly a 4 : 6 split; the enterprise camp leans "gray".
 
 ## Two nuances that decide it for us
 
 1. **In the Tailwind/Radix vocabulary — the one most developers know — "neutral"
-   means *pure achromatic* (zero cast), and "slate" means *cool, blue-cast
-   gray*.** Our ramp (`--neutral-500 #6B7388` ≈ hsl(223°, 12%, 48%)) is
+   means _pure achromatic_ (zero cast), and "slate" means _cool, blue-cast
+   gray_.** Our ramp (`--neutral-500 #6B7388` ≈ hsl(223°, 12%, 48%)) is
    textbook **slate**, not neutral. Keeping the name "neutral" mildly
    misdescribes the color by that convention.
 2. **Material 3's `neutral` is generated from the brand hue** (source color at
-   chroma 4) — i.e. M3's "neutral" is *the low-chroma companion of the brand*.
+   chroma 4) — i.e. M3's "neutral" is _the low-chroma companion of the brand_.
    That is exactly our design: hue 223 ≈ brand hue 229, desaturated. M3 is the
    strongest precedent for calling a brand-derived gray ramp "neutral".
    Radix's pairing guide agrees from the other side: `slate` is the gray they
-   recommend *for blue/indigo brands*.
+   recommend _for blue/indigo brands_.
 
 ## Decision rule
 
@@ -52,9 +52,9 @@ The right name depends on intent, not taste:
   re-derive its grays from its own hue, M3-style — plausible for us: secondary
   and tertiary already derive from brand channels) → **keep `--neutral-*`**.
   "Neutral" then correctly means "the brand's low-chroma companion ramp,
-  whatever its hue". Add one doc line in `_palette.scss`: *neutral = system
+  whatever its hue". Add one doc line in `_palette.scss`: _neutral = system
   gray ramp; in this palette a cool slate (hue ≈ 223°, harmonized with brand
-  hue 229°)*.
+  hue 229°)_.
 - **If the grays are fixed forever** (cool slate regardless of brand) →
   **rename to `--slate-*`** (Tailwind/Radix vocabulary) or Carbon-style
   `--cool-gray-*`, keeping `--neutral-X: var(--slate-X)` as deprecated aliases

@@ -1,8 +1,7 @@
 <docs-section
   anchor="loading-overlay"
   eyebrow="Components"
-  title="Loading overlay"
->
+  title="Loading overlay">
   <span lede>
     Covers a content region with a spinner and optional label while an async
     operation is in progress.
@@ -22,8 +21,7 @@
       label="Saving…"
       [loading]="busy()"
       [blur]="true"
-      [spinnerSize]="'md'"
-    >
+      [spinnerSize]="'md'">
       <div
         style="
           height: 14px;
@@ -31,8 +29,7 @@
           border-radius: var(--radius-sm);
           width: 70%;
           margin-bottom: var(--space-3);
-        "
-      >
+        ">
       </div>
 
       <div
@@ -42,8 +39,7 @@
           border-radius: var(--radius-sm);
           width: 90%;
           margin-bottom: var(--space-3);
-        "
-      >
+        ">
       </div>
 
       <div
@@ -53,8 +49,7 @@
           border-radius: var(--radius-sm);
           width: 50%;
           margin-bottom: var(--space-3);
-        "
-      >
+        ">
       </div>
     </ds-loading-overlay>
 
@@ -62,8 +57,7 @@
       <ds-button
         color="neutral"
         variant="outline"
-        (pressed)="toggle()"
-      >
+        (pressed)="toggle()">
         Toggle loading
       </ds-button>
     </div>
@@ -80,8 +74,8 @@
     is painted over the content, so it intercepts every click — but focus walked
     straight under it, and a keyboard user could reach and activate a control
     the mouse could not even touch, while its data was being replaced. So the
-    covered content goes <code class="t-mono-inline"> inert </code> while
-    loading: not tabbable, and out of the accessibility tree.
+    covered content goes <code class="t-mono-inline">inert</code> while loading:
+    not tabbable, and out of the accessibility tree.
     <code class="t-mono-inline">
       aria-busy
     </code> stays on the host, so a
@@ -94,7 +88,7 @@
     </code> turns that off,
     and is for a scrim that covers only PART of its content — a blanket flag
     would take the uncovered part with it. The consumer then marks the covered
-    subtree itself. <code class="t-mono-inline"> ds-table </code> does exactly
+    subtree itself. <code class="t-mono-inline">ds-table</code> does exactly
     this: its scrim starts below the header, because re-sorting is what puts the
     scrim up in the first place, so only its
     <code class="t-mono-inline">

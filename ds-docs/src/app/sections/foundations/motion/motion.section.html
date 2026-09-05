@@ -1,8 +1,7 @@
 <docs-section
   anchor="motion"
   eyebrow="Foundations"
-  title="Motion"
->
+  title="Motion">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -32,8 +31,7 @@
         <div class="loop-track">
           <div
             class="loop-puck loop-puck--dur"
-            [style.transitionDuration]="d.value"
-          >
+            [style.transitionDuration]="d.value">
           </div>
         </div>
 
@@ -67,8 +65,7 @@
         <div class="loop-track">
           <div
             class="loop-puck loop-puck--ease"
-            [style.transitionTimingFunction]="e.curve"
-          >
+            [style.transitionTimingFunction]="e.curve">
           </div>
         </div>
 
@@ -101,8 +98,7 @@
         class="combined-cell"
         [class]="'combined-cell--' + c.kind"
         [style.--demo-dur]="c.duration"
-        [style.--demo-ease]="c.easing"
-      >
+        [style.--demo-ease]="c.easing">
         <div class="combined-stage">
           @if (c.kind === 'fade') {
             <div class="demo-card-lift">
@@ -132,15 +128,13 @@
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
-                fill="none"
-              >
+                fill="none">
                 <path
                   d="M5 12.5l4.5 4.5L19 7.5"
                   stroke="currentColor"
                   stroke-width="2.5"
                   stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+                  stroke-linejoin="round" />
               </svg>
             </div>
           }
@@ -172,27 +166,23 @@
     ariaLabel="Entrance preset"
     [options]="presetOptions"
     [value]="preset()"
-    (valueChange)="preset.set($event)"
-  />
+    (valueChange)="preset.set($event)" />
 
   <div
     class="motion-preset-stage"
     [style.--ds-overlay-enter-keyframes]="preset()"
-    [style.--ds-alert-enter-keyframes]="preset()"
-  >
+    [style.--ds-alert-enter-keyframes]="preset()">
     <ds-select
       class="motion-preset-select"
       label="Discharge port"
       placeholder="Pick a port"
-      [options]="demoOptions"
-    />
+      [options]="demoOptions" />
 
     <div class="motion-preset-replay">
       @if (alertShown()) {
         <ds-alert
           variant="success"
-          title="Manifest saved"
-        >
+          title="Manifest saved">
           Entrance played with
           <code class="t-mono-inline">
             {{ preset() }}
@@ -204,8 +194,7 @@
       <ds-button
         variant="outline"
         size="sm"
-        (pressed)="replayAlert()"
-      >
+        (pressed)="replayAlert()">
         Replay
       </ds-button>
     </div>

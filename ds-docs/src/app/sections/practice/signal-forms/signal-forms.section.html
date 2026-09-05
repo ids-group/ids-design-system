@@ -1,8 +1,7 @@
 <docs-section
   anchor="practice-signal-forms"
   eyebrow="Practice"
-  title="Signal Forms"
->
+  title="Signal Forms">
   <span lede>
     {{ lede }}
   </span>
@@ -37,25 +36,21 @@
   <div class="demo-form">
     <ds-input
       label="Email"
-      [formField]="demoForm.email"
-    />
+      [formField]="demoForm.email" />
 
     <ds-select
       label="Role"
       [options]="roles"
-      [formField]="demoForm.role"
-    />
+      [formField]="demoForm.role" />
 
     <ds-input
       label="Reference"
       hint="Held read-only by a readonly() rule in the schema"
-      [formField]="demoForm.reference"
-    />
+      [formField]="demoForm.reference" />
 
     <ds-checkbox
       label="I agree to the terms"
-      [formField]="demoForm.terms"
-    />
+      [formField]="demoForm.terms" />
 
     <ds-button [disabled]="!demoForm().valid()">
       Send invite
@@ -109,8 +104,7 @@
     @for (row of contract; track row.member) {
       <div
         class="contract-row"
-        [class.contract-row--no]="row.state === 'no'"
-      >
+        [class.contract-row--no]="row.state === 'no'">
         <code class="contract-member t-mono-inline">
           {{ row.member }}
         </code>

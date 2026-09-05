@@ -14,8 +14,23 @@ export const PACKAGE_NAME = JSON.parse(
   readFileSync(join(REPO_ROOT, 'package.json'), 'utf8'),
 ).name;
 
+// Absence has to be fatal here: every consumer walks the export graph FROM the facade, so an
+// empty result is indistinguishable from a library with nothing public and reports OK.
+if (!existsSync(FACADE)) {
+  console.error(
+    `lib-entry-points: ${relative(REPO_ROOT, FACADE).split('\\').join('/')} does not exist, so ` +
+      'the public surface cannot be resolved. Every check that walks it would pass on an empty ' +
+      'set. If the primary entry point moved, point FACADE at its new entryFile.',
+  );
+  process.exit(1);
+}
+
 const asFile = (base) => {
-  for (const candidate of [`${base}.ts`, `${base}.d.ts`, join(base, 'index.ts')]) {
+  for (const candidate of [
+    `${base}.ts`,
+    `${base}.d.ts`,
+    join(base, 'index.ts'),
+  ]) {
     if (existsSync(candidate)) return candidate;
   }
 
@@ -59,7 +74,8 @@ export function entryPoints() {
  *  them from the .d.ts — the imports that forced the export still need them. */
 export function internalSymbols() {
   const marked = new Set();
-  const TAGGED = /\/\*\*[\s\S]*?@internal[\s\S]*?\*\/\s*(?:@[\w.]+\([\s\S]*?\)\s*)*export\s+(?:declare\s+)?(?:abstract\s+)?(?:class|const|function|interface|type|enum)\s+(\w+)/g;
+  const TAGGED =
+    /\/\*\*[\s\S]*?@internal[\s\S]*?\*\/\s*(?:@[\w.]+\([\s\S]*?\)\s*)*export\s+(?:declare\s+)?(?:abstract\s+)?(?:class|const|function|interface|type|enum)\s+(\w+)/g;
   const visit = (dir) => {
     for (const item of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, item.name);
@@ -67,8 +83,10 @@ export function internalSymbols() {
         visit(full);
         continue;
       }
-      if (!item.name.endsWith('.ts') || item.name.endsWith('.spec.ts')) continue;
-      for (const [, name] of readFileSync(full, 'utf8').matchAll(TAGGED)) marked.add(name);
+      if (!item.name.endsWith('.ts') || item.name.endsWith('.spec.ts'))
+        continue;
+      for (const [, name] of readFileSync(full, 'utf8').matchAll(TAGGED))
+        marked.add(name);
     }
   };
   visit(LIB_ROOT);

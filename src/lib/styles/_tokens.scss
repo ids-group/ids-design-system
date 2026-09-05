@@ -61,6 +61,10 @@
   --border-width-default: 1px;
   --border-width-strong:  2px;
 
+  /* 2px is the floor WCAG 2.4.13 measures against, and only the CONTRASTING part counts —
+     an indicator whose 2px is half gap does not meet it. The offset is a real gap: the
+     outline is not painted there, so whatever the control sits on shows through. */
+  --focus-ring-width:     2px;
   --focus-ring-offset:    2px;
 
   /* Shadows are composed from a channel-split tint so a theme can re-colour them:
@@ -147,6 +151,15 @@
   --ds-motion-exit-easing:            var(--ease-accelerate);
   --ds-motion-exit-large-duration:    var(--duration-base);
   --ds-motion-exit-large-easing:      var(--ease-accelerate);
+
+  /* The check mark landing in a box. Its own role because the mark overshoots and
+     nothing else at this scale does: --ease-spring exists for exactly this and is
+     documented as sparing. Enter and exit differ so the mark leaves faster than it
+     arrives, which is what makes the overshoot read as weight rather than as lag. */
+  --ds-motion-check-enter-duration:   var(--duration-base);
+  --ds-motion-check-enter-easing:     var(--ease-spring);
+  --ds-motion-check-exit-duration:    var(--duration-fast);
+  --ds-motion-check-exit-easing:      var(--ease-accelerate);
 
   --opacity-disabled:        0.5;
   --opacity-text-disabled:   0.38;  /* WCAG-derived */
@@ -238,6 +251,13 @@
   /* Two focus families: fields get the soft halo, interactive controls and nav
      the crisp ring. Components default their own --ds-*-focus-shadow to these,
      so a consumer can retune a whole family or a single component. */
+
+  /* The flat tokens, NOT the --accent-focus-* aliases, and that is not an oversight — see
+     docs/todo.md, "zone colour and data-focus shape cannot both reach one role". A `var()`
+     inside a custom property is substituted where that property is DECLARED, so anything
+     written here is frozen with :root's inputs and a ds-color zone can never reach it. A zone
+     changing the colour and the switch changing the shape are therefore mutually exclusive at
+     this indirection; the switch wins here because it is the documented one. */
   --ds-field-focus-shadow:         var(--focus-field);
   --ds-field-focus-shadow-error:   var(--focus-field-error);
   --ds-control-focus-shadow:       var(--focus-ring);

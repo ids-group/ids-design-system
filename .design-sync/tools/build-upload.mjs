@@ -14,6 +14,10 @@ import { fileURLToPath } from 'node:url';
 // cover image changes only when the card it is shot from does, so it is a local step like
 // measure-cards — CI checks the file exists rather than re-rendering it.
 const here = dirname(fileURLToPath(import.meta.url));
-for (const tool of ['build-cards.mjs', 'build-adherence.mjs', 'build-manifest.mjs']) {
+for (const tool of [
+  'build-cards.mjs',
+  'build-adherence.mjs',
+  'build-manifest.mjs',
+]) {
   execFileSync(process.execPath, [join(here, tool)], { stdio: 'inherit' });
 }

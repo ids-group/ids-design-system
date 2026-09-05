@@ -46,9 +46,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "ds-docs/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "ds-docs/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -67,13 +65,9 @@
                 "output": "/"
               }
             ],
-            "styles": [
-              "ds-docs/src/styles.scss"
-            ],
+            "styles": ["ds-docs/src/styles.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/lib"
-              ]
+              "includePaths": ["src/lib"]
             }
           },
           "configurations": {
@@ -138,10 +132,7 @@
               ".design-sync/elements/docs-globals.scss"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/lib",
-                "ds-docs/src"
-              ]
+              "includePaths": ["src/lib", "ds-docs/src"]
             },
             "index": false
           }

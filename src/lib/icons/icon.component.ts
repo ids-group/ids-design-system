@@ -31,25 +31,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
       }
     `,
   ],
-  template: `
-    <svg
-      class="icon"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      [style.--ds-icon-size]="sizeResolved() + 'px'"
-      [attr.width]="sizeResolved()"
-      [attr.height]="sizeResolved()"
-      [attr.stroke-width]="stroke()"
-      [attr.role]="ariaLabel() ? 'img' : null"
-      [attr.aria-label]="ariaLabel()"
-      [attr.aria-hidden]="ariaLabel() ? null : 'true'"
-      [innerHTML]="paths()"
-    >
-    </svg>
-  `,
+  templateUrl: './icon.component.html',
 })
 export class IconComponent {
   private readonly sanitizer = inject(DomSanitizer);

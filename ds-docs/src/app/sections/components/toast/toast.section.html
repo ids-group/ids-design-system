@@ -2,8 +2,7 @@
   anchor="toast"
   eyebrow="Components"
   title="Toast"
-  [apiKeys]="['toast:ToastRegionComponent']"
->
+  [apiKeys]="['toast:ToastRegionComponent']">
   <span lede>
     Auto-dismissing notification anchored to top-right of the viewport. Stacks
     vertically. Trigger imperatively via
@@ -22,32 +21,27 @@
       variant="info"
       title="Recompute queued"
       body="3 logistics plans will update in a moment."
-      [dismissible]="true"
-    />
+      [dismissible]="true" />
 
     <ds-toast
       variant="success"
       title="Alpha saved"
       body="12 resource allocations updated."
-      [dismissible]="true"
-    />
+      [dismissible]="true" />
 
     <ds-toast
       variant="warning"
       title="Volume nearing limit"
-      body="92% / 95% on Lane 04."
-    />
+      body="92% / 95% on Lane 04." />
 
     <ds-toast
       variant="error"
       title="Inventory sync failed"
-      body="Connection timed out — retrying in 30s."
-    />
+      body="Connection timed out — retrying in 30s." />
 
     <ds-toast
       variant="loading"
-      body="Generating report…"
-    />
+      body="Generating report…" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -71,8 +65,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      (click)="fire('info')"
-    >
+      (click)="fire('info')">
       Info
     </ds-button>
 
@@ -80,8 +73,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      (click)="fire('success')"
-    >
+      (click)="fire('success')">
       Success
     </ds-button>
 
@@ -89,8 +81,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      (click)="fire('warning')"
-    >
+      (click)="fire('warning')">
       Warning
     </ds-button>
 
@@ -98,8 +89,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      (click)="fire('error')"
-    >
+      (click)="fire('error')">
       Error
     </ds-button>
   </div>
@@ -119,8 +109,8 @@
       does not auto-dismiss
     </strong> and is always dismissible: the
     button is the only way to take the action, and the region is the last child
-    of <code class="t-mono-inline"> body </code>, so a keyboard user cannot
-    cross a page to reach it inside five seconds.
+    of <code class="t-mono-inline">body</code>, so a keyboard user cannot cross
+    a page to reach it inside five seconds.
   </p>
 
   <div class="demo">
@@ -128,8 +118,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      (click)="fireWithAction()"
-    >
+      (click)="fireWithAction()">
       Delete with Undo
     </ds-button>
   </div>
@@ -155,8 +144,7 @@
       variant="outline"
       size="sm"
       [disabled]="promiseRunning()"
-      (click)="firePromise()"
-    >
+      (click)="firePromise()">
       Save report (async)
     </ds-button>
   </div>
@@ -196,8 +184,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="toast-region"
-  >
+    data-for="toast-region">
     maxVisible queue
   </h3>
 
@@ -214,7 +201,7 @@
       maxVisible
     </code> at once, five by default —
     fire the button below twice and the sixth onwards wait their turn. Change it
-    there, or pass <code class="t-mono-inline"> 0 </code> for no cap at all.
+    there, or pass <code class="t-mono-inline">0</code> for no cap at all.
   </p>
 
   <div class="demo">
@@ -222,8 +209,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      (click)="fireMaxVisible()"
-    >
+      (click)="fireMaxVisible()">
       Fire 5 toasts
     </ds-button>
   </div>

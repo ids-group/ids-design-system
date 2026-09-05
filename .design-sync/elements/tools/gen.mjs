@@ -33,10 +33,17 @@ function walk(dir, suffix, out = []) {
 }
 
 const parse = (file) =>
-  ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
+  ts.createSourceFile(
+    file,
+    readFileSync(file, 'utf8'),
+    ts.ScriptTarget.Latest,
+    true,
+  );
 
 const pascalOf = (tag) =>
-  tag.replace(/^ds-/, '').replace(/(^|-)([a-z])/g, (_, __, char) => char.toUpperCase());
+  tag
+    .replace(/^ds-/, '')
+    .replace(/(^|-)([a-z])/g, (_, __, char) => char.toUpperCase());
 const capitalize = (name) => `${name[0].toUpperCase()}${name.slice(1)}`;
 
 const SIGNAL_KINDS = new Set(['input', 'output', 'model']);
@@ -54,13 +61,17 @@ const SIGNAL_KINDS = new Set(['input', 'output', 'model']);
 function templateSlots(componentFile, meta) {
   const urlNode = metaProperty(meta, 'templateUrl');
   if (!urlNode || !ts.isStringLiteralLike(urlNode)) return [];
-  const template = readFileSync(resolve(dirname(componentFile), urlNode.text), 'utf8');
+  const template = readFileSync(
+    resolve(dirname(componentFile), urlNode.text),
+    'utf8',
+  );
   const slots = [];
   // Brace depth carries the enclosing `@if` conditions, so a slot reports the gates that actually
   // still apply to it rather than every one that appears earlier in the file.
   const gates = [];
   let depth = 0;
-  const token = /@(if|else if)\s*\(([\s\S]*?)\)\s*\{|\{|\}|<ng-content\s+select="([^"]+)"/g;
+  const token =
+    /@(if|else if)\s*\(([\s\S]*?)\)\s*\{|\{|\}|<ng-content\s+select="([^"]+)"/g;
   for (const match of template.matchAll(token)) {
     if (match[1]) {
       depth += 1;
@@ -96,7 +107,9 @@ function slotPropName(attribute, componentName) {
   const stripped = attribute.startsWith(`ds${componentName}`)
     ? attribute.slice(2 + componentName.length)
     : attribute.replace(/^ds(?=[A-Z])/, '');
-  const camel = (stripped || attribute).replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+  const camel = (stripped || attribute).replace(/-([a-z])/g, (_, char) =>
+    char.toUpperCase(),
+  );
 
   return camel[0].toLowerCase() + camel.slice(1);
 }
@@ -104,7 +117,9 @@ function slotPropName(attribute, componentName) {
 function signalKind(initializer) {
   if (!initializer || !ts.isCallExpression(initializer)) return null;
   const callee = initializer.expression;
-  const root = ts.isPropertyAccessExpression(callee) ? callee.expression : callee;
+  const root = ts.isPropertyAccessExpression(callee)
+    ? callee.expression
+    : callee;
   const name = ts.isIdentifier(root) ? root.text : null;
   return SIGNAL_KINDS.has(name) ? name : null;
 }
@@ -122,7 +137,11 @@ function propType(initializer, kind) {
   if (/booleanAttribute/.test(optionsText)) return 'boolean';
   if (/numberAttribute/.test(optionsText)) return 'number';
   if (!first) return 'unknown';
-  if (first.kind === ts.SyntaxKind.TrueKeyword || first.kind === ts.SyntaxKind.FalseKeyword) return 'boolean';
+  if (
+    first.kind === ts.SyntaxKind.TrueKeyword ||
+    first.kind === ts.SyntaxKind.FalseKeyword
+  )
+    return 'boolean';
   if (ts.isStringLiteralLike(first)) return 'string';
   if (ts.isNumericLiteral(first)) return 'number';
   if (ts.isArrayLiteralExpression(first)) return 'unknown[]';
@@ -132,18 +151,55 @@ function propType(initializer, kind) {
 
 // Type names the emitted props reference but that need no import.
 const AMBIENT_TYPES = new Set([
-  'string', 'number', 'boolean', 'void', 'unknown', 'any', 'never', 'null', 'undefined',
-  'object', 'symbol', 'bigint', 'readonly', 'Array', 'ReadonlyArray', 'Record', 'Partial',
-  'Set', 'ReadonlySet', 'Map', 'ReadonlyMap', 'Date', 'RegExp', 'Promise', 'Function',
-  'Event', 'MouseEvent', 'KeyboardEvent', 'PointerEvent', 'FocusEvent', 'InputEvent',
-  'DragEvent', 'File', 'FileList', 'Blob', 'Element', 'HTMLElement', 'HTMLInputElement',
-  'Node', 'true', 'false', 'this',
+  'string',
+  'number',
+  'boolean',
+  'void',
+  'unknown',
+  'any',
+  'never',
+  'null',
+  'undefined',
+  'object',
+  'symbol',
+  'bigint',
+  'readonly',
+  'Array',
+  'ReadonlyArray',
+  'Record',
+  'Partial',
+  'Set',
+  'ReadonlySet',
+  'Map',
+  'ReadonlyMap',
+  'Date',
+  'RegExp',
+  'Promise',
+  'Function',
+  'Event',
+  'MouseEvent',
+  'KeyboardEvent',
+  'PointerEvent',
+  'FocusEvent',
+  'InputEvent',
+  'DragEvent',
+  'File',
+  'FileList',
+  'Blob',
+  'Element',
+  'HTMLElement',
+  'HTMLInputElement',
+  'Node',
+  'true',
+  'false',
+  'this',
 ]);
 
 /** Identifiers a type expression depends on, minus the ambient ones. */
 function typeDependencies(typeText) {
-  return [...new Set(typeText.match(/[A-Za-z_$][\w$]*/g) ?? [])]
-    .filter((name) => !AMBIENT_TYPES.has(name));
+  return [...new Set(typeText.match(/[A-Za-z_$][\w$]*/g) ?? [])].filter(
+    (name) => !AMBIENT_TYPES.has(name),
+  );
 }
 
 /** Names in a type expression that are actually TYPE references. `typeDependencies`
@@ -164,7 +220,11 @@ function typeReferences(typeText) {
 function decoratorMeta(classNode, decoratorName) {
   for (const decorator of ts.getDecorators?.(classNode) ?? []) {
     const call = decorator.expression;
-    if (!ts.isCallExpression(call) || call.expression.getText() !== decoratorName) continue;
+    if (
+      !ts.isCallExpression(call) ||
+      call.expression.getText() !== decoratorName
+    )
+      continue;
     const meta = call.arguments[0];
     // `@Directive()` with no metadata still counts as a match — hence null, not undefined.
     return meta && ts.isObjectLiteralExpression(meta) ? meta : null;
@@ -174,7 +234,8 @@ function decoratorMeta(classNode, decoratorName) {
 
 function metaProperty(meta, name) {
   return meta?.properties.find(
-    (property) => ts.isPropertyAssignment(property) && property.name.getText() === name,
+    (property) =>
+      ts.isPropertyAssignment(property) && property.name.getText() === name,
   )?.initializer;
 }
 
@@ -182,11 +243,17 @@ function metaProperty(meta, name) {
  *  the only place that says what it MEANS, and dropping it left the agent reading bare unions. */
 function docOf(member) {
   const comment = ts.getJSDocCommentsAndTags(member)?.[0];
-  const text = typeof comment?.comment === 'string'
-    ? comment.comment
-    : (comment?.comment ?? []).map((part) => part.text ?? '').join('');
+  const text =
+    typeof comment?.comment === 'string'
+      ? comment.comment
+      : (comment?.comment ?? []).map((part) => part.text ?? '').join('');
 
-  return text.replace(/\s*\n\s*\*?\s*/g, ' ').replace(/\s+/g, ' ').trim() || null;
+  return (
+    text
+      .replace(/\s*\n\s*\*?\s*/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim() || null
+  );
 }
 
 /** Signal API declared directly on a class. */
@@ -196,8 +263,8 @@ function classApi(classNode) {
     if (!ts.isPropertyDeclaration(member) || !member.initializer) continue;
     const hidden = member.modifiers?.some(
       (modifier) =>
-        modifier.kind === ts.SyntaxKind.PrivateKeyword
-        || modifier.kind === ts.SyntaxKind.ProtectedKeyword,
+        modifier.kind === ts.SyntaxKind.PrivateKeyword ||
+        modifier.kind === ts.SyntaxKind.ProtectedKeyword,
     );
     if (hidden) continue;
     const kind = signalKind(member.initializer);
@@ -221,14 +288,18 @@ function classApi(classNode) {
  */
 function hostDirectiveApi(meta, directiveApi) {
   const hostDirectives = metaProperty(meta, 'hostDirectives');
-  if (!hostDirectives || !ts.isArrayLiteralExpression(hostDirectives)) return [];
+  if (!hostDirectives || !ts.isArrayLiteralExpression(hostDirectives))
+    return [];
   const api = [];
   for (const entry of hostDirectives.elements) {
     const directiveName = ts.isObjectLiteralExpression(entry)
       ? metaProperty(entry, 'directive')?.getText()
       : entry.getText();
-    const exposed = ts.isObjectLiteralExpression(entry) ? metaProperty(entry, 'inputs') : null;
-    if (!directiveName || !exposed || !ts.isArrayLiteralExpression(exposed)) continue;
+    const exposed = ts.isObjectLiteralExpression(entry)
+      ? metaProperty(entry, 'inputs')
+      : null;
+    if (!directiveName || !exposed || !ts.isArrayLiteralExpression(exposed))
+      continue;
     const declared = directiveApi.get(directiveName) ?? [];
     for (const element of exposed.elements) {
       if (!ts.isStringLiteralLike(element)) continue;
@@ -262,19 +333,32 @@ for (const file of walk(join(repo, 'src/lib'), '.ts').sort()) {
   if (file.endsWith('.spec.ts') || file.endsWith('.d.ts')) continue;
   const importPath = `../../../${relative(repo, file).replace(/\\/g, '/').replace(/\.ts$/, '')}`;
   parse(file).forEachChild((node) => {
-    const exported = node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
-    const isType = ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node)
-      || ts.isEnumDeclaration(node);
+    const exported = node.modifiers?.some(
+      (m) => m.kind === ts.SyntaxKind.ExportKeyword,
+    );
+    const isType =
+      ts.isTypeAliasDeclaration(node) ||
+      ts.isInterfaceDeclaration(node) ||
+      ts.isEnumDeclaration(node);
     if (exported && isType && node.name && !typeIndex.has(node.name.text)) {
       typeIndex.set(node.name.text, importPath);
     }
     // The alias TEXT as well as its module: the upload declarations cannot import from the library,
     // so `color?: ButtonColor` has to go out as the union it stands for or as nothing useful at all.
-    if (exported && ts.isTypeAliasDeclaration(node) && node.name && !aliasText.has(node.name.text)) {
+    if (
+      exported &&
+      ts.isTypeAliasDeclaration(node) &&
+      node.name &&
+      !aliasText.has(node.name.text)
+    ) {
       aliasText.set(node.name.text, node.type.getText());
     }
-    if (!exported && ts.isTypeAliasDeclaration(node) && node.name
-        && !localTypeText.has(node.name.text)) {
+    if (
+      !exported &&
+      ts.isTypeAliasDeclaration(node) &&
+      node.name &&
+      !localTypeText.has(node.name.text)
+    ) {
       localTypeText.set(node.name.text, node.type.getText());
     }
   });
@@ -322,12 +406,24 @@ for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
     const meta = decoratorMeta(node, 'Component');
     if (!meta) return;
     const selectorNode = metaProperty(meta, 'selector');
-    const selector = selectorNode && ts.isStringLiteralLike(selectorNode) ? selectorNode.text : null;
+    const selector =
+      selectorNode && ts.isStringLiteralLike(selectorNode)
+        ? selectorNode.text
+        : null;
     if (!selector?.startsWith('ds-') || selector.includes(',')) return;
+
+    // A component marked internal is created imperatively by a directive and appears in no
+    // template, so the alias scan below cannot see it and it would register under its real
+    // tag. Registering it buys nothing - no caller can write one - and risks the nested
+    // custom-element defect the alias exists to avoid, since Angular's own createComponent
+    // makes a node the browser would then upgrade a second time.
+    if (source.getText().includes('@internal')) return;
 
     // A generic component's own type parameters can't cross into a non-generic
     // React wrapper — widen them rather than emit unbound names.
-    const typeParams = (node.typeParameters ?? []).map((param) => param.name.text);
+    const typeParams = (node.typeParameters ?? []).map(
+      (param) => param.name.text,
+    );
     const hostApi = hostDirectiveApi(meta, directiveApi);
     const api = [...inheritedApi(node.name.text), ...hostApi].map((entry) => {
       let type = entry.type;
@@ -348,11 +444,15 @@ for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
     const taken = new Set(api.map((entry) => entry.name));
     for (const slot of slots) {
       if (taken.has(slot.prop)) {
-        renamedSlots.push(`${name}.${slot.prop} → ${slot.prop}Content ([${slot.attribute}])`);
+        renamedSlots.push(
+          `${name}.${slot.prop} → ${slot.prop}Content ([${slot.attribute}])`,
+        );
         slot.prop = `${slot.prop}Content`;
       }
       if (taken.has(slot.prop)) {
-        throw new Error(`${name}: slot [${slot.attribute}] cannot be named — "${slot.prop}" is taken too.`);
+        throw new Error(
+          `${name}: slot [${slot.attribute}] cannot be named — "${slot.prop}" is taken too.`,
+        );
       }
       taken.add(slot.prop);
     }
@@ -377,8 +477,12 @@ components.sort((a, b) => a.name.localeCompare(b.name));
 // alias tag no template mentions. The React wrapper renders the alias, so `<Modal>`
 // and `<Button>` are unchanged for a caller and the tag never surfaces.
 const nestedTags = new Set();
-for (const file of [...walk(join(repo, 'src/lib'), '.component.html'), ...walk(join(repo, 'src/lib'), '.component.ts')]) {
-  for (const match of readFileSync(file, 'utf8').matchAll(/<(ds-[a-z0-9-]+)/g)) nestedTags.add(match[1]);
+for (const file of [
+  ...walk(join(repo, 'src/lib'), '.component.html'),
+  ...walk(join(repo, 'src/lib'), '.component.ts'),
+]) {
+  for (const match of readFileSync(file, 'utf8').matchAll(/<(ds-[a-z0-9-]+)/g))
+    nestedTags.add(match[1]);
 }
 for (const component of components) {
   component.tag = nestedTags.has(component.selector)
@@ -403,7 +507,10 @@ import { provideZonelessChangeDetection, type Injector } from '@angular/core';
 import { provideRouter } from '@angular/router';
 ${components.map((c) => `import { ${c.className} } from '${c.importPath}';`).join('\n')}
 ${sections
-  .map((s) => `import { ${s.exportedName} as ${s.localName} } from '${s.importPath}';`)
+  .map(
+    (s) =>
+      `import { ${s.exportedName} as ${s.localName} } from '${s.importPath}';`,
+  )
   .join('\n')}
 
 /** Inputs a component re-exposes through hostDirectives. createCustomElement builds
@@ -500,27 +607,37 @@ function propsInterface(component) {
       : own;
   });
   const inputNames = new Set(
-    component.api.filter((entry) => entry.kind !== 'output').map((entry) => entry.name),
+    component.api
+      .filter((entry) => entry.kind !== 'output')
+      .map((entry) => entry.name),
   );
   for (const { prop, attribute, gates } of component.slots) {
     // Only inputs are worth naming: a gate on an internal signal is not something a caller can
     // open, and telling them to set it would send them looking for a prop that does not exist.
     const openers = [
-      ...new Set(gates.flatMap((gate) => gate.match(/[A-Za-z_$][\w$]*/g) ?? []).filter((n) => inputNames.has(n))),
+      ...new Set(
+        gates
+          .flatMap((gate) => gate.match(/[A-Za-z_$][\w$]*/g) ?? [])
+          .filter((n) => inputNames.has(n)),
+      ),
     ];
     const gate = openers.length
       ? ` Rendered only while ${openers.map((n) => `\`${n}\``).join(' or ')} is set.`
       : gates.length
         ? ' Rendered behind a condition the component owns, so it can be absent even when passed.'
         : '';
-    lines.push(`  /** Content for the \`[${attribute}]\` slot.${gate} */\n  ${prop}?: React.ReactNode;`);
+    lines.push(
+      `  /** Content for the \`[${attribute}]\` slot.${gate} */\n  ${prop}?: React.ReactNode;`,
+    );
   }
 
   return `export interface ${component.name}Props extends DsHostProps {\n${lines.join('\n')}\n}`;
 }
 
 function wrapper(component) {
-  const inputs = component.api.filter((entry) => entry.kind !== 'output').map((entry) => entry.name);
+  const inputs = component.api
+    .filter((entry) => entry.kind !== 'output')
+    .map((entry) => entry.name);
   const events = component.api.flatMap((entry) =>
     entry.kind === 'output'
       ? [[entry.name, `on${capitalize(entry.name)}`]]
@@ -547,20 +664,28 @@ export const ${component.name} = React.forwardRef<HTMLElement, ${component.name}
 // Angular-only types (TemplateRef) carry nothing a React caller can use, and an
 // unresolvable name would emit a broken declaration, so both are widened. Reported
 // rather than silent: a widened prop is a real loss of contract for the agent.
-const WIDENED_TO_UNKNOWN = new Set(['TemplateRef', 'ElementRef', 'Signal', 'WritableSignal']);
+const WIDENED_TO_UNKNOWN = new Set([
+  'TemplateRef',
+  'ElementRef',
+  'Signal',
+  'WritableSignal',
+]);
 const widened = [];
 for (const component of components) {
   for (const entry of component.api) {
-    const unresolved = typeReferences(entry.type)
-      .filter((name) => !typeIndex.has(name));
+    const unresolved = typeReferences(entry.type).filter(
+      (name) => !typeIndex.has(name),
+    );
     if (!unresolved.length) continue;
 
     // A file-local alias can be inlined verbatim, which is better than an import:
-      // the agent reads the real shape. Only when the alias is not itself generic,
+    // the agent reads the real shape. Only when the alias is not itself generic,
     // since substituting an identifier inside a generic leaves the arguments behind.
     const inlinable = unresolved.filter(
-      (name) => localTypeText.has(name) && !WIDENED_TO_UNKNOWN.has(name)
-        && !new RegExp(name + '\s*<').test(entry.type),
+      (name) =>
+        localTypeText.has(name) &&
+        !WIDENED_TO_UNKNOWN.has(name) &&
+        !new RegExp(name + '\s*<').test(entry.type),
     );
     for (const name of inlinable) {
       entry.type = entry.type.replace(
@@ -572,16 +697,26 @@ for (const component of components) {
     // Anything still unresolvable makes the WHOLE type unknown. Substituting the
     // identifier alone produced `unknown<unknown>` and clobbered same-named
     // properties; these are Angular-only handles a React caller cannot use anyway.
-    const stillUnresolved = typeReferences(entry.type)
-      .filter((name) => !typeIndex.has(name) && !localTypeText.has(name));
+    const stillUnresolved = typeReferences(entry.type).filter(
+      (name) => !typeIndex.has(name) && !localTypeText.has(name),
+    );
     if (stillUnresolved.length) {
-      widened.push(component.name + '.' + entry.name + ' (' + stillUnresolved.join(', ') + ')');
+      widened.push(
+        component.name +
+          '.' +
+          entry.name +
+          ' (' +
+          stillUnresolved.join(', ') +
+          ')',
+      );
       entry.type = 'unknown';
     }
   }
 }
 if (widened.length) {
-  console.log('· ' + widened.length + ' prop(s) widened to unknown — no importable type:');
+  console.log(
+    '· ' + widened.length + ' prop(s) widened to unknown — no importable type:',
+  );
   for (const note of widened) console.log('    ' + note);
 }
 const byModule = new Map();
@@ -597,7 +732,10 @@ for (const component of components) {
 }
 const typeImports = [...byModule]
   .sort()
-  .map(([module, names]) => `import type { ${[...names].sort().join(', ')} } from '${module}';`)
+  .map(
+    ([module, names]) =>
+      `import type { ${[...names].sort().join(', ')} } from '${module}';`,
+  )
   .join('\n');
 
 writeFileSync(
@@ -621,7 +759,9 @@ ${components.map(wrapper).join('\n')}`,
 // `AutocompleteOptionGroup`, and a caller building that value needs the member type too. Collecting
 // only what props mention left three such types unreachable.
 const exportsByModule = new Map();
-const wrapperNames = new Set(components.flatMap((c) => [c.name, `${c.name}Props`]));
+const wrapperNames = new Set(
+  components.flatMap((c) => [c.name, `${c.name}Props`]),
+);
 for (const [name, module] of typeIndex) {
   if (wrapperNames.has(name)) continue;
   if (!exportsByModule.has(module)) exportsByModule.set(module, new Set());
@@ -629,7 +769,10 @@ for (const [name, module] of typeIndex) {
 }
 const reexports = [...exportsByModule]
   .sort()
-  .map(([module, names]) => `export type { ${[...names].sort().join(', ')} } from '${module}';`)
+  .map(
+    ([module, names]) =>
+      `export type { ${[...names].sort().join(', ')} } from '${module}';`,
+  )
   .join('\n');
 
 writeFileSync(
@@ -666,7 +809,9 @@ function inlineAliases(type, depth = 0) {
 const iconNameUnion = (() => {
   const source = readFileSync(join(repo, 'src/lib/core/icon-names.ts'), 'utf8');
   const body = source.slice(source.indexOf('export const ICONS'));
-  const names = [...body.matchAll(/^\s{2}([A-Za-z][\w]*):/gm)].map((match) => match[1]);
+  const names = [...body.matchAll(/^\s{2}([A-Za-z][\w]*):/gm)].map(
+    (match) => match[1],
+  );
 
   return names.length ? names.map((name) => `'${name}'`).join(' | ') : 'string';
 })();
@@ -683,7 +828,10 @@ writeFileSync(
         tag: component.tag,
         selector: component.selector,
         className: component.className,
-        api: component.api.map((entry) => ({ ...entry, inlined: inlineAliases(entry.type) })),
+        api: component.api.map((entry) => ({
+          ...entry,
+          inlined: inlineAliases(entry.type),
+        })),
         slots: component.slots,
       })),
     },
@@ -702,12 +850,14 @@ writeFileSync(
 );
 
 if (renamedSlots.length) {
-  console.log(`· ${renamedSlots.length} slot(s) renamed — an input already held the name:`);
+  console.log(
+    `· ${renamedSlots.length} slot(s) renamed — an input already held the name:`,
+  );
   for (const note of renamedSlots) console.log(`    ${note}`);
 }
 const slotTotal = components.reduce((total, c) => total + c.slots.length, 0);
 console.error(
-  `✓ generated ${components.length} elements + wrappers`
-  + ` (${components.reduce((total, c) => total + c.api.length, 0)} inputs/outputs,`
-  + ` ${slotTotal} named slots across ${components.filter((c) => c.slots.length).length})`,
+  `✓ generated ${components.length} elements + wrappers` +
+    ` (${components.reduce((total, c) => total + c.api.length, 0)} inputs/outputs,` +
+    ` ${slotTotal} named slots across ${components.filter((c) => c.slots.length).length})`,
 );

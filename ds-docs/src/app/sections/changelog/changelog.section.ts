@@ -23,19 +23,7 @@ function dropEmptyUnreleased(markdown: string): string {
   standalone: true,
   imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
-  template: `
-    <docs-section anchor="changelog" eyebrow="Changelog" title="Changelog">
-      <span lede>
-        Every published release of
-        <code>
-          &#64;ids-group-ltd/ids-design-system
-        </code>, newest first. This
-        is the same <code>CHANGELOG.md</code> shipped in the npm package.
-      </span>
-
-      <div class="changelog-body" [innerHTML]="html()"></div>
-    </docs-section>
-  `,
+  templateUrl: './changelog.section.html',
   styles: [
     `
       .changelog-body {

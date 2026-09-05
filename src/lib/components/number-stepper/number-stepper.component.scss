@@ -18,6 +18,9 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 
+  // Clips, so the ring has to be drawn inward or the overflow eats it.
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+
   @include focus.owns-the-focus-ring('.qty');
   &:focus-within {
     border-color: var(--accent);
@@ -101,7 +104,9 @@
   text-align: center;
   font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
-  outline: 0;
+
+  @include focus.own-indicator;
+
   padding: 0;
   appearance: textfield;
 

@@ -19,13 +19,10 @@
 // leave its card unsized. Run build-cards first, then this, then build-cards again to stamp the
 // numbers into the markers.
 import { createServer } from 'node:http';
-import { execFile } from 'node:child_process';
-import {
-  existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { launchBrowser } from './lib/browser.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -38,11 +35,15 @@ const FRAME_HEIGHT = 24000;
 const PORT = 4577;
 
 const CHROME = [
+  process.env.CHROME_BIN,
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   '/usr/bin/google-chrome',
   '/usr/bin/chromium',
-].find((path) => existsSync(path));
+  '/usr/bin/chromium-browser',
+]
+  .filter(Boolean)
+  .find((path) => existsSync(path));
 
 const TYPES = {
   '.html': 'text/html',
@@ -65,7 +66,10 @@ function cards() {
 
   return listed
     .map((path) => ({
-      name: path.split('/').pop().replace(/\.html$/, ''),
+      name: path
+        .split('/')
+        .pop()
+        .replace(/\.html$/, ''),
       // Card names carry spaces, so the request line needs escaping; the server decodes it back.
       url: `/${path.split('/').map(encodeURIComponent).join('/')}`,
     }))
@@ -113,7 +117,9 @@ const server = createServer((request, response) => {
 
     return response.end(`${readFileSync(file, 'utf8')}${REPORTER}`);
   }
-  response.writeHead(200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' });
+  response.writeHead(200, {
+    'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream',
+  });
 
   return response.end(readFileSync(file));
 });
@@ -125,36 +131,30 @@ if (!CHROME) {
 
 const all = cards();
 server.listen(PORT);
-const profile = mkdtempSync(join(tmpdir(), 'ds-measure-'));
+const browser = await launchBrowser({
+  chrome: CHROME,
+  width: WIDTH,
+  height: FRAME_HEIGHT,
+});
 const heights = {};
 
-// A browser per card is the only shape that works (see the header), so the wall clock is entirely
-// browser start-up — four hundred cards one at a time is an hour. They are independent, so run a
-// few at once; more than this and the machine's own scheduling starts to dominate.
-const LANES = 5;
+// Concurrent TABS in one browser. Cards are independent, so several run at once; more than this
+// and the machine's own scheduling starts to dominate.
+const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
-function measure(card) {
-  return new Promise((done) => {
-    execFile(
-      CHROME,
-      [
-        '--headless=new', '--disable-gpu', '--no-sandbox',
-        `--user-data-dir=${join(profile, card.name)}`,
-        '--virtual-time-budget=25000',
-        `--window-size=${WIDTH},${FRAME_HEIGHT}`,
-        '--dump-dom', `http://127.0.0.1:${PORT}${card.url}`,
-      ],
-      { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
-      (error, stdout) => {
-        const reported = error ? null : stdout.match(/<title>H=(\d+);K=(\d+|-)<\/title>/);
+// The probe writes its numbers into the title, which is one small string to read back rather than
+// a whole DOM. Read after the virtual clock stops, so it must not wait for anything.
+async function measure(card) {
+  const title = await browser.render(
+    `http://127.0.0.1:${PORT}${card.url}`,
+    'document.title',
+  );
+  const reported = title.match(/^H=(\d+);K=(\d+|-)$/);
 
-        return done({
-          height: Number(reported?.[1] ?? 0),
-          kept: reported?.[2] === '-' ? null : Number(reported?.[2] ?? 0),
-        });
-      },
-    );
-  });
+  return {
+    height: Number(reported?.[1] ?? 0),
+    kept: reported?.[2] === '-' ? null : Number(reported?.[2] ?? 0),
+  };
 }
 
 const blank = [];
@@ -168,7 +168,15 @@ async function lane() {
     heights[card.name] = height;
     if (kept === 0) blank.push(card.name);
     finished += 1;
-    process.stderr.write(`  ${finished}/${all.length} ${card.name} = ${height}px        \r`);
+    // A lone carriage return never flushes into a pipe: redirected, this printed all 410 cards as
+    // one 60 KB line, which is what a CI log would have shown instead of progress.
+    if (process.stderr.isTTY) {
+      process.stderr.write(
+        `  ${finished}/${all.length} ${card.name} = ${height}px        \r`,
+      );
+    } else if (finished % 20 === 0 || finished === all.length) {
+      console.error(`  measured ${finished}/${all.length}`);
+    }
   }
 }
 
@@ -176,7 +184,7 @@ try {
   await Promise.all(Array.from({ length: LANES }, lane));
 } finally {
   server.close();
-  rmSync(profile, { recursive: true, force: true });
+  await browser.close();
 }
 
 // A card that renders nothing still has a height, so a run where the bundle was half-built came in
@@ -189,28 +197,40 @@ const EMPTY_CARD = 200;
 // 144px, and no height threshold separates it from a small real card. The card counts what survived
 // its slice; zero means it published a title over an empty page. Four Menu cards did.
 if (blank.length) {
-  console.error(`\n✗ ${blank.length} card(s) sliced away everything they were meant to show:`);
+  console.error(
+    `\n✗ ${blank.length} card(s) sliced away everything they were meant to show:`,
+  );
   for (const name of blank) console.error(`    ${name}`);
   process.exit(1);
 }
 
-const missing = Object.entries(heights).filter(([, value]) => value < EMPTY_CARD);
+const missing = Object.entries(heights).filter(
+  ([, value]) => value < EMPTY_CARD,
+);
 if (missing.length) {
-  console.error(`\n✗ ${missing.length} card(s) rendered no block (under ${EMPTY_CARD}px):`);
-  for (const [name, value] of missing.slice(0, 12)) console.error(`    ${value}px  ${name}`);
-  if (missing.length > 12) console.error(`    … and ${missing.length - 12} more`);
-  console.error('\nA whole run at one small height means the bundle is stale: rebuild it with'
-    + ' `bun run build:elements` before measuring.');
+  console.error(
+    `\n✗ ${missing.length} card(s) rendered no block (under ${EMPTY_CARD}px):`,
+  );
+  for (const [name, value] of missing.slice(0, 12))
+    console.error(`    ${value}px  ${name}`);
+  if (missing.length > 12)
+    console.error(`    … and ${missing.length - 12} more`);
+  console.error(
+    '\nA whole run at one small height means the bundle is stale: rebuild it with' +
+      ' `bun run build:elements` before measuring.',
+  );
   process.exit(1);
 }
 
 const previous = JSON.parse(readFileSync(VIEWPORTS, 'utf8'));
-const sorted = Object.fromEntries(Object.entries(heights).sort(([a], [b]) => a.localeCompare(b)));
+const sorted = Object.fromEntries(
+  Object.entries(heights).sort(([a], [b]) => a.localeCompare(b)),
+);
 writeFileSync(
   VIEWPORTS,
   `${JSON.stringify({ note: previous.note, width: WIDTH, heights: sorted }, null, 2)}\n`,
 );
 console.error(
-  `\n✓ ${Object.keys(sorted).length} card height(s) into viewports.json`
-    + ` — tallest ${Math.max(...Object.values(sorted))}px, shortest ${Math.min(...Object.values(sorted))}px`,
+  `\n✓ ${Object.keys(sorted).length} card height(s) into viewports.json` +
+    ` — tallest ${Math.max(...Object.values(sorted))}px, shortest ${Math.min(...Object.values(sorted))}px`,
 );

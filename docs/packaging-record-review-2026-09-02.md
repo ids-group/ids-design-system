@@ -24,14 +24,14 @@ What moved is the arithmetic.
 
 Wave 1 axes dispatched (all read-only, Explore agents, opus):
 
-| axis | status |
-| --- | --- |
-| measurement methodology | **FAILED — API error, produced NO findings. MUST BE RE-DISPATCHED.** |
-| arithmetic / cross-document numbers | **RETURNED — below** |
-| **shipped commit `d8eb81c0` (dev warnings)** | **RETURNED — below** |
-| **shipped commit `e8cef30a` (lint rule)** | **RETURNED — below** |
-| records consistency (docs vs decks vs code) | **RETURNED — below** |
-| audit of my own 22 claims | **RETURNED — below (agent F)** |
+| axis                                         | status                                                               |
+| -------------------------------------------- | -------------------------------------------------------------------- |
+| measurement methodology                      | **FAILED — API error, produced NO findings. MUST BE RE-DISPATCHED.** |
+| arithmetic / cross-document numbers          | **RETURNED — below**                                                 |
+| **shipped commit `d8eb81c0` (dev warnings)** | **RETURNED — below**                                                 |
+| **shipped commit `e8cef30a` (lint rule)**    | **RETURNED — below**                                                 |
+| records consistency (docs vs decks vs code)  | **RETURNED — below**                                                 |
+| audit of my own 22 claims                    | **RETURNED — below (agent F)**                                       |
 
 ---
 
@@ -204,20 +204,20 @@ virtual filenames fail open without crashing; 307 reproducible.
 
 ## My validation so far (step 2, incomplete)
 
-| finding | my verdict | evidence |
-| --- | --- | --- |
-| C-F1 (13 not 14) | **CONFIRMED-BY-ME** | grep: 13 calls, 4 guards |
-| C-F2 (other isDevMode sites ship) | **CONFIRMED-BY-ME** | built FESM: 7 `isDevMode`, 4 `typeof ngDevMode` |
-| C-F3 (redundant `.d.ts`, masked TS2451) | not yet | must re-run tsc with `--skipLibCheck false` and test deleting the file |
-| C-F4 (inline-guard rule false) | **DISPUTED** | agent used raw esbuild; I measured through ng-packagr + Angular builder and saw the opposite. Re-test pending — see the note in C-F4 |
-| C-F5…C-F7 | not yet | |
-| D-F1…D-F12 | not yet | D-F1 and D-F2 are the two that change what we ship |
+| finding                                 | my verdict          | evidence                                                                                                                             |
+| --------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| C-F1 (13 not 14)                        | **CONFIRMED-BY-ME** | grep: 13 calls, 4 guards                                                                                                             |
+| C-F2 (other isDevMode sites ship)       | **CONFIRMED-BY-ME** | built FESM: 7 `isDevMode`, 4 `typeof ngDevMode`                                                                                      |
+| C-F3 (redundant `.d.ts`, masked TS2451) | not yet             | must re-run tsc with `--skipLibCheck false` and test deleting the file                                                               |
+| C-F4 (inline-guard rule false)          | **DISPUTED**        | agent used raw esbuild; I measured through ng-packagr + Angular builder and saw the opposite. Re-test pending — see the note in C-F4 |
+| C-F5…C-F7                               | not yet             |                                                                                                                                      |
+| D-F1…D-F12                              | not yet             | D-F1 and D-F2 are the two that change what we ship                                                                                   |
 
 ## Next actions when work resumes
 
 1. **Re-dispatch the measurement-methodology agent — it died on an API error and produced nothing.**
    It is the highest-value axis: it attacks whether the numbers were produced validly at all (baseline
-   drift, missing controls, tsconfig  bypassing the  map, raw-vs-gzip, generalising a
+   drift, missing controls, tsconfig bypassing the map, raw-vs-gzip, generalising a
    fixture to the real library). Its prompt is in the transcript; re-use it verbatim.
 2. Wait for the three remaining wave-1 agents (arithmetic, records consistency, audit of my 22 claims);
    append their reports here.
@@ -233,7 +233,6 @@ whether a shipped doc comment is wrong), D-F1 (the shipped lint defaults will pr
 positives on the day A3 flips them on), D-F2 (99 messages name an impossible specifier), C-F3 (a
 possibly redundant declaration file masking two type errors), C-F1/C-F2 (a published count and headline
 that are wrong, already on npm in v0.11.2).
-
 
 ---
 
@@ -447,7 +446,6 @@ on the rest of its report.
 9. **B-F10 / B-F11** — decide one unit convention and restate every figure in it.
 10. **E-F22** — nine stale `file:line` citations; substance holds, evidence rotted.
 
-
 ---
 
 ## Agent F — audit of my own 22 "verified" claims
@@ -469,9 +467,9 @@ recorded-but-not-reproducible. That is an archival gap, not evidence of error.
 **F-#4 — "`provideDsTheme()` is in the documented setup every consumer copies, so every app already
 has an eager anchor". FALSE. HIGH — this one carries weight in the argument.**
 The citation is real and says the opposite. `theme/provide-ds-theme.ts:23-32` is a JSDoc example whose
-line 30 reads *"Light is the default with no provider; `followSystem` opts into OS-driven switching."*
-The only other consumer-facing mention, `themes/README.md:44`, says *"To follow the OS, **opt in** at
-the app root"*. `provideDsTheme` appears in no README, no `design-system.md`, no `components.md` setup
+line 30 reads _"Light is the default with no provider; `followSystem` opts into OS-driven switching."_
+The only other consumer-facing mention, `themes/README.md:44`, says _"To follow the OS, **opt in** at
+the app root"_. `provideDsTheme` appears in no README, no `design-system.md`, no `components.md` setup
 section. Decisively: `schematics/ng-add/index.cts:3,54` — the thing a consumer actually runs — inserts
 only `@use '@ids-group-ltd/ids-design-system/styles/ds';`, no provider, in all 77 lines.
 So `packaging-diagnosis.md:81-83` ("every app already has an eager anchor. There is no consumer for
@@ -484,7 +482,7 @@ route has no theme anchor at all.**
 Counted three ways: `icons/icons.data.ts` has **86** entries (lines 3→118); the published
 `dist/ds/types/…d.ts` has **86** `readonly` keys; `git show v0.11.1:src/lib/icons/icons.data.ts` — the
 measured version — has **83**. `packaging-diagnosis.md:409` says 115. Wrong by ~35%. Compounding it:
-the ablation "cut to 9", so 2 522 B is the cost of ~74 of 83, not "the whole map". The *conclusion*
+the ablation "cut to 9", so 2 522 B is the cost of ~74 of 83, not "the whole map". The _conclusion_
 (splitting the icon map is not worth it) survives; the stated fact does not.
 → **Third independent confirmation.** B-F16 and E-F23 found the same thing at different commits.
 
@@ -506,7 +504,7 @@ it estimates the real table's registry at 1–2.5 kB (`packaging-diagnosis.md:52
 fixture. **923 B is the floor for the simplest possible seam, not a constant.**
 
 **F-#14 — "the minimum cut is 14 statements". OVERSTATED — it is 15–16. MEDIUM.**
-The two counts are right *as `import` statements*: 11 files import `config/ds-config`, 3 import
+The two counts are right _as `import` statements_: 11 files import `config/ds-config`, 3 import
 `card/card.types`. But `components/card/index.ts:2` (`export type { CardElevation, CardPadding } from
 './card.types'`) is a fourth statement whose path changes when the file moves, and `src/public-api.ts:1`
 (`export * from './lib/config/ds-config'`) is a fifth. **The repo's own lint rule counts
@@ -574,12 +572,12 @@ it deserved a captured log.
 
 **F-#1b — the 18.2 KB sentence inverts its own meaning.** "The 52 components a prototype never uses
 **cost it** 18.2 KB" — unused components cost a tree-shaken prototype **zero**. 18.2 KB is what they
-would *add* if used: the ceiling on what any split could save. Same slippage at
+would _add_ if used: the ceiling on what any split could save. Same slippage at
 `packaging-diagnosis.md:28`. Also: entry cost is quoted as "5.6 KB" from two different builds (5 569 B
 and 5 351 B).
 
 **F-#9b — "35% of the button's cost" needs its denominator stated.** 11 295 / 32 087 = 35.2% is
-35% of the button's *marginal cost over bare Angular*, not of its 62 733 B total. The structural half
+35% of the button's _marginal cost over bare Angular_, not of its 62 733 B total. The structural half
 is fully confirmed at HEAD (`button.component.ts:19,21-22,25-26,62,78`).
 
 **F-#12b — the CDK figure is a retained closure, not "the package".** 48 375 − 30 646 = 17 729 B is
@@ -604,7 +602,7 @@ independent reproductions:
   condition. `@angular/build` 21.2.15.
 - **#17.** The naming rule is in the source, not inferred:
   `discover-packages.js:137-138` derives `secondaryModuleId` from `path.relative(primary.basePath,
-  basePath)`, and `entry-point.js:153-154` returns it verbatim. All eight schema keys check out.
+basePath)`, and `entry-point.js:153-154` returns it verbatim. All eight schema keys check out.
 - **#11.** Every stylesheet partial reproduced byte-exact.
 - **#20.** Exactly two relative imports in all 12 files of `src/lib/core` — `config-defaults.ts:2` and
   `option.ts:1`.
@@ -619,14 +617,14 @@ declined to delete it (deletion is also a write). **Deleted 2026-09-02.**
 
 ## Wave 1 is now closed except one axis
 
-| axis | outcome |
-| --- | --- |
-| shipped commit `d8eb81c0` | agent C — 7 findings, core mechanism sound |
-| shipped commit `e8cef30a` | agent D — 12 findings, 2 HIGH |
-| arithmetic / cross-document numbers | agent B — 3 CRITICAL, 16 total |
-| records consistency | agent E — 24 findings, 4 reversed verdicts unswept |
-| audit of my 22 claims | agent F — 2 FALSE, 4 OVERSTATED, 18 stand, 9 new contradictions |
-| **measurement methodology** | **re-dispatched and RETURNED — 20 findings, 2 HIGH structural. Below.** |
+| axis                                | outcome                                                                 |
+| ----------------------------------- | ----------------------------------------------------------------------- |
+| shipped commit `d8eb81c0`           | agent C — 7 findings, core mechanism sound                              |
+| shipped commit `e8cef30a`           | agent D — 12 findings, 2 HIGH                                           |
+| arithmetic / cross-document numbers | agent B — 3 CRITICAL, 16 total                                          |
+| records consistency                 | agent E — 24 findings, 4 reversed verdicts unswept                      |
+| audit of my 22 claims               | agent F — 2 FALSE, 4 OVERSTATED, 18 stand, 9 new contradictions         |
+| **measurement methodology**         | **re-dispatched and RETURNED — 20 findings, 2 HIGH structural. Below.** |
 
 **Triple-confirmed across independent agents:** the icon map is 86 (83 at the measured version), never
 115 — B-F16, E-F23, F-#10. **Cross-confirmed:** the `todo.md:560` percentage is wrong — D-F3 and F-#16b
@@ -634,7 +632,6 @@ by different routes.
 
 **Cross-wave conflict count so far: one** (13 vs 14 devWarn sites — agents C, E and my own grep say 13;
 agent B says 14). My grep decides it: **13**.
-
 
 ---
 
@@ -652,14 +649,14 @@ FESM → `@angular/build` application builder with `define` — using `.claude/l
 Six shapes, each packaged and built twice (`--configuration full` and `--configuration prototype`,
 the latter defining `dsPrototype: "true"`). Marker count is out of 500.
 
-| guard shape | FESM markers | full build | prototype build |
-| --- | --- | --- | --- |
-| `if (typeof dsPrototype === 'undefined' \|\| !dsPrototype)` — **as shipped** | 500 | 500 / 123 498 B | **0 / 99 550 B** |
-| `const ADVANCED = typeof … ; if (ADVANCED)` — module scope | 500 | 500 / 123 503 B | **500 / 123 469 B** |
-| `const advanced = typeof … ; if (advanced)` — inside the callback | 500 | 500 / 123 498 B | **500 / 123 462 B** |
-| `const ADVANCED_BARE = !dsPrototype; if (ADVANCED_BARE)` | 500 | 500 / 123 479 B | **500 / 123 469 B** |
-| `if (!dsPrototype)` — inline, no `typeof` | 500 | 500 / 123 472 B | **0 / 99 550 B** |
-| `if (!dsPrototype \|\| typeof dsPrototype === 'undefined')` — inline, reordered | 500 | 500 / 123 498 B | **0 / 99 550 B** |
+| guard shape                                                                     | FESM markers | full build      | prototype build     |
+| ------------------------------------------------------------------------------- | ------------ | --------------- | ------------------- |
+| `if (typeof dsPrototype === 'undefined' \|\| !dsPrototype)` — **as shipped**    | 500          | 500 / 123 498 B | **0 / 99 550 B**    |
+| `const ADVANCED = typeof … ; if (ADVANCED)` — module scope                      | 500          | 500 / 123 503 B | **500 / 123 469 B** |
+| `const advanced = typeof … ; if (advanced)` — inside the callback               | 500          | 500 / 123 498 B | **500 / 123 462 B** |
+| `const ADVANCED_BARE = !dsPrototype; if (ADVANCED_BARE)`                        | 500          | 500 / 123 479 B | **500 / 123 469 B** |
+| `if (!dsPrototype)` — inline, no `typeof`                                       | 500          | 500 / 123 472 B | **0 / 99 550 B**    |
+| `if (!dsPrototype \|\| typeof dsPrototype === 'undefined')` — inline, reordered | 500          | 500 / 123 498 B | **0 / 99 550 B**    |
 
 **Every inline form folds. Every `const` form fails to fold, at either scope, with or without
 `typeof`.** The prototype build of the const variants is the same size as the full build — the whole
@@ -677,7 +674,7 @@ library is built. No rewording is needed — the file documents this repo's buil
 ADDING is the reproduction: the `jf=!1` observation, which is what makes the rule checkable.
 
 → **Rule 2 of the comment ("it must be the `typeof` form") is CONFIRMED, and the comment already
-states the right reason.** Rows 5 and 6 show the bare inline form folds *equally well*, so `typeof`
+states the right reason.** Rows 5 and 6 show the bare inline form folds _equally well_, so `typeof`
 buys nothing for folding. What it buys is runtime safety, exactly as the comment says: the full build
 of the bare form emits `return dsPrototype||(e.push(…` — an **undeclared free identifier**, a
 ReferenceError in any consumer whose build does not define it. The shipped form emits
@@ -691,14 +688,14 @@ fold still works, they reintroduce that crash.
 
 Parsed the `ICONS` object literal and counted top-level keys at six refs:
 
-| ref | keys | file |
-| --- | --- | --- |
+| ref          | keys   | file    |
+| ------------ | ------ | ------- |
 | working tree | **86** | 9 437 B |
-| `HEAD` | **86** | 9 437 B |
-| `v0.11.2` | **86** | 9 437 B |
-| `v0.11.1` | **86** | 9 437 B |
-| `v0.11.0` | **86** | 9 508 B |
-| `v0.10.0` | **86** | 9 508 B |
+| `HEAD`       | **86** | 9 437 B |
+| `v0.11.2`    | **86** | 9 437 B |
+| `v0.11.1`    | **86** | 9 437 B |
+| `v0.11.0`    | **86** | 9 508 B |
+| `v0.10.0`    | **86** | 9 508 B |
 
 **86 at every ref back to v0.10.0.** The map has never had 115 entries in any released version, so
 `packaging-diagnosis.md:409`, `todo.md:610` and `11-rejected-with-numbers.html:137` are all wrong.
@@ -710,37 +707,36 @@ numbers can be taken on trust; each has now been caught once.**
 
 Consequence for the argument (unchanged by which figure is right): 2 522 B gzip was measured by
 cutting 86 icons down to 9, so it is the cost of the 77 removed, not "the entire set", and deck 11's
-per-icon extrapolation is built on the wrong divisor. The *conclusion* — splitting the icon map is not
+per-icon extrapolation is built on the wrong divisor. The _conclusion_ — splitting the icon map is not
 worth it — stands either way, and stands more firmly at 86 than at 115.
 
 ## Validation table (running)
 
-| finding | my verdict | what decided it |
-| --- | --- | --- |
-| C-F1 (13 devWarn sites, not 14) | **CONFIRMED-BY-ME** | grep: 13 calls, 4 guards (button 1, stat 1, table 11) |
-| C-F2 (six `isDevMode()` sites still ship) | **CONFIRMED-BY-ME** | built FESM: 7 `isDevMode`, 4 `typeof ngDevMode` |
-| C-F3 (`build-flags.d.ts` redundant, masks TS2451) | wave 2 running | must not be settled by reading — needs the tsc runs |
-| **C-F4 (inline-guard rule false)** | **REJECTED-BY-ME** | six-shape build matrix above; `jf=!1` survives unpropagated |
-| C-F5…C-F7 | wave 2 running | |
-| D-F1…D-F12 | wave 2 running | D-F1 and D-F2 change what we ship |
-| B-F1…B-F9 | wave 2 running | B-F2 is the one that moves a conclusion |
-| **B-F16 / E-F23 / F-#10 (86 icons)** | **CONFIRMED-BY-ME** | six-ref key parse, table above |
-| F-#10's "83 at v0.11.1" | **REJECTED-BY-ME** | 86 at v0.11.1, file byte-identical to HEAD |
-| B-F10…B-F22 (except F16) | **not assigned to wave 2** — mine to finish | |
-| E-F4…E-F38 | partly wave 2, remainder mine | |
-| F-#1b, #9b, #11b, #12b, #18b | mine to finish | |
+| finding                                           | my verdict                                  | what decided it                                             |
+| ------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------- |
+| C-F1 (13 devWarn sites, not 14)                   | **CONFIRMED-BY-ME**                         | grep: 13 calls, 4 guards (button 1, stat 1, table 11)       |
+| C-F2 (six `isDevMode()` sites still ship)         | **CONFIRMED-BY-ME**                         | built FESM: 7 `isDevMode`, 4 `typeof ngDevMode`             |
+| C-F3 (`build-flags.d.ts` redundant, masks TS2451) | wave 2 running                              | must not be settled by reading — needs the tsc runs         |
+| **C-F4 (inline-guard rule false)**                | **REJECTED-BY-ME**                          | six-shape build matrix above; `jf=!1` survives unpropagated |
+| C-F5…C-F7                                         | wave 2 running                              |                                                             |
+| D-F1…D-F12                                        | wave 2 running                              | D-F1 and D-F2 change what we ship                           |
+| B-F1…B-F9                                         | wave 2 running                              | B-F2 is the one that moves a conclusion                     |
+| **B-F16 / E-F23 / F-#10 (86 icons)**              | **CONFIRMED-BY-ME**                         | six-ref key parse, table above                              |
+| F-#10's "83 at v0.11.1"                           | **REJECTED-BY-ME**                          | 86 at v0.11.1, file byte-identical to HEAD                  |
+| B-F10…B-F22 (except F16)                          | **not assigned to wave 2** — mine to finish |                                                             |
+| E-F4…E-F38                                        | partly wave 2, remainder mine               |                                                             |
+| F-#1b, #9b, #11b, #12b, #18b                      | mine to finish                              |                                                             |
 
 ## Calibration ledger — every agent caught in an error so far
 
-| agent | caught on | by |
-| --- | --- | --- |
-| B (arithmetic) | 14 devWarn sites; it is 13 | my grep, agents C and E |
+| agent            | caught on                                              | by                        |
+| ---------------- | ------------------------------------------------------ | ------------------------- |
+| B (arithmetic)   | 14 devWarn sites; it is 13                             | my grep, agents C and E   |
 | C (dev warnings) | C-F4: generalised a raw-esbuild result to our pipeline | my six-shape build matrix |
-| F (my 22 claims) | "83 icons at v0.11.1"; it is 86 | my six-ref parse |
-| D, E | nothing yet | |
+| F (my 22 claims) | "83 icons at v0.11.1"; it is 86                        | my six-ref parse          |
+| D, E             | nothing yet                                            |                           |
 
 This is the point of the two waves. **No finding enters the fix list on an agent's authority.**
-
 
 ## V-3. B-F18 — **CONFIRMED-BY-ME, and the error is bigger than the agent said.** Item 8's CSS prize is roughly HALF what is published.
 
@@ -752,11 +748,11 @@ treated the total as sound, because each ROW is correct. **Neither of them teste
 I recompiled every partial at HEAD with dart-sass `style: 'compressed'`, then measured three different
 things the doc conflates:
 
-| what is being measured | gzip | note |
-| --- | --- | --- |
-| **sum of the ten partials gzipped SEPARATELY** | **3 409 B** | ← what `packaging-diagnosis.md:415` publishes |
-| gzip of the ten partials CONCATENATED | 2 568 B | −841 B: one dictionary instead of ten |
-| **`ds.scss` minus the ten `@forward` lines, ablated** | **2 156 B** | ← the only figure that answers the question |
+| what is being measured                                | gzip        | note                                          |
+| ----------------------------------------------------- | ----------- | --------------------------------------------- |
+| **sum of the ten partials gzipped SEPARATELY**        | **3 409 B** | ← what `packaging-diagnosis.md:415` publishes |
+| gzip of the ten partials CONCATENATED                 | 2 568 B     | −841 B: one dictionary instead of ten         |
+| **`ds.scss` minus the ten `@forward` lines, ablated** | **2 156 B** | ← the only figure that answers the question   |
 
 The per-partial rows reproduce exactly (`dropdown-overlay` 4 346/1 043, `overlay-motion` 1 829/458,
 `link` 1 685/533, `page-grid` 1 079/312, `scrollbar` 774/297, `surface-motion` 751/192,
@@ -771,10 +767,10 @@ measuring that removal is exactly the prize.
 
 **Both sub-totals move the same way:**
 
-| group | doc says | ablation says |
-| --- | --- | --- |
-| component-scopable (`link`, `page-grid`, `scrollbar`, `surface-motion`, `layout-utils`, `skeleton-shimmer`, `icon-base`) | ~1.8 kB | **1 018 B** |
-| portaled (`dropdown-overlay`, `overlay-motion`, `toast-overlay`) | 1 592 B | **1 055 B** |
+| group                                                                                                                    | doc says | ablation says |
+| ------------------------------------------------------------------------------------------------------------------------ | -------- | ------------- |
+| component-scopable (`link`, `page-grid`, `scrollbar`, `surface-motion`, `layout-utils`, `skeleton-shimmer`, `icon-base`) | ~1.8 kB  | **1 018 B**   |
+| portaled (`dropdown-overlay`, `overlay-motion`, `toast-overlay`)                                                         | 1 592 B  | **1 055 B**   |
 
 `presentations/9-opt-in-seam.html:338` and `11-rejected-with-numbers.html:180` both publish the
 1 592 B figure; it is 1 055 B. And the sentence at `packaging-diagnosis.md:489` — "the prize is a third
@@ -801,7 +797,6 @@ not a disagreement about the stylesheet.
 agents were wrong to clear it. B-F18 was filed as SUSPECTED with no measurement; it deserved
 CONFIRMED. Agent B's arithmetic instinct was sound even though its devWarn count was not.
 
-
 ## V-4. B-F2 — **REFUTED-BY-ME.** The agent had the two floors the wrong way round. But there IS an invalid subtraction here, in the OTHER document, and it is worse.
 
 B-F2 was ranked the most consequential wave-1 finding: it claimed
@@ -813,14 +808,14 @@ Method: `run-placement.sh` reports `initial` (main.js + every chunk it staticall
 the heavy-selector census, so every row below is one metric, one script, one library build
 (`dist/ds` 0.11.2 at HEAD).
 
-| scenario | initial gzip | recorded | lazy bytes | has a lazy route? |
-| --- | --- | --- | --- | --- |
-| `baseline` | **30 646** | 30 646 | 0 | **no** |
-| `cdk_only` | **48 375** | 48 375 | 0 | **no** |
-| `placement_after_a3` | **86 376** | 86 775 | **0** | **NO** |
-| `placement_clean` | 59 020 | 59 019 | 574 554 | yes |
-| `anchor_typeonly` | 59 034 | 59 034 | 574 554 | yes |
-| `placement_eager` | 196 633 | 194 763 | 189 | yes |
+| scenario             | initial gzip | recorded | lazy bytes | has a lazy route? |
+| -------------------- | ------------ | -------- | ---------- | ----------------- |
+| `baseline`           | **30 646**   | 30 646   | 0          | **no**            |
+| `cdk_only`           | **48 375**   | 48 375   | 0          | **no**            |
+| `placement_after_a3` | **86 376**   | 86 775   | **0**      | **NO**            |
+| `placement_clean`    | 59 020       | 59 019   | 574 554    | yes               |
+| `anchor_typeonly`    | 59 034       | 59 034   | 574 554    | yes               |
+| `placement_eager`    | 196 633      | 194 763  | 189        | yes               |
 
 `grep -c "lazy-heavy" scenarios/*.ts` settles it: **`placement_after_a3` is the only placement scenario
 with no `await import('./lazy-heavy')`.** Its `lazy=0B` confirms it at build time. So it is the same
@@ -835,13 +830,13 @@ was complaining about — it takes a no-lazy-route measurement and subtracts a l
 Both documents subtract from 86 775. They disagree about the floor, so **one of them must be wrong**,
 and the agent picked the wrong one to condemn:
 
-| document | subtraction | result | verdict |
-| --- | --- | --- | --- |
-| `packaging-diagnosis.md:437` | 86 775 − **30 646** | 56 129 → "CDK is ~32% of it" | **valid** — same app shape |
+| document                          | subtraction         | result                                     | verdict                                            |
+| --------------------------------- | ------------------- | ------------------------------------------ | -------------------------------------------------- |
+| `packaging-diagnosis.md:437`      | 86 775 − **30 646** | 56 129 → "CDK is ~32% of it"               | **valid** — same app shape                         |
 | `packaging-chunking-audit.md:305` | 86 775 − **59 019** | 27 756 → "**falls to 27.8 KB gzip, −80%**" | **INVALID** — 59 019 is the lazy-route app's floor |
 
-So the headline that sizes the entire A3 item — *"the DS's contribution to the initial bundle falls
-from 135.7 KB gzip to 27.8 KB gzip, −80%"* (`packaging-chunking-audit.md:303-306`) — **subtracts a
+So the headline that sizes the entire A3 item — _"the DS's contribution to the initial bundle falls
+from 135.7 KB gzip to 27.8 KB gzip, −80%"_ (`packaging-chunking-audit.md:303-306`) — **subtracts a
 lazy-route floor from a no-lazy-route measurement.** Its 27.8 KB is not a measurement of anything.
 
 **Recomputed with each scenario against its own control:**
@@ -849,7 +844,7 @@ lazy-route floor from a no-lazy-route measurement.** Its 27.8 KB is not a measur
 - eager today: 194 763 − 59 019 = **135 744 B** the DS puts in the initial bundle
 - the services closure, measured alone: 86 775 − 30 646 = **56 129 B** (55 730 B at HEAD)
 - fall: 135.7 → 56.1 kB = **−59%, not −80%**
-- and *"A3 is worth roughly 5.7× the table work"* (`chunking-audit.md:307`) recomputes as
+- and _"A3 is worth roughly 5.7× the table work"_ (`chunking-audit.md:307`) recomputes as
   (135.7 − 56.1) / 18.9 = **4.2×**
 
 **A3 is still the largest single item on the plan by a wide margin, so nothing about the ordering
@@ -888,15 +883,15 @@ Reproduced at HEAD with fresh builds of both scenarios:
 So "moves 576 239 B raw out of the lazy chunk and into the initial bundle"
 (`packaging-chunking-audit.md:294`, `todo.md:317`) is indeed impossible as a description of movement.
 
-But the agent's gloss — *"the extra 9 667 B existed in neither prior artefact"* — is wrong. **It exists
+But the agent's gloss — _"the extra 9 667 B existed in neither prior artefact"_ — is wrong. **It exists
 in the eager build as the services' own code.** `placement_eager` injects `ToastService`, `ModalService`
 and `BodyScrollLockService`; `placement_clean` imports nothing from the DS, so toast, modal and
 scroll-lock were never in its lazy chunk either. The eager build therefore contains code that was in
 NO chunk of the clean build. The residual is new code, not misplaced code.
 
-→ Correct phrasing, and it is a small edit: *"One `inject(ToastService)` collapses the lazy chunk from
+→ Correct phrasing, and it is a small edit: _"One `inject(ToastService)` collapses the lazy chunk from
 574 554 B to 189 B and grows the initial bundle by 585 266 B — the difference being the services' own
-closure, which the clean build never contained."*
+closure, which the clean build never contained."_
 
 ## V-6. B-F8 — **CONFIRMED-BY-ME.** The audit is right and the deck is wrong.
 
@@ -907,32 +902,31 @@ the ratio is 135 744 / 18 900 = **7.18×**. Two different quantities, one ratio.
 
 ## Running validation table — update
 
-| finding | my verdict | what decided it |
-| --- | --- | --- |
-| **B-F1** (saving larger than the thing saved) | **CONFIRMED-BY-ME** | fresh builds: +585 266 in, −574 365 out, residual 10 901 B = the services' own closure |
-| **B-F2** (CDK is 64%, not a third) | **REFUTED-BY-ME** | `placement_after_a3` has no lazy route (`lazy=0B`); 30 646 IS its floor; CDK = 31.8% at HEAD |
-| **NEW (mine): the −80% headline is invalid** | **CONFIRMED-BY-ME** | `chunking-audit.md:305` subtracts a lazy-route floor from a no-lazy-route build; correct figure ≈ −59%, A3 ≈ 4.2× not 5.7× |
-| **NEW (mine): `placement_after_a3` has no control** | **CONFIRMED-BY-ME** | its "0 of 11" is vacuous; the like-for-like control cannot be built until entry points exist |
-| **B-F8** (5.7× vs 7.0×) | **CONFIRMED-BY-ME** | deck 5 attaches the saving's ratio to the gross figure |
-| B-F18 (CSS gzip summed, not measured) | **CONFIRMED-BY-ME** | ablation: 2 156 B, not 3 409 B — see V-3 |
-| B-F16 (86 icons) | **CONFIRMED-BY-ME** | six-ref parse — see V-2 |
-| C-F4 (inline-guard rule false) | **REJECTED-BY-ME** | six-shape build matrix — see V-1 |
+| finding                                             | my verdict          | what decided it                                                                                                            |
+| --------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **B-F1** (saving larger than the thing saved)       | **CONFIRMED-BY-ME** | fresh builds: +585 266 in, −574 365 out, residual 10 901 B = the services' own closure                                     |
+| **B-F2** (CDK is 64%, not a third)                  | **REFUTED-BY-ME**   | `placement_after_a3` has no lazy route (`lazy=0B`); 30 646 IS its floor; CDK = 31.8% at HEAD                               |
+| **NEW (mine): the −80% headline is invalid**        | **CONFIRMED-BY-ME** | `chunking-audit.md:305` subtracts a lazy-route floor from a no-lazy-route build; correct figure ≈ −59%, A3 ≈ 4.2× not 5.7× |
+| **NEW (mine): `placement_after_a3` has no control** | **CONFIRMED-BY-ME** | its "0 of 11" is vacuous; the like-for-like control cannot be built until entry points exist                               |
+| **B-F8** (5.7× vs 7.0×)                             | **CONFIRMED-BY-ME** | deck 5 attaches the saving's ratio to the gross figure                                                                     |
+| B-F18 (CSS gzip summed, not measured)               | **CONFIRMED-BY-ME** | ablation: 2 156 B, not 3 409 B — see V-3                                                                                   |
+| B-F16 (86 icons)                                    | **CONFIRMED-BY-ME** | six-ref parse — see V-2                                                                                                    |
+| C-F4 (inline-guard rule false)                      | **REJECTED-BY-ME**  | six-shape build matrix — see V-1                                                                                           |
 
 ## Calibration ledger — update
 
-| agent | caught on | by |
-| --- | --- | --- |
-| B (arithmetic) | 14 devWarn sites; it is 13 | my grep, agents C and E |
-| B (arithmetic) | **B-F2: inverted the two floors, and condemned the valid subtraction while clearing the invalid one** | my rebuild of all six placement scenarios |
-| C (dev warnings) | C-F4: generalised a raw-esbuild result to our pipeline | my six-shape build matrix |
-| F (my 22 claims) | "83 icons at v0.11.1"; it is 86 | my six-ref parse |
-| E, D | nothing yet | |
+| agent            | caught on                                                                                             | by                                        |
+| ---------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| B (arithmetic)   | 14 devWarn sites; it is 13                                                                            | my grep, agents C and E                   |
+| B (arithmetic)   | **B-F2: inverted the two floors, and condemned the valid subtraction while clearing the invalid one** | my rebuild of all six placement scenarios |
+| C (dev warnings) | C-F4: generalised a raw-esbuild result to our pipeline                                                | my six-shape build matrix                 |
+| F (my 22 claims) | "83 icons at v0.11.1"; it is 86                                                                       | my six-ref parse                          |
+| E, D             | nothing yet                                                                                           |                                           |
 
 **Three of the five wave-1 agents have now been caught in a concrete error, and B — the agent whose
 axis was arithmetic — has been caught twice, once on its own headline finding.** Its remaining
 findings are not thereby void: B-F1, B-F8 and B-F18 all survived my check, and B-F18 was
 UNDER-stated. Each item still has to be settled on its own evidence.
-
 
 ---
 
@@ -952,6 +946,7 @@ definition is not a call site. Four places carry it: `CHANGELOG.md:226`, `dist/d
 (shipped in v0.11.2), `build-flags.d.ts:9`, and the commit message.
 
 **W2-E2 — E2 PARTIAL. The structure is right, the enumeration and the byte figure are not.**
+
 - Correct: `isDevMode()` is a function CALL (`@angular/core/fesm2022/core.mjs:900`); its body folds
   under `--define`, the call does not. In the agent's own esbuild matrix the call form was **the only
   shape that survived `--minify`**. Angular defines nothing that would strip it.
@@ -966,8 +961,9 @@ definition is not a call site. Four places carry it: `CHANGELOG.md:226`, `dist/d
   its template instructions, none of it in the cited lines. It would need two consumer builds.
 
 **W2-E3 — E3 (C-F3) PARTIAL, and the conclusion is confirmed by better evidence than the docs app.**
+
 - **The quoted reproduction command does not work**: `npx tsc -p tsconfig.lib.json --noEmit
-  --skipLibCheck false` aborts with `TS5051` on `inlineSources` and never reaches TS2451. Add
+--skipLibCheck false` aborts with `TS5051` on `inlineSources` and never reaches TS2451. Add
   `--sourceMap` and the TS2451 pair does reproduce exactly.
 - **Context C-F3 omitted, and it matters:** under the settings the repo actually builds with
   (`tsconfig.json:11` sets `skipLibCheck: true`), `npx tsc -p tsconfig.lib.json --noEmit --sourceMap`
@@ -981,9 +977,9 @@ definition is not a call site. Four places carry it: `CHANGELOG.md:226`, `dist/d
   zero `build-flags`, exit 0.
 - Angular's type has no `undefined`, but `typeof x === 'undefined'` is legal against any declared
   identifier — proven by those exit-0 runs.
-→ **Verdict: delete line 18 (`declare const ngDevMode: …`), KEEP the comment.** The declaration is
-redundant and is the sole cause of the masked errors; lines 1-17 are the only record of the technique
-and part of it is load-bearing.
+  → **Verdict: delete line 18 (`declare const ngDevMode: …`), KEEP the comment.** The declaration is
+  redundant and is the sole cause of the masked errors; lines 1-17 are the only record of the technique
+  and part of it is load-bearing.
 
 **W2-E4 — the C-F4 dispute is RESOLVED, and it resolves against MY explanation as well as the agent's.**
 
@@ -1003,17 +999,17 @@ The agent reproduced BOTH results and then found the real mechanism.
 
 **I re-ran this myself, seven shapes, raw esbuild with `--define:dsPrototype=true --minify`:**
 
-| shape | markers left | output |
-| --- | --- | --- |
-| inline, no import | **0** | 40 B |
-| `const`, module has NO import | **0** | 40 B |
-| `const`, UNUSED import before it | 40 | 1 253 B |
-| `const`, import AFTER it, same module | 40 | 1 276 B |
-| `const`, USED import before it | 40 | 1 278 B |
-| `const` in its own IMPORT-FREE module | **0** | 51 B |
-| `const` in its own module that HAS an import | 40 | 1 253 B |
+| shape                                        | markers left | output  |
+| -------------------------------------------- | ------------ | ------- |
+| inline, no import                            | **0**        | 40 B    |
+| `const`, module has NO import                | **0**        | 40 B    |
+| `const`, UNUSED import before it             | 40           | 1 253 B |
+| `const`, import AFTER it, same module        | 40           | 1 276 B |
+| `const`, USED import before it               | 40           | 1 278 B |
+| `const` in its own IMPORT-FREE module        | **0**        | 51 B    |
+| `const` in its own module that HAS an import | 40           | 1 253 B |
 
-Confirmed exactly. Position of the import is irrelevant; used or unused is irrelevant; *any* import in
+Confirmed exactly. Position of the import is irrelevant; used or unused is irrelevant; _any_ import in
 the declaring module defeats the inlining.
 
 → **My V-1 framing was wrong.** It is not "our pipeline versus raw esbuild" — it is module shape, and
@@ -1021,16 +1017,16 @@ raw esbuild reproduces both outcomes on demand. Both measurements were right; my
 
 → **What survives, and it is the part that matters:** every Angular component module imports
 `@angular/core`, so a guard `const` written in a component file can never fold. **The shipped rule
-("the guard must sit INLINE") is correct for every file it governs.** Its stated *reason* at
-`build-flags.d.ts:12-14` — *"esbuild substitutes the identifier but will not propagate the constant
-through module scope"* — is **exactly backwards**: propagation through module scope is precisely the
+("the guard must sit INLINE") is correct for every file it governs.** Its stated _reason_ at
+`build-flags.d.ts:12-14` — _"esbuild substitutes the identifier but will not propagate the constant
+through module scope"_ — is **exactly backwards**: propagation through module scope is precisely the
 case that works.
 
 **W2-E5 — C-F5 PARTIAL, and the "roughly half" rebuttal is REFUTED.** Unreproducible from the record:
 true, there is no `dist-button/` and no `build-button.log`. But the 827 B reconciles once collateral
 tree-shaking is counted — folding the guarded block also orphans `DISCOURAGED_COMBOS` (669 B) and
 `devWarn` itself (369 B): 867 + 669 + 369 = 1 905 B raw → **779 B gzip**, within 6% of 827.
-→ Correct statement: *not reproducible from anything recorded, but plausible and not contradicted.*
+→ Correct statement: _not reproducible from anything recorded, but plausible and not contradicted._
 
 **W2-E6 — C-F6 CONFIRMED**, with context: `npm run format` currently reports 121 files with issues and
 sits under `run-s -c`, so widening the glob would not make CI fail anyway.
@@ -1042,16 +1038,19 @@ sits under `run-s -c`, so widening the glob would not make CI fail anyway.
 
 The agent flagged its own methodology failure first, unprompted: its initial synthetic battery returned
 0 for every case **including the positive control**, caused by a Bash heredoc collapsing `\\` to `\`.
-It caught it *because* the baseline was 0 and re-ran. **Only runs whose positive control fired are
+It caught it _because_ the baseline was 0 and re-ran. **Only runs whose positive control fired are
 reported.** That is the discipline this whole exercise is for.
 
 **W2-D1 — CONFIRMED, with three corrections, and the "31" holds.**
+
 ```
 SCC-defaults (as shipped)  TOTAL 308
 PROBE core(13)             TOTAL 277
 EXTRA = 31        ONLY-IN-PROBE = 0
 ```
+
 The probe run is a strict subset — the defaults miss nothing.
+
 1. **D-F1's itemisation sums to 30, not 31** — it says "menu ×5"; `menu.component.ts` adds a sixth.
 2. **"All inside the planned core entry" is true and STRONGER than D-F1 claimed.** Every source group
    and every target group is one of the 13. The agent also tested the **post-A3-pre** partition (card
@@ -1060,11 +1059,11 @@ The probe run is a strict subset — the defaults miss nothing.
    `theme` and `components/card` in the core entry, which `42b54a0b` reverses. So "the correct
    configuration exists only in the gitignored probe" should read: **no correct configuration exists
    anywhere.**
-On "false positive": acting on one means rewriting `button.component.ts:12` to import
-`@ids-group-ltd/ids-design-system/core` **from a file inside the core entry** — a self-referential
-entry-point import. Today it is fully moot (`npx eslint "src/lib/**/*.ts"` → 0 messages); it fires the
-day someone follows the shipped instruction, and `eslint.config.mjs:124-128` and `todo.md:565` both say
-only "flip it to `'error'`".
+   On "false positive": acting on one means rewriting `button.component.ts:12` to import
+   `@ids-group-ltd/ids-design-system/core` **from a file inside the core entry** — a self-referential
+   entry-point import. Today it is fully moot (`npx eslint "src/lib/**/*.ts"` → 0 messages); it fires the
+   day someone follows the shipped instruction, and `eslint.config.mjs:124-128` and `todo.md:565` both say
+   only "flip it to `'error'`".
 
 **W2-D2 — CONFIRMED, and materially understated.** 99/68/64/17 reproduced. `src/lib` contains no
 `components-root` directory and no ng-packagr layout produces one.
@@ -1080,13 +1079,13 @@ resolved target. The `package.json` collision is real in the abstract and unreac
 
 **W2-D3 — CONFIRMED, and D-F3's diagnosis of the 81% is BACKWARDS.**
 
-| target | defaults (308) | probe (277) |
-| --- | --- | --- |
-| components-root | 99 | 92 |
-| core | 68 | 60 |
-| icons | 64 | 57 |
-| field-message | 17 | 15 |
-| **top-4 share** | **80.5%** | **80.9%** |
+| target          | defaults (308) | probe (277) |
+| --------------- | -------------- | ----------- |
+| components-root | 99             | 92          |
+| core            | 68             | 60          |
+| icons           | 64             | 57          |
+| field-message   | 17             | 15          |
+| **top-4 share** | **80.5%**      | **80.9%**   |
 
 `todo.md:559-560`'s 92/60/57/15 is an exact match for the probe run. **But 224/276 = 81.2% is the probe
 run's own internally consistent arithmetic — the percentage is not the error; the four absolute counts
@@ -1099,11 +1098,12 @@ Provenance of the 307→308 delta confirmed directly: `git diff e8cef30a..HEAD -
 
 **W2-D4 — CONFIRMED as a gap, its JUSTIFICATION REFUTED.** `ImportExpression` is absent and a dynamic
 relative import reports 0. But **`@defer` is template syntax lowered by the Angular compiler; that node
-never exists in the `.ts` source ESLint parses**, and `todo.md:580` is about *consumer* code. Fix it —
+never exists in the `.ts` source ESLint parses**, and `todo.md:580` is about _consumer_ code. Fix it —
 but because a human will write `await import('../x/y')` during A3, not because of `@defer`.
 
 **W2-D5…D12, each tested with a firing positive control:**
-- **D-F5 CONFIRMED**, and *not* a one-word fix: `TSImportType` carries `argument`, not `source`.
+
+- **D-F5 CONFIRMED**, and _not_ a one-word fix: `TSImportType` carries `argument`, not `source`.
 - **D-F6 CONFIRMED but inert** — `@typescript-eslint/no-require-imports` already fires on the same line.
 - **D-F7 CONFIRMED, and the fail-open is broader than stated.** `'./x.ts'`, `'./x.js'` and
   `'../../does-not-exist/nope'` all report 0. The reachable defect is not the extension case (which
@@ -1116,7 +1116,7 @@ but because a human will write `await import('../x/y')` during A3, not because o
 - **D-F10 CONFIRMED as a code defect, REFUTED as a reachable one.** Proven at unit level with
   `Linter.verify` (which does not normalise), and refuted at every supported entry point: CLI
   `--stdin-filename`, Node API absolute posix, and Node API relative posix **all** produce 10 reports.
-  The agent then named the defect D-F10 *should* have found: `lastIndexOf` has no separator boundary
+  The agent then named the defect D-F10 _should_ have found: `lastIndexOf` has no separator boundary
   check, so a checkout under `…\src\library\…` mis-roots the analysis instead of disabling it.
 - **D-F11 CONFIRMED as fact, unreachable**: needs `X.d.ts` and `X/index.ts` for one base;
   `src/lib/core/build-flags.d.ts` is the only `.d.ts` and has no sibling directory.
@@ -1125,15 +1125,16 @@ but because a human will write `await import('../x/y')` during A3, not because o
 
 **W2 on the reversed comment — CONFIRMED, and the history makes it worse.** `git show 2e1535aa`
 (2026-09-01 20:59, "a comment pass over everything the last three releases touched") rewrote:
+
 ```
 - *  config's type imports create (accepted 2026-09-01 - breaking it saves 593 B gzip). */
 + *  config's type imports create - accepted, because breaking it saves 593 B gzip. */
 ```
+
 **The comment pass stripped the date, converting a dated record into a standing claim — and the next
 day's commit falsified it.** Separately the sentence is a non-sequitur: "accepted, **because** breaking
 it **saves** 593 B" gives a reason to break it as the reason not to. `todo.md:522` states it correctly
 ("accepting the cycle **costs** 593 B").
-
 
 ## Wave 2 on the audit of my 22 claims
 
@@ -1142,6 +1143,7 @@ Every citation re-verified line by line (the JSDoc block is `:20-33`, the provid
 `:25` as `packaging-diagnosis.md:81` cites). The stylesheet anchors nothing: `ng-add` injects an SCSS
 `@use`, contributing zero JS and zero runtime symbols.
 **But the agent then asked the question F did not**, and found the answer in this repo:
+
 - **`ds-docs` is a real consumer with an eager anchor twice over — and never via `provideDsTheme`.**
   `ds-docs/src/app/app.config.ts:7,18` provides `DS_TOAST_CONFIG` (a runtime `InjectionToken`) at the
   root; `app.ts:3-8` imports `AppLayoutComponent, ButtonComponent, IconButtonComponent, TopBarComponent`
@@ -1149,10 +1151,10 @@ Every citation re-verified line by line (the JSDoc block is `:20-33`, the provid
   `packaging-diagnosis.md:70`, within 148 B of the theme-provider row.
 - **But "there is no consumer for whom this is hypothetical" is refuted by the document's own table.**
   Rows `:66` and `:67` ARE that consumer, and both were built and measured.
-→ **Correct statement:** an app that renders any DS component or provides any DS token in its root shell
-has an eager anchor — true of `ds-docs` itself; an all-lazy app with a DS-free shell has none.
-**Severity HIGH → MEDIUM**: the anchor-equivalence measurement is untouched and the A3 recommendation is
-unaffected. **Two documents carry the bad premise**, not one — `todo.md:534` repeats it verbatim.
+  → **Correct statement:** an app that renders any DS component or provides any DS token in its root shell
+  has an eager anchor — true of `ds-docs` itself; an all-lazy app with a DS-free shell has none.
+  **Severity HIGH → MEDIUM**: the anchor-equivalence measurement is untouched and the A3 recommendation is
+  unaffected. **Two documents carry the bad premise**, not one — `todo.md:534` repeats it verbatim.
 
 **W2-V10 — F-#10 PARTIAL: the headline is right, two of F's three numbers are wrong.** Counted at six
 refs plus the shipped `.d.ts`: **86 everywhere back to v0.10.0** (85 at v0.9.1). **F's "83 at v0.11.1"
@@ -1171,12 +1173,12 @@ claim is `115 345 B` at `packaging-diagnosis.md:400`, the "one entry per compone
 multi-line imports included — my first run missed the `time-picker ↔ time-columns` pair because the
 regex forbade newlines; corrected, all three SCCs appear):
 
-| cut | statements touched | non-trivial SCCs left |
-| --- | --- | --- |
-| **the doc plan** — `ds-config`→core AND `card.types`→core | **17** | `core+icons` (+ the 2 sibling pairs) |
-| **`card.types` → core, ALONE** | **4** | `config+core+icons` |
-| `card.types` → config, alone | 4 | `config+core+icons` |
-| **`ds-config` → core, ALONE** | **14** | **`card+core+icons` — card STILL trapped** |
+| cut                                                       | statements touched | non-trivial SCCs left                      |
+| --------------------------------------------------------- | ------------------ | ------------------------------------------ |
+| **the doc plan** — `ds-config`→core AND `card.types`→core | **17**             | `core+icons` (+ the 2 sibling pairs)       |
+| **`card.types` → core, ALONE**                            | **4**              | `config+core+icons`                        |
+| `card.types` → config, alone                              | 4                  | `config+core+icons`                        |
+| **`ds-config` → core, ALONE**                             | **14**             | **`card+core+icons` — card STILL trapped** |
 
 Three things follow, and each is published wrongly today:
 
@@ -1217,15 +1219,16 @@ read on a component instance, not a constant esbuild can fold. `define` has no r
 replaced.**
 
 **W2-V15b — F-#15b REFUTED. Two different objects, both sound.**
+
 - `chunking-audit.md:339` / `packaging-diagnosis.md:153` **"core (13 groups)"** is a computed transitive
   closure seed: 12 groups plus `components/card` from the accepted SCC. `:339` states the check
   explicitly: 77 − 13 = 64.
 - `todo.md:479` **"core | 15"** is a **semantic cluster** in a six-way hand partition after merging its
   SCCs. That table sums 60 + 15 + 2 = 77. ✔
-Different definitions, different partitions, both summing to the independently measured 77.
-**The real defect is traceability**, not contradiction: neither document says which object "core"
-denotes at the point of use, and the cluster membership behind the 15 is recorded nowhere, so it cannot
-be recomputed. → label them **"core seed (13)"** and **"core cluster (15)"**.
+  Different definitions, different partitions, both summing to the independently measured 77.
+  **The real defect is traceability**, not contradiction: neither document says which object "core"
+  denotes at the point of use, and the cluster membership behind the 15 is recorded nowhere, so it cannot
+  be recomputed. → label them **"core seed (13)"** and **"core cluster (15)"**.
 
 **W2-V17b — F-#17b CONFIRMED on ng-packagr, and the agent answered the decision question with a
 controlled experiment.** `flatModuleFile` verified at `entry-point.js:138-139`, consumed at `:106`,
@@ -1240,23 +1243,23 @@ fixtures.** `@arethetypeswrong/cli` is not installed, not in `package.json`, and
 tried first failed its own positive control and was discarded), TypeScript 5.9.3, and a negative control
 in every run:
 
-| specifier | node10 | bundler | node16 |
-| --- | --- | --- | --- |
-| `shapelib-a` (root) | OK | OK | OK |
-| `shapelib-a/src/lib/components/button` (native long path) | **OK** | OK | OK |
-| `shapelib-a/button` (hand-added ALIAS, no directory) | **FAIL** | OK | OK |
-| `shapelib-b/components/button` (stub + `typesVersions`) | **OK** | OK | OK |
-| `shapelib-c/button` (stub, **NO** `typesVersions`) | **OK** | OK | OK |
-| `shapelib-c/does-not-exist` | FAIL | FAIL | FAIL |
+| specifier                                                 | node10   | bundler | node16 |
+| --------------------------------------------------------- | -------- | ------- | ------ |
+| `shapelib-a` (root)                                       | OK       | OK      | OK     |
+| `shapelib-a/src/lib/components/button` (native long path) | **OK**   | OK      | OK     |
+| `shapelib-a/button` (hand-added ALIAS, no directory)      | **FAIL** | OK      | OK     |
+| `shapelib-b/components/button` (stub + `typesVersions`)   | **OK**   | OK      | OK     |
+| `shapelib-c/button` (stub, **NO** `typesVersions`)        | **OK**   | OK      | OK     |
+| `shapelib-c/does-not-exist`                               | FAIL     | FAIL    | FAIL   |
 
 Ablations, each isolating one cause:
 
-| variant | `shapelib-b/components/button` under node10 |
-| --- | --- |
-| as shipped (stub + typesVersions) | OK |
-| **minus `typesVersions`, stubs kept** | **OK** — the typesVersions is redundant |
+| variant                                       | `shapelib-b/components/button` under node10    |
+| --------------------------------------------- | ---------------------------------------------- |
+| as shipped (stub + typesVersions)             | OK                                             |
+| **minus `typesVersions`, stubs kept**         | **OK** — the typesVersions is redundant        |
 | **minus `typesVersions` AND minus the stubs** | **FAIL** — the stubs are what make node10 work |
-| dist-A + a `typesVersions` for its alias | its alias goes **OK** |
+| dist-A + a `typesVersions` for its alias      | its alias goes **OK**                          |
 
 **ng-packagr already emits a per-entry-point node10 compatibility stub** — `dist-C/button/package.json`
 is `{"module": "../fesm2022/shapelib-c-button.mjs", "typings": "../types/shapelib-c-button.d.ts"}` —
@@ -1272,6 +1275,7 @@ do not carry at all.
 `require()` under node10 CJS would still fail. Irrelevant for an Angular ESM library, but unmeasured.
 
 **W2 re-tests of F's clean bill (it picked five, not the three I asked for):**
+
 - **#13 CONFIRMED** — rebuilt the graph, ran Tarjan, got exactly the three SCCs, matching
   `DEFAULT_CO_LOCATED`. **My own independent run agrees** (after fixing my multi-line regex).
 - **#16 — F's numbers right, the documents' not, and a NEW defect found.** 556 relative statements,
@@ -1289,20 +1293,20 @@ do not carry at all.
 - **#12 CONFIRMED arithmetically** with the caveat wave 1 should have recorded: it is a difference of
   two builds, carrying both builds' error, and **no artifact for either is preserved**.
 
-
 ## Wave 2 on records consistency
 
 **W2-R1 — PARTIAL. Agent E flattened five heterogeneous sites into one verdict; only two are wrong
 today.**
+
 - **Genuinely wrong now (both in deck 4):** `:100-101` asserts "priced and declined — 593 B gzip against
   **40 import rewrites**", where the 40 is refuted on its own terms by `todo.md:518` ("The 40 came from
   assuming `icons.data.ts` (28 importers) had to move too. **It does not.**"), and it cites commit
-  `d6b52890` — real, but the *superseded* declining commit, so a reader who follows the hash lands on
+  `d6b52890` — real, but the _superseded_ declining commit, so a reader who follows the hash lands on
   the wrong record. `:253-255` says `ds-card` "lives in the core entry as a result", which the reversal
   undoes.
 - **Stale rationale on a still-correct number (three sites):** `chunking-audit.md:338`,
   `todo.md:335-336`, `todo.md:392`. **The arithmetic is correct TODAY** — no code has moved,
-  `ds-config.ts` still type-imports from `card`, so a partition computed on today's graph *does* put
+  `ds-config.ts` still type-imports from `card`, so a partition computed on today's graph _does_ put
   `card` in the core seed. Only the word "accepted" has gone stale. These become **numerically** wrong
   the day A3-pre lands, not before.
 - **The real reader hazard:** `todo.md` says "accepted rather than broken" at `:335` and "DO IT /
@@ -1393,6 +1397,7 @@ on-disk size. **Both figures reproduce to the byte at the version the document n
 → **Restating this as an error would itself be the mistake.**
 
 **W2-R25 — PARTIAL: one of three wrong, two reproduce exactly.**
+
 - **"85 exported `*Component` classes" REFUTED** — `todo.md:658` states its method verbatim
   (`grep -rho 'export class .*Component' src/lib | sort -u`) and that command returns **85**. E's 84
   came from a stricter regex dropping `W3wComponent`.
@@ -1406,12 +1411,14 @@ on-disk size. **Both figures reproduce to the byte at the version the document n
 what **rescues** R21 and R22.
 
 **W2-R38 — REFUTED. Agent E compared gzip against brotli.**
+
 ```
 gzip -9 -c < dist-core_seed/browser/main.js       -> 84 430 B   (todo.md:523)
 gzip -9 -c < dist-core_seed_card/browser/main.js  -> 85 023 B   (todo.md:523)
 delta 593 B  ✓
 brotli seed 74 371 -> 74.37 kB   card 75 018 -> 75.02 kB   delta 647 B
 ```
+
 Angular's `Estimated transfer size` in the retained build logs is **brotli**. 593 B (gzip) and ~650 B
 (brotli) are two correct compressions of the same 2 984-byte raw delta. E's own 84 438 / 85 031 are the
 same files gzipped **with** the filename in the header (`gzip -c file` rather than `gzip -c < file`) —
@@ -1427,7 +1434,6 @@ recommendation, in the index everyone reads first) ② the shipped devWarn item 
 ③ deck 4 `:100-101`/`:253-255` ④ deck 4 `:250` ⑤ `chunking-audit.md:268`'s absolute import claim.
 **Findings wave 2 says should be STRUCK from the record: E-F21, E-F38, and two-thirds of E-F25.**
 
-
 ---
 
 # STEP 4 — MY VALIDATION OF WAVE 2
@@ -1441,15 +1447,15 @@ Wave 2 claimed the inline-vs-const split is not about our pipeline at all: esbui
 `const` only when the declaring module has **no `import` statement**. I built seven shapes and ran raw
 esbuild 0.27.3 with `--bundle --format=esm --define:dsPrototype=true --minify`, 40 markers each:
 
-| shape | markers left | output |
-| --- | --- | --- |
-| inline, no import | **0** | 40 B |
-| `const`, module has NO import | **0** | 40 B |
-| `const`, **UNUSED** import before it | 40 | 1 253 B |
-| `const`, import **AFTER** it, same module | 40 | 1 276 B |
-| `const`, **USED** import before it | 40 | 1 278 B |
-| `const` in its own **import-free** module | **0** | 51 B |
-| `const` in its own module **that has an import** | 40 | 1 253 B |
+| shape                                            | markers left | output  |
+| ------------------------------------------------ | ------------ | ------- |
+| inline, no import                                | **0**        | 40 B    |
+| `const`, module has NO import                    | **0**        | 40 B    |
+| `const`, **UNUSED** import before it             | 40           | 1 253 B |
+| `const`, import **AFTER** it, same module        | 40           | 1 276 B |
+| `const`, **USED** import before it               | 40           | 1 278 B |
+| `const` in its own **import-free** module        | **0**        | 51 B    |
+| `const` in its own module **that has an import** | 40           | 1 253 B |
 
 Reproduced exactly. Import position is irrelevant, used-or-unused is irrelevant: **any import in the
 declaring module defeats the inlining.**
@@ -1474,12 +1480,12 @@ newlines inside an import statement, so it missed every multi-line `} from '…'
 all three reappeared, and the cut results were unchanged. **A graph analysis that finds fewer cycles
 than the shipped lint rule already encodes is wrong, and that is the check to run first.**
 
-| cut | statements touched in `src/lib` | non-trivial SCCs left |
-| --- | --- | --- |
-| **doc plan** — `ds-config`→core **and** `card.types`→core | **17** | `core+icons`, `radio` pair, `time` pair |
-| **`card.types` → core ALONE** | **4** | `config+core+icons`, + the 2 pairs |
-| `card.types` → config alone | 4 | same |
-| **`ds-config` → core ALONE** | **14** | **`card+core+icons`** — card still trapped, + the 2 pairs |
+| cut                                                       | statements touched in `src/lib` | non-trivial SCCs left                                     |
+| --------------------------------------------------------- | ------------------------------- | --------------------------------------------------------- |
+| **doc plan** — `ds-config`→core **and** `card.types`→core | **17**                          | `core+icons`, `radio` pair, `time` pair                   |
+| **`card.types` → core ALONE**                             | **4**                           | `config+core+icons`, + the 2 pairs                        |
+| `card.types` → config alone                               | 4                               | same                                                      |
+| **`ds-config` → core ALONE**                              | **14**                          | **`card+core+icons`** — card still trapped, + the 2 pairs |
 
 1. **The published "14" (11 + 3) is `ds-config` alone**, which leaves `components/card` inside a
    three-way SCC. It is the cost of a move that does not achieve the goal.
@@ -1508,24 +1514,24 @@ row **including the positive controls** — an all-red table is a broken harness
 it with a real `node_modules` (copies of dist-A/B/C), the default compiler host, TypeScript 5.9.3, and
 `shapelib-c/does-not-exist` as a negative control in every run.
 
-| specifier | node10 | bundler | node16 |
-| --- | --- | --- | --- |
-| `shapelib-a` (root) | OK | OK | OK |
-| `shapelib-a/src/lib/components/button` (native long path) | **OK** | OK | OK |
-| `shapelib-a/button` (hand-added alias, **no directory**) | **FAIL** | OK | OK |
-| `shapelib-b` (root facade) | OK | OK | OK |
-| `shapelib-b/components/button` (stub + `typesVersions`) | **OK** | OK | OK |
-| `shapelib-c/button` (stub, **no** `typesVersions`) | **OK** | OK | OK |
-| `shapelib-c/does-not-exist` | FAIL | FAIL | FAIL |
+| specifier                                                 | node10   | bundler | node16 |
+| --------------------------------------------------------- | -------- | ------- | ------ |
+| `shapelib-a` (root)                                       | OK       | OK      | OK     |
+| `shapelib-a/src/lib/components/button` (native long path) | **OK**   | OK      | OK     |
+| `shapelib-a/button` (hand-added alias, **no directory**)  | **FAIL** | OK      | OK     |
+| `shapelib-b` (root facade)                                | OK       | OK      | OK     |
+| `shapelib-b/components/button` (stub + `typesVersions`)   | **OK**   | OK      | OK     |
+| `shapelib-c/button` (stub, **no** `typesVersions`)        | **OK**   | OK      | OK     |
+| `shapelib-c/does-not-exist`                               | FAIL     | FAIL    | FAIL   |
 
 Ablations, each isolating one cause, negative control failing throughout:
 
-| variant | `shapelib-b/components/button` @ node10 |
-| --- | --- |
-| as shipped | OK |
-| **minus `typesVersions`**, stubs kept | **OK** — so the hand-written map is redundant |
-| **minus `typesVersions` AND minus the on-disk stubs** | **FAIL** |
-| dist-A **plus** a `typesVersions` for its alias | that alias flips to **OK** |
+| variant                                               | `shapelib-b/components/button` @ node10       |
+| ----------------------------------------------------- | --------------------------------------------- |
+| as shipped                                            | OK                                            |
+| **minus `typesVersions`**, stubs kept                 | **OK** — so the hand-written map is redundant |
+| **minus `typesVersions` AND minus the on-disk stubs** | **FAIL**                                      |
+| dist-A **plus** a `typesVersions` for its alias       | that alias flips to **OK**                    |
 
 The cause is on disk: **ng-packagr emits a node10 compatibility stub per entry point.**
 `dist-C/button/package.json` is `{"module": "../fesm2022/shapelib-c-button.mjs", "typings":
@@ -1543,18 +1549,18 @@ a bundler, but it is the row attw would have covered and I did not.
 
 ## Where the two waves disagree, and who wins
 
-| question | wave 1 | wave 2 | **my verdict** |
-| --- | --- | --- | --- |
-| devWarn call sites | B: 14 · C, E: 13 | 13, and **found the cause of the 14** (grep matched the definition) | **13** |
-| the const-fold rule | C: the doc comment is FALSE | it is true for every module with an import | **the rule holds; its stated reason is backwards** |
-| CDK's share of post-A3 cost | B: 64%, not "a third" | (arithmetic axis still running) | **~32% — B inverted the floors** (V-4) |
-| icon map size | B, E: 86 · F: 83 at v0.11.1 | **86** at six refs | **86 everywhere back to v0.10.0** |
-| the A3-pre cut | doc: 14 · F: 15-16 | 17 for the doc plan, **4 for the goal** | **4 is the useful cut** (V-8) |
-| node10 breakage | doc: measured breaking change | refuted by the fixtures | **refuted — stubs make node10 work** (V-9) |
-| `ds-table` 62 inputs / 76 KB | E: wrong, it is 66 / 81 200 | **exact at the stated 0.11.1 baseline** | **strike the finding** |
-| the 593 B figure | E: log says 650, unreproducible | gzip vs **brotli** | **strike the finding** |
-| "core" = 13 or 15 | F: a contradiction | two different objects, both sound | **not a contradiction — a labelling gap** |
-| CSS partial total | B-F18: SUSPECTED, summed not measured | (wave 2 verified the ROWS, not the total) | **CONFIRMED and worse: 2 156 B, not 3 409** (V-3) |
+| question                     | wave 1                                | wave 2                                                              | **my verdict**                                     |
+| ---------------------------- | ------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------- |
+| devWarn call sites           | B: 14 · C, E: 13                      | 13, and **found the cause of the 14** (grep matched the definition) | **13**                                             |
+| the const-fold rule          | C: the doc comment is FALSE           | it is true for every module with an import                          | **the rule holds; its stated reason is backwards** |
+| CDK's share of post-A3 cost  | B: 64%, not "a third"                 | (arithmetic axis still running)                                     | **~32% — B inverted the floors** (V-4)             |
+| icon map size                | B, E: 86 · F: 83 at v0.11.1           | **86** at six refs                                                  | **86 everywhere back to v0.10.0**                  |
+| the A3-pre cut               | doc: 14 · F: 15-16                    | 17 for the doc plan, **4 for the goal**                             | **4 is the useful cut** (V-8)                      |
+| node10 breakage              | doc: measured breaking change         | refuted by the fixtures                                             | **refuted — stubs make node10 work** (V-9)         |
+| `ds-table` 62 inputs / 76 KB | E: wrong, it is 66 / 81 200           | **exact at the stated 0.11.1 baseline**                             | **strike the finding**                             |
+| the 593 B figure             | E: log says 650, unreproducible       | gzip vs **brotli**                                                  | **strike the finding**                             |
+| "core" = 13 or 15            | F: a contradiction                    | two different objects, both sound                                   | **not a contradiction — a labelling gap**          |
+| CSS partial total            | B-F18: SUSPECTED, summed not measured | (wave 2 verified the ROWS, not the total)                           | **CONFIRMED and worse: 2 156 B, not 3 409** (V-3)  |
 
 ## Still open
 
@@ -1564,17 +1570,16 @@ a bundler, but it is the row attw would have covered and I did not.
 - **My own new finding — the `−80%` headline in `chunking-audit.md:305` is invalid** — has had no
   adversarial pass at all. It should get one before it is acted on.
 
-
 ## Wave 2 on the arithmetic findings — **two of the nine do not survive**
 
 **W2-C1 — B-F1 CONFIRMED on the arithmetic, severity OVERSTATED, and the residual is fully explained
 without a rebuild.** The agent read `run-placement.sh` and noticed the "lazy chunk" column is a
 **residual**, not a chunk: `lazy = total − initial`. So each row's total is recoverable:
 
-| row | initial | "lazy" | **total JS** |
-| --- | --- | --- | --- |
-| no eager DS symbol | 178 723 | 566 761 | **745 484** |
-| `inject(ToastService)` | 754 962 | 189 | **755 151** |
+| row                    | initial | "lazy"  | **total JS** |
+| ---------------------- | ------- | ------- | ------------ |
+| no eager DS symbol     | 178 723 | 566 761 | **745 484**  |
+| `inject(ToastService)` | 754 962 | 189     | **755 151**  |
 
 `576 239 − 566 572 = 9 667`, and `755 151 − 745 484 = 9 667` **exactly**. The residual is the growth in
 total emitted JS — the toast closure the DS-free build never retained.
@@ -1594,8 +1599,8 @@ it is `scenarios/baseline.ts` in the same workspace.**
 Its sanity check is the one I wish I had made: one `<ds-button>` alone costs 32 087 B gzip over the same
 bare app, and the services closure contains button + icon + spinner + modal-card + toast + modal + CDK
 overlay. **56 129 fits; 27 756 would make the whole closure cheaper than one button inside it.**
-→ And it reached my V-4 conclusion unprompted: *"If anything the first-wave picked the wrong one of the
-two to correct."*
+→ And it reached my V-4 conclusion unprompted: _"If anything the first-wave picked the wrong one of the
+two to correct."_
 
 **W2-C3 — B-F3 CONFIRMED, and the rejection is STRENGTHENED.** 18 172 and 32 022 re-derived. They are
 not contradictory as numbers — different populations, same build — but the document asserts two mutually
@@ -1619,9 +1624,9 @@ in the eleven no-runtime-edge list **and** in the 13-group core seed, and that d
 only way the sum closes: runtime-edge universe 77 − 11 = 66; core contributes 11 of those; complement
 **55** ✔. Full universe with a 13-group core: **64** ✔. Naive `55 + 11 = 66` overshoots by exactly 2 =
 `theme` double-counted + `card` moved.
-*(The agent disclosed that its own classifier found 10 no-edge groups, traced the gap to its regex —
+_(The agent disclosed that its own classifier found 10 no-edge groups, traced the gap to its regex —
 `status-dot.component.ts:2` is an `import type` — and credited the audit's 11 as right. Same class of
-self-caught error as my multi-line-import miss.)*
+self-caught error as my multi-line-import miss.)_
 
 **W2-C6 — B-F6 REFUTED, and B-F6's citation is wrong too.** The agent ran the probe config and got
 **277 violations**, with `components-root 92 / core 60 / icons 57 / field-message 15 = 224 = 80.9%`, and
@@ -1649,11 +1654,11 @@ multiplier and swapped the gross figure in.
 
 **W2-C9 — B-F9 PARTIAL, and one of the three is a DEFINITION difference, not an error.**
 
-| number | what it counts | verdict |
-| --- | --- | --- |
-| **71** (deck 8 `:188,315`) | component folders | **correct** |
-| **85** (deck 4 `:236,248`, labelled "component folders") | `grep -rho 'export class .*Component' \| sort -u` = 85; `@Component` decorators = 85 | **number right, LABEL wrong** — a class count called folders. `todo.md:668` states this method explicitly |
-| **95** (`chunking-audit.md:268`, `basic-advanced-split-audit.md:158,181`, `todo.md:686`, `packaging-diagnosis.md:19,50,97`) | nothing reproducible | **wrong under every definition** |
+| number                                                                                                                      | what it counts                                                                       | verdict                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| **71** (deck 8 `:188,315`)                                                                                                  | component folders                                                                    | **correct**                                                                                               |
+| **85** (deck 4 `:236,248`, labelled "component folders")                                                                    | `grep -rho 'export class .*Component' \| sort -u` = 85; `@Component` decorators = 85 | **number right, LABEL wrong** — a class count called folders. `todo.md:668` states this method explicitly |
+| **95** (`chunking-audit.md:268`, `basic-advanced-split-audit.md:158,181`, `todo.md:686`, `packaging-diagnosis.md:19,50,97`) | nothing reproducible                                                                 | **wrong under every definition**                                                                          |
 
 The agent checked every plausible denominator at 0.11.1 — 71 folders, 80 documented components, 85
 classes, 88 `export *` lines, 96 declarables, 107 declarable classes. **None is 95.**
@@ -1662,7 +1667,6 @@ three confirmed.
 → **New, in the same family:** `chunking-audit.md:9-10,186` records "73 component folders" for 0.7.0;
 `git ls-tree -d v0.7.0:src/lib/components` returns **66**. So four distinct folder counts circulate
 (66/71 real, 73/85/95 written).
-
 
 ---
 
@@ -1681,7 +1685,7 @@ Same conclusion as my V-4 and as W2-C2, reached through a byte-level reconstruct
   bare app 92 686 B → payload closure **649 291 B**.
 - `chunking-audit.md:290` — **split**: initial 178 723 + lazy 566 761 = **745 484 B** total.
   Splitting overhead = 745 484 − 741 977 = **3 507 B**.
-- Payload left in the *eager* chunk = 649 291 − 566 761 = **82 530 B**.
+- Payload left in the _eager_ chunk = 649 291 − 566 761 = **82 530 B**.
 - And 178 723 − 92 686 = **86 037 = 82 530 + 3 507**, exactly.
 
 **So the "DS-free floor" of 59 019 contains 86 037 B raw / 28 373 B gzip of code that exists only
@@ -1692,8 +1696,8 @@ becomes **~4×**. Every figure matches what I computed in V-4 from fresh builds.
 Propagated to: `chunking-audit.md:305-306,308`, `packaging-diagnosis.md:150,153,261`, `todo.md:321-322`.
 
 **M-F2 — HIGH, CONFIRMED. A SECOND instance of the same failure class, which nobody had found.**
-`packaging-diagnosis.md:218-222`: *"an app shell … 201 283 B … Built on its own that closure is
-101 108 B gzip, so an eager-shell consumer stands to save ~98 kB gzip"*. `201 283` is
+`packaging-diagnosis.md:218-222`: _"an app shell … 201 283 B … Built on its own that closure is
+101 108 B gzip, so an eager-shell consumer stands to save ~98 kB gzip"_. `201 283` is
 `scenarios/anchor_shell.ts` (**has** the lazy route); `101 108` is `scenarios/shell_closure.ts`
 (**no** lazy route). Split-app initial minus monolithic total, again.
 → Corrected: ≈ 59 019 + (101 108 − 30 646) = 129 481 → saving ≈ **72 kB, not 98 kB**.
@@ -1759,8 +1763,8 @@ exactly the gap my V-9 node10 experiment fills from the other side: I resolved t
 ## Measurement-definition defects
 
 **M-F7 — "initial" is computed by grepping only `main.js`.** `run-placement.sh:11-15`:
-`grep -oE 'from"\./chunk-[A-Z0-9]+\.js"' "$main"`. Two holes: a chunk statically imported by *another
-eager chunk* is never found, and a bindingless `import"./chunk-X.js"` does not match. Both under-count
+`grep -oE 'from"\./chunk-[A-Z0-9]+\.js"' "$main"`. Two holes: a chunk statically imported by _another
+eager chunk_ is never found, and a bindingless `import"./chunk-X.js"` does not match. Both under-count
 initial and over-count lazy, **and both get likelier as chunk count rises — precisely in the
 per-component arms the recommendation rests on.** The Angular builder prints the correct answer in every
 log and was not used. Not yet shown to have bitten (the one surviving multi-chunk build has an eager
@@ -1799,7 +1803,7 @@ B-F2's 64%.
 **M-F14, M-F16, M-F18, M-F19, M-F20 (LOW):** the §10 fixture on disk is not the one §10 measured (built
 14 h apart, from two separately authored sources, CRLF vs LF — so "38 bytes apart" is unearned
 precision across two builds); the icon claim has a scope error **and repeats the 115** (the agent did
-not catch that the map is 86 — *its own instance of the error it was auditing*); attw has no recoverable
+not catch that the map is 86 — _its own instance of the error it was auditing_); attw has no recoverable
 method and ng-packagr does not emit `typesVersions`; the "61 entry points 9 s" build-time figure is a
 single unlogged run; and the seam overhead was measured in a multi-entry library and applied to a
 single-entry one, with the app builds gone.
@@ -1819,7 +1823,7 @@ single-entry one, with the app builds gone.
   its 26 raw bytes are explained.
 - **Discriminating controls exist in four fixtures and were observed going RED**: granularity-probe's
   grouped arm, scale-probe's `many_one`, entrypoint-probe's `ctl`, and the `@defer` facade arm — the
-  last of which proves the facade/deep comparison is *capable* of showing a difference, **so
+  last of which proves the facade/deep comparison is _capable_ of showing a difference, **so
   "byte-identical" elsewhere is not instrument blindness.**
 - **`define-probe` is the best-run fixture in the set**: raw sizes and marker counts reproduce exactly,
   an `explicit-full` control configuration exists, a dev build is retained as a third arm, **and the
@@ -1827,9 +1831,8 @@ single-entry one, with the app builds gone.
 - **The "missed rewrite" test is a proper causal control**: mutate → build fails → restore → builds.
 - **Source citations spot-checked and correct**: `application-code-bundle.js:465`; `provide-ds-theme.ts`
   is a true leaf; `button.component.ts`'s field-message imports.
-- **Internal arithmetic of the ladders is correct everywhere checked.** *"The failures above are of what
-  was subtracted from what, not of adding up."*
-
+- **Internal arithmetic of the ladders is correct everywhere checked.** _"The failures above are of what
+  was subtracted from what, not of adding up."_
 
 ---
 
@@ -1849,7 +1852,7 @@ This is the headline, and it should be said before the corrections:
   discriminating controls in four fixtures were **observed going red**, so "byte-identical" elsewhere is
   not instrument blindness.
 - **basic/advanced as two packages stays REJECTED — and the rejection got SAFER.** Its headline number
-  was wrong in the direction that *weakens* the split: the prize for a no-table prototype is **~0, not
+  was wrong in the direction that _weakens_ the split: the prize for a no-table prototype is **~0, not
   32 KB**. The case rests on duplicate maintenance, which is untouched.
 - **A3 (per-component entry points behind a facade) stays the largest item on the plan**, by a wide
   margin, even after its headline is cut by a third.
@@ -1865,34 +1868,34 @@ Ranked by what they change.
    `packaging-diagnosis.md:150,153,261`, `chunking-audit.md:308`, `todo.md:321-322`.
    It subtracts a code-split floor (59 019) from a non-split total (86 775).
    **Correct: 135.7 → ~56 kB, −59%; A3 ≈ 4.2× the table work, not 5.7×.**
-   *Settled by: my fresh rebuild of all six placement scenarios (V-4); the methodology axis's byte
-   reconstruction (86 037 = 82 530 + 3 507); the wave-2 arithmetic axis reaching it independently.*
+   _Settled by: my fresh rebuild of all six placement scenarios (V-4); the methodology axis's byte
+   reconstruction (86 037 = 82 530 + 3 507); the wave-2 arithmetic axis reaching it independently._
    **Three independent routes, one answer.**
 2. **The same error a second time** — `packaging-diagnosis.md:218-222`, the eager-shell case.
-   **Correct: ~72 kB, not ~98 kB.** *Found only by the methodology axis; verified against the scenario
-   sources.* **The class is now bounded: exactly two instances; every other delta subtracts two
+   **Correct: ~72 kB, not ~98 kB.** _Found only by the methodology axis; verified against the scenario
+   sources._ **The class is now bounded: exactly two instances; every other delta subtracts two
    monolithic rungs and is shape-consistent.**
 3. **The A3-pre cut is 4 statements, not 14** — `todo.md:507-527`. The published 14 is `ds-config`
    alone, which **leaves `card` inside a three-way SCC and does not achieve the goal**. The doc plan is
-   17 (18 with `public-api.ts`). *Settled by: my Tarjan run over all four candidate cuts (V-8), matching
-   the wave-2 claims axis exactly.*
+   17 (18 with `public-api.ts`). _Settled by: my Tarjan run over all four candidate cuts (V-8), matching
+   the wave-2 claims axis exactly._
 4. **node10 is NOT broken by a plain multi-entry build** — `packaging-diagnosis.md:751-757` must be
    withdrawn; deck 4 `:250`'s "untested" is closer to right than the diagnosis's "measured".
    **ng-packagr emits a per-entry-point node10 stub.** `typesVersions` is required **only for option E**.
-   *Settled by: my TypeScript-resolver matrix with four ablations and a failing negative control (V-9).*
+   _Settled by: my TypeScript-resolver matrix with four ablations and a failing negative control (V-9)._
    **This changes the deck-8 decision: E costs more than stated, B/C/D cost less.**
 5. **The CSS prize is ~half what is published** — `packaging-diagnosis.md:414-434`, `:477-486`, deck 9
-   `:338`, deck 11 `:180`. 3 409 B is the sum of ten *separately gzipped* partials.
+   `:338`, deck 11 `:180`. 3 409 B is the sum of ten _separately gzipped_ partials.
    **Ablated from `ds.scss`: 2 156 B.** Sub-totals: movable ~1.8 kB → **1 018 B**; portaled 1 592 B →
    **1 055 B**. And "a third of the stylesheet" is **a fifth** (19.7% min / 20.7% gzip).
-   *Settled by: my ablation (V-3); the methodology axis independently measured the same partials
-   together at 2 582 B — both well below the published figure, mine matching what shipping it saves.*
+   _Settled by: my ablation (V-3); the methodology axis independently measured the same partials
+   together at 2 582 B — both well below the published figure, mine matching what shipping it saves._
 6. **The icon map is 86, never 115** — `packaging-diagnosis.md:409`, `todo.md:610`, deck 11 `:137`,
    `packaging-bundle-plan.md:95`. 86 at every ref back to v0.10.0. **The 115 is the digits of
-   `115 345 B` at `:400` carried down the page.** *Four independent counts; F's "83 at v0.11.1" refuted
-   by two of them and by my own six-ref parse.*
+   `115 345 B` at `:400` carried down the page.** _Four independent counts; F's "83 at v0.11.1" refuted
+   by two of them and by my own six-ref parse._
 7. **"95 components/folders" is wrong under every definition** — 5 sites. **71 folders + 23 loose
-   files.** "85" is a *correct class count mislabelled as folders* (deck 4 `:236,248`) — a definition
+   files.** "85" is a _correct class count mislabelled as folders_ (deck 4 `:236,248`) — a definition
    error, not a miscount. **And "73 folders" at v0.7.0 is 66** (`chunking-audit.md:9-10,186`) — verified
    by me: `git ls-tree -d v0.7.0:src/lib/components` = 66.
 8. **The three-layer partition is 13 / 2 / 62, not 13 / 2 / 64** — the 64 is derived as 77 − 13, so it
@@ -1904,14 +1907,14 @@ Ranked by what they change.
     the net one. The 5.7× is correct in its home; **both die anyway under item 1 → 4.2×.**
 11. **`todo.md:558-562` splices two lint configurations.** The counts 92/60/57/15 and "roughly fifty"
     belong to the 277 run; the 307 headline belongs to the three-SCC run.
-    **The 81% is CORRECT under either.** B-F6's "73%" is wrong *and* cited the wrong lines (`:610-612`
+    **The 81% is CORRECT under either.** B-F6's "73%" is wrong _and_ cited the wrong lines (`:610-612`
     is the icon item; the text is at `:559`). **The two wave-2 axes propose opposite repairs — that is a
     choice of which configuration to describe, not a factual dispute.**
 12. **`todo.md:459`'s "249 runtime + 69 type-only" is 258 + 60** — total unaffected, but
     `packaging-diagnosis.md:354` uses the split to argue "318 rewrites, not 249".
 13. **The `55 → 64` correction does not close as written** — it reconciles only via `theme` being in
     both the no-edge list and the core seed (verified: zero edges either way) plus `card` moving.
-14. **Unit convention**: KB is ÷1000 in some sentences and ÷1024 in others *inside one comparison*
+14. **Unit convention**: KB is ÷1000 in some sentences and ÷1024 in others _inside one comparison_
     (18.9 vs 18.2). `+118.3 KB` is neither. Pick one and restate.
 15. **`chunking-audit.md:268`'s "toast/ and modal/ import nothing else from `../`" is FALSE** — modal
     has **eleven** external specifiers, toast three. **`todo.md:686` already states it correctly**, so
@@ -1934,31 +1937,31 @@ Ranked by what they change.
 1. **`build-flags.d.ts:12-14` — the stated REASON for the inline rule is backwards.** "esbuild will not
    propagate the constant through module scope" — propagation through module scope is precisely the case
    that works. **The real condition: esbuild inlines a top-level `const` only if the declaring module
-   has no `import` statement at all.** *Settled by my seven-shape raw-esbuild matrix (V-7), reproducing
-   the wave-2 finding exactly.* **The RULE is correct and must stay** — every Angular component module
+   has no `import` statement at all.** _Settled by my seven-shape raw-esbuild matrix (V-7), reproducing
+   the wave-2 finding exactly._ **The RULE is correct and must stay** — every Angular component module
    imports `@angular/core`. Rule 2 (`typeof`) is correct and its stated reason is right.
 2. **`build-flags.d.ts:18` — delete the `declare const`, keep the comment.** It duplicates Angular's own
    `declare global` and is the sole cause of two masked TS2451s; the library compiles at exit 0 without
-   it **even at `--skipLibCheck false`**. *Wave 2 tested this directly rather than by analogy.*
+   it **even at `--skipLibCheck false`**. _Wave 2 tested this directly rather than by analogy._
 3. **`entry-point-boundary.mjs:17-23` — the comment encodes a REVERSED decision**, and
    `git show 2e1535aa` shows a comment pass **stripped its `2026-09-01` date the evening before the
    reversal**, turning a dated record into a standing claim. The sentence is also a non-sequitur
-   ("accepted, **because** breaking it **saves** 593 B" — `todo.md:522` says *costs*).
+   ("accepted, **because** breaking it **saves** 593 B" — `todo.md:522` says _costs_).
 4. **The lint rule cannot be flipped to `'error'` as shipped** — 31 false positives, every one inside
    the planned core entry, "fixable" only by writing a self-referential entry-point import.
    **And no correct configuration exists anywhere**: the gitignored probe is also stale post-`42b54a0b`.
    `eslint.config.mjs:124-128` and `todo.md:565` both say only "flip it".
 5. **`publicSpecifier()` maps group → slug, not group → entry point.** 99 of 308 messages name
    `components-root`, which cannot exist — **and ~204 of 277 are wrong even with the correct config.**
-   The co-location sets need a name. *(The styles/themes collision is unreachable: those directories
-   contain no `.ts` files at all.)*
+   The co-location sets need a name. _(The styles/themes collision is unreachable: those directories
+   contain no `.ts` files at all.)_
 6. **`ImportExpression` is unchecked** — fix it, but **not for the `@defer` reason given**: `@defer` is
    template syntax lowered by the compiler and never appears in the `.ts` ESLint parses. The real risk
    is a human writing `await import('../x/y')` during A3.
 7. **The rule FAILS OPEN on any unresolvable specifier** — a boundary guard defeatable by a typo.
 8. **`CHANGELOG.md:232-233`** — double blank line; prettier's glob excludes the repo root.
 9. **`todo.md:427` and `packaging-diagnosis.md:613` still carry the devWarn work as OPEN** — it shipped
-   in `d8eb81c0`. Wave 2 called this the strongest finding in its set: *someone will do it twice.*
+   in `d8eb81c0`. Wave 2 called this the strongest finding in its set: _someone will do it twice._
    And `packaging-diagnosis.md:628` prescribes the bare form the shipped code correctly avoided.
 10. **`todo.md:674-675` states the OPPOSITE of deck 4's recommendation**, in the index everyone reads
     first, and invites the reader to trust the summary. **Current answer: option D, PER-COMPONENT top
@@ -1979,24 +1982,24 @@ Ranked by what they change.
 
 ## D. STRUCK — findings that did not survive
 
-| finding | why it dies |
-| --- | --- |
-| **B-F2** (CDK is 64%, not a third) | `placement_after_a3` has **no lazy route**; 30 646 IS its floor. Refuted by me and by two wave-2 axes independently. It condemned the valid subtraction and cleared the invalid one |
-| **C-F4** (the inline rule is false) | true of raw esbuild in an import-free module; **every module the rule governs has imports** |
-| **E-F21** (`ds-table` 62 inputs / 76 KB is wrong) | **exact to the byte at the stated v0.11.1 baseline** — 46+8+8 = 62, 74 399 + 1 991 = 76 390 |
-| **E-F38** (593 B vs a 650 B log) | **gzip vs brotli.** Independently confirmed by the methodology axis, which verified `brotliCompressSync` = the log's figure |
-| **E-F25's "85" and "96"** | both reproduce **exactly** under the documents' own stated methods |
-| **E-F3** ("exactly two cycles" is false) | every site is explicitly scoped to *runtime edges*; both counts are true. The real defect is a missing back-pointer |
-| **F-#15b** (core 13 vs 15 is a contradiction) | two different objects — a computed **seed** and a semantic **cluster**. Label them; do not "fix" either |
-| **F-#10's "83 icons at v0.11.1"** | it is 86; the file is byte-identical to HEAD's |
-| **B-F6's "73%"** | pairs a numerator from one run with a denominator from another; **81% is right** |
-| **C-F2's "1 278 B / 732 B"** | not reproducible by any method, and **ill-posed** — the bytes cannot be read off the FESM |
-| **C-F2's sixth site** | `projection-dropped.directive.ts:53` uses a bare `console.warn`, not `isDevMode()`; the sixth FESM hit is `devWarn`'s own guard |
-| **C-F5's "roughly half"** | 827 B reconciles at 779 B once the orphaned `DISCOURAGED_COMBOS` and `devWarn` are counted |
-| **D-F2's styles/themes collision** | those directories contain **no `.ts` files**; unreachable |
-| **D-F10 as a reachable defect** | ESLint normalises through `path.resolve` at every supported entry point — CLI, Node API absolute, Node API relative all report 10 |
-| **D-F4's `@defer` justification** | `@defer` never appears as an `ImportExpression` in the linted source |
-| **E-F35's "decks 9 and 11 both claim measured"** | only deck 9 does, and its vendor row is honestly headed "Reported result" |
+| finding                                           | why it dies                                                                                                                                                                         |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **B-F2** (CDK is 64%, not a third)                | `placement_after_a3` has **no lazy route**; 30 646 IS its floor. Refuted by me and by two wave-2 axes independently. It condemned the valid subtraction and cleared the invalid one |
+| **C-F4** (the inline rule is false)               | true of raw esbuild in an import-free module; **every module the rule governs has imports**                                                                                         |
+| **E-F21** (`ds-table` 62 inputs / 76 KB is wrong) | **exact to the byte at the stated v0.11.1 baseline** — 46+8+8 = 62, 74 399 + 1 991 = 76 390                                                                                         |
+| **E-F38** (593 B vs a 650 B log)                  | **gzip vs brotli.** Independently confirmed by the methodology axis, which verified `brotliCompressSync` = the log's figure                                                         |
+| **E-F25's "85" and "96"**                         | both reproduce **exactly** under the documents' own stated methods                                                                                                                  |
+| **E-F3** ("exactly two cycles" is false)          | every site is explicitly scoped to _runtime edges_; both counts are true. The real defect is a missing back-pointer                                                                 |
+| **F-#15b** (core 13 vs 15 is a contradiction)     | two different objects — a computed **seed** and a semantic **cluster**. Label them; do not "fix" either                                                                             |
+| **F-#10's "83 icons at v0.11.1"**                 | it is 86; the file is byte-identical to HEAD's                                                                                                                                      |
+| **B-F6's "73%"**                                  | pairs a numerator from one run with a denominator from another; **81% is right**                                                                                                    |
+| **C-F2's "1 278 B / 732 B"**                      | not reproducible by any method, and **ill-posed** — the bytes cannot be read off the FESM                                                                                           |
+| **C-F2's sixth site**                             | `projection-dropped.directive.ts:53` uses a bare `console.warn`, not `isDevMode()`; the sixth FESM hit is `devWarn`'s own guard                                                     |
+| **C-F5's "roughly half"**                         | 827 B reconciles at 779 B once the orphaned `DISCOURAGED_COMBOS` and `devWarn` are counted                                                                                          |
+| **D-F2's styles/themes collision**                | those directories contain **no `.ts` files**; unreachable                                                                                                                           |
+| **D-F10 as a reachable defect**                   | ESLint normalises through `path.resolve` at every supported entry point — CLI, Node API absolute, Node API relative all report 10                                                   |
+| **D-F4's `@defer` justification**                 | `@defer` never appears as an `ImportExpression` in the linted source                                                                                                                |
+| **E-F35's "decks 9 and 11 both claim measured"**  | only deck 9 does, and its vendor row is honestly headed "Reported result"                                                                                                           |
 
 ## E. Still not settled, and it should be said plainly
 
@@ -2022,22 +2025,21 @@ Ranked by what they change.
 
 ## F. Calibration — every agent caught in a concrete error
 
-| agent | caught on | by |
-| --- | --- | --- |
-| B (arithmetic) | 14 devWarn sites; **B-F2 inverted the floors**; 73%; wrong citation | me, C, E, both wave-2 axes |
-| C (dev warnings) | C-F4 generalised an import-free-module result; the 1 278 B figure; a sixth site that is not one | me, wave 2 |
-| D (lint rule) | itemisation sums to 30; the styles/themes collision is unreachable; the `@defer` rationale | wave 2 |
-| E (records) | E-F21 and E-F38 struck; "nine of nineteen" is ten of twenty-five; "ten decks" is eleven; two-thirds of E-F25 | wave 2 |
-| F (my 22 claims) | "83 icons"; "15-16" is 17; F-#15b is not a contradiction | me, wave 2 |
-| M (methodology) | **repeated the "115 icons" it was auditing** | me |
-| **me** | **V-1's pipeline framing was wrong**; my first SCC graph missed multi-line imports; my first node10 harness failed its own control | wave 2, and my own controls |
-| wave-2 lint agent | first synthetic battery invalid (heredoc mangled the path) — **it caught this itself and re-ran** | itself |
-| wave-2 arithmetic agent | its no-edge classifier missed `status-dot` — **caught and credited the audit** | itself |
+| agent                   | caught on                                                                                                                          | by                          |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| B (arithmetic)          | 14 devWarn sites; **B-F2 inverted the floors**; 73%; wrong citation                                                                | me, C, E, both wave-2 axes  |
+| C (dev warnings)        | C-F4 generalised an import-free-module result; the 1 278 B figure; a sixth site that is not one                                    | me, wave 2                  |
+| D (lint rule)           | itemisation sums to 30; the styles/themes collision is unreachable; the `@defer` rationale                                         | wave 2                      |
+| E (records)             | E-F21 and E-F38 struck; "nine of nineteen" is ten of twenty-five; "ten decks" is eleven; two-thirds of E-F25                       | wave 2                      |
+| F (my 22 claims)        | "83 icons"; "15-16" is 17; F-#15b is not a contradiction                                                                           | me, wave 2                  |
+| M (methodology)         | **repeated the "115 icons" it was auditing**                                                                                       | me                          |
+| **me**                  | **V-1's pipeline framing was wrong**; my first SCC graph missed multi-line imports; my first node10 harness failed its own control | wave 2, and my own controls |
+| wave-2 lint agent       | first synthetic battery invalid (heredoc mangled the path) — **it caught this itself and re-ran**                                  | itself                      |
+| wave-2 arithmetic agent | its no-edge classifier missed `status-dot` — **caught and credited the audit**                                                     | itself                      |
 
 **Every single participant, including me, was caught in at least one error. That is the result the two
 waves were for.** The five items in section D would all have shipped as corrections if wave 1 had been
 trusted; the nineteen in section B would all have shipped as fact if no review had run at all.
-
 
 ---
 
@@ -2130,15 +2132,16 @@ Approved 2026-09-02: everything in one pass, in this branch. A3-pre at the full 
 
 All four commits on `fix/two-wave-review-corrections`, worktree `C:\wt-ds-review`:
 
-| | |
-| --- | --- |
+|            |                                                                   |
+| ---------- | ----------------------------------------------------------------- |
 | `76b7c9c2` | build-flags reason + count + the redundant declaration; CHANGELOG |
-| `bff7efbc` | A3-pre: 17 statements, 77 -> 76 groups, four-way SCC gone |
-| `f94c586c` | 233 insertions across 4 docs and 5 decks |
-| `eeb7471a` | `tools/entry-point-graph.mjs` |
+| `bff7efbc` | A3-pre: 17 statements, 77 -> 76 groups, four-way SCC gone         |
+| `f94c586c` | 233 insertions across 4 docs and 5 decks                          |
+| `eeb7471a` | `tools/entry-point-graph.mjs`                                     |
 
 Gates, all green: `build:lib`, `lint`, `deck-lint`, `changelog-lint`, `check-docs-links`,
 `check-docblock-drift`, and `tsc --skipLibCheck false` (which was RED before the declaration came out
+
 - watched it go red on the restored file, then green again).
 
 Public type surface identical either side of A3-pre: 126 declarations, none added, none removed.

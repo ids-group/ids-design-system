@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 :host {
   display: inline-flex;
 }
@@ -20,7 +21,6 @@
   --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--surface-muted));
   --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--_icon-button-bg-color-hover));
   --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--text-primary));
-  --_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--ds-control-focus-shadow));
   --_icon-button-radius: var(--ds-icon-button-radius, var(--ds-radius-control));
   --_icon-button-press-scale: var(--ds-icon-button-press-scale, 0.96);
 
@@ -66,8 +66,7 @@
     transform: scale(var(--_icon-button-press-scale));
   }
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--_icon-button-focus-shadow);
+    @include focus.ring;
   }
   &[disabled] {
     background-color: var(--_icon-button-bg-color-disabled);

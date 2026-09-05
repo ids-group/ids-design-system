@@ -1,5 +1,404 @@
 # DS — improvements backlog
 
+## Reported by Stas from the docs site, 2026-09-05
+
+- [ ] **[P3] The shimmer's viewport anchoring breaks inside a transformed ancestor.**
+  `background-attachment: fixed` is what makes every skeleton show its slice of ONE screen-wide
+  wave, and the spec makes a transformed, filtered or `will-change: transform` ancestor a
+  containing block for it — inside one the background anchors to that ancestor instead, and the
+  skeletons in it fall out of the shared wave into their own local one. Nothing on the docs site
+  triggers it today (measured: no transformed ancestor above any skeleton), which is exactly why it
+  would show up first in a consumer app with an animated drawer or a `transform`-based layout.
+  No cheap fix: the alternative is the shared `:root` driver this replaced, which invalidated the
+  whole document every frame. Worth a note in the skeleton's docs page before it is worth code.
+
+
+- [ ] **[P2] A `ds-stat` value longer than its tile spills straight out of the card.** `.value`
+  carries `white-space: var(--_stat-value-white-space)` defaulting to `nowrap`, and nothing clips or
+  wraps — so a date range or a status phrase runs past the tile's edge and over whatever is beside
+  it. The two hooks `--ds-stat-value-white-space` and `--ds-stat-value-font-size` let a consumer fix
+  it per tile, and the docs demonstrate the unfixed default on purpose as the other half of a pair.
+  Open question, and it is a visual breaking change either way: should the DEFAULT still be a value
+  that escapes its own card? Candidates — wrap by default (`normal`), or keep `nowrap` and add
+  `min-width: 0` plus `text-overflow: ellipsis` so it truncates instead of escaping. Both change how
+  every existing tile renders, which is why nothing was touched.
+
+
+## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
+
+- [ ] **[P3] A whole-page keyboard walk is not measurable with the tools here, and the failed
+  attempt is worth not repeating.** Tried 2026-09-05 to assert an indicator on all 262 focusables of
+  one docs page by focusing each in turn. Void: `element.focus()` inherits keyboard modality from the
+  last REAL input, and the first call spends it — from the second element on, `:focus-visible` reads
+  false for everything and the walk reports almost nothing indicated whether the CSS is right or
+  wrong. Same shape as the reduced-motion trap.
+  What would work: read the AUTHORED cascade instead of the focused state — for each focusable, find
+  the `:focus-visible` rules that match it with the pseudo stripped, and ask whether any paints. That
+  needs no focus at all, so no modality to lose. Until then the static gate is the coverage claim:
+  88 files, three rejected failure classes, each controlled by planting a defect and watching it
+  exit 1.
+
+
+- [ ] **[P2] Nothing catches a shell that rings on `:focus-within` when it means the keyboard.**
+  Shipped and caught by Stas in a screenshot, 2026-09-05: the row ring on checkbox/radio/switch used
+  `:focus-within`, which matches a POINTER focus too — and a checkbox, unlike a text input, is not
+  granted `:focus-visible` on click, so clicking one left the ring behind until focus moved. Fixed
+  with `:has(:focus-visible)`, but only on the four shells that were looked at.
+  A gate is not obvious here, because `:focus-within` is CORRECT on a text-field shell — clicking
+  into an input does grant `:focus-visible`, so the two selectors agree there. The rule a checker
+  would need is "does the focusable inside this shell take `:focus-visible` from a pointer", which
+  is about the element type, not the selector. Candidate: flag `:focus-within` in a component whose
+  template has `type="checkbox"`, `type="radio"`, or a `button`, and leave text fields alone.
+
+
+- [ ] **[P2] Overlays should grow, not drop in from above (Stas, 2026-09-04).** Every CDK panel
+  carrying `ds-overlay-pane` enters with `ds-slide-in`: `_overlay-motion.scss` sets
+  `--_ds-enter-y: calc(-1 * var(--_overlay-enter-offset))`, so a panel below its trigger starts 4px
+  high and drops into place. Across selects, menus, popovers, tooltips and the pickers that reads as
+  a small jump from the top on everything at once. Wanted instead: scale plus opacity, no travel.
+  Most of the parts are already there — `ds-scale-in` exists in `_surface-motion.scss`, reads
+  `--_ds-enter-scale` (0.96), and `--_overlay-enter-origin` is ALREADY computed per placement
+  (`top center` / `bottom center` / `center left` / `center right`), so a scaled panel would still
+  grow out of its trigger edge. The change is the default keyframe name, one line.
+  Check before shipping it: the four panels that opt out of the shared enter (drawer, bottom-sheet,
+  alert, banner set their own `--_ds-enter-y`) must keep travelling — an edge panel that scales
+  instead of sliding reads as a glitch. And `prepareOverlayEnter()` stamps `data-ds-placement`
+  BEFORE attach specifically so a mid-scroll CDK flip redirects rather than restarts; a scale
+  entrance has to survive the same flip.
+
+- [ ] **[P2] Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04).**
+  Asked for as a sweep: add the ones that are absent, correct the ones that are wrong. Two mechanical
+  traps are already known and should shape the sweep rather than be rediscovered. First, `transition`
+  is ONE property: whichever rule wins REPLACES the other's list, it never adds to it, and 46
+  component stylesheets declare their own — this is why `focus.ring` uses an `animation` instead, and
+  why `_press.scss` deliberately declares no transition at all. Second, a state that appears and
+  disappears cannot transition unless its resting state exists in the DOM: an element rendered only
+  while active has nothing to travel from and will pop in whatever is written. Verify with animations
+  ON — see the reduced-motion item below for how a void run reads exactly like a working one.
+
+
+- [x] **The "wrong element focuses" sweep, and what a gate can and cannot decide.** Ran 2026-09-04
+  after a consumer screenshot showed `ds-multi-select`'s panel filter ringing its bare input rather
+  than the row that carries the search icon. Confirmed against the tag rather than guessed: v0.12.0's
+  blanket was `outline: none; box-shadow: var(--ds-control-focus-shadow)`, and `.search-input` reset
+  only `outline`, which cannot cancel a shadow — so the base ring landed on the inner input.
+  Swept every `<input>` in the library against whether its component rings a shell, which found four
+  more of the same family, all now fixed: `ds-sidenav-footer`'s search box, `ds-table`'s column filter
+  and inline cell editor (each answering focus with a 1px border tint after killing the outline), and
+  `ds-dropzone`'s hidden input.
+  Two mechanical halves of this are now gated, each verified by planting a defect and watching the
+  gate exit 1: a shell that rings without silencing its control, and a focus rule that turns the
+  outline off and paints nothing. The gate also reads ds-docs and the portaled-panel sheet now,
+  because the sidebar toggle's clipped ring lived in neither of its old roots.
+  **What no gate decides:** whether the ringed element is the RIGHT one. A control that rings itself
+  correctly can still be the wrong choice — the selection-control bullseye is exactly that, and it
+  needs the deck's verdict, not a rule.
+
+
+- [ ] **[P2] `.design-sync/upload/_ds_bundle.css` is frozen against a rule the library no longer
+  has.** `ddae60e0` regenerated it while `_focus.scss` still carried the resting transparent-outline
+  rule; `5be96212` replaced that whole mechanism with `animation: ds-focus-ring-in`. The frozen
+  bundle now contains one `solid transparent` outline rule and zero mentions of the keyframe, so the
+  cards render a focus mechanism that no longer exists. Owned by the design-sync pipeline, which
+  regenerates and freezes in CI (`bf949c62`) — do NOT regenerate the 410 files by hand in the shared
+  checkout, since committing them unfrozen has already been a real bug once.
+
+
+- [ ] **[P2] `_focus.scss`'s top-level CSS is copied into 33 component style strings.** Measured
+  2026-09-04 on `dist/ds/fesm2022/`: 33 of 75 built bundles each carry the blanket
+  `:where(:focus-visible)` rule, all three `data-focus` blocks, the `@keyframes` and the
+  forced-colors block — 4 to 6 copies of the blanket selector per bundle, none of which the
+  component uses. 48 component stylesheets `@use` the partial for its mixins, and each is a
+  separate Sass compilation, so each re-emits the module's top-level rules.
+  `docs/agent/foundations/global-helper-classes.md` states the opposite in writing: "reaching for
+  the mixin adds no CSS." That sentence is wrong either way and should go.
+  **What is NOT measured, and must be before sizing this:** what the copies do in a running app.
+  A library build ships styles UNSHIMMED (`.button{` appears with no `_ngcontent` attribute), so
+  the consumer's AOT compiler is what scopes them — whether these copies end up scoped, global or
+  deduped is decided there, not here. One runtime fact is now in hand, and it is not the whole
+  answer: in ds-docs, which compiles the library FROM SOURCE, a component's copy comes back
+  scoped — `animationName` on a focused ds-icon-button read
+  `_ngcontent-ng-c838688186_ds-focus-ring-in`. So the shim does run and the copies are
+  per-component rather than global. What that costs a consumer of the PUBLISHED package is still
+  unmeasured. Do not quote a byte cost until it is measured in a real consumer build.
+  Same shape wherever a partial mixes mixins with top-level rules — check `_press.scss`,
+  `_dropdown-overlay.scss`, `_link.scss` and `_check-mark.scss` before choosing the fix. Splitting
+  the partial (mixins in one file, emitted rules in another that only the global aggregate uses) is
+  the likely answer.
+
+- [x] **[P1] A `transition` declared in a focus rule silently deletes the component's own.** Found
+  and fixed the same day, 2026-09-04, in `focus.ring`. `transition` is ONE property, so the rule
+  that wins REPLACES the other's list rather than adding to it — and 46 component stylesheets
+  declare their own. A `transition: outline-color` in `:focus-visible` therefore dropped the
+  component's background and border easing for as long as the element held focus. Measured before
+  the fix: a focused `ds-number-stepper` button reported `transitionProperty: "outline-color"`
+  while its base rule declares `background-color`. Fixed by using `animation` instead — a separate
+  property that nothing on a focusable element sets, so both survive; the keyframe declares only
+  `from { outline-color: transparent }`, and the global resting-outline rule it needed is gone.
+  `_press.scss` already carries a comment warning about exactly this and is why it declares no
+  `transition` of its own. **Worth a gate:** nothing catches the next one, and it fails silently —
+  the ring still animates, so the change looks like it worked.
+
+- [x] **[P2] `dev` was red: `a5cb916c` committed an `@else if` with no opening `@if`.** Fixed by the
+  session that shipped it, in `b6913f00`. Its unwrap regex matched `@if` up to the first closing
+  paren, so a condition with a nested one — `someFilteredSelected()` — had its `@if` head eaten and
+  left the `@else if` orphaned. Recorded because it cost two `ng serve` attempts that read as an
+  environment problem: a broken template makes the dev server never bind its port, with an empty log.
+
+- [x] **[P3] Motion could not be verified on this machine — the setting was off, and is now on.**
+  Windows reported `SPI_GETCLIENTAREAANIMATION = False` (Settings → Accessibility → Visual effects
+  → Animation effects), so every Chrome here answered `prefers-reduced-motion: reduce` and dropped
+  CSS transitions wholesale: `getAnimations()` came back empty even with a 600ms duration forced
+  past the token. Stas turned it back on the same day and the same probe now reads
+  `prefers-reduced-motion: false`, `--duration-fast: 120ms`, and the focus ring interpolating
+  `rgba(0,0,0,0)` → `rgba(46,84,255,0.714)` → `0.945` → `rgb(46,84,255)`.
+  The durable half is the trap, not the setting: under reduced motion a 0ms-vs-600ms control shows
+  NO difference, so the run reads identically whether the CSS is right or wrong. That is a VOID
+  measurement, not a negative one, and reporting "the animation does not work" from it would be a
+  false finding. Check `matchMedia('(prefers-reduced-motion: reduce)')` before trusting any motion
+  measurement, and fall back to reading the cascade (`transitionProperty` / `animationName`), which
+  reduced motion does not touch.
+
+
+- [x] **[P1] A selected radio, checkbox or switch reads as a bullseye while focused.** FIXED — Measured from
+  the tokens, not from a screenshot: on a 20px glyph the checked+focused radio paints, centre outward,
+  a 10px accent dot, 3px of white, a 2px accent border, a 2px unpainted gap and a 2px accent outline —
+  three brand bands separated by two white ones, concentric and equally spaced. It passes WCAG 2.4.13:
+  the ring is 2px and contrasts with the white gap beside it. What fails is legibility. Focus and
+  `selected` are drawn in the SAME colour and the SAME shape, so on a selection control the two states
+  stop being distinguishable — and those are exactly the two a keyboard user must tell apart while
+  moving through a group. Material does not put a hard ring on a radio by default for this reason: it
+  uses a translucent state layer behind the glyph and keeps the outline for forced colours.
+  Agreed fix (Stas, 2026-09-04): ring the ROW, not the glyph — `.control-line:focus-within` draws the
+  indicator around glyph and label together while `focus.owns-the-focus-ring('.radio')` silences the
+  input, so the ring stops being concentric with the dot. The label already carries the hit area.
+  Gated on a concept deck first.
+
+
+Six defects from that review are fixed (`a5af6ba8`, `38764f81`, `29532e27`, `e88de757`). Everything
+below survived wave 2's attack and is NOT fixed. Each claim was traced in emitted CSS from a linked
+app build rather than from SCSS; none was verified in a browser.
+
+Context that cannot go in a published file, kept here instead: `--focus-ring-inner` was
+`var(--surface-canvas)` until `7c37a8f9` (v0.10.2) made it `transparent`, which collapsed the
+two-layer ring into one solid band. That release's manifest item promises the opposite — "the 2px
+gap ... shows whatever is actually behind it" and "the same pixels show through" — and a transparent
+box-shadow layer paints nothing and reserves nothing, so there was no gap between v0.10.2 and the
+fix. The record cannot be corrected (a published manifest is frozen, `AUTHORING.md:183`) and
+`CONTRIBUTING.md:168-174` forbids describing it in a new entry, so the new item carries `supersedes`
+and says nothing about the old one. Measured on three grounds: `presentations/focus-ring-gap.png`.
+
+- [x] **[P1] Move the focus ring from `box-shadow` to `outline` + `outline-offset` (major).** DONE The gap
+  now painted by `--focus-ring-inner: var(--surface-default)` is a GUESS: it is right on a card and
+  visibly wrong on the canvas or any tinted band, because a shadow layer can only cover, never let
+  the real ground through. An outline's offset region is simply not painted, so the gap shows
+  whatever is actually behind — measured on three grounds, `presentations/focus-ring-gap.png`. The
+  library is already half-way: `focus.outline-indicator` is adopted by seven components and takes a
+  negative offset for clipping ancestors. What makes it a MAJOR: `--ds-*-focus-shadow` and the two
+  roles are public and documented as shadow VALUES, and a consumer who overrides one gets nothing
+  after the switch. Note it does not fix the six clipped-ring findings — an outline is clipped by an
+  ancestor's `overflow` exactly like a shadow.
+
+- [x] **[P1] forced-colors needs the cause removed, not the symptom overpowered.** DONE — the The floor rule in
+  `styles/_focus.scss` now carries `!important`, which contradicts that file's own stated contract —
+  it is written at zero specificity precisely so a component or a consumer still wins. The honest
+  shape is an `own-indicator` mixin emitting `outline: none` inside
+  `@media not (forced-colors: active)`, adopted by the ~49 declarations that suppress the UA ring,
+  plus a gate in `tools/check-focus-rings.mjs` so a new component cannot forget. Then the
+  `!important` comes out. Agreed with Stas 2026-09-04: the edit count is not an argument against.
+
+- [ ] **[P1] `field-state` out-ranks `disabled` and `read-only` in nine field components.** A field
+  that is both disabled and invalid paints the error border and error fill, keeping only the disabled
+  text colour and `not-allowed` cursor. Measured: ds-input and ds-textarea are an exact (0,5,0) tie
+  won by source order; the other seven lose outright at (0,3,0). The `form.disable()` path does NOT
+  reproduce it — disabling clears the control's errors — so it needs the component's own `disabled`
+  plus `invalid`/`error`/`errors`. ds-checkbox shows the fix: it re-points its `--_*` resolvers per
+  state instead of declaring final properties, and gets the precedence right. 0.10.0 inverted this
+  for select, autocomplete, both pickers, color-picker and otp-input; input and textarea always were.
+
+- [ ] **[P2] `ds-field-group[invalid]` loses its error border on hover and on focus,** and that border
+  is the group's ONLY error affordance — segment labels and messages are hidden by `.in-group`.
+  `:host(:hover:not(.disabled))` and `:host(:focus-within:not(.disabled))` are (0,3,0) against
+  `:host(.invalid)` at (0,2,0). Worse, in the same file: the group sets no `aria-invalid` at all, so
+  an invalid group is never invalid to a screen reader. Note it gets disabled-vs-invalid the RIGHT
+  way round — the anomaly is the nine single fields above.
+
+- [ ] **[P2] Warning and success fields show a mismatched halo.** `_field-state.scss` gives error a
+  nested focus block and gives warning/success none, so a focused warning field is a yellow border
+  with a blue halo. `--focus-field-warning` and `--focus-field-success` already exist in
+  `themes/_semantic.scss` and are documented, and nothing in `src/` reads either — the tokens for the
+  fix are already shipped. The mixin also takes no `$warning-focus-shadow` / `$success-focus-shadow`,
+  so a component cannot pass its own.
+
+- [x] **[P2] Six focus rules draw two indicators at once.** Closed by the outline migration: the
+  blanket indicator is an `outline` now, so an element declaring its own outline replaces it instead
+  of drawing over it. accordion-item, stepper, table's header label / clickable row / icon buttons
+  and dropzone were rewritten onto `focus.ring`, which also retired their hard-coded `var(--accent)`.
+  Table's `.col-resize` and `.cell-edit` keep a bare `outline: 0` — both already carry an accent
+  border as their indicator, so they are deliberate, not misses.
+
+- [ ] **[P2] Zone COLOUR and `data-focus` SHAPE cannot both reach one role, and the reason is a
+  language rule.** A `var()` inside a custom property is substituted where that property is
+  DECLARED, not where it is read. Every role and every alias is declared on `:root`, so its value
+  is frozen with `:root`'s inputs and a `ds-color` zone deeper in the tree can never reach inside
+  it. Measured three times, 2026-09-05, each attempt failing differently:
+  1. Zone re-declares the roles → colour follows the zone, but the zone now out-ranks
+     `data-focus` by proximity, so `edge` and `ring` silently revert to the halo inside every zone.
+     The SHAPE is lost.
+  2. `--focus-field` composed off `var(--accent)` → shape is safe, but the substitution happens on
+     `:root` where `--accent` is still the brand, so the colour stops following the zone entirely.
+  3. Role points at `--accent-focus-field` → same trap one level further out; the alias is also
+     declared on `:root`.
+  So the two are mutually exclusive at this indirection, and today's split is the honest one:
+  color-picker, modal-confirm, multi-select and otp-input read the ALIAS and adapt to a zone;
+  everything else reads the ROLE and answers the switch. Neither spelling is a bug.
+  What would actually solve it: the zone re-emitting the shape recipes as well as the colour, which
+  is the per-scope composite `_semantic.scss` deliberately avoided by pre-composing
+  `--focus-ring-<family>` / `--focus-field-<family>`; or a `@property`-registered colour the recipes
+  read, which IS substituted per element. Both are real work, not a token edit.
+
+- [x] **[P2] Focus rings are clipped in six components.** Fixed on the element that clips rather than
+  on each control inside it: ds-tabs[scrollable], ds-breadcrumbs, ds-sidenav-group, ds-number-stepper
+  and ds-sidenav-footer each set `--focus-ring-offset` to a negative value on their own overflow box,
+  which is what `data-focus="inset"` now does globally. ds-time-columns, ds-menu and the dropdown
+  panels pass the negative offset to `focus.ring` directly. Measured in Chrome on ds-number-stepper:
+  scoped token `calc(-1 * 2px)`, computed `outline-offset: -1.92px`, unfocused control `none`.
+
+- [ ] **[P3] `ds-date-picker` takes the CONTROL focus role while being a text field.** Its `.trigger`
+  wraps a real masked `<input>`, and every other text field takes `--ds-field-focus-shadow`, so a date
+  beside an input in one row shows a crisp 4px ring next to a soft 3px halo. One resolver serves both
+  the trigger and the panel's buttons, so splitting them needs a second token.
+
+- [ ] **[P3] `--ds-multi-select-option-bg-color-active` is documented and dead.** The alias is
+  re-declared on `.dropdown-panel`, a DESCENDANT of the pane where `_dropdown-overlay.scss` has
+  already substituted `--_option-bg-color-active`, so nothing reads it. The forwarding half works —
+  the token is in `panelTokens`; only the declaration site is wrong, and ds-autocomplete shows the
+  working shape (declare the alias on `:host`). Its description is also wrong: it says "while
+  pressed", while the token drives hover and keyboard-active and pressed is hard-coded with no hook.
+
+- [ ] **[P3] `--ds-time-picker-focus-shadow` is read by the portaled panel and forwarded by nobody.**
+  `time-picker.component.scss` reads it on `.time-action` and it is absent from that component's
+  `panelTokens`, so a host-scoped value never reaches the panel. The token reference states the
+  opposite in writing. Same class as the six tokens fixed in `c013e08c`.
+
+- [x] **[P3] `data-focus="outline"` leaves ~20 components with no indicator at all.** The mode is
+  removed — an outline is what every control draws by default now, so the value described nothing.
+  `data-focus="field"` went with it for the same reason in reverse: it swapped one box-shadow for
+  another, and controls no longer paint a shadow on focus at all.
+
+- [ ] **[P3] color-picker's selected swatch stops reading as selected while focused** — a regression
+  from `e9b0ef16` (2026-09-02), which adopted `outline-indicator` and with it `box-shadow: none`. The
+  preset button is empty, so selection is carried by the shadow ALONE in the visual channel:
+  `focus.state-shadow` must NOT be used here. Selection needs another channel — a check glyph, a
+  border — before the ring can take the shadow.
+
+- [ ] **[P3] Thirteen ds-docs forced-state pins misrepresent their component.** Three change pixels
+  today: the dropzone pin invents a text colour from a token nothing else reads (itself a published
+  no-op), the button `pin-active` omits the press scale while `pin-hover` omits the hover shadow, and
+  the table `pin-hover-th` invents a header background the component never paints — while the
+  component's own header hover is a no-op, both sides being `--text-secondary`. Six pin comments
+  claim "no `--_*` resolvers" where resolvers exist; they were true when written and the resolvers
+  landed six days later. `ds-docs/src/styles/specimens/_day.scss` is a hand-written mirror of
+  calendar-day with seven or more divergences.
+
+- [ ] **[P3] `ds-tag` marked `interactive` is mouse-only.** It takes a click handler but no
+  `tabindex`, no `role` and no keydown, so the affordance is unreachable by keyboard. Found while
+  auditing its focus ring, which is moot until this is fixed.
+
+## Claude Design upload — what the freeze left open (recorded 2026-09-04)
+
+The cards are static HTML now: 283 of 410 frozen, 127 left live because their panel is the
+documented thing or their chapter's demo only exists once opened. Everything below is NOT fixed.
+
+**Verification debts — each is one command away, none is a known defect.**
+
+- [ ] **`.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it.**
+      `config.json` names it `readmeHeader` and `build-cards.mjs` copies it VERBATIM into
+      `.design-sync/upload/README.md`, which `build-design-sync.sh` byte-compares. A prettier run over
+      it on 2026-09-05 reflowed the fenced `tsx` block — a semicolon after `</Card>` among it — and
+      left source and committed copy 37 lines apart. The content is restored, but the exposure is
+      open: the ignore entry that guarded it was an unapproved prettier-config edit and was reverted
+      with it. Two ways out, both Stas's call: a gate in `tools/` that fails when the source and the
+      copy differ (no config touched), or one `.prettierignore` line for this file. Do not add either
+      without asking — see the memory entry on linter configs.
+
+- [ ] **Where a check mark is drawn, and which ones are the shared one.** Kept here because the
+      answer is not derivable from one file — the marks live in three partials and two of the eight
+      sites are deliberately different.
+
+      | Where | Draws with | Shared mark | Animated |
+      | --- | --- | --- | --- |
+      | `ds-checkbox` | `.check::after`, `check-box.box` | yes | yes |
+      | `ds-multi-select` — option, select-all, group | `.tick` | yes | yes |
+      | `ds-autocomplete` — multi | `.tick` | yes | yes |
+      | `ds-autocomplete` — single | `.option-check` | yes | yes |
+      | `ds-select` | `.option-check` | yes | yes |
+      | `ds-table` — row selection | `.check`, `check-box.box` | yes | yes |
+      | `ds-stepper` — completed step | `ds-icon name="check"` | **no, on purpose** | no |
+      | `description-item` — copied | `ds-icon name="check"` | **no, on purpose** | no |
+
+      The last two are confirmations of an ACTION, not marks of a selection: a stepper's completed
+      step and a "copied to clipboard" flash are not checkboxes, and giving them a checkbox's mark
+      and overshoot would say they can be unticked. `_check-mark.scss` owns the tick and the
+      indeterminate bar; `_check-box.scss` owns the box around them; the motion is four tokens,
+      written up in `docs/check-mark-motion.md`.
+
+- [ ] **The elements demo has not been opened in a real browser since the rebuilds.** `COMMANDS.md`
+  says to serve `.design-sync/elements/demo` over http and look at it in a real tab, because a
+  background or headless one freezes transitions and reports stale layout. Every measurement this
+  cycle was headless. Nothing suggests a problem — the 127 live cards render and their panels open —
+  but the one check the runbook asks for has not been done.
+- [ ] **`ds-toast-region`'s dev-warning strip is unverified.** It was the one `devWarn` caller
+  without the `ngDevMode` guard and its message shipped as live code; the guard is now there, but
+  the rebuilt bundle came out byte-identical, which points at a stale `.angular/cache` rather than
+  at the guard. Re-check on a clean cache. `ds-stat` and `ds-split-button` both compile to
+  `constructor(){}`, so the pattern itself is known to work.
+
+**Standing conditions, not tasks.**
+
+- [ ] **The upload tree tracks `src/lib`, and only a machine with Chrome can bring it back into
+  line.** Any change to a component's template or SCSS moves what a card renders, so each one needs
+  `build-upload` → `snapshot-cards` → the height check before the tree matches the library again.
+  CI cannot do it: the image has no browser, which is why `cards.lock.json` and `check-frozen.mjs`
+  exist. In a shared checkout this means the tree is briefly stale after every library commit.
+- [ ] **Three obsolete paths on the project can only be deleted by its owner.** Listed in
+  `.design-sync/obsolete.txt`, printed by every build with the instruction to paste:
+  `components/actions/Button/Button - Refused, and why.html`,
+  `components/forms-inputs/TimeColumns/Time Columns.html`, `_TO_BE_DELETED.md`. Blanked and
+  unregistered from here; `delete_files` answers 403 for a non-owner by every route tested.
+
+**Decisions waiting on Stas.**
+
+- [ ] **Which of the 8 live chapters can also be frozen.** `live-chapters.txt` keeps toast, drawer,
+  modal, popover, bottom-sheet, tree, loading-overlay and scrollbar live because their demo only
+  exists once opened. Removing a line freezes that chapter's cards on the next run — 350 ms and
+  2.1 MB per card become about 35 ms and no bundle. Stas asked to look at the list himself.
+- [ ] **`templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty.** The
+  pane is server-side and the CLI binary carries only the tool description, so what fills them
+  cannot be determined from here. Nothing is known to be missing because of it.
+- [ ] **`.thumbnail` — the project's cover image — has no source that regenerates it.** It lives at
+  `assets/thumbnail.webp` and is copied into the tree; re-rendering it from a card is still open.
+
+**Closed by measurement, recorded so it is not reopened.**
+
+- **Lazy card rendering is no longer worth building.** The backlog item assumed every card in the
+  grid boots its own Angular application; that is now true for 127 of 410. A frozen card costs about
+  20 ms and zero bytes warm, so an `IntersectionObserver` would buy only the live ones and the two
+  unknowns behind it still stand: whether the pane keeps off-screen cards in the DOM, and whether it
+  screenshots them for the grid thumbnails, where a deferred card would thumbnail blank. The cheaper
+  lever is the live list above.
+- **All six panel-owning controls are proven to open.** Select 20 options, MultiSelect 6,
+  Autocomplete 4, the date picker 42 day cells, the colour picker its panel, and `ds-menu` one pane
+  with its items — that last one needed the probe pointed at the SIBLING button carrying
+  `aria-haspopup`, because a trigger-opened menu's trigger is not inside the panel.
+- **The two disputed comment numbers are gone rather than corrected.** The icon count was 86 against
+  an actual 83, and "120 public `--ds-*` hooks" measured 128 over `_ds_bundle.css` — the /changelog
+  session's 783 came from `src/lib/**/*.scss`, a different corpus, which explains the whole gap.
+  Neither number was acted on by a reader, so both comments now state the constraint without one.
+- **A dropdown was never visible in a card, before or after the freeze.** It is a CDK overlay:
+  closed by default, portaled to `document.body`. Verified against the pre-freeze cards, which held
+  no overlay either. What freezing took away was the click, which is why the panel owners are live.
+
 ## The hex readout rolls its glyphs like a mechanical board (recorded 2026-09-02, Stas)
 
 - [ ] **[P3] Dragging the picker retypes the hex value instantly; each glyph should ROLL to its new
@@ -103,9 +502,9 @@
 
 ## Decks awaiting a verdict (re-audited 2026-09-01)
 
-**Ten** decks carry `ds-deck-status: open` — counted on disk, not from this list, which had missed
-`basic-advanced-split` and then `banner-toast-icon-alignment`. The two picker decks closed: every
-question in them is answered and they moved to `presentations/implemented/`.
+**Eight** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+short before. The packaging lane closed and took three decks with it to
+`presentations/implemented/`, as the two picker decks did earlier.
 
 **The rank is now the filename.** An open deck is `<rank>-<slug>.html`, ranked by what answering it
 unblocks, so the folder listing is the queue — see `presentations/README.md`. Ranks are renumbered
@@ -352,6 +751,36 @@ rather than re-reading our own API.
 # Bugs — something shipped misbehaves
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
+
+## Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)
+
+- [x] **[P2] DONE 2026-09-04 — four shipped manifest shapes the upgrade machinery could not
+  execute, all violating `AUTHORING.md`'s own rules, none caught by the lint.** Fixed in place,
+  validated against the tag trees, all five gates green: `0.11.4#toast-promise-messages-generic`
+  reclassified `type-rename` → `behavior` (a widened type, not a rename — the bare name still
+  compiles via `<T = unknown>`, and "old count must reach 0" false-fails every correct migration);
+  `0.11.4#toast-message-input-renamed-body` `old` element-scoped to `ds-toast[message]` (a bare
+  `message` perma-fails a repo-wide zero-count on any real app); `0.11.1#trigger-display-compact-renamed`
+  map made full-token (`{"compact": "triggerDisplay=\"count\""}`), `old` scoped, and its released
+  `appliesWhen` no longer says "this same unreleased block". Lint hardened so the class cannot
+  ship again: **M043** (a bare map value that is not its key), **M044** (a `value-remap` `old`
+  must be `element[attr]`), M034's subject-to-"can go" gap closed (an intervening clause hid the
+  0.11.4 `--layer-toast` delete instruction) — which surfaced a second silent one in 0.9.0
+  (`--ds-input-pad-y` compensation); both now have `deleteList` rows + CHANGELOG table rows.
+  Selftest extended, every rule fires.
+- [x] **[P3] DONE 2026-09-05 (three of four; validated by probe before fixing): `class-surface-diff`
+  pre-existing blind spots.** Function-typed field annotations (`onChange: (v: boolean) => void = …`)
+  now match (annotations may contain `=>`; ~35 such members incl. both CVA bases became visible);
+  a wholesale-DELETED file reports its classes under LOST tagged "(file deleted)"; `normalize` no
+  longer collapses whitespace inside string literals, so `'No  data'` vs `'No data'` reads as a
+  default change. **Deliberately NOT fixed:** template-literal defaults stay blanked — the blanking
+  suppresses false members (load-bearing), and a default-value change inside a template is
+  manifest-entry material, not a type change.
+- [ ] **[P3] Prose-shaped `old` values in 0.11.x remain (hygiene, not breakage):** comma-joined
+  token lists (`0.11.4#toast-border-tokens-gain-color`), a full sentence as `old`
+  (`0.11.1`), a ~95-word `restore` paragraph (`0.11.3` — README wants "a literal snippet or
+  `null`"). The plugin now treats a non-token `old` as a non-locator, so these degrade safely;
+  tidy them when those manifests are next touched, and consider a lint rule for `restore` length.
 
 - [ ] **[P2] The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold.** `src/lib/styles/_status.scss:54` pairs `bg: var(--warning-subtitle)` with `text: var(--warning-text)`. Resolved in the default theme that is `#8A7400` on `#FFFBEA`, which computes to **4.42:1** by the WCAG relative-luminance formula — under AA for text below 18.66px/700. **It is the only status pair that fails:** error measures **5.92**, success **6.42** and primary **6.16** on their own subtitle backgrounds, so this is one colour out of step, not a palette-wide problem.
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:177`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
@@ -940,6 +1369,14 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 - [x] **[P2] Split the package into `basic` + `advanced` — DECIDED 2026-09-04: NO. Stas, on deck 5: «если замерил и директивы лучше тогда ок, не делим на два пакета».** The prize is 0 for a prototype that does not use the table, and the work moves to the table's opt-in directives (A1/A2) instead. Reopen only if a component needs an external runtime dependency. Original case below. The proposal: prototypes install a light kit, production apps add a heavy one, `ds-table` swapped for an `ids-data-grid`. **AUDITED 2026-09-01 → read `basic-advanced-split-audit.md` before actioning. Both premises are measurably false.** (1) Bundle: on 0.11.1, going from the 44 components a prototype uses to all 96 costs **18 KB gzip**; the whole library is 179 KB gzip; entry cost is 5.6 KB; `ds-table`'s MARGINAL cost beside the rest of the kit is **32 KB gzip**, not the 118 KB it measures alone. (2) Capability: every feature named for `ids-data-grid` — column resize, filters, visibility, order, CSV export, inline edit, sticky h-scrollbar, truncate+popover, selection-safe row click — **already ships in `ds-table`**, most since 0.6.3. So a split would move shipped features into a second package and double the release pipeline to save ≤32 KB. (Breaking consumers is NOT part of the case against it — see the memory rule; shipped features are free to move.) **The one shape that survives the numbers** is intra-component, not intra-package: move the table's opt-in behaviours into separately-importable directives (`DsTableResizable`, `DsTableExport`, …) so the heavy parts tree-shake per feature — one component, one docs page, no mirror to keep in sync. Unmeasured; ceiling on the saving is 32 KB. **A separate package is justified by an external runtime dependency, never by component count** — which makes `ids-charts` a real candidate the day it needs a third-party renderer, and `ids-advanced` not one. Decision is Stas's; nothing is blocked.
 
+- [x] **[P2] `ds-button` stops importing `FieldMessageComponent` — BUILT AND REVERTED 2026-09-04, because the measurement killed it.** The decision stands as taken; what changed is the number behind it. Built on `feat/table-feature-directives`, measured on the probe, and reverted: the button stops referencing `FieldMessageComponent` (verified in the built FESM, no reference left) and the probe bundle goes **63 066 → 63 374 B gzip** — 308 B WORSE, which is the seam. **The 11 295 B came from an ablation taken before A3, on the flattened package.** Now `field-message` is its own entry point and everything it needs — icons, core, its styles — is already in the bundle for the button itself, so the row's marginal cost is hundreds of bytes and a seam costs more than it saves. Original framing:
+
+  **[P2] `ds-button` stops importing `FieldMessageComponent`. DECIDED 2026-09-04 by Stas: behind a `DsButtonMessage` directive.** 11 295 B, 35% of the button's cost, paid by everyone who draws one. The button's template gets a slot and the directive brings the message component in itself, rendering into that slot through `ViewContainerRef` — so the import lives in the directive's file and is tree-shaken when nobody imports it.
+
+  **`DS_CONFIG` cannot replace the import, and Stas asked, so record why:** a config flag is a runtime value and the bundler cannot see it. While `ButtonComponent` statically references `FieldMessageComponent` the 11 KB ships whatever the flag says — that reference IS the cost. Config earns its place after the import: it carries the feature's defaults, the way `dsReserveMessages` provides `DS_CONFIG` for a subtree, so the options are not repeated per button. The irreducible price is one line in the `imports` of each component whose buttons show a message. Note the warning already in `reserve-messages.directive.ts`: a `provideDsConfig(...)` CALL in decorator metadata marks the module side-effectful and cost a consumer 566 KB of tree-shaking — use an object literal with a factory.
+
+- [ ] **[P3] Portaled CSS as opt-in — PARKED 2026-09-04 by Stas.** 1 055 B of the 2 793 B global sheet is the only part that could move behind an opt-in: `dropdown-overlay`, `overlay-motion`, `toast-overlay`. It saves only a consumer with no picker, no toast and no modal, which is close to nobody, and the cost is one more import in everyone else's bootstrap. The measurement stands if the balance ever changes; the AG Grid route (CSS inside the component) stays rejected because Angular injects those as runtime tags and a strict CSP under SSR blocks them.
+
 - [ ] **[P2] The table's opt-in behaviours become separately-importable directives. DECIDED 2026-09-04 by Stas on deck 7: form **a**, directives.**
 
   `<ds-table dsResizable dsExport>` — each feature is a directive the consumer puts in `imports`, and its options are ordinary inputs on that directive. The three forms cost the same bytes, so the choice was ergonomics: under **b** (`[features]="[withResize()]"`) every live option sits inside an array literal Angular rebuilds each change-detection cycle, so changing one means remembering `computed`; under **c** (`provideDsTable(...)`) the scope is the route, which makes two differently-configured tables on one screen impossible. **a** trades those for one weakness — binding a feature you did not import fails silently — and that is answerable: the table knows which contributions are registered, so a dev-mode warning names the missing directive. **Still open on the same deck: the button's message row (11.3 KB) and the portaled CSS (1.1 KB).**
@@ -1180,6 +1617,19 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 - [ ] **[P3] MED cluster — ASKED 2026-08-05, Stas: keep in the backlog.** Density beyond hit-targets (fonts/icons/pad — `[data-density]` scales heights/pad/avatars today but NOT `--font-size-*`/`--icon-*`, verified 2026-07-24) · fluid typography (`clamp()` — type tokens are fixed px). **No longer speculative — there is now a MEASURED case (2026-08-10).** Controls that hold chips set a `min-height` rather than a height, so when a tier floor drops below what the text needs they stop following it: under `ultra-compact` `ds-multi-select` measures **33px** and `ds-autocomplete` **29px** where the other seven reach 24px. The floor is applied correctly (`min-height: 24px`); the content cannot shrink, because at a 14px font the line box alone is 19.6px. Proved by hand: dropping `--font-size-s` to 11px in that container pulled them to 31px and 25px. So "density does not scale type" is not a nicety — it is why the bottom tier does not level. `compact` is unaffected in practice (33 against 32). _(The third clause — motion semantic presets — MOVED 2026-07-31 into the customizable-motion item under "Motion / overlays" as its slice 3; don't re-open it here.)_ Both remaining pieces are speculative, no active request; split into their own items if ever prioritized. _(high-contrast/forced-colors + RTL/logical-properties dropped — Stas 2026-07-07.)_
 
 ## Component API / portfolio
+
+- [ ] **[P2] The button's colour-family slots are named `--c-*`, which is not an acceptable name.**
+  Seven of them — `--c-base`, `--c-on`, `--c-strong`, `--c-subtitle`, `--c-muted`, `--c-muted-strong`,
+  `--c-outline-border` — declared on `.button` in `button.component.scss` and read by `button` and
+  `icon-button`. Two things are wrong with the name and each on its own is enough: `c` is a
+  one-letter abbreviation where the house rule is a spelled-out word, and these are INTERNAL slots
+  that carry none of the `--_` marker this library uses to say so, so they read like a public hook
+  a consumer may set. The `.c-*` colour classes that override them have the same defect.
+  Rename to the spelled-out internal form (`--_family-base` / `-on` / `-strong` / …) and the classes
+  with them. Not a public break — `components.md` names none of them and only those two components
+  read them — but `0.10.1.json` mentions `--c-on` inside an `informational` line explaining a
+  disabled-icon recipe, so that sentence needs the new name too. Check `.design-sync/` and the docs
+  specimens as well: both pin component internals in places `src/lib` does not reach.
 
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
 

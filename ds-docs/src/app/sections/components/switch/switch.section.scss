@@ -3,7 +3,7 @@
     /* State pins — ds-switch has no --_* resolvers; restate the bare role token
        its own rule uses directly.
        focus: --focus-ring (box-shadow) */
-    :host ::ng-deep .pin-focus .switch { outline: none; box-shadow: var(--focus-ring); }
+    :host ::ng-deep .pin-focus .control-line { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
 
     /* ---------- Size row ---------- */
     .sw-size-row {
