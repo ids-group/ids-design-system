@@ -303,11 +303,22 @@ if (check) {
   process.exit(0);
 }
 
-rmSync(OUT, { recursive: true, force: true });
+// Written first, pruned after. Wiping the directory and rebuilding it left ~40 ms in which the
+// catalogue was 8 files instead of 70 — long enough for a concurrent `build:schematics` to copy an
+// incomplete tree into the tarball with nothing going red, and for a Ctrl-C to delete tracked files
+// outright.
 for (const [path, content] of files) {
   const full = join(OUT, path);
   mkdirSync(dirname(full), { recursive: true });
   writeFileSync(full, content);
+}
+const wanted = new Set([...files.keys()].map((path) => join(OUT, path)));
+for (const entry of readdirSync(OUT, {
+  recursive: true,
+  withFileTypes: true,
+})) {
+  const full = join(entry.parentPath ?? entry.path, entry.name);
+  if (entry.isFile() && !wanted.has(full)) rmSync(full, { force: true });
 }
 
 const bytes = [...files.values()].reduce(
