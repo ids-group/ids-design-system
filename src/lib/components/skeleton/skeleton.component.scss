@@ -86,6 +86,16 @@
     var(--_skeleton-wave-fade) calc(var(--_skeleton-wave-period) * 0.75),
     var(--_skeleton-wave-echo-color) var(--_skeleton-wave-period)
   );
+
+  /* The tile is SQUARE with a side of period x sqrt(2), and that number is the whole reason there
+     is no seam. A repeating gradient still paints into a finite image which the browser then tiles,
+     and an angled gradient only meets itself across a tile edge when the tile advances its phase by
+     a whole period: at 135deg a square tile of side S advances it by S / sqrt(2), so S must be
+     period x sqrt(2). Left at `auto` the tile is the positioning area — the viewport under `fixed` —
+     and every tile boundary showed as a hard line across the page. Measured against tiles of
+     period / sqrt(2), period, and one oversized no-repeat image: all three seam, this one does not. */
+  background-size: calc(var(--_skeleton-wave-period) * 1.4142)
+    calc(var(--_skeleton-wave-period) * 1.4142);
   background-attachment: fixed;
 
   /* NO `will-change`. It promotes this pseudo-element to its own compositing layer, and Chrome

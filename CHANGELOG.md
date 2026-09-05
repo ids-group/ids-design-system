@@ -17,13 +17,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Neither has a flat core: each peaks at a point and is ramp either side, so a pass arrives and
   leaves rather than switching. The tone is one soft step darker than the base, unchanged: a shadow
   moving over the placeholders, not a light switched on over them.
-  It is seamless, and two separate things had to be true for that. The pattern is a repeating gradient
-  periodic along its own axis, so there are no tile edges to meet — an angled gradient in a
-  rectangular tile does not, and every boundary showed as a diagonal line across the page. Travel is
-  exactly one period, resolved along the 45° path, which lands on a state identical to the start.
-  And it carries no `will-change`: that promoted the layer, and Chrome paints a `fixed` background
-  per layer, so the layer's own edge showed as a hard vertical line through the wave. It bought
-  nothing either, since `background-position` is not a compositable property.
+  It is seamless, and the reason is one number. A repeating gradient still paints into a finite
+  image which the browser tiles, and an angled gradient meets itself across a tile edge only when
+  the tile advances its phase by a whole period: at 135° a square tile of side S advances it by
+  S / √2, so the tile has to be period × √2. Left at `auto` the tile was the positioning area — the
+  viewport, under `fixed` — and every tile boundary showed as a hard line straight across the page.
+  Measured against tiles of period / √2, of period, and one oversized no-repeat image: all three
+  seam, this one does not.
+
   Four hooks, all with defaults — `--ds-skeleton-wave-period` (56rem),
   `--ds-skeleton-wave-duration` (3400ms), `--ds-skeleton-wave-angle` (135deg) and
   `--ds-skeleton-wave-echo-color`.
