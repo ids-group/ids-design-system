@@ -101,6 +101,9 @@ step "Verifying the upload tree"
 # which under `set -e` killed the run before it could say so.
 indexed=$(grep -cE '"path": "(components|guides)/' .design-sync/upload/_ds_manifest.json || true)
 pages=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' | wc -l)
+# Both zero compares equal, and `|| true` above is what makes that reachable: an empty tree would
+# report "indexes all 0 card(s)" as a pass.
+[ "$pages" -gt 0 ] || { echo "No card pages in the upload tree at all"; exit 1; }
 [ "$indexed" = "$pages" ] || { echo "Manifest indexes $indexed card(s) against $pages page(s) in the tree"; exit 1; }
 echo "Manifest indexes all $indexed card(s)"
 
@@ -122,10 +125,13 @@ for f in styles.css README.md _vendor/react.js _vendor/react-dom.js fonts/fonts.
 done
 sources=$(find .design-sync/assets/uploads -type f | wc -l)
 copies=$(find .design-sync/upload/uploads -type f | wc -l)
+# `find | wc -l` yields 0 when find itself fails, so both sides vanishing compares equal.
+[ "$sources" -gt 0 ] || { echo "No pasted images found under .design-sync/assets/uploads"; exit 1; }
 [ "$sources" = "$copies" ] || { echo "Pasted-image mismatch: $sources source(s) against $copies in the upload tree"; exit 1; }
 [ -f .design-sync/upload/.thumbnail ] || { echo "Expected artifact missing: .design-sync/upload/.thumbnail — it is copied from .design-sync/assets/thumbnail.webp"; exit 1; }
 faces=$(find .design-sync/upload/fonts -name '*.woff2' | wc -l)
 rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css || true)
+[ "$faces" -gt 0 ] || { echo "No font files in the upload tree at all"; exit 1; }
 [ "$faces" = "$rules" ] || { echo "Font mismatch: $faces face file(s) against $rules @font-face rule(s) - the missing side 404s silently"; exit 1; }
 # fonts.css lives INSIDE fonts/, so the bundle's `fonts/` prefix has to be rewritten one level down.
 grep -q 'url("./' .design-sync/upload/fonts/fonts.css || { echo "fonts.css still points outside its own directory"; exit 1; }
