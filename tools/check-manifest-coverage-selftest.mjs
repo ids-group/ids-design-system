@@ -293,18 +293,19 @@ try {
       testCase.entry,
       '',
     ].join(eol);
-    // A case that brings its own manifest gets a changelog holding ONLY its block: dropping the
-    // real manifest strands every other entry in the live block, and the run then goes red on
-    // somebody else's line rather than on the one under test.
+    // Every case gets a changelog holding ONLY its own block and a manifest of its own. Inserting
+    // the fixture ahead of the live entries left them in the block, so a case was judged together
+    // with somebody else's line: seven of them went red on a tree nobody had touched whenever an
+    // Unreleased entry was uncovered, and others reported the expected red for that entry rather
+    // than for their fixture. The live records are the thing under test everywhere else; here they
+    // are noise. What stays live is the library tree, which is what the rules read.
     writeFileSync(
       CHANGELOG,
-      testCase.manifest
-        ? [block, '## 0.0.0 — 2000-01-01', ''].join(eol)
-        : original.replace(/^## Unreleased\r?\n/m, `${block}`),
+      [block, '## 0.0.0 — 2000-01-01', ''].join(eol),
       'utf8',
     );
 
-    const { red } = run(testCase.manifest);
+    const { red } = run(testCase.manifest ?? {});
     ran++;
     const got = red ? 'red' : 'green';
     const ok = got === testCase.expect;

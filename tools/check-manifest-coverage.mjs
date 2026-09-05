@@ -96,11 +96,22 @@ function realHooks() {
   // Nothing resolvable means `src/lib` was not read, and every entry then holds "no public
   // hook" and is skipped — a green that says "every one is covered" having looked at nothing.
   // The sibling tool has had this guard from the start; this one exited 0.
-  if (!tokens.size && !tags.size && !symbols.size) {
+  // Each half separately, not all three together. A library always has all three, so an empty one
+  // means that reader stopped working — and the surface the boundary tag supplies would hide it:
+  // only what this cycle INTRODUCED comes from the working tree, so a gutted scan goes unnoticed
+  // until the release that adds a tag or a symbol.
+  const empty = [
+    ['token', tokens],
+    ['tag', tags],
+    ['symbol', symbols],
+  ]
+    .filter(([, set]) => !set.size)
+    .map(([what]) => what);
+  if (empty.length) {
     console.error(
-      `check-manifest-coverage: no token, tag or symbol could be read from ${join(ROOT, 'src/lib')}. ` +
-        'Every entry would then name no public hook and be skipped, which is not the same as ' +
-        'every entry being covered.',
+      `check-manifest-coverage: not one ${empty.join(' or ')} could be read from ` +
+        `${join(ROOT, 'src/lib')}. An entry naming that kind of surface would be skipped, which ` +
+        'is not the same as its being covered.',
     );
     process.exit(1);
   }
