@@ -110,8 +110,7 @@
 
   <p class="block-desc t-s">
     Pass
-    <code class="t-mono-inline"
-      >
+    <code class="t-mono-inline">
       action: {{ '{' }} label, handler {{ '}' }}
     </code>
     to <code class="t-mono-inline">ToastService.show()</code> to render a
@@ -187,8 +186,8 @@
     carries no <code class="t-mono-inline">role</code> or
     <code class="t-mono-inline">
       aria-live
-    </code> and is silent to a reader — it
-    is a specimen, not an event, so route anything that should be announced
+    </code> and is silent to a reader —
+    it is a specimen, not an event, so route anything that should be announced
     through the service. And the stack stays above a modal, drawer or confirm
     opened after it: <code class="t-mono-inline">--layer-toast</code> cannot do
     that on its own, because overlays live in the browser's top layer where
@@ -209,8 +208,8 @@
     </code> through
     <code class="t-mono-inline">
       provideDsConfig
-    </code> to cap concurrent toasts.
-    Extras queue and appear as earlier ones dismiss. A region shows
+    </code> to cap concurrent
+    toasts. Extras queue and appear as earlier ones dismiss. A region shows
     <code class="t-mono-inline">
       maxVisible
     </code> at once, five by default —

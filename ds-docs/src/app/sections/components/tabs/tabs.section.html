@@ -296,9 +296,9 @@
     </code> with the tab's
     <code class="t-mono-inline">
       value
-    </code> (or label as fallback). The host is
-    responsible for removing the tab. Closing a tab does not change the active
-    index.
+    </code> (or label as fallback). The host
+    is responsible for removing the tab. Closing a tab does not change the
+    active index.
   </p>
 
   <div class="variant-row">
@@ -644,10 +644,13 @@
     subscription again. It also pairs with
     <code class="t-mono-inline">
       ds-app-layout
-    </code> — the write is query-only,
-    and that layout's <code class="t-mono-inline">pathChanged</code> ignores
-    query-only navigations, so switching tabs cannot trip its scroll reset.
-    There is deliberately no live demo here: it would write
+    </code> — the write is
+    query-only, and that layout's
+    <code class="t-mono-inline">
+      pathChanged
+    </code> ignores query-only
+    navigations, so switching tabs cannot trip its scroll reset. There is
+    deliberately no live demo here: it would write
     <code class="t-mono-inline">
       ?tab=
     </code> into the docs' own address while
@@ -661,12 +664,12 @@
     </strong> Two
     <code class="t-mono-inline">
       ds-tabs
-    </code> sharing a name on the same screen
-    erase each other — both write the same parameter, and a reload restores
-    whichever wrote last. It is the easy mistake to make when turning this on
-    across an app, because <code class="t-mono-inline">"tab"</code> is the
-    obvious name every time, so a dev-mode warning names the clash. Nested or
-    sibling strips need distinct names —
+    </code> sharing a name on the same
+    screen erase each other — both write the same parameter, and a reload
+    restores whichever wrote last. It is the easy mistake to make when turning
+    this on across an app, because <code class="t-mono-inline">"tab"</code> is
+    the obvious name every time, so a dev-mode warning names the clash. Nested
+    or sibling strips need distinct names —
     <code class="t-mono-inline">
       tab
     </code> and
@@ -682,12 +685,13 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       rememberLastTab
-    </code> stores the active tab per
-    path in <code class="t-mono-inline">sessionStorage</code>, so returning to a
-    record reopens where you left it. Off by default, and it only does anything
-    alongside <code class="t-mono-inline">urlParam</code>, which supplies the
-    names — a remembered INDEX would repoint the moment a tab is inserted, for
-    the same reason the parameter carries names rather than numbers.
+    </code> stores the active tab
+    per path in <code class="t-mono-inline">sessionStorage</code>, so returning
+    to a record reopens where you left it. Off by default, and it only does
+    anything alongside <code class="t-mono-inline">urlParam</code>, which
+    supplies the names — a remembered INDEX would repoint the moment a tab is
+    inserted, for the same reason the parameter carries names rather than
+    numbers.
   </p>
 
   <p class="block-desc t-s">

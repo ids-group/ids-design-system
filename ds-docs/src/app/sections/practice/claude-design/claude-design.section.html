@@ -58,8 +58,8 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
     nothing to drift: the same month of upstream cost it one
     <code class="t-mono-inline">
       gen.mjs
-    </code> run, and the surface grew from 81
-    elements to 85 on its own. The price is about
+    </code> run, and the surface grew from
+    81 elements to 85 on its own. The price is about
     <strong>
       135 KB gzip
     </strong> more over the wire for the Angular runtime —
@@ -153,9 +153,9 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
       content and its inputs, so the generator gives those an
       <code class="t-mono-inline">
         ds-x-
-      </code> tag no template mentions — 31 of
-      85. The React wrapper emits the alias, so nothing changes for a caller and
-      the tag never surfaces in a design.
+      </code> tag no template mentions — 31
+      of 85. The React wrapper emits the alias, so nothing changes for a caller
+      and the tag never surfaces in a design.
     </li>
   </ul>
 
@@ -164,8 +164,8 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
     absent from the generated surface. Only
     <code class="t-mono-inline">
       dsTooltip
-    </code> would be missed, and a tooltip
-    is hover-revealed — a static design card has no hover, so it would show
-    nothing anyway.
+    </code> would be missed, and a
+    tooltip is hover-revealed — a static design card has no hover, so it would
+    show nothing anyway.
   </p>
 </docs-section>

@@ -279,8 +279,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [clearable]
-    </code> shows an inline × button when
-    the field has a non-empty value. Defaults to
+    </code> shows an inline × button
+    when the field has a non-empty value. Defaults to
     <code class="t-mono-inline">
       true
     </code> for
@@ -368,9 +368,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [required]="true"
-    </code> appends a red asterisk
-    to the label; <code class="t-mono-inline">[optional]="true"</code> appends
-    the muted "(optional)" suffix. They are mutually exclusive — pick one.
+    </code> appends a red
+    asterisk to the label;
+    <code class="t-mono-inline">
+      [optional]="true"
+    </code> appends the muted
+    "(optional)" suffix. They are mutually exclusive — pick one.
   </p>
 
   <div class="grid-2">
@@ -404,10 +407,10 @@
     </code> →
     <code class="t-mono-inline">
       hint
-    </code>. Only one line ever renders, so the
-    field's height never depends on how many of them you bound. All three fields
-    below carry the same <code class="t-mono-inline">hint</code>; the second
-    adds a warning and the third adds both.
+    </code>. Only one line ever renders, so
+    the field's height never depends on how many of them you bound. All three
+    fields below carry the same <code class="t-mono-inline">hint</code>; the
+    second adds a warning and the third adds both.
   </p>
 
   <p class="block-desc t-s">
@@ -417,8 +420,8 @@
     in a form holding all three. One rule drives all nine bordered fields, off a
     <code class="t-mono-inline">
       data-field-state
-    </code> attribute on the host —
-    style against that attribute rather than a class if you need to extend it.
+    </code> attribute on the host
+    — style against that attribute rather than a class if you need to extend it.
   </p>
 
   <div class="grid-3">
@@ -463,11 +466,11 @@
     </code> each bring a glyph;
     <code class="t-mono-inline">
       hint
-    </code> does not, because it is the resting
-    text rather than a state and a form where every field carries an info circle
-    reads as noise. Colour alone was the whole signal before — and in the light
-    theme warning (#8A7400) against success (#156822) is a hue apart and nothing
-    else, which is the case WCAG 1.4.1 is about.
+    </code> does not, because it is the
+    resting text rather than a state and a form where every field carries an
+    info circle reads as noise. Colour alone was the whole signal before — and
+    in the light theme warning (#8A7400) against success (#156822) is a hue
+    apart and nothing else, which is the case WCAG 1.4.1 is about.
   </p>
 
   <p class="block-desc t-s">
@@ -517,15 +520,15 @@
     waits for the first blur, so a
     <code class="t-mono-inline">
       required
-    </code> error never greets an untouched
-    form. Both fields below are plain
+    </code> error never greets an
+    untouched form. Both fields below are plain
     <code class="t-mono-inline">
       [formControl]
     </code> with
     <code class="t-mono-inline">
       Validators
-    </code> and no message binding at all
-    — focus one, leave it empty, and blur.
+    </code> and no message binding at
+    all — focus one, leave it empty, and blur.
   </p>
 
   <div class="grid-2">
@@ -555,8 +558,7 @@
       A form can raise a WARNING, not only an error.
     </b> "Display name" above
     runs a validator that returns
-    <code class="t-mono-inline"
-      >
+    <code class="t-mono-inline">
       {{ '{' }} warning: 'Long runs of capitals are hard to scan'
       {{ '}' }}
     </code>
@@ -591,10 +593,9 @@
     </code> and
     <code class="t-mono-inline">
       minlength
-    </code> above comes from one shared map
-    —
-    <code class="t-mono-inline"
-      >
+    </code> above comes from one shared
+    map —
+    <code class="t-mono-inline">
       provideDsConfig({{ '{' }} field: {{ '{' }} errorMessages: … {{ '}' }}
       {{ '}' }})
     </code>
@@ -603,9 +604,9 @@
     the map: "admin" is rejected by a custom validator returning
     <code class="t-mono-inline">
       {{ '{' }} taken: 'That handle is already taken' {{ '}' }}
-    </code>. In signal forms the same thing is written at the validator —
-    <code class="t-mono-inline"
-      >
+    </code
+    >. In signal forms the same thing is written at the validator —
+    <code class="t-mono-inline">
       required(path, {{ '{' }} message: … {{ '}' }})
     </code>
     — and the field needs no binding there either, because
@@ -653,11 +654,12 @@
     For a whole form, put the
     <code class="t-mono-inline">
       dsReserveMessages
-    </code> directive on it instead
-    of binding every control:
+    </code> directive on it
+    instead of binding every control:
     <code class="t-mono-inline">
       &lt;form dsReserveMessages&gt;…&lt;/form&gt;
-    </code>. It provides <code class="t-mono-inline">DS_CONFIG</code> for its subtree,
+    </code
+    >. It provides <code class="t-mono-inline">DS_CONFIG</code> for its subtree,
     merged with the config above it, and a field's own
     <code class="t-mono-inline">
       [reserveMessage]

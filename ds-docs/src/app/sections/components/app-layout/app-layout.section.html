@@ -195,8 +195,7 @@
       button
     </code> is what a screen reader reads.
     Bind that component's forwarding inputs instead, off a template ref:
-    <code class="t-mono-inline"
-      >
+    <code class="t-mono-inline">
       [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"
     </code>
     and <code class="t-mono-inline">[ariaControls]="layout.railId"</code>. These
@@ -229,7 +228,8 @@
     instead of traversing can arm it explicitly with
     <code class="t-mono-inline">
       state: {{ '{' }} dsRestoreScroll: true {{ '}' }}
-    </code>. Any wheel, touch or key input cancels the pending restore, so it never
+    </code
+    >. Any wheel, touch or key input cancels the pending restore, so it never
     fights a reader who has already started scrolling. These docs run with it
     on.
   </p>
@@ -262,13 +262,14 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       LayoutNavigationService
-    </code> is public for the
-    same reason. Its <code class="t-mono-inline">pathChanged</code> stream is
-    the layout's own answer to "did we go somewhere else?" — `NavigationEnd`,
+    </code> is public for
+    the same reason. Its <code class="t-mono-inline">pathChanged</code> stream
+    is the layout's own answer to "did we go somewhere else?" — `NavigationEnd`,
     path only, de-duplicated, and skipping any navigation that carries
     <code class="t-mono-inline">
       state: {{ '{' }} dsSamePage: true {{ '}' }}
-    </code>. Inject it instead of deriving your own: one consumer ended up with three
+    </code
+    >. Inject it instead of deriving your own: one consumer ended up with three
     answers that disagreed, because a `split('?')` keeps the fragment this one
     strips.
   </p>
@@ -278,8 +279,8 @@
     with a
     <code class="t-mono-inline">
       ResizeObserver
-    </code> rather than a fixed frame
-    count, and clamped at
+    </code> rather than a fixed
+    frame count, and clamped at
     <code class="t-mono-inline">
       restoreScrollTimeout
     </code> so a list that
@@ -289,7 +290,8 @@
     letting the service assign it:
     <code class="t-mono-inline">
       inject(LayoutScrollService).consumePendingOffset()
-    </code>.
+    </code
+    >.
   </p>
 
   <h3
@@ -302,12 +304,14 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       &lt;ds-sidenav-footer&gt;
-    </code> is the one part
-    of the rail a consumer configures rather than composes: it owns the profile
-    row, the alert bell and the collapse handle. Both states below are the same
-    element &mdash; <code class="t-mono-inline">[collapsed]</code> switches it.
-    The width comes from the sidenav, so a footer shown outside one needs a
-    frame of its own.
+    </code> is the one
+    part of the rail a consumer configures rather than composes: it owns the
+    profile row, the alert bell and the collapse handle. Both states below are
+    the same element &mdash;
+    <code class="t-mono-inline">
+      [collapsed]
+    </code> switches it. The width comes
+    from the sidenav, so a footer shown outside one needs a frame of its own.
   </p>
 
   <div class="footer-rails">

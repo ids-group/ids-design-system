@@ -36,25 +36,24 @@
       Set the brand once, not per screen.
     </strong>
 
-    <code class="t-mono-inline"
-      >
+    <code class="t-mono-inline">
       provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125;
       &#125;)
     </code>
     answers all three for this layout AND for
     <code class="t-mono-inline">
       ds-sidenav
-    </code>, which asks the same questions
-    — an app that has six auth screens was binding the same values six times.
-    Each field resolves on its own: an element input beats the config, so one
-    screen can differ without restating the rest, and
+    </code>, which asks the same
+    questions — an app that has six auth screens was binding the same values six
+    times. Each field resolves on its own: an element input beats the config, so
+    one screen can differ without restating the rest, and
     <code class="t-mono-inline">
       brand=""
     </code> drops the wordmark while a
     <code class="t-mono-inline">
       logoLetter
-    </code> in the config still paints its
-    tile. Clear both to give a screen no brand row at all.
+    </code> in the config still paints
+    its tile. Clear both to give a screen no brand row at all.
   </p>
 
   <p class="block-desc t-s">
@@ -77,12 +76,12 @@
     type scale never fights your screen's. The support line goes into
     <code class="t-mono-inline">
       [dsAuthSupport]
-    </code> and renders as the page's
-    contentinfo landmark when this layout IS the page — nested inside another
-    layout's <code class="t-mono-inline">main</code> (as on this docs site) it
-    is a plain footer. Leave it out and the footer collapses. The card itself is
-    an <code class="t-mono-inline">article</code>, which is not a landmark: on a
-    standalone auth page set
+    </code> and renders as the
+    page's contentinfo landmark when this layout IS the page — nested inside
+    another layout's <code class="t-mono-inline">main</code> (as on this docs
+    site) it is a plain footer. Leave it out and the footer collapses. The card
+    itself is an <code class="t-mono-inline">article</code>, which is not a
+    landmark: on a standalone auth page set
     <code class="t-mono-inline">
       landmark="main"
     </code> so a screen-reader user
@@ -212,9 +211,9 @@
     </code> and not
     <code class="t-mono-inline">
       dvh
-    </code>: the dynamic unit changes as a mobile
-    URL bar hides, which would resize the wordmark and re-space the column while
-    the reader scrolls. Setting any of
+    </code>: the dynamic unit changes as a
+    mobile URL bar hides, which would resize the wordmark and re-space the
+    column while the reader scrolls. Setting any of
     <code class="t-mono-inline">
       --ds-auth-layout-pad-block
     </code>,
@@ -236,9 +235,9 @@
     elsewhere takes the masthead and footer out of the flow with
     <code class="t-mono-inline">
       position: absolute
-    </code>, which frees more room
-    but lets that chrome overlap a tall form instead of scrolling past it. A
-    card here holds whatever you project into it, so overlap is the worse
+    </code>, which frees more
+    room but lets that chrome overlap a tall form instead of scrolling past it.
+    A card here holds whatever you project into it, so overlap is the worse
     failure.
   </p>
 

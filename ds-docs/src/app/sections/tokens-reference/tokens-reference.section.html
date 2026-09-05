@@ -219,10 +219,8 @@
     indicators. Ships a distinct default hue (a cool violet), independent of
     <code class="t-mono-inline">
       --primary
-    </code>; brands reskin it by overriding
-    <code class="t-mono-inline">
-      --tertiary-h/s/l
-    </code>.
+    </code>; brands reskin it by
+    overriding <code class="t-mono-inline"> --tertiary-h/s/l </code>.
   </p>
 
   <div class="scroll-wrap">
@@ -1045,8 +1043,7 @@
           @for (stop of ramp.stops; track stop) {
             <tr>
               <td>
-                <code class="t-mono-inline"
-                  >
+                <code class="t-mono-inline">
                   --{{ ramp.prefix }}-{{ stop }}
                 </code>
               </td>
@@ -1814,8 +1811,7 @@
         @for (row of densityTiers; track row.name) {
           <tr>
             <td>
-              <code class="t-mono-inline"
-                >
+              <code class="t-mono-inline">
                 [data-density=&quot;{{ row.name }}&quot;]
               </code>
             </td>

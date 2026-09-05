@@ -19,11 +19,9 @@
     </code> — and it comes from
     <code class="t-mono-inline">
       &#64;angular/forms/signals
-    </code>, not from this
-    library. That is the point: a DS control participates because it exposes
-    <code class="t-mono-inline">
-      value
-    </code> as a
+    </code>, not from
+    this library. That is the point: a DS control participates because it
+    exposes <code class="t-mono-inline"> value </code> as a
     <code class="t-mono-inline">
       model()
     </code>, which is the entire
@@ -69,8 +67,9 @@
     the field is touched, the border turns,
     <code class="t-mono-inline">
       aria-invalid
-    </code> flips, and the button stays
-    disabled until the form is valid. None of that is wired in the template.
+    </code> flips, and the button
+    stays disabled until the form is valid. None of that is wired in the
+    template.
   </p>
 
   <h3 class="block-title t-h4">
@@ -84,7 +83,8 @@
     supply it: per rule, as
     <code class="t-mono-inline">
       required(path.email, &#123; message: '…' &#125;)
-    </code>, or once per app for the built-in kinds:
+    </code
+    >, or once per app for the built-in kinds:
   </p>
 
   <pre class="t-mono-block">{{ messagesSnippet }}</pre>

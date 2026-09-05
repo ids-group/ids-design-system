@@ -38,7 +38,8 @@
     </code>,
     <code class="t-mono-inline">
       &lt;ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
-    </code>, sidenav active rail, stat delta neutral.
+    </code
+    >, sidenav active rail, stat delta neutral.
   </p>
 
   <div class="role-grid">
@@ -149,8 +150,8 @@
     </code> by default. Override
     <code class="t-mono-inline">
       --secondary-h/s/l
-    </code> (or a brand) to reskin
-    it.
+    </code> (or a brand) to
+    reskin it.
   </p>
 
   <div class="role-demos">
@@ -212,10 +213,8 @@
         Custom state
       </div>
 
-      <code class="t-mono-inline"
-        >
-        &lt;ds-status-dot
-        [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
+      <code class="t-mono-inline">
+        &lt;ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
       </code>
     </div>
 
@@ -231,8 +230,7 @@
         subtitle="Secondary-toned eyebrow"
       />
 
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         &lt;ds-page-header class="eyebrow-secondary"&gt;
       </code>
     </div>
@@ -253,8 +251,7 @@
         </span>
       </ds-stat>
 
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         &lt;ds-stat deltaTone="secondary"&gt; → .delta.secondary
       </code>
     </div>
@@ -269,8 +266,7 @@
         inline — single-rule override, no new API surface:
       </p>
 
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         &lt;ds-card style="border-top: 3px solid var(--secondary)"&gt;
       </code>
     </div>
@@ -284,8 +280,8 @@
     family by default — distinct from
     <code class="t-mono-inline">
       --primary
-    </code>, so these examples already read
-    apart from the blue accent. Under
+    </code>, so these examples already
+    read apart from the blue accent. Under
     <code class="t-mono-inline">
       [data-brand="manage-my"]
     </code>
@@ -302,8 +298,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       --tertiary
-    </code> is the third brand hue (violet
-    family) with a full ramp (<code class="t-mono-inline"
+    </code> is the third brand hue
+    (violet family) with a full ramp (<code class="t-mono-inline"
       >-hover / -strong / -subtitle / -muted</code
     >). Fewer touchpoints than <code class="t-mono-inline">--secondary</code> —
     today it drives the <code class="t-mono-inline">tertiary</code> button
@@ -350,10 +346,8 @@
         Tonal chip
       </span>
 
-      <code class="t-mono-inline"
-        >
-        background: var(--tertiary-subtitle); color:
-        var(--tertiary-strong)
+      <code class="t-mono-inline">
+        background: var(--tertiary-subtitle); color: var(--tertiary-strong)
       </code>
     </div>
 
@@ -374,8 +368,7 @@
         <span style="background: var(--tertiary-pressed)"></span>
       </div>
 
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         --tertiary-subtitle → -muted → base → -strong → -pressed
       </code>
     </div>
@@ -646,17 +639,17 @@
     If your composite control paints a ring on
     <code class="t-mono-inline">
       :focus-within
-    </code> — a field box, a segmented
-    row, a toolbar cell — the element inside it still gets the base ring, and
-    the result is two: a tight one on the control and the halo on the box. This
-    is the trap the DS itself fell into twice, in
+    </code> — a field box, a
+    segmented row, a toolbar cell — the element inside it still gets the base
+    ring, and the result is two: a tight one on the control and the halo on the
+    box. This is the trap the DS itself fell into twice, in
     <code class="t-mono-inline">
       ds-input
     </code> and
     <code class="t-mono-inline">
       ds-textarea
-    </code>, both found by measuring in a
-    browser rather than by reading the styles.
+    </code>, both found by measuring in
+    a browser rather than by reading the styles.
   </p>
 
   <p class="block-desc t-s">
@@ -679,20 +672,22 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       outline
-    </code> is the one style that also emits
-    a rule, because an outline cannot be carried by a box-shadow token; it is
-    written at zero specificity with
+    </code> is the one style that also
+    emits a rule, because an outline cannot be carried by a box-shadow token; it
+    is written at zero specificity with
     <code class="t-mono-inline">
       :where()
     </code> so a component or your own CSS
     still wins. Separately, and regardless of which style is set: under
     <code class="t-mono-inline">
       forced-colors
-    </code> every focused element gets
-    a <code class="t-mono-inline">CanvasText</code> outline, because Windows
-    High Contrast DROPS box-shadow and a shadow-only indicator disappears there
-    completely. Consumers who <code class="t-mono-inline">&#64;use</code> the DS
-    partials à la carte need
+    </code> every focused element
+    gets a <code class="t-mono-inline">CanvasText</code> outline, because
+    Windows High Contrast DROPS box-shadow and a shadow-only indicator
+    disappears there completely. Consumers who
+    <code class="t-mono-inline">
+      &#64;use
+    </code> the DS partials à la carte need
     <code class="t-mono-inline">
       &#64;use 'styles/focus'
     </code> to get either;
@@ -711,17 +706,17 @@
     Every style above draws OUTSIDE the border box, so an ancestor with
     <code class="t-mono-inline">
       overflow: hidden
-    </code> cuts the indicator away
-    and leaves the element focusable with nothing to see. That ancestor is not
-    exotic: clipping a card is how a full-bleed child stays inside a rounded
+    </code> cuts the indicator
+    away and leaves the element focusable with nothing to see. That ancestor is
+    not exotic: clipping a card is how a full-bleed child stays inside a rounded
     corner, and <code class="t-mono-inline">ds-card</code> with
     <code class="t-mono-inline">
       padding="none"
     </code> invites it.
     <code class="t-mono-inline">
       inset
-    </code> draws the same two rings INSIDE the
-    box instead, where nothing can clip them.
+    </code> draws the same two rings INSIDE
+    the box instead, where nothing can clip them.
   </p>
 
   <p class="block-desc t-s">

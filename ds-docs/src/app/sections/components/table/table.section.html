@@ -64,14 +64,14 @@
     Mark columns <code class="t-mono-inline">sortable: true</code> and add
     <code class="t-mono-inline">
       sortMode="client"
-    </code> to let the table order
-    its own rows. Click a header to cycle asc → desc → none; the active column
-    shows a coloured chevron. Pass
+    </code> to let the table
+    order its own rows. Click a header to cycle asc → desc → none; the active
+    column shows a coloured chevron. Pass
     <code class="t-mono-inline">
       [sortingOrder]="['asc', 'desc']"
-    </code> to drop
-    the “none” step where an unsorted state isn't legal (e.g. a server-paged
-    list).
+    </code> to
+    drop the “none” step where an unsorted state isn't legal (e.g. a
+    server-paged list).
   </p>
 
   <ds-table
@@ -174,7 +174,8 @@
     hover and pressed only appear when rows are clickable, so a passive table
     stays static. Selected (checkbox column) and active (<code
       class="t-mono-inline"
-    >[activeRowId]</code>, the open detail row) persist regardless of pointer.
+      >[activeRowId]</code
+    >, the open detail row) persist regardless of pointer.
   </p>
 
   <div class="states states--cols-4">
@@ -303,8 +304,8 @@
     the column a
     <code class="t-mono-inline">
       link
-    </code> function returning an Angular route
-    target and the value renders as a real
+    </code> function returning an Angular
+    route target and the value renders as a real
     <code class="t-mono-inline">
       &lt;a&gt;
     </code>: visible without hovering,
@@ -342,9 +343,9 @@
     — the row and the link — so on a long list drop
     <code class="t-mono-inline">
       rowInteractive
-    </code> once the link is there and
-    keep one stop per row. Keep both only where the row click is genuinely worth
-    the second stop.
+    </code> once the link is there
+    and keep one stop per row. Keep both only where the row click is genuinely
+    worth the second stop.
   </p>
 
   <ds-table
@@ -431,9 +432,9 @@
     The header stays pinned while the body scrolls.
     <code class="t-mono-inline">
       maxHeight="220px"
-    </code> caps the scroll region
-    and <code class="t-mono-inline">[stickyHeader]="true"</code> (the default)
-    pins the header inside it.
+    </code> caps the scroll
+    region and <code class="t-mono-inline">[stickyHeader]="true"</code> (the
+    default) pins the header inside it.
   </p>
 
   <ds-table
@@ -544,8 +545,7 @@
     reader is looking at, and dimming an empty card announces nothing about what
     is coming — and the table is the only place that holds both halves of the
     condition. Every list screen was otherwise writing the same
-    <code class="t-mono-inline"
-      >
+    <code class="t-mono-inline">
       items().length > 0 ? 'overlay' : 'skeleton'
     </code>
     line; one consumer feature had three copies of it.
@@ -726,9 +726,9 @@
     the same table with
     <code class="t-mono-inline">
       [loading]="'overlay'"
-    </code> and zero rows shows
-    its spinner and no message, where it used to paint “No records match your
-    filters” underneath one.
+    </code> and zero rows
+    shows its spinner and no message, where it used to paint “No records match
+    your filters” underneath one.
     <strong>
       You do not need a guard of your own
     </strong> — a consumer audit
@@ -815,23 +815,26 @@
     pagination (select-all then scopes to the current page);
     <code class="t-mono-inline">
       [stickyFirstColumn]
-    </code> pins the first column
-    on horizontal scroll; <code class="t-mono-inline">sortMode</code> says who
-    sorts — <code class="t-mono-inline">"server"</code> (the default) emits
+    </code> pins the first
+    column on horizontal scroll;
+    <code class="t-mono-inline">
+      sortMode
+    </code> says who sorts —
+    <code class="t-mono-inline">
+      "server"
+    </code> (the default) emits
     <code class="t-mono-inline">
       (sortChange)
-    </code> and leaves ordering to you,
-    <code class="t-mono-inline">
-      "client"
-    </code> has the table reorder its own
-    rows and is what a table holding EVERY row wants, and
+    </code> and leaves ordering to
+    you, <code class="t-mono-inline"> "client" </code> has the table reorder its
+    own rows and is what a table holding EVERY row wants, and
     <code class="t-mono-inline">
       "none"
     </code> drops the affordance so a
     <code class="t-mono-inline">
       sortable
-    </code> column cannot draw a header that
-    does nothing. 12 rows across three pages;
+    </code> column cannot draw a header
+    that does nothing. 12 rows across three pages;
     <code class="t-mono-inline">
       [animateHeight]
     </code> tweens the body height
@@ -950,8 +953,8 @@
     It is enforced on interaction, not on the binding: an
     <code class="t-mono-inline">
       expandedIds
-    </code> set you seed with several ids
-    is left as passed — it is your model to write — and dev mode says so.
+    </code> set you seed with several
+    ids is left as passed — it is your model to write — and dev mode says so.
   </p>
 
   <ds-table
@@ -993,11 +996,11 @@
     </code> with the record, and
     <code class="t-mono-inline">
       [activeRowId]
-    </code> keeps that row highlighted
-    (plus <code class="t-mono-inline">aria-current</code>) while the drawer is
-    open. Controls inside cells (checkboxes, menus) stop propagation, so they
-    never trigger the row click — and neither does finishing a text selection,
-    so cell values stay copyable by mouse.
+    </code> keeps that row
+    highlighted (plus <code class="t-mono-inline">aria-current</code>) while the
+    drawer is open. Controls inside cells (checkboxes, menus) stop propagation,
+    so they never trigger the row click — and neither does finishing a text
+    selection, so cell values stay copyable by mouse.
   </p>
 
   <ds-table
@@ -1073,21 +1076,21 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [rowActions]
-    </code> renders a trailing ⋮ column
-    — the button opens a menu of the configured items and
+    </code> renders a trailing ⋮
+    column — the button opens a menu of the configured items and
     <code class="t-mono-inline">
       (rowActionSelected)
     </code> reports the chosen
     action together with its row. A per-row
     <code class="t-mono-inline">
       disabled
-    </code> predicate greys items out (here
-    Delete is blocked for completed records), and
+    </code> predicate greys items out
+    (here Delete is blocked for completed records), and
     <code class="t-mono-inline">
       disabledReason
-    </code> puts the WHY on the item's
-    second line — a greyed item that does not say why is the same dead control
-    as a greyed button.
+    </code> puts the WHY on the
+    item's second line — a greyed item that does not say why is the same dead
+    control as a greyed button.
     <br />
     Where an action does not APPLY to a row, use
     <code class="t-mono-inline">
@@ -1095,8 +1098,8 @@
     </code> rather than
     <code class="t-mono-inline">
       disabled
-    </code>: greying leaves every row with a
-    permanently dead half, which is what happens when one status offers Edit +
+    </code>: greying leaves every row with
+    a permanently dead half, which is what happens when one status offers Edit +
     Launch and another Revert + Delete. Relaunch below is hidden except on
     completed records.
     <b>
@@ -1106,16 +1109,16 @@
     stops propagation, so on a
     <code class="t-mono-inline">
       [rowInteractive]
-    </code> table a menu click never
-    fires <code class="t-mono-inline">(rowClicked)</code>. A hand-built action
-    column with no visible header should give its
+    </code> table a menu click
+    never fires <code class="t-mono-inline">(rowClicked)</code>. A hand-built
+    action column with no visible header should give its
     <code class="t-mono-inline">
       TableColumn
     </code> an
     <code class="t-mono-inline">
       srLabel
-    </code> so screen-reader users still hear
-    a column name.
+    </code> so screen-reader users still
+    hear a column name.
   </p>
 
   <ds-table
@@ -1305,21 +1308,21 @@
     </code> with a
     <code class="t-mono-inline">
       storageKey
-    </code> round-trips the column order,
-    widths and hidden set through
+    </code> round-trips the column
+    order, widths and hidden set through
     <code class="t-mono-inline">
       localStorage
-    </code>, so reorder a column or hide
-    one, reload the page, and it stays. Without a key nothing is stored — two
-    tables would otherwise overwrite each other.
+    </code>, so reorder a column or
+    hide one, reload the page, and it stays. Without a key nothing is stored —
+    two tables would otherwise overwrite each other.
     <code class="t-mono-inline">
       [exportButton]="true"
     </code> renders the CSV
     button; a server-paged table passes
     <code class="t-mono-inline">
       [exportFetcher]
-    </code> so the export covers the
-    whole set instead of the page it holds.
+    </code> so the export covers
+    the whole set instead of the page it holds.
   </p>
 
   <ds-table
@@ -1344,15 +1347,15 @@
     </code> and
     <code class="t-mono-inline">
       :focus-visible
-    </code>, neither of which a coarse
-    pointer produces — so it was an invisible 8px strip at each header's right
-    edge that still swallowed the horizontal swipe used to scroll the table. It
-    now stands down, and width moves into the column panel: every row gets − / +
-    / Fit alongside its visibility and order controls, and the panel itself
-    opens as a <code class="t-mono-inline">ds-bottom-sheet</code> instead of a
-    popover. The steps are the handle's own keyboard steps, so all three routes
-    — drag, arrows, buttons — change width by the same amount. The buttons show
-    on desktop too; there the handle stays the primary way.
+    </code>, neither of which a
+    coarse pointer produces — so it was an invisible 8px strip at each header's
+    right edge that still swallowed the horizontal swipe used to scroll the
+    table. It now stands down, and width moves into the column panel: every row
+    gets − / + / Fit alongside its visibility and order controls, and the panel
+    itself opens as a <code class="t-mono-inline">ds-bottom-sheet</code> instead
+    of a popover. The steps are the handle's own keyboard steps, so all three
+    routes — drag, arrows, buttons — change width by the same amount. The
+    buttons show on desktop too; there the handle stays the primary way.
   </p>
 
   <h3 class="block-title t-h4">
@@ -1363,21 +1366,21 @@
     A row above the table, filled through one
     <code class="t-mono-inline">
       [toolbar]
-    </code> slot, for controls that act on
-    THIS table: a search box, a status filter, a refresh. Project a handful of
-    controls and the row lays them out — flex, wrap, 8px gap — so the ordinary
-    case needs no CSS of yours. Project one element of your own instead and the
-    layout is entirely yours; the row's flex then has a single child and stays
-    out of the way. It disappears when nothing filled it and
+    </code> slot, for controls that act
+    on THIS table: a search box, a status filter, a refresh. Project a handful
+    of controls and the row lays them out — flex, wrap, 8px gap — so the
+    ordinary case needs no CSS of yours. Project one element of your own instead
+    and the layout is entirely yours; the row's flex then has a single child and
+    stays out of the way. It disappears when nothing filled it and
     <code class="t-mono-inline">
       exportButton
-    </code> is off, so a table that uses
-    neither is unchanged. Filters that belong to the PAGE still belong in a
+    </code> is off, so a table that
+    uses neither is unchanged. Filters that belong to the PAGE still belong in a
     <code class="t-mono-inline">
       ds-filter-bar
-    </code> above it — the slot is for
-    the ones that would otherwise read as page furniture one card away from the
-    rows they narrow.
+    </code> above it — the slot is
+    for the ones that would otherwise read as page furniture one card away from
+    the rows they narrow.
   </p>
 
   <p class="block-desc t-s">
@@ -1452,11 +1455,11 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       width: 'content'
-    </code> on a column sizes it to
-    its widest cell and stops it wrapping, leaving the slack to the columns that
-    should absorb it. An auto-layout table spreads leftover width evenly, so a
-    status or a figure ends up as wide as its own header while the name column
-    that should take the space does not. A pixel
+    </code> on a column sizes it
+    to its widest cell and stops it wrapping, leaving the slack to the columns
+    that should absorb it. An auto-layout table spreads leftover width evenly,
+    so a status or a figure ends up as wide as its own header while the name
+    column that should take the space does not. A pixel
     <code class="t-mono-inline">
       width
     </code> cannot express that — pin one
@@ -1502,8 +1505,7 @@
     <strong>
       Owner ▼
     </strong>. Host state:
-    <code class="t-mono-inline"
-      >
+    <code class="t-mono-inline">
       {{ serverSortKey() }} · {{ serverSortDir() ?? 'null' }}
     </code>
   </p>
@@ -1560,8 +1562,7 @@
       (sortChange)
     </code> where the host owns a
     default it has to be able to restore. Host state:
-    <code class="t-mono-inline"
-      >
+    <code class="t-mono-inline">
       {{ twoWaySortKey() }} · {{ twoWaySortDir() ?? 'null' }}
     </code>
   </p>
@@ -1628,13 +1629,13 @@
     Clip detection runs on cells in a
     <code class="t-mono-inline">
       truncate
-    </code> column, not on every overflowing
-    cell in the table: a click handler on every
+    </code> column, not on every
+    overflowing cell in the table: a click handler on every
     <code class="t-mono-inline">
       &lt;td&gt;
-    </code> would swallow the row click on
-    an interactive table. Within such a column it does look deeper than the cell
-    itself — a <code class="t-mono-inline">dsCellTemplate</code> puts the
+    </code> would swallow the row click
+    on an interactive table. Within such a column it does look deeper than the
+    cell itself — a <code class="t-mono-inline">dsCellTemplate</code> puts the
     ellipsis on a descendant, so testing only the wrapper would miss it.
   </p>
 
@@ -1652,11 +1653,11 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [stickyScrollbar]="true"
-    </code> hides the scroll
-    container's native bar and pins a proxy scrollbar to the bottom of the
-    viewport while the table is on screen — on a tall, wide table the horizontal
-    bar stays reachable without scrolling to the table's end. Wide fixed column
-    widths force the overflow here.
+    </code> hides the
+    scroll container's native bar and pins a proxy scrollbar to the bottom of
+    the viewport while the table is on screen — on a tall, wide table the
+    horizontal bar stays reachable without scrolling to the table's end. Wide
+    fixed column widths force the overflow here.
   </p>
 
   <ds-table
@@ -1674,9 +1675,10 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       exportCsv()
-    </code> downloads the visible columns
-    of the filtered + sorted rows (all rows, not just the current page). It's a
-    public method — wire it to your own toolbar button via a template reference.
+    </code> downloads the visible
+    columns of the filtered + sorted rows (all rows, not just the current page).
+    It's a public method — wire it to your own toolbar button via a template
+    reference.
   </p>
 
   <div class="export-row">
@@ -1740,8 +1742,8 @@
     </code>: the table tracks
     <code class="t-mono-inline">
       columnFilters
-    </code> without filtering anything,
-    so your request drives the rows; pass the real domain through
+    </code> without filtering
+    anything, so your request drives the rows; pass the real domain through
     <code class="t-mono-inline">
       columnFilterOptions
     </code>. That is the right
@@ -1795,8 +1797,8 @@
     empty string to stay silent. The first render is silent regardless —
     <code class="t-mono-inline">
       aria-live="polite"
-    </code> announces changes, not
-    initial content.
+    </code> announces changes,
+    not initial content.
   </p>
 
   <h3 class="block-title t-h4">
@@ -1813,18 +1815,18 @@
     count in the DOM stays flat. It needs
     <code class="t-mono-inline">
       maxHeight
-    </code>, because a bounded scroller is
-    the viewport it windows against.
+    </code>, because a bounded scroller
+    is the viewport it windows against.
   </p>
 
   <p class="block-desc t-s">
     Every row must be exactly
     <code class="t-mono-inline">
       virtualRowSize
-    </code> tall — that number is the
-    only thing telling the maths where a row starts, so one row that grows puts
-    every offset below it out by the difference. Virtual mode therefore fixes
-    the row height from that same input, forces
+    </code> tall — that number is
+    the only thing telling the maths where a row starts, so one row that grows
+    puts every offset below it out by the difference. Virtual mode therefore
+    fixes the row height from that same input, forces
     <code class="t-mono-inline">
       table-layout: fixed
     </code> (auto layout
@@ -1858,9 +1860,9 @@
     range it is about to show through
     <code class="t-mono-inline">
       (lazyLoad)
-    </code>, and every index the host has
-    not filled yet renders a skeleton row. Scroll fast and you outrun the fetch
-    — that is what the skeletons are for.
+    </code>, and every index the host
+    has not filled yet renders a skeleton row. Scroll fast and you outrun the
+    fetch — that is what the skeletons are for.
   </p>
 
   <p class="block-desc t-s">
@@ -1869,21 +1871,19 @@
     </code> is a SPARSE array
     <code class="t-mono-inline">
       total
-    </code> long: write each fetched row at its
-    absolute index. The scroller is sized from
+    </code> long: write each fetched row at
+    its absolute index. The scroller is sized from
     <code class="t-mono-inline">
       total
-    </code>, not from what has arrived, so the
-    scrollbar tells the truth from the first frame. The demo answers after 600
-    ms; a request already in flight is never re-sent.
+    </code>, not from what has arrived, so
+    the scrollbar tells the truth from the first frame. The demo answers after
+    600 ms; a request already in flight is never re-sent.
   </p>
 
   <p class="block-desc t-s">
     Requests so far:
     <code class="t-mono-inline">
-      {{
-      lazyRequests().join(' · ') || 'none yet'
-    }}
+      {{ lazyRequests().join(' · ') || 'none yet' }}
     </code>
   </p>
 
