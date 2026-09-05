@@ -71,31 +71,51 @@
           </a>
         }
       } @else {
-        <a
-          class="group group-link"
-          [routerLink]="urlForGroupPath(group.path)"
-          [class.is-active]="isGroupActive(group)"
-          (click)="navigated.emit()">
-          {{ group.title }}
-        </a>
-
-        @for (item of group.items; track item.anchor) {
+        <div class="group-row">
           <a
-            class="link"
-            [routerLink]="urlForAnchor(group.path, item.anchor)"
-            [state]="linkState(group.path)"
-            [class.is-active]="isActive(item.anchor)"
-            (click)="onItem(item.anchor)">
-            <span class="link-label">
-              {{ item.label }}
-            </span>
-
-            @if (item.new) {
-              <span class="nav-new">
-                new
-              </span>
-            }
+            class="group group-link"
+            [routerLink]="urlForGroupPath(group.path)"
+            [class.is-active]="isGroupActive(group)"
+            (click)="navigated.emit()">
+            {{ group.title }}
           </a>
+
+          <!-- Separate from the heading, which still navigates to the group page: one control
+               cannot both go somewhere and stay to open something. -->
+          <button
+            type="button"
+            class="group-toggle"
+            [class.is-open]="isGroupOpen(group)"
+            [attr.aria-expanded]="isGroupOpen(group)"
+            [attr.aria-label]="
+              (isGroupOpen(group) ? 'Collapse ' : 'Expand ') + group.title
+            "
+            (click)="toggleGroup(group)">
+            <ds-icon
+              name="chevron-down"
+              [size]="14" />
+          </button>
+        </div>
+
+        @if (isGroupOpen(group)) {
+          @for (item of group.items; track item.anchor) {
+            <a
+              class="link"
+              [routerLink]="urlForAnchor(group.path, item.anchor)"
+              [state]="linkState(group.path)"
+              [class.is-active]="isActive(item.anchor)"
+              (click)="onItem(item.anchor)">
+              <span class="link-label">
+                {{ item.label }}
+              </span>
+
+              @if (item.new) {
+                <span class="nav-new">
+                  new
+                </span>
+              }
+            </a>
+          }
         }
       }
     }

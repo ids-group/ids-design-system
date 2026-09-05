@@ -19,6 +19,7 @@ import {
 import { filter } from 'rxjs/operators';
 import { AppLayoutComponent, LayoutScrollService } from 'ds/app-layout';
 import { IconButtonComponent } from 'ds/icon-button';
+import { IconComponent } from 'ds/icons';
 import { SearchComponent } from 'ds/search';
 import {
   NAV,
@@ -34,7 +35,13 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [IconButtonComponent, SearchComponent, RouterLink, RouterLinkActive],
+  imports: [
+    IconButtonComponent,
+    IconComponent,
+    SearchComponent,
+    RouterLink,
+    RouterLinkActive,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.is-collapsed]': 'effectiveCollapsed()',
@@ -302,6 +309,24 @@ export class SidebarComponent {
    */
   protected linkState(groupPath: string): { dsSamePage: true } | undefined {
     return groupPath === this.lastGroup() ? { dsSamePage: true } : undefined;
+  }
+
+  /** Groups the reader has opened by hand. A group holding the active section is open regardless,
+   *  so the one being read never has to be opened to be seen. */
+  private readonly openedGroups = signal<ReadonlySet<string>>(new Set());
+
+  protected isGroupOpen(group: NavGroup): boolean {
+    return this.isGroupActive(group) || this.openedGroups().has(group.title);
+  }
+
+  protected toggleGroup(group: NavGroup): void {
+    const next = new Set(this.openedGroups());
+    if (next.has(group.title)) {
+      next.delete(group.title);
+    } else {
+      next.add(group.title);
+    }
+    this.openedGroups.set(next);
   }
 
   // A group header is active when the active section belongs to it (the flat URL

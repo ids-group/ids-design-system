@@ -209,3 +209,46 @@
 .toc.is-drawer .start-link {
   min-height: var(--hit-comfy);
 }
+
+/* The heading keeps its own click target and the chevron gets a separate one, so opening a group
+   and going to its page stay two different gestures. */
+.group-row {
+  display: flex;
+  align-items: center;
+}
+
+.group-row .group-link {
+  flex: 1;
+  min-width: 0;
+}
+
+.group-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--space-6);
+  height: var(--space-6);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+
+  ds-icon {
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+
+  &.is-open ds-icon {
+    transform: rotate(180deg);
+  }
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    @include focus.ring;
+  }
+}
