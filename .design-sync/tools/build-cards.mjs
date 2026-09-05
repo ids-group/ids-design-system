@@ -664,17 +664,11 @@ function cardHtml({
   title,
   subtitle,
 }) {
-  guardInterpolated(name, {
-    group,
-    tag,
-    owns,
-    apiKey,
-    head,
-    block,
-    react,
-    title,
-    subtitle,
-  });
+  // Exactly the values that pass THROUGH `trimmed()`. `group`, `title` and `subtitle` reach only
+  // the marker, which is concatenated after the strip and never sees it, so guarding those would
+  // reject a build over a `*/` in prose the card never carries — while `name`, which the strip does
+  // run over, was the one value left out.
+  guardInterpolated(name, { name, tag, owns, apiKey, head, block, react });
 
   const marker =
     `<!-- @dsCard group="${group}"${viewport ? ` viewport="${viewport}"` : ''}` +

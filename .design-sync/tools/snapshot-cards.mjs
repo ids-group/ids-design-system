@@ -176,9 +176,13 @@ const render = async (path) => {
     DUMP,
   );
 
+  // The trailing newline matters as much as the doctype: `--dump-dom` printed one, every frozen
+  // card in git ends with it, and dropping it rewrites all 280 of them on the next release for a
+  // single byte each.
   return html
     ? `<!DOCTYPE html>
-${html}`
+${html}
+`
     : '';
 };
 

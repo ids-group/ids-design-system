@@ -74,6 +74,21 @@ if (unexpectedlyFrozen.length) {
   );
 }
 
+// The record comes from the same run that wrote the tree, so every comparison above is satisfied by
+// a run that froze NOTHING: it would record all 410 as live and agree with itself. A gate whose one
+// job is to assert the tree is frozen has to fail when none of it is — this is the floor the rest
+// of the file cannot supply.
+if (stillLive === cards.length) {
+  console.error(
+    `✗ not one of ${cards.length} cards is frozen, and live-cards.txt records them all live.`,
+  );
+  console.error(
+    '\n  The two agree because one run wrote both. Either live-chapters.txt now matches every\n' +
+      '  chapter, or the panel-owner rule matched every card — neither is ever right.',
+  );
+  process.exit(1);
+}
+
 const missing = [...shouldBeLive].filter((path) => !cards.includes(path));
 if (missing.length) {
   report(
