@@ -12,8 +12,15 @@
   position: relative;
 }
 
+// The box no longer rings itself: ds-checkbox has a shell that rings FOR it (`focus.ring-for`), and
+// a ring in the shared mixin tied with that suppression on specificity and won on source order, so
+// a labelled checkbox drew two. A table row has no such shell, so the ring belongs here.
 .check {
   @include check-box.box;
+
+  &:focus-visible {
+    @include focus.ring;
+  }
 }
 
 .visually-hidden {

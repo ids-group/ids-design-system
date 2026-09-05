@@ -1,5 +1,4 @@
 @use 'check-mark' as check-mark;
-@use 'focus' as focus;
 @use 'press' as press;
 
 // The box a checkbox draws, in one place.
@@ -22,23 +21,30 @@
   --_checkbox-glyph: var(--check-size);
 }
 
+// Every reference carries the resolver's OWN default as its fallback, so a box that never saw
+// `resolvers` still paints. That is not belt and braces: a checkbox inside a portaled CDK panel is
+// outside its component's host, custom properties inherit by DOM position, and the whole
+// declaration is then invalid at computed-value time — measured on ds-table's column picker, where
+// six boxes came out 12x12 with no border and no fill, invisible on the panel.
 @mixin box {
   appearance: none;
-  width: var(--_checkbox-glyph);
-  height: var(--_checkbox-glyph);
-  border: var(--check-bw) solid var(--_checkbox-border);
-  background: var(--_checkbox-bg);
+  width: var(--_checkbox-glyph, var(--check-size));
+  height: var(--_checkbox-glyph, var(--check-size));
+  border: var(--check-bw) solid
+    var(--_checkbox-border, var(--ds-checkbox-border-color, var(--border-strong)));
+  background: var(--_checkbox-bg, var(--ds-checkbox-bg-color, var(--surface-default)));
   cursor: pointer;
   display: inline-grid;
   place-items: center;
   flex-shrink: 0;
   margin: 0;
-  border-radius: var(--_checkbox-radius);
+  border-radius: var(--_checkbox-radius, var(--ds-checkbox-radius, var(--ds-radius-inner)));
   transition: background-color var(--duration-fast) var(--ease-standard),
               border-color var(--duration-fast) var(--ease-standard);
 
-  &:hover:not(:disabled) { border-color: var(--_checkbox-hover-border); }
-  &:focus-visible        { @include focus.ring; }
+  &:hover:not(:disabled) {
+    border-color: var(--_checkbox-hover-border, var(--ds-checkbox-hover-border-color, var(--accent)));
+  }
 
   @include press.feedback;
   &:disabled {
@@ -60,14 +66,14 @@
   }
 
   &:checked {
-    background: var(--_checkbox-selected-bg);
-    border-color: var(--_checkbox-selected-border);
+    background: var(--_checkbox-selected-bg, var(--ds-checkbox-selected-bg-color, var(--accent)));
+    border-color: var(--_checkbox-selected-border, var(--ds-checkbox-selected-border-color, var(--accent)));
     &::after { @include check-mark.shown; }
   }
 
   &:indeterminate {
-    background: var(--_checkbox-selected-bg);
-    border-color: var(--_checkbox-selected-border);
+    background: var(--_checkbox-selected-bg, var(--ds-checkbox-selected-bg-color, var(--accent)));
+    border-color: var(--_checkbox-selected-border, var(--ds-checkbox-selected-border-color, var(--accent)));
     &::after {
       @include check-mark.shown;
       @include check-mark.dash;
