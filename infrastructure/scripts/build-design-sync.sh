@@ -87,11 +87,19 @@ step "Verifying the upload tree"
 # writes the shared sheet. Every frozen card links it, so its absence unstyles 376 of them — and it
 # did go missing in a working tree this cycle, noticed by eye rather than by a check.
 [ -f .design-sync/upload/_ds_cards.css ] || { echo "Expected artifact missing: .design-sync/upload/_ds_cards.css — run 'node .design-sync/tools/snapshot-cards.mjs'"; exit 1; }
+# Present is not the same as populated: an empty sheet unstyles every frozen card, and -f passes on
+# a one-byte file.
+[ -s .design-sync/upload/_ds_cards.css ] || { echo ".design-sync/upload/_ds_cards.css is empty, so every frozen card would render unstyled"; exit 1; }
+# Each card links this one level up from its own directory; the step gates its SOURCE above and used
+# to leave the copy the cards actually load unchecked.
+[ -s .design-sync/upload/_ds_bundle.css ] || { echo "Expected artifact missing or empty: .design-sync/upload/_ds_bundle.css"; exit 1; }
 
 # The pane indexes from the manifest, so a card the manifest omits is not in the project at all.
 [ -f .design-sync/upload/_ds_manifest.json ] || { echo "Expected artifact missing: .design-sync/upload/_ds_manifest.json"; exit 1; }
 # `"path"` alone also matches brandFonts, which is how this first reported 316 against 314.
-indexed=$(grep -cE '"path": "(components|guides)/' .design-sync/upload/_ds_manifest.json)
+# `|| true` because zero matches is the case the next line reports, and `grep -c` exits 1 on it —
+# which under `set -e` killed the run before it could say so.
+indexed=$(grep -cE '"path": "(components|guides)/' .design-sync/upload/_ds_manifest.json || true)
 pages=$(find .design-sync/upload/components .design-sync/upload/guides -name '*.html' | wc -l)
 [ "$indexed" = "$pages" ] || { echo "Manifest indexes $indexed card(s) against $pages page(s) in the tree"; exit 1; }
 echo "Manifest indexes all $indexed card(s)"
@@ -117,7 +125,7 @@ copies=$(find .design-sync/upload/uploads -type f | wc -l)
 [ "$sources" = "$copies" ] || { echo "Pasted-image mismatch: $sources source(s) against $copies in the upload tree"; exit 1; }
 [ -f .design-sync/upload/.thumbnail ] || { echo "Expected artifact missing: .design-sync/upload/.thumbnail — it is copied from .design-sync/assets/thumbnail.webp"; exit 1; }
 faces=$(find .design-sync/upload/fonts -name '*.woff2' | wc -l)
-rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css)
+rules=$(grep -c '@font-face' .design-sync/upload/fonts/fonts.css || true)
 [ "$faces" = "$rules" ] || { echo "Font mismatch: $faces face file(s) against $rules @font-face rule(s) - the missing side 404s silently"; exit 1; }
 # fonts.css lives INSIDE fonts/, so the bundle's `fonts/` prefix has to be rewritten one level down.
 grep -q 'url("./' .design-sync/upload/fonts/fonts.css || { echo "fonts.css still points outside its own directory"; exit 1; }
@@ -147,11 +155,18 @@ GENERATED=".design-sync/upload .design-sync/viewports.json .design-sync/live-car
 # A release bumps the version, DS_VERSION carries it into the bundle, and the bundle is committed
 # — so every release leaves this tree a version behind. In CI that is committed; run by hand it
 # fails, because a script must not push on a developer's behalf.
-if [ -z "$(git status --porcelain $GENERATED)" ]; then
+# Captured with its status checked: git writes its diagnostics to stderr and nothing to stdout, so
+# a `fatal:` of any kind used to arrive here as an empty string and read as "the tree matches".
+if ! CHANGED=$(git status --porcelain $GENERATED); then
+  echo "git status failed, so the upload tree could not be compared — refusing to call it unchanged"
+  exit 1
+fi
+
+if [ -z "$CHANGED" ]; then
   echo "Committed upload tree matches the build"
 elif [ -z "$BITBUCKET_BUILD_NUMBER" ]; then
   echo "The committed upload tree is stale — this build regenerated different files:"
-  git status --porcelain $GENERATED
+  echo "$CHANGED"
   echo ""
   echo "Commit what this run regenerated — it is what a publish sends, so a stale copy"
   echo "publishes the previous release's contract."
@@ -159,7 +174,7 @@ elif [ -z "$BITBUCKET_BUILD_NUMBER" ]; then
 else
   [ -n "$RELEASE_TOKEN" ] || { echo "the upload tree needs committing but RELEASE_TOKEN is unset"; exit 1; }
   echo "The upload tree changed; committing it as the release bot..."
-  git status --porcelain $GENERATED
+  echo "$CHANGED"
 
   git config user.name "${RELEASE_GIT_NAME:-IDS Release Bot}"
   git config user.email "${RELEASE_GIT_EMAIL:-ci@ids-group.co.uk}"
