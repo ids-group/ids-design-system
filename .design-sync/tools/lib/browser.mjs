@@ -128,6 +128,11 @@ export async function launchBrowser({
   });
   child.on('exit', (code) => die(`Chrome exited with ${code}`));
 
+  // A command carries its own deadline, because `die()` only fires when the socket closes or the
+  // process exits. A chrome that is still up but has stopped answering — a wedged renderer, a
+  // half-open connection with no FIN — would otherwise leave every lane waiting on a reply forever,
+  // which is the original hang by another route.
+  const COMMAND_TIMEOUT = 90000;
   const send = (method, params, sessionId) =>
     new Promise((resolve, reject) => {
       if (dead) {
@@ -136,7 +141,21 @@ export async function launchBrowser({
         return;
       }
       const id = (nextId += 1);
-      pending.set(id, { resolve, reject, method });
+      const timer = setTimeout(() => {
+        if (!pending.delete(id)) return;
+        reject(new Error(`${method} got no reply in ${COMMAND_TIMEOUT}ms`));
+      }, COMMAND_TIMEOUT);
+      pending.set(id, {
+        method,
+        resolve: (value) => {
+          clearTimeout(timer);
+          resolve(value);
+        },
+        reject: (error) => {
+          clearTimeout(timer);
+          reject(error);
+        },
+      });
       socket.send(
         JSON.stringify(
           sessionId
@@ -241,13 +260,22 @@ export async function launchBrowser({
     async close() {
       await send('Browser.close').catch(() => {});
       socket.close();
-      await new Promise((resolve) => {
-        child.once('exit', resolve);
-        setTimeout(() => {
-          child.kill();
-          resolve();
-        }, 5000).unref?.();
-      });
+      // A chrome that already exited will never emit `exit` again, and the fallback timer was
+      // unref'd, so nothing held the loop: the await never settled, Node bailed with code 13, and
+      // the caller's own report — which cards failed, and the file it was about to write — was
+      // never reached. That is the case this whole module exists to survive.
+      if (child.exitCode === null && child.signalCode === null) {
+        await new Promise((resolve) => {
+          const timer = setTimeout(() => {
+            child.kill();
+            resolve();
+          }, 5000);
+          child.once('exit', () => {
+            clearTimeout(timer);
+            resolve();
+          });
+        });
+      }
       rmSync(profile, { recursive: true, force: true });
     },
   };
