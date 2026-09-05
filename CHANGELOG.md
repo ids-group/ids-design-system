@@ -17,10 +17,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Neither has a flat core: each peaks at a point and is ramp either side, so a pass arrives and
   leaves rather than switching. The tone is one soft step darker than the base, unchanged: a shadow
   moving over the placeholders, not a light switched on over them.
-  It is seamless by construction rather than by hiding the seam. The pattern is a repeating gradient
+  It is seamless, and two separate things had to be true for that. The pattern is a repeating gradient
   periodic along its own axis, so there are no tile edges to meet — an angled gradient in a
   rectangular tile does not, and every boundary showed as a diagonal line across the page. Travel is
   exactly one period, resolved along the 45° path, which lands on a state identical to the start.
+  And it carries no `will-change`: that promoted the layer, and Chrome paints a `fixed` background
+  per layer, so the layer's own edge showed as a hard vertical line through the wave. It bought
+  nothing either, since `background-position` is not a compositable property.
   Four hooks, all with defaults — `--ds-skeleton-wave-period` (56rem),
   `--ds-skeleton-wave-duration` (3400ms), `--ds-skeleton-wave-angle` (135deg) and
   `--ds-skeleton-wave-echo-color`.
