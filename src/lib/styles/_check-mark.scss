@@ -29,6 +29,15 @@
   transition: transform var(--_check-mark-exit-duration) var(--_check-mark-exit-easing),
               opacity var(--_check-mark-exit-duration) var(--_check-mark-exit-easing);
   background-color: currentcolor;
+
+  // Forced colours override `background-color` and leave `background-image` alone, so moving the
+  // tick from an image to a masked fill made it vanish under Windows High Contrast: the mark was
+  // forced to Canvas, the same colour the box fill becomes, leaving checked and unchecked
+  // pixel-identical. The mask itself survives, so naming the text colour puts the glyph back.
+  @media (forced-colors: active) {
+    background-color: CanvasText;
+  }
+
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
 }
 
