@@ -75,12 +75,18 @@ if (unexpectedlyFrozen.length) {
 }
 
 // The record comes from the same run that wrote the tree, so every comparison above is satisfied by
-// a run that froze NOTHING: it would record all 410 as live and agree with itself. A gate whose one
-// job is to assert the tree is frozen has to fail when none of it is — this is the floor the rest
-// of the file cannot supply.
-if (stillLive === cards.length) {
+// a run that froze too little: it records whatever it left live and agrees with itself. A floor is
+// the one thing the rest of the file cannot supply.
+//
+// Half is not a fine-grained rule and is not meant to be: the split has been ~283 frozen to ~127
+// live for as long as the freeze has existed, and the failures this guards against are wholesale —
+// live-chapters.txt matching every chapter, or the panel-owner regex matching every card. A floor
+// that only caught EXACTLY zero let ten live cards out of eleven walk through.
+const FROZEN_FLOOR = 0.5;
+if (cards.length - stillLive < cards.length * FROZEN_FLOOR) {
   console.error(
-    `✗ not one of ${cards.length} cards is frozen, and live-cards.txt records them all live.`,
+    `✗ only ${cards.length - stillLive} of ${cards.length} cards are frozen, and live-cards.txt` +
+      ' records the rest live.',
   );
   console.error(
     '\n  The two agree because one run wrote both. Either live-chapters.txt now matches every\n' +
