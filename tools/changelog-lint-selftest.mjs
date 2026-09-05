@@ -315,6 +315,19 @@ try {
   );
   if (!recordCaught) dead.push('C014');
 
+  // The phrase list catches its eight wordings and nothing else — measured at one natural
+  // rewrite in seven — so the SUBJECT half is asserted separately: a released version, a word of
+  // ours about records, and a repair verb. The version is what keeps it quiet; without it the
+  // same rule flagged five honest published entries.
+  const RECORD_BY_SUBJECT =
+    '# Fixture\n\n## Unreleased\n\n### Fixed\n\n- **A note about the toast border.** The 0.11.3 migration manifest was incomplete. It has been corrected.\n';
+  writeFileSync(FIXTURE_PATH, RECORD_BY_SUBJECT);
+  const subjectCaught = run(FIXTURE).includes('  C014  ');
+  console.log(
+    `${subjectCaught ? 'fires ' : 'DEAD  '} C014 on a rewording the phrase list does not hold`,
+  );
+  if (!subjectCaught) dead.push('C014-subject');
+
   writeFileSync(FIXTURE_PATH, REAL_DEFECT);
   const defectQuiet = !run(FIXTURE).includes('  C014  ');
   console.log(

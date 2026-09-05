@@ -635,6 +635,37 @@ for (const { full, label: file, isSource } of targets) {
   // as a rule about prose inside an entry, and three releases in a row still shipped a whole
   // entry announcing that we had corrected a manifest. A consumer executes these files; that we
   // repaired one is not a change to their code.
+  // The phrase list catches the wordings that actually shipped and nothing else: measured, one
+  // of seven natural rewrites of the same forbidden content. So the SUBJECT is tested too — a
+  // released version, one of our record words, and a repair verb in one entry. Measured at zero
+  // hits across all 547 published entries, so it costs nothing and cannot be walked around by
+  // rephrasing.
+  // Only a file that carries release blocks: the rule is about a release ENTRY whose subject is
+  // our bookkeeping, and `migrations/README.md` documents `deleteList` in those very words on
+  // purpose. Testing for the block rather than for the filename keeps the rule reachable from
+  // the selftest fixture, which is not called CHANGELOG.md.
+  if (lines.some((line) => /^## (Unreleased|\d+\.\d+\.\d+)/.test(line))) {
+    const RECORD_WORD =
+      /\b(manifests?|changelog|migration notes?|release notes?)\b/i;
+    const RELEASED = /\b\d+\.\d+\.\d+\b/;
+    const REPAIR =
+      /\b(correct(?:ed|s)?|fix(?:ed|es)?|incomplete|missing|rewritten|now lists|filled in|amended)\b/i;
+    for (let i = 0; i < lines.length; i++) {
+      if (!/^- \*\*/.test(lines[i])) continue;
+      let j = i + 1;
+      while (j < lines.length && !/^(- |### |## )/.test(lines[j])) j++;
+      const body = lines.slice(i, j).join(' ');
+      if (RECORD_WORD.test(body) && RELEASED.test(body) && REPAIR.test(body))
+        report(
+          file,
+          i + 1,
+          'C014',
+          `reports our own record-keeping — correct the file so it reads as though it were always right, and say nothing: ${quote(lines[i])}`,
+        );
+      i = j - 1;
+    }
+  }
+
   for (const phrase of OUR_RECORD) {
     scanFlat(
       new RegExp(loose(phrase), 'gi'),
