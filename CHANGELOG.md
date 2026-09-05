@@ -10,6 +10,37 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Breaking
 
+- **`ds-table`'s data-grid features are directives now, so a table that does not use them stops
+  carrying them.** Reordering, the column picker and resizing left the component; a table with none
+  of them costs **35 647 → 16 410 B gzip, −54%**, and `@angular/cdk/drag-drop` goes with the drag
+  handle. Nothing was removed — each feature is one import and one attribute away:
+
+  ```html
+  <!-- was -->
+  <ds-table [reorderableColumns]="true" [resizableColumns]="true" [exportButton]="true" />
+
+  <!-- now: add the directive to the component's imports, and its attribute here -->
+  <ds-table dsTableColumns [reorderableColumns]="true" dsTableResize dsTableExport />
+  ```
+
+  | feature | directive | class, and where it lives | its inputs |
+  | --- | --- | --- | --- |
+  | reorder + the column picker | `dsTableColumns` | `DsTableColumns`, `…/table-columns` | `reorderableColumns`, `[(hiddenKeys)]`, `[(columnOrder)]` |
+  | column resizing | `dsTableResize` | `DsTableResize`, `…/table-resize` | `[(columnWidths)]` |
+  | CSV export | `dsTableExport` | `DsTableExport`, `…/table-export` | `exportFilename`, `exportFetcher`, `(exportFailed)` |
+
+  **`exportButton` is gone as an input** — the directive's own presence renders the button, and
+  `[dsTableExport]="false"` keeps the feature while hiding the built-in control. `runExport()`,
+  `exporting()` and `exportCsv()` stay on the table, because their documentation promises a button
+  elsewhere on the page can drive them; they now delegate to the directive, and calling one with no
+  directive present logs a dev-mode warning rather than doing nothing. **Binding a moved input
+  without adding its directive is the one silent failure here**, so each of the three warns in dev
+  mode when it sees state it owns and no feature to act on it.
+
+  `persistLayout` and `storageKey` stay on the table and keep working. Its stored JSON keeps the
+  `{ order, widths, hidden }` shape, so a layout saved by an earlier version still restores — a
+  part whose directive is absent is simply not applied.
+
 - **A focused `ds-checkbox`, `ds-radio` or `ds-switch` rings the whole row, label included, instead
   of the glyph.** Ringing the glyph put a brand ring concentric with the brand ring the CHECKED state
   already draws — three bands through two gaps, a target rather than two states a keyboard user has
@@ -114,8 +145,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **Three classes gained members — only matters if you SUBCLASS one.** `MenuComponent` gained
   `anyIcon`, which it computes over its content children, `RadioComponent` gained `onClick`
   alongside the new `deselectable` input, and `TableComponent` gained `anySelected`, a computed
-  over the selection set. A subclass that declares any of those names stops building, whether or
-  not the member is public API.
+  over the selection set, the anchors the table's opt-in features render into, and the seam they
+  write through. A subclass that declares any of those names stops building, whether or not the
+  member is public API.
+
+  **`TableComponent` also LOST the data-grid half**, and that one the compiler does not report:
+  `columnOrder`, `hiddenKeys`, `columnWidths`, `reorderableColumns`, `resizableColumns`,
+  `exportButton` and their handlers moved to `dsTableColumns`, `dsTableResize` and
+  `dsTableExport`. A subclass that overrode one of them now overrides nothing and runs never.
+
+  Three new classes come with those directives, and all three are internal: `DsTableLayout` is
+  internal, the seam a feature registers with; `TableColumnsPanelComponent` is internal, the
+  column panel; `TableColumnsTriggerComponent` is internal, its header button; and
+  `TableExportButtonComponent` is internal, the toolbar button. None is API, none appears in the
+  component reference, and each is created imperatively — they are named here only so a name
+  collision in a subclass is greppable from the first release that has them.
 
 
 - **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the

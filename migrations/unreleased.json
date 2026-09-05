@@ -86,7 +86,7 @@
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
       "appliesWhen": "Only a class that extends MenuComponent, RadioComponent or TableComponent. Template users need nothing; `deselectable` is a new input and nothing existing changed name or type.",
       "pitfall": "Three of the four new members are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does. And an `override anyIcon`, `override onClick` or `override anySelected` written before this release compiles clean while overriding nothing.",
-      "note": "MenuComponent gained `anyIcon`, a computed over its content children that decides whether every row reserves the icon slot. RadioComponent gained `deselectable` (a new input) and `onClick`. TableComponent gained `anySelected`, a computed over the selection set.",
+      "note": "MenuComponent gained `anyIcon`, a computed over its content children that decides whether every row reserves the icon slot. RadioComponent gained `deselectable` (a new input) and `onClick`. TableComponent gained `anySelected` plus the anchors and the seam the opt-in features write into, and LOST the whole data-grid half: `columnOrder`, `hiddenKeys`, `columnWidths`, `reorderableColumns`, `resizableColumns`, `exportButton` and their handlers moved to `dsTableColumns`, `dsTableResize` and `dsTableExport`. A subclass that overrode one of those now overrides nothing, which the compiler does NOT report — the member is simply gone and the override runs never. The three directives and the panel components they create are new classes, listed so a name collision in a subclass of one is greppable from the first release that has them.",
       "verify": "The app builds with no TS4114 / TS2415 / TS2416 naming MenuComponent, RadioComponent or TableComponent, and no override of anyIcon, deselectable, onClick or anySelected remains in your source.",
       "searchHints": [
         "extends MenuComponent",
@@ -106,7 +106,20 @@
         "override anyIcon",
         "override onClick",
         "override deselectable",
-        "override anySelected"
+        "override anySelected",
+        "extends DsTableColumns",
+        "extends DsTableExport",
+        "extends DsTableResize",
+        "extends DsTableLayout",
+        "extends TableColumnsPanelComponent",
+        "extends TableColumnsTriggerComponent",
+        "extends TableExportButtonComponent",
+        "override columnOrder",
+        "override columnWidths",
+        "override hiddenKeys",
+        "override resizableColumns",
+        "override reorderableColumns",
+        "override exportButton"
       ],
       "restore": null
     },
@@ -128,6 +141,58 @@
         "control-line",
         "--focus-ring-offset"
       ]
+    },
+    {
+      "id": "table-export-behind-directive",
+      "kind": "input-rename",
+      "old": "ds-table[exportButton]",
+      "new": "dsTableExport",
+      "action": "Import DsTableExport from '@ids-group-ltd/ids-design-system/table-export', add it to the component's imports, and replace [exportButton]=\"true\" on the element with the dsTableExport attribute. Move exportFilename, exportFetcher and (exportFailed) bindings across unchanged — they are the directive's inputs now and still sit on the same element.",
+      "appliesWhen": "A <ds-table> that renders the built-in CSV button or binds any export input. NOT affected: a table that only calls table.runExport() from a button of its own — those methods stay on the component and keep working.",
+      "pitfall": "The bindings keep type-checking after the rename because they sit on the same element, so a build can pass with the directive never imported and the export simply absent. Dev mode warns; a production build does not.",
+      "surface": "template",
+      "searchHints": [
+        "exportButton",
+        "exportFetcher",
+        "exportFilename",
+        "exportFailed"
+      ],
+      "verify": "Every table that used to show the CSV button carries the dsTableExport attribute AND the component declaring it imports DsTableExport.",
+      "note": "The button was the only rendered part of the feature, so it is the one thing a reader loses if the directive is forgotten. The export code left the component because a static reference is what a bundler cannot remove — a runtime flag would have shipped it to every table regardless."
+    },
+    {
+      "id": "table-columns-behind-directive",
+      "kind": "code-add",
+      "old": "ds-table[reorderableColumns]",
+      "new": "dsTableColumns",
+      "action": "Import DsTableColumns from '@ids-group-ltd/ids-design-system/table-columns', add it to the component's imports, and put the dsTableColumns attribute on any <ds-table> that reorders columns or offers the column picker. Leave [reorderableColumns], [(hiddenKeys)] and [(columnOrder)] where they are — they are the directive's inputs now and stay on the same element.",
+      "appliesWhen": "A <ds-table> binding reorderableColumns, hiddenKeys or columnOrder, or relying on a column's hideable flag to offer the picker. NOT affected: a table with fixed columns.",
+      "pitfall": "Hiding needs no input at all — a column marked hideable used to grow a picker on its own. Without the directive that picker never appears, and nothing in the markup says so.",
+      "surface": "template",
+      "searchHints": [
+        "reorderableColumns",
+        "hiddenKeys",
+        "columnOrder",
+        "hideable"
+      ],
+      "verify": "Every table whose columns can be reordered, hidden or shown carries dsTableColumns, and the picker opens from the header.",
+      "note": "This is the feature that earned the split: it takes @angular/cdk/drag-drop with it, which is most of the 19 KB a table no longer costs."
+    },
+    {
+      "id": "table-resize-behind-directive",
+      "kind": "code-add",
+      "old": "ds-table[resizableColumns]",
+      "new": "dsTableResize",
+      "action": "Import DsTableResize from '@ids-group-ltd/ids-design-system/table-resize', add it to the component's imports, and replace [resizableColumns]=\"true\" with the dsTableResize attribute. Move a [(columnWidths)] binding across unchanged.",
+      "appliesWhen": "A <ds-table> with resizable columns, or one that reads or seeds columnWidths. NOT affected: a table whose widths come only from column.width.",
+      "pitfall": "Without the directive the header renders no resize handle and the width buttons vanish from the column panel, while column.width keeps working — so the table looks right and is simply not resizable.",
+      "surface": "template",
+      "searchHints": [
+        "resizableColumns",
+        "columnWidths"
+      ],
+      "verify": "Every table that could be resized carries dsTableResize, and its header separators are focusable.",
+      "note": "Truncation stayed on the component: it measures the DOM rather than the dragged width, so it never depended on resizing."
     }
   ],
   "deleteList": [],
@@ -143,6 +208,8 @@
     "A ds-split-button darkens and scales each half under a press, like every other button in the library. --ds-split-button-bg-color-active, --ds-split-button-outline-bg-color-active and --ds-split-button-press-scale are new and set what a press does; --ds-split-button-pressed-shadow is an opt-in pressed halo, default none. The scale runs away from the seam, so the two halves do not part under the finger. NO ACTION.",
     "`ds-table`'s bulk-action bar was hidden when every row was selected — it read the header checkbox's indeterminate predicate rather than \"is anything selected\". It shows for any non-empty selection now. Nothing to change on your side.",
     "A focused first or last `ds-accordion-item` header takes the accordion's own corner radius, so its focus ring is no longer square inside the rounded box.",
-    "The `ds-skeleton` shimmer is one viewport-wide wave again: every skeleton shows the slice passing over its own position, anchored with `background-attachment: fixed` instead of the inherited custom property that used to be animated on `:root` and invalidated the whole document each frame. `--ds-skeleton-shimmer-color` and the reduced-motion opt-out are unchanged. Inside a transformed or filtered ancestor the anchor becomes that ancestor, and those skeletons share a wave with each other rather than with the page."
+    "The `ds-skeleton` shimmer is one viewport-wide wave again: every skeleton shows the slice passing over its own position, anchored with `background-attachment: fixed` instead of the inherited custom property that used to be animated on `:root` and invalidated the whole document each frame. `--ds-skeleton-shimmer-color` and the reduced-motion opt-out are unchanged. Inside a transformed or filtered ancestor the anchor becomes that ancestor, and those skeletons share a wave with each other rather than with the page.",
+    "persistLayout and storageKey stay on ds-table. The stored JSON keeps its { order, widths, hidden } shape, so a layout saved by an earlier version still restores; a part whose directive is absent is not applied.",
+    "table.runExport(), table.exporting() and table.exportCsv() stay on the component and keep their signatures — they delegate to whichever export directive is present, so a button of your own in [toolbar] or a page header still drives the export. Called with no directive present they log a dev-mode warning instead of doing nothing quietly."
   ]
 }
