@@ -87,7 +87,12 @@
     var(--_skeleton-wave-echo-color) var(--_skeleton-wave-period)
   );
   background-attachment: fixed;
-  will-change: background-position;
+
+  /* NO `will-change`. It promotes this pseudo-element to its own compositing layer, and Chrome
+     paints a `fixed` background per layer — the layer's own edge then shows as a hard vertical
+     seam straight through the wave. It bought nothing anyway: `background-position` is not a
+     compositable property, so the promotion could not make the animation cheaper.
+     Measured side by side: same gradient, same `fixed`, seam present with it and absent without. */
 
   /* Declared HERE, not in the global partial: Angular's emulated encapsulation rewrites the
      animation name inside a component stylesheet, so a reference to a globally-declared
