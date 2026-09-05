@@ -12,6 +12,7 @@ import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { patternsIn } from './check-manifest-coverage.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CHANGELOG = join(ROOT, 'CHANGELOG.md');
@@ -102,6 +103,18 @@ const cases = [
     expect: 'green',
   },
   {
+    // The boundary itself. `ds-tab` is a real element the manifest never spells; it says
+    // `ds-table` and `ds-tabs`. Every other red case here fires because NO hook is mentioned, so
+    // none of them can see a boundary that has been loosened rather than removed — which is how
+    // a `\w` written inside a plain template literal, where it degrades to the letter `w`,
+    // shipped as a working fix.
+    name: 'FIRES on a tag the manifest only ever spells as a longer name',
+    section: 'Fixed',
+    entry:
+      '- **A `ds-tab` header lost its ring.** The indicator sat under the panel edge.',
+    expect: 'red',
+  },
+  {
     name: 'the exemption needs the phrase — the same entry without it still FIRES',
     section: 'Fixed',
     entry:
@@ -113,30 +126,31 @@ const cases = [
 let failed = 0;
 let ran = 0;
 
-// A family-wide rename is filed once with a placeholder, so a literal substring test reads the
-// whole family as uncovered — it did, for both of 0.3.0's token renames. This is the case that
-// keeps the pattern support from being dropped as unnecessary.
+// A family-wide rename is filed once with a placeholder — `--ds-*-bg` -> `--ds-*-bg-color` — and a
+// literal substring test reads the whole family as uncovered. Asserted on the rule itself rather
+// than on a released block's verdict: that verdict answers to every other item in the block too,
+// so it stopped proving anything about placeholders the moment one of those items changed.
 {
-  const versionMode = (version) => {
-    try {
-      execFileSync('node', ['tools/check-manifest-coverage.mjs', version], {
-        cwd: ROOT,
-        encoding: 'utf8',
-        stdio: 'pipe',
-      });
-      return 'green';
-    } catch {
-      return 'red';
-    }
-  };
-  const got = versionMode('0.3.0');
-  ran++;
-  const ok = got === 'green';
-  if (!ok) failed++;
-  console.log(
-    `${ok ? 'ok   ' : 'FAIL '} a placeholder rename (--ds-*-bg → --ds-*-bg-color) covers its ` +
-      `members — expected green, got ${got}`,
-  );
+  const covers = (placeholder, token) =>
+    patternsIn(placeholder).some((pattern) => pattern.test(token));
+  const cases = [
+    ['--ds-*-bg covers a member', '--ds-*-bg', '--ds-avatar-bg', true],
+    ['--ds-*-bg does not reach the renamed name', '--ds-*-bg', '--ds-avatar-bg-color', false],
+    ['<component> placeholders resolve', '--ds-<component>-focus-shadow', '--ds-button-focus-shadow', true],
+    ['a placeholder stays inside its family', '--ds-segmented-*', '--ds-modal-pad-y', false],
+    // Prose, not a placeholder: eight published manifests say "not a `--ds-*` component hook" in
+    // a note, and each was answering for all 836 tokens in the namespace.
+    ['a bare --ds-* names nothing and is refused', '--ds-*', '--ds-avatar-bg', false],
+  ];
+  for (const [name, placeholder, token, expected] of cases) {
+    ran++;
+    const got = covers(placeholder, token);
+    const ok = got === expected;
+    if (!ok) failed++;
+    console.log(
+      `${ok ? 'ok   ' : 'FAIL '} ${name} — expected ${expected}, got ${got}`,
+    );
+  }
 }
 
 try {

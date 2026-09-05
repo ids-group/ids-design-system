@@ -30,7 +30,8 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { surfaceAt } from './check-manifest-truth.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const AUDIT = process.argv.includes('--audit');
@@ -83,10 +84,33 @@ function realHooks() {
   return { tokens, tags, symbols };
 }
 
-const HOOKS = realHooks();
+// A published block describes its own boundary, so its hooks resolve against the tree AT that
+// tag — the rule `migrations/AUTHORING.md` states for every claim about a past release. Reading
+// the working tree instead made `0.3.0` answer for `--ds-modal-title-text-color`, a name that
+// arrived in the same release the block was renaming things INTO. `## Unreleased` is the one
+// block HEAD really describes, so it alone reads the working tree.
+const hookCache = new Map();
+
+function hooksAt(version) {
+  if (hookCache.has(version)) return hookCache.get(version);
+  let hooks;
+  if (version === 'unreleased') hooks = realHooks();
+  else {
+    const surface = surfaceAt(`v${version}`);
+    hooks = surface
+      ? {
+          tokens: surface.tokens,
+          tags: new Set(surface.elements.keys()),
+          symbols: surface.symbols,
+        }
+      : realHooks();
+  }
+  hookCache.set(version, hooks);
+  return hooks;
+}
 
 // The house style backticks every identifier, so the backtick is the extraction boundary.
-const hooksIn = (body) => {
+const hooksIn = (body, HOOKS) => {
   const found = new Set();
   for (const span of body.matchAll(/`([^`]+)`/g)) {
     for (const piece of span[1].split(/[^A-Za-z0-9_-]+/)) {
@@ -163,11 +187,21 @@ function entriesOf(block) {
 // `--<role>-subtle` → `--<role>-subtitle` — which is the right way to file it: enumerating every
 // member would be worse. A literal substring test cannot see through it, so placeholders are
 // matched as patterns.
-function patternsIn(text) {
+export function patternsIn(text) {
   const patterns = [];
   for (const match of text.matchAll(
     /--[a-z0-9-]*(?:\*|<[a-z]+>)[a-z0-9*<>-]*/gi,
   )) {
+    // A bare `--ds-*` names nothing — it covers all 836 tokens in the namespace, and naming the
+    // surface is the whole requirement. It reaches this function from PROSE: eight published
+    // manifests say "not a `--ds-*` component hook" in a note, and each one was answering for
+    // every token in the library. A real placeholder keeps a literal segment of its own.
+    const literal = match[0]
+      .replace(/^--/, '')
+      .split('-')
+      .slice(1)
+      .filter((part) => part && !/[*<>]/.test(part));
+    if (!literal.length) continue;
     const source = match[0]
       .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
       .replace(/<[a-z]+>/gi, '[a-z0-9-]+')
@@ -240,9 +274,15 @@ function manifestFor(version) {
     path,
     // Boundaried, never a substring: `ds-accordion-item` in the manifest would otherwise answer
     // for an entry about `ds-accordion`, and `--ds-toast-border-color` for `--ds-toast-border`.
+    // String.raw, never a plain template: there `\w` is not an escape and degrades to the letter
+    // `w`, leaving a boundary class of `w` and `-`. The hyphen alone still separated
+    // `ds-accordion` from `ds-accordion-item`, so the case this was written for passed while
+    // `ds-tab` went on matching inside `ds-table`, and `SelectOption` inside `MultiSelectOption`.
     names: (hook) =>
       new RegExp(
-        `(?<![\w-])${hook.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\w-])`,
+        String.raw`(?<![\w-])` +
+          hook.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) +
+          String.raw`(?![\w-])`,
       ).test(text) || patterns.some((pattern) => pattern.test(hook)),
   };
 }
@@ -256,7 +296,7 @@ function check(block) {
   for (const entry of entries) {
     if (SAYS_NOTHING_CHANGED.some((phrase) => phrase.test(entry.body)))
       continue;
-    const hooks = hooksIn(entry.body);
+    const hooks = hooksIn(entry.body, hooksAt(block.version));
     if (!hooks.size) continue;
     // A missing manifest is only a gap once something in the block actually needs one; that
     // keeps a cycle with no actionable work from being told to create an empty file.
@@ -281,64 +321,70 @@ function check(block) {
   return { manifest, entries, gaps };
 }
 
-const all = blocks();
-const chosen = ONLY
-  ? all.filter((block) => block.version === ONLY)
-  : AUDIT
-    ? all
-    : all.filter((block) => block.version === 'unreleased');
+// Guarded so importing `patternsIn` does not run the whole check: module top-level code runs
+// on import, and the selftest needs the placeholder rule without a sweep.
+function main() {
+  const all = blocks();
+  const chosen = ONLY
+    ? all.filter((block) => block.version === ONLY)
+    : AUDIT
+      ? all
+      : all.filter((block) => block.version === 'unreleased');
 
-if (ONLY && !chosen.length) {
-  console.error(
-    `check-manifest-coverage: no \`## ${ONLY}\` block in CHANGELOG.md.`,
-  );
-  process.exit(1);
-}
-
-let failures = 0;
-for (const block of chosen) {
-  const { manifest, entries, gaps } = check(block);
-  const label = block.version === 'unreleased' ? 'Unreleased' : block.version;
-
-  if (!gaps.length) {
-    if (!AUDIT)
-      console.log(
-        `check-manifest-coverage: ${label} — ${entries.length} entr(ies) outside Added, ` +
-          `every one that names public surface is covered by ` +
-          `${manifest ? relative(ROOT, manifest.path).split('\\').join('/') : 'no manifest (none needed)'}.`,
-      );
-    continue;
-  }
-
-  failures += gaps.length;
-  const where = manifest
-    ? relative(ROOT, manifest.path).split('\\').join('/')
-    : `migrations/${block.version}.json (does not exist)`;
-  console.error(
-    `\n${label}: ${gaps.length} documented change(s) ${where} never names.`,
-  );
-  for (const gap of gaps) {
+  if (ONLY && !chosen.length) {
     console.error(
-      `  CHANGELOG.md:${gap.line}  [${gap.section}] ${gap.headline.slice(0, 88)}`,
+      `check-manifest-coverage: no \`## ${ONLY}\` block in CHANGELOG.md.`,
     );
-    console.error(`      names: ${gap.hooks.join(', ')}`);
+    process.exit(1);
+  }
+
+  let failures = 0;
+  for (const block of chosen) {
+    const { manifest, entries, gaps } = check(block);
+    const label = block.version === 'unreleased' ? 'Unreleased' : block.version;
+
+    if (!gaps.length) {
+      if (!AUDIT)
+        console.log(
+          `check-manifest-coverage: ${label} — ${entries.length} entr(ies) outside Added, ` +
+            `every one that names public surface is covered by ` +
+            `${manifest ? relative(ROOT, manifest.path).split('\\').join('/') : 'no manifest (none needed)'}.`,
+        );
+      continue;
+    }
+
+    failures += gaps.length;
+    const where = manifest
+      ? relative(ROOT, manifest.path).split('\\').join('/')
+      : `migrations/${block.version}.json (does not exist)`;
+    console.error(
+      `\n${label}: ${gaps.length} documented change(s) ${where} never names.`,
+    );
+    for (const gap of gaps) {
+      console.error(
+        `  CHANGELOG.md:${gap.line}  [${gap.section}] ${gap.headline.slice(0, 88)}`,
+      );
+      console.error(`      names: ${gap.hooks.join(', ')}`);
+    }
+  }
+
+  if (AUDIT) {
+    console.log(
+      `\ncheck-manifest-coverage --audit: ${failures} documented change(s) unnamed across ` +
+        `${chosen.length} block(s). Advisory only — a published manifest gets corrected in place, ` +
+        `and an entry that needs no line should not be given one.`,
+    );
+    process.exit(0);
+  }
+
+  if (failures) {
+    console.error(
+      `\ncheck-manifest-coverage: name the surface in the manifest — an item if a consumer must ` +
+        `edit code, an \`informational\` line otherwise. Silence reads as "this release does not ` +
+        `touch you".`,
+    );
+    process.exit(1);
   }
 }
 
-if (AUDIT) {
-  console.log(
-    `\ncheck-manifest-coverage --audit: ${failures} documented change(s) unnamed across ` +
-      `${chosen.length} block(s). Advisory only — a published manifest gets corrected in place, ` +
-      `and an entry that needs no line should not be given one.`,
-  );
-  process.exit(0);
-}
-
-if (failures) {
-  console.error(
-    `\ncheck-manifest-coverage: name the surface in the manifest — an item if a consumer must ` +
-      `edit code, an \`informational\` line otherwise. Silence reads as "this release does not ` +
-      `touch you".`,
-  );
-  process.exit(1);
-}
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main();
