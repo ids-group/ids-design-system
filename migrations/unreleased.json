@@ -25,10 +25,97 @@
         "override publishHeadHeight"
       ],
       "restore": null
+    },
+    {
+      "id": "modal-fullscreen-height-is-a-target",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--modal-h-fullscreen",
+      "new": null,
+      "action": "Where you set `--modal-h-fullscreen`, decide whether you meant a ceiling or a height, and lower the value below 90dvh if you want the panel shorter than the screen.",
+      "appliesWhen": "Only a modal opened fullscreen, and only where you set `--modal-h-fullscreen` yourself or relied on a short body keeping the panel small. A modal opened at any other size is untouched, and the token keeps its name and its own value.",
+      "pitfall": "Setting the token above 90dvh looks like it does nothing: the modal's own ceiling still clips the panel, so the used height stays 90dvh and no warning says the value was ignored.",
+      "note": "The fullscreen class fed the token to `max-height`, so a short body shrank the panel and a tall one stopped at the token. It feeds `height` now, so the panel is that tall whatever the body holds, still clipped by the modal's 90dvh ceiling. The panel already lays out as a column with a scrolling body, so the room a short body no longer reclaims goes to the body and the footer sits at the bottom of the screen.",
+      "verify": "A fullscreen modal with two lines of content is as tall as a fullscreen modal with fifty, and one you sized through the token is `min(your value, 90dvh)` tall.",
+      "searchHints": [
+        "--modal-h-fullscreen",
+        "fullscreen"
+      ],
+      "restore": null
+    },
+    {
+      "id": "date-picker-focus-resolves-the-field-family",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--ds-date-picker-focus-shadow",
+      "new": null,
+      "action": "Retune the date picker's focus indicator through `--ds-field-focus-shadow`, or set `--ds-date-picker-focus-shadow` outright.",
+      "appliesWhen": "Only a brand that retunes focus through the control family — `--ds-control-focus-shadow` or the per-control tokens. An explicit `--ds-date-picker-focus-shadow` override still wins and needs nothing. `ds-time-picker` still resolves the control family, so the two pickers focus differently until you set both.",
+      "pitfall": "A control-family override is a custom property like any other: it still sets, it still cascades, and the date picker simply no longer reads it. Nothing errors, and the field draws the default halo.",
+      "note": "The trigger is field-shaped and was drawing the two-band control ring, so it read as a button beside inputs that draw one soft halo. It resolves the field family now, which also means it follows the `data-focus` switch — `ring`, `edge` and `inset` reach it, and they did not before.",
+      "verify": "Focusing the date field draws the same indicator as focusing a text input beside it, and switching `data-focus` changes both together.",
+      "searchHints": [
+        "--ds-date-picker-focus-shadow",
+        "--ds-control-focus-shadow",
+        "--ds-field-focus-shadow",
+        "focus-shadow"
+      ],
+      "restore": "--ds-date-picker-focus-shadow: var(--ds-control-focus-shadow);"
+    },
+    {
+      "id": "progress-warning-bar-resolves-a-palette-yellow",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--ds-progress-bar-color-warning",
+      "new": null,
+      "action": "Recolour the warning bar through `--ds-progress-bar-color-warning` rather than through `--warning-hover`.",
+      "appliesWhen": "Only a brand that recoloured the bar by way of `--warning-hover`. An explicit `--ds-progress-bar-color-warning` override still wins. `--warning-hover` keeps its name and value and is still read elsewhere.",
+      "pitfall": "The bar moves in opposite directions per theme, so a screenshot check on one theme proves nothing about the other: the light bar gets more saturated and the dark bar gets darker.",
+      "note": "The fallback resolved to a hover derivation of the warning hue, which mixes toward black in the light theme and toward white in the dark one — so the light bar read olive and the dark bar read washed out, and neither matched the warning colour anywhere else. Both themes resolve the same palette yellow now.",
+      "verify": "The warning progress bar is the same colour in both themes, and matches the warning hue used by the other status surfaces.",
+      "searchHints": [
+        "--ds-progress-bar-color-warning",
+        "--warning-hover"
+      ],
+      "restore": "--ds-progress-bar-color-warning: var(--warning-hover);"
+    },
+    {
+      "id": "skeleton-shimmer-reads-its-own-duration-token",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--duration-loop-slow",
+      "new": null,
+      "action": "Set `--ds-skeleton-wave-duration` wherever you were retuning the skeleton through `--duration-loop-slow`.",
+      "appliesWhen": "Only a brand that set `--duration-loop-slow` and expected the skeleton to follow. That token keeps its name and value and still drives everything else that reads it; the skeleton is what stopped reading it.",
+      "pitfall": "The shimmer keeps animating either way, so an override that no longer lands looks like a value that was simply too small to notice rather than one nothing reads.",
+      "note": "The wave now tiles by construction and travels exactly one period per loop, so its duration is a property of the wave rather than of the shared loop family. The loop runs 3400ms where the shared token gave it 1400ms, and passes no longer rest between crossings. `--ds-skeleton-wave-angle` turns the gradient only — the tile size and the travel are pinned to the 45° diagonal, so an angle far from the default tiles visibly.",
+      "verify": "Setting `--ds-skeleton-wave-duration` changes how fast the shimmer crosses, and setting `--duration-loop-slow` alone leaves it unchanged.",
+      "searchHints": [
+        "--duration-loop-slow",
+        "--ds-skeleton-wave-duration",
+        "ds-skeleton"
+      ],
+      "restore": "--ds-skeleton-wave-duration: var(--duration-loop-slow);"
     }
   ],
   "informational": [
-    "The `ds-skeleton` shimmer travels diagonally now and crosses as two waves per period, one quiet and one main, with no seam anywhere in the loop. Four new hooks with defaults — `--ds-skeleton-wave-period`, `--ds-skeleton-wave-duration`, `--ds-skeleton-wave-angle`, `--ds-skeleton-wave-echo-color`. The tone is unchanged; a skeleton you never tuned simply reads calmer. NO ACTION."
+    "The `ds-skeleton` shimmer travels diagonally now and crosses as two waves per period, one quiet and one main, with no seam anywhere in the loop. Four new hooks with defaults — `--ds-skeleton-wave-period`, `--ds-skeleton-wave-duration`, `--ds-skeleton-wave-angle`, `--ds-skeleton-wave-echo-color`. The tone is unchanged; a skeleton you never tuned simply reads calmer. Only the duration hook needs an edit, and only if you were retuning it through the shared loop token.",
+    "A `ds-table` loading in `overlay` mode with no rows now holds one `aria-hidden` spacer row's worth of height instead of collapsing onto its header. Nothing to change unless a test asserts an empty tbody during an overlay load. `skeleton` loading is unaffected.",
+    "The `ds-table` loading scrim measures the header after render and re-measures on resize, so it starts below the header on the first frame rather than at a 40px fallback. `--ds-table-head-h` still overrides the measurement.",
+    "The `ds-table` selection checkbox is centred against the line box instead of sitting on the text baseline, so the header row no longer changes height when the select-all mark swaps between its tick and its indeterminate bar. `ds-checkbox` lays its own box out as a flex item and never showed this.",
+    "`ds-date-picker`'s calendar glyph is two pixels smaller so it matches the cap height of the value beside it, and its text input now spans the field's height so a click above or below the digits places the caret rather than opening the calendar.",
+    "`ds-dropzone` shows the hand cursor once files are listed. The zone was always clickable; only the cursor said otherwise."
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "table-checkbox-baseline-nudge",
+      "surface": "style",
+      "find": [
+        "ds-table .check",
+        "::ng-deep .check"
+      ],
+      "why": "The table's selection box no longer sits on the text baseline, so a nudge added to lift it off is now an offset in its own right — the header row moves by whatever the nudge was.",
+      "replaceWith": "nothing"
+    }
+  ]
 }

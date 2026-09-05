@@ -27,7 +27,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
   Four hooks, all with defaults — `--ds-skeleton-wave-period` (56rem),
   `--ds-skeleton-wave-duration` (3400ms), `--ds-skeleton-wave-angle` (135deg) and
-  `--ds-skeleton-wave-echo-color`.
+  `--ds-skeleton-wave-echo-color`. **`--ds-skeleton-wave-duration` replaces the shimmer's old
+  dependency on `--duration-loop-slow`**, so a brand that retuned that global no longer reaches the
+  skeleton — set the skeleton hook instead. The loop is 3400ms where it was 1400ms, and the pass no
+  longer rests between crossings. **`--ds-skeleton-wave-angle` retunes the gradient's direction
+  only**: the tile size and the loop's travel are fixed to the 45° diagonal, so an angle far from
+  the default tiles visibly. Change it for a small adjustment, not for a new axis.
 
 - **`TableComponent` gained two members — only matters if you SUBCLASS it.**
   `showsLoadingSpace` decides whether a table that is still loading and has no rows yet holds a
@@ -36,6 +41,66 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   protection: `private` and `protected` collide with TS2415 exactly as a public name does, so a
   member of yours sharing one of those names stops the build. Nothing changes for a consumer who
   only uses the element — no input, output or token changed name or type.
+
+- **A fullscreen `ds-modal` is a full-height panel now, so `--modal-h-fullscreen` reads as a target
+  and no longer as a cap.** The class used to set the token as a `max-height`, which let a short
+  body shrink the panel; it sets the height itself now, still clipped by the modal's own 90dvh
+  ceiling. A modal you sized through that token gets `min(your value, 90dvh)` — set it below the
+  ceiling if you want the panel shorter, and expect the extra room to go to the scrolling body with
+  the footer at the bottom of the screen.
+
+- **`ds-date-picker` focuses like a field, not like a button.** `--ds-date-picker-focus-shadow`
+  falls back to `--ds-field-focus-shadow` instead of `--ds-control-focus-shadow`, so the trigger
+  draws the single soft field halo the inputs draw and follows the `data-focus` switch, which it
+  used to ignore. A brand that retunes the control family no longer reaches the date picker — retune
+  the field family, or set `--ds-date-picker-focus-shadow` outright. `ds-time-picker` still resolves
+  the control family, so the two now focus differently.
+
+- **The `ds-progress` warning bar is a yellow.** `--ds-progress-bar-color-warning` falls back to
+  `--yellow-500` rather than to `--warning-hover`, which mixed the warning hue toward black in the
+  light theme and toward white in the dark one — one bar read olive, the other pale. Both themes
+  paint the same yellow now. A brand that recoloured the bar through `--warning-hover` no longer
+  reaches it; set `--ds-progress-bar-color-warning`. `--warning-hover` itself is unchanged and still
+  used elsewhere.
+
+### Fixed
+
+- **A `ds-table` loading in `overlay` mode with no rows keeps a body.** The tbody was empty, so the
+  table collapsed onto its header and the spinner floated over nothing. It now holds one
+  `aria-hidden` spacer row's worth of height, built from the same padding and line height a real row
+  uses, so it tracks density. Only `[loading]="'overlay'"` with zero rows is affected — `skeleton`
+  draws its own rows and `[loading]="true"` resolves to `skeleton` when there is nothing to show.
+  A test that asserts an empty tbody during an overlay load now sees that one row.
+
+- **The `ds-table` loading scrim starts below the header from the first frame.** The header height
+  was read once per load and before layout, so the first frame fell back to a 40px guess under a
+  taller header and the blur began mid-header. It is measured after render and re-measured whenever
+  the header resizes, so a header that wraps or a density change moves the scrim with it.
+  `--ds-table-head-h` still overrides the measurement.
+
+- **The `ds-table` selection checkbox stops twitching when the mark changes.** The box sat on the
+  text baseline, so the header row's height moved by a fraction of a pixel as the select-all box
+  swapped between its tick and its indeterminate bar. It is centred against the line box now. This
+  reaches the table's header and row checkboxes; `ds-checkbox` itself lays the box out as a flex
+  item and never showed it. A `::ng-deep` nudge you added to compensate for the old sit is now that
+  much out.
+
+- **`ds-date-picker`'s calendar glyph matches the value it sits beside.** It rendered two pixels
+  taller than the digits' cap height and overhung them top and bottom.
+
+- **Clicking above or below the digits in `ds-date-picker` places the caret instead of opening the
+  calendar.** The text input only covered the value's own line box, so the band either side of it
+  fell through to the trigger. It spans the field's height now.
+
+- **`ds-dropzone` shows the hand cursor once files are listed.** The zone kept the arrow, which read
+  as "this is finished, there is nothing to click", while the whole zone had stayed clickable the
+  entire time. Nothing about what a click does has changed.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `ds-table .check` — a margin or `transform` nudging the selection box off the text baseline | the box is centred against the line box now, so the nudge is an offset of its own | nothing |
 
 ## 0.12.1 — 2026-09-05
 
