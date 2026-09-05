@@ -20,7 +20,11 @@
 }
 
 :host(.success) { --_progress-bar-color-success: var(--ds-progress-bar-color-success, var(--success)); }
-:host(.warning) { --_progress-bar-color-warning: var(--ds-progress-bar-color-warning, var(--warning-hover)); }
+
+/* `--warning-hover` is a HOVER derivation — the warning yellow mixed 88% with black — and mixing a
+   yellow toward black desaturates it into olive, which is why this one bar read as dirty rather than
+   as bright. `--yellow-500` is the ramp's own deeper yellow and stays a yellow. */
+:host(.warning) { --_progress-bar-color-warning: var(--ds-progress-bar-color-warning, var(--yellow-500)); }
 :host(.error) { --_progress-bar-color-error: var(--ds-progress-bar-color-error, var(--error)); }
 
 :host(.success) > span { background: var(--_progress-bar-color-success); }
