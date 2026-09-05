@@ -79,10 +79,22 @@ for (const file of files) {
   try {
     source = readFileSync(`src/lib/${file}`, 'utf8');
   } catch {
-    console.error(
-      `check-class-surface-entry: cannot read src/lib/${file} — the report names a file that is gone.`,
-    );
-    process.exit(1);
+    // A DELETED component is the loudest possible member loss, and its classes are exactly the
+    // ones a subclasser needs named — so read them from the base tag rather than refusing to run.
+    // Exiting here made a release that removes a component impossible to pass, whatever the notes
+    // said.
+    try {
+      source = execSync(`git show ${base}:src/lib/${file}`, {
+        encoding: 'utf8',
+        maxBuffer: 1 << 28,
+      });
+    } catch {
+      console.error(
+        `check-class-surface-entry: src/lib/${file} is in the report but readable at neither ` +
+          `HEAD nor ${base}, so its classes cannot be named.`,
+      );
+      process.exit(1);
+    }
   }
   const named = [
     ...source.matchAll(/export\s+(?:abstract\s+)?class\s+(\w+)/g),

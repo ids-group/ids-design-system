@@ -76,7 +76,11 @@ for (const { file, label, needle } of manifests) {
     .slice(headingAt)
     .split('\n')
     .filter((line) => /^\| (?!---|If you have)/.test(line))
-    .map((line) => line.split('|')[1] ?? '');
+    // Split on unescaped pipes only, then unescape. Markdown forces `\|` inside a cell, so a
+    // locator holding one — an Angular pipe, a TypeScript union, a `|=` selector — had no correct
+    // spelling at all: escaped, the raw text did not match the manifest; unescaped, the cell was
+    // truncated at the pipe.
+    .map((line) => (line.split(/(?<!\\)\|/)[1] ?? '').replace(/\\\|/g, '|'));
 
   // A shape several entries share cannot identify a row: matching on `ds-table` alone let four
   // 0.9.0 entries pass on one unrelated row.
