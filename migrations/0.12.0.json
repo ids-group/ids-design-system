@@ -7,7 +7,9 @@
       "surface": "typescript",
       "find": [
         "await import('@ids-group-ltd/ids-design-system')",
-        "import('@ids-group-ltd/ids-design-system').then"
+        "import('@ids-group-ltd/ids-design-system').then",
+        "import('@ids-group-ltd/ids-design-system')",
+        "import(\"@ids-group-ltd/ids-design-system\")"
       ],
       "why": "The package was one flattened module, so an eager import of any part of it made the whole library reachable from the initial bundle. A dynamic import of the package was the only lever that moved it out, and it paid for that with an async boundary in the consumer's own code. Each component is now its own entry point internally, so an ordinary static import from the package root lands in the chunk that uses it. Still legitimate where the lazy boundary exists for its own sake — a feature area deliberately kept off the critical path.",
       "replaceWith": "a plain static import from the package root, @ids-group-ltd/ids-design-system"

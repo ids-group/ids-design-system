@@ -32,7 +32,7 @@
       "surface": "style",
       "old": "--focus-ring-inner",
       "new": null,
-      "action": "If you set `--focus-ring-inner` to a colour to get a visible ring back, remove that override — it no longer reaches a control's ring. To restyle the ring, set `--focus-ring-width`, `--focus-ring-color` or `--focus-ring-offset`.",
+      "action": "If you set `--focus-ring-inner` to a colour to get a visible ring back, remove that override — it no longer reaches a control's ring. To restyle the ring, set `--focus-ring-width`, `--focus-ring-color` or `--focus-ring-offset`. Wrap any `outline: none` you keep on a DS control in `@media not (forced-colors: active)`.",
       "appliesWhen": "Every focusable control in the library — buttons, checkboxes, radios, switches, tabs, menu rows, list rows, segments, days, links. Fields keep their soft halo and are unaffected; `--focus-ring-inner` still composes the halo that `data-focus=\"ring\"` opts into.",
       "pitfall": "An `outline: none` in your own stylesheet now removes a control's indicator outright, where before it removed nothing because the ring was a shadow. Any reset that zeroes outlines on DS controls leaves a keyboard user with no indicator, and nothing errors.",
       "note": "Controls draw the ring with `outline` + `outline-offset` instead of a two-layer box-shadow. `outline-offset` leaves its gap UNPAINTED, so the gap shows whatever the control actually sits on; the shadow gap had to be filled with a guessed colour, which was a coloured rim wherever the guess was wrong. A negative offset draws the ring inside the element, so a clipping ancestor can no longer eat it. Components no longer touch `box-shadow` on focus, so a focused card keeps its elevation and a selected segment keeps its shadow.",
@@ -46,7 +46,18 @@
         "--focus-ring-width",
         "--focus-ring-offset",
         "--focus-ring-color",
-        "outline-offset"
+        "outline-offset",
+        "outline: none",
+        "outline: 0",
+        "outline:none"
+      ],
+      "detect": [
+        "outline: none",
+        "outline:none",
+        "outline: 0",
+        "outline:0",
+        ":focus { outline",
+        ":focus-visible { outline"
       ]
     },
     {
@@ -203,6 +214,56 @@
       "note": "This is the feature that earned the split: it takes @angular/cdk/drag-drop with it, which is most of the 19 KB a table no longer costs."
     },
     {
+      "id": "table-column-hidden-flag-needs-the-directive",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "hidden: true",
+      "new": null,
+      "action": "Put dsTableColumns on every table whose column definitions carry hidden or hideable, or drop those columns from the array.",
+      "appliesWhen": "A column array where any entry sets hidden or hideable — wherever that array lives, including a service, a constant or a computed. The flags keep their names and their types; nothing in the template says which tables have them.",
+      "pitfall": "Nothing errors and nothing is logged. A column marked hidden simply renders, so a table that was hiding a cost or an internal identifier now shows it to every reader, and the reviewer sees a table that looks complete rather than one that leaked a column. The column COUNT moves with it, in both directions: a table with hideable columns and no rowActions loses the trailing utility cell that carried the picker button, and a reorder-only table that takes the directive gains one. A positional selector, a colspan or a DOM assertion counting cells lands one off either way, and still passes its own type check.",
+      "note": "Both flags are read by the directive now, so the component alone honours neither: hidden is an initial state the picker owns, and the picker is the directive's. This is the one part of the split that a template search cannot find, because the flags are written in TypeScript and the element carries no binding for them.",
+      "verify": "Every table whose columns declare hidden or hideable carries dsTableColumns, and a column marked hidden is absent from the rendered header.",
+      "searchHints": [
+        "hidden",
+        "hideable",
+        "TableColumn",
+        "columns"
+      ],
+      "detect": [
+        "hidden: true",
+        "hideable: true",
+        "TableColumn<",
+        "TableColumn[]",
+        ": TableColumn"
+      ],
+      "restore": null
+    },
+    {
+      "id": "table-persisted-layout-holds-only-what-the-directives-own",
+      "kind": "behavior",
+      "surface": "template",
+      "old": "ds-table[persistLayout]",
+      "new": null,
+      "action": "On a table with persistLayout, carry every directive whose part of the layout you want kept — dsTableColumns for order and hidden columns, dsTableResize for widths.",
+      "appliesWhen": "Only a table binding persistLayout, and only where it carried more than one part of the layout before. persistLayout and storageKey keep their names and stay on the element, and the stored shape is unchanged, so a layout written by an earlier version still restores.",
+      "pitfall": "The loss is one-way and arrives on the first save, not on the upgrade: the table restores the full stored layout, then writes back only the parts a directive registered, so a table carrying dsTableResize alone replaces a stored { order, widths, hidden } with widths alone. The reader sees their column order come back once and never again, and nothing was logged.",
+      "note": "Each directive registers the slice it owns, and the save writes the registered slices as the whole entry rather than merging into what is there. That is what makes the parts independent, and it is why a table that persists a layout needs the directives for every part of it.",
+      "verify": "Reorder and resize a persisted table, reload twice, and both the order and the widths come back the second time.",
+      "searchHints": [
+        "persistLayout",
+        "storageKey",
+        "ds-table:"
+      ],
+      "detect": [
+        "persistLayout",
+        "storageKey",
+        "localStorage.getItem('ds-table:",
+        "localStorage.setItem('ds-table:"
+      ],
+      "restore": null
+    },
+    {
       "id": "table-resize-behind-directive",
       "kind": "code-add",
       "old": "ds-table[resizableColumns]",
@@ -240,7 +301,7 @@
     "`ds-table`'s bulk-action bar was hidden when every row was selected — it read the header checkbox's indeterminate predicate rather than \"is anything selected\". It shows for any non-empty selection now. Nothing to change on your side.",
     "A focused first or last `ds-accordion-item` header takes the accordion's own corner radius, so its focus ring is no longer square inside the rounded box.",
     "The `ds-skeleton` shimmer is one viewport-wide wave again: every skeleton shows the slice passing over its own position, anchored with `background-attachment: fixed` instead of the inherited custom property that used to be animated on `:root` and invalidated the whole document each frame. `--ds-skeleton-shimmer-color` and the reduced-motion opt-out are unchanged. Inside a transformed or filtered ancestor the anchor becomes that ancestor, and those skeletons share a wave with each other rather than with the page.",
-    "persistLayout and storageKey stay on ds-table. The stored JSON keeps its { order, widths, hidden } shape, so a layout saved by an earlier version still restores; a part whose directive is absent is not applied.",
+    "persistLayout and storageKey stay on ds-table. The stored JSON keeps its { order, widths, hidden } shape, so a layout saved by an earlier version still restores; what a table then writes back is covered by table-persisted-layout-holds-only-what-the-directives-own.",
     "table.runExport(), table.exporting() and table.exportCsv() stay on the component and keep their signatures — they delegate to whichever export directive is present, so a button of your own in [toolbar] or a page header still drives the export. Called with no directive present they log a dev-mode warning instead of doing nothing quietly."
   ]
 }
