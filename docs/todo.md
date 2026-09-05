@@ -2,6 +2,17 @@
 
 ## Reported by Stas from the docs site, 2026-09-05
 
+- [ ] **[P3] The shimmer's viewport anchoring breaks inside a transformed ancestor.**
+  `background-attachment: fixed` is what makes every skeleton show its slice of ONE screen-wide
+  wave, and the spec makes a transformed, filtered or `will-change: transform` ancestor a
+  containing block for it — inside one the background anchors to that ancestor instead, and the
+  skeletons in it fall out of the shared wave into their own local one. Nothing on the docs site
+  triggers it today (measured: no transformed ancestor above any skeleton), which is exactly why it
+  would show up first in a consumer app with an animated drawer or a `transform`-based layout.
+  No cheap fix: the alternative is the shared `:root` driver this replaced, which invalidated the
+  whole document every frame. Worth a note in the skeleton's docs page before it is worth code.
+
+
 - [ ] **[P2] A `ds-stat` value longer than its tile spills straight out of the card.** `.value`
   carries `white-space: var(--_stat-value-white-space)` defaulting to `nowrap`, and nothing clips or
   wraps — so a date range or a status phrase runs past the tile's edge and over whatever is beside

@@ -1,8 +1,8 @@
 /* Skeleton — shimmer placeholder.
 
    Base layer    : solid --surface-secondary on host.
-   Shimmer layer : ::after, a transparent-to--surface-muted-to-transparent band that
-                   slides across the host's own width.
+   Shimmer layer : ::after, a viewport-anchored band that every skeleton on screen shares —
+                   one wave crossing the page, each placeholder showing its own slice.
    Container has overflow: hidden so the ::after stays inside the skeleton.
 
    Variants: .circle (avatars / dots), .inline (inline-block flow). */
@@ -25,18 +25,27 @@
   content: "";
   position: absolute;
   inset: 0;
+  pointer-events: none;
 
-  /* Both ends of the gradient are fully transparent, which is what makes the loop seamless: the
-     band leaves the box on one side and re-enters on the other with nothing visible in between,
-     so the restart has no edge to show. */
-  background: linear-gradient(
-    90deg,
+  /* ONE wave for the whole screen, and each skeleton shows the slice passing over its own
+     position — `fixed` anchors this background to the viewport rather than to the element, so the
+     same `background-position` on every skeleton puts the band at the same SCREEN x. That is what
+     the shared `--skeleton-shimmer-x` driver bought, without its cost: animating an inherited
+     registered custom property on :root invalidated the style of the whole document every frame.
+
+     Two tones of the same surface rather than a bright band: the wave should read as colour
+     washing across the placeholders, not as a light being shone on them. */
+  background-image: linear-gradient(
+    100deg,
     transparent 0%,
-    var(--_skeleton-shimmer-color) 50%,
+    var(--_skeleton-shimmer-color) 42%,
+    var(--_skeleton-shimmer-color) 58%,
     transparent 100%
   );
-  pointer-events: none;
-  will-change: transform;
+  background-attachment: fixed;
+  background-size: 100vw 100%;
+  background-repeat: no-repeat;
+  will-change: background-position;
 
   /* Declared HERE, not in the global partial: Angular's emulated encapsulation rewrites the
      animation name inside a component stylesheet, so a reference to a globally-declared
@@ -44,16 +53,14 @@
   animation: ds-skeleton-shimmer-loop var(--duration-loop-slow, 1400ms) linear infinite;
 }
 
-/* Travel is the ELEMENT's own width, not the viewport's. A viewport-sized mask sliding 200vw per
-   cycle left a 280px skeleton dark for most of it and then jumped 3278px back in one frame — the
-   band flicked through and the loop ended on a hard cut. `transform` is also composited, which
-   `mask-position` is not. */
+/* A full viewport of travel each way, so the tile is entirely off-screen at both ends and the
+   restart has nothing visible to cut. The wave crosses, the screen rests, the wave crosses again. */
 @keyframes ds-skeleton-shimmer-loop {
   from {
-    transform: translateX(-100%);
+    background-position: -100vw 0;
   }
 
   to {
-    transform: translateX(100%);
+    background-position: 100vw 0;
   }
 }

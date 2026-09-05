@@ -145,11 +145,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   bar with the selection still live, which is when a bulk action is most likely. It answers the
   selection being non-empty now.
 
-- **The skeleton shimmer stuttered and ended on a hard cut.** The band was a viewport-sized mask
-  sliding 200vw per cycle: on a 280px skeleton it sat off the element for most of the loop, flicked
-  through, then jumped 3278px back in a single frame. It slides the element's own width now, ending
-  where the band is fully outside the box, so the loop has no edge to show — and it animates
-  `transform`, which the compositor handles, rather than `mask-position`, which it does not.
+- **The skeleton shimmer is one wave across the screen again, and it no longer stutters.** Every
+  `ds-skeleton` shows the slice of a single viewport-wide band passing over its own position, so a
+  page of placeholders reads as one light moving across it rather than as N loops running side by
+  side. The band is two tones of the same surface — colour washing over the placeholders, not a
+  highlight shone on them. It is anchored with `background-attachment: fixed` rather than the
+  shared custom property it used to read: that property was inherited and animated on `:root`,
+  which invalidated the style of every element in the document on every frame. Measured: `:root`
+  now reports zero animations, and six skeletons of different widths report the same band position
+  at the same instant.
 
 - **A focused first or last `ds-accordion-item` drew a square ring inside the rounded box.** An
   outline follows its own element's radius, and the rounded corner belongs to `ds-accordion`, not to
@@ -444,7 +448,8 @@ this package ships under `migrations/`.
 
 | If you have | Delete it, because |
 | --- | --- |
-| a raised `--layer-toast` or `--layer-tooltip` | It never worked: overlay hosts live in the browser's top layer, which paints in the order hosts were shown and ignores z-index entirely. The library re-shows the toast host itself now. |
+| a raised `--layer-toast` or `--layer-tooltip` | It never fixed toast-under-modal: overlay hosts live in the browser's top layer, which paints in the order hosts were shown and ignores z-index entirely. The library re-shows the toast host itself now. A layer-scale retune for your own stacking (or for browsers without popover support) is still load-bearing and stays. |
+| a `--ds-table-head-h` override added so the loading scrim stops cutting into the header | The scrim measures the real header height now. Sizing the header itself with this token is its normal use and stays. |
 
 ## 0.11.3 — 2026-09-02
 
@@ -2966,7 +2971,8 @@ skipping it leaves working code that is merely redundant.
 | If you have | Delete it, because |
 | --- | --- |
 | `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary` | `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant="outline"]` |
-| your own vertical-padding override on a `sm`/`lg` textarea (a `--ds-input-pad-y` retune or a local rule compensating the wrong padding) | sm/lg textareas rendered the md vertical padding; they are corrected now, so the compensation stacks on top of the fix. |
+| your own vertical-padding override on a `sm`/`lg` textarea (a `--ds-input-pad-y` retune or a local rule compensating the wrong padding) | sm/lg textareas rendered the md vertical padding; they are corrected now, so the compensation stacks on top of the fix. A deliberate global `--ds-input-pad-y` retune is a legitimate hook and stays. |
+| a `height`/`min-height` pinned on `ds-autocomplete`, `ds-multi-select`, `ds-color-picker`, `ds-number-stepper` or `ds-split-button` to make `--ds-field-height` "work" | Those six spelled their height as the raw `--hit-*` value, so the token did nothing for them; they read the field scale now. |
 | `--radius-sm: 0` to square a checkbox | `--ds-checkbox-radius` |
 | `.title.title { font-size }` inside a modal | `--ds-modal-title-font-size` |
 | Pagination label type overrides — a rule on `ds-pagination` setting `--ds-pagination-label-*` | `--ds-pagination-label-*` |
