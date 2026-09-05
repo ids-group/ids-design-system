@@ -115,24 +115,24 @@ the look actually happens.
 
 The sixteen, each with the gate its `<ng-content>` sits behind:
 
-| component       | gate             | status                                                                                                 |
-| --------------- | ---------------- | ------------------------------------------------------------------------------------------------------ |
-| `modal`         | `rendered()`     | overlay; ✅ via staticPreview and via open                                                             |
-| `drawer`        | `rendered()`     | overlay; ✅                                                                                            |
-| `bottom-sheet`  | `rendered()`     | overlay; ✅                                                                                            |
-| `auth-layout`   | `letterGlyph()`  | ✅                                                                                                     |
-| `badge`         | `count()`        | projection in the live @else; ✅                                                                       |
-| `checkbox`      | `label()`        | projection in the live @else; ✅                                                                       |
-| `radio`         | `label()`        | projection in the live @else; ✅ — moved under `radio-group/` by the entry-point split, same component |
-| `switch`        | `label()`        | projection in the live @else; ✅                                                                       |
-| `dropzone`      | `files()`        | ✅                                                                                                     |
-| `menu-item`     | `icon()`         | ✅                                                                                                     |
-| `sidenav`       | `brandRoute()`   | [dsBrandName] is directive-gated — see the sweep above                                                 |
-| `sidenav-group` | `expandable()`   | ✅ with label + expandable set                                                                         |
-| `sidenav-item`  | `routerLink()`   | no default slot by design                                                                              |
-| `stat`          | `delta()`        | ✅ with the delta input set                                                                            |
-| `table`         | `exportButton()` | [empty] ✅; [bulk-actions] inconclusive                                                                |
-| `filter-bar`    | `collapsed()`    | drops unslotted content by design                                                                      |
+| component       | gate              | status                                                                                                 |
+| --------------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
+| `modal`         | `rendered()`      | overlay; ✅ via staticPreview and via open                                                             |
+| `drawer`        | `rendered()`      | overlay; ✅                                                                                            |
+| `bottom-sheet`  | `rendered()`      | overlay; ✅                                                                                            |
+| `auth-layout`   | `letterGlyph()`   | ✅                                                                                                     |
+| `badge`         | `count()`         | projection in the live @else; ✅                                                                       |
+| `checkbox`      | `label()`         | projection in the live @else; ✅                                                                       |
+| `radio`         | `label()`         | projection in the live @else; ✅ — moved under `radio-group/` by the entry-point split, same component |
+| `switch`        | `label()`         | projection in the live @else; ✅                                                                       |
+| `dropzone`      | `files()`         | ✅                                                                                                     |
+| `menu-item`     | `icon()`          | ✅                                                                                                     |
+| `sidenav`       | `brandRoute()`    | [dsBrandName] is directive-gated — see the sweep above                                                 |
+| `sidenav-group` | `expandable()`    | ✅ with label + expandable set                                                                         |
+| `sidenav-item`  | `routerLink()`    | no default slot by design                                                                              |
+| `stat`          | `delta()`         | ✅ with the delta input set                                                                            |
+| `table`         | `emptyTemplate()` | [empty] ✅; [bulk-actions] ✅ with `selectedIds` passed as an initial prop                             |
+| `filter-bar`    | `collapsed()`     | drops unslotted content by design                                                                      |
 
 `ds-modal-card` also has projection but does not appear here: its slots are at root level,
 outside any block, and it is one of the 31 that register under an alias.
@@ -140,13 +140,14 @@ outside any block, and it is one of the 31 that register under an alias.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Fifteen of them:
+absent from the generated surface entirely. Eighteen of them:
 
 `[dsBrandName]` · `[dsCellTemplate]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
 `[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
 `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
 `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
-`[dsReserveMessages]` · `[dsTooltip]`
+`[dsReserveMessages]` · `[dsTableColumns]` · `[dsTableExport]` ·
+`[dsTableResize]` · `[dsTooltip]`
 
 Most are template-slot markers for the picker family (`dsOptionTemplate`,
 `dsPanelHeaderTemplate`, …) and are meaningless without an Angular template
@@ -162,6 +163,27 @@ or add a design-sync-local component for a feature that cannot be seen in a stat
 only if the design host ever renders interactive cards.
 
 `[dsProjectionDropped]` is dev-only and never ships a node in production.
+
+**The three `[dsTable*]` directives are the table's opt-in features** (2026-09-05), and they are a
+different case from the template-slot markers above: they carry real behaviour, not a marker. They
+exist because `ds-table` shipped the data-grid features to everyone who ever drew a table — moving
+reorder, the column picker and resizing behind directives took its marginal cost from **35 647 to
+16 410 B gzip** and sent `@angular/cdk/drag-drop` with them.
+
+**What the elements route loses, and why it is acceptable.** A design card shows a table in a
+state, not a reader rearranging one: the picker opens on a click, resizing is a drag, and the CSV
+button downloads a file — none of the three is visible in a static capture, exactly the argument
+already recorded above for `[dsTooltip]`. The features the card CAN show — columns, rows, sorting,
+selection, pagination — are all still inputs on `ds-table` itself and reach the element unchanged.
+**Nothing that was visible in a card before has stopped being visible**, because the built-in
+export button was the only rendered affordance of the three and a card never pressed it.
+
+The three panel components they create (`ds-table-columns-panel`, `ds-table-columns-trigger`,
+`ds-table-export-button`) carry `@internal` and are created imperatively through a
+`ViewContainerRef`, so they appear in no template and no consumer can write one.
+`check-manual-surface.mjs` skips a component that is BOTH marked internal AND rendered by no
+template of ours — the second half matters, because `CalendarDay` and `FieldMessage` are internal
+too and do render inside their parents' previews.
 
 ## 3. Imperative APIs that do not cross the boundary
 

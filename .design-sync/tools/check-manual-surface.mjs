@@ -162,12 +162,24 @@ const pascalOfTag = (tag) =>
   tag
     .replace(/^ds-/, '')
     .replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
+// Every template we ship, so a component can be asked whether anything of ours renders it.
+const libTemplates = walk(join(repo, 'src', 'lib'), '.component.html').map(
+  (file) => readFileSync(file, 'utf8'),
+);
 const componentTags = new Set();
 for (const file of walk(join(repo, 'src', 'lib'), '.component.ts')) {
-  const match = /selector:\s*'(ds-[a-z0-9-]+)'/.exec(
-    readFileSync(file, 'utf8'),
+  const source = readFileSync(file, 'utf8');
+  const match = /selector:\s*'(ds-[a-z0-9-]+)'/.exec(source);
+  if (!match) continue;
+  // Marked internal AND rendered by no template of ours: a directive creates it imperatively,
+  // so it can never appear in a consumer's markup or inside another component's preview. There
+  // is no usage for the design agent to read and no section to point at. A component that is
+  // merely internal still counts - CalendarDay and FieldMessage render inside their parents.
+  const renderedByUs = libTemplates.some((template) =>
+    template.includes(`<${match[1]}`),
   );
-  if (match) componentTags.add(match[1]);
+  if (source.includes('@internal') && !renderedByUs) continue;
+  componentTags.add(match[1]);
 }
 const docNames = new Set(
   readdirSync(join(repo, '.design-sync', 'docs'))

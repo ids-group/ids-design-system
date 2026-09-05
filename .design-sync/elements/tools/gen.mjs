@@ -412,6 +412,13 @@ for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
         : null;
     if (!selector?.startsWith('ds-') || selector.includes(',')) return;
 
+    // A component marked internal is created imperatively by a directive and appears in no
+    // template, so the alias scan below cannot see it and it would register under its real
+    // tag. Registering it buys nothing - no caller can write one - and risks the nested
+    // custom-element defect the alias exists to avoid, since Angular's own createComponent
+    // makes a node the browser would then upgrade a second time.
+    if (source.getText().includes('@internal')) return;
+
     // A generic component's own type parameters can't cross into a non-generic
     // React wrapper — widen them rather than emit unbound names.
     const typeParams = (node.typeParameters ?? []).map(
