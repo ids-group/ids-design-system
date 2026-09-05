@@ -138,7 +138,10 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: 7px var(--space-2-5);
+
+  /* The dot's gutter is on EVERY row, not only the current one: put it on `.is-active` alone and
+     the label jumps right the moment a row is selected. */
+  padding: 7px var(--space-2-5) 7px var(--space-5);
   color: var(--text-secondary);
   font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
   border-radius: var(--radius-md);
@@ -180,9 +183,22 @@
 .link.is-active,
 .link.is-active:hover,
 .link.is-active:active {
+  position: relative;
   background: var(--accent-muted);
   color: var(--accent-strong);
   font-weight: var(--font-weight-bold);
+}
+
+.link.is-active::before {
+  content: '';
+  position: absolute;
+  left: var(--space-2);
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: var(--accent-strong);
 }
 
 .start-link {
@@ -217,6 +233,23 @@
 
 .nav-group {
   border-radius: var(--ds-radius-control);
+}
+
+/* The thread runs THROUGH the dot's own centre (--space-2 plus half of a 5px dot) and therefore
+   inside the row, under its fill: the current row's dot is a node on the thread, not a second mark
+   beside it. No indent and no padding for it — either would take width from the row and narrow the
+   fill, and the fill is what this treatment is built around. */
+.group-items {
+  position: relative;
+}
+.group-items::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--space-2) + 2px);
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--border-divider);
 }
 
 .group-row {

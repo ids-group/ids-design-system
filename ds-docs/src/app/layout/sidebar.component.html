@@ -88,23 +88,25 @@
           </button>
 
           @if (isGroupOpen(group)) {
-            @for (item of group.items; track item.anchor) {
-              <a
-                class="link"
-                [routerLink]="urlForAnchor(group.path, item.anchor)"
-                [state]="linkState(group.path)"
-                [class.is-active]="isActive(item.anchor)"
-                [attr.aria-current]="isActive(item.anchor) ? 'page' : null"
-                (click)="onItem(item.anchor)">
-                <span class="link-label">
-                  {{ item.label }}
-                </span>
+            <div class="group-items">
+              @for (item of group.items; track item.anchor) {
+                <a
+                  class="link"
+                  [routerLink]="urlForAnchor(group.path, item.anchor)"
+                  [state]="linkState(group.path)"
+                  [class.is-active]="isActive(item.anchor)"
+                  [attr.aria-current]="isActive(item.anchor) ? 'page' : null"
+                  (click)="onItem(item.anchor)">
+                  <span class="link-label">
+                    {{ item.label }}
+                  </span>
 
-                @if (item.new) {
-                  <span class="nav-new"> new </span>
-                }
-              </a>
-            }
+                  @if (item.new) {
+                    <span class="nav-new"> new </span>
+                  }
+                </a>
+              }
+            </div>
           }
         </div>
       }
