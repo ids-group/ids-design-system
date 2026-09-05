@@ -68,31 +68,24 @@
         <div
           class="nav-group"
           [class.is-open]="isGroupOpen(group)">
-          <div class="group-row">
-            <a
-              class="group group-link"
-              [routerLink]="urlForGroupPath(group.path)"
-              [class.is-active]="isGroupActive(group)"
-              (click)="navigated.emit()">
+          <!-- These groups are a way of arranging the nav, not destinations: every one of them
+               would have "opened" on its own first section, closing the page being read. -->
+          <button
+            type="button"
+            class="group-row"
+            [class.is-open]="isGroupOpen(group)"
+            [class.is-active]="isGroupActive(group)"
+            [attr.aria-expanded]="isGroupOpen(group)"
+            (click)="toggleGroup(group)">
+            <span class="group">
               {{ group.title }}
-            </a>
+            </span>
 
-            <!-- Separate from the heading, which still navigates to the group page: one control
-               cannot both go somewhere and stay to open something. -->
-            <button
-              type="button"
-              class="group-toggle"
-              [class.is-open]="isGroupOpen(group)"
-              [attr.aria-expanded]="isGroupOpen(group)"
-              [attr.aria-label]="
-                (isGroupOpen(group) ? 'Collapse ' : 'Expand ') + group.title
-              "
-              (click)="toggleGroup(group)">
-              <ds-icon
-                name="chevronDown"
-                [size]="14" />
-            </button>
-          </div>
+            <ds-icon
+              class="group-caret"
+              name="chevronDown"
+              [size]="14" />
+          </button>
 
           @if (isGroupOpen(group)) {
             @for (item of group.items; track item.anchor) {

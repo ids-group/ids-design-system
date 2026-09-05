@@ -125,11 +125,7 @@
   color: var(--text-secondary);
   padding: var(--space-4) var(--space-2) var(--space-1-5);
 }
-.group-link {
-  text-decoration: none;
-  cursor: pointer;
-}
-.group-link.is-active {
+.group-row.is-active .group {
   color: var(--text-primary);
 }
 
@@ -231,49 +227,39 @@
   }
 }
 
-/* The heading keeps its own click target and the chevron gets a separate one, so opening a group
-   and going to its page stay two different gestures. */
 .group-row {
   display: flex;
   align-items: center;
-}
-
-.group-row .group-link {
-  flex: 1;
-  min-width: 0;
-}
-
-.group-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: var(--space-6);
-  height: var(--space-6);
-  padding: 0;
+  width: 100%;
+  padding: 0 var(--space-2) 0 0;
   border: 0;
   background: none;
-  color: var(--text-tertiary);
+  text-align: left;
   cursor: pointer;
   border-radius: var(--radius-sm);
 
-  ds-icon {
-    transition: transform var(--duration-fast) var(--ease-standard);
+  .group {
+    flex: 1;
+    min-width: 0;
+    padding-right: var(--space-1);
   }
 
-  ds-icon {
-    transform: rotate(-90deg);
-  }
-
-  &.is-open ds-icon {
-    transform: rotate(0deg);
-  }
-
-  &:hover {
+  &:hover .group {
     color: var(--text-primary);
   }
 
   &:focus-visible {
     @include focus.ring;
+  }
+}
+
+.group-caret {
+  flex: none;
+  color: var(--text-tertiary);
+  transform: rotate(-90deg);
+  transition: transform var(--duration-fast) var(--ease-standard);
+
+  .group-row.is-open & {
+    transform: rotate(0deg);
   }
 }
