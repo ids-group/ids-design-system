@@ -24,7 +24,9 @@ export interface RadioProps {
   /** Standalone two-way binding, and the ONLY way to drive a lone radio: this component is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form control — a radio is one option of a choice, not a value of its own — and a second accessor on the option would fight it. A lone radio in a form binds through `[(checked)]`, or becomes a one-option `ds-radio-group`. When inside `ds-radio-group`, `isChecked()` derives from the group value and this input is not read. */
   checked?: boolean;
   onCheckedChange?: (value: boolean) => void;
-  /** Disables the radio; a disabled parent `ds-radio-group` also disables it. */
+  /** Lets a checked standalone radio be cleared by clicking it again. Off by default, and ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it would leave the group with no value through a gesture the group cannot see. */
+  deselectable?: boolean;
+  /** A disabled parent `ds-radio-group` also disables it, whatever this is set to. */
   disabled?: boolean;
   /** Native `name` attribute — overridden by the group's name when inside `ds-radio-group`. */
   name?: string;
@@ -32,7 +34,7 @@ export interface RadioProps {
   value?: unknown;
   /** Overrides the auto-generated id used for the input and its label's `for`. */
   inputId?: string | null;
-  /** Control size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
   /** Marks the radio required — shows an asterisk on the label and sets `aria-required`. */
   required?: boolean;
