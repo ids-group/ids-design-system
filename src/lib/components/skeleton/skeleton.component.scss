@@ -18,8 +18,12 @@
      grew with the monitor, so on a wide screen the band spanned everything and the gradient read as
      a flat wash: nothing appeared to move because every point changed at once. Wide, because a
      narrow band crossing quickly reads as a twitch rather than a swell. */
-  --_skeleton-wave-width: var(--ds-skeleton-wave-width, 26rem);
-  --_skeleton-wave-duration: var(--ds-skeleton-wave-duration, 2200ms);
+
+  /* The distance from one wave to the next of the same kind, measured along the direction the
+     waves travel. The quiet one sits at half of it, so crossings alternate at exactly even
+     intervals. */
+  --_skeleton-wave-period: var(--ds-skeleton-wave-period, 56rem);
+  --_skeleton-wave-duration: var(--ds-skeleton-wave-duration, 3400ms);
 
   /* Down and to the right rather than straight across. A band square to its travel sweeps the whole
      height of every placeholder at once; tilted, it arrives at the top of one and the bottom of
@@ -32,7 +36,7 @@
      made the main wave hurry. Two bands of different weight cross in the time one used to. */
   --_skeleton-wave-echo-color: var(
     --ds-skeleton-wave-echo-color,
-    color-mix(in srgb, var(--_skeleton-shimmer-color) 45%, transparent)
+    color-mix(in srgb, var(--_skeleton-shimmer-color) 30%, transparent)
   );
 
   display: block;
@@ -60,21 +64,23 @@
      Two tones of the same surface rather than a bright band: the wave should read as colour
      washing across the placeholders, not as a light being shone on them. */
 
-  /* Two bands, and neither has a flat core — each peaks at a point and is ramp either side, which
-     is what keeps the pass from reading as a stripe with edges. */
-  background-image: linear-gradient(
+  /* `repeating-linear-gradient`, not a repeated tile: an angled gradient inside a rectangular tile
+     does not meet itself at the tile edges, and every boundary shows as a diagonal seam across the
+     page. A repeating gradient is periodic along its OWN axis, so there are no tile edges to meet
+     — the pattern is continuous everywhere by construction.
+
+     The first and last stops are the same colour, so one period joins the next with no step. Neither
+     band has a flat core: each peaks at a point and is ramp either side, which is what keeps a pass
+     from reading as a stripe with edges. */
+  background-image: repeating-linear-gradient(
     var(--_skeleton-wave-angle),
-    transparent 0%,
-    var(--_skeleton-wave-echo-color) 17%,
-    transparent 34%,
-    transparent calc(50% - var(--_skeleton-wave-width)),
-    var(--_skeleton-shimmer-color) 50%,
-    transparent calc(50% + var(--_skeleton-wave-width)),
-    transparent 100%
+    var(--_skeleton-wave-echo-color) 0,
+    transparent calc(var(--_skeleton-wave-period) / 4),
+    var(--_skeleton-shimmer-color) calc(var(--_skeleton-wave-period) / 2),
+    transparent calc(var(--_skeleton-wave-period) * 0.75),
+    var(--_skeleton-wave-echo-color) var(--_skeleton-wave-period)
   );
   background-attachment: fixed;
-  background-size: 100vw 440vh;
-  background-repeat: no-repeat;
   will-change: background-position;
 
   /* Declared HERE, not in the global partial: Angular's emulated encapsulation rewrites the
@@ -83,15 +89,17 @@
   animation: ds-skeleton-shimmer-loop var(--_skeleton-wave-duration) linear infinite;
 }
 
-/* A full viewport of travel each way, so the tile is entirely off-screen at both ends and the
-   restart has nothing visible to cut. The vertical half is what tilts the path: the band travels
-   down as it crosses, so it arrives diagonally rather than sweeping the whole page height at once. */
+/* Exactly ONE period of travel, resolved along the 45 degree path: moving by period / sqrt(2) in
+   each axis advances the gradient by exactly one period along its own direction, which lands on a
+   state identical to the start. The loop therefore has no seam to hide rather than one hidden
+   off-screen, and equal steps in x and y make the path a true 45 degrees. */
 @keyframes ds-skeleton-shimmer-loop {
   from {
-    background-position: -100vw -220vh;
+    background-position: 0 0;
   }
 
   to {
-    background-position: 100vw 220vh;
+    background-position: calc(var(--_skeleton-wave-period) / 1.4142)
+      calc(var(--_skeleton-wave-period) / 1.4142);
   }
 }

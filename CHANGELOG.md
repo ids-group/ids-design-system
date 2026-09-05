@@ -11,15 +11,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ### Changed
 
 - **The skeleton shimmer reads as a wave now, not a wash.** It travels diagonally, down and to the
-  right at about 42°, so it arrives at the top of one placeholder and the bottom of another instead
-  of sweeping every row in step. The band has a size of its own — `--ds-skeleton-wave-width`, 26rem
-  — rather than a share of the viewport: sized as a fraction it grew with the monitor, covered a
-  wide screen all at once, and nothing appeared to move. Most of that width is ramp and only a
-  quarter is the tone at full strength, which is what makes it arrive and leave rather than switch.
-  It runs on its own `--ds-skeleton-wave-duration`, 2800ms, instead of the shared loop token,
-  because a placeholder is background and should never pull the eye. The tone is one soft step
-  darker than the base, unchanged from before — a shadow moving over the placeholders, not a light
-  switched on over them. `--ds-skeleton-wave-angle` tilts the band itself.
+  right at 45°, so it arrives at the top of one placeholder and the bottom of another instead of
+  sweeping every row in step. Two waves cross per period — a main one and a quieter one exactly
+  between two mains — which fills the wait a single band left without making the main wave hurry.
+  Neither has a flat core: each peaks at a point and is ramp either side, so a pass arrives and
+  leaves rather than switching. The tone is one soft step darker than the base, unchanged: a shadow
+  moving over the placeholders, not a light switched on over them.
+  It is seamless by construction rather than by hiding the seam. The pattern is a repeating gradient
+  periodic along its own axis, so there are no tile edges to meet — an angled gradient in a
+  rectangular tile does not, and every boundary showed as a diagonal line across the page. Travel is
+  exactly one period, resolved along the 45° path, which lands on a state identical to the start.
+  Four hooks, all with defaults — `--ds-skeleton-wave-period` (56rem),
+  `--ds-skeleton-wave-duration` (3400ms), `--ds-skeleton-wave-angle` (135deg) and
+  `--ds-skeleton-wave-echo-color`.
 
 ## 0.12.1 — 2026-09-05
 

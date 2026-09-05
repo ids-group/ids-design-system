@@ -2680,6 +2680,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
       },
       {
+        "name": "--ds-check-mark-enter-duration",
+        "value": "var(--ds-motion-check-enter-duration)",
+        "notes": "How long a check mark takes to land, for the marks under this scope only. Defaults to the --ds-motion-check-enter-duration role."
+      },
+      {
+        "name": "--ds-check-mark-enter-easing",
+        "value": "var(--ds-motion-check-enter-easing)",
+        "notes": "Easing a check mark lands on, for the marks under this scope only. Defaults to the --ds-motion-check-enter-easing role."
+      },
+      {
+        "name": "--ds-check-mark-exit-duration",
+        "value": "var(--ds-motion-check-exit-duration)",
+        "notes": "How long a check mark takes to leave, for the marks under this scope only. Defaults to the --ds-motion-check-exit-duration role."
+      },
+      {
+        "name": "--ds-check-mark-exit-easing",
+        "value": "var(--ds-motion-check-exit-easing)",
+        "notes": "Easing a check mark leaves on, for the marks under this scope only. Defaults to the --ds-motion-check-exit-easing role."
+      },
+      {
         "name": "--check-size",
         "value": "20px",
         "notes": "20px — checkbox/radio box glyph (density-scaled)."
@@ -3293,6 +3313,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-field-height",
+        "value": "var(--field-h-#{$size})",
+        "notes": "Control-box height for the field family, overriding the size class. The sm/md/lg defaults come from the --field-h-* scale; set this to pin one height regardless of size."
+      },
+      {
         "name": "--ds-field-label-font-size",
         "value": "var(--font-size-xs)",
         "notes": "Label size for the whole field family — input, textarea, select, both pickers and radio-group resolve through it."
@@ -3318,9 +3343,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label letter-spacing, for uppercase labels that need opening up. Default `normal`."
       },
       {
-        "name": "--ds-field-height",
-        "value": "var(--field-h-#{$size})",
-        "notes": "Control-box height for the field family, overriding the size class. The sm/md/lg defaults come from the --field-h-* scale; set this to pin one height regardless of size."
+        "name": "--ds-field-focus-shadow-error",
+        "value": "—",
+        "notes": "Field focus ring shadow in error state (defaults to --focus-field-error)."
       }
     ]
   },
@@ -3407,6 +3432,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-filter-bar-panel-gap",
         "value": "var(--space-4)",
         "notes": "Vertical space between filters stacked in the overflow panel (defaults to --space-4, looser than the row because they read as a form there)."
+      }
+    ]
+  },
+  {
+    "component": "Icon Base",
+    "selector": ".icon-base",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-icon-size",
+        "value": "var(--icon-md)",
+        "notes": "Icon glyph box for every icon under this scope. Defaults to --icon-md; a per-instance `size` input beats it."
       }
     ]
   },
@@ -3608,6 +3645,28 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-stack-gap",
         "value": "var(--space-stack)",
         "notes": "Default gap for vertically stacked layouts (defaults to --space-stack)."
+      }
+    ]
+  },
+  {
+    "component": "Link",
+    "selector": ".link",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-link-color",
+        "value": "var(--text-link)",
+        "notes": "Link text colour. Defaults to --text-link."
+      },
+      {
+        "name": "--ds-link-color-hover",
+        "value": "color-mix(in srgb, var(--_link-color) 80%, black)",
+        "notes": "Link colour on hover. Defaults to the link colour mixed 80% with black."
+      },
+      {
+        "name": "--ds-link-color-active",
+        "value": "color-mix(in srgb, var(--_link-color) 65%, black)",
+        "notes": "Link colour while pressed. Defaults to the link colour mixed 65% with black."
       }
     ]
   },
@@ -4513,6 +4572,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Press",
+    "selector": ".press",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-press-brightness",
+        "value": "0.9",
+        "notes": "How far a pressed control darkens. Defaults to 0.9, applied as a brightness filter."
+      },
+      {
+        "name": "--ds-press-scale",
+        "value": "0.97",
+        "notes": "How far a pressed control shrinks. Defaults to 0.97."
+      }
+    ]
+  },
+  {
     "component": "Progress",
     "selector": ".progress",
     "description": "",
@@ -4987,19 +5063,24 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Skeleton shimmer sweep colour (defaults to --surface-muted)."
       },
       {
-        "name": "--ds-skeleton-wave-width",
-        "value": "26rem",
-        "notes": "26rem — how wide the shimmer wave is, ramps included. A size of its own rather than a share of the viewport, which grew with the monitor and read as a flat wash."
+        "name": "--ds-skeleton-wave-period",
+        "value": "56rem",
+        "notes": "56rem — the distance from one wave to the next of the same kind, measured along the direction they travel. The quiet wave sits at half of it, so crossings alternate at exactly even intervals."
       },
       {
         "name": "--ds-skeleton-wave-duration",
-        "value": "2800ms",
-        "notes": "2800ms — one pass of the shimmer wave. Slower than the shared loop token on purpose: a placeholder is background and should not pull the eye."
+        "value": "3400ms",
+        "notes": "3400ms — one period of travel, in which two waves cross: a quiet one and a main one. Slower than the shared loop token on purpose: a placeholder is background and should not pull the eye."
       },
       {
         "name": "--ds-skeleton-wave-angle",
         "value": "135deg",
-        "notes": "135deg — the tilt of the wave's own band. The path it travels is diagonal regardless; this is the angle of the band across it."
+        "notes": "135deg — the direction the waves travel, down and to the right. The gradient repeats along this axis, which is what leaves no seam to meet."
+      },
+      {
+        "name": "--ds-skeleton-wave-echo-color",
+        "value": "color-mix(in srgb, var(--_skeleton-shimmer-color) 30%, transparent)",
+        "notes": "The quieter wave, sitting exactly between two main ones. Defaults to the shimmer tone at 30%, meant to be noticed only as the page not standing still."
       }
     ]
   },
@@ -6641,6 +6722,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Tokens",
+    "selector": ".tokens",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-elevation-overlay",
+        "value": "—",
+        "notes": "Elevation role for a panel anchored to a trigger — popovers, menus, dropdowns, tooltips. Defaults to --shadow-2."
+      },
+      {
+        "name": "--ds-elevation-modal",
+        "value": "—",
+        "notes": "Elevation role for a surface that owns the screen — modals, drawers, sheets, the overlay rail. Defaults to --shadow-4."
+      },
+      {
+        "name": "--ds-elevation-floating",
+        "value": "—",
+        "notes": "Elevation role for a surface above overlays — toasts. Defaults to --shadow-3."
+      },
+      {
+        "name": "--ds-elevation-raised",
+        "value": "—",
+        "notes": "Elevation role for a resting surface that lifts off the page — cards, stats, the segmented thumb. Defaults to --shadow-1."
+      }
+    ]
+  },
+  {
     "component": "Tooltip",
     "selector": ".tooltip",
     "description": "",
@@ -7047,33 +7155,8 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "color"
   },
   {
-    "name": "--ds-elevation-floating",
-    "value": "var(--shadow-3)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-elevation-modal",
-    "value": "var(--shadow-4)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-elevation-overlay",
-    "value": "var(--shadow-2)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-elevation-raised",
-    "value": "var(--shadow-1)",
-    "kind": "other"
-  },
-  {
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
-    "kind": "color"
-  },
-  {
-    "name": "--ds-field-focus-shadow-error",
-    "value": "var(--focus-field-error)",
     "kind": "color"
   },
   {

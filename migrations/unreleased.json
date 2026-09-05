@@ -2,7 +2,7 @@
   "version": "unreleased",
   "items": [],
   "informational": [
-    "The `ds-skeleton` shimmer wave travels diagonally now, is wider and slower, and has three new hooks with defaults — `--ds-skeleton-wave-width` (26rem), `--ds-skeleton-wave-duration` (2800ms) and `--ds-skeleton-wave-angle` (135deg). Its tone is unchanged. A skeleton you never tuned simply reads calmer. NO ACTION."
+    "The `ds-skeleton` shimmer travels diagonally now and crosses as two waves per period, one quiet and one main, with no seam anywhere in the loop. Four new hooks with defaults — `--ds-skeleton-wave-period`, `--ds-skeleton-wave-duration`, `--ds-skeleton-wave-angle`, `--ds-skeleton-wave-echo-color`. The tone is unchanged; a skeleton you never tuned simply reads calmer. NO ACTION."
   ],
   "deleteList": []
 }
