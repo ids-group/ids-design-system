@@ -37,6 +37,18 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const AUDIT = process.argv.includes('--audit');
 const ONLY = process.argv.slice(2).find((arg) => /^\d+\.\d+\.\d+$/.test(arg));
 
+// An argument nobody recognises used to be dropped, so `v0.11.4`, `0.11` and a mistyped
+// `--audti` each reported on Unreleased and exited 0 — an answer to a question that was not asked.
+const unknownArgument = process.argv
+  .slice(2)
+  .find((arg) => arg !== '--audit' && !/^\d+\.\d+\.\d+$/.test(arg));
+if (unknownArgument) {
+  console.error(
+    `check-manifest-coverage: "${unknownArgument}" is neither \`--audit\` nor an <x.y.z> version.`,
+  );
+  process.exit(1);
+}
+
 function libraryFiles() {
   const found = [];
   const crawl = (dir) => {
@@ -80,6 +92,17 @@ function realHooks() {
         .matchAll(DECL_RE))
         symbols.add(decl[1]);
     }
+  }
+  // Nothing resolvable means `src/lib` was not read, and every entry then holds "no public
+  // hook" and is skipped — a green that says "every one is covered" having looked at nothing.
+  // The sibling tool has had this guard from the start; this one exited 0.
+  if (!tokens.size && !tags.size && !symbols.size) {
+    console.error(
+      `check-manifest-coverage: no token, tag or symbol could be read from ${join(ROOT, 'src/lib')}. ` +
+        'Every entry would then name no public hook and be skipped, which is not the same as ' +
+        'every entry being covered.',
+    );
+    process.exit(1);
   }
   return { tokens, tags, symbols };
 }
@@ -163,12 +186,19 @@ const lines = changelog.split('\n');
 
 function blocks() {
   const found = [];
+  let fenced = false;
   for (let i = 0; i < lines.length; i++) {
+    // A fenced sample containing a version-shaped heading used to open a phantom block, which
+    // truncated the real one at that line and left every entry below it unchecked.
+    if (/^\s*```/.test(lines[i])) fenced = !fenced;
+    if (fenced) continue;
     const released = /^## (\d+\.\d+\.\d+)(?: — |$)/.exec(lines[i]);
     const unreleased = /^## Unreleased\s*$/.exec(lines[i]);
     if (released) found.push({ version: released[1], start: i });
     else if (unreleased) found.push({ version: 'unreleased', start: i });
-    else if (/^## /.test(lines[i])) {
+    // `##0.13.0` and an indented `  ## 0.13.0` are invisible to a `^## ` test, so they merged
+    // their entries into the block above and were judged against the wrong manifest.
+    else if (/^\s*##(?!#)\s*\S/.test(lines[i])) {
       // Not a skip: an unrecognised heading merges its entries into the block ABOVE it, so they
       // are checked against the previous version's manifest and pass for the wrong reason.
       console.error(
@@ -248,9 +278,7 @@ const TAGS = (() => {
       .map((line) => line.trim())
       .filter(Boolean)
       .sort((a, b) =>
-        a
-          .slice(1)
-          .localeCompare(b.slice(1), undefined, { numeric: true }),
+        a.slice(1).localeCompare(b.slice(1), undefined, { numeric: true }),
       );
   } catch {
     return [];
@@ -275,7 +303,17 @@ function tokensAt(tag) {
   try {
     const out = execFileSync(
       'git',
-      ['-C', ROOT, 'grep', '-oh', '-e', '--[a-z][a-z0-9-]*', tag, '--', 'src/lib'],
+      [
+        '-C',
+        ROOT,
+        'grep',
+        '-oh',
+        '-e',
+        '--[a-z][a-z0-9-]*',
+        tag,
+        '--',
+        'src/lib',
+      ],
       { encoding: 'utf8', maxBuffer: 1 << 28 },
     );
     for (const match of out.matchAll(/--[a-z][a-z0-9-]*/g))

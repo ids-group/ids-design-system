@@ -120,14 +120,24 @@ const rules = [
     // A bare custom element reached none of the branches and passed unread, along with 127 other
     // values. It resolves against the element map like any other name.
     name: 'FIRES when a removed element still answers at its own tag',
-    item: { id: 'x', kind: 'selector-rename', old: 'ds-old-sheet', new: 'ds-sheet' },
+    item: {
+      id: 'x',
+      kind: 'selector-rename',
+      old: 'ds-old-sheet',
+      new: 'ds-sheet',
+    },
     before: surface({ elements: { 'ds-old-sheet': [] } }),
     after: surface({ elements: { 'ds-old-sheet': [], 'ds-sheet': [] } }),
     expect: 'fire',
   },
   {
     name: 'HOLDS: an element that really went away',
-    item: { id: 'x', kind: 'selector-rename', old: 'ds-old-sheet', new: 'ds-sheet' },
+    item: {
+      id: 'x',
+      kind: 'selector-rename',
+      old: 'ds-old-sheet',
+      new: 'ds-sheet',
+    },
     before: surface({ elements: { 'ds-old-sheet': [] } }),
     after: surface({ elements: { 'ds-sheet': [] } }),
     expect: 'hold',
@@ -149,17 +159,29 @@ const rules = [
   {
     // A field's `error`, `hint` and `touched` are declared on a base class in another file, and
     // reading only the file that holds the `selector:` lost 139 real bindings across 16 elements.
-    // Two verbatim published items — `ds-input[reserveMessage]` and `ds-input[error]` — were
-    // being accused of migrating from nowhere at the current boundary.
+    // `ds-input[reserveMessage]` and `ds-input[error]` are both verbatim published item shapes;
+    // each passes at its OWN boundary, where the input was still declared in the component file,
+    // and each would be accused the moment the same shape were written for a boundary after the
+    // inputs moved up to the base — which is every boundary from now on.
     name: 'HOLDS: a member inherited from a base class is not accused',
-    item: { id: 'x', kind: 'behavior', old: 'ds-input[reserveMessage]', new: null },
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: 'ds-input[reserveMessage]',
+      new: null,
+    },
     before: surface({ elements: { 'ds-input': ['reserveMessage'] } }),
     after: surface({ elements: { 'ds-input': ['reserveMessage'] } }),
     expect: 'hold',
   },
   {
     name: 'FIRES on a member no ancestor declares',
-    item: { id: 'x', kind: 'behavior', old: 'ds-input[neverWasAnInput]', new: null },
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: 'ds-input[neverWasAnInput]',
+      new: null,
+    },
     before: surface({ elements: { 'ds-input': ['reserveMessage'] } }),
     after: surface({ elements: { 'ds-input': ['reserveMessage'] } }),
     expect: 'fire',
@@ -183,7 +205,12 @@ const rules = [
   },
   {
     name: 'FIRES when a renamed CSS class still resolves at its own tag',
-    item: { id: 'x', kind: 'class-rename', old: '.crumb-sep', new: '.crumb-divider' },
+    item: {
+      id: 'x',
+      kind: 'class-rename',
+      old: '.crumb-sep',
+      new: '.crumb-divider',
+    },
     before: surface({ classes: ['crumb-sep'] }),
     after: surface({ classes: ['crumb-sep', 'crumb-divider'] }),
     expect: 'fire',
@@ -200,7 +227,12 @@ const rules = [
   },
   {
     name: 'FIRES on an element that never existed, even when `new` is real',
-    item: { id: 'x', kind: 'selector-rename', old: 'ds-never-was', new: 'ds-real' },
+    item: {
+      id: 'x',
+      kind: 'selector-rename',
+      old: 'ds-never-was',
+      new: 'ds-real',
+    },
     before: surface({ elements: { 'ds-real': [] } }),
     after: surface({ elements: { 'ds-real': [] } }),
     expect: 'fire',
@@ -210,7 +242,12 @@ const rules = [
     // declared compiles and silently does nothing, so consumers really did write these. Four
     // published 0.11.3 items are exactly this and must stay green.
     name: 'HOLDS: a phantom template binding whose replacement is real',
-    item: { id: 'x', kind: 'output-rename', old: 'ds-banner[dismissed]', new: 'closed' },
+    item: {
+      id: 'x',
+      kind: 'output-rename',
+      old: 'ds-banner[dismissed]',
+      new: 'closed',
+    },
     before: surface({ elements: { 'ds-banner': [] } }),
     after: surface({ elements: { 'ds-banner': ['closed'] } }),
     expect: 'hold',
@@ -324,7 +361,10 @@ for (const [version, what] of readOnly) {
     );
   }
   ran++;
-  const clean = !members('ds-input')?.has('neverWasAnInput');
+  // The set has to EXIST for its not-containing something to mean anything: `!undefined` is
+  // true, so an empty surface used to pass this control while proving nothing.
+  const present = members('ds-input');
+  const clean = Boolean(present?.size) && !present.has('neverWasAnInput');
   if (!clean) failed++;
   console.log(
     `${clean ? 'ok   ' : 'FAIL '} v0.12.0 ds-input[neverWasAnInput] is not invented by the walk`,

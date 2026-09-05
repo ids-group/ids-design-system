@@ -127,9 +127,9 @@ export function surfaceAt(tag) {
         `@each\\s+\\$${variable}\\s*(?:,[^)]*?)?\\s+in\\s+\\$([a-z][a-z0-9-]*)`,
       ).exec(text);
       if (!loop) continue;
-      const map = new RegExp(`\\$${loop[1]}\\s*:\\s*\\(([\\s\\S]*?)\\n\\s*\\);`).exec(
-        text,
-      );
+      const map = new RegExp(
+        `\\$${loop[1]}\\s*:\\s*\\(([\\s\\S]*?)\\n\\s*\\);`,
+      ).exec(text);
       if (!map) continue;
       for (const key of map[1].matchAll(/'([a-z0-9]+)'\s*:/gi))
         tokens.add(`${prefix}${key[1]}`);
@@ -215,7 +215,8 @@ export function surfaceAt(tag) {
     // The decorator sits ABOVE its class, so these belong to the first one declared.
     const first = memberSets[0];
     if (first) {
-      for (const alias of text.matchAll(/alias:\s*'([^']+)'/g)) first.add(alias[1]);
+      for (const alias of text.matchAll(/alias:\s*'([^']+)'/g))
+        first.add(alias[1]);
       // A hostDirective's declared inputs are bindable on the host element and appear in no
       // `input()` line of its own — `ds-modal[staticPreview]` is one.
       for (const host of text.matchAll(/inputs:\s*\[([^\]]*)\]/g))
@@ -259,7 +260,10 @@ function claims(value) {
   // mentions TableComponent, but the item removes a member of it, not the class.
   // The value form too — `ds-button[variant=outline]` names the same input as `ds-button[variant]`.
   // `data-*` is excluded: the component writes those itself, so they are not inputs to resolve.
-  const attr = /^([a-z][\w-]*)\[([\w-]+)(?:\s*[~|^$*]?=\s*['"]?[^\]'"]*['"]?)?\]$/.exec(text);
+  const attr =
+    /^([a-z][\w-]*)\[([\w-]+)(?:\s*[~|^$*]?=\s*['"]?[^\]'"]*['"]?)?\]$/.exec(
+      text,
+    );
   if (attr && !attr[2].startsWith('data-'))
     return [{ kind: 'member', element: attr[1], name: attr[2], bare: true }];
 
@@ -272,9 +276,21 @@ function claims(value) {
   if (bareTag) return [{ kind: 'element', name: bareTag[1], bare: true }];
 
   const found = [];
+  // A value that is NOTHING BUT tokens and separators is a list of bare claims, not prose. Read
+  // per-value, one item listing five renamed toast tokens made every claim non-bare, so the
+  // "gone at the new tag" half — the half that proves the rename happened — was skipped for all
+  // five. `TableComponent.sortKey.set()` is not a list and stays exempt, which is the case the
+  // bare/non-bare distinction exists for.
+  const listOnly =
+    text.replace(/--[a-z][a-z0-9-]*/g, '').replace(/[\s,/|]+/g, '').length ===
+    0;
   for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))
     if (!match[0].endsWith('-'))
-      found.push({ kind: 'token', name: match[0], bare: text === match[0] });
+      found.push({
+        kind: 'token',
+        name: match[0],
+        bare: text === match[0] || listOnly,
+      });
   if (found.length) return found;
 
   const bareClass = /^\.([a-z][a-z0-9-]*)$/.exec(text);
@@ -384,6 +400,10 @@ function sweep() {
     process.exit(1);
   }
   if (unreadable.length) {
+    // The defects come out first: an unreadable boundary elsewhere is no reason to withhold what
+    // the trees that DID read do not support.
+    if (defects.length)
+      report(defects, unresolved, checked, skipped, unchecked);
     console.error(
       `check-manifest-truth: ${unreadable.length} manifest(s) could not be read at their own ` +
         `boundary, so nothing is known about them:\n  ${unreadable.join('\n  ')}`,
@@ -409,26 +429,38 @@ export function checkItem(item, before, after, prevTag, tag) {
   // (`avatarTint(seed, { chroma })`) yields no single name to look up. Counting them is the
   // difference between a green that means "verified" and one that means "nothing was read".
   const unchecked = [];
-  for (const field of ['old', 'new']) {
-    const value = item[field];
-    if (typeof value === 'string' && value.trim() && !claims(value).length)
-      unchecked.push(`${item.id}: ${field} \`${value.trim()}\``);
-  }
 
   const oldMember = claims(item.old).find((claim) => claim.kind === 'member');
+  // A bare `new` beside an element-scoped `old` means the same element's new member name — but
+  // only while that element still answers at the new tag. Where the selector was renamed in the
+  // same release the element is unknown there, `resolves` returns null, and ANY string passed.
+  const scopeSurvives =
+    oldMember && after.elements.has(oldMember.element) ? oldMember : null;
   const newClaims =
-    oldMember &&
+    scopeSurvives &&
     typeof item.new === 'string' &&
     /^[\w-]+$/.test(item.new.trim())
       ? [
           {
             kind: 'member',
-            element: oldMember.element,
+            element: scopeSurvives.element,
             name: item.new.trim(),
             bare: true,
           },
         ]
       : claims(item.new);
+
+  // Counted from the lists the check actually consumes. Reading `claims(item.new)` here instead
+  // reported 21 items as "nothing was verified about these" while their `new` had in fact been
+  // resolved, through the member reinterpretation just above.
+  for (const [field, list] of [
+    ['old', claims(item.old)],
+    ['new', newClaims],
+  ]) {
+    const value = item[field];
+    if (typeof value === 'string' && value.trim() && !list.length)
+      unchecked.push(`${item.id}: ${field} \`${value.trim()}\``);
+  }
   const targetExists = newClaims.some(
     (claim) => resolves(after, claim) === true,
   );
@@ -466,8 +498,12 @@ export function checkItem(item, before, after, prevTag, tag) {
       // nothing, so a consumer really could have written one — but a token, an element or a class
       // that never existed is a manifest describing a rename that never happened, and forgiving
       // it because the REPLACEMENT is real leaves the rarer half of the failure as the only half
-      // caught. 48 of 99 published rename items had this check inert.
-      if (claim.kind === 'member' && targetExists && !(isImportedName && claim.bare))
+      // caught, across a large share of the 99 published rename and removal items.
+      if (
+        claim.kind === 'member' &&
+        targetExists &&
+        !(isImportedName && claim.bare)
+      )
         continue;
       defects.push(
         targetExists
