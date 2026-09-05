@@ -19,13 +19,21 @@
      a flat wash: nothing appeared to move because every point changed at once. Wide, because a
      narrow band crossing quickly reads as a twitch rather than a swell. */
   --_skeleton-wave-width: var(--ds-skeleton-wave-width, 26rem);
-  --_skeleton-wave-duration: var(--ds-skeleton-wave-duration, 2800ms);
+  --_skeleton-wave-duration: var(--ds-skeleton-wave-duration, 2200ms);
 
   /* Down and to the right rather than straight across. A band square to its travel sweeps the whole
      height of every placeholder at once; tilted, it arrives at the top of one and the bottom of
      another, which is what makes the movement read as one wave over a page rather than as rows
      blinking in step. */
   --_skeleton-wave-angle: var(--ds-skeleton-wave-angle, 135deg);
+
+  /* A second, quieter wave riding a third of a tile ahead of the main one. It is not a decoration:
+     one band per pass left a long empty wait between crossings, and shortening the loop to fill it
+     made the main wave hurry. Two bands of different weight cross in the time one used to. */
+  --_skeleton-wave-echo-color: var(
+    --ds-skeleton-wave-echo-color,
+    color-mix(in srgb, var(--_skeleton-shimmer-color) 45%, transparent)
+  );
 
   display: block;
   position: relative;
@@ -52,17 +60,20 @@
      Two tones of the same surface rather than a bright band: the wave should read as colour
      washing across the placeholders, not as a light being shone on them. */
 
-  /* Long ramps, short core: most of the band is the transition, which is what makes the tone
-     arrive and leave rather than switch. */
+  /* Two bands, and neither has a flat core — each peaks at a point and is ramp either side, which
+     is what keeps the pass from reading as a stripe with edges. */
   background-image: linear-gradient(
     var(--_skeleton-wave-angle),
+    transparent 0%,
+    var(--_skeleton-wave-echo-color) 17%,
+    transparent 34%,
     transparent calc(50% - var(--_skeleton-wave-width)),
-    var(--_skeleton-shimmer-color) calc(50% - var(--_skeleton-wave-width) / 4),
-    var(--_skeleton-shimmer-color) calc(50% + var(--_skeleton-wave-width) / 4),
-    transparent calc(50% + var(--_skeleton-wave-width))
+    var(--_skeleton-shimmer-color) 50%,
+    transparent calc(50% + var(--_skeleton-wave-width)),
+    transparent 100%
   );
   background-attachment: fixed;
-  background-size: 100vw 400vh;
+  background-size: 100vw 440vh;
   background-repeat: no-repeat;
   will-change: background-position;
 
@@ -77,10 +88,10 @@
    down as it crosses, so it arrives diagonally rather than sweeping the whole page height at once. */
 @keyframes ds-skeleton-shimmer-loop {
   from {
-    background-position: -100vw -200vh;
+    background-position: -100vw -220vh;
   }
 
   to {
-    background-position: 100vw 200vh;
+    background-position: 100vw 220vh;
   }
 }
