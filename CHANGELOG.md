@@ -21,8 +21,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   <ds-table [reorderableColumns]="true" [resizableColumns]="true" [exportButton]="true" />
 
   <!-- now: add the directive to the component's imports, and its attribute here -->
-  <ds-table dsTableColumns [reorderableColumns]="true" dsTableResize dsTableExport />
+  <ds-table dsTableColumns reorderableColumns dsTableResize dsTableExport />
   ```
+
+  Every switch above reads as a boolean attribute, so its bare presence turns it on and
+  `[reorderableColumns]="true"` is the same thing written longer. Only `[dsTableExport]="false"`
+  earns a value, and it turns the built-in button off while keeping the feature.
 
   | feature | directive | class, and where it lives | its inputs |
   | --- | --- | --- | --- |

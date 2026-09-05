@@ -149,7 +149,7 @@
       "new": "dsTableExport",
       "action": "Import DsTableExport from '@ids-group-ltd/ids-design-system/table-export', add it to the component's imports, and replace [exportButton]=\"true\" on the element with the dsTableExport attribute. Move exportFilename, exportFetcher and (exportFailed) bindings across unchanged — they are the directive's inputs now and still sit on the same element.",
       "appliesWhen": "A <ds-table> that renders the built-in CSV button or binds any export input. NOT affected: a table that only calls table.runExport() from a button of its own — those methods stay on the component and keep working.",
-      "pitfall": "The bindings keep type-checking after the rename because they sit on the same element, so a build can pass with the directive never imported and the export simply absent. Dev mode warns; a production build does not.",
+      "pitfall": "Forgetting the import is a build error, not a silent loss: exportFilename, exportFetcher and exportFailed left the component with the button, so a template that still binds them fails with NG8002 \"Can't bind to 'exportFetcher' since it isn't a known property of 'ds-table'\". The silent case is the other one — a table that renders no export binding at all and drives the feature from a button of its own through runExport() or exportCsv(): those still compile, and with no directive present they do nothing but log a development-mode warning.",
       "surface": "template",
       "searchHints": [
         "exportButton",
