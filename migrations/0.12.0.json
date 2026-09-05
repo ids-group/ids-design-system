@@ -1,6 +1,32 @@
 {
   "version": "0.12.0",
-  "items": [],
+  "items": [
+    {
+      "id": "package-ships-one-bundle-per-entry-point",
+      "kind": "behavior",
+      "surface": "config",
+      "old": "fesm2022",
+      "new": null,
+      "action": "Point any tooling of your own that reads the installed package by FILE PATH at the per-entry-point layout, or have it resolve through the package's exports instead of globbing.",
+      "appliesWhen": "Only your own scripts, generators and bundler config that open files inside the installed package. Every import statement is unaffected: the package root exports the same names it always did, so application code needs no edit.",
+      "pitfall": "Nothing throws. A script that read the single bundle or the single type file now reads one entry point's worth and reports a complete result — a generated map, catalogue or size report silently covering a fraction of the library, with no error to say which fraction.",
+      "note": "The library was one bundle and one type file; it is one of each per entry point. That is what lets a bundler drop the components an application does not use, and it changes the shape of the installed tree even though it changes no import.",
+      "verify": "Any file your tooling generates from the installed package names components from more than one area of the library, and its count matches what you expect the library to hold.",
+      "searchHints": [
+        "fesm2022",
+        "@ids-group-ltd/ids-design-system/",
+        "node_modules/@ids-group-ltd"
+      ],
+      "detect": [
+        "fesm2022",
+        "readFileSync",
+        "readdirSync",
+        "node_modules/@ids-group-ltd/ids-design-system",
+        ".d.ts"
+      ],
+      "restore": null
+    }
+  ],
   "deleteList": [
     {
       "id": "dynamic-import-of-whole-package",
