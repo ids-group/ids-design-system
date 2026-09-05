@@ -37,6 +37,10 @@ docs/agent
 components.md
 design-system.md
 
+# The plugin's SKILL and agent prompts are agent-facing contracts too: a reflow already turned a
+# "+ the lockfile" conjunction into a "-" list bullet on the commit gate, and re-nested scoped rules.
+plugins/design-system
+
 # Hand-maintained prose the design agent reads, parsed by .design-sync/tools/check-doc-api.mjs —
 # reflowing its tables and fenced blocks is a change to what that check reads.
 .design-sync/docs

@@ -29,7 +29,7 @@ demands them — predates the current contract (an older `node_modules` copy), a
 as-is is how an undetectable item reaches the finder.** `pitfall` and `appliesWhen` are OPTIONAL:
 most shipped items legitimately omit them — their absence is never grounds to enrich, and inventing
 either is forbidden. So for
-every item that lacks them, ADD the fields from what the item's own `note` already says — this is enrichment, not a
+every item that lacks a REQUIRED field, ADD that field from what the item's own `note` already says — this is enrichment, not a
 rewrite: you are not changing the migration, you are stating where to look for it (and, for
 `action`, lifting the imperative out of the note so the applier executes a field, not a paragraph). Read the note for
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
@@ -186,7 +186,8 @@ Return ONLY a fenced ```json block:
 }
 
 `map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `surface` is
-on every item; `detect` on every behavioural one and `verify` on every behavioural one AND every
+on every item; `detect` on every behavioural one whose surface includes `typescript` or `config`
+(style is exempt — see above) and `verify` on every behavioural one AND every
 `value-remap` (see above); `restore` wherever a default moved. `supersedes` (`<version>#<id>`, on
 the LATER item that reverses an earlier one) is carried through from the shipped manifest, or
 emitted from prose ONLY when the block itself names the exact earlier version and change — you

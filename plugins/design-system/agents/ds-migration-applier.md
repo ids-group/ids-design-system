@@ -67,7 +67,8 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
     them. Follow the migration the `action`
     describes and make the real code change — e.g. swap a removed API for its documented replacement,
     wrap an element in a newly-required container, restructure an attribute into a projected slot,
-    update an event handler whose payload changed, or pin a changed default the consumer relied on.
+    update an event handler whose payload changed, or pin a changed default the consumer relied on —
+    the pin snippet is the item's `restore`, verbatim; never improvise one when the field is there.
     Make your best correct effort, keeping the change minimal and idiomatic.
     Record `needsReview` ONLY as a last resort: the change is genuinely too ambiguous or intertwined
     to do safely, OR the `action`/`note` describes no concrete consumer action (a purely visual/informational

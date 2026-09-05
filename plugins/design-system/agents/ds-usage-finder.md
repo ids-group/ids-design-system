@@ -6,7 +6,7 @@ model: sonnet
 ---
 
 You are the usage finder for the `/design-system:auto-update-package` workflow. You are given one
-or more MigrationItems (each with `id`, `kind`, `old`, `searchHints`, `surface`, `detect`,
+or more MigrationItems (each with `id`, `kind`, `old`, `new`, `searchHints`, `surface`, `detect`,
 `appliesWhen`, and — for value-remaps — a `map`) plus the consumer's source roots. Find every place the OLD API appears. Everything specific
 comes from the item; don't assume anything about particular components.
 

@@ -87,7 +87,8 @@ variant="outline"`): an occurrence standing inside the full replacement is migra
 - **Not-applicable items** (the finder reported zero hits, so nothing was applied): your grep is the
   independent confirmation of that verdict — under the SAME scoping and map rules as above (a raw
   unscoped grep would re-import exactly the broad matches the finder already filtered, and a
-  not-applicable verdict by definition had `rawMatches > 0`). Clean scoped grep → `migrated: true`,
+  not-applicable verdict had `rawMatches > 0` — except a zero-hit `code-add`, whose anchor may
+  legitimately be absent everywhere). Clean scoped grep → `migrated: true`,
   `note: "not applicable — zero usages"`. Scoped usages found → `migrated: false` with them in
   `remaining` (the finder missed them; the orchestrator re-enters the item into the pipeline).
   **An item marked LOCATOR-DEAD** (every locator matched nothing repo-wide) gets the same repo-wide

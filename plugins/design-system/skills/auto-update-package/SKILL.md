@@ -150,7 +150,9 @@ delete pass / committed); DELETE it when the run completes. **On skill start (no
 a ledger for this repo shows an unfinished version, summarize it, warn when `git rev-parse HEAD`
 no longer matches `headAtStart` (the tree moved since), and ask the user (AskUserQuestion): resume
 from the recorded step, or start fresh — where fresh means re-running the UNFINISHED version from
-step 1, never skipping past it.
+step 1, never skipping past it. Either way, Phase A setup (the clone, the save-asides, the truth
+check) is re-run first — those artifacts lived in the dead session's scratchpad; only the ledger
+survives.
 
 ## Phase A — Run setup (do once)
 
@@ -183,7 +185,8 @@ step 1, never skipping past it.
    **stable** `X.Y.Z` (drop any prerelease tag — `-beta`, `-rc`, etc.). Semver-sort. The chain =
    every stable version strictly greater than `current` up to and including the latest stable, in
    ascending order. **If a non-dry ledger records an unfinished version, the chain starts THERE,
-   not at `current`** — a post-bump failure leaves the lockfile at a version whose migration never
+   not at `current`** (a dry-run reads that ledger too — it reports the unfinished version instead
+   of resuming it, and never writes to it) — a post-bump failure leaves the lockfile at a version whose migration never
    went green, and computing from the lockfile would silently skip it. Fetch each chain version's
    `peerDependencies` now (`npm view …@V peerDependencies --json` needs no install) and tell the
    user up front which version, if any, will stop the run on an unsatisfied peer.
@@ -213,6 +216,17 @@ step 1, never skipping past it.
    merely has _some_ headings, or a mid-chain version silently becomes a no-migration step). If no
    source covers the whole chain → report and stop. Parse each version's block (its heading to the
    next `## ` or EOF).
+   **Manifest-truth check (run HERE, before any tag checkout).** When the clone's DEFAULT branch
+   carries `tools/check-manifest-truth.mjs`, run `node <clone>/tools/check-manifest-truth.mjs` once
+   (no argument = every manifest) NOW — the tool resolves tags itself but the per-version checkouts
+   below replace the tree that holds it, and no published tag carries the tool. It validates
+   against the tag trees the same three assumptions this workflow executes (`old` resolves at the
+   previous tag; a rename/removal's `old` is gone at `v<V>`; `new` resolves at `v<V>`). Read its
+   OUTPUT, not just the exit code, and record per chain version: "N claim(s) the tree does not
+   support" = a manifest DEFECT; "nothing could be checked" (or a skipped-versions list) =
+   UNVERIFIED, not clean. The two are different evidence, never merged; step 1 of the loop consumes
+   the record, and the final report carries both lists. A clone without the tool = every version
+   UNVERIFIED, said so once.
    **Migration manifests (deterministic bonus, same source priority).** The DS ships a structured
    `migrations/<V>.json` per version (a MigrationPlan mirror of each changelog block). Prefer the
    clone's `migrations/` (default branch has ALL versions — save the whole dir aside). If the clone
@@ -230,8 +244,9 @@ step 1, never skipping past it.
 **Attempts cap (the sole termination guarantee).** Keep ONE integer `attempts` per (target,
 version), starting at 0. It counts FIX cycles only — the initial verify (step 5) does NOT increment.
 Increment by 1 at the top of every step-6 entry (whether reached from step 5's failed verify or a
-step-7 re-check failure). Before starting a step-6 cycle, if `attempts` is already 3, do not retry —
-go to step 10. So a version gets at most 3 fix attempts after the initial verify, then stops.
+step-7 re-check failure). Before starting a step-6 cycle OR a step-3 re-entry, if `attempts` is
+already ≥ 3, do not retry — go to step 10. So a version gets at most 3 fix attempts after the
+initial verify, then stops.
 
 **Monorepo (shared lockfile).** Workspace targets share ONE root lockfile, so do NOT run this loop
 independently per target (it double-touches the lockfile and interleaves half-migrated commits).
@@ -245,22 +260,17 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    can consult V's real sources throughout this version. Dispatch `ds-migration-planner` with V's
    changelog block — **and, if a shipped manifest `migrations/<V>.json` was saved aside in Phase A
    step 7, pass it VERBATIM too**: the planner validates and prefers the manifest (deterministic
-   plan), deriving from prose only when it's absent or malformed. When the DS clone carries
-   `tools/check-manifest-truth.mjs`, run `node <clone>/tools/check-manifest-truth.mjs <V>` first —
-   it validates against the tag trees the same three assumptions this workflow executes (`old`
-   resolves at the previous tag; a rename/removal's `old` is gone at `v<V>`; `new` resolves at
-   `v<V>`). Read its OUTPUT, not just the exit code — three outcomes, two of them non-clean:
-   "N claim(s) the tree does not support" = a manifest DEFECT — report it with the locator-dead
-   set and derive that item's plan entry from prose (a fallback, not verified ground: the prose can
-   carry the same phantom, so the item keeps its full `verify` obligations); "nothing could be
-   checked" (or a skipped-versions list) = UNVERIFIED, not clean — proceed on the manifest as
-   normal and say so in the report. The two are different evidence and are never merged. Parse the MigrationPlan. If
+   plan), deriving from prose only when it's absent or malformed. Consult the manifest-truth result
+   recorded for V in Phase A step 7: a flagged item's plan entry is derived from prose instead of
+   trusted (a fallback, not verified ground: the prose can carry the same phantom, so the item
+   keeps its full `verify` obligations), and the flag itself is reported with the locator-dead set. Parse the MigrationPlan. If
    `items` is empty → no-migration version: skip steps 2–3 and go to step 4 — but a non-empty
    `deleteList` still gets its step-8 pass before the commit.
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
-   root — passing each MigrationItem **verbatim** (`id` / `kind` / `old` / `searchHints` / `map` /
-   `surface` / `detect` / `appliesWhen` as the planner emitted them; the same no-paraphrase rule as
-   step 3). Collect per-item
+   root — passing each MigrationItem **verbatim** (`id` / `kind` / `old` / `new` / `searchHints` /
+   `map` / `surface` / `detect` / `appliesWhen` as the planner emitted them — `new` is what lets the
+   finder skip old values standing inside an already-applied replacement; the same no-paraphrase
+   rule as step 3). Collect per-item
    `path:line` hits **and record every item's hit count** (ledger + final report). **Classify a
    zero before dropping it — the finder's `rawMatches` (per-locator pre-filter counts) is the
    evidence; "not in this repo" and "this locator matches nothing anywhere" are different claims:**
@@ -272,26 +282,28 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
      not-applicable total) and carry the whole set into the Phase C report.
      The two exceptions below still run FIRST — locator-dead is the classification of a zero that
      SURVIVES them, never a reason to skip the code-add site resolution or the semantic pass.
-     **Exception:** zero hits
-     prove non-applicability only for items whose `old` locates EXISTING usages (renames, remaps,
-     removals). For a `code-add` — code that must EXIST after the update — zero hits may just mean the
-     finder couldn't locate the insertion site; resolve the site yourself from the `action`/`note` (step 3
-     dispatches it by `action`), and record it not-applicable only when this consumer genuinely lacks the
-     thing the addition extends, stating that reason.
-     **Second exception: a `behavior` / `removed-api` item whose `surface` is not `template` or
-     `none` is NEVER dropped on zero hits.** Its `old` may be a DS symbol the affected code does not
-     mention (the defect can live in the consumer's own store logic), so zero hits means the shapes
-     did not match THIS consumer's spelling, not that they are unaffected. Read the
-     item's `verify` and go look yourself over the named surface (you are opus; this is a semantic
-     pass, not a grep). When that pass too finds nothing to do, classify the surviving zero by the
-     same rule — locator-dead if every `rawMatches` count is 0, not-applicable otherwise — and
-     record it with the reason you satisfied yourself of it.
-     An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here with
-     that reason recorded — the later item is the one to act on, and doing both means doing work the
-     next version undoes. The link only points back, so build the skip set by reading every
-     `supersedes` in the manifests saved aside in Phase A; nothing marks an item from its own file,
-     and a chain version with no manifest contributes nothing — note in the report that supersession
-     coverage is partial past it.
+
+   **Exception:** zero hits prove non-applicability only for items whose `old` locates EXISTING
+   usages (renames, remaps, removals). For a `code-add` — code that must EXIST after the update —
+   zero hits may just mean the finder couldn't locate the insertion site; resolve the site yourself
+   from the `action`/`note` (step 3 dispatches it by `action`), and record it not-applicable only
+   when this consumer genuinely lacks the thing the addition extends, stating that reason.
+
+   **Second exception: a `behavior` / `removed-api` item whose `surface` is not `template` or
+   `none` is NEVER dropped on zero hits.** Its `old` may be a DS symbol the affected code does not
+   mention (the defect can live in the consumer's own store logic), so zero hits means the shapes
+   did not match THIS consumer's spelling, not that they are unaffected. Read the item's `verify`
+   and go look yourself over the named surface (you are opus; this is a semantic pass, not a grep).
+   When that pass too finds nothing to do, classify the surviving zero by the same rule —
+   locator-dead if every `rawMatches` count is 0, not-applicable otherwise — and record it with the
+   reason you satisfied yourself of it.
+
+   An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here —
+   for EVERY item kind, not only zeros — with that reason recorded: the later item is the one to
+   act on, and doing both means doing work the next version undoes. The link only points back, so
+   build the skip set by reading every `supersedes` in the manifests saved aside in Phase A;
+   nothing marks an item from its own file, and a chain version with no manifest contributes
+   nothing — note in the report that supersession coverage is partial past it.
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
@@ -425,10 +437,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    kept with the reason.
    Re-run the verify command after any deletion, before the commit. A deletion that changes
    rendering belongs in "applied — human should eyeball".
-9. **Green → commit.** Stage EXACTLY the touched-files union (step 3) + the target's `package.json`
-   - the lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
-     `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
-     (`-m` subject, `-m` body). Do not run any git command containing the word "push". Next version.
+9. **Green → commit.** Stage EXACTLY the touched-files union (step 3) plus the target's
+   `package.json` plus the lockfile, by explicit pathspec (never `git add -A`, never a bare
+   directory). Commit `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration
+   summary in the body (`-m` subject, `-m` body). Do not run any git command containing the word
+   "push". Next version.
 10. **Stuck — LAST RESORT (cap hit, an identical-edit short-circuit, re-check still disagrees, or
     peer unsatisfied).** **Stop the
     run.** Leave the partial edits in the working tree (do NOT roll back). Report the version reached,
