@@ -37,8 +37,8 @@
   // The ring goes on the ROW, not the glyph. A checked box already draws a brand box of
   // its own, and a focus ring around the glyph lands concentric with it — brand bands
   // through a gap, which reads as a target rather than as two states a keyboard user has
-  // to tell apart. The shared `check-box.box` keeps its own ring: ds-table uses the same
-  // partial for a bare cell checkbox that has no row to speak for it.
+  // to tell apart. The shared `check-box.box` draws no ring of its own — a control that has a
+  // shell to speak for it must not, and ds-table adds one itself because it has none.
   @include focus.ring-for('.check');
 
   // No label: the row collapses onto the glyph and the concentric read comes back, so the

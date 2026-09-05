@@ -12,9 +12,11 @@
   position: relative;
 }
 
-// The box no longer rings itself: ds-checkbox has a shell that rings FOR it (`focus.ring-for`), and
-// a ring in the shared mixin tied with that suppression on specificity and won on source order, so
-// a labelled checkbox drew two. A table row has no such shell, so the ring belongs here.
+// The ring is stated here rather than inside the shared box, because a control WITH a shell — every
+// ds-checkbox — has that shell ring for it, and a second ring in the mixin is one the shell then has
+// to suppress. A table cell has no shell, so this is the only place it can come from. (It did not
+// previously draw twice: Angular's encapsulation attribute makes the shell's suppression outrank the
+// mixin's ring, so the two never tied. The move is about where the rule belongs, not a repair.)
 .check {
   @include check-box.box;
 

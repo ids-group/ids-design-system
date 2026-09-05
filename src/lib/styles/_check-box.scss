@@ -21,8 +21,10 @@
   --_checkbox-glyph: var(--check-size);
 }
 
-// Every reference carries the resolver's OWN default as its fallback, so a box that never saw
-// `resolvers` still paints. That is not belt and braces: a checkbox inside a portaled CDK panel is
+// Every reference to a `--_checkbox-*` resolver carries that resolver's OWN default, so a box which
+// never saw `resolvers` still paints. The `:root` tokens it also reads — `--check-bw`,
+// `--check-size`, `--icon-on-primary` — are global and need no fallback; strip the token layer and
+// the border goes invalid again. That is not belt and braces: a checkbox inside a portaled CDK panel is
 // outside its component's host, custom properties inherit by DOM position, and the whole
 // declaration is then invalid at computed-value time — measured on ds-table's column picker, where
 // six boxes came out 12x12 with no border and no fill, invisible on the panel.
