@@ -119,7 +119,10 @@
   font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
   letter-spacing: var(--letter-spacing-wider);
   text-transform: uppercase;
-  color: var(--text-tertiary);
+
+  /* --text-tertiary measures 4.74:1 on white but 4.30:1 on the open group's tint, so the tint
+     alone pushed the label under AA. One colour that clears both grounds, not one per state. */
+  color: var(--text-secondary);
   padding: var(--space-4) var(--space-2) var(--space-1-5);
 }
 .group-link {
@@ -210,6 +213,16 @@
   min-height: var(--hit-comfy);
 }
 
+.nav-group {
+  border-radius: var(--ds-radius-control);
+  background-color: transparent;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &.is-open {
+    background-color: var(--surface-secondary);
+  }
+}
+
 /* The heading keeps its own click target and the chevron gets a separate one, so opening a group
    and going to its page stay two different gestures. */
 .group-row {
@@ -240,8 +253,12 @@
     transition: transform var(--duration-fast) var(--ease-standard);
   }
 
+  ds-icon {
+    transform: rotate(-90deg);
+  }
+
   &.is-open ds-icon {
-    transform: rotate(180deg);
+    transform: rotate(0deg);
   }
 
   &:hover {
