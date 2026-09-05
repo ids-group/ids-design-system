@@ -10,8 +10,7 @@
     'group-label-template',
     'chip-template',
     'empty-template',
-  ]"
->
+  ]">
   <span lede>
     Chip-based multi-value selector with search filtering, keyboard navigation,
     and optional overflow collapse. For a set too large to scan — where typing
@@ -42,8 +41,7 @@
         maxVisibleChips="all"
         [options]="tagOptions"
         [selectAll]="true"
-        [(value)]="tags"
-      />
+        [(value)]="tags" />
     </div>
 
     <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
@@ -76,8 +74,7 @@
         ariaLabel="Tags with overflow"
         [options]="tagOptions"
         [maxVisibleChips]="2"
-        [(value)]="overflow"
-      />
+        [(value)]="overflow" />
     </div>
 
     <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
@@ -92,8 +89,7 @@
         ariaLabel="Tags fitted to width"
         maxVisibleChips="fit"
         [options]="tagOptions"
-        [(value)]="fitted"
-      />
+        [(value)]="fitted" />
     </div>
 
     <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
@@ -129,8 +125,7 @@
         label="Labels"
         width="content"
         [options]="labelOptions"
-        [(value)]="compactLabels"
-      />
+        [(value)]="compactLabels" />
 
       <ds-multi-select
         data-testid="ms-group-all"
@@ -138,8 +133,7 @@
         ariaLabel="Assignees with per-group select all"
         selectAll="both"
         [options]="assigneeItems"
-        [(value)]="assignees"
-      />
+        [(value)]="assignees" />
     </div>
   </div>
 
@@ -184,8 +178,7 @@
         ariaLabel="Priority, no filter row"
         [searchable]="false"
         [options]="labelOptions"
-        [(value)]="noSearchValue"
-      />
+        [(value)]="noSearchValue" />
 
       <ds-multi-select
         data-testid="ms-threshold"
@@ -193,8 +186,7 @@
         ariaLabel="Tags, filter row past four options"
         [searchable]="4"
         [options]="tagOptions"
-        [(value)]="thresholdValue"
-      />
+        [(value)]="thresholdValue" />
     </div>
   </div>
 
@@ -225,23 +217,19 @@
         label="Labels"
         width="content"
         [options]="labelOptions"
-        [(value)]="compactLabels"
-      />
+        [(value)]="compactLabels" />
 
       <ds-multi-select
         data-testid="ms-custom-trigger"
         width="content"
         [options]="labelOptions"
-        [(value)]="customLabels"
-      >
+        [(value)]="customLabels">
         <ng-template
           let-count="count"
-          dsPickerTrigger
-        >
+          dsPickerTrigger>
           <span
             class="demo-dot"
-            style="background: var(--primary)"
-          >
+            style="background: var(--primary)">
           </span>
           Custom
           @if (count) {
@@ -292,28 +280,23 @@
         placeholder="Labels…"
         ariaLabel="Labels with colour dots"
         [options]="labelOptions"
-        [(value)]="labels"
-      >
+        [(value)]="labels">
         <ng-template
           let-option
-          dsOptionTemplate
-        >
+          dsOptionTemplate>
           <span
             class="demo-dot"
-            [style.background]="dotColour(option.value)"
-          >
+            [style.background]="dotColour(option.value)">
           </span>
           {{ option.label }}
         </ng-template>
 
         <ng-template
           let-option
-          dsChipTemplate
-        >
+          dsChipTemplate>
           <span
             class="demo-dot"
-            [style.background]="dotColour(option.value)"
-          >
+            [style.background]="dotColour(option.value)">
           </span>
           {{ option.label }}
         </ng-template>
@@ -339,8 +322,7 @@
         placeholder="Assignees…"
         ariaLabel="Assignees"
         [options]="assigneeItems"
-        [(value)]="assignees"
-      />
+        [(value)]="assignees" />
     </div>
   </div>
 
@@ -371,16 +353,14 @@
       width="content"
       placeholder="Tags…"
       [options]="tagOptions"
-      [(value)]="widthDemoValue"
-    />
+      [(value)]="widthDemoValue" />
 
     <ds-select
       data-testid="select-content-width"
       width="content"
       placeholder="Status…"
       [options]="widthDemoStatuses"
-      [(value)]="widthDemoStatus"
-    />
+      [(value)]="widthDemoStatus" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -401,8 +381,7 @@
         placeholder="Add tags…"
         ariaLabel="Tags — with hint"
         hint="Choose all categories that apply to this record."
-        [options]="tagOptions"
-      />
+        [options]="tagOptions" />
     </div>
   </div>
 
@@ -412,8 +391,7 @@
         placeholder="Add tags…"
         ariaLabel="Tags — error"
         error="At least one tag is required."
-        [options]="tagOptions"
-      />
+        [options]="tagOptions" />
     </div>
   </div>
 
@@ -457,8 +435,7 @@
         placeholder="Any priority"
         ariaLabel="Priority"
         [options]="priorityOptions"
-        [(value)]="priority"
-      />
+        [(value)]="priority" />
     </div>
   </div>
 
@@ -490,8 +467,7 @@
         [options]="serverOptions()"
         [(value)]="serverValue"
         (opened)="onServerOpened()"
-        (filterChange)="onServerQuery($event)"
-      />
+        (filterChange)="onServerQuery($event)" />
     </div>
 
     <p class="block-desc t-s">
@@ -527,13 +503,11 @@
         placeholder="Any label"
         ariaLabel="Label"
         [options]="labelOptions"
-        [(value)]="slotLabels"
-      >
+        [(value)]="slotLabels">
         <ng-template
           let-count="count"
           let-total="total"
-          dsPanelHeaderTemplate
-        >
+          dsPanelHeaderTemplate>
           <span class="t-s">
             Showing {{ count }} of {{ total }}
           </span>
@@ -543,8 +517,7 @@
           <ds-button
             size="sm"
             variant="ghost"
-            (clicked)="slotLabels.set([])"
-          >
+            (clicked)="slotLabels.set([])">
             Clear all
           </ds-button>
         </ng-template>
@@ -578,13 +551,11 @@
         placeholder="Any reviewer"
         ariaLabel="Reviewer"
         [options]="reviewerGroups"
-        [(value)]="reviewers"
-      >
+        [(value)]="reviewers">
         <ng-template
           let-group
           let-count="count"
-          dsGroupLabelTemplate
-        >
+          dsGroupLabelTemplate>
           {{ group.label }} · {{ count }}
         </ng-template>
       </ds-multi-select>
@@ -617,8 +588,7 @@
         name="labels"
         [clearable]="true"
         [options]="labelOptions"
-        [(value)]="clearableLabels"
-      />
+        [(value)]="clearableLabels" />
     </div>
 
     <div class="ms-demo">
@@ -626,8 +596,7 @@
         label="Locked selection"
         [readOnly]="true"
         [options]="labelOptions"
-        [(value)]="readOnlyLabels"
-      />
+        [(value)]="readOnlyLabels" />
     </div>
   </div>
 </docs-section>

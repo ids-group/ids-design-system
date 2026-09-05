@@ -1,8 +1,7 @@
 <docs-section
   anchor="icon"
   eyebrow="Components"
-  title="Icon"
->
+  title="Icon">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -31,12 +30,10 @@
       <div class="size-cell">
         <div
           class="size-cell-stage"
-          [style.height.px]="32"
-        >
+          [style.height.px]="32">
           <ds-icon
             name="calendar"
-            [size]="size.px"
-          />
+            [size]="size.px" />
         </div>
 
         <code class="t-mono-inline size-cell-tok">
@@ -67,8 +64,7 @@
     @for (s of strokes; track s) {
       <div
         class="stroke-row"
-        [class.is-default]="s === 1.75"
-      >
+        [class.is-default]="s === 1.75">
         <div class="stroke-row-label">
           <code class="t-mono-inline">
             stroke {{ s }}
@@ -87,8 +83,7 @@
               <ds-icon
                 [name]="name"
                 [size]="px"
-                [stroke]="s"
-              />
+                [stroke]="s" />
             }
 
             <span class="t-caption">
@@ -108,8 +103,7 @@
     The library is broader; these are the most common app glyphs. See
     <a
       class="link"
-      routerLink="/foundations/icons"
-    >
+      routerLink="/foundations/icons">
       Foundations · Icons
     </a>
     for the full library.
@@ -120,8 +114,7 @@
       <div class="sample-cell">
         <ds-icon
           [name]="name"
-          [size]="20"
-        />
+          [size]="20" />
 
         <code class="t-mono-inline sample-cell-name">
           {{ name }}

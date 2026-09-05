@@ -6,14 +6,12 @@
   [icon]="options.icon ?? null"
   [showClose]="false"
   [cdkTrapFocusAutoCapture]="true"
-  [attr.aria-describedby]="options.message ? messageId : null"
->
+  [attr.aria-describedby]="options.message ? messageId : null">
   <ng-container body>
     @if (options.message) {
       <p
         class="message"
-        [id]="messageId"
-      >
+        [id]="messageId">
         {{ options.message }}
       </p>
     }
@@ -30,8 +28,7 @@
           autocomplete="off"
           spellcheck="false"
           [value]="typed()"
-          (input)="onType($event)"
-        />
+          (input)="onType($event)" />
       </label>
     }
   </ng-container>
@@ -40,16 +37,14 @@
     <ds-button
       color="neutral"
       variant="outline"
-      (pressed)="cancel()"
-    >
+      (pressed)="cancel()">
       {{ options.cancelLabel ?? 'Cancel' }}
     </ds-button>
 
     <ds-button
       [color]="confirmColor"
       [disabled]="confirmDisabled()"
-      (pressed)="confirm()"
-    >
+      (pressed)="confirm()">
       {{ options.confirmLabel ?? 'Confirm' }}
     </ds-button>
   </ng-container>

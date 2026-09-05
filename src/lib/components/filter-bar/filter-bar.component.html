@@ -1,12 +1,10 @@
 <div
   #row
-  class="row"
->
+  class="row">
   @for (item of inline(); track item) {
     <div
       class="item"
-      [style.width.px]="item.width()"
-    >
+      [style.width.px]="item.width()">
       <ng-container [ngTemplateOutlet]="item.template" />
     </div>
   }
@@ -20,8 +18,7 @@
       icon="filter"
       [size]="triggerSize()"
       [ariaExpanded]="more.opened()"
-      (pressed)="more.toggle(moreTrigger.buttonRef().nativeElement)"
-    >
+      (pressed)="more.toggle(moreTrigger.buttonRef().nativeElement)">
       +{{ collapsed().length }} {{ moreLabel() }}
     </ds-button>
 
@@ -29,14 +26,12 @@
       #more
       align="end"
       panelRole="dialog"
-      [panelLabel]="panelLabel()"
-    >
+      [panelLabel]="panelLabel()">
       <div class="panel">
         @for (item of collapsed(); track item) {
           <div
             class="item"
-            [style.width.px]="item.width()"
-          >
+            [style.width.px]="item.width()">
             <ng-container [ngTemplateOutlet]="item.template" />
           </div>
         }
@@ -52,8 +47,7 @@
 @if (devMode) {
   <span
     dsProjectionDropped="ds-filter-bar"
-    reason='a filter belongs in an <ng-template [dsFilterItem]="width">, and anything else needs the dsFilterBarTrailing attribute to reach the trailing edge. Content carrying neither is not rendered.'
-  >
+    reason='a filter belongs in an <ng-template [dsFilterItem]="width">, and anything else needs the dsFilterBarTrailing attribute to reach the trailing edge. Content carrying neither is not rendered.'>
     <ng-content></ng-content>
   </span>
 }

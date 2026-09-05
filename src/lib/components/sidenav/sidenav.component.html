@@ -2,8 +2,7 @@
   <a
     class="brand brand-link"
     [routerLink]="brandRoute()"
-    [attr.aria-label]="brandAriaLabel()"
-  >
+    [attr.aria-label]="brandAriaLabel()">
     <ng-container [ngTemplateOutlet]="brandContent" />
   </a>
 } @else {
@@ -18,8 +17,7 @@
   @if (letterGlyph() || brandName()) {
     <span
       class="mark"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       {{ markGlyph() }}
     </span>
   }

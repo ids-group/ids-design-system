@@ -5,12 +5,10 @@
     class="row"
     aria-label="Search"
     [attr.aria-expanded]="searchPop.opened()"
-    (click)="searchPop.toggle(searchTrigger)"
-  >
+    (click)="searchPop.toggle(searchTrigger)">
     <ds-icon
       name="search"
-      [size]="20"
-    />
+      [size]="20" />
 
     <span class="label">
       Search
@@ -21,14 +19,12 @@
     #searchPop
     align="start"
     panelRole="dialog"
-    panelLabel="Search"
-  >
+    panelLabel="Search">
     <div class="search-panel">
       <div class="search-box">
         <ds-icon
           name="search"
-          [size]="18"
-        />
+          [size]="18" />
 
         <input
           #searchInput
@@ -40,20 +36,17 @@
           [value]="query()"
           (input)="query.set($any($event.target).value)"
           (keydown.enter)="goFirst(provider) && searchPop.close()"
-          (keydown.escape)="searchPop.close()"
-        />
+          (keydown.escape)="searchPop.close()" />
 
         @if (query()) {
           <button
             type="button"
             class="clear"
             aria-label="Clear"
-            (click)="query.set(''); searchInput.focus()"
-          >
+            (click)="query.set(''); searchInput.focus()">
             <ds-icon
               name="x"
-              [size]="16"
-            />
+              [size]="16" />
           </button>
         }
       </div>
@@ -68,13 +61,11 @@
             <button
               type="button"
               class="result"
-              (click)="searchPop.close(); goResult(result)"
-            >
+              (click)="searchPop.close(); goResult(result)">
               @if (result.icon) {
                 <ds-icon
                   [name]="result.icon"
-                  [size]="16"
-                />
+                  [size]="16" />
               }
 
               <span class="text">
@@ -105,12 +96,10 @@
 } @else {
   <button
     type="button"
-    class="row"
-  >
+    class="row">
     <ds-icon
       name="search"
-      [size]="20"
-    />
+      [size]="20" />
 
     <span class="label">
       Search
@@ -127,12 +116,10 @@
     [attr.aria-expanded]="alertsPop.opened()"
     (click)="
       !alertsPop.opened() && alertsOpened.emit(); alertsPop.toggle(alertTrigger)
-    "
-  >
+    ">
     <ds-icon
       name="bell"
-      [size]="20"
-    />
+      [size]="20" />
 
     <span class="label">
       Alerts
@@ -141,8 +128,7 @@
     @if (alerts()) {
       <span
         class="dot"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
       </span>
     }
   </button>
@@ -151,8 +137,7 @@
     #alertsPop
     align="start"
     panelRole="dialog"
-    panelLabel="Alerts"
-  >
+    panelLabel="Alerts">
     <div class="alerts-panel">
       <p class="heading">
         Alerts
@@ -162,13 +147,11 @@
         <button
           type="button"
           class="alert"
-          (click)="alertsPop.close(); goAlert(alert)"
-        >
+          (click)="alertsPop.close(); goAlert(alert)">
           <span class="icon {{ alert.variant }}">
             <ds-icon
               [name]="alert.icon"
-              [size]="16"
-            />
+              [size]="16" />
           </span>
 
           <span class="text">
@@ -199,12 +182,10 @@
 } @else {
   <button
     type="button"
-    class="row"
-  >
+    class="row">
     <ds-icon
       name="bell"
-      [size]="20"
-    />
+      [size]="20" />
 
     <span class="label">
       Alerts
@@ -213,8 +194,7 @@
     @if (alerts()) {
       <span
         class="dot"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
       </span>
     }
   </button>
@@ -223,12 +203,10 @@
 <button
   type="button"
   class="row"
-  (click)="collapseToggled.emit()"
->
+  (click)="collapseToggled.emit()">
   <ds-icon
     [name]="collapsed() ? 'chevronRight' : 'chevronLeft'"
-    [size]="20"
-  />
+    [size]="20" />
 
   <span class="label">
     Collapse
@@ -241,8 +219,7 @@
   <div class="profile">
     <ds-avatar
       size="sm"
-      [initials]="initials()"
-    />
+      [initials]="initials()" />
 
     <span class="profile-text">
       <span class="name">
@@ -262,20 +239,17 @@
       class="more"
       aria-label="Account menu"
       [attr.aria-expanded]="accountPop.opened()"
-      (click)="accountPop.toggle(accountTrigger)"
-    >
+      (click)="accountPop.toggle(accountTrigger)">
       <ds-icon
         name="moreV"
-        [size]="18"
-      />
+        [size]="18" />
     </button>
 
     <ds-popover
       #accountPop
       align="end"
       panelRole="menu"
-      panelLabel="Account"
-    >
+      panelLabel="Account">
       <ds-menu>
         <p class="heading">
           Signed in as {{ userName() }}
@@ -283,8 +257,7 @@
 
         <ds-menu-item
           icon="user"
-          (pressed)="goProfile()"
-        >
+          (pressed)="goProfile()">
           Your profile
         </ds-menu-item>
 
@@ -301,8 +274,7 @@
         <ds-menu-item
           icon="logout"
           [error]="true"
-          (pressed)="signOutSelected.emit()"
-        >
+          (pressed)="signOutSelected.emit()">
           Sign out
         </ds-menu-item>
       </ds-menu>

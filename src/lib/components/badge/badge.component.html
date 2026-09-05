@@ -1,8 +1,7 @@
 <span
   [class]="classes()"
   [attr.role]="countAriaLabel() ? 'img' : null"
-  [attr.aria-label]="countAriaLabel()"
->
+  [attr.aria-label]="countAriaLabel()">
   @if (count() !== null) {
     {{ countDisplay() }}
   } @else {

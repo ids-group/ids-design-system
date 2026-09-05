@@ -1,8 +1,7 @@
 <docs-section
   anchor="charts"
   eyebrow="Foundations"
-  title="Charts &amp; dataviz"
->
+  title="Charts &amp; dataviz">
   <span lede>
     Categorical, sequential and divergent palettes. Axis / grid / legend tokens.
     Five reference chart types with empty + loading states.
@@ -22,8 +21,7 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--chart-cat-' + n + ')'"
-        >
+          [style.background]="'var(--chart-cat-' + n + ')'">
         </div>
 
         <code class="t-mono-inline">
@@ -47,8 +45,7 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--chart-seq-' + n + ')'"
-        >
+          [style.background]="'var(--chart-seq-' + n + ')'">
         </div>
 
         <code class="t-mono-inline">
@@ -71,8 +68,7 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="divToken(n)"
-        >
+          [style.background]="divToken(n)">
         </div>
 
         <code class="t-mono-inline">
@@ -141,16 +137,14 @@
 
     <svg
       class="svg"
-      [attr.viewBox]="'0 0 ' + w + ' ' + h"
-    >
+      [attr.viewBox]="'0 0 ' + w + ' ' + h">
       <g class="grid">
         @for (t of gridYs; track $index) {
           <line
             [attr.x1]="padL"
             [attr.x2]="w - padR"
             [attr.y1]="t"
-            [attr.y2]="t"
-          />
+            [attr.y2]="t" />
         }
       </g>
 
@@ -159,22 +153,19 @@
           [attr.x1]="padL"
           [attr.x2]="padL"
           [attr.y1]="padT"
-          [attr.y2]="padT + innerH"
-        />
+          [attr.y2]="padT + innerH" />
 
         <line
           [attr.x1]="padL"
           [attr.x2]="w - padR"
           [attr.y1]="padT + innerH"
-          [attr.y2]="padT + innerH"
-        />
+          [attr.y2]="padT + innerH" />
 
         @for (yt of yTicksLine; track yt.v) {
           <text
             text-anchor="end"
             [attr.x]="padL - 8"
-            [attr.y]="yt.y + 4"
-          >
+            [attr.y]="yt.y + 4">
             {{ yt.v }}
           </text>
         }
@@ -183,8 +174,7 @@
           <text
             text-anchor="middle"
             [attr.x]="xt.x"
-            [attr.y]="h - 8"
-          >
+            [attr.y]="h - 8">
             {{ xt.label }}
           </text>
         }
@@ -196,16 +186,14 @@
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        [attr.d]="linePath()"
-      />
+        [attr.d]="linePath()" />
 
       @for (p of linePoints(); track $index) {
         <circle
           r="3"
           fill="var(--chart-cat-1)"
           [attr.cx]="p.x"
-          [attr.cy]="p.y"
-        />
+          [attr.cy]="p.y" />
       }
     </svg>
 
@@ -213,8 +201,7 @@
       <span class="item">
         <span
           class="dot"
-          style="background: var(--chart-cat-1)"
-        >
+          style="background: var(--chart-cat-1)">
         </span>
         Allocations
       </span>
@@ -235,16 +222,14 @@
 
       <svg
         class="svg"
-        [attr.viewBox]="'0 0 ' + w + ' ' + h"
-      >
+        [attr.viewBox]="'0 0 ' + w + ' ' + h">
         <g class="grid">
           @for (t of gridYs; track $index) {
             <line
               [attr.x1]="padL"
               [attr.x2]="w - padR"
               [attr.y1]="t"
-              [attr.y2]="t"
-            />
+              [attr.y2]="t" />
           }
         </g>
 
@@ -253,15 +238,13 @@
             [attr.x1]="padL"
             [attr.x2]="w - padR"
             [attr.y1]="padT + innerH"
-            [attr.y2]="padT + innerH"
-          />
+            [attr.y2]="padT + innerH" />
 
           @for (yt of yTicksBar; track yt.v) {
             <text
               text-anchor="end"
               [attr.x]="padL - 8"
-              [attr.y]="yt.y + 4"
-            >
+              [attr.y]="yt.y + 4">
               {{ yt.v }}
             </text>
           }
@@ -270,8 +253,7 @@
             <text
               text-anchor="middle"
               [attr.x]="b.cx"
-              [attr.y]="h - 8"
-            >
+              [attr.y]="h - 8">
               {{ b.label }}
             </text>
           }
@@ -284,8 +266,7 @@
             [attr.x]="b.x"
             [attr.y]="b.y"
             [attr.width]="barW"
-            [attr.height]="b.h"
-          />
+            [attr.height]="b.h" />
         }
       </svg>
     </div>
@@ -305,15 +286,13 @@
         <svg
           width="200"
           height="200"
-          viewBox="0 0 200 200"
-        >
+          viewBox="0 0 200 200">
           @for (a of donutArcs(); track a.label) {
             <path
               stroke-width="22"
               fill="none"
               [attr.d]="a.d"
-              [attr.stroke]="a.c"
-            />
+              [attr.stroke]="a.c" />
           }
 
           <text
@@ -322,8 +301,7 @@
             text-anchor="middle"
             font-size="11"
             fill="var(--text-tertiary)"
-            font-family="var(--font-sans)"
-          >
+            font-family="var(--font-sans)">
             Total
           </text>
 
@@ -334,8 +312,7 @@
             font-size="22"
             font-weight="800"
             fill="var(--text-primary)"
-            font-family="var(--font-sans)"
-          >
+            font-family="var(--font-sans)">
             412
           </text>
         </svg>
@@ -345,8 +322,7 @@
             <span class="item">
               <span
                 class="dot"
-                [style.background]="s.c"
-              >
+                [style.background]="s.c">
               </span>
               {{ s.label }} <span class="donut-pct">{{ s.v }}%</span>
             </span>
@@ -365,22 +341,19 @@
 
     <svg
       class="svg"
-      [attr.viewBox]="'0 0 ' + w + ' ' + h"
-    >
+      [attr.viewBox]="'0 0 ' + w + ' ' + h">
       <g class="axis">
         <line
           [attr.x1]="padL"
           [attr.x2]="w - padR"
           [attr.y1]="padT + innerH"
-          [attr.y2]="padT + innerH"
-        />
+          [attr.y2]="padT + innerH" />
 
         @for (s of stackBars(); track s.label) {
           <text
             text-anchor="middle"
             [attr.x]="s.cx"
-            [attr.y]="h - 8"
-          >
+            [attr.y]="h - 8">
             {{ s.label }}
           </text>
         }
@@ -392,24 +365,21 @@
           [attr.x]="s.x"
           [attr.y]="s.yA"
           [attr.width]="stackW"
-          [attr.height]="s.hA"
-        />
+          [attr.height]="s.hA" />
 
         <rect
           fill="var(--chart-cat-2)"
           [attr.x]="s.x"
           [attr.y]="s.yB"
           [attr.width]="stackW"
-          [attr.height]="s.hB"
-        />
+          [attr.height]="s.hB" />
 
         <rect
           fill="var(--chart-cat-3)"
           [attr.x]="s.x"
           [attr.y]="s.yC"
           [attr.width]="stackW"
-          [attr.height]="s.hC"
-        />
+          [attr.height]="s.hC" />
       }
     </svg>
 
@@ -417,8 +387,7 @@
       <span class="item">
         <span
           class="dot"
-          style="background: var(--chart-cat-1)"
-        >
+          style="background: var(--chart-cat-1)">
         </span
         >Audio
       </span>
@@ -426,8 +395,7 @@
       <span class="item">
         <span
           class="dot"
-          style="background: var(--chart-cat-2)"
-        >
+          style="background: var(--chart-cat-2)">
         </span
         >Lighting
       </span>
@@ -435,8 +403,7 @@
       <span class="item">
         <span
           class="dot"
-          style="background: var(--chart-cat-3)"
-        >
+          style="background: var(--chart-cat-3)">
         </span
         >Video
       </span>
@@ -474,8 +441,7 @@
             [style.background]="divToken(v)"
             [style.color]="
               v <= -2 || v >= 2 ? 'var(--neutral-0)' : 'var(--text-primary)'
-            "
-          >
+            ">
             {{ v > 0 ? '+' + v : v }}
           </div>
         }
@@ -499,8 +465,7 @@
         <div>
           <ds-icon
             name="chart"
-            [size]="32"
-          />
+            [size]="32" />
 
           <p class="empty-msg">
             No data for this period.<br />

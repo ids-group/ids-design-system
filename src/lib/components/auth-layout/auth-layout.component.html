@@ -6,8 +6,7 @@
       @if (letterGlyph() || brandName()) {
         <span
           class="mark"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           {{ markGlyph() }}
         </span>
       }
@@ -34,8 +33,7 @@
     class="card"
     [attr.role]="landmark() === 'main' ? 'main' : null"
     [elevation]="cardElevation()"
-    [padding]="cardPadding()"
-  >
+    [padding]="cardPadding()">
     <ng-content></ng-content>
   </ds-card>
 

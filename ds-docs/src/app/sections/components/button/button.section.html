@@ -2,8 +2,7 @@
   anchor="button"
   eyebrow="Components"
   title="Buttons"
-  [apiKeys]="['button-group', 'toggle-button']"
->
+  [apiKeys]="['button-group', 'toggle-button']">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -118,24 +117,20 @@
       <ds-switch
         label="Disabled"
         size="sm"
-        [(checked)]="matrixDisabled"
-      />
+        [(checked)]="matrixDisabled" />
     </div>
 
     <docs-matrix
       cornerLabel="color \ variant"
       [cols]="variants"
-      [rows]="combos"
-    >
+      [rows]="combos">
       <ng-template
         let-variant
-        let-row="row"
-      >
+        let-row="row">
         <ds-button
           [color]="$any(row.key)"
           [variant]="variant"
-          [disabled]="matrixDisabled()"
-        >
+          [disabled]="matrixDisabled()">
           {{ row.label }}
         </ds-button>
       </ng-template>
@@ -225,8 +220,7 @@
         <div class="matrix-cell">
           <ds-button
             [variant]="spec.variant"
-            [disabled]="true"
-          >
+            [disabled]="true">
             {{ spec.label }}
           </ds-button>
         </div>
@@ -234,8 +228,7 @@
         <div class="matrix-cell">
           <ds-button
             [variant]="spec.variant"
-            [loading]="true"
-          >
+            [loading]="true">
             {{ spec.label }}
           </ds-button>
         </div>
@@ -262,16 +255,14 @@
 
     <ds-button
       variant="tonal"
-      trailingIcon="chevronDown"
-    >
+      trailingIcon="chevronDown">
       Filters
     </ds-button>
 
     <ds-button
       color="neutral"
       variant="outline"
-      icon="download"
-    >
+      icon="download">
       Export CSV
     </ds-button>
   </div>
@@ -298,8 +289,7 @@
     <ds-button
       color="neutral"
       variant="outline"
-      size="lg"
-    >
+      size="lg">
       Continue<span dsButtonSubtext>3 items remaining</span>
     </ds-button>
 
@@ -345,16 +335,14 @@
       <div class="refusal-stage">
         <ds-button
           disabledReason="Needs the Finance role"
-          [disabled]="true"
-        >
+          [disabled]="true">
           Approve invoice
         </ds-button>
 
         <ds-button
           color="error"
           disabledReason="Retention policy keeps signed contracts for 7 years, so this one cannot be removed until March 2031"
-          [disabled]="true"
-        >
+          [disabled]="true">
           Delete contract
         </ds-button>
       </div>
@@ -394,8 +382,7 @@
 
         <ds-button
           color="primary"
-          error="Fill in the delivery address first"
-        >
+          error="Fill in the delivery address first">
           Place order
         </ds-button>
       </div>
@@ -422,8 +409,7 @@
         <ds-button
           color="neutral"
           variant="outline"
-          [reserveMessage]="true"
-        >
+          [reserveMessage]="true">
           Room held
         </ds-button>
 
@@ -431,8 +417,7 @@
           color="neutral"
           variant="outline"
           warning="Now it has something to say"
-          [reserveMessage]="true"
-        >
+          [reserveMessage]="true">
           Room used
         </ds-button>
       </div>
@@ -469,16 +454,14 @@
     <ds-button
       color="neutral"
       variant="outline"
-      fullWidth
-    >
+      fullWidth>
       Cancel
     </ds-button>
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="toggle-button"
-  >
+    data-for="toggle-button">
     Toggle · link
   </h3>
 
@@ -502,15 +485,13 @@
 
     <ds-toggle-button
       icon="check"
-      [pressed]="true"
-    >
+      [pressed]="true">
       Confirmed
     </ds-toggle-button>
 
     <button
       class="link"
-      type="button"
-    >
+      type="button">
       View activity log
     </button>
   </div>

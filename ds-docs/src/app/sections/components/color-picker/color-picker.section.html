@@ -1,8 +1,7 @@
 <docs-section
   anchor="color-picker"
   eyebrow="Components"
-  title="Color picker"
->
+  title="Color picker">
   <span lede>
     Swatch trigger that opens a full picker overlay — a saturation/brightness
     plane, a hue slider, a hex field and an optional preset palette. Backed by a
@@ -27,8 +26,7 @@
   <div class="demo-panel">
     <ds-color-picker
       ariaLabel="Brand colour"
-      [(value)]="brand"
-    />
+      [(value)]="brand" />
 
     <p style="margin: var(--space-3) 0 0; font-size: var(--font-size-s)">
       Selected:
@@ -41,8 +39,7 @@
           border: 1px solid var(--border-default);
           vertical-align: middle;
         "
-        [style.background-color]="brand()"
-      >
+        [style.background-color]="brand()">
       </span>
       {{ brand() }}
     </p>
@@ -70,8 +67,7 @@
         '#DB2777',
         '#65A30D',
       ]"
-      [(value)]="label"
-    />
+      [(value)]="label" />
 
     <p style="margin: var(--space-3) 0 0; font-size: var(--font-size-s)">
       Selected:
@@ -84,8 +80,7 @@
           border: 1px solid var(--border-default);
           vertical-align: middle;
         "
-        [style.background-color]="label()"
-      >
+        [style.background-color]="label()">
       </span>
       {{ label() }}
     </p>
@@ -106,14 +101,12 @@
   <div class="demo-panel">
     <ds-color-picker
       ariaLabel="Accent colour"
-      hint="This colour is used for charts and highlights."
-    />
+      hint="This colour is used for charts and highlights." />
   </div>
 
   <div class="demo-panel">
     <ds-color-picker
       ariaLabel="Accent colour — error"
-      error="Colour does not meet contrast requirements."
-    />
+      error="Colour does not meet contrast requirements." />
   </div>
 </docs-section>

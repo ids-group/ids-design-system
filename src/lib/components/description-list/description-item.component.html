@@ -1,14 +1,12 @@
 <span
   class="term"
-  role="term"
->
+  role="term">
   {{ term() }}
 </span>
 
 <div
   class="details"
-  role="definition"
->
+  role="definition">
   <span class="value">
     <ng-content></ng-content>
   </span>
@@ -18,12 +16,10 @@
       type="button"
       class="copy"
       [attr.aria-label]="copied() ? 'Copied' : 'Copy value'"
-      (click)="copy()"
-    >
+      (click)="copy()">
       <ds-icon
         [name]="copied() ? 'check' : 'copy'"
-        [size]="14"
-      />
+        [size]="14" />
     </button>
   }
 </div>

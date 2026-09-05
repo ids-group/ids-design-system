@@ -2,15 +2,13 @@
   aria-modal="true"
   [attr.role]="resolvedRole()"
   [class]="classes()"
-  [attr.aria-labelledby]="titleId"
->
+  [attr.aria-labelledby]="titleId">
   <div class="header">
     @if (resolvedIcon(); as iconName) {
       <span [class]="status() ? 'icon-badge ' + status() : 'icon-badge'">
         <ds-icon
           [name]="iconName"
-          [size]="20"
-        />
+          [size]="20" />
       </span>
     }
 
@@ -22,8 +20,7 @@
       <div class="title-line">
         <h2
           class="title"
-          [id]="titleId"
-        >
+          [id]="titleId">
           {{ title() }}
         </h2>
 
@@ -42,12 +39,10 @@
         class="close"
         type="button"
         aria-label="Close dialog"
-        (click)="onClose()"
-      >
+        (click)="onClose()">
         <ds-icon
           name="x"
-          [size]="16"
-        >
+          [size]="16">
         </ds-icon>
       </button>
     }

@@ -1,8 +1,7 @@
 <docs-section
   anchor="stat"
   eyebrow="Components"
-  title="Stats"
->
+  title="Stats">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -23,28 +22,24 @@
       label="Records this cycle"
       value="147"
       deltaLabel="vs 2025"
-      [delta]="12"
-    />
+      [delta]="12" />
 
     <ds-stat
       label="Capacity used"
       value="12.9 m"
-      caption="of 13.45 m available"
-    />
+      caption="of 13.45 m available" />
 
     <ds-stat
       label="Resource conflicts"
       value="3"
       variant="error"
       deltaLabel="vs last week"
-      [delta]="-5"
-    />
+      [delta]="-5" />
 
     <ds-stat
       label="Pending recomputes"
       value="12"
-      caption="Last sync 4m ago"
-    />
+      caption="Last sync 4m ago" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -66,21 +61,18 @@
       size="sm"
       label="Compact"
       value="147"
-      [delta]="12"
-    />
+      [delta]="12" />
 
     <ds-stat
       label="Default"
       value="147"
-      [delta]="12"
-    />
+      [delta]="12" />
 
     <ds-stat
       size="lg"
       label="Hero KPI"
       value="147"
-      [delta]="12"
-    />
+      [delta]="12" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -106,8 +98,7 @@
     <ds-stat
       label="Renewals"
       value="147"
-      unit="%"
-    />
+      unit="%" />
 
     <ds-stat label="Contract">
       <ds-badge dsStatValue>
@@ -142,13 +133,11 @@
     <ds-stat
       label="Enrollment window"
       value="Feb 1 – Feb 28, 2026"
-      class="stat-phrase"
-    />
+      class="stat-phrase" />
 
     <ds-stat
       label="Enrollment window"
-      value="Feb 1 – Feb 28, 2026"
-    />
+      value="Feb 1 – Feb 28, 2026" />
   </div>
 
   <p class="block-desc t-s">
@@ -188,8 +177,8 @@
     TS2322. Prefer this to
     <code class="t-mono-inline">
       toLocaleString('en-US')
-    </code> in the template,
-    which pins a locale instead of reading
+    </code> in the
+    template, which pins a locale instead of reading
     <code class="t-mono-inline">
       LOCALE_ID
     </code> and re-runs on every
@@ -203,22 +192,18 @@
   <div class="grid-4">
     <ds-stat
       label="Records this cycle"
-      [value]="records | number"
-    />
+      [value]="records | number" />
 
     <ds-stat
       label="Gross written premium"
-      [value]="premium | currency: 'GBP' : 'symbol' : '1.0-0'"
-    />
+      [value]="premium | currency: 'GBP' : 'symbol' : '1.0-0'" />
 
     <ds-stat
       label="Renewal rate"
-      [value]="renewalRate | percent"
-    />
+      [value]="renewalRate | percent" />
 
     <ds-stat
       label="Next recompute"
-      [value]="nextRecompute | date: 'MMM d, y'"
-    />
+      [value]="nextRecompute | date: 'MMM d, y'" />
   </div>
 </docs-section>

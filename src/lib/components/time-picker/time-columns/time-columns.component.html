@@ -1,8 +1,7 @@
 <div
   class="col"
   role="listbox"
-  aria-label="Hours"
->
+  aria-label="Hours">
   @for (cell of hourCells(); track cell.value; let i = $index) {
     <button
       #hourOpt
@@ -14,8 +13,7 @@
       [attr.tabindex]="i === hourEntry() ? 0 : -1"
       [disabled]="cell.disabled"
       (click)="selectHour(cell)"
-      (keydown)="onKey($event, 'hours', i)"
-    >
+      (keydown)="onKey($event, 'hours', i)">
       {{ cell.label }}
     </button>
   }
@@ -24,8 +22,7 @@
 <div
   class="col"
   role="listbox"
-  aria-label="Minutes"
->
+  aria-label="Minutes">
   @for (cell of minuteCells(); track cell.value; let i = $index) {
     <button
       #minOpt
@@ -37,8 +34,7 @@
       [attr.tabindex]="i === minuteEntry() ? 0 : -1"
       [disabled]="cell.disabled"
       (click)="selectMinute(cell)"
-      (keydown)="onKey($event, 'minutes', i)"
-    >
+      (keydown)="onKey($event, 'minutes', i)">
       {{ cell.label }}
     </button>
   }
@@ -48,8 +44,7 @@
   <div
     class="col"
     role="listbox"
-    aria-label="AM/PM"
-  >
+    aria-label="AM/PM">
     @for (cell of periodCells(); track cell.value; let i = $index) {
       <button
         #periodOpt
@@ -61,8 +56,7 @@
         [attr.tabindex]="i === periodEntry() ? 0 : -1"
         [disabled]="cell.disabled"
         (click)="selectPeriod(cell)"
-        (keydown)="onKey($event, 'period', i)"
-      >
+        (keydown)="onKey($event, 'period', i)">
         {{ cell.label }}
       </button>
     }

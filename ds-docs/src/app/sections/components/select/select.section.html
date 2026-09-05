@@ -1,8 +1,7 @@
 <docs-section
   anchor="select"
   eyebrow="Components"
-  title="Select"
->
+  title="Select">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -21,21 +20,18 @@
       size="sm"
       label="Owner · sm"
       placeholder="Pick an owner…"
-      [options]="ownerOptions"
-    />
+      [options]="ownerOptions" />
 
     <ds-select
       label="Owner · md"
       placeholder="Pick an owner…"
-      [options]="ownerOptions"
-    />
+      [options]="ownerOptions" />
 
     <ds-select
       size="lg"
       label="Owner · lg"
       placeholder="Pick an owner…"
-      [options]="ownerOptions"
-    />
+      [options]="ownerOptions" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -52,8 +48,7 @@
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
-          [options]="ownerOptions"
-        />
+          [options]="ownerOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -68,8 +63,7 @@
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
-          [options]="ownerOptions"
-        />
+          [options]="ownerOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -82,8 +76,7 @@
         <ds-select
           label="Owner"
           value="brooks"
-          [options]="ownerOptions"
-        />
+          [options]="ownerOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -96,8 +89,7 @@
         <ds-select
           label="Owner"
           placeholder="Pick an owner…"
-          [options]="ownerOptions"
-        />
+          [options]="ownerOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -111,8 +103,7 @@
           label="Owner"
           value="brooks"
           [options]="ownerOptions"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -126,8 +117,7 @@
           label="Owner"
           value="brooks"
           [options]="ownerOptions"
-          [readOnly]="true"
-        />
+          [readOnly]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -142,8 +132,7 @@
             label="Tier"
             placeholder="Choose tier…"
             [options]="tierOptions"
-            [invalid]="true"
-          />
+            [invalid]="true" />
 
           <span class="field-hint error">
             Pick one
@@ -162,8 +151,7 @@
           <ds-select
             label="Tier"
             value="t2"
-            [options]="tierOptions"
-          />
+            [options]="tierOptions" />
 
           <span class="field-hint">
             OK
@@ -190,8 +178,7 @@
     <ds-select
       label="Region"
       placeholder="Pick a region…"
-      [options]="regionOptions"
-    />
+      [options]="regionOptions" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -215,8 +202,7 @@
       <ds-select
         size="sm"
         placeholder="Pick a product · sm"
-        [options]="productOptions"
-      />
+        [options]="productOptions" />
 
       <div class="caption t-overline">
         sm
@@ -226,8 +212,7 @@
     <div class="cell-wrap">
       <ds-select
         placeholder="Pick a product · md"
-        [options]="productOptions"
-      />
+        [options]="productOptions" />
 
       <div class="caption t-overline">
         md
@@ -238,8 +223,7 @@
       <ds-select
         size="lg"
         placeholder="Pick a product · lg"
-        [options]="productOptions"
-      />
+        [options]="productOptions" />
 
       <div class="caption t-overline">
         lg
@@ -260,8 +244,7 @@
     <ds-select
       value="hi"
       [staticPreview]="true"
-      [options]="openSpecimenOptions"
-    />
+      [options]="openSpecimenOptions" />
   </div>
 
   <h4 class="sub-title t-overline">
@@ -272,8 +255,7 @@
     <ds-select
       value="hi"
       [staticPreview]="true"
-      [options]="iconOptions"
-    />
+      [options]="iconOptions" />
   </div>
 
   <h4 class="sub-title t-overline">
@@ -285,8 +267,7 @@
       <div class="state-cell-stage">
         <ds-select
           placeholder="Pick a product…"
-          [options]="productOptions"
-        />
+          [options]="productOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -299,8 +280,7 @@
       <div class="state-cell-stage pin-hover">
         <ds-select
           placeholder="Pick a product…"
-          [options]="productOptions"
-        />
+          [options]="productOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -312,8 +292,7 @@
       <div class="state-cell-stage pin-focus">
         <ds-select
           value="hi"
-          [options]="productOptions"
-        />
+          [options]="productOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -326,8 +305,7 @@
         <ds-select
           value="hi"
           [staticPreview]="true"
-          [options]="productOptions"
-        />
+          [options]="productOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -340,8 +318,7 @@
         <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
-          [invalid]="true"
-        />
+          [invalid]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -354,8 +331,7 @@
         <ds-select
           value="hi"
           [options]="productOptions"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -376,8 +352,7 @@
     <div class="cell-wrap">
       <ds-select
         placeholder="Pick a region…"
-        [options]="regionOptions"
-      />
+        [options]="regionOptions" />
 
       <div class="caption t-overline">
         15 options · scrolls
@@ -402,15 +377,13 @@
       label="Role"
       placeholder="Choose a role…"
       hint="Determines what actions the user can perform."
-      [options]="roleOptions"
-    />
+      [options]="roleOptions" />
 
     <ds-select
       label="Role"
       placeholder="Choose a role…"
       error="A role is required to save this member."
-      [options]="roleOptions"
-    />
+      [options]="roleOptions" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -429,15 +402,13 @@
       placeholder="Choose a role…"
       value="editor"
       [clearable]="true"
-      [options]="roleOptions"
-    />
+      [options]="roleOptions" />
 
     <ds-select
       label="Role (no value)"
       placeholder="Choose a role…"
       [clearable]="true"
-      [options]="roleOptions"
-    />
+      [options]="roleOptions" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -457,16 +428,14 @@
       label="Role"
       placeholder="Choose a role…"
       value="editor"
-      [options]="roleIconOptions"
-    />
+      [options]="roleIconOptions" />
 
     <ds-select
       label="Role (clearable + icons)"
       placeholder="Choose a role…"
       value="admin"
       [clearable]="true"
-      [options]="roleIconOptions"
-    />
+      [options]="roleIconOptions" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -512,8 +481,7 @@
       <ds-select
         label="Country"
         [options]="countryOptions"
-        [(value)]="country"
-      />
+        [(value)]="country" />
     </div>
   </div>
 
@@ -536,8 +504,7 @@
       <ds-select
         label="Plan"
         [options]="planOptions"
-        [(value)]="plan"
-      >
+        [(value)]="plan">
         <ng-template dsPanelFooterTemplate>
           <span class="t-s">
             Contact sales for the enterprise plan
@@ -571,15 +538,13 @@
         #resettable
         label="Plan"
         [options]="planOptions"
-        [(value)]="resetPlan"
-      />
+        [(value)]="resetPlan" />
     </div>
 
     <ds-button
       size="sm"
       variant="ghost"
-      (clicked)="resettable.clear()"
-    >
+      (clicked)="resettable.clear()">
       Reset
     </ds-button>
   </div>

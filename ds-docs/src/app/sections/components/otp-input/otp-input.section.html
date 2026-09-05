@@ -1,8 +1,7 @@
 <docs-section
   anchor="otp-input"
   eyebrow="Components"
-  title="OTP input"
->
+  title="OTP input">
   <span lede>
     One-time password and PIN entry fields with configurable length, mode, and
     optional masking.
@@ -24,8 +23,7 @@
         [length]="6"
         [mode]="'numeric'"
         [(value)]="code"
-        (completed)="onComplete($event)"
-      />
+        (completed)="onComplete($event)" />
 
       <p class="t-s">
         Entered: {{ code() }}
@@ -50,8 +48,7 @@
     <ds-otp-input
       [length]="4"
       [mask]="true"
-      [(value)]="pin"
-    />
+      [(value)]="pin" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -70,15 +67,13 @@
     <ds-otp-input
       ariaLabel="Verification code"
       hint="Check your email for a 6-digit code."
-      [length]="6"
-    />
+      [length]="6" />
   </div>
 
   <div class="demo-panel">
     <ds-otp-input
       ariaLabel="Verification code — error"
       error="The code you entered is incorrect. Please try again."
-      [length]="6"
-    />
+      [length]="6" />
   </div>
 </docs-section>

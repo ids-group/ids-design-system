@@ -1,8 +1,7 @@
 <docs-section
   anchor="textarea"
   eyebrow="Components"
-  title="Textarea"
->
+  title="Textarea">
   <span lede>
     Multi-line text input with state variants and content-driven autosize.
   </span>
@@ -17,8 +16,7 @@
         <ds-textarea
           label="Description"
           placeholder="Describe the event…"
-          [rows]="3"
-        />
+          [rows]="3" />
       </div>
 
       <div class="state-cell-label">
@@ -31,8 +29,7 @@
         <ds-textarea
           label="Description"
           value="Multi-phase initiative for the north quadrant of the site."
-          [rows]="3"
-        />
+          [rows]="3" />
       </div>
 
       <div class="state-cell-label">
@@ -45,8 +42,7 @@
         <ds-textarea
           label="Brief"
           error="Required"
-          [rows]="3"
-        />
+          [rows]="3" />
       </div>
 
       <div class="state-cell-label">
@@ -60,8 +56,7 @@
           label="Brief"
           value="Auto-generated from event template."
           [rows]="3"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -78,8 +73,7 @@
     <ds-textarea
       label="Notes"
       value="Site map TBC — confirmed via Sam Carter 2 May."
-      [rows]="3"
-    />
+      [rows]="3" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -99,8 +93,7 @@
       label="Generated summary"
       value="Auto-generated from the project template. Edit the source to update this field."
       [rows]="4"
-      [readOnly]="true"
-    />
+      [readOnly]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -120,16 +113,14 @@
       label="Short description"
       placeholder="Describe the project in a few sentences…"
       [rows]="4"
-      [maxLength]="200"
-    />
+      [maxLength]="200" />
 
     <ds-textarea
       label="Notes"
       hint="Visible only to project admins"
       placeholder="Internal notes…"
       [rows]="4"
-      [maxLength]="300"
-    />
+      [maxLength]="300" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -153,7 +144,6 @@
       value="Type more lines and the field grows up to 8 rows, then scrolls."
       [autosize]="true"
       [minRows]="2"
-      [maxRows]="8"
-    />
+      [maxRows]="8" />
   </div>
 </docs-section>

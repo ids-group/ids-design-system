@@ -13,8 +13,7 @@ import { DS_VERSION } from '../../../shared/docs-stats';
     <docs-section
       anchor="practice-rules"
       eyebrow="Practice"
-      title="Composition rules"
-    >
+      title="Composition rules">
       <span lede>
         Which spacing goes between what, which type role a piece of text takes,
         which colour role does which job, and when a transition earns its place.

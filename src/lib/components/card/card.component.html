@@ -4,7 +4,6 @@
   [attr.tabindex]="interactive() ? 0 : null"
   (click)="onClick($event)"
   (keydown.enter)="onActivationKey($event)"
-  (keydown.space)="onActivationKey($event)"
->
+  (keydown.space)="onActivationKey($event)">
   <ng-content></ng-content>
 </article>

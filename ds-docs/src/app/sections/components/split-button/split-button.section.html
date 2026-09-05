@@ -1,8 +1,7 @@
 <docs-section
   anchor="split-button"
   eyebrow="Components"
-  title="Split button"
->
+  title="Split button">
   <span lede>
     Combines a primary action button with a dropdown of secondary actions in a
     single cohesive control.
@@ -25,8 +24,7 @@
         [variant]="'primary'"
         [menuItems]="saveActions"
         (pressed)="onSave()"
-        (itemSelected)="onPick($event)"
-      />
+        (itemSelected)="onPick($event)" />
 
       <p class="t-s">
         Last action: {{ lastAction() }}
@@ -50,8 +48,7 @@
       [variant]="'outline'"
       [menuItems]="exportActions"
       (pressed)="onSave()"
-      (itemSelected)="onPick($event)"
-    />
+      (itemSelected)="onPick($event)" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -74,7 +71,6 @@
     <ds-split-button
       label="Save"
       [variant]="'primary'"
-      (pressed)="onSave()"
-    />
+      (pressed)="onSave()" />
   </div>
 </docs-section>

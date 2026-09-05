@@ -46,8 +46,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
       [attr.role]="ariaLabel() ? 'img' : null"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-hidden]="ariaLabel() ? null : 'true'"
-      [innerHTML]="paths()"
-    >
+      [innerHTML]="paths()">
     </svg>
   `,
 })

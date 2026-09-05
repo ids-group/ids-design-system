@@ -1,8 +1,7 @@
 <nav
   class="toc"
   [class.is-collapsed]="effectiveCollapsed()"
-  [class.is-drawer]="layout.railOverlay()"
->
+  [class.is-drawer]="layout.railOverlay()">
   <!-- The brand row also heads the OVERLAY: the layout's rail is a bare
            container, so nothing else names the panel now that the ds-drawer
            that used to wrap it is gone. Collapsing is desktop-only (the overlay
@@ -11,8 +10,7 @@
     <a
       class="brand-home"
       routerLink="/"
-      aria-label="Design System, home"
-    >
+      aria-label="Design System, home">
       <span class="mark">
         D
       </span>
@@ -38,8 +36,7 @@
         size="sm"
         icon="x"
         ariaLabel="Close navigation"
-        (pressed)="layout.railOpen.set(false)"
-      />
+        (pressed)="layout.railOpen.set(false)" />
     } @else {
       <ds-icon-button
         class="collapse-toggle"
@@ -49,8 +46,7 @@
         [ariaLabel]="
           effectiveCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'
         "
-        (pressed)="toggleCollapsed()"
-      />
+        (pressed)="toggleCollapsed()" />
     }
   </div>
 
@@ -60,8 +56,7 @@
       placeholder="Search…"
       ariaLabel="Filter sections"
       [clearable]="true"
-      [(value)]="query"
-    />
+      [(value)]="query" />
 
     @for (group of filteredNav(); track group.title) {
       @if (group.title === 'Start') {
@@ -71,8 +66,7 @@
             routerLinkActive="is-active"
             [routerLink]="urlForGroupPath(group.path)"
             [routerLinkActiveOptions]="{ exact: true }"
-            (click)="navigated.emit()"
-          >
+            (click)="navigated.emit()">
             {{ item.label }}
           </a>
         }
@@ -81,8 +75,7 @@
           class="group group-link"
           [routerLink]="urlForGroupPath(group.path)"
           [class.is-active]="isGroupActive(group)"
-          (click)="navigated.emit()"
-        >
+          (click)="navigated.emit()">
           {{ group.title }}
         </a>
 
@@ -92,8 +85,7 @@
             [routerLink]="urlForAnchor(group.path, item.anchor)"
             [state]="linkState(group.path)"
             [class.is-active]="isActive(item.anchor)"
-            (click)="onItem(item.anchor)"
-          >
+            (click)="onItem(item.anchor)">
             <span class="link-label">
               {{ item.label }}
             </span>

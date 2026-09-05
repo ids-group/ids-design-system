@@ -2,8 +2,7 @@
   anchor="autocomplete"
   eyebrow="Components"
   title="Autocomplete"
-  [apiKeys]="['create-template']"
->
+  [apiKeys]="['create-template']">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -60,8 +59,7 @@
     <ds-autocomplete
       placeholder="Pick a member…"
       [options]="members"
-      [(value)]="memberValue"
-    />
+      [(value)]="memberValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -77,8 +75,7 @@
       placeholder="Add product…"
       [options]="products"
       [multiple]="true"
-      [(value)]="productsValue"
-    />
+      [(value)]="productsValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -126,8 +123,7 @@
       [options]="products"
       [multiple]="true"
       [maxVisibleChips]="2"
-      [(value)]="cappedProductsValue"
-    />
+      [(value)]="cappedProductsValue" />
   </div>
 
   <p class="block-desc t-s">
@@ -145,8 +141,7 @@
         maxVisibleChips="fit"
         [options]="products"
         [multiple]="true"
-        [(value)]="fitProductsValue"
-      />
+        [(value)]="fitProductsValue" />
     </div>
   </div>
 
@@ -175,15 +170,13 @@
       placeholder="Add product…"
       [options]="products"
       [multiple]="true"
-      [(value)]="toolbarProductsValue"
-    />
+      [(value)]="toolbarProductsValue" />
 
     <ds-autocomplete
       width="content"
       placeholder="Venue…"
       [options]="venueGroups"
-      [(value)]="toolbarVenueValue"
-    />
+      [(value)]="toolbarVenueValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -208,8 +201,7 @@
       placeholder="Pick a member…"
       hint="Start typing to filter the member list."
       [options]="members"
-      [(value)]="memberValue"
-    />
+      [(value)]="memberValue" />
   </div>
 
   <div class="autocomplete-field-wrap">
@@ -220,8 +212,7 @@
     <ds-autocomplete
       placeholder="Pick a member…"
       error="A member is required."
-      [options]="members"
-    />
+      [options]="members" />
   </div>
 
   <div class="autocomplete-field-wrap">
@@ -232,8 +223,7 @@
     <ds-autocomplete
       placeholder="Pick a member…"
       [options]="members"
-      [disabled]="true"
-    />
+      [disabled]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -254,8 +244,7 @@
     <ds-autocomplete
       placeholder="Search venues…"
       [options]="venueGroups"
-      [(value)]="venueValue"
-    />
+      [(value)]="venueValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -283,8 +272,7 @@
       [multiple]="true"
       [allowCreate]="true"
       [(value)]="tagValue"
-      (create)="onCreateTag($event)"
-    />
+      (create)="onCreateTag($event)" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -350,8 +338,7 @@
     <ds-autocomplete
       placeholder="Search channels…"
       [options]="channels"
-      [(value)]="channelValue"
-    />
+      [(value)]="channelValue" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -374,15 +361,13 @@
         label="Owner"
         [options]="ownerOptions()"
         [compareWith]="sameOwner"
-        [(value)]="owner"
-      />
+        [(value)]="owner" />
     </div>
 
     <ds-button
       size="sm"
       variant="ghost"
-      (clicked)="refetchOwners()"
-    >
+      (clicked)="refetchOwners()">
       Refetch
     </ds-button>
 
@@ -413,8 +398,7 @@
         placeholder="Where to?"
         searchPlaceholder="Type to search again"
         [options]="members"
-        [(value)]="searchCity"
-      />
+        [(value)]="searchCity" />
     </div>
   </div>
 </docs-section>

@@ -2,21 +2,18 @@
   @if (label()) {
     <span
       class="label"
-      [id]="labelId"
-    >
+      [id]="labelId">
       {{ label() }}
       @if (required()) {
         <span
           class="req"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           *
         </span>
       } @else if (optional()) {
         <span
           class="optional-marker"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           (optional)
         </span>
       }
@@ -29,8 +26,7 @@
   <div
     #anchor
     [class]="triggerClasses()"
-    (click)="onFieldClick()"
-  >
+    (click)="onFieldClick()">
     <span class="input-wrap">
       <input
         #inputEl
@@ -57,8 +53,7 @@
         (paste)="onFieldPaste($event)"
         (blur)="onFieldBlur()"
         (keydown)="onFieldKeydown($event)"
-        (keydown.arrowdown)="open(true); $event.preventDefault()"
-      />
+        (keydown.arrowdown)="open(true); $event.preventDefault()" />
 
       <!-- Per-slot overlay: the real input is transparent (see .masked in the
            SCSS), so this paints every glyph — digits at normal weight, unfilled
@@ -71,8 +66,7 @@
         <!-- eslint-disable ds/template/element-content-newline -->
         <span
           class="mask-ghost"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           @for (part of displaySlots(); track $index) {
             <span [class.muted]="part.muted">{{ part.text }}</span>
           }
@@ -87,12 +81,10 @@
       tabindex="-1"
       aria-hidden="true"
       [disabled]="isDisabled()"
-      (click)="onFieldClick(); $event.stopPropagation()"
-    >
+      (click)="onFieldClick(); $event.stopPropagation()">
       <ds-icon
         name="calendar"
-        [size]="16"
-      />
+        [size]="16" />
     </button>
   </div>
 
@@ -101,8 +93,7 @@
     [text]="message().text"
     [state]="message().state"
     [messageId]="hintId()"
-    [reserve]="reserveMessageResolved()"
-  />
+    [reserve]="reserveMessageResolved()" />
 </div>
 
 <ng-template #panel>
@@ -116,12 +107,10 @@
     cdkTrapFocus
     [id]="panelId"
     [class.has-presets]="presets().length > 0"
-    (click)="closeMenus()"
-  >
+    (click)="closeMenus()">
     <span
       class="visually-hidden"
-      aria-live="polite"
-    >
+      aria-live="polite">
       {{ monthYearLabel() }}
     </span>
 
@@ -129,21 +118,18 @@
       <div class="head">
         <span
           class="period"
-          [id]="captionId"
-        >
+          [id]="captionId">
           <span class="period-item">
             <button
               type="button"
               class="period-trigger"
               aria-haspopup="listbox"
               [attr.aria-expanded]="monthMenuOpen()"
-              (click)="toggleMonthMenu($event)"
-            >
+              (click)="toggleMonthMenu($event)">
               {{ monthNames()[viewMonthIndex()] }}
               <ds-icon
                 name="chevronDown"
-                [size]="12"
-              />
+                [size]="12" />
             </button>
 
             @if (monthMenuOpen()) {
@@ -153,13 +139,11 @@
               <div
                 class="picker-menu"
                 (click)="$event.stopPropagation()"
-                (keydown.escape)="closeMenus()"
-              >
+                (keydown.escape)="closeMenus()">
                 <div
                   class="picker-grid"
                   role="group"
-                  aria-label="Select month"
-                >
+                  aria-label="Select month">
                   @for (name of monthNames(); track $index) {
                     <button
                       type="button"
@@ -169,8 +153,7 @@
                       [attr.aria-current]="
                         $index === viewMonthIndex() ? 'true' : null
                       "
-                      (click)="selectMonth($index, $event)"
-                    >
+                      (click)="selectMonth($index, $event)">
                       {{ name.slice(0, 3) }}
                     </button>
                   }
@@ -185,13 +168,11 @@
               class="period-trigger"
               aria-haspopup="listbox"
               [attr.aria-expanded]="yearMenuOpen()"
-              (click)="toggleYearMenu($event)"
-            >
+              (click)="toggleYearMenu($event)">
               {{ viewYear() }}
               <ds-icon
                 name="chevronDown"
-                [size]="12"
-              />
+                [size]="12" />
             </button>
 
             @if (yearMenuOpen()) {
@@ -201,20 +182,17 @@
               <div
                 class="picker-menu"
                 (click)="$event.stopPropagation()"
-                (keydown.escape)="closeMenus()"
-              >
+                (keydown.escape)="closeMenus()">
                 <div class="picker-head">
                   <button
                     type="button"
                     class="picker-nav"
                     aria-label="Previous years"
                     [disabled]="!canPrevYearPage()"
-                    (click)="prevYearPage($event)"
-                  >
+                    (click)="prevYearPage($event)">
                     <ds-icon
                       name="chevronLeft"
-                      [size]="14"
-                    />
+                      [size]="14" />
                   </button>
 
                   <span class="picker-range">
@@ -226,28 +204,24 @@
                     class="picker-nav"
                     aria-label="Next years"
                     [disabled]="!canNextYearPage()"
-                    (click)="nextYearPage($event)"
-                  >
+                    (click)="nextYearPage($event)">
                     <ds-icon
                       name="chevronRight"
-                      [size]="14"
-                    />
+                      [size]="14" />
                   </button>
                 </div>
 
                 <div
                   class="picker-grid"
                   role="group"
-                  aria-label="Select year"
-                >
+                  aria-label="Select year">
                   @for (year of yearsOnPage(); track year) {
                     <button
                       type="button"
                       class="picker-cell year-cell"
                       [class.selected]="year === viewYear()"
                       [attr.aria-current]="year === viewYear() ? 'true' : null"
-                      (click)="selectYear(year, $event)"
-                    >
+                      (click)="selectYear(year, $event)">
                       {{ year }}
                     </button>
                   }
@@ -260,23 +234,19 @@
         <span class="nav">
           <button
             type="button"
-            (click)="prevMonth()"
-          >
+            (click)="prevMonth()">
             <ds-icon
               name="chevronLeft"
-              [size]="14"
-            >
+              [size]="14">
             </ds-icon>
           </button>
 
           <button
             type="button"
-            (click)="nextMonth()"
-          >
+            (click)="nextMonth()">
             <ds-icon
               name="chevronRight"
-              [size]="14"
-            >
+              [size]="14">
             </ds-icon>
           </button>
         </span>
@@ -285,18 +255,15 @@
       <div
         class="grid"
         role="grid"
-        [attr.aria-labelledby]="captionId"
-      >
+        [attr.aria-labelledby]="captionId">
         <div
           class="dow-row"
-          role="row"
-        >
+          role="row">
           @for (dow of weekdays(); track $index) {
             <span
               class="dow"
               role="columnheader"
-              [attr.aria-label]="weekdaysFull()[$index]"
-            >
+              [attr.aria-label]="weekdaysFull()[$index]">
               {{ dow }}
             </span>
           }
@@ -305,8 +272,7 @@
         @for (week of weeksGrid(); track $index) {
           <div
             class="week"
-            role="row"
-          >
+            role="row">
             @for (cell of week; track $index) {
               <ds-calendar-day
                 [muted]="!cell.inMonth"
@@ -320,8 +286,7 @@
                 [tabIndex]="isFocusDay(cell) ? 0 : -1"
                 [ariaLabel]="dayLabel(cell)"
                 (daySelected)="selectDay(cell)"
-                (dayKeydown)="onGridKeydown($event, cell)"
-              >
+                (dayKeydown)="onGridKeydown($event, cell)">
                 {{ cell.day }}
               </ds-calendar-day>
             }
@@ -337,8 +302,7 @@
             type="button"
             class="preset-btn"
             [disabled]="isPresetDisabled(preset)"
-            (click)="applyPreset(preset); $event.stopPropagation()"
-          >
+            (click)="applyPreset(preset); $event.stopPropagation()">
             {{ preset.label }}
           </button>
         }

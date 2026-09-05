@@ -1,8 +1,7 @@
 <docs-section
   anchor="icon-button"
   eyebrow="Components"
-  title="Icon button"
->
+  title="Icon button">
   <span lede>
     Icon-only action with its own variant taxonomy — distinct from
     <code class="t-mono-inline">
@@ -43,18 +42,15 @@
     <docs-matrix
       cornerLabel="color \ variant"
       [cols]="variants"
-      [rows]="colors"
-    >
+      [rows]="colors">
       <ng-template
         let-variant
-        let-row="row"
-      >
+        let-row="row">
         <ds-icon-button
           icon="edit"
           [ariaLabel]="row.label + ' ' + variant"
           [variant]="$any(variant)"
-          [color]="$any(row.key)"
-        />
+          [color]="$any(row.key)" />
       </ng-template>
     </docs-matrix>
   </div>
@@ -73,8 +69,7 @@
         icon="settings"
         ariaLabel="Settings"
         variant="outlined"
-        size="sm"
-      />
+        size="sm" />
 
       <code class="t-mono-inline">
         size="sm"
@@ -85,8 +80,7 @@
       <ds-icon-button
         icon="settings"
         ariaLabel="Settings"
-        variant="outlined"
-      />
+        variant="outlined" />
 
       <code class="t-mono-inline">
         size="md"
@@ -98,8 +92,7 @@
         icon="settings"
         ariaLabel="Settings"
         variant="outlined"
-        size="lg"
-      />
+        size="lg" />
 
       <code class="t-mono-inline">
         size="lg"
@@ -124,8 +117,7 @@
         icon="star"
         ariaLabel="Bookmark"
         [selected]="bookmarked()"
-        (pressed)="bookmarked.set(!bookmarked())"
-      />
+        (pressed)="bookmarked.set(!bookmarked())" />
 
       <code class="t-mono-inline">
         selected = {{ bookmarked() }}
@@ -154,8 +146,7 @@
         icon="trash"
         ariaLabel="Delete"
         variant="standard"
-        [disabled]="true"
-      />
+        [disabled]="true" />
 
       <code class="t-mono-inline">
         standard
@@ -167,8 +158,7 @@
         icon="trash"
         ariaLabel="Delete"
         variant="filled"
-        [disabled]="true"
-      />
+        [disabled]="true" />
 
       <code class="t-mono-inline">
         filled
@@ -180,8 +170,7 @@
         icon="trash"
         ariaLabel="Delete"
         variant="tonal"
-        [disabled]="true"
-      />
+        [disabled]="true" />
 
       <code class="t-mono-inline">
         tonal
@@ -193,8 +182,7 @@
         icon="trash"
         ariaLabel="Delete"
         variant="outlined"
-        [disabled]="true"
-      />
+        [disabled]="true" />
 
       <code class="t-mono-inline">
         outlined

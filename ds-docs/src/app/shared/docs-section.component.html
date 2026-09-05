@@ -1,8 +1,7 @@
 <section
   class="section"
   [id]="'section-' + anchor()"
-  [attr.data-anchor]="anchor()"
->
+  [attr.data-anchor]="anchor()">
   <div class="eyebrow t-overline">
     {{ eyebrow() }}
   </div>
@@ -14,8 +13,7 @@
   @if (primaryKey(); as pk) {
     <docs-component-meta
       [key]="pk"
-      [attr.data-key]="pk"
-    />
+      [attr.data-key]="pk" />
   }
 
   <p class="lede t-m">
@@ -30,15 +28,13 @@
   @if (primaryKey(); as pk) {
     <docs-api-table
       [key]="pk"
-      [attr.data-key]="pk"
-    />
+      [attr.data-key]="pk" />
   }
 
   @for (key of secondaryKeys(); track key) {
     <div
       class="api-sub"
-      [attr.data-key]="key"
-    >
+      [attr.data-key]="key">
       <docs-component-meta [key]="key" />
 
       <docs-api-table [key]="key" />

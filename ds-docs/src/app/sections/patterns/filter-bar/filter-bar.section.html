@@ -1,8 +1,7 @@
 <docs-section
   anchor="pattern-filter-bar"
   eyebrow="Patterns"
-  title="Filter bar"
->
+  title="Filter bar">
   <span lede>
     {{ lede }}
   </span>
@@ -38,24 +37,20 @@
       <ds-select
         placeholder="Status"
         size="sm"
-        [options]="statusOptions"
-      />
+        [options]="statusOptions" />
 
       <ds-select
         placeholder="Member"
         size="sm"
-        [options]="memberOptions"
-      />
+        [options]="memberOptions" />
 
       <ds-button
         color="neutral"
         variant="outline"
-        size="sm"
-      >
+        size="sm">
         <ds-icon
           name="filter"
-          [size]="14"
-        />
+          [size]="14" />
         More filters
       </ds-button>
 
@@ -77,8 +72,7 @@
 
       <button
         class="link"
-        type="button"
-      >
+        type="button">
         Clear filters
       </button>
     </div>
@@ -105,24 +99,20 @@
         <ds-select
           placeholder="Status"
           size="sm"
-          [options]="statusOptions"
-        />
+          [options]="statusOptions" />
 
         <ds-select
           placeholder="Member"
           size="sm"
-          [options]="memberOptions"
-        />
+          [options]="memberOptions" />
 
         <ds-button
           color="neutral"
           variant="outline"
-          size="sm"
-        >
+          size="sm">
           <ds-icon
             name="filter"
-            [size]="14"
-          />
+            [size]="14" />
           More
         </ds-button>
 
@@ -138,8 +128,7 @@
 
         <button
           class="link"
-          type="button"
-        >
+          type="button">
           Clear
         </button>
       </div>
@@ -176,16 +165,14 @@
         <ds-search
           placeholder="Search records…"
           [clearable]="true"
-          [(value)]="filterQuery"
-        />
+          [(value)]="filterQuery" />
       </div>
 
       <ds-select
         placeholder="Status"
         size="sm"
         [options]="statusOptions"
-        [(value)]="filterStatus"
-      />
+        [(value)]="filterStatus" />
 
       @if (filterQuery() || filterStatus()) {
         <span class="divider"></span>
@@ -198,8 +185,7 @@
           @if (filterQuery()) {
             <ds-tag
               [closable]="true"
-              (closed)="filterQuery.set('')"
-            >
+              (closed)="filterQuery.set('')">
               Search: {{ filterQuery() }}
             </ds-tag>
           }
@@ -207,8 +193,7 @@
           @if (filterStatus()) {
             <ds-tag
               [closable]="true"
-              (closed)="filterStatus.set('')"
-            >
+              (closed)="filterStatus.set('')">
               Status: {{ statusLabel(filterStatus()) }}
             </ds-tag>
           }
@@ -217,8 +202,7 @@
         <button
           class="link"
           type="button"
-          (click)="clearFilters()"
-        >
+          (click)="clearFilters()">
           Clear filters
         </button>
       }
@@ -231,8 +215,7 @@
       [columns]="recordColumns"
       [filterQuery]="filterQuery()"
       [bordered]="true"
-      [stickyHeader]="false"
-    >
+      [stickyHeader]="false">
       <span empty>
         No records match your filters
       </span>

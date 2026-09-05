@@ -2,8 +2,7 @@
   anchor="layout"
   eyebrow="Foundations"
   title="Layout"
-  [api]="false"
->
+  [api]="false">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -59,8 +58,7 @@
         <div class="bp-row-bar">
           <div
             class="bp-row-fill"
-            [style.width.%]="(bp.px / 1536) * 100"
-          >
+            [style.width.%]="(bp.px / 1536) * 100">
           </div>
         </div>
       </div>
@@ -96,8 +94,7 @@
 
         <div
           class="grid-tier-viz"
-          [style.--cols]="t.cols"
-        >
+          [style.--cols]="t.cols">
           @for (_ of cols(t.cols); track $index) {
             <span></span>
           }

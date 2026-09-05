@@ -1,8 +1,7 @@
 <docs-section
   anchor="pattern-form-layout"
   eyebrow="Patterns"
-  title="Form layout"
->
+  title="Form layout">
   <span lede>
     {{ lede }}
   </span>
@@ -37,22 +36,19 @@
               label="Name"
               placeholder="Project Alpha"
               [value]="name"
-              [required]="true"
-            />
+              [required]="true" />
 
             <ds-input
               label="ID (auto)"
               placeholder="EVT-2026-0142"
               [value]="recordId"
-              [disabled]="true"
-            />
+              [disabled]="true" />
           </div>
 
           <ds-select
             label="Member"
             [options]="members"
-            [value]="member"
-          />
+            [value]="member" />
         </div>
       </div>
 
@@ -78,14 +74,12 @@
               <ds-input
                 label="Start"
                 placeholder="27 Jul 2026 06:00"
-                [value]="buildStart"
-              />
+                [value]="buildStart" />
 
               <ds-input
                 label="Complete"
                 placeholder="30 Jul 2026 12:00"
-                [value]="buildEnd"
-              />
+                [value]="buildEnd" />
             </div>
           </fieldset>
 
@@ -98,14 +92,12 @@
               <ds-input
                 label="Open"
                 placeholder="30 Jul 2026 14:00"
-                [value]="liveOpen"
-              />
+                [value]="liveOpen" />
 
               <ds-input
                 label="Close"
                 placeholder="3 Aug 2026 23:00"
-                [value]="liveClose"
-              />
+                [value]="liveClose" />
             </div>
           </fieldset>
         </div>
@@ -127,14 +119,12 @@
             <ds-input
               label="City"
               placeholder="Suffolk"
-              [value]="city"
-            />
+              [value]="city" />
 
             <ds-input
               label="Country"
               placeholder="United Kingdom"
-              [value]="country"
-            />
+              [value]="country" />
           </div>
         </div>
       </div>
@@ -142,8 +132,7 @@
       <div class="form-footer">
         <ds-button
           color="neutral"
-          variant="outline"
-        >
+          variant="outline">
           Discard
         </ds-button>
 
@@ -171,29 +160,24 @@
 
       <ds-input
         placeholder="Project Alpha"
-        [value]="name"
-      />
+        [value]="name" />
 
       <div class="inline-edit-actions">
         <button
           type="button"
-          class="pill pill--ghost"
-        >
+          class="pill pill--ghost">
           <ds-icon
             name="x"
-            [size]="14"
-          />
+            [size]="14" />
           Cancel
         </button>
 
         <button
           type="button"
-          class="pill pill--primary"
-        >
+          class="pill pill--primary">
           <ds-icon
             name="check"
-            [size]="14"
-          />
+            [size]="14" />
           Save
         </button>
       </div>
@@ -271,22 +255,19 @@
         <ds-input
           label="Contact name"
           value="Ann Fletcher"
-          [reserveMessage]="true"
-        />
+          [reserveMessage]="true" />
 
         <ds-input
           label="Email"
           value="ann@example.com"
           [reserveMessage]="true"
           [invalid]="showError()"
-          [error]="showError() ? 'Enter a work address.' : ''"
-        />
+          [error]="showError() ? 'Enter a work address.' : ''" />
 
         <ds-input
           label="Phone"
           value="+44 7700 900123"
-          [reserveMessage]="true"
-        />
+          [reserveMessage]="true" />
       </ds-stack>
     </div>
 
@@ -299,22 +280,19 @@
         <ds-input
           label="Contact name"
           value="Ann Fletcher"
-          [reserveMessage]="true"
-        />
+          [reserveMessage]="true" />
 
         <ds-input
           label="Email"
           value="ann@example.com"
           [reserveMessage]="true"
           [invalid]="showError()"
-          [error]="showError() ? 'Enter a work address.' : ''"
-        />
+          [error]="showError() ? 'Enter a work address.' : ''" />
 
         <ds-input
           label="Phone"
           value="+44 7700 900123"
-          [reserveMessage]="true"
-        />
+          [reserveMessage]="true" />
       </ds-stack>
     </div>
   </div>
@@ -324,8 +302,7 @@
       size="sm"
       color="neutral"
       variant="outline"
-      (pressed)="showError.set(!showError())"
-    >
+      (pressed)="showError.set(!showError())">
       {{ showError() ? 'Clear the error' : 'Show an error' }}
     </ds-button>
   </div>
@@ -355,16 +332,14 @@
         <ds-input
           label="Contact name"
           value="Ann Fletcher"
-          [reserveMessage]="true"
-        />
+          [reserveMessage]="true" />
 
         <ds-switch label="Send a copy to the account owner" />
 
         <ds-input
           label="Phone"
           value="+44 7700 900123"
-          [reserveMessage]="true"
-        />
+          [reserveMessage]="true" />
 
         <ds-button size="sm">
           Add another contact
@@ -381,8 +356,7 @@
         <ds-input
           label="Contact name"
           value="Ann Fletcher"
-          [reserveMessage]="true"
-        />
+          [reserveMessage]="true" />
 
         <div class="gap-demo-inset">
           <ds-switch label="Send a copy to the account owner" />
@@ -391,8 +365,7 @@
         <ds-input
           label="Phone"
           value="+44 7700 900123"
-          [reserveMessage]="true"
-        />
+          [reserveMessage]="true" />
 
         <div class="gap-demo-inset">
           <ds-button size="sm">

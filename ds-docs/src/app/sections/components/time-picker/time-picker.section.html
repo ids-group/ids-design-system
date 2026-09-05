@@ -1,8 +1,7 @@
 <docs-section
   anchor="time-picker"
   eyebrow="Components"
-  title="Time picker"
->
+  title="Time picker">
   <span lede>
     A time field (HH:MM) that opens column wheels — Hours / Minutes (and AM·PM
     in 12-hour mode). Value is a canonical 24-hour
@@ -37,8 +36,7 @@
   <div class="row">
     <ds-time-picker
       label="Time"
-      [(value)]="single"
-    />
+      [(value)]="single" />
 
     <span class="value-tag t-mono-inline">
       {{ single() ?? '—' }}
@@ -61,8 +59,7 @@
   <div class="row">
     <ds-time-picker
       format="12h"
-      placeholder="--:-- --"
-    />
+      placeholder="--:-- --" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -79,8 +76,7 @@
   <div class="row">
     <ds-time-picker
       [minuteStep]="15"
-      [(value)]="stepped"
-    />
+      [(value)]="stepped" />
 
     <span class="value-tag t-mono-inline">
       {{ stepped() ?? '—' }}
@@ -110,8 +106,7 @@
       maxTime="18:00"
       [minuteStep]="30"
       [disabledTime]="noLunch"
-      [(value)]="bounded"
-    />
+      [(value)]="bounded" />
 
     <span class="value-tag t-mono-inline">
       {{ bounded() ?? '—' }}
@@ -133,20 +128,17 @@
     <ds-time-picker
       size="sm"
       clearable
-      [(value)]="single"
-    />
+      [(value)]="single" />
 
     <ds-time-picker
       size="md"
       clearable
-      [(value)]="single"
-    />
+      [(value)]="single" />
 
     <ds-time-picker
       size="lg"
       clearable
-      [(value)]="single"
-    />
+      [(value)]="single" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -163,15 +155,13 @@
   <div class="row">
     <ds-time-picker
       mode="range"
-      [(value)]="range"
-    />
+      [(value)]="range" />
 
     <ds-time-picker
       mode="range"
       label="Cover window"
       [required]="true"
-      [(value)]="requiredRange"
-    />
+      [(value)]="requiredRange" />
 
     <span class="value-tag t-mono-inline">
       {{ range() }}
@@ -195,8 +185,7 @@
   <div class="row">
     <ds-time-picker
       error="A time is required."
-      [formControl]="timeControl"
-    />
+      [formControl]="timeControl" />
 
     <span class="value-tag t-mono-inline">
       {{ timeControl.value ?? '—' }}

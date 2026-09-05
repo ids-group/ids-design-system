@@ -1,21 +1,18 @@
 @if (label()) {
   <span
     class="label"
-    [id]="labelId"
-  >
+    [id]="labelId">
     {{ label() }}
     @if (required()) {
       <span
         class="req"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         *
       </span>
     } @else if (optional()) {
       <span
         class="optional-marker"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         (optional)
       </span>
     }
@@ -39,14 +36,12 @@
   [attr.aria-required]="required() ? 'true' : null"
   [attr.aria-disabled]="isDisabled() ? 'true' : null"
   (click)="toggle()"
-  (keydown)="onTriggerKeydown($event)"
->
+  (keydown)="onTriggerKeydown($event)">
   @if (selectedOption()?.icon) {
     <ds-icon
       class="trigger-icon"
       [name]="selectedOption()!.icon!"
-      [size]="16"
-    />
+      [size]="16" />
   }
 
   @if (pickerTrigger(); as tpl) {
@@ -58,13 +53,11 @@
         count: hasValue() ? 1 : 0,
         open: open(),
         disabled: isDisabled(),
-      }"
-    />
+      }" />
   } @else {
     <span
       class="trigger-text"
-      [class.is-placeholder]="!hasValue()"
-    >
+      [class.is-placeholder]="!hasValue()">
       {{ displayLabel() }}
     </span>
   }
@@ -79,20 +72,17 @@
       type="button"
       class="clear-btn"
       aria-label="Clear selection"
-      (click)="clearValue($event)"
-    >
+      (click)="clearValue($event)">
       <ds-icon
         name="x"
-        [size]="14"
-      />
+        [size]="14" />
     </button>
   }
 
   <span class="chevron">
     <ds-icon
       name="chevronDown"
-      [size]="14"
-    />
+      [size]="14" />
   </span>
 </div>
 
@@ -101,8 +91,7 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()"
-/>
+  [reserve]="reserveMessageResolved()" />
 
 @if (preview.staticPreview()) {
   <div class="ds-dropdown-panel">
@@ -124,8 +113,7 @@
             count: options().length,
             total: options().length,
             query: '',
-          }"
-        />
+          }" />
       </div>
     }
 
@@ -134,19 +122,16 @@
       role="listbox"
       [attr.aria-busy]="loading() ? 'true' : null"
       [id]="listboxId"
-      [attr.aria-labelledby]="label() ? labelId : null"
-    >
+      [attr.aria-labelledby]="label() ? labelId : null">
       @for (item of options(); track $index; let groupIdx = $index) {
         @if (isOptionGroup(item)) {
           <li
             class="optgroup"
             role="group"
-            [attr.aria-label]="item.label"
-          >
+            [attr.aria-label]="item.label">
             <span
               class="optgroup-label"
-              [class.is-first]="groupIdx === 0"
-            >
+              [class.is-first]="groupIdx === 0">
               @if (groupLabelTemplate(); as tpl) {
                 <ng-container
                   [ngTemplateOutlet]="tpl"
@@ -154,8 +139,7 @@
                     $implicit: item,
                     group: item,
                     count: item.options.length,
-                  }"
-                />
+                  }" />
               } @else {
                 {{ item.label }}
               }
@@ -163,8 +147,7 @@
 
             <ul
               class="optgroup-list"
-              role="presentation"
-            >
+              role="presentation">
               @for (opt of item.options; track opt.value) {
                 <li role="presentation">
                   <button
@@ -190,21 +173,18 @@
                     (mouseenter)="
                       cursorFromKeyboard.set(false);
                       activeIndex.set(flatIndexOf(opt))
-                    "
-                  >
+                    ">
                     @if (opt.icon) {
                       <ds-icon
                         class="option-icon"
                         [name]="opt.icon"
-                        [size]="16"
-                      />
+                        [size]="16" />
                     }
 
                     @if (opt.disabled && opt.disabledReason) {
                       <span
                         class="option-reason"
-                        [id]="optionId(flatIndexOf(opt)) + '-reason'"
-                      >
+                        [id]="optionId(flatIndexOf(opt)) + '-reason'">
                         {{ opt.disabledReason }}
                       </span>
                     }
@@ -216,8 +196,7 @@
                           [ngTemplateOutletContext]="{
                             $implicit: opt,
                             option: opt,
-                          }"
-                        />
+                          }" />
                       } @else {
                         {{ opt.label }}
                       }
@@ -225,8 +204,7 @@
 
                     <span
                       class="option-check"
-                      [class.is-shown]="isSelected(opt)"
-                    >
+                      [class.is-shown]="isSelected(opt)">
                     </span>
                   </button>
                 </li>
@@ -251,14 +229,12 @@
               (mouseenter)="
                 cursorFromKeyboard.set(false);
                 activeIndex.set(flatIndexOf(item))
-              "
-            >
+              ">
               @if (item.icon) {
                 <ds-icon
                   class="option-icon"
                   [name]="item.icon"
-                  [size]="16"
-                />
+                  [size]="16" />
               }
 
               <span class="option-label">
@@ -268,8 +244,7 @@
                     [ngTemplateOutletContext]="{
                       $implicit: item,
                       option: item,
-                    }"
-                  />
+                    }" />
                 } @else {
                   {{ item.label }}
                 }
@@ -277,8 +252,7 @@
 
               <span
                 class="option-check"
-                [class.is-shown]="isSelected(item)"
-              >
+                [class.is-shown]="isSelected(item)">
               </span>
             </button>
           </li>
@@ -288,15 +262,13 @@
       @if (loading()) {
         <li
           class="empty t-s"
-          role="presentation"
-        >
+          role="presentation">
           <ds-spinner size="sm" />
         </li>
       } @else if (options().length === 0) {
         <li
           class="empty t-s"
-          role="presentation"
-        >
+          role="presentation">
           @if (emptyTemplate(); as tpl) {
             <ng-container [ngTemplateOutlet]="tpl" />
           } @else {
@@ -314,8 +286,7 @@
             count: options().length,
             total: options().length,
             query: '',
-          }"
-        />
+          }" />
       </div>
     }
   </div>

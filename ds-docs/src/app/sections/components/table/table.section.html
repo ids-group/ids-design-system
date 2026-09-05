@@ -1,8 +1,7 @@
 <docs-section
   anchor="table"
   eyebrow="Components"
-  title="Table"
->
+  title="Table">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -23,12 +22,10 @@
     caption="Records"
     [data]="events"
     [columns]="defaultColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -36,8 +33,7 @@
 
     <ng-template
       let-row
-      dsCellTemplate="id"
-    >
+      dsCellTemplate="id">
       <span class="mono muted">
         {{ asEvent(row).id }}
       </span>
@@ -45,12 +41,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -79,12 +73,10 @@
     sortMode="client"
     [data]="sortableRows"
     [columns]="sortableColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -106,8 +98,7 @@
           caption="Sortable idle"
           [data]="stateRow"
           [columns]="sortStateColumns"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -123,8 +114,7 @@
           sortDir="asc"
           [data]="stateRow"
           [columns]="sortStateColumns"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -140,8 +130,7 @@
           sortDir="desc"
           [data]="stateRow"
           [columns]="sortStateColumns"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -155,8 +144,7 @@
           caption="Header hover"
           [data]="stateRow"
           [columns]="sortStateColumns"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -186,8 +174,7 @@
           [data]="stateRow"
           [columns]="stateColumns"
           [rowInteractive]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -202,8 +189,7 @@
           [data]="stateRow"
           [columns]="stateColumns"
           [rowInteractive]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -219,8 +205,7 @@
           [columns]="stateColumns"
           [selectable]="true"
           [stickyHeader]="false"
-          [(selectedIds)]="stateSelectedIds"
-        />
+          [(selectedIds)]="stateSelectedIds" />
       </div>
 
       <div class="state-cell-label">
@@ -236,8 +221,7 @@
           [columns]="stateColumns"
           [rowInteractive]="true"
           [activeRowId]="stateRow[0].id"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -280,8 +264,7 @@
           [data]="stateRow"
           [columns]="linkCellColumns"
           [rowInteractive]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -353,8 +336,7 @@
     [data]="events"
     [columns]="linkColumns"
     [rowInteractive]="true"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Row selection · bulk-action bar
@@ -371,12 +353,10 @@
     [columns]="selectionColumns"
     [selectable]="true"
     [stickyHeader]="false"
-    [(selectedIds)]="bulkSelected"
-  >
+    [(selectedIds)]="bulkSelected">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -384,12 +364,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -399,8 +377,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      icon="archive"
-    >
+      icon="archive">
       Archive
     </ds-button>
 
@@ -409,8 +386,7 @@
       color="neutral"
       variant="outline"
       size="sm"
-      icon="download"
-    >
+      icon="download">
       Export
     </ds-button>
 
@@ -418,8 +394,7 @@
       bulk-actions
       color="neutral"
       variant="outline"
-      size="sm"
-    >
+      size="sm">
       Clear
     </ds-button>
   </ds-table>
@@ -442,12 +417,10 @@
     maxHeight="220px"
     [data]="longList"
     [columns]="selectionColumns"
-    [stickyHeader]="true"
-  >
+    [stickyHeader]="true">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -455,12 +428,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -485,8 +456,7 @@
     [data]="events"
     [columns]="loadingColumns"
     [bordered]="true"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Loading · skeleton
@@ -508,8 +478,7 @@
     [data]="events"
     [columns]="loadingColumns"
     [loading]="'skeleton'"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Loading · overlay
@@ -528,8 +497,7 @@
     [data]="events"
     [columns]="loadingColumns"
     [loading]="'overlay'"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Loading · let the table choose
@@ -566,8 +534,7 @@
           [data]="noRows"
           [columns]="loadingColumns"
           [loading]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -581,8 +548,7 @@
           [data]="events"
           [columns]="loadingColumns"
           [loading]="true"
-          [stickyHeader]="false"
-        />
+          [stickyHeader]="false" />
       </div>
 
       <div class="state-cell-label">
@@ -613,8 +579,7 @@
     caption="Records"
     [data]="noRows"
     [columns]="loadingColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <span empty>
       No records match your filters
     </span>
@@ -632,21 +597,18 @@
     caption="Records"
     [data]="noRows"
     [columns]="loadingColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ds-empty-state
       empty
       variant="none"
       icon="inbox"
       title="No records yet"
-      body="Create your first record to start tracking schedules, venues and capacity."
-    >
+      body="Create your first record to start tracking schedules, venues and capacity.">
       <ds-button
         actions
         variant="tonal"
         size="sm"
-        icon="plus"
-      >
+        icon="plus">
         New record
       </ds-button>
     </ds-empty-state>
@@ -664,21 +626,18 @@
     caption="Records"
     [data]="noRows"
     [columns]="loadingColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ds-empty-state
       empty
       variant="none"
       icon="search"
       title="No matches for your filters"
-      body="Try a broader query or clear the active filters to see every record."
-    >
+      body="Try a broader query or clear the active filters to see every record.">
       <ds-button
         actions
         color="neutral"
         variant="outline"
-        size="sm"
-      >
+        size="sm">
         Clear filters
       </ds-button>
     </ds-empty-state>
@@ -697,20 +656,17 @@
     caption="Records"
     [data]="noRows"
     [columns]="loadingColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ds-empty-state
       empty
       variant="error"
       title="Couldn't load records"
-      body="Network error — the request timed out after 30 seconds."
-    >
+      body="Network error — the request timed out after 30 seconds.">
       <ds-button
         actions
         variant="tonal"
         size="sm"
-        icon="refresh"
-      >
+        icon="refresh">
         Retry
       </ds-button>
     </ds-empty-state>
@@ -742,15 +698,13 @@
     [data]="noRows"
     [columns]="loadingColumns"
     [loading]="'overlay'"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ds-empty-state
       empty
       variant="none"
       icon="search"
       title="No matches for your filters"
-      body="This message is bound, and deliberately not shown while the load is in flight."
-    />
+      body="This message is bound, and deliberately not shown while the load is in flight." />
   </ds-table>
 
   <h3 class="block-title t-h4">
@@ -771,12 +725,10 @@
     [data]="events"
     [columns]="defaultColumns"
     [zebra]="true"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -784,8 +736,7 @@
 
     <ng-template
       let-row
-      dsCellTemplate="id"
-    >
+      dsCellTemplate="id">
       <span class="mono muted">
         {{ asEvent(row).id }}
       </span>
@@ -793,12 +744,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -856,8 +805,7 @@
     [stickyFirstColumn]="true"
     [pageSize]="5"
     [animateHeight]="true"
-    [(selectedIds)]="projectSelected"
-  />
+    [(selectedIds)]="projectSelected" />
 
   <p class="block-desc t-s">
     Selected: {{ projectSelected().size }}
@@ -902,12 +850,10 @@
     [rowExpandTemplate]="rowExpand"
     [stickyHeader]="false"
     (rowExpanded)="onRowExpanded($event)"
-    (rowCollapsed)="onRowCollapsed($event)"
-  >
+    (rowCollapsed)="onRowCollapsed($event)">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -916,8 +862,7 @@
 
   <ng-template
     #rowExpand
-    let-row
-  >
+    let-row>
     <div class="expand-detail">
       <span class="expand-detail-label">
         Order ID
@@ -965,12 +910,10 @@
     [expandableRows]="true"
     [rowExpandTemplate]="rowExpand"
     [stickyHeader]="false"
-    [(expandedIds)]="singleExpanded"
-  >
+    [(expandedIds)]="singleExpanded">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -1010,13 +953,11 @@
     [rowInteractive]="true"
     [activeRowId]="detailOpen() ? (detailRow()?.id ?? null) : null"
     [stickyHeader]="false"
-    (rowClicked)="openDetail($event)"
-  />
+    (rowClicked)="openDetail($event)" />
 
   <ds-drawer
     [title]="detailRow()?.project ?? 'Record'"
-    [(open)]="detailOpen"
-  >
+    [(open)]="detailOpen">
     <ng-container drawer-body>
       @if (detailRow(); as row) {
         <div class="expand-detail">
@@ -1051,8 +992,7 @@
           <span class="expand-detail-value">
             <ds-badge
               [status]="row.status"
-              [withDot]="true"
-            >
+              [withDot]="true">
               {{ row.statusLabel }}
             </ds-badge>
           </span>
@@ -1129,8 +1069,7 @@
     [rowActions]="rowActions"
     [stickyHeader]="false"
     (rowClicked)="lastRowClick.set($event.project)"
-    (rowActionSelected)="onRowAction($event)"
-  />
+    (rowActionSelected)="onRowAction($event)" />
 
   <p class="block-desc t-s">
     Row clicked: {{ lastRowClick() ?? '—' }} · Action:
@@ -1171,8 +1110,7 @@
     [data]="events"
     [columns]="pickerColumns"
     [reorderableColumns]="true"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Resizable columns
@@ -1240,12 +1178,10 @@
     [data]="events"
     [columns]="defaultColumns"
     [resizableColumns]="true"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -1253,8 +1189,7 @@
 
     <ng-template
       let-row
-      dsCellTemplate="id"
-    >
+      dsCellTemplate="id">
       <span class="mono muted">
         {{ asEvent(row).id }}
       </span>
@@ -1262,12 +1197,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -1295,8 +1228,7 @@
     [data]="editRows()"
     [columns]="editColumns"
     [stickyHeader]="false"
-    (cellEdited)="onCellEdited($event)"
-  />
+    (cellEdited)="onCellEdited($event)" />
 
   <h3 class="block-title t-h4">
     Persisted layout &amp; export
@@ -1334,8 +1266,7 @@
     [persistLayout]="true"
     [exportButton]="true"
     [reorderableColumns]="true"
-    [resizableColumns]="true"
-  />
+    [resizableColumns]="true" />
 
   <p class="block-desc t-s">
     <strong>
@@ -1425,15 +1356,13 @@
     sortMode="client"
     [data]="projectRows"
     [columns]="projectColumns"
-    [exportFetcher]="slowExportFetcher"
-  >
+    [exportFetcher]="slowExportFetcher">
     <ds-search
       toolbar
       size="sm"
       placeholder="Search projects…"
       ariaLabel="Search projects"
-      [debounce]="300"
-    />
+      [debounce]="300" />
 
     <ds-button
       toolbar
@@ -1442,8 +1371,7 @@
       size="sm"
       icon="download"
       [loading]="toolbarTable.exporting()"
-      (pressed)="toolbarTable.runExport()"
-    >
+      (pressed)="toolbarTable.runExport()">
       Export
     </ds-button>
   </ds-table>
@@ -1475,8 +1403,7 @@
     caption="Projects"
     [data]="projectRows"
     [columns]="fitColumns"
-    [resizableColumns]="true"
-  />
+    [resizableColumns]="true" />
 
   <h3 class="block-title t-h4">
     Server sort · a host that answers with its own default
@@ -1517,8 +1444,7 @@
     [columns]="serverSortColumns"
     [sortKey]="serverSortKey()"
     [sortDir]="serverSortDir()"
-    (sortChange)="onServerSort($event)"
-  />
+    (sortChange)="onServerSort($event)" />
 
   <h3 class="block-title t-h4">
     The same thing two-way, when the host has no opinion to defend
@@ -1573,8 +1499,7 @@
     [data]="twoWaySortedRows()"
     [columns]="serverSortColumns"
     [(sortKey)]="twoWaySortKey"
-    [(sortDir)]="twoWaySortDir"
-  />
+    [(sortDir)]="twoWaySortDir" />
 
   <h3 class="block-title t-h4">
     Column filters
@@ -1597,12 +1522,10 @@
     caption="Records"
     [data]="events"
     [columns]="filterColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -1643,8 +1566,7 @@
     caption="Records"
     [data]="truncateRows"
     [columns]="truncateColumns"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Sticky horizontal scrollbar
@@ -1665,8 +1587,7 @@
     [data]="longList"
     [columns]="wideColumns"
     [stickyScrollbar]="true"
-    [stickyHeader]="false"
-  />
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     CSV export
@@ -1687,8 +1608,7 @@
       variant="outline"
       size="sm"
       icon="download"
-      (pressed)="exportTable.exportCsv('records.csv')"
-    >
+      (pressed)="exportTable.exportCsv('records.csv')">
       Export CSV
     </ds-button>
   </div>
@@ -1698,12 +1618,10 @@
     caption="Records"
     [data]="events"
     [columns]="defaultColumns"
-    [stickyHeader]="false"
-  >
+    [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project"
-    >
+      dsCellTemplate="project">
       <span class="t-s-bold">
         {{ asEvent(row).project }}
       </span>
@@ -1711,8 +1629,7 @@
 
     <ng-template
       let-row
-      dsCellTemplate="id"
-    >
+      dsCellTemplate="id">
       <span class="mono muted">
         {{ asEvent(row).id }}
       </span>
@@ -1720,12 +1637,10 @@
 
     <ng-template
       let-row
-      dsCellTemplate="status"
-    >
+      dsCellTemplate="status">
       <ds-badge
         [status]="asEvent(row).status"
-        [withDot]="true"
-      >
+        [withDot]="true">
         {{ asEvent(row).statusLabel }}
       </ds-badge>
     </ng-template>
@@ -1770,8 +1685,7 @@
   </p>
 
   <pre
-    class="t-mono-block"
-  ><code>&lt;ng-template dsHeaderFilter="opened" [active]="!!range()" let-close="close"&gt;
+    class="t-mono-block"><code>&lt;ng-template dsHeaderFilter="opened" [active]="!!range()" let-close="close"&gt;
   &lt;ds-date-picker mode="range" [(value)]="range" /&gt;
   &lt;ds-button size="sm" (pressed)="apply(); close()"&gt;Apply&lt;/ds-button&gt;
 &lt;/ng-template&gt;</code></pre>
@@ -1845,8 +1759,7 @@
     [virtualRowSize]="44"
     [selectable]="true"
     [zebra]="true"
-    [stickyFirstColumn]="true"
-  />
+    [stickyFirstColumn]="true" />
 
   <h3 class="block-title t-h4">
     Lazy loading
@@ -1897,6 +1810,5 @@
     [virtualScroll]="true"
     [virtualRowSize]="44"
     [zebra]="true"
-    (lazyLoad)="onLazyLoad($event)"
-  />
+    (lazyLoad)="onLazyLoad($event)" />
 </docs-section>

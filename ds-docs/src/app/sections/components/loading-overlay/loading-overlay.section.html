@@ -1,8 +1,7 @@
 <docs-section
   anchor="loading-overlay"
   eyebrow="Components"
-  title="Loading overlay"
->
+  title="Loading overlay">
   <span lede>
     Covers a content region with a spinner and optional label while an async
     operation is in progress.
@@ -22,8 +21,7 @@
       label="Saving…"
       [loading]="busy()"
       [blur]="true"
-      [spinnerSize]="'md'"
-    >
+      [spinnerSize]="'md'">
       <div
         style="
           height: 14px;
@@ -31,8 +29,7 @@
           border-radius: var(--radius-sm);
           width: 70%;
           margin-bottom: var(--space-3);
-        "
-      >
+        ">
       </div>
 
       <div
@@ -42,8 +39,7 @@
           border-radius: var(--radius-sm);
           width: 90%;
           margin-bottom: var(--space-3);
-        "
-      >
+        ">
       </div>
 
       <div
@@ -53,8 +49,7 @@
           border-radius: var(--radius-sm);
           width: 50%;
           margin-bottom: var(--space-3);
-        "
-      >
+        ">
       </div>
     </ds-loading-overlay>
 
@@ -62,8 +57,7 @@
       <ds-button
         color="neutral"
         variant="outline"
-        (pressed)="toggle()"
-      >
+        (pressed)="toggle()">
         Toggle loading
       </ds-button>
     </div>

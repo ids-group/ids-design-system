@@ -11,14 +11,12 @@
     [class.selected]="isSelected(entry.node.id)"
     [disabled]="entry.node.disabled"
     [style.--_level]="entry.level"
-    (click)="onRowClick(entry)"
-  >
+    (click)="onRowClick(entry)">
     @if (entry.hasChildren) {
       <ds-icon
         class="caret"
         [name]="entry.expanded ? 'chevronDown' : 'chevronRight'"
-        [size]="16"
-      />
+        [size]="16" />
     } @else {
       <span class="caret-spacer"></span>
     }
@@ -27,8 +25,7 @@
       <ds-icon
         class="node-icon"
         [name]="icon"
-        [size]="16"
-      />
+        [size]="16" />
     }
 
     <span class="label">

@@ -1,8 +1,7 @@
 <docs-section
   anchor="drawer"
   eyebrow="Components"
-  title="Drawer"
->
+  title="Drawer">
   <span lede>
     Slide-in panel for inline edit flows. Renders as fixed-position when
     <code class="t-mono-inline">
@@ -18,13 +17,11 @@
     [title]="activePlacement() + ' · ' + activeSize()"
     [placement]="activePlacement()"
     [size]="activeSize()"
-    [(open)]="open"
-  >
+    [(open)]="open">
     <ng-container drawer-body>
       <p
         class="t-s"
-        style="color: var(--text-secondary); margin: 0"
-      >
+        style="color: var(--text-secondary); margin: 0">
         Opened from the <strong>{{ activePlacement() }}</strong> edge at
         <strong>
           {{ activeSize() }}
@@ -37,8 +34,7 @@
       <ds-button
         color="neutral"
         variant="outline"
-        (click)="open.set(false)"
-      >
+        (click)="open.set(false)">
         Cancel
       </ds-button>
 
@@ -62,8 +58,7 @@
   <div class="demo">
     <ds-button
       size="sm"
-      (click)="openWith('right', 'md')"
-    >
+      (click)="openWith('right', 'md')">
       Open drawer
     </ds-button>
   </div>
@@ -89,8 +84,7 @@
       size="sm"
       color="neutral"
       variant="outline"
-      (click)="openWith('left')"
-    >
+      (click)="openWith('left')">
       Left
     </ds-button>
 
@@ -98,8 +92,7 @@
       size="sm"
       color="neutral"
       variant="outline"
-      (click)="openWith('top')"
-    >
+      (click)="openWith('top')">
       Top
     </ds-button>
 
@@ -107,15 +100,13 @@
       size="sm"
       color="neutral"
       variant="outline"
-      (click)="openWith('bottom')"
-    >
+      (click)="openWith('bottom')">
       Bottom
     </ds-button>
 
     <ds-button
       size="sm"
-      (click)="openWith('right')"
-    >
+      (click)="openWith('right')">
       Right
     </ds-button>
   </div>
@@ -134,8 +125,7 @@
       size="sm"
       color="neutral"
       variant="outline"
-      (click)="openWith('right', 'sm')"
-    >
+      (click)="openWith('right', 'sm')">
       sm · 320 px
     </ds-button>
 
@@ -143,8 +133,7 @@
       size="sm"
       color="neutral"
       variant="outline"
-      (click)="openWith('right', 'md')"
-    >
+      (click)="openWith('right', 'md')">
       md · 480 px
     </ds-button>
 
@@ -152,8 +141,7 @@
       size="sm"
       color="neutral"
       variant="outline"
-      (click)="openWith('right', 'lg')"
-    >
+      (click)="openWith('right', 'lg')">
       lg · 640 px
     </ds-button>
   </div>
