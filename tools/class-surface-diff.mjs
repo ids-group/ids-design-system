@@ -58,14 +58,17 @@ function show(ref, path) {
 // an annotated one does. Widening it is only safe because the scan is bounded to the class BODY —
 // see classBody() — so the module-level function bodies that share this indentation are out of
 // range before the pattern ever runs.
+// The annotation may itself contain `=>` — a function-typed field
+// (`onChange: (v: boolean) => void = …`) must not end the annotation at the arrow's `=`,
+// only at the standalone initializer `=`.
 const FIELD =
-  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*:[^=\n]+)? = /gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*:(?:[^=\n]|=>)+)? = /gm;
 // A field can also be DECLARED and never assigned — `announceTimer: number | undefined;`. It
 // collides in a subclass like any other, and FIELD cannot see it because it requires an `=`.
 // Only safe inside the bounded class body, where a bare `name: Type;` is a declaration and
 // nothing else.
 const DECLARED_FIELD =
-  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*[?!]?\s*:[^=;\n]+)?;$/gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*[?!]?\s*:(?:[^=;\n]|=>)+)?;$/gm;
 // `get ` is matched here rather than in FIELD: a getter is a member and collides like one, and
 // `get name(` never matched `name(` because of the space.
 const METHOD =
@@ -156,11 +159,20 @@ function stripComments(text) {
 
 // Whitespace inside brackets is collapsed too — a prettier rewrap of an unchanged
 // declaration (`input<\n  readonly RegExp[]…`) must not read as a type change.
+// …but never inside a string literal: collapsing there reads `'No  data'` and `'No data'`
+// as the same default.
 const normalize = (text) =>
   stripComments(text)
-    .replace(/\s+/g, ' ')
-    .replace(/([<([{]) /g, '$1')
-    .replace(/ ([>)\]},;])/g, '$1')
+    .split(/('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*")/)
+    .map((part, index) =>
+      index % 2
+        ? part
+        : part
+            .replace(/\s+/g, ' ')
+            .replace(/([<([{]) /g, '$1')
+            .replace(/ ([>)\]},;])/g, '$1'),
+    )
+    .join('')
     .trim();
 const clip = (text) => (text.length > 100 ? `${text.slice(0, 97)}…` : text);
 
@@ -315,7 +327,17 @@ for (const path of files) {
   const afterSource = show(head, path);
   const before = classSurface(beforeSource);
   const after = classSurface(afterSource);
-  if (after === null) continue;
+  if (after === null) {
+    // A deleted file is the loudest LOST there is — skipping it printed
+    // "no exported member changed" over a removed consumer-extension base.
+    if (before?.names.size) {
+      shrank.push([
+        `${path.replace('src/lib/', '')}  (file deleted)`,
+        [...before.names].sort(),
+      ]);
+    }
+    continue;
+  }
   const known = before?.names ?? new Set();
   const added = [...after.names].filter((name) => !known.has(name)).sort();
   const removed = [...known].filter((name) => !after.names.has(name)).sort();
