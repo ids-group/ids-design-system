@@ -69,7 +69,7 @@ const DECLARED_FIELD =
 // `get ` is matched here rather than in FIELD: a getter is a member and collides like one, and
 // `get name(` never matched `name(` because of the space.
 const METHOD =
-  /^ {2}((?:protected |public |private )?)(?:override )?(?:async )?(?:get |set )?(\w+)\(/gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:override )?(?:async )?(?:get |set )?(\w+)\(/gm;
 const NOT_A_MEMBER = new Set([
   'constructor',
   'if',
@@ -79,7 +79,6 @@ const NOT_A_MEMBER = new Set([
   'catch',
   'return',
 ]);
-const FIRST_CLASS = /^export (?:abstract )?class /m;
 // The initializer families that DEFINE a member's public type. Other initializers
 // (computed, plain signals, literals) churn with implementation — comparing their
 // text would flood the changed-types report, so those members stay name-only.
@@ -125,7 +124,16 @@ function stripComments(text) {
       continue;
     }
     const preceding = out.trimEnd();
-    if (char === '/' && (preceding === '' || VALUE_MAY_START.test(preceding))) {
+    if (
+      char === '/' &&
+      (preceding === '' ||
+        VALUE_MAY_START.test(preceding) ||
+        // A regex may also follow a keyword (`return /x/.test(…)`) — reading it as
+        // division there eats the rest of the line as a comment.
+        /\b(?:return|typeof|case|instanceof|new|delete|void|throw|do|else|yield|await|in|of)$/.test(
+          preceding,
+        ))
+    ) {
       out += char;
       for (i++; i < text.length; i++) {
         out += text[i];
@@ -189,15 +197,20 @@ function blockText(source, openBraceIndex) {
 // Comments go, and template literals are blanked to spaces of the same length: a commented-out or
 // quoted declaration would otherwise read as a member, and a false positive blocks a release cut.
 // Same length, because statementText() reads offsets into this string.
+// EVERY exported class, not the first one — control-value-accessor.ts exports two consumer
+// extension bases, and a first-class-only scan left the second invisible.
 function classBody(source) {
-  const classStart = source.search(FIRST_CLASS);
-  if (classStart === -1) return null;
-  const body = source.slice(classStart);
-  const end = body.search(/^\}/m);
-  const bounded = end === -1 ? body : body.slice(0, end);
-
-  return stripComments(bounded).replace(/`(?:[^`\\]|\\.)*`/g, (literal) =>
-    literal.replace(/[^\n]/g, ' '),
+  const bodies = [];
+  const opens = [...source.matchAll(/^export (?:abstract )?class /gm)];
+  if (!opens.length) return null;
+  for (const open of opens) {
+    const body = source.slice(open.index);
+    const end = body.search(/^\}/m);
+    bodies.push(end === -1 ? body : body.slice(0, end));
+  }
+  return stripComments(bodies.join('\n')).replace(
+    /`(?:[^`\\]|\\.)*`/g,
+    (literal) => literal.replace(/[^\n]/g, ' '),
   );
 }
 
@@ -326,11 +339,15 @@ for (const path of files) {
       changedHere.push(`${key}: ${clip(oldDecl)}  →  ${clip(decl)}`);
     }
   }
-  for (const [name, clause] of typesAfter.heritage) {
+  for (const name of new Set([
+    ...typesBefore.heritage.keys(),
+    ...typesAfter.heritage.keys(),
+  ])) {
     const oldClause = typesBefore.heritage.get(name);
+    const clause = typesAfter.heritage.get(name);
     if (oldClause !== clause)
       changedHere.push(
-        `${name}: ${oldClause ?? '(no heritage)'}  →  ${clause}`,
+        `${name}: ${oldClause ?? '(no heritage)'}  →  ${clause ?? '(heritage removed — its inherited members are gone)'}`,
       );
   }
   for (const key of typesBefore.decls.keys()) {

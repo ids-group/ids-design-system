@@ -155,6 +155,35 @@ const extraCases = [
       item.pitfall = `${item.pitfall} That override can now be removed.`;
     },
   },
+  {
+    label: 'M034 via the clause-separated subject…can-go branch alone',
+    code: 'M034',
+    mutate: (m) => {
+      m.informational.push(
+        'That override was doing nothing after the fix and can go.',
+      );
+    },
+  },
+  {
+    label: 'M044 on a value-remap with no `old` at all',
+    code: 'M044',
+    mutate: (m) => {
+      const i = m.items.find((x) => x.kind === 'value-remap') ?? m.items[0];
+      i.kind = 'value-remap';
+      i.map = { a: 'attr="b"' };
+      delete i.old;
+    },
+  },
+  {
+    label: 'M014 on a value-remap whose map is an array',
+    code: 'M014',
+    mutate: (m) => {
+      const i = m.items.find((x) => x.kind === 'value-remap') ?? m.items[0];
+      i.kind = 'value-remap';
+      i.old = 'ds-x[attr]';
+      i.map = ['attr="b"'];
+    },
+  },
 ];
 
 for (const { label, code, mutate, raw: text } of extraCases) {

@@ -758,6 +758,14 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   0.11.4 `--layer-toast` delete instruction) — which surfaced a second silent one in 0.9.0
   (`--ds-input-pad-y` compensation); both now have `deleteList` rows + CHANGELOG table rows.
   Selftest extended, every rule fires.
+- [ ] **[P3] `class-surface-diff` pre-existing blind spots, found by the 09-05 two-wave pass and
+  deliberately not fixed with it (each needs its own look):** a field annotated with a FUNCTION
+  type (`private onChange: (v: boolean) => void = …`) matches neither field pattern — ~35 such
+  annotations live in `src/lib`, incl. both CVA bases; a wholesale-DELETED file's classes never
+  reach the LOST report (`after === null → continue`); `normalize` collapses string-literal
+  differences and template-literal defaults are blanked, so changes inside them are invisible to
+  the changed-types report. Session-introduced siblings (first-class-only scan, static methods,
+  removed `extends`, keyword-position regexes) were fixed 2026-09-05.
 - [ ] **[P3] Prose-shaped `old` values in 0.11.x remain (hygiene, not breakage):** comma-joined
   token lists (`0.11.4#toast-border-tokens-gain-color`), a full sentence as `old`
   (`0.11.1`), a ~95-word `restore` paragraph (`0.11.3` — README wants "a literal snippet or

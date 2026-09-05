@@ -212,8 +212,8 @@ for (const [name, manifest] of manifests) {
     }
 
     if (item.kind === 'value-remap') {
-      if (!item.map || typeof item.map !== 'object')
-        at('M014', 'value-remap without a `map`');
+      if (!item.map || typeof item.map !== 'object' || Array.isArray(item.map))
+        at('M014', 'value-remap without a `map` object');
       // A bare map value differing from its key is undecidable for an applier: full token
       // (contains `=`), null (drop), or key==value (the bare-boolean-attribute convention) are
       // the three legal shapes. Shipped once (0.11.1) and it read as "replace the token with
@@ -231,7 +231,7 @@ for (const [name, manifest] of manifests) {
         }
       }
       if (
-        typeof item.old === 'string' &&
+        typeof item.old !== 'string' ||
         !/^[a-z][a-z0-9-]*\[[^\]]+\]$/.test(item.old)
       ) {
         at(
@@ -447,10 +447,12 @@ for (const [name, manifest] of manifests) {
   // is what kept every third-person spelling from ever matching.
   // The subject and "can go" may be separated by a clause ("that override was doing nothing and
   // can go") — a contiguous-only match shipped exactly that instruction with an empty deleteList.
+  // "can go" needs a deletion sense — "can go stale / out of sync / either way / wrong" is prose
+  // about behaviour, not an instruction, and widening the subject list amplifies that trap.
   const DELETE_SELF =
-    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround)\b[^.;!?]{0,60}\bcan go\b|\bcan now be removed\b|\b(?:is|are) no longer needed\b|\bdelete that\b|\bremove it\b/i;
+    /\b(?:that (?:item|rule|override|copy|pin|binding|wrapper|line)|those copies|the workaround)\b[^.;!?]{0,60}\bcan go\b(?!\s+(?:stale|out|either|wrong))|\bcan now be removed\b|\b(?:is|are) no longer needed\b|\bdelete that\b|\bremove it\b/i;
   const DELETE_BY_SUBJECT =
-    /\b(?:you|consumers?|apps?|callers?) (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b/i;
+    /\b(?:you|consumers?|apps?|callers?) (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou (?:should )?no longer need\b/i;
   const DELETE_MARKER = /\(DELETE-LIST\)|DELETE-LIST MATERIAL|^DELETE-LIST/;
   const knownDeleteIds = new Set(
     (manifest.deleteList ?? []).map((entry) => entry.id),
@@ -465,33 +467,53 @@ for (const [name, manifest] of manifests) {
     ),
   ];
   for (const [where, line] of deleteProse) {
-    const sentences = String(line).split(/(?<=\.)\s+/);
-    const guilty = sentences.find(
-      (one) =>
+    // Abbreviation dots would both split a sentence mid-instruction and block the
+    // subject-to-"can go" window (its char class excludes '.').
+    const deAbbrev = String(line).replace(/\be\.g\.|\bi\.e\./gi, 'eg');
+    // Each guilty sentence needs its OWN citation, in itself or trailing it — one cited
+    // instruction must not whitewash an uncited one sharing the line, and every citation id
+    // must resolve, not just the first.
+    const sentences = deAbbrev.split(/(?<=\.)\s+/);
+    for (const cite of deAbbrev.matchAll(/\(delete list: ([a-z0-9-]+)\)/g)) {
+      if (!knownDeleteIds.has(cite[1])) {
+        report(
+          errors,
+          file,
+          'M034',
+          where +
+            ' cites "' +
+            cite[1] +
+            '", which is no `deleteList` id in this file',
+        );
+      }
+    }
+    let unsatisfied = 0;
+    for (const one of sentences) {
+      if (
         DELETE_MARKER.test(one) ||
         DELETE_SELF.test(one) ||
-        DELETE_BY_SUBJECT.test(one),
-    );
-    if (!guilty) continue;
-    const cited = String(line).match(/\(delete list: ([a-z0-9-]+)\)/);
-    if (!cited) {
-      report(
-        errors,
-        file,
-        'M034',
-        where +
-          ' tells the consumer to delete something but names no row — add a `deleteList` entry and cite it as "(delete list: <id>)": ' +
-          JSON.stringify(guilty.trim().slice(0, 70)),
+        DELETE_BY_SUBJECT.test(one)
+      ) {
+        unsatisfied += 1;
+        report.lastGuilty = one;
+      }
+      unsatisfied -= Math.min(
+        unsatisfied,
+        [...one.matchAll(/\(delete list: [a-z0-9-]+\)/g)].length,
       );
-    } else if (!knownDeleteIds.has(cited[1])) {
+    }
+    if (unsatisfied > 0) {
       report(
         errors,
         file,
         'M034',
         where +
-          ' cites "' +
-          cited[1] +
-          '", which is no `deleteList` id in this file',
+          ` carries ${unsatisfied} delete instruction(s) with no own citation — each needs its "(delete list: <id>)", e.g.: ` +
+          JSON.stringify(
+            String(report.lastGuilty ?? '')
+              .trim()
+              .slice(0, 70),
+          ),
       );
     }
   }

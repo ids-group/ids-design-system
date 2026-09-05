@@ -260,7 +260,7 @@
     "ds-modal / ds-modal-card gained a [title-badge] content slot and a subtitle input, so a dialog header can carry a status chip and a second line without abandoning the component. Additive, NO ACTION - both are absent by default and the header renders exactly as before. WORTH A LOOK IF YOU HAND-ROLLED A DIALOG: a header that has to carry `title + ds-badge` over a second line used to be a reason to drop ds-modal and re-implement the scrim, the body scroll lock, backdrop-click and Escape by hand - which costs the focus trap, focus restore, the enter/leave animation and, easily, the footer, leaving a destructive action next to the close button. The shape matches ds-page-header: [title-badge] projects beside the title, subtitle is a plain string under it. The accessible name is still the title string - projected markup never enters aria-labelledby. Retune with --ds-modal-subtitle-text-color and --ds-modal-subtitle-font-size.",
     "NEW COMPONENT ds-field-group: several controls in one bordered box (select + input, input + button, search + date-picker). Additive, NO ACTION. If you hand-rolled a glued row by stripping borders off two controls and wrapping them, this replaces it - wrap them in <ds-field-group> and mark the stretching one with grow. Six controls can be segments: ds-input, ds-select, ds-search, ds-autocomplete, ds-date-picker, ds-button. ds-number-stepper and ds-multi-select are excluded by design. Grouped controls must not be given a label or hint - the message row would break the glued line and is suppressed.",
     "ds-table gained [lazy] + (lazyLoad) for fetching rows as they scroll into view. Additive and opt-in, NO ACTION. If you paged a long list yourself to keep it responsive, this is the alternative: set lazy with virtualScroll and total, make data a SPARSE array total long, and write each fetched row at its ABSOLUTE index - gaps inside the window render skeleton rows. Note sortMode must not be \"client\" (it would sort only the rows that happen to have arrived); the new server default is already right.",
-    "--ds-field-height now reaches ds-autocomplete, ds-multi-select, ds-color-picker, ds-number-stepper, ds-split-button and the ds-modal confirm input. All six spelled their height as the raw --hit-* value, so the token the name advertises did nothing for them; they read the field scale now. Pixel-identical at every size EXCEPT ds-number-stepper at size=\"lg\" (its own actionable entry above). NO ACTION unless you had already worked around the gap by pinning height on one of these - that pin can go.",
+    "--ds-field-height now reaches ds-autocomplete, ds-multi-select, ds-color-picker, ds-number-stepper, ds-split-button and the ds-modal confirm input. All six spelled their height as the raw --hit-* value, so the token the name advertises did nothing for them; they read the field scale now. Pixel-identical at every size EXCEPT ds-number-stepper at size=\"lg\" (its own actionable entry above). NO ACTION unless you had already worked around the gap by pinning height on one of these - that pin can go (delete list: field-height-pin-on-late-adopters).",
     "The six connected panels (ds-select, ds-multi-select, ds-autocomplete, ds-color-picker, ds-date-picker, ds-time-picker) now build their overlay from one shared helper instead of six identical copies. Internal only, NO ACTION: the position, the 4px gap, the flip-above fallback, the panel classes and the scroll strategy are byte-for-byte what they were.",
     "ds-autocomplete gained dsAutocompletePrefix / dsAutocompleteSuffix content slots and [showChevron] (default true). Additive, NO ACTION. If you absolutely positioned a search glyph over the field and re-padded the input, or hid the arrow with a global rule reaching for .autocomplete-chevron, replace both: put the icon in the prefix slot and set [showChevron]=\"false\". The slot names and behaviour match ds-input's dsInputPrefix / dsInputSuffix.",
     "ds-autocomplete gained a public clear() that empties the value AND the typed text. If you reset the field by querying the inner <input> out of the DS's DOM and dispatching a synthetic input event, delete that and call clear() on a viewChild ref - the DOM shape it depended on is not part of the public API. It deliberately does not move focus. (delete list: autocomplete-synthetic-input-clear)",
@@ -575,8 +575,18 @@
       "find": [
         "--ds-input-pad-y"
       ],
-      "why": "sm/lg textareas rendered the md vertical padding; a consumer override compensating for it now stacks on the corrected value.",
+      "why": "sm/lg textareas rendered the md vertical padding; an override scoped to a sm or lg textarea compensating for it now stacks on the corrected value. A deliberate global --ds-input-pad-y retune is a legitimate hook and stays.",
       "replaceWith": "nothing"
+    },
+    {
+      "id": "field-height-pin-on-late-adopters",
+      "surface": "style",
+      "find": [
+        "min-height",
+        "height"
+      ],
+      "why": "ds-autocomplete, ds-multi-select, ds-color-picker, ds-number-stepper and ds-split-button spelled their height as the raw --hit-* value, so --ds-field-height did nothing for them and consumers pinned height directly; they read the field scale now. Only a height/min-height pinned on one of those five counts — any other height in the app stays.",
+      "replaceWith": "--ds-field-height (or nothing - the default now lands)"
     }
   ]
 }
