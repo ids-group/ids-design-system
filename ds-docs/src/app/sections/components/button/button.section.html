@@ -16,100 +16,58 @@
   </span>
 
   <p class="block-desc t-s">
-    <strong>
-      Only solid and tonal paint a fill.
-    </strong>
+    <strong> Only solid and tonal paint a fill. </strong>
 
-    <code class="t-mono-inline">
-      outline
-    </code>,
-    <code class="t-mono-inline">
-      ghost
-    </code> and
-    <code class="t-mono-inline">
-      text
-    </code> are transparent, so they adopt
+    <code class="t-mono-inline"> outline </code>,
+    <code class="t-mono-inline"> ghost </code> and
+    <code class="t-mono-inline"> text </code> are transparent, so they adopt
     whatever surface they sit on — an outlined button on a tinted card reads as
     drawn on the card, not as a white sticker over it. Set
-    <code class="t-mono-inline">
-      --ds-button-bg-color
-    </code> per instance if a
+    <code class="t-mono-inline"> --ds-button-bg-color </code> per instance if a
     button sits on a photo or a gradient and needs its own opaque ground.
   </p>
 
-  <h3 class="block-title t-h4">
-    Color × variant
-  </h3>
+  <h3 class="block-title t-h4">Color × variant</h3>
 
   <p class="block-desc t-s">
     Every <code class="t-mono-inline">color</code> ×
-    <code class="t-mono-inline">
-      variant
-    </code> combination — all of them
+    <code class="t-mono-inline"> variant </code> combination — all of them
     render. Defaults are
-    <code class="t-mono-inline">
-      color="primary" variant="solid"
-    </code>. Cells
+    <code class="t-mono-inline"> color="primary" variant="solid" </code>. Cells
     marked ⚠ are UX-discouraged: they work (and emit a dev-mode warning), but
     read poorly — grey <em>solid</em> looks disabled; quiet
-    <em>
-      success/warning
-    </em> (outline/ghost) is too low-contrast — prefer
+    <em> success/warning </em> (outline/ghost) is too low-contrast — prefer
     solid/tonal there.
   </p>
 
   <p class="block-desc t-s">
     The whole <strong>text</strong> column is marked ⚠ on purpose:
-    <code class="t-mono-inline">
-      variant="text"
-    </code> is a no-chrome,
+    <code class="t-mono-inline"> variant="text" </code> is a no-chrome,
     underlined, link-styled button, which is exactly what the global
-    <code class="t-mono-inline">
-      .link
-    </code> class already gives any
-    <code class="t-mono-inline">
-      &lt;a&gt;
-    </code>/<code class="t-mono-inline"
+    <code class="t-mono-inline"> .link </code> class already gives any
+    <code class="t-mono-inline"> &lt;a&gt; </code>/<code class="t-mono-inline"
       >&lt;button&gt;</code
     >. For a link-styled action
-    <strong>
-      prefer <code class="t-mono-inline">.link</code>
-    </strong> (lighter,
+    <strong> prefer <code class="t-mono-inline">.link</code> </strong> (lighter,
     no component) — reach for
-    <code class="t-mono-inline">
-      variant="text"
-    </code> only when you genuinely
+    <code class="t-mono-inline"> variant="text" </code> only when you genuinely
     need the ds-button API on a link look (<code class="t-mono-inline"
       >loading</code
     >, <code class="t-mono-inline">fullWidth</code>, the typed
-    <code class="t-mono-inline">
-      (pressed)
-    </code> output, leading/trailing
+    <code class="t-mono-inline"> (pressed) </code> output, leading/trailing
     icons). It's kept, not removed — just not the default choice.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      secondary
-    </strong> and <strong>tertiary</strong> are brand hue
-    <em>
-      roles
-    </em>, not fixed colours — they ship distinct default hues (a
+    <strong> secondary </strong> and <strong>tertiary</strong> are brand hue
+    <em> roles </em>, not fixed colours — they ship distinct default hues (a
     warm orange, a cool violet), independent of
-    <code class="t-mono-inline">
-      --primary
-    </code>, so the three brand rows read
+    <code class="t-mono-inline"> --primary </code>, so the three brand rows read
     apart out of the box. Changing
-    <code class="t-mono-inline">
-      --primary
-    </code> alone won't recolour them — a
+    <code class="t-mono-inline"> --primary </code> alone won't recolour them — a
     brand reskins each by overriding
-    <code class="t-mono-inline">
-      --secondary-h/s/l
-    </code> /
-    <code class="t-mono-inline">
-      --tertiary-h/s/l
-    </code>.
+    <code class="t-mono-inline"> --secondary-h/s/l </code> /
+    <code class="t-mono-inline"> --tertiary-h/s/l </code>.
   </p>
 
   <div class="brand-demo">
@@ -137,40 +95,24 @@
     </docs-matrix>
   </div>
 
-  <h3 class="block-title t-h4">
-    Sizes
-  </h3>
+  <h3 class="block-title t-h4">Sizes</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      sm
-    </code> ·
-    <code class="t-mono-inline">
-      md
-    </code> (default) ·
-    <code class="t-mono-inline">
-      lg
-    </code> — 32 / 40 / 48, aligned with the
+    <code class="t-mono-inline"> sm </code> ·
+    <code class="t-mono-inline"> md </code> (default) ·
+    <code class="t-mono-inline"> lg </code> — 32 / 40 / 48, aligned with the
     field controls.
   </p>
 
   <div class="row">
-    <ds-button size="sm">
-      Small
-    </ds-button>
+    <ds-button size="sm"> Small </ds-button>
 
-    <ds-button size="md">
-      Medium
-    </ds-button>
+    <ds-button size="md"> Medium </ds-button>
 
-    <ds-button size="lg">
-      Large
-    </ds-button>
+    <ds-button size="lg"> Large </ds-button>
   </div>
 
-  <h3 class="block-title t-h4">
-    States
-  </h3>
+  <h3 class="block-title t-h4">States</h3>
 
   <p class="block-desc t-s">
     The primary colour in every variant (rows) across every state (columns).
@@ -236,22 +178,16 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    With icon
-  </h3>
+  <h3 class="block-title t-h4">With icon</h3>
 
   <p class="block-desc t-s">
     Leading or trailing icon alongside a label. For icon-only actions use
-    <code class="t-mono-inline">
-      &lt;ds-icon-button&gt;
-    </code> (see the Icon
+    <code class="t-mono-inline"> &lt;ds-icon-button&gt; </code> (see the Icon
     button section).
   </p>
 
   <div class="row">
-    <ds-button icon="plus">
-      New record
-    </ds-button>
+    <ds-button icon="plus"> New record </ds-button>
 
     <ds-button
       variant="tonal"
@@ -267,15 +203,11 @@
     </ds-button>
   </div>
 
-  <h3 class="block-title t-h4">
-    With subtext
-  </h3>
+  <h3 class="block-title t-h4">With subtext</h3>
 
   <p class="block-desc t-s">
     Project a short helper line into the
-    <code class="t-mono-inline">
-      [dsButtonSubtext]
-    </code> slot — e.g. why an
+    <code class="t-mono-inline"> [dsButtonSubtext] </code> slot — e.g. why an
     action is locked. Purely structural: the button stacks into a column only
     when the slot has content, and the subtext inherits the button's colour
     (including the muted disabled tone).
@@ -298,9 +230,7 @@
     </ds-button>
   </div>
 
-  <h3 class="block-title t-h4">
-    Refused with reason
-  </h3>
+  <h3 class="block-title t-h4">Refused with reason</h3>
 
   <p class="block-desc t-s">
     Two kinds of refusal, and they take different treatments. The third column
@@ -309,25 +239,17 @@
 
   <div class="refusals">
     <div class="refusal">
-      <span class="refusal-tag refusal-tag--standing">
-        Standing
-      </span>
+      <span class="refusal-tag refusal-tag--standing"> Standing </span>
+
+      <p class="refusal-lede t-s">Nothing on this screen will lift it.</p>
 
       <p class="t-s refusal-copy">
-        Nothing on this screen will lift it (no permission, no integration). Set
-        <code class="t-mono-inline">
-          disabledReason
-        </code> beside
-        <code class="t-mono-inline">
-          disabled
-        </code>: the reason renders as a
+        No permission to grant, no integration to connect. Set
+        <code class="t-mono-inline"> disabledReason </code> beside
+        <code class="t-mono-inline"> disabled </code>: the reason renders as a
         second line inside the button, and the button switches from the native
-        <code class="t-mono-inline">
-          disabled
-        </code> attribute to
-        <code class="t-mono-inline">
-          aria-disabled
-        </code> so it stays focusable
+        <code class="t-mono-inline"> disabled </code> attribute to
+        <code class="t-mono-inline"> aria-disabled </code> so it stays focusable
         and the reason is announced. Clicks are swallowed either way. Length is
         uncapped — a long reason wraps and the button grows.
       </p>
@@ -349,23 +271,16 @@
     </div>
 
     <div class="refusal">
-      <span class="refusal-tag refusal-tag--temporary">
-        Temporary
-      </span>
+      <span class="refusal-tag refusal-tag--temporary"> Temporary </span>
+
+      <p class="refusal-lede t-s">The user's own next action lifts it.</p>
 
       <p class="t-s refusal-copy">
-        The user's own next action lifts it. Do not disable the button at all:
-        leave it live, judge validity in the submit handler, and carry the text
-        under the button with
-        <code class="t-mono-inline">
-          hint
-        </code>,
-        <code class="t-mono-inline">
-          warning
-        </code> or
-        <code class="t-mono-inline">
-          error
-        </code> — the same three inputs the
+        Do not disable the button at all: leave it live, judge validity in the
+        submit handler, and carry the text under the button with
+        <code class="t-mono-inline"> hint </code>,
+        <code class="t-mono-inline"> warning </code> or
+        <code class="t-mono-inline"> error </code> — the same three inputs the
         fields take, with the same message line under them. A message longer
         than the label widens the pair, button included, the way a field's
         control spans its own message.
@@ -389,19 +304,17 @@
     </div>
 
     <div class="refusal">
-      <span class="refusal-tag refusal-tag--room">
-        Reserved room
-      </span>
+      <span class="refusal-tag refusal-tag--room"> Reserved room </span>
+
+      <p class="refusal-lede t-s">
+        The room the second one needs, held before it is used.
+      </p>
 
       <p class="t-s refusal-copy">
-        <code class="t-mono-inline">
-          reserveMessage
-        </code> holds the line's
+        <code class="t-mono-inline"> reserveMessage </code> holds the line's
         height while it is empty, so a button that gains an error mid-form does
         not shove the layout below it. Same input, same
-        <code class="t-mono-inline">
-          DS_CONFIG.field.reserveMessage
-        </code>
+        <code class="t-mono-inline"> DS_CONFIG.field.reserveMessage </code>
         fallback as the fields.
       </p>
 
@@ -424,21 +337,15 @@
     </div>
   </div>
 
-  <p class="block-desc t-s">
+  <p class="refusal-note t-s">
     None of the three reaches
-    <code class="t-mono-inline">
-      ds-icon-button
-    </code>: an icon button has no
+    <code class="t-mono-inline"> ds-icon-button </code>: an icon button has no
     room for a second line. It gained
-    <code class="t-mono-inline">
-      ariaDescribedBy
-    </code> instead, to point at
+    <code class="t-mono-inline"> ariaDescribedBy </code> instead, to point at
     text the page already shows.
   </p>
 
-  <h3 class="block-title t-h4">
-    Full width
-  </h3>
+  <h3 class="block-title t-h4">Full width</h3>
 
   <p class="block-desc t-s">
     Set <code class="t-mono-inline">fullWidth</code> to stretch the button to
@@ -447,9 +354,7 @@
   </p>
 
   <div class="fullwidth-demo">
-    <ds-button fullWidth>
-      Continue
-    </ds-button>
+    <ds-button fullWidth> Continue </ds-button>
 
     <ds-button
       color="neutral"
@@ -461,34 +366,38 @@
 
   <h3
     class="block-title t-h4"
+    data-anchor="toggle-button"
     data-for="toggle-button">
-    Toggle · link
+    Toggle
   </h3>
 
   <p class="block-desc t-s">
-    A link-styled action is the global
-    <code class="t-mono-inline">
-      .link
-    </code> class on a
-    <code class="t-mono-inline">
-      &lt;button&gt;
-    </code> (replaces the old
-    <code class="t-mono-inline">
-      variant="text"
-    </code>).
+    A two-state action that stays pressed:
+    <code class="t-mono-inline">[pressed]</code> is the state and the button
+    carries <code class="t-mono-inline">aria-pressed</code> for it.
   </p>
 
   <div class="row">
-    <ds-toggle-button icon="filter">
-      Conflicts only
-    </ds-toggle-button>
+    <ds-toggle-button icon="filter"> Conflicts only </ds-toggle-button>
 
     <ds-toggle-button
       icon="check"
       [pressed]="true">
       Confirmed
     </ds-toggle-button>
+  </div>
 
+  <h3 class="block-title t-h4">Link-styled action</h3>
+
+  <p class="block-desc t-s">
+    A link-styled action is the global
+    <code class="t-mono-inline">.link</code> class on a
+    <code class="t-mono-inline">&lt;button&gt;</code> (replaces the old
+    <code class="t-mono-inline">variant="text"</code>). It is an action, not
+    navigation — navigation is what the Link section covers.
+  </p>
+
+  <div class="row">
     <button
       class="link"
       type="button">
