@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.12.1 — 2026-09-05
+
 ### Breaking
 
 - **`ds-table`'s data-grid features are directives now, so a table that does not use them stops

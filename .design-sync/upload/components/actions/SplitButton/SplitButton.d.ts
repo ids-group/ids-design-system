@@ -19,7 +19,7 @@ export interface SplitButtonProps {
   menuLabel?: string;
   /** Fires when the main button (not the dropdown trigger) is clicked. */
   onPressed?: (value: MouseEvent) => void;
-  /** Fires with the chosen menu item. */
+  /** The menu half only — a press on the main button is `pressed`, never this. */
   onItemSelected?: (value: unknown) => void;
   /** Element content. */
   children?: React.ReactNode;

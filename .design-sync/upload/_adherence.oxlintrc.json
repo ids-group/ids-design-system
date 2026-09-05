@@ -71,7 +71,6 @@
               "components/*/Breadcrumbs/**",
               "components/*/Button/**",
               "components/*/ButtonGroup/**",
-              "components/*/CalendarDay/**",
               "components/*/Card/**",
               "components/*/Checkbox/**",
               "components/*/ColorPicker/**",
@@ -84,7 +83,6 @@
               "components/*/Dropzone/**",
               "components/*/EmptyState/**",
               "components/*/FieldGroup/**",
-              "components/*/FieldMessage/**",
               "components/*/FilterBar/**",
               "components/*/Icon/**",
               "components/*/IconButton/**",
@@ -219,10 +217,6 @@
         "message": "<ButtonGroup> doesn't accept that prop. Declared props: ariaLabel, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='CalendarDay'] > JSXAttribute > JSXIdentifier[name!=/^(?:selected|inRange|rangeStart|rangeEnd|today|muted|disabled|dataDay|tabIndex|ariaLabel|onDaySelected|onDayKeydown|children|key|ref|className|style)$/]",
-        "message": "<CalendarDay> doesn't accept that prop. Declared props: selected, inRange, rangeStart, rangeEnd, today, muted, disabled, dataDay, tabIndex, ariaLabel, onDaySelected, onDayKeydown, children."
-      },
-      {
         "selector": "JSXOpeningElement[name.name='Card'] > JSXAttribute > JSXIdentifier[name!=/^(?:elevation|padding|onPressed|children|key|ref|className|style)$/]",
         "message": "<Card> doesn't accept that prop. Declared props: elevation, padding, onPressed, children."
       },
@@ -269,10 +263,6 @@
       {
         "selector": "JSXOpeningElement[name.name='FieldGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:size|invalid|disabled|fullWidth|children|key|ref|className|style)$/]",
         "message": "<FieldGroup> doesn't accept that prop. Declared props: size, invalid, disabled, fullWidth, children."
-      },
-      {
-        "selector": "JSXOpeningElement[name.name='FieldMessage'] > JSXAttribute > JSXIdentifier[name!=/^(?:text|state|messageId|icon|reserve|children|key|ref|className|style)$/]",
-        "message": "<FieldMessage> doesn't accept that prop. Declared props: text, state, messageId, icon, reserve, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='FilterBar'] > JSXAttribute > JSXIdentifier[name!=/^(?:moreLabel|panelLabel|triggerSize|trailing|children|key|ref|className|style)$/]",
@@ -367,8 +357,8 @@
         "message": "<Progress> doesn't accept that prop. Declared props: value, variant, indeterminate, ariaLabel, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Radio'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|checked|disabled|name|value|inputId|size|required|label|onCheckedChange|children|key|ref|className|style)$/]",
-        "message": "<Radio> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, checked, disabled, name, value, inputId, size, required, label, onCheckedChange, children."
+        "selector": "JSXOpeningElement[name.name='Radio'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|checked|deselectable|disabled|name|value|inputId|size|required|label|onCheckedChange|children|key|ref|className|style)$/]",
+        "message": "<Radio> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, checked, deselectable, disabled, name, value, inputId, size, required, label, onCheckedChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='RadioGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|name|disabled|ariaLabel|label|onValueChange|children|key|ref|className|style)$/]",
@@ -443,8 +433,8 @@
         "message": "<Tab> doesn't accept that prop. Declared props: label, icon, count, disabled, value, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Table'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|rowId|columns|selectable|bordered|loading|stickyHeader|maxHeight|density|zebra|animateHeight|selectedIds|sortKey|onSortKeyChange|sortDir|onSortDirChange|sortingOrder|sortAnnouncement|rangeAnnouncement|skeletonRows|caption|rowInteractive|activeRowId|filterQuery|columnFilters|hiddenKeys|resizableColumns|columnWidths|reorderableColumns|columnOrder|persistLayout|storageKey|exportButton|exportFilename|exportFetcher|onExportFailed|stickyScrollbar|pageSize|page|pageSizeOptions|showPageSize|showLabel|total|scrollToTopOnPageChange|sortMode|filterMode|columnFilterOptions|stickyFirstColumn|virtualScroll|virtualRowSize|lazy|onLazyLoad|onRowClicked|onSortChange|rowActions|onRowActionSelected|onCellEdited|cellTemplateMap|emptyTemplate|expandableRows|expandedIds|expandMode|expandAllToggle|onRowExpanded|onRowCollapsed|rowExpandTemplate|onSelectedIdsChange|onColumnFiltersChange|onHiddenKeysChange|onColumnWidthsChange|onColumnOrderChange|onPageSizeChange|onPageChange|onExpandedIdsChange|toolbar|empty|bulkActions|children|key|ref|className|style)$/]",
-        "message": "<Table> doesn't accept that prop. Declared props: data, rowId, columns, selectable, bordered, loading, stickyHeader, maxHeight, density, zebra, animateHeight, selectedIds, sortKey, onSortKeyChange, sortDir, onSortDirChange, sortingOrder, sortAnnouncement, rangeAnnouncement, skeletonRows, caption, rowInteractive, activeRowId, filterQuery, columnFilters, hiddenKeys, resizableColumns, columnWidths, reorderableColumns, columnOrder, persistLayout, storageKey, exportButton, exportFilename, exportFetcher, onExportFailed, stickyScrollbar, pageSize, page, pageSizeOptions, showPageSize, showLabel, total, scrollToTopOnPageChange, sortMode, filterMode, columnFilterOptions, stickyFirstColumn, virtualScroll, virtualRowSize, lazy, onLazyLoad, onRowClicked, onSortChange, rowActions, onRowActionSelected, onCellEdited, cellTemplateMap, emptyTemplate, expandableRows, expandedIds, expandMode, expandAllToggle, onRowExpanded, onRowCollapsed, rowExpandTemplate, onSelectedIdsChange, onColumnFiltersChange, onHiddenKeysChange, onColumnWidthsChange, onColumnOrderChange, onPageSizeChange, onPageChange, onExpandedIdsChange, toolbar, empty, bulkActions, children."
+        "selector": "JSXOpeningElement[name.name='Table'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|rowId|columns|selectable|bordered|loading|stickyHeader|maxHeight|density|zebra|animateHeight|selectedIds|sortKey|onSortKeyChange|sortDir|onSortDirChange|sortingOrder|sortAnnouncement|rangeAnnouncement|skeletonRows|caption|rowInteractive|activeRowId|filterQuery|columnFilters|persistLayout|storageKey|stickyScrollbar|pageSize|page|pageSizeOptions|showPageSize|showLabel|total|scrollToTopOnPageChange|sortMode|filterMode|columnFilterOptions|stickyFirstColumn|virtualScroll|virtualRowSize|lazy|onLazyLoad|onRowClicked|onSortChange|rowActions|onRowActionSelected|onCellEdited|cellTemplateMap|emptyTemplate|expandableRows|expandedIds|expandMode|expandAllToggle|onRowExpanded|onRowCollapsed|rowExpandTemplate|onSelectedIdsChange|onColumnFiltersChange|onPageSizeChange|onPageChange|onExpandedIdsChange|toolbar|empty|bulkActions|children|key|ref|className|style)$/]",
+        "message": "<Table> doesn't accept that prop. Declared props: data, rowId, columns, selectable, bordered, loading, stickyHeader, maxHeight, density, zebra, animateHeight, selectedIds, sortKey, onSortKeyChange, sortDir, onSortDirChange, sortingOrder, sortAnnouncement, rangeAnnouncement, skeletonRows, caption, rowInteractive, activeRowId, filterQuery, columnFilters, persistLayout, storageKey, stickyScrollbar, pageSize, page, pageSizeOptions, showPageSize, showLabel, total, scrollToTopOnPageChange, sortMode, filterMode, columnFilterOptions, stickyFirstColumn, virtualScroll, virtualRowSize, lazy, onLazyLoad, onRowClicked, onSortChange, rowActions, onRowActionSelected, onCellEdited, cellTemplateMap, emptyTemplate, expandableRows, expandedIds, expandMode, expandAllToggle, onRowExpanded, onRowCollapsed, rowExpandTemplate, onSelectedIdsChange, onColumnFiltersChange, onPageSizeChange, onPageChange, onExpandedIdsChange, toolbar, empty, bulkActions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Tabs'] > JSXAttribute > JSXIdentifier[name!=/^(?:selectedIndex|variant|lazy|scrollable|closable|orientation|urlParam|rememberLastTab|onTabClosed|onSelectedIndexChange|children|key|ref|className|style)$/]",
@@ -560,9 +550,6 @@
       "ButtonGroup": {
         "replaces": []
       },
-      "CalendarDay": {
-        "replaces": []
-      },
       "Card": {
         "replaces": []
       },
@@ -599,9 +586,6 @@
         "replaces": []
       },
       "FieldGroup": {
-        "replaces": []
-      },
-      "FieldMessage": {
         "replaces": []
       },
       "FilterBar": {
@@ -793,6 +777,10 @@
       }
     },
     "tokens": [
+      "--_check-mark-enter-duration",
+      "--_check-mark-enter-easing",
+      "--_check-mark-exit-duration",
+      "--_check-mark-exit-easing",
       "--_date-picker-day-disabled-label-color",
       "--_date-picker-day-hover-bg-color",
       "--_date-picker-day-range-bg-color",
@@ -1001,6 +989,10 @@
       "--drawer-w-sm",
       "--ds-badge-bg-color",
       "--ds-badge-label-color",
+      "--ds-check-mark-enter-duration",
+      "--ds-check-mark-enter-easing",
+      "--ds-check-mark-exit-duration",
+      "--ds-check-mark-exit-easing",
       "--ds-container-pad",
       "--ds-control-focus-shadow",
       "--ds-control-focus-shadow-error",
@@ -1027,6 +1019,10 @@
       "--ds-link-color",
       "--ds-link-color-active",
       "--ds-link-color-hover",
+      "--ds-motion-check-enter-duration",
+      "--ds-motion-check-enter-easing",
+      "--ds-motion-check-exit-duration",
+      "--ds-motion-check-exit-easing",
       "--ds-motion-enter-large-duration",
       "--ds-motion-enter-large-easing",
       "--ds-motion-enter-panel-duration",
@@ -1129,6 +1125,7 @@
       "--ds-t-mono-inline-font-weight",
       "--ds-t-mono-inline-line-height",
       "--ds-t-mono-inline-radius",
+      "--ds-t-mono-ligatures",
       "--ds-t-mono-line-height",
       "--ds-t-overline-color",
       "--ds-t-overline-font-family",
@@ -1980,6 +1977,10 @@
       "--ds-motion-exit-easing": "other",
       "--ds-motion-exit-large-duration": "other",
       "--ds-motion-exit-large-easing": "other",
+      "--ds-motion-check-enter-duration": "other",
+      "--ds-motion-check-enter-easing": "other",
+      "--ds-motion-check-exit-duration": "other",
+      "--ds-motion-check-exit-easing": "other",
       "--opacity-disabled": "number",
       "--opacity-text-disabled": "number",
       "--opacity-scrim": "number",
@@ -2264,6 +2265,10 @@
       "--_dropdown-panel-maxh": "other",
       "--_dropdown-panel-minw": "other",
       "--_dropdown-panel-maxw": "other",
+      "--_check-mark-enter-duration": "other",
+      "--_check-mark-enter-easing": "other",
+      "--_check-mark-exit-duration": "other",
+      "--_check-mark-exit-easing": "other",
       "--_overlay-enter-keyframes": "other",
       "--_overlay-enter-duration": "other",
       "--_overlay-enter-easing": "other",
@@ -2370,6 +2375,7 @@
       "--ds-t-caption-line-height": "length",
       "--ds-t-caption-font-family": "other",
       "--ds-t-caption-color": "color",
+      "--ds-t-mono-ligatures": "other",
       "--ds-t-mono-font-weight": "other",
       "--ds-t-mono-font-size": "length",
       "--ds-t-mono-line-height": "length",
@@ -2411,6 +2417,10 @@
       "--ds-dropdown-panel-maxh": "length",
       "--ds-dropdown-panel-minw": "length",
       "--ds-dropdown-panel-maxw": "length",
+      "--ds-check-mark-enter-duration": "other",
+      "--ds-check-mark-enter-easing": "other",
+      "--ds-check-mark-exit-duration": "other",
+      "--ds-check-mark-exit-easing": "other",
       "--_ds-exit-scale": "other",
       "--_ds-exit-x": "other",
       "--_ds-exit-y": "other",

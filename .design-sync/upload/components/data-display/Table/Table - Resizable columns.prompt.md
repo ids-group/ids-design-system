@@ -1,6 +1,6 @@
 # Table - resizable columns
 
-[resizableColumns]="true" adds a drag handle to each header's right edge. Widths are two-way bindable via [(columnWidths)] (a Map<key, px>), seeded from any column.width.
+dsTableResize adds a drag handle to each header's right edge. Widths are two-way bindable via [(columnWidths)] (a Map<key, px>), seeded from any column.width.
 
 The first resize records a width for EVERY visible column, not just the one you dragged — deliberately. Until then the untouched columns are auto-sized, so the browser redistributes whatever the dragged column gives up and columns nobody touched visibly jump. Measuring them all once, at the first grab, keeps the auto-sized geometry instead of losing it. The consequence to expect: if you persist [(columnWidths)], one drag fills the map for the whole row. That is the saved layout, not a leak — and a second drag adds nothing further.
 

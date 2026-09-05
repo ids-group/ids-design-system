@@ -1,18 +1,96 @@
-<!-- @dsCard group="patterns" viewport="1200x352" name="Page header - compact variant" subtitle="No breadcrumb, no tabs — just title + sub-line + action row." -->
-<!DOCTYPE html>
+<!-- @dsCard group="patterns" viewport="1200x352" name="Page header - compact variant" subtitle="No breadcrumb, no tabs — just title + sub-line + action row." --><!doctype html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Page header</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
-  <div class="ds-page"><ds-docs-patterns-page-header _nghost-c4g=""><docs-section _ngcontent-c4g="" anchor="pattern-page-header" eyebrow="Patterns" title="Page header" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-pattern-page-header" data-anchor="pattern-page-header"><h2 _ngcontent-c1="" class="t-h2">Page header - compact variant</h2><p _ngcontent-c4g="" class="block-desc t-s"> No breadcrumb, no tabs — just title + sub-line + action row. For embedded views (drawers, secondary pages) where the chrome already establishes location. </p><div _ngcontent-c4g="" class="stage"><ds-page-header _ngcontent-c4g="" title="Edit allocation" subtitle="3 lanes affected · auto-recompute on save" _nghost-c3p=""><header _ngcontent-c3p="" class="compact page-header"><div _ngcontent-c3p="" class="row title-row"><div _ngcontent-c3p="" class="title-block"><div _ngcontent-c3p="" class="title-line"><h1 _ngcontent-c3p="" class="title"> Edit allocation </h1></div><p _ngcontent-c3p="" class="subtitle"> 3 lanes affected · auto-recompute on save </p><div _ngcontent-c3p="" class="meta"></div></div><div _ngcontent-c3p="" class="actions"><div _ngcontent-c4g="" actions=""><ds-button _ngcontent-c4g="" color="neutral" variant="outline" _nghost-c5="" data-variant="outline" data-color="neutral"><button _ngcontent-c5="" class="button c-neutral md v-outline" type="button"><span _ngcontent-c5="" class="button-main"> Discard </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button><ds-button _ngcontent-c4g="" _nghost-c5="" data-variant="solid" data-color="primary"><button _ngcontent-c5="" class="button md" type="button"><span _ngcontent-c5="" class="button-main"> Save </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button></div></div></div></header></ds-page-header></div></section></docs-section></ds-docs-patterns-page-header></div>
-  
-  
-  
-  
-
-
+  <style>
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
+  </style>
+</head><body>
+  <div class="ds-page"><ds-docs-patterns-page-header></ds-docs-patterns-page-header></div>
+  <script>window.__dsSectionsOnly = true</script>
+  <script src="../../../_ds_bundle.js"></script>
+  <script>
+    (function () {
+      var OWNS = "";
+      var INDEX = 1;
+      var KEY = "";
+      var TABLE = false;
+      var HEAD = null;
+      var BLOCK = "compact variant";
+      var REACT = null;
+      var WHOLE = OWNS === null;
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var API = '[data-key]';
+      var host = document.querySelector("ds-docs-patterns-page-header");
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        var heading = null;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
+          if (node.matches(KEEP)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
+        }
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
+          }
+        }
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
+        }
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
+      })();
+    })();
+  </script>
 </body></html>

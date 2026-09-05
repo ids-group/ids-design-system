@@ -1,19 +1,96 @@
-<!-- @dsCard group="forms-inputs" viewport="1200x537" name="w3w - specimen" -->
-<!DOCTYPE html>
+<!-- @dsCard group="forms-inputs" viewport="1200x537" name="w3w - specimen" --><!doctype html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>W3w</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
-  <div class="ds-page"><ds-docs-components-w3w _nghost-c1p=""><docs-section _ngcontent-c1p="" anchor="w3w" eyebrow="Components" title="w3w" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-w3w" data-anchor="w3w"><h2 _ngcontent-c1="" class="t-h2">w3w - specimen</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="w3w"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;W3w /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c1p="" lede=""> Pill for what3words-style location identifiers (///daring.lion.race). Monospace body in brand colour so the identifier reads as a distinct, code-like token; the leading prefix mark is danger red. Click to copy the full identifier to clipboard. Sits with badges and tags as a pill-family component. </span></p><div _ngcontent-c1p="" class="row"><ds-w3w _ngcontent-c1p="" prefix="///" address="daring.lion.race" _nghost-c1q="" role="button" tabindex="0" aria-label="Copy what3words address ///daring.lion.race"><ds-icon _ngcontent-c1q="" name="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="m9 4-6 3v13l6-3 6 3 6-3V4l-6 3-6-3z"></path><path d="M9 4v13M15 7v13"></path></svg></ds-icon><span _ngcontent-c1q="" class="words"><span _ngcontent-c1q="" class="mark"> /// </span> daring.lion.race
-</span><ds-icon _ngcontent-c1q="" name="copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 12px;" width="12" height="12" stroke-width="1.75" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg></ds-icon></ds-w3w></div><docs-api-table _ngcontent-c1="" _nghost-c9="" data-key="w3w"><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Inputs <span _ngcontent-c9="" class="count">3</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Default </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> prefix </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '///' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Marker rendered before the address (e.g. the "///" glyph). </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> address </span><span _ngcontent-c9="" title="required" class="req"> * </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> — </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> The three-word address, rendered after `prefix`. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> copyable </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> true </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Makes the address clickable/focusable and copies `prefix` + `address` to the clipboard. </span></td></tr></tbody></table></div></details><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Outputs <span _ngcontent-c9="" class="count">1</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Emits </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> copied </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> string </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> event </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Fires with `address` after a successful copy. </span></td></tr></tbody></table></div></details></docs-api-table></section></docs-section></ds-docs-components-w3w></div>
-  
-  
-  
-  
-
-
+  <style>
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
+  </style>
+</head><body>
+  <div class="ds-page"><ds-docs-components-w3w></ds-docs-components-w3w></div>
+  <script>window.__dsSectionsOnly = true</script>
+  <script src="../../../_ds_bundle.js"></script>
+  <script>
+    (function () {
+      var OWNS = "";
+      var INDEX = 0;
+      var KEY = "w3w";
+      var TABLE = true;
+      var HEAD = null;
+      var BLOCK = "specimen";
+      var REACT = "W3w";
+      var WHOLE = OWNS === null;
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var API = '[data-key]';
+      var host = document.querySelector("ds-docs-components-w3w");
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        var heading = null;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
+          if (node.matches(KEEP)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
+        }
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
+          }
+        }
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
+        }
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
+      })();
+    })();
+  </script>
 </body></html>

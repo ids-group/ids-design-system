@@ -1,18 +1,96 @@
-<!-- @dsCard group="overlays" viewport="1200x454" name="Tooltip Panel - states showcase (static specimens)" -->
-<!DOCTYPE html>
+<!-- @dsCard group="overlays" viewport="1200x454" name="Tooltip Panel - states showcase (static specimens)" --><!doctype html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>TooltipPanel</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
-<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
-  <div class="ds-page"><ds-docs-components-tooltip _nghost-c3i=""><docs-section _ngcontent-c3i="" anchor="tooltip" eyebrow="Components" title="Tooltip" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-tooltip" data-anchor="tooltip"><h2 _ngcontent-c1="" class="t-h2">Tooltip Panel - states showcase (static specimens)</h2><docs-component-meta _ngcontent-c1="" _nghost-c8=""><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;TooltipPanel /&gt;</span></span></div></div></docs-component-meta><div _ngcontent-c3i="" class="states"><div _ngcontent-c3i="" class="state"><code _ngcontent-c3i="" class="t-mono-inline state-lbl"> placement="top" </code><div _ngcontent-c3i="" class="state-stage"><ds-tooltip-panel _ngcontent-c3i="" role="tooltip" text="Recompute pending — 3 affected" placement="top" _nghost-c3j="" id="" class="top">Recompute pending — 3 affected</ds-tooltip-panel><span _ngcontent-c3i="" class="anchor t-xs"> Anchor </span></div></div><div _ngcontent-c3i="" class="state"><code _ngcontent-c3i="" class="t-mono-inline state-lbl"> placement="bottom" </code><div _ngcontent-c3i="" class="state-stage"><span _ngcontent-c3i="" class="anchor t-xs"> Anchor </span><ds-tooltip-panel _ngcontent-c3i="" role="tooltip" text="Last synced 14m ago" placement="bottom" _nghost-c3j="" id="" class="bottom">Last synced 14m ago</ds-tooltip-panel></div></div><div _ngcontent-c3i="" class="state"><code _ngcontent-c3i="" class="t-mono-inline state-lbl"> placement="left" </code><div _ngcontent-c3i="" class="state-stage state-stage--horiz"><ds-tooltip-panel _ngcontent-c3i="" role="tooltip" text="Locked" placement="left" _nghost-c3j="" id="" class="left">Locked</ds-tooltip-panel><span _ngcontent-c3i="" class="anchor t-xs"> Anchor </span></div></div><div _ngcontent-c3i="" class="state"><code _ngcontent-c3i="" class="t-mono-inline state-lbl"> placement="right" </code><div _ngcontent-c3i="" class="state-stage state-stage--horiz"><span _ngcontent-c3i="" class="anchor t-xs"> Anchor </span><ds-tooltip-panel _ngcontent-c3i="" role="tooltip" text="3 affected" placement="right" _nghost-c3j="" id="" class="right">3 affected</ds-tooltip-panel></div></div></div><div _ngcontent-c1="" class="api-sub" data-key="tooltip:TooltipPanelComponent"><docs-api-table _ngcontent-c1="" _nghost-c9=""><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Inputs <span _ngcontent-c9="" class="count">3</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Default </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> text </span><span _ngcontent-c9="" title="required" class="req"> * </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> — </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Tooltip text content. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> placement </span><span _ngcontent-c9="" title="required" class="req"> * </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="uni"><code _ngcontent-c9="" class="mono chip"> top </code><code _ngcontent-c9="" class="mono chip"> bottom </code><code _ngcontent-c9="" class="mono chip"> left </code><code _ngcontent-c9="" class="mono chip"> right </code></span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> — </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Side of the trigger the panel is positioned on; also drives the arrow class. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> panelId </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Element `id`, referenced by the trigger's `aria-describedby`. </span></td></tr></tbody></table></div></details></docs-api-table></div></section></docs-section></ds-docs-components-tooltip></div>
-  
-  
-  
-  
-
-
+  <style>
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
+  </style>
+</head><body>
+  <div class="ds-page"><ds-docs-components-tooltip></ds-docs-components-tooltip></div>
+  <script>window.__dsSectionsOnly = true</script>
+  <script src="../../../_ds_bundle.js"></script>
+  <script>
+    (function () {
+      var OWNS = "tooltip-panel";
+      var INDEX = 0;
+      var KEY = "tooltip:TooltipPanelComponent";
+      var TABLE = true;
+      var HEAD = "Tooltip Panel";
+      var BLOCK = "states showcase (static specimens)";
+      var REACT = "TooltipPanel";
+      var WHOLE = OWNS === null;
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var API = '[data-key]';
+      var host = document.querySelector("ds-docs-components-tooltip");
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        var heading = null;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
+          if (node.matches(KEEP)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
+        }
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
+          }
+        }
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
+        }
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
+      })();
+    })();
+  </script>
 </body></html>

@@ -57,31 +57,10 @@ export interface TableProps {
   /** Two-way per-column set-filters: column key → the still-checked values. A column absent from the map (or with every value checked) is unfiltered. */
   columnFilters?: unknown;
   onColumnFiltersChange?: (value: unknown) => void;
-  /** Two-way set of hidden column keys. `null` (default) derives the set from each column's `hidden` flag; the column picker then owns it. Binding a Set takes over — `hidden` flags are ignored. */
-  hiddenKeys?: unknown;
-  onHiddenKeysChange?: (value: unknown) => void;
-  /** Enables drag-to-resize handles on each column header. */
-  resizableColumns?: boolean;
-  /** Two-way per-column pixel width overrides (keyed by column key), set by dragging a resize handle. Seeded from `column.width` where unset. */
-  columnWidths?: unknown;
-  onColumnWidthsChange?: (value: unknown) => void;
-  /** Enables drag + up/down reordering in the column panel. */
-  reorderableColumns?: boolean;
-  /** Two-way column order as a list of keys. `null` (default) keeps declaration order; the column panel owns it once the user reorders. Keys absent from the list fall back to declaration order after the listed ones. */
-  columnOrder?: string[] | null;
-  onColumnOrderChange?: (value: string[] | null) => void;
-  /** Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default. */
+  /** Round-trip whatever the column features persist (order, widths, hidden keys) through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default. */
   persistLayout?: boolean;
   /** Screen id the persisted layout is stored under. Pick something stable per table, not per route instance. */
   storageKey?: string;
-  /** Render an export button in the table's toolbar row. Off by default. Leave it off and drive `runExport()` from your own button — in a page header, a filter bar, the `[toolbar]` slot — reading `exporting()` for its loading state. */
-  exportButton?: boolean;
-  /** Filename the export button downloads as. */
-  exportFilename?: string;
-  /** Where the export button gets its data. A server-paged table only HAS the current page, so exporting without this silently exports one page. Return ROWS and the table serializes them the same way it serializes its own. Return a `Blob` (or a URL string) and the table just downloads it — which is what you want when the backend already formatted the file with its own number formats, its own columns, or a sheet the table never held. */
-  exportFetcher?: unknown;
-  /** Fires when `exportFetcher` rejects. Without it a failed export is silent — the button simply re-enables and no file arrives. */
-  onExportFailed?: (value: unknown) => void;
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default. Unset falls back to `DS_CONFIG.table.stickyScrollbar`, then `false`. */
   stickyScrollbar?: boolean | null;
   /** Rows per page. `null` (default) disables pagination — all rows render. */

@@ -679,13 +679,6 @@
       "subtitle": "[allowInput]='false' restores the button-only trigger — no manual typing, selection via the calendar only."
     },
     {
-      "path": "components/forms-inputs/CalendarDay/Calendar Day - Day states.html",
-      "group": "forms-inputs",
-      "viewport": "1200x489",
-      "name": "Calendar Day - day states",
-      "subtitle": "Every individual cell state side-by-side."
-    },
-    {
       "path": "components/forms-inputs/Dropzone/Dropzone - States showcase.html",
       "group": "forms-inputs",
       "viewport": "1200x700",
@@ -774,27 +767,6 @@
       "viewport": "1200x359",
       "name": "Input - required vs optional",
       "subtitle": "[required]='true' appends a red asterisk to the label; [optional]='true' appends the muted '(optional)' suffix."
-    },
-    {
-      "path": "components/forms-inputs/FieldMessage/Field Message - Messages error, warning, hint.html",
-      "group": "forms-inputs",
-      "viewport": "1200x448",
-      "name": "Field Message - messages: error, warning, hint",
-      "subtitle": "A field takes all three and shows exactly ONE, highest first: error → validation errors → warning → hint."
-    },
-    {
-      "path": "components/forms-inputs/FieldMessage/Field Message - The glyph on the message line.html",
-      "group": "forms-inputs",
-      "viewport": "1200x700",
-      "name": "Field Message - the glyph on the message line",
-      "subtitle": "error, warning and success each bring a glyph; hint does not, because it is the resting text rather than a state and a form where every field carries an info circle reads as noise."
-    },
-    {
-      "path": "components/forms-inputs/FieldMessage/Field Message - Reserved message row.html",
-      "group": "forms-inputs",
-      "viewport": "1200x487",
-      "name": "Field Message - reserved message row",
-      "subtitle": "reserveMessage (default off) holds a message line's height even when there's no hint or error, so a form doesn't reflow the moment validation appears."
     },
     {
       "path": "components/forms-inputs/Input/Input - Whole form at once.html",
@@ -1897,7 +1869,7 @@
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - resizable columns",
-      "subtitle": "[resizableColumns]='true' adds a drag handle to each header's right edge."
+      "subtitle": "dsTableResize adds a drag handle to each header's right edge."
     },
     {
       "path": "components/data-display/Table/Table - Inline editing.html",
@@ -7003,6 +6975,30 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--ds-motion-check-enter-duration",
+      "value": "var(--duration-base)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-check-enter-easing",
+      "value": "var(--ease-spring)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-check-exit-duration",
+      "value": "var(--duration-fast)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-check-exit-easing",
+      "value": "var(--ease-accelerate)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--opacity-disabled",
       "value": ".5",
       "kind": "other",
@@ -9018,62 +9014,6 @@
       "definedIn": "_ds_bundle.css"
     },
     {
-      "name": "--ds-field-focus-shadow",
-      "value": "var(--focus-ring)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=ring]"
-    },
-    {
-      "name": "--ds-field-focus-shadow-error",
-      "value": "var(--focus-ring-error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=ring]"
-    },
-    {
-      "name": "--focus-ring-offset",
-      "value": "0px",
-      "kind": "spacing",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=edge]"
-    },
-    {
-      "name": "--ds-field-focus-shadow",
-      "value": "0 0 0 var(--border-width-default) var(--primary)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=edge]"
-    },
-    {
-      "name": "--ds-field-focus-shadow-error",
-      "value": "0 0 0 var(--border-width-default) var(--error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=edge]"
-    },
-    {
-      "name": "--focus-ring-offset",
-      "value": "calc(-1 * var(--focus-ring-width))",
-      "kind": "spacing",
-      "definedIn": "_ds_bundle.css",
-      "scope": "[data-focus=inset]"
-    },
-    {
-      "name": "--ds-field-focus-shadow",
-      "value": "var(--focus-ring-inset)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": "[data-focus=inset]"
-    },
-    {
-      "name": "--ds-field-focus-shadow-error",
-      "value": "var(--focus-ring-inset-error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": "[data-focus=inset]"
-    },
-    {
       "name": "--_link-color",
       "value": "var(--ds-link-color, var(--text-link))",
       "kind": "color",
@@ -9676,6 +9616,34 @@
       "scope": ".ds-dropdown-panel"
     },
     {
+      "name": "--_check-mark-enter-duration",
+      "value": "var(--ds-check-mark-enter-duration, var(--ds-motion-check-enter-duration))",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel .option .option-check"
+    },
+    {
+      "name": "--_check-mark-enter-easing",
+      "value": "var(--ds-check-mark-enter-easing, var(--ds-motion-check-enter-easing))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel .option .option-check"
+    },
+    {
+      "name": "--_check-mark-exit-duration",
+      "value": "var(--ds-check-mark-exit-duration, var(--ds-motion-check-exit-duration))",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel .option .option-check"
+    },
+    {
+      "name": "--_check-mark-exit-easing",
+      "value": "var(--ds-check-mark-exit-easing, var(--ds-motion-check-exit-easing))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel .option .option-check"
+    },
+    {
       "name": "--_overlay-enter-keyframes",
       "value": "var(--ds-overlay-enter-keyframes, ds-slide-in)",
       "kind": "color",
@@ -9843,6 +9811,62 @@
       "value": "1536px",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-field-focus-shadow",
+      "value": "var(--focus-ring)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=ring]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-error",
+      "value": "var(--focus-ring-error)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=ring]"
+    },
+    {
+      "name": "--focus-ring-offset",
+      "value": "0px",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=edge]"
+    },
+    {
+      "name": "--ds-field-focus-shadow",
+      "value": "0 0 0 var(--border-width-default) var(--primary)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=edge]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-error",
+      "value": "0 0 0 var(--border-width-default) var(--error)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=edge]"
+    },
+    {
+      "name": "--focus-ring-offset",
+      "value": "calc(-1 * var(--focus-ring-width))",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-focus=inset]"
+    },
+    {
+      "name": "--ds-field-focus-shadow",
+      "value": "var(--focus-ring-inset)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-focus=inset]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-error",
+      "value": "var(--focus-ring-inset-error)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-focus=inset]"
     },
     {
       "name": "--_date-picker-day-hover-bg-color",
@@ -10130,18 +10154,6 @@
       "label": "Density Comfy"
     },
     {
-      "selector": ":root[data-focus=ring]",
-      "label": "Root Focus Ring"
-    },
-    {
-      "selector": ":root[data-focus=edge]",
-      "label": "Root Focus Edge"
-    },
-    {
-      "selector": "[data-focus=inset]",
-      "label": "Focus Inset"
-    },
-    {
       "selector": "[ds-color=secondary]",
       "label": "Ds Color Secondary"
     },
@@ -10160,6 +10172,18 @@
     {
       "selector": "[ds-color=warning]",
       "label": "Ds Color Warning"
+    },
+    {
+      "selector": ":root[data-focus=ring]",
+      "label": "Root Focus Ring"
+    },
+    {
+      "selector": ":root[data-focus=edge]",
+      "label": "Root Focus Edge"
+    },
+    {
+      "selector": "[data-focus=inset]",
+      "label": "Focus Inset"
     }
   ],
   "fonts": [
