@@ -9,7 +9,7 @@
 //
 //   node tools/migration-lint-selftest.mjs
 import { readFileSync, writeFileSync, rmSync, cpSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -137,6 +137,21 @@ const mutations = {
   },
 };
 
+// A defect anywhere in the corpus makes a case pass without its own mutation firing, because the
+// lint sweeps every manifest. Assert the baseline is clean first, or every result below is noise.
+{
+  const baseline = run();
+  if (baseline.trim()) {
+    console.error(
+      'migration-lint-selftest: the manifests are not clean before any fixture is written, so a ' +
+        `case could pass on somebody else's defect:
+${baseline}`,
+    );
+    process.exit(1);
+  }
+  console.log('ok     the corpus is clean before the first fixture');
+}
+
 const dead = [];
 for (const [code, mutate] of Object.entries(mutations)) {
   const m = JSON.parse(PRISTINE);
@@ -147,7 +162,7 @@ for (const [code, mutate] of Object.entries(mutations)) {
   }
   writeFileSync(F, JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n');
   const out = run();
-  const fired = out.includes(`  ${code}  `);
+  const fired = out.includes(`${basename(F)}  ${code}  `);
   if (!fired) dead.push(code);
   console.log(`${fired ? 'fires ' : 'DEAD  '} ${code}`);
 }
@@ -209,7 +224,7 @@ for (const { label, code, mutate, raw: text } of extraCases) {
       JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n',
     );
   }
-  const fired = run().includes(`  ${code}  `);
+  const fired = run().includes(`${basename(F)}  ${code}  `);
   if (!fired) dead.push(label);
   console.log(`${fired ? 'fires ' : 'DEAD  '} ${label}`);
 }

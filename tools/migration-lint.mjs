@@ -24,7 +24,7 @@
 // Usage:
 //   node tools/migration-lint.mjs                          all manifests
 //   node tools/migration-lint.mjs migrations/0.9.0.json …   specific files
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -123,6 +123,18 @@ const everyManifest = () =>
 // `supersedes` cannot be resolved against a single file, and a lint that fails
 // because it was pointed at one manifest is a lint people stop running.
 const requested = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
+// A path that is not there used to be counted and reported as OK: the name was reduced to a
+// version string and every rule then found nothing to say about a manifest that does not exist.
+const missing = requested.filter(
+  (arg) => !existsSync(join(MIGRATIONS, basename(arg))),
+);
+if (missing.length) {
+  console.error(
+    `migration-lint: no such manifest — ${missing.join(', ')}. Nothing was read, which is not ` +
+      'the same as nothing being wrong.',
+  );
+  process.exit(1);
+}
 const targets = new Set(
   (requested.length
     ? requested.map((arg) => join(ROOT, arg))
