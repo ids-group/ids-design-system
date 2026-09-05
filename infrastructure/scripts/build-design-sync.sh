@@ -67,13 +67,27 @@ fi
 export CHROME_BIN
 [ -n "$CHROME_BIN" ] || { echo "chromium is not available, so the cards cannot be frozen"; exit 1; }
 
-# A card's height is measured from the rendered page, and the marker that carries it is written by
-# build-upload — so the measurement sits between two builds, not after the last one.
+# A card's height is measured from the RENDERED page, so the cards have to exist before it can run —
+# the first build above is what it measures. The marker carrying the number is written by
+# build-upload, which is why the measurement sits between two builds rather than after the last one.
 step "Measuring the card heights"
 node .design-sync/tools/measure-cards.mjs
 
-step "Stamping the heights back into the cards"
-bun run build:upload
+# The second build exists only to stamp NEW numbers into the markers. Heights are stable release to
+# release, so on most runs it rebuilds 410 cards to write what they already say. Same guarded form as
+# the tree comparison below: git reports on stdout and complains on stderr, so an unchecked capture
+# would read a failure as "nothing moved" and skip a build that was needed.
+if ! MOVED=$(git status --porcelain .design-sync/viewports.json); then
+  echo "git status failed, so the heights could not be compared — rebuilding rather than guessing"
+  MOVED="unknown"
+fi
+
+if [ -n "$MOVED" ]; then
+  step "Stamping the new heights into the cards"
+  bun run build:upload
+else
+  step "Heights unchanged, so the cards already carry them"
+fi
 
 step "Freezing the cards"
 node .design-sync/tools/snapshot-cards.mjs
