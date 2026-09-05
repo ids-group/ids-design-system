@@ -25,6 +25,15 @@
   }
 }
 
+/* Three rows' worth, built from the same padding and line height a real row is, so it tracks
+   density instead of restating a number. The spinner then has a body to sit in and the table does
+   not jump when the first page arrives. */
+.loading-space {
+  height: calc(
+    (var(--_table-cell-pad-y) * 2 + var(--line-height-base) * var(--font-size-s)) * 3
+  );
+}
+
 .visually-hidden {
   @include visually-hidden.visually-hidden;
 }
@@ -373,8 +382,35 @@
       width: var(--space-10);
     }
 
+    /* Opens like ds-accordion, on the same 0fr -> 1fr grid track: height 0 -> auto cannot
+       interpolate, and this can. A keyframe rather than a transition because the row is inserted
+       when it opens, and there is no previous state for a transition to run from. */
     .expand-panel-cell {
       padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
+      display: grid;
+      grid-template-rows: 1fr;
+      animation: ds-table-expand var(--duration-base) var(--ease-standard);
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+
+    .expand-panel-inner {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    @keyframes ds-table-expand {
+      from {
+        grid-template-rows: 0fr;
+        opacity: 0;
+      }
+
+      to {
+        grid-template-rows: 1fr;
+        opacity: 1;
+      }
     }
 
     /* Ellipsis clip for `truncate` text cells — the inline max-width (column
