@@ -1387,5 +1387,10 @@
   "--yellow-50": "Yellow ramp — stop 50.",
   "--yellow-500": "Yellow ramp — stop 500.",
   "--yellow-600": "Yellow ramp — stop 600.",
-  "--yellow-700": "Yellow ramp — stop 700."
+  "--yellow-700": "Yellow ramp — stop 700.",
+  "--ds-t-mono-ligatures": "Ligatures in mono type. Defaults to `none`, so `===` and `!=` show their characters rather than JetBrains Mono's combined glyph; set `normal` to get them back.",
+  "--ds-motion-check-enter-duration": "How long a check mark takes to land. Defaults to --duration-base.",
+  "--ds-motion-check-enter-easing": "Easing a check mark lands on. Defaults to --ease-spring, which overshoots and settles.",
+  "--ds-motion-check-exit-duration": "How long a check mark takes to leave. Defaults to --duration-fast, shorter than the entrance.",
+  "--ds-motion-check-exit-easing": "Easing a check mark leaves on. Defaults to --ease-accelerate, so it does not overshoot on the way out."
 }

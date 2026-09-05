@@ -2650,6 +2650,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Checkbox caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
       },
       {
+        "name": "--ds-checkbox-bg-color",
+        "value": "var(--surface-default)",
+        "notes": "Checkbox unchecked surface fill."
+      },
+      {
+        "name": "--ds-checkbox-border-color",
+        "value": "var(--border-strong)",
+        "notes": "Checkbox unchecked border colour."
+      },
+      {
+        "name": "--ds-checkbox-hover-border-color",
+        "value": "var(--accent)",
+        "notes": "Checkbox border colour on hover (defaults to --accent)."
+      },
+      {
+        "name": "--ds-checkbox-selected-bg-color",
+        "value": "var(--accent)",
+        "notes": "Checked box fill (defaults to --accent)."
+      },
+      {
+        "name": "--ds-checkbox-selected-border-color",
+        "value": "var(--accent)",
+        "notes": "Checked box border colour (defaults to --accent)."
+      },
+      {
+        "name": "--ds-checkbox-radius",
+        "value": "var(--ds-radius-inner)",
+        "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
+      },
+      {
         "name": "--check-size",
         "value": "20px",
         "notes": "20px — checkbox/radio box glyph (density-scaled)."
@@ -5700,7 +5730,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-t-mono-ligatures",
         "value": "none",
-        "notes": ""
+        "notes": "Ligatures in mono type. Defaults to `none`, so `===` and `!=` show their characters rather than JetBrains Mono's combined glyph; set `normal` to get them back."
       },
       {
         "name": "--ds-t-mono-font-weight",

@@ -235,12 +235,19 @@ const fieldBoxHooks = extractComponentTokens(
   readIf(join(ROOT, 'src/lib/styles/_field-box.scss')),
   'field',
 );
+// Same shape: ds-checkbox and ds-table's row selection both include this mixin, so neither
+// stylesheet declares the hooks and the component sweep cannot see them.
+const checkBoxHooks = extractComponentTokens(
+  readIf(join(ROOT, 'src/lib/styles/_check-box.scss')),
+  'checkbox',
+);
 const all = [
   ...comp.map((t) => ({ ...t, category: 'component' })),
   ...typographyHooks.map((t) => ({ ...t, category: 'component' })),
   ...overlayMotionHooks.map((t) => ({ ...t, category: 'component' })),
   ...fieldLabelHooks.map((t) => ({ ...t, category: 'component' })),
   ...fieldBoxHooks.map((t) => ({ ...t, category: 'component' })),
+  ...checkBoxHooks.map((t) => ({ ...t, category: 'component' })),
   ...globals.map((t) => ({ ...t, category: categorize(t.name) })),
 ];
 for (const t of all)
