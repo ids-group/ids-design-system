@@ -10,14 +10,24 @@ import { writeFileSync, rmSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const FIXTURE = 'changelog-lint-selftest.fixture.md';
-const FIXTURE_PATH = join(ROOT, FIXTURE);
+// Per-process, and outside the repository: a constant name at the repo root meant two runs shared
+// both paths — one run's `finally` deleted the fixture the other was about to lint — and a crash
+// left a stray that `git add -A` would stage.
+const FIXTURE = join(
+  tmpdir(),
+  `changelog-lint-selftest.${process.pid}.fixture.md`,
+);
+const FIXTURE_PATH = FIXTURE;
 // At the root, NOT in `migrations/`: a crash between write and cleanup would otherwise
 // leave a stray file that ships.
-const MANIFEST = 'changelog-lint-selftest.fixture.json';
-const MANIFEST_PATH = join(ROOT, MANIFEST);
+const MANIFEST = join(
+  tmpdir(),
+  `changelog-lint-selftest.${process.pid}.fixture.json`,
+);
+const MANIFEST_PATH = MANIFEST;
 
 // The prose around each offending token is deliberately plausible: a rule that only fires
 // on a bare token would miss every real occurrence.
