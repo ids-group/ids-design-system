@@ -30,8 +30,18 @@
     .state-cell-stage {
       padding: var(--space-3);
       min-height: 96px;
+
+      /* The stage is a child of the grid item, not the item itself, so it does not stretch on its
+         own — and the SELECTED specimen is the only one carrying a checkbox column, which makes its
+         row 50px taller than a plain text row. Without this the four cards in one band end up
+         different heights. */
+      height: 100%;
     }
     .state-cell-stage--tbl { padding: 0; align-items: stretch; }
+
+    /* The one-specimen band keeps the card width the four-across bands use. `1fr` stretched it to
+       the full row, which reads as a broken layout rather than as a single example. */
+    .states--cols-1 { grid-template-columns: max-content; }
     .state-cell-stage--tbl ds-table { width: 100%; }
 
     /* State pin — hover on a sortable header reads the component's own resolvers;

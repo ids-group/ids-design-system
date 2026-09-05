@@ -96,6 +96,7 @@ permission prompt once it is granted; writes prompt.
 > divergences behind 0.11.1, and nobody was re-porting it, so it stopped being a fallback and became
 > 11 000 lines of misleading code. `git log -- .design-sync/react-bindings` recovers it if it is ever
 > wanted. Its parity gate went with it — there is no second implementation left to guard.
+
 ## The build chain
 
 ```sh
@@ -273,7 +274,7 @@ delete_files { planId, paths }
   per file, but the PLAN does not.
 - **`delete_files` is refused on a project someone else owns**, verbatim:
   `bulk delete requires project ownership when called without a turn fence; this
-  project is owned by another user`. Writes are fine, deletes are not, so an
+project is owned by another user`. Writes are fine, deletes are not, so an
   obsolete path can only be BLANKED (`data: ""` is accepted and leaves a 0-byte
   file) until the owner deletes it. There is **no move or rename method** — the
   full surface is list_projects, get_project, list_files, get_file, finalize_plan,

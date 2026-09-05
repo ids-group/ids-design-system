@@ -298,19 +298,27 @@
   --info-text: var(--sky-700);
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
-     so re-skinning --primary-h propagates into focus state.
-
-     The inner halo is TRANSPARENT, not a colour: its job is to separate the ring
-     from the element, so it has to match whatever is actually behind — which a
-     named surface only is when nothing intervenes. Painting --surface-canvas here
-     drew a dark rim around a white card in a dark app, reading as a rendering
-     artifact rather than a focus state. Transparent costs nothing on a canvas
-     ground (the same pixels show through) and is correct on every other. */
-  --focus-ring-inner: transparent;
+     so re-skinning --primary-h propagates into focus state. */
+  /* Separates the two bands of the FIELD halo, and nothing else — controls draw an
+     `outline`, whose gap needs no colour at all. It cannot be `transparent`: a transparent
+     shadow layer is a no-op, not a hole, so the outer band would show through as one solid
+     4px slab. `--surface-default` and not `--surface-canvas`: a field sits on the surface,
+     and painting the page ground here drew a dark rim around a light card. */
+  --focus-ring-inner: var(--surface-default);
   --focus-ring-outer-h: var(--primary-h);
   --focus-ring-outer-s: var(--primary-s);
   --focus-ring-outer-l: var(--primary-l);
   --focus-ring-outer-alpha: 1;
+  /* A flat focus colour, for components that draw an `outline` instead of a shadow (a row
+     inside a clipping list, a swatch grid). It must stay DEFINED: an `outline-color` that
+     falls through resolves to `currentColor`, so a row rings itself in its own text colour.
+
+     `--accent`, not the ring's own primary channels: outside a zone it IS `--primary`, and
+     inside `[ds-color="error"]` it becomes that family, which is the same adaptivity the
+     zone already gives the shadow ring through `--accent-focus-ring`. Composing it from
+     `--focus-ring-outer-*` would have pinned the outline to the brand hue in a zone whose
+     every other accent had moved. */
+  --focus-ring-color: var(--accent);
   --focus-ring:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
@@ -583,19 +591,27 @@
   --info-text: var(--sky-700);
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
-     so re-skinning --primary-h propagates into focus state.
-
-     The inner halo is TRANSPARENT, not a colour: its job is to separate the ring
-     from the element, so it has to match whatever is actually behind — which a
-     named surface only is when nothing intervenes. Painting --surface-canvas here
-     drew a dark rim around a white card in a dark app, reading as a rendering
-     artifact rather than a focus state. Transparent costs nothing on a canvas
-     ground (the same pixels show through) and is correct on every other. */
-  --focus-ring-inner: transparent;
+     so re-skinning --primary-h propagates into focus state. */
+  /* Separates the two bands of the FIELD halo, and nothing else — controls draw an
+     `outline`, whose gap needs no colour at all. It cannot be `transparent`: a transparent
+     shadow layer is a no-op, not a hole, so the outer band would show through as one solid
+     4px slab. `--surface-default` and not `--surface-canvas`: a field sits on the surface,
+     and painting the page ground here drew a dark rim around a light card. */
+  --focus-ring-inner: var(--surface-default);
   --focus-ring-outer-h: var(--primary-h);
   --focus-ring-outer-s: var(--primary-s);
   --focus-ring-outer-l: var(--primary-l);
   --focus-ring-outer-alpha: 1;
+  /* A flat focus colour, for components that draw an `outline` instead of a shadow (a row
+     inside a clipping list, a swatch grid). It must stay DEFINED: an `outline-color` that
+     falls through resolves to `currentColor`, so a row rings itself in its own text colour.
+
+     `--accent`, not the ring's own primary channels: outside a zone it IS `--primary`, and
+     inside `[ds-color="error"]` it becomes that family, which is the same adaptivity the
+     zone already gives the shadow ring through `--accent-focus-ring`. Composing it from
+     `--focus-ring-outer-*` would have pinned the outline to the brand hue in a zone whose
+     every other accent had moved. */
+  --focus-ring-color: var(--accent);
   --focus-ring:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
@@ -786,6 +802,10 @@
   /* Two stops only: 1.5/2.5 mid-stops read identically to 1/2 on standard displays. */
   --border-width-default: 1px;
   --border-width-strong: 2px;
+  /* 2px is the floor WCAG 2.4.13 measures against, and only the CONTRASTING part counts —
+     an indicator whose 2px is half gap does not meet it. The offset is a real gap: the
+     outline is not painted there, so whatever the control sits on shows through. */
+  --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
   /* Shadows are composed from a channel-split tint so a theme can re-colour them:
      --shadow-tint-h/s come from ../themes/_base-palette.scss and -l from each
@@ -1532,6 +1552,40 @@ h1, h2, h3, h4, h5, h6 {
   border: 0;
 }
 
+:where(a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])) {
+  outline: var(--focus-ring-width) solid transparent;
+  outline-offset: var(--focus-ring-offset);
+}
+
+:where(:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  transition: outline-color var(--duration-fast) var(--ease-standard);
+}
+
+:root[data-focus=ring] {
+  --ds-field-focus-shadow: var(--focus-ring);
+  --ds-field-focus-shadow-error: var(--focus-ring-error);
+}
+
+:root[data-focus=edge] {
+  --focus-ring-offset: 0px;
+  --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+  --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
+}
+
+[data-focus=inset] {
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+  --ds-field-focus-shadow: var(--focus-ring-inset);
+  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
+}
+
+@media (forced-colors: active) {
+  :where(:focus-visible) {
+    outline: var(--focus-ring-width) solid CanvasText;
+    outline-offset: var(--focus-ring-offset);
+  }
+}
 /* Global .link helper — pure CSS class (no Angular wrapper) so consumers
    can apply it to inline anchors inside <p> text without disrupting line
    flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
@@ -1558,8 +1612,9 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration-color: var(--_link-color-active);
 }
 .link:focus-visible {
-  outline: none;
-  box-shadow: var(--ds-control-focus-shadow);
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  transition: outline-color var(--duration-fast) var(--ease-standard);
   border-radius: var(--radius-sm);
   text-decoration-color: var(--_link-color);
 }
@@ -1625,54 +1680,6 @@ h1, h2, h3, h4, h5, h6 {
   font-size: var(--font-size-l);
 }
 
-:where(:focus-visible) {
-  outline: none;
-  box-shadow: var(--ds-control-focus-shadow);
-}
-
-:root[data-focus=ring] {
-  --ds-field-focus-shadow: var(--focus-ring);
-  --ds-field-focus-shadow-error: var(--focus-ring-error);
-}
-
-:root[data-focus=field] {
-  --ds-control-focus-shadow: var(--focus-field);
-  --ds-control-focus-shadow-error: var(--focus-field-error);
-}
-
-:root[data-focus=edge] {
-  --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
-  --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
-  --ds-control-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
-  --ds-control-focus-shadow-error: 0 0 0 var(--border-width-default)
-    var(--error);
-}
-
-[data-focus=inset] {
-  --ds-field-focus-shadow: var(--focus-ring-inset);
-  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
-  --ds-control-focus-shadow: var(--focus-ring-inset);
-  --ds-control-focus-shadow-error: var(--focus-ring-inset-error);
-}
-
-:root[data-focus=outline] {
-  --ds-field-focus-shadow: none;
-  --ds-field-focus-shadow-error: none;
-  --ds-control-focus-shadow: none;
-  --ds-control-focus-shadow-error: none;
-}
-
-:root[data-focus=outline] :where(:focus-visible) {
-  outline: var(--border-width-strong) solid var(--primary);
-  outline-offset: var(--focus-ring-offset);
-}
-
-@media (forced-colors: active) {
-  :where(:focus-visible) {
-    outline: var(--border-width-strong) solid CanvasText;
-    outline-offset: var(--focus-ring-offset);
-  }
-}
 [ds-color=secondary] {
   --accent: var(--secondary);
   --accent-hover: var(--secondary-hover, var(--secondary));
@@ -1685,6 +1692,7 @@ h1, h2, h3, h4, h5, h6 {
   --accent-focus-ring: var(--focus-ring-secondary, var(--focus-ring));
   --accent-focus-field: var(--focus-field-secondary, var(--focus-field));
   --accent-surface-tint: var(--secondary-subtitle, var(--secondary-muted));
+  --focus-ring-color: var(--secondary);
 }
 
 [ds-color=tertiary] {
@@ -1699,6 +1707,7 @@ h1, h2, h3, h4, h5, h6 {
   --accent-focus-ring: var(--focus-ring-tertiary, var(--focus-ring));
   --accent-focus-field: var(--focus-field-tertiary, var(--focus-field));
   --accent-surface-tint: var(--tertiary-subtitle, var(--tertiary-muted));
+  --focus-ring-color: var(--tertiary);
 }
 
 [ds-color=error] {
@@ -1713,6 +1722,7 @@ h1, h2, h3, h4, h5, h6 {
   --accent-focus-ring: var(--focus-ring-error, var(--focus-ring));
   --accent-focus-field: var(--focus-field-error, var(--focus-field));
   --accent-surface-tint: var(--error-subtitle, var(--error-muted));
+  --focus-ring-color: var(--error);
 }
 
 [ds-color=success] {
@@ -1727,6 +1737,7 @@ h1, h2, h3, h4, h5, h6 {
   --accent-focus-ring: var(--focus-ring-success, var(--focus-ring));
   --accent-focus-field: var(--focus-field-success, var(--focus-field));
   --accent-surface-tint: var(--success-subtitle, var(--success-muted));
+  --focus-ring-color: var(--success);
 }
 
 [ds-color=warning] {
@@ -1741,6 +1752,7 @@ h1, h2, h3, h4, h5, h6 {
   --accent-focus-ring: var(--focus-ring-warning, var(--focus-ring));
   --accent-focus-field: var(--focus-field-warning, var(--focus-field));
   --accent-surface-tint: var(--warning-subtitle, var(--warning-muted));
+  --focus-ring-color: var(--warning);
 }
 
 .grid-2 {
@@ -2052,8 +2064,9 @@ html {
   background: var(--surface-muted);
 }
 .ds-dropdown-panel .option:focus-visible {
-  outline: none;
-  box-shadow: var(--ds-control-focus-shadow);
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: calc(-1 * var(--focus-ring-width));
+  transition: outline-color var(--duration-fast) var(--ease-standard);
 }
 .ds-dropdown-panel .option.is-selected {
   background: var(--_option-selected-bg-color);
@@ -2197,25 +2210,8 @@ html {
     opacity: 0;
   }
 }
-@property --skeleton-shimmer-x {
-  syntax: "<length>";
-  inherits: true;
-  initial-value: 100vw;
-}
-:root {
-  animation: ds-skeleton-shimmer-loop var(--duration-loop-slow, 1400ms) linear infinite;
-}
-
-@keyframes ds-skeleton-shimmer-loop {
-  0% {
-    --skeleton-shimmer-x: 100vw;
-  }
-  100% {
-    --skeleton-shimmer-x: -100vw;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  :root {
+  ds-skeleton::after {
     animation: none;
   }
 }

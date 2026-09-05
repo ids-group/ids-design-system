@@ -4,12 +4,57 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.7.0 — 2026-09-04
+
+Two-wave adversarial review (4 sceptics on the files, 2 on their findings, every survivor
+validated by hand) against the repo as of 0.12.0.
+
+### Fixed
+
+- **Restart-after-failure is now sound.** The chain starts at the ledger's unfinished version, not
+  the lockfile's (a post-bump failure left the lockfile at a version that never went green, and its
+  partial edits rode into the next version's commit); "fresh" re-runs that version, never skips it.
+  The half-migrated-tree idempotence guard (an old value standing inside its applied replacement)
+  now lives in the finder too, not only the re-check.
+- **The re-check's rename mode gained the scoping it always needed:** `element[attr]` is parsed as
+  a scope (a literal grep matched nothing and false-GREENed every element-scoped rename),
+  `input-rename`/`output-rename` bare-word `old`s count only on the host component, `new ⊃ old`
+  (a type gaining a generic) no longer fails correct code, non-token `old`s stop being locators,
+  `detect` shapes joined the grep list, and the not-applicable confirmation runs under the same
+  scoping instead of re-importing the finder's filtered matches.
+- The value-remap tables (planner/applier/re-check) learned the bare-value map rows: key==value is
+  the bare-boolean-attribute convention (never "repaired" into an identity token, never read as
+  leave-untouched), key!=value replaces the value inside the attribute.
+- The planner enriches only REQUIRED fields — `pitfall`/`appliesWhen` are optional by contract and
+  are never invented; a contract-clean manifest is no longer branded legacy.
+- The excusal of an unresolvable dynamic binding now covers the `verify` leg too; a `no-op` mode is
+  forwarded and re-checked by testing the condition; DEGRADED targets exclude their unattempted
+  behavioral items from the re-check dispatch instead of feeding the forbidden fix loop.
+
+### Changed
+
+- Phase A step 7 runs the DS repo's `tools/check-manifest-truth.mjs` ONCE from the clone's default
+  branch, before any tag checkout replaces the tree that holds it (no published tag carries the
+  tool) — the tag-tree check of the same three assumptions this workflow executes, read by OUTPUT
+  (defect vs could-not-check, never merged); step 1 consumes the per-version record: a flagged
+  item is reported as manifest evidence and its plan entry derives from prose instead (the check's
+  first run upstream removed seven items migrating from names no release ever shipped).
+- Ledger v2: per-target (monorepo runs were unrepresentable), stores each version's plan (id
+  stability across resumes), head commit at start (a moved tree is flagged on resume), delete-pass
+  progress, and is deleted on completion; dry-run writes its own suffixed path and never prompts.
+- Peer preflight moved to Phase A (`npm view` needs no install); an install that fails on a peer
+  conflict reads as the peer stop. Verify commands are discovered per target; a mixed
+  DEGRADED/normal fleet is supported. `code-add` may create the described file; step-5 spot-greps
+  skip `code-add` anchors; deletions honour `replaceWith`; `restore` is the sanctioned
+  old-behaviour snippet; the frontmatter hook catches `git -C <path> push` spellings.
+
 ## 1.6.0 — 2026-09-01
 
 Three validation gaps closed, each grounded in a manifest defect the plugin could not distinguish
 from success (found by the 2026-08-31 manifest audit).
 
 ### Added
+
 - **LOCATOR-DEAD classification.** A zero-hit item is classified before it is dropped: broad
   locators show the feature absent → not-applicable; `old` + every `detect` shape + every
   `searchHint` match nothing repo-wide → locator-dead — evidence about the MANIFEST, reported as
@@ -23,6 +68,7 @@ from success (found by the 2026-08-31 manifest audit).
   the described location instead of grepping for an `old` that was never there.
 
 ### Changed
+
 - **Executor-simulation + regression pass.** The unresolvable-dynamic-binding path is now one road
   (skip the fix loop → re-check excusal → "human should eyeball" with `locs`); the finder reports
   per-locator `rawMatches` so the not-applicable/locator-dead call has evidence; superseded items
@@ -54,6 +100,7 @@ from success (found by the 2026-08-31 manifest audit).
 ## 1.5.0 — 2026-08-21
 
 ### Added
+
 - **A behavioural item is no longer dropped on zero hits (Phase B step 2).** An item whose `surface`
   is not the template is about the CONSUMER's own code, which routinely names nothing of ours: zero
   hits now means "these shapes did not match this consumer's spelling", and the orchestrator does a
@@ -78,6 +125,7 @@ from success (found by the 2026-08-31 manifest audit).
   skipped with that reason recorded, so a run stops doing work the next version undoes.
 
 ### Changed
+
 - The planner emits the new fields (`surface`, `detect`, `verify`, `restore`, `supersedes` /
   `supersededBy`, top-level `deleteList`) and, where a manifest lacks them, ENRICHES each item from
   its own `note` instead of passing an undetectable item downstream. Every manifest in the DS repo
@@ -87,6 +135,7 @@ from success (found by the 2026-08-31 manifest audit).
 ## 1.4.0 — 2026-08-20
 
 ### Added
+
 - **Phase C team-setup offer**: at the end of a run, if the consumer repo's committed
   `.claude/settings.json` does not declare the `ids` marketplace, the orchestrator offers to merge
   in `extraKnownMarketplaces` (+`autoUpdate: true`) + `enabledPlugins` and commit it — after which
@@ -96,6 +145,7 @@ from success (found by the 2026-08-31 manifest audit).
   plugin is a relative-path marketplace source.
 
 ### Changed
+
 - Private-repo auth: `BITBUCKET_TOKEN` is not a documented mechanism for marketplace fetches. The
   working paths are the credentialed re-clone fallback (the default on credential-manager setups),
   an SSH marketplace URL, or a scoped git URL-rewrite token.
@@ -108,6 +158,7 @@ from success (found by the 2026-08-31 manifest audit).
 ## 1.3.1 — 2026-07-13
 
 ### Changed
+
 - Migration-manifest source priority made symmetric with the changelog's: prefer the clone's
   `migrations/<V>.json`, fall back to Bitbucket-raw per chain version, and treat a missing manifest
   as "derive that version from prose" rather than losing determinism silently when the clone fails.
@@ -118,6 +169,7 @@ Deep-review round with external research (codemod prior art, ng-update conventio
 plugin capability audit).
 
 ### Added
+
 - **Shipped migration manifests.** The DS now publishes `migrations/<version>.json` — a structured
   MigrationPlan mirror of each changelog block (schema in `migrations/README.md`), shipped in the
   npm package and readable from the repo clone; 0.4.0 and 0.5.0 authored retroactively. The
@@ -135,6 +187,7 @@ plugin capability audit).
   a run — verified to fire inside the skill and stay inert outside it.
 
 ### Changed
+
 - **One clone = changelog + sources.** Phase A clones the DS repo once; the clone's default branch
   is the primary changelog source (the raw-URL fetch demoted to fallback; the docs-site SPA dropped
   as a source). Migration manifests are saved aside before per-version tag checkouts.
@@ -146,6 +199,7 @@ plugin capability audit).
 Follow-ups from the second live run (mm-broker, 0.3.0 → 0.5.0, clean full-auto pass):
 
 ### Changed
+
 - Appliers may own a **small disjoint batch** of files (≤~5) instead of strictly one file; the
   invariant stays — a file is never shared between concurrent appliers. (The run batched safely on
   its own; the letter now matches the proven behavior.)
@@ -159,6 +213,7 @@ Follow-ups from the second live run (mm-broker, 0.3.0 → 0.5.0, clean full-auto
 ## 1.2.6 — 2026-07-10
 
 ### Breaking (workflow contract)
+
 - **Full-auto.** The applier now ATTEMPTS every actionable change, including `removed-api` and
   `behavior` items (real code edits per the changelog's migration notes). Manual review is a
   last-resort escalation (attempt + fix-loop failed), no longer the default bucket for behavioral
@@ -166,6 +221,7 @@ Follow-ups from the second live run (mm-broker, 0.3.0 → 0.5.0, clean full-auto
   committed but flagged "applied — human should eyeball".
 
 ### Added
+
 - **Generic changelog-reading engine** — no baked component/attribute/value specifics; the planner
   derives every specific from the changelog block (content-based actionability, compound bullets
   split per mechanical unit, `behavior` catch-all so nothing documented is dropped).
@@ -183,6 +239,7 @@ Follow-ups from the second live run (mm-broker, 0.3.0 → 0.5.0, clean full-auto
   target version caps the chain.
 
 ### Changed
+
 - `ds-usage-finder` moved haiku → sonnet (finding usages needs scoping/classification/
   exhaustiveness judgement).
 - `value-remap` map semantics pinned as closed-set decision tables in applier + recheck (absent

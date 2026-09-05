@@ -59,11 +59,13 @@ export class ToastRegionComponent {
   private readonly position = inject(DS_CONFIG).toast?.position;
 
   constructor() {
-    devWarn(() =>
-      this.maxVisible() < 0
-        ? `<ds-toast-region> maxVisible is ${this.maxVisible()}; a negative cap means unlimited, which is what 0 says. Pass 0 if that is the intent.`
-        : null,
-    );
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      devWarn(() =>
+        this.maxVisible() < 0
+          ? `<ds-toast-region> maxVisible is ${this.maxVisible()}; a negative cap means unlimited, which is what 0 says. Pass 0 if that is the intent.`
+          : null,
+      );
+    }
     effect(() => {
       this.maxVisible();
       this.drainQueue();

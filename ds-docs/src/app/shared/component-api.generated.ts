@@ -4715,13 +4715,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Standalone two-way binding, and the ONLY way to drive a lone radio: this component is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form control — a radio is one option of a choice, not a value of its own — and a second accessor on the option would fight it. A lone radio in a form binds through `[(checked)]`, or becomes a one-option `ds-radio-group`. When inside `ds-radio-group`, `isChecked()` derives from the group value and this input is not read."
       },
       {
+        "name": "deselectable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Lets a checked standalone radio be cleared by clicking it again. Off by default, and ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it would leave the group with no value through a gesture the group cannot see."
+      },
+      {
         "name": "disabled",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Disables the radio; a disabled parent `ds-radio-group` also disables it."
+        "description": "A disabled parent `ds-radio-group` also disables it, whatever this is set to."
       },
       {
         "name": "name",
@@ -4761,7 +4770,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Control size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -6088,7 +6097,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Items listed in the dropdown menu."
+        "description": "Items listed in the dropdown menu. Empty disables the chevron."
       },
       {
         "name": "menuLabel",
@@ -6117,7 +6126,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires with the chosen menu item."
+        "description": "The menu half only — a press on the main button is `pressed`, never this."
       }
     ]
   },

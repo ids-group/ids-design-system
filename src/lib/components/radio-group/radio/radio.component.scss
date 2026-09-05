@@ -1,8 +1,8 @@
+@use '../../../styles/focus' as focus;
 @use '../../../styles/control-label' as control-label;
 @use '../../../styles/press' as press;
 
 :host {
-  --_radio-focus-shadow: var(--ds-radio-focus-shadow, var(--ds-control-focus-shadow));
   --_radio-accent-color: var(--ds-radio-accent-color, var(--accent));
   --_radio-bg-color: var(--ds-radio-bg-color, var(--surface-default));
   --_radio-border-color: var(--ds-radio-border-color, var(--border-strong));
@@ -27,6 +27,18 @@
 }
 
 .control-line {
+  // The ring goes on the ROW, not the glyph. A checked control already draws a brand
+  // ring of its own, and a focus ring around the glyph lands concentric with it — three
+  // brand bands through two gaps, which reads as a target rather than as two states a
+  // keyboard user has to tell apart.
+  @include focus.ring-for('.radio');
+
+  // No label: the row collapses onto the glyph and the concentric read comes back, so the
+  // ring stands further off. `.control-text:empty` is display:none, so the row IS the glyph.
+  &:has(.control-text:empty) {
+    --focus-ring-offset: var(--space-1-5);
+  }
+
   display: inline-flex;
   align-items: center;
 
@@ -72,7 +84,6 @@
               border-width var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) { border-color: var(--accent); }
-  &:focus-visible        { outline: none; box-shadow: var(--_radio-focus-shadow); }
 
   @include press.feedback;
   &:disabled {

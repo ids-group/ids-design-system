@@ -78,7 +78,7 @@
        component's own resolvers; values never duplicated here. */
     :host ::ng-deep .pin-hover .button  { background-color: var(--_button-bg-color-hover); }
     :host ::ng-deep .pin-active .button { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); }
-    :host ::ng-deep .pin-focus .button  { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
+    :host ::ng-deep .pin-focus .button  { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); z-index: var(--btn-focus-z); }
 
     /* Flips the whole colour x variant matrix to disabled — the fastest way to see
        whether a disabled state still reads as off next to its live self, which is

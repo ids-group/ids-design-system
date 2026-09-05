@@ -18,6 +18,12 @@
       > * { flex: 1; }
     }
 
+    /* A single field demonstrating one prop should not be wider than the prose that explains it —
+       the same 480px the autocomplete section caps its own field wrapper at. */
+    .select-demo {
+      max-width: 480px;
+    }
+
     /* Wrapper for raw .dropdown cells that need an external label / hint. */
     .field-stack {
       display: flex; flex-direction: column;

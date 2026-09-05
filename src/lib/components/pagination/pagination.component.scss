@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
 :host {
@@ -10,7 +11,6 @@
   --_pagination-active-bg-color-hover: var(--ds-pagination-active-bg-color-hover, var(--accent-hover));
   --_pagination-active-label-color:    var(--ds-pagination-active-label-color,    var(--accent-on));
   --_pagination-radius:        var(--ds-pagination-radius,        var(--ds-radius-control));
-  --_pagination-focus-shadow:  var(--ds-pagination-focus-shadow,  var(--ds-control-focus-shadow));
   --_pagination-label-font-size: var(--ds-pagination-label-font-size, var(--font-size-s));
   --_pagination-label-weight: var(--ds-pagination-label-weight, var(--font-weight-regular));
   --_pagination-label-color: var(--ds-pagination-label-color, var(--text-secondary));
@@ -69,8 +69,7 @@
     }
 
     &:focus-visible {
-      outline: none;
-      box-shadow: var(--_pagination-focus-shadow);
+      @include focus.ring;
     }
 
     @include press.feedback;

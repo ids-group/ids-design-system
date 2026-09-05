@@ -65,7 +65,7 @@
     the count and still fit what comes after; it measures for the same reason
     the default does. Only <code>maxVisibleChips="all"</code> skips measuring:
     it shows every chip and lets the trigger grow a line per selection. Same
-    input and same default on <code> ds-autocomplete </code>, so the two
+    input and same default on <code>ds-autocomplete</code>, so the two
     multi-value pickers do not diverge.
   </p>
 
@@ -474,10 +474,10 @@
       filterWith="none"
     </code> stops the panel
     narrowing the list a second time — the options you hand back are the ones
-    rendered. <code class="t-mono-inline"> loading </code> replaces the empty
-    row with a spinner, because "No matches" during a request in flight is a
-    lie. The panel also emits <code class="t-mono-inline"> opened </code>, which
-    is where the first fetch belongs.
+    rendered. <code class="t-mono-inline">loading</code> replaces the empty row
+    with a spinner, because "No matches" during a request in flight is a lie.
+    The panel also emits <code class="t-mono-inline">opened</code>, which is
+    where the first fetch belongs.
   </p>
 
   <div class="demo-panel">
@@ -510,10 +510,7 @@
     <code class="t-mono-inline">
       dsPanelFooterTemplate
     </code> fill a strip
-    above and below the options, with
-    <code class="t-mono-inline">
-      count
-    </code>,
+    above and below the options, with <code class="t-mono-inline">count</code>,
     <code class="t-mono-inline">
       total
     </code> and
@@ -545,7 +542,7 @@
         <ng-template dsPanelFooterTemplate>
           <ds-button
             size="sm"
-            fill="ghost"
+            variant="ghost"
             (clicked)="slotLabels.set([])"
           >
             Clear all
@@ -609,7 +606,7 @@
     <code class="t-mono-inline">
       clearable
     </code> shows the same clear button
-    the other fields use, and <code class="t-mono-inline"> name </code> reaches
+    the other fields use, and <code class="t-mono-inline">name</code> reaches
     the trigger.
   </p>
 

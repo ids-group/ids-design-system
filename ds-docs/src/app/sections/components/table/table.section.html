@@ -61,7 +61,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Mark columns <code class="t-mono-inline"> sortable: true </code> and add
+    Mark columns <code class="t-mono-inline">sortable: true</code> and add
     <code class="t-mono-inline">
       sortMode="client"
     </code> to let the table
@@ -170,12 +170,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Row tints on a <code class="t-mono-inline"> [rowInteractive] </code> table —
+    Row tints on a <code class="t-mono-inline">[rowInteractive]</code> table —
     hover and pressed only appear when rows are clickable, so a passive table
     stays static. Selected (checkbox column) and active (<code
       class="t-mono-inline"
-    >
-      [activeRowId] </code
+      >[activeRowId]</code
     >, the open detail row) persist regardless of pointer.
   </p>
 
@@ -273,7 +272,7 @@
     reason the tint is: nothing should promise a click that does not happen.
   </p>
 
-  <div class="states states--cols-4">
+  <div class="states states--cols-1">
     <div class="state-cell">
       <div class="state-cell-stage state-cell-stage--tbl pin-cell-link">
         <ds-table
@@ -434,7 +433,7 @@
     <code class="t-mono-inline">
       maxHeight="220px"
     </code> caps the scroll
-    region and <code class="t-mono-inline"> [stickyHeader]="true" </code> (the
+    region and <code class="t-mono-inline">[stickyHeader]="true"</code> (the
     default) pins the header inside it.
   </p>
 
@@ -541,7 +540,7 @@
       [loading]="true"
     </code> resolves the two above
     by the row count: skeleton while there is nothing on screen, overlay once
-    there is. <strong> Prefer it. </strong> Which treatment is right is not a
+    there is. <strong>Prefer it.</strong> Which treatment is right is not a
     preference — replacing visible rows with placeholders throws away what the
     reader is looking at, and dimming an empty card announces nothing about what
     is coming — and the table is the only place that holds both halves of the
@@ -606,7 +605,7 @@
   </div>
 
   <p class="block-desc t-s">
-    A single tertiary line in the <code class="t-mono-inline"> [empty] </code>
+    A single tertiary line in the <code class="t-mono-inline">[empty]</code>
     slot. Use when the empty state is transient or context-obvious.
   </p>
 
@@ -762,7 +761,7 @@
     <code class="t-mono-inline">
       density="compact"
     </code> tightens cell padding
-    and <code class="t-mono-inline"> [zebra]="true" </code> tints odd rows for
+    and <code class="t-mono-inline">[zebra]="true"</code> tints odd rows for
     spreadsheet-style scanning.
   </p>
 
@@ -840,15 +839,12 @@
       [animateHeight]
     </code> tweens the body height
     between pages (page 3 has only two rows) instead of snapping. For
-    server-side paging, bind <code class="t-mono-inline"> [total] </code> to the
+    server-side paging, bind <code class="t-mono-inline">[total]</code> to the
     full row count and hand the table one page at a time — it then drives the
-    pager off <code class="t-mono-inline"> total </code> and skips its own
-    slicing. Add
-    <code class="t-mono-inline">
-      [scrollToTopOnPageChange]
-    </code> to scroll the
-    table back into view on a page change — handy when the pager sits below a
-    long table.
+    pager off <code class="t-mono-inline">total</code> and skips its own
+    slicing. Add <code class="t-mono-inline">[scrollToTopOnPageChange]</code> to
+    scroll the table back into view on a page change — handy when the pager sits
+    below a long table.
   </p>
 
   <ds-table
@@ -876,7 +872,7 @@
       [expandableRows]="true"
     </code> adds a leading
     chevron column. Clicking it toggles an inline panel below the row. Pass a
-    template via <code class="t-mono-inline"> [rowExpandTemplate] </code> to
+    template via <code class="t-mono-inline">[rowExpandTemplate]</code> to
     control the panel content. Expanded ids are two-way bindable via
     <code class="t-mono-inline">
       [(expandedIds)]
@@ -888,19 +884,13 @@
       [expandAllToggle]="true"
     </code> puts an
     expand-all chevron in the column header — page-scoped when paginating, the
-    same way select-all is.
-    <code class="t-mono-inline">
-      (rowExpanded)
-    </code> and
+    same way select-all is. <code class="t-mono-inline">(rowExpanded)</code> and
     <code class="t-mono-inline">
       (rowCollapsed)
     </code> report each row as it
     opens or closes, expand-all included, which is where panel content gets
-    lazy-loaded. Writing
-    <code class="t-mono-inline">
-      expandedIds
-    </code> yourself stays silent — you
-    already know.
+    lazy-loaded. Writing <code class="t-mono-inline">expandedIds</code> yourself
+    stays silent — you already know.
   </p>
 
   <ds-table
@@ -1007,10 +997,10 @@
     <code class="t-mono-inline">
       [activeRowId]
     </code> keeps that row
-    highlighted (plus <code class="t-mono-inline"> aria-current </code>) while
-    the drawer is open. Controls inside cells (checkboxes, menus) stop
-    propagation, so they never trigger the row click — and neither does
-    finishing a text selection, so cell values stay copyable by mouse.
+    highlighted (plus <code class="t-mono-inline">aria-current</code>) while the
+    drawer is open. Controls inside cells (checkboxes, menus) stop propagation,
+    so they never trigger the row click — and neither does finishing a text
+    selection, so cell values stay copyable by mouse.
   </p>
 
   <ds-table
@@ -1120,7 +1110,7 @@
     <code class="t-mono-inline">
       [rowInteractive]
     </code> table a menu click
-    never fires <code class="t-mono-inline"> (rowClicked) </code>. A hand-built
+    never fires <code class="t-mono-inline">(rowClicked)</code>. A hand-built
     action column with no visible header should give its
     <code class="t-mono-inline">
       TableColumn
@@ -1152,7 +1142,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    The header <code class="t-mono-inline"> Columns </code> button opens a panel
+    The header <code class="t-mono-inline">Columns</code> button opens a panel
     that toggles visibility for
     <code class="t-mono-inline">
       hideable: true
@@ -1212,9 +1202,9 @@
     redistributes whatever the dragged column gives up and columns nobody
     touched visibly jump. Measuring them all once, at the first grab, keeps the
     auto-sized geometry instead of losing it. The consequence to expect: if you
-    persist <code class="t-mono-inline"> [(columnWidths)] </code>, one drag
-    fills the map for the whole row. That is the saved layout, not a leak — and
-    a second drag adds nothing further.
+    persist <code class="t-mono-inline">[(columnWidths)]</code>, one drag fills
+    the map for the whole row. That is the saved layout, not a leak — and a
+    second drag adds nothing further.
   </p>
 
   <p class="block-desc t-s">
@@ -1224,7 +1214,7 @@
     drag control that only answers a pointer makes a resizable column unusable
     without a mouse, so the handle is focusable: Arrow keys step by 16px,
     PageUp/PageDown by 64px, and Home hands the column back to automatic sizing.
-    It is a <code class="t-mono-inline"> role="separator" </code>, which ARIA
+    It is a <code class="t-mono-inline">role="separator"</code>, which ARIA
     reads as a range widget, so while it holds focus it reports
     <code class="t-mono-inline">
       aria-valuenow
@@ -1287,7 +1277,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Columns marked <code class="t-mono-inline"> editable: true </code>
+    Columns marked <code class="t-mono-inline">editable: true</code>
     (Record, Venue, Capacity here) turn into an input on double-click; Enter or
     blur commits, Escape cancels. The table stays data-agnostic — it emits
     <code class="t-mono-inline">
@@ -1362,13 +1352,10 @@
     right edge that still swallowed the horizontal swipe used to scroll the
     table. It now stands down, and width moves into the column panel: every row
     gets − / + / Fit alongside its visibility and order controls, and the panel
-    itself opens as a
-    <code class="t-mono-inline">
-      ds-bottom-sheet
-    </code> instead of a popover.
-    The steps are the handle's own keyboard steps, so all three routes — drag,
-    arrows, buttons — change width by the same amount. The buttons show on
-    desktop too; there the handle stays the primary way.
+    itself opens as a <code class="t-mono-inline">ds-bottom-sheet</code> instead
+    of a popover. The steps are the handle's own keyboard steps, so all three
+    routes — drag, arrows, buttons — change width by the same amount. The
+    buttons show on desktop too; there the handle stays the primary way.
   </p>
 
   <h3 class="block-title t-h4">
@@ -1509,7 +1496,7 @@
     <code class="t-mono-inline">
       (sortChange)
     </code> is where it hears about a
-    click. This host's default is <strong> Owner descending </strong>, and it
+    click. This host's default is <strong>Owner descending</strong>, and it
     answers a cleared sort by returning to it — the case that used to leave the
     header marking nothing over sorted rows.
   </p>
@@ -1596,7 +1583,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    A column marked <code class="t-mono-inline"> filter: 'set' </code> gets a
+    A column marked <code class="t-mono-inline">filter: 'set'</code> gets a
     funnel button in its header — a searchable checkbox list of the column's
     distinct values (here Venue and Status). Unchecking narrows the rows; the
     funnel highlights while a filter is active. State is two-way bindable via
@@ -1632,7 +1619,7 @@
     <code class="t-mono-inline">
       truncate: true
     </code> ellipsis-clips a text
-    column at its <code class="t-mono-inline"> width </code> (240px when unset).
+    column at its <code class="t-mono-inline">width</code> (240px when unset).
     The full value sits in the hover tooltip, and clicking a clipped cell opens
     it in a popover — an unclipped cell passes the click through to the row.
   </p>
@@ -1650,7 +1637,7 @@
       &lt;td&gt;
     </code> would swallow the row click
     on an interactive table. Within such a column it does look deeper than the
-    cell itself — a <code class="t-mono-inline"> dsCellTemplate </code> puts the
+    cell itself — a <code class="t-mono-inline">dsCellTemplate</code> puts the
     ellipsis on a descendant, so testing only the wrapper would miss it.
   </p>
 
@@ -1764,7 +1751,7 @@
     </code>. That is the right
     default because a paged table filtering locally would filter what the server
     already filtered, over a checklist offering only the values on THIS page.
-    Declare <code class="t-mono-inline"> filterMode="client" </code> when the
+    Declare <code class="t-mono-inline">filterMode="client"</code> when the
     table holds every row and should filter them itself — there is a dev warning
     for the giveaway case, a filterable column on a table that binds no `total`
     and declares no mode.
@@ -1804,7 +1791,7 @@
     Owner, ascending" and "Showing 1–25 of 240", with loading taking precedence
     while it lasts — announcing a new sort order over rows that are still being
     replaced describes a state the reader cannot inspect. Both strings are
-    inputs (<code class="t-mono-inline"> sortAnnouncement </code>,
+    inputs (<code class="t-mono-inline">sortAnnouncement</code>,
     <code class="t-mono-inline">
       rangeAnnouncement
     </code>) taking the facts and

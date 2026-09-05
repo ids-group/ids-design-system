@@ -1,3 +1,5 @@
+@use '../../../styles/focus' as focus;
+
 :host {
   --_time-picker-option-bg-color-selected: var(
     --ds-time-picker-option-bg-color-selected,
@@ -63,11 +65,7 @@
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(
-      --ds-time-picker-focus-shadow,
-      var(--ds-control-focus-shadow, var(--focus-ring))
-    );
+    @include focus.ring(calc(-1 * var(--focus-ring-width)));
   }
 
   &:disabled {

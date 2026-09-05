@@ -1,9 +1,9 @@
 # One line in `ng-package.json` is the whole bundle problem
 
-> Written 2026-09-01 to answer a question asked directly: *"так что у нас как-то сервисы
+> Written 2026-09-01 to answer a question asked directly: _"так что у нас как-то сервисы
 > неправильно устроены, или у нас внутри библиотеки зависимости неверные, или у нас какие-то графы
 > положений, компонентов, инжектов неверные? У нас не оптимизирован импорт библиотеки, не
-> оптимизирован tree shaking, или что?"*
+> оптимизирован tree shaking, или что?"_
 >
 > The reason the question keeps coming back is that the finding has always been told as a story about
 > a service — `NotificationService`, `ToastService`, `BodyScrollLockService`. **That framing is
@@ -22,16 +22,16 @@
 Nothing is wrong with the services, the internal dependency graph, or the DI graph. Tree-shaking is
 not unoptimised — it is working about as well as it can. The library declares **one** entry point, so
 ng-packagr emits **one** ESM module containing all 71 component folders, and a module is the smallest unit a
-bundler can place in a chunk. The consequence: the instant *any* runtime symbol from the library is
+bundler can place in a chunk. The consequence: the instant _any_ runtime symbol from the library is
 reachable before the first route resolves, the retained code of the **entire** library is placed in
 the initial bundle — including components only a lazy route uses. It does not matter which symbol.
 
 ## Two different problems share one name
 
-| | Question it answers | Our status |
-| --- | --- | --- |
-| **Tree-shaking** | is code nothing references deleted? | ✅ **working.** Entry cost 5.6 KB gzip; the 52 components a prototype never touches cost it 18.2 KB total |
-| **Chunk placement** (code-splitting) | of the code that IS used, does it land in the startup chunk or a later one? | ❌ **broken.** One eager symbol puts everything in the startup chunk |
+|                                      | Question it answers                                                         | Our status                                                                                                |
+| ------------------------------------ | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Tree-shaking**                     | is code nothing references deleted?                                         | ✅ **working.** Entry cost 5.6 KB gzip; the 52 components a prototype never touches cost it 18.2 KB total |
+| **Chunk placement** (code-splitting) | of the code that IS used, does it land in the startup chunk or a later one? | ❌ **broken.** One eager symbol puts everything in the startup chunk                                      |
 
 They are orthogonal, and almost every confusion about this topic comes from treating them as one
 thing. Ours is entirely a placement problem. `"sideEffects": false` is set, the Angular compiler marks
@@ -56,7 +56,7 @@ all 71 component folders** behind a single `"."` export. So "reachable from eage
 library, not of any component in it.
 
 Tree-shaking still runs inside that module, which is why the eager chunk measures 755 kB and not
-1.73 MB — genuinely unused code *is* dropped. What survives is everything the app uses **anywhere**,
+1.73 MB — genuinely unused code _is_ dropped. What survives is everything the app uses **anywhere**,
 placed eagerly.
 
 ## The evidence: what you import makes no difference
@@ -66,14 +66,14 @@ and one `await import()` route holding eleven heavy components (table, date-pick
 multi-select, autocomplete, color-picker, tree, stepper, dropzone, slider, otp-input). "Initial" is
 `main.js` plus every chunk it statically imports.
 
-| Eager anchor in the app root | Initial raw | Initial gzip | Lazy chunk | Heavy components in the initial bundle |
-| --- | --- | --- | --- | --- |
-| nothing from the DS | 178 723 B | 59 019 B | 566 761 B | **0 of 11** |
-| `import type { DsStatus }` — type-only | 178 749 B | 59 034 B | 566 761 B | **0 of 11** |
-| `provideDsTheme({ followSystem: true })` | 743 724 B | **192 392 B** | 189 B | **11 of 11** |
-| `provideDsConfig({})` | 743 583 B | **192 342 B** | 189 B | **11 of 11** |
-| one `<ds-button>` in the root shell | 743 355 B | **192 244 B** | 189 B | **11 of 11** |
-| `inject(ToastService)` | 754 962 B | **194 763 B** | 189 B | **11 of 11** |
+| Eager anchor in the app root             | Initial raw | Initial gzip  | Lazy chunk | Heavy components in the initial bundle |
+| ---------------------------------------- | ----------- | ------------- | ---------- | -------------------------------------- |
+| nothing from the DS                      | 178 723 B   | 59 019 B      | 566 761 B  | **0 of 11**                            |
+| `import type { DsStatus }` — type-only   | 178 749 B   | 59 034 B      | 566 761 B  | **0 of 11**                            |
+| `provideDsTheme({ followSystem: true })` | 743 724 B   | **192 392 B** | 189 B      | **11 of 11**                           |
+| `provideDsConfig({})`                    | 743 583 B   | **192 342 B** | 189 B      | **11 of 11**                           |
+| one `<ds-button>` in the root shell      | 743 355 B   | **192 244 B** | 189 B      | **11 of 11**                           |
+| `inject(ToastService)`                   | 754 962 B   | **194 763 B** | 189 B      | **11 of 11**                           |
 
 Read the bottom four rows together: **they are within 2.5 KB gzip of each other.** A theme provider, a
 config provider, one button and a service all cost the same, because all four anchor the same single
@@ -84,7 +84,7 @@ Two things follow that change how this should be talked about:
 
 1. **The service was never the cause.** It was the anchor someone happened to notice.
 2. **`provideDsTheme()` is in the documented setup for every consumer** (`provide-ds-theme.ts:25`
-   shows it in `app.config.ts`). So *every* app using this library already has an eager anchor,
+   shows it in `app.config.ts`). So _every_ app using this library already has an eager anchor,
    whether or not it ever touches a service. There is no consumer for whom this is hypothetical.
 
 Type-only imports do not anchor — 15 bytes of difference — because TypeScript erases them and no
@@ -92,14 +92,14 @@ runtime reference survives.
 
 ## Each hypothesis, tested
 
-| Hypothesis | Verdict | Evidence |
-| --- | --- | --- |
-| the services are badly designed | **no** | a service that spawns its own overlay component is the normal shape (`MatSnackBar`, `MatDialog` do the same). Its closure is 11 of 77 groups, and behind an entry point that closure is the whole eager cost — 86.8 kB gzip of app, of which 56.1 kB is the DS (the rest is the bare-Angular floor), measured |
-| internal dependencies are wrong / not separated | **no** | 77 groups over 254 files, **runtime edges only** (the qualifier matters — with type-only edges there was a third, four-way SCC, corrected below and broken by A3-pre on 2026-09-02): **two cycles**, `radio ↔ radio-group` and `time-columns ↔ time-picker`, both sibling pairs that belong together. `overlay` and `theme` import nothing outside themselves (`config` had three type-only edges out, and no longer exists as a group); `core → config`; `icons → core`. A computed 12-group `core` seed closes on itself with nothing extra pulled in |
-| the DI / inject graph is wrong | **no** | DI is a runtime concern. It touches bundling only by making a symbol reachable eagerly, and the table above shows a plain `<ds-button>` does that just as well as any injector |
-| the library import is not optimised | **no** | there is exactly one specifier to import from, and it is correctly declared: `exports`, `module`, `typings`, `sideEffects: false`, partial-Ivy FESM |
-| tree-shaking is not optimised | **no** | 5.6 kB entry cost; 52 unused components cost 18.2 kB; unused exports are provably dropped (`packaging-chunking-audit.md` §3 fixtures) |
-| **the packaging granularity is wrong** | **yes** | one `entryFile` for 71 component folders (85 exported component classes). Everything above is a consequence of it |
+| Hypothesis                                      | Verdict | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ----------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| the services are badly designed                 | **no**  | a service that spawns its own overlay component is the normal shape (`MatSnackBar`, `MatDialog` do the same). Its closure is 11 of 77 groups, and behind an entry point that closure is the whole eager cost — 86.8 kB gzip of app, of which 56.1 kB is the DS (the rest is the bare-Angular floor), measured                                                                                                                                                                                                                                           |
+| internal dependencies are wrong / not separated | **no**  | 77 groups over 254 files, **runtime edges only** (the qualifier matters — with type-only edges there was a third, four-way SCC, corrected below and broken by A3-pre on 2026-09-02): **two cycles**, `radio ↔ radio-group` and `time-columns ↔ time-picker`, both sibling pairs that belong together. `overlay` and `theme` import nothing outside themselves (`config` had three type-only edges out, and no longer exists as a group); `core → config`; `icons → core`. A computed 12-group `core` seed closes on itself with nothing extra pulled in |
+| the DI / inject graph is wrong                  | **no**  | DI is a runtime concern. It touches bundling only by making a symbol reachable eagerly, and the table above shows a plain `<ds-button>` does that just as well as any injector                                                                                                                                                                                                                                                                                                                                                                          |
+| the library import is not optimised             | **no**  | there is exactly one specifier to import from, and it is correctly declared: `exports`, `module`, `typings`, `sideEffects: false`, partial-Ivy FESM                                                                                                                                                                                                                                                                                                                                                                                                     |
+| tree-shaking is not optimised                   | **no**  | 5.6 kB entry cost; 52 unused components cost 18.2 kB; unused exports are provably dropped (`packaging-chunking-audit.md` §3 fixtures)                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **the packaging granularity is wrong**          | **yes** | one `entryFile` for 71 component folders (85 exported component classes). Everything above is a consequence of it                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 ## Why no internal refactor can fix this
 
@@ -152,13 +152,13 @@ be checked. The upstream doc stands on its own).
 
 ## The option space, with prices
 
-| Option | What it does | Price | Eager DS cost after |
-| --- | --- | --- | --- |
-| **A — nothing** | consumers with all-lazy routes get the DS with route 1 rather than before it | zero | 135.7 kB gzip |
-| **C — consumer-side `await import()` / `@defer`** | the consumer's eager root imports the DS lazily | none for us; costs the consumer ~50% of tree-shaking (the dynamic specifier becomes an entry point, so unused exports can no longer be dropped — measured, §3 variant C) and must be rediscovered by every consumer | ~0 eager, larger total |
-| **B — one narrow services entry point** | ~~a `services` entry beside an unchanged root~~ | **impossible** — refuted 2026-08-05: the services' closure includes button, icon, spinner, modal-card, which every other component also needs, so the root would import from the services entry and ng-packagr forbids cycles between entry points | — |
-| **D — layered entry points** | `core (13 groups) ← services (toast, modal) ← components (62 groups)`, root kept as a pure re-export facade | one internal refactor. **No consumer changes an import** — §10 measured `facade` and `deep` consumer variants as byte-identical down to the chunk hash | **~50–56 kB gzip, ≈ −59%** (modelled — see the correction in `packaging-chunking-audit.md` §11(a)) |
-| **D+ — per-component entry points** (Material's model) | maximum granularity | larger refactor; the graph nearly allows it already — only the two sibling cycles must be co-located | lowest possible |
+| Option                                                 | What it does                                                                                                | Price                                                                                                                                                                                                                                              | Eager DS cost after                                                                                |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| **A — nothing**                                        | consumers with all-lazy routes get the DS with route 1 rather than before it                                | zero                                                                                                                                                                                                                                               | 135.7 kB gzip                                                                                      |
+| **C — consumer-side `await import()` / `@defer`**      | the consumer's eager root imports the DS lazily                                                             | none for us; costs the consumer ~50% of tree-shaking (the dynamic specifier becomes an entry point, so unused exports can no longer be dropped — measured, §3 variant C) and must be rediscovered by every consumer                                | ~0 eager, larger total                                                                             |
+| **B — one narrow services entry point**                | ~~a `services` entry beside an unchanged root~~                                                             | **impossible** — refuted 2026-08-05: the services' closure includes button, icon, spinner, modal-card, which every other component also needs, so the root would import from the services entry and ng-packagr forbids cycles between entry points | —                                                                                                  |
+| **D — layered entry points**                           | `core (13 groups) ← services (toast, modal) ← components (62 groups)`, root kept as a pure re-export facade | one internal refactor. **No consumer changes an import** — §10 measured `facade` and `deep` consumer variants as byte-identical down to the chunk hash                                                                                             | **~50–56 kB gzip, ≈ −59%** (modelled — see the correction in `packaging-chunking-audit.md` §11(a)) |
+| **D+ — per-component entry points** (Material's model) | maximum granularity                                                                                         | larger refactor; the graph nearly allows it already — only the two sibling cycles must be co-located                                                                                                                                               | lowest possible                                                                                    |
 
 **D is the recommendation, and A0 has now cleared its two unknowns:** the pipeline works end-to-end
 through the Angular application builder (§10), and the real graph partitions (§11).
@@ -172,7 +172,7 @@ one `<ds-button>` measures 32.1 kB gzip over a bare Angular app.
 
 **Not measured:** how much of that 32.1 kB is the field-message closure rather than icons, config and
 the shared component runtime. Worth a targeted ablation before anyone calls it a defect — and note it
-is a *retention* question, not a placement one, so it is independent of everything above and does not
+is a _retention_ question, not a placement one, so it is independent of everything above and does not
 block D.
 
 ## Not verified
@@ -199,10 +199,10 @@ Measured with a purpose-built fixture at `.claude/local/granularity-probe/`: a l
 identical payload, consumed through the **root facade** both times. The app has an eager component
 (`alpha`) and two lazy routes using `beta` and `gamma`.
 
-| Library shape | Initial | `alpha` (eager) | `beta` (lazy A) | `gamma` (lazy B) | Lazy chunks |
-| --- | --- | --- | --- | --- | --- |
-| `core` + **one `components` entry** | 178 538 B | 500 markers | **500** | **500** | 101 B, 101 B — stubs |
-| `core` + **one entry per component** | **125 651 B** | 500 markers | **0** | **0** | 26 819 B, 26 318 B — real |
+| Library shape                        | Initial       | `alpha` (eager) | `beta` (lazy A) | `gamma` (lazy B) | Lazy chunks               |
+| ------------------------------------ | ------------- | --------------- | --------------- | ---------------- | ------------------------- |
+| `core` + **one `components` entry**  | 178 538 B     | 500 markers     | **500**         | **500**          | 101 B, 101 B — stubs      |
+| `core` + **one entry per component** | **125 651 B** | 500 markers     | **0**           | **0**            | 26 819 B, 26 318 B — real |
 
 With one `components` entry the eager component drags **both** lazy-only components into the initial
 bundle and the lazy chunks collapse to 101-byte stubs. Per-component entries keep each in its own
@@ -219,10 +219,10 @@ eager-shell consumer.
 `packaging-chunking-audit.md` §7 named "a consumer whose EAGER root needs a component rather than a
 service" as what would overturn option D. Measured, it does not.
 
-| Eager anchor | Initial gzip today | Closure | Groups |
-| --- | --- | --- | --- |
-| the three services | 194 763 B | `core` + `services` | 11 of 77 |
-| **an app shell** (`app-layout` + `sidenav` + `topbar` + `page-header`) | **201 283 B** | + `tooltip` | **9 of 77** |
+| Eager anchor                                                           | Initial gzip today | Closure             | Groups      |
+| ---------------------------------------------------------------------- | ------------------ | ------------------- | ----------- |
+| the three services                                                     | 194 763 B          | `core` + `services` | 11 of 77    |
+| **an app shell** (`app-layout` + `sidenav` + `topbar` + `page-header`) | **201 283 B**      | + `tooltip`         | **9 of 77** |
 
 The shell's closure is nine groups, five of them (`app-layout`, `sidenav`, `topbar`, `page-header`,
 `tooltip`) outside the proposed `core`. Built on its own that closure is **101 108 B gzip**.
@@ -242,12 +242,12 @@ services together close over **16 of 77 groups**.
 `trimmedText` so a button can render a hint/warning/error line under itself. Ablated on
 `probe/button-field-message` (worktree `C:\wt-ds-table-split`), control re-measured on the same build:
 
-| | JS raw | JS gzip | over bare Angular |
-| --- | --- | --- | --- |
-| bare Angular app | 92 686 B | 30 646 B | — |
-| `+ ds-divider` (entry cost) | 107 723 B | 35 997 B | +5 351 B |
-| **`+ ds-button` today** | 200 941 B | **62 733 B** | **+32 087 B** |
-| **`+ ds-button` without field-message** | 158 610 B | **51 438 B** | **+20 792 B** |
+|                                         | JS raw    | JS gzip      | over bare Angular |
+| --------------------------------------- | --------- | ------------ | ----------------- |
+| bare Angular app                        | 92 686 B  | 30 646 B     | —                 |
+| `+ ds-divider` (entry cost)             | 107 723 B | 35 997 B     | +5 351 B          |
+| **`+ ds-button` today**                 | 200 941 B | **62 733 B** | **+32 087 B**     |
+| **`+ ds-button` without field-message** | 158 610 B | **51 438 B** | **+20 792 B**     |
 
 **The field-message coupling is 11 295 B gzip — 35% of the button's cost**, paid by every consumer that
 renders a single button, whether or not they ever bind `hint`, `warning` or `error`. The remaining
@@ -261,17 +261,17 @@ same lane as A1/A2 rather than in A3.
 
 ## Do we have to split? Yes — and per-component is nearly the cheapest option
 
-Asked directly on 2026-09-01: *"пока entry point один, никакой внутренний рефакторинг не вынесет из
-initial ни байта — нужно разделять?"* Every other lever has now been measured, so the comparison is
+Asked directly on 2026-09-01: _"пока entry point один, никакой внутренний рефакторинг не вынесет из
+initial ни байта — нужно разделять?"_ Every other lever has now been measured, so the comparison is
 complete:
 
-| Lever | What it moves out of the initial bundle | Catch |
-| --- | --- | --- |
-| internal refactor of any kind | **0 bytes** | placement is per module; there is one module |
-| `DS_CONFIG.prototype: true` | **0 bytes** | a runtime flag cannot be folded at build time |
-| basic/advanced as two packages | ~18 kB gzip of retention, 0 of placement | a second table to mirror forever |
-| consumer-side `await import()` / `@defer` | most of it | costs the consumer ~50% of tree-shaking, and every consumer must rediscover it |
-| **secondary entry points** | **~80 kB gzip** (eager service) / **~72 kB** (eager shell), both MODELLED | one internal refactor, sized below |
+| Lever                                     | What it moves out of the initial bundle                                   | Catch                                                                          |
+| ----------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| internal refactor of any kind             | **0 bytes**                                                               | placement is per module; there is one module                                   |
+| `DS_CONFIG.prototype: true`               | **0 bytes**                                                               | a runtime flag cannot be folded at build time                                  |
+| basic/advanced as two packages            | ~18 kB gzip of retention, 0 of placement                                  | a second table to mirror forever                                               |
+| consumer-side `await import()` / `@defer` | most of it                                                                | costs the consumer ~50% of tree-shaking, and every consumer must rediscover it |
+| **secondary entry points**                | **~80 kB gzip** (eager service) / **~72 kB** (eager shell), both MODELLED | one internal refactor, sized below                                             |
 
 ### The refactor is 318 import rewrites, and the number barely moves with granularity
 
@@ -281,11 +281,11 @@ a relative path. **Recount it rather than trusting any figure here: `node tools/
 `src/lib` holds **318 cross-group import statements** (250 runtime,
 69 type-only). How many need rewriting depends on where the boundaries fall:
 
-| Partition | Entry points | Imports to rewrite |
-| --- | --- | --- |
-| **P1 — one per component** | 77 | **318** (250 runtime + 70 type-only; 320 counting exports) |
-| P2 — six semantic clusters | 6 | 265 |
-| P3 — three layers | 3 | 257 |
+| Partition                  | Entry points | Imports to rewrite                                         |
+| -------------------------- | ------------ | ---------------------------------------------------------- |
+| **P1 — one per component** | 77           | **318** (250 runtime + 70 type-only; 320 counting exports) |
+| P2 — six semantic clusters | 6            | 265                                                        |
+| P3 — three layers          | 3            | 257                                                        |
 
 **Only 19% separates the finest partition from the coarsest**, because most cross-group imports point at
 core-ish modules (`icons`, `core`, `field-message`) that cross a boundary under every partition. So
@@ -350,10 +350,10 @@ or researched. Two results **correct earlier conclusions in this repo** — they
 Fixture `.claude/local/scale-probe/`: 61 entry points (60 components + core), root `public-api.ts`
 re-exporting all of them, an app with one eager component and two lazy routes.
 
-| Consumer imports | Initial | Total | JS files | In the initial bundle |
-| --- | --- | --- | --- | --- |
-| **root facade** | 114 436 B | 269 452 B | 4 | only the eager component |
-| **deep specifiers** | 114 436 B | 269 452 B | 4 | only the eager component |
+| Consumer imports    | Initial   | Total     | JS files | In the initial bundle    |
+| ------------------- | --------- | --------- | -------- | ------------------------ |
+| **root facade**     | 114 436 B | 269 452 B | 4        | only the eager component |
+| **deep specifiers** | 114 436 B | 269 452 B | 4        | only the eager component |
 
 Byte-identical, down to the chunk hash `chunk-24W5R2VQ.js`. The 49 unused components are gone
 entirely. **"No consumer changes an import" now holds at 61 entry points, not just 3.**
@@ -384,7 +384,7 @@ core/option.ts                    -> icons/icons.data.ts
 icons/icon.component.ts           -> core/config-defaults.ts
 ```
 
-Every edge *out of* `ds-config.ts` is a type import, so the cycle exists because the config reaches
+Every edge _out of_ `ds-config.ts` is a type import, so the cycle exists because the config reaches
 back into the modules that depend on it — not because of any runtime need. `components/card` is
 dragged into the core by a single type import.
 
@@ -402,18 +402,18 @@ single-entry in ~7 s, so expect low teens at 77 entries.
 
 **5. The `ds-docs` dev loop needs a generated paths map.** `tsconfig.json` currently maps
 `"ds": ["./src/public-api.ts"]`. After the split the facade re-exports public specifiers, which must
-resolve to *source* during docs development — one `paths` entry per entry point, ~77 of them. Every
+resolve to _source_ during docs development — one `paths` entry per entry point, ~77 of them. Every
 `from 'ds'` in `ds-docs` keeps working through the facade, so no docs import changes. Generate the map
 from disk, the way `tokens.generated.ts` and `component-api.generated.ts` already are, so it cannot
 drift from the folder layout.
 
 **6. Chunk explosion and duplication: neither.** Eight lazy routes with deliberately overlapping
-component sets (route *i* uses components *3i…3i+5*; union 27 of 60):
+component sets (route _i_ uses components _3i…3i+5_; union 27 of 60):
 
-| Library shape | Initial | Total | JS files | Components in the initial bundle |
-| --- | --- | --- | --- | --- |
-| one entry point | **517 674 B** | 518 827 B | 10 | **all 27** |
-| one entry per component | **115 345 B** | 520 039 B | 18 | **1** |
+| Library shape           | Initial       | Total     | JS files | Components in the initial bundle |
+| ----------------------- | ------------- | --------- | -------- | -------------------------------- |
+| one entry point         | **517 674 B** | 518 827 B | 10       | **all 27**                       |
+| one entry per component | **115 345 B** | 520 039 B | 18       | **1**                            |
 
 **Initial −78%. Total within 1 212 B — 0.2%.** The same bytes are redistributed across 18 files
 instead of concentrated in one eager chunk; there is no duplication penalty. 10 → 18 files for eight
@@ -438,27 +438,27 @@ HEAD; four theme commits landed 2026-09-02). The component-ish partials are **11
 here is the SUM of the ten partials gzipped SEPARATELY, and gzip is not additive. Minified bytes
 are, which is why the 11 703 stands. Three different things, measured:
 
-| what is measured | gzip |
-| --- | --- |
-| the ten partials gzipped separately, then added | 3 409 B |
-| the ten partials gzipped as one concatenation | 2 568 B |
+| what is measured                                             | gzip        |
+| ------------------------------------------------------------ | ----------- |
+| the ten partials gzipped separately, then added              | 3 409 B     |
+| the ten partials gzipped as one concatenation                | 2 568 B     |
 | **`ds.scss` with the ten `@forward` lines removed, ablated** | **2 156 B** |
 
 The ablation is the right method because these do not ship as ten files: they ship inside one
 stylesheet, sharing a compression dictionary with the other eleven partials as well as each other.
 Removing them is exactly the change this item proposes, so measuring that removal is the prize.
 
-| Partial | min | gzip | |
-| --- | --- | --- | --- |
-| `dropdown-overlay` | 4 346 | **1 043** | portaled panels: select, autocomplete, date-picker, menu |
-| `overlay-motion` | 1 829 | 458 | portaled |
-| `link` | 1 685 | 533 | |
-| `page-grid` | 1 079 | 312 | |
-| `scrollbar` | 774 | 297 | |
-| `surface-motion` | 751 | 192 | |
-| `layout-utils` | 706 | 184 | |
-| `skeleton-shimmer` | 337 | 207 | |
-| `icon-base` + `toast-overlay` | 196 | 183 | portaled |
+| Partial                       | min   | gzip      |                                                          |
+| ----------------------------- | ----- | --------- | -------------------------------------------------------- |
+| `dropdown-overlay`            | 4 346 | **1 043** | portaled panels: select, autocomplete, date-picker, menu |
+| `overlay-motion`              | 1 829 | 458       | portaled                                                 |
+| `link`                        | 1 685 | 533       |                                                          |
+| `page-grid`                   | 1 079 | 312       |                                                          |
+| `scrollbar`                   | 774   | 297       |                                                          |
+| `surface-motion`              | 751   | 192       |                                                          |
+| `layout-utils`                | 706   | 184       |                                                          |
+| `skeleton-shimmer`            | 337   | 207       |                                                          |
+| `icon-base` + `toast-overlay` | 196   | 183       | portaled                                                 |
 
 A consumer rendering one button ships **2.1 kB** gzip of dropdown, toast and skeleton CSS. About
 **1 018 B** of it (`link`, `page-grid`, `scrollbar`, `surface-motion`, `layout-utils`,
@@ -485,7 +485,7 @@ true share is above 31.6% and unmeasured.
 ### Tier 4 — guardrails and solutions worth adopting
 
 **10. The cryptic build failure can become a lint error.** `sheriff.config.ts` already exists, scoped
-to `ds-docs/src/**` and explicitly *not* to `src/lib`. Sheriff's deep-import prevention is exactly the
+to `ds-docs/src/**` and explicitly _not_ to `src/lib`. Sheriff's deep-import prevention is exactly the
 guard needed: declare each component folder a module, and any import into another module's internals
 is flagged. Independently, `eslint-rules/` already hosts a local plugin with three custom rules, so a
 targeted "no relative import crossing a component-folder boundary" rule is a small, well-precedented
@@ -505,7 +505,7 @@ state arose in the first place.
 `/design-system:auto-update-package` rewrites consumer code across versions. If a later change moves a
 symbol between entry points, the migration format has to say so. Nothing to do while the root stays a
 facade — every symbol is still importable from the root — but worth checking before any entry point
-becomes the *only* path to a symbol.
+becomes the _only_ path to a symbol.
 
 ## Six residual questions, closed (2026-09-01)
 
@@ -517,17 +517,17 @@ one found the single exception to "no consumer changes an import".
 Item 8 claimed ~1.8 kB gzip of the global sheet could "move into the components' own SCSS". Checked
 what those partials actually define, and that is wrong for almost all of them:
 
-| Partial | gzip | What it is | Can it move? |
-| --- | --- | --- | --- |
-| `link` | 533 | the **public** `.link` helper class for inline anchors in prose, documented as consumer API | no — it is API |
-| `page-grid` | 312 | the **public** `.page-grid` class | no |
-| `layout-utils` | 184 | the **public** `.grid-2` family | no |
-| `scrollbar` | 297 | styles `html` and `::-webkit-scrollbar` — document level | impossible |
-| `skeleton-shimmer` | 207 | deliberately one `:root` animation so every skeleton stays in lock-step | no, by design |
-| `surface-motion` | 192 | `@keyframes ds-fade-in` / `ds-scale-in`; emulated encapsulation renames keyframes, which would break cross-component reference | no |
-| `dropdown-overlay` | 1 043 | portaled panels, rendered outside the component's DOM | opt-in only |
-| `overlay-motion` + `toast-overlay` | 549 | same | opt-in only |
-| `icon-base` | 92 | `.icon` used inside components | yes, but 92 bytes |
+| Partial                            | gzip  | What it is                                                                                                                     | Can it move?      |
+| ---------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
+| `link`                             | 533   | the **public** `.link` helper class for inline anchors in prose, documented as consumer API                                    | no — it is API    |
+| `page-grid`                        | 312   | the **public** `.page-grid` class                                                                                              | no                |
+| `layout-utils`                     | 184   | the **public** `.grid-2` family                                                                                                | no                |
+| `scrollbar`                        | 297   | styles `html` and `::-webkit-scrollbar` — document level                                                                       | impossible        |
+| `skeleton-shimmer`                 | 207   | deliberately one `:root` animation so every skeleton stays in lock-step                                                        | no, by design     |
+| `surface-motion`                   | 192   | `@keyframes ds-fade-in` / `ds-scale-in`; emulated encapsulation renames keyframes, which would break cross-component reference | no                |
+| `dropdown-overlay`                 | 1 043 | portaled panels, rendered outside the component's DOM                                                                          | opt-in only       |
+| `overlay-motion` + `toast-overlay` | 549   | same                                                                                                                           | opt-in only       |
+| `icon-base`                        | 92    | `.icon` used inside components                                                                                                 | yes, but 92 bytes |
 
 **So the real lever is only making the portaled group (~1.6 kB gzip) opt-in**, and even that pays only
 a consumer with no pickers, toasts or modals — rare. The prize is about HALF what item 8 reported:
@@ -561,30 +561,30 @@ The open question behind A1 — does the contribution-registry seam eat the priz
 one optional feature in three shapes — inline behind an input (today), behind a separately importable
 directive, and deleted outright (the ablation floor).
 
-| Feature size | `bare` (deleted) | `mono` (inline, input off) | `seam_off` (directive not imported) | Overhead | Recovered |
-| --- | --- | --- | --- | --- | --- |
-| 1.6 kB gzip | 32 965 B | 34 592 B | **33 888 B** | **923 B** | 704 B |
-| 5.9 kB gzip | 32 965 B | 38 901 B | **33 888 B** | **923 B** | **5 013 B** |
+| Feature size | `bare` (deleted) | `mono` (inline, input off) | `seam_off` (directive not imported) | Overhead  | Recovered   |
+| ------------ | ---------------- | -------------------------- | ----------------------------------- | --------- | ----------- |
+| 1.6 kB gzip  | 32 965 B         | 34 592 B                   | **33 888 B**                        | **923 B** | 704 B       |
+| 5.9 kB gzip  | 32 965 B         | 38 901 B                   | **33 888 B**                        | **923 B** | **5 013 B** |
 
 `seam_off` is **byte-identical at both feature sizes**. The overhead is fixed — the service, its
 `providers` entry, the composition point and the extra module boundary — while recovery scales 1:1 with
 the feature. For the real table, 18.9 kB of features against one registry (a few contribution kinds in
 one service, call it 1–2.5 kB) means **the seam keeps ~87–95% of the prize**. The honest trade: a
-consumer who *does* use the feature pays about 1 kB more than today (`seam_on − mono` = 987 B).
+consumer who _does_ use the feature pays about 1 kB more than today (`seam_on − mono` = 987 B).
 
 ### F. `@defer` through the facade does not defer — the one exception to "no consumer changes an import"
 
-| `@defer` block, component imported from | Initial | Total | JS files | In the initial bundle |
-| --- | --- | --- | --- | --- |
-| **the root facade** | 153 764 B | 153 764 B | **1** | the eager one **and both deferred ones** |
-| **deep specifiers** | **123 467 B** | 154 617 B | 4 | **only the eager one** |
+| `@defer` block, component imported from | Initial       | Total     | JS files | In the initial bundle                    |
+| --------------------------------------- | ------------- | --------- | -------- | ---------------------------------------- |
+| **the root facade**                     | 153 764 B     | 153 764 B | **1**    | the eager one **and both deferred ones** |
+| **deep specifiers**                     | **123 467 B** | 154 617 B | 4        | **only the eager one**                   |
 
 Through the facade, nothing defers at all — a single `main.js`, no chunks. This is a known Angular
 issue, [angular/angular#52554](https://github.com/angular/angular/issues/52554): a component imported
 from a barrel gets no lazy chunk, because the bundler treats the barrel as one module and keeps its
 exports together. The fix is to import from the component's own specifier.
 
-**Consequence for A3's documentation.** The facade is free for *route-level* laziness — a separate file
+**Consequence for A3's documentation.** The facade is free for _route-level_ laziness — a separate file
 behind `loadComponent` or `await import()`, measured four times, byte-identical. It is **not** free for
 `@defer` inside an eagerly-loaded template. Consumer guidance after A3 has to say: **use the deep
 specifier inside a `@defer` block.** That is the only place the "no consumer changes an import" claim
@@ -598,8 +598,8 @@ entry points or the FESM layout. Nothing to revisit.
 
 ## A build-time flag CAN remove bytes — measured 2026-09-01
 
-> Raised by Stas: *"может стоит не прокидывать конфиг билда в DS-конфиг, а делать это раньше —
-> условно в package.json или angular.json или tsconfig, или создать ещё один JSON-конфиг"*.
+> Raised by Stas: _"может стоит не прокидывать конфиг билда в DS-конфиг, а делать это раньше —
+> условно в package.json или angular.json или tsconfig, или создать ещё один JSON-конфиг"_.
 >
 > **This CORRECTS the table in "Do we have to split?" above**, which listed
 > `DS_CONFIG.prototype: true` as removing **0 bytes**. That row is right about `DS_CONFIG` — a
@@ -611,13 +611,13 @@ entry points or the FESM layout. Nothing to revisit.
 
 From the installed `@angular/build:application` schema:
 
-| Option | What the schema says |
-| --- | --- |
-| `define` | "Defines global identifiers that will be replaced with a specified constant value when found in any JavaScript or TypeScript code **including libraries**. The value will be used directly." |
-| `conditions` | "Custom package resolution conditions used to resolve conditional exports/imports. Defaults to `['module', 'development'/'production']`." |
+| Option       | What the schema says                                                                                                                                                                         |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `define`     | "Defines global identifiers that will be replaced with a specified constant value when found in any JavaScript or TypeScript code **including libraries**. The value will be used directly." |
+| `conditions` | "Custom package resolution conditions used to resolve conditional exports/imports. Defaults to `['module', 'development'/'production']`."                                                    |
 
 So a consumer configures this in a build config file, not through DI — exactly the shape asked for.
-`define` is the byte lever; `conditions` would let `package.json` `exports` serve a *different FESM*
+`define` is the byte lever; `conditions` would let `package.json` `exports` serve a _different FESM_
 per condition, which is a larger design and only sensible once entry points exist.
 
 ### `define` works, and it reaches the published FESM
@@ -626,10 +626,10 @@ Fixture `.claude/local/define-probe/`: a library built by ng-packagr with an adv
 grep-marked lines behind a build flag, consumed by an app with three `angular.json` configurations
 that differ only in `define`.
 
-| Configuration | Raw | gzip | Advanced markers in the bundle |
-| --- | --- | --- | --- |
-| `full` — no `define` | 123 498 B | 34 957 B | 500 |
-| `prototype` — `define: { dsPrototype: "true" }` | **99 550 B** | **32 969 B** | **0** |
+| Configuration                                   | Raw          | gzip         | Advanced markers in the bundle |
+| ----------------------------------------------- | ------------ | ------------ | ------------------------------ |
+| `full` — no `define`                            | 123 498 B    | 34 957 B     | 500                            |
+| `prototype` — `define: { dsPrototype: "true" }` | **99 550 B** | **32 969 B** | **0**                          |
 
 **−23 948 B raw / −1 988 B gzip**, and the branch is gone from a FESM that was compiled and published
 before the consumer's build ran.
@@ -641,7 +641,9 @@ before the consumer's build ran.
 ```ts
 const ADVANCED = typeof dsPrototype === 'undefined' || !dsPrototype;
 // ...
-if (ADVANCED) { /* heavy */ }
+if (ADVANCED) {
+  /* heavy */
+}
 ```
 
 That produced **500 markers in every configuration** — no saving. `define` had applied (the identifier
@@ -650,7 +652,9 @@ constant through the module-scope `const` into the `if`; the emitted code was `r
 `jf` a live variable. Moving the guard inline fixed it completely:
 
 ```ts
-if (typeof dsPrototype === 'undefined' || !dsPrototype) { /* heavy */ }
+if (typeof dsPrototype === 'undefined' || !dsPrototype) {
+  /* heavy */
+}
 ```
 
 The `typeof` form is required, not stylistic: a consumer who never sets `define` leaves the identifier
@@ -662,13 +666,13 @@ undefined, and a bare `if (dsPrototype)` would throw. This is precisely the `ngD
 call sites and their message closures ship to production. Measured by stripping all 14 call sites on
 `probe/devwarn`, control re-measured on the same build:
 
-| Rung | With `devWarn` | Stripped | Saving |
-| --- | --- | --- | --- |
+| Rung                       | With `devWarn` | Stripped       | Saving      |
+| -------------------------- | -------------- | -------------- | ----------- |
 | prototype kit + `ds-table` | 191 988 B gzip | 190 398 B gzip | **1 590 B** |
-| one `<ds-button>` | 62 733 B gzip | 61 906 B gzip | **827 B** |
+| one `<ds-button>`          | 62 733 B gzip  | 61 906 B gzip  | **827 B**   |
 
 **And this one needs no consumer configuration at all.** The installed builder already adds
-`'ngDevMode': 'false'` to esbuild's `define` whenever script optimization is on — 
+`'ngDevMode': 'false'` to esbuild's `define` whenever script optimization is on —
 `@angular/build/src/tools/esbuild/application-code-bundle.js:465`. So rewriting each call site as
 
 ```ts
@@ -682,11 +686,11 @@ Fourteen one-token edits for 1.6 kB gzip, and it removes dead weight rather than
 
 The byte-removal roles now overlap, so it is worth being exact about which tool does what:
 
-| Kind of code | Right tool |
-| --- | --- |
-| a whole component the app never uses | **entry points** (A3) — already free via tree-shaking, entry points fix its *placement* |
-| a separable feature of a component the app does use | **an opt-in directive** (A1/A2) — measured seam overhead a fixed 923 B |
-| a branch *inside* code the app must ship, with no seam to hang it on | **`define`** — dev warnings, assertions, showcase-only APIs, a coarse `prototype` mode |
+| Kind of code                                                         | Right tool                                                                              |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| a whole component the app never uses                                 | **entry points** (A3) — already free via tree-shaking, entry points fix its _placement_ |
+| a separable feature of a component the app does use                  | **an opt-in directive** (A1/A2) — measured seam overhead a fixed 923 B                  |
+| a branch _inside_ code the app must ship, with no seam to hang it on | **`define`** — dev warnings, assertions, showcase-only APIs, a coarse `prototype` mode  |
 
 So `define` does not replace A1–A3; it covers the cross-cutting remainder they cannot reach. Angular
 uses it for exactly that (`ngDevMode`).
@@ -716,19 +720,19 @@ that was open on three decks.
 ### AG Grid 33 went from 25 packages to 2 — the opposite of the basic/advanced proposal
 
 AG Grid's whole feature set used to ship as separate npm packages. In v33 they **collapsed 25 packages
-into two** (`ag-grid-community`, `ag-grid-enterprise`) and made features tree-shakeable *from a single
-bundled package* through a module-registration API:
+into two** (`ag-grid-community`, `ag-grid-enterprise`) and made features tree-shakeable _from a single
+bundled package_ through a module-registration API:
 
 ```js
-ModuleRegistry.registerModules([ClientSideRowModelModule]);            // global
-createGrid(element, options, { modules: [CsvExportModule] });          // per grid
+ModuleRegistry.registerModules([ClientSideRowModelModule]); // global
+createGrid(element, options, { modules: [CsvExportModule] }); // per grid
 ```
 
 Reported: grids up to **40% smaller**, and a measured **43% reduction** in one application's bundle.
 Their stated second reason is maintenance — "supporting 2 packages instead of 25 means better velocity".
 
 This is independent, large-scale confirmation of the verdict in `basic-advanced-split-audit.md`: the
-industry's biggest data-grid vendor moved *away* from package-per-feature towards tree-shaking inside
+industry's biggest data-grid vendor moved _away_ from package-per-feature towards tree-shaking inside
 one package. Registering modules globally must happen before any grid is instantiated; the per-grid
 form combines with the global set.
 
@@ -790,11 +794,11 @@ real argument against copying AG Grid here, and it should be weighed rather than
 > `shape-probe` packages copied into a real `node_modules`, with `shapelib-c/does-not-exist` as a
 > negative control that failed in every run:
 >
-> | specifier | node10 | bundler | node16 |
-> | --- | --- | --- | --- |
-> | `shapelib-c/button` — ng-packagr's own output, **no** `typesVersions` | ✅ | ✅ | ✅ |
-> | `shapelib-b/components/button` — stub + `typesVersions` | ✅ | ✅ | ✅ |
-> | `shapelib-a/button` — a hand-added alias with **no directory** | ❌ | ✅ | ✅ |
+> | specifier                                                             | node10 | bundler | node16 |
+> | --------------------------------------------------------------------- | ------ | ------- | ------ |
+> | `shapelib-c/button` — ng-packagr's own output, **no** `typesVersions` | ✅     | ✅      | ✅     |
+> | `shapelib-b/components/button` — stub + `typesVersions`               | ✅     | ✅      | ✅     |
+> | `shapelib-a/button` — a hand-added alias with **no directory**        | ❌     | ✅      | ✅     |
 >
 > Ablations isolate the cause: removing `typesVersions` from dist-B changes nothing; removing the
 > **on-disk directory stubs** as well is what breaks node10; and adding a `typesVersions` to dist-A
@@ -822,19 +826,19 @@ consumers get.
 
 **Baseline, today's package:**
 
-| Entry | node10 | node16 (CJS) | node16 (ESM) | bundler |
-| --- | --- | --- | --- | --- |
-| `@ids-group-ltd/ids-design-system` | 🟢 | ⚠️ ESM, dynamic import only | 🟢 | 🟢 |
+| Entry                              | node10 | node16 (CJS)                | node16 (ESM) | bundler |
+| ---------------------------------- | ------ | --------------------------- | ------------ | ------- |
+| `@ids-group-ltd/ids-design-system` | 🟢     | ⚠️ ESM, dynamic import only | 🟢           | 🟢      |
 
 **A three-entry-point build of the same shape A3 would produce:**
 
-| Entry | node10 |
-| --- | --- |
-| root facade | 🥴 internal resolution error |
-| every subpath | 💀 resolution failed |
+| Entry         | node10                       |
+| ------------- | ---------------------------- |
+| root facade   | 🥴 internal resolution error |
+| every subpath | 💀 resolution failed         |
 
 ~~So **A3 as planned would break a consumer on legacy `moduleResolution: "node"`**~~ — **withdrawn, see
-the box above.** The mechanism described is real *if* the per-entry-point directory stubs are absent;
+the box above.** The mechanism described is real _if_ the per-entry-point directory stubs are absent;
 ng-packagr emits them, so they are not. And the "caveat carried on decks 5 and 9" is itself wrong:
 `grep untested` finds it only on deck 4 and deck 6. Decks 5 and 7 never carried it.
 

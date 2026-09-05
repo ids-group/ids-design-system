@@ -99,7 +99,7 @@
     chips as the trigger is wide, with the rest behind "+N more", re-split
     whenever the trigger resizes. Left to grow, a multi-value trigger gains a
     line per selection and pushes the rest of the form down the page. Same input
-    and same default on <code class="t-mono-inline"> ds-multi-select </code>, so
+    and same default on <code class="t-mono-inline">ds-multi-select</code>, so
     the two multi-value pickers do not diverge. Backspace still removes the last
     SELECTED chip, not the last visible one.
   </p>
@@ -362,14 +362,14 @@
     <code class="t-mono-inline">
       compareWith
     </code> decides when two values are
-    the same one. The default is <code class="t-mono-inline"> === </code>, which
+    the same one. The default is <code class="t-mono-inline">===</code>, which
     for an object is reference identity — so a re-fetch returning equal data as
     new objects would drop the selection. Key the comparator on whatever
-    identifies the value. Press <em> Refetch </em>: the selection survives.
+    identifies the value. Press <em>Refetch</em>: the selection survives.
   </p>
 
   <div class="demo-panel">
-    <div class="ac-demo">
+    <div class="autocomplete-field-wrap">
       <ds-autocomplete
         label="Owner"
         [options]="ownerOptions()"
@@ -380,7 +380,7 @@
 
     <ds-button
       size="sm"
-      fill="ghost"
+      variant="ghost"
       (clicked)="refetchOwners()"
     >
       Refetch
@@ -407,7 +407,7 @@
   </p>
 
   <div class="demo-panel">
-    <div class="ac-demo">
+    <div class="autocomplete-field-wrap">
       <ds-autocomplete
         label="City"
         placeholder="Where to?"

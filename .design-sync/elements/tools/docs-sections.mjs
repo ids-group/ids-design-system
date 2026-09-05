@@ -34,7 +34,12 @@ function stringOf(node) {
 // a use for them and registering them only grows the bundle every card downloads. `reference` is the
 // generated token table (~800 rows), `changelog` reads a shipped markdown file, `home` is the hero,
 // and `claude-design` documents this pipeline to a human.
-const NOT_DESIGN_SYSTEM = new Set(['home', 'changelog', 'tokens-reference', 'practice/claude-design']);
+const NOT_DESIGN_SYSTEM = new Set([
+  'home',
+  'changelog',
+  'tokens-reference',
+  'practice/claude-design',
+]);
 
 /** Every section ds-docs renders, in the order the docs site renders them. */
 export function docsSections() {
@@ -64,13 +69,19 @@ export function docsSections() {
   const groupPages = source.statements
     .filter(ts.isVariableStatement)
     .flatMap((statement) => statement.declarationList.declarations)
-    .find((declaration) => declaration.name.getText() === 'GROUP_PAGES')?.initializer;
+    .find(
+      (declaration) => declaration.name.getText() === 'GROUP_PAGES',
+    )?.initializer;
   if (!groupPages) throw new Error(`No GROUP_PAGES in ${REGISTRY_FILE}`);
 
   // `as const` / `as readonly …` wrap the array literal.
-  const array = ts.isAsExpression(groupPages) ? groupPages.expression : groupPages;
+  const array = ts.isAsExpression(groupPages)
+    ? groupPages.expression
+    : groupPages;
   if (!ts.isArrayLiteralExpression(array)) {
-    throw new Error('GROUP_PAGES is not an array literal — the parser reads it as data.');
+    throw new Error(
+      'GROUP_PAGES is not an array literal — the parser reads it as data.',
+    );
   }
 
   const sections = [];
@@ -79,7 +90,9 @@ export function docsSections() {
     if (!ts.isObjectLiteralExpression(page)) continue;
     const property = (name) =>
       page.properties.find(
-        (candidate) => ts.isPropertyAssignment(candidate) && candidate.name.getText() === name,
+        (candidate) =>
+          ts.isPropertyAssignment(candidate) &&
+          candidate.name.getText() === name,
       )?.initializer;
 
     const group = stringOf(property('path'));
@@ -91,7 +104,10 @@ export function docsSections() {
     for (const entry of list.elements) {
       if (!ts.isIdentifier(entry)) continue;
       const imported = imports.get(entry.text);
-      if (!imported) throw new Error(`GROUP_PAGES names ${entry.text}, which nothing imports.`);
+      if (!imported)
+        throw new Error(
+          `GROUP_PAGES names ${entry.text}, which nothing imports.`,
+        );
 
       const slug = slugOf(imported.importPath);
       if (seen.has(slug) || NOT_DESIGN_SYSTEM.has(slug)) continue;

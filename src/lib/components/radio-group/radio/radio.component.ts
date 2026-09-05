@@ -36,7 +36,11 @@ export class RadioComponent extends DsFieldBase {
    *  When inside `ds-radio-group`, `isChecked()` derives from the group value and
    *  this input is not read. */
   readonly checked = model<boolean>(false);
-  /** Disables the radio; a disabled parent `ds-radio-group` also disables it. */
+  /** Lets a checked standalone radio be cleared by clicking it again. Off by default, and
+   *  ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it
+   *  would leave the group with no value through a gesture the group cannot see. */
+  readonly deselectable = input(false, { transform: booleanAttribute });
+  /** A disabled parent `ds-radio-group` also disables it, whatever this is set to. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Native `name` attribute — overridden by the group's name when inside `ds-radio-group`. */
   readonly name = input<string>('');
@@ -44,8 +48,7 @@ export class RadioComponent extends DsFieldBase {
   readonly value = input<unknown>('');
   /** Overrides the auto-generated id used for the input and its label's `for`. */
   readonly inputId = input<string | null>(null);
-  /** Control size — sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
@@ -105,6 +108,17 @@ export class RadioComponent extends DsFieldBase {
   /** Called by the group's keyboard handler to focus this radio's input. */
   focus(): void {
     this.inputElement()?.nativeElement.focus();
+  }
+
+  // A radio fires no `change` when an already-checked one is clicked, so the clear cannot ride on
+  // onSelect. Click runs before change, and on an unchecked radio isChecked() is still false here.
+  protected onClick(): void {
+    if (this.effectiveDisabled() || this.group || !this.deselectable()) {
+      return;
+    }
+    if (this.isChecked()) {
+      this.checked.set(false);
+    }
   }
 
   protected onSelect(): void {

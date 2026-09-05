@@ -1,3 +1,5 @@
+@use '../../styles/focus' as focus;
+
 /* Toast pill — single notification surface. Consumed by ToastRegion (service-
    driven runtime stack) and by static showcases. */
 
@@ -36,7 +38,6 @@
 .toast {
   --_toast-bg-color:     var(--ds-toast-bg-color,     var(--surface-overlay));
   --_toast-border:        var(--ds-toast-border-color,        var(--border-default));
-  --_toast-focus-shadow:  var(--ds-toast-focus-shadow,  var(--ds-control-focus-shadow));
   --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
   --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
   --_toast-enter-keyframes: var(--ds-toast-enter-keyframes, ds-slide-in);
@@ -88,7 +89,7 @@
     border-radius: var(--ds-radius-inner);
 
     &:hover { background: var(--surface-secondary); }
-    &:focus-visible { outline: none; box-shadow: var(--_toast-focus-shadow); }
+    &:focus-visible { @include focus.ring; }
   }
 
   .actions {

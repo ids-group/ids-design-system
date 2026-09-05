@@ -17,7 +17,9 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
-const surface = JSON.parse(readFileSync(join(syncDir, 'elements/gen/surface.json'), 'utf8'));
+const surface = JSON.parse(
+  readFileSync(join(syncDir, 'elements/gen/surface.json'), 'utf8'),
+);
 
 const accepted = new Map();
 for (const component of surface.components) {
@@ -28,7 +30,8 @@ for (const component of surface.components) {
       continue;
     }
     names.add(entry.name);
-    if (entry.kind === 'model') names.add(`on${entry.name[0].toUpperCase()}${entry.name.slice(1)}Change`);
+    if (entry.kind === 'model')
+      names.add(`on${entry.name[0].toUpperCase()}${entry.name.slice(1)}Change`);
   }
   for (const slot of component.slots) names.add(slot.prop);
   accepted.set(component.name, names);
@@ -57,25 +60,62 @@ function scan(label, source) {
     if (attributes.trimEnd().endsWith('=')) continue;
     for (const [, attribute] of attributes.matchAll(ATTRIBUTE)) {
       if (names.has(attribute)) continue;
-      problems.push(`${label} — <${component} ${attribute}> is not a prop of ${component}`);
+      problems.push(
+        `${label} — <${component} ${attribute}> is not a prop of ${component}`,
+      );
     }
   }
 }
 
-for (const file of readdirSync(join(syncDir, 'docs')).filter((name) => name.endsWith('.md'))) {
+// A controlled-prop claim in PROSE, which the tag scan above cannot see: seven docs promised
+// `open` + `onOpenChange` on components that have neither, and an agent passing `open` gets a
+// dropdown that never opens.
+//
+// Only `on…Change`, and only inside backticks. Wider shapes are noise - prose legitimately
+// backticks value names, an item object's fields, and the name of a prop it says does NOT exist:
+// every backticked identifier gives 46 findings on this tree, this one gives 0.
+const HANDLER_CLAIM = /`(on[A-Z][A-Za-z0-9]*Change)`/g;
+
+for (const file of readdirSync(join(syncDir, 'docs')).filter((name) =>
+  name.endsWith('.md'),
+)) {
   const name = file.replace(/\.md$/, '');
-  const text = readFileSync(join(syncDir, 'docs', file), 'utf8').replace(/\r\n/g, '\n');
-  for (const [, fence] of text.matchAll(/```tsx\n([\s\S]*?)```/g)) scan(`docs/${file}`, fence);
+  const text = readFileSync(join(syncDir, 'docs', file), 'utf8').replace(
+    /\r\n/g,
+    '\n',
+  );
+  for (const [, fence] of text.matchAll(/```tsx\n([\s\S]*?)```/g))
+    scan(`docs/${file}`, fence);
+
+  const names = accepted.get(name);
+  if (names) {
+    const prose = text.replace(/```[\s\S]*?```/g, '');
+    for (const [, handler] of prose.matchAll(HANDLER_CLAIM)) {
+      if (names.has(handler)) continue;
+      problems.push(
+        `docs/${file} — prose offers \`${handler}\`, which ${name} does not have`,
+      );
+    }
+  }
   if (!accepted.has(name)) {
-    problems.push(`docs/${file} — no component named ${name}; the doc would upload with nothing to describe`);
+    problems.push(
+      `docs/${file} — no component named ${name}; the doc would upload with nothing to describe`,
+    );
   }
 }
 
 if (problems.length) {
-  console.error(`check-doc-api: ${problems.length} claim(s) the surface does not support:`);
-  for (const problem of [...new Set(problems)].sort()) console.error(`  ${problem}`);
-  console.error('  The docs ship as the agent\'s instructions, so a wrong prop there is executed,');
-  console.error('  not read. Fix the doc, or add the prop if the example is what the API should be.');
+  console.error(
+    `check-doc-api: ${problems.length} claim(s) the surface does not support:`,
+  );
+  for (const problem of [...new Set(problems)].sort())
+    console.error(`  ${problem}`);
+  console.error(
+    "  The docs ship as the agent's instructions, so a wrong prop there is executed,",
+  );
+  console.error(
+    '  not read. Fix the doc, or add the prop if the example is what the API should be.',
+  );
   process.exit(1);
 }
 

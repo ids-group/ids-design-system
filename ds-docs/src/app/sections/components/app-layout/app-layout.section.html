@@ -13,7 +13,7 @@
     <code class="t-mono-inline">
       [topbar]
     </code> and default slots — the layout
-    renders the <code class="t-mono-inline"> &lt;main&gt; </code> landmark and
+    renders the <code class="t-mono-inline">&lt;main&gt;</code> landmark and
     compensates the scrollbar so the content insets stay symmetric.
   </span>
 
@@ -198,9 +198,9 @@
     <code class="t-mono-inline">
       [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"
     </code>
-    and <code class="t-mono-inline"> [ariaControls]="layout.railId" </code>.
-    These docs use the second route — the burger at the top of this page on a
-    narrow screen is it.
+    and <code class="t-mono-inline">[ariaControls]="layout.railId"</code>. These
+    docs use the second route — the burger at the top of this page on a narrow
+    screen is it.
   </p>
 
   <p class="block-desc t-s">
@@ -263,7 +263,7 @@
     <code class="t-mono-inline">
       LayoutNavigationService
     </code> is public for
-    the same reason. Its <code class="t-mono-inline"> pathChanged </code> stream
+    the same reason. Its <code class="t-mono-inline">pathChanged</code> stream
     is the layout's own answer to "did we go somewhere else?" — `NavigationEnd`,
     path only, de-duplicated, and skipping any navigation that carries
     <code class="t-mono-inline">
@@ -310,9 +310,8 @@
     the same element &mdash;
     <code class="t-mono-inline">
       [collapsed]
-    </code> switches it. The width
-    comes from the sidenav, so a footer shown outside one needs a frame of its
-    own.
+    </code> switches it. The width comes
+    from the sidenav, so a footer shown outside one needs a frame of its own.
   </p>
 
   <div class="footer-rails">

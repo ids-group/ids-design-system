@@ -8,6 +8,197 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **A focused `ds-checkbox`, `ds-radio` or `ds-switch` rings the whole row, label included, instead
+  of the glyph.** Ringing the glyph put a brand ring concentric with the brand ring the CHECKED state
+  already draws — three bands through two gaps, a target rather than two states a keyboard user has
+  to tell apart while moving through a group. The row is also what the pointer already hits, since
+  the label carries the hit area. A control with no label has no row to speak of, so there the ring
+  keeps its distance instead (`--space-1-5` rather than the usual 2px offset). It is keyboard-only:
+  the row matches `:has(:focus-visible)`, so clicking a checkbox with the pointer leaves no ring
+  behind. A `ds-table` selection checkbox has no row to ring, so it rings its own box.
+
+- **Every hand-written `outline: none` in the library became `focus.own-indicator`.** The declaration
+  is the same everywhere except in forced colours, where it is now skipped. Windows High Contrast
+  drops `box-shadow`, so a field whose shell rings with the halo had nothing left once its inner
+  control was silenced — the one mode where an indicator is mandatory was the one mode without one.
+  If you silence a DS control in your own stylesheet, wrap it the same way:
+  `@media not (forced-colors: active) { outline: none; }`.
+
+- **Every focus ring on a control is an `outline` now, not a box-shadow, and its gap is genuinely
+  see-through.** A shadow cannot leave a hole: the gap had to be painted with a guessed colour, and
+  that guess was a coloured rim everywhere it was wrong — a control standing on a tinted band, a
+  photo or a card of another shade got a surface-coloured band around it rather than its own ground.
+  `outline-offset` does not paint its gap at all, so the ring now floats over whatever the control
+  actually sits on. Two things follow. A negative offset draws the ring INSIDE the element, which is
+  how a row inside a clipping panel keeps an indicator that `overflow: hidden` used to eat — `ds-menu`
+  and the dropdown panels do this. And the ring no longer competes with `box-shadow`: a focused card
+  keeps its elevation, where before the two signals fought for one property. A state carried partly
+  by a shadow — the selected segment, the active pill, the sidenav item's rail — still drops that
+  shadow while focused, deliberately, because its fill and label colour go on saying which one it is.
+  — Restyle the ring through the new `--focus-ring-width` (2px, the WCAG 2.4.13 floor for a
+  perimeter indicator), plus `--focus-ring-color` and `--focus-ring-offset`, which are unchanged. Components author it through one mixin,
+  `focus.ring($offset)`, so there is a single place to change it.
+  — If you set `--focus-ring-inner` to a colour to get a visible ring back, remove it: the token no
+  longer reaches a control's ring. It still composes the field halo that `data-focus="ring"` opts into.
+  — Watch for an `outline: none` of your own on a DS control. It used to remove nothing, because the
+  ring was a shadow; it now removes the indicator outright, and nothing warns.
+
+- **Thirteen `--ds-<component>-focus-shadow` tokens are gone**, on button, icon-button, card,
+  checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group and
+  menu-item. Each resolved to `--ds-control-focus-shadow`, which controls no longer read. Set
+  `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the component's own scope
+  instead. Field tokens — `--ds-input-focus-shadow` and its siblings — are unchanged, because fields
+  keep the soft halo. An override of a removed token still parses and cascades and changes nothing,
+  so this fails silently.
+
+- **`data-focus="field"` and `data-focus="outline"` are removed** from the one-place focus switch.
+  Both described swapping one box-shadow for another, which no longer describes anything a control
+  does. `ring`, `edge` and `inset` keep their meaning, and `edge` is the tight-ring answer that
+  `field` was reached for. An unknown value matches nothing and is ignored in silence.
+
+### Added
+
+- **The check mark overshoots as it lands, and its motion is now four tokens.** A tick that scaled
+  in on a flat ease read as a state flag; it now arrives on `--ease-spring` over 180ms and leaves on
+  `--ease-accelerate` over 120ms, so it settles rather than snaps. The timing is a motion ROLE —
+  `--ds-motion-check-enter-duration`, `--ds-motion-check-enter-easing`, `--ds-motion-check-exit-duration`,
+  `--ds-motion-check-exit-easing` — with per-scope hooks `--ds-check-mark-*` beneath it, so a dense
+  option list can stay calm while forms overshoot. The previous motion and the one block that restores
+  it are written down in `docs/check-mark-motion.md`. Both durations resolve through the `--duration-*`
+  scale, which `prefers-reduced-motion` already zeroes, so the mark goes instant on its own.
+- **Every option mark in a picker panel is now the SAME mark as a checkbox's,** and animates with
+  it: the selected row in `ds-select` and single-mode `ds-autocomplete`, the option boxes in
+  multi-mode `ds-autocomplete`, and every box in a `ds-multi-select` panel — option rows, group-all
+  and select-all. Each was a `ds-icon name="check"` rendered only while selected, so it had no
+  resting state to move from and popped in. The indeterminate bar animates on the same tokens now,
+  instead of appearing as a separate element. The mark is painted as a mask over `currentColor`,
+  which is what lets one path serve a filled box (white on the accent) and a bare option row
+  (accent on the surface). `--ds-option-check-color` still picks its colour.
+
+- **A picker panel's option box is drawn at the checkbox's own border weight.** It used
+  `--border-width-strong` where `ds-checkbox` and `ds-radio` read `--check-bw`, so the same control
+  shipped at two thicknesses; the panel boxes in `ds-multi-select` and multi-mode `ds-autocomplete`
+  are 1px now, on the unchanged 20px `--check-size`.
+- **The typing area beside an autocomplete's chips is 40px, not 80px.** `--ds-autocomplete-input-minw`
+  is a floor, so in the default `width="fill"` the input still stretches across the row and only the
+  chip case changes; under `width="content"` it is what an empty field measures. Set the hook back to
+  `80px` to keep the old footprint.
+- **A multi-select panel's "Select all" row clips its label like the option rows do.**
+  `.select-all-label` carried no clip at all, so a narrow panel wrapped that one row to two lines
+  beside single-line options. The per-group "All of …" row is not wrapped in an element, so it is
+  not clipped and a long group name still wraps there.
+- **`ds-radio` accepts `[deselectable]`,** which lets a checked STANDALONE radio be cleared by
+  clicking it again. Off by default and ignored inside `ds-radio-group`, where clearing the one
+  selected option would leave the group with no value through a gesture the group cannot see.
+
+### Changed
+
+- **A date field is as wide as its date.** The trigger sized its input with the HTML `size`
+  attribute, which counts CHARACTERS — and a mask's slashes, spaces and dash are all narrower than a
+  digit, so a range reserved roughly two digits of dead space between the value and the calendar
+  button. The painted overlay now sits in the flow and measures the field with the real glyphs.
+- **Mono type no longer ligates operators.** JetBrains Mono draws `===` as one triple-bar glyph and
+  `!=` as a struck equals, so any prose naming an operator showed something other than the characters
+  it was discussing. `--ds-t-mono-ligatures` puts them back for a consumer who wants them.
+- **`ds-table` selects rows with the design system's checkbox, not the browser's.** Its
+  `<input type="checkbox">` was styled nowhere at all, so the OS drew it — no DS geometry, no DS
+  colours, no mark. The box is a shared partial now, so it cannot drift from `ds-checkbox`, and it
+  answers the same hooks: `--ds-checkbox-bg-color`, `--ds-checkbox-border-color`,
+  `--ds-checkbox-selected-bg-color` and their siblings reach a table's selection column where they
+  previously did nothing. The element is still an `<input type="checkbox">`, so a selector of your
+  own aimed at it still matches — but it is now competing with the library's own rule instead of
+  styling something nothing else touched, and the box sets `appearance: none`.
+
+- **Three classes gained members — only matters if you SUBCLASS one.** `MenuComponent` gained
+  `anyIcon`, which it computes over its content children, `RadioComponent` gained `onClick`
+  alongside the new `deselectable` input, and `TableComponent` gained `anySelected`, a computed
+  over the selection set. A subclass that declares any of those names stops building, whether or
+  not the member is public API.
+
+
+- **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the
+  ring's geometry is already in place, so nothing shifts and the indicator lands where it will stay.
+  `outline-offset` is deliberately not animated: an expanding ring lags the caret on a fast Tab, and
+  the indicator is a keyboard user's only signal of where they are. It runs as an `animation` rather
+  than a transition, because `transition` is a single property and a component that declares its own
+  list would have had it replaced for as long as the element held focus — a focused button would have
+  lost its background easing. The duration is `--duration-fast`, which the library already zeroes
+  under `prefers-reduced-motion: reduce`, so a reduced-motion user sees the ring appear instantly
+  with no separate opt-out to wire up.
+
+- **`ds-split-button` with an empty `menuItems` disables its chevron instead of opening an empty
+  menu.** The template carried no guard, so a split button configured with nothing to list still
+  opened a panel with nothing in it — a chevron is a promise that there is more, and an empty panel
+  reads as a broken control. The trigger is now disabled whenever `menuItems` is empty, and a
+  development build warns once and names `ds-button` as the control for a single action. It is
+  disabled rather than hidden, so the button keeps its geometry: a `ds-split-button` whose items
+  arrive asynchronously shows a disabled chevron until they do and enables itself when they land.
+  The panel can only ever be the `ds-menu` built from `menuItems` — nothing projects into it, and
+  anything else composes from `ds-button` and `ds-popover`. Content you project into
+  `ds-split-button` itself still lands on the main button, as before.
+
+### Fixed
+
+- **The bulk-action bar vanished exactly when every row was selected.** It was gated on the header
+  checkbox's INDETERMINATE predicate — "some rows, but not all" — so selecting the last row hid the
+  bar with the selection still live, which is when a bulk action is most likely. It answers the
+  selection being non-empty now.
+
+- **The skeleton shimmer is one wave across the screen again, and it no longer stutters.** Every
+  `ds-skeleton` shows the slice of a single viewport-wide band passing over its own position, so a
+  page of placeholders reads as one light moving across it rather than as N loops running side by
+  side. The band is two tones of the same surface — colour washing over the placeholders, not a
+  highlight shone on them. It is anchored with `background-attachment: fixed` rather than the
+  shared custom property it used to read: that property was inherited and animated on `:root`,
+  which invalidated the style of every element in the document on every frame. Measured: `:root`
+  now reports zero animations, and six skeletons of different widths report the same band position
+  at the same instant.
+
+- **A focused first or last `ds-accordion-item` drew a square ring inside the rounded box.** An
+  outline follows its own element's radius, and the rounded corner belongs to `ds-accordion`, not to
+  the header button. The first and last header take that corner now; the rows between stay square,
+  because there is no corner there to follow.
+
+- **A `ds-date-picker` day outside the allowed range highlighted under the pointer as though it
+  could be picked.** The day button is only ever `aria-disabled`, never natively disabled, so its
+  hover rule still matched and offered an unselectable date. Hover now skips a disabled day; the
+  colour and cursor it already carried are unchanged.
+
+- **Three fields answered focus with a one-pixel border tint and nothing else.** The sidenav
+  footer's search box, the table's column filter and the table's inline cell editor each turned the
+  outline off to make room for a border colour change — one pixel, under the WCAG 2.4.13 floor of a
+  2px perimeter, and on the cell editor the accent border is already its resting chrome, so focus
+  changed nothing at all. All three ring properly now and keep the tint as a second signal.
+
+- **The search field inside a `ds-multi-select` panel showed no focus indicator at all.** It zeroed
+  its own outline and no ancestor painted one, so a keyboard user opening the panel and tabbing to
+  the filter had nothing on screen telling them where they were. The row around it rings now, drawn
+  inward because the panel clips, and the input is silenced so only one ring appears.
+
+- **A focused `ds-icon-button` sitting flush inside a clipping box lost three sides of its ring.**
+  Seen first on the documentation sidebar's collapse toggle, then swept: a `ds-table` row sits flush
+  inside the horizontal scroller, and a collapsed `ds-sidenav` clips its own brand link. In each the
+  ring had zero room outward and read as sitting behind the control. Any box that clips can now flip
+  `--focus-ring-offset` negative on itself and everything focusable inside keeps a whole ring.
+
+- **A `ds-menu` row without an icon started one icon-width left of its neighbours.** `.menu-item` is
+  a flex row with a gap, and an item that projected no icon collapsed its wrapper to zero width while
+  the gap stayed, so a mixed menu had two text axes and an unindented row read as a different kind of
+  thing. The menu decides it now rather than the item — an item cannot see its siblings — so one
+  item with an icon makes every item reserve the slot. A menu with no icons anywhere is unchanged and
+  stays flush to its padding. The new `--ds-menu-item-icon-size` sets the width the slot reserves.
+
+- **`ds-split-button` answers a press on either half.** Both segments were missing the darken-plus-
+  micro-scale that every other button in the library gives a press, so the one control built from two
+  buttons was the one that felt dead under the finger. Each half now darkens through
+  `--ds-split-button-bg-color-active` (or `--ds-split-button-outline-bg-color-active` on the outline
+  variant) and scales by `--ds-split-button-press-scale`, with the same opt-in pressed halo hook the
+  button has (`--ds-split-button-pressed-shadow`, default none). The scale runs AWAY from the seam —
+  `transform-origin` is the inner edge on each half — because a centred scale pulls the pressed half's
+  inner edge inward and opens a hairline gap in the joint.
+
 ## 0.12.0 — 2026-09-04
 
 ### Added
@@ -250,6 +441,17 @@ this package ships under `migrations/`.
   one of those lines has something new to say, so "Export failed" still stands until the reader
   moves on, and everything after it is announced again.
 
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround this release made unnecessary. Generated from the `deleteList` in the release manifest
+this package ships under `migrations/`.
+
+| If you have | Delete it, because |
+| --- | --- |
+| a raised `--layer-toast` or `--layer-tooltip` | It never fixed toast-under-modal: overlay hosts live in the browser's top layer, which paints in the order hosts were shown and ignores z-index entirely. The library re-shows the toast host itself now. A layer-scale retune for your own stacking (or for browsers without popover support) is still load-bearing and stays. |
+| a `--ds-table-head-h` override added so the loading scrim stops cutting into the header | The scrim measures the real header height now. Sizing the header itself with this token is its normal use and stays. |
+
 ## 0.11.3 — 2026-09-02
 
 ### Breaking
@@ -300,14 +502,14 @@ this package ships under `migrations/`.
   overrides nothing and silently never runs. There is no public replacement to call — the countdown
   is the region's own business now. Delete the override.
 
-- **`components.md` documented a component that does not exist and four events that never fired.**
-  It carried a `<ds-dropdown>` entry through nine releases; that component was absorbed into
-  `<ds-select>` and an import written from the document fails to compile. Four documented event
-  names were never identifiers here: `ds-banner` and `ds-toast` emit `(closed)`, not `(dismissed)`;
-  `ds-pagination` emits `(currentPageChange)`, not `(pageChange)`; `ds-table` emits `(rowClicked)`,
-  not `(rowClick)`. An unknown event binding registers a DOM listener and never fires, so those
-  four handlers were silently dead with nothing in the console. `<ds-alert>` was missing from the
-  document entirely and is now in it, `'neutral'` variant included.
+- **Four event bindings are silently dead, and there is no `<ds-dropdown>`.** `ds-banner` and
+  `ds-toast` emit `(closed)`, not `(dismissed)`; `ds-pagination` emits `(currentPageChange)`, not
+  `(pageChange)`; `ds-table` emits `(rowClicked)`, not `(rowClick)`. An unknown event binding
+  registers a DOM listener and never fires, so a handler on one of those four runs never, with
+  nothing in the console — check your templates for them. `<ds-dropdown>` is not a component of
+  this library; its work is `<ds-select>`, and an import naming the other one does not compile.
+  `components.md` names the shipped identifiers throughout, and carries `<ds-alert>` with its
+  `'neutral'` variant.
 
 ### Fixed
 
@@ -711,10 +913,9 @@ this package ships under `migrations/`.
   component's own tokens. Its option row carries only `[disabled]` where `ds-select` sets
   `.is-disabled` beside it, which is why it still declares an `.option:disabled` of its own.
 
-- **BREAKING if you set it: `triggerDisplay="compact"` is now `triggerDisplay="count"`.** The name
-  says what the trigger shows, which matters once `labels` sits beside it. The union is exported as
-  `DsTriggerDisplay` — `'full' | 'count' | 'labels'` — so a variable typed against it fails to
-  compile rather than passing a dead string.
+- **The `triggerDisplay` union is exported as `DsTriggerDisplay`** — `'full' | 'count' | 'labels'`.
+  A variable typed against it fails to compile rather than passing a dead string, and each name says
+  what the trigger shows, which is what matters once `labels` sits beside `count`.
 
 - **Every single-line label clips through one mixin now.** Seven rules hand-rolled
   `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — the `ds-select` trigger text,
@@ -1068,8 +1269,8 @@ workaround written against a hook that only landed in this release.
   a single ring, and the reset stays scoped to the field element, so `clear-btn` and
   `password-toggle` inside the same box keep their own rings; they are real tab stops.
 - **Fourteen public override tokens are now listed in the token reference.** They were always
-  overridable and nothing in the components changed — only the reference was missing them. Newly
-  listed and described: `--ds-container-pad-x`, `--ds-multi-select-border-color`
+  overridable and nothing in the components changed. Listed and described:
+  `--ds-container-pad-x`, `--ds-multi-select-border-color`
   (+`-focus`), `--ds-segmented-selected-bg-color` / `-label-color` / `--ds-segmented-radius`,
   `--ds-time-picker-option-bg-color-selected` / `-text-color-selected` / `-bg-color-hover`,
   `--ds-time-picker-trigger-bg-color` / `-border` / `-color`, `--ds-field-message-icon-offset` and
@@ -2174,8 +2375,7 @@ None of this is required — skipping it leaves working code that is merely redu
   `--ds-*` tokens it named no longer exist** (`--ds-button-fg`, `--ds-sidenav-item-bg-hover`, the
   whole `--ds-pagehdr-*` family, …), `ds-button` was described with its pre-2026-06 single `variant`
   axis (`'primary' | 'secondary' | 'tertiary' | …`) instead of `color` × `variant`, and the topbar
-  section documented a `--ds-topbar-margin-b` that **has never existed** — telling readers the
-  topbar owns the gap below it and that pages must not add their own.
+  section named a `--ds-topbar-margin-b` that this library does not define.
   Every name in the body is now the shipped one, and the two paragraphs are rewritten from the
   components' actual API.
 
@@ -2772,6 +2972,8 @@ skipping it leaves working code that is merely redundant.
 | If you have | Delete it, because |
 | --- | --- |
 | `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary` | `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant="outline"]` |
+| your own vertical-padding override on a `sm`/`lg` textarea (a `--ds-input-pad-y` retune or a local rule compensating the wrong padding) | sm/lg textareas rendered the md vertical padding; they are corrected now, so the compensation stacks on top of the fix. A deliberate global `--ds-input-pad-y` retune is a legitimate hook and stays. |
+| a `height`/`min-height` pinned on `ds-autocomplete`, `ds-multi-select`, `ds-color-picker`, `ds-number-stepper` or `ds-split-button` to make `--ds-field-height` "work" | Those six spelled their height as the raw `--hit-*` value, so the token did nothing for them; they read the field scale now. |
 | `--radius-sm: 0` to square a checkbox | `--ds-checkbox-radius` |
 | `.title.title { font-size }` inside a modal | `--ds-modal-title-font-size` |
 | Pagination label type overrides — a rule on `ds-pagination` setting `--ds-pagination-label-*` | `--ds-pagination-label-*` |
@@ -3480,7 +3682,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 ### Changed
 
 - **BREAKING: the control `size` scale is unified into one shared `DsSize` type.** The per-component
-  size types (`InputSize`, `ButtonSize`, `SelectSize`, `SearchSize`, `CheckboxSize`, `RadioSize`,
+  size types (`InputSize`, `ButtonSize`, `SelectSize`, `CheckboxSize`, `RadioSize`,
   `SwitchSize`, `SpinnerSize`, `TextareaSize`, `NumberStepperSize`, `DatePickerSize`, `TimePickerSize`,
   `DrawerSize`, `IconButtonSize`, `AutocompleteSize`) are removed from the public API — import
   `DsSize` instead (`type DsSize = 'sm' | 'md' | 'lg'`, exported from the package root). `AvatarSize`,
@@ -4013,17 +4215,16 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   type-to-pick control; "combobox" survives only as the ARIA role — which the select-only
   `ds-select` trigger also carries. Renames: selector `ds-combobox` → `ds-autocomplete`;
   `ComboboxComponent` → `AutocompleteComponent`; exported types `ComboboxOption` /
-  `ComboboxOptionGroup` / `ComboboxSize` / `ComboboxWidth` → `AutocompleteOption` /
-  `AutocompleteOptionGroup` / `AutocompleteSize` / `AutocompleteWidth`; public tokens
+  `ComboboxSize` → `AutocompleteOption` / `AutocompleteSize`; public tokens
   `--ds-combobox-focus-shadow` / `--ds-combobox-maxw` / `--ds-combobox-input-minw` →
   `--ds-autocomplete-*`. Behavior unchanged.
 - **`ds-dropdown` removed — use `ds-select`.** The two were near-identical select-only single
   pickers (same trigger, same panel, same keyboard model); `ds-select` is the richer canonical
   form field (`ControlValueAccessor`, `invalid` + `hint` via `ds-field-message`, `required` /
   `optional`, per-option icons, group-level `disabled`). Migration: `<ds-dropdown>` →
-  `<ds-select>`; `[error]` → `[invalid]`; `[optionGroups]="groups"` → pass groups inline in
-  `[options]` (`SelectItem = SelectOption | SelectOptionGroup`); `DropdownOption` /
-  `DropdownOptionGroup` / `DropdownSize` → `SelectOption` / `SelectOptionGroup` / `SelectSize`.
+  `<ds-select>`; `[error]` → `[invalid]`; `DropdownOption` / `DropdownSize` → `SelectOption` /
+  `SelectSize`. Groups go inline in `[options]`, which is what `ds-select` already took
+  (`SelectItem = SelectOption | SelectOptionGroup`).
   `readOnly` moved to `ds-select` (see Added).
 - **Public token prefixes normalized to match the selector (not aliased).** Four components had
   their `--ds-*` token name fragments hyphenated to align with the Angular selector; the old

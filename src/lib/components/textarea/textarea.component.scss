@@ -65,7 +65,9 @@
       min-width: 0;
       appearance: none;
       border: 0;
-      outline: 0;
+
+      @include focus.own-indicator;
+
       background: transparent;
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--_input-text-color);

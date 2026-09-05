@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
 :host {
@@ -24,7 +25,6 @@
   --_tab-pill-bg-color-active-hover: var(--ds-tab-pill-bg-color-active-hover, var(--accent-subtitle));
   --_tab-pill-label-color-active:    var(--ds-tab-pill-label-color-active,    var(--accent-strong));
   --_tab-pill-radius:       var(--ds-tab-pill-radius,       var(--ds-radius-control));
-  --_tabs-focus-shadow:     var(--ds-tabs-focus-shadow,     var(--ds-control-focus-shadow));
   --_tab-badge-bg-color: var(--ds-tab-badge-bg-color, var(--surface-secondary));
   --_tab-badge-label-color: var(--ds-tab-badge-label-color, var(--text-secondary));
   --_tab-close-icon-color: var(--ds-tab-close-icon-color, var(--text-tertiary));
@@ -40,6 +40,10 @@
 
   &.scrollable {
     overflow-x: auto;
+
+    // Clips, so the ring has to be drawn inward or the overflow eats it.
+    --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+
     flex-wrap: nowrap;
     scrollbar-width: none;
 
@@ -113,8 +117,8 @@
     }
 
     &:focus-visible {
-      outline: none;
-      box-shadow: var(--_tabs-focus-shadow);
+      @include focus.ring;
+
       border-radius: var(--radius-sm);
     }
 
@@ -160,7 +164,10 @@
         background-color: var(--_tab-pill-bg-color-active);
         color: var(--_tab-pill-label-color-active);
         border-bottom: 0;
-        box-shadow: var(--shadow-1);
+
+        // Roving tabindex leaves the active tab as the only stop, so its elevation must
+        // never be what wins the box-shadow tie.
+        @include focus.state-shadow(var(--shadow-1));
 
         &:hover {
           background-color: var(--_tab-pill-bg-color-active-hover);

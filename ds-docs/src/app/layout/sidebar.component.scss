@@ -1,3 +1,4 @@
+@use 'styles/focus' as focus;
 @use 'styles/text-clip' as text-clip;
 
 :host {
@@ -32,6 +33,10 @@
   // so it has to be cut off rather than reflowed. `clip`, not `hidden`: hidden
   // would make this a scroll container and swallow the rail's own scrolling.
   overflow: clip;
+
+  // The collapse toggle sits flush against this box's right edge, so a ring drawn
+  // outward is cut on three sides and reads as sitting behind the button.
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
 }
 
 .brand-home {
@@ -44,8 +49,7 @@
   border-radius: var(--ds-radius-control);
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--ds-control-focus-shadow);
+    @include focus.ring;
   }
 }
 

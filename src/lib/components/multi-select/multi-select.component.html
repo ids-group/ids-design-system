@@ -225,14 +225,7 @@
           [class.checked]="allFilteredSelected()"
           [class.indeterminate]="someFilteredSelected()"
         >
-          @if (allFilteredSelected()) {
-            <ds-icon
-              name="check"
-              [size]="13"
-            />
-          } @else if (someFilteredSelected()) {
-            <span class="dash"></span>
-          }
+          <span class="tick"></span>
         </span>
 
         <span class="select-all-label">
@@ -295,14 +288,7 @@
                   [class.checked]="groupAllSelected(item)"
                   [class.indeterminate]="groupSomeSelected(item)"
                 >
-                  @if (groupAllSelected(item)) {
-                    <ds-icon
-                      name="check"
-                      [size]="13"
-                    />
-                  } @else if (groupSomeSelected(item)) {
-                    <span class="dash"></span>
-                  }
+                  <span class="tick"></span>
                 </span>
 
                 All of {{ item.label }}
@@ -334,12 +320,7 @@
                       class="checkbox"
                       [class.checked]="isSelected(option.value)"
                     >
-                      @if (isSelected(option.value)) {
-                        <ds-icon
-                          name="check"
-                          [size]="13"
-                        />
-                      }
+                      <span class="tick"></span>
                     </span>
 
                     @if (option.icon) {
@@ -391,12 +372,7 @@
                 class="checkbox"
                 [class.checked]="isSelected(option.value)"
               >
-                @if (isSelected(option.value)) {
-                  <ds-icon
-                    name="check"
-                    [size]="13"
-                  />
-                }
+                <span class="tick"></span>
               </span>
 
               @if (option.icon) {

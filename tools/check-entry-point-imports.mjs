@@ -16,7 +16,8 @@ const SPECIFIER = /(?:^|\n)\s*(?:import|export)\b([^;]*?)from\s+'([^']+)'/g;
 
 const groupOf = (path) => {
   const parts = relative(LIB_ROOT, path).split(/[\\/]/);
-  if (parts[0] === 'components') return parts.length > 2 ? `components/${parts[1]}` : 'components';
+  if (parts[0] === 'components')
+    return parts.length > 2 ? `components/${parts[1]}` : 'components';
 
   return parts[0];
 };
@@ -29,12 +30,19 @@ const visit = (dir) => {
       visit(full);
       continue;
     }
-    if (!item.endsWith('.ts') || item.endsWith('.spec.ts') || item.endsWith('.d.ts')) continue;
+    if (
+      !item.endsWith('.ts') ||
+      item.endsWith('.spec.ts') ||
+      item.endsWith('.d.ts')
+    )
+      continue;
     const source = readFileSync(full, 'utf8');
     const where = relative(LIB_ROOT, full).split('\\').join('/');
     for (const [, , specifier] of source.matchAll(SPECIFIER)) {
       if (specifier.startsWith('ds/') || specifier === 'ds') {
-        problems.push(`${where}: '${specifier}' — the in-repo alias is for ds-docs, not the library.`);
+        problems.push(
+          `${where}: '${specifier}' — the in-repo alias is for ds-docs, not the library.`,
+        );
         continue;
       }
       if (specifier.startsWith(`${PACKAGE_NAME}/`)) {
@@ -47,7 +55,9 @@ const visit = (dir) => {
       const target = join(dir, specifier);
       if (relative(LIB_ROOT, target).startsWith('..')) continue;
       if (groupOf(target) !== groupOf(full)) {
-        problems.push(`${where}: '${specifier}' leaves its entry point — use ${PACKAGE_NAME}/${groupOf(target)}.`);
+        problems.push(
+          `${where}: '${specifier}' leaves its entry point — use ${PACKAGE_NAME}/${groupOf(target)}.`,
+        );
       }
     }
   }
@@ -55,8 +65,12 @@ const visit = (dir) => {
 visit(LIB_ROOT);
 
 if (problems.length) {
-  console.error(`check-entry-point-imports: ${problems.length} bad specifier(s)`);
+  console.error(
+    `check-entry-point-imports: ${problems.length} bad specifier(s)`,
+  );
   for (const problem of problems) console.error(`  ${problem}`);
   process.exit(1);
 }
-console.log(`check-entry-point-imports: OK — ${known.size} entry points, every cross-entry import names one.`);
+console.log(
+  `check-entry-point-imports: OK — ${known.size} entry points, every cross-entry import names one.`,
+);

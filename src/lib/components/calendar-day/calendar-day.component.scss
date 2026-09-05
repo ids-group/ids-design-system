@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
 :host {
@@ -37,7 +38,9 @@
   color: var(--_date-picker-day-label-color);
   transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
-  &:hover {
+  // Guarded because the button is only ever aria-disabled, never natively disabled, so
+  // :hover matches on a day that cannot be picked.
+  &:hover:not(.disabled) {
     background-color: var(--_date-picker-day-hover-bg-color);
   }
 
@@ -90,8 +93,7 @@
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--accent-focus-ring);
+    @include focus.ring;
   }
 
   @include press.feedback;

@@ -11,6 +11,7 @@ that it is complete — assume it is incomplete until the evidence says otherwis
 comes from the item.
 
 Two verification modes:
+
 - **Mechanical** (rename kinds, `value-remap`, `scss-api`, `code-add`) → verify by **grep** (below).
 - **Behavioral** (`removed-api`, `behavior`) → the applier now ATTEMPTS these (full-auto), so verify
   them **semantically**: read the edited code and judge whether it correctly implements the migration
@@ -20,12 +21,23 @@ Two verification modes:
 ## What to do
 
 - Search the target source (`*.html`, `*.ts`, `*.scss`, `*.css`; skip `node_modules`, `dist`,
-  `.git`) for the item's `old` and every `searchHint`.
-- **Rename kind:** complete only if the OLD identifier count is **0** and (when `new` is non-null)
-  the new identifier appears where expected; `new: null` (a shape only an un-enriched old-manifest
-  item carries) is complete when the old is gone.
-  Respect token boundaries — a longer identifier that merely CONTAINS `old` (e.g. `foo-bar` for a
-  `foo` rename) is NOT a remaining usage.
+  `.git`) for the item's `old`, every `searchHint`, AND every `detect` shape — `detect` is the
+  primary locator exactly where `old` names nothing the affected code mentions.
+- **Rename kind:** complete only if the OLD usage count is **0** (scoped as below) and (when `new`
+  is non-null) the new identifier appears where expected; `new: null` (a shape only an un-enriched
+  old-manifest item carries) is complete when the old is gone. Scoping rules, all three mandatory:
+  1. An `element[attr]`-shaped `old` is a SCOPE, not a literal string — grep the attribute/input on
+     that element (a literal grep of `ds-modal[danger]` matches nothing and would false-GREEN every
+     element-scoped rename).
+  2. A bare-word `old` on an `input-rename`/`output-rename` counts only occurrences on the host
+     component (from `appliesWhen`/`searchHints`) — `message` repo-wide is not a defect count.
+  3. When `new` CONTAINS `old` as the same token (`Foo` → `Foo<T>`): count only occurrences of
+     `old` standing WITHOUT the addition — migrated code still contains the old token by design.
+
+  Two rules for the whole rename mode, not only case 3: an `old` that is not a single greppable
+  token (prose, a comma-joined list) is not a locator — judge by `searchHints`/`detect` and the
+  `verify` assertion instead. And respect token boundaries — a longer identifier that merely
+  CONTAINS `old` (e.g. `foo-bar` for a `foo` rename) is NOT a remaining usage.
 - **`value-remap`:** complete only when none of the **removed** old values still appear — subject to
   two rules that will make you wrong if you skip them:
   1. **Scope to the item's target element.** An attribute/class NAME can exist on other components,
@@ -34,20 +46,27 @@ Two verification modes:
   2. **Only map-removed values count as "old remaining"** — decide per value by its `map` entry,
      never by pattern-similarity to a listed value:
 
-     | value's entry in `map` | counts as "old remaining"? |
-     |---|---|
-     | renamed / moved / `null` (dropped) | yes — require **0** occurrences |
-     | maps to itself (same token) | no — still valid |
-     | ABSENT from `map` | no — the changelog documented no change for it |
+     | value's entry in `map`                                      | counts as "old remaining"?                                    |
+     | ----------------------------------------------------------- | ------------------------------------------------------------- |
+     | renamed / moved / `null` (dropped)                          | yes — require **0** occurrences                               |
+     | maps to itself (same FULL token)                            | no — still valid                                              |
+     | a BARE value equal to the key (the bare-boolean convention) | yes — `attr="value"` must be gone, the bare attribute present |
+     | ABSENT from `map`                                           | no — the changelog documented no change for it                |
 
   A "moved" replacement can itself contain the old token (`outline` → `color="neutral"
-  variant="outline"`): an occurrence standing inside the full replacement is migrated, not old —
+variant="outline"`): an occurrence standing inside the full replacement is migrated, not old —
   count only occurrences NOT accompanied by the rest of the replacement.
   An occurrence at a `loc` named by the applier's forwarded `needsReview` entries (an unresolvable
   dynamic binding) goes in `remaining` as `excused-dynamic-binding`, not a failure; every other
   leftover is a `real-miss`. No forwarded `locs` = nothing is excused.
   **Then test the item's `verify` assertion like a behavioural one** — a remap changes what a
-  binding MEANS with no symbol removed, so the clean grep alone proves nothing.
+  binding MEANS with no symbol removed, so the clean grep alone proves nothing. A `verify` failure
+  attributable SOLELY to excused `locs` does not fail the item — it stays excused, reported for the
+  eyeball list, never re-entering the fix loop it was excused from.
+
+- **A `no-op` mode** (any kind): confirm the `action`'s condition is genuinely unmet in this
+  consumer — that check, not an edit, is the verification; met condition with no edit →
+  `migrated: false`.
 - **`scss-api` / `code-add`:** when the applier reported `replaced` — confirm the old path/symbol
   is gone; when it reported `inserted` (the item's `old` was an anchor, not a target) — confirm
   `new` is present at the location the item's `action`/`note` describes. A clean grep for an `old`
@@ -61,17 +80,20 @@ Two verification modes:
   escalates low-confidence and failed items.
 - **`verify` is the assertion you must test, and its absence of a symbol proves nothing.** When the
   item carries a `verify` sentence, that sentence IS the check: search the surface it names and judge
-  it directly (*"every place that turns (sortChange) into a query gates on the direction, not the
-  key"* → read every such place and look). A behavioural item has no old identifier whose
+  it directly (_"every place that turns (sortChange) into a query gates on the direction, not the
+  key"_ → read every such place and look). A behavioural item has no old identifier whose
   disappearance means anything, so "grep for `old` came back clean" is not evidence. No `verify` on the item and no way to construct one
   from the `note` → `confidence: "low"`, and say in `note` that the item is unverifiable as written.
 - **Not-applicable items** (the finder reported zero hits, so nothing was applied): your grep is the
-  independent confirmation of that verdict. Clean grep → `migrated: true`,
-  `note: "not applicable — zero usages"`. Usages found → `migrated: false` with them in `remaining`
-  (the finder missed them; the orchestrator re-enters the item into the pipeline).
+  independent confirmation of that verdict — under the SAME scoping and map rules as above (a raw
+  unscoped grep would re-import exactly the broad matches the finder already filtered, and a
+  not-applicable verdict had `rawMatches > 0` — except a zero-hit `code-add`, whose anchor may
+  legitimately be absent everywhere). Clean scoped grep → `migrated: true`,
+  `note: "not applicable — zero usages"`. Scoped usages found → `migrated: false` with them in
+  `remaining` (the finder missed them; the orchestrator re-enters the item into the pipeline).
   **An item marked LOCATOR-DEAD** (every locator matched nothing repo-wide) gets the same repo-wide
   grep as a second opinion: still nothing anywhere → `migrated: true`, `note: "locator-dead — no
-  locator matches this repo"`, so the report carries it as manifest evidence rather than consumer
+locator matches this repo"`, so the report carries it as manifest evidence rather than consumer
   state; anything found → `migrated: false` with the hits.
   **This shortcut covers mechanical items AND behavioural items whose surface is `template` or
   `none`.** On a behavioural item whose surface is anything else, zero hits means the item's shapes
@@ -97,8 +119,8 @@ Two verification modes:
 Return ONLY a fenced ```json block:
 
 { "id": "<item-id>", "migrated": true|false,
-  "remaining": [ { "loc": "path:line", "reason": "real-miss | excused-dynamic-binding" } ],
-  "confidence": "high|medium|low", "note": "<one line>" }
+"remaining": [ { "loc": "path:line", "reason": "real-miss | excused-dynamic-binding" } ],
+"confidence": "high|medium|low", "note": "<one line>" }
 
 `migrated` is false if any **real-miss** old usage remains (mechanical, scoped to the target) or the
 attempted behavioral change doesn't match what the changelog requires. `excused-dynamic-binding`

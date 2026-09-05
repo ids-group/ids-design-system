@@ -441,6 +441,13 @@
       "subtitle": "Use the outline variant when the split button sits alongside a primary action."
     },
     {
+      "path": "components/actions/SplitButton/Split Button - Without menu items.html",
+      "group": "actions",
+      "viewport": "1200x378",
+      "name": "Split button - without menu items",
+      "subtitle": "An empty [menuItems] disables the chevron: one that opens an empty panel reads as a broken control."
+    },
+    {
       "path": "components/actions/Link/Link - States.html",
       "group": "actions",
       "viewport": "1200x312",
@@ -4599,7 +4606,7 @@
     },
     {
       "name": "--focus-ring-inner",
-      "value": "transparent",
+      "value": "var(--surface-default)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -5763,7 +5770,7 @@
     },
     {
       "name": "--focus-ring-inner",
-      "value": "transparent",
+      "value": "var(--surface-default)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ":root[data-theme=dark]"
@@ -6673,6 +6680,12 @@
     },
     {
       "name": "--border-width-strong",
+      "value": "2px",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--focus-ring-width",
       "value": "2px",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css"
@@ -9005,6 +9018,62 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--ds-field-focus-shadow",
+      "value": "var(--focus-ring)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=ring]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-error",
+      "value": "var(--focus-ring-error)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=ring]"
+    },
+    {
+      "name": "--focus-ring-offset",
+      "value": "0px",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=edge]"
+    },
+    {
+      "name": "--ds-field-focus-shadow",
+      "value": "0 0 0 var(--border-width-default) var(--primary)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=edge]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-error",
+      "value": "0 0 0 var(--border-width-default) var(--error)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=edge]"
+    },
+    {
+      "name": "--focus-ring-offset",
+      "value": "calc(-1 * var(--focus-ring-width))",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-focus=inset]"
+    },
+    {
+      "name": "--ds-field-focus-shadow",
+      "value": "var(--focus-ring-inset)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-focus=inset]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-error",
+      "value": "var(--focus-ring-inset-error)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-focus=inset]"
+    },
+    {
       "name": "--_link-color",
       "value": "var(--ds-link-color, var(--text-link))",
       "kind": "color",
@@ -9024,118 +9093,6 @@
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".link"
-    },
-    {
-      "name": "--ds-field-focus-shadow",
-      "value": "var(--focus-ring)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=ring]"
-    },
-    {
-      "name": "--ds-field-focus-shadow-error",
-      "value": "var(--focus-ring-error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=ring]"
-    },
-    {
-      "name": "--ds-control-focus-shadow",
-      "value": "var(--focus-field)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=field]"
-    },
-    {
-      "name": "--ds-control-focus-shadow-error",
-      "value": "var(--focus-field-error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=field]"
-    },
-    {
-      "name": "--ds-field-focus-shadow",
-      "value": "0 0 0 var(--border-width-default) var(--primary)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=edge]"
-    },
-    {
-      "name": "--ds-field-focus-shadow-error",
-      "value": "0 0 0 var(--border-width-default) var(--error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=edge]"
-    },
-    {
-      "name": "--ds-control-focus-shadow",
-      "value": "0 0 0 var(--border-width-default) var(--primary)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=edge]"
-    },
-    {
-      "name": "--ds-control-focus-shadow-error",
-      "value": "0 0 0 var(--border-width-default) var(--error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=edge]"
-    },
-    {
-      "name": "--ds-field-focus-shadow",
-      "value": "var(--focus-ring-inset)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": "[data-focus=inset]"
-    },
-    {
-      "name": "--ds-field-focus-shadow-error",
-      "value": "var(--focus-ring-inset-error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": "[data-focus=inset]"
-    },
-    {
-      "name": "--ds-control-focus-shadow",
-      "value": "var(--focus-ring-inset)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": "[data-focus=inset]"
-    },
-    {
-      "name": "--ds-control-focus-shadow-error",
-      "value": "var(--focus-ring-inset-error)",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": "[data-focus=inset]"
-    },
-    {
-      "name": "--ds-field-focus-shadow",
-      "value": "none",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=outline]"
-    },
-    {
-      "name": "--ds-field-focus-shadow-error",
-      "value": "none",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=outline]"
-    },
-    {
-      "name": "--ds-control-focus-shadow",
-      "value": "none",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=outline]"
-    },
-    {
-      "name": "--ds-control-focus-shadow-error",
-      "value": "none",
-      "kind": "shadow",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-focus=outline]"
     },
     {
       "name": "--accent",
@@ -10177,20 +10134,12 @@
       "label": "Root Focus Ring"
     },
     {
-      "selector": ":root[data-focus=field]",
-      "label": "Root Focus Field"
-    },
-    {
       "selector": ":root[data-focus=edge]",
       "label": "Root Focus Edge"
     },
     {
       "selector": "[data-focus=inset]",
       "label": "Focus Inset"
-    },
-    {
-      "selector": ":root[data-focus=outline]",
-      "label": "Root Focus Outline"
     },
     {
       "selector": "[ds-color=secondary]",

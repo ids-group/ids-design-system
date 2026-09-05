@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
 
@@ -22,7 +23,6 @@
   --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--accent-strong));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--ds-radius-control));
   --_sidenav-alert-color:          var(--ds-sidenav-alert-color,          var(--error));
-  --_sidenav-item-focus-shadow:    var(--ds-sidenav-item-focus-shadow,    var(--ds-control-focus-shadow));
 
   display: block;
 }
@@ -55,8 +55,7 @@
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--_sidenav-item-focus-shadow);
+    @include focus.ring;
   }
 
   @include press.feedback;
@@ -65,12 +64,14 @@
     background-color: var(--_sidenav-item-bg-color-active);
     color: var(--_sidenav-item-label-color-active);
 
-    /* inset box-shadow follows the item's rounded corners */
-    box-shadow: inset var(--sidenav-item-rail-width) 0 0 var(--_sidenav-item-rail);
+    // The rail is inset, so it follows the item's rounded corners.
+    @include focus.state-shadow(
+      inset var(--sidenav-item-rail-width) 0 0 var(--_sidenav-item-rail)
+    );
   }
 
   &.active.no-rail {
-    box-shadow: none;
+    @include focus.state-shadow(none);
   }
 
   &.active:hover {

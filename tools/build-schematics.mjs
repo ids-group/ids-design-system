@@ -2,7 +2,15 @@
 // Runs as the second half of `build:lib` (after `ng build ds` regenerates
 // dist/ds), so the schematics collection ships with the package.
 import { execSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { createRequire } from 'node:module';
 
 const distPkgPath = 'dist/ds/package.json';
@@ -100,7 +108,9 @@ if (existsSync('docs/agent')) {
   mkdirSync('dist/ds/docs', { recursive: true });
   cpSync('docs/agent', 'dist/ds/docs/agent', { recursive: true });
 } else {
-  console.error('build-schematics: docs/agent missing — run `npm run agent-catalogue` first.');
+  console.error(
+    'build-schematics: docs/agent missing — run `npm run agent-catalogue` first.',
+  );
   process.exit(1);
 }
 
@@ -114,7 +124,9 @@ if (existsSync('migrations')) {
   mkdirSync('dist/ds/migrations', { recursive: true });
   for (const entry of readdirSync('migrations')) {
     if (entry === 'unreleased.json' || entry === 'AUTHORING.md') continue;
-    cpSync(`migrations/${entry}`, `dist/ds/migrations/${entry}`, { recursive: true });
+    cpSync(`migrations/${entry}`, `dist/ds/migrations/${entry}`, {
+      recursive: true,
+    });
   }
 }
 

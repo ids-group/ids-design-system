@@ -92,21 +92,31 @@ const declarationsOf = (body) => {
 
 // sass emits attribute values unquoted where the source quotes them, and a selector read out of
 // SCSS carries whatever preceded it on earlier lines.
-const normalizeSelector = (selector) => selector.trim().split('\n').pop().trim().replace(/['"]/g, '');
-const rules = scanRules(css).map((rule) => ({ ...rule, selector: normalizeSelector(rule.selector) }));
+const normalizeSelector = (selector) =>
+  selector.trim().split('\n').pop().trim().replace(/['"]/g, '');
+const rules = scanRules(css).map((rule) => ({
+  ...rule,
+  selector: normalizeSelector(rule.selector),
+}));
 
 // ── which selectors are colour themes ─────────────────────────────────────
 // Read from the activation file rather than hard-coded: `data-theme` also carries shape themes,
 // which declare no colour roles at all.
-const activation = readFileSync(join(repo, 'src/lib/styles/_theme-activation.scss'), 'utf8')
+const activation = readFileSync(
+  join(repo, 'src/lib/styles/_theme-activation.scss'),
+  'utf8',
+)
   .replace(/\/\*[\s\S]*?\*\//g, '')
   .replace(/(^|\s)\/\/[^\n]*/g, '');
 const themeSelectors = [];
 for (const [, selector, body] of activation.matchAll(/([^{}]*)\{([^{}]*)\}/g)) {
-  if (/@include\s+[\w-]+\.theme\b/.test(body)) themeSelectors.push(normalizeSelector(selector));
+  if (/@include\s+[\w-]+\.theme\b/.test(body))
+    themeSelectors.push(normalizeSelector(selector));
 }
 if (themeSelectors.length < 2) {
-  fail(`found ${themeSelectors.length} theme selector(s) in _theme-activation.scss, expected light and dark at least`);
+  fail(
+    `found ${themeSelectors.length} theme selector(s) in _theme-activation.scss, expected light and dark at least`,
+  );
 }
 
 // Every unconditional `:root` contributes to the environment a theme resolves in — the palette,
@@ -114,7 +124,8 @@ if (themeSelectors.length < 2) {
 const rootDeclarations = new Map();
 for (const rule of rules) {
   if (rule.selector === ':root' && !rule.conditional) {
-    for (const [name, value] of declarationsOf(rule.body)) rootDeclarations.set(name, value);
+    for (const [name, value] of declarationsOf(rule.body))
+      rootDeclarations.set(name, value);
   }
 }
 
@@ -125,12 +136,15 @@ for (const selector of themeSelectors) {
   for (const rule of rules) {
     if (rule.selector === selector && !rule.conditional) {
       matched += 1;
-      for (const [name, value] of declarationsOf(rule.body)) environment.set(name, value);
+      for (const [name, value] of declarationsOf(rule.body))
+        environment.set(name, value);
     }
   }
   // Counted, not sized: a sibling theme redeclares the same names, so the map does not grow.
   if (!matched) {
-    fail(`_theme-activation.scss applies ${selector}, but no unconditional rule for it reached the CSS`);
+    fail(
+      `_theme-activation.scss applies ${selector}, but no unconditional rule for it reached the CSS`,
+    );
   }
   environments.set(selector, environment);
 }
@@ -143,7 +157,9 @@ for (const rule of rules) {
   zones.set(match[1], declarationsOf(rule.body));
 }
 if (zones.size < 2) {
-  fail(`found ${zones.size} unconditional [ds-color=…] rule(s) in the compiled CSS — the @each in _ds-color.scss emits nothing`);
+  fail(
+    `found ${zones.size} unconditional [ds-color=…] rule(s) in the compiled CSS — the @each in _ds-color.scss emits nothing`,
+  );
 }
 
 // ── resolution ────────────────────────────────────────────────────────────
@@ -200,8 +216,9 @@ function resolves(value, environment, seen = new Set()) {
   for (const reference of varReferences(value)) {
     if (seen.has(reference.name)) return false;
     const declared = environment.get(reference.name);
-    const viaName = declared !== undefined
-      && resolves(declared, environment, new Set([...seen, reference.name]));
+    const viaName =
+      declared !== undefined &&
+      resolves(declared, environment, new Set([...seen, reference.name]));
     if (viaName) continue;
     if (reference.fallback === null) return false;
     if (!resolves(reference.fallback, environment, seen)) return false;
@@ -214,19 +231,26 @@ function resolves(value, environment, seen = new Set()) {
 // all of them is the shared crash barrier and proves nothing about the family.
 const families = [...zones.keys()].sort();
 const pointerNames = new Set();
-for (const declarations of zones.values()) for (const name of declarations.keys()) pointerNames.add(name);
+for (const declarations of zones.values())
+  for (const name of declarations.keys()) pointerNames.add(name);
 
 for (const pointer of [...pointerNames].sort()) {
   const missing = families.filter((family) => !zones.get(family).has(pointer));
   if (missing.length) {
-    problems.push(`✗ ${pointer} is declared for ${families.length - missing.length} of ${families.length} families but not for ${missing.join(', ')}`);
+    problems.push(
+      `✗ ${pointer} is declared for ${families.length - missing.length} of ${families.length} families but not for ${missing.join(', ')}`,
+    );
     continue;
   }
-  const chains = families.map((family) => ({ family, links: chainOf(zones.get(family).get(pointer)) }));
+  const chains = families.map((family) => ({
+    family,
+    links: chainOf(zones.get(family).get(pointer)),
+  }));
   const depth = Math.min(...chains.map((chain) => chain.links.length));
   const familyLinks = [];
   for (let position = 0; position < depth; position += 1) {
-    if (new Set(chains.map((chain) => chain.links[position])).size > 1) familyLinks.push(position);
+    if (new Set(chains.map((chain) => chain.links[position])).size > 1)
+      familyLinks.push(position);
   }
   if (!familyLinks.length) continue; // every link is shared: nothing family-specific to demand
 
@@ -237,8 +261,12 @@ for (const pointer of [...pointerNames].sort()) {
         return declared !== undefined && resolves(declared, environment);
       });
       if (answered) continue;
-      const names = familyLinks.map((position) => chain.links[position]).join(' or ');
-      problems.push(`✗ ${themeSelector}: ds-color="${chain.family}" leaves ${pointer} unanswered — no resolving ${names}`);
+      const names = familyLinks
+        .map((position) => chain.links[position])
+        .join(' or ');
+      problems.push(
+        `✗ ${themeSelector}: ds-color="${chain.family}" leaves ${pointer} unanswered — no resolving ${names}`,
+      );
     }
   }
 }
@@ -251,9 +279,13 @@ for (const [themeSelector, environment] of environments) {
   for (const pointer of pointerNames) {
     const value = environment.get(pointer);
     if (value === undefined) {
-      problems.push(`✗ ${themeSelector}: the default accent has no ${pointer}, though ds-color zones map it`);
+      problems.push(
+        `✗ ${themeSelector}: the default accent has no ${pointer}, though ds-color zones map it`,
+      );
     } else if (!resolves(value, environment)) {
-      problems.push(`✗ ${themeSelector}: the default accent's ${pointer} does not resolve — ${value}`);
+      problems.push(
+        `✗ ${themeSelector}: the default accent's ${pointer} does not resolve — ${value}`,
+      );
     }
   }
 }
@@ -266,11 +298,14 @@ for (const [themeSelector, environment] of environments) {
   const dangling = new Set();
   for (const [, value] of environment) {
     for (const reference of varReferences(value)) {
-      if (reference.fallback === null && !environment.has(reference.name)) dangling.add(reference.name);
+      if (reference.fallback === null && !environment.has(reference.name))
+        dangling.add(reference.name);
     }
   }
   for (const name of [...dangling].sort()) {
-    problems.push(`✗ ${themeSelector}: ${name} is read without a fallback and declared nowhere`);
+    problems.push(
+      `✗ ${themeSelector}: ${name} is read without a fallback and declared nowhere`,
+    );
   }
 }
 
@@ -280,7 +315,7 @@ if (problems.length) {
 }
 
 console.log(
-  `check-color-families: OK — ${families.length} famil${families.length === 1 ? 'y' : 'ies'}`
-  + ` × ${pointerNames.size} pointers resolve in ${environments.size} theme blocks,`
-  + ` and the default accent resolves in each.`,
+  `check-color-families: OK — ${families.length} famil${families.length === 1 ? 'y' : 'ies'}` +
+    ` × ${pointerNames.size} pointers resolve in ${environments.size} theme blocks,` +
+    ` and the default accent resolves in each.`,
 );

@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
 
@@ -74,12 +75,12 @@
   &.selected {
     background: var(--_segmented-selected-bg-color);
     color: var(--_segmented-selected-label-color);
-    box-shadow: var(--_segmented-selected-shadow);
+
+    @include focus.state-shadow(var(--_segmented-selected-shadow));
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--accent-focus-ring);
+    @include focus.ring;
   }
 
   @include press.feedback;

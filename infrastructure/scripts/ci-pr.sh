@@ -27,6 +27,13 @@ echo "===== manifest coverage ====="
 node tools/check-manifest-coverage-selftest.mjs
 node tools/check-manifest-coverage.mjs
 
+# The only check that reads the tree at each published boundary: an item can satisfy every rule
+# above and still name a token that never existed. Here rather than in lint:all because it reads
+# 27 trees (~22s) and the manifests it checks cannot change without a commit touching them.
+echo "===== manifest truth (against each release's own tag) ====="
+node tools/check-manifest-truth-selftest.mjs
+node tools/check-manifest-truth.mjs
+
 # The agent catalogue is derived from components.md; editing the source without regenerating
 # leaves the shipped leaves lying.
 echo "===== agent catalogue ====="

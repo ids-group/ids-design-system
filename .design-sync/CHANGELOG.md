@@ -17,6 +17,39 @@ the release commit — one timeline, two audiences.
 
 ### Cards
 
+- **A card whose control owns a dropdown stays live, so the dropdown still opens.** What freezing
+  takes away is behaviour, and for Select, MultiSelect, Autocomplete, the date and time pickers, the
+  colour picker and Menu the panel IS the documented thing. It was never VISIBLE in a card — a CDK
+  overlay is closed by default and portaled to `document.body` — but it was one click away, and a
+  frozen card has no click. The rule is per card and read from the rendered dom rather than from a
+  list of chapters, which would drag 130 cards live to keep the 85 that have a panel. The other
+  chapters that need behaviour are named in `live-chapters.txt`: toast, drawer, modal, popover,
+  bottom-sheet, tree, loading-overlay, scrollbar.
+
+### Docs
+
+- **Seven component docs promised an `open` prop that does not exist.** Autocomplete, ColorPicker,
+  DatePicker, MultiSelect, Select, SplitButton and TimePicker each documented it, so an agent
+  writing against the doc got a dropdown that never opened. Behind the custom elements the trigger
+  owns its own open state and the panel is a CDK overlay portaled to `document.body`; `Select`'s
+  `staticPreview` is the one way to render a panel in flow. `check-doc-api.mjs` now reads the prose
+  for a backticked `on…Change` the component does not have, not only the tsx examples — that shape
+  alone, because every backticked identifier reports 46 findings on this tree and almost none are
+  defects, while this reports none.
+
+### Build
+
+- **The shared stylesheet is the union over every rendered card, not the frozen ones.** A block
+  qualifies for it on carrying a scope attribute anywhere in it, and some carry document-level rules
+  alongside — `:root` custom properties, keyframes, `::ng-deep` output. Taking the union from the
+  frozen subset dropped what only a live card contributed and moved 80 frozen cards by 4–32px, so
+  the blocks are not as position-independent as they look. Measure the heights after touching either
+  the union or its order.
+
+## 0.12.0 — 2026-09-04
+
+### Cards
+
 - **Every card is titled after its own subject and names its own tag.** A card used to open with
   the chapter's header, so a pane full of cards from one chapter read as the same thing repeated.
   Each now opens with its own subject and names the Angular tag it documents, with the React tag
@@ -26,25 +59,17 @@ the release commit — one timeline, two audiences.
   anything longer in the note.
 - **The last five cards lose the eyebrow**, and a part no longer republishes the chapter it
   belongs to.
-- **291 of 409 cards ship as static HTML instead of an Angular application.** A card is a whole
+- **376 of 409 cards ship as static HTML instead of an Angular application.** A card is a whole
   document, and every one of them downloaded the 2.12 MB bundle and booted its own application, in
   every tile of the grid at once. `snapshot-cards.mjs` renders each card and writes back the settled
   DOM with the scripts stripped, so a frozen card fetches no bundle at all. Nothing renders
   differently — the theme tokens stay in `_ds_bundle.css`, so the pane switching `data-theme` still
   recolours a frozen card, and all 409 declared heights are unchanged.
-- **A card whose control owns a dropdown stays live, so the dropdown still opens.** What freezing
-  takes away is behaviour, and for Select, MultiSelect, Autocomplete, the date and time pickers, the
-  colour picker and Menu the panel IS the documented thing. It was never VISIBLE in a card — a CDK
-  overlay is closed by default and portaled to `document.body` — but it was one click away, and a
-  frozen card has no click. The rule is per card and read from the rendered dom rather than from a
-  list of chapters, which would drag 130 cards live to keep the 85 that have a panel. The other
-  chapters that need behaviour are named in `live-chapters.txt`: toast, drawer, modal, popover,
-  bottom-sheet, tree, loading-overlay, scrollbar.
 - **The 185 distinct component stylesheets are one linked file.** Angular inlines a component's
   styles into every document that renders it, so the same block arrived in card after card. They
-  are scoped by attribute and therefore position-independent, so they concatenate into
-  `_ds_cards.css`, fetched once for the whole grid instead of parsed inside each card. With the
-  scaffolding comments and the Angular component ids trimmed too, the tree is 20 MB → 9.0 MB.
+  concatenate into `_ds_cards.css`, fetched once for the whole grid instead of parsed inside each
+  card. With the scaffolding comments and the Angular component ids trimmed too, the tree is
+  20 MB → 9.0 MB.
 
 ### Removing a file from the shared project
 

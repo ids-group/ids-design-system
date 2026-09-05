@@ -38,17 +38,6 @@
       "surface": "typescript"
     },
     {
-      "id": "combobox-option-group-type-rename",
-      "kind": "type-rename",
-      "old": "ComboboxOptionGroup",
-      "new": "AutocompleteOptionGroup",
-      "action": "Replace `ComboboxOptionGroup` with `AutocompleteOptionGroup`. Apply this before the shorter `ComboboxOption`.",
-      "searchHints": [
-        "ComboboxOptionGroup"
-      ],
-      "surface": "typescript"
-    },
-    {
       "id": "combobox-size-type-rename",
       "kind": "type-rename",
       "old": "ComboboxSize",
@@ -56,17 +45,6 @@
       "action": "Replace `ComboboxSize` with `AutocompleteSize`.",
       "searchHints": [
         "ComboboxSize"
-      ],
-      "surface": "typescript"
-    },
-    {
-      "id": "combobox-width-type-rename",
-      "kind": "type-rename",
-      "old": "ComboboxWidth",
-      "new": "AutocompleteWidth",
-      "action": "Replace `ComboboxWidth` with `AutocompleteWidth`.",
-      "searchHints": [
-        "ComboboxWidth"
       ],
       "surface": "typescript"
     },
@@ -127,27 +105,6 @@
       "surface": "template"
     },
     {
-      "id": "dropdown-option-groups-fold",
-      "kind": "behavior",
-      "old": "ds-dropdown[optionGroups]",
-      "new": null,
-      "action": "Merge the flat options and the groups into one `[options]` array. `SelectItem` is `SelectOption | SelectOptionGroup`, so both shapes sit in the same list.",
-      "pitfall": "The array order IS the render order now. Two separate inputs used to be rendered in a fixed sequence, so concatenating them the other way round silently reshuffles the list and nothing warns.",
-      "note": "`[optionGroups]` no longer exists on ds-select.",
-      "searchHints": [
-        "[optionGroups]="
-      ],
-      "surface": [
-        "template",
-        "typescript"
-      ],
-      "detect": [
-        "optionGroups",
-        "[optionGroups]"
-      ],
-      "verify": "No ds-select binds optionGroups; the groups sit inside [options] in render order."
-    },
-    {
       "id": "dropdown-component-class-rename",
       "kind": "type-rename",
       "old": "DropdownComponent",
@@ -167,17 +124,6 @@
       "pitfall": "`DropdownOptionGroup` contains `DropdownOption`. Apply the group item first, or match whole identifiers — a substring replace corrupts the longer name.",
       "searchHints": [
         "DropdownOption"
-      ],
-      "surface": "typescript"
-    },
-    {
-      "id": "dropdown-option-group-type-rename",
-      "kind": "type-rename",
-      "old": "DropdownOptionGroup",
-      "new": "SelectOptionGroup",
-      "action": "Replace `DropdownOptionGroup` with `SelectOptionGroup`. Apply this before the shorter `DropdownOption`.",
-      "searchHints": [
-        "DropdownOptionGroup"
       ],
       "surface": "typescript"
     },

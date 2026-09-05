@@ -19,6 +19,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 6 | `6-migration-manifest-audit` | eight format practices to ratify - tooling, no consumer pulling on it |
 | 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
 | 8 | `8-warning-text-colour` | one colour on one tint, each candidate rendered in itself |
+| 9 | `9-selection-focus-ring` | the P1 bullseye on radio/checkbox/switch — one verdict moves the ring from the glyph to the row, and a second decides the label-less control |
 
 **Ranks 4 and 5 are what is left of the packaging lane and are kept adjacent** — the opt-in seam,
 then what was rejected and why. The three that closed on 2026-09-04 are in `implemented/`

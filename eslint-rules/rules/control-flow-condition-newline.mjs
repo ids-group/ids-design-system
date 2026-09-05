@@ -56,7 +56,8 @@ export default {
         else if (char === ')' || char === ']' || char === '}') depth--;
         else if (
           depth === 0 &&
-          (condition.startsWith('||', index) || condition.startsWith('&&', index))
+          (condition.startsWith('||', index) ||
+            condition.startsWith('&&', index))
         ) {
           parts.push({
             expression: condition.slice(start, index).trim(),

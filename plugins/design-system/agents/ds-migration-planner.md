@@ -24,11 +24,12 @@ enrich `informational` and APPEND items for documented changes the manifest miss
 appended item's `note`), but never silently rewrite the manifest's own items. Manifest missing or
 malformed → derive the plan from the prose block as below.
 
-**A manifest that carries no `surface` / `detect` / `verify` — or no `action` / `appliesWhen` /
-`pitfall` — predates the current contract (every manifest in the DS repo carries them; an older
-`node_modules` copy may not), and passing those items through as-is is how an undetectable one
-reaches the finder.** So for
-every item that lacks them, ADD the fields from what the item's own `note` already says — this is enrichment, not a
+**An item missing a REQUIRED field — `action`, `surface`, or `detect`/`verify` where the contract
+demands them — predates the current contract (an older `node_modules` copy), and passing it through
+as-is is how an undetectable item reaches the finder.** `pitfall` and `appliesWhen` are OPTIONAL:
+most shipped items legitimately omit them — their absence is never grounds to enrich, and inventing
+either is forbidden. So for
+every item that lacks a REQUIRED field, ADD that field from what the item's own `note` already says — this is enrichment, not a
 rewrite: you are not changing the migration, you are stating where to look for it (and, for
 `action`, lifting the imperative out of the note so the applier executes a field, not a paragraph). Read the note for
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
@@ -41,6 +42,7 @@ planning a version that ships no manifest at all, taking the `find` from whateve
 shape the sentence names.
 
 ## What to read
+
 - **Decide actionability by CONTENT, not by section name.** An entry is actionable when it documents
   a change after which existing consumer code no longer works or behaves as before — something
   renamed, removed, retyped, revalued, restructured, newly required, or behaving differently.
@@ -55,6 +57,7 @@ shape the sentence names.
   empty `items` array.
 
 ## Classifying each change (`kind`)
+
 Pick the kind that lets a downstream agent act mechanically. All specifics come from the changelog:
 
 - **rename kinds** — `selector-rename` | `type-rename` | `input-rename` | `output-rename` |
@@ -91,20 +94,25 @@ to one of the mechanical kinds, classify it **`behavior`**. NEVER drop a documen
 it doesn't fit a kind. Reading the changelog completely matters more than perfect kinds.
 
 ## `value-remap` specifics
+
 - `old` is the **element-scoped target**, always `element[attr]` (the element comes from the
   changelog — it matters because the same attribute name can exist on other components).
 - `map` is keyed by the old VALUE. **Each map value is the full replacement for the whole
   `attr="oldValue"` token** (not a bare value — that ambiguity makes the applier guess), or `null`
   to drop the attribute:
-    - value change on the same attribute → `{ "<oldVal>": "<attr>=\"<newVal>\"" }`
-    - value becomes the default (drop the attribute) → `{ "<oldVal>": null }`
-    - value moves to a different attribute → `{ "<oldVal>": "<otherAttr>=\"<val>\"" }`
-    - a value that stays valid → maps to itself (`{ "<val>": "<attr>=\"<val>\"" }`); the re-checker
-      treats a maps-to-itself entry as still-valid, not as "old to remove".
-    - a value the changelog does NOT mention → simply absent from `map`; the applier and re-checker
-      leave such values untouched. Only enumerate values the changelog actually addresses.
-- If the changelog says values move to a different attribute, note that DYNAMIC bindings
-  (`[attr]="expr"`) resolving to those values must be rebound too — flag it in `note`.
+  - value change on the same attribute → `{ "<oldVal>": "<attr>=\"<newVal>\"" }`
+  - value becomes the default (drop the attribute) → `{ "<oldVal>": null }`
+  - value moves to a different attribute → `{ "<oldVal>": "<otherAttr>=\"<val>\"" }`
+  - a value that stays valid → maps to itself (`{ "<val>": "<attr>=\"<val>\"" }`); the re-checker
+    treats a maps-to-itself entry as still-valid, not as "old to remove".
+  - a value the changelog does NOT mention → simply absent from `map`; the applier and re-checker
+    leave such values untouched. Only enumerate values the changelog actually addresses.
+- If the changelog says values move to a different attribute, state in `action` that DYNAMIC
+  bindings (`[attr]="expr"`) resolving to those values must be rebound too.
+- **A bare map value equal to its key is the bare-boolean-attribute convention**
+  (`{ "indeterminate": "indeterminate" }` = the value becomes a bare attribute) — it is legitimate;
+  never "repair" it into an identity token. Repair a bare value DIFFERENT from its key into the
+  full-token form only when the target attribute is unambiguous.
 
 ## The prose fields: `action`, `appliesWhen`, `pitfall`, `note`
 
@@ -138,8 +146,8 @@ fields exist so that cannot happen.
   locator you can think of is a DS symbol while the affected code lives in their TypeScript, the item
   is not detectable yet — say so in the `note` instead of shipping a locator that cannot fire.
 - **`verify`** (required on `behavior` / `removed-api` / `value-remap`) — the positive assertion a
-  re-checker can test, because here no absent symbol proves anything: *"every place that turns
-  (sortChange) into a query gates on the direction, not the key"*. A `value-remap` needs it too —
+  re-checker can test, because here no absent symbol proves anything: _"every place that turns
+  (sortChange) into a query gates on the direction, not the key"_. A `value-remap` needs it too —
   it changes what a binding MEANS with no symbol removed, so the re-check's grep alone proves
   nothing there.
 - **`restore`** (on a changed default) — the literal snippet that brings the old behaviour back, or
@@ -150,6 +158,7 @@ Also emit **`deleteList`** at the top level for what the release made UNNECESSAR
 says what broke, never what became redundant.
 
 ## searchHints & id
+
 `searchHints` are concrete strings a grep can find in consumer `.html` / `.ts` / `.scss` — the old
 selector, binding, type name, class, token prefix, or attribute value exactly as written in code.
 List every alias worth searching. If the block's wording leaves an exact identifier or value
@@ -160,23 +169,25 @@ checkout at the release tag, when the orchestrator provided its path. `id` = a s
 applier and re-checker match on).
 
 ## Output
+
 Return ONLY a fenced ```json block:
 
 {
-  "version": "<the version>",
-  "items": [ { "id", "kind", "old", "new", "searchHints": [],
-               "map": { "<oldValue>": "<replacement token | null>" },
-               "action": "<imperative>", "appliesWhen": "<boundary>",
-               "pitfall": "<how it still breaks>", "note": "<the why>",
-               "surface": "template | typescript | style | config | none (or an array)",
-               "detect": [], "verify": "<positive assertion>", "restore": "<snippet | null>",
-               "supersedes": ["<version>#<id>"] } ],
-  "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
-  "informational": [ "<one-line summary of each Added/Fixed group>" ]
+"version": "<the version>",
+"items": [ { "id", "kind", "old", "new", "searchHints": [],
+"map": { "<oldValue>": "<replacement token | null>" },
+"action": "<imperative>", "appliesWhen": "<boundary>",
+"pitfall": "<how it still breaks>", "note": "<the why>",
+"surface": "template | typescript | style | config | none (or an array)",
+"detect": [], "verify": "<positive assertion>", "restore": "<snippet | null>",
+"supersedes": ["<version>#<id>"] } ],
+"deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
+"informational": [ "<one-line summary of each Added/Fixed group>" ]
 }
 
 `map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `surface` is
-on every item; `detect` on every behavioural one and `verify` on every behavioural one AND every
+on every item; `detect` on every behavioural one whose surface includes `typescript` or `config`
+(style is exempt — see above) and `verify` on every behavioural one AND every
 `value-remap` (see above); `restore` wherever a default moved. `supersedes` (`<version>#<id>`, on
 the LATER item that reverses an earlier one) is carried through from the shipped manifest, or
 emitted from prose ONLY when the block itself names the exact earlier version and change — you

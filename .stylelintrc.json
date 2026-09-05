@@ -1,14 +1,10 @@
 {
-  "extends": [
-    "stylelint-config-standard-scss"
-  ],
+  "extends": ["stylelint-config-standard-scss"],
   "rules": {
     "selector-pseudo-element-no-unknown": [
       true,
       {
-        "ignorePseudoElements": [
-          "ng-deep"
-        ]
+        "ignorePseudoElements": ["ng-deep"]
       }
     ],
     "selector-type-no-unknown": [
@@ -56,9 +52,7 @@
     "declaration-block-no-redundant-longhand-properties": [
       true,
       {
-        "ignoreShorthands": [
-          "grid-template"
-        ]
+        "ignoreShorthands": ["grid-template"]
       }
     ],
     "media-feature-name-value-allowed-list": {

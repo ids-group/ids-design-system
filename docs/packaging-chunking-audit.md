@@ -15,7 +15,7 @@
 The reported problem is **real and structural**, but it is **not a tree-shaking failure** —
 nobody claimed it was. Tree-shaking works exactly as the 2026-07-27 verification found.
 What fails is **chunk placement**: a single FESM is a single module, a module is the
-bundler's atom, so the moment an *eager* consumer graph touches one DS symbol, the chunk
+bundler's atom, so the moment an _eager_ consumer graph touches one DS symbol, the chunk
 carrying **every** DS symbol the app uses anywhere becomes a static import of `main`.
 
 The two properties are orthogonal, and the fixtures below show them holding
@@ -37,10 +37,10 @@ Source: `mm-broker-platform/src/frontend/todo.md` §13g, verbatim:
 
 Three things follow that the 08-03 todo item got wrong:
 
-1. **The word "tree-shaking" never appears.** The finding is about *initial-bundle
-   placement*, nothing else.
+1. **The word "tree-shaking" never appears.** The finding is about _initial-bundle
+   placement_, nothing else.
 2. **It is filed as their own architecture debt, not an upstream ask.** The complaint is
-   that *their* `common/README.md` overstates a guarantee. Their §13f lists what they did
+   that _their_ `common/README.md` overstates a guarantee. Their §13f lists what they did
    file upstream during the same review: **one** item — the `ds-checkbox` projected-caption
    gap — and states explicitly that the four MBP-133 items already filed on 2026-07-31 were
    not duplicated. There is no upstream packaging request.
@@ -55,13 +55,13 @@ the strongest independent evidence for it:
 
 ## 2. Verified against their code
 
-| Claim | Status | Evidence |
-|---|---|---|
-| Eager chain reaches `ToastService` | confirmed | `provide-common.ts:60` `{ provide: NotificationService, useClass: ToastNotificationService }` → `toast-notification.service.ts:2,9` `import { ToastService } from '@ids-group-ltd/ids-design-system'` |
-| `ToastService` is the *only* eager DS anchor | confirmed | `platform-admin/src/app/app.routes.ts` — every route is `loadComponent`/`loadChildren`, including the layout shell |
-| Their own fix works | **refuted** | `GlobalErrorHandler` takes `NotificationService` as a field initializer (`global-error-handler.ts:13`) and is bound at root (`provide-common.ts:63`); `errorInterceptor` is registered root-level (`app.config.ts:54`) and injects it too (`error.interceptor.ts:59`). Binding the implementation only in lazy route `providers` leaves both resolving from the root injector → `NullInjectorError`. |
-| The 631 966 B / 720 kB figures | **not reproducible from artifacts on disk** | their `dist/broker-portal` is 2026-07-23 and has no lazy chunks at all; `dist/platform-admin` is 2026-07-29 and is a dev build. No production rebuild was run — measuring in another repo was out of scope. |
-| They measured 0.7.0 | **can't tell** | `package.json` *and* `package-lock.json` both pin `0.7.0` — bumped `0.6.2 → 0.6.3 → 0.7.0` on 2026-08-03, the review day (`c401942f`, `b5965305`). But the `node_modules` copy on disk is still **0.6.2** (FESM 1 113 693 B, 2026-07-23), so a local measurement without a reinstall measured 0.6.2 while CI would measure 0.7.0. Structurally identical — one entry point either way — so the mechanism is unaffected; only the byte figures are in doubt. |
+| Claim                                        | Status                                      | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| -------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Eager chain reaches `ToastService`           | confirmed                                   | `provide-common.ts:60` `{ provide: NotificationService, useClass: ToastNotificationService }` → `toast-notification.service.ts:2,9` `import { ToastService } from '@ids-group-ltd/ids-design-system'`                                                                                                                                                                                                                                                       |
+| `ToastService` is the _only_ eager DS anchor | confirmed                                   | `platform-admin/src/app/app.routes.ts` — every route is `loadComponent`/`loadChildren`, including the layout shell                                                                                                                                                                                                                                                                                                                                          |
+| Their own fix works                          | **refuted**                                 | `GlobalErrorHandler` takes `NotificationService` as a field initializer (`global-error-handler.ts:13`) and is bound at root (`provide-common.ts:63`); `errorInterceptor` is registered root-level (`app.config.ts:54`) and injects it too (`error.interceptor.ts:59`). Binding the implementation only in lazy route `providers` leaves both resolving from the root injector → `NullInjectorError`.                                                        |
+| The 631 966 B / 720 kB figures               | **not reproducible from artifacts on disk** | their `dist/broker-portal` is 2026-07-23 and has no lazy chunks at all; `dist/platform-admin` is 2026-07-29 and is a dev build. No production rebuild was run — measuring in another repo was out of scope.                                                                                                                                                                                                                                                 |
+| They measured 0.7.0                          | **can't tell**                              | `package.json` _and_ `package-lock.json` both pin `0.7.0` — bumped `0.6.2 → 0.6.3 → 0.7.0` on 2026-08-03, the review day (`c401942f`, `b5965305`). But the `node_modules` copy on disk is still **0.6.2** (FESM 1 113 693 B, 2026-07-23), so a local measurement without a reinstall measured 0.6.2 while CI would measure 0.7.0. Structurally identical — one entry point either way — so the mechanism is unaffected; only the byte figures are in doubt. |
 
 ## 3. The bundler experiment
 
@@ -74,9 +74,12 @@ labelled so the output can be grepped to prove where each landed.
 ```js
 // fixture generator (condensed) — payload lines are grep markers, not realistic code
 const filler = (name, count) =>
-  Array.from({ length: count }, (_, index) =>
-    `  const ${name}Local${index} = "${name}-payload-${index}".repeat(12);\n` +
-    `  sink.push(${name}Local${index});`).join('\n');
+  Array.from(
+    { length: count },
+    (_, index) =>
+      `  const ${name}Local${index} = "${name}-payload-${index}".repeat(12);\n` +
+      `  sink.push(${name}Local${index});`,
+  ).join('\n');
 // vendor.mjs: const sink = []; + export function <name>() { <filler> return sink.length }
 //   toastService(3) · tableComponent(400) · datePickerComponent(400) · neverUsedComponent(400)
 // lazy.mjs:   import { tableComponent, datePickerComponent } from './vendor.mjs'
@@ -89,11 +92,11 @@ const filler = (name, count) =>
 esbuild src/main.mjs --bundle --splitting --format=esm --minify --outdir=out
 ```
 
-| Variant | Module layout | Eager cost | Deferred chunk | Unused export dropped |
-|---|---|---|---|---|
-| **A — today** | one module, static eager import | `main.js` 157 B **+ a 40.1 kb chunk it statically imports** | — | ✅ |
-| **B — secondary entry points** | two modules (`services.mjs` / `components.mjs`) | `main.js` **290 B**, no chunk import | 39.9 kb, in the lazy chunk | ✅ |
-| **C — consumer-side `import()`** | one module, dynamic import in the eager root | `main.js` **202 B** | **60.6 kb** | ❌ |
+| Variant                          | Module layout                                   | Eager cost                                                  | Deferred chunk             | Unused export dropped |
+| -------------------------------- | ----------------------------------------------- | ----------------------------------------------------------- | -------------------------- | --------------------- |
+| **A — today**                    | one module, static eager import                 | `main.js` 157 B **+ a 40.1 kb chunk it statically imports** | —                          | ✅                    |
+| **B — secondary entry points**   | two modules (`services.mjs` / `components.mjs`) | `main.js` **290 B**, no chunk import                        | 39.9 kb, in the lazy chunk | ✅                    |
+| **C — consumer-side `import()`** | one module, dynamic import in the eager root    | `main.js` **202 B**                                         | **60.6 kb**                | ❌                    |
 
 Grep counts inside the chunk `main` statically imports, variant **A**:
 
@@ -105,8 +108,8 @@ neverUsed-payload    0     ← tree-shaking works
 ```
 
 Variant **A** emitted `main.js` as `import{a as t}from"./chunk-ITUI43BK.js";…` — a static
-import — while the lazy chunk shrank to 95 B because it re-imports its components *from
-that same eager chunk*. This is the mechanism, isolated: the lazy route contributes its
+import — while the lazy chunk shrank to 95 B because it re-imports its components _from
+that same eager chunk_. This is the mechanism, isolated: the lazy route contributes its
 components to a chunk it does not own.
 
 Variant **B** moved the entire 39.9 kb into the lazy chunk; `table-payload` count in
@@ -138,8 +141,8 @@ different chunks?". Both answers stand.
 What did fail is that section's **revisit trigger list**, which names (a) component count
 roughly doubling, (b) a consumer needing route-level lazy loading of a heavy component,
 (c) wanting tree-shaking independent of bundler quality. None describes what actually
-happened: *one eager service import drags the whole component layer into the initial
-chunk*. That trigger was missing, so the item could not fire.
+happened: _one eager service import drags the whole component layer into the initial
+chunk_. That trigger was missing, so the item could not fire.
 
 ## 5. Scale to the real library
 
@@ -183,7 +186,7 @@ not lost:
 - **B — one narrow services entry point** (`ToastService`, `ModalService`,
   `BodyScrollLockService`), root `public-api.ts` kept as a facade. Non-breaking, same
   symbols, no cross-entry deep-import refactor across 71 folders (73 here until 2026-09-02; v0.7.0 had 66). Measured to be the only
-  option that fixes placement *without* losing tree-shaking. **Recommended.**
+  option that fixes placement _without_ losing tree-shaking. **Recommended.**
 - **C — leave it to consumers.** Costs them tree-shaking (§3) and has to be rediscovered by
   every consumer.
 - **D — full per-component entry points.** Ideal end state, but forces every cross-entry
@@ -217,8 +220,8 @@ are ours to act on and are folded into `todo.md`; the rest are the consumer's.
    before `click` dispatches, the close handler never runs), so it needs a real-browser check
    on 0.7.0 first.
 4. **"`ds-table` sorts DISPLAY STRINGS lexically" overstates the blast radius.** `NUMERIC =
-   /^-?\d+(\.\d+)?$/` (`table.component.ts:44`) is tried before `localeCompare` (`:632-641`),
-   so bare numeric columns already sort correctly; the defect is scoped to *formatted* values.
+/^-?\d+(\.\d+)?$/` (`table.component.ts:44`) is tried before `localeCompare` (`:632-641`),
+   so bare numeric columns already sort correctly; the defect is scoped to _formatted_ values.
    **Ours** → the P1 item's framing is narrowed; the `sortValue` ask is unchanged.
 5. **The doc nit named two symbols, one is affected** — `cellTemplateMap`
    (`table.component.ts:203`) only. Ours, already split into its own `todo.md` item.
@@ -242,11 +245,11 @@ dependency order without complaint and emitted four separate FESM modules (root 
 a correct `exports` map. Consumer: an eager root injecting `ProbeService`, a `await import()` of a
 lazy module using `HeavyComponent` (600 grep-marked payload lines).
 
-| Variant | Library shape | Consumer imports from | `main.js` | Chunk `main` statically imports | Heavy payload in the eager chunk |
-|---|---|---|---|---|---|
-| **ctl** | one entry point (today) | root | 12 689 B | **118 011 B** | **600 markers** |
-| **facade** | layered entries + facade root | **root specifier** | 12 917 B | 85 800 B | **0** |
-| **deep** | layered entries + facade root | deep specifiers | 12 917 B | 85 800 B | **0** |
+| Variant    | Library shape                 | Consumer imports from | `main.js` | Chunk `main` statically imports | Heavy payload in the eager chunk |
+| ---------- | ----------------------------- | --------------------- | --------- | ------------------------------- | -------------------------------- |
+| **ctl**    | one entry point (today)       | root                  | 12 689 B  | **118 011 B**                   | **600 markers**                  |
+| **facade** | layered entries + facade root | **root specifier**    | 12 917 B  | 85 800 B                        | **0**                            |
+| **deep**   | layered entries + facade root | deep specifiers       | 12 917 B  | 85 800 B                        | **0**                            |
 
 - **The control goes red.** `ctl` reproduces the reported mechanism exactly: the lazy chunk shrinks
   to 100 B because it re-imports the components from the chunk `main` already pulled.
@@ -259,7 +262,7 @@ lazy module using `HeavyComponent` (600 grep-marked payload lines).
   placement.** Option D's headline cost in §7 — "changes how every consumer imports" — is not real
   when the root is kept as a pure re-export facade. The refactor is internal to the library.
 
-**What this does NOT prove.** Only that the pipeline and the facade shape work. Whether *this*
+**What this does NOT prove.** Only that the pipeline and the facade shape work. Whether _this_
 library partitions into acyclic entry points is a separate question — ng-packagr forbids cycles
 between entry points, which is what killed option B. The top-level edges look favourable: nothing in
 `core/`, `icons/`, `overlay/` or `theme/` imports a component at runtime, and the single edge that
@@ -276,7 +279,7 @@ Fixture: `.claude/local/entrypoint-probe/` (gitignored) — `lib/` layered, `lib
 
 ## 11. A0 — the prize measured against this library, and the graph that gates it
 
-Everything above priced the *mechanism*. The audit's own §8 left the size of the prize for THIS
+Everything above priced the _mechanism_. The audit's own §8 left the size of the prize for THIS
 library unmeasured, and §2 recorded the consumer's 631 966 B / 720 kB figures as second-hand and not
 reproducible from artefacts on disk. Both gaps are now closed. Measured 2026-09-01 against
 `dist/ds` 0.11.1 with the probe app at `.claude/local/bundle-probe/`.
@@ -288,11 +291,11 @@ holds eleven heavy components (table, date-picker, time-picker, multi-select, au
 color-picker, tree, stepper, dropzone, slider, otp-input); "initial" is `main.js` plus every chunk it
 statically imports.
 
-| Scenario | Initial raw | Initial gzip | Lazy chunk | Heavy components in the initial bundle |
-|---|---|---|---|---|
-| no eager DS symbol at all | 178 723 B | 59 019 B | 566 761 B | **0 of 11** |
-| **eager `inject(ToastService)`** | **754 962 B** | **194 763 B** | **189 B** | **11 of 11** |
-| services closure only (the post-fix shape) | 298 575 B | 86 775 B | — | 0 of 11 |
+| Scenario                                   | Initial raw   | Initial gzip  | Lazy chunk | Heavy components in the initial bundle |
+| ------------------------------------------ | ------------- | ------------- | ---------- | -------------------------------------- |
+| no eager DS symbol at all                  | 178 723 B     | 59 019 B      | 566 761 B  | **0 of 11**                            |
+| **eager `inject(ToastService)`**           | **754 962 B** | **194 763 B** | **189 B**  | **11 of 11**                           |
+| services closure only (the post-fix shape) | 298 575 B     | 86 775 B      | —          | 0 of 11                                |
 
 **One `inject(ToastService)` moves 576 239 B raw / 135 744 B gzip out of the lazy chunk and into the
 initial bundle, and collapses the lazy chunk to 189 bytes.** The initial bundle grows 4.2×. Every one
@@ -302,33 +305,33 @@ route uses them.
 **This reproduces the consumer's report independently.** Their figure was ~88% of a 720 kB initial;
 ours is 577 kB of a 755 kB initial — 76% on a different component set. The mechanism and the order of
 magnitude both hold, so §2's "not reproducible from artifacts on disk" is now superseded: it was not
-reproducible *there*, but it reproduces cleanly here.
+reproducible _there_, but it reproduces cleanly here.
 
 **What the fix is worth — CORRECTED 2026-09-02, and the first version of this paragraph was wrong.**
-It read: *"86 775 B gzip against the same probe's 59 019 B DS-free floor — so the DS's contribution
-falls from 135.7 KB gzip to 27.8 KB gzip, −80%"*. **That subtraction mixes two app shapes.**
+It read: _"86 775 B gzip against the same probe's 59 019 B DS-free floor — so the DS's contribution
+falls from 135.7 KB gzip to 27.8 KB gzip, −80%"_. **That subtraction mixes two app shapes.**
 `scenarios/placement_after_a3.ts` — the source of 86 775 — has **no `await import('./lazy-heavy')`**,
 which is why its row prints `—` in the Lazy chunk column. Its matched DS-free floor is `baseline.ts`
 at **30 646 B**, not the 59 019 B floor of `placement_clean.ts`, which does have the lazy route.
 
 That floor difference is not noise. 178 723 − 92 686 = **86 037 B raw** of the split app's initial is
-code that exists *only* because a lazy route uses the DS: 649 291 B of payload closure (from
+code that exists _only_ because a lazy route uses the DS: 649 291 B of payload closure (from
 `basic-advanced-split-audit.md:46`) minus the 566 761 B that reached the lazy chunk, plus 3 507 B of
 splitting overhead — 82 530 + 3 507 = 86 037, exactly.
 
 Each scenario against its own control:
 
-| | measured | control | DS contribution |
-| --- | --- | --- | --- |
-| eager `inject(ToastService)` | 194 763 B | `placement_clean` 59 019 B | **135 744 B** |
-| the services closure alone | 86 775 B | `baseline` 30 646 B | **56 129 B** |
+|                              | measured  | control                    | DS contribution |
+| ---------------------------- | --------- | -------------------------- | --------------- |
+| eager `inject(ToastService)` | 194 763 B | `placement_clean` 59 019 B | **135 744 B**   |
+| the services closure alone   | 86 775 B  | `baseline` 30 646 B        | **56 129 B**    |
 
 **So the fall is 135.7 → ~56 kB gzip, about −59%** — not −80%. For scale, the table's directive split
 is worth 18.9 kB gzip, so **A3 is worth roughly 4.2× the table work**, not 5.7×. It remains the
 largest single item on the plan by a wide margin.
 
 **And the post-A3 figure is a MODEL, not a measurement.** The control it needs — the services eager
-*and* the lazy route intact — cannot be built while the library has one entry point, because
+_and_ the lazy route intact — cannot be built while the library has one entry point, because
 `inject(ToastService)` drags everything (that is the `placement_eager` row, 11 of 11). Raw bytes are
 additive, so post-A3 initial ≈ 178 723 + 204 510 = **383 233 B raw** against 763 989 eager, −50% raw;
 gzip is sub-additive, so the gzip fall is somewhat better than −59% and cannot reach −80% unless the
@@ -340,7 +343,7 @@ for them to be in. `Lazy chunk: —` is the tell that it is a different experime
 
 ### What the fixtures do NOT establish — recorded 2026-09-02
 
-*(Found by the adversarial review; full record and evidence in `docs/packaging-record-review-2026-09-02.md`.)*
+_(Found by the adversarial review; full record and evidence in `docs/packaging-record-review-2026-09-02.md`.)_
 
 An adversarial pass over the measurement method found six gaps that no number here closes. They do
 not overturn any conclusion; they bound what the numbers can be used for.
@@ -354,7 +357,7 @@ not overturn any conclusion; they bound what the numbers can be used for.
   the map were absent or wrong. The types half of that gap was closed separately — see the node10
   box in `packaging-diagnosis.md` — with a real `node_modules` and a failing negative control.
 - **"Initial" is computed by grepping `main.js` only.** `run-placement.sh` scans `main.js` for
-  `from"./chunk-…"`, so a chunk statically imported by *another* eager chunk is missed, and a
+  `from"./chunk-…"`, so a chunk statically imported by _another_ eager chunk is missed, and a
   bindingless `import"./chunk-X.js"` does not match the pattern. Both under-count initial and
   over-count lazy, and both get likelier as chunk count rises — which is exactly the per-component
   arms the recommendation rests on. The Angular builder prints the correct figure in every log and
@@ -417,6 +420,6 @@ Root `public-api.ts` stays a pure re-export facade, so — per §10 — no consu
 
 - The closure figures are group-level, from the static import graph; the 86 775 B is a real build of
   the three services, so it already includes whatever the closure actually drags.
-- No consumer repo was rebuilt. The probe models the mm-broker shape; a consumer whose *eager* root
+- No consumer repo was rebuilt. The probe models the mm-broker shape; a consumer whose _eager_ root
   needs a component rather than a service pays more, and that is the case §7 named as D's trigger.
 - Whether the 64-group top layer wants to be one entry point or many is a separate design call. **Answered 2026-09-01: it must be per-component** — see `packaging-diagnosis.md` « Three follow-up measurements » item 1.

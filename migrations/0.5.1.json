@@ -436,7 +436,9 @@
         "--secondary-h",
         "--tertiary-h",
         "--secondary",
-        "--tertiary"
+        "--tertiary",
+        "--orange-h",
+        "--violet-h"
       ],
       "surface": "style",
       "restore": "--secondary-h/s/l and --tertiary-h/s/l pointed back at the --primary channels",

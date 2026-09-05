@@ -34,7 +34,10 @@ Commit this to a consumer repo's `.claude/settings.json`:
 {
   "extraKnownMarketplaces": {
     "ids": {
-      "source": { "source": "url", "url": "https://bitbucket.org/itband/ids-design-system.git" },
+      "source": {
+        "source": "url",
+        "url": "https://bitbucket.org/itband/ids-design-system.git"
+      },
       "autoUpdate": true
     }
   },

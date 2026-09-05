@@ -1,3 +1,5 @@
+@use '../../styles/focus' as focus;
+
 /* Sidenav parent container only.
  *
  * Item / group / group-label styles live in the child components
@@ -45,8 +47,7 @@
   border-radius: var(--ds-radius-control);
 
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--ds-control-focus-shadow);
+    @include focus.ring;
   }
 
   /* Pierces encapsulation because projected nodes carry the CONSUMER's attribute,
@@ -80,6 +81,9 @@
 }
 
 :host(.collapsed) {
+// Collapsed, the rail clips its own content, and the brand link fills it edge to edge.
+--focus-ring-offset: calc(-1 * var(--focus-ring-width));
+
   width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
   overflow-x: clip;

@@ -14,22 +14,36 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LOG = join(ROOT, '.design-sync', 'CHANGELOG.md');
 
 const git = (args) =>
-  execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26 }).trim();
+  execFileSync('git', args, {
+    cwd: ROOT,
+    encoding: 'utf8',
+    maxBuffer: 1 << 26,
+  }).trim();
 
 let base;
 try {
   base = git(['describe', '--tags', '--abbrev=0']);
 } catch {
-  console.log('check-design-sync-log: no tags yet, nothing to compare a cycle against.');
+  console.log(
+    'check-design-sync-log: no tags yet, nothing to compare a cycle against.',
+  );
   process.exit(0);
 }
 
-const touched = git(['diff', '--name-only', `${base}..HEAD`, '--', '.design-sync'])
+const touched = git([
+  'diff',
+  '--name-only',
+  `${base}..HEAD`,
+  '--',
+  '.design-sync',
+])
   .split('\n')
   .filter(Boolean);
 
 if (!touched.length) {
-  console.log(`check-design-sync-log: nothing under .design-sync/ changed since ${base}.`);
+  console.log(
+    `check-design-sync-log: nothing under .design-sync/ changed since ${base}.`,
+  );
   process.exit(0);
 }
 
@@ -44,7 +58,9 @@ if (!existsSync(LOG)) {
 const text = readFileSync(LOG, 'utf8');
 const start = text.search(/^## Unreleased\s*$/m);
 if (start === -1) {
-  console.error('check-design-sync-log: .design-sync/CHANGELOG.md has no `## Unreleased` heading.');
+  console.error(
+    'check-design-sync-log: .design-sync/CHANGELOG.md has no `## Unreleased` heading.',
+  );
   process.exit(1);
 }
 // No next heading on the first cycle, before any version block exists.
@@ -54,7 +70,9 @@ const section = nextHeading === -1 ? rest : rest.slice(0, nextHeading);
 
 // A `###` subsection with no bullet under it is the shape this catches: the headings get written
 // while the entries are meant to follow, and then do not.
-const bullets = section.split('\n').filter((line) => /^\s*-\s+\S/.test(line)).length;
+const bullets = section
+  .split('\n')
+  .filter((line) => /^\s*-\s+\S/.test(line)).length;
 
 if (!bullets) {
   console.error(

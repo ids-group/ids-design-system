@@ -28,7 +28,7 @@
   [class.open]="pop.opened()"
   [attr.aria-expanded]="pop.opened()"
   [attr.aria-label]="menuLabel()"
-  [disabled]="disabled()"
+  [disabled]="disabled() || !menuItems().length"
   (click)="pop.toggle(trigger)"
   (keydown)="onTriggerKeydown($event, pop, trigger)"
 >

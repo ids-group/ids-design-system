@@ -38,8 +38,8 @@
     :host ::ng-deep .pin-hover .tab:not(.active) { color: var(--_tab-label-color-hover); }
 
     /* focus: --focus-ring and --radius-sm are bare tokens (no --_* resolver) */
-    :host ::ng-deep .pin-focus .tab:not(.active) { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }
+    :host ::ng-deep .pin-focus .tab:not(.active) { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); border-radius: var(--radius-sm); }
 
     /* pills: hover fills with brand-subtle tint */
     :host ::ng-deep .pin-hover .tabs.pills .tab:not(.active) { background-color: var(--_tab-pill-bg-color-hover); color: var(--_tab-label-color-hover); }
-    :host ::ng-deep .pin-focus .tabs.pills .tab:not(.active) { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }
+    :host ::ng-deep .pin-focus .tabs.pills .tab:not(.active) { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); border-radius: var(--radius-sm); }

@@ -170,6 +170,16 @@ judgment half is yours.
   that we fixed a manifest, rewrote a note, or re-ran our own items. Correct the file so it reads
   as though it had always been right, and ship that — the reader wants the current instruction, not
   its history. Three releases in a row carried an entry of this shape before it was named here.
+
+  When a published record turns out to have described something that never worked, one question
+  settles it: **does anything the consumer DOES change?** If yes, it is an item with an `action` in
+  the current release, in the library's voice — "the ring had no gap and has one now; if you set
+  `--focus-ring-inner` to a colour to get one back, remove it". If no, say nothing, and correct the
+  old file quietly if it still misleads. What never helps is a line announcing that our earlier note
+  was wrong: where the release fixes the thing, the new entry already carries everything the reader
+  acts on, and where it does not, the people at risk are the ones still on the old version, who are
+  not reading this release either.
+
 - **Decision archaeology.** How we chose, what we first believed, which alternative we
   rejected, that an earlier note of ours was wrong, that a note was added after the release.
   The line: describing the DEFECT is what a release note is for and stays — "an override

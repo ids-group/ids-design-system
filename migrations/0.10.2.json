@@ -316,35 +316,6 @@
       "verify": "Every field showing error / warning / success renders a 14px glyph before its message text and hint rows render none; an app that set stateIcons:false shows no glyph on any state; a field with [messageIcon]=\"false\" shows none while its neighbours do."
     },
     {
-      "id": "search-drops-the-message-inputs",
-      "kind": "removed-api",
-      "old": "ds-search[hint]",
-      "new": null,
-      "action": "Delete the binding. If the field genuinely needs a label or a validation line, use ds-input — ds-search is a toolbar filter and deliberately has no message row.",
-      "appliesWhen": "Not affected: `value`, `disabled`, `hidden`, `size`, `debounce`, `clearable`, `placeholder`, `shortcut`, `showIcon`, `ariaLabel`.",
-      "pitfall": "It used to compile and do NOTHING, and it is a template type error now — which is the whole point of the change, but it means the upgrade surfaces bindings that looked fine for releases.",
-      "note": "Removed from ds-search, which never rendered any of them: `hint`, `error`, `warning`, `errors`, `invalid`, `touched`, `reserveMessage`, `messageIcon` and the `reserveMessageResolved` readback. They arrived by inheritance when search gained form binding, so the API reference advertised eight inputs whose values nothing read.",
-      "surface": [
-        "template",
-        "typescript"
-      ],
-      "verify": "Binding hint/error/warning/errors/invalid/touched/reserveMessage/messageIcon on a ds-search fails to compile, while formControl binding and the disabled surface still work.",
-      "searchHints": [
-        "ds-search",
-        "<ds-search",
-        "error=",
-        "hint=",
-        "reserveMessage",
-        "messageIcon"
-      ],
-      "detect": [
-        "<ds-search",
-        "error=",
-        "hint=",
-        "[errors]"
-      ]
-    },
-    {
       "id": "one-focus-ring-per-field",
       "kind": "behavior",
       "old": "ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper, ds-field-group",
@@ -395,7 +366,7 @@
     "DS_CONFIG: provideDsConfig() must be called ONCE per injector. Two calls in the same `providers` array do not merge - both resolve their parent with skipSelf, so the later wins and the earlier is silently lost. Merging happens across injector LEVELS (a route or component inheriting the app's config), not within one array.",
     "data-focus=\"inset\" draws the focus ring INSIDE the border box, for a subtree under an overflow:hidden ancestor that would otherwise clip it away and leave the element focusable with no indicator at all. Unlike the other focus styles it is NOT pinned to :root - set the attribute on the clipping element and the declarations inherit into the subtree.",
     "migrations/<version>.json - the files this package carries in node_modules - now carry `surface`, `detect`, `verify`, `restore`, `supersedes` and a structured `deleteList` on every published release. Read `surface` for which artifact to search, `detect` plus searchHints to find it, `verify` for the positive assertion a re-check can test, and deleteList[].find for code that is now redundant. `supersedes` points BACKWARD only: a manifest never references a later version.",
-    "components.md - the digest shipped in the package for a consumer's own agent to read - was missing ds-app-layout and ds-auth-layout entirely, and named --primary, --text-on-primary and --secondary as the active sidenav item defaults, which this release replaced with the wash. Both corrected. If you hand-rolled an app shell or a sign-in screen because the digest did not list one, or overrode those three tokens to restyle the active item, re-read those entries."
+    "components.md - the digest shipped in the package for a consumer's own agent to read - carries ds-app-layout and ds-auth-layout, and names the wash as the active sidenav item's defaults rather than --primary, --text-on-primary and --secondary, which this release replaced. If you hand-rolled an app shell or a sign-in screen, or overrode those three tokens to restyle the active item, re-read those entries."
   ],
   "deleteList": [
     {

@@ -52,12 +52,17 @@ export default {
     );
 
     function isWhitespaceSensitive(offset) {
-      return exemptRanges.some(([start, end]) => offset >= start && offset < end);
+      return exemptRanges.some(
+        ([start, end]) => offset >= start && offset < end,
+      );
     }
 
     function checkChildren(children, parentNode) {
       if (!children || !Array.isArray(children)) return;
-      if (parentNode?.sourceSpan && isWhitespaceSensitive(parentNode.sourceSpan.start.offset)) {
+      if (
+        parentNode?.sourceSpan &&
+        isWhitespaceSensitive(parentNode.sourceSpan.start.offset)
+      ) {
         return;
       }
 
@@ -78,7 +83,10 @@ export default {
             let startOffset = prevBlock.sourceSpan.end.offset;
 
             // LetDeclaration's sourceSpan excludes the trailing ";"
-            if (prevBlock.type === 'LetDeclaration' && text[startOffset] === ';') {
+            if (
+              prevBlock.type === 'LetDeclaration' &&
+              text[startOffset] === ';'
+            ) {
               startOffset++;
             }
 

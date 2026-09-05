@@ -463,14 +463,19 @@ export const SEMANTIC_BORDER: readonly ColourRow[] = [
 
 export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   {
+    "name": "--focus-ring-width",
+    "value": "2px",
+    "notes": "2px — thickness of the control focus outline. The WCAG 2.4.13 floor for a perimeter indicator; 1px fails it."
+  },
+  {
     "name": "--focus-ring-offset",
     "value": "2px",
-    "notes": "2px — gap between element edge and focus ring."
+    "notes": "2px — gap between element edge and focus outline. The gap is unpainted, so it shows whatever the control sits on. Negative draws the ring inward, past a clipping ancestor."
   },
   {
     "name": "--focus-ring-inner",
-    "value": "transparent",
-    "notes": "Inner ring band (reads canvas — flips with theme)."
+    "value": "var(--surface-default)",
+    "notes": "Separates the two bands of the field halo. Controls draw an outline whose gap is unpainted, so nothing there reads it."
   },
   {
     "name": "--focus-ring-outer-alpha",
@@ -480,7 +485,7 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   {
     "name": "--focus-ring-color",
     "value": "var(--accent)",
-    "notes": ""
+    "notes": "Colour of the control focus outline. Follows --accent, so it adapts inside a ds-color zone."
   },
   {
     "name": "--focus-ring",
@@ -1991,8 +1996,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-input-minw",
-        "value": "80px",
-        "notes": "Autocomplete input minimum width (80px)."
+        "value": "40px",
+        "notes": "Autocomplete input minimum width (40px)."
       },
       {
         "name": "--ds-autocomplete-bg-color",
@@ -2377,11 +2382,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Current crumb."
       },
       {
-        "name": "--ds-breadcrumbs-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Breadcrumb link focus ring (inherits shared control focus shadow)."
-      },
-      {
         "name": "--breadcrumbs-link-uloff",
         "value": "2px",
         "notes": "Breadcrumb link underline offset (2px)."
@@ -2393,11 +2393,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".button",
     "description": "",
     "tokens": [
-      {
-        "name": "--ds-control-focus-shadow",
-        "value": "—",
-        "notes": "Shared focus ring shadow reused across interactive controls."
-      },
       {
         "name": "--ds-button-bg-color",
         "value": "var(--c-base)",
@@ -2422,11 +2417,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-button-border",
         "value": "transparent",
         "notes": "Border colour (outline variant overrides)."
-      },
-      {
-        "name": "--ds-button-focus-shadow",
-        "value": "var(--c-ring)",
-        "notes": "Focus halo."
       },
       {
         "name": "--ds-button-press-scale",
@@ -2497,11 +2487,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-button-border-disabled",
         "value": "oklch(from var(--_button-accent) 86% 0.04 h)",
         "notes": "Disabled border — a pale tint of the accent for solid, color-mix(border 55%, surface-disabled) for outline."
-      },
-      {
-        "name": "--ds-control-focus-shadow-error",
-        "value": "—",
-        "notes": "Focus ring shadow for controls in error state (defaults to --focus-field-error)."
       },
       {
         "name": "--btn-focus-z",
@@ -2623,11 +2608,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Hover lift shadow."
       },
       {
-        "name": "--ds-card-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Focus halo on interactive cards."
-      },
-      {
         "name": "--ds-card-hover-lift",
         "value": "var(--card-hover-lift)",
         "notes": "Translate-Y on hover."
@@ -2654,41 +2634,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".checkbox",
     "description": "",
     "tokens": [
-      {
-        "name": "--ds-checkbox-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Checkbox focus ring shadow (defaults to --ds-control-focus-shadow)."
-      },
-      {
-        "name": "--ds-checkbox-bg-color",
-        "value": "var(--surface-default)",
-        "notes": "Checkbox unchecked surface fill."
-      },
-      {
-        "name": "--ds-checkbox-border-color",
-        "value": "var(--border-strong)",
-        "notes": "Checkbox unchecked border colour."
-      },
-      {
-        "name": "--ds-checkbox-hover-border-color",
-        "value": "var(--accent)",
-        "notes": "Checkbox border colour on hover (defaults to --accent)."
-      },
-      {
-        "name": "--ds-checkbox-selected-bg-color",
-        "value": "var(--accent)",
-        "notes": "Checked box fill (defaults to --accent)."
-      },
-      {
-        "name": "--ds-checkbox-selected-border-color",
-        "value": "var(--accent)",
-        "notes": "Checked box border colour (defaults to --accent)."
-      },
-      {
-        "name": "--ds-checkbox-radius",
-        "value": "var(--ds-radius-inner)",
-        "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
-      },
       {
         "name": "--ds-checkbox-label-weight",
         "value": "var(--font-weight-regular)",
@@ -3471,11 +3416,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Hover icon colour."
       },
       {
-        "name": "--ds-icon-button-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Focus halo."
-      },
-      {
         "name": "--ds-icon-button-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
@@ -3771,11 +3711,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Item label colour."
       },
       {
-        "name": "--ds-menu-item-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Menu item focus ring shadow (defaults to --ds-control-focus-shadow)."
-      },
-      {
         "name": "--ds-menu-item-hover-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "Menu item hover fill (defaults to --surface-secondary)."
@@ -3824,6 +3759,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-item-description-max-width",
         "value": "14rem",
         "notes": "Where the description wraps (default 14rem). It exists because the line is prose, and an unbounded one would stretch the menu to the width of its longest sentence."
+      },
+      {
+        "name": "--ds-menu-item-icon-size",
+        "value": "16px",
+        "notes": ""
       },
       {
         "name": "--ds-menu-item-radius",
@@ -4437,11 +4377,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Button radius."
       },
       {
-        "name": "--ds-pagination-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Pagination control focus ring (defaults to --ds-control-focus-shadow)."
-      },
-      {
         "name": "--ds-pagination-label-font-size",
         "value": "var(--font-size-s)",
         "notes": "Size of the \"Showing X–Y of Z\" range label (default --font-size-s)."
@@ -4594,11 +4529,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".radio",
     "description": "",
     "tokens": [
-      {
-        "name": "--ds-radio-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Radio focus ring (defaults to --ds-control-focus-shadow)."
-      },
       {
         "name": "--ds-radio-accent-color",
         "value": "var(--accent)",
@@ -4843,11 +4773,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Group section-label text colour."
       },
       {
-        "name": "--ds-sidenav-group-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Sidenav group header focus ring (defaults to --ds-control-focus-shadow)."
-      },
-      {
         "name": "--ds-sidenav-item-label-color",
         "value": "var(--text-secondary)",
         "notes": "Item label."
@@ -4896,11 +4821,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-sidenav-alert-color",
         "value": "var(--error)",
         "notes": "Alert pip colour."
-      },
-      {
-        "name": "--ds-sidenav-item-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Sidenav item focus ring (defaults to --ds-control-focus-shadow)."
       },
       {
         "name": "--ds-sidenav-bg-color",
@@ -5166,6 +5086,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-split-button-outline-border-color",
         "value": "var(--border-default)",
         "notes": "Outline split button border colour."
+      },
+      {
+        "name": "--ds-split-button-bg-color-active",
+        "value": "color-mix(in srgb, var(--_split-button-bg-color) 76%, black)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-split-button-outline-bg-color-active",
+        "value": "var(--surface-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-split-button-press-scale",
+        "value": "0.98",
+        "notes": ""
+      },
+      {
+        "name": "--ds-split-button-pressed-shadow",
+        "value": "none",
+        "notes": ""
       }
     ]
   },
@@ -5315,11 +5255,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".switch",
     "description": "",
     "tokens": [
-      {
-        "name": "--ds-switch-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Switch focus ring shadow (defaults to --ds-control-focus-shadow)."
-      },
       {
         "name": "--ds-switch-track-on-bg-color",
         "value": "var(--accent)",
@@ -5763,6 +5698,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "`.t-caption` text colour."
       },
       {
+        "name": "--ds-t-mono-ligatures",
+        "value": "none",
+        "notes": ""
+      },
+      {
         "name": "--ds-t-mono-font-weight",
         "value": "var(--font-weight-medium)",
         "notes": "`.t-mono` font weight."
@@ -6177,11 +6117,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Pill radius."
       },
       {
-        "name": "--ds-tabs-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Tab focus ring shadow (defaults to --ds-control-focus-shadow)."
-      },
-      {
         "name": "--ds-tab-badge-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "Tab count badge fill (defaults to --surface-secondary)."
@@ -6344,11 +6279,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-time-picker-column-height",
         "value": "13.5rem",
         "notes": "Max height of each scroll column."
-      },
-      {
-        "name": "--ds-time-picker-focus-shadow",
-        "value": "var(--ds-control-focus-shadow, var(--focus-ring))",
-        "notes": "Time picker focus ring shadow (defaults to --ds-control-focus-shadow) — read directly by the portaled panel, where a :host-scoped private token cannot reach."
       }
     ]
   },
@@ -6357,6 +6287,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".time-picker",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-time-picker-focus-shadow",
+        "value": "var(--ds-control-focus-shadow)",
+        "notes": "Time picker focus ring shadow (defaults to --ds-control-focus-shadow) — read directly by the portaled panel, where a :host-scoped private token cannot reach."
+      },
       {
         "name": "--ds-time-picker-trigger-bg-color",
         "value": "var(--surface-default)",
@@ -6515,11 +6450,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-toast-border-color",
         "value": "var(--border-default)",
         "notes": "Base border."
-      },
-      {
-        "name": "--ds-toast-focus-shadow",
-        "value": "var(--ds-control-focus-shadow)",
-        "notes": "Toast focus ring shadow (defaults to --ds-control-focus-shadow)."
       },
       {
         "name": "--ds-toast-bar-color",
@@ -7062,6 +6992,16 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--ds-control-focus-shadow",
+    "value": "var(--focus-ring)",
+    "kind": "color"
+  },
+  {
+    "name": "--ds-control-focus-shadow-error",
+    "value": "var(--focus-ring-error)",
+    "kind": "color"
+  },
+  {
     "name": "--ds-elevation-floating",
     "value": "var(--shadow-3)",
     "kind": "other"
@@ -7090,6 +7030,26 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow-error",
     "value": "var(--focus-field-error)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-check-enter-duration",
+    "value": "var(--duration-base)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-check-enter-easing",
+    "value": "var(--ease-spring)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-check-exit-duration",
+    "value": "var(--duration-fast)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-check-exit-easing",
+    "value": "var(--ease-accelerate)",
+    "kind": "other"
   },
   {
     "name": "--ds-motion-enter-large-duration",

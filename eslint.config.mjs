@@ -73,7 +73,16 @@ export default defineConfig(
         'error',
         {
           type: 'element',
-          prefix: ['ds', 'app', 'docs', 'page', 'section', 'pattern', 'tweaks', 'practice'],
+          prefix: [
+            'ds',
+            'app',
+            'docs',
+            'page',
+            'section',
+            'pattern',
+            'tweaks',
+            'practice',
+          ],
           style: 'kebab-case',
         },
       ],

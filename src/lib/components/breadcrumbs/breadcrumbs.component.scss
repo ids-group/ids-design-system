@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 
 :host {
@@ -5,7 +6,6 @@
   --_breadcrumbs-label-color-hover:     var(--ds-breadcrumbs-label-color-hover,     var(--accent));
   --_breadcrumbs-separator-icon-color: var(--ds-breadcrumbs-separator-icon-color, var(--icon-muted));
   --_breadcrumbs-current-label-color:   var(--ds-breadcrumbs-current-label-color,   var(--text-primary));
-  --_breadcrumbs-focus-shadow:          var(--ds-breadcrumbs-focus-shadow,          var(--ds-control-focus-shadow));
 
   display: inline-flex;
   min-width: 0;
@@ -22,6 +22,9 @@
   max-width: 100%;
   flex-wrap: nowrap;
   overflow: hidden;
+
+  // Clips, so the ring has to be drawn inward or the overflow eats it.
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
 
   a, .current {
     display: inline-flex;
@@ -42,8 +45,8 @@
     }
 
     &:focus-visible {
-      outline: none;
-      box-shadow: var(--_breadcrumbs-focus-shadow);
+      @include focus.ring;
+
       border-radius: var(--radius-sm);
     }
   }

@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/field-box' as field-box;
 
 :host {
@@ -44,7 +45,8 @@
     var(--font-sans);
 
   &:focus {
-    outline: none;
+    @include focus.own-indicator;
+
     border-color: var(--accent);
     box-shadow: var(--accent-focus-field);
   }

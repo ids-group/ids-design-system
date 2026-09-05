@@ -3,7 +3,7 @@
 `/design-sync` is React-only, so something has to stand between the design agent
 and an Angular library. Until 2026-09-01 that was a hand-written React port of 63
 components; it was deleted, and this is what replaced it: **ship the real
-components** as custom elements and let a *generated* React layer be the only
+components** as custom elements and let a _generated_ React layer be the only
 thing in between.
 
 ```
@@ -49,35 +49,35 @@ each `output`/`modelChange` as a **CustomEvent**. So the wrapper (see
   matching `on<Output>` prop.
 
 Two details that are easy to get wrong and are handled: a property written
-*before* the element upgrades would shadow the prototype setter forever (so the
+_before_ the element upgrades would shadow the prototype setter forever (so the
 runtime waits on `customElements.whenDefined`), and named content slots keep
 working because Angular projects light-DOM children — `<div actions="">` lands in
 `<ng-content select="[actions]">` unchanged.
 
 ## What this bought over the port
 
-| | the deleted React port | this |
-|---|---|---|
-| source of truth | a second implementation, re-ported by hand | the shipped component |
-| drift | possible, needs `check-parity.mjs` to catch it | structurally impossible |
-| CSS | `build-css.mjs` textually re-scopes `:host`/`::ng-deep` onto tags | Angular emits its own component styles |
-| CDK overlays, focus trap, scroll lock | not ported — overlays render inline | real |
-| pointer interactions (table resize/reorder, slider drag) | not ported | real |
-| type vocabulary | restated in the binding | imported from the DS's `*.types.ts` |
-| hand-written lines | ~11 000 | ~90 (`runtime.tsx`) |
+|                                                          | the deleted React port                                            | this                                   |
+| -------------------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------- |
+| source of truth                                          | a second implementation, re-ported by hand                        | the shipped component                  |
+| drift                                                    | possible, needs `check-parity.mjs` to catch it                    | structurally impossible                |
+| CSS                                                      | `build-css.mjs` textually re-scopes `:host`/`::ng-deep` onto tags | Angular emits its own component styles |
+| CDK overlays, focus trap, scroll lock                    | not ported — overlays render inline                               | real                                   |
+| pointer interactions (table resize/reorder, slider drag) | not ported                                                        | real                                   |
+| type vocabulary                                          | restated in the binding                                           | imported from the DS's `*.types.ts`    |
+| hand-written lines                                       | ~11 000                                                           | ~90 (`runtime.tsx`)                    |
 
 ## Measured
 
 Re-measured 2026-09-01 against `dev` at 0.11.1 (85 components), after merging a
 month of upstream into both branches. Gzip is `gzip -9` over the built files.
 
-| | React port | this branch |
-|---|---|---|
-| JS, minified | 251 KB raw / **51 KB gzip** | 1052 KB raw / **259 KB gzip** |
-| CSS | 450 KB raw / **83 KB gzip** | 57 KB raw / **10 KB gzip** |
-| total over the wire | **134 KB gzip** | **269 KB gzip** |
-| hand-written component code | ~11 000 lines | 0 (+ 90 lines of `runtime.tsx`) |
-| build | esbuild + tsc, seconds | `ng build` 7.8 s + esbuild |
+|                             | React port                  | this branch                     |
+| --------------------------- | --------------------------- | ------------------------------- |
+| JS, minified                | 251 KB raw / **51 KB gzip** | 1052 KB raw / **259 KB gzip**   |
+| CSS                         | 450 KB raw / **83 KB gzip** | 57 KB raw / **10 KB gzip**      |
+| total over the wire         | **134 KB gzip**             | **269 KB gzip**                 |
+| hand-written component code | ~11 000 lines               | 0 (+ 90 lines of `runtime.tsx`) |
+| build                       | esbuild + tsc, seconds      | `ng build` 7.8 s + esbuild      |
 
 So the Angular runtime and CDK cost about **+135 KB gzip** — the same delta the
 first measurement found at 0.7.0 (+136 KB), so the framework's cost is flat while
@@ -88,19 +88,19 @@ component count rises, because its CSS is what scales, not its JS.
 
 The two branches sat open from 2026-07-31 to 2026-09-01 while the DS went 0.7.0 →
 0.11.1. Merging `dev` into each was identical work — the same three conflicting
-files, all mechanical. Bringing each one back to *correct* was not:
+files, all mechanical. Bringing each one back to _correct_ was not:
 
-| | React port | this branch |
-|---|---|---|
-| `bun run check:design-sync` | **213 problems** | nothing to check — no second implementation |
-| components whose source drifted | 53 of 80 | n/a |
-| public props missing from the layer | 122 across 26 components | 0 |
-| new components with no counterpart | 6 | 0 |
-| manual work to make it correct | a re-port of 53 components | `node gen.mjs` |
+|                                     | React port                 | this branch                                 |
+| ----------------------------------- | -------------------------- | ------------------------------------------- |
+| `bun run check:design-sync`         | **213 problems**           | nothing to check — no second implementation |
+| components whose source drifted     | 53 of 80                   | n/a                                         |
+| public props missing from the layer | 122 across 26 components   | 0                                           |
+| new components with no counterpart  | 6                          | 0                                           |
+| manual work to make it correct      | a re-port of 53 components | `node gen.mjs`                              |
 
 `gen.mjs` picked the month up on its own: 81 elements / 518 inputs-outputs became
 **85 / 630**, `ng build ds-elements` is green, and the bundle builds. The port's
-own build is *also* green — `build-css.mjs` emits 85/85 blocks and
+own build is _also_ green — `build-css.mjs` emits 85/85 blocks and
 `build-bindings.mjs` produces a bundle — which is the point: nothing in the port's
 toolchain can tell that what it just built ships an API the DS no longer has. Only
 the parity gate can, and it does.
@@ -127,7 +127,7 @@ Against the demo page, real browser, not a headless approximation:
 measurements, in `../MANUAL-SURFACE.md` §1.
 
 1. **Nested custom elements** — [angular/angular#24536](https://github.com/angular/angular/issues/24536).
-   A custom element inside another custom element's template loses its projected content *and*
+   A custom element inside another custom element's template loses its projected content _and_
    its inputs. `ds-modal` renders `<ds-modal-card>`, which was also registered. `gen.mjs` now
    registers a component used inside another component's template under an alias, `ds-x-<name>`,
    which no template mentions — 31 of 85. The React wrapper emits the alias, so callers are
@@ -149,6 +149,7 @@ before `appendChild`, and React 19's detached-property assignment. All measured,
 
 **The lesson, and it is the cheap one:** four self-generated hypotheses cost several rounds;
 one web search for the symptom returned #24536 on the first page.
+
 ## Other limitations, verified
 
 - **A gate toggled long after upgrade drops the custom elements in its slot.** The projected

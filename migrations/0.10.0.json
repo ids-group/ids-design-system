@@ -299,7 +299,7 @@
       "new": null,
       "action": "Nothing for most, and a wide trigger still shows exactly N. You are affected only if you relied on a numeric cap to guarantee a fixed chip COUNT regardless of width.",
       "appliesWhen": "ds-autocomplete and ds-multi-select alike. `null` remains the only mode that never measures.",
-      "pitfall": "The stale wording is still in the wild and it contradicts this item: the input's own JSDoc in both components, and the generated docs API table built from it, still say \"A NUMBER caps at exactly that many\". That wording is stale; this item describes the behaviour.",
+      "pitfall": "Nothing errors and nothing logs: pass 6 and a narrow trigger simply shows fewer than six chips. A wide one still shows exactly six, so a check at one breakpoint proves nothing — measure at the narrowest width the field is used at.",
       "note": "A number is a CEILING that is then measured. `[maxVisibleChips]=\"2\"` means at most two, and fewer when the trigger is too narrow to hold them beside the \"+N more\" marker. Exactly-N is what made a capped trigger on a phone run out of room and wrap the text input onto a second line — the growth the cap exists to prevent. The single-line height is guaranteed instead.",
       "searchHints": [
         "maxVisibleChips",

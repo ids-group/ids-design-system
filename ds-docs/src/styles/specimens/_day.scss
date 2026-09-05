@@ -1,3 +1,5 @@
+@use 'styles/focus' as focus;
+
 /* Raw mirror of the INTERNAL ds-calendar-day cell (not public API, so docs can't render it live). Scoped `.day-specimen`
    (not `.day`) so it can't leak onto the real component. Keep resolver fallbacks in sync with calendar-day.component.scss. */
 
@@ -46,5 +48,5 @@
     background-color: var(--_date-picker-day-selected-bg-color-hover);
     color: var(--_date-picker-day-selected-label-color);
   }
-  &.is-forced-focus { outline: none; box-shadow: var(--accent-focus-ring); }
+  &.is-forced-focus { @include focus.ring; }
 }

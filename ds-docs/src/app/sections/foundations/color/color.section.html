@@ -583,13 +583,14 @@
     <code class="t-mono-inline">
       &lt;html&gt;
     </code> to change it everywhere at
-    once: <code class="t-mono-inline"> ring </code> puts the double ring on
-    fields too, <code class="t-mono-inline"> field </code> puts the halo on
-    controls, <code class="t-mono-inline"> edge </code> is a hairline flush
-    against the element, and <code class="t-mono-inline"> outline </code> swaps
-    the shadow for a real <code class="t-mono-inline"> outline </code>. Omit the
-    attribute and nothing changes. It works because 20 components already
-    resolve through the
+    once: <code class="t-mono-inline">ring</code> puts the double ring on fields
+    too, <code class="t-mono-inline">field</code> puts the halo on controls,
+    <code class="t-mono-inline">
+      edge
+    </code> is a hairline flush against the
+    element, and <code class="t-mono-inline">outline</code> swaps the shadow for
+    a real <code class="t-mono-inline">outline</code>. Omit the attribute and
+    nothing changes. It works because 20 components already resolve through the
     <code class="t-mono-inline">
       --ds-field-focus-shadow
     </code> /
@@ -611,8 +612,8 @@
       --ds-control-focus-shadow
     </code> — at zero
     specificity, so a component rule and your own CSS both out-rank it. Without
-    it a close button inside <code class="t-mono-inline"> ds-alert </code>, a
-    link in projected content, or a plain
+    it a close button inside <code class="t-mono-inline">ds-alert</code>, a link
+    in projected content, or a plain
     <code class="t-mono-inline">
       &lt;button&gt;
     </code> of yours fell through to
@@ -681,15 +682,17 @@
     <code class="t-mono-inline">
       forced-colors
     </code> every focused element
-    gets a <code class="t-mono-inline"> CanvasText </code> outline, because
+    gets a <code class="t-mono-inline">CanvasText</code> outline, because
     Windows High Contrast DROPS box-shadow and a shadow-only indicator
     disappears there completely. Consumers who
     <code class="t-mono-inline">
       &#64;use
-    </code> the DS partials à la carte
-    need <code class="t-mono-inline"> &#64;use 'styles/focus' </code> to get
-    either; the bundled <code class="t-mono-inline"> styles/ds </code> entry
-    already includes it.
+    </code> the DS partials à la carte need
+    <code class="t-mono-inline">
+      &#64;use 'styles/focus'
+    </code> to get either;
+    the bundled <code class="t-mono-inline">styles/ds</code> entry already
+    includes it.
   </p>
 
   <h3 class="block-title t-h4">
@@ -706,7 +709,7 @@
     </code> cuts the indicator
     away and leaves the element focusable with nothing to see. That ancestor is
     not exotic: clipping a card is how a full-bleed child stays inside a rounded
-    corner, and <code class="t-mono-inline"> ds-card </code> with
+    corner, and <code class="t-mono-inline">ds-card</code> with
     <code class="t-mono-inline">
       padding="none"
     </code> invites it.

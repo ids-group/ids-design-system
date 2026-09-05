@@ -3,7 +3,13 @@
 // Unreleased section with the new version + local date, open a fresh Unreleased,
 // and stage CHANGELOG.md so it lands in the release commit and tag.
 import { execSync } from 'node:child_process';
-import { existsSync, readFileSync, rmSync, writeFileSync , renameSync } from 'node:fs';
+import {
+  existsSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+  renameSync,
+} from 'node:fs';
 
 const version = process.env.npm_package_version;
 if (!version) {
@@ -40,14 +46,18 @@ const draft = 'migrations/unreleased.json';
 if (existsSync(draft)) {
   const target = `migrations/${version}.json`;
   if (existsSync(target)) {
-    console.error(`changelog: ${target} already exists — refusing to overwrite the manifest.`);
+    console.error(
+      `changelog: ${target} already exists — refusing to overwrite the manifest.`,
+    );
     process.exit(1);
   }
   let manifest;
   try {
     manifest = JSON.parse(readFileSync(draft, 'utf8'));
   } catch (error) {
-    console.error(`changelog: ${draft} is not valid JSON — fix the draft before releasing. ${error.message}`);
+    console.error(
+      `changelog: ${draft} is not valid JSON — fix the draft before releasing. ${error.message}`,
+    );
     process.exit(1);
   }
   manifest.version = version;
@@ -64,7 +74,9 @@ const draftGuide = 'migrations/unreleased';
 if (existsSync(draftGuide)) {
   const guideTarget = `migrations/${version}`;
   if (existsSync(guideTarget)) {
-    console.error(`changelog: ${guideTarget}/ already exists — refusing to overwrite the guide.`);
+    console.error(
+      `changelog: ${guideTarget}/ already exists — refusing to overwrite the guide.`,
+    );
     process.exit(1);
   }
   renameSync(draftGuide, guideTarget);
