@@ -174,17 +174,9 @@
   transform: scale(0.97);
 }
 
-/* ds-sidenav-item's own active treatment, tokens and all. Its background alone is
-   --accent-subtitle, which sits at 1.00 against the open group's tint — the rail is what
-   carries the state, which is why the DS pairs the two rather than tinting alone. */
 .link.is-active {
-  background: var(--accent-subtitle);
   color: var(--accent-strong);
   font-weight: var(--font-weight-bold);
-
-  @include focus.state-shadow(
-    inset var(--sidenav-item-rail-width) 0 0 var(--accent-strong)
-  );
 }
 
 .start-link {
@@ -219,12 +211,6 @@
 
 .nav-group {
   border-radius: var(--ds-radius-control);
-  background-color: transparent;
-  transition: background-color var(--duration-fast) var(--ease-standard);
-
-  &.is-open {
-    background-color: var(--surface-secondary);
-  }
 }
 
 .group-row {
