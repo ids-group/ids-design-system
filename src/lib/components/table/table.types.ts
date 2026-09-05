@@ -66,8 +66,9 @@ export interface TableColumn<T = unknown> {
   /** Double-click the cell to edit it inline; the committed value is emitted
    *  via the table's `cellEdited` output (the consumer owns the data update). */
   editable?: boolean;
-  /** Let the user toggle the column in the header column picker — the picker
-   *  button appears once at least one column is hideable. */
+  /** Let the user toggle the column in the header column picker. Needs the
+   *  `dsTableColumns` directive on the table: that is what renders the picker,
+   *  and without it this flag does nothing. */
   hideable?: boolean;
   /** Marks the cell whose TEXT tells the reader what the row opens, so it takes a link
    *  colour and underline while the row is hovered. Only has an effect on a
@@ -93,9 +94,10 @@ export interface TableColumn<T = unknown> {
    *  row, so the row handler fires for the rest of the row and the link navigates
    *  once. Style it with the same `--ds-table-cell-link-*` tokens as `interactive`. */
   link?: (row: T) => string | readonly unknown[] | null | undefined;
-  /** Initial visibility: start hidden. The column picker (or a bound
-   *  `hiddenKeys` set) owns the state from then on; a hidden column stays
-   *  available to `filterable` matching and sorting. */
+  /** Initial visibility: start hidden. Needs the `dsTableColumns` directive on
+   *  the table — visibility is its stage, so without it the column renders. The
+   *  picker (or a bound `hiddenKeys` set) owns the state from then on; a hidden
+   *  column stays available to `filterable` matching and sorting. */
   hidden?: boolean;
 }
 

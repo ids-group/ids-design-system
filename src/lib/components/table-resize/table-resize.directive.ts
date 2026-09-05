@@ -16,8 +16,9 @@ const RESIZE_PAGE = 64;
  * <ds-table dsTableResize [columns]="cols" [data]="rows" />
  * ```
  *
- * `[(columnWidths)]` is two-way and round-trips through `persistLayout` on the table, so a width
- * the reader dragged survives a reload.
+ * The bare attribute is the whole switch: there is no input to bind, so resizing cannot be toggled
+ * by an expression. Seed a width through the column's own `width`, read the live ones through
+ * `viewChild(DsTableResize)`, and let `persistLayout` on the table carry them across a reload.
  *
  * The handle's MARKUP stays in the table's header, gated on this directive being present, and so
  * does the width template the column panel renders. Two reasons: a per-column
