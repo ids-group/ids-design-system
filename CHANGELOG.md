@@ -111,10 +111,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   own aimed at it still matches — but it is now competing with the library's own rule instead of
   styling something nothing else touched, and the box sets `appearance: none`.
 
-- **Two classes gained members — only matters if you SUBCLASS one.** `MenuComponent` gained
-  `anyIcon`, which it computes over its content children, and `RadioComponent` gained `onClick`
-  alongside the new `deselectable` input. A subclass that declares any of those names stops
-  building, whether or not the member is public API.
+- **Three classes gained members — only matters if you SUBCLASS one.** `MenuComponent` gained
+  `anyIcon`, which it computes over its content children, `RadioComponent` gained `onClick`
+  alongside the new `deselectable` input, and `TableComponent` gained `anySelected`, a computed
+  over the selection set. A subclass that declares any of those names stops building, whether or
+  not the member is public API.
 
 
 - **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the

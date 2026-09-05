@@ -81,28 +81,32 @@
       "id": "subclass-members-grew",
       "kind": "behavior",
       "surface": "typescript",
-      "old": "class MyThing extends MenuComponent | RadioComponent",
+      "old": "class MyThing extends MenuComponent | RadioComponent | TableComponent",
       "new": null,
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
-      "appliesWhen": "Only a class that extends MenuComponent or RadioComponent. Template users need nothing; `deselectable` is a new input and nothing existing changed name or type.",
-      "pitfall": "Two of the three new members are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does. And an `override anyIcon` or `override onClick` written before this release compiles clean while overriding nothing.",
-      "note": "MenuComponent gained `anyIcon`, a computed over its content children that decides whether every row reserves the icon slot. RadioComponent gained `deselectable` (a new input) and `onClick`.",
-      "verify": "The app builds with no TS4114 / TS2415 / TS2416 naming MenuComponent or RadioComponent, and no override of anyIcon, deselectable or onClick remains in your source.",
+      "appliesWhen": "Only a class that extends MenuComponent, RadioComponent or TableComponent. Template users need nothing; `deselectable` is a new input and nothing existing changed name or type.",
+      "pitfall": "Three of the four new members are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does. And an `override anyIcon`, `override onClick` or `override anySelected` written before this release compiles clean while overriding nothing.",
+      "note": "MenuComponent gained `anyIcon`, a computed over its content children that decides whether every row reserves the icon slot. RadioComponent gained `deselectable` (a new input) and `onClick`. TableComponent gained `anySelected`, a computed over the selection set.",
+      "verify": "The app builds with no TS4114 / TS2415 / TS2416 naming MenuComponent, RadioComponent or TableComponent, and no override of anyIcon, deselectable, onClick or anySelected remains in your source.",
       "searchHints": [
         "extends MenuComponent",
         "extends RadioComponent",
+        "extends TableComponent",
         "anyIcon",
         "deselectable",
         "onClick",
+        "anySelected",
         "TS2415",
         "TS4114"
       ],
       "detect": [
         "extends MenuComponent",
         "extends RadioComponent",
+        "extends TableComponent",
         "override anyIcon",
         "override onClick",
-        "override deselectable"
+        "override deselectable",
+        "override anySelected"
       ],
       "restore": null
     },
