@@ -5590,6 +5590,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "When true, the label/icon row becomes a clickable header that expands/collapses the group."
       },
       {
+        "name": "routerLink",
+        "kind": "input",
+        "type": "string | readonly unknown[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Makes the group a destination of its own as well as a container: the header navigates here and the caret becomes a separate control, because one control cannot both go somewhere and stay to open something. Unset (the default) the whole header only expands — a heading that navigates closes the page being read the moment someone reaches for the group beneath it."
+      },
+      {
         "name": "expanded",
         "kind": "model",
         "type": "boolean",

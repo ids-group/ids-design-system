@@ -49,6 +49,44 @@
   }
 }
 
+/* A navigating header splits into a link plus its own caret button; the link keeps the whole
+   header's look so the row reads as one control either way. */
+.group-header-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.group-header-row .group-header {
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+
+  &.active {
+    color: var(--accent-strong);
+  }
+}
+
+.group-caret-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--hit-min);
+  height: var(--hit-min);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+
+  &:hover { background: var(--surface-secondary); }
+
+  &:focus-visible {
+    @include focus.ring;
+  }
+}
+
 .group-icon {
   display: inline-flex;
   align-items: center;

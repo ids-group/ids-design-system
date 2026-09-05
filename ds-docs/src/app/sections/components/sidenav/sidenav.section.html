@@ -295,6 +295,59 @@
   </div>
 
   <h3 class="block-title t-h4">
+    A group that is also a page
+  </h3>
+
+  <p class="block-desc t-s">
+    Without
+    <code class="t-mono-inline">
+      routerLink
+    </code> the whole header only opens
+    the group — a heading that navigates closes the page being read the moment
+    someone reaches for the section beneath it. Set it and the group becomes a
+    destination as well as a container: the header navigates, and the caret
+    splits off into its own control, because one control cannot both go
+    somewhere and stay to open something.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      &lt;ds-sidenav-group expandable [routerLink]="reportsRoute"&gt;
+    </code>
+  </p>
+
+  <div class="stage stage--frame">
+    <ds-sidenav brand="Atlas">
+      <ds-sidenav-group
+        label="Operations"
+        icon="truck"
+        [expandable]="true">
+        <ds-sidenav-item
+          icon="calendar"
+          label="Records" />
+
+        <ds-sidenav-item
+          icon="package"
+          label="Asset register" />
+      </ds-sidenav-group>
+
+      <ds-sidenav-group
+        label="Reports"
+        icon="activity"
+        routerLink="."
+        [expandable]="true">
+        <ds-sidenav-item
+          icon="clock"
+          label="Scheduled" />
+
+        <ds-sidenav-item
+          icon="download"
+          label="Exports" />
+      </ds-sidenav-group>
+    </ds-sidenav>
+  </div>
+
+  <h3 class="block-title t-h4">
     Collapsed
   </h3>
 
