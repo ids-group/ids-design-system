@@ -4615,7 +4615,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-progress-bar-color-warning",
-        "value": "var(--warning-hover)",
+        "value": "var(--yellow-500)",
         "notes": "Progress bar fill — warning state (defaults to --warning-hover)."
       },
       {

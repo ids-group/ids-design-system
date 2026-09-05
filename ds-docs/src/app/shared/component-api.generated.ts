@@ -253,7 +253,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"AppAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
       },
       {
         "name": "tagline",
@@ -5529,7 +5529,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"AppAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
       },
       {
         "name": "brandRoute",
