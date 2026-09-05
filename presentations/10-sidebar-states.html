@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
 <title>Состояния сайдбара — чем различать группу, открытую группу и выбранный пункт</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="answered">
 <meta name="ds-deck-evidence" content="ds-docs/src/app/layout/sidebar.component.scss нёс .nav-group.is-open{background:--surface-secondary} и рейку inset --sidenav-item-rail-width на .link.is-active — оба сняты 2026-09-06 по прямому отказу Стаса; src/lib/components/sidenav/sidenav-item.component.scss:63 держит ту же пару (заливка --accent-subtitle + рейка) как штатное состояние .active; замеры WCAG в разделе «Что показали цифры» считаны из токенов --brand-gray-100/500/900 и --blue-50/700 при --blue-h 229.">
 <link rel="stylesheet" href="ds.css">
 <style>
@@ -224,11 +224,24 @@
     padding-bottom: 1px;
   }
 
-  /* E — the restrained fill, on the ITEM only, never the group */
+  /* E — the restrained fill, on the ITEM only, never the group. --accent-muted rather than
+     --accent-subtitle: subtitle is 1.11 against white and the hover grey is 1.10, so on subtitle
+     a hovered row and the current row are the same fill. */
   .v-e .row.on {
-    background: var(--accent-subtitle);
+    background: var(--accent-muted);
     color: var(--accent-strong);
     font-weight: var(--font-weight-bold);
+  }
+
+  .chosen {
+    margin-left: auto;
+    padding: 1px 7px;
+    border-radius: var(--radius-pill);
+    background: var(--success-subtitle);
+    color: var(--success-text);
+    font: var(--font-weight-bold) var(--font-size-2xs) / 1.6 var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
   }
 
   .verdict {
@@ -480,10 +493,11 @@
     <div class="variant-head">
       <span class="variant-letter">E</span>
       <span class="variant-name">Заливка только пункта</span>
+      <span class="chosen">выбрано</span>
     </div>
     <p class="variant-note">
-      Единственная заливка во всей подборке — и она на пункте, никогда на группе. Показана, чтобы
-      было с чем сравнивать: это ровно та граница, за которой начинается отклонённое.
+      Единственная заливка во всей подборке — и она на пункте, никогда на группе. Выбрано
+      2026-09-06 и внедрено; ниже — почему это подтверждается практикой, а моя рекомендация нет.
     </p>
     <nav class="nav v-e">
       <button class="grp" type="button">
@@ -554,7 +568,36 @@
 </table>
 
 <div class="verdict">
-  <h2>Что рекомендую</h2>
+  <h2>Решение: E, и рекомендация была неверна</h2>
+  <p>
+    <strong>Выбран E.</strong> Причина не во вкусе — она в источниках, которых в первой редакции
+    этой деки не было. Material Design 3 обозначает активный пункт navigation drawer «contrasting
+    pill-shaped active indicator», то есть скруглённой заливкой. Обзор сайдбаров Linear, Notion,
+    Slack, Discord, GitHub и VS Code даёт то же самое: «filled background colors with rounded
+    corners for active navigation items». E — это отраслевая конвенция; B ею не является.
+  </p>
+  <p>
+    <strong>Как я ошибся.</strong> Ограничение «никаких заливок» было сформулировано про
+    <em>группу</em>. Я перенёс его на <em>пункт</em>, чего сказано не было, и дальше рекомендовал
+    исходя из этого — рассуждением, а не источником. Заливка группы остаётся отклонённой; заливка
+    пункта под запрет не попадала ни разу.
+  </p>
+  <p>
+    <strong>Одна поправка при внедрении.</strong> Черновик E был нарисован на
+    <code>--accent-subtitle</code>, и этот шаг оказался слишком слабым: он даёт 1.11 против белой
+    страницы, а серый ховер — 1.10. На таком фоне наведённая строка и текущая выглядели бы
+    одинаково. E выше и в коде стоит на <code>--accent-muted</code> — 1.24 против белого, текст на
+    нём 5.51, поэтому ховер, выбор и обычная строка дают три разные заливки, а не две.
+  </p>
+  <p>
+    <strong>Найдено попутно, не тронуто.</strong> Ровно та же пара стоит в самом компоненте:
+    <code>ds-sidenav-item</code> красит <code>.active</code> в <code>--accent-subtitle</code>, а
+    ховер — в <code>--surface-secondary</code>, то есть 1.11 против 1.10. У зашипленного компонента
+    активный пункт под курсором соседа неотличим от него. Это правка внешнего вида публичного
+    компонента и отдельное решение — сюда не внесена.
+  </p>
+
+  <h2>Что рекомендовалось до источников</h2>
   <p>
     <strong>B — направляющая линия.</strong> Она единственная отвечает на всё сразу тем самым
     средством, которое было названо: структурой. Вертикаль показывает, что пункты принадлежат
