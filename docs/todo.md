@@ -312,6 +312,16 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 
 **Verification debts — each is one command away, none is a known defect.**
 
+- [ ] **`.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it.**
+      `config.json` names it `readmeHeader` and `build-cards.mjs` copies it VERBATIM into
+      `.design-sync/upload/README.md`, which `build-design-sync.sh` byte-compares. A prettier run over
+      it on 2026-09-05 reflowed the fenced `tsx` block — a semicolon after `</Card>` among it — and
+      left source and committed copy 37 lines apart. The content is restored, but the exposure is
+      open: the ignore entry that guarded it was an unapproved prettier-config edit and was reverted
+      with it. Two ways out, both Stas's call: a gate in `tools/` that fails when the source and the
+      copy differ (no config touched), or one `.prettierignore` line for this file. Do not add either
+      without asking — see the memory entry on linter configs.
+
 - [ ] **Where a check mark is drawn, and which ones are the shared one.** Kept here because the
       answer is not derivable from one file — the marks live in three partials and two of the eight
       sites are deliberately different.
