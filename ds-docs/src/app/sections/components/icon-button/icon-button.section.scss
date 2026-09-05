@@ -16,3 +16,44 @@
       gap: var(--space-2);
       align-items: center;
     }
+
+    .demo-head {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: flex-end;
+      margin-bottom: var(--space-2);
+    }
+
+    .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
+    .matrix {
+      display: grid;
+      gap: var(--space-4) var(--space-6);
+      align-items: center;
+    }
+    .matrix--states {
+      grid-template-columns: 92px repeat(6, minmax(84px, 1fr));
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
+    .matrix--states .t-overline { text-align: center; }
+    .matrix-row-label { color: var(--text-secondary); }
+    .matrix-cell {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 56px;
+    }
+
+    /* State pins — force a visual state on live ds-icon-buttons by reading the
+       component's own resolvers; values never duplicated here. */
+    :host ::ng-deep .pin-hover .icon-button {
+      background-color: var(--_icon-button-bg-color-hover);
+      color: var(--_icon-button-icon-color-hover);
+    }
+    :host ::ng-deep .pin-active .icon-button {
+      background-color: var(--_icon-button-bg-color-active);
+      transform: scale(var(--_icon-button-press-scale));
+    }
+    :host ::ng-deep .pin-focus .icon-button {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+    }

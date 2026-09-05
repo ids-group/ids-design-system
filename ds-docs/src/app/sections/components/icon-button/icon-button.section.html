@@ -4,41 +4,39 @@
   title="Icon button">
   <span lede>
     Icon-only action with its own variant taxonomy — distinct from
-    <code class="t-mono-inline">
-      &lt;ds-button&gt;
-    </code>. Use for toolbars,
+    <code class="t-mono-inline"> &lt;ds-button&gt; </code>. Use for toolbars,
     table-row actions, close / back / overflow affordances.
-    <code class="t-mono-inline">
-      [ariaLabel]
-    </code> is required (an icon has no
+    <code class="t-mono-inline"> [ariaLabel] </code> is required (an icon has no
     text label). This replaces the former
-    <code class="t-mono-inline">
-      ds-button iconOnly
-    </code> flag.
+    <code class="t-mono-inline"> ds-button iconOnly </code> flag.
   </span>
 
-  <h3 class="block-title t-h4">
-    Color × variant
-  </h3>
+  <h3 class="block-title t-h4">Color × variant</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      variant
-    </code> = fill taxonomy (standard
+    <code class="t-mono-inline"> variant </code> = fill taxonomy (standard
     chromeless · filled · tonal · outlined);
-    <code class="t-mono-inline">
-      color
-    </code>
+    <code class="t-mono-inline"> color </code>
     = the shared brand/status hue family (same axis as
-    <code class="t-mono-inline">
-      ds-button
-    </code>). All combinations are valid.
+    <code class="t-mono-inline"> ds-button </code>). All combinations are valid.
     secondary/tertiary ship distinct default hues (orange / violet), independent
     of <code class="t-mono-inline">--primary</code>, so the brand rows read as
     independent roles out of the box.
   </p>
 
   <div class="brand-demo">
+    <div class="demo-head">
+      <ds-switch
+        label="Selected"
+        size="sm"
+        [(checked)]="matrixSelected" />
+
+      <ds-switch
+        label="Disabled"
+        size="sm"
+        [(checked)]="matrixDisabled" />
+    </div>
+
     <docs-matrix
       cornerLabel="color \ variant"
       [cols]="variants"
@@ -50,14 +48,84 @@
           icon="edit"
           [ariaLabel]="row.label + ' ' + variant"
           [variant]="$any(variant)"
-          [color]="$any(row.key)" />
+          [color]="$any(row.key)"
+          [selected]="matrixSelected()"
+          [disabled]="matrixDisabled()" />
       </ng-template>
     </docs-matrix>
   </div>
 
-  <h3 class="block-title t-h4">
-    Sizes
-  </h3>
+  <h3 class="block-title t-h4">States</h3>
+
+  <p class="block-desc t-s">
+    The primary colour in every variant (rows) across every state (columns).
+    Hover, focus and active are pinned for display — the pins read the
+    component's own resolvers, so no values are duplicated here.
+  </p>
+
+  <div class="matrix-scroll">
+    <div class="matrix matrix--states">
+      <div></div>
+
+      @for (state of states; track state) {
+        <div class="t-overline">
+          {{ state }}
+        </div>
+      }
+
+      @for (spec of stateVariants; track spec.variant) {
+        <div class="t-overline matrix-row-label">
+          {{ spec.label }}
+        </div>
+
+        <div class="matrix-cell">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' default'"
+            [variant]="spec.variant" />
+        </div>
+
+        <div class="matrix-cell pin-hover">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' hover'"
+            [variant]="spec.variant" />
+        </div>
+
+        <div class="matrix-cell pin-focus">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' focus'"
+            [variant]="spec.variant" />
+        </div>
+
+        <div class="matrix-cell pin-active">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' active'"
+            [variant]="spec.variant" />
+        </div>
+
+        <div class="matrix-cell">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' selected'"
+            [variant]="spec.variant"
+            [selected]="true" />
+        </div>
+
+        <div class="matrix-cell">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' disabled'"
+            [variant]="spec.variant"
+            [disabled]="true" />
+        </div>
+      }
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">Sizes</h3>
 
   <p class="block-desc t-s">
     sm 32 · md 40 (default) · lg 48 — aligned with the field / button scale.
@@ -71,9 +139,7 @@
         variant="outlined"
         size="sm" />
 
-      <code class="t-mono-inline">
-        size="sm"
-      </code>
+      <code class="t-mono-inline"> size="sm" </code>
     </div>
 
     <div class="cell">
@@ -82,9 +148,7 @@
         ariaLabel="Settings"
         variant="outlined" />
 
-      <code class="t-mono-inline">
-        size="md"
-      </code>
+      <code class="t-mono-inline"> size="md" </code>
     </div>
 
     <div class="cell">
@@ -94,20 +158,14 @@
         variant="outlined"
         size="lg" />
 
-      <code class="t-mono-inline">
-        size="lg"
-      </code>
+      <code class="t-mono-inline"> size="lg" </code>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Toggle
-  </h3>
+  <h3 class="block-title t-h4">Toggle</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [selected]
-    </code> renders the pressed state
+    <code class="t-mono-inline"> [selected] </code> renders the pressed state
     and sets <code class="t-mono-inline">aria-pressed</code>. Click to flip.
   </p>
 
@@ -119,24 +177,16 @@
         [selected]="bookmarked()"
         (pressed)="bookmarked.set(!bookmarked())" />
 
-      <code class="t-mono-inline">
-        selected = {{ bookmarked() }}
-      </code>
+      <code class="t-mono-inline"> selected = {{ bookmarked() }} </code>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Disabled
-  </h3>
+  <h3 class="block-title t-h4">Disabled</h3>
 
   <p class="block-desc t-s">
     Disabled is a muted tint of the variant's own colour (derived via
-    <code class="t-mono-inline">
-      oklch()
-    </code>), not a flat grey. Chromeless
-    <code class="t-mono-inline">
-      standard
-    </code> stays boxless — muted icon
+    <code class="t-mono-inline"> oklch() </code>), not a flat grey. Chromeless
+    <code class="t-mono-inline"> standard </code> stays boxless — muted icon
     only.
   </p>
 
@@ -148,9 +198,7 @@
         variant="standard"
         [disabled]="true" />
 
-      <code class="t-mono-inline">
-        standard
-      </code>
+      <code class="t-mono-inline"> standard </code>
     </div>
 
     <div class="cell">
@@ -160,9 +208,7 @@
         variant="filled"
         [disabled]="true" />
 
-      <code class="t-mono-inline">
-        filled
-      </code>
+      <code class="t-mono-inline"> filled </code>
     </div>
 
     <div class="cell">
@@ -172,9 +218,7 @@
         variant="tonal"
         [disabled]="true" />
 
-      <code class="t-mono-inline">
-        tonal
-      </code>
+      <code class="t-mono-inline"> tonal </code>
     </div>
 
     <div class="cell">
@@ -184,9 +228,7 @@
         variant="outlined"
         [disabled]="true" />
 
-      <code class="t-mono-inline">
-        outlined
-      </code>
+      <code class="t-mono-inline"> outlined </code>
     </div>
   </div>
 </docs-section>
