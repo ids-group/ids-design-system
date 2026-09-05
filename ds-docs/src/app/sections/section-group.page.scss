@@ -1,3 +1,4 @@
+@use 'styles/focus' as focus;
 @use 'styles/breakpoints' as bp;
 
 :host {
@@ -38,18 +39,31 @@
   margin-top: 0;
 }
 
+/* It sits on --surface-canvas, and a transparent card with the lightest border read as an artefact
+   of the page rather than as the one link that carries a reader forward. It now starts a step up
+   from the page and has somewhere to go on hover and on press. */
 .next-group {
   display: block;
   margin-top: var(--space-16);
   padding: var(--space-4) var(--space-6);
-  border: var(--border-width-default) solid var(--border-default);
+  border: var(--border-width-default) solid var(--border-strong);
   border-radius: var(--radius-md);
+  background: var(--surface-secondary);
   text-align: right;
   text-decoration: none;
-  transition: background var(--duration-fast) var(--ease-standard);
+  transition: background var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
 }
 .next-group:hover {
-  background: var(--surface-secondary);
+  background: var(--surface-muted);
+  border-color: var(--accent);
+}
+.next-group:active {
+  background: var(--surface-muted);
+  border-color: var(--accent);
+}
+.next-group:focus-visible {
+  @include focus.ring;
 }
 .next-group-label {
   display: block;
@@ -57,14 +71,14 @@
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wider);
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
 }
 .next-group-title {
   display: block;
   font-weight: var(--font-weight-semibold);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   transition: color var(--duration-fast) var(--ease-standard);
 }
 .next-group:hover .next-group-title {
-  color: var(--text-primary);
+  color: var(--accent);
 }
