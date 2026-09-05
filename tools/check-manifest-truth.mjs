@@ -30,9 +30,18 @@ const git = (args) =>
     stdio: ['ignore', 'pipe', 'ignore'],
   });
 
-const tags = git(['tag', '--list', 'v*', '--sort=v:refname'])
-  .split('\n')
-  .filter(Boolean);
+// Guarded because this module is IMPORTED by check-manifest-coverage, which runs in `lint:all`
+// and in the PR gate where this one does not. Unguarded, a checkout without git turned that
+// gate's verdict into a node stack trace from a file it never asked to run.
+const tags = (() => {
+  try {
+    return git(['tag', '--list', 'v*', '--sort=v:refname'])
+      .split('\n')
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+})();
 
 // One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
 // and the per-spawn cost dominates everything else. Nothing is written to disk.
@@ -98,10 +107,33 @@ export function surfaceAt(tag) {
   const classOwn = new Map();
   const classParent = new Map();
   const elementClass = new Map();
+  const tokenPrefixes = new Set();
 
   for (const { path: file, text } of files) {
     for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))
       if (!match[0].endsWith('-')) tokens.add(match[0]);
+
+    // A name cut off by interpolation — `--bp-#{$name}`, `--focus-ring-#{$family}` — reads as a
+    // trailing hyphen and is dropped above, so the whole family is missing from the surface and
+    // an honest item naming a member is accused of migrating from nowhere. Two answers, in order:
+    // expand the loop where its keys are in the same file, and otherwise remember the PREFIX so
+    // the member is set aside as unresolvable rather than declared absent.
+    for (const interpolated of text.matchAll(
+      /(--[a-z][a-z0-9-]*-)#\{\$([a-z][a-z0-9-]*)\}/g,
+    )) {
+      const [, prefix, variable] = interpolated;
+      tokenPrefixes.add(prefix);
+      const loop = new RegExp(
+        `@each\\s+\\$${variable}\\s*(?:,[^)]*?)?\\s+in\\s+\\$([a-z][a-z0-9-]*)`,
+      ).exec(text);
+      if (!loop) continue;
+      const map = new RegExp(`\\$${loop[1]}\\s*:\\s*\\(([\\s\\S]*?)\\n\\s*\\);`).exec(
+        text,
+      );
+      if (!map) continue;
+      for (const key of map[1].matchAll(/'([a-z0-9]+)'\s*:/gi))
+        tokens.add(`${prefix}${key[1]}`);
+    }
     // `[class.expanded]` puts a class on the element as surely as `class="expanded"` does, and
     // a component's own host classes are declared that way in its .ts, not in its template.
     for (const bound of text.matchAll(/\[class\.([a-z][a-z0-9-]*)\]/g))
@@ -150,7 +182,20 @@ export function surfaceAt(tag) {
       const from = declaration.index;
       const to = declarations[at + 1]?.index ?? text.length;
       const slice = text.slice(from, to);
-      const header = slice.slice(0, slice.indexOf('{'));
+      // The generic parameter list comes off first, by angle depth. `TableComponent<T extends
+      // object>` otherwise reads `object` as its superclass, and `<T extends { id: string }>`
+      // puts a brace before the class body so the header truncates mid-constraint. Both are
+      // silent: the chain is simply dropped, and every inherited binding reads as a phantom.
+      let header = '';
+      let depth = 0;
+      for (const character of slice) {
+        if (character === '<') depth++;
+        else if (character === '>') depth = Math.max(0, depth - 1);
+        else if (depth === 0) {
+          if (character === '{') break;
+          header += character;
+        }
+      }
       const parent = /\bextends\s+([A-Za-z_][A-Za-z0-9_]*)/.exec(header);
       if (parent) declaration[2] = parent[1];
       const own = new Set();
@@ -199,7 +244,7 @@ export function surfaceAt(tag) {
     elements.set(tag_, members);
   }
 
-  const surface = { tokens, symbols, classes, elements };
+  const surface = { tokens, symbols, classes, elements, tokenPrefixes };
   surfaceCache.set(tag, surface);
   return surface;
 }
@@ -241,7 +286,14 @@ function claims(value) {
 }
 
 function resolves(surface, claim) {
-  if (claim.kind === 'token') return surface.tokens.has(claim.name);
+  if (claim.kind === 'token') {
+    if (surface.tokens.has(claim.name)) return true;
+    // null, not false: the family exists but its members are built by interpolation, so absence
+    // here means "cannot be read", and a `false` would accuse an honest item.
+    for (const prefix of surface.tokenPrefixes ?? [])
+      if (claim.name.startsWith(prefix)) return null;
+    return false;
+  }
   if (claim.kind === 'symbol') return surface.symbols.has(claim.name);
   if (claim.kind === 'class') return surface.classes.has(claim.name);
   if (claim.kind === 'element') return surface.elements.has(claim.name);

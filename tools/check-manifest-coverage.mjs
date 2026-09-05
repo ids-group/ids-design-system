@@ -90,21 +90,43 @@ function realHooks() {
 // arrived in the same release the block was renaming things INTO. `## Unreleased` is the one
 // block HEAD really describes, so it alone reads the working tree.
 const hookCache = new Map();
+const substituted = [];
+
+const asHooks = (surface) => ({
+  tokens: surface.tokens,
+  tags: new Set(surface.elements.keys()),
+  symbols: surface.symbols,
+});
+
+const union = (a, b) => ({
+  tokens: new Set([...a.tokens, ...b.tokens]),
+  tags: new Set([...a.tags, ...b.tags]),
+  symbols: new Set([...a.symbols, ...b.symbols]),
+});
 
 function hooksAt(version) {
   if (hookCache.has(version)) return hookCache.get(version);
-  let hooks;
-  if (version === 'unreleased') hooks = realHooks();
-  else {
-    const surface = surfaceAt(`v${version}`);
-    hooks = surface
-      ? {
-          tokens: surface.tokens,
-          tags: new Set(surface.elements.keys()),
-          symbols: surface.symbols,
-        }
-      : realHooks();
-  }
+  // BOTH sides of the boundary. A release describes a two-sided event and the surface was
+  // one-sided, so anything the cycle REMOVED resolved to nothing, the entry was skipped, and no
+  // manifest line was ever asked for — the one category a consumer most needs one for. Twenty
+  // published entries name a hook that vanished in their own release; the authors spelled it in
+  // the manifest by hand every time, and the gate never enforced it.
+  const after =
+    version === 'unreleased'
+      ? realHooks()
+      : (surfaceAt(`v${version}`) ?? null) && asHooks(surfaceAt(`v${version}`));
+  const previous = boundaryTag(version);
+  const beforeSurface = previous ? surfaceAt(previous) : null;
+  // Falling back to the working tree for a PUBLISHED block is the anachronism this function
+  // exists to remove, so it cannot happen quietly: without the tag the verdict is about today's
+  // tree, not that release's.
+  if (!after && version !== 'unreleased')
+    substituted.push(`${version} (no readable tree at v${version})`);
+  const hooks = after
+    ? beforeSurface
+      ? union(after, asHooks(beforeSurface))
+      : after
+    : realHooks();
   hookCache.set(version, hooks);
   return hooks;
 }
@@ -196,12 +218,16 @@ export function patternsIn(text) {
     // surface is the whole requirement. It reaches this function from PROSE: eight published
     // manifests say "not a `--ds-*` component hook" in a note, and each one was answering for
     // every token in the library. A real placeholder keeps a literal segment of its own.
+    // Judged by BREADTH, not by segment count. `--status-*` and `--bp-*` name a family and are
+    // legitimate placeholders; `--ds-*` names the library's whole namespace — 836 tokens — which
+    // is not naming anything. Dropping the first segment unconditionally refused seven honest
+    // family forms alongside it, `--status-<lifecycle>-*` among them.
     const literal = match[0]
       .replace(/^--/, '')
       .split('-')
-      .slice(1)
       .filter((part) => part && !/[*<>]/.test(part));
-    if (!literal.length) continue;
+    if (!literal.length || (literal.length === 1 && literal[0] === 'ds'))
+      continue;
     const source = match[0]
       .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
       .replace(/<[a-z]+>/gi, '[a-z0-9-]+')
@@ -334,6 +360,15 @@ function main() {
   if (ONLY && !chosen.length) {
     console.error(
       `check-manifest-coverage: no \`## ${ONLY}\` block in CHANGELOG.md.`,
+    );
+    process.exit(1);
+  }
+
+  if (substituted.length) {
+    console.error(
+      `check-manifest-coverage: ${substituted.length} published block(s) were judged against the ` +
+        `WORKING TREE because their own tag could not be read — the verdict is about today, not ` +
+        `about that release:\n  ${substituted.join('\n  ')}`,
     );
     process.exit(1);
   }
