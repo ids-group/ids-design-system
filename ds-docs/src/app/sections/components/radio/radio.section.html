@@ -2,33 +2,27 @@
   anchor="radio"
   eyebrow="Components"
   title="Radio"
-  [apiKeys]="['radio-group']"
->
+  [apiKeys]="['radio-group']">
   <div class="stack">
     <ds-radio-group
       name="r"
-      [(value)]="dateModeValue"
-    >
+      [(value)]="dateModeValue">
       <ds-radio
         value="single"
-        label="Single date"
-      />
+        label="Single date" />
 
       <ds-radio
         value="range"
-        label="Date range"
-      />
+        label="Date range" />
 
       <ds-radio
         value="recurring"
-        label="Recurring"
-      />
+        label="Recurring" />
     </ds-radio-group>
 
     <ds-radio
       label="Disabled"
-      [disabled]="true"
-    />
+      [disabled]="true" />
   </div>
 
   <!-- Live ds-radio; pin classes on the stage read bare role tokens via ::ng-deep. -->
@@ -71,8 +65,7 @@
       <div class="state-cell-stage">
         <ds-radio
           [checked]="true"
-          [deselectable]="true"
-        />
+          [deselectable]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -84,8 +77,7 @@
       <div class="state-cell-stage pin-focus">
         <ds-radio
           [checked]="true"
-          [deselectable]="true"
-        />
+          [deselectable]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -107,8 +99,7 @@
       <div class="state-cell-stage">
         <ds-radio
           [disabled]="true"
-          [checked]="true"
-        />
+          [checked]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -125,20 +116,17 @@
     <ds-radio
       size="sm"
       label="Small"
-      [deselectable]="true"
-    />
+      [deselectable]="true" />
 
     <ds-radio
       size="md"
       label="Medium"
-      [deselectable]="true"
-    />
+      [deselectable]="true" />
 
     <ds-radio
       size="lg"
       label="Large"
-      [deselectable]="true"
-    />
+      [deselectable]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -149,8 +137,7 @@
     <ds-radio
       label="Confirm selection"
       [required]="true"
-      [deselectable]="true"
-    />
+      [deselectable]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -169,20 +156,17 @@
     <ds-radio
       label="Preferred contact"
       hint="We will only use this for account alerts."
-      [deselectable]="true"
-    />
+      [deselectable]="true" />
 
     <ds-radio
       label="Preferred contact"
       error="A selection is required to continue."
-      [deselectable]="true"
-    />
+      [deselectable]="true" />
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="radio-group"
-  >
+    data-for="radio-group">
     Radio group
   </h3>
 
@@ -203,43 +187,35 @@
     <ds-radio-group
       label="Schedule type"
       hint="Select how the event repeats."
-      [(value)]="scheduleValue"
-    >
+      [(value)]="scheduleValue">
       <ds-radio
         value="single"
-        label="Single date"
-      />
+        label="Single date" />
 
       <ds-radio
         value="range"
-        label="Date range"
-      />
+        label="Date range" />
 
       <ds-radio
         value="recurring"
-        label="Recurring"
-      />
+        label="Recurring" />
     </ds-radio-group>
 
     <ds-radio-group
       label="Schedule type"
       error="A selection is required."
-      [(value)]="invalidGroupValue"
-    >
+      [(value)]="invalidGroupValue">
       <ds-radio
         value="single"
-        label="Single date"
-      />
+        label="Single date" />
 
       <ds-radio
         value="range"
-        label="Date range"
-      />
+        label="Date range" />
 
       <ds-radio
         value="recurring"
-        label="Recurring"
-      />
+        label="Recurring" />
     </ds-radio-group>
   </div>
 </docs-section>

@@ -17,6 +17,29 @@ npm start            # serve the docs app
 npm run build:docs   # build the docs app
 ```
 
+## A `>` alone on a line is deliberate — do not tidy it away
+
+`bracketSameLine` keeps the closing bracket of a multi-attribute tag on the last attribute line, so a
+lone `>` is not prettier's normal line-breaking. Where one survives — 57 sites, all of them inline
+`<code>`, `<span>` or `<strong>` — it is prettier protecting RENDERED whitespace:
+
+```html
+Entrance played with
+<code class="t-mono-inline">
+  {{ preset() }}
+</code
+>.
+```
+
+`<code>` is inline, so a break between `</code>` and the `.` would print a space before the period.
+Prettier hides the break inside the tag instead, where whitespace is not rendered. Close it by hand
+and the next `fix:all` puts it back; force it shut and the page gains a gap before its punctuation.
+
+The setting that would remove the last 57 is `htmlWhitespaceSensitivity: "ignore"`, and it costs more
+than it buys: measured over ds-docs it drops the count 741 → 684 on its own, and pushes 101 pieces of
+punctuation onto their own line — the very space it was avoiding. `bracketSameLine` alone took the
+same 741 down to 57 and rendered nothing differently.
+
 ## Adding a component means adding an entry point
 
 Every component is its own ng-packagr entry point, so a new one needs three things and the build

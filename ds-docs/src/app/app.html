@@ -2,32 +2,27 @@
   #layout
   railLabel="Navigation"
   [restoreScroll]="true"
-  [(railOpen)]="navOpen"
->
+  [(railOpen)]="navOpen">
   <div
     sidenav
-    class="side"
-  >
+    class="side">
     <app-sidebar (navigated)="navOpen.set(false)"></app-sidebar>
   </div>
 
   <header
     topbar
-    class="mob-bar"
-  >
+    class="mob-bar">
     <ds-topbar>
       <span
         title
-        class="mob-brand"
-      >
+        class="mob-brand">
         <ds-icon-button
           variant="standard"
           icon="menu"
           ariaLabel="Open navigation"
           [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"
           [ariaControls]="layout.railOverlay() ? layout.railId : null"
-          (pressed)="navOpen.set(!navOpen())"
-        />
+          (pressed)="navOpen.set(!navOpen())" />
 
         <span class="mob-name">
           Design System
@@ -39,8 +34,7 @@
           color="neutral"
           variant="ghost"
           size="sm"
-          (pressed)="tweaks.openPanel()"
-        >
+          (pressed)="tweaks.openPanel()">
           ⚙ Tweaks
         </ds-button>
       </span>

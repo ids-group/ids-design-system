@@ -10,8 +10,7 @@
   [attr.aria-disabled]="softDisabled() ? 'true' : null"
   [attr.aria-describedby]="describedBy()"
   [disabled]="(disabled() || loading()) && !softDisabled()"
-  (click)="onClick($event)"
->
+  (click)="onClick($event)">
   <span class="button-main">
     @if (icon(); as name) {
       <ds-icon [name]="name" />
@@ -35,8 +34,7 @@
     <span
       class="reason"
       aria-hidden="true"
-      [id]="reasonId"
-    >
+      [id]="reasonId">
       {{ disabledReason() }}
     </span>
   }
@@ -47,5 +45,4 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()"
-/>
+  [reserve]="reserveMessageResolved()" />

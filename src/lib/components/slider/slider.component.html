@@ -4,13 +4,11 @@
   (pointerdown)="onTrackPointerDown($event)"
   (pointermove)="onTrackPointerMove($event)"
   (pointerup)="onTrackPointerUp($event)"
-  (pointercancel)="onTrackPointerUp($event)"
->
+  (pointercancel)="onTrackPointerUp($event)">
   <span
     class="fill"
     [style.left.%]="fill().left"
-    [style.width.%]="fill().width"
-  >
+    [style.width.%]="fill().width">
   </span>
 
   @for (thumbValue of thumbValues(); track $index; let i = $index) {
@@ -27,8 +25,7 @@
       [attr.aria-disabled]="isDisabled() ? 'true' : null"
       [attr.aria-invalid]="invalidResolved() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
-      (keydown)="onThumbKeydown($event, i)"
-    >
+      (keydown)="onThumbKeydown($event, i)">
     </span>
   }
 </div>
@@ -38,5 +35,4 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()"
-/>
+  [reserve]="reserveMessageResolved()" />

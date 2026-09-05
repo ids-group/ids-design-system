@@ -7,10 +7,8 @@
   [attr.aria-pressed]="selected() ? true : null"
   [attr.aria-expanded]="ariaExpanded()"
   [attr.aria-controls]="ariaControls()"
-  (click)="onClick($event)"
->
+  (click)="onClick($event)">
   <ds-icon
     [name]="icon()"
-    [size]="iconSize()"
-  />
+    [size]="iconSize()" />
 </button>

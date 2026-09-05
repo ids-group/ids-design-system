@@ -7,7 +7,6 @@
   [attr.aria-current]="today() ? 'date' : null"
   [attr.aria-disabled]="disabled() ? 'true' : null"
   (click)="daySelected.emit($event)"
-  (keydown)="dayKeydown.emit($event)"
->
+  (keydown)="dayKeydown.emit($event)">
   <ng-content></ng-content>
 </button>

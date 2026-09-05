@@ -17,13 +17,11 @@
       [disabled]="option.disabled || isDisabled()"
       (click)="select(option)"
       (keydown)="onKeydown($event, i)"
-      (blur)="markTouched()"
-    >
+      (blur)="markTouched()">
       @if (option.icon; as icon) {
         <ds-icon
           [name]="icon"
-          [size]="16"
-        />
+          [size]="16" />
       }
 
       <span class="seg-label">
@@ -38,5 +36,4 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()"
-/>
+  [reserve]="reserveMessageResolved()" />

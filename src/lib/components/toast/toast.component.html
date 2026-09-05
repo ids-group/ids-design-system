@@ -8,14 +8,12 @@
     <ds-spinner
       class="icon"
       size="sm"
-      aria-hidden="true"
-    />
+      aria-hidden="true" />
   } @else {
     <ds-icon
       class="icon"
       [name]="icon() ?? defaultIcon()"
-      [size]="16"
-    />
+      [size]="16" />
   }
 
   <div class="body">
@@ -32,8 +30,7 @@
     <button
       type="button"
       class="action"
-      (click)="onAction(act)"
-    >
+      (click)="onAction(act)">
       {{ act.label }}
     </button>
   }
@@ -47,12 +44,10 @@
       type="button"
       class="close"
       aria-label="Dismiss"
-      (click)="onDismiss()"
-    >
+      (click)="onDismiss()">
       <ds-icon
         name="x"
-        [size]="14"
-      />
+        [size]="14" />
     </button>
   }
 </div>

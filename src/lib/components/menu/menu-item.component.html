@@ -15,13 +15,11 @@
   (click)="onClick($event)"
   (keydown)="onKeydown($event)"
   (mouseenter)="onMouseEnter()"
-  (mouseleave)="onMouseLeave($event)"
->
+  (mouseleave)="onMouseLeave($event)">
   @if (icon()) {
     <ds-icon
       [name]="icon()!"
-      [size]="16"
-    >
+      [size]="16">
     </ds-icon>
   } @else {
     <span class="menu-item-icon">
@@ -36,8 +34,7 @@
       <span
         class="menu-item-description"
         aria-hidden="true"
-        [id]="descriptionId"
-      >
+        [id]="descriptionId">
         {{ description() }}
       </span>
     }
@@ -47,7 +44,6 @@
     <ds-icon
       class="submenu-chevron"
       name="chevronRight"
-      [size]="14"
-    />
+      [size]="14" />
   }
 </button>

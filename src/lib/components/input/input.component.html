@@ -2,21 +2,18 @@
   @if (label()) {
     <label
       class="label"
-      [attr.for]="uid"
-    >
+      [attr.for]="uid">
       {{ label() }}
       @if (required()) {
         <span
           class="req"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           *
         </span>
       } @else if (optional()) {
         <span
           class="optional-marker"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           (optional)
         </span>
       }
@@ -25,8 +22,7 @@
 
   <div
     class="control"
-    dsFieldClickFocus
-  >
+    dsFieldClickFocus>
     <span class="addon-slot prefix">
       <ng-content select="[dsInputPrefix]"></ng-content>
     </span>
@@ -55,8 +51,7 @@
       [readOnly]="isReadOnly()"
       [required]="required()"
       [(ngModel)]="value"
-      (blur)="blurred.emit(); markTouched()"
-    />
+      (blur)="blurred.emit(); markTouched()" />
 
     @if (
         canClear() &&
@@ -67,8 +62,7 @@
         type="button"
         class="clear-btn"
         aria-label="Clear input"
-        (click)="clear()"
-      >
+        (click)="clear()">
       </button>
     }
 
@@ -80,12 +74,10 @@
         [attr.aria-label]="
           passwordVisible() ? 'Hide password' : 'Show password'
         "
-        (click)="togglePassword()"
-      >
+        (click)="togglePassword()">
         <ds-icon
           [name]="passwordVisible() ? 'eye-off' : 'eye'"
-          [size]="16"
-        />
+          [size]="16" />
       </button>
     }
 
@@ -109,16 +101,14 @@
         [text]="message().text"
         [state]="message().state"
         [messageId]="hintId()"
-        [reserve]="reserveMessageResolved()"
-      />
+        [reserve]="reserveMessageResolved()" />
 
       @if (maxLength() !== null) {
         <span
           class="char-counter"
           aria-live="polite"
           aria-atomic="true"
-          [id]="counterId()"
-        >
+          [id]="counterId()">
           {{ currentLength() }}/{{ maxLength() }}
         </span>
       }

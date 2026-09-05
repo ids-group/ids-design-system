@@ -15,8 +15,7 @@
     [attr.aria-disabled]="disabled() ? 'true' : null"
     [attr.tabindex]="disabled() ? -1 : null"
     [dsTooltip]="collapsedTooltip()"
-    (click)="onActivate($event)"
-  >
+    (click)="onActivate($event)">
     <ng-container [ngTemplateOutlet]="content" />
   </a>
 } @else if (href()) {
@@ -29,8 +28,7 @@
     [attr.aria-disabled]="disabled() ? 'true' : null"
     [attr.tabindex]="disabled() ? -1 : null"
     [dsTooltip]="collapsedTooltip()"
-    (click)="onActivate($event)"
-  >
+    (click)="onActivate($event)">
     <ng-container [ngTemplateOutlet]="content" />
   </a>
 } @else {
@@ -45,8 +43,7 @@
     [attr.aria-current]="active() ? 'page' : null"
     [disabled]="disabled()"
     [dsTooltip]="collapsedTooltip()"
-    (click)="onActivate($event)"
-  >
+    (click)="onActivate($event)">
     <ng-container [ngTemplateOutlet]="content" />
   </button>
 }
@@ -56,8 +53,7 @@
     <ds-icon
       class="icon"
       [name]="icon()!"
-      [size]="20"
-    >
+      [size]="20">
     </ds-icon>
   } @else {
     <span class="icon">

@@ -2,21 +2,18 @@
   @if (label()) {
     <span
       class="label"
-      [id]="labelId"
-    >
+      [id]="labelId">
       {{ label() }}
       @if (required()) {
         <span
           class="req"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           *
         </span>
       } @else if (optional()) {
         <span
           class="optional-marker"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           (optional)
         </span>
       }
@@ -37,23 +34,20 @@
           [attr.aria-required]="required() ? 'true' : null"
           [attr.aria-invalid]="invalidResolved() ? 'true' : null"
           [attr.aria-describedby]="hintId()"
-          (click)="onTriggerClick('start')"
-        >
+          (click)="onTriggerClick('start')">
           <span class="time-value">
             {{ formatFor(rangeValue()[0]) || placeholder() }}
           </span>
 
           <ds-icon
             name="clock"
-            [size]="16"
-          />
+            [size]="16" />
         </button>
       </div>
 
       <span
         class="range-sep"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         –
       </span>
 
@@ -69,16 +63,14 @@
           [attr.aria-required]="required() ? 'true' : null"
           [attr.aria-invalid]="invalidResolved() ? 'true' : null"
           [attr.aria-describedby]="hintId()"
-          (click)="onTriggerClick('end')"
-        >
+          (click)="onTriggerClick('end')">
           <span class="time-value">
             {{ formatFor(rangeValue()[1]) || placeholder() }}
           </span>
 
           <ds-icon
             name="clock"
-            [size]="16"
-          />
+            [size]="16" />
         </button>
       </div>
     </div>
@@ -96,16 +88,14 @@
         [attr.aria-required]="required() ? 'true' : null"
         [attr.aria-invalid]="invalidResolved() ? 'true' : null"
         [attr.aria-describedby]="hintId()"
-        (click)="onTriggerClick('single')"
-      >
+        (click)="onTriggerClick('single')">
         <span class="time-value">
           {{ displayValue() }}
         </span>
 
         <ds-icon
           name="clock"
-          [size]="16"
-        />
+          [size]="16" />
       </button>
 
       @if (clearable() && hasValue()) {
@@ -114,12 +104,10 @@
           class="time-clear"
           aria-label="Clear"
           [disabled]="isDisabled()"
-          (click)="clear($event)"
-        >
+          (click)="clear($event)">
           <ds-icon
             name="x"
-            [size]="14"
-          />
+            [size]="14" />
         </button>
       }
     </div>
@@ -130,8 +118,7 @@
     [text]="message().text"
     [state]="message().state"
     [messageId]="hintId()"
-    [reserve]="reserveMessageResolved()"
-  />
+    [reserve]="reserveMessageResolved()" />
 </div>
 
 <ng-template #panel>
@@ -144,15 +131,13 @@
       [maxTime]="panelMaxTime()"
       [disabledTime]="disabledTime()"
       (timeChange)="onPick($event)"
-      (partPicked)="onPartPicked($event)"
-    />
+      (partPicked)="onPartPicked($event)" />
 
     <div class="time-footer">
       <button
         type="button"
         class="time-action"
-        (click)="setNow()"
-      >
+        (click)="setNow()">
         Now
       </button>
 
@@ -160,8 +145,7 @@
         <button
           type="button"
           class="time-action primary"
-          (click)="onEscape()"
-        >
+          (click)="onEscape()">
           Done
         </button>
       }

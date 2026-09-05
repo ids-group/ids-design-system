@@ -6,28 +6,24 @@
     <span
       class="field-message error"
       role="alert"
-      [id]="messageId()"
-    >
+      [id]="messageId()">
       @if (iconResolved(); as glyph) {
         <ds-icon
           class="message-icon"
           [name]="glyph"
-          [size]="14"
-        />
+          [size]="14" />
       }
       {{ text() }}
     </span>
   } @else {
     <span
       class="field-message {{ state() }}"
-      [id]="messageId()"
-    >
+      [id]="messageId()">
       @if (iconResolved(); as glyph) {
         <ds-icon
           class="message-icon"
           [name]="glyph"
-          [size]="14"
-        />
+          [size]="14" />
       }
       {{ text() }}
     </span>
@@ -35,7 +31,6 @@
 } @else if (reserve()) {
   <span
     class="field-message reserve-placeholder"
-    aria-hidden="true"
-  >
+    aria-hidden="true">
   </span>
 }

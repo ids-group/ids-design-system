@@ -5,11 +5,9 @@
     type="button"
     class="close"
     [attr.aria-label]="closeLabel()"
-    (click)="$event.stopPropagation(); closed.emit()"
-  >
+    (click)="$event.stopPropagation(); closed.emit()">
     <ds-icon
       name="x"
-      [size]="12"
-    />
+      [size]="12" />
   </button>
 }

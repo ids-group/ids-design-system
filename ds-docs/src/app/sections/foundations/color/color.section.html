@@ -1,8 +1,7 @@
 <docs-section
   anchor="color"
   eyebrow="Foundations"
-  title="Colour"
->
+  title="Colour">
   <span lede>
     Three layers: raw ramps (50&ndash;950) &rarr; semantic role tokens (surface,
     border, text, status) &rarr; component tokens. Components only consume role
@@ -51,8 +50,7 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--secondary)'"
-        >
+          [style.background]="'var(--secondary)'">
         </div>
 
         <div class="swatch-meta">
@@ -73,8 +71,7 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--secondary-strong)'"
-        >
+          [style.background]="'var(--secondary-strong)'">
         </div>
 
         <div class="swatch-meta">
@@ -95,8 +92,7 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--secondary-subtitle)'"
-        >
+          [style.background]="'var(--secondary-subtitle)'">
         </div>
 
         <div class="swatch-meta">
@@ -117,8 +113,7 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--secondary-on)'"
-        >
+          [style.background]="'var(--secondary-on)'">
         </div>
 
         <div class="swatch-meta">
@@ -181,19 +176,16 @@
       <ds-sidenav ds-color="secondary">
         <ds-sidenav-item
           label="Inactive"
-          icon="users"
-        />
+          icon="users" />
 
         <ds-sidenav-item
           label="Active"
           icon="layers"
-          [active]="true"
-        />
+          [active]="true" />
 
         <ds-sidenav-item
           label="Inactive"
-          icon="settings"
-        />
+          icon="settings" />
       </ds-sidenav>
 
       <code class="t-mono-inline">
@@ -207,8 +199,7 @@
       </div>
 
       <div
-        style="display: inline-flex; align-items: center; gap: var(--space-2)"
-      >
+        style="display: inline-flex; align-items: center; gap: var(--space-2)">
         <ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'" />
         Custom state
       </div>
@@ -227,8 +218,7 @@
         class="eyebrow-secondary"
         eyebrow="Forecast"
         title="Q3 outlook"
-        subtitle="Secondary-toned eyebrow"
-      />
+        subtitle="Secondary-toned eyebrow" />
 
       <code class="t-mono-inline">
         &lt;ds-page-header class="eyebrow-secondary"&gt;
@@ -244,8 +234,7 @@
         label="Forecast"
         value="12.4k"
         deltaTone="secondary"
-        [delta]="0"
-      >
+        [delta]="0">
         <span delta>
           +8% projected
         </span>
@@ -319,15 +308,13 @@
 
         <ds-button
           color="tertiary"
-          variant="tonal"
-        >
+          variant="tonal">
           Tonal
         </ds-button>
 
         <ds-button
           color="tertiary"
-          variant="ghost"
-        >
+          variant="ghost">
           Ghost
         </ds-button>
       </div>
@@ -394,8 +381,7 @@
           <div class="swatch">
             <div
               class="swatch-chip"
-              [style.background]="'var(' + swatch.token + ')'"
-            >
+              [style.background]="'var(' + swatch.token + ')'">
             </div>
 
             <div class="swatch-meta">
@@ -405,8 +391,7 @@
                   swatch.inverted
                     ? 'var(--text-inverted)'
                     : 'var(--text-primary)'
-                "
-              >
+                ">
                 {{ swatch.name }}
               </div>
 
@@ -452,8 +437,7 @@
           <div class="ramp-stop">
             <div
               class="ramp-chip"
-              [style.background]="'var(--' + ramp.prefix + '-' + stop + ')'"
-            >
+              [style.background]="'var(--' + ramp.prefix + '-' + stop + ')'">
               <span class="ramp-num t-mono-inline">
                 {{ stop }}
               </span>
@@ -489,8 +473,7 @@
       <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--ring"
-          type="button"
-        >
+          type="button">
           Focus ring
         </button>
       </div>
@@ -510,8 +493,7 @@
       <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--field"
-          type="button"
-        >
+          type="button">
           Field halo
         </button>
       </div>
@@ -531,8 +513,7 @@
       <div class="halo-stage-well">
         <button
           class="halo-demo halo-demo--error"
-          type="button"
-        >
+          type="button">
           Danger ring
         </button>
       </div>
@@ -552,8 +533,7 @@
       <div class="halo-stage-well halo-stage-well--inverted">
         <button
           class="halo-demo halo-demo--inverted"
-          type="button"
-        >
+          type="button">
           Inverted
         </button>
       </div>
@@ -687,12 +667,10 @@
     disappears there completely. Consumers who
     <code class="t-mono-inline">
       &#64;use
-    </code> the DS partials à la carte need
-    <code class="t-mono-inline">
-      &#64;use 'styles/focus'
-    </code> to get either;
-    the bundled <code class="t-mono-inline">styles/ds</code> entry already
-    includes it.
+    </code> the DS partials à la carte
+    need <code class="t-mono-inline"> &#64;use 'styles/focus' </code> to get
+    either; the bundled <code class="t-mono-inline">styles/ds</code> entry
+    already includes it.
   </p>
 
   <h3 class="block-title t-h4">
@@ -737,8 +715,7 @@
       <div class="clip-well">
         <button
           class="clip-fill"
-          type="button"
-        >
+          type="button">
           Tab here — no ring
         </button>
       </div>
@@ -757,12 +734,10 @@
     <div class="halo-cell">
       <div
         class="clip-well"
-        data-focus="inset"
-      >
+        data-focus="inset">
         <button
           class="clip-fill"
-          type="button"
-        >
+          type="button">
           Tab here — ring inside
         </button>
       </div>
@@ -798,8 +773,7 @@
   <div class="surface-stage">
     <div
       class="surface-cell"
-      style="background: var(--surface-canvas)"
-    >
+      style="background: var(--surface-canvas)">
       <div class="surface-cell-label">
         canvas
       </div>
@@ -811,8 +785,7 @@
 
     <div
       class="surface-cell"
-      style="background: var(--surface-default)"
-    >
+      style="background: var(--surface-default)">
       <div class="surface-cell-label">
         default
       </div>
@@ -824,8 +797,7 @@
 
     <div
       class="surface-cell"
-      style="background: var(--surface-secondary)"
-    >
+      style="background: var(--surface-secondary)">
       <div class="surface-cell-label">
         secondary
       </div>
@@ -837,8 +809,7 @@
 
     <div
       class="surface-cell"
-      style="background: var(--surface-tint)"
-    >
+      style="background: var(--surface-tint)">
       <div class="surface-cell-label">
         tint
       </div>
@@ -867,8 +838,7 @@
 
     <div
       class="surface-cell surface-cell--inverted"
-      style="background: var(--surface-inverted)"
-    >
+      style="background: var(--surface-inverted)">
       <div class="surface-cell-label">
         inverted
       </div>

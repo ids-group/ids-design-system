@@ -1,8 +1,7 @@
 <docs-section
   anchor="slider"
   eyebrow="Components"
-  title="Slider"
->
+  title="Slider">
   <span lede>
     Single-value and range sliders for selecting a numeric value or interval
     within a bounded scale.
@@ -27,8 +26,7 @@
         [min]="0"
         [max]="100"
         [step]="1"
-        [(value)]="brightness"
-      />
+        [(value)]="brightness" />
 
       <p class="t-s">
         {{ brightness() }}%
@@ -56,8 +54,7 @@
         [range]="true"
         [min]="0"
         [max]="100"
-        [(value)]="price"
-      />
+        [(value)]="price" />
 
       <p class="t-s">
         £{{ price()[0] }} – £{{ price()[1] }}
@@ -88,8 +85,7 @@
         hint="Drag to adjust the output volume."
         [min]="0"
         [max]="100"
-        [step]="1"
-      />
+        [step]="1" />
     </div>
   </div>
 
@@ -104,8 +100,7 @@
         error="Value is outside the allowed range."
         [min]="0"
         [max]="100"
-        [step]="1"
-      />
+        [step]="1" />
     </div>
   </div>
 </docs-section>

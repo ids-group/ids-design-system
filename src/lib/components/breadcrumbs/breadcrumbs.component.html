@@ -1,8 +1,7 @@
 <nav
   class="breadcrumbs"
   aria-label="Breadcrumb"
-  [class.is-static]="!effectiveClickable()"
->
+  [class.is-static]="!effectiveClickable()">
   @for (item of resolvedItems(); track $index; let last = $last) {
     @if (
         item.href &&
@@ -11,13 +10,11 @@
       ) {
       <a
         [href]="item.href"
-        (click)="onNav($event, item)"
-      >
+        (click)="onNav($event, item)">
         @if (item.icon) {
           <ds-icon
             [name]="item.icon"
-            [size]="14"
-          />
+            [size]="14" />
         }
 
         @if (item.label) {
@@ -29,13 +26,11 @@
     } @else {
       <span
         [class.current]="last"
-        [attr.aria-current]="last ? 'page' : null"
-      >
+        [attr.aria-current]="last ? 'page' : null">
         @if (item.icon) {
           <ds-icon
             [name]="item.icon"
-            [size]="14"
-          />
+            [size]="14" />
         }
 
         @if (item.label) {
@@ -49,12 +44,10 @@
     @if (!last) {
       <span
         class="sep"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         <ds-icon
           [name]="effectiveSeparator()"
-          [size]="12"
-        />
+          [size]="12" />
       </span>
     }
   }

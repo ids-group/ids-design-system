@@ -1,8 +1,7 @@
 <docs-section
   anchor="popover"
   eyebrow="Components"
-  title="Popover"
->
+  title="Popover">
   <span lede>
     Light surface panel anchored to a trigger element. Use for contextual info
     that needs a few lines of content and at most one action — for richer
@@ -19,22 +18,19 @@
     <ds-popover [staticPreview]="true">
       <h4
         class="t-s-bold"
-        style="margin: 0 0 var(--space-1)"
-      >
+        style="margin: 0 0 var(--space-1)">
         Recompute summary
       </h4>
 
       <p
         class="t-s"
-        style="color: var(--text-secondary); margin: 0 0 var(--space-3)"
-      >
+        style="color: var(--text-secondary); margin: 0 0 var(--space-3)">
         3 Logistics plans · 12 Resource allocations · 2 Sub-records affected.
       </p>
 
       <ds-button
         size="sm"
-        style="width: 100%"
-      >
+        style="width: 100%">
         View details
       </ds-button>
     </ds-popover>
@@ -54,30 +50,26 @@
       color="neutral"
       variant="outline"
       [ariaExpanded]="pop.opened()"
-      (pressed)="pop.toggle(trigger.buttonRef().nativeElement)"
-    >
+      (pressed)="pop.toggle(trigger.buttonRef().nativeElement)">
       Open summary
     </ds-button>
 
     <ds-popover #pop>
       <h4
         class="t-s-bold"
-        style="margin: 0 0 var(--space-1)"
-      >
+        style="margin: 0 0 var(--space-1)">
         Recompute summary
       </h4>
 
       <p
         class="t-s"
-        style="color: var(--text-secondary); margin: 0 0 var(--space-3)"
-      >
+        style="color: var(--text-secondary); margin: 0 0 var(--space-3)">
         3 Logistics plans · 12 Resource allocations.
       </p>
 
       <ds-button
         size="sm"
-        style="width: 100%"
-      >
+        style="width: 100%">
         View details
       </ds-button>
     </ds-popover>
@@ -108,19 +100,16 @@
         color="neutral"
         variant="outline"
         [ariaExpanded]="popStart.opened()"
-        (pressed)="popStart.toggle(startTrigger.buttonRef().nativeElement)"
-      >
+        (pressed)="popStart.toggle(startTrigger.buttonRef().nativeElement)">
         Align start
       </ds-button>
 
       <ds-popover
         #popStart
-        align="start"
-      >
+        align="start">
         <p
           class="t-s"
-          style="margin: 0"
-        >
+          style="margin: 0">
           Panel left-aligned to the trigger.
         </p>
       </ds-popover>
@@ -132,19 +121,16 @@
         color="neutral"
         variant="outline"
         [ariaExpanded]="popEnd.opened()"
-        (pressed)="popEnd.toggle(endTrigger.buttonRef().nativeElement)"
-      >
+        (pressed)="popEnd.toggle(endTrigger.buttonRef().nativeElement)">
         Align end
       </ds-button>
 
       <ds-popover
         #popEnd
-        align="end"
-      >
+        align="end">
         <p
           class="t-s"
-          style="margin: 0"
-        >
+          style="margin: 0">
           Panel right-aligned to the trigger.
         </p>
       </ds-popover>
@@ -179,19 +165,16 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popTop.opened()"
-      (pressed)="popTop.toggle(topTrigger.buttonRef().nativeElement)"
-    >
+      (pressed)="popTop.toggle(topTrigger.buttonRef().nativeElement)">
       Top
     </ds-button>
 
     <ds-popover
       #popTop
-      placement="top"
-    >
+      placement="top">
       <p
         class="t-s"
-        style="margin: 0"
-      >
+        style="margin: 0">
         Appears above the trigger.
       </p>
     </ds-popover>
@@ -202,19 +185,16 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popBottom.opened()"
-      (pressed)="popBottom.toggle(bottomTrigger.buttonRef().nativeElement)"
-    >
+      (pressed)="popBottom.toggle(bottomTrigger.buttonRef().nativeElement)">
       Bottom
     </ds-button>
 
     <ds-popover
       #popBottom
-      placement="bottom"
-    >
+      placement="bottom">
       <p
         class="t-s"
-        style="margin: 0"
-      >
+        style="margin: 0">
         Appears below the trigger.
       </p>
     </ds-popover>
@@ -225,19 +205,16 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popLeft.opened()"
-      (pressed)="popLeft.toggle(leftTrigger.buttonRef().nativeElement)"
-    >
+      (pressed)="popLeft.toggle(leftTrigger.buttonRef().nativeElement)">
       Left
     </ds-button>
 
     <ds-popover
       #popLeft
-      placement="left"
-    >
+      placement="left">
       <p
         class="t-s"
-        style="margin: 0"
-      >
+        style="margin: 0">
         Appears to the left.
       </p>
     </ds-popover>
@@ -248,19 +225,16 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popRight.opened()"
-      (pressed)="popRight.toggle(rightTrigger.buttonRef().nativeElement)"
-    >
+      (pressed)="popRight.toggle(rightTrigger.buttonRef().nativeElement)">
       Right
     </ds-button>
 
     <ds-popover
       #popRight
-      placement="right"
-    >
+      placement="right">
       <p
         class="t-s"
-        style="margin: 0"
-      >
+        style="margin: 0">
         Appears to the right.
       </p>
     </ds-popover>
@@ -285,20 +259,17 @@
       [ariaExpanded]="popArrowBottom.opened()"
       (pressed)="
         popArrowBottom.toggle(arrowBottomTrigger.buttonRef().nativeElement)
-      "
-    >
+      ">
       Arrow bottom
     </ds-button>
 
     <ds-popover
       #popArrowBottom
       placement="bottom"
-      arrow
-    >
+      arrow>
       <p
         class="t-s"
-        style="margin: 0"
-      >
+        style="margin: 0">
         Arrow points up at the trigger.
       </p>
     </ds-popover>
@@ -309,20 +280,17 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popArrowTop.opened()"
-      (pressed)="popArrowTop.toggle(arrowTopTrigger.buttonRef().nativeElement)"
-    >
+      (pressed)="popArrowTop.toggle(arrowTopTrigger.buttonRef().nativeElement)">
       Arrow top
     </ds-button>
 
     <ds-popover
       #popArrowTop
       placement="top"
-      arrow
-    >
+      arrow>
       <p
         class="t-s"
-        style="margin: 0"
-      >
+        style="margin: 0">
         Arrow points down at the trigger.
       </p>
     </ds-popover>
@@ -335,20 +303,17 @@
       [ariaExpanded]="popArrowRight.opened()"
       (pressed)="
         popArrowRight.toggle(arrowRightTrigger.buttonRef().nativeElement)
-      "
-    >
+      ">
       Arrow right
     </ds-button>
 
     <ds-popover
       #popArrowRight
       placement="right"
-      arrow
-    >
+      arrow>
       <p
         class="t-s"
-        style="margin: 0"
-      >
+        style="margin: 0">
         Arrow points left at the trigger.
       </p>
     </ds-popover>

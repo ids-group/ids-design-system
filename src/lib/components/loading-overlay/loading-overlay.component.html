@@ -1,7 +1,6 @@
 <div
   class="content"
-  [attr.inert]="loading() && inertContent() ? '' : null"
->
+  [attr.inert]="loading() && inertContent() ? '' : null">
   <ng-content></ng-content>
 </div>
 
@@ -9,8 +8,7 @@
   <div
     class="scrim"
     [class.blur]="blur()"
-    [style.top]="insetTop()"
-  >
+    [style.top]="insetTop()">
     <ds-spinner [size]="spinnerSize()" />
 
     @if (label()) {

@@ -2,21 +2,18 @@
   @if (label()) {
     <label
       class="label"
-      [attr.for]="uid"
-    >
+      [attr.for]="uid">
       {{ label() }}
       @if (required()) {
         <span
           class="req"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           *
         </span>
       } @else if (optional()) {
         <span
           class="optional-marker"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           (optional)
         </span>
       }
@@ -25,8 +22,7 @@
 
   <div
     class="control"
-    dsFieldClickFocus
-  >
+    dsFieldClickFocus>
     <textarea
       #control
       [id]="uid"
@@ -48,8 +44,7 @@
       [style.max-height]="autosizeMaxHeight()"
       [style.overflow-y]="autosize() && maxRows() ? 'auto' : null"
       [(ngModel)]="value"
-      (blur)="markTouched()"
-    >
+      (blur)="markTouched()">
     </textarea>
   </div>
 
@@ -64,16 +59,14 @@
         [text]="message().text"
         [state]="message().state"
         [messageId]="hintId()"
-        [reserve]="reserveMessageResolved()"
-      />
+        [reserve]="reserveMessageResolved()" />
 
       @if (maxLength() !== null) {
         <span
           class="char-counter"
           aria-live="polite"
           aria-atomic="true"
-          [id]="counterId()"
-        >
+          [id]="counterId()">
           {{ currentLength() }}/{{ maxLength() }}
         </span>
       }

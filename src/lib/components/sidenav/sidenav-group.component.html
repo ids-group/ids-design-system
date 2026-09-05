@@ -6,14 +6,12 @@
     type="button"
     class="group-header"
     [attr.aria-expanded]="expanded()"
-    (click)="toggle()"
-  >
+    (click)="toggle()">
     @if (icon()) {
       <ds-icon
         class="group-icon"
         [name]="icon()!"
-        [size]="18"
-      >
+        [size]="18">
       </ds-icon>
     } @else {
       <!-- `[ds-group-icon]` is selector-distinct from `[icon]` slots used on
@@ -34,8 +32,7 @@
       class="group-caret"
       name="chevronDown"
       [class.open]="expanded()"
-      [size]="14"
-    >
+      [size]="14">
     </ds-icon>
   </button>
 } @else if (label()) {
@@ -47,7 +44,6 @@
 <div
   class="group-body"
   [class.hidden]="expandable() && !expanded()"
-  [attr.inert]="expandable() && !expanded() ? '' : null"
->
+  [attr.inert]="expandable() && !expanded() ? '' : null">
   <ng-content></ng-content>
 </div>

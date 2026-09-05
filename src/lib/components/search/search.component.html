@@ -1,13 +1,11 @@
 <div
   class="search"
   dsFieldClickFocus
-  [class]="sizeResolved()"
->
+  [class]="sizeResolved()">
   @if (showIcon()) {
     <ds-icon
       name="search"
-      [size]="16"
-    >
+      [size]="16">
     </ds-icon>
   }
 
@@ -20,8 +18,7 @@
     [disabled]="isDisabled()"
     (ngModelChange)="onText($event)"
     (keydown.enter)="onSubmit()"
-    (blur)="markTouched()"
-  />
+    (blur)="markTouched()" />
 
   @if (clearable() && text()) {
     <button
@@ -29,12 +26,10 @@
       class="search-clear"
       aria-label="Clear search"
       [disabled]="isDisabled()"
-      (click)="clear()"
-    >
+      (click)="clear()">
       <ds-icon
         name="x"
-        [size]="14"
-      >
+        [size]="14">
       </ds-icon>
     </button>
   }

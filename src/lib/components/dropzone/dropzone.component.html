@@ -3,8 +3,7 @@
   [attr.aria-disabled]="disabled() ? 'true' : null"
   (dragover)="onDragOver($event)"
   (dragleave)="onDragLeave()"
-  (drop)="onDrop($event)"
->
+  (drop)="onDrop($event)">
   <input
     type="file"
     class="dz-input"
@@ -12,14 +11,12 @@
     [attr.accept]="accept() || null"
     [multiple]="single() ? false : multiple()"
     [disabled]="disabled()"
-    (change)="onPickerChange($event)"
-  />
+    (change)="onPickerChange($event)" />
 
   @if (files().length === 0) {
     <ds-icon
       name="upload"
-      [size]="24"
-    >
+      [size]="24">
     </ds-icon>
 
     <div class="title">
@@ -38,8 +35,7 @@
           <ds-icon
             class="icon"
             [name]="fileIcon(file.state)"
-            [size]="20"
-          >
+            [size]="20">
           </ds-icon>
 
           <div class="main">
@@ -55,8 +51,7 @@
               <div class="progress">
                 <div
                   class="progress-fill"
-                  [style.width.%]="file.progress"
-                >
+                  [style.width.%]="file.progress">
                 </div>
               </div>
             }
@@ -68,12 +63,10 @@
             [attr.aria-label]="'Remove ' + file.name"
             (click)="
               onRemove(file); $event.preventDefault(); $event.stopPropagation()
-            "
-          >
+            ">
             <ds-icon
               name="x"
-              [size]="14"
-            >
+              [size]="14">
             </ds-icon>
           </button>
         </div>

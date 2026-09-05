@@ -5,8 +5,7 @@
     [class.closing]="closing()"
     (pointerdown)="backdropPress.down($event)"
     (pointerup)="onBackdropRelease($event)"
-    (keydown.escape)="onEscape()"
-  >
+    (keydown.escape)="onEscape()">
     <div
       #sheet
       cdkTrapFocus
@@ -23,23 +22,20 @@
       "
       [style.height]="snapHeight()"
       [style.maxHeight]="snapHeight() ? snapHeight() : null"
-      (animationend)="onLeaveEnd($event)"
-    >
+      (animationend)="onLeaveEnd($event)">
       <div
         class="grab"
         (pointerdown)="onGrabStart($event)"
         (pointermove)="onGrabMove($event)"
         (pointerup)="onGrabEnd()"
-        (pointercancel)="onGrabEnd()"
-      >
+        (pointercancel)="onGrabEnd()">
         <div class="sheet-handle"></div>
       </div>
 
       @if (title()) {
         <h3
           class="sheet-title"
-          [id]="titleId"
-        >
+          [id]="titleId">
           {{ title() }}
         </h3>
       }

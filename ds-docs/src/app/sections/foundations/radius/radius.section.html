@@ -1,8 +1,7 @@
 <docs-section
   anchor="radius"
   eyebrow="Foundations"
-  title="Radius"
->
+  title="Radius">
   <span lede>
     Five-stop scale (0 / sm / md / lg / 2xl) plus pill — but reach for a ROLE,
     not a stop:
@@ -41,8 +40,7 @@
     @for (r of radii; track r.name) {
       <div
         class="radius-tile"
-        [style.borderRadius]="'var(--radius-' + r.name + ')'"
-      >
+        [style.borderRadius]="'var(--radius-' + r.name + ')'">
         <code class="t-mono-inline token-name">
           --radius-{{ r.name }}
         </code>
@@ -92,8 +90,7 @@
       <div class="radius-role-row">
         <div
           class="radius-role-swatch"
-          [style.borderRadius]="'var(' + role.token + ')'"
-        >
+          [style.borderRadius]="'var(' + role.token + ')'">
           <code class="t-mono-inline">
             {{ role.token }}
           </code>
@@ -247,15 +244,13 @@
         <div class="demo-hero">
           <div
             class="t-overline"
-            style="color: var(--text-on-primary); opacity: 0.7"
-          >
+            style="color: var(--text-on-primary); opacity: 0.7">
             Q3 summary
           </div>
 
           <div
             class="t-h4"
-            style="color: var(--text-on-primary)"
-          >
+            style="color: var(--text-on-primary)">
             All systems green
           </div>
         </div>

@@ -20,8 +20,7 @@ import { NgTemplateOutlet } from '@angular/common';
           <div class="stage">
             <ng-container
               [ngTemplateOutlet]="cell()"
-              [ngTemplateOutletContext]="{ $implicit: item }"
-            />
+              [ngTemplateOutletContext]="{ $implicit: item }" />
           </div>
 
           @if (showCaption()) {

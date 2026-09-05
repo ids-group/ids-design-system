@@ -1,8 +1,7 @@
 <div class="scroll">
   <div
     class="matrix"
-    [style.grid-template-columns]="gridCols()"
-  >
+    [style.grid-template-columns]="gridCols()">
     <div class="t-overline corner">
       {{ cornerLabel() }}
     </div>
@@ -18,8 +17,7 @@
         @if (row.dot) {
           <span
             class="dot"
-            [style.background]="row.dot"
-          >
+            [style.background]="row.dot">
           </span>
         }
 
@@ -37,8 +35,7 @@
       @for (col of cols(); track col) {
         <div
           class="cell"
-          [class.is-discouraged]="isLegal(row, col) && isDiscouraged(row, col)"
-        >
+          [class.is-discouraged]="isLegal(row, col) && isDiscouraged(row, col)">
           @if (isLegal(row, col)) {
             <ng-container
               [ngTemplateOutlet]="cell()"
@@ -46,14 +43,12 @@
                 $implicit: col,
                 row: row,
                 col: col,
-              }"
-            />
+              }" />
 
             @if (isDiscouraged(row, col)) {
               <span
                 class="warn"
-                title="UX-discouraged combination — renders, but reads poorly"
-              >
+                title="UX-discouraged combination — renders, but reads poorly">
               </span>
             }
           } @else {

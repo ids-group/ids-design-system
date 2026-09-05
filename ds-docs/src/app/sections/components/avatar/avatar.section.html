@@ -2,8 +2,7 @@
   anchor="avatar"
   eyebrow="Components"
   title="Avatars"
-  [apiKeys]="['avatar-group']"
->
+  [apiKeys]="['avatar-group']">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -17,48 +16,40 @@
   <div class="row">
     <ds-avatar
       size="xs"
-      initials="AB"
-    />
+      initials="AB" />
 
     <ds-avatar
       size="sm"
-      initials="AB"
-    />
+      initials="AB" />
 
     <ds-avatar
       size="md"
-      initials="AB"
-    />
+      initials="AB" />
 
     <ds-avatar
       size="lg"
-      initials="AB"
-    />
+      initials="AB" />
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="avatar-group"
-  >
+    data-for="avatar-group">
     Group
   </h3>
 
   <div class="row">
     <ds-avatar-group
       [max]="3"
-      [total]="7"
-    >
+      [total]="7">
       <ds-avatar initials="AB" />
 
       <ds-avatar
         initials="JR"
-        [tint]="{ bg: 'var(--orange-100)', fg: 'var(--orange-700)' }"
-      />
+        [tint]="{ bg: 'var(--orange-100)', fg: 'var(--orange-700)' }" />
 
       <ds-avatar
         initials="SK"
-        [tint]="{ bg: 'var(--green-100)', fg: 'var(--green-700)' }"
-      />
+        [tint]="{ bg: 'var(--green-100)', fg: 'var(--green-700)' }" />
     </ds-avatar-group>
   </div>
 
@@ -75,26 +66,22 @@
     <ds-avatar
       initials="AB"
       status="online"
-      ariaLabel="Alice Brown, Online"
-    />
+      ariaLabel="Alice Brown, Online" />
 
     <ds-avatar
       initials="JR"
       status="away"
-      ariaLabel="James Reeves, Away"
-    />
+      ariaLabel="James Reeves, Away" />
 
     <ds-avatar
       initials="SK"
       status="busy"
-      ariaLabel="Sara Kim, Busy"
-    />
+      ariaLabel="Sara Kim, Busy" />
 
     <ds-avatar
       initials="MO"
       status="offline"
-      ariaLabel="Mike O'Brien, Offline"
-    />
+      ariaLabel="Mike O'Brien, Offline" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -112,23 +99,19 @@
   <div class="row">
     <ds-avatar
       size="xs"
-      fallbackIcon="user"
-    />
+      fallbackIcon="user" />
 
     <ds-avatar
       size="sm"
-      fallbackIcon="user"
-    />
+      fallbackIcon="user" />
 
     <ds-avatar
       size="md"
-      fallbackIcon="user"
-    />
+      fallbackIcon="user" />
 
     <ds-avatar
       size="lg"
-      fallbackIcon="user"
-    />
+      fallbackIcon="user" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -203,8 +186,7 @@
       <ds-avatar
         [seed]="person[0] + '.' + person[1]"
         [initials]="initialsFrom(person[0], person[1])"
-        [ariaLabel]="person[0] + ' ' + person[1]"
-      />
+        [ariaLabel]="person[0] + ' ' + person[1]" />
     }
   </div>
 
@@ -223,8 +205,7 @@
         [seed]="person[0] + '.' + person[1]"
         [initials]="initialsFrom(person[0], person[1])"
         [avoidHues]="brandAvoid"
-        [ariaLabel]="person[0] + ' ' + person[1]"
-      />
+        [ariaLabel]="person[0] + ' ' + person[1]" />
     }
   </div>
 </docs-section>

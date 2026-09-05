@@ -2,8 +2,7 @@
   anchor="input"
   eyebrow="Components"
   title="Input"
-  [apiKeys]="['field-click-focus']"
->
+  [apiKeys]="['field-click-focus']">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -23,8 +22,7 @@
       <div class="state-cell-stage">
         <ds-input
           label="Project name"
-          placeholder="Project Alpha"
-        />
+          placeholder="Project Alpha" />
       </div>
 
       <div class="state-cell-label">
@@ -37,8 +35,7 @@
       <div class="state-cell-stage force-focus">
         <ds-input
           label="Project name"
-          placeholder="Project Alpha"
-        />
+          placeholder="Project Alpha" />
       </div>
 
       <div class="state-cell-label">
@@ -50,8 +47,7 @@
       <div class="state-cell-stage">
         <ds-input
           label="Project name"
-          value="Project Alpha 2026"
-        />
+          value="Project Alpha 2026" />
       </div>
 
       <div class="state-cell-label">
@@ -63,8 +59,7 @@
       <div class="state-cell-stage force-focus">
         <ds-input
           label="Project name"
-          value="Project Alpha 2026"
-        />
+          value="Project Alpha 2026" />
       </div>
 
       <div class="state-cell-label">
@@ -77,8 +72,7 @@
       <div class="state-cell-stage force-hover">
         <ds-input
           label="Project name"
-          placeholder="Project Alpha"
-        />
+          placeholder="Project Alpha" />
       </div>
 
       <div class="state-cell-label">
@@ -91,8 +85,7 @@
         <ds-input
           label="Project ID"
           value="ORD-2026-0142"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -105,8 +98,7 @@
         <ds-input
           label="Project ID"
           value="ORD-2026-0142"
-          [readOnly]="true"
-        />
+          [readOnly]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -119,8 +111,7 @@
         <ds-input
           label="Start date"
           value="2026-04-30"
-          error="Must be before end date"
-        />
+          error="Must be before end date" />
       </div>
 
       <div class="state-cell-label">
@@ -133,8 +124,7 @@
         <ds-input
           label="Slug"
           value="project-alpha-2026"
-          success="Available"
-        />
+          success="Available" />
       </div>
 
       <div class="state-cell-label">
@@ -148,8 +138,7 @@
           label="Slug"
           value="project-alpha-2026"
           hint="Checking availability…"
-          [loading]="true"
-        />
+          [loading]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -167,12 +156,10 @@
       <div class="state-cell-stage">
         <ds-input
           label="Site URL"
-          value="member.example.com"
-        >
+          value="member.example.com">
           <span
             dsInputPrefix
-            class="addon"
-          >
+            class="addon">
             https://
           </span>
         </ds-input>
@@ -188,12 +175,10 @@
         <ds-input
           label="Capacity"
           value="250"
-          type="number"
-        >
+          type="number">
           <span
             dsInputSuffix
-            class="addon right"
-          >
+            class="addon right">
             people
           </span>
         </ds-input>
@@ -224,36 +209,30 @@
   <div class="grid-3">
     <ds-input
       label="Search"
-      placeholder="Search projects…"
-    >
+      placeholder="Search projects…">
       <ds-icon
         dsInputPrefix
         name="search"
-        [size]="16"
-      />
+        [size]="16" />
     </ds-input>
 
     <ds-input
       label="Cap length"
       value="13.55"
-      type="number"
-    >
+      type="number">
       <span
         dsInputSuffix
-        class="addon right"
-      >
+        class="addon right">
         m
       </span>
     </ds-input>
 
     <ds-input
       label="Site URL"
-      value="member.example.com"
-    >
+      value="member.example.com">
       <span
         dsInputPrefix
-        class="addon"
-      >
+        class="addon">
         https://
       </span>
     </ds-input>
@@ -261,12 +240,10 @@
     <ds-input
       label="Capacity"
       value="250"
-      type="number"
-    >
+      type="number">
       <span
         dsInputSuffix
-        class="addon right"
-      >
+        class="addon right">
         people
       </span>
     </ds-input>
@@ -298,15 +275,13 @@
       type="search"
       label="Search (auto-clearable)"
       placeholder="Search projects…"
-      [value]="'Project Alpha'"
-    />
+      [value]="'Project Alpha'" />
 
     <ds-input
       label="Email (explicitly clearable)"
       placeholder="you@company.com"
       [value]="'user@example.com'"
-      [clearable]="true"
-    />
+      [clearable]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -330,8 +305,7 @@
       label="Password"
       placeholder="Enter password"
       [passwordToggle]="true"
-      [value]="'hunter2'"
-    />
+      [value]="'hunter2'" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -350,15 +324,13 @@
     <ds-input
       label="Short bio"
       placeholder="Tell us about yourself…"
-      [maxLength]="80"
-    />
+      [maxLength]="80" />
 
     <ds-input
       label="Project name"
       hint="Must be unique within your workspace"
       placeholder="e.g. Project Alpha"
-      [maxLength]="40"
-    />
+      [maxLength]="40" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -380,20 +352,17 @@
     <ds-input
       label="Project name"
       placeholder="e.g. Project Alpha"
-      [required]="true"
-    />
+      [required]="true" />
 
     <ds-input
       label="Description"
       placeholder="Internal notes…"
-      [optional]="true"
-    />
+      [optional]="true" />
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="field-message"
-  >
+    data-for="field-message">
     Messages: error, warning, hint
   </h3>
 
@@ -428,29 +397,25 @@
     <ds-input
       label="Hint only"
       hint="Lowercase letters and dashes"
-      placeholder="my-workspace"
-    />
+      placeholder="my-workspace" />
 
     <ds-input
       label="Warning wins over hint"
       hint="Lowercase letters and dashes"
       warning="This name is close to an existing one"
-      placeholder="my-workspace"
-    />
+      placeholder="my-workspace" />
 
     <ds-input
       label="Error wins over both"
       hint="Lowercase letters and dashes"
       warning="This name is close to an existing one"
       error="Uppercase letters are not allowed"
-      placeholder="My-Workspace"
-    />
+      placeholder="My-Workspace" />
   </div>
 
   <h3
     class="block-title t-h4"
-    data-for="field-message"
-  >
+    data-for="field-message">
     The glyph on the message line
   </h3>
 
@@ -492,22 +457,19 @@
     <ds-input
       label="Default"
       error="Uppercase letters are not allowed"
-      placeholder="My-Workspace"
-    />
+      placeholder="My-Workspace" />
 
     <ds-input
       label='[messageIcon]="false"'
       error="Uppercase letters are not allowed"
       placeholder="My-Workspace"
-      [messageIcon]="false"
-    />
+      [messageIcon]="false" />
 
     <ds-input
       label='messageIcon="info"'
       error="Uppercase letters are not allowed"
       placeholder="My-Workspace"
-      messageIcon="info"
-    />
+      messageIcon="info" />
   </div>
 
   <p class="block-desc t-s">
@@ -536,21 +498,18 @@
       label="Workspace name"
       hint="Shown until a validator has something to say"
       placeholder="At least 3 characters"
-      [formControl]="nameControl"
-    />
+      [formControl]="nameControl" />
 
     <ds-input
       label="Handle"
       hint="Checked against names already taken"
       placeholder="Try “admin”"
-      [formControl]="handleControl"
-    />
+      [formControl]="handleControl" />
 
     <ds-input
       label="Display name"
       hint="Shown on invoices"
-      [formControl]="displayControl"
-    />
+      [formControl]="displayControl" />
   </div>
 
   <p class="block-desc t-s">
@@ -624,8 +583,7 @@
 
   <h3
     class="block-title t-h4"
-    data-for="field-message"
-  >
+    data-for="field-message">
     Reserved message row
   </h3>
 
@@ -671,14 +629,12 @@
   <div class="grid-2 reserve-demo">
     <ds-input
       label="Collapsed (default)"
-      placeholder="No row until a message shows"
-    />
+      placeholder="No row until a message shows" />
 
     <ds-input
       label="Reserved"
       placeholder="No hint — the row is still held"
-      [reserveMessage]="true"
-    />
+      [reserveMessage]="true" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -693,22 +649,18 @@
 
   <form
     dsReserveMessages
-    class="reserve-group-demo"
-  >
+    class="reserve-group-demo">
     <ds-input
       label="Email"
-      placeholder="Both fields reserve"
-    />
+      placeholder="Both fields reserve" />
 
     <ds-input
       label="Password"
-      placeholder="…without binding either"
-    />
+      placeholder="…without binding either" />
 
     <ds-input
       label="Opted back out"
       placeholder="Per-field input still wins"
-      [reserveMessage]="false"
-    />
+      [reserveMessage]="false" />
   </form>
 </docs-section>
