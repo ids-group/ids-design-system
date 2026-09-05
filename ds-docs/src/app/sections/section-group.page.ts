@@ -24,35 +24,7 @@ import { groupForAnchor, urlForGroupPath } from '../core/nav.config';
   imports: [NgComponentOutlet, RouterLink],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrls: ['./section-group.page.scss'],
-  template: `
-    @let group = def();
-
-    @if (group) {
-      @if (group.title) {
-        <h1 class="group-title t-h2">
-          {{ group.title }}
-        </h1>
-      }
-
-      @for (section of group.sections; track section) {
-        <div class="section-slot">
-          <ng-container [ngComponentOutlet]="section" />
-        </div>
-      }
-
-      @if (nextLink(); as link) {
-        <a class="next-group" [routerLink]="link">
-          <span class="next-group-label">
-            Next
-          </span>
-
-          <span class="next-group-title">
-            {{ nextGroup()?.title }} →
-          </span>
-        </a>
-      }
-    }
-  `,
+  templateUrl: './section-group.page.html',
 })
 export class SectionGroupPage {
   private readonly route = inject(ActivatedRoute);
