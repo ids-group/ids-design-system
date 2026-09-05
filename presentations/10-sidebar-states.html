@@ -182,7 +182,7 @@
   .nav .row:hover { background: var(--surface-secondary); }
 
   /* Every variant differs ONLY in what `.row.on` and `.grp.open` look like.
-     Everything above this line is identical across all ten. */
+     Everything above this line is identical across all eleven. */
 
   /* A — typographic only */
   .v-a .row.on { color: var(--accent-strong); font-weight: var(--font-weight-bold); }
@@ -292,6 +292,40 @@
     font-weight: var(--font-weight-bold);
   }
 
+  /* K — what shipped. Fill + dot for the row, and the thread running through the dot's own centre,
+     inside the row and under its fill, so the dot is a node on the thread. No indent: it would
+     take width from the row and narrow the fill. */
+  .v-k .row { padding-left: var(--space-5); }
+  .v-k .row.on {
+    position: relative;
+    background: var(--accent-muted);
+    color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+  }
+  .v-k .row.on::before {
+    content: '';
+    position: absolute;
+    left: var(--space-2); top: 50%;
+    width: 5px; height: 5px;
+    margin-top: -2.5px;
+    border-radius: 50%;
+    background: var(--accent-strong);
+  }
+  .v-k .kids {
+    position: relative;
+  }
+  .v-k .kids .row { margin-left: 0; }
+  .v-k .kids::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--space-2) + 2px);
+    top: 4px; bottom: 4px;
+    width: 1px;
+    background: var(--border-divider);
+  }
+
+  .chosen.base { background: var(--surface-muted); color: var(--text-secondary); }
+
   .chosen {
     margin-left: auto;
     padding: 1px 7px;
@@ -330,7 +364,7 @@
 <h1>Состояния сайдбара</h1>
 <p class="lede">
   Чем различать закрытую группу, открытую группу, выбранного ребёнка группы и просто выбранный
-  пункт. Десять вариантов, каждый отрисован живым — одна и та же навигация, отличается только
+  пункт. Одиннадцать вариантов, каждый отрисован живым — одна и та же навигация, отличается только
   трактовка состояний. Всё построено на токенах системы, ни одного нового цвета.
 </p>
 
@@ -414,7 +448,7 @@
 <h2>Варианты</h2>
 <p>
   В каждом: закрытая группа, открытая группа с выбранным ребёнком, отдельный выбранный пункт вне
-  группы. Наведите курсор — состояние hover одинаково во всех десяти и не участвует в выборе.
+  группы. Наведите курсор — состояние hover одинаково во всех одиннадцати и не участвует в выборе.
 </p>
 
 <div class="variants">
@@ -553,7 +587,7 @@
     <div class="variant-head">
       <span class="variant-letter">E</span>
       <span class="variant-name">Заливка только пункта</span>
-      <span class="chosen">выбрано</span>
+      <span class="chosen base">основа</span>
     </div>
     <p class="variant-note">
       Заливка на пункте, никогда на группе — простейшая её форма, без второго маркера и без
@@ -733,6 +767,40 @@
         Patterns
       </button>
       <a class="row" href="#j"><span class="label">Changelog</span></a>
+    </nav>
+  </div>
+
+  <!-- K -->
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">K</span>
+      <span class="variant-name">F + направляющая + отступ</span>
+      <span class="chosen">внедрено</span>
+    </div>
+    <p class="variant-note">
+      Заливка и точка держат выбранный пункт, а нитка идёт ровно через центр точки — внутри строки,
+      под заливкой. Точка оказывается узлом на нитке, а не вторым маркером рядом. Ни отступа, ни
+      поля: и то и другое отняло бы у строки ширину и подрезало плашку.
+    </p>
+    <nav class="nav v-k">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#k"><span class="label">Borders</span></a>
+        <a class="row on" href="#k"><span class="label">Color</span></a>
+        <a class="row" href="#k"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+      <a class="row" href="#k"><span class="label">Changelog</span></a>
     </nav>
   </div>
 
