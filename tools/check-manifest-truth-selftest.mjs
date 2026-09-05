@@ -12,7 +12,7 @@
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkItem } from './check-manifest-truth.mjs';
+import { checkItem, surfaceAt } from './check-manifest-truth.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -147,6 +147,75 @@ const rules = [
     expect: 'fire',
   },
   {
+    // A field's `error`, `hint` and `touched` are declared on a base class in another file, and
+    // reading only the file that holds the `selector:` lost 139 real bindings across 16 elements.
+    // Two verbatim published items — `ds-input[reserveMessage]` and `ds-input[error]` — were
+    // being accused of migrating from nowhere at the current boundary.
+    name: 'HOLDS: a member inherited from a base class is not accused',
+    item: { id: 'x', kind: 'behavior', old: 'ds-input[reserveMessage]', new: null },
+    before: surface({ elements: { 'ds-input': ['reserveMessage'] } }),
+    after: surface({ elements: { 'ds-input': ['reserveMessage'] } }),
+    expect: 'hold',
+  },
+  {
+    name: 'FIRES on a member no ancestor declares',
+    item: { id: 'x', kind: 'behavior', old: 'ds-input[neverWasAnInput]', new: null },
+    before: surface({ elements: { 'ds-input': ['reserveMessage'] } }),
+    after: surface({ elements: { 'ds-input': ['reserveMessage'] } }),
+    expect: 'fire',
+  },
+  {
+    // `removed-api` and `class-rename` were the two kinds in GONE_AFTER that no case touched:
+    // deleting either from the set left this selftest green while 26 published items stopped
+    // being asked to prove the change happened.
+    name: 'FIRES when a removed API still resolves at its own tag',
+    item: { id: 'x', kind: 'removed-api', old: 'LegacyService', new: null },
+    before: surface({ symbols: ['LegacyService'] }),
+    after: surface({ symbols: ['LegacyService'] }),
+    expect: 'fire',
+  },
+  {
+    name: 'HOLDS: a removed API that really went',
+    item: { id: 'x', kind: 'removed-api', old: 'LegacyService', new: null },
+    before: surface({ symbols: ['LegacyService'] }),
+    after: surface({ symbols: [] }),
+    expect: 'hold',
+  },
+  {
+    name: 'FIRES when a renamed CSS class still resolves at its own tag',
+    item: { id: 'x', kind: 'class-rename', old: '.crumb-sep', new: '.crumb-divider' },
+    before: surface({ classes: ['crumb-sep'] }),
+    after: surface({ classes: ['crumb-sep', 'crumb-divider'] }),
+    expect: 'fire',
+  },
+  {
+    // The exemption below is for a template binding only. Forgiving a phantom TOKEN because its
+    // replacement is real left the rarer half of the failure as the only half caught, across 48
+    // of 99 published rename items.
+    name: 'FIRES on a token that never existed, even when `new` is real',
+    item: { id: 'x', kind: 'token-rename', old: '--never-was', new: '--real' },
+    before: surface({ tokens: ['--real'] }),
+    after: surface({ tokens: ['--real'] }),
+    expect: 'fire',
+  },
+  {
+    name: 'FIRES on an element that never existed, even when `new` is real',
+    item: { id: 'x', kind: 'selector-rename', old: 'ds-never-was', new: 'ds-real' },
+    before: surface({ elements: { 'ds-real': [] } }),
+    after: surface({ elements: { 'ds-real': [] } }),
+    expect: 'fire',
+  },
+  {
+    // The exemption itself, and why it exists: a binding against an output that was never
+    // declared compiles and silently does nothing, so consumers really did write these. Four
+    // published 0.11.3 items are exactly this and must stay green.
+    name: 'HOLDS: a phantom template binding whose replacement is real',
+    item: { id: 'x', kind: 'output-rename', old: 'ds-banner[dismissed]', new: 'closed' },
+    before: surface({ elements: { 'ds-banner': [] } }),
+    after: surface({ elements: { 'ds-banner': ['closed'] } }),
+    expect: 'hold',
+  },
+  {
     // Without the `ds-` prefix every hyphenated value is looked up among elements, found missing,
     // and accused of migrating from nowhere — a density value, an aria attribute, an input alias.
     name: 'HOLDS: a hyphenated value that is not an element is not accused',
@@ -178,6 +247,7 @@ const rules = [
 ];
 
 let failed = 0;
+let ran = 0;
 for (const testCase of rules) {
   const verdict = checkItem(
     testCase.item,
@@ -187,6 +257,7 @@ for (const testCase of rules) {
     'v0.0.1',
   );
   const got = verdict.defects.length ? 'fire' : 'hold';
+  ran++;
   let ok = got === testCase.expect;
   if (
     testCase.unresolved !== undefined &&
@@ -225,6 +296,7 @@ const run = (version) => {
 
 for (const [version, what] of readOnly) {
   const got = run(version);
+  ran++;
   const ok = got === 'green';
   if (!ok) failed++;
   console.log(
@@ -232,12 +304,41 @@ for (const [version, what] of readOnly) {
   );
 }
 
+// The inheritance walk lives in `surfaceAt`, not in the rules, so a synthetic surface cannot
+// exercise it: these members are declared on a base class in a different file from the
+// `selector:` that names the element.
+{
+  const inherited = [
+    ['ds-input', 'reserveMessage'],
+    ['ds-checkbox', 'touched'],
+    ['ds-textarea', 'hint'],
+    ['ds-modal', 'staticPreview'],
+  ];
+  const members = (tag_) => surfaceAt('v0.12.0')?.elements.get(tag_);
+  for (const [tag_, member] of inherited) {
+    ran++;
+    const ok = Boolean(members(tag_)?.has(member));
+    if (!ok) failed++;
+    console.log(
+      `${ok ? 'ok   ' : 'FAIL '} v0.12.0 ${tag_}[${member}] is reachable through its base class`,
+    );
+  }
+  ran++;
+  const clean = !members('ds-input')?.has('neverWasAnInput');
+  if (!clean) failed++;
+  console.log(
+    `${clean ? 'ok   ' : 'FAIL '} v0.12.0 ds-input[neverWasAnInput] is not invented by the walk`,
+  );
+}
+
 // A caller sees only the exit code, so a version the check could not look at has to fail.
-for (const [version, what] of [
+const UNCHECKABLE = [
   ['9.9.9', 'no manifest of that name'],
   ['0.1.0', 'the earliest tag, so no predecessor to diff against'],
-]) {
+];
+for (const [version, what] of UNCHECKABLE) {
   const got = run(version);
+  ran++;
   const ok = got === 'red';
   if (!ok) failed++;
   console.log(
@@ -245,12 +346,14 @@ for (const [version, what] of [
   );
 }
 
-const fires = rules.filter((r) => r.expect === 'fire').length;
-const holds = rules.filter((r) => r.expect === 'hold').length + readOnly.length;
+// Counted from what actually ran, never off the arrays: two of the assertions below live outside
+// them, and an array-derived tally can never disagree with itself — it is decoration, not a check.
+const fires =
+  rules.filter((rule) => rule.expect === 'fire').length + UNCHECKABLE.length;
 if (failed) {
   console.error(`\n${failed} case(s) wrong.`);
   process.exit(1);
 }
 console.log(
-  `\nevery case behaved: ${fires} case(s) fire, ${holds} exemption(s) hold`,
+  `\nevery case behaved: ${ran} check(s) ran, ${fires} of them expected red`,
 );

@@ -95,6 +95,9 @@ export function surfaceAt(tag) {
   const symbols = new Set();
   const classes = new Set();
   const elements = new Map();
+  const classOwn = new Map();
+  const classParent = new Map();
+  const elementClass = new Map();
 
   for (const { path: file, text } of files) {
     for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))
@@ -128,26 +131,72 @@ export function surfaceAt(tag) {
     for (const decl of text.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(DECL))
       symbols.add(decl[1]);
 
-    // A component's own members: the selector it answers to, and every signal-based member a
-    // template can bind. `alias` forms count under the alias, which is what a consumer writes.
+    // Every signal-based member a template can bind, indexed by the class that declares it, not
+    // by the file: a field's `error`, `hint` and `touched` live on DsFieldBase in another file
+    // entirely, and reading only the file with the `selector:` lost 139 real bindings across 16
+    // elements. `alias` forms count under the alias, which is what a consumer writes.
+    // Sliced per class, not per file: `control-value-accessor.ts` declares two of them, and
+    // taking the first match dropped the second's `extends` edge — which is the link a checkbox
+    // walks to reach `touched`.
+    // The header is read separately from the name. Written as one optional group, a lazy match
+    // skips `extends` whenever it sits on its own line — which is exactly how the field bases
+    // are written, so every one of their subclasses lost its parent link.
+    const declarations = [
+      ...text.matchAll(
+        /export\s+(?:abstract\s+)?class\s+([A-Za-z_][A-Za-z0-9_]*)/g,
+      ),
+    ];
+    const memberSets = declarations.map((declaration, at) => {
+      const from = declaration.index;
+      const to = declarations[at + 1]?.index ?? text.length;
+      const slice = text.slice(from, to);
+      const header = slice.slice(0, slice.indexOf('{'));
+      const parent = /\bextends\s+([A-Za-z_][A-Za-z0-9_]*)/.exec(header);
+      if (parent) declaration[2] = parent[1];
+      const own = new Set();
+      for (const member of slice.matchAll(
+        /(?:readonly\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(input|output|model)(?:\.required)?\s*[<(]/g,
+      )) {
+        own.add(member[1]);
+        // A `model()` also publishes `<name>Change`, which Angular generates and no source line
+        // declares — `ds-pagination[currentPageChange]` is a real binding with nothing to grep.
+        if (member[2] === 'model') own.add(`${member[1]}Change`);
+      }
+      classOwn.set(declaration[1], own);
+      if (declaration[2]) classParent.set(declaration[1], declaration[2]);
+      return own;
+    });
+
+    // The decorator sits ABOVE its class, so these belong to the first one declared.
+    const first = memberSets[0];
+    if (first) {
+      for (const alias of text.matchAll(/alias:\s*'([^']+)'/g)) first.add(alias[1]);
+      // A hostDirective's declared inputs are bindable on the host element and appear in no
+      // `input()` line of its own — `ds-modal[staticPreview]` is one.
+      for (const host of text.matchAll(/inputs:\s*\[([^\]]*)\]/g))
+        for (const name of host[1].matchAll(/'([A-Za-z_][A-Za-z0-9_]*)'/g))
+          first.add(name[1]);
+    }
+
     for (const block of text.matchAll(/selector:\s*'([^']+)'/g)) {
       for (const part of block[1].split(',')) {
         const tag_ = /^\s*([a-z][a-z0-9-]*)\s*$/.exec(part);
         if (!tag_) continue;
-        const members = elements.get(tag_[1]) ?? new Set();
-        for (const member of text.matchAll(
-          /(?:readonly\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(input|output|model)(?:\.required)?\s*[<(]/g,
-        )) {
-          members.add(member[1]);
-          // A `model()` also publishes `<name>Change`, which Angular generates and no source line
-          // declares — `ds-pagination[currentPageChange]` is a real binding with nothing to grep.
-          if (member[2] === 'model') members.add(`${member[1]}Change`);
-        }
-        for (const alias of text.matchAll(/alias:\s*'([^']+)'/g))
-          members.add(alias[1]);
-        elements.set(tag_[1], members);
+        elements.set(tag_[1], first ?? new Set());
+        if (declarations.length) elementClass.set(tag_[1], declarations[0][1]);
       }
     }
+  }
+
+  for (const [tag_, className] of elementClass) {
+    const members = new Set(elements.get(tag_));
+    for (
+      let parent = classParent.get(className), guard = 0;
+      parent && guard < 20;
+      parent = classParent.get(parent), guard++
+    )
+      for (const name of classOwn.get(parent) ?? []) members.add(name);
+    elements.set(tag_, members);
   }
 
   const surface = { tokens, symbols, classes, elements };
@@ -231,6 +280,10 @@ function sweep() {
   // and one asks per version before trusting that manifest. A clone without tags is the way to hit
   // it — `git tag --list` comes back empty, so every version is skipped at once.
   const skipped = [];
+  // A boundary that could not be READ is not the same as one with nothing to check. The only
+  // legitimate skip is the earliest tag, which has no predecessor; anything else means a tree was
+  // missing, and one readable manifest was enough to green a run where the other 26 were not.
+  const unreadable = [];
   const unchecked = [];
   let checked = 0;
 
@@ -238,7 +291,7 @@ function sweep() {
     const version = file.replace('.json', '');
     const index = tags.indexOf(`v${version}`);
     if (index < 0) {
-      skipped.push(`${file}: no tag v${version} in this checkout`);
+      unreadable.push(`${file}: no tag v${version} in this checkout`);
       continue;
     }
     if (index === 0) {
@@ -251,7 +304,7 @@ function sweep() {
     const before = surfaceAt(prev);
     const after = surfaceAt(`v${version}`);
     if (!before || !after) {
-      skipped.push(
+      unreadable.push(
         `${file}: could not read src/lib at ${!before ? prev : `v${version}`}`,
       );
       continue;
@@ -275,6 +328,13 @@ function sweep() {
   if (ONLY && !manifests.length) {
     console.error(
       `check-manifest-truth: there is no migrations/${ONLY}.json to check.`,
+    );
+    process.exit(1);
+  }
+  if (unreadable.length) {
+    console.error(
+      `check-manifest-truth: ${unreadable.length} manifest(s) could not be read at their own ` +
+        `boundary, so nothing is known about them:\n  ${unreadable.join('\n  ')}`,
     );
     process.exit(1);
   }
@@ -350,9 +410,17 @@ export function checkItem(item, before, after, prevTag, tag) {
     if (!wasThere) {
       // Same distinction as above: the phantom exemption is only for a name a consumer could
       // have written, which an imported one never was.
-      if (targetExists && !(isImportedName && claim.bare)) continue;
+      // Only a template binding earns this. A phantom `ds-banner[dismissed]` compiles and does
+      // nothing, so a consumer really could have written one — but a token, an element or a class
+      // that never existed is a manifest describing a rename that never happened, and forgiving
+      // it because the REPLACEMENT is real leaves the rarer half of the failure as the only half
+      // caught. 48 of 99 published rename items had this check inert.
+      if (claim.kind === 'member' && targetExists && !(isImportedName && claim.bare))
+        continue;
       defects.push(
-        `old \`${label(claim)}\` does not exist at ${prevTag}, and \`new\` names nothing that does — the item migrates from nowhere to nowhere`,
+        targetExists
+          ? `old \`${label(claim)}\` does not exist at ${prevTag} — \`new\` is real, so the item renames something that was never there`
+          : `old \`${label(claim)}\` does not exist at ${prevTag}, and \`new\` names nothing that does — the item migrates from nowhere to nowhere`,
       );
     } else if (
       claim.bare &&
