@@ -42,13 +42,8 @@ design-system.md
 plugins/design-system
 
 # Hand-maintained prose the design agent reads, parsed by .design-sync/tools/check-doc-api.mjs —
-# reflowing its tables and fenced blocks is a change to what that check reads. `conventions.md` is
-# worse than prose: config.json names it readmeHeader and build-cards copies it VERBATIM into the
-# upload tree, so a reflow desyncs a byte-compared artefact — it already added a semicolon to a JSX
-# example that no consumer would write, and left source and copy 37 lines apart.
+# reflowing its tables and fenced blocks is a change to what that check reads.
 .design-sync/docs
-.design-sync/*.md
-.design-sync/elements/README.md
 
 # Decks are finished artifacts with their own hand-written shell; deck-lint owns their rules.
 presentations
