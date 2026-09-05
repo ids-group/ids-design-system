@@ -82,9 +82,12 @@
       aria-hidden="true"
       [disabled]="isDisabled()"
       (click)="onFieldClick(); $event.stopPropagation()">
+      <!-- 14, not 16. The calendar path fills 18 of its 24 viewBox units, so at 16 its ink is 12px
+           tall against the value's ~10px cap height — same centre, but overhanging a pixel above and
+           below, which is what read as the two being out of line. At 14 the ink is 10.5px. -->
       <ds-icon
         name="calendar"
-        [size]="16" />
+        [size]="14" />
     </button>
   </div>
 
