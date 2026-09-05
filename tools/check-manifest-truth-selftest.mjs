@@ -269,6 +269,40 @@ const rules = [
     expect: 'fire',
   },
   {
+    // An attribute directive is written on someone else's element, so a `new` naming one is not a
+    // member of that element and the surface has to know it separately. Three published items
+    // moved a feature behind a directive and every one was accused of naming a member that does
+    // not exist, which held the release gate red.
+    name: 'HOLDS: a `new` that names an attribute directive on the element',
+    item: {
+      id: 'x',
+      kind: 'input-rename',
+      old: 'ds-table[exportButton]',
+      new: 'dsTableExport',
+    },
+    before: surface({ elements: { 'ds-table': ['exportButton'] } }),
+    after: {
+      ...surface({ elements: { 'ds-table': [] } }),
+      directives: new Set(['dsTableExport']),
+    },
+    expect: 'hold',
+  },
+  {
+    name: 'FIRES on a `new` naming a directive nothing declares',
+    item: {
+      id: 'x',
+      kind: 'input-rename',
+      old: 'ds-table[exportButton]',
+      new: 'dsTableNeverWas',
+    },
+    before: surface({ elements: { 'ds-table': ['exportButton'] } }),
+    after: {
+      ...surface({ elements: { 'ds-table': [] } }),
+      directives: new Set(['dsTableExport']),
+    },
+    expect: 'fire',
+  },
+  {
     // The component writes `data-*` itself, so it is not an input and must not be looked up as one.
     name: 'HOLDS: a data-* attribute is not treated as a missing input',
     item: {

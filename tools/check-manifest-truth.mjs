@@ -108,6 +108,7 @@ export function surfaceAt(tag) {
   const classParent = new Map();
   const elementClass = new Map();
   const tokenPrefixes = new Set();
+  const directives = new Set();
 
   for (const { path: file, text } of files) {
     for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))
@@ -226,6 +227,15 @@ export function surfaceAt(tag) {
 
     for (const block of text.matchAll(/selector:\s*'([^']+)'/g)) {
       for (const part of block[1].split(',')) {
+        // An attribute directive is written on someone else's element, so it is a name a consumer
+        // puts THERE — `ds-table dsTableExport`. Without it the surface knows only the component's
+        // own inputs, and an item whose `new` is a directive was accused of naming a member that
+        // does not exist on the element it sits on.
+        const attribute = /^\s*\[([A-Za-z][A-Za-z0-9]*)\]\s*$/.exec(part);
+        if (attribute) {
+          directives.add(attribute[1]);
+          continue;
+        }
         const tag_ = /^\s*([a-z][a-z0-9-]*)\s*$/.exec(part);
         if (!tag_) continue;
         elements.set(tag_[1], first ?? new Set());
@@ -245,7 +255,14 @@ export function surfaceAt(tag) {
     elements.set(tag_, members);
   }
 
-  const surface = { tokens, symbols, classes, elements, tokenPrefixes };
+  const surface = {
+    tokens,
+    symbols,
+    classes,
+    elements,
+    tokenPrefixes,
+    directives,
+  };
   surfaceCache.set(tag, surface);
   return surface;
 }
@@ -314,6 +331,9 @@ function resolves(surface, claim) {
   if (claim.kind === 'class') return surface.classes.has(claim.name);
   if (claim.kind === 'element') return surface.elements.has(claim.name);
   if (claim.kind === 'member') {
+    // A directive selector is bindable on any element it is applied to, so it answers before the
+    // element's own member list is consulted.
+    if (surface.directives?.has(claim.name)) return true;
     const members = surface.elements.get(claim.element);
     return members ? members.has(claim.name) : null; // null: the element itself is unknown here
   }
