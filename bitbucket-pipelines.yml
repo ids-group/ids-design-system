@@ -20,10 +20,15 @@ definitions:
         files:
           - bun.lock
       path: ~/.bun/install/cache
-    # No `.angular/cache` entry: Angular's default `cli.cache.environment` is "local", so the
-    # build cache is off whenever CI=true and the directory is never created — the entry
-    # restored nothing. `"cache": { "environment": "all" }` in angular.json is the switch that
-    # would make it live, and it has to come first.
+    # Paired with `cli.cache.environment: "all"` in angular.json: the default there is "local",
+    # which switches Angular's build cache off whenever CI=true. Without that half this entry
+    # caches a directory nothing writes.
+    angular:
+      key:
+        files:
+          - bun.lock
+          - angular.json
+      path: .angular/cache
     dist-ds:
       key:
         files:
@@ -39,6 +44,7 @@ definitions:
           - npm
           - bun-bin
           - bun-cache
+          - angular
           - dist-ds
         script:
           - sh infrastructure/scripts/build-docs.sh
@@ -52,6 +58,7 @@ pipelines:
             - npm
             - bun-bin
             - bun-cache
+            - angular
             - dist-ds
           script:
             - sh infrastructure/scripts/build-lib.sh
@@ -68,6 +75,7 @@ pipelines:
             - npm
             - bun-bin
             - bun-cache
+            - angular
             - dist-ds
           script:
             - sh infrastructure/scripts/ci-pr.sh
@@ -167,6 +175,7 @@ pipelines:
               - npm
               - bun-bin
               - bun-cache
+              - angular
             artifacts:
               - .design-sync/elements/dist/**
             script:
