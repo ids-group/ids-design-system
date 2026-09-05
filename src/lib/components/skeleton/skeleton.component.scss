@@ -34,10 +34,11 @@
   /* A second, quieter wave riding a third of a tile ahead of the main one. It is not a decoration:
      one band per pass left a long empty wait between crossings, and shortening the loop to fill it
      made the main wave hurry. Two bands of different weight cross in the time one used to. */
+
   /* The SAME tone at zero alpha, never the `transparent` keyword: `transparent` is transparent
      BLACK, so a ramp to it travels toward black as it fades and the midpoint comes out darker than
      either end. Over a long ramp that reads as a hard edge in the middle of the wave. */
-  --_skeleton-wave-fade: rgb(from var(--_skeleton-shimmer-color) r g b / 0);
+  --_skeleton-wave-fade: rgb(from var(--_skeleton-shimmer-color) r g b / 0%);
 
   --_skeleton-wave-echo-color: var(
     --ds-skeleton-wave-echo-color,
