@@ -183,7 +183,7 @@
       "kind": "code-add",
       "old": "ds-table[resizableColumns]",
       "new": "dsTableResize",
-      "action": "Import DsTableResize from '@ids-group-ltd/ids-design-system/table-resize', add it to the component's imports, and replace [resizableColumns]=\"true\" with the dsTableResize attribute. Move a [(columnWidths)] binding across unchanged.",
+      "action": "Import DsTableResize from '@ids-group-ltd/ids-design-system/table-resize', add it to the component's imports, and replace [resizableColumns]=\"true\" with the bare dsTableResize attribute. Delete any [(columnWidths)], [columnWidths] or (columnWidthsChange) binding: the directive declares no inputs and no outputs, so none of them compiles. Seed a width through the column's own width instead, and read the live ones through a viewChild(DsTableResize) where you need them.",
       "appliesWhen": "A <ds-table> with resizable columns, or one that reads or seeds columnWidths. NOT affected: a table whose widths come only from column.width.",
       "pitfall": "Without the directive the header renders no resize handle and the width buttons vanish from the column panel, while column.width keeps working — so the table looks right and is simply not resizable.",
       "surface": "template",

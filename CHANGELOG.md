@@ -13,7 +13,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-table`'s data-grid features are directives now, so a table that does not use them stops
   carrying them.** Reordering, the column picker and resizing left the component; a table with none
   of them costs **35 647 → 16 410 B gzip, −54%**, and `@angular/cdk/drag-drop` goes with the drag
-  handle. Nothing was removed — each feature is one import and one attribute away:
+  handle. Each feature is one import and one attribute away, and two of the moved inputs changed
+  shape on the way:
 
   ```html
   <!-- was -->
@@ -26,7 +27,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   | feature | directive | class, and where it lives | its inputs |
   | --- | --- | --- | --- |
   | reorder + the column picker | `dsTableColumns` | `DsTableColumns`, `…/table-columns` | `reorderableColumns`, `[(hiddenKeys)]`, `[(columnOrder)]` |
-  | column resizing | `dsTableResize` | `DsTableResize`, `…/table-resize` | `[(columnWidths)]` |
+  | column resizing | `dsTableResize` | `DsTableResize`, `…/table-resize` | none — the bare attribute is the whole switch |
   | CSV export | `dsTableExport` | `DsTableExport`, `…/table-export` | `exportFilename`, `exportFetcher`, `(exportFailed)` |
 
   **`exportButton` is gone as an input** — the directive's own presence renders the button, and
@@ -34,12 +35,38 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `exporting()` and `exportCsv()` stay on the table, because their documentation promises a button
   elsewhere on the page can drive them; they now delegate to the directive, and calling one with no
   directive present logs a dev-mode warning rather than doing nothing. **Binding a moved input
-  without adding its directive is the one silent failure here**, so each of the three warns in dev
-  mode when it sees state it owns and no feature to act on it.
+  without adding its directive does not compile**: `reorderableColumns`, `[(hiddenKeys)]`,
+  `[(columnOrder)]`, `resizableColumns` and `[(columnWidths)]` are gone from `ds-table` with no
+  passthrough, so the template fails the build rather than quietly doing nothing. Two of them do not
+  come back as bindings at all — `dsTableResize` declares no inputs and no outputs, so
+  `[(columnWidths)]`, `[columnWidths]` and `(columnWidthsChange)` compile nowhere: resizing can no
+  longer be toggled by an expression, and the widths are reachable only through a
+  `viewChild(DsTableResize)`. `dsTableColumns` keeps the other three under their old names and
+  defaults, and `(hiddenKeysChange)` and `(columnOrderChange)` still fire on the same element, so
+  those bindings survive once the attribute is there. The handle itself is unchanged: the same
+  keyboard steps and minimum width, the same markup, the same `col-*` classes, and no custom
+  property added or removed.
 
-  `persistLayout` and `storageKey` stay on the table and keep working. Its stored JSON keeps the
+  `persistLayout` and `storageKey` stay on the table, under the same storage key and the same
   `{ order, widths, hidden }` shape, so a layout saved by an earlier version still restores — a
-  part whose directive is absent is simply not applied.
+  part whose directive is absent is simply not applied. Saving works the other way round now: only
+  the slices the present directives own are written, where every save used to carry all three. A
+  table that takes `dsTableResize` and not `dsTableColumns` rewrites an existing entry with widths
+  alone on its first save and drops the reader's stored order and hidden columns, and `persistLayout`
+  with a `storageKey` and neither directive writes nothing at all. Keep both directives on a table
+  whose layout you persist.
+
+- **A column declared `hidden: true` renders unless `dsTableColumns` is on the table.** Column
+  visibility is the directive's stage now — `ds-table` reads neither `hidden` nor `hideable` without
+  it. `TableColumn` is unchanged, both fields still declared and still typed, so a table that sets
+  them compiles exactly as before and shows every column. Two structural consequences ride along. A
+  table with hideable columns and no `rowActions` used to grow a trailing utility column to carry the
+  picker button; without the directive that header cell and its body cells are gone, so a rule that
+  counts columns lands one off. And with the directive the button renders unconditionally, where it
+  used to need at least one `hideable` column or `reorderableColumns` — a table that takes
+  `dsTableColumns` for reordering alone gains the utility column plus a "Choose columns" panel whose
+  checkboxes are all disabled. Add the directive wherever a column is declared `hidden` or
+  `hideable`.
 
 - **A focused `ds-checkbox`, `ds-radio` or `ds-switch` rings the whole row, label included, instead
   of the glyph.** Ringing the glyph put a brand ring concentric with the brand ring the CHECKED state
@@ -96,9 +123,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `--ease-accelerate` over 120ms, so it settles rather than snaps. The timing is a motion ROLE —
   `--ds-motion-check-enter-duration`, `--ds-motion-check-enter-easing`, `--ds-motion-check-exit-duration`,
   `--ds-motion-check-exit-easing` — with per-scope hooks `--ds-check-mark-*` beneath it, so a dense
-  option list can stay calm while forms overshoot. The previous motion and the one block that restores
-  it are written down in `docs/check-mark-motion.md`. Both durations resolve through the `--duration-*`
+  option list can stay calm while forms overshoot. To put the previous motion back, set the four
+  tokens to the linear timing they replaced. Both durations resolve through the `--duration-*`
   scale, which `prefers-reduced-motion` already zeroes, so the mark goes instant on its own.
+- **The tick and the indeterminate bar are painted as a mask over `currentcolor`, not as a hardcoded
+  white stroke.** One path serves a filled box and a bare row — white on the accent fill, the row's
+  own colour on a surface — and under `forced-colors: active` it resolves to `CanvasText`, so in
+  Windows High Contrast a checked or indeterminate mark stays distinct from the forced fill of the
+  box it sits in, where before the two came out the same colour. This is the mark in `ds-checkbox`,
+  in `ds-table`'s select-all, row and column-filter boxes, in a picker panel's option ticks, and in
+  `ds-autocomplete` and `ds-multi-select`. Nothing to change on your side: a colour override of your
+  own is unaffected, and forced-colors mode discards colour overrides either way.
+
 - **Every option mark in a picker panel is now the SAME mark as a checkbox's,** and animates with
   it: the selected row in `ds-select` and single-mode `ds-autocomplete`, the option boxes in
   multi-mode `ds-autocomplete`, and every box in a `ds-multi-select` panel — option rows, group-all
@@ -149,10 +185,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   write through. A subclass that declares any of those names stops building, whether or not the
   member is public API.
 
-  **`TableComponent` also LOST the data-grid half**, and that one the compiler does not report:
-  `columnOrder`, `hiddenKeys`, `columnWidths`, `reorderableColumns`, `resizableColumns`,
-  `exportButton` and their handlers moved to `dsTableColumns`, `dsTableResize` and
-  `dsTableExport`. A subclass that overrode one of them now overrides nothing and runs never.
+  **`TableComponent` also LOST the data-grid half**, and how you hear about it depends on how the
+  subclass was written: `columnOrder`, `hiddenKeys`, `columnWidths`, `reorderableColumns`,
+  `resizableColumns`, `exportButton` and their handlers moved to `dsTableColumns`, `dsTableResize`
+  and `dsTableExport`. A member you marked `override` fails the build, because there is no base
+  member left to override; one you declared without the modifier still compiles, overrides nothing
+  and runs never.
 
   Three new classes come with those directives, and all three are internal: `DsTableLayout` is
   internal, the seam a feature registers with; `TableColumnsPanelComponent` is internal, the
@@ -185,20 +223,31 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A `ds-table` column filter's value list draws proper checkbox boxes.** That list renders in an
+  overlay, outside the element that declares the box's `--ds-checkbox-*` resolvers — and an
+  unresolved custom property inside a `border` invalidates the whole declaration at computed-value
+  time, which left a box with no border and no size. The shared box carries each resolver's own
+  default as its fallback now, so it paints wherever it is projected, including into an overlay of
+  your own. No token name and no default changed, and there is nothing to change on your side.
+
 - **The bulk-action bar vanished exactly when every row was selected.** It was gated on the header
   checkbox's INDETERMINATE predicate — "some rows, but not all" — so selecting the last row hid the
   bar with the selection still live, which is when a bulk action is most likely. It answers the
-  selection being non-empty now.
+  selection being non-empty now — the selection set itself, not the rows on screen, so the bar also
+  stays up where it used to disappear: select rows on page one and page forward and it holds, and it
+  holds when a filter hides every selected row. The selection is still live and still actionable,
+  which is the point of the bar.
 
 - **The skeleton shimmer is one wave across the screen again, and it no longer stutters.** Every
   `ds-skeleton` shows the slice of a single viewport-wide band passing over its own position, so a
   page of placeholders reads as one light moving across it rather than as N loops running side by
   side. The band is two tones of the same surface — colour washing over the placeholders, not a
-  highlight shone on them. It is anchored with `background-attachment: fixed` rather than the
-  shared custom property it used to read: that property was inherited and animated on `:root`,
-  which invalidated the style of every element in the document on every frame. Measured: `:root`
-  now reports zero animations, and six skeletons of different widths report the same band position
-  at the same instant.
+  highlight shone on them. It replaces a per-element `mask-position` slide of a 200vw mask, which on
+  a narrow skeleton parked the band off the element for most of the loop, flicked it through, and
+  restarted on a hard cut. The wave is anchored with `background-attachment: fixed`, which resolves
+  against the nearest transformed, filtered or `will-change: transform` ancestor rather than the
+  viewport — so skeletons inside an animated drawer or a transform-based layout wave locally on that
+  ancestor instead of joining the page-wide one.
 
 - **A focused first or last `ds-accordion-item` drew a square ring inside the rounded box.** An
   outline follows its own element's radius, and the rounded corner belongs to `ds-accordion`, not to
