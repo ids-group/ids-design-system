@@ -20,12 +20,12 @@ definitions:
         files:
           - bun.lock
       path: ~/.bun/install/cache
-    angular:
-      key:
-        files:
-          - bun.lock
-          - angular.json
-      path: .angular/cache
+    # No `.angular/cache` entry on purpose. Angular's default `cli.cache.environment` is "local",
+    # so the cache is off whenever CI=true and the directory is never even created. Switching it
+    # on with `"cache": { "environment": "all" }` in angular.json was measured and rejected: with
+    # a warm cache ng-packagr's hit path writes the FESM/DTS files without invalidating the
+    # memoised fileExists in sourcesFileCache, so the next entry point cannot resolve its
+    # neighbour's .d.ts — `ng build ds` failed 4 of 6 runs. dist-ds below is the cache that works.
     dist-ds:
       key:
         files:
@@ -41,7 +41,6 @@ definitions:
           - npm
           - bun-bin
           - bun-cache
-          - angular
           - dist-ds
         script:
           - sh infrastructure/scripts/build-docs.sh
@@ -55,7 +54,6 @@ pipelines:
             - npm
             - bun-bin
             - bun-cache
-            - angular
             - dist-ds
           script:
             - sh infrastructure/scripts/build-lib.sh
@@ -72,7 +70,6 @@ pipelines:
             - npm
             - bun-bin
             - bun-cache
-            - angular
             - dist-ds
           script:
             - sh infrastructure/scripts/ci-pr.sh
@@ -172,7 +169,6 @@ pipelines:
               - npm
               - bun-bin
               - bun-cache
-              - angular
             artifacts:
               - .design-sync/elements/dist/**
             script:
