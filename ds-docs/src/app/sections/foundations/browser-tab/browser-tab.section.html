@@ -3,11 +3,9 @@
   eyebrow="Foundations"
   title="Browser tab &amp; document"
 >
-  <span lede>
-    Title, favicon, theme-color and tab grouping — the off-canvas surface the
+  <span lede>Title, favicon, theme-color and tab grouping — the off-canvas surface the
     user sees in their tab bar. Long URLs and breadcrumb paths clip with
-    ellipsis; full path is exposed via title attribute or copy-to-clipboard.
-  </span>
+    ellipsis; full path is exposed via title attribute or copy-to-clipboard.</span>
 
   <h3 class="block-title t-h4">
     Tab specimen
@@ -19,46 +17,32 @@
         <span
           class="fav"
           aria-hidden="true"
-        >
-          A
-        </span>
+        >A</span>
 
-        <span class="title">
-          Project Alpha · Projects · Acme
-        </span>
+        <span class="title">Project Alpha · Projects · Acme</span>
 
         <span
           class="close"
           aria-hidden="true"
-        >
-          ×
-        </span>
+        >×</span>
       </div>
 
       <div class="tab">
         <span
           class="fav alert"
           aria-hidden="true"
-        >
-          A
-        </span>
+        >A</span>
 
-        <span class="title">
-          Schedule · 3 conflicts · Acme
-        </span>
+        <span class="title">Schedule · 3 conflicts · Acme</span>
       </div>
 
       <div class="tab">
         <span
           class="fav"
           aria-hidden="true"
-        >
-          A
-        </span>
+        >A</span>
 
-        <span class="title">
-          Resource allocation · Acme
-        </span>
+        <span class="title">Resource allocation · Acme</span>
       </div>
     </div>
 
@@ -68,9 +52,7 @@
         [size]="12"
       />
 
-      <span class="t-mono">
-        app.acme.com / projects / project-alpha / schedule
-      </span>
+      <span class="t-mono">app.acme.com / projects / project-alpha / schedule</span>
     </div>
   </div>
 
@@ -84,14 +66,9 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">
-        {{ '{Record} · {Section} · Acme' }}
-      </code>
+      <code class="t-mono-inline">{{ '{Record} · {Section} · Acme' }}</code>
       — leaf first, brand last so multi-tab triage works. Index pages:
-      <code class="t-mono-inline">
-        {{ '{Section} · Acme' }}
-      </code
-      >. Login: <code class="t-mono-inline">Acme</code> only.
+      <code class="t-mono-inline">{{ '{Section} · Acme' }}</code>. Login: <code class="t-mono-inline">Acme</code> only.
     </dd>
 
     <dt>
@@ -112,12 +89,8 @@
 
     <dd>
       Brand letter on brand surface; alert dot via
-      <code class="t-mono-inline">
-        .fav.alert
-      </code> nested under
-      <code class="t-mono-inline">
-        .tab-spec
-      </code> for unread count or attention
+      <code class="t-mono-inline">.fav.alert</code> nested under
+      <code class="t-mono-inline">.tab-spec</code> for unread count or attention
       state. Size matches <code class="t-mono-inline">--icon-md</code> so it
       reads legibly at retina + sub-retina densities.
     </dd>
@@ -127,9 +100,7 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">
-        &lt;meta name="theme-color"&gt;
-      </code>
+      <code class="t-mono-inline">&lt;meta name="theme-color"&gt;</code>
       matches <code class="t-mono-inline">--primary</code> for branded chrome;
       reset to <code class="t-mono-inline">--surface-default</code> on logout to
       avoid carry-over branding.

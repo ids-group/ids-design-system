@@ -23,14 +23,10 @@
           </span>
         }
 
-        <span class="name">
-          {{ row.label }}
-        </span>
+        <span class="name">{{ row.label }}</span>
 
         @if (row.note) {
-          <span class="note t-mono-inline">
-            {{ row.note }}
-          </span>
+          <span class="note t-mono-inline">{{ row.note }}</span>
         }
       </div>
 
@@ -57,9 +53,7 @@
               </span>
             }
           } @else {
-            <span class="na">
-              —
-            </span>
+            <span class="na">—</span>
           }
         </div>
       }

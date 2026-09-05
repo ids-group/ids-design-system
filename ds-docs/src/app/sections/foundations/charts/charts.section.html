@@ -3,10 +3,8 @@
   eyebrow="Foundations"
   title="Charts &amp; dataviz"
 >
-  <span lede>
-    Categorical, sequential and divergent palettes. Axis / grid / legend tokens.
-    Five reference chart types with empty + loading states.
-  </span>
+  <span lede>Categorical, sequential and divergent palettes. Axis / grid / legend tokens.
+    Five reference chart types with empty + loading states.</span>
 
   <h3 class="block-title t-h4">
     Categorical palette (8)
@@ -26,9 +24,7 @@
         >
         </div>
 
-        <code class="t-mono-inline">
-          --chart-cat-{{ n }}
-        </code>
+        <code class="t-mono-inline">--chart-cat-{{ n }}</code>
       </div>
     }
   </div>
@@ -51,9 +47,7 @@
         >
         </div>
 
-        <code class="t-mono-inline">
-          --chart-seq-{{ n }}
-        </code>
+        <code class="t-mono-inline">--chart-seq-{{ n }}</code>
       </div>
     }
   </div>
@@ -75,9 +69,7 @@
         >
         </div>
 
-        <code class="t-mono-inline">
-          {{ n > 0 ? '+' + n : n }}
-        </code>
+        <code class="t-mono-inline">{{ n > 0 ? '+' + n : n }}</code>
       </div>
     }
   </div>
@@ -107,9 +99,7 @@
       @for (t of axisTokens; track t.token) {
         <tr>
           <td>
-            <code class="t-mono-inline">
-              {{ t.token }}
-            </code>
+            <code class="t-mono-inline">{{ t.token }}</code>
           </td>
 
           <td>
@@ -134,9 +124,7 @@
         Resource allocations / week
       </h4>
 
-      <span class="sub">
-        Q3 2026
-      </span>
+      <span class="sub">Q3 2026</span>
     </div>
 
     <svg
@@ -228,9 +216,7 @@
           Kit out, by event
         </h4>
 
-        <span class="sub">
-          Aug 2026
-        </span>
+        <span class="sub">Aug 2026</span>
       </div>
 
       <svg
@@ -296,9 +282,7 @@
           Kit register status
         </h4>
 
-        <span class="sub">
-          412 items
-        </span>
+        <span class="sub">412 items</span>
       </div>
 
       <div class="donut-row">
@@ -449,24 +433,18 @@
         Kit excess / shortage by week (divergent)
       </h4>
 
-      <span class="sub">
-        Negative = shortage · Positive = excess
-      </span>
+      <span class="sub">Negative = shortage · Positive = excess</span>
     </div>
 
     <div class="heat">
       <span></span>
 
       @for (w of heatWeeks; track w) {
-        <span class="t-overline heat-col-h">
-          {{ w }}
-        </span>
+        <span class="t-overline heat-col-h">{{ w }}</span>
       }
 
       @for (row of heatRows; track row; let r = $index) {
-        <span class="t-s-bold heat-row-h">
-          {{ row }}
-        </span>
+        <span class="t-s-bold heat-row-h">{{ row }}</span>
 
         @for (v of heat[r]; track $index) {
           <div
@@ -505,9 +483,7 @@
           <p class="empty-msg">
             No data for this period.<br />
 
-            <span class="t-xs">
-              Pick a different week range.
-            </span>
+            <span class="t-xs">Pick a different week range.</span>
           </p>
         </div>
       </div>
@@ -519,9 +495,7 @@
           Allocations / week
         </h4>
 
-        <span class="sub">
-          Loading…
-        </span>
+        <span class="sub">Loading…</span>
       </div>
 
       <ds-skeleton height="var(--chart-skeleton-h)" />

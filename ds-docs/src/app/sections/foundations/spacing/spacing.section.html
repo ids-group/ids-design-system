@@ -3,10 +3,8 @@
   eyebrow="Foundations"
   title="Spacing"
 >
-  <span lede>
-    4-pixel base. Component padding lives at s-2 / s-3 / s-4. Page gutters at
-    s-5 / s-6. Section breaks at s-10+.
-  </span>
+  <span lede>4-pixel base. Component padding lives at s-2 / s-3 / s-4. Page gutters at
+    s-5 / s-6. Section breaks at s-10+.</span>
 
   <h3 class="block-title t-h4">
     Scale
@@ -20,13 +18,9 @@
   <div class="scale-list">
     @for (stop of stops; track stop.name) {
       <div class="scale-row">
-        <code class="t-mono-inline token-name">
-          --space-{{ stop.name }}
-        </code>
+        <code class="t-mono-inline token-name">--space-{{ stop.name }}</code>
 
-        <code class="t-mono-inline token-px">
-          {{ stop.px }}
-        </code>
+        <code class="t-mono-inline token-px">{{ stop.px }}</code>
 
         <div class="bar-track">
           <div

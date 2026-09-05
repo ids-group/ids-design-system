@@ -13,21 +13,15 @@
       routerLink="/"
       aria-label="Design System, home"
     >
-      <span class="mark">
-        D
-      </span>
+      <span class="mark">D</span>
 
       <!-- Always rendered, hidden by CSS when collapsed: mounting it on expand put
            the full name into a rail still 48px wide, so it wrapped to two lines and
            unwrapped again as the width animated. -->
       <div class="brand-text">
-        <span class="brand-name">
-          Design System
-        </span>
+        <span class="brand-name">Design System</span>
 
-        <small>
-          Boilerplate v{{ version }}
-        </small>
+        <small>Boilerplate v{{ version }}</small>
       </div>
     </a>
 
@@ -94,14 +88,10 @@
             [class.is-active]="isActive(item.anchor)"
             (click)="onItem(item.anchor)"
           >
-            <span class="link-label">
-              {{ item.label }}
-            </span>
+            <span class="link-label">{{ item.label }}</span>
 
             @if (item.new) {
-              <span class="nav-new">
-                new
-              </span>
+              <span class="nav-new">new</span>
             }
           </a>
         }

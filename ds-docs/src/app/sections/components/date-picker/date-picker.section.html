@@ -5,10 +5,8 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>
-    Calendar popover anchored to a date field. Single-day or range selection.
-    Range is the canonical use for Build / Access / Strike scheduling.
-  </span>
+  <span lede>Calendar popover anchored to a date field. Single-day or range selection.
+    Range is the canonical use for Build / Access / Strike scheduling.</span>
 
   <docs-nonmodal-note />
 
@@ -18,12 +16,8 @@
 
   <p class="block-desc t-s">
     The field accepts masked typing (the locale mask, e.g.
-    <code class="t-mono-inline">
-      MM/DD/YYYY
-    </code>); the calendar icon or
-    <kbd>
-      ↓
-    </kbd> opens a one-month panel.
+    <code class="t-mono-inline">MM/DD/YYYY</code>); the calendar icon or
+    <kbd>↓</kbd> opens a one-month panel.
   </p>
 
   <div class="row">
@@ -54,9 +48,7 @@
 
   <p class="block-desc t-s">
     New <code class="t-mono-inline">[label]</code> /
-    <code class="t-mono-inline">
-      [hint]
-    </code> inputs render the field-label
+    <code class="t-mono-inline">[hint]</code> inputs render the field-label
     above and a hint line below the trigger, matching the input/select field
     shape. <code class="t-mono-inline">[required]="true"</code> appends the
     asterisk; <code class="t-mono-inline">[optional]="true"</code> appends the
@@ -86,9 +78,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [invalid]="true"
-    </code> switches the hint to an
+    <code class="t-mono-inline">[invalid]="true"</code> switches the hint to an
     error message; <code class="t-mono-inline">[disabled]="true"</code>
     makes the picker inert.
   </p>
@@ -115,12 +105,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [minDate]
-    </code> and
-    <code class="t-mono-inline">
-      [maxDate]
-    </code> disable days outside the
+    <code class="t-mono-inline">[minDate]</code> and
+    <code class="t-mono-inline">[maxDate]</code> disable days outside the
     allowed window. Days before <code class="t-mono-inline">minDate</code> or
     after <code class="t-mono-inline">maxDate</code> are rendered as disabled
     and cannot be selected. The example below restricts to today ± 30 days.
@@ -141,12 +127,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [disabledDate]
-    </code> accepts a
-    <code class="t-mono-inline">
-      (date: Date) =&gt; boolean
-    </code> predicate. The
+    <code class="t-mono-inline">[disabledDate]</code> accepts a
+    <code class="t-mono-inline">(date: Date) =&gt; boolean</code> predicate. The
     example disables weekends — useful for booking working days only.
   </p>
 
@@ -171,26 +153,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [presets]
-    </code> renders a quick-pick button
+    <code class="t-mono-inline">[presets]</code> renders a quick-pick button
     column inside the calendar panel. Each preset carries a
-    <code class="t-mono-inline">
-      label
-    </code> and a
-    <code class="t-mono-inline">
-      value
-    </code> (<code class="t-mono-inline"
+    <code class="t-mono-inline">label</code> and a
+    <code class="t-mono-inline">value</code> (<code class="t-mono-inline"
       >Date</code
     >
     or <code class="t-mono-inline">RangeValue</code>). Disabled when its dates
     fall outside <code class="t-mono-inline">minDate</code> /
-    <code class="t-mono-inline">
-      maxDate
-    </code> /
-    <code class="t-mono-inline">
-      disabledDate
-    </code>.
+    <code class="t-mono-inline">maxDate</code> /
+    <code class="t-mono-inline">disabledDate</code>.
   </p>
 
   <div class="row">
@@ -236,9 +208,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [maxDate]="today"
-    </code> rejects future dates,
+    <code class="t-mono-inline">[maxDate]="today"</code> rejects future dates,
     and <code class="t-mono-inline">[defaultDate]</code> opens the panel on that
     date instead of the current month — the calendar focuses its exact day
     without selecting it.
@@ -259,17 +229,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [locale]
-    </code> drives month names, weekday
+    <code class="t-mono-inline">[locale]</code> drives month names, weekday
     headers and the value format together via <code>Intl</code> — no OS-locale
     mixing. <code class="t-mono-inline">[firstDayOfWeek]</code> (0–6, default
     Monday) shifts the week. Set app-wide via
-    <code class="t-mono-inline">
-      provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale {{ '}' }}
-      {{ '}' }})
-    </code
-    >.
+    <code class="t-mono-inline">provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale {{ '}' }}
+      {{ '}' }})</code>.
   </p>
 
   <div class="grid-2">
@@ -294,16 +259,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [dateFormat]
-    </code> pins an explicit token order
+    <code class="t-mono-inline">[dateFormat]</code> pins an explicit token order
     (<code class="t-mono-inline">DD</code> /
-    <code class="t-mono-inline">
-      MM
-    </code> /
-    <code class="t-mono-inline">
-      YYYY
-    </code>), overriding the locale-derived one.
+    <code class="t-mono-inline">MM</code> /
+    <code class="t-mono-inline">YYYY</code>), overriding the locale-derived one.
   </p>
 
   <div class="row">
@@ -320,9 +279,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [allowInput]="false"
-    </code> restores the
+    <code class="t-mono-inline">[allowInput]="false"</code> restores the
     button-only trigger — no manual typing, selection via the calendar only.
   </p>
 

@@ -6,16 +6,9 @@
   <span lede>
     Spinbox for small bounded quantities — increment / decrement buttons around
     a numeric value. Respects <code class="t-mono-inline">min</code> /
-    <code class="t-mono-inline">
-      max
-    </code> /
-    <code class="t-mono-inline">
-      step
-    </code>. Render via
-    <code class="t-mono-inline">
-      &lt;ds-number-stepper [(value)]="qty"&gt;
-    </code
-    >.
+    <code class="t-mono-inline">max</code> /
+    <code class="t-mono-inline">step</code>. Render via
+    <code class="t-mono-inline">&lt;ds-number-stepper [(value)]="qty"&gt;</code>.
   </span>
 
   <h3 class="block-title t-h4">
@@ -33,17 +26,13 @@
         [(value)]="qtySm"
       />
 
-      <code class="t-mono-inline">
-        size="sm"
-      </code>
+      <code class="t-mono-inline">size="sm"</code>
     </div>
 
     <div class="cell">
       <ds-number-stepper [(value)]="qtyMd" />
 
-      <code class="t-mono-inline">
-        size="md" · default
-      </code>
+      <code class="t-mono-inline">size="md" · default</code>
     </div>
 
     <div class="cell">
@@ -52,9 +41,7 @@
         [(value)]="qtyLg"
       />
 
-      <code class="t-mono-inline">
-        size="lg"
-      </code>
+      <code class="t-mono-inline">size="lg"</code>
     </div>
   </div>
 
@@ -63,12 +50,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [min]
-    </code> /
-    <code class="t-mono-inline">
-      [max]
-    </code> clamp the value; the buttons
+    <code class="t-mono-inline">[min]</code> /
+    <code class="t-mono-inline">[max]</code> clamp the value; the buttons
     disable at the bounds. <code class="t-mono-inline">[step]</code> sets the
     increment.
   </p>
@@ -81,9 +64,7 @@
         [(value)]="bounded"
       />
 
-      <code class="t-mono-inline">
-        min=0 max=10 · value {{ bounded() }}
-      </code>
+      <code class="t-mono-inline">min=0 max=10 · value {{ bounded() }}</code>
     </div>
 
     <div class="cell">
@@ -94,9 +75,7 @@
         [(value)]="stepped"
       />
 
-      <code class="t-mono-inline">
-        step=5 · value {{ stepped() }}
-      </code>
+      <code class="t-mono-inline">step=5 · value {{ stepped() }}</code>
     </div>
   </div>
 
@@ -111,9 +90,7 @@
         [disabled]="true"
       />
 
-      <code class="t-mono-inline">
-        [disabled]="true"
-      </code>
+      <code class="t-mono-inline">[disabled]="true"</code>
     </div>
   </div>
 </docs-section>

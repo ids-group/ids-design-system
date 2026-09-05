@@ -6,11 +6,9 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>
-    Six min-width breakpoint tokens, one column-count per tier, content caps for
+  <span lede>Six min-width breakpoint tokens, one column-count per tier, content caps for
     prose and page width. Page gutters scale with the viewport; content caps at
-    1280 px on the widest tier, fluid below.
-  </span>
+    1280 px on the widest tier, fluid below.</span>
 
   <h3 class="block-title t-h4">
     Breakpoints
@@ -18,35 +16,21 @@
 
   <p class="block-desc t-s">
     A custom property can't be read inside an
-    <code class="t-mono-inline">
-      &#64;media
-    </code>
+    <code class="t-mono-inline">&#64;media</code>
     condition, so for media queries use the compile-time Sass aliases instead:
     after
-    <code class="t-mono-inline">
-      &#64;use 'breakpoints' as bp
-    </code> write
-    <code class="t-mono-inline">
-      &#64;include bp.up(md)
-    </code> or
-    <code class="t-mono-inline">
-      bp.down(sm)
-    </code>, or read
-    <code class="t-mono-inline">
-      bp.$bp-md
-    </code> directly. The
-    <code class="t-mono-inline">
-      --bp-*
-    </code> custom properties below stay for
+    <code class="t-mono-inline">&#64;use 'breakpoints' as bp</code> write
+    <code class="t-mono-inline">&#64;include bp.up(md)</code> or
+    <code class="t-mono-inline">bp.down(sm)</code>, or read
+    <code class="t-mono-inline">bp.$bp-md</code> directly. The
+    <code class="t-mono-inline">--bp-*</code> custom properties below stay for
     regular rules and JS.
   </p>
 
   <div class="bp-list">
     @for (bp of breakpoints; track bp.token) {
       <div class="bp-row">
-        <code class="t-mono-inline bp-row-tok">
-          {{ bp.token }}
-        </code>
+        <code class="t-mono-inline bp-row-tok">{{ bp.token }}</code>
 
         <div class="t-s-bold bp-row-px">
           {{ bp.px }} px
@@ -109,9 +93,7 @@
           </dt>
 
           <dd>
-            <code class="t-mono-inline">
-              var({{ t.gutter }})
-            </code>
+            <code class="t-mono-inline">var({{ t.gutter }})</code>
           </dd>
 
           <dt>
@@ -119,9 +101,7 @@
           </dt>
 
           <dd>
-            <code class="t-mono-inline">
-              var({{ t.margin }})
-            </code>
+            <code class="t-mono-inline">var({{ t.margin }})</code>
           </dd>
 
           <dt>
@@ -129,9 +109,7 @@
           </dt>
 
           <dd>
-            <code class="t-mono-inline">
-              {{ t.cap }}
-            </code>
+            <code class="t-mono-inline">{{ t.cap }}</code>
           </dd>
         </dl>
       </div>
@@ -145,9 +123,7 @@
   <div class="cap-list">
     @for (c of colCaps; track c.token) {
       <div class="cap-row">
-        <code class="t-mono-inline cap-row-tok">
-          {{ c.token }}
-        </code>
+        <code class="t-mono-inline cap-row-tok">{{ c.token }}</code>
 
         <div class="t-s-bold cap-row-val">
           {{ c.value }}
@@ -166,41 +142,29 @@
 
   <ul class="rules-list">
     <li>
-      <strong>
-        One grid per page.
-      </strong> Sub-regions align to the same column
+      <strong>One grid per page.</strong> Sub-regions align to the same column
       track they inherit — never invent a local grid.
     </li>
 
     <li>
-      <strong>
-        Snap to columns, not to pixels.
-      </strong> Two-column splits at
+      <strong>Snap to columns, not to pixels.</strong> Two-column splits at
       desktop are 8 + 4 or 6 + 6 — never 7 + 5.
     </li>
 
     <li>
-      <strong>
-        Sidenav lives outside the grid.
-      </strong> Reserve a fixed rail
+      <strong>Sidenav lives outside the grid.</strong> Reserve a fixed rail
       (collapsed 64 px / open 240 px), then start the grid in the remaining
       width.
     </li>
 
     <li>
-      <strong>
-        Content cap.
-      </strong> Body text never exceeds 720 px width
+      <strong>Content cap.</strong> Body text never exceeds 720 px width
       regardless of grid — use
-      <code class="t-mono-inline">
-        --col-cap-text
-      </code>.
+      <code class="t-mono-inline">--col-cap-text</code>.
     </li>
 
     <li>
-      <strong>
-        Asymmetric layouts.
-      </strong> 8 + 4 is canonical for
+      <strong>Asymmetric layouts.</strong> 8 + 4 is canonical for
       record-detail pages (main + meta sidebar). 9 + 3 reserved for kit /
       track-plan picker rails.
     </li>

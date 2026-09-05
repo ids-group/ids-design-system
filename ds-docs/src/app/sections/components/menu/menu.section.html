@@ -9,7 +9,7 @@
     already provides its own surface. Each item is a full-width button with an
     optional leading icon. <code>error</code> turns the item red for destructive
     actions (Sign out, Delete); <code>disabled</code> dims it and blocks clicks.
-    To float it from a trigger, host it in a <code> ds-popover </code> — see the
+    To float it from a trigger, host it in a <code>ds-popover</code> — see the
     first demo.
   </span>
 
@@ -67,19 +67,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      description
-    </code> puts a second line under the
+    <code class="t-mono-inline">description</code> puts a second line under the
     label for a limitation the action carries. Unlike a
-    <code class="t-mono-inline">
-      [dsTooltip]
-    </code>, it is visible without hover
+    <code class="t-mono-inline">[dsTooltip]</code>, it is visible without hover
     or focus — which is the whole point of a caveat like "will not be saved".
     <br />
     It reaches assistive tech as
-    <code class="t-mono-inline">
-      aria-describedby
-    </code>, not as part of the
+    <code class="t-mono-inline">aria-describedby</code>, not as part of the
     item's name: the label names the action, the description describes it. So a
     screen reader announces "Export as CSV" and then the caveat, rather than one
     run-on name.
@@ -126,9 +120,7 @@
   <p class="block-desc t-s">
     Use <code class="t-mono-inline">ds-menu-divider</code> between item groups
     to create visual sections. It renders a thin
-    <code class="t-mono-inline">
-      role="separator"
-    </code> rule and is ignored by
+    <code class="t-mono-inline">role="separator"</code> rule and is ignored by
     keyboard navigation.
   </p>
 
@@ -169,16 +161,10 @@
 
   <p class="block-desc t-s">
     Pass a <code class="t-mono-inline">TemplateRef</code> to
-    <code class="t-mono-inline">
-      [submenu]
-    </code> on a
-    <code class="t-mono-inline">
-      ds-menu-item
-    </code>. The nested menu opens on
+    <code class="t-mono-inline">[submenu]</code> on a
+    <code class="t-mono-inline">ds-menu-item</code>. The nested menu opens on
     hover or <kbd>ArrowRight</kbd> and closes on <kbd>ArrowLeft</kbd> /
-    <kbd>
-      Escape
-    </kbd>.
+    <kbd>Escape</kbd>.
   </p>
 
   <div class="showcase-grid">

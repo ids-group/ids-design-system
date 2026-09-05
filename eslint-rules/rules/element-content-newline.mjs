@@ -39,6 +39,15 @@ export default {
       );
     }
 
+    // Phrasing elements whose surrounding whitespace is RENDERED. Breaking one open puts a space
+    // inside it, and `.t-mono-inline` paints a padded pill, so the chip grows 14% and any following
+    // comma is pushed off the word. The line-start test below cannot catch these: a reflow that
+    // moves a chip to column 0 is exactly what turned 870 of them back into the padded form.
+    const INLINE_TAGS = new Set([
+      'code', 'em', 'strong', 'b', 'i', 'u', 's', 'small', 'mark', 'kbd', 'samp', 'var',
+      'abbr', 'cite', 'q', 'sub', 'sup', 'time', 'span',
+    ]);
+
     function isSelfClosing(node) {
       const tag = text.substring(
         node.startSourceSpan.start.offset,
@@ -51,6 +60,8 @@ export default {
       if (!node.endSourceSpan) return;
 
       if (isWhitespaceSensitive(node.startSourceSpan.start.offset)) return;
+
+      if (INLINE_TAGS.has(node.name)) return;
 
       // Skip self-closing elements (<input />, <br />, <ng-content />, etc.)
       if (isSelfClosing(node)) return;

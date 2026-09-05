@@ -6,9 +6,7 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>
-    Initials and image avatars in four sizes, plus stacked groups with overflow.
-  </span>
+  <span lede>Initials and image avatars in four sizes, plus stacked groups with overflow.</span>
 
   <h3 class="block-title t-h4">
     Sizes
@@ -103,9 +101,7 @@
 
   <p class="block-desc t-s">
     When neither <code class="t-mono-inline">imageUrl</code> nor
-    <code class="t-mono-inline">
-      initials
-    </code> are provided, the avatar renders
+    <code class="t-mono-inline">initials</code> are provided, the avatar renders
     the <code class="t-mono-inline">fallbackIcon</code>.
   </p>
 
@@ -140,42 +136,28 @@
     deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> colour — the
     same person always gets the same tint across apps — with WHITE initials on
     every one. The helpers <code class="t-mono-inline">avatarTint</code> and
-    <code class="t-mono-inline">
-      initialsFrom
-    </code> (which also accepts a single
+    <code class="t-mono-inline">initialsFrom</code> (which also accepts a single
     full name) are exported for use outside the component.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      The trade this makes, stated plainly.
-    </strong>
+    <strong>The trade this makes, stated plainly.</strong>
     HSL lightness is not perceptually even, so a yellow lands far lighter than a
     blue at the same 62% — and that unevenness is what makes the row read as
     bright rather than uniform. White initials on the lighter hues measure as
     little as <strong>1.65:1</strong>, under the 4.5:1 WCAG AA asks of text. Use
     it where the avatar is decoration beside a name that is written out anyway;
     where the initials are the only identifier, pass your own
-    <code class="t-mono-inline">
-      lightness
-    </code> and
-    <code class="t-mono-inline">
-      foreground
-    </code>.
+    <code class="t-mono-inline">lightness</code> and
+    <code class="t-mono-inline">foreground</code>.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      Or pass the name and let the avatar do both.
-    </strong>
+    <strong>Or pass the name and let the avatar do both.</strong>
 
-    <code class="t-mono-inline">
-      name
-    </code> replaces the two bindings this demo
+    <code class="t-mono-inline">name</code> replaces the two bindings this demo
     wires by hand: it derives the initials AND seeds the tint.
-    <strong>
-      The tint hashes the NAME, never the initials
-    </strong> — two
+    <strong>The tint hashes the NAME, never the initials</strong> — two
     letters collide wholesale, so Alice Brown and Adam Bell would otherwise
     share one colour. Measured: same "AB", hues 198° and 356°.
   </p>
@@ -186,18 +168,11 @@
     a UI decision: a Spanish reader wants MG from "María José García López", an
     insurer wants BC from "Blue Cross Blue Shield". So the rule is replaceable,
     not configurable-by-mode —
-    <code class="t-mono-inline">
-      [initialsRule]
-    </code> for one table,
+    <code class="t-mono-inline">[initialsRule]</code> for one table,
     <code class="t-mono-inline"
-      >
-      provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
-    </code
-    >
+      >provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)</code>
     for the app. An explicit
-    <code class="t-mono-inline">
-      initials
-    </code> still wins over both.
+    <code class="t-mono-inline">initials</code> still wins over both.
   </p>
 
   <div class="row">
@@ -212,9 +187,7 @@
 
   <p class="block-desc t-s">
     Same seeds with
-    <code class="t-mono-inline">
-      [avoidHues]="[[310, 360], [0, 20]]"
-    </code> —
+    <code class="t-mono-inline">[avoidHues]="[[310, 360], [0, 20]]"</code> —
     pink and red hues are skipped so seeded avatars never clash with a brand
     colour:
   </p>

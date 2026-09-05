@@ -3,9 +3,7 @@
   eyebrow="Patterns"
   title="Activity"
 >
-  <span lede>
-    {{ lede }}
-  </span>
+  <span lede>{{ lede }}</span>
 
   <h3 class="block-title t-h4">
     Activity stream
@@ -28,13 +26,9 @@
 
           <div class="activity-body">
             <p class="t-s subject">
-              <strong>
-                {{ entry.actor }}
-              </strong>
+              <strong>{{ entry.actor }}</strong>
               {{ entry.verb }}
-              <strong>
-                {{ entry.object }}
-              </strong>
+              <strong>{{ entry.object }}</strong>
 
               @if (entry.badge) {
                 <ds-badge [status]="entry.badge.status">
@@ -50,9 +44,7 @@
             }
           </div>
 
-          <span class="t-s time">
-            {{ entry.time }}
-          </span>
+          <span class="t-s time">{{ entry.time }}</span>
         </li>
       }
     </ul>

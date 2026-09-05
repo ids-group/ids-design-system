@@ -3,10 +3,8 @@
   eyebrow="Components"
   title="Loading overlay"
 >
-  <span lede>
-    Covers a content region with a spinner and optional label while an async
-    operation is in progress.
-  </span>
+  <span lede>Covers a content region with a spinner and optional label while an async
+    operation is in progress.</span>
 
   <h3 class="block-title t-h4">
     Interactive demo
@@ -74,32 +72,24 @@
   </h3>
 
   <p class="block-desc t-s">
-    <strong>
-      A scrim that only stops the pointer is a trap.
-    </strong> The scrim
+    <strong>A scrim that only stops the pointer is a trap.</strong> The scrim
     is painted over the content, so it intercepts every click — but focus walked
     straight under it, and a keyboard user could reach and activate a control
     the mouse could not even touch, while its data was being replaced. So the
     covered content goes <code class="t-mono-inline">inert</code> while loading:
     not tabbable, and out of the accessibility tree.
-    <code class="t-mono-inline">
-      aria-busy
-    </code> stays on the host, so a reader
+    <code class="t-mono-inline">aria-busy</code> stays on the host, so a reader
     is still told why the content went quiet.
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [inertContent]="false"
-    </code> turns that off,
+    <code class="t-mono-inline">[inertContent]="false"</code> turns that off,
     and is for a scrim that covers only PART of its content — a blanket flag
     would take the uncovered part with it. The consumer then marks the covered
     subtree itself. <code class="t-mono-inline">ds-table</code> does exactly
     this: its scrim starts below the header, because re-sorting is what puts the
     scrim up in the first place, so only its
-    <code class="t-mono-inline">
-      &lt;tbody&gt;
-    </code> goes inert and the header
+    <code class="t-mono-inline">&lt;tbody&gt;</code> goes inert and the header
     stays operable.
   </p>
 </docs-section>

@@ -5,9 +5,7 @@
 >
   <span lede>
     Slide-in panel for inline edit flows. Renders as fixed-position when
-    <code class="t-mono-inline">
-      [open]
-    </code> is true. Three sizes (sm = 320 px,
+    <code class="t-mono-inline">[open]</code> is true. Three sizes (sm = 320 px,
     md = 480 px, lg = 640 px) and four placements (right, left, top, bottom).
     Use a drawer over a modal when the form needs more vertical room or runs
     alongside the underlying page state.
@@ -26,9 +24,7 @@
         style="color: var(--text-secondary); margin: 0"
       >
         Opened from the <strong>{{ activePlacement() }}</strong> edge at
-        <strong>
-          {{ activeSize() }}
-        </strong>
+        <strong>{{ activeSize() }}</strong>
         width.
       </p>
     </ng-container>
@@ -54,9 +50,7 @@
 
   <p class="block-desc t-s">
     Click to open the drawer at the right edge (md). Click X or press
-    <kbd>
-      Esc
-    </kbd> to close.
+    <kbd>Esc</kbd> to close.
   </p>
 
   <div class="demo">
@@ -73,15 +67,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code>
-      placement
-    </code> controls which edge the drawer slides in from.
-    <code>
-      right
-    </code> (default) and <code>left</code> use the width token;
-    <code>
-      top
-    </code> and <code>bottom</code> span full-width at up to 80 vh.
+    <code>placement</code> controls which edge the drawer slides in from.
+    <code>right</code> (default) and <code>left</code> use the width token;
+    <code>top</code> and <code>bottom</code> span full-width at up to 80 vh.
   </p>
 
   <div class="demo placement-demo">

@@ -4,11 +4,9 @@
   title="Borders &amp; dividers"
   [apiKeys]="['divider']"
 >
-  <span lede>
-    Two widths × six roles. Width carries semantic weight: hairline for
+  <span lede>Two widths × six roles. Width carries semantic weight: hairline for
     everything, regular for inputs, strong for emphasis (selected radio, slider
-    thumb, focus rings).
-  </span>
+    thumb, focus rings).</span>
 
   <h3 class="block-title t-h4">
     Widths
@@ -27,9 +25,7 @@
           {{ width.value }}
         </div>
 
-        <code class="t-mono-inline width-cell-tok">
-          {{ width.token }}
-        </code>
+        <code class="t-mono-inline width-cell-tok">{{ width.token }}</code>
 
         <div class="t-xs width-cell-use">
           {{ width.use }}
@@ -63,9 +59,7 @@
       @for (role of roles; track role.token) {
         <tr>
           <td>
-            <code class="t-mono-inline">
-              {{ role.token }}
-            </code>
+            <code class="t-mono-inline">{{ role.token }}</code>
           </td>
 
           <td>
@@ -117,21 +111,15 @@
     </p>
 
     <div class="divider-vertical-row">
-      <span class="t-s">
-        Item one
-      </span>
+      <span class="t-s">Item one</span>
 
       <ds-divider variant="vertical" />
 
-      <span class="t-s">
-        Item two
-      </span>
+      <span class="t-s">Item two</span>
 
       <ds-divider variant="vertical" />
 
-      <span class="t-s">
-        Item three
-      </span>
+      <span class="t-s">Item three</span>
     </div>
   </div>
 
@@ -143,9 +131,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [spacing]
-    </code> controls the vertical gap above
+    <code class="t-mono-inline">[spacing]</code> controls the vertical gap above
     and below the rule. Defaults to <code class="t-mono-inline">"md"</code> —
     pick <code class="t-mono-inline">"none"</code> when the parent owns spacing.
   </p>
@@ -155,42 +141,30 @@
       spacing="none"
     </p>
 
-    <span class="t-s">
-      Before
-    </span>
+    <span class="t-s">Before</span>
 
     <ds-divider spacing="none" />
 
-    <span class="t-s">
-      After
-    </span>
+    <span class="t-s">After</span>
 
     <p class="t-s demo-label">
       spacing="sm"
     </p>
 
-    <span class="t-s">
-      Before
-    </span>
+    <span class="t-s">Before</span>
 
     <ds-divider spacing="sm" />
 
-    <span class="t-s">
-      After
-    </span>
+    <span class="t-s">After</span>
 
     <p class="t-s demo-label">
       spacing="lg"
     </p>
 
-    <span class="t-s">
-      Before
-    </span>
+    <span class="t-s">Before</span>
 
     <ds-divider spacing="lg" />
 
-    <span class="t-s">
-      After
-    </span>
+    <span class="t-s">After</span>
   </div>
 </docs-section>

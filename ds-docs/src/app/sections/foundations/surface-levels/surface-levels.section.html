@@ -3,11 +3,9 @@
   eyebrow="Foundations"
   title="Surface levels"
 >
-  <span lede>
-    Eight surface roles. They're not strict elevation tiers — they're contextual
+  <span lede>Eight surface roles. They're not strict elevation tiers — they're contextual
     lanes that compose. A card on the canvas can have a subtle hover lane and a
-    muted code block inside it.
-  </span>
+    muted code block inside it.</span>
 
   <div class="grid">
     @for (s of surfaces; track s.token) {
@@ -22,9 +20,7 @@
           {{ s.name }}
         </div>
 
-        <code class="t-mono-inline cell-tok">
-          {{ s.token }}
-        </code>
+        <code class="t-mono-inline cell-tok">{{ s.token }}</code>
 
         <div class="t-xs cell-desc">
           {{ s.desc }}
