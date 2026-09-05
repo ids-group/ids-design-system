@@ -17,6 +17,13 @@
         "menuItems",
         "SplitButtonItem",
         "SplitButtonComponent"
+      ],
+      "detect": [
+        "SplitButtonItem[]",
+        "menuItems =",
+        "menuItems:",
+        ".filter(",
+        "signal<SplitButtonItem"
       ]
     },
     {
@@ -49,7 +56,7 @@
       "old": "--ds-button-focus-shadow",
       "new": "--focus-ring-color",
       "action": "Replace every `--ds-<component>-focus-shadow` override on a control with `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the same scope.",
-      "appliesWhen": "Only the thirteen control components that published one: button, icon-button, card, checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group, menu-item. Field tokens such as `--ds-input-focus-shadow` are unchanged.",
+      "appliesWhen": "Only the thirteen control components that published one: button, icon-button, card, checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group, menu-item. Field tokens such as `--ds-input-focus-shadow` are unchanged. The umbrella `--ds-control-focus-shadow` is the same case and needs the same edit: it still resolves, and the date and time pickers still read it, but none of the thirteen does any more — an override that used to recolour every control is now a silent no-op on them.",
       "pitfall": "An override of a removed token is a custom property like any other — it sets, it cascades, and it changes nothing. The control keeps the default ring and no build or console says why.",
       "note": "Each of these resolved to `--ds-control-focus-shadow`, which controls no longer read. The three ring tokens replace them and cascade the same way, so a per-component override becomes a scoped one: set them on the component's own selector rather than at `:root`.",
       "verify": "Focus the component you overrode: the ring shows your colour and thickness, not the default brand ring.",
@@ -57,6 +64,7 @@
         "--ds-button-focus-shadow",
         "--ds-tabs-focus-shadow",
         "--ds-card-focus-shadow",
+        "--ds-control-focus-shadow",
         "focus-shadow"
       ]
     },
@@ -148,7 +156,7 @@
       "old": "ds-table[exportButton]",
       "new": "dsTableExport",
       "action": "Import DsTableExport from '@ids-group-ltd/ids-design-system/table-export', add it to the component's imports, and replace [exportButton]=\"true\" on the element with the dsTableExport attribute. Move exportFilename, exportFetcher and (exportFailed) bindings across unchanged — they are the directive's inputs now and still sit on the same element.",
-      "appliesWhen": "A <ds-table> that renders the built-in CSV button or binds any export input. NOT affected: a table that only calls table.runExport() from a button of its own — those methods stay on the component and keep working.",
+      "appliesWhen": "A <ds-table> that renders the built-in CSV button, binds any export input, or calls table.runExport() / table.exportCsv() from a button of its own — the methods stay on the component, but they carry out an export only while the directive is on that table. To keep a button of your own and hide the built-in one, put dsTableExport on the element and bind [dsTableExport]=\"false\". NOT affected: a table with no export of any kind.",
       "pitfall": "Forgetting the import is a build error, not a silent loss: exportFilename, exportFetcher and exportFailed left the component with the button, so a template that still binds them fails with NG8002 \"Can't bind to 'exportFetcher' since it isn't a known property of 'ds-table'\". The silent case is the other one — a table that renders no export binding at all and drives the feature from a button of its own through runExport() or exportCsv(): those still compile, and with no directive present they do nothing but log a development-mode warning.",
       "surface": "template",
       "searchHints": [
@@ -156,6 +164,13 @@
         "exportFetcher",
         "exportFilename",
         "exportFailed"
+      ],
+      "detect": [
+        ".runExport(",
+        ".exportCsv(",
+        ".exporting()",
+        "viewChild(TableComponent",
+        "ViewChild(TableComponent"
       ],
       "verify": "Every table that used to show the CSV button carries the dsTableExport attribute AND the component declaring it imports DsTableExport.",
       "note": "The button was the only rendered part of the feature, so it is the one thing a reader loses if the directive is forgotten. The export code left the component because a static reference is what a bundler cannot remove — a runtime flag would have shipped it to every table regardless."
@@ -175,6 +190,15 @@
         "columnOrder",
         "hideable"
       ],
+      "detect": [
+        "hideable: true",
+        "hidden: true",
+        "TableColumn",
+        "hiddenKeys",
+        "columnOrder",
+        "viewChild(TableComponent",
+        "ViewChild(TableComponent"
+      ],
       "verify": "Every table whose columns can be reordered, hidden or shown carries dsTableColumns, and the picker opens from the header.",
       "note": "This is the feature that earned the split: it takes @angular/cdk/drag-drop with it, which is most of the 19 KB a table no longer costs."
     },
@@ -190,6 +214,13 @@
       "searchHints": [
         "resizableColumns",
         "columnWidths"
+      ],
+      "detect": [
+        "columnWidths",
+        "columnWidthsChange",
+        "viewChild(DsTableResize",
+        "viewChild(TableComponent",
+        "ViewChild(TableComponent"
       ],
       "verify": "Every table that could be resized carries dsTableResize, and its header separators are focusable.",
       "note": "Truncation stayed on the component: it measures the DOM rather than the dragged width, so it never depended on resizing."
