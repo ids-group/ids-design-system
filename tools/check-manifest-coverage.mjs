@@ -238,8 +238,12 @@ function manifestFor(version) {
   const patterns = patternsIn(text);
   return {
     path,
+    // Boundaried, never a substring: `ds-accordion-item` in the manifest would otherwise answer
+    // for an entry about `ds-accordion`, and `--ds-toast-border-color` for `--ds-toast-border`.
     names: (hook) =>
-      text.includes(hook) || patterns.some((pattern) => pattern.test(hook)),
+      new RegExp(
+        `(?<![\w-])${hook.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\w-])`,
+      ).test(text) || patterns.some((pattern) => pattern.test(hook)),
   };
 }
 
