@@ -1392,5 +1392,12 @@
   "--ds-motion-check-enter-duration": "How long a check mark takes to land. Defaults to --duration-base.",
   "--ds-motion-check-enter-easing": "Easing a check mark lands on. Defaults to --ease-spring, which overshoots and settles.",
   "--ds-motion-check-exit-duration": "How long a check mark takes to leave. Defaults to --duration-fast, shorter than the entrance.",
-  "--ds-motion-check-exit-easing": "Easing a check mark leaves on. Defaults to --ease-accelerate, so it does not overshoot on the way out."
+  "--ds-motion-check-exit-easing": "Easing a check mark leaves on. Defaults to --ease-accelerate, so it does not overshoot on the way out.",
+  "--ds-list-item-selected-icon-color": "Icon colour in a selected list row. Defaults to the row's selected label colour, so icon and text move together.",
+  "--ds-menu-item-icon-size": "Menu-item icon box. Defaults to 16px, and it is the width every item reserves once any item in the menu has an icon, so the labels line up.",
+  "--ds-tree-row-selected-icon-color": "Icon colour in a selected tree row. Defaults to the row's selected text colour.",
+  "--ds-split-button-bg-color-active": "Split-button fill while pressed. Defaults to its own fill mixed 76% with black.",
+  "--ds-split-button-outline-bg-color-active": "Pressed fill for the outline variant, which has no fill of its own to darken. Defaults to --surface-muted.",
+  "--ds-split-button-press-scale": "How far the button shrinks under the pointer. Defaults to 0.98, matching ds-button.",
+  "--ds-split-button-pressed-shadow": "Shadow while pressed. Defaults to `none` — the scale carries the press on its own."
 }
