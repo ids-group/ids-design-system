@@ -88,6 +88,20 @@ const FORWARD_PROSE =
 const DEFAULT_CHANGE =
   /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults|\bwas [^,.]{1,40}, now\b/i;
 
+// Both patterns read prose, so both hit a sentence that says the OPPOSITE — "still defaults to
+// `false`", "not deferred to a later release". Test one sentence at a time and let it withdraw.
+const sentencesOf = (text) =>
+  String(text ?? '')
+    .split(/(?<=[.!?])\s+|\n+/)
+    .filter((one) => one.trim());
+const CONTINUITY =
+  /\b(still|unchanged|untouched|remains?|always defaulted|(?:does|do|did|will) not change|no change|the same)\b/i;
+// `no longer defaults to true` IS a changed default, so a bare negation cannot be the guard.
+const DENIES_DEFERRAL = (sentence) =>
+  /\b(not|nothing|never|neither)\b/i.test(sentence) && !/\buntil\b/i.test(sentence);
+const claimsIn = (pattern, text, withdraws) =>
+  sentencesOf(text).some((one) => pattern.test(one) && !withdraws(one));
+
 // A field's worth of structure typed into prose, which is what a missing field looks like from
 // the outside.
 const STRUCTURAL_MARKER =
@@ -308,7 +322,10 @@ for (const [name, manifest] of manifests) {
       );
     }
 
-    if (DEFAULT_CHANGE.test(item.note ?? '') && item.restore === undefined) {
+    if (
+      claimsIn(DEFAULT_CHANGE, item.note, (one) => CONTINUITY.test(one)) &&
+      item.restore === undefined
+    ) {
       at(
         'M024',
         'reads as a changed default with no `restore` — give the literal snippet, ' +
@@ -327,7 +344,13 @@ for (const [name, manifest] of manifests) {
           'declare `supersedes` on the LATER item instead',
       );
     }
-    if (FORWARD_PROSE.test(`${item.note ?? ''} ${item.restore ?? ''}`)) {
+    if (
+      claimsIn(
+        FORWARD_PROSE,
+        `${item.note ?? ''} ${item.restore ?? ''}`,
+        DENIES_DEFERRAL,
+      )
+    ) {
       at(
         'M029',
         'the note or restore refers to a later release — an upgrade applies this ' +
