@@ -68,7 +68,7 @@
         <!-- Whitespace-tight on purpose: the overlay paints with `white-space:
              pre`, so it must hug its tags or stray whitespace would render
              and shift later glyphs out of alignment. -->
-        <!-- eslint-disable ds/template/element-content-newline -->
+
         <span
           class="mask-ghost"
           aria-hidden="true"
@@ -77,7 +77,7 @@
             <span [class.muted]="part.muted">{{ part.text }}</span>
           }
         </span>
-        <!-- eslint-enable ds/template/element-content-newline -->
+
       }
     </span>
 
