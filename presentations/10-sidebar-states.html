@@ -182,7 +182,7 @@
   .nav .row:hover { background: var(--surface-secondary); }
 
   /* Every variant differs ONLY in what `.row.on` and `.grp.open` look like.
-     Everything above this line is identical across all five. */
+     Everything above this line is identical across all ten. */
 
   /* A — typographic only */
   .v-a .row.on { color: var(--accent-strong); font-weight: var(--font-weight-bold); }
@@ -233,6 +233,65 @@
     font-weight: var(--font-weight-bold);
   }
 
+  /* F — the fill carries the row, a dot inside it anchors the text */
+  .v-f .row.on {
+    background: var(--accent-muted);
+    color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+    position: relative;
+    padding-left: var(--space-5);
+  }
+  .v-f .row.on::before {
+    content: '';
+    position: absolute;
+    left: var(--space-2); top: 50%;
+    width: 5px; height: 5px;
+    margin-top: -2.5px;
+    border-radius: 50%;
+    background: var(--accent-strong);
+  }
+  .v-f .row { padding-left: var(--space-5); }
+  .v-f .kids .row { margin-left: calc(var(--indent) - var(--space-3)); }
+
+  /* G — the same fill at full radius, Material 3's "pill-shaped" read literally */
+  .v-g .row.on {
+    background: var(--accent-muted);
+    color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-pill);
+  }
+
+  /* H — edge to edge, so the row reads as a selected section rather than an object in a list */
+  .v-h { padding-left: 0; padding-right: 0; }
+  .v-h .grp, .v-h .row { padding-left: var(--space-3); padding-right: var(--space-3); }
+  .v-h .kids .row { margin-left: 0; padding-left: calc(var(--space-3) + var(--indent)); }
+  .v-h .row { border-radius: 0; }
+  .v-h .row.on {
+    background: var(--accent-muted);
+    color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+  }
+
+  /* I — fill for the choice, guide line for the belonging */
+  .v-i .kids {
+    margin-left: calc(var(--indent) - 1px);
+    border-left: 1px solid var(--border-divider);
+    padding-left: var(--space-2);
+  }
+  .v-i .kids .row { margin-left: 0; }
+  .v-i .row.on {
+    background: var(--accent-muted);
+    color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+  }
+
+  /* J — neutral fill, the accent kept in the text alone */
+  .v-j .row.on {
+    background: var(--surface-muted);
+    color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+  }
+
   .chosen {
     margin-left: auto;
     padding: 1px 7px;
@@ -271,7 +330,7 @@
 <h1>Состояния сайдбара</h1>
 <p class="lede">
   Чем различать закрытую группу, открытую группу, выбранного ребёнка группы и просто выбранный
-  пункт. Пять вариантов, каждый отрисован живым — одна и та же навигация, отличается только
+  пункт. Десять вариантов, каждый отрисован живым — одна и та же навигация, отличается только
   трактовка состояний. Всё построено на токенах системы, ни одного нового цвета.
 </p>
 
@@ -355,7 +414,7 @@
 <h2>Варианты</h2>
 <p>
   В каждом: закрытая группа, открытая группа с выбранным ребёнком, отдельный выбранный пункт вне
-  группы. Наведите курсор — состояние hover одинаково во всех пяти и не участвует в выборе.
+  группы. Наведите курсор — состояние hover одинаково во всех десяти и не участвует в выборе.
 </p>
 
 <div class="variants">
@@ -400,7 +459,8 @@
     </div>
     <p class="variant-note">
       Дети открытой группы висят на тонкой вертикали. Сегмент линии напротив выбранного —
-      акцентный. Структура рисует и вложенность, и выбор.
+      акцентный. Структура рисует и вложенность, и выбор, без единой заливки. Ср. I, где та же
+      вертикаль сочетается с заливкой.
     </p>
     <nav class="nav v-b">
       <button class="grp" type="button">
@@ -496,8 +556,8 @@
       <span class="chosen">выбрано</span>
     </div>
     <p class="variant-note">
-      Единственная заливка во всей подборке — и она на пункте, никогда на группе. Выбрано
-      2026-09-06 и внедрено; ниже — почему это подтверждается практикой, а моя рекомендация нет.
+      Заливка на пункте, никогда на группе — простейшая её форма, без второго маркера и без
+      правки радиуса. Выбрано 2026-09-06 и внедрено; F–J разрабатывают эту же мысль дальше.
     </p>
     <nav class="nav v-e">
       <button class="grp" type="button">
@@ -518,6 +578,161 @@
         Patterns
       </button>
       <a class="row" href="#e"><span class="label">Changelog</span></a>
+    </nav>
+  </div>
+
+  <!-- F -->
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">F</span>
+      <span class="variant-name">Точка и фон</span>
+    </div>
+    <p class="variant-note">
+      Заливка держит строку, точка внутри неё ставит якорь на текст. Два разных языка в одном состоянии: площадь говорит «эта строка», точка — «вот здесь».
+    </p>
+    <nav class="nav v-f">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#f"><span class="label">Borders</span></a>
+        <a class="row on" href="#f"><span class="label">Color</span></a>
+        <a class="row" href="#f"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+      <a class="row" href="#f"><span class="label">Changelog</span></a>
+    </nav>
+  </div>
+
+  <!-- G -->
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">G</span>
+      <span class="variant-name">Пилюля</span>
+    </div>
+    <p class="variant-note">
+      Та же заливка, но радиус полный. Material 3 описывает индикатор буквально как «pill-shaped», так что это самая дословная реализация конвенции.
+    </p>
+    <nav class="nav v-g">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#g"><span class="label">Borders</span></a>
+        <a class="row on" href="#g"><span class="label">Color</span></a>
+        <a class="row" href="#g"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+      <a class="row" href="#g"><span class="label">Changelog</span></a>
+    </nav>
+  </div>
+
+  <!-- H -->
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">H</span>
+      <span class="variant-name">Заливка во всю ширину</span>
+    </div>
+    <p class="variant-note">
+      Полоса от края до края рельса, без боковых полей. Так делают VS Code и Slack: строка читается как выбранная секция, а не как отдельный объект в списке.
+    </p>
+    <nav class="nav v-h">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#h"><span class="label">Borders</span></a>
+        <a class="row on" href="#h"><span class="label">Color</span></a>
+        <a class="row" href="#h"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+      <a class="row" href="#h"><span class="label">Changelog</span></a>
+    </nav>
+  </div>
+
+  <!-- I -->
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">I</span>
+      <span class="variant-name">Заливка и направляющая</span>
+    </div>
+    <p class="variant-note">
+      Заливка отвечает за выбор, вертикаль — за принадлежность к группе. Единственный вариант, где структура открытой группы нарисована явно, но не фоном.
+    </p>
+    <nav class="nav v-i">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#i"><span class="label">Borders</span></a>
+        <a class="row on" href="#i"><span class="label">Color</span></a>
+        <a class="row" href="#i"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+      <a class="row" href="#i"><span class="label">Changelog</span></a>
+    </nav>
+  </div>
+
+  <!-- J -->
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">J</span>
+      <span class="variant-name">Нейтральная заливка</span>
+    </div>
+    <p class="variant-note">
+      Фон серый, акцент живёт только в тексте. Пригодится, если синей заливки в интерфейсе станет слишком много и её захочется приберечь для действий.
+    </p>
+    <nav class="nav v-j">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#j"><span class="label">Borders</span></a>
+        <a class="row on" href="#j"><span class="label">Color</span></a>
+        <a class="row" href="#j"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+      <a class="row" href="#j"><span class="label">Changelog</span></a>
     </nav>
   </div>
 
@@ -562,10 +777,70 @@
       <td><strong>E</strong> заливка пункта</td>
       <td>площадь</td>
       <td>да</td>
-      <td>это фон, пусть и маленький; в открытой группе без плашки он снова начинает работать, но остаётся тем же приёмом, что отклонён</td>
+      <td>ничего: запрет касался группы, не пункта. Выбрано</td>
+    </tr>
+    <tr>
+      <td><strong>F</strong> точка и фон</td>
+      <td>площадь + геометрия</td>
+      <td>да — точка переживает сворачивание</td>
+      <td>два маркера на одно состояние; отступ слева отбирается у всех строк, чтобы точке было где стоять</td>
+    </tr>
+    <tr>
+      <td><strong>G</strong> пилюля</td>
+      <td>площадь</td>
+      <td>да</td>
+      <td>полный радиус спорит с <code>--radius-md</code> остальных строк и с прямыми углами полей рядом</td>
+    </tr>
+    <tr>
+      <td><strong>H</strong> во всю ширину</td>
+      <td>площадь до краёв</td>
+      <td>да</td>
+      <td>полоса упирается в границу рельса, поэтому радиус теряется и строка перестаёт быть объектом</td>
+    </tr>
+    <tr>
+      <td><strong>I</strong> заливка и направляющая</td>
+      <td>площадь + структура</td>
+      <td>нет — линия висит на детях</td>
+      <td>два приёма разом: линия рисует группу, заливка — выбор; на два уровня это читается, на три уже нет</td>
+    </tr>
+    <tr>
+      <td><strong>J</strong> нейтральная заливка</td>
+      <td>площадь</td>
+      <td>да</td>
+      <td><strong>совпадает с нажатием:</strong> <code>.link:active</code> уже красится в <code>--surface-muted</code>, и от серого ховера отличается на 1.08 — тот же оттенок, чуть темнее</td>
     </tr>
   </tbody>
 </table>
+
+<h3>Заливки, померенные</h3>
+<table>
+  <thead>
+    <tr><th>Заливка</th><th>Где</th><th>vs белая страница</th><th>vs серый ховер</th><th>текст #1d43ed</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--accent-muted</code> #e1e6fe</td><td>E F G H I</td>
+      <td class="num">1.24</td><td class="num">1.12</td><td class="num">5.51</td>
+    </tr>
+    <tr>
+      <td><code>--surface-muted</code> #e8ecf2</td><td>J</td>
+      <td class="num">1.19</td><td class="num">1.08</td><td class="num">5.75</td>
+    </tr>
+    <tr>
+      <td><code>--surface-secondary</code> #f1f4f9</td><td>ховер во всех</td>
+      <td class="num">1.10</td><td class="num">—</td><td class="num">6.19</td>
+    </tr>
+    <tr>
+      <td><code>--accent-subtitle</code> #f0f3ff</td><td>черновик E, отвергнут</td>
+      <td class="num">1.11</td><td class="num">1.00</td><td class="num">6.16</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Последняя строка — почему черновик не годился: <strong>1.00 против ховера</strong>, то есть
+  наведённая и выбранная строки одной светлоты. Колонка «vs серый ховер» и есть та величина, ради
+  которой выбирается заливка: она измеряет, отличается ли выбранное от того, на что просто навели.
+</p>
 
 <div class="verdict">
   <h2>Решение: E, и рекомендация была неверна</h2>
@@ -597,6 +872,35 @@
     компонента и отдельное решение — сюда не внесена.
   </p>
 
+  <h2>Пять добавленных: что каждая меняет по существу</h2>
+  <p>
+    <strong>F, точка и фон</strong> — единственная из пяти, которая добавляет к выбранному пункту
+    вторую, нецветовую величину поверх заливки. Полезно там, где заливка может оказаться слабой:
+    точка читается независимо от того, насколько фон отличается от фона страницы. Цена — колонка
+    слева отбирается у всех строк, включая невыбранные, иначе точке негде стоять без сдвига текста.
+  </p>
+  <p>
+    <strong>G, пилюля</strong> — та же заливка, но радиус полный, как в дословной формулировке
+    Material 3. Смотреть стоит на соседей: в этом сайдбаре поля и кнопки скруглены по
+    <code>--radius-md</code>, и полный радиус выбивается из этого ряда, а не поддерживает его.
+  </p>
+  <p>
+    <strong>H, во всю ширину</strong> — путь VS Code и Slack. Строка перестаёт быть объектом в
+    списке и становится выбранной секцией рельса. Работает, когда рельс узкий и служебный; здесь
+    рельс широкий, с поиском и отступами, и полоса до краёв ломает его внутренние поля.
+  </p>
+  <p>
+    <strong>I, заливка и направляющая</strong> — единственная, где структура открытой группы
+    нарисована явно, но не фоном: вертикаль связывает детей с родителем, заливка отвечает только за
+    выбор. Ближе всего к исходной формулировке «различать структурой», не нарушая её.
+  </p>
+  <p>
+    <strong>J, нейтральная заливка</strong> — и её стоит отклонить по измеримой причине, а не по
+    вкусу: <code>--surface-muted</code> уже занят состоянием нажатия (<code>.link:active</code>), а
+    от серого ховера отличается всего на 1.08 и тем же оттенком. Выбранное, наведённое и нажатое
+    сливаются в три оттенка одного серого.
+  </p>
+
   <h2>Что рекомендовалось до источников</h2>
   <p>
     <strong>B — направляющая линия.</strong> Она единственная отвечает на всё сразу тем самым
@@ -611,8 +915,9 @@
     честное: в списке на сорок пунктов взгляд ищет выбранный дольше.
   </p>
   <p>
-    <strong>Против D</strong> — подчёркивание в навигации спорит со ссылкой. <strong>Против E</strong>
-    — это по-прежнему заливка; она снята с группы, но приём тот же.
+    <strong>Против D</strong> — подчёркивание в навигации спорит со ссылкой. Довод против E
+    здесь стоял такой: «это по-прежнему заливка, приём тот же». Он и оказался ошибкой — приём был
+    отклонён для группы, а не для пункта, и источники говорят за него.
   </p>
 </div>
 
