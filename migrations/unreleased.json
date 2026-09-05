@@ -1,6 +1,32 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "subclass-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "class MyThing extends TableComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
+      "appliesWhen": "Only a class that extends TableComponent. A consumer who uses the element in a template needs nothing — no input, output, token or class changed name or type in this release.",
+      "pitfall": "Neither member is public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and a same-named method whose signature differs fails with TS2416 instead.",
+      "note": "TableComponent gained `showsLoadingSpace`, a computed that keeps a body open while the table is still loading and has no rows to show, and `publishHeadHeight`, which measures the header and publishes its height for the scrim to inset against. Both are internal to the component and neither appears in the component reference. They are named here so that a collision in a subclass is greppable from the release that introduced them.",
+      "verify": "The app builds with no TS2415 or TS2416 naming TableComponent, and no member of your subclass is called showsLoadingSpace or publishHeadHeight.",
+      "searchHints": [
+        "extends TableComponent",
+        "showsLoadingSpace",
+        "publishHeadHeight",
+        "TS2415",
+        "TS2416"
+      ],
+      "detect": [
+        "extends TableComponent",
+        "override showsLoadingSpace",
+        "override publishHeadHeight"
+      ],
+      "restore": null
+    }
+  ],
   "informational": [
     "The `ds-skeleton` shimmer travels diagonally now and crosses as two waves per period, one quiet and one main, with no seam anywhere in the loop. Four new hooks with defaults — `--ds-skeleton-wave-period`, `--ds-skeleton-wave-duration`, `--ds-skeleton-wave-angle`, `--ds-skeleton-wave-echo-color`. The tone is unchanged; a skeleton you never tuned simply reads calmer. NO ACTION."
   ],

@@ -29,6 +29,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `--ds-skeleton-wave-duration` (3400ms), `--ds-skeleton-wave-angle` (135deg) and
   `--ds-skeleton-wave-echo-color`.
 
+- **`TableComponent` gained two members — only matters if you SUBCLASS it.**
+  `showsLoadingSpace` decides whether a table that is still loading and has no rows yet holds a
+  body open instead of collapsing onto its header, and `publishHeadHeight` measures the header and
+  publishes its height for the scrim to inset against. Neither is public API and that is no
+  protection: `private` and `protected` collide with TS2415 exactly as a public name does, so a
+  member of yours sharing one of those names stops the build. Nothing changes for a consumer who
+  only uses the element — no input, output or token changed name or type.
+
 ## 0.12.1 — 2026-09-05
 
 ### Breaking
