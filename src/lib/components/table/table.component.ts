@@ -1152,18 +1152,27 @@ export class TableComponent<T extends object> {
     // from padding and line-height: `vertical-align: middle` on the inline-flex label extends
     // the line box past the strut by a font-metric amount no calc() can carry, and a sum is
     // blind to a taller control in the header.
-    effect(() => {
-      if (!this.isOverlayLoading()) {
-        return;
-      }
+    //
+    // Observed rather than read once while loading: a header that wraps on a narrower column, or
+    // a density change, moves it after the read — and gated on `isOverlayLoading` the first frame
+    // of every load painted the scrim at the 40px fallback, over the bottom of a 44.5px header.
+    effect((onCleanup) => {
       const head = this.tableHead()?.nativeElement;
       if (!head) {
         return;
       }
-      this.hostElement.nativeElement.style.setProperty(
-        '--_table-head-h',
-        `${head.getBoundingClientRect().height}px`,
-      );
+      const publish = () =>
+        this.hostElement.nativeElement.style.setProperty(
+          '--_table-head-h',
+          `${head.getBoundingClientRect().height}px`,
+        );
+      publish();
+      if (typeof ResizeObserver === 'undefined') {
+        return;
+      }
+      const observer = new ResizeObserver(publish);
+      observer.observe(head);
+      onCleanup(() => observer.disconnect());
     });
     // One effect for both halves, because the restore CANNOT run in the
     // constructor: input signals are not set yet there, so storageKey() is still
