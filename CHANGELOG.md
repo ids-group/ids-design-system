@@ -392,6 +392,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `transform-origin` is the inner edge on each half — because a centred scale pulls the pressed half's
   inner edge inward and opens a hairline gap in the joint.
 
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `::ng-deep ds-menu-item` — a left padding or margin added so icon-less rows line up with rows that have icons | the menu reserves the icon slot for every row as soon as one item carries an icon | nothing |
+| `::ng-deep ds-split-button` — a hand-rolled `:active` darken or scale | both halves darken and scale on press, and the scale runs away from the seam so the joint stays closed | `--ds-split-button-bg-color-active`, `--ds-split-button-press-scale` |
+| `::ng-deep .search` — a focus indicator added by hand to a picker's search box, a column filter, a cell editor or a clipped icon button | each of those draws the control ring itself now, and the ring is an `outline` drawn inside the element, so a clipping ancestor no longer eats it | nothing |
+
 ## 0.12.0 — 2026-09-04
 
 ### Added

@@ -287,7 +287,40 @@
       "note": "Truncation stayed on the component: it measures the DOM rather than the dragged width, so it never depended on resizing."
     }
   ],
-  "deleteList": [],
+  "deleteList": [
+    {
+      "id": "menu-icon-indent-compensation",
+      "surface": "style",
+      "find": [
+        "::ng-deep ds-menu-item",
+        "ds-menu-item { padding-left",
+        "ds-menu-item { margin-left"
+      ],
+      "why": "The menu reserves the icon slot on every row as soon as one item in it carries an icon, so rows without one already line up.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "split-button-press-styling",
+      "surface": "style",
+      "find": [
+        "::ng-deep ds-split-button",
+        "ds-split-button:active"
+      ],
+      "why": "Both halves darken and scale on press on their own, and the scale runs away from the seam — a hand-rolled centred scale opens a hairline gap in the joint that the built-in one avoids.",
+      "replaceWith": "--ds-split-button-bg-color-active, --ds-split-button-press-scale"
+    },
+    {
+      "id": "hand-added-focus-indicators",
+      "surface": "style",
+      "find": [
+        "::ng-deep .search",
+        "::ng-deep .cell-editor",
+        "::ng-deep .col-filter"
+      ],
+      "why": "A picker's search box, a column filter, a cell editor and a clipped icon button each draw the control ring themselves now, and the ring is an outline drawn inside the element, so a clipping ancestor no longer eats it.",
+      "replaceWith": "nothing"
+    }
+  ],
   "informational": [
     "The focus ring now eases its colour in over `--duration-fast`, as a CSS animation rather than a transition so a component's own transition list is untouched. Geometry does not animate, so nothing moves and no layout shifts. `--duration-fast` is already 0ms under `prefers-reduced-motion: reduce`, so there is nothing to opt out of.",
     "`ds-multi-select`'s panel search field had no focus indicator — it zeroed its own outline and nothing above it painted one. The row around it rings now, drawn inward because the panel clips. Nothing to change on your side.",
@@ -301,6 +334,7 @@
     "`ds-table`'s bulk-action bar was hidden when every row was selected — it read the header checkbox's indeterminate predicate rather than \"is anything selected\". It shows for any non-empty selection now. Nothing to change on your side.",
     "A focused first or last `ds-accordion-item` header takes the accordion's own corner radius, so its focus ring is no longer square inside the rounded box.",
     "The `ds-skeleton` shimmer is one viewport-wide wave again: every skeleton shows the slice passing over its own position, anchored with `background-attachment: fixed` instead of the inherited custom property that used to be animated on `:root` and invalidated the whole document each frame. `--ds-skeleton-shimmer-color` and the reduced-motion opt-out are unchanged. Inside a transformed or filtered ancestor the anchor becomes that ancestor, and those skeletons share a wave with each other rather than with the page.",
+    "`focus.owns-the-focus-ring($control)` still does its job and needs no edit. It silenced a shadow before and silences an outline now, and it is the shape the ring change asks for: it wraps `outline: none` in `@media not (forced-colors: active)`, so a shell that rings on its control's behalf keeps an indicator in forced colours. If you silence a DS control by hand anywhere else, this mixin is what to use instead.",
     "persistLayout and storageKey stay on ds-table. The stored JSON keeps its { order, widths, hidden } shape, so a layout saved by an earlier version still restores; what a table then writes back is covered by table-persisted-layout-holds-only-what-the-directives-own.",
     "table.runExport(), table.exporting() and table.exportCsv() stay on the component and keep their signatures — they delegate to whichever export directive is present, so a button of your own in [toolbar] or a page header still drives the export. Called with no directive present they log a dev-mode warning instead of doing nothing quietly."
   ]
