@@ -346,11 +346,14 @@ for (const testCase of rules) {
 
 // These depend on reading a real tree, not on the rules alone: an implicit `model()` output that no
 // source line declares, and the live shapes above as they actually ship.
+// The third number is how many of that manifest's values hold no name to look up. A green exit
+// alone proved nothing: replacing every value in a manifest with an unresolvable placeholder still
+// exits 0, because a value nobody can read is not a defect. The budget is what notices.
 const readOnly = [
-  ['0.7.0', "a model()'s implicit Change output"],
-  ['0.11.2', 'a consumer example in a detect shape'],
-  ['0.11.3', 'four phantom output renames'],
-  ['0.11.4', 'a widened type, filed as behavior rather than as a rename'],
+  ['0.7.0', "a model()'s implicit Change output", 2],
+  ['0.11.2', 'a consumer example in a detect shape', 1],
+  ['0.11.3', 'four phantom output renames', 1],
+  ['0.11.4', 'a widened type, filed as behavior rather than as a rename', 8],
 ];
 const run = (version, options = {}) => {
   const spawn = () =>
@@ -373,13 +376,19 @@ const run = (version, options = {}) => {
   }
 };
 
-for (const [version, what] of readOnly) {
-  const got = run(version);
+for (const [version, what, budget] of readOnly) {
+  const out = run(version, { text: true });
   ran++;
-  const ok = got === 'green';
+  const unchecked = Number(
+    /(\d+) value\(s\) hold no single name/.exec(out)?.[1] ?? 0,
+  );
+  const ok =
+    !/does not exist|still resolves|target is not there/.test(out) &&
+    unchecked <= budget;
   if (!ok) failed++;
   console.log(
-    `${ok ? 'ok   ' : 'FAIL '} ${version} as it ships — ${what}: expected green, got ${got}`,
+    `${ok ? 'ok   ' : 'FAIL '} ${version} as it ships — ${what}: no defect, and ${unchecked} ` +
+      `value(s) unreadable against a budget of ${budget}`,
   );
 }
 
