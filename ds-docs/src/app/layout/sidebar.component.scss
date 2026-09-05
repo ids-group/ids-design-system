@@ -174,7 +174,13 @@
   transform: scale(0.97);
 }
 
-.link.is-active {
+/* --accent-muted, not --accent-subtitle: subtitle measures 1.11 against the white page and the
+   hover grey measures 1.10, so on subtitle a hovered row and the current row are the same fill.
+   Declared after :hover and :active so the current row keeps its own fill under the cursor. */
+.link.is-active,
+.link.is-active:hover,
+.link.is-active:active {
+  background: var(--accent-muted);
   color: var(--accent-strong);
   font-weight: var(--font-weight-bold);
 }
