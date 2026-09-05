@@ -55,8 +55,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
         #popover
         align="end"
         panelRole="dialog"
-        panelLabel="Column visibility"
-      >
+        panelLabel="Column visibility">
         <ng-container [ngTemplateOutlet]="panel" />
       </ds-popover>
     }
@@ -65,8 +64,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
       <div
         class="col-picker"
         cdkDropList
-        (cdkDropListDropped)="dropped.emit($event)"
-      >
+        (cdkDropListDropped)="dropped.emit($event)">
         @for (
           col of columns();
           track col.key;
@@ -76,8 +74,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
           <div
             class="col-picker-row"
             cdkDrag
-            [cdkDragDisabled]="!reorderable()"
-          >
+            [cdkDragDisabled]="!reorderable()">
             @if (reorderable()) {
               <span class="col-drag" cdkDragHandle aria-hidden="true">
                 <ds-icon name="drag" [size]="14" />
@@ -90,16 +87,14 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
                 class="check"
                 [checked]="isVisible()(col)"
                 [disabled]="!col.hideable || isLocked()(col)"
-                (change)="toggled.emit(col)"
-              />
+                (change)="toggled.emit(col)" />
               {{ col.label }}
             </label>
 
             @if (rowExtras()) {
               <ng-container
                 [ngTemplateOutlet]="rowExtras()!"
-                [ngTemplateOutletContext]="{ $implicit: col }"
-              />
+                [ngTemplateOutletContext]="{ $implicit: col }" />
             }
 
             @if (reorderable()) {
@@ -109,8 +104,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
                   class="col-move-btn"
                   aria-label="Move up"
                   [disabled]="first"
-                  (click)="moved.emit({ column: col, delta: -1 })"
-                >
+                  (click)="moved.emit({ column: col, delta: -1 })">
                   <ds-icon name="chevronUp" [size]="14" />
                 </button>
 
@@ -119,8 +113,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
                   class="col-move-btn"
                   aria-label="Move down"
                   [disabled]="last"
-                  (click)="moved.emit({ column: col, delta: 1 })"
-                >
+                  (click)="moved.emit({ column: col, delta: 1 })">
                   <ds-icon name="chevronDown" [size]="14" />
                 </button>
               </span>

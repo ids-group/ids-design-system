@@ -165,7 +165,9 @@
               <ng-container #headerUtilityAnchor />
 
               @if (!layout.wantsUtilityColumn()) {
-                <span class="visually-hidden"> Actions </span>
+                <span class="visually-hidden">
+                  Actions
+                </span>
               }
             </th>
           }
@@ -203,7 +205,8 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padTop"></tr>
+              [style.height.px]="window.padTop">
+            </tr>
           }
 
           @for (slot of rowSlots(); track slot.index) {
@@ -357,11 +360,11 @@
               </tr>
 
               @if (
-                expandableRows() &&
-                isExpanded(row) &&
-                rowExpandTemplate() &&
-                !virtualizing()
-              ) {
+                  expandableRows() &&
+                  isExpanded(row) &&
+                  rowExpandTemplate() &&
+                  !virtualizing()
+                ) {
                 <tr class="expand-panel-row">
                   <td
                     class="expand-panel-cell"
@@ -385,7 +388,8 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padBottom"></tr>
+              [style.height.px]="window.padBottom">
+            </tr>
           }
         }
       </tbody>
@@ -401,7 +405,8 @@
     [class.hscroll-hidden]="!hscrollNeeded()">
     <div
       class="hscroll-spacer"
-      [style.width.px]="hscrollContentWidth()"></div>
+      [style.width.px]="hscrollContentWidth()">
+    </div>
   </div>
 }
 
@@ -459,7 +464,9 @@
               {{ value || '(empty)' }}
             </label>
           } @empty {
-            <div class="col-filter-empty">No matches</div>
+            <div class="col-filter-empty">
+              No matches
+            </div>
           }
         </div>
 
@@ -539,7 +546,9 @@
 
 @if (selectable() && anySelected()) {
   <div class="bulk-bar">
-    <span class="count"> {{ selectedIds().size }} selected </span>
+    <span class="count">
+      {{ selectedIds().size }} selected
+    </span>
 
     <span class="sep"></span>
 
@@ -566,7 +575,8 @@
     @if (expandableRows()) {
       <td
         class="expand-col"
-        [class.pin-expand]="stickyFirstColumn()"></td>
+        [class.pin-expand]="stickyFirstColumn()">
+      </td>
     }
 
     @for (col of visibleColumns(); track col.key; let first = $first) {

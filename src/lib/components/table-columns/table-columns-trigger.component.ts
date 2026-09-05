@@ -18,8 +18,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
       aria-haspopup="dialog"
       aria-label="Choose columns"
       [attr.aria-expanded]="opened()"
-      (click)="pressed.emit($event)"
-    >
+      (click)="pressed.emit($event)">
       <ds-icon name="grid" [size]="14" />
     </button>
   `,

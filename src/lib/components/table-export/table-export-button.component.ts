@@ -21,8 +21,7 @@ import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/but
       variant="outline"
       size="sm"
       [disabled]="busy()"
-      (pressed)="pressed.emit()"
-    >
+      (pressed)="pressed.emit()">
       {{ busy() ? 'Preparing…' : 'Export CSV' }}
     </ds-button>
   `,
