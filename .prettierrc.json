@@ -5,7 +5,6 @@
   "endOfLine": "auto",
   "bracketSpacing": true,
   "arrowParens": "always",
-  "embeddedLanguageFormatting": "off",
   "overrides": [
     {
       "files": "*.html",

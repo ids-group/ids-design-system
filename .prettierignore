@@ -44,21 +44,11 @@ design-system.md
 # Decks are finished artifacts with their own hand-written shell; deck-lint owns their rules.
 presentations
 
-# Angular templates belong to eslint here, not to prettier. The repo carries three rules of its own
-# for them — ds/template/element-content-newline, sibling-blank-line, control-flow-condition-newline
-# — and prettier disagrees with the first on every `>` it can pull onto the closing tag's line. Both
-# with --fix, they rewrite each other; eslint wins because its rules are the ones written for this
-# codebase.
-*.html
-
 # Append-only history that changelog-lint owns. Reflowing 302 lines of published entries is churn on
 # a file several sessions hold at once, and it rewrites records rather than formatting source.
 CHANGELOG.md
 
 # Published manifests the auto-update plugin reads, under migrations/AUTHORING.md. Reflowing them
-# rewrote 1357 lines of shipped records, and a manifest is edited item by item, never in bulk.
+# rewrote 1357 lines of shipped records, and a manifest is edited item by item, never in bulk. Out
+# of `fix:all` on purpose, NOT out of reach: `npm run format:records` formats these two deliberately.
 migrations
-
-# Live working records several sessions hold at once.
-docs/todo.md
-docs/done.md
