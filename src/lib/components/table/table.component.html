@@ -3,16 +3,7 @@
     <ng-content select="[toolbar]"></ng-content>
   </div>
 
-  @if (exportButton()) {
-    <ds-button
-      color="neutral"
-      variant="outline"
-      size="sm"
-      [disabled]="exporting()"
-      (pressed)="runExport()">
-      {{ exporting() ? 'Preparing…' : 'Export CSV' }}
-    </ds-button>
-  }
+  <ng-container #toolbarAnchor />
 </div>
 
 <!-- Wraps the SCROLL CONTAINER, not the table inside it: the scrim is
@@ -143,8 +134,8 @@
                 </button>
               }
 
-              @if (resizableColumns()) {
-                @let range = resizeRange(col);
+              @if (layout.resize(); as resize) {
+                @let range = resize.range(col);
 
                 <span
                   class="col-resize"
@@ -155,13 +146,13 @@
                   [attr.aria-valuenow]="range?.now ?? null"
                   [attr.aria-valuemin]="range?.min ?? null"
                   [attr.aria-valuemax]="range?.max ?? null"
-                  (focus)="onResizeFocus(col, $event)"
-                  (blur)="onResizeBlur()"
-                  (pointerdown)="onResizeStart(col, $event)"
-                  (pointermove)="onResizeMove($event)"
-                  (pointerup)="onResizeEnd()"
-                  (pointercancel)="onResizeEnd()"
-                  (keydown)="onResizeKey(col, $event)">
+                  (focus)="resize.onFocus(col, $event)"
+                  (blur)="resize.onBlur()"
+                  (pointerdown)="resize.onStart(col, $event)"
+                  (pointermove)="resize.onMove($event)"
+                  (pointerup)="resize.onEnd()"
+                  (pointercancel)="resize.onEnd()"
+                  (keydown)="resize.onKey(col, $event)">
                 </span>
               }
             </th>
@@ -171,19 +162,9 @@
             <th
               scope="col"
               class="actions-col">
-              @if (hasColumnPicker()) {
-                <button
-                  type="button"
-                  class="col-picker-btn"
-                  aria-haspopup="dialog"
-                  aria-label="Choose columns"
-                  [attr.aria-expanded]="columnPickerOpened()"
-                  (click)="onColumnPickerClick($event)">
-                  <ds-icon
-                    name="grid"
-                    [size]="14" />
-                </button>
-              } @else {
+              <ng-container #headerUtilityAnchor />
+
+              @if (!layout.wantsUtilityColumn()) {
                 <span class="visually-hidden">
                   Actions
                 </span>
@@ -506,126 +487,43 @@
   </ds-popover>
 }
 
-@if (hasColumnPicker()) {
-  <ds-popover
-    #columnPickerPopover
-    align="end"
-    panelRole="dialog"
-    panelLabel="Column visibility">
-    <ng-container [ngTemplateOutlet]="columnPanel"></ng-container>
-  </ds-popover>
+<ng-container #overlaysAnchor />
 
-  <ds-bottom-sheet
-    title="Columns"
-    [(open)]="columnSheetOpen">
-    <ng-container [ngTemplateOutlet]="columnPanel"></ng-container>
-  </ds-bottom-sheet>
-
-  <ng-template #columnPanel>
-    <div
-      class="col-picker"
-      cdkDropList
-      (cdkDropListDropped)="onColumnDrop($event)">
-      @for (
-        col of orderedColumns();
-        track col.key;
-        let first = $first;
-        let last = $last
-      ) {
-        <div
-          class="col-picker-row"
-          cdkDrag
-          [cdkDragDisabled]="!reorderableColumns()">
-          @if (reorderableColumns()) {
-            <span
-              class="col-drag"
-              cdkDragHandle
-              aria-hidden="true">
-              <ds-icon
-                name="drag"
-                [size]="14" />
-            </span>
-          }
-
-          <label class="col-picker-option">
-            <input
-              type="checkbox"
-              class="check"
-              [checked]="isColumnVisible(col)"
-              [disabled]="!col.hideable || isColumnLocked(col)"
-              (change)="toggleColumn(col)" />
-            {{ col.label }}
-          </label>
-
-          @if (resizableColumns()) {
-            <span class="col-width">
-              <button
-                type="button"
-                class="col-width-btn"
-                [attr.aria-label]="'Narrow ' + col.label"
-                (click)="onColumnWidthStep(col, -resizeStep)">
-                <ds-icon
-                  name="minus"
-                  [size]="14" />
-              </button>
-
-              <button
-                type="button"
-                class="col-width-btn"
-                [attr.aria-label]="'Widen ' + col.label"
-                (click)="onColumnWidthStep(col, resizeStep)">
-                <ds-icon
-                  name="plus"
-                  [size]="14" />
-              </button>
-
-              <button
-                type="button"
-                class="col-width-btn col-width-auto"
-                [attr.aria-label]="'Fit ' + col.label + ' to its content'"
-                (click)="onColumnWidthStep(col, 'auto')">
-                Fit
-              </button>
-            </span>
-          }
-
-          @if (reorderableColumns()) {
-            <span class="col-move">
-              <button
-                type="button"
-                class="col-move-btn"
-                aria-label="Move up"
-                [disabled]="first"
-                (click)="moveColumn(col, -1)">
-                <ds-icon
-                  name="chevronUp"
-                  [size]="14" />
-              </button>
-
-              <button
-                type="button"
-                class="col-move-btn"
-                aria-label="Move down"
-                [disabled]="last"
-                (click)="moveColumn(col, 1)">
-                <ds-icon
-                  name="chevronDown"
-                  [size]="14" />
-              </button>
-            </span>
-          }
-        </div>
-      }
+<ng-template
+  #columnWidthControls
+  let-col>
+  @if (layout.resize(); as resize) {
+    <span class="col-width">
+      <button
+        type="button"
+        class="col-width-btn"
+        [attr.aria-label]="'Narrow ' + col.label"
+        (click)="resize.step(col, -16)">
+        <ds-icon
+          name="minus"
+          [size]="14" />
+      </button>
 
       <button
         type="button"
-        class="col-reset"
-        (click)="resetColumns()">
-        Reset to default
+        class="col-width-btn"
+        [attr.aria-label]="'Widen ' + col.label"
+        (click)="resize.step(col, 16)">
+        <ds-icon
+          name="plus"
+          [size]="14" />
       </button>
-    </div>
-  </ng-template>
-}
+
+      <button
+        type="button"
+        class="col-width-btn col-width-auto"
+        [attr.aria-label]="'Fit ' + col.label + ' to its content'"
+        (click)="resize.step(col, 'auto')">
+        Fit
+      </button>
+    </span>
+  }
+</ng-template>
 
 @if (hasRowActions()) {
   <ds-popover

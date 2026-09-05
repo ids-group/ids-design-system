@@ -1094,12 +1094,10 @@
     </code> is the initial state, the
     last visible column is locked). With
     <code class="t-mono-inline">
-      [reorderableColumns]="true"
-    </code> each row
-    gains a drag handle and up/down buttons — order is two-way bindable via
-    <code class="t-mono-inline">
-      [(columnOrder)]
-    </code>, and
+      dsTableColumns [reorderableColumns]="true"
+    </code>
+    each row gains a drag handle and up/down buttons — order is two-way bindable
+    via <code class="t-mono-inline"> [(columnOrder)] </code>, and
     <code class="t-mono-inline">
       Reset to default
     </code> clears both.
@@ -1107,6 +1105,7 @@
 
   <ds-table
     caption="Records"
+    dsTableColumns
     [data]="events"
     [columns]="pickerColumns"
     [reorderableColumns]="true"
@@ -1118,9 +1117,9 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      [resizableColumns]="true"
-    </code> adds a drag
-    handle to each header's right edge. Widths are two-way bindable via
+      dsTableResize
+    </code> adds a drag handle to
+    each header's right edge. Widths are two-way bindable via
     <code class="t-mono-inline">
       [(columnWidths)]
     </code> (a
@@ -1175,9 +1174,9 @@
 
   <ds-table
     caption="Records"
+    dsTableResize
     [data]="events"
     [columns]="defaultColumns"
-    [resizableColumns]="true"
     [stickyHeader]="false">
     <ng-template
       let-row
@@ -1248,9 +1247,9 @@
     hide one, reload the page, and it stays. Without a key nothing is stored —
     two tables would otherwise overwrite each other.
     <code class="t-mono-inline">
-      [exportButton]="true"
-    </code> renders the CSV
-    button; a server-paged table passes
+      dsTableExport
+    </code> renders the CSV button; a
+    server-paged table passes
     <code class="t-mono-inline">
       [exportFetcher]
     </code> so the export covers
@@ -1261,12 +1260,13 @@
     caption="Projects"
     storageKey="docs-demo-projects"
     sortMode="client"
+    dsTableExport
+    dsTableColumns
+    dsTableResize
     [data]="projectRows"
     [columns]="projectColumns"
     [persistLayout]="true"
-    [exportButton]="true"
-    [reorderableColumns]="true"
-    [resizableColumns]="true" />
+    [reorderableColumns]="true" />
 
   <p class="block-desc t-s">
     <strong>
@@ -1304,7 +1304,7 @@
     and the layout is entirely yours; the row's flex then has a single child and
     stays out of the way. It disappears when nothing filled it and
     <code class="t-mono-inline">
-      exportButton
+      dsTableExport
     </code> is off, so a table that
     uses neither is unchanged. Filters that belong to the PAGE still belong in a
     <code class="t-mono-inline">
@@ -1346,8 +1346,9 @@
     </code> call, the download, the
     in-flight state and the live-region announcement. Leave
     <code class="t-mono-inline">
-      exportButton
-    </code> off and drive it yourself.
+      dsTableExport
+    </code> off and drive it
+    yourself.
   </p>
 
   <ds-table
@@ -1356,6 +1357,7 @@
     sortMode="client"
     [data]="projectRows"
     [columns]="projectColumns"
+    [dsTableExport]="false"
     [exportFetcher]="slowExportFetcher">
     <ds-search
       toolbar
@@ -1401,9 +1403,9 @@
 
   <ds-table
     caption="Projects"
+    dsTableResize
     [data]="projectRows"
-    [columns]="fitColumns"
-    [resizableColumns]="true" />
+    [columns]="fitColumns" />
 
   <h3 class="block-title t-h4">
     Server sort · a host that answers with its own default

@@ -16,30 +16,23 @@ import {
   model,
   output,
   signal,
+  ViewContainerRef,
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  CdkDrag,
-  CdkDragDrop,
-  CdkDragHandle,
-  CdkDropList,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
-import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { PaginationComponent } from '@ids-group-ltd/ids-design-system/components/pagination';
 import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
-import { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
 import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { CellTemplateDirective } from './cell-template.directive';
 import { HeaderFilterDirective } from './header-filter.directive';
+import { DsTableLayout } from './table-layout';
 import type {
   SortChangeEvent,
   SortDir,
@@ -113,19 +106,14 @@ function compareSortValues(
   selector: 'ds-table',
   standalone: true,
   imports: [
-    ButtonComponent,
     IconComponent,
     NgTemplateOutlet,
     SkeletonComponent,
     PaginationComponent,
     LoadingOverlayComponent,
     PopoverComponent,
-    BottomSheetComponent,
     MenuComponent,
     MenuItemComponent,
-    CdkDropList,
-    CdkDrag,
-    CdkDragHandle,
     // Only instantiated when a column sets `link`, so a consumer app with no router
     // provided still renders the table — the directive is never constructed.
     RouterLink,
@@ -139,8 +127,9 @@ function compareSortValues(
     '[class.pinned]': 'stickyFirstColumn()',
     '[class.expandable]': 'expandableRows()',
     '[class.sticky-scrollbar]': 'stickyScrollbarResolved()',
-    '[class.resizable]': 'resizableColumns()',
+    '[class.resizable]': 'layout.resize() !== null',
   },
+  providers: [DsTableLayout],
 })
 export class TableComponent<T extends object> {
   /** Rows to render. */
@@ -273,24 +262,7 @@ export class TableComponent<T extends object> {
    *  A column absent from the map (or with every value checked) is unfiltered. */
   readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
 
-  /** Two-way set of hidden column keys. `null` (default) derives the set from
-   *  each column's `hidden` flag; the column picker then owns it. Binding a
-   *  Set takes over — `hidden` flags are ignored. */
-  readonly hiddenKeys = model<Set<string> | null>(null);
-
-  /** Enables drag-to-resize handles on each column header. */
-  readonly resizableColumns = input(false, { transform: booleanAttribute });
-  /** Two-way per-column pixel width overrides (keyed by column key), set by
-   *  dragging a resize handle. Seeded from `column.width` where unset. */
-  readonly columnWidths = model<Map<string, number>>(new Map());
-  /** Enables drag + up/down reordering in the column panel. */
-  readonly reorderableColumns = input(false, { transform: booleanAttribute });
-  /** Two-way column order as a list of keys. `null` (default) keeps declaration
-   *  order; the column panel owns it once the user reorders. Keys absent from
-   *  the list fall back to declaration order after the listed ones. */
-  readonly columnOrder = model<string[] | null>(null);
-
-  /** Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through
+  /** Round-trip whatever the column features persist (order, widths, hidden keys) through
    *  `localStorage`, so a reader's column layout survives a reload. Needs
    *  `storageKey` — without one there is nothing to key a screen by, and two
    *  tables would overwrite each other. Off by default. */
@@ -299,36 +271,9 @@ export class TableComponent<T extends object> {
    *  table, not per route instance. */
   readonly storageKey = input<string>('');
 
-  /** Render an export button in the table's toolbar row. Off by default. Leave it
-   *  off and drive `runExport()` from your own button — in a page header, a filter
-   *  bar, the `[toolbar]` slot — reading `exporting()` for its loading state. */
-  readonly exportButton = input(false, { transform: booleanAttribute });
-  /** Filename the export button downloads as. */
-  readonly exportFilename = input<string>('table.csv');
-  /**
-   * Where the export button gets its data. A server-paged table only HAS the
-   * current page, so exporting without this silently exports one page.
-   *
-   * Return ROWS and the table serializes them the same way it serializes its
-   * own. Return a `Blob` (or a URL string) and the table just downloads it —
-   * which is what you want when the backend already formatted the file with its
-   * own number formats, its own columns, or a sheet the table never held.
-   */
-  readonly exportFetcher = input<
-    (() => Promise<readonly T[] | Blob | string>) | null
-  >(null);
-  /** Fires when `exportFetcher` rejects. Without it a failed export is silent —
-   *  the button simply re-enables and no file arrives. */
-  readonly exportFailed = output<unknown>();
-  private readonly exportingState = signal(false);
-  /** True while `exportFetcher` is in flight. Public so a button OUTSIDE the table
-   *  can show the same in-flight state as the built-in one. */
-  readonly exporting = this.exportingState.asReadonly();
-  private readonly exportStatusState = signal('');
-  private readonly eventsAtExport = signal('');
-  /** Announced in the table's live region while an export is running or after it
-   *  failed, so the button's own disabled state is not the only signal. */
-  readonly exportStatus = this.exportStatusState.asReadonly();
+  /** True while an export is in flight. Public so a button OUTSIDE the table can show the same
+   *  state as the built-in one. `false` when no export directive is present. */
+  readonly exporting = computed(() => this.layout.exporting());
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
@@ -544,103 +489,49 @@ export class TableComponent<T extends object> {
     () => this.loadingMode() === false && !this.filteredData().length,
   );
 
-  protected readonly effectiveHiddenKeys = computed<ReadonlySet<string>>(
-    () =>
-      this.hiddenKeys() ??
-      new Set(
-        this.columns()
-          .filter((col) => col.hidden)
-          .map((col) => col.key),
-      ),
-  );
+  protected readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
 
-  protected readonly orderedColumns = computed<readonly TableColumn<T>[]>(
-    () => {
-      const order = this.columnOrder();
-      const columns = this.columns();
-      if (!order) {
-        return columns;
-      }
-      const byKey = new Map(columns.map((col) => [col.key, col]));
-      const placed = new Set<string>();
-      const out: TableColumn<T>[] = [];
-      for (const key of order) {
-        const col = byKey.get(key);
-        if (col && !placed.has(key)) {
-          out.push(col);
-          placed.add(key);
-        }
-      }
-      for (const col of columns) {
-        if (!placed.has(col.key)) {
-          out.push(col);
-        }
-      }
+  private readonly toolbarAnchor = viewChild('toolbarAnchor', {
+    read: ViewContainerRef,
+  });
+  private readonly headerUtilityAnchor = viewChild('headerUtilityAnchor', {
+    read: ViewContainerRef,
+  });
+  private readonly overlaysAnchor = viewChild('overlaysAnchor', {
+    read: ViewContainerRef,
+  });
+  private readonly columnWidthControls = viewChild<
+    TemplateRef<{ $implicit: TableColumn<T> }>
+  >('columnWidthControls');
 
-      return out;
-    },
-  );
-
+  // Ordering and hiding are stages a feature contributes, so this is the whole chain: the
+  // declared list folded through whatever registered.
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
-    this.orderedColumns().filter(
-      (col) => !this.effectiveHiddenKeys().has(col.key),
-    ),
+    this.layout.foldColumns(this.columns()),
   );
 
-  protected readonly hideableColumns = computed<readonly TableColumn<T>[]>(() =>
-    this.columns().filter((col) => col.hideable),
-  );
-  protected readonly hasColumnPicker = computed(
-    () => this.hideableColumns().length > 0 || this.reorderableColumns(),
-  );
+  /** `'content'` is not a pixel value — it is carried by a class instead, see `fitsContent`. */
+  protected columnWidth(col: TableColumn<T>): number | null {
+    const dragged = this.layout.resize()?.widthOverride(col.key);
+    if (dragged !== undefined) {
+      return dragged;
+    }
+
+    return typeof col.width === 'number' ? col.width : null;
+  }
+
+  /** Shrink-to-content mode, unless the reader has dragged this column — a drag is a deliberate
+   *  pixel width and must win over the declared intent. */
+  protected fitsContent(col: TableColumn<T>): boolean {
+    return (
+      col.width === 'content' &&
+      this.layout.resize()?.widthOverride(col.key) === undefined
+    );
+  }
+
   protected readonly hasUtilityColumn = computed(
-    () => this.hasRowActions() || this.hasColumnPicker(),
+    () => this.hasRowActions() || this.layout.wantsUtilityColumn(),
   );
-
-  protected isColumnVisible(col: TableColumn<T>): boolean {
-    return !this.effectiveHiddenKeys().has(col.key);
-  }
-
-  /** The last visible column can't be hidden — an all-hidden grid is useless. */
-  protected isColumnLocked(col: TableColumn<T>): boolean {
-    return this.isColumnVisible(col) && this.visibleColumns().length === 1;
-  }
-
-  protected toggleColumn(col: TableColumn<T>): void {
-    if (!col.hideable || this.isColumnLocked(col)) {
-      return;
-    }
-    const next = new Set(this.effectiveHiddenKeys());
-    if (next.has(col.key)) {
-      next.delete(col.key);
-    } else {
-      next.add(col.key);
-    }
-    this.hiddenKeys.set(next);
-  }
-
-  protected moveColumn(col: TableColumn<T>, delta: -1 | 1): void {
-    const keys = this.orderedColumns().map((column) => column.key);
-    const from = keys.indexOf(col.key);
-    const to = from + delta;
-    if (from < 0 || to < 0 || to >= keys.length) {
-      return;
-    }
-    moveItemInArray(keys, from, to);
-    this.columnOrder.set(keys);
-  }
-
-  protected onColumnDrop(event: CdkDragDrop<unknown>): void {
-    const keys = this.orderedColumns().map((column) => column.key);
-    moveItemInArray(keys, event.previousIndex, event.currentIndex);
-    this.columnOrder.set(keys);
-  }
-
-  protected resetColumns(): void {
-    this.columnOrder.set(null);
-    this.hiddenKeys.set(null);
-    this.columnWidths.set(new Map());
-  }
 
   private readonly columnFilterPopover = viewChild<PopoverComponent>(
     'columnFilterPopover',
@@ -836,33 +727,6 @@ export class TableComponent<T extends object> {
     this.editingCell.set(null);
   }
 
-  // One notch is a comfortable nudge; a page is roughly a short column.
-  private static readonly RESIZE_STEP = 16;
-  private static readonly RESIZE_PAGE = 64;
-  private static readonly MIN_COLUMN_WIDTH = 48;
-  private resizeState: {
-    key: string;
-    startX: number;
-    startWidth: number;
-  } | null = null;
-
-  /** `'content'` is not a pixel value — it is carried by a class instead, see
-   *  `fitsContent`. */
-  protected columnWidth(col: TableColumn<T>): number | null {
-    const dragged = this.columnWidths().get(col.key);
-    if (dragged !== undefined) {
-      return dragged;
-    }
-
-    return typeof col.width === 'number' ? col.width : null;
-  }
-
-  /** Shrink-to-content mode, unless the user has dragged this column — a drag is a
-   *  deliberate pixel width and must win over the declared intent. */
-  protected fitsContent(col: TableColumn<T>): boolean {
-    return col.width === 'content' && !this.columnWidths().has(col.key);
-  }
-
   /** Clip width for `truncate`. `'content'` has no clip width — the column is as
    *  wide as its widest cell, so there is nothing to ellipsis against. */
   protected clipWidth(col: TableColumn<T>): number | null {
@@ -872,221 +736,6 @@ export class TableComponent<T extends object> {
         ? null
         : 240;
   }
-
-  protected onResizeStart(col: TableColumn<T>, event: PointerEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    const header = (event.target as HTMLElement).closest('th');
-    if (!header) {
-      return;
-    }
-    this.lockMeasuredWidths(header);
-    this.resizeState = {
-      key: col.key,
-      startX: event.clientX,
-      startWidth: header.offsetWidth,
-    };
-    (event.target as HTMLElement).setPointerCapture(event.pointerId);
-  }
-
-  /**
-   * Freeze the columns at what they currently measure, once, before the first
-   * drag moves anything.
-   *
-   * Without it only the dragged column has a width and the rest are still
-   * auto-sized, so the browser redistributes the remainder across them and
-   * columns the reader never touched visibly jump. Measuring first means the
-   * drag changes one column and leaves the others where they were — the
-   * auto-sized geometry is kept rather than lost at the first grab.
-   *
-   * Reads the header row that is actually on screen rather than assuming a
-   * column order.
-   */
-  private lockMeasuredWidths(from: HTMLElement): void {
-    const columns = this.visibleColumns();
-    if (columns.every((col) => this.columnWidth(col) !== null)) {
-      return;
-    }
-    const headerRow = from.parentElement;
-    if (!headerRow) {
-      return;
-    }
-    const widths = new Map(this.columnWidths());
-    for (const col of columns) {
-      if (this.columnWidth(col) !== null) {
-        continue;
-      }
-      const cell = headerRow.querySelector<HTMLElement>(
-        `th[data-col-key="${CSS.escape(col.key)}"]`,
-      );
-      if (cell) {
-        widths.set(
-          col.key,
-          Math.max(TableComponent.MIN_COLUMN_WIDTH, cell.offsetWidth),
-        );
-      }
-    }
-    this.columnWidths.set(widths);
-  }
-
-  protected onResizeMove(event: PointerEvent): void {
-    if (!this.resizeState) {
-      return;
-    }
-    const width = this.clampColumnWidth(
-      this.resizeState.startWidth + (event.clientX - this.resizeState.startX),
-    );
-    const next = new Map(this.columnWidths());
-    next.set(this.resizeState.key, Math.round(width));
-    this.columnWidths.set(next);
-  }
-
-  protected onResizeEnd(): void {
-    this.resizeState = null;
-  }
-
-  private readonly resizeFocus = signal<{
-    key: string;
-    measured: number;
-    max: number;
-  } | null>(null);
-
-  /**
-   * The widest a single column may be dragged: the scroll viewport.
-   *
-   * A column wider than the viewport can never be seen whole, and long text has
-   * its own affordance here — `truncate` clips it and the clip popover shows the
-   * rest — so nothing is lost by stopping at the edge. The ceiling exists at all
-   * because `aria-valuemax` has to be TRUE: a focusable `role="separator"` is a
-   * range widget, and announcing a bound that neither resize path applies is
-   * worse than announcing none.
-   */
-  private columnWidthCeiling(): number {
-    return Math.max(
-      TableComponent.MIN_COLUMN_WIDTH,
-      this.scrollWrap().nativeElement.clientWidth,
-    );
-  }
-
-  private clampColumnWidth(width: number): number {
-    return Math.min(
-      this.columnWidthCeiling(),
-      Math.max(TableComponent.MIN_COLUMN_WIDTH, width),
-    );
-  }
-
-  protected onResizeFocus(col: TableColumn<T>, event: FocusEvent): void {
-    const target = event.target as HTMLElement;
-
-    this.resizeFocus.set({
-      key: col.key,
-      measured: this.resolvedColumnWidth(col, target),
-      max: this.columnWidthCeiling(),
-    });
-  }
-
-  protected onResizeBlur(): void {
-    this.resizeFocus.set(null);
-  }
-
-  /**
-   * The separator's range, and only while it holds focus — that is when a range
-   * widget is announced, and an auto-sized column has no width to report until
-   * something measures one. Measuring on every change detection to fill an
-   * attribute nothing is reading would force layout once per resizable column.
-   *
-   * `now` prefers `columnWidth`, which the first arrow key makes known and keeps
-   * live; the focus measurement only covers the moment before that.
-   */
-  protected resizeRange(
-    col: TableColumn<T>,
-  ): { now: number; min: number; max: number } | null {
-    const focused = this.resizeFocus();
-    if (focused?.key !== col.key) {
-      return null;
-    }
-
-    return {
-      now: this.columnWidth(col) ?? focused.measured,
-      min: TableComponent.MIN_COLUMN_WIDTH,
-      max: focused.max,
-    };
-  }
-
-  protected resolvedColumnWidth(
-    col: TableColumn<T>,
-    from?: HTMLElement,
-  ): number {
-    const known = this.columnWidth(col);
-    if (known !== null) {
-      return known;
-    }
-
-    return from?.closest('th')?.offsetWidth ?? TableComponent.MIN_COLUMN_WIDTH;
-  }
-
-  protected onResizeKey(col: TableColumn<T>, event: KeyboardEvent): void {
-    const target = event.target as HTMLElement;
-    const step = TableComponent.RESIZE_STEP;
-    const page = TableComponent.RESIZE_PAGE;
-    const delta: number | 'auto' | null =
-      event.key === 'ArrowLeft'
-        ? -step
-        : event.key === 'ArrowRight'
-          ? step
-          : event.key === 'PageDown'
-            ? -page
-            : event.key === 'PageUp'
-              ? page
-              : event.key === 'Home'
-                ? 'auto'
-                : null;
-    if (delta === null) {
-      return;
-    }
-    event.preventDefault();
-    this.stepColumnWidth(col, delta, target.closest('th'));
-  }
-
-  /**
-   * The header cell is passed when the caller has it — the column panel does
-   * not, so it is looked up by `data-col-key`, and the measurement matters:
-   * stepping an auto-sized column has to start from what it currently RENDERS,
-   * not from the minimum.
-   */
-  private stepColumnWidth(
-    col: TableColumn<T>,
-    delta: number | 'auto',
-    from: HTMLElement | null,
-  ): void {
-    const header = from ?? this.headerCellFor(col);
-    if (header) {
-      this.lockMeasuredWidths(header);
-    }
-    const widths = new Map(this.columnWidths());
-    if (delta === 'auto') {
-      widths.delete(col.key);
-    } else {
-      const current = this.resolvedColumnWidth(col, header ?? undefined);
-      widths.set(col.key, this.clampColumnWidth(Math.round(current + delta)));
-    }
-    this.columnWidths.set(widths);
-  }
-
-  private headerCellFor(col: TableColumn<T>): HTMLElement | null {
-    return this.scrollWrap().nativeElement.querySelector<HTMLElement>(
-      `th[data-col-key="${CSS.escape(col.key)}"]`,
-    );
-  }
-
-  protected onColumnWidthStep(
-    col: TableColumn<T>,
-    delta: number | 'auto',
-  ): void {
-    this.stepColumnWidth(col, delta, null);
-  }
-
-  protected readonly resizeStep = TableComponent.RESIZE_STEP;
 
   protected readonly filteredData = computed<readonly T[]>(() => {
     const query = this.filterQuery().trim().toLowerCase();
@@ -1099,7 +748,7 @@ export class TableComponent<T extends object> {
         : new Map<string, ReadonlySet<string>>();
     const columns = this.columns();
     if (!query && setFilters.size === 0) {
-      return this.data();
+      return this.layout.foldRows(this.data());
     }
     const marked = columns.filter((col) => col.filterable);
     const scope = marked.length ? marked : columns;
@@ -1200,15 +849,10 @@ export class TableComponent<T extends object> {
     if (this.loadingMode() !== false) {
       return 'Loading…';
     }
-    const events = this.eventMessages();
-    // The export line holds the region until the events line has something NEW to say, so
-    // "Export failed" survives until the reader moves on rather than for a guessed interval.
-    // Compared against a snapshot rather than cleared, because a computed cannot write.
-    if (this.exportStatus() && events === this.eventsAtExport()) {
-      return this.exportStatus();
-    }
 
-    return events;
+    // A contributed line wins while it has one: an "Export failed" has to survive until the
+    // reader moves on, and the feature that raised it is what clears it.
+    return this.layout.status() || this.eventMessages();
   });
 
   private readonly eventMessages = computed<string>(() =>
@@ -1410,30 +1054,6 @@ export class TableComponent<T extends object> {
     'columnPickerPopover',
   );
 
-  protected readonly columnSheetOpen = signal(false);
-
-  private readonly coarsePointerState = signal(false);
-
-  /** Whether the column panel opens as a sheet and the drag handle stands down.
-   *  Keyed on the pointer, not the viewport — see the matching media query in
-   *  `table.component.scss`. */
-  protected readonly coarsePointer = this.coarsePointerState.asReadonly();
-
-  protected readonly columnPickerOpened = computed(() =>
-    this.coarsePointer()
-      ? this.columnSheetOpen()
-      : (this.columnPickerPopover()?.opened() ?? false),
-  );
-
-  protected onColumnPickerClick(event: Event): void {
-    if (this.coarsePointer()) {
-      this.columnSheetOpen.set(true);
-
-      return;
-    }
-    this.columnPickerPopover()?.toggle(event.currentTarget as HTMLElement);
-  }
-
   protected readonly hasTruncate = computed(() =>
     this.columns().some((col) => col.truncate),
   );
@@ -1492,7 +1112,33 @@ export class TableComponent<T extends object> {
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
-    this.watchPointer();
+    // The width buttons the column panel renders are still declared in this template, because a
+    // directive has no view to declare an ng-template in — so the table hands the template over
+    // and the resize feature owns everything the buttons DO.
+    effect(() => {
+      const template = this.columnWidthControls();
+      if (template) {
+        this.layout.registerPanelRowTemplate(template);
+      }
+    });
+
+    // Published here rather than from an init hook: a directive on the same element is
+    // constructed after this component, so by the time a feature asks, the view is here. The
+    // anchor goes over as a signal — a viewChild is undefined until the view exists, and a
+    // feature that renders a control of its own has to wait for it.
+    this.layout.publish({
+      visibleColumns: this.visibleColumns,
+      sortedRows: this.sortedData,
+      declaredColumns: this.columns,
+      scrollViewport: computed(() => this.scrollWrap()?.nativeElement),
+      cellText: (row, column) => this.cellValue(row, column),
+      anchor: (name) =>
+        name === 'toolbar'
+          ? this.toolbarAnchor
+          : name === 'header-utility'
+            ? this.headerUtilityAnchor
+            : this.overlaysAnchor,
+    });
 
     // The scrim starts below the header, so it needs the header's height. Measured, not summed
     // from padding and line-height: `vertical-align: middle` on the inline-flex label extends
@@ -1517,9 +1163,10 @@ export class TableComponent<T extends object> {
     // restores; every later run saves.
     effect(() => {
       const key = this.layoutKey();
-      const order = this.columnOrder();
-      const widths = this.columnWidths();
-      const hidden = this.hiddenKeys();
+      // Read every slice so the effect tracks them, whichever feature owns them.
+      const stored = Object.fromEntries(
+        this.layout.persistedSlices().map((slice) => [slice.key, slice.read()]),
+      );
       if (!key) {
         return;
       }
@@ -1529,7 +1176,7 @@ export class TableComponent<T extends object> {
 
         return;
       }
-      this.saveLayout(key, order, widths, hidden);
+      this.saveLayout(key, stored);
     });
 
     // A table holding ALL its rows is the exception, and `total` unbound is how
@@ -2054,34 +1701,6 @@ export class TableComponent<T extends object> {
     return col.link?.(row) ?? null;
   }
 
-  /** Serialises the visible columns of the rows the TABLE HOLDS as a CSV download.
-   *  On a server-paged table that is one page — prefer `runExport()`, which goes
-   *  through `exportFetcher` and exports the whole set. Pass `rows` to serialise a
-   *  set you fetched yourself. */
-  exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
-    if (typeof document === 'undefined') {
-      return;
-    }
-    const columns = this.visibleColumns();
-    const escapeCell = (value: string): string =>
-      /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
-    const header = columns.map((col) => escapeCell(col.label));
-    const body = (rows ?? this.sortedData()).map((row) =>
-      columns.map((col) => escapeCell(this.cellValue(row, col))),
-    );
-    // Leading BOM so Excel reads UTF-8 (accented labels/values) correctly.
-    const csv =
-      '﻿' + [header, ...body].map((cells) => cells.join(',')).join('\r\n');
-    const url = URL.createObjectURL(
-      new Blob([csv], { type: 'text/csv;charset=utf-8;' }),
-    );
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(url);
-  }
-
   // localStorage, not session: a column layout the reader arranged should still
   // be there tomorrow. Every access is guarded — Safari private mode throws on
   // write, and a quota error must not take the table down with it.
@@ -2099,96 +1718,57 @@ export class TableComponent<T extends object> {
       if (!raw) {
         return;
       }
-      const saved = JSON.parse(raw) as {
-        order?: string[] | null;
-        widths?: [string, number][];
-        hidden?: string[] | null;
-      };
-      // Only apply what was actually stored: a table that has never been
-      // rearranged must keep its declaration order and `hidden` flags.
-      if (saved.order) {
-        this.columnOrder.set(saved.order);
-      }
-      if (saved.widths) {
-        this.columnWidths.set(new Map(saved.widths));
-      }
-      if (saved.hidden) {
-        this.hiddenKeys.set(new Set(saved.hidden));
+      const saved = JSON.parse(raw) as Record<string, unknown>;
+      // Only apply what was actually stored, and only what something owns: a table that has
+      // never been rearranged must keep its declaration order and `hidden` flags, and a layout
+      // saved when a feature was present must not be forced on a table that no longer has it.
+      for (const slice of this.layout.persistedSlices()) {
+        const value = saved[slice.key];
+        if (value !== undefined && value !== null) {
+          slice.write(value);
+        }
       }
     } catch {
       // Unreadable or from an older shape: fall back to the declared layout.
     }
   }
 
-  private saveLayout(
-    key: string,
-    order: string[] | null,
-    widths: Map<string, number>,
-    hidden: Set<string> | null,
-  ): void {
+  private saveLayout(key: string, stored: Record<string, unknown>): void {
     try {
-      localStorage.setItem(
-        key,
-        JSON.stringify({
-          order,
-          widths: [...widths],
-          hidden: hidden ? [...hidden] : null,
-        }),
-      );
+      localStorage.setItem(key, JSON.stringify(stored));
     } catch {
       // Full or blocked: a lost column layout is not worth an error.
     }
   }
 
-  /** Runs the export the built-in button runs: awaits `exportFetcher` when one is
-   *  given — so a server-paged table exports the whole set rather than the page it
-   *  holds — downloads the result, drives `exporting`, writes the live region and
-   *  emits `exportFailed`. Public so the button can live anywhere:
-   *  `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`. */
+  /** Serialises the visible columns as a CSV download, through whichever export feature is on the
+   *  table. Pass `rows` to serialise a set you fetched yourself. Needs `dsTableExport`. */
+  exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
+    if (!this.layout.exportCsv(filename, rows)) {
+      this.warnNoExport('exportCsv');
+    }
+  }
+
+  /** Runs the export: awaits the feature's `exportFetcher` when one is given, downloads the
+   *  result, drives `exporting()` and emits its `exportFailed`. Public so the button can live
+   *  anywhere: `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`. */
   async runExport(): Promise<void> {
-    const fetcher = this.exportFetcher();
-    if (!fetcher) {
-      this.exportCsv(this.exportFilename());
+    const running = this.layout.runExport();
+    if (!running) {
+      this.warnNoExport('runExport');
 
       return;
     }
-    this.exportingState.set(true);
-    this.announceExport('Preparing export…');
-    try {
-      const result = await fetcher();
-      if (typeof result === 'string' || result instanceof Blob) {
-        this.downloadFile(result, this.exportFilename());
-      } else {
-        this.exportCsv(this.exportFilename(), result);
-      }
-      this.announceExport('Export ready');
-    } catch (error) {
-      this.announceExport('Export failed');
-      this.exportFailed.emit(error);
-    } finally {
-      this.exportingState.set(false);
-    }
+    await running;
   }
 
-  private announceExport(status: string): void {
-    this.eventsAtExport.set(this.eventMessages());
-    this.exportStatusState.set(status);
-  }
-
-  /** Hands a ready-made file to the browser. Only a Blob gets its object URL
-   *  revoked — a URL the caller supplied is theirs to manage. */
-  private downloadFile(source: Blob | string, filename: string): void {
-    if (typeof document === 'undefined') {
-      return;
-    }
-    const url = source instanceof Blob ? URL.createObjectURL(source) : source;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    if (source instanceof Blob) {
-      URL.revokeObjectURL(url);
-    }
+  // The one failure this shape is prone to: a call that finds no feature is a silent no-op, and
+  // the table is the only place that knows whether one registered.
+  private warnNoExport(called: string): void {
+    devWarn(
+      () =>
+        `ds-table: ${called}() found no export feature. Add the dsTableExport directive to the table.`,
+    );
   }
 
   /** Deterministic per-cell width so skeleton rows look organic but stable
@@ -2202,16 +1782,5 @@ export class TableComponent<T extends object> {
     const widths = ['45%', '55%', '65%', '75%', '85%'];
 
     return widths[Math.abs(hash) % widths.length] ?? '70%';
-  }
-
-  private watchPointer(): void {
-    if (typeof window === 'undefined' || !window.matchMedia) {
-      return;
-    }
-    const coarse = window.matchMedia('(hover: none) and (pointer: coarse)');
-    const sync = (): void => this.coarsePointerState.set(coarse.matches);
-    sync();
-    coarse.addEventListener('change', sync);
-    this.destroyRef.onDestroy(() => coarse.removeEventListener('change', sync));
   }
 }
