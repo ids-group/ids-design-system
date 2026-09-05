@@ -29,7 +29,11 @@ import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const MIGRATIONS = join(ROOT, 'migrations');
+// Overridable so the selftest can mutate a private copy of the whole directory instead of the
+// tracked manifests. Writing them and restoring afterwards is safe alone and corrupting in
+// parallel: a second run backs up the first run's fixture and then restores THAT, leaving a
+// tracked manifest broken and every later lint red with no bad commit behind it.
+const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 
 const KINDS = new Set([
   'selector-rename',

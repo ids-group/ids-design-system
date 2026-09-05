@@ -3,26 +3,38 @@
 // the lint stays green either way, which is how M033 spent its whole life testing
 // `^DELETE-LIST` while every manifest wrote the marker mid-line.
 //
-// Each entry breaks one real manifest the way its rule forbids, runs the lint, and
-// asserts that code appears. Every case starts from a fresh copy of the backup, but the
-// manifest itself is only restored at the end; a crash leaves it mutated, with the backup
-// at the path below.
+// Each entry breaks one manifest the way its rule forbids, runs the lint, and asserts that code
+// appears. Nothing tracked is written: the whole migrations directory is copied to a per-process
+// path first, so a crash leaves the repository untouched and two sessions cannot collide.
 //
 //   node tools/migration-lint-selftest.mjs
-import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, rmSync, cpSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 
-const F = 'migrations/0.9.0.json';
-const BAK = join(tmpdir(), 'migration-lint-selftest.bak.json');
-copyFileSync(F, BAK);
+// The fixtures go into a per-process COPY of the whole migrations directory, never into the
+// tracked manifests. Mutating them and restoring afterwards is safe alone and corrupting in
+// parallel: a second run copies the first run's fixture over the shared backup and then restores
+// that, so a tracked manifest ends up broken while both runs exit 0. The whole directory is copied
+// rather than the one file, because the lint reads every manifest and a thinner input would change
+// which rules can fire.
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const MIGRATIONS = join(tmpdir(), `migration-lint-selftest.${process.pid}`);
+rmSync(MIGRATIONS, { recursive: true, force: true });
+cpSync(join(ROOT, 'migrations'), MIGRATIONS, { recursive: true });
+const F = join(MIGRATIONS, '0.9.0.json');
+const PRISTINE = readFileSync(F, 'utf8');
 
 const run = () => {
   try {
     execFileSync('node', ['tools/migration-lint.mjs'], {
+      cwd: ROOT,
       encoding: 'utf8',
       stdio: 'pipe',
+      env: { ...process.env, DS_MIGRATIONS_DIR: MIGRATIONS },
     });
     return '';
   } catch (e) {
@@ -127,7 +139,7 @@ const mutations = {
 
 const dead = [];
 for (const [code, mutate] of Object.entries(mutations)) {
-  const m = JSON.parse(readFileSync(BAK, 'utf8'));
+  const m = JSON.parse(PRISTINE);
   try {
     mutate(m);
   } catch {
@@ -190,7 +202,7 @@ for (const { label, code, mutate, raw: text } of extraCases) {
   if (text) {
     writeFileSync(F, text);
   } else {
-    const m = JSON.parse(readFileSync(BAK, 'utf8'));
+    const m = JSON.parse(PRISTINE);
     mutate(m);
     writeFileSync(
       F,
@@ -202,7 +214,7 @@ for (const { label, code, mutate, raw: text } of extraCases) {
   console.log(`${fired ? 'fires ' : 'DEAD  '} ${label}`);
 }
 
-copyFileSync(BAK, F);
+rmSync(MIGRATIONS, { recursive: true, force: true });
 if (dead.length) process.exitCode = 1;
 console.log(
   `\n${dead.length ? 'RULES THAT DID NOT FIRE: ' + dead.join(', ') : 'every rule fired'}`,
