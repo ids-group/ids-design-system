@@ -489,6 +489,14 @@ export class TableComponent<T extends object> {
     () => this.loadingMode() === false && !this.filteredData().length,
   );
 
+  /** Loading, nothing to show yet, and not the skeleton mode which draws its own rows. */
+  protected readonly showsLoadingSpace = computed(
+    () =>
+      this.loadingMode() !== false &&
+      this.loadingMode() !== 'skeleton' &&
+      !this.filteredData().length,
+  );
+
   protected readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
 
   private readonly toolbarAnchor = viewChild('toolbarAnchor', {

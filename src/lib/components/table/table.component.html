@@ -187,6 +187,16 @@
               [ngTemplateOutletContext]="{ $implicit: rowIndex }">
             </ng-container>
           }
+        } @else if (showsLoadingSpace()) {
+          <!-- Height, not a message. The empty state is a claim about the data and stays withheld
+               while the table is still asking; without this the tbody is empty, the table collapses
+               onto its header and the overlay spinner floats over nothing. -->
+          <tr aria-hidden="true">
+            <td
+              class="loading-space"
+              [attr.colspan]="expandedColspan()">
+            </td>
+          </tr>
         } @else if (showsEmptyRow()) {
           <tr>
             <td
@@ -369,10 +379,18 @@
                   <td
                     class="expand-panel-cell"
                     [attr.colspan]="expandedColspan()">
-                    <ng-container
-                      [ngTemplateOutlet]="rowExpandTemplate()!"
-                      [ngTemplateOutletContext]="{ $implicit: row, row: row }">
-                    </ng-container>
+                    <!-- The animation runs on the grid track, so the panel needs a child to be the
+                         track's content; `overflow: hidden` on it is what makes the reveal read as
+                         the accordion's rather than as a jump. -->
+                    <div class="expand-panel-inner">
+                      <ng-container
+                        [ngTemplateOutlet]="rowExpandTemplate()!"
+                        [ngTemplateOutletContext]="{
+                          $implicit: row,
+                          row: row,
+                        }">
+                      </ng-container>
+                    </div>
                   </td>
                 </tr>
               }
