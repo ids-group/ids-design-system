@@ -690,7 +690,8 @@
   "--ds-skeleton-bg-color": "Skeleton placeholder base fill (defaults to --surface-secondary).",
   "--ds-skeleton-shimmer-color": "Skeleton shimmer sweep colour (defaults to --surface-muted).",
   "--ds-skeleton-wave-angle": "135deg — the tilt of the wave's own band. The path it travels is diagonal regardless; this is the angle of the band across it.",
-  "--ds-skeleton-wave-duration": "2800ms — one pass of the shimmer wave. Slower than the shared loop token on purpose: a placeholder is background and should not pull the eye.",
+  "--ds-skeleton-wave-duration": "2200ms — one turn of the shimmer, in which two bands cross: a quiet one and then the main one. Slower than the shared loop token on purpose: a placeholder is background and should not pull the eye.",
+  "--ds-skeleton-wave-echo-color": "The quieter second band, riding a third of a turn ahead of the main one. Defaults to the shimmer tone at 45%, meant to be noticed only as the page not standing still.",
   "--ds-skeleton-wave-width": "26rem — how wide the shimmer wave is, ramps included. A size of its own rather than a share of the viewport, which grew with the monitor and read as a flat wash.",
   "--ds-slider-fill-color": "Slider filled-track colour (defaults to --accent).",
   "--ds-slider-thumb-border-color": "Slider thumb border colour (defaults to --accent).",
@@ -1402,5 +1403,15 @@
   "--yellow-50": "Yellow ramp — stop 50.",
   "--yellow-500": "Yellow ramp — stop 500.",
   "--yellow-600": "Yellow ramp — stop 600.",
-  "--yellow-700": "Yellow ramp — stop 700."
+  "--yellow-700": "Yellow ramp — stop 700.",
+  "--ds-check-mark-enter-duration": "How long a check mark takes to land, for the marks under this scope only. Defaults to the --ds-motion-check-enter-duration role.",
+  "--ds-check-mark-enter-easing": "Easing a check mark lands on, for the marks under this scope only. Defaults to the --ds-motion-check-enter-easing role.",
+  "--ds-check-mark-exit-duration": "How long a check mark takes to leave, for the marks under this scope only. Defaults to the --ds-motion-check-exit-duration role.",
+  "--ds-check-mark-exit-easing": "Easing a check mark leaves on, for the marks under this scope only. Defaults to the --ds-motion-check-exit-easing role.",
+  "--ds-icon-size": "Icon glyph box for every icon under this scope. Defaults to --icon-md; a per-instance `size` input beats it.",
+  "--ds-link-color": "Link text colour. Defaults to --text-link.",
+  "--ds-link-color-hover": "Link colour on hover. Defaults to the link colour mixed 80% with black.",
+  "--ds-link-color-active": "Link colour while pressed. Defaults to the link colour mixed 65% with black.",
+  "--ds-press-brightness": "How far a pressed control darkens. Defaults to 0.9, applied as a brightness filter.",
+  "--ds-press-scale": "How far a pressed control shrinks. Defaults to 0.97."
 }
