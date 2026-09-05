@@ -12,14 +12,20 @@
 // case and again at the end.
 //
 //   node tools/deck-lint-selftest.mjs
-import { writeFileSync, rmSync, existsSync } from 'node:fs';
+import { writeFileSync, rmSync, cpSync, existsSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DECKS = join(ROOT, 'presentations');
+// Fixtures go into a per-process COPY of presentations/, never into the tracked directory. Written
+// there they are seen by the real gate, so a concurrent session goes red on a file it never made,
+// and a crash leaves a `selftest-*.html` that `git add -A` would stage.
+const DECKS = join(tmpdir(), `deck-lint-selftest.${process.pid}`);
 const ARCHIVE = join(DECKS, 'implemented');
+rmSync(DECKS, { recursive: true, force: true });
+cpSync(join(ROOT, 'presentations'), DECKS, { recursive: true });
 
 const run = () => {
   try {
@@ -27,6 +33,7 @@ const run = () => {
       cwd: ROOT,
       encoding: 'utf8',
       stdio: 'pipe',
+      env: { ...process.env, DS_DECKS_DIR: DECKS },
     });
     return '';
   } catch (error) {
