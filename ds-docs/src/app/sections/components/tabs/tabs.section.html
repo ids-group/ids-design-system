@@ -6,8 +6,10 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>Switch among peer panels. Two visual variants — line for primary navigation,
-    pills for compact filters. Optional icon and count chip per tab.</span>
+  <span lede>
+    Switch among peer panels. Two visual variants — line for primary navigation,
+    pills for compact filters. Optional icon and count chip per tab.
+  </span>
 
   <h3 class="block-title t-h4">
     Variants
@@ -15,10 +17,14 @@
 
   <p class="block-desc t-s">
     Line — primary navigation. Pills — compact filter row. Pills look like a
-    <code class="t-mono-inline">ds-segmented</code> control but are real tabs
+    <code class="t-mono-inline">
+      ds-segmented
+    </code> control but are real tabs
     (they own content panels, with <code class="t-mono-inline">tablist</code>
     semantics); for a value/view toggle with no panels, use
-    <code class="t-mono-inline">ds-segmented</code> instead.
+    <code class="t-mono-inline">
+      ds-segmented
+    </code> instead.
   </p>
 
   <div class="variant-row">
@@ -285,8 +291,12 @@
   <p class="block-desc t-s">
     When <code class="t-mono-inline">closable</code> is set each tab shows a
     close button. Clicking it emits
-    <code class="t-mono-inline">tabClosed</code> with the tab's
-    <code class="t-mono-inline">value</code> (or label as fallback). The host is
+    <code class="t-mono-inline">
+      tabClosed
+    </code> with the tab's
+    <code class="t-mono-inline">
+      value
+    </code> (or label as fallback). The host is
     responsible for removing the tab. Closing a tab does not change the active
     index.
   </p>
@@ -572,7 +582,9 @@
 
   <p class="block-desc t-s">
     Set
-    <code class="t-mono-inline">urlParam</code> and the strip keeps the active
+    <code class="t-mono-inline">
+      urlParam
+    </code> and the strip keeps the active
     tab in a query parameter, so it survives F5, a shared link and the Back
     button. The input both switches the behaviour on and names the parameter;
     leave it out and the URL is untouched.
@@ -587,23 +599,39 @@
 
   <p class="block-desc t-s">
     The names come from each tab's
-    <code class="t-mono-inline">value</code>, falling back to a SLUG of its
-    <code class="t-mono-inline">label</code> — kebab, lowercased, diacritics
+    <code class="t-mono-inline">
+      value
+    </code>, falling back to a SLUG of its
+    <code class="t-mono-inline">
+      label
+    </code> — kebab, lowercased, diacritics
     dropped, so "License Verification Status" gives
-    <code class="t-mono-inline">?tab=license-verification-status</code> rather
+    <code class="t-mono-inline">
+      ?tab=license-verification-status
+    </code> rather
     than a percent-encoded sentence. That is not the identifier
-    <code class="t-mono-inline">tabClosed</code> emits: closing still carries
+    <code class="t-mono-inline">
+      tabClosed
+    </code> emits: closing still carries
     the raw label, because a host matches it against its own list. And a slug is
     still derived from copy, so renaming a tab still breaks saved links —
-    <code class="t-mono-inline">value</code> is the only fix for that. Three
+    <code class="t-mono-inline">
+      value
+    </code> is the only fix for that. Three
     decisions are baked in. <strong>Names, not indices:</strong>
 
-    <code class="t-mono-inline">?tab=1</code> would silently repoint every old
+    <code class="t-mono-inline">
+      ?tab=1
+    </code> would silently repoint every old
     link the moment a tab is inserted.
-    <strong>The first tab writes no parameter and every write replaces:</strong>
+    <strong>
+      The first tab writes no parameter and every write replaces:
+    </strong>
     a pristine screen keeps a clean address, and flipping tabs does not fill the
     Back button with entries to walk one at a time.
-    <strong>An unknown or missing name lands on the first tab</strong>
+    <strong>
+      An unknown or missing name lands on the first tab
+    </strong>
     rather than throwing — a URL is user input, and a stale bookmark should
     still open the screen.
   </p>
@@ -614,25 +642,37 @@
     resolved until you set it — no DI lookup, and no subscription to the query
     parameters. Setting it later switches both on; clearing it drops the
     subscription again. It also pairs with
-    <code class="t-mono-inline">ds-app-layout</code> — the write is query-only,
+    <code class="t-mono-inline">
+      ds-app-layout
+    </code> — the write is query-only,
     and that layout's <code class="t-mono-inline">pathChanged</code> ignores
     query-only navigations, so switching tabs cannot trip its scroll reset.
     There is deliberately no live demo here: it would write
-    <code class="t-mono-inline">?tab=</code> into the docs' own address while
+    <code class="t-mono-inline">
+      ?tab=
+    </code> into the docs' own address while
     the sidebar rewrites the path from the scroll position, and the two would
     read as fighting.
   </p>
 
   <p class="block-desc t-s">
-    <strong>One strip per parameter name.</strong> Two
-    <code class="t-mono-inline">ds-tabs</code> sharing a name on the same screen
+    <strong>
+      One strip per parameter name.
+    </strong> Two
+    <code class="t-mono-inline">
+      ds-tabs
+    </code> sharing a name on the same screen
     erase each other — both write the same parameter, and a reload restores
     whichever wrote last. It is the easy mistake to make when turning this on
     across an app, because <code class="t-mono-inline">"tab"</code> is the
     obvious name every time, so a dev-mode warning names the clash. Nested or
     sibling strips need distinct names —
-    <code class="t-mono-inline">tab</code> and
-    <code class="t-mono-inline">subtab</code>.
+    <code class="t-mono-inline">
+      tab
+    </code> and
+    <code class="t-mono-inline">
+      subtab
+    </code>.
   </p>
 
   <h3 class="block-title t-h4">
@@ -640,7 +680,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">rememberLastTab</code> stores the active tab per
+    <code class="t-mono-inline">
+      rememberLastTab
+    </code> stores the active tab per
     path in <code class="t-mono-inline">sessionStorage</code>, so returning to a
     record reopens where you left it. Off by default, and it only does anything
     alongside <code class="t-mono-inline">urlParam</code>, which supplies the
@@ -649,7 +691,9 @@
   </p>
 
   <p class="block-desc t-s">
-    <strong>A link always wins.</strong> The parameter is read first; memory
+    <strong>
+      A link always wins.
+    </strong> The parameter is read first; memory
     only fills the gap the first tab deliberately leaves, since that case writes
     no parameter at all. Tab one is remembered too — otherwise going back to it
     would be forgotten, and the next visit would reopen the tab before it.

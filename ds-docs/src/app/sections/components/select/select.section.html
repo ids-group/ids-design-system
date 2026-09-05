@@ -5,8 +5,10 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>Custom dropdown built on CDK Overlay, with a custom chevron. Sizes, states,
-    with-value, disabled, error.</span>
+  <span lede>
+    Custom dropdown built on CDK Overlay, with a custom chevron. Sizes, states,
+    with-value, disabled, error.
+  </span>
 
   <docs-nonmodal-note />
 
@@ -143,7 +145,9 @@
             [invalid]="true"
           />
 
-          <span class="field-hint error">Pick one</span>
+          <span class="field-hint error">
+            Pick one
+          </span>
         </div>
       </div>
 
@@ -161,7 +165,9 @@
             [options]="tierOptions"
           />
 
-          <span class="field-hint">OK</span>
+          <span class="field-hint">
+            OK
+          </span>
         </div>
       </div>
 
@@ -384,7 +390,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">hint</code> renders a helper line below the
+    <code class="t-mono-inline">
+      hint
+    </code> renders a helper line below the
     control. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
     switches to an error style with <code>role="alert"</code>.
   </p>
@@ -438,7 +446,9 @@
 
   <p class="block-desc t-s">
     Add an <code class="t-mono-inline">icon</code> property to each
-    <code class="t-mono-inline">SelectOption</code>. The icon appears in both
+    <code class="t-mono-inline">
+      SelectOption
+    </code>. The icon appears in both
     the option list and the trigger when that option is selected.
   </p>
 
@@ -466,17 +476,25 @@
   <p class="block-desc t-s">
     Typing a letter on the closed trigger jumps to the first option starting
     with it and commits, the way a native
-    <code class="t-mono-inline">&lt;select&gt;</code> does; repeating the letter
+    <code class="t-mono-inline">
+      &lt;select&gt;
+    </code> does; repeating the letter
     cycles. With the panel open the same keys move the cursor, and the active
     row scrolls itself into view — try <kbd>ArrowDown</kbd> through this list,
     which is longer than the panel.
-    <code class="t-mono-inline">scrollActiveIntoView="false"</code> hands the
+    <code class="t-mono-inline">
+      scrollActiveIntoView="false"
+    </code> hands the
     scroll position back to you.
   </p>
 
   <p class="block-desc t-s">
-    <kbd>PageDown</kbd> and <kbd>PageUp</kbd> move ten rows — the native
-    <code class="t-mono-inline">&lt;select&gt;</code> step, a fixed number
+    <kbd>
+      PageDown
+    </kbd> and <kbd>PageUp</kbd> move ten rows — the native
+    <code class="t-mono-inline">
+      &lt;select&gt;
+    </code> step, a fixed number
     rather than a measured screenful so the jump does not change with the
     panel's height. <kbd>Home</kbd> and <kbd>End</kbd> go to the first and
     last option a reader can actually pick, skipping a disabled one.
@@ -504,10 +522,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">dsPanelFooterTemplate</code> puts a strip under
+    <code class="t-mono-inline">
+      dsPanelFooterTemplate
+    </code> puts a strip under
     the options, outside the listbox so it is not counted as one. An option's
-    <code class="t-mono-inline">disabledReason</code> is announced through
-    <code class="t-mono-inline">aria-describedby</code> — the row already looks
+    <code class="t-mono-inline">
+      disabledReason
+    </code> is announced through
+    <code class="t-mono-inline">
+      aria-describedby
+    </code> — the row already looks
     disabled, the sentence is for whoever cannot see it.
   </p>
 
@@ -519,7 +543,9 @@
         [(value)]="plan"
       >
         <ng-template dsPanelFooterTemplate>
-          <span class="t-s">Contact sales for the enterprise plan</span>
+          <span class="t-s">
+            Contact sales for the enterprise plan
+          </span>
         </ng-template>
       </ds-select>
     </div>
@@ -530,10 +556,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">clear()</code> empties the value from a template
+    <code class="t-mono-inline">
+      clear()
+    </code> empties the value from a template
     reference — a "reset filters" button, a form the app clears itself. All
     three pickers have it now;
-    <code class="t-mono-inline">ds-autocomplete</code> was the only one before,
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code> was the only one before,
     so an app with its own reset had to write the empty value by hand and guess
     what empty means for each control. It deliberately does not move focus.
   </p>

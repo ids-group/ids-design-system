@@ -5,8 +5,10 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>Mulish for UI and prose, JetBrains Mono for IDs, dates and any monospace
-    data. Weights: 400 / 500 / 600 / 700 / 800.</span>
+  <span lede>
+    Mulish for UI and prose, JetBrains Mono for IDs, dates and any monospace
+    data. Weights: 400 / 500 / 600 / 700 / 800.
+  </span>
 
   <h3 class="block-title t-h4">
     Type ramp
@@ -15,7 +17,9 @@
   <p class="block-desc t-s">
     Every utility class side-by-side. Headings are reserved for marketing
     surfaces and large section titles. Default UI runs on
-    <code class="t-mono-inline">.t-s</code> (14).
+    <code class="t-mono-inline">
+      .t-s
+    </code> (14).
   </p>
 
   <div class="ramp">
@@ -48,9 +52,13 @@
     @for (row of ramp; track row.cls) {
       <div class="ramp-row">
         <div class="ramp-label">
-          <code class="t-mono-inline ramp-cls">.{{ row.cls }}</code>
+          <code class="t-mono-inline ramp-cls">
+            .{{ row.cls }}
+          </code>
 
-          <code class="t-mono-inline ramp-token">{{ row.sizeToken }}</code>
+          <code class="t-mono-inline ramp-token">
+            {{ row.sizeToken }}
+          </code>
         </div>
 
         <div [class]="row.cls + ' ramp-sample'">
@@ -83,7 +91,9 @@
   <p class="block-desc t-s">
     JetBrains Mono for any literal value the operator might paste, search or
     read aloud. <code class="t-mono-inline">.t-mono</code> for inline tokens;
-    <code class="t-mono-inline">.t-mono-block</code> wraps a code-snippet style
+    <code class="t-mono-inline">
+      .t-mono-block
+    </code> wraps a code-snippet style
     frame.
   </p>
 
@@ -137,7 +147,9 @@ WHERE  project_id = 'alpha'
         Mulish
       </div>
 
-      <code class="t-mono-inline family-card-tok">--font-sans</code>
+      <code class="t-mono-inline family-card-tok">
+        --font-sans
+      </code>
     </div>
 
     <div class="family-card">
@@ -152,7 +164,9 @@ WHERE  project_id = 'alpha'
         JetBrains Mono
       </div>
 
-      <code class="t-mono-inline family-card-tok">--font-mono</code>
+      <code class="t-mono-inline family-card-tok">
+        --font-mono
+      </code>
     </div>
   </div>
 </docs-section>

@@ -5,11 +5,17 @@
 >
   <span lede>
     Icon-only action with its own variant taxonomy — distinct from
-    <code class="t-mono-inline">&lt;ds-button&gt;</code>. Use for toolbars,
+    <code class="t-mono-inline">
+      &lt;ds-button&gt;
+    </code>. Use for toolbars,
     table-row actions, close / back / overflow affordances.
-    <code class="t-mono-inline">[ariaLabel]</code> is required (an icon has no
+    <code class="t-mono-inline">
+      [ariaLabel]
+    </code> is required (an icon has no
     text label). This replaces the former
-    <code class="t-mono-inline">ds-button iconOnly</code> flag.
+    <code class="t-mono-inline">
+      ds-button iconOnly
+    </code> flag.
   </span>
 
   <h3 class="block-title t-h4">
@@ -17,11 +23,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">variant</code> = fill taxonomy (standard
+    <code class="t-mono-inline">
+      variant
+    </code> = fill taxonomy (standard
     chromeless · filled · tonal · outlined);
-    <code class="t-mono-inline">color</code>
+    <code class="t-mono-inline">
+      color
+    </code>
     = the shared brand/status hue family (same axis as
-    <code class="t-mono-inline">ds-button</code>). All combinations are valid.
+    <code class="t-mono-inline">
+      ds-button
+    </code>). All combinations are valid.
     secondary/tertiary ship distinct default hues (orange / violet), independent
     of <code class="t-mono-inline">--primary</code>, so the brand rows read as
     independent roles out of the box.
@@ -64,7 +76,9 @@
         size="sm"
       />
 
-      <code class="t-mono-inline">size="sm"</code>
+      <code class="t-mono-inline">
+        size="sm"
+      </code>
     </div>
 
     <div class="cell">
@@ -74,7 +88,9 @@
         variant="outlined"
       />
 
-      <code class="t-mono-inline">size="md"</code>
+      <code class="t-mono-inline">
+        size="md"
+      </code>
     </div>
 
     <div class="cell">
@@ -85,7 +101,9 @@
         size="lg"
       />
 
-      <code class="t-mono-inline">size="lg"</code>
+      <code class="t-mono-inline">
+        size="lg"
+      </code>
     </div>
   </div>
 
@@ -94,7 +112,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[selected]</code> renders the pressed state and
+    <code class="t-mono-inline">
+      [selected]
+    </code> renders the pressed state and
     sets <code class="t-mono-inline">aria-pressed</code>. Click to flip.
   </p>
 
@@ -107,7 +127,9 @@
         (pressed)="bookmarked.set(!bookmarked())"
       />
 
-      <code class="t-mono-inline">selected = {{ bookmarked() }}</code>
+      <code class="t-mono-inline">
+        selected = {{ bookmarked() }}
+      </code>
     </div>
   </div>
 
@@ -117,8 +139,12 @@
 
   <p class="block-desc t-s">
     Disabled is a muted tint of the variant's own colour (derived via
-    <code class="t-mono-inline">oklch()</code>), not a flat grey. Chromeless
-    <code class="t-mono-inline">standard</code> stays boxless — muted icon only.
+    <code class="t-mono-inline">
+      oklch()
+    </code>), not a flat grey. Chromeless
+    <code class="t-mono-inline">
+      standard
+    </code> stays boxless — muted icon only.
   </p>
 
   <div class="row">
@@ -130,7 +156,9 @@
         [disabled]="true"
       />
 
-      <code class="t-mono-inline">standard</code>
+      <code class="t-mono-inline">
+        standard
+      </code>
     </div>
 
     <div class="cell">
@@ -141,7 +169,9 @@
         [disabled]="true"
       />
 
-      <code class="t-mono-inline">filled</code>
+      <code class="t-mono-inline">
+        filled
+      </code>
     </div>
 
     <div class="cell">
@@ -152,7 +182,9 @@
         [disabled]="true"
       />
 
-      <code class="t-mono-inline">tonal</code>
+      <code class="t-mono-inline">
+        tonal
+      </code>
     </div>
 
     <div class="cell">
@@ -163,7 +195,9 @@
         [disabled]="true"
       />
 
-      <code class="t-mono-inline">outlined</code>
+      <code class="t-mono-inline">
+        outlined
+      </code>
     </div>
   </div>
 </docs-section>

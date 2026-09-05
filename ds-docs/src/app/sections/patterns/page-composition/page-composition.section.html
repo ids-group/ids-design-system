@@ -3,10 +3,12 @@
   eyebrow="Patterns"
   title="Page composition"
 >
-  <span lede>The individual patterns below each answer one screen. This one answers the
+  <span lede>
+    The individual patterns below each answer one screen. This one answers the
     layer above: which region holds what, in which order, and how to tell
     whether a composition is right before anyone reviews it. The grid itself —
-    tiers, spans, the canonical splits — is in Foundations &rarr; Layout.</span>
+    tiers, spans, the canonical splits — is in Foundations &rarr; Layout.
+  </span>
 
   <h3 class="block-title t-h4">
     Four regions, and three of them are components
@@ -20,28 +22,44 @@
 
   <div class="pc-regions">
     <div class="pc-region pc-region--chrome">
-      <code class="t-mono-inline">ds-sidenav</code>
+      <code class="t-mono-inline">
+        ds-sidenav
+      </code>
 
-      <span class="t-xs pc-note">rail reserved first, outside the grid</span>
+      <span class="t-xs pc-note">
+        rail reserved first, outside the grid
+      </span>
     </div>
 
     <div class="pc-column">
       <div class="pc-region pc-region--chrome">
-        <code class="t-mono-inline">ds-topbar</code>
+        <code class="t-mono-inline">
+          ds-topbar
+        </code>
 
-        <span class="t-xs pc-note">global</span>
+        <span class="t-xs pc-note">
+          global
+        </span>
       </div>
 
       <div class="pc-region">
-        <code class="t-mono-inline">ds-page-header</code>
+        <code class="t-mono-inline">
+          ds-page-header
+        </code>
 
-        <span class="t-xs pc-note">breadcrumbs · title · meta · actions · tabs</span>
+        <span class="t-xs pc-note">
+          breadcrumbs · title · meta · actions · tabs
+        </span>
       </div>
 
       <div class="pc-region">
-        <code class="t-mono-inline">ds-filter-bar</code>
+        <code class="t-mono-inline">
+          ds-filter-bar
+        </code>
 
-        <span class="t-xs pc-note">only if the page has data to filter</span>
+        <span class="t-xs pc-note">
+          only if the page has data to filter
+        </span>
       </div>
 
       <div class="pc-region pc-region--content">
@@ -51,9 +69,13 @@
       </div>
 
       <div class="pc-region">
-        <code class="t-mono-inline">ds-page-footer</code>
+        <code class="t-mono-inline">
+          ds-page-footer
+        </code>
 
-        <span class="t-xs pc-note">optional</span>
+        <span class="t-xs pc-note">
+          optional
+        </span>
       </div>
     </div>
   </div>
@@ -63,10 +85,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[breadcrumbs]</code> above the title,
-    <code class="t-mono-inline">[title-badge]</code> beside it,
-    <code class="t-mono-inline">[meta]</code> under it,
-    <code class="t-mono-inline">[actions]</code> right-aligned on the title
+    <code class="t-mono-inline">
+      [breadcrumbs]
+    </code> above the title,
+    <code class="t-mono-inline">
+      [title-badge]
+    </code> beside it,
+    <code class="t-mono-inline">
+      [meta]
+    </code> under it,
+    <code class="t-mono-inline">
+      [actions]
+    </code> right-aligned on the title
     line, <code class="t-mono-inline">[tabs]</code> last so the tab row sits on
     the header's bottom edge. Putting page actions anywhere else — a floating
     button, a row above the header — breaks the one place a user has learned to
@@ -79,7 +109,9 @@
 
   <ul class="pc-list t-s">
     <li>
-      <strong>Filters sit directly above the data they filter</strong> —
+      <strong>
+        Filters sit directly above the data they filter
+      </strong> —
       between the header and the content, full width, with no wrapper that could
       clip the overflow popover. Not in a sidebar, not inside the table's own
       card. The 9+3 split is what a genuine filter RAIL is for, and it is
@@ -87,17 +119,27 @@
     </li>
 
     <li>
-      <strong>One primary per region, once</strong> — one in the page header,
+      <strong>
+        One primary per region, once
+      </strong> — one in the page header,
       one per card, one in a modal's actions. A second primary in the same
       region makes neither primary. Secondary work takes
-      <code class="t-mono-inline">outline</code>, dismissive work takes
-      <code class="t-mono-inline">ghost</code>.
+      <code class="t-mono-inline">
+        outline
+      </code>, dismissive work takes
+      <code class="t-mono-inline">
+        ghost
+      </code>.
     </li>
 
     <li>
-      <strong>Supporting information goes under, never beside</strong> —
+      <strong>
+        Supporting information goes under, never beside
+      </strong> —
       hints, counts and timestamps sit under the thing they describe at
-      <code class="t-mono-inline">--space-1</code>. Beside is reserved for
+      <code class="t-mono-inline">
+        --space-1
+      </code>. Beside is reserved for
       actions. Never a tooltip: it is hover-only, so it cannot carry anything
       the user needs in order to act.
     </li>
@@ -167,7 +209,9 @@
   <ol class="pc-list t-s">
     @for (check of checks; track check.rule) {
       <li>
-        <strong>{{ check.rule }}.</strong>
+        <strong>
+          {{ check.rule }}.
+        </strong>
         {{ check.how }}
       </li>
     }

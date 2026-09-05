@@ -5,9 +5,11 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>Top of every page: title, optional lede, primary action area, optional
+  <span lede>
+    Top of every page: title, optional lede, primary action area, optional
     bottom tabs. Distinct from the Page header pattern, which documents the full
-    page composition around this block.</span>
+    page composition around this block.
+  </span>
 
   <h3 class="block-title t-h4">
     Default
@@ -191,7 +193,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[divider]="true"</code> draws a hairline rule
+    <code class="t-mono-inline">
+      [divider]="true"
+    </code> draws a hairline rule
     beneath the meta row, separating the header from the page content. Default
     is flush (no divider) — opt in when the content below doesn't supply its own
     framing.

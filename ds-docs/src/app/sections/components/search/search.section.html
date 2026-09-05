@@ -5,8 +5,10 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>Top-bar search affordance — leading magnifier icon, mid-content control,
-    optional ⌘K keyboard hint.</span>
+  <span lede>
+    Top-bar search affordance — leading magnifier icon, mid-content control,
+    optional ⌘K keyboard hint.
+  </span>
 
   <h3 class="block-title t-h4">
     Default · filled · focus
@@ -101,13 +103,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">size</code> aligns the search-row height with
+    <code class="t-mono-inline">
+      size
+    </code> aligns the search-row height with
     the controls beside it in a filter toolbar.
-    <code class="t-mono-inline">sm</code> is 32px — matching
-    <code>ds-input</code> / <code>ds-button</code> at
-    <code class="t-mono-inline">sm</code>;
-    <code class="t-mono-inline">md</code> (default) keeps the classic 36px bar;
-    <code class="t-mono-inline">lg</code> steps up to 40px.
+    <code class="t-mono-inline">
+      sm
+    </code> is 32px — matching
+    <code>
+      ds-input
+    </code> / <code>ds-button</code> at
+    <code class="t-mono-inline">
+      sm
+    </code>;
+    <code class="t-mono-inline">
+      md
+    </code> (default) keeps the classic 36px bar;
+    <code class="t-mono-inline">
+      lg
+    </code> steps up to 40px.
   </p>
 
   <div class="row">
@@ -132,29 +146,47 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[debounce]="200"</code> holds each keystroke
+    <code class="t-mono-inline">
+      [debounce]="200"
+    </code> holds each keystroke
     back before <code class="t-mono-inline">value</code> updates, so a list
     screen stops firing a request per character. Default is
-    <code class="t-mono-inline">0</code> — every keystroke writes through,
+    <code class="t-mono-inline">
+      0
+    </code> — every keystroke writes through,
     exactly as this control always has.
   </p>
 
   <p class="block-desc t-s">
     Three things deliberately skip the timer, and they are the reason a wrapped
-    <code class="t-mono-inline">debounceTime</code> usually feels wrong.
-    <strong>Clearing the field</strong> — emptying a search is a deliberate
+    <code class="t-mono-inline">
+      debounceTime
+    </code> usually feels wrong.
+    <strong>
+      Clearing the field
+    </strong> — emptying a search is a deliberate
     act, and waiting 200ms to see the whole list back reads as a hang;
-    <strong>Enter</strong>, which flushes whatever is still in flight so you
+    <strong>
+      Enter
+    </strong>, which flushes whatever is still in flight so you
     search what you can see; and
     <strong>
       the public
-      <code class="t-mono-inline">clear()</code>
+      <code class="t-mono-inline">
+        clear()
+      </code>
     </strong
     >, for a Clear button that lives outside the control — it empties the field,
     drops an armed keystroke and publishes
-    <code class="t-mono-inline">''</code> at once. Writing
-    <code class="t-mono-inline">''</code> into
-    <code class="t-mono-inline">value</code> is NOT the same: the timer is
+    <code class="t-mono-inline">
+      ''
+    </code> at once. Writing
+    <code class="t-mono-inline">
+      ''
+    </code> into
+    <code class="t-mono-inline">
+      value
+    </code> is NOT the same: the timer is
     cancelled only when the incoming text differs from what the control last
     pushed, so clearing an already-empty-looking field left the keystroke armed.
     What the input SHOWS is never delayed by any of the three.
@@ -169,7 +201,9 @@
     />
 
     <p class="t-s">
-      <code class="t-mono-inline">value</code>: {{ debounced() || '(empty)' }}
+      <code class="t-mono-inline">
+        value
+      </code>: {{ debounced() || '(empty)' }}
     </p>
   </div>
 
@@ -179,9 +213,15 @@
 
   <p class="block-desc t-s">
     A search box holds a value, so it binds like any other control now:
-    <code class="t-mono-inline">[formControl]</code>,
-    <code class="t-mono-inline">formControlName</code>,
-    <code class="t-mono-inline">[(ngModel)]</code> and a signal form all reach
+    <code class="t-mono-inline">
+      [formControl]
+    </code>,
+    <code class="t-mono-inline">
+      formControlName
+    </code>,
+    <code class="t-mono-inline">
+      [(ngModel)]
+    </code> and a signal form all reach
     it, and its own <code class="t-mono-inline">[(value)]</code> keeps working.
     A <code class="t-mono-inline">disabled</code> input folds together with the
     form's own disabled state, and the shell paints the disabled surface — it
@@ -189,11 +229,15 @@
   </p>
 
   <p class="block-desc t-s">
-    <strong>Deliberately no label and no message row.</strong>
+    <strong>
+      Deliberately no label and no message row.
+    </strong>
     A toolbar filter is not a validated field, and giving it the field chrome
     would restyle every toolbar it sits in. Where a search needs a label or an
     error line, that is what
-    <code class="t-mono-inline">ds-input</code> is for.
+    <code class="t-mono-inline">
+      ds-input
+    </code> is for.
   </p>
 
   <div class="demo-stack">
@@ -204,7 +248,9 @@
     />
 
     <p class="t-s">
-      <code class="t-mono-inline">queryControl.valueChanges</code>:
+      <code class="t-mono-inline">
+        queryControl.valueChanges
+      </code>:
       {{ queryValue() || '(empty)' }}
     </p>
 

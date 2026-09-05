@@ -3,15 +3,21 @@
   eyebrow="Components"
   title="Filter bar"
 >
-  <span lede>Priority+ filter row: as many filters as fit, the rest behind "+N more".</span>
+  <span lede>
+    Priority+ filter row: as many filters as fit, the rest behind "+N more".
+  </span>
 
   <p class="block-desc t-s">
     Every admin list past three filters hits the same wall — the row wraps to a
     second line on a laptop, or someone hand-rolls an overflow menu. Each filter
     goes in an
-    <code class="t-mono-inline">ng-template</code> carrying the width it should
+    <code class="t-mono-inline">
+      ng-template
+    </code> carrying the width it should
     occupy, and the bar decides the split from those numbers plus one
-    <code class="t-mono-inline">ResizeObserver</code> on the row. It never
+    <code class="t-mono-inline">
+      ResizeObserver
+    </code> on the row. It never
     measures the filters themselves: they would have to be in the DOM to be
     measured, so anything that did not fit would flash into view before being
     taken away.
@@ -20,7 +26,9 @@
   <p class="block-desc t-s">
     Drag the handle to resize the frame — the filters collapse into the panel
     from the right as room runs out, while anything marked
-    <code class="t-mono-inline">dsFilterBarTrailing</code> keeps its place
+    <code class="t-mono-inline">
+      dsFilterBarTrailing
+    </code> keeps its place
     throughout. Mark each trailing control rather than wrapping them in a div:
     the bar owns that group's gap and alignment, and a projected wrapper is a
     plain block whose children would stack. The group sits outside the measured
@@ -29,14 +37,22 @@
   </p>
 
   <p class="block-desc t-s">
-    <strong>If one component genuinely has to hold two trailing controls</strong>
+    <strong>
+      If one component genuinely has to hold two trailing controls
+    </strong>
     — the usual reason was a Clear that must cancel a debounce armed on the
     search beside it, and that reason is gone:
-    <code class="t-mono-inline">ds-search</code>
+    <code class="t-mono-inline">
+      ds-search
+    </code>
     cancels its own pending keystroke when the host writes
-    <code class="t-mono-inline">value</code>, so a bar-level Clear no longer
+    <code class="t-mono-inline">
+      value
+    </code>, so a bar-level Clear no longer
     needs to live in the same component — then mark that component and give its
-    <code class="t-mono-inline">:host</code> the three declarations the bar
+    <code class="t-mono-inline">
+      :host
+    </code> the three declarations the bar
     would have applied. They are the bar's own trailing rule, and the gap reads
     from the same token so the two cannot drift.
   </p>
@@ -48,15 +64,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">triggerSize</code> matches the trigger to the
+    <code class="t-mono-inline">
+      triggerSize
+    </code> matches the trigger to the
     filters beside it — default <code class="t-mono-inline">md</code>. The bar
     cannot work this out on its own:
-    <code class="t-mono-inline">dsFilterItem</code> carries a WIDTH, and the
+    <code class="t-mono-inline">
+      dsFilterItem
+    </code> carries a WIDTH, and the
     filters are arbitrary projected controls whose own
-    <code class="t-mono-inline">size</code> it never sees. Left unset beside
-    <code class="t-mono-inline">sm</code> filters, the trigger stands 8px taller
+    <code class="t-mono-inline">
+      size
+    </code> it never sees. Left unset beside
+    <code class="t-mono-inline">
+      sm
+    </code> filters, the trigger stands 8px taller
     than everything next to it, since the row aligns on
-    <code class="t-mono-inline">flex-end</code>.
+    <code class="t-mono-inline">
+      flex-end
+    </code>.
   </p>
 
   <div class="width-control">
@@ -77,7 +103,9 @@
       (input)="frameWidth.set(+$any($event.target).value)"
     />
 
-    <span class="t-mono-inline">{{ frameWidth() }}px</span>
+    <span class="t-mono-inline">
+      {{ frameWidth() }}px
+    </span>
   </div>
 
   <div
@@ -155,7 +183,9 @@
     collapses it. Its value does: that lives in your own signal or form control,
     which is why the demo above keeps every selection while you drag. The
     trigger carries the count as text and
-    <code class="t-mono-inline">aria-expanded</code>, and the panel is a
+    <code class="t-mono-inline">
+      aria-expanded
+    </code>, and the panel is a
     focus-trapped dialog; there is exactly one copy of each filter in the
     accessibility tree, because the filters move rather than being rendered
     twice and hidden.

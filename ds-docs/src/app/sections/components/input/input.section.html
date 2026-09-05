@@ -6,7 +6,9 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede>Single-line text, prefix/suffix add-ons, six states.</span>
+  <span lede>
+    Single-line text, prefix/suffix add-ons, six states.
+  </span>
 
   <h3 class="block-title t-h4">
     States showcase
@@ -170,7 +172,9 @@
           <span
             dsInputPrefix
             class="addon"
-          >https://</span>
+          >
+            https://
+          </span>
         </ds-input>
       </div>
 
@@ -189,7 +193,9 @@
           <span
             dsInputSuffix
             class="addon right"
-          >people</span>
+          >
+            people
+          </span>
         </ds-input>
       </div>
 
@@ -207,8 +213,12 @@
     Clicking anywhere in the frame — a leading icon, a prefix/suffix add-on, or
     the padding — focuses the input; only nested controls (a projected button,
     the clear ✕, the password toggle) keep their own click. Same behaviour on
-    <code class="t-mono-inline">ds-search</code> and
-    <code class="t-mono-inline">ds-textarea</code>.
+    <code class="t-mono-inline">
+      ds-search
+    </code> and
+    <code class="t-mono-inline">
+      ds-textarea
+    </code>.
   </p>
 
   <div class="grid-3">
@@ -231,7 +241,9 @@
       <span
         dsInputSuffix
         class="addon right"
-      >m</span>
+      >
+        m
+      </span>
     </ds-input>
 
     <ds-input
@@ -241,7 +253,9 @@
       <span
         dsInputPrefix
         class="addon"
-      >https://</span>
+      >
+        https://
+      </span>
     </ds-input>
 
     <ds-input
@@ -252,7 +266,9 @@
       <span
         dsInputSuffix
         class="addon right"
-      >people</span>
+      >
+        people
+      </span>
     </ds-input>
   </div>
 
@@ -261,11 +277,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[clearable]</code> shows an inline × button when
+    <code class="t-mono-inline">
+      [clearable]
+    </code> shows an inline × button when
     the field has a non-empty value. Defaults to
-    <code class="t-mono-inline">true</code> for
-    <code class="t-mono-inline">type="search"</code> and
-    <code class="t-mono-inline">false</code> otherwise — pass an explicit
+    <code class="t-mono-inline">
+      true
+    </code> for
+    <code class="t-mono-inline">
+      type="search"
+    </code> and
+    <code class="t-mono-inline">
+      false
+    </code> otherwise — pass an explicit
     boolean to override.
   </p>
 
@@ -291,9 +315,13 @@
 
   <p class="block-desc t-s">
     On <code class="t-mono-inline">type="password"</code>,
-    <code class="t-mono-inline">[passwordToggle]="true"</code> adds an eye
+    <code class="t-mono-inline">
+      [passwordToggle]="true"
+    </code> adds an eye
     button that flips the field between masked and plain text. Two-way
-    <code class="t-mono-inline">[(passwordVisible)]</code> exposes the state.
+    <code class="t-mono-inline">
+      [(passwordVisible)]
+    </code> exposes the state.
   </p>
 
   <div class="grid-2">
@@ -311,7 +339,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[maxLength]</code> caps input length natively
+    <code class="t-mono-inline">
+      [maxLength]
+    </code> caps input length natively
     and shows a live <code class="t-mono-inline">current/max</code> counter
     below the field — right-aligned, aligned with the hint.
   </p>
@@ -336,7 +366,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[required]="true"</code> appends a red asterisk
+    <code class="t-mono-inline">
+      [required]="true"
+    </code> appends a red asterisk
     to the label; <code class="t-mono-inline">[optional]="true"</code> appends
     the muted "(optional)" suffix. They are mutually exclusive — pick one.
   </p>
@@ -364,9 +396,15 @@
 
   <p class="block-desc t-s">
     A field takes all three and shows exactly ONE, highest first:
-    <code class="t-mono-inline">error</code> → validation errors →
-    <code class="t-mono-inline">warning</code> →
-    <code class="t-mono-inline">hint</code>. Only one line ever renders, so the
+    <code class="t-mono-inline">
+      error
+    </code> → validation errors →
+    <code class="t-mono-inline">
+      warning
+    </code> →
+    <code class="t-mono-inline">
+      hint
+    </code>. Only one line ever renders, so the
     field's height never depends on how many of them you bound. All three fields
     below carry the same <code class="t-mono-inline">hint</code>; the second
     adds a warning and the third adds both.
@@ -377,7 +415,9 @@
     a red border AND a tinted fill because it blocks submission; a warning and a
     success take the border alone, so an error still reads as the loudest thing
     in a form holding all three. One rule drives all nine bordered fields, off a
-    <code class="t-mono-inline">data-field-state</code> attribute on the host —
+    <code class="t-mono-inline">
+      data-field-state
+    </code> attribute on the host —
     style against that attribute rather than a class if you need to extend it.
   </p>
 
@@ -412,10 +452,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">error</code>,
-    <code class="t-mono-inline">warning</code> and
-    <code class="t-mono-inline">success</code> each bring a glyph;
-    <code class="t-mono-inline">hint</code> does not, because it is the resting
+    <code class="t-mono-inline">
+      error
+    </code>,
+    <code class="t-mono-inline">
+      warning
+    </code> and
+    <code class="t-mono-inline">
+      success
+    </code> each bring a glyph;
+    <code class="t-mono-inline">
+      hint
+    </code> does not, because it is the resting
     text rather than a state and a form where every field carries an info circle
     reads as noise. Colour alone was the whole signal before — and in the light
     theme warning (#8A7400) against success (#156822) is a hue apart and nothing
@@ -424,10 +472,16 @@
 
   <p class="block-desc t-s">
     Per state, app-wide:
-    <code class="t-mono-inline">DS_CONFIG.field.stateIcons</code>
+    <code class="t-mono-inline">
+      DS_CONFIG.field.stateIcons
+    </code>
     — each key independent, a name replaces the glyph,
-    <code class="t-mono-inline">false</code> removes it, and
-    <code class="t-mono-inline">stateIcons: false</code> removes all four. On
+    <code class="t-mono-inline">
+      false
+    </code> removes it, and
+    <code class="t-mono-inline">
+      stateIcons: false
+    </code> removes all four. On
     one field, <code class="t-mono-inline">messageIcon</code> wins over both:
   </p>
 
@@ -455,14 +509,22 @@
 
   <p class="block-desc t-s">
     Bind
-    <code class="t-mono-inline">error</code> and it shows at once — binding it
+    <code class="t-mono-inline">
+      error
+    </code> and it shows at once — binding it
     says you have already decided. Everything else can come from the form
     control instead, and then you bind nothing: the field reads the control and
     waits for the first blur, so a
-    <code class="t-mono-inline">required</code> error never greets an untouched
+    <code class="t-mono-inline">
+      required
+    </code> error never greets an untouched
     form. Both fields below are plain
-    <code class="t-mono-inline">[formControl]</code> with
-    <code class="t-mono-inline">Validators</code> and no message binding at all
+    <code class="t-mono-inline">
+      [formControl]
+    </code> with
+    <code class="t-mono-inline">
+      Validators
+    </code> and no message binding at all
     — focus one, leave it empty, and blur.
   </p>
 
@@ -489,43 +551,73 @@
   </div>
 
   <p class="block-desc t-s">
-    <b>A form can raise a WARNING, not only an error.</b> "Display name" above
+    <b>
+      A form can raise a WARNING, not only an error.
+    </b> "Display name" above
     runs a validator that returns
     <code class="t-mono-inline"
-      >{{ '{' }} warning: 'Long runs of capitals are hard to scan'
-      {{ '}' }}</code>
+      >
+      {{ '{' }} warning: 'Long runs of capitals are hard to scan'
+      {{ '}' }}
+    </code>
     — the reserved kind exported as
-    <code class="t-mono-inline">DS_FIELD_WARNING_KIND</code>. The field paints
+    <code class="t-mono-inline">
+      DS_FIELD_WARNING_KIND
+    </code>. The field paints
     the warning state and shows the text, but stays VALID:
-    <code class="t-mono-inline">aria-invalid</code> is not set and a submit
+    <code class="t-mono-inline">
+      aria-invalid
+    </code> is not set and a submit
     guard reading validity is not blocked. Angular's
-    <code class="t-mono-inline">AbstractControl</code> has no channel for an
+    <code class="t-mono-inline">
+      AbstractControl
+    </code> has no channel for an
     advisory remark — only <code class="t-mono-inline">errors</code> and the
     validity derived from it — so this rides in
-    <code class="t-mono-inline">errors</code> under a kind the DS treats as
+    <code class="t-mono-inline">
+      errors
+    </code> under a kind the DS treats as
     non-blocking. It works from both form systems: a reactive validator's KEY
     becomes the kind, and signal forms' own
-    <code class="t-mono-inline">ValidationError</code> already carries one.
+    <code class="t-mono-inline">
+      ValidationError
+    </code> already carries one.
   </p>
 
   <p class="block-desc t-s">
     The text for
-    <code class="t-mono-inline">required</code> and
-    <code class="t-mono-inline">minlength</code> above comes from one shared map
+    <code class="t-mono-inline">
+      required
+    </code> and
+    <code class="t-mono-inline">
+      minlength
+    </code> above comes from one shared map
     —
     <code class="t-mono-inline"
-      >provideDsConfig({{ '{' }} field: {{ '{' }} errorMessages: … {{ '}' }}
-      {{ '}' }})</code>
+      >
+      provideDsConfig({{ '{' }} field: {{ '{' }} errorMessages: … {{ '}' }}
+      {{ '}' }})
+    </code>
     on this section — because Angular's built-in validators carry a detail
     object and no wording. A validator that supplies its own message wins over
     the map: "admin" is rejected by a custom validator returning
-    <code class="t-mono-inline">{{ '{' }} taken: 'That handle is already taken' {{ '}' }}</code>. In signal forms the same thing is written at the validator —
+    <code class="t-mono-inline">
+      {{ '{' }} taken: 'That handle is already taken' {{ '}' }}
+    </code>. In signal forms the same thing is written at the validator —
     <code class="t-mono-inline"
-      >required(path, {{ '{' }} message: … {{ '}' }})</code>
+      >
+      required(path, {{ '{' }} message: … {{ '}' }})
+    </code>
     — and the field needs no binding there either, because
-    <code class="t-mono-inline">errors</code> and
-    <code class="t-mono-inline">touched</code> are the names Angular's
-    <code class="t-mono-inline">FormUiControl</code> contract binds
+    <code class="t-mono-inline">
+      errors
+    </code> and
+    <code class="t-mono-inline">
+      touched
+    </code> are the names Angular's
+    <code class="t-mono-inline">
+      FormUiControl
+    </code> contract binds
     automatically.
   </p>
 
@@ -537,25 +629,39 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">reserveMessage</code> (default off) holds a
+    <code class="t-mono-inline">
+      reserveMessage
+    </code> (default off) holds a
     message line's height even when there's no hint or error, so a form doesn't
     reflow the moment validation appears. Turn it on with
-    <code class="t-mono-inline">[reserveMessage]="true"</code> on a single
+    <code class="t-mono-inline">
+      [reserveMessage]="true"
+    </code> on a single
     control, or with the
-    <code class="t-mono-inline">dsReserveMessages</code> directive for a whole
+    <code class="t-mono-inline">
+      dsReserveMessages
+    </code> directive for a whole
     form (below). The reserved row sits ~23px under the control, so stack
     reserved fields tighter —
-    <code class="t-mono-inline">&lt;ds-stack gap="none"&gt;</code> — than bare
+    <code class="t-mono-inline">
+      &lt;ds-stack gap="none"&gt;
+    </code> — than bare
     ones, or the gap reads as a hole.
   </p>
 
   <p class="block-desc t-s">
     For a whole form, put the
-    <code class="t-mono-inline">dsReserveMessages</code> directive on it instead
+    <code class="t-mono-inline">
+      dsReserveMessages
+    </code> directive on it instead
     of binding every control:
-    <code class="t-mono-inline">&lt;form dsReserveMessages&gt;…&lt;/form&gt;</code>. It provides <code class="t-mono-inline">DS_CONFIG</code> for its subtree,
+    <code class="t-mono-inline">
+      &lt;form dsReserveMessages&gt;…&lt;/form&gt;
+    </code>. It provides <code class="t-mono-inline">DS_CONFIG</code> for its subtree,
     merged with the config above it, and a field's own
-    <code class="t-mono-inline">[reserveMessage]</code> still wins. It applies
+    <code class="t-mono-inline">
+      [reserveMessage]
+    </code> still wins. It applies
     to fields <em>declared</em> inside the host — projected content keeps the
     injector of the template it was written in.
   </p>

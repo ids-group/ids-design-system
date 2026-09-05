@@ -5,7 +5,9 @@
 >
   <span lede>
     The scaffold for the screens in front of the login — counterpart to
-    <code class="t-mono-inline">ds-app-layout</code>, which only ever covers
+    <code class="t-mono-inline">
+      ds-app-layout
+    </code>, which only ever covers
     what sits behind it.
   </span>
 
@@ -13,9 +15,15 @@
     Sign-in, forgot password, reset and MFA are the same four parts every time:
     a brand lockup, an optional tagline, one card holding the form, and a
     support line underneath. The brand row is the sidenav's row — same
-    <code class="t-mono-inline">brand</code> /
-    <code class="t-mono-inline">logoLetter</code> /
-    <code class="t-mono-inline">[dsBrandName]</code> contract, and an accent
+    <code class="t-mono-inline">
+      brand
+    </code> /
+    <code class="t-mono-inline">
+      logoLetter
+    </code> /
+    <code class="t-mono-inline">
+      [dsBrandName]
+    </code> contract, and an accent
     letter-mark tile of its own — close enough that the mark a user meets on the
     login screen reads as the mark that greets them in the rail, but not
     identical: the rail's is a fixed 28px at weight 800, this one 24-32px at
@@ -24,27 +32,41 @@
   </p>
 
   <p class="block-desc t-s">
-    <strong>Set the brand once, not per screen.</strong>
+    <strong>
+      Set the brand once, not per screen.
+    </strong>
 
     <code class="t-mono-inline"
-      >provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125;
-      &#125;)</code>
+      >
+      provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125;
+      &#125;)
+    </code>
     answers all three for this layout AND for
-    <code class="t-mono-inline">ds-sidenav</code>, which asks the same questions
+    <code class="t-mono-inline">
+      ds-sidenav
+    </code>, which asks the same questions
     — an app that has six auth screens was binding the same values six times.
     Each field resolves on its own: an element input beats the config, so one
     screen can differ without restating the rest, and
-    <code class="t-mono-inline">brand=""</code> drops the wordmark while a
-    <code class="t-mono-inline">logoLetter</code> in the config still paints its
+    <code class="t-mono-inline">
+      brand=""
+    </code> drops the wordmark while a
+    <code class="t-mono-inline">
+      logoLetter
+    </code> in the config still paints its
     tile. Clear both to give a screen no brand row at all.
   </p>
 
   <p class="block-desc t-s">
-    <strong>The two-tone wordmark stays projected</strong> — there is
+    <strong>
+      The two-tone wordmark stays projected
+    </strong> — there is
     deliberately no accent in the config. A config can only carry a string, so
     an accent would have to be found by splitting that string back apart, which
     is exactly the guessing
-    <code class="t-mono-inline">[dsBrandName]</code> exists to avoid. Provide
+    <code class="t-mono-inline">
+      [dsBrandName]
+    </code> exists to avoid. Provide
     the plain name in the config and project the accented version on the screens
     that want one; the projection wins over both.
   </p>
@@ -53,13 +75,17 @@
     Everything inside the card is yours: the default slot projects straight into
     it, and the layout deliberately leaves your headings and form alone so its
     type scale never fights your screen's. The support line goes into
-    <code class="t-mono-inline">[dsAuthSupport]</code> and renders as the page's
+    <code class="t-mono-inline">
+      [dsAuthSupport]
+    </code> and renders as the page's
     contentinfo landmark when this layout IS the page — nested inside another
     layout's <code class="t-mono-inline">main</code> (as on this docs site) it
     is a plain footer. Leave it out and the footer collapses. The card itself is
     an <code class="t-mono-inline">article</code>, which is not a landmark: on a
     standalone auth page set
-    <code class="t-mono-inline">landmark="main"</code> so a screen-reader user
+    <code class="t-mono-inline">
+      landmark="main"
+    </code> so a screen-reader user
     can jump to the form.
   </p>
 
@@ -161,7 +187,9 @@
     letter-mark tile, the wordmark, the masthead's inner gap — used to cost
     ~219px of that before your form got a single pixel. All of it now clamps
     against
-    <code class="t-mono-inline">svh</code>, so at ~330px the same chrome costs
+    <code class="t-mono-inline">
+      svh
+    </code>, so at ~330px the same chrome costs
     ~131px. Every multiplier reaches its maximum at a viewport 800px tall or
     more — which is a viewport height, not a screen size: a 1366x768 laptop
     lands near 630px after browser and OS chrome, and a 1080p screen at 150%
@@ -179,22 +207,36 @@
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">svh</code> and not
-    <code class="t-mono-inline">dvh</code>: the dynamic unit changes as a mobile
+    <code class="t-mono-inline">
+      svh
+    </code> and not
+    <code class="t-mono-inline">
+      dvh
+    </code>: the dynamic unit changes as a mobile
     URL bar hides, which would resize the wordmark and re-space the column while
     the reader scrolls. Setting any of
-    <code class="t-mono-inline">--ds-auth-layout-pad-block</code>,
-    <code class="t-mono-inline">-gap</code> or
-    <code class="t-mono-inline">-mark-size</code> to a fixed value opts out of
+    <code class="t-mono-inline">
+      --ds-auth-layout-pad-block
+    </code>,
+    <code class="t-mono-inline">
+      -gap
+    </code> or
+    <code class="t-mono-inline">
+      -mark-size
+    </code> to a fixed value opts out of
     the compression for that one dimension.
   </p>
 
   <p class="block-desc t-s">
-    <strong>What this does not promise.</strong> A card taller than the space
+    <strong>
+      What this does not promise.
+    </strong> A card taller than the space
     left still scrolls, and should — the fix is for the LAYOUT never to be the
     reason. Compressing rather than pinning is deliberate: the same exercise
     elsewhere takes the masthead and footer out of the flow with
-    <code class="t-mono-inline">position: absolute</code>, which frees more room
+    <code class="t-mono-inline">
+      position: absolute
+    </code>, which frees more room
     but lets that chrome overlap a tall form instead of scrolling past it. A
     card here holds whatever you project into it, so overlap is the worse
     failure.
@@ -225,13 +267,21 @@
 
   <p class="block-desc t-s">
     This layout pads itself by
-    <code class="t-mono-inline">env(safe-area-inset-*)</code>, so a notched
+    <code class="t-mono-inline">
+      env(safe-area-inset-*)
+    </code>, so a notched
     phone in landscape does not put the card under the cutout — and
-    <code class="t-mono-inline">ds-bottom-sheet</code> does the same for the
+    <code class="t-mono-inline">
+      ds-bottom-sheet
+    </code> does the same for the
     home indicator. Those insets are
-    <strong>0 until the host document opts in</strong>, and a library cannot
+    <strong>
+      0 until the host document opts in
+    </strong>, and a library cannot
     do it for you: it lives in the viewport meta tag, which belongs to your
-    <code class="t-mono-inline">index.html</code>.
+    <code class="t-mono-inline">
+      index.html
+    </code>.
   </p>
 
   <pre class="t-mono-block"><code>&lt;!-- your index.html --&gt;

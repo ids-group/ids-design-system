@@ -25,9 +25,13 @@
     <div class="scroll-pane scroll-pane--vertical">
       @for (row of rows; track row) {
         <div class="scroll-pane-row">
-          <code class="t-mono-inline scroll-pane-num">{{ pad(row) }}</code>
+          <code class="t-mono-inline scroll-pane-num">
+            {{ pad(row) }}
+          </code>
 
-          <span class="scroll-pane-txt">Scrollable content row — drag the thumb to test feel.</span>
+          <span class="scroll-pane-txt">
+            Scrollable content row — drag the thumb to test feel.
+          </span>
         </div>
       }
     </div>
@@ -70,7 +74,9 @@
       @for (t of tokens; track t.token) {
         <tr>
           <td>
-            <code class="t-mono-inline">{{ t.token }}</code>
+            <code class="t-mono-inline">
+              {{ t.token }}
+            </code>
           </td>
 
           <td>
@@ -107,9 +113,15 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">--neutral-300</code>; hover
-      <code class="t-mono-inline">--neutral-400</code>; active
-      <code class="t-mono-inline">--neutral-500</code>
+      <code class="t-mono-inline">
+        --neutral-300
+      </code>; hover
+      <code class="t-mono-inline">
+        --neutral-400
+      </code>; active
+      <code class="t-mono-inline">
+        --neutral-500
+      </code>
     </dd>
 
     <dt>
@@ -117,7 +129,9 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">--radius-pill</code> on the thumb
+      <code class="t-mono-inline">
+        --radius-pill
+      </code> on the thumb
     </dd>
 
     <dt>
@@ -135,7 +149,9 @@
 
     <dd>
       Track <code class="t-mono-inline">--neutral-800</code>; thumb
-      <code class="t-mono-inline">--neutral-600</code>
+      <code class="t-mono-inline">
+        --neutral-600
+      </code>
     </dd>
   </dl>
 </docs-section>

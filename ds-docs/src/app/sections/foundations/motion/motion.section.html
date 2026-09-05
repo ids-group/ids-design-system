@@ -7,10 +7,14 @@
 
   <span lede>
     Five durations, five eases. All motion respects
-    <code class="t-mono-inline">prefers-reduced-motion</code> — durations
+    <code class="t-mono-inline">
+      prefers-reduced-motion
+    </code> — durations
     collapse to 0 so components don't need to opt in. Pair durations with the
     right easing per direction: <em>decelerate</em> for enter,
-    <em>accelerate</em> for exit.
+    <em>
+      accelerate
+    </em> for exit.
   </span>
 
   <h3 class="block-title t-h4">
@@ -33,9 +37,13 @@
           </div>
         </div>
 
-        <code class="t-mono-inline token-name">--duration-{{ d.name }}</code>
+        <code class="t-mono-inline token-name">
+          --duration-{{ d.name }}
+        </code>
 
-        <code class="t-mono-inline token-value">{{ d.value }}</code>
+        <code class="t-mono-inline token-value">
+          {{ d.value }}
+        </code>
 
         <div class="t-caption token-desc">
           {{ d.use }}
@@ -64,9 +72,13 @@
           </div>
         </div>
 
-        <code class="t-mono-inline token-name">--ease-{{ e.name }}</code>
+        <code class="t-mono-inline token-name">
+          --ease-{{ e.name }}
+        </code>
 
-        <code class="t-mono-inline token-value">{{ e.curve }}</code>
+        <code class="t-mono-inline token-value">
+          {{ e.curve }}
+        </code>
 
         <div class="t-caption token-desc">
           {{ e.use }}
@@ -138,7 +150,9 @@
           {{ c.label }}
         </div>
 
-        <code class="t-mono-inline token-value">{{ c.tokens }}</code>
+        <code class="t-mono-inline token-value">
+          {{ c.tokens }}
+        </code>
       </div>
     }
   </div>
@@ -180,7 +194,9 @@
           title="Manifest saved"
         >
           Entrance played with
-          <code class="t-mono-inline">{{ preset() }}</code>.
+          <code class="t-mono-inline">
+            {{ preset() }}
+          </code>.
         </ds-alert>
       }
 
@@ -197,7 +213,9 @@
   <div class="motion-preset-grid">
     @for (p of enterPresets; track p.keyframes) {
       <div class="motion-preset-cell">
-        <code class="t-mono-inline token-name">{{ p.keyframes }}</code>
+        <code class="t-mono-inline token-name">
+          {{ p.keyframes }}
+        </code>
 
         <div class="t-caption token-desc">
           {{ p.feel }}
@@ -212,14 +230,28 @@
 
   <p class="block-desc t-s">
     The knobs are the same on every surface —
-    <code class="t-mono-inline">--ds-&lt;surface&gt;-enter-keyframes</code>,
-    <code class="t-mono-inline">-enter-duration</code>,
-    <code class="t-mono-inline">-enter-easing</code>, plus
-    <code class="t-mono-inline">-enter-offset</code> or
-    <code class="t-mono-inline">-enter-scale</code> for the travel/scale a
+    <code class="t-mono-inline">
+      --ds-&lt;surface&gt;-enter-keyframes
+    </code>,
+    <code class="t-mono-inline">
+      -enter-duration
+    </code>,
+    <code class="t-mono-inline">
+      -enter-easing
+    </code>, plus
+    <code class="t-mono-inline">
+      -enter-offset
+    </code> or
+    <code class="t-mono-inline">
+      -enter-scale
+    </code> for the travel/scale a
     preset reads. Surfaces that animate on close also take
-    <code class="t-mono-inline">-leave-duration</code> and
-    <code class="t-mono-inline">-leave-easing</code>. Set them globally, per
+    <code class="t-mono-inline">
+      -leave-duration
+    </code> and
+    <code class="t-mono-inline">
+      -leave-easing
+    </code>. Set them globally, per
     theme, or on a single component instance — portaled panels forward them onto
     their overlay pane on open. See the token reference for the full per-surface
     list.

@@ -6,7 +6,9 @@
   <span lede>
     Mobile-first panel anchored to the bottom edge — the touch equivalent of a
     drawer / modal. Drag the grab strip down or tap the scrim to dismiss;
-    <kbd>Esc</kbd> also closes. Body scroll locks while open. On wider
+    <kbd>
+      Esc
+    </kbd> also closes. Body scroll locks while open. On wider
     viewports it caps its width and centres.
   </span>
 
@@ -16,7 +18,9 @@
 
   <p class="block-desc t-s">
     Two-way <code class="t-mono-inline">[(open)]</code> drives visibility; the
-    <code class="t-mono-inline">[actions]</code> slot holds footer buttons.
+    <code class="t-mono-inline">
+      [actions]
+    </code> slot holds footer buttons.
   </p>
 
   <div class="demo">
@@ -83,11 +87,17 @@
       </p>
 
       <p class="t-s sheet-body rules">
-        <span>35 % — compact filter panel</span>
+        <span>
+          35 % — compact filter panel
+        </span>
 
-        <span>65 % — medium with sort options</span>
+        <span>
+          65 % — medium with sort options
+        </span>
 
-        <span>90 % — full sheet with map preview</span>
+        <span>
+          90 % — full sheet with map preview
+        </span>
       </p>
 
       <ng-container actions>
@@ -116,12 +126,20 @@
 
   <p class="block-desc t-s">
     The sheet pads its bottom by
-    <code class="t-mono-inline">env(safe-area-inset-bottom)</code> so its last
+    <code class="t-mono-inline">
+      env(safe-area-inset-bottom)
+    </code> so its last
     action does not sit under the home indicator. That inset reads
-    <strong>0 until the host document opts in</strong>, and a library cannot
+    <strong>
+      0 until the host document opts in
+    </strong>, and a library cannot
     do it for you — it lives in the viewport meta tag of your
-    <code class="t-mono-inline">index.html</code>. Same requirement as
-    <code class="t-mono-inline">ds-auth-layout</code>, where it is spelled out.
+    <code class="t-mono-inline">
+      index.html
+    </code>. Same requirement as
+    <code class="t-mono-inline">
+      ds-auth-layout
+    </code>, where it is spelled out.
   </p>
 
   <pre

@@ -33,17 +33,23 @@
             @for (p of inputs(); track p.name) {
               <tr>
                 <td>
-                  <span class="pname">{{ p.name }}</span>
+                  <span class="pname">
+                    {{ p.name }}
+                  </span>
 
                   @if (p.required) {
                     <span
                       class="req"
                       title="required"
-                    >*</span>
+                    >
+                      *
+                    </span>
                   }
 
                   @if (p.kind === 'model') {
-                    <span class="tag">two-way</span>
+                    <span class="tag">
+                      two-way
+                    </span>
                   }
                 </td>
 
@@ -56,17 +62,25 @@
 
                 <td>
                   @if (p.default === null || p.default === 'null') {
-                    <span class="muted">{{ p.default ?? '—' }}</span>
+                    <span class="muted">
+                      {{ p.default ?? '—' }}
+                    </span>
                   } @else {
-                    <code class="mono">{{ p.default }}</code>
+                    <code class="mono">
+                      {{ p.default }}
+                    </code>
                   }
                 </td>
 
                 <td>
                   @if (p.description) {
-                    <span class="desc">{{ p.description }}</span>
+                    <span class="desc">
+                      {{ p.description }}
+                    </span>
                   } @else {
-                    <span class="desc missing">— needs description —</span>
+                    <span class="desc missing">
+                      — needs description —
+                    </span>
                   }
                 </td>
               </tr>
@@ -109,22 +123,32 @@
             @for (p of outputs(); track p.name) {
               <tr>
                 <td>
-                  <span class="pname">{{ p.name }}</span>
+                  <span class="pname">
+                    {{ p.name }}
+                  </span>
                 </td>
 
                 <td>
-                  <code class="mono">{{ p.type }}</code>
+                  <code class="mono">
+                    {{ p.type }}
+                  </code>
                 </td>
 
                 <td>
-                  <span class="muted">event</span>
+                  <span class="muted">
+                    event
+                  </span>
                 </td>
 
                 <td>
                   @if (p.description) {
-                    <span class="desc">{{ p.description }}</span>
+                    <span class="desc">
+                      {{ p.description }}
+                    </span>
                   } @else {
-                    <span class="desc missing">— needs description —</span>
+                    <span class="desc missing">
+                      — needs description —
+                    </span>
                   }
                 </td>
               </tr>
@@ -146,7 +170,9 @@
   <details class="api">
     <summary>
       {{ serviceData()?.className }} methods
-      <span class="count">{{ methods().length }}</span>
+      <span class="count">
+        {{ methods().length }}
+      </span>
     </summary>
 
     <div class="scroll">
@@ -171,22 +197,32 @@
           @for (m of methods(); track m.name) {
             <tr>
               <td>
-                <code class="mono">{{ m.signature }}</code>
+                <code class="mono">
+                  {{ m.signature }}
+                </code>
               </td>
 
               <td>
                 @if (m.type) {
-                  <code class="mono type">{{ m.type }}</code>
+                  <code class="mono type">
+                    {{ m.type }}
+                  </code>
                 } @else {
-                  <span class="muted">—</span>
+                  <span class="muted">
+                    —
+                  </span>
                 }
               </td>
 
               <td>
                 @if (m.description) {
-                  <span class="desc">{{ m.description }}</span>
+                  <span class="desc">
+                    {{ m.description }}
+                  </span>
                 } @else {
-                  <span class="desc missing">— needs description —</span>
+                  <span class="desc missing">
+                    — needs description —
+                  </span>
                 }
               </td>
             </tr>
@@ -201,7 +237,9 @@
   <details class="api">
     <summary>
       {{ serviceData()?.className }} properties
-      <span class="count">{{ properties().length }}</span>
+      <span class="count">
+        {{ properties().length }}
+      </span>
     </summary>
 
     <div class="scroll">
@@ -226,22 +264,32 @@
           @for (p of properties(); track p.name) {
             <tr>
               <td>
-                <span class="pname">{{ p.name }}</span>
+                <span class="pname">
+                  {{ p.name }}
+                </span>
               </td>
 
               <td>
                 @if (p.type) {
-                  <code class="mono type">{{ p.type }}</code>
+                  <code class="mono type">
+                    {{ p.type }}
+                  </code>
                 } @else {
-                  <span class="muted">—</span>
+                  <span class="muted">
+                    —
+                  </span>
                 }
               </td>
 
               <td>
                 @if (p.description) {
-                  <span class="desc">{{ p.description }}</span>
+                  <span class="desc">
+                    {{ p.description }}
+                  </span>
                 } @else {
-                  <span class="desc missing">— needs description —</span>
+                  <span class="desc missing">
+                    — needs description —
+                  </span>
                 }
               </td>
             </tr>
@@ -265,10 +313,14 @@
   @if (p.union) {
     <span class="uni">
       @for (v of p.union; track v) {
-        <code class="mono chip">{{ v }}</code>
+        <code class="mono chip">
+          {{ v }}
+        </code>
       }
     </span>
   } @else {
-    <code class="mono type">{{ p.type }}</code>
+    <code class="mono type">
+      {{ p.type }}
+    </code>
   }
 </ng-template>
