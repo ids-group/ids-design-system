@@ -5,6 +5,7 @@ import {
   TemplateRef,
   ViewEncapsulation,
   afterNextRender,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   contentChildren,
@@ -1112,6 +1113,13 @@ export class TableComponent<T extends object> {
   private readonly hscrollProxy =
     viewChild<ElementRef<HTMLElement>>('hscrollProxy');
   private readonly tableHead = viewChild<ElementRef<HTMLElement>>('tableHead');
+
+  private publishHeadHeight(head: HTMLElement): void {
+    this.hostElement.nativeElement.style.setProperty(
+      '--_table-head-h',
+      `${head.getBoundingClientRect().height}px`,
+    );
+  }
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly hscrollContentWidth = signal(0);
   protected readonly hscrollNeeded = signal(false);
@@ -1153,26 +1161,25 @@ export class TableComponent<T extends object> {
     // the line box past the strut by a font-metric amount no calc() can carry, and a sum is
     // blind to a taller control in the header.
     //
-    // Observed rather than read once while loading: a header that wraps on a narrower column, or
-    // a density change, moves it after the read — and gated on `isOverlayLoading` the first frame
-    // of every load painted the scrim at the 40px fallback, over the bottom of a 44.5px header.
-    effect((onCleanup) => {
+    // After RENDER, or the read lands before layout and publishes 0px, which insets the scrim by
+    // nothing and covers the whole header. Twice, as chip-overflow does: the observer catches a
+    // header that grows on a narrower column or a density change, and the second pass re-reads
+    // whenever the scrim is about to appear, so a load never depends on an observer having fired.
+    afterRenderEffect((onCleanup) => {
       const head = this.tableHead()?.nativeElement;
-      if (!head) {
+      if (!head || typeof ResizeObserver === 'undefined') {
         return;
       }
-      const publish = () =>
-        this.hostElement.nativeElement.style.setProperty(
-          '--_table-head-h',
-          `${head.getBoundingClientRect().height}px`,
-        );
-      publish();
-      if (typeof ResizeObserver === 'undefined') {
-        return;
-      }
-      const observer = new ResizeObserver(publish);
+      const observer = new ResizeObserver(() => this.publishHeadHeight(head));
       observer.observe(head);
       onCleanup(() => observer.disconnect());
+    });
+    afterRenderEffect(() => {
+      this.isOverlayLoading();
+      const head = this.tableHead()?.nativeElement;
+      if (head) {
+        this.publishHeadHeight(head);
+      }
     });
     // One effect for both halves, because the restore CANNOT run in the
     // constructor: input signals are not set yet there, so storageKey() is still
