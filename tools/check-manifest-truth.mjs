@@ -99,18 +99,26 @@ export function surfaceAt(tag) {
   for (const { path: file, text } of files) {
     for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))
       if (!match[0].endsWith('-')) tokens.add(match[0]);
+    // `[class.expanded]` puts a class on the element as surely as `class="expanded"` does, and
+    // a component's own host classes are declared that way in its .ts, not in its template.
+    for (const bound of text.matchAll(/\[class\.([a-z][a-z0-9-]*)\]/g))
+      classes.add(bound[1]);
     if (!file.endsWith('.ts')) {
       // Two precise readings rather than one loose one. A template's `items().length,` and a
       // comment naming `input.component.scss` both match a bare `.name` pattern, and a
       // `class-rename` claiming a class that never existed would resolve against that noise.
       if (file.endsWith('.scss'))
-        for (const match of text
+        // A selector chain starts at a non-word boundary, which is what separates `.a.b` (two
+        // classes) from `focus.outline-indicator` and `map.get` (a namespaced member, and never a
+        // class). Matching the chain and splitting it keeps the second half of `.a.b`, which a
+        // plain lookbehind on each dot would throw away. What may FOLLOW a class is anything at
+        // all, including the `)` of `:host(.bordered)`.
+        for (const chain of text
           .replace(/\/\*[\s\S]*?\*\//g, '')
           .replace(/(^|\s)\/\/.*$/gm, '$1')
-          .matchAll(/\.([a-z][a-z0-9-]*)\s*[,{:.[]/g))
-          classes.add(match[1]);
-      // Sixteen classes reach the DOM from a template and are never selected in a stylesheet,
-      // so a consumer can target them and the stylesheets alone do not know they exist.
+          .matchAll(/(?<![\w.-])((?:\.[a-z][a-z0-9-]*)+)(?!\()/g))
+          for (const name of chain[1].split('.').filter(Boolean))
+            classes.add(name);
       else
         for (const attribute of text.matchAll(/\bclass="([^"]*)"/g))
           for (const name of attribute[1].split(/\s+/))
@@ -162,10 +170,12 @@ function claims(value) {
     return [{ kind: 'member', element: attr[1], name: attr[2], bare: true }];
 
   // A custom element is a claim in its own right: `ds-bottom-sheet` was reaching none of the
-  // branches below and passed unchecked, as did 127 other values.
-  const bareTag = /^([a-z][a-z0-9]*(?:-[a-z0-9]+)+)$/.exec(text);
-  if (bareTag)
-    return [{ kind: 'element', name: bareTag[1], bare: true }];
+  // branches below and passed unchecked, as did 127 other values. The `ds-` prefix is what keeps
+  // it to elements: every element this library publishes carries it, and without it any
+  // hyphenated value — `data-density`, `aria-expanded`, an input alias like `menu-items` — is
+  // looked up among elements, found missing, and accused of migrating from nowhere.
+  const bareTag = /^(ds-[a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(text);
+  if (bareTag) return [{ kind: 'element', name: bareTag[1], bare: true }];
 
   const found = [];
   for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))

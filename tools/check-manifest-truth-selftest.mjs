@@ -147,6 +147,22 @@ const rules = [
     expect: 'fire',
   },
   {
+    // Without the `ds-` prefix every hyphenated value is looked up among elements, found missing,
+    // and accused of migrating from nowhere — a density value, an aria attribute, an input alias.
+    name: 'HOLDS: a hyphenated value that is not an element is not accused',
+    item: { id: 'x', kind: 'behavior', old: 'ultra-compact', new: null },
+    before: surface({ elements: { 'ds-button': [] } }),
+    after: surface({ elements: { 'ds-button': [] } }),
+    expect: 'hold',
+  },
+  {
+    name: 'FIRES on an element neither tag ever declared',
+    item: { id: 'x', kind: 'behavior', old: 'ds-never-was', new: null },
+    before: surface({ elements: { 'ds-button': [] } }),
+    after: surface({ elements: { 'ds-button': [] } }),
+    expect: 'fire',
+  },
+  {
     // The component writes `data-*` itself, so it is not an input and must not be looked up as one.
     name: 'HOLDS: a data-* attribute is not treated as a missing input',
     item: {
