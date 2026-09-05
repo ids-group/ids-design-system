@@ -21,7 +21,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const ONLY = process.argv.slice(2).find((arg) => /^\d+\.\d+\.\d+$/.test(arg));
+const ONLY = process.argv
+  .slice(2)
+  .find((arg) => /^(\d+\.\d+\.\d+|unreleased)$/.test(arg));
 
 const git = (args) =>
   execFileSync('git', ['-C', ROOT, ...args], {
@@ -34,6 +36,10 @@ const git = (args) =>
 // and in the PR gate where this one does not. Unguarded, a checkout without git turned that
 // gate's verdict into a node stack trace from a file it never asked to run.
 const tags = (() => {
+  // Overridable so the selftest can simulate the shallow clone CI actually makes: with 15 of 28
+  // tags present, half the manifests are unreadable, and the branch that says so had no coverage.
+  if (process.env.DS_TRUTH_TAGS)
+    return process.env.DS_TRUTH_TAGS.split(',').filter(Boolean);
   try {
     return git(['tag', '--list', 'v*', '--sort=v:refname'])
       .split('\n')
@@ -99,7 +105,35 @@ export function surfaceAt(tag) {
   if (surfaceCache.has(tag)) return surfaceCache.get(tag);
   const files = readTreeAt(tag);
   if (!files) return null;
+  const surface = buildSurface(files);
+  surfaceCache.set(tag, surface);
+  return surface;
+}
 
+// The same parser over the files on disk. `migrations/unreleased.json` describes the boundary
+// between the last tag and HEAD, so the AFTER side of it is the working tree and not a tag.
+export function surfaceOfWorkingTree() {
+  const files = [];
+  const crawl = (dir) => {
+    for (const item of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, item.name);
+      if (item.isDirectory()) crawl(full);
+      else if (
+        /\.(ts|scss|html)$/.test(item.name) &&
+        !item.name.endsWith('.spec.ts')
+      )
+        files.push({ path: full, text: readFileSync(full, 'utf8') });
+    }
+  };
+  try {
+    crawl(join(ROOT, 'src/lib'));
+  } catch {
+    return null;
+  }
+  return files.length ? buildSurface(files) : null;
+}
+
+function buildSurface(files) {
   const tokens = new Set();
   const symbols = new Set();
   const classes = new Set();
@@ -255,7 +289,7 @@ export function surfaceAt(tag) {
     elements.set(tag_, members);
   }
 
-  const surface = {
+  return {
     tokens,
     symbols,
     classes,
@@ -263,8 +297,6 @@ export function surfaceAt(tag) {
     tokenPrefixes,
     directives,
   };
-  surfaceCache.set(tag, surface);
-  return surface;
 }
 
 function claims(value) {
@@ -360,7 +392,7 @@ function sweep() {
   const unresolved = [];
 
   const manifests = readdirSync(join(ROOT, 'migrations'))
-    .filter((f) => /^\d+\.\d+\.\d+\.json$/.test(f))
+    .filter((f) => /^(\d+\.\d+\.\d+|unreleased)\.json$/.test(f))
     .filter((f) => !ONLY || f === `${ONLY}.json`)
     .sort();
 
@@ -377,7 +409,12 @@ function sweep() {
 
   for (const file of manifests) {
     const version = file.replace('.json', '');
-    const index = tags.indexOf(`v${version}`);
+    // `unreleased.json` describes the boundary between the last tag and the working tree, and it
+    // is the ONE manifest that can still be corrected. Skipping it left the check silent at the
+    // cut and red only after publication, when the choice is to rewrite a published record or to
+    // route around the gate.
+    const draft = version === 'unreleased';
+    const index = draft ? tags.length : tags.indexOf(`v${version}`);
     if (index < 0) {
       unreadable.push(`${file}: no tag v${version} in this checkout`);
       continue;
@@ -390,7 +427,7 @@ function sweep() {
     }
     const prev = tags[index - 1];
     const before = surfaceAt(prev);
-    const after = surfaceAt(`v${version}`);
+    const after = draft ? surfaceOfWorkingTree() : surfaceAt(`v${version}`);
     if (!before || !after) {
       unreadable.push(
         `${file}: could not read src/lib at ${!before ? prev : `v${version}`}`,
@@ -403,7 +440,13 @@ function sweep() {
       readFileSync(join(ROOT, 'migrations', file), 'utf8'),
     );
     for (const item of doc.items ?? []) {
-      const verdict = checkItem(item, before, after, prev, `v${version}`);
+      const verdict = checkItem(
+        item,
+        before,
+        after,
+        prev,
+        draft ? 'the working tree' : `v${version}`,
+      );
       defects.push(
         ...verdict.defects.map((line) => `${file}  ${item.id}\n      ${line}`),
       );
@@ -420,14 +463,15 @@ function sweep() {
     process.exit(1);
   }
   if (unreadable.length) {
-    // The defects come out first: an unreadable boundary elsewhere is no reason to withhold what
-    // the trees that DID read do not support.
-    if (defects.length)
-      report(defects, unresolved, checked, skipped, unchecked);
+    // Said BEFORE the defects, because `report()` exits: printing it afterwards meant the line
+    // never appeared whenever there was a defect to print, and a CI clone that carries 15 of 28
+    // tags reported on half the manifests without saying so.
     console.error(
       `check-manifest-truth: ${unreadable.length} manifest(s) could not be read at their own ` +
         `boundary, so nothing is known about them:\n  ${unreadable.join('\n  ')}`,
     );
+    if (defects.length)
+      report(defects, unresolved, checked, skipped, unchecked);
     process.exit(1);
   }
   if (!checked) {

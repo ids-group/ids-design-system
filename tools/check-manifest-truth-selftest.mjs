@@ -352,16 +352,24 @@ const readOnly = [
   ['0.11.3', 'four phantom output renames'],
   ['0.11.4', 'a widened type, filed as behavior rather than as a rename'],
 ];
-const run = (version) => {
+const run = (version, options = {}) => {
+  const spawn = () =>
+    execFileSync(
+      'node',
+      ['tools/check-manifest-truth.mjs', ...(version ? [version] : [])],
+      {
+        cwd: ROOT,
+        encoding: 'utf8',
+        stdio: 'pipe',
+        env: { ...process.env, ...(options.env ?? {}) },
+      },
+    );
   try {
-    execFileSync('node', ['tools/check-manifest-truth.mjs', version], {
-      cwd: ROOT,
-      encoding: 'utf8',
-      stdio: 'pipe',
-    });
-    return 'green';
-  } catch {
-    return 'red';
+    const out = spawn();
+    return options.text ? out : 'green';
+  } catch (error) {
+    const out = (error.stdout ?? '') + (error.stderr ?? '');
+    return options.text ? out : 'red';
   }
 };
 
@@ -417,6 +425,44 @@ for (const [version, what] of UNCHECKABLE) {
   if (!ok) failed++;
   console.log(
     `${ok ? 'ok   ' : 'FAIL '} ${version} is uncheckable — ${what}: expected red, got ${got}`,
+  );
+}
+
+// The draft manifest is the ONE that can still be corrected, and it was excluded from the sweep by
+// a filter that demanded an existing tag. Its boundary is the last tag against the working tree.
+{
+  ran++;
+  // The draft is the one manifest that can still be corrected, and it used to be excluded from the
+  // sweep by a filter that demanded an existing tag.
+  const out = run('unreleased', { text: true });
+  const covered = /1 manifest\(s\) against/.test(out);
+  if (!covered) failed++;
+  console.log(
+    `${covered ? 'ok   ' : 'FAIL '} migrations/unreleased.json is checkable, against the last tag`,
+  );
+}
+
+// Two assertions the earlier cases could not make, because both branches they guard print nothing
+// a caller can see from the exit code alone.
+{
+  ran++;
+  const named = run('9.9.9', { text: true }).includes(
+    'no migrations/9.9.9.json',
+  );
+  if (!named) failed++;
+  console.log(
+    `${named ? 'ok   ' : 'FAIL '} an unknown version says WHICH manifest is missing, not just "nothing checkable"`,
+  );
+
+  ran++;
+  const unreadableFirst = (() => {
+    const out = run('', { text: true, env: { DS_TRUTH_TAGS: 'v0.0.0' } });
+    const warning = out.indexOf('could not be read at their own boundary');
+    return warning !== -1;
+  })();
+  if (!unreadableFirst) failed++;
+  console.log(
+    `${unreadableFirst ? 'ok   ' : 'FAIL '} an unreadable boundary is announced even when there are defects to print`,
   );
 }
 
