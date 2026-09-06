@@ -67,7 +67,8 @@
       } @else {
         <div
           class="nav-group"
-          [class.is-open]="isGroupOpen(group)">
+          [class.is-open]="isGroupOpen(group)"
+          [class.is-active]="isGroupActive(group)">
           <!-- These groups are a way of arranging the nav, not destinations: every one of them
                would have "opened" on its own first section, closing the page being read. -->
           <button

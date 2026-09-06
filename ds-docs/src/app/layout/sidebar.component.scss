@@ -252,6 +252,14 @@
   background: var(--border-divider);
 }
 
+/* The group holding the current page tints its own thread — the quietest signal available, because
+   the thread already belongs to the group and already runs down to the dot. --accent-muted-strong
+   and not --accent-muted: muted measures 1.04 against the idle thread, which is no signal at all,
+   while this measures 1.26 and stays a hairline rather than reading as a border. */
+.nav-group.is-active .group-items::before {
+  background: var(--accent-muted-strong);
+}
+
 .group-row {
   display: flex;
   align-items: center;
