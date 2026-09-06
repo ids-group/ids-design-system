@@ -352,6 +352,10 @@
   .g-6 .grp.act .caret { color: var(--accent-strong); }
   .g-6 .kids::before { background: var(--border-divider); }
 
+  .g-7 .kids::before { background: var(--accent-muted-strong); }
+  .g-7 .grp.act { color: var(--accent-strong); }
+  .g-7 .grp.act .caret { color: var(--accent-strong); }
+
   .chosen.base { background: var(--surface-muted); color: var(--text-secondary); }
 
   .chosen {
@@ -877,7 +881,7 @@
     <div class="variant-head">
       <span class="variant-letter">Г2</span>
       <span class="variant-name">Нитка подкрашена</span>
-      <span class="chosen">внедрено</span>
+      <span class="chosen base">в составе Г7</span>
     </div>
     <p class="variant-note">
       Та же вертикаль в <code>--accent-muted-strong</code>. Ничего нового на экране: цвет ложится на элемент, который и так принадлежит группе и и так доходит до точки.
@@ -936,6 +940,7 @@
     <div class="variant-head">
       <span class="variant-letter">Г4</span>
       <span class="variant-name">Заголовок акцентом</span>
+      <span class="chosen base">в составе Г7</span>
     </div>
     <p class="variant-note">
       Заголовок группы окрашен в <code>--accent-strong</code>. Самый заметный из шести — и потому самый спорный: цвет тянет сильнее, чем темнота.
@@ -994,6 +999,7 @@
     <div class="variant-head">
       <span class="variant-letter">Г6</span>
       <span class="variant-name">Шеврон акцентом</span>
+      <span class="chosen base">в составе Г7</span>
     </div>
     <p class="variant-note">
       Цвет получает только шеврон. Трогает единственный элемент, который и так говорит о состоянии группы.
@@ -1019,6 +1025,37 @@
     </nav>
   </div>
 
+
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">Г7</span>
+      <span class="variant-name">Г2 + Г4 + Г6</span>
+      <span class="chosen">внедрено</span>
+    </div>
+    <p class="variant-note">
+      Все три сигнала разом: нитка подкрашена, заголовок акцентом, шеврон акцентом. Выбрано
+      2026-09-06. Ни один из трёх не заливка — группа помечена собственными частями.
+    </p>
+    <nav class="nav v-k g-7">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open act" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#g7"><span class="label">Borders</span></a>
+        <a class="row on" href="#g7"><span class="label">Color</span></a>
+        <a class="row" href="#g7"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+    </nav>
+  </div>
 </div>
 
 <h2>Чем они различаются по существу</h2>
@@ -1157,11 +1194,12 @@
 
   <h2>Активная группа</h2>
   <p>
-    Шесть вариантов отрисованы живьём выше, в разделе «Чем метить активную группу» — выбирать
-    глазами там. Внедрена <strong>Г2, подкрашенная нитка</strong>: цвет ложится на элемент, который
-    и так принадлежит группе и и так доходит до точки, поэтому ничего нового на экране не
-    появляется. Заголовок при этом лишь темнеет с <code>--text-secondary</code> на
-    <code>--text-primary</code>, как и раньше. Ниже — почему у нитки именно этот оттенок.
+    Варианты отрисованы живьём выше, в разделе «Чем метить активную группу». Внедрена
+    <strong>Г7 — Г2 + Г4 + Г6 разом</strong>: подкрашенная нитка, заголовок акцентом и шеврон
+    акцентом. Три сигнала на трёх собственных частях группы, ни один из них не заливка. Прежнее
+    затемнение заголовка до <code>--text-primary</code> снято, а не сложено с акцентом: два
+    «активных» оформления на одном лейбле — на одно больше, чем он выдерживает. Ниже — почему у
+    нитки именно этот оттенок.
   </p>
   <table>
     <thead>
@@ -1190,9 +1228,10 @@
     </tbody>
   </table>
   <p>
-    <strong>Почему не заголовок акцентом.</strong> Цвет притягивает сильнее темноты: акцентный
-    заголовок при контрасте 6.82 читался бы громче нынешнего тёмного при 17.32 и начал бы спорить с
-    выбранным пунктом. Условие «не так же сильно, как выбранная» этого не выдержит.
+    <strong>Довод против акцентного заголовка, и почему он не победил.</strong> Цвет притягивает
+    сильнее темноты: акцентный заголовок при 6.82 заметнее тёмного при 17.32, хотя контраст у него
+    ниже. Довод был выдвинут и отклонён — выбраны все три сигнала сразу. Записан здесь, потому что
+    если сайдбар начнёт казаться пёстрым, снимать надо этот сигнал первым, а не нитку.
   </p>
   <p>
     <strong>Оговорка про группу-вкладку.</strong> Всё это — про группу, которая является только
