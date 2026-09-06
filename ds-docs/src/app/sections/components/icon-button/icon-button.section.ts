@@ -63,7 +63,6 @@ export class IconButtonSection {
     'Disabled',
   ] as const;
 
-  protected readonly matrixSelected = signal(false);
   protected readonly matrixDisabled = signal(false);
   protected readonly bookmarked = signal(true);
 }
