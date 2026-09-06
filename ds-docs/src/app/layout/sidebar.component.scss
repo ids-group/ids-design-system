@@ -125,8 +125,17 @@
   color: var(--text-secondary);
   padding: var(--space-4) var(--space-2) var(--space-1-5);
 }
+
+/* Accent, not a darker neutral: the group holding the current page is marked on three of its own
+   parts at once — this label, its chevron and its thread — and none of them is a fill. Replaces the
+   --text-primary darkening rather than stacking with it; two "active" treatments on one label is
+   one more than the label can carry. */
 .group-row.is-active .group {
-  color: var(--text-primary);
+  color: var(--accent-strong);
+}
+
+.group-row.is-active .group-caret {
+  color: var(--accent-strong);
 }
 
 .link {
