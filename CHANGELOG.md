@@ -8,6 +8,28 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`ds-sidenav-group` takes a `routerLink`, so a group can be a destination as well as a
+  container.** Unset — the default, and what every existing group does — the header only expands,
+  unchanged. Set it and the header becomes a link that navigates, and the caret splits off into a
+  button of its own, because one control cannot both go somewhere and stay put to open something.
+  The link takes the whole header's look, so the row still reads as one control, and it carries the
+  active state when its route is the current one.
+
+  ```html
+  <ds-sidenav-group label="Reports" icon="chart" expandable routerLink="/reports">
+    <ds-sidenav-item label="Daily" routerLink="/reports/daily" />
+  </ds-sidenav-group>
+  ```
+
+  It takes the same shapes a router link takes anywhere, a string or a command array. **It does
+  nothing without `expandable`** — a group that cannot open has no caret to split off, so the header
+  stays a plain label and the link is ignored with nothing said. On a group that does opt in, the
+  header element changes from a `button` to an `a` and gains a `.group-header-row` wrapper beside a
+  `.group-caret-button`; a stylesheet of yours reaching `.group-header` by class still lands, one
+  that qualifies it with `button` does not.
+
 ### Changed
 
 - **The skeleton shimmer reads as a wave now, not a wash.** It travels diagonally, down and to the
@@ -34,13 +56,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   only**: the tile size and the loop's travel are fixed to the 45° diagonal, so an angle far from
   the default tiles visibly. Change it for a small adjustment, not for a new axis.
 
-- **`TableComponent` gained two members — only matters if you SUBCLASS it.**
-  `showsLoadingSpace` decides whether a table that is still loading and has no rows yet holds a
-  body open instead of collapsing onto its header, and `publishHeadHeight` measures the header and
-  publishes its height for the scrim to inset against. Neither is public API and that is no
-  protection: `private` and `protected` collide with TS2415 exactly as a public name does, so a
-  member of yours sharing one of those names stops the build. Nothing changes for a consumer who
-  only uses the element — no input, output or token changed name or type.
+- **Two classes gained members — only matters if you SUBCLASS one.** `TableComponent` gained
+  `showsLoadingSpace`, which decides whether a table that is still loading and has no rows yet holds
+  a body open instead of collapsing onto its header, and `publishHeadHeight`, which measures the
+  header and publishes its height for the scrim to inset against. `SidenavGroupComponent` gained the
+  new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
+  into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
+  `private` and `protected` collide with TS2415 exactly as a public name does, so a member of yours
+  sharing one of those names stops the build. Nothing changes for a consumer who only uses the
+  elements — no existing input, output or token changed name or type.
 
 - **A fullscreen `ds-modal` is a full-height panel now, so `--modal-h-fullscreen` reads as a target
   and no longer as a cap.** The class used to set the token as a `max-height`, which let a short
