@@ -324,6 +324,34 @@
     background: var(--accent-muted-strong);
   }
 
+  /* The six active-group signals. Every one rides the K item treatment, so only the group differs. */
+  .nav .grp.act { position: relative; }
+
+  .g-1 .kids::before { background: var(--border-divider); }
+
+  .g-2 .kids::before { background: var(--accent-muted-strong); }
+
+  .g-3 .kids::before { width: 2px; background: var(--text-tertiary); }
+
+  .g-4 .grp.act { color: var(--accent-strong); }
+  .g-4 .kids::before { background: var(--border-divider); }
+
+  .g-5 .grp.act { padding-left: var(--space-5); }
+  .g-5 .grp.act::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--space-2) + 0.5px);
+    top: 50%;
+    width: 4px; height: 4px;
+    margin-top: -2px;
+    border-radius: 50%;
+    background: var(--accent-strong);
+  }
+  .g-5 .kids::before { background: var(--border-divider); }
+
+  .g-6 .grp.act .caret { color: var(--accent-strong); }
+  .g-6 .kids::before { background: var(--border-divider); }
+
   .chosen.base { background: var(--surface-muted); color: var(--text-secondary); }
 
   .chosen {
@@ -364,7 +392,7 @@
 <h1>Состояния сайдбара</h1>
 <p class="lede">
   Чем различать закрытую группу, открытую группу, выбранного ребёнка группы и просто выбранный
-  пункт. Одиннадцать вариантов, каждый отрисован живым — одна и та же навигация, отличается только
+  пункт. Одиннадцать вариантов для строки и шесть для активной группы, каждый отрисован живым — одна и та же навигация, отличается только
   трактовка состояний. Всё построено на токенах системы, ни одного нового цвета.
 </p>
 
@@ -806,6 +834,193 @@
 
 </div>
 
+
+<h2>Чем метить активную группу</h2>
+<p>
+  Группа, в которой лежит открытая страница. Во всех шести пунктах трактовка выбранной строки одна
+  и та же — вариант K, — различается <strong>только</strong> сигнал на группе «Foundations».
+  Сигнал должен быть слабее выбранной строки, иначе они начнут спорить.
+</p>
+
+<div class="variants">
+
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">Г1</span>
+      <span class="variant-name">Ничего</span>
+    </div>
+    <p class="variant-note">
+      База для сравнения: группа не помечена вовсе. Стоит посмотреть первой — возможно, выбранного пункта внутри уже достаточно и сигнал не нужен.
+    </p>
+    <nav class="nav v-k g-1">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open act" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#g1"><span class="label">Borders</span></a>
+        <a class="row on" href="#g1"><span class="label">Color</span></a>
+        <a class="row" href="#g1"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+    </nav>
+  </div>
+
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">Г2</span>
+      <span class="variant-name">Нитка подкрашена</span>
+      <span class="chosen">внедрено</span>
+    </div>
+    <p class="variant-note">
+      Та же вертикаль в <code>--accent-muted-strong</code>. Ничего нового на экране: цвет ложится на элемент, который и так принадлежит группе и и так доходит до точки.
+    </p>
+    <nav class="nav v-k g-2">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open act" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#g2"><span class="label">Borders</span></a>
+        <a class="row on" href="#g2"><span class="label">Color</span></a>
+        <a class="row" href="#g2"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+    </nav>
+  </div>
+
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">Г3</span>
+      <span class="variant-name">Нитка толще</span>
+    </div>
+    <p class="variant-note">
+      Нитка 2px вместо 1px, цвет нейтральный. Сигнал без единой капли цвета — работает и в монохроме, и при дальтонизме.
+    </p>
+    <nav class="nav v-k g-3">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open act" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#g3"><span class="label">Borders</span></a>
+        <a class="row on" href="#g3"><span class="label">Color</span></a>
+        <a class="row" href="#g3"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+    </nav>
+  </div>
+
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">Г4</span>
+      <span class="variant-name">Заголовок акцентом</span>
+    </div>
+    <p class="variant-note">
+      Заголовок группы окрашен в <code>--accent-strong</code>. Самый заметный из шести — и потому самый спорный: цвет тянет сильнее, чем темнота.
+    </p>
+    <nav class="nav v-k g-4">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open act" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#g4"><span class="label">Borders</span></a>
+        <a class="row on" href="#g4"><span class="label">Color</span></a>
+        <a class="row" href="#g4"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+    </nav>
+  </div>
+
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">Г5</span>
+      <span class="variant-name">Точка у заголовка</span>
+    </div>
+    <p class="variant-note">
+      Маленькая точка слева от заголовка, в той же колонке, где точка выбранного пункта. Рифмуется с ним, но мельче.
+    </p>
+    <nav class="nav v-k g-5">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open act" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#g5"><span class="label">Borders</span></a>
+        <a class="row on" href="#g5"><span class="label">Color</span></a>
+        <a class="row" href="#g5"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+    </nav>
+  </div>
+
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-letter">Г6</span>
+      <span class="variant-name">Шеврон акцентом</span>
+    </div>
+    <p class="variant-note">
+      Цвет получает только шеврон. Трогает единственный элемент, который и так говорит о состоянии группы.
+    </p>
+    <nav class="nav v-k g-6">
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Page structure
+      </button>
+      <button class="grp open act" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Foundations
+      </button>
+      <div class="kids">
+        <a class="row" href="#g6"><span class="label">Borders</span></a>
+        <a class="row on" href="#g6"><span class="label">Color</span></a>
+        <a class="row" href="#g6"><span class="label">Density</span></a>
+      </div>
+      <button class="grp" type="button">
+        <span class="caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+        Patterns
+      </button>
+    </nav>
+  </div>
+
+</div>
+
 <h2>Чем они различаются по существу</h2>
 <table>
   <thead>
@@ -942,12 +1157,11 @@
 
   <h2>Активная группа</h2>
   <p>
-    Группу, в которой лежит открытая страница, помечает <strong>её собственная нитка</strong>: та
-    же вертикаль, но подкрашенная в <code>--accent-muted-strong</code>. Это самый тихий сигнал из
-    возможных — нитка и так принадлежит группе и и так доходит до точки, поэтому цвет на ней
-    читается как «эта ветка ведёт туда, где вы находитесь», и ничего нового на экране не появляется.
-    Заголовок при этом лишь темнеет с <code>--text-secondary</code> на <code>--text-primary</code>,
-    как и раньше.
+    Шесть вариантов отрисованы живьём выше, в разделе «Чем метить активную группу» — выбирать
+    глазами там. Внедрена <strong>Г2, подкрашенная нитка</strong>: цвет ложится на элемент, который
+    и так принадлежит группе и и так доходит до точки, поэтому ничего нового на экране не
+    появляется. Заголовок при этом лишь темнеет с <code>--text-secondary</code> на
+    <code>--text-primary</code>, как и раньше. Ниже — почему у нитки именно этот оттенок.
   </p>
   <table>
     <thead>
