@@ -30,6 +30,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `.group-caret-button`; a stylesheet of yours reaching `.group-header` by class still lands, one
   that qualifies it with `button` does not.
 
+- **`ds-table` takes `[hscrollBottom]`, and `DS_CONFIG.table.hscrollBottom` sets it for every
+  table.** Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset — the
+  default — each table measures its own scroll container's bottom padding and cancels it, which is
+  what puts the bar on the edge the reader sees; set this for a scrollport whose reachable edge is
+  somewhere else, and set it in the config when that is true of a whole app rather than of one
+  table. `--ds-table-hscroll-bottom` still out-ranks both, for a rule that has to reach one table
+  from a stylesheet.
+
+  ```html
+  <ds-table [hscrollBottom]="'-3rem'" [stickyScrollbar]="true" [columns]="cols" [data]="rows" />
+  ```
+
 ### Changed
 
 - **The skeleton shimmer reads as a wave now, not a wash.** It travels diagonally, down and to the
@@ -61,8 +73,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   a body open instead of collapsing onto its header, and `publishHeadHeight`, which measures the
   header and publishes its height for the scrim to inset against, `scrollAncestor`, which finds the
   scrollport a sticky offset inside the table resolves against, `hasAnyColumnFilter`, which decides
-  whether the column-filter panel is rendered at all, and `isFilterPanelOpen`, which tells a header
-  button whether the panel showing belongs to it. `SidenavGroupComponent` gained the
+  whether the column-filter panel is rendered at all, `isFilterPanelOpen`, which tells a header
+  button whether the panel showing belongs to it, and the new `hscrollBottom` input with its
+  `hscrollBottomResolved`. `SidenavGroupComponent` gained the
   new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
   into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
   `private` and `protected` collide with TS2415 exactly as a public name does, so a member of yours
