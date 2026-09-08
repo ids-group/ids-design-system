@@ -126,6 +126,7 @@
                   class="col-filter-btn"
                   aria-haspopup="dialog"
                   [class.active]="isColumnFiltered(col)"
+                  [attr.aria-expanded]="isFilterPanelOpen(col)"
                   [attr.aria-label]="'Filter ' + col.label"
                   (click)="onColumnFilterClick(col, $event)">
                   <ds-icon

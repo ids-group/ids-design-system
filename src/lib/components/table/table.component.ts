@@ -574,6 +574,13 @@ export class TableComponent<T extends object> {
     return col.filter === 'set' || !!this.headerFilterFor(col);
   }
 
+  protected isFilterPanelOpen(col: TableColumn<T>): boolean {
+    return (
+      this.filterColumn()?.key === col.key &&
+      (this.columnFilterPopover()?.opened() ?? false)
+    );
+  }
+
   protected isColumnFiltered(col: TableColumn<T>): boolean {
     // A projected filter owns its own criterion, so only the host can say
     // whether it is set; the table still draws the highlight.
