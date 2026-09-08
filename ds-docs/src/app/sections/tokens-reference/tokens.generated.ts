@@ -5942,8 +5942,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-table-hscroll-bottom",
-        "value": "0",
-        "notes": "Offset of the sticky horizontal scrollbar from the scrollport edge (default 0). Set a negative value equal to the container's bottom padding when the table sits in a padded box, or the bar floats above the content it belongs to."
+        "value": "calc(-1 * var(--_table-hscroll-scroller-pad, 0px))",
+        "notes": "Offset of the sticky horizontal scrollbar from the scrollport edge. Unset, the table measures the scroll container's bottom padding and cancels it, so the bar rests on the edge the reader sees — set this only for a scrollport whose reachable edge is somewhere else."
       },
       {
         "name": "--ds-table-min-width",

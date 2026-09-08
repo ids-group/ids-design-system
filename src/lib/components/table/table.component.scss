@@ -135,11 +135,13 @@
 .hscroll-proxy {
   position: sticky;
 
-  /* `bottom: 0` pins it to the scrollport edge, which is wrong when the table
-     sits in a container with bottom padding — the bar then floats above the
-     content it belongs to. A consumer offsets it with a negative value equal to
-     that padding. */
-  bottom: var(--ds-table-hscroll-bottom, 0);
+  /* The offset the .ts measured off the scroll ancestor, negated: see the note where it is
+     written. `--ds-table-hscroll-bottom` still wins outright, for a scrollport whose reachable
+     edge is not its padding edge. */
+  bottom: var(
+    --ds-table-hscroll-bottom,
+    calc(-1 * var(--_table-hscroll-scroller-pad, 0px))
+  );
   overflow: auto hidden;
 }
 

@@ -1121,6 +1121,23 @@ export class TableComponent<T extends object> {
     );
   }
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  // The scrollport a `position: sticky` offset inside this table resolves against.
+  private scrollAncestor(): HTMLElement | null {
+    for (
+      let element = this.hostElement.nativeElement.parentElement;
+      element;
+      element = element.parentElement
+    ) {
+      const overflowY = getComputedStyle(element).overflowY;
+      if (overflowY === 'auto' || overflowY === 'scroll') {
+        return element;
+      }
+    }
+
+    return document.scrollingElement as HTMLElement | null;
+  }
+
   protected readonly hscrollContentWidth = signal(0);
   protected readonly hscrollNeeded = signal(false);
   private readonly scrollTop = signal(0);
@@ -1333,11 +1350,20 @@ export class TableComponent<T extends object> {
       };
       wrap.addEventListener('scroll', fromWrap, { passive: true });
       proxy.addEventListener('scroll', fromProxy, { passive: true });
+      const scroller = this.scrollAncestor();
       const measure = (): void => {
         this.hscrollContentWidth.set(wrap.scrollWidth);
         // Both are rounded integers, so a fractional layout width makes an
         // unscrollable wrap report one px more than it holds.
         this.hscrollNeeded.set(wrap.scrollWidth > wrap.clientWidth + 1);
+        // A sticky `bottom` resolves against the scrollport's CONTENT box, so the bar comes to
+        // rest one padding-bottom above the edge the reader sees and floats over the rows below
+        // it. Measured, not a token the consumer restates: the padding is the scroll container's
+        // and can move with a media query.
+        proxy.style.setProperty(
+          '--_table-hscroll-scroller-pad',
+          scroller ? getComputedStyle(scroller).paddingBottom : '0px',
+        );
       };
       // The wrap's own box never changes with content — watch the table too
       // (column toggles, data swaps change its width).
@@ -1346,6 +1372,9 @@ export class TableComponent<T extends object> {
       const table = wrap.querySelector('table');
       if (table) {
         resizeObserver.observe(table);
+      }
+      if (scroller) {
+        resizeObserver.observe(scroller);
       }
       measure();
       onCleanup(() => {
