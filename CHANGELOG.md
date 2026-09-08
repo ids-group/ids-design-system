@@ -59,8 +59,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **Two classes gained members — only matters if you SUBCLASS one.** `TableComponent` gained
   `showsLoadingSpace`, which decides whether a table that is still loading and has no rows yet holds
   a body open instead of collapsing onto its header, and `publishHeadHeight`, which measures the
-  header and publishes its height for the scrim to inset against, and `scrollAncestor`, which finds
-  the scrollport a sticky offset inside the table resolves against. `SidenavGroupComponent` gained the
+  header and publishes its height for the scrim to inset against, `scrollAncestor`, which finds the
+  scrollport a sticky offset inside the table resolves against, `hasAnyColumnFilter`, which decides
+  whether the column-filter panel is rendered at all, and `isFilterPanelOpen`, which tells a header
+  button whether the panel showing belongs to it. `SidenavGroupComponent` gained the
   new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
   into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
   `private` and `protected` collide with TS2415 exactly as a public name does, so a member of yours
@@ -159,6 +161,31 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   press feedback, over a `--surface-secondary` hover. `ds-select` itself is unchanged, and `ds-input`
   keeps its own filled-disc clear button, which is a different control on purpose
   (delete list: picker-clear-button-workaround).
+
+- **A `ds-table` column filter opens on the first click.** The first click on a filter button only
+  built the panel and the second one opened it, because the handler raised the condition that
+  renders the panel and then read the panel back in the same synchronous line, before change
+  detection had created it. The panel's existence now follows the columns' own filter configuration,
+  the way the row-actions menu and the clipped-cell text popover already did, so it is there before
+  the first click arrives. This reaches `filterMode` set to anything but `'none'`, both the built-in
+  `filter: 'set'` panel and a projected `dsHeaderFilter`, and the keyboard as much as the pointer —
+  one Enter on the button opens it. A table with no filterable column renders no panel at all.
+
+- **A `ds-table` column filter button says whether its panel is open.** It announced
+  `aria-haspopup="dialog"` and never `aria-expanded`, so a screen reader was told a dialog was
+  available but never that it had appeared. The attribute is on every filter button now and reads
+  `true` only on the column whose panel is showing.
+
+- **A panel re-opened straight after being dismissed can be closed again.** Dismissing an overlay
+  disposes it only after its exit animation, so re-opening within that window let the OLD panel's
+  disposal clear the state belonging to the NEW one: the component held no reference to the panel on
+  screen, `close()` therefore did nothing, and neither Escape nor a click outside would dismiss it —
+  while `aria-expanded` reported it collapsed. Reachable by dismissing and re-opening quickly, and
+  in `ds-table` by moving from one column filter to another. Measured in `ds-date-picker`,
+  `ds-color-picker`, `ds-time-picker` and `ds-popover` — and so in everything `ds-popover` carries:
+  `ds-table`'s column filter, row-actions menu and clipped-cell text, `ds-split-button`,
+  `ds-filter-bar`'s overflow panel and `ds-sidenav-footer`'s search. `ds-select`,
+  `ds-autocomplete` and `ds-multi-select` were already immune and are unchanged in behaviour.
 
 ### What you can now DELETE
 

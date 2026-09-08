@@ -10,14 +10,16 @@
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
       "appliesWhen": "Only a class that extends TableComponent or SidenavGroupComponent. A consumer who uses the elements in a template needs nothing — no existing input, output, token or class changed name or type in this release.",
       "pitfall": "Three of the four members are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and a same-named method whose signature differs fails with TS2416 instead.",
-      "note": "TableComponent gained `showsLoadingSpace`, a computed that keeps a body open while the table is still loading and has no rows to show, `publishHeadHeight`, which measures the header and publishes its height for the scrim to inset against, and `scrollAncestor`, which finds the scrollport a sticky offset inside the table resolves against. SidenavGroupComponent gained the new `routerLink` input and `headerNavigates`, the computed deciding whether the header splits into a link and its own caret. They are named here so that a collision in a subclass is greppable from the release that introduced them.",
-      "verify": "The app builds with no TS2415 or TS2416 naming TableComponent or SidenavGroupComponent, and no member of your subclass is called showsLoadingSpace, publishHeadHeight, scrollAncestor, routerLink or headerNavigates.",
+      "note": "TableComponent gained `showsLoadingSpace`, a computed that keeps a body open while the table is still loading and has no rows to show, `publishHeadHeight`, which measures the header and publishes its height for the scrim to inset against, `scrollAncestor`, which finds the scrollport a sticky offset inside the table resolves against, `hasAnyColumnFilter`, which decides whether the column-filter panel renders at all, and `isFilterPanelOpen`, which tells a header button whether the panel showing is its own. SidenavGroupComponent gained the new `routerLink` input and `headerNavigates`, the computed deciding whether the header splits into a link and its own caret. They are named here so that a collision in a subclass is greppable from the release that introduced them.",
+      "verify": "The app builds with no TS2415 or TS2416 naming TableComponent or SidenavGroupComponent, and no member of your subclass is called showsLoadingSpace, publishHeadHeight, scrollAncestor, hasAnyColumnFilter, isFilterPanelOpen, routerLink or headerNavigates.",
       "searchHints": [
         "extends TableComponent",
         "extends SidenavGroupComponent",
         "showsLoadingSpace",
         "publishHeadHeight",
         "scrollAncestor",
+        "hasAnyColumnFilter",
+        "isFilterPanelOpen",
         "headerNavigates",
         "TS2415",
         "TS2416"
@@ -28,6 +30,8 @@
         "override showsLoadingSpace",
         "override publishHeadHeight",
         "override scrollAncestor",
+        "override hasAnyColumnFilter",
+        "override isFilterPanelOpen",
         "override routerLink",
         "override headerNavigates"
       ],
@@ -204,7 +208,10 @@
     "`ds-sidenav-group` takes a new optional `routerLink`. Unset, which is the default and what every existing group has, the header only expands and nothing changed. Set together with `expandable`, the header navigates and the caret becomes its own button, so the group's own DOM gains a `.group-header-row` wrapper and a `.group-caret-button`, and `.group-header` becomes an `a` rather than a `button`. `routerLink` without `expandable` is ignored.",
     "The `ds-table` column panel and the header button that opens it, both rendered by `dsTableColumns`, draw with their own styles instead of the browser's native checkbox, buttons and link. Markup, class names and API are unchanged; a stylesheet of yours that reached `.col-picker`, `.col-picker-row`, `.col-picker-option`, `.col-drag`, `.col-move`, `.col-move-btn`, `.col-reset` or `.col-picker-btn` by a bare class name now competes with a scoped rule, so qualify the selector where your override stopped landing.",
     "A `ds-table` sticky horizontal scrollbar rests on the scroll container's visible bottom edge rather than one padding-bottom above it, measured off the scroll ancestor and re-measured on resize. `--ds-table-hscroll-bottom` still overrides outright; a negative value equal to your own container's padding is now a second offset (delete list: table-hscroll-bottom-workaround).",
-    "`clearable` on `ds-autocomplete` and `ds-multi-select` now draws the same clear button as `ds-select`, where both previously rendered the markup with no rule able to reach it and the × came out as the browser's default button. Nothing to change; `ds-select` is untouched and `ds-input` keeps its own filled-disc variant (delete list: picker-clear-button-workaround)."
+    "`clearable` on `ds-autocomplete` and `ds-multi-select` now draws the same clear button as `ds-select`, where both previously rendered the markup with no rule able to reach it and the × came out as the browser's default button. Nothing to change; `ds-select` is untouched and `ds-input` keeps its own filled-disc variant (delete list: picker-clear-button-workaround).",
+    "A `ds-table` column filter opens on the first click; the first click used to only build the panel. Nothing to change — `filterMode`, `filter: 'set'` and a projected `dsHeaderFilter` all keep their behaviour, and a table with no filterable column renders no panel at all.",
+    "A `ds-table` column filter button now carries `aria-expanded` beside its `aria-haspopup=\"dialog\"`, true only on the column whose panel is showing. Nothing to change unless a test of yours asserts the attribute's absence.",
+    "A panel re-opened inside the exit animation of a dismissed one can be closed again: the old panel's disposal no longer clears the state of the one that replaced it, which used to leave a panel that neither Escape nor an outside click would dismiss and that reported itself collapsed. Reaches `ds-date-picker`, `ds-color-picker`, `ds-time-picker` and everything `ds-popover` carries — `ds-table`'s filter, row menu and clipped-cell text, `ds-split-button`, `ds-filter-bar`'s overflow panel, `ds-sidenav-footer`'s search. `ds-select`, `ds-autocomplete` and `ds-multi-select` behave exactly as before."
   ],
   "deleteList": [
     {
