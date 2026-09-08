@@ -8,6 +8,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`--ds-table-hscroll-bottom` is `--ds-table-sticky-scrollbar-offset`.** The knob now carries the
+  name of the feature it belongs to, beside `stickyScrollbar` itself and the new
+  `[stickyScrollbarOffset]` input; the old spelling named neither the feature nor the edge it moves.
+  It is inert under the old name, and a stylesheet that still sets it stops offsetting the bar with
+  nothing said. Rename the declaration and the value carries over unchanged — except where the value
+  was a negative offset equal to your scroll container's bottom padding, which the table measures
+  and cancels itself now, so that one is deleted rather than renamed
+  (delete list: table-hscroll-bottom-workaround).
+
 ### Added
 
 - **`ds-sidenav-group` takes a `routerLink`, so a group can be a destination as well as a
@@ -30,16 +41,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `.group-caret-button`; a stylesheet of yours reaching `.group-header` by class still lands, one
   that qualifies it with `button` does not.
 
-- **`ds-table` takes `[hscrollBottom]`, and `DS_CONFIG.table.hscrollBottom` sets it for every
-  table.** Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset — the
-  default — each table measures its own scroll container's bottom padding and cancels it, which is
-  what puts the bar on the edge the reader sees; set this for a scrollport whose reachable edge is
-  somewhere else, and set it in the config when that is true of a whole app rather than of one
-  table. `--ds-table-hscroll-bottom` still out-ranks both, for a rule that has to reach one table
-  from a stylesheet.
+- **`ds-table` takes `[stickyScrollbarOffset]`, and `DS_CONFIG.table.stickyScrollbarOffset` sets it
+  for every table.** Where the sticky horizontal scrollbar comes to rest, as any CSS length.
+  Unset — the default — each table measures its own scroll container's bottom padding and cancels
+  it, which is what puts the bar on the edge the reader sees; set this for a scrollport whose
+  reachable edge is somewhere else, and set it in the config when that is true of a whole app rather
+  than of one table. `--ds-table-sticky-scrollbar-offset` still out-ranks both, for a rule that has
+  to reach one table from a stylesheet.
 
   ```html
-  <ds-table [hscrollBottom]="'-3rem'" [stickyScrollbar]="true" [columns]="cols" [data]="rows" />
+  <ds-table
+    [stickyScrollbarOffset]="'-3rem'"
+    [stickyScrollbar]="true"
+    [columns]="cols"
+    [data]="rows" />
   ```
 
 ### Changed
@@ -74,8 +89,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   header and publishes its height for the scrim to inset against, `scrollAncestor`, which finds the
   scrollport a sticky offset inside the table resolves against, `hasAnyColumnFilter`, which decides
   whether the column-filter panel is rendered at all, `isFilterPanelOpen`, which tells a header
-  button whether the panel showing belongs to it, and the new `hscrollBottom` input with its
-  `hscrollBottomResolved`. `SidenavGroupComponent` gained the
+  button whether the panel showing belongs to it, and the new `stickyScrollbarOffset` input with its
+  `stickyScrollbarOffsetResolved`. `SidenavGroupComponent` gained the
   new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
   into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
   `private` and `protected` collide with TS2415 exactly as a public name does, so a member of yours
@@ -161,9 +176,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the rows beneath it, because a sticky `bottom` resolves against the scrollport's content box. The
   table measures that padding off its scroll ancestor, cancels it, and re-measures when the
   container resizes, so a padding that moves with a media query moves the bar with it.
-  `--ds-table-hscroll-bottom` still overrides the measurement outright — keep it for a scrollport
-  whose reachable edge is not its padding edge, and drop a negative value written to cancel your own
-  container's padding, which now offsets the bar a second time
+  `--ds-table-sticky-scrollbar-offset` still overrides the measurement outright — keep it for a
+  scrollport whose reachable edge is not its padding edge, and drop a negative value written to
+  cancel your own container's padding, which now offsets the bar a second time
   (delete list: table-hscroll-bottom-workaround).
 
 - **`clearable` on `ds-autocomplete` and `ds-multi-select` draws the clear button the rest of the
@@ -205,7 +220,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 | your workaround | why it is unnecessary | replace with |
 | --- | --- | --- |
 | `ds-table .check` — a margin or `transform` nudging the selection box off the text baseline | the box is centred against the line box now, so the nudge is an offset of its own | nothing |
-| `--ds-table-hscroll-bottom: -` — a negative offset equal to your scroll container's bottom padding | the table measures that padding and cancels it itself, so the value offsets the sticky scrollbar a second time | nothing |
+| `--ds-table-hscroll-bottom: -` — a negative offset equal to your scroll container's bottom padding | the table measures that padding and cancels it itself, so the value offsets the sticky scrollbar a second time — and the token it sits on is renamed, so this one is deleted rather than carried over | nothing |
 | `ds-autocomplete .clear-btn` (or the `ds-multi-select` one) — your own rule giving the clear × a border, background, radius or size | both draw ds-select's clear button themselves now, so your rule fights it | nothing |
 
 ## 0.12.1 — 2026-09-05
