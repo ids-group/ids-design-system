@@ -103,6 +103,95 @@
         "ds-skeleton"
       ],
       "restore": "--ds-skeleton-wave-duration: var(--duration-loop-slow);"
+    },
+    {
+      "id": "autocomplete-trigger-open-class-removed",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-autocomplete .autocomplete-trigger.open",
+      "new": null,
+      "action": "Rewrite any rule keyed off `.autocomplete-trigger.open` to key off the input's expanded state: `.autocomplete-trigger:has(input[aria-expanded=\"true\"])`.",
+      "appliesWhen": "Only a stylesheet of yours that selected the open state by class. Nothing in a template or in TypeScript changes — `isOpen()` and the panel are untouched, and this library never styled `.open`, so no look of ours moves.",
+      "pitfall": "The rule stops matching with no error anywhere: the class is simply absent, so the open state renders as the resting state and nothing reports it. A build passes, a test that asserts on computed style is the only thing that catches it.",
+      "note": "The class reported a state it never painted. `aria-expanded` was already on the input for assistive technology, so the state stayed reachable without a second copy of it in the class list.",
+      "verify": "No stylesheet selects `.autocomplete-trigger.open`, and every rule that dressed the open state now selects it through `aria-expanded`.",
+      "searchHints": [
+        "autocomplete-trigger.open",
+        ".open",
+        "aria-expanded"
+      ],
+      "detect": [
+        "autocomplete-trigger.open",
+        "ds-autocomplete .open",
+        "::ng-deep .open"
+      ]
+    },
+    {
+      "id": "autocomplete-trigger-error-class-removed",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-autocomplete .autocomplete-trigger.error",
+      "new": null,
+      "action": "Rewrite any rule keyed off `.autocomplete-trigger.error` to key off the host attribute: `ds-autocomplete[data-field-state=\"error\"] .autocomplete-trigger`.",
+      "appliesWhen": "Only a stylesheet of yours that selected the error state by class on the trigger. The field family's own error paint has always come from `data-field-state` on the host and is unchanged.",
+      "pitfall": "An invalid field keeps rendering as a valid one in your own styling, with nothing raised — and it is the state a reader most needs to see, so the silence costs more here than on a cosmetic class.",
+      "note": "`data-field-state` carries `error`, `warning` and `success`, which one boolean class could not, and it is where this library reads the state itself — so a rule written against it also follows a warning.",
+      "verify": "No stylesheet selects `.autocomplete-trigger.error`, and the rules that dressed the error state select `[data-field-state=\"error\"]` on the host.",
+      "searchHints": [
+        "autocomplete-trigger.error",
+        ".error",
+        "data-field-state"
+      ],
+      "detect": [
+        "autocomplete-trigger.error",
+        "ds-autocomplete .error",
+        "::ng-deep .error"
+      ]
+    },
+    {
+      "id": "multi-select-trigger-readonly-class-removed",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-multi-select .field-trigger.readonly",
+      "new": null,
+      "action": "Rewrite any rule keyed off `.field-trigger.readonly` to key off the attribute already on that element: `.field-trigger[aria-readonly=\"true\"]`.",
+      "appliesWhen": "Only a stylesheet of yours that selected the read-only trigger by class. `readOnly` itself, and everything it does to focus and opening, is unchanged. `ds-select`'s trigger never carried the class, so a rule shared between the two was already only half working.",
+      "pitfall": "A read-only trigger renders as an editable one under your own styling, which invites a click that then does nothing — and no tool reports the dead selector.",
+      "note": "`aria-readonly` sits on the same element and says the same thing to assistive technology, so the state needed no class beside it.",
+      "verify": "No stylesheet selects `.field-trigger.readonly`, and the read-only styling selects `aria-readonly` instead.",
+      "searchHints": [
+        "field-trigger.readonly",
+        ".readonly",
+        "aria-readonly"
+      ],
+      "detect": [
+        "field-trigger.readonly",
+        "ds-multi-select .readonly",
+        "::ng-deep .readonly"
+      ]
+    },
+    {
+      "id": "tabs-badge-tone-classes-removed",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-tabs .badge.neutral",
+      "new": null,
+      "action": "Drop `.neutral` and `.count` from any rule selecting the tab count badge and select `.badge` on its own.",
+      "appliesWhen": "Only a stylesheet of yours that qualified the tab badge with either word. The badge's own look is unchanged — it always came from `.badge` alone, and `.neutral` and `.count` never carried a declaration.",
+      "pitfall": "A rule qualified with either word stops matching entirely rather than partly, so a recoloured badge returns to the library's grey pill and reads as intentional.",
+      "note": "Both were tone and role markers copied from `ds-badge`'s vocabulary, where they do carry styling. On a tab they never did, and keeping them implied a tone the component does not offer.",
+      "verify": "No stylesheet selects `.badge.neutral` or `.badge.count` under `ds-tabs`, and the badge rules select `.badge`.",
+      "searchHints": [
+        "badge.neutral",
+        "badge.count",
+        "badge neutral count"
+      ],
+      "detect": [
+        "badge.neutral",
+        "badge.count",
+        "ds-tabs .neutral",
+        "ds-tabs .count"
+      ]
     }
   ],
   "informational": [
@@ -114,7 +203,8 @@
     "`ds-dropzone` shows the hand cursor once files are listed. The zone was always clickable; only the cursor said otherwise.",
     "`ds-sidenav-group` takes a new optional `routerLink`. Unset, which is the default and what every existing group has, the header only expands and nothing changed. Set together with `expandable`, the header navigates and the caret becomes its own button, so the group's own DOM gains a `.group-header-row` wrapper and a `.group-caret-button`, and `.group-header` becomes an `a` rather than a `button`. `routerLink` without `expandable` is ignored.",
     "The `ds-table` column panel and the header button that opens it, both rendered by `dsTableColumns`, draw with their own styles instead of the browser's native checkbox, buttons and link. Markup, class names and API are unchanged; a stylesheet of yours that reached `.col-picker`, `.col-picker-row`, `.col-picker-option`, `.col-drag`, `.col-move`, `.col-move-btn`, `.col-reset` or `.col-picker-btn` by a bare class name now competes with a scoped rule, so qualify the selector where your override stopped landing.",
-    "A `ds-table` sticky horizontal scrollbar rests on the scroll container's visible bottom edge rather than one padding-bottom above it, measured off the scroll ancestor and re-measured on resize. `--ds-table-hscroll-bottom` still overrides outright; a negative value equal to your own container's padding is now a second offset (delete list: table-hscroll-bottom-workaround)."
+    "A `ds-table` sticky horizontal scrollbar rests on the scroll container's visible bottom edge rather than one padding-bottom above it, measured off the scroll ancestor and re-measured on resize. `--ds-table-hscroll-bottom` still overrides outright; a negative value equal to your own container's padding is now a second offset (delete list: table-hscroll-bottom-workaround).",
+    "`clearable` on `ds-autocomplete` and `ds-multi-select` now draws the same clear button as `ds-select`, where both previously rendered the markup with no rule able to reach it and the × came out as the browser's default button. Nothing to change; `ds-select` is untouched and `ds-input` keeps its own filled-disc variant (delete list: picker-clear-button-workaround)."
   ],
   "deleteList": [
     {
@@ -134,6 +224,16 @@
         "--ds-table-hscroll-bottom: -"
       ],
       "why": "The table measures its scroll container's bottom padding and cancels it itself, so a negative offset written to do that job moves the sticky scrollbar a second time. The token stays legitimate for a scrollport whose reachable edge is not its padding edge — only the value that duplicates the measurement is dead.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "picker-clear-button-workaround",
+      "surface": "style",
+      "find": [
+        "ds-autocomplete .clear-btn",
+        "ds-multi-select .clear-btn"
+      ],
+      "why": "Both components render ds-select's clear button themselves now, so a rule written to give that button a border, background, radius or size fights the library's own instead of standing in for it.",
       "replaceWith": "nothing"
     }
   ]

@@ -81,6 +81,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the field family, or set `--ds-date-picker-focus-shadow` outright. `ds-time-picker` still resolves
   the control family, so the two now focus differently.
 
+- **Five classes that carried no styling are gone from the DOM — only matters if YOUR stylesheet
+  reached one.** `ds-autocomplete`'s trigger no longer takes `.open` or `.error`,
+  `ds-multi-select`'s trigger no longer takes `.readonly`, and `ds-tabs`' count badge is
+  `class="badge"` where it was `class="badge neutral count"`. This library never styled any of the
+  five, so none of its own rules move; a rule of yours keyed off one stops matching, silently. Every
+  state they reported is still on the element:
+  `.autocomplete-trigger:has(input[aria-expanded="true"])` for open, the host's
+  `[data-field-state="error"]` for error, `.field-trigger[aria-readonly="true"]` for read-only, and
+  `.badge` on its own for the badge.
+
 - **The `ds-progress` warning bar is a yellow.** `--ds-progress-bar-color-warning` falls back to
   `--yellow-500` rather than to `--warning-hover`, which mixed the warning hue toward black in the
   light theme and toward white in the dark one — one bar read olive, the other pale. Both themes
@@ -141,12 +151,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   container's padding, which now offsets the bar a second time
   (delete list: table-hscroll-bottom-workaround).
 
+- **`clearable` on `ds-autocomplete` and `ds-multi-select` draws the clear button the rest of the
+  field family draws.** Both rendered the `.clear-btn` markup with no rule able to reach it, so the
+  × came out as the browser's default button — a grey bordered rectangle with a square corner and a
+  default cursor — next to the properly drawn chips it sits beside. `ds-select`'s rule is shared by
+  all three now: chromeless, `--icon-default`, `--ds-radius-inner`, `--space-0-5` of padding and the
+  press feedback, over a `--surface-secondary` hover. `ds-select` itself is unchanged, and `ds-input`
+  keeps its own filled-disc clear button, which is a different control on purpose
+  (delete list: picker-clear-button-workaround).
+
 ### What you can now DELETE
 
 | your workaround | why it is unnecessary | replace with |
 | --- | --- | --- |
 | `ds-table .check` — a margin or `transform` nudging the selection box off the text baseline | the box is centred against the line box now, so the nudge is an offset of its own | nothing |
 | `--ds-table-hscroll-bottom: -` — a negative offset equal to your scroll container's bottom padding | the table measures that padding and cancels it itself, so the value offsets the sticky scrollbar a second time | nothing |
+| `ds-autocomplete .clear-btn` (or the `ds-multi-select` one) — your own rule giving the clear × a border, background, radius or size | both draw ds-select's clear button themselves now, so your rule fights it | nothing |
 
 ## 0.12.1 — 2026-09-05
 
