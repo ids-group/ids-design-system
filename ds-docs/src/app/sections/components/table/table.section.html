@@ -472,12 +472,31 @@
       [loading]="'skeleton'"
     </code> when you have no
     rows to show yet.
+    <code class="t-mono-inline">
+      [skeletonRows]
+    </code> sets how many shimmer rows
+    stand in — five by default. Match it to the page size you are about to show,
+    so the body does not resize the moment the rows land.
   </p>
 
   <ds-table
     [data]="events"
     [columns]="loadingColumns"
     [loading]="'skeleton'"
+    [stickyHeader]="false" />
+
+  <p class="block-desc t-s">
+    The same table with
+    <code class="t-mono-inline">
+      [skeletonRows]="3"
+    </code>.
+  </p>
+
+  <ds-table
+    [data]="events"
+    [columns]="loadingColumns"
+    [loading]="'skeleton'"
+    [skeletonRows]="3"
     [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
@@ -810,6 +829,146 @@
   <p class="block-desc t-s">
     Selected: {{ projectSelected().size }}
   </p>
+
+  <h3 class="block-title t-h4">
+    Templates a wrapper hands over
+  </h3>
+
+  <p class="block-desc t-s">
+    A component that wraps this table cannot rely on the projected
+    <code class="t-mono-inline">
+      dsCellTemplate
+    </code> and
+    <code class="t-mono-inline">
+      [empty]
+    </code> slots: content arriving through
+    the wrapper's own <code class="t-mono-inline">&lt;ng-content&gt;</code> is
+    invisible to the table's content query, so it never lands. Both have an
+    input twin for exactly that case —
+    <code class="t-mono-inline">
+      [cellTemplateMap]
+    </code>
+    takes a column key to template map and overrides a projected template of
+    the same key, and
+    <code class="t-mono-inline">
+      [emptyTemplate]
+    </code>
+    stands in for the slot. This table is empty on purpose, so the handed-over
+    empty state is what shows; give it rows and the
+    <code class="t-mono-inline">
+      outcome
+    </code> column renders through the
+    handed-over cell template.
+  </p>
+
+  <ng-template #outcomeCell let-row>
+    <ds-badge [status]="row.outcome === 'Failed' ? 'error' : 'success'">
+      {{ row.outcome }}
+    </ds-badge>
+  </ng-template>
+
+  <ng-template #noDeliveries>
+    <ds-empty-state
+      icon="inbox"
+      title="No deliveries yet"
+      body="Handed over as [emptyTemplate], not projected into the slot." />
+  </ng-template>
+
+  <ds-table
+    caption="Deliveries"
+    [data]="wrapperRows()"
+    [columns]="deliveryColumns"
+    [rowId]="deliveryRowId"
+    [cellTemplateMap]="handedOverTemplates()"
+    [emptyTemplate]="handedOverEmpty()"
+    [stickyHeader]="false" />
+
+  <ds-button
+    variant="outline"
+    size="sm"
+    (pressed)="wrapperRows.set(wrapperRows().length ? [] : deliveries)">
+    {{ wrapperRows().length ? 'Empty it again' : 'Give it rows' }}
+  </ds-button>
+
+  <h3 class="block-title t-h4">
+    Row identity for data with no key
+  </h3>
+
+  <p class="block-desc t-s">
+    Selection, expansion and the active-row highlight all need to name a row,
+    and by default the table reads
+    <code class="t-mono-inline">
+      row.id
+    </code>. Display-only data often has none —
+    an audit line, a log row, a joined projection. Pass
+    <code class="t-mono-inline">
+      [rowId]
+    </code> an accessor instead of minting
+    synthetic ids into the data just to satisfy the table. These deliveries have
+    no id at all: two share a channel and two share a timestamp, so identity is
+    the pair, and
+    <code class="t-mono-inline">
+      [rowId]="row => row.channel + '-' + row.sentAt"
+    </code>
+    is what makes the checkboxes track the right rows.
+  </p>
+
+  <ds-table
+    caption="Deliveries"
+    [data]="deliveries"
+    [columns]="deliveryColumns"
+    [rowId]="deliveryRowId"
+    [selectable]="true"
+    [stickyHeader]="false"
+    [(selectedIds)]="deliverySelected" />
+
+  <p class="block-desc t-s">
+    Selected: {{ deliverySelected().size }} —
+    {{ [...deliverySelected()].join(', ') || 'none' }}
+  </p>
+
+  <h3 class="block-title t-h4">
+    What the pager shows
+  </h3>
+
+  <p class="block-desc t-s">
+    Three switches, all on by default.
+    <code class="t-mono-inline">
+      [pageSizeOptions]
+    </code> is the list the picker
+    offers — <code class="t-mono-inline">[10, 25, 50, 100]</code> unless you say
+    otherwise, and worth narrowing when the data has a natural page.
+    <code class="t-mono-inline">
+      [showPageSize]="false"
+    </code> drops the picker for a
+    table whose page size is fixed, and
+    <code class="t-mono-inline">
+      [showLabel]="false"
+    </code> drops the "N of M" range
+    line. Turn both off and the footer is arrows and a page number, which is all
+    a short list needs.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [pageSize]="4"
+    [pageSizeOptions]="[4, 8]"
+    [stickyHeader]="false" />
+
+  <p class="block-desc t-s">
+    The same table with the picker and the range label off.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [pageSize]="4"
+    [showPageSize]="false"
+    [showLabel]="false"
+    [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
     Expandable rows
