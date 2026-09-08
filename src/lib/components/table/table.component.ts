@@ -546,6 +546,12 @@ export class TableComponent<T extends object> {
     'columnFilterPopover',
   );
   /** The column whose filter menu is open — drives the distinct-value list. */
+  // Gates the panel's EXISTENCE on configuration, never on the clicked column: a handler that
+  // raises its own `@if` reads the viewChild back in the same synchronous line, before change
+  // detection has created it, and loses the click that opened it.
+  protected readonly hasAnyColumnFilter = computed(() =>
+    this.columns().some((col) => this.hasColumnFilter(col)),
+  );
   protected readonly filterColumn = signal<TableColumn<T> | null>(null);
   protected readonly filterSearch = signal('');
 

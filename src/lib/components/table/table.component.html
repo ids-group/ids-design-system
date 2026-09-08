@@ -450,58 +450,60 @@
   </ds-popover>
 }
 
-@if (filterColumn()) {
+@if (hasAnyColumnFilter()) {
   <ds-popover
     #columnFilterPopover
     align="start"
     panelRole="dialog"
     panelLabel="Filter values">
-    @if (headerFilterFor(filterColumn()!); as projected) {
-      <div class="col-filter col-filter-custom">
-        <ng-container
-          [ngTemplateOutlet]="projected.template"
-          [ngTemplateOutletContext]="headerFilterContext(filterColumn()!)" />
-      </div>
-    } @else {
-      <div class="col-filter">
-        <input
-          type="text"
-          class="col-filter-search"
-          placeholder="Search…"
-          [value]="filterSearch()"
-          (input)="onFilterSearch($event)"
-          (click)="$event.stopPropagation()" />
-
-        <div class="col-filter-list">
-          @for (value of filterValues(); track value) {
-            <label class="col-filter-option">
-              <input
-                type="checkbox"
-                class="check"
-                [checked]="isFilterValueChecked(value)"
-                (change)="toggleFilterValue(value)" />
-              {{ value || '(empty)' }}
-            </label>
-          } @empty {
-            <div class="col-filter-empty">
-              No matches
-            </div>
-          }
+    @if (filterColumn()) {
+      @if (headerFilterFor(filterColumn()!); as projected) {
+        <div class="col-filter col-filter-custom">
+          <ng-container
+            [ngTemplateOutlet]="projected.template"
+            [ngTemplateOutletContext]="headerFilterContext(filterColumn()!)" />
         </div>
+      } @else {
+        <div class="col-filter">
+          <input
+            type="text"
+            class="col-filter-search"
+            placeholder="Search…"
+            [value]="filterSearch()"
+            (input)="onFilterSearch($event)"
+            (click)="$event.stopPropagation()" />
 
-        <div class="col-filter-footer">
-          <span class="col-filter-count">
-            {{ filterSelectedCount() }} selected
-          </span>
+          <div class="col-filter-list">
+            @for (value of filterValues(); track value) {
+              <label class="col-filter-option">
+                <input
+                  type="checkbox"
+                  class="check"
+                  [checked]="isFilterValueChecked(value)"
+                  (change)="toggleFilterValue(value)" />
+                {{ value || '(empty)' }}
+              </label>
+            } @empty {
+              <div class="col-filter-empty">
+                No matches
+              </div>
+            }
+          </div>
 
-          <button
-            type="button"
-            class="col-reset"
-            (click)="clearColumnFilter()">
-            Clear
-          </button>
+          <div class="col-filter-footer">
+            <span class="col-filter-count">
+              {{ filterSelectedCount() }} selected
+            </span>
+
+            <button
+              type="button"
+              class="col-reset"
+              (click)="clearColumnFilter()">
+              Clear
+            </button>
+          </div>
         </div>
-      </div>
+      }
     }
   </ds-popover>
 }
