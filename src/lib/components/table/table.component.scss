@@ -765,7 +765,13 @@
 
 .bulk-bar {
   position: sticky;
-  bottom: var(--bulk-bar-offset);
+
+  /* Same subtraction the sticky scrollbar makes, for the same reason: a sticky `bottom` resolves
+     against the scrollport's CONTENT box, so the offset alone left the bar floating
+     `--bulk-bar-offset` PLUS the container's padding above the edge the reader sees. */
+  bottom: calc(
+    var(--bulk-bar-offset) - var(--_table-scroller-pad-bottom, 0px)
+  );
   display: flex;
   align-items: center;
   gap: var(--space-3);

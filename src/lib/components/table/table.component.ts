@@ -1363,6 +1363,29 @@ export class TableComponent<T extends object> {
       );
     }
 
+    // A sticky `bottom` resolves against the scrollport's CONTENT box, so anything this table
+    // sticks to the bottom comes to rest one padding-bottom above the edge the reader sees. Both
+    // the horizontal scrollbar proxy and the bulk-action bar subtract this; it is published on the
+    // HOST so every descendant inherits one measurement, and measured rather than taken from a
+    // token because the padding belongs to the consumer's scroll container and moves with a media
+    // query.
+    effect((onCleanup) => {
+      const host = this.hostElement.nativeElement;
+      const scroller = this.scrollAncestor();
+      const publish = (): void =>
+        host.style.setProperty(
+          '--_table-scroller-pad-bottom',
+          scroller ? getComputedStyle(scroller).paddingBottom : '0px',
+        );
+      publish();
+      if (!scroller) {
+        return;
+      }
+      const observer = new ResizeObserver(publish);
+      observer.observe(scroller);
+      onCleanup(() => observer.disconnect());
+    });
+
     // Published as a custom property rather than bound on the proxy: the proxy is behind an
     // `@if`, and the stylesheet must be able to out-rank it with --ds-table-sticky-scrollbar-offset.
     effect(() => {
@@ -1392,20 +1415,11 @@ export class TableComponent<T extends object> {
       };
       wrap.addEventListener('scroll', fromWrap, { passive: true });
       proxy.addEventListener('scroll', fromProxy, { passive: true });
-      const scroller = this.scrollAncestor();
       const measure = (): void => {
         this.hscrollContentWidth.set(wrap.scrollWidth);
         // Both are rounded integers, so a fractional layout width makes an
         // unscrollable wrap report one px more than it holds.
         this.hscrollNeeded.set(wrap.scrollWidth > wrap.clientWidth + 1);
-        // A sticky `bottom` resolves against the scrollport's CONTENT box, so the bar comes to
-        // rest one padding-bottom above the edge the reader sees and floats over the rows below
-        // it. Measured, not a token the consumer restates: the padding is the scroll container's
-        // and can move with a media query.
-        proxy.style.setProperty(
-          '--_table-scroller-pad-bottom',
-          scroller ? getComputedStyle(scroller).paddingBottom : '0px',
-        );
       };
       // The wrap's own box never changes with content — watch the table too
       // (column toggles, data swaps change its width).
@@ -1414,9 +1428,6 @@ export class TableComponent<T extends object> {
       const table = wrap.querySelector('table');
       if (table) {
         resizeObserver.observe(table);
-      }
-      if (scroller) {
-        resizeObserver.observe(scroller);
       }
       measure();
       onCleanup(() => {
