@@ -11,15 +11,21 @@
       class="brand-home"
       routerLink="/"
       aria-label="Design System, home">
-      <span class="mark"> D </span>
+      <span class="mark">
+        D
+      </span>
 
       <!-- Always rendered, hidden by CSS when collapsed: mounting it on expand put
            the full name into a rail still 48px wide, so it wrapped to two lines and
            unwrapped again as the width animated. -->
       <div class="brand-text">
-        <span class="brand-name"> Design System </span>
+        <span class="brand-name">
+          Design System
+        </span>
 
-        <small> Boilerplate v{{ version }} </small>
+        <small>
+          Boilerplate v{{ version }}
+        </small>
       </div>
     </a>
 
@@ -103,7 +109,9 @@
                   </span>
 
                   @if (item.new) {
-                    <span class="nav-new"> new </span>
+                    <span class="nav-new">
+                      new
+                    </span>
                   }
                 </a>
               }
@@ -114,7 +122,9 @@
     }
 
     @if (filteredNav().length === 0) {
-      <div class="nav-empty">Nothing found</div>
+      <div class="nav-empty">
+        Nothing found
+      </div>
     }
   }
 </nav>
