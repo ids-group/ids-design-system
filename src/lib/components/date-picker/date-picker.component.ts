@@ -22,6 +22,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { A11yModule } from '@angular/cdk/a11y';
 import {
+  clearOnDetach,
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
@@ -751,12 +752,16 @@ export class DatePickerComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
-    // Sync state on EVERY detach, so a stray CDK detach cannot leave a stale
-    // `overlayRef` wedging this method's reopen guard.
-    this.overlayRef.detachments().subscribe(() => {
-      removeScrollClose();
-      this.overlayRef = null;
-      this.isOpen.set(false);
+    // Syncs on every detach of the CURRENT overlay, whatever caused it, so a stray CDK detach
+    // cannot leave a stale `overlayRef` wedging this method's reopen guard — and skips a
+    // superseded one, which used to strand the panel that replaced it.
+    clearOnDetach(this.overlayRef, {
+      current: () => this.overlayRef,
+      always: removeScrollClose,
+      clear: () => {
+        this.overlayRef = null;
+        this.isOpen.set(false);
+      },
     });
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

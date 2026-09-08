@@ -25,6 +25,7 @@ export { DsGroupLabelTemplateDirective } from './group-label-template.directive'
 export { DsMessageBase } from './message-base';
 export { DsOptionTemplateDirective } from './option-template.directive';
 export {
+  clearOnDetach,
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
