@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Главы в навигации доков — 38 пунктов, пять способов их подать</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="ds-docs/src/app/layout/sidebar.component.html - ds-docs/src/app/core/section-chapters.service.ts - ds-docs/src/app/sections/components/table/table.section.html">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+
+<style>
+  /* A rail mock, so every variant is judged at the real width instead of on a description. */
+  .rails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    align-items: flex-start;
+  }
+  .rail {
+    width: 264px;
+    flex: 0 0 auto;
+    padding: var(--space-4) var(--space-3);
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-lg);
+    font-family: var(--font-sans);
+  }
+  .rail.is-tall {
+    max-height: 560px;
+    overflow: auto;
+  }
+  .rail-caption {
+    margin: 0 0 var(--space-3);
+    color: var(--text-tertiary);
+    font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .grp {
+    margin: 0 0 var(--space-1);
+    padding: 7px var(--space-2);
+    color: var(--text-tertiary);
+    font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px var(--space-2-5);
+    color: var(--text-secondary);
+    font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
+    border-radius: var(--radius-md);
+  }
+  .item.is-section {
+    padding-left: var(--space-5);
+  }
+  .item.is-active {
+    background: var(--accent-muted);
+    color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+  }
+  .caret {
+    color: var(--icon-default);
+    font-size: 10px;
+  }
+  /* The chapter row, at the size the real one uses. */
+  .ch {
+    padding: 5px var(--space-2-5) 5px var(--space-6);
+    margin-left: var(--space-4);
+    color: var(--text-tertiary);
+    font: var(--font-weight-medium) 12px/1.4 var(--font-sans);
+    border-left: var(--border-width-default) solid var(--border-divider);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ch.is-active {
+    color: var(--accent-strong);
+    border-left-color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+  }
+  .ch-group {
+    padding: 6px var(--space-2-5) 2px var(--space-6);
+    margin-left: var(--space-4);
+    color: var(--text-tertiary);
+    font: var(--font-weight-bold) 10px/1.4 var(--font-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-left: var(--border-width-default) solid var(--border-divider);
+  }
+  .ch-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--space-2);
+    margin-left: var(--space-4);
+    padding-left: var(--space-3);
+    border-left: var(--border-width-default) solid var(--border-divider);
+  }
+  .ch-cols .ch {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+  /* Variant 1 puts the chapters in their own column beside the content. */
+  .page {
+    display: flex;
+    gap: var(--space-5);
+    align-items: flex-start;
+  }
+  .page-body {
+    flex: 1 1 auto;
+    min-width: 220px;
+    padding: var(--space-4);
+    background: var(--surface-secondary);
+    border-radius: var(--radius-lg);
+    color: var(--text-tertiary);
+    font: var(--font-weight-medium) 12px/1.6 var(--font-sans);
+  }
+  .toc {
+    width: 216px;
+    flex: 0 0 auto;
+    max-height: 560px;
+    overflow: auto;
+    padding: var(--space-3);
+    border-left: var(--border-width-default) solid var(--border-divider);
+    font-family: var(--font-sans);
+  }
+  .toc .ch,
+  .toc .ch-group {
+    margin-left: 0;
+    border-left: 0;
+    padding-left: var(--space-2);
+  }
+  .toc .ch.is-active {
+    border-left: 2px solid var(--accent-strong);
+    padding-left: calc(var(--space-2) - 2px);
+  }
+  .searchbox {
+    padding: 7px var(--space-3);
+    margin-bottom: var(--space-2);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-md);
+    color: var(--text-tertiary);
+    font: var(--font-weight-medium) 12px/1.4 var(--font-sans);
+  }
+  .count-line {
+    padding: 5px var(--space-2-5) 5px var(--space-6);
+    margin-left: var(--space-4);
+    border-left: var(--border-width-default) solid var(--border-divider);
+    color: var(--accent);
+    font: var(--font-weight-medium) 12px/1.4 var(--font-sans);
+  }
+  .fade {
+    position: relative;
+  }
+  .fade::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 48px;
+    background: linear-gradient(to bottom, transparent, var(--surface-default));
+    pointer-events: none;
+  }
+</style>
+
+<main>
+  <header class="masthead">
+    <div class="chips">
+      <span class="chip is-open">нужен вердикт</span>
+      <span class="chip is-dead">как сейчас — отвергнуто</span>
+      <span class="chip">38 глав · 6 из них фразы</span>
+    </div>
+    <h1>Главы в навигации доков — 38 пунктов, пять способов их подать</h1>
+    <p class="lede">
+      Главы секции теперь выводятся автоматически и попадают в рейку. У <code>ds-table</code> их
+      <b>38</b> — против 14 у следующей по размеру секции, — и плоским списком это
+      <b>нечитаемо</b>. Ниже сначала разобрано, что именно сломано, потом пять вариантов, каждый
+      живьём и на настоящей ширине рейки.
+    </p>
+  </header>
+
+  <h2>Четыре дефекта, а не один</h2>
+
+  <table>
+    <thead>
+      <tr><th>Что не так</th><th>Почему это ломает задачу</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>38 пунктов плоской стеной</th>
+        <td>Список заводился, чтобы <b>искать было легче</b>. Плоские 38 сканируются не быстрее, чем прокрутка самой страницы, — задача не решена.</td>
+      </tr>
+      <tr>
+        <th>Шесть лейблов обрублены посреди слова</th>
+        <td><code>The cell that names what the row o…</code>, <code>A cell that IS a link — the accessible…</code>. Это заголовки-фразы: хороши на странице, бесполезны в рейке. Обрубок не опознаётся.</td>
+      </tr>
+      <tr>
+        <th>Нет иерархии</th>
+        <td>Глава 12px против пункта 13px и та же левая кромка: список читается как <b>второй верхний уровень</b>, а не как содержимое секции.</td>
+      </tr>
+      <tr>
+        <th>Остальной навигатор выдавлен</th>
+        <td>Открытая Table занимает всю высоту рейки. Перейти <b>к другому компоненту</b> нельзя, не свернув главы, — рейка перестаёт быть навигацией.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="panel">
+    <b>Что уже известно про содержимое.</b> 32 заголовка из 38 короткие (1–4 слова), и в них уже
+    заложена группировка разделителем <code>·</code>: <code>Loading&nbsp;·&nbsp;skeleton</code>,
+    <code>Row&nbsp;selection&nbsp;·&nbsp;bulk-action&nbsp;bar</code>,
+    <code>Column&nbsp;picker&nbsp;·&nbsp;reorder</code>. Фраз ровно шесть, и переписать их в лейблы
+    — работа на десять минут. Значит и группы, и короткие подписи <b>не надо изобретать</b>, они
+    уже в тексте.
+  </div>
+
+  <h2>Как сейчас — для сравнения</h2>
+
+  <div class="rails">
+    <div class="rail is-tall fade">
+      <p class="rail-caption">сейчас в dev</p>
+      <div class="item">Stats <span class="caret">▾</span></div>
+      <div class="item is-active">Table <span class="caret">▴</span></div>
+      <div class="ch">Default</div>
+      <div class="ch">Sortable columns</div>
+      <div class="ch">Header sort states</div>
+      <div class="ch">Row interaction states</div>
+      <div class="ch">The cell that names what the row opens</div>
+      <div class="ch">A cell that IS a link — the accessible way to say a row leads somewhere</div>
+      <div class="ch">Row selection · bulk-action bar</div>
+      <div class="ch">Sticky header</div>
+      <div class="ch">Bordered</div>
+      <div class="ch">Loading · skeleton</div>
+      <div class="ch">Loading · overlay</div>
+      <div class="ch">Loading · let the table choose</div>
+      <div class="ch">Empty states</div>
+      <div class="ch">Dense · zebra</div>
+      <div class="ch">Pagination · sticky column</div>
+      <div class="ch">Templates a wrapper hands over</div>
+      <div class="ch is-active">Row identity for data with no key</div>
+      <div class="ch">What the pager shows</div>
+      <div class="ch">Expandable rows</div>
+      <div class="ch">One row at a time</div>
+      <div class="ch">Clickable rows · drawer detail</div>
+      <div class="ch">Row actions · kebab menu</div>
+      <div class="ch">Column picker · reorder</div>
+      <div class="ch">Resizable columns</div>
+      <div class="ch">Inline editing</div>
+      <div class="ch">Persisted layout &amp; export</div>
+      <div class="ch">Toolbar slot · the export button anywhere</div>
+      <div class="ch">Sizing a column to its content</div>
+      <div class="ch">Server sort · a host that answers with its own default</div>
+      <div class="ch">The same thing two-way, when the host has no opinion to defend</div>
+      <div class="ch">Column filters</div>
+      <div class="ch">Truncation · full-text popover</div>
+    </div>
+
+    <div class="panel" style="max-width: 40ch">
+      <span class="verdict is-dead">отвергнуто</span>
+      <p>
+        Скролл внутри рейки, шесть обрубков, и ни одного другого компонента на экране. Именно это
+        на скриншоте.
+      </p>
+    </div>
+  </div>
+
+  <h2>Вариант 1 — оглавление справа <span class="chip is-accent">рекомендую</span></h2>
+
+  <p class="lede">
+    Главы <b>уходят из рейки</b> в свою колонку у правого края страницы, как в MDN, Angular.dev и
+    Stripe. Рейка снова про переход <b>между компонентами</b>, оглавление — про перемещение
+    <b>внутри</b> одного. Ширины хватает на группы, и ничего не обрубается.
+  </p>
+
+  <div class="page">
+    <div class="rail">
+      <p class="rail-caption">рейка — только компоненты</p>
+      <div class="item">Accordion</div>
+      <div class="item">Avatars</div>
+      <div class="item">Cards</div>
+      <div class="item">Description list</div>
+      <div class="item">Icon</div>
+      <div class="item">List</div>
+      <div class="item">Stats</div>
+      <div class="item is-active">Table</div>
+      <div class="item">Tag</div>
+      <div class="item">Timeline</div>
+      <div class="item">Tree view</div>
+    </div>
+
+    <div class="page-body">
+      <b style="color: var(--text-primary)">Row identity for data with no key</b>
+      <p>Тело страницы. Оглавление справа липкое и скроллится отдельно.</p>
+    </div>
+
+    <div class="toc">
+      <p class="rail-caption">на этой странице</p>
+      <div class="ch-group">Основа</div>
+      <div class="ch">Default</div>
+      <div class="ch">Bordered</div>
+      <div class="ch">Dense · zebra</div>
+      <div class="ch">Sticky header</div>
+      <div class="ch-group">Сортировка</div>
+      <div class="ch">Sortable columns</div>
+      <div class="ch">Header sort states</div>
+      <div class="ch">Server sort</div>
+      <div class="ch">Two-way sort</div>
+      <div class="ch-group">Строки</div>
+      <div class="ch">Row interaction states</div>
+      <div class="ch">Naming cell</div>
+      <div class="ch">Link cell</div>
+      <div class="ch is-active">Row identity</div>
+      <div class="ch">Clickable rows</div>
+      <div class="ch">Row actions</div>
+      <div class="ch">Expandable rows</div>
+      <div class="ch">One row at a time</div>
+      <div class="ch-group">Колонки</div>
+      <div class="ch">Column picker</div>
+      <div class="ch">Resizable</div>
+      <div class="ch">Fit to content</div>
+      <div class="ch">Column filters</div>
+      <div class="ch">Truncation</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <b>Плюсы.</b> Решает все четыре дефекта сразу: своя колонка (стена уходит), своя ширина
+    (обрубков нет), своя область (иерархия очевидна), рейка не тронута (остальные компоненты на
+    месте). <b>Минус:</b> нужна третья колонка, то есть на узких экранах оглавление уезжает под
+    кнопку или исчезает. <b>Цена:</b> новый компонент в оболочке доков плюс перенос
+    scroll-spy — правка средняя, вся в <code>ds-docs</code>.
+  </div>
+
+  <h2>Вариант 2 — девять групп внутри рейки</h2>
+
+  <p class="lede">
+    Главы остаются в рейке, но собраны в <b>девять групп по 2–8</b>, и раскрыта только та, в
+    которой читатель сейчас. 38 пунктов превращаются в 9 строк плюс одна открытая группа.
+  </p>
+
+  <div class="rails">
+    <div class="rail">
+      <p class="rail-caption">свёрнуто — 9 строк вместо 38</p>
+      <div class="item is-active">Table <span class="caret">▴</span></div>
+      <div class="ch">Основа <span class="caret">▸</span></div>
+      <div class="ch">Сортировка <span class="caret">▸</span></div>
+      <div class="ch is-active">Строки <span class="caret">▾</span></div>
+      <div class="ch" style="padding-left: var(--space-8)">Row interaction states</div>
+      <div class="ch" style="padding-left: var(--space-8)">Naming cell</div>
+      <div class="ch" style="padding-left: var(--space-8)">Link cell</div>
+      <div class="ch is-active" style="padding-left: var(--space-8)">Row identity</div>
+      <div class="ch" style="padding-left: var(--space-8)">Clickable rows</div>
+      <div class="ch" style="padding-left: var(--space-8)">Row actions</div>
+      <div class="ch" style="padding-left: var(--space-8)">Expandable rows</div>
+      <div class="ch" style="padding-left: var(--space-8)">One row at a time</div>
+      <div class="ch">Выделение и правка <span class="caret">▸</span></div>
+      <div class="ch">Колонки <span class="caret">▸</span></div>
+      <div class="ch">Загрузка и пустота <span class="caret">▸</span></div>
+      <div class="ch">Страницы и объём <span class="caret">▸</span></div>
+      <div class="ch">Данные внутрь и наружу <span class="caret">▸</span></div>
+      <div class="ch">Края и доступность <span class="caret">▸</span></div>
+      <div class="item">Tag</div>
+      <div class="item">Timeline</div>
+    </div>
+
+    <div class="panel" style="max-width: 40ch">
+      <p>
+        <b>Плюс:</b> рейка остаётся единственной навигацией, третья колонка не нужна, на узком
+        экране работает как есть. <b>Минус:</b> третий уровень вложенности в рейке 264px — отступы
+        съедают ширину, и до главы теперь два клика вместо одного. <b>Цена:</b> малая, всё в
+        сайдбаре плюс таблица групп.
+      </p>
+    </div>
+  </div>
+
+  <h2>Вариант 3 — только короткие лейблы</h2>
+
+  <p class="lede">
+    Минимальная правка: 38 остаются плоскими, но каждая глава получает <b>короткую подпись для
+    навигации</b> — заголовок на странице не меняется. Обрубков не остаётся.
+  </p>
+
+  <div class="rails">
+    <div class="rail is-tall">
+      <p class="rail-caption">плоско, но читаемо</p>
+      <div class="item is-active">Table <span class="caret">▴</span></div>
+      <div class="ch">Default</div>
+      <div class="ch">Sortable columns</div>
+      <div class="ch">Header sort states</div>
+      <div class="ch">Row interaction states</div>
+      <div class="ch">Naming cell</div>
+      <div class="ch">Link cell</div>
+      <div class="ch">Row selection</div>
+      <div class="ch">Sticky header</div>
+      <div class="ch">Bordered</div>
+      <div class="ch">Loading · skeleton</div>
+      <div class="ch">Loading · overlay</div>
+      <div class="ch">Loading · auto</div>
+      <div class="ch">Empty states</div>
+      <div class="ch">Dense · zebra</div>
+      <div class="ch">Pagination</div>
+      <div class="ch">Wrapper templates</div>
+      <div class="ch is-active">Row identity</div>
+      <div class="ch">Pager switches</div>
+      <div class="ch">Expandable rows</div>
+      <div class="ch">One row at a time</div>
+      <div class="ch">Clickable rows</div>
+      <div class="ch">Row actions</div>
+      <div class="ch">Column picker</div>
+      <div class="ch">Resizable</div>
+      <div class="ch">Inline editing</div>
+      <div class="ch">Persisted layout</div>
+      <div class="ch">Toolbar slot</div>
+      <div class="ch">Fit to content</div>
+      <div class="ch">Server sort</div>
+      <div class="ch">Two-way sort</div>
+      <div class="ch">Column filters</div>
+      <div class="ch">Truncation</div>
+      <div class="ch">Sticky scrollbar</div>
+      <div class="ch">CSV export</div>
+      <div class="ch">Server filtering</div>
+      <div class="ch">Screen reader</div>
+      <div class="ch">Virtual scroll</div>
+      <div class="ch">Lazy loading</div>
+    </div>
+
+    <div class="panel" style="max-width: 40ch">
+      <p>
+        <b>Плюс:</b> самая дешёвая правка и единственная, которая чинит обрубки без всякой
+        перестройки. <b>Минус:</b> стена остаётся стеной — 38 читаемых пунктов всё равно выдавливают
+        остальной навигатор. Это <b>половина решения</b>, и её стоит взять в любом случае, потому что
+        коротких подписей требуют и варианты 1, 2 и 5.
+      </p>
+    </div>
+  </div>
+
+  <h2>Вариант 4 — поиск вместо списка</h2>
+
+  <p class="lede">
+    Списка нет вообще. Поле поиска, которое уже стоит в рейке, начинает <b>искать и по главам</b>, а
+    под секцией остаётся одна строка со счётчиком. Прямой ответ на «трудно искать», без стены.
+  </p>
+
+  <div class="rails">
+    <div class="rail">
+      <p class="rail-caption">покой — счётчик вместо 38 строк</p>
+      <div class="searchbox">Поиск…</div>
+      <div class="item">Stats</div>
+      <div class="item is-active">Table</div>
+      <div class="count-line">38 глав — искать в поиске</div>
+      <div class="item">Tag</div>
+      <div class="item">Timeline</div>
+      <div class="item">Tree view</div>
+    </div>
+
+    <div class="rail">
+      <p class="rail-caption">набрано «col»</p>
+      <div class="searchbox" style="color: var(--text-primary)">col</div>
+      <div class="item is-active">Table</div>
+      <div class="ch">Sortable columns</div>
+      <div class="ch">Column picker</div>
+      <div class="ch">Resizable columns</div>
+      <div class="ch">Column filters</div>
+      <div class="ch">Fit to content</div>
+      <div class="ch">Pagination · sticky column</div>
+    </div>
+
+    <div class="panel" style="max-width: 34ch">
+      <p>
+        <b>Плюс:</b> в покое рейка не меняется вообще, а поиск и был тем, чем ищут. <b>Минус:</b>
+        <b>нельзя просмотреть</b>, что вообще есть в секции, — а половина ценности оглавления
+        именно в этом: увидеть, что у таблицы есть виртуальный скролл, о котором не знал.
+      </p>
+    </div>
+  </div>
+
+  <h2>Вариант 5 — две колонки в рейке</h2>
+
+  <p class="lede">
+    Короткие подписи в <b>две колонки</b>: та же плоская модель, но высота вдвое меньше.
+  </p>
+
+  <div class="rails">
+    <div class="rail">
+      <p class="rail-caption">38 в две колонки</p>
+      <div class="item is-active">Table <span class="caret">▴</span></div>
+      <div class="ch-cols">
+        <div class="ch">Default</div>
+        <div class="ch">Sortable</div>
+        <div class="ch">Sort states</div>
+        <div class="ch">Row states</div>
+        <div class="ch">Naming cell</div>
+        <div class="ch">Link cell</div>
+        <div class="ch">Selection</div>
+        <div class="ch">Sticky header</div>
+        <div class="ch">Bordered</div>
+        <div class="ch">Skeleton</div>
+        <div class="ch">Overlay</div>
+        <div class="ch">Auto loading</div>
+        <div class="ch">Empty</div>
+        <div class="ch">Dense</div>
+        <div class="ch">Pagination</div>
+        <div class="ch">Wrapper tpl</div>
+        <div class="ch is-active">Row identity</div>
+        <div class="ch">Pager</div>
+        <div class="ch">Expandable</div>
+        <div class="ch">One at a time</div>
+        <div class="ch">Clickable</div>
+        <div class="ch">Row actions</div>
+        <div class="ch">Picker</div>
+        <div class="ch">Resizable</div>
+        <div class="ch">Inline edit</div>
+        <div class="ch">Persisted</div>
+        <div class="ch">Toolbar</div>
+        <div class="ch">Fit content</div>
+        <div class="ch">Server sort</div>
+        <div class="ch">Two-way</div>
+        <div class="ch">Filters</div>
+        <div class="ch">Truncation</div>
+        <div class="ch">Scrollbar</div>
+        <div class="ch">CSV</div>
+        <div class="ch">Server filter</div>
+        <div class="ch">A11y</div>
+        <div class="ch">Virtual</div>
+        <div class="ch">Lazy</div>
+      </div>
+      <div class="item">Tag</div>
+    </div>
+
+    <div class="panel" style="max-width: 40ch">
+      <p>
+        <b>Плюс:</b> высота вдвое меньше, остальной навигатор возвращается на экран.
+        <b>Минус:</b> 264px на две колонки дают ~15 символов на подпись — подписи приходится резать
+        до <code>Wrapper tpl</code> и <code>A11y</code>, а <b>двухколоночный список сканируется
+        хуже одноколоночного</b>: глаз не знает, читать вниз или вправо.
+      </p>
+    </div>
+  </div>
+
+  <h2>Сводка</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Вариант</th><th>Стена</th><th>Обрубки</th><th>Иерархия</th><th>Рейка цела</th><th>Цена</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>1 · Оглавление справа</th>
+        <td class="yes">решено</td><td class="yes">решено</td><td class="yes">решено</td><td class="yes">да</td><td>средняя</td>
+      </tr>
+      <tr>
+        <th>2 · Группы в рейке</th>
+        <td class="yes">решено</td><td class="yes">решено</td><td class="yes">решено</td><td>частично</td><td>малая</td>
+      </tr>
+      <tr>
+        <th>3 · Короткие лейблы</th>
+        <td class="no">остаётся</td><td class="yes">решено</td><td class="no">нет</td><td class="no">нет</td><td>минимальная</td>
+      </tr>
+      <tr>
+        <th>4 · Поиск вместо списка</th>
+        <td class="yes">решено</td><td class="yes">неприменимо</td><td class="yes">решено</td><td class="yes">да</td><td>малая</td>
+      </tr>
+      <tr>
+        <th>5 · Две колонки</th>
+        <td>частично</td><td class="no">хуже</td><td class="no">нет</td><td>частично</td><td>малая</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="panel">
+    <span class="verdict">нужен вердикт</span>
+    <p>
+      <b>Рекомендую 1 + 3:</b> оглавление справа с короткими подписями. Короткие подписи (3) нужны
+      любому варианту кроме четвёртого, поэтому их стоит взять сразу; оглавление справа — то, чем
+      этот же вопрос решают все крупные доки, и оно единственное закрывает все четыре дефекта, не
+      отбирая у рейки её работу.
+    </p>
+    <p>
+      <b>Если третья колонка не нужна</b> — берём 2 + 3: девять групп в рейке. Дешевле, работает на
+      узком экране, ценой второго клика до главы.
+    </p>
+  </div>
+</main>
