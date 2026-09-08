@@ -210,6 +210,84 @@
   background: var(--accent-strong);
 }
 
+/* The link keeps the whole row; the caret is laid over its right end rather than shrinking it, so
+   a row with chapters and one without have the label starting and ending in the same place. */
+.item-row {
+  position: relative;
+}
+
+.item-row.has-chapters .link {
+  padding-right: var(--space-7);
+}
+
+.item-caret {
+  position: absolute;
+  right: var(--space-1);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--icon-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.item-caret:hover {
+  color: var(--text-primary);
+}
+
+.item-caret[aria-expanded='true'] {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.chapters {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A thread down the chapter column: 35 of them under one section, and without a line the list
+   reads as a second flat level rather than as the section's contents. */
+.chapter {
+  position: relative;
+
+  /* Clipped, not wrapped — the rule the nav labels already follow. Several chapter headings are
+     full sentences, and wrapping 35 of them made the list three times its height. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px var(--space-2-5) 5px var(--space-7);
+  margin-left: var(--space-5);
+  color: var(--text-tertiary);
+  font: var(--font-weight-medium) 12px/1.4 var(--font-sans);
+  text-decoration: none;
+  border-left: var(--border-width-default) solid var(--border-divider);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.chapter:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
+.chapter.is-active {
+  color: var(--accent-strong);
+  border-left-color: var(--accent-strong);
+  font-weight: var(--font-weight-bold);
+}
+
 .start-link {
   font-weight: var(--font-weight-bold);
   color: var(--text-primary);
@@ -235,6 +313,11 @@
 .toc.is-drawer .link {
   min-height: var(--hit-comfy);
   padding-block: var(--space-2);
+}
+.toc.is-drawer .chapter {
+  min-height: var(--hit-comfy);
+  display: flex;
+  align-items: center;
 }
 .toc.is-drawer .start-link {
   min-height: var(--hit-comfy);

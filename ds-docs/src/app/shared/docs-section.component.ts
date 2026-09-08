@@ -1,10 +1,18 @@
 import {
   Component,
+  DestroyRef,
+  ElementRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
+  inject,
   input,
 } from '@angular/core';
+import {
+  SectionChaptersService,
+  chapterSlug,
+} from '../core/section-chapters.service';
 import { COMPONENT_API, SERVICE_API } from './component-api.generated';
 import { DocsComponentMetaComponent } from './docs-component-meta.component';
 import { DocsApiTableComponent } from './docs-api-table.component';
@@ -20,6 +28,7 @@ import { DocsApiTableComponent } from './docs-api-table.component';
 })
 export class DocsSectionComponent {
   readonly anchor = input.required<string>();
+
   readonly eyebrow = input<string>('');
   readonly title = input.required<string>();
   /** Opt out of the auto API surface — for a non-component section whose anchor
@@ -63,6 +72,39 @@ export class DocsSectionComponent {
 
     return keys;
   });
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly chapters = inject(SectionChaptersService);
+
+  constructor() {
+    // After render, not from a lifecycle hook: the chapters are projected content, so they exist
+    // only once this view has been stamped out.
+    afterNextRender(() => {
+      const anchor = this.anchor();
+      const headings = Array.from(
+        this.host.nativeElement.querySelectorAll<HTMLElement>('h3.block-title'),
+      );
+      const seen = new Set<string>();
+      const found = headings.map((heading) => {
+        const label = (heading.textContent ?? '').trim();
+        let slug = chapterSlug(label);
+        // Two chapters can reduce to one slug; the fragment has to stay unique to be navigable.
+        if (seen.has(slug)) {
+          let n = 2;
+          while (seen.has(`${slug}-${n}`)) {
+            n += 1;
+          }
+          slug = `${slug}-${n}`;
+        }
+        seen.add(slug);
+        heading.id = slug;
+
+        return { slug, label, heading };
+      });
+      this.chapters.publish(anchor, found);
+    });
+    inject(DestroyRef).onDestroy(() => this.chapters.withdraw(this.anchor()));
+  }
+
   protected readonly serviceNames = computed(() => {
     if (!this.api()) {
       return [];

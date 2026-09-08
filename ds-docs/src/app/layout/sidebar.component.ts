@@ -2,7 +2,9 @@ import { DOCUMENT } from '@angular/common';
 import {
   Component,
   DestroyRef,
+  Injector,
   ViewEncapsulation,
+  afterNextRender,
   computed,
   effect,
   inject,
@@ -24,13 +26,19 @@ import { SearchComponent } from 'ds/search';
 import {
   NAV,
   type NavGroup,
+  type NavItem,
   groupForAnchor,
   urlForAnchor,
   urlForGroupPath,
 } from '../core/nav.config';
+import {
+  type SectionChapter,
+  SectionChaptersService,
+} from '../core/section-chapters.service';
 import { DS_VERSION } from '../shared/docs-stats';
 
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
+const CHAPTER_LINE_SLACK_PX = 2;
 
 @Component({
   selector: 'app-sidebar',
@@ -53,6 +61,7 @@ export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
+  private readonly injector = inject(Injector);
   private readonly layoutScroll = inject(LayoutScrollService);
   protected readonly layout = inject(AppLayoutComponent);
 
@@ -82,7 +91,74 @@ export class SidebarComponent {
   protected readonly urlForAnchor = urlForAnchor;
   protected readonly urlForGroupPath = urlForGroupPath;
 
+  private readonly chaptersService = inject(SectionChaptersService);
+  /** Read once, before anything can rewrite it: the scroll-spy republishes the URL from the
+   *  active anchor, and with no chapter known yet that write dropped the fragment a deep link
+   *  arrived with. */
+  private readonly initialChapter = this.chapterFromUrl(this.router.url);
+  protected readonly activeChapter = signal<string>(this.initialChapter);
+  // A group page mounts EVERY section it holds, so every item has chapters to show — 67 of them on
+  // Data display. Only the section being read opens its own, the way a group holding the active
+  // section is open regardless; an explicit close still wins, because 35 chapters is a lot to
+  // scroll past to reach the next component.
+  private readonly openedItems = signal<ReadonlySet<string>>(new Set());
+  private readonly closedItems = signal<ReadonlySet<string>>(new Set());
+
+  protected chaptersFor(item: NavItem): readonly SectionChapter[] {
+    return this.chaptersService.chaptersOf(item.anchor);
+  }
+
+  protected isItemOpen(item: NavItem): boolean {
+    if (this.chaptersFor(item).length === 0) {
+      return false;
+    }
+    if (this.closedItems().has(item.anchor)) {
+      return false;
+    }
+
+    return this.isActive(item.anchor) || this.openedItems().has(item.anchor);
+  }
+
+  protected toggleItem(item: NavItem): void {
+    const anchor = item.anchor;
+    const closing = this.isItemOpen(item);
+    const opened = new Set(this.openedItems());
+    const closed = new Set(this.closedItems());
+    if (closing) {
+      opened.delete(anchor);
+      closed.add(anchor);
+    } else {
+      closed.delete(anchor);
+      opened.add(anchor);
+    }
+    this.openedItems.set(opened);
+    this.closedItems.set(closed);
+  }
+
+  protected isChapterActive(chapter: SectionChapter): boolean {
+    return this.activeChapter() === chapter.slug;
+  }
+
+  /** Scrolls to a chapter heading the same way `onItem` scrolls to a section. */
+  protected onChapter(chapter: SectionChapter): void {
+    this.navigated.emit();
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
+    if (!main) {
+      return;
+    }
+    const topbarHeight = this.computeTopbarHeight();
+    const containerTop = main.getBoundingClientRect().top;
+    const targetTop = chapter.heading.getBoundingClientRect().top;
+    main.scrollTo({
+      top: main.scrollTop + (targetTop - containerTop) - topbarHeight,
+      behavior: 'auto',
+    });
+    this.activeChapter.set(chapter.slug);
+  }
+
   private observer: IntersectionObserver | null = null;
+  private chapterObserver: IntersectionObserver | null = null;
+  private readonly chapterHeadings = new Map<HTMLElement, string>();
   // Anchors of sections currently intersecting the spy band.
   private readonly intersecting = new Set<string>();
   private readonly anchorToSection = new Map<string, HTMLElement>();
@@ -150,14 +226,50 @@ export class SidebarComponent {
       if (!area) {
         return;
       }
-      const target = `/${area}/${anchor}`;
-      if (this.router.url.split('?')[0].split('#')[0] === target) {
+      const chapter = this.activeChapter();
+      const target = chapter
+        ? `/${area}/${anchor}#${chapter}`
+        : `/${area}/${anchor}`;
+      if (this.router.url.split('?')[0] === target) {
         return;
       }
       void this.router.navigateByUrl(target, {
         replaceUrl: true,
         state: { dsSamePage: true },
       });
+    });
+
+    // A second observer for chapter headings, rebuilt whenever the mounted section republishes
+    // them. Separate from the section spy so neither rule has to know about the other's targets.
+    effect((onCleanup) => {
+      const chapters = this.chaptersService.chaptersOf(this.activeAnchor());
+      this.chapterObserver?.disconnect();
+      this.chapterObserver = null;
+      this.chapterHeadings.clear();
+      if (chapters.length === 0) {
+        this.activeChapter.set('');
+
+        return;
+      }
+      const main = this.layoutScroll.scroller() as HTMLElement | null;
+      const topbarHeight = this.computeTopbarHeight();
+      for (const chapter of chapters) {
+        this.chapterHeadings.set(chapter.heading, chapter.slug);
+      }
+      const observer = new IntersectionObserver(
+        () => this.syncActiveChapter(topbarHeight),
+        {
+          root: main,
+          rootMargin: `-${topbarHeight}px 0px -60% 0px`,
+          threshold: [0, 1],
+        },
+      );
+      for (const chapter of chapters) {
+        observer.observe(chapter.heading);
+      }
+      this.chapterObserver = observer;
+      this.syncActiveChapter(topbarHeight);
+      onCleanup(() => observer.disconnect());
     });
   }
 
@@ -216,6 +328,23 @@ export class SidebarComponent {
   // On initial mount, jump to the section named by the URL's anchor segment.
   private scrollToAnchorOnLoad(): void {
     this.scrollToAnchor(this.anchorFromUrl(this.router.url));
+    // A `#chapter` fragment is finer-grained than the section, so it wins — but the chapters are
+    // published after render, so wait for them rather than reading an empty list.
+    const wanted = this.initialChapter;
+    if (!wanted) {
+      return;
+    }
+    afterNextRender(
+      () => {
+        const chapter = this.chaptersService
+          .chaptersOf(this.activeAnchor())
+          .find((each) => each.slug === wanted);
+        if (chapter) {
+          this.onChapter(chapter);
+        }
+      },
+      { injector: this.injector },
+    );
   }
 
   // Scroll main to `anchor`'s section and mark it active. Returns false when the
@@ -254,7 +383,7 @@ export class SidebarComponent {
   // '/components/button' -> 'components/actions'; '/foundations/color' ->
   // 'foundations'; '/changelog' -> 'changelog'; '/' -> ''.
   private groupPathForUrl(url: string): string {
-    const segments = url.split('/').filter(Boolean);
+    const segments = this.pathOf(url).split('/').filter(Boolean);
     if (segments.length === 0) {
       return '';
     }
@@ -268,13 +397,24 @@ export class SidebarComponent {
 
   // The `<anchor>` of a flat `/<area>/<anchor>` URL, else '' (home / bare page).
   private anchorFromUrl(url: string): string {
-    const segments = url.split('?')[0].split('/').filter(Boolean);
+    const segments = this.pathOf(url).split('/').filter(Boolean);
 
     return segments.length >= 2 ? segments[1] : '';
   }
 
+  /** The `#chapter` of `/<area>/<anchor>#<chapter>`, else ''. */
+  private chapterFromUrl(url: string): string {
+    return url.split('?')[0].split('#')[1] ?? '';
+  }
+
+  /** Path with the query and the fragment cut off — a chapter fragment must not be read as part
+   *  of the anchor segment, or every group lookup fails the moment one is in the URL. */
+  private pathOf(url: string): string {
+    return url.split('?')[0].split('#')[0];
+  }
+
   private currentArea(): string {
-    return this.router.url.split('?')[0].split('/').filter(Boolean)[0] ?? '';
+    return this.pathOf(this.router.url).split('/').filter(Boolean)[0] ?? '';
   }
 
   protected toggleCollapsed(): void {
@@ -420,6 +560,28 @@ export class SidebarComponent {
 
     for (const section of sections) {
       this.observer.observe(section);
+    }
+  }
+
+  /**
+   * The chapter the reader is in: the last heading to have passed the topbar line, so a chapter
+   * stays current for its whole body rather than only while its one-line heading is on screen.
+   * Headings BELOW the line do not qualify — the reader has not reached them.
+   */
+  private syncActiveChapter(topbarHeight: number): void {
+    let bestSlug = '';
+    let bestTop = Number.NEGATIVE_INFINITY;
+    for (const [heading, slug] of this.chapterHeadings) {
+      const top = heading.getBoundingClientRect().top - topbarHeight;
+      // A couple of px of slack: a click scrolls the heading TO the line, and a fractional
+      // remainder there read as "not reached yet" and handed the highlight to the chapter above.
+      if (top <= CHAPTER_LINE_SLACK_PX && top > bestTop) {
+        bestTop = top;
+        bestSlug = slug;
+      }
+    }
+    if (bestSlug) {
+      this.activeChapter.set(bestSlug);
     }
   }
 
