@@ -1,3 +1,4 @@
+@use '../../styles/clear-button' as clear-button;
 @use '../../styles/focus' as focus;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/check-mark';
@@ -73,6 +74,10 @@
 .field-trigger {
   display: flex;
   flex-wrap: wrap;
+
+  .clear-btn {
+    @include clear-button.button;
+  }
 
   /* Wrapping is what an UNCAPPED trigger does — a line per selection. With a cap
      it is the failure the cap exists to prevent: a flex container that wraps

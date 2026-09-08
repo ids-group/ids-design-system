@@ -1,3 +1,4 @@
+@use '../../styles/clear-button' as clear-button;
 @use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
@@ -80,20 +81,7 @@
   }
 
   .clear-btn {
-    border: 0;
-    background: transparent;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--icon-default);
-    border-radius: var(--ds-radius-inner);
-    padding: var(--space-0-5);
-    cursor: pointer;
-    flex: 0 0 auto;
-
-    &:hover { color: var(--text-primary); background: var(--surface-secondary); }
-
-    @include press.feedback;
+    @include clear-button.button;
   }
 
   .chevron {
