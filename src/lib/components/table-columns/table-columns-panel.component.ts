@@ -8,7 +8,6 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   TemplateRef,
-  ViewEncapsulation,
   computed,
   input,
   model,
@@ -35,7 +34,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 @Component({
   selector: 'ds-table-columns-panel',
   standalone: true,
-  encapsulation: ViewEncapsulation.None,
+  styleUrl: './table-columns-panel.component.scss',
   imports: [
     BottomSheetComponent,
     CdkDrag,

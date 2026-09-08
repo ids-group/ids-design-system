@@ -1,5 +1,6 @@
 @use '../../styles/check-box' as check-box;
 @use '../../styles/focus' as focus;
+@use '../../styles/table-controls' as table-controls;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
 
@@ -441,30 +442,8 @@
   }
 
   .expand-btn,
-  .row-actions-btn,
-  .col-picker-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--space-6);
-    height: var(--space-6);
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-    color: var(--_table-icon-btn-color);
-    border-radius: var(--ds-radius-inner);
-    transition: color var(--duration-fast) var(--ease-standard);
-
-    &:hover {
-      color: var(--_table-icon-btn-color-hover);
-    }
-
-    &:focus-visible {
-      --focus-ring-color: var(--_table-icon-btn-focus-color);
-
-      @include focus.ring;
-    }
+  .row-actions-btn {
+    @include table-controls.header-icon-button;
   }
 
   /* Retunes the density tokens the resolvers already read, rather than setting
@@ -527,60 +506,8 @@
 
 }
 
-/* Column-picker panel — portaled into the popover overlay, styled via the
-   component's emulated-encapsulation attribute (not nested under .table). */
-.col-picker {
-  display: grid;
-  gap: var(--space-2);
-  min-width: 160px;
-}
-
-.col-picker-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-
-  &.cdk-drag-preview {
-    background-color: var(--surface-default);
-    border-radius: var(--ds-radius-inner);
-    box-shadow: var(--shadow-popover);
-    padding: var(--space-1) var(--space-2);
-  }
-
-  &.cdk-drag-placeholder {
-    opacity: 0.4;
-  }
-}
-
-.col-picker.cdk-drop-list-dragging .col-picker-row:not(.cdk-drag-placeholder) {
-  transition: transform var(--duration-fast) var(--ease-standard);
-}
-
-.col-drag {
-  display: inline-flex;
-  color: var(--icon-default);
-  cursor: grab;
-
-  &:active {
-    cursor: grabbing;
-  }
-}
-
-.col-picker-option {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex: 1;
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  color: var(--text-primary);
-  cursor: pointer;
-
-  &:has(input:disabled) {
-    color: var(--text-tertiary);
-    cursor: default;
-  }
-}
-
+/* The width buttons `dsTableResize` hands to the column panel through the row seam: declared
+   here, so they carry ds-table's attribute and are ds-table's to style wherever they render. */
 .col-width {
   display: inline-flex;
   gap: var(--space-1);
@@ -594,43 +521,12 @@
   font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
 }
 
-.col-move {
-  display: inline-flex;
-  gap: var(--space-1);
-}
-
-.col-width-btn,
-.col-move-btn {
-  display: inline-flex;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--icon-default);
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    color: var(--icon-strong);
-  }
-
-  &:disabled {
-    color: var(--text-disabled);
-    cursor: default;
-  }
+.col-width-btn {
+  @include table-controls.panel-icon-button;
 }
 
 .col-reset {
-  margin-top: var(--space-1);
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--accent);
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  cursor: pointer;
-  text-align: left;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  @include table-controls.panel-reset-link;
 }
 
 .col-filter-btn {
