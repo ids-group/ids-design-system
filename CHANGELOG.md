@@ -204,6 +204,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   available but never that it had appeared. The attribute is on every filter button now and reads
   `true` only on the column whose panel is showing.
 
+- **A `ds-table` bulk-action bar rests `--bulk-bar-offset` above the edge the reader can see.**
+  Inside a scroll container with bottom padding it floated that offset PLUS the padding above the
+  edge, because a sticky `bottom` resolves against the scrollport's content box — the same reason
+  the sticky horizontal scrollbar settled short. The table measures its scroll container's bottom
+  padding once and both subtract it, so the gap is the offset you set whatever the container's
+  padding is. Only a table with row selection inside a padded scroll container moves; the token
+  itself is unchanged.
+
 - **A panel re-opened straight after being dismissed can be closed again.** Dismissing an overlay
   disposes it only after its exit animation, so re-opening within that window let the OLD panel's
   disposal clear the state belonging to the NEW one: the component held no reference to the panel on
