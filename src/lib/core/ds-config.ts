@@ -107,11 +107,11 @@ export interface DsConfig {
     /** Default for `ds-table`'s `bordered` — the outer border and radius.
      *  Default `false`. */
     bordered?: boolean;
-    /** Default for `ds-table`'s `hscrollBottom` — where the sticky horizontal bar comes to rest,
-     *  as any CSS length. Unset, each table measures its own scroll container's bottom padding
-     *  and cancels it, which puts the bar on the edge the reader sees; set this for an app whose
-     *  scrollports end somewhere else, so every table agrees without a binding each. */
-    hscrollBottom?: string;
+    /** Default for `ds-table`'s `stickyScrollbarOffset` — where the sticky horizontal bar comes
+     *  to rest, as any CSS length. Unset, each table measures its own scroll container's bottom
+     *  padding and cancels it, which puts the bar on the edge the reader sees; set this for an app
+     *  whose scrollports end somewhere else, so every table agrees without a binding each. */
+    stickyScrollbarOffset?: string;
   };
   icon?: {
     /** Default pixel `size` for `ds-icon`. Default `16`. */

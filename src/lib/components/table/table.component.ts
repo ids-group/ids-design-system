@@ -345,13 +345,14 @@ export class TableComponent<T extends object> {
    *
    * Unset, the table measures its scroll container's bottom padding and cancels it, so the bar
    * sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its
-   * padding edge. Falls back to `DS_CONFIG.table.hscrollBottom`; `--ds-table-hscroll-bottom`
-   * still wins over both, for a rule that has to reach one table from a stylesheet.
+   * padding edge. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`;
+   * `--ds-table-sticky-scrollbar-offset` still wins over both, for a rule that has to reach one
+   * table from a stylesheet.
    */
-  readonly hscrollBottom = input<string | null>(null);
-  readonly hscrollBottomResolved = resolveWithConfig(
-    this.hscrollBottom,
-    (config) => config.table?.hscrollBottom,
+  readonly stickyScrollbarOffset = input<string | null>(null);
+  readonly stickyScrollbarOffsetResolved = resolveWithConfig(
+    this.stickyScrollbarOffset,
+    (config) => config.table?.stickyScrollbarOffset,
     null,
   );
 
@@ -1363,16 +1364,16 @@ export class TableComponent<T extends object> {
     }
 
     // Published as a custom property rather than bound on the proxy: the proxy is behind an
-    // `@if`, and the stylesheet has to be able to out-rank this with --ds-table-hscroll-bottom.
+    // `@if`, and the stylesheet must be able to out-rank it with --ds-table-sticky-scrollbar-offset.
     effect(() => {
       const host = this.hostElement.nativeElement;
-      const resolved = this.hscrollBottomResolved();
+      const resolved = this.stickyScrollbarOffsetResolved();
       if (resolved === null) {
-        host.style.removeProperty('--_table-hscroll-bottom');
+        host.style.removeProperty('--_table-sticky-scrollbar-offset');
 
         return;
       }
-      host.style.setProperty('--_table-hscroll-bottom', resolved);
+      host.style.setProperty('--_table-sticky-scrollbar-offset', resolved);
     });
 
     // Assigning an equal scrollLeft fires no scroll event, so the two mirrors
@@ -1402,7 +1403,7 @@ export class TableComponent<T extends object> {
         // it. Measured, not a token the consumer restates: the padding is the scroll container's
         // and can move with a media query.
         proxy.style.setProperty(
-          '--_table-hscroll-scroller-pad',
+          '--_table-scroller-pad-bottom',
           scroller ? getComputedStyle(scroller).paddingBottom : '0px',
         );
       };

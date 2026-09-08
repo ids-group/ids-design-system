@@ -6933,13 +6933,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The full value domain per column key, for a header filter the table cannot derive itself. Without it the checklist is built from the rows in hand, which on a server-paged table offers only the values that happen to be on the current page."
       },
       {
-        "name": "hscrollBottom",
+        "name": "stickyScrollbarOffset",
         "kind": "input",
         "type": "string | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its padding edge. Falls back to `DS_CONFIG.table.hscrollBottom`; `--ds-table-hscroll-bottom` still wins over both, for a rule that has to reach one table from a stylesheet."
+        "description": "Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its padding edge. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` still wins over both, for a rule that has to reach one table from a stylesheet."
       },
       {
         "name": "stickyFirstColumn",

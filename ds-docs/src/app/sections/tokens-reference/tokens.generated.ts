@@ -5941,9 +5941,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Table fill."
       },
       {
-        "name": "--ds-table-hscroll-bottom",
-        "value": "calc(-1 * var(--_table-hscroll-scroller-pad, 0px))",
-        "notes": "Offset of the sticky horizontal scrollbar from the scrollport edge. Unset, the table measures the scroll container's bottom padding and cancels it, so the bar rests on the edge the reader sees — set this only for a scrollport whose reachable edge is somewhere else."
+        "name": "--ds-table-sticky-scrollbar-offset",
+        "value": "var(\n      --_table-sticky-scrollbar-offset,\n      calc(-1 * var(--_table-scroller-pad-bottom, 0px))\n    )",
+        "notes": "Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader sees; set this for a scrollport whose reachable edge is somewhere else. Overrides `[stickyScrollbarOffset]` and `DS_CONFIG.table.stickyScrollbarOffset`."
       },
       {
         "name": "--ds-table-min-width",

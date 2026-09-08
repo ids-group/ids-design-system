@@ -135,14 +135,14 @@
 .hscroll-proxy {
   position: sticky;
 
-  /* Three layers, most specific first: the stylesheet hook, then `[hscrollBottom]` /
-     `DS_CONFIG.table.hscrollBottom` published as `--_table-hscroll-bottom`, then the padding the
-     .ts measured off the scroll ancestor and negates — see the note where it is written. */
+  /* Three layers, most specific first: the stylesheet hook, then `[stickyScrollbarOffset]` /
+     `DS_CONFIG.table.stickyScrollbarOffset` published as `--_table-sticky-scrollbar-offset`, then
+     the padding the .ts measured off the scroll ancestor and negates — see the note there. */
   bottom: var(
-    --ds-table-hscroll-bottom,
+    --ds-table-sticky-scrollbar-offset,
     var(
-      --_table-hscroll-bottom,
-      calc(-1 * var(--_table-hscroll-scroller-pad, 0px))
+      --_table-sticky-scrollbar-offset,
+      calc(-1 * var(--_table-scroller-pad-bottom, 0px))
     )
   );
   overflow: auto hidden;
