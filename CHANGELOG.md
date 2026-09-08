@@ -59,7 +59,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **Two classes gained members — only matters if you SUBCLASS one.** `TableComponent` gained
   `showsLoadingSpace`, which decides whether a table that is still loading and has no rows yet holds
   a body open instead of collapsing onto its header, and `publishHeadHeight`, which measures the
-  header and publishes its height for the scrim to inset against. `SidenavGroupComponent` gained the
+  header and publishes its height for the scrim to inset against, and `scrollAncestor`, which finds
+  the scrollport a sticky offset inside the table resolves against. `SidenavGroupComponent` gained the
   new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
   into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
   `private` and `protected` collide with TS2415 exactly as a public name does, so a member of yours
@@ -120,11 +121,32 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   as "this is finished, there is nothing to click", while the whole zone had stayed clickable the
   entire time. Nothing about what a click does has changed.
 
+- **`dsTableColumns` draws a styled panel and a styled header button.** The panel's checkboxes, drag
+  handles, move buttons and `Reset to default` link came out as the browser's own widgets and the
+  button that opens the panel as a bordered grey rectangle, because the rules for `.col-picker`,
+  `.col-picker-row`, `.col-picker-option`, `.col-drag`, `.col-move`, `.col-move-btn`, `.col-reset`
+  and `.col-picker-btn` were scoped to `ds-table` while the elements they name sit in views of their
+  own. Each of those classes is styled from the view that renders it now. Markup, class names and
+  API are unchanged, but a stylesheet of yours that reached one of them by a bare class name shared
+  the element with nothing and now competes with a scoped rule — qualify your selector, or reach for
+  the token the class reads.
+
+- **A `ds-table` sticky horizontal scrollbar rests on the edge the reader can see.** Inside a scroll
+  container with bottom padding the bar settled one padding-bottom short of that edge and drew over
+  the rows beneath it, because a sticky `bottom` resolves against the scrollport's content box. The
+  table measures that padding off its scroll ancestor, cancels it, and re-measures when the
+  container resizes, so a padding that moves with a media query moves the bar with it.
+  `--ds-table-hscroll-bottom` still overrides the measurement outright — keep it for a scrollport
+  whose reachable edge is not its padding edge, and drop a negative value written to cancel your own
+  container's padding, which now offsets the bar a second time
+  (delete list: table-hscroll-bottom-workaround).
+
 ### What you can now DELETE
 
 | your workaround | why it is unnecessary | replace with |
 | --- | --- | --- |
 | `ds-table .check` — a margin or `transform` nudging the selection box off the text baseline | the box is centred against the line box now, so the nudge is an offset of its own | nothing |
+| `--ds-table-hscroll-bottom: -` — a negative offset equal to your scroll container's bottom padding | the table measures that padding and cancels it itself, so the value offsets the sticky scrollbar a second time | nothing |
 
 ## 0.12.1 — 2026-09-05
 
