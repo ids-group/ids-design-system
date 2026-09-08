@@ -340,6 +340,21 @@ export class TableComponent<T extends object> {
     (config) => config.table?.stickyScrollbar,
     false,
   );
+  /**
+   * Where the sticky horizontal scrollbar comes to rest, as any CSS length.
+   *
+   * Unset, the table measures its scroll container's bottom padding and cancels it, so the bar
+   * sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its
+   * padding edge. Falls back to `DS_CONFIG.table.hscrollBottom`; `--ds-table-hscroll-bottom`
+   * still wins over both, for a rule that has to reach one table from a stylesheet.
+   */
+  readonly hscrollBottom = input<string | null>(null);
+  readonly hscrollBottomResolved = resolveWithConfig(
+    this.hscrollBottom,
+    (config) => config.table?.hscrollBottom,
+    null,
+  );
+
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
 
@@ -1346,6 +1361,19 @@ export class TableComponent<T extends object> {
           : null,
       );
     }
+
+    // Published as a custom property rather than bound on the proxy: the proxy is behind an
+    // `@if`, and the stylesheet has to be able to out-rank this with --ds-table-hscroll-bottom.
+    effect(() => {
+      const host = this.hostElement.nativeElement;
+      const resolved = this.hscrollBottomResolved();
+      if (resolved === null) {
+        host.style.removeProperty('--_table-hscroll-bottom');
+
+        return;
+      }
+      host.style.setProperty('--_table-hscroll-bottom', resolved);
+    });
 
     // Assigning an equal scrollLeft fires no scroll event, so the two mirrors
     // can't loop.

@@ -1584,6 +1584,24 @@
     fixed column widths force the overflow here.
   </p>
 
+  <p class="block-desc t-s">
+    The bar rests on the edge the reader can see: the table measures its scroll
+    container's bottom padding and cancels it, because a sticky offset otherwise
+    resolves against the scrollport's content box and settles that far short.
+    For a scrollport whose reachable edge is somewhere else, set
+    <code class="t-mono-inline">
+      [hscrollBottom]
+    </code> on the table or
+    <code class="t-mono-inline">
+      DS_CONFIG.table.hscrollBottom
+    </code> for every table
+    at once; the
+    <code class="t-mono-inline">
+      --ds-table-hscroll-bottom
+    </code> hook still
+    out-ranks both.
+  </p>
+
   <ds-table
     caption="Records"
     [data]="longList"
