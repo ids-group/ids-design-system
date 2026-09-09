@@ -1,7 +1,8 @@
 <docs-section
   anchor="table"
   eyebrow="Components"
-  title="Table">
+  title="Table"
+  [chapters]="true">
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -230,7 +231,9 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
+  <h3
+    class="block-title t-h4"
+    data-nav="Naming cell">
     The cell that names what the row opens
   </h3>
 
@@ -273,7 +276,9 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
+  <h3
+    class="block-title t-h4"
+    data-nav="Link cell">
     A cell that IS a link — the accessible way to say a row leads somewhere
   </h3>
 
@@ -1448,7 +1453,9 @@
     buttons show on desktop too; there the handle stays the primary way.
   </p>
 
-  <h3 class="block-title t-h4">
+  <h3
+    class="block-title t-h4"
+    data-nav="Toolbar slot">
     Toolbar slot · the export button anywhere
   </h3>
 
@@ -1566,7 +1573,9 @@
     [data]="projectRows"
     [columns]="fitColumns" />
 
-  <h3 class="block-title t-h4">
+  <h3
+    class="block-title t-h4"
+    data-nav="Server sort">
     Server sort · a host that answers with its own default
   </h3>
 
@@ -1607,7 +1616,9 @@
     [sortDir]="serverSortDir()"
     (sortChange)="onServerSort($event)" />
 
-  <h3 class="block-title t-h4">
+  <h3
+    class="block-title t-h4"
+    data-nav="Two-way sort">
     The same thing two-way, when the host has no opinion to defend
   </h3>
 
@@ -1825,7 +1836,9 @@
     </ng-template>
   </ds-table>
 
-  <h3 class="block-title t-h4">
+  <h3
+    class="block-title t-h4"
+    data-nav="Server filtering">
     Server-side filtering, and a filter of your own
   </h3>
 

@@ -42,6 +42,11 @@ export class DocsSectionComponent {
   /** Service class names to append beyond the ones this section's own folder
    *  declares — for a service whose folder is no section's anchor. */
   readonly serviceKeys = input<readonly string[] | null>(null);
+  /** Lists this section's `h3` chapters under its nav item. Off by default: a group page mounts
+   *  every section it holds, so switching it on everywhere put 70 chapters in a 264px rail at
+   *  once. Worth it only for a section too long to scroll — `ds-table` carries 38 against the
+   *  next one's 14. */
+  readonly chapters = input(false, { transform: booleanAttribute });
 
   /** The anchor's own component, shown under the title + as the first table. */
   protected readonly primaryKey = computed(() => {
@@ -73,36 +78,44 @@ export class DocsSectionComponent {
     return keys;
   });
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly chapters = inject(SectionChaptersService);
+  private readonly chapterRegistry = inject(SectionChaptersService);
 
   constructor() {
     // After render, not from a lifecycle hook: the chapters are projected content, so they exist
     // only once this view has been stamped out.
     afterNextRender(() => {
+      if (!this.chapters()) {
+        return;
+      }
       const anchor = this.anchor();
       const headings = Array.from(
         this.host.nativeElement.querySelectorAll<HTMLElement>('h3.block-title'),
       );
       const seen = new Set<string>();
       const found = headings.map((heading) => {
-        const label = (heading.textContent ?? '').trim();
-        let slug = chapterSlug(label);
+        const headingText = (heading.textContent ?? '').trim();
+        // A heading written as a sentence reads well on the page and truncates to nothing in the
+        // 264px rail, so it may carry the short form the nav should use instead.
+        const label = heading.dataset['nav']?.trim() || headingText;
+        let slug = chapterSlug(headingText);
         // Two chapters can reduce to one slug; the fragment has to stay unique to be navigable.
         if (seen.has(slug)) {
-          let n = 2;
-          while (seen.has(`${slug}-${n}`)) {
-            n += 1;
+          let suffix = 2;
+          while (seen.has(`${slug}-${suffix}`)) {
+            suffix += 1;
           }
-          slug = `${slug}-${n}`;
+          slug = `${slug}-${suffix}`;
         }
         seen.add(slug);
         heading.id = slug;
 
-        return { slug, label, heading };
+        return { slug, label, headingText, heading };
       });
-      this.chapters.publish(anchor, found);
+      this.chapterRegistry.publish(anchor, found);
     });
-    inject(DestroyRef).onDestroy(() => this.chapters.withdraw(this.anchor()));
+    inject(DestroyRef).onDestroy(() =>
+      this.chapterRegistry.withdraw(this.anchor()),
+    );
   }
 
   protected readonly serviceNames = computed(() => {

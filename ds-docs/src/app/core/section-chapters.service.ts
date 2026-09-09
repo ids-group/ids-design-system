@@ -3,7 +3,10 @@ import { Injectable, signal } from '@angular/core';
 export interface SectionChapter {
   /** `id` given to the heading, and the URL fragment that reaches it. */
   slug: string;
+  /** What the nav shows — the heading's own `data-nav`, else its text. */
   label: string;
+  /** The heading as written on the page, for the hover title. */
+  headingText: string;
   heading: HTMLElement;
 }
 
