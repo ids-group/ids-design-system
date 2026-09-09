@@ -219,6 +219,25 @@
       "detect": [
         "--ds-table-hscroll-bottom"
       ]
+    },
+    {
+      "id": "table-expand-panel-inner-wrapper",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-table .expand-panel-cell",
+      "new": null,
+      "action": "Re-point a rule that selected the expanded row’s content as a direct child of `.expand-panel-cell` at `.expand-panel-inner`, or drop the child combinator.",
+      "appliesWhen": "Only a stylesheet of yours that reaches inside the expanded row of a `ds-table` with a child combinator. A rule using a descendant selector already matches through the new wrapper and needs nothing, and nothing changes for the template you project — its own root element is untouched.",
+      "pitfall": "The selector simply stops matching: the panel keeps the library’s own layout and your rule is silently inert. No build error, and the row still opens, so the difference is only visible in the expanded content’s own spacing or width.",
+      "note": "The expanded row now animates open by interpolating its cell’s `grid-template-rows` from `0fr` to `1fr`, which a height of `auto` cannot do. A grid track can only clip one child, so the projected template is wrapped in `.expand-panel-inner`, which carries the `overflow: hidden` the reveal needs. That wrapper is the only structural change; class names on the cell itself are unchanged.",
+      "verify": "Every rule that styled the expanded row’s content matches an element again — inspect an open row and confirm your declarations appear on it rather than being overridden or absent.",
+      "searchHints": [
+        "expand-panel-cell",
+        "expand-panel",
+        "expandTemplate",
+        "rowExpandable"
+      ],
+      "restore": null
     }
   ],
   "informational": [
@@ -235,7 +254,8 @@
     "A `ds-table` column filter opens on the first click; the first click used to only build the panel. Nothing to change — `filterMode`, `filter: 'set'` and a projected `dsHeaderFilter` all keep their behaviour, and a table with no filterable column renders no panel at all.",
     "A `ds-table` column filter button now carries `aria-expanded` beside its `aria-haspopup=\"dialog\"`, true only on the column whose panel is showing. Nothing to change unless a test of yours asserts the attribute's absence.",
     "A panel re-opened inside the exit animation of a dismissed one can be closed again: the old panel's disposal no longer clears the state of the one that replaced it, which used to leave a panel that neither Escape nor an outside click would dismiss and that reported itself collapsed. Reaches `ds-date-picker`, `ds-color-picker`, `ds-time-picker` and everything `ds-popover` carries — `ds-table`'s filter, row menu and clipped-cell text, `ds-split-button`, `ds-filter-bar`'s overflow panel, `ds-sidenav-footer`'s search. `ds-select`, `ds-autocomplete` and `ds-multi-select` behave exactly as before.",
-    "A `ds-table` bulk-action bar now rests `--bulk-bar-offset` above the scroll container's visible bottom edge rather than that offset plus the container's padding. Nothing to change, and `--bulk-bar-offset` keeps its meaning and its default; only a table with row selection inside a padded scroll container looks different."
+    "A `ds-table` bulk-action bar now rests `--bulk-bar-offset` above the scroll container's visible bottom edge rather than that offset plus the container's padding. Nothing to change, and `--bulk-bar-offset` keeps its meaning and its default; only a table with row selection inside a padded scroll container looks different.",
+    "An expanded `ds-table` row opens with a reveal — its cell interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base` at `--ease-standard`, and `prefers-reduced-motion: reduce` shows the panel fully open with no animation. Retune it through those two tokens. The one structural change, a `.expand-panel-inner` wrapper inside the cell, is an item of its own."
   ],
   "deleteList": [
     {

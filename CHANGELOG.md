@@ -37,9 +37,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   It takes the same shapes a router link takes anywhere, a string or a command array. **It does
   nothing without `expandable`** — a group that cannot open has no caret to split off, so the header
   stays a plain label and the link is ignored with nothing said. On a group that does opt in, the
-  header element changes from a `button` to an `a` and gains a `.group-header-row` wrapper beside a
-  `.group-caret-button`; a stylesheet of yours reaching `.group-header` by class still lands, one
-  that qualifies it with `button` does not.
+  header element changes from a `button` to an `a` — the active state above is a contextual `.active`
+  class it carries — and gains a `.group-header-row` wrapper beside a `.group-caret-button`, with
+  `.group-caret` now sitting inside that button rather than directly in the header; a stylesheet of
+  yours reaching `.group-header` by class still lands, one that qualifies it with `button` does
+  not.
 
 - **`ds-table` takes `[stickyScrollbarOffset]`, and `DS_CONFIG.table.stickyScrollbarOffset` sets it
   for every table.** Where the sticky horizontal scrollbar comes to rest, as any CSS length.
@@ -58,6 +60,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   ```
 
 ### Changed
+
+- **An expanded `ds-table` row opens with a reveal instead of appearing at full height.** The
+  panel's cell animates its `grid-template-rows` from `0fr` to `1fr`, and a new
+  `.expand-panel-inner` wrapper between the cell and your projected expand template clips the
+  overflow so the content wipes into place rather than snapping open. The reveal runs over
+  `--duration-base` at `--ease-standard`; set those to retune its speed and curve. Under
+  `prefers-reduced-motion: reduce` the panel appears fully open with no reveal. Because that
+  wrapper now sits between the `<td>` and the projected template, a rule of yours that reached the
+  template as a direct child of the cell no longer matches — reach it through `.expand-panel-inner`,
+  or drop the child combinator.
 
 - **The skeleton shimmer reads as a wave now, not a wash.** It travels diagonally, down and to the
   right at 45°, so it arrives at the top of one placeholder and the bottom of another instead of
@@ -146,8 +158,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **The `ds-table` selection checkbox stops twitching when the mark changes.** The box sat on the
   text baseline, so the header row's height moved by a fraction of a pixel as the select-all box
   swapped between its tick and its indeterminate bar. It is centred against the line box now. This
-  reaches the table's header and row checkboxes; `ds-checkbox` itself lays the box out as a flex
-  item and never showed it. A `::ng-deep` nudge you added to compensate for the old sit is now that
+  reaches the table's header and row checkboxes and the `dsTableColumns` panel's per-column
+  checkboxes; `ds-checkbox` itself lays the box out as a flex item and never showed it. A `::ng-deep` nudge you added to compensate for the old sit is now that
   much out.
 
 - **`ds-date-picker`'s calendar glyph matches the value it sits beside.** It rendered two pixels
