@@ -106,6 +106,10 @@
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
+
+  /* The element follows the destination, so this class also dresses an `<a href>`, which the UA
+     underlines. `.v-text` puts the underline back deliberately, after this. */
+  text-decoration: none;
   position: relative;
   box-shadow: var(--_button-shadow);
   transition:

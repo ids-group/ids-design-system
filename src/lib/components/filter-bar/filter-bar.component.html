@@ -18,7 +18,7 @@
       icon="filter"
       [size]="triggerSize()"
       [ariaExpanded]="more.opened()"
-      (pressed)="more.toggle(moreTrigger.buttonRef().nativeElement)">
+      (pressed)="more.toggle(moreTrigger.controlRef().nativeElement)">
       +{{ collapsed().length }} {{ moreLabel() }}
     </ds-button>
 

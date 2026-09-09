@@ -10,8 +10,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import { dsDestination } from '@ids-group-ltd/ids-design-system/components';
 import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
@@ -59,7 +62,13 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
 @Component({
   selector: 'ds-button',
   standalone: true,
-  imports: [IconComponent, FieldMessageComponent],
+  imports: [
+    IconComponent,
+    FieldMessageComponent,
+    NgTemplateOutlet,
+    RouterLink,
+    RouterLinkActive,
+  ],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -96,11 +105,21 @@ export class ButtonComponent extends DsMessageBase {
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. */
+  /** Angular `RouterLink` target — string or array form for dynamic segments. Set it and the button
+   *  renders an `<a [routerLink]>` that also takes `routerLinkActive`, because a control that
+   *  navigates must be a link: middle-click, open-in-new-tab, copy-link-address and the "link" role
+   *  a screen reader announces all depend on the element, not on the look. */
+  readonly routerLink = input<string | readonly unknown[] | null>(null);
+  /** Plain `href` target, used when `routerLink` is not set — an external address or a download.
+   *  Renders an `<a href>`; same reasoning as `routerLink`. */
+  readonly href = input<string>('');
+  /** Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident.
+   *  Button-only — an anchor has no form to submit, so it is ignored with a dev-mode warning. */
   readonly type = input<ButtonType>('button');
   /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Busy state — disables interaction and sets `aria-busy`. */
+  /** Busy state — disables interaction and sets `aria-busy`. Button-only: a navigation cannot be
+   *  in flight before it starts, so on an anchor it is ignored with a dev-mode warning. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Stretch the button to fill its container — the host becomes block-level
       and 100% wide (the inner control is already full-width). Use for mobile
@@ -144,10 +163,14 @@ export class ButtonComponent extends DsMessageBase {
   /** Fires on click, unless `disabled` or `loading`. */
   readonly pressed = output<MouseEvent>();
 
-  /** The inner native <button>, exposed so overlay triggers can position
-   *  against and restore focus to the real focusable element — e.g.
-   *  `(pressed)="pop.toggle(trigger.buttonRef().nativeElement)"`. */
-  readonly buttonRef = viewChild.required<ElementRef<HTMLButtonElement>>('btn');
+  /** The inner control, exposed so overlay triggers can position against and restore focus to the
+   *  real focusable element — e.g.
+   *  `(pressed)="pop.toggle(trigger.controlRef().nativeElement)"`. Typed `HTMLElement` because the
+   *  element follows the destination: a `<button>`, or an `<a>` when `routerLink` or `href` is set. */
+  readonly controlRef = viewChild.required<ElementRef<HTMLElement>>('btn');
+
+  /** Which element this button renders — `routerLink`, `href` or neither. */
+  protected readonly destination = dsDestination(this.routerLink, this.href);
 
   protected readonly classes = computed(() => {
     const color = this.color();
@@ -203,6 +226,14 @@ export class ButtonComponent extends DsMessageBase {
         if (variant === 'text') {
           return '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.';
         }
+        if (this.destination() !== 'button') {
+          if (this.loading()) {
+            return '[ds-button] `loading` is ignored on a link-button — a navigation cannot be in flight before it starts. Remove it, or drop the destination and emit `(pressed)` instead.';
+          }
+          if (this.type() !== 'button') {
+            return `[ds-button] type="${this.type()}" is ignored on a link-button — an anchor has no form to submit. Drop the destination to submit a form.`;
+          }
+        }
         const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
 
         return reason
@@ -216,6 +247,13 @@ export class ButtonComponent extends DsMessageBase {
     // A soft-disabled button is only `aria-disabled`, so the browser still
     // dispatches the click — this is what stops it.
     if (this.disabled() || this.loading()) {
+      // An `<a href>` navigates on its own, and `aria-disabled` is a label rather than a
+      // behaviour: without this a disabled link-button still leaves the page. The routerLink
+      // branch binds `null` instead, which is what stops that one.
+      if (this.destination() === 'href') {
+        event.preventDefault();
+      }
+
       return;
     }
     this.pressed.emit(event);
