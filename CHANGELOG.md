@@ -37,8 +37,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   It takes the same shapes a router link takes anywhere, a string or a command array. **It does
   nothing without `expandable`** — a group that cannot open has no caret to split off, so the header
   stays a plain label and the link is ignored with nothing said. On a group that does opt in, the
-  header element changes from a `button` to an `a` — the active state above is a contextual `.active`
-  class it carries — and gains a `.group-header-row` wrapper beside a `.group-caret-button`, with
+  header element changes from a `button` to an `a` — the active state above is a contextual
+  `.active` class it carries — and gains a `.group-header-row` wrapper beside a
+  `.group-caret-button`, with
   `.group-caret` now sitting inside that button rather than directly in the header; a stylesheet of
   yours reaching `.group-header` by class still lands, one that qualifies it with `button` does
   not.
@@ -159,8 +160,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   text baseline, so the header row's height moved by a fraction of a pixel as the select-all box
   swapped between its tick and its indeterminate bar. It is centred against the line box now. This
   reaches the table's header and row checkboxes and the `dsTableColumns` panel's per-column
-  checkboxes; `ds-checkbox` itself lays the box out as a flex item and never showed it. A `::ng-deep` nudge you added to compensate for the old sit is now that
-  much out.
+  checkboxes; `ds-checkbox` itself lays the box out as a flex item and never showed it. A
+  `::ng-deep` nudge you added to compensate for the old sit is now that much out.
 
 - **`ds-date-picker`'s calendar glyph matches the value it sits beside.** It rendered two pixels
   taller than the digits' cap height and overhung them top and bottom.
