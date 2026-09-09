@@ -1,96 +1,20 @@
-<!-- @dsCard group="data-display" viewport="1200x409" name="Avatars - sizes" --><!doctype html>
+<!-- @dsCard group="data-display" viewport="1200x407" name="Avatars - sizes" --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Avatar</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-avatar></ds-docs-components-avatar></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "avatar";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "sizes";
-      var REACT = "Avatar";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-avatar");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-avatar _nghost-c2i=""><docs-section _ngcontent-c2i="" anchor="avatar" eyebrow="Components" title="Avatars" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-avatar" data-anchor="avatar"><h2 _ngcontent-c1="" class="t-h2">Avatars - sizes<docs-truncation _ngcontent-c2i="" _nghost-c2=""><button _ngcontent-c2="" type="button" aria-label="Truncation rules" class="i"><ds-icon _ngcontent-c2="" name="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button><div _ngcontent-c2="" role="tooltip" class="panel"><div _ngcontent-c2="" class="panel-title"><ds-icon _ngcontent-c2="" name="filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 13px;" width="13" height="13" stroke-width="1.75" aria-hidden="true"><path d="M3 5h18l-7 9v6l-4-2v-4z"></path></svg></ds-icon> Truncation </div><ul _ngcontent-c2="" class="list"><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Initials fallback </span><span _ngcontent-c2="" class="behaviour"> 2 chars max — no clip. Generated from first + last name. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Adjacent name label </span><span _ngcontent-c2="" class="behaviour"> Single line, ellipsis. Tooltip on hover with full name. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> +N overflow </span><span _ngcontent-c2="" class="behaviour"> Numeric only — no clip. Hidden member names are not surfaced by the component. </span></li></ul></div></docs-truncation></h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="avatar"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Avatar /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c2i="" lede=""> Initials and image avatars in four sizes, plus stacked groups with overflow. </span></p><div _ngcontent-c2i="" class="row"><ds-avatar _ngcontent-c2i="" size="xs" initials="AB" _nghost-c1x="" aria-hidden="true" class="xs"> AB
+</ds-avatar><ds-avatar _ngcontent-c2i="" size="sm" initials="AB" _nghost-c1x="" aria-hidden="true" class="sm"> AB
+</ds-avatar><ds-avatar _ngcontent-c2i="" size="md" initials="AB" _nghost-c1x="" aria-hidden="true"> AB
+</ds-avatar><ds-avatar _ngcontent-c2i="" size="lg" initials="AB" _nghost-c1x="" aria-hidden="true" class="lg"> AB
+</ds-avatar></div><docs-api-table _ngcontent-c1="" _nghost-c9="" data-key="avatar"><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Inputs <span _ngcontent-c9="" class="count">11</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Default </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> size </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="uni"><code _ngcontent-c9="" class="mono chip"> xs </code><code _ngcontent-c9="" class="mono chip"> sm </code><code _ngcontent-c9="" class="mono chip"> md </code><code _ngcontent-c9="" class="mono chip"> lg </code></span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 'md' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Diameter — xs/sm/lg apply a size class; md is the default. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> initials </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Fallback text shown when there's no `imageUrl`. Wins over anything derived from `name`, so a caller that already has the letters keeps passing them. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> name </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> The person or thing this avatar stands for — one binding drives both the initials and the seed the tint hashes. The tint keys on the NAME, never on the initials — two letters collide wholesale, so every Alice Brown and Adam Bell would share one colour. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> initialsRule </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> ((name: string) =&gt; string) | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Replaces the built-in rule for turning `name` into initials, for one avatar or one table of them. Falls back to `DS_CONFIG.avatar.initials`, then to `initialsFrom` — first two words, a Latin-script guess the library does not pretend is universal. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> imageUrl </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Image source; shown before `initials` or `fallbackIcon` when set. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> ariaLabel </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Accessible name. When omitted, the avatar is treated as decorative (hidden from AT) — correct when a visible name sits beside it. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> tint </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> { bg: string; fg: string } | 'neutral' | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Off-token color tint. Accepts a `{ bg, fg }` pair for arbitrary palettes, the literal `'neutral'` for the neutral overflow-chip treatment, or null for the default brand-subtle tones from avatar.scss. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> status </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="uni"><code _ngcontent-c9="" class="mono chip"> online </code><code _ngcontent-c9="" class="mono chip"> offline </code><code _ngcontent-c9="" class="mono chip"> away </code><code _ngcontent-c9="" class="mono chip"> busy </code></span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Presence indicator shown as a colored dot in the bottom-right corner. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> fallbackIcon </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> IconName | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Icon rendered when there is no imageUrl and no initials. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> seed </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Seed for a deterministic tint (e.g. an email) used when no explicit `tint` is set — the same seed always yields the same colour. Defaults to `name`; set it explicitly when identity is an id or an email rather than the display name. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> avoidHues </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> readonly (readonly [number, number])[] </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> [] </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Hue arcs `[start, end]` (0–360°) the seeded tint must avoid, e.g. a brand hue: `[[310, 360], [0, 20]]`. Only applies when `seed` drives the tint. </span></td></tr></tbody></table></div></details></docs-api-table></section></docs-section></ds-docs-components-avatar></div>
+  
+  
+  
+
+
 </body></html>

@@ -1,96 +1,16 @@
-<!-- @dsCard group="navigation" viewport="1200x700" name="Tabs - variants" subtitle="Line — primary navigation." --><!doctype html>
+<!-- @dsCard group="navigation" viewport="1200x700" name="Tabs - variants" subtitle="Line — primary navigation." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Tabs</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-tabs></ds-docs-components-tabs></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "tabs";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "variants";
-      var REACT = "Tabs";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-tabs");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-tabs _nghost-c2b=""><docs-section _ngcontent-c2b="" anchor="tabs" eyebrow="Components" title="Tabs" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-tabs" data-anchor="tabs"><h2 _ngcontent-c1="" class="t-h2">Tabs - variants<docs-truncation _ngcontent-c2b="" _nghost-c2=""><button _ngcontent-c2="" type="button" aria-label="Truncation rules" class="i"><ds-icon _ngcontent-c2="" name="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button><div _ngcontent-c2="" role="tooltip" class="panel"><div _ngcontent-c2="" class="panel-title"><ds-icon _ngcontent-c2="" name="filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 13px;" width="13" height="13" stroke-width="1.75" aria-hidden="true"><path d="M3 5h18l-7 9v6l-4-2v-4z"></path></svg></ds-icon> Truncation </div><ul _ngcontent-c2="" class="list"><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Tab label </span><span _ngcontent-c2="" class="behaviour"> Single line, no clip — labels are short. Tooltip on hover if forced clip. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Badge count </span><span _ngcontent-c2="" class="behaviour"> Numeric only — no clip. </span></li></ul></div></docs-truncation></h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="tabs"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Tabs /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c2b="" lede=""> Switch among peer panels. Two visual variants — line for primary navigation, pills for compact filters. Optional icon and count chip per tab. </span></p><p _ngcontent-c2b="" class="block-desc t-s"> Line — primary navigation. Pills — compact filter row. Pills look like a <code _ngcontent-c2b="" class="t-mono-inline"> ds-segmented </code> control but are real tabs (they own content panels, with <code _ngcontent-c2b="" class="t-mono-inline">tablist</code> semantics); for a value/view toggle with no panels, use <code _ngcontent-c2b="" class="t-mono-inline"> ds-segmented </code> instead. </p><div _ngcontent-c2b="" class="variant-row"><div _ngcontent-c2b="" class="variant-row-label t-overline"> Line </div><ds-tabs _ngcontent-c2b="" class="variant-row-stage" _nghost-c2c=""><div _ngcontent-c2c="" role="tablist" class="tabs" aria-orientation="horizontal"><button _ngcontent-c2c="" type="button" role="tab" class="active tab" id="ds-tabs-1-tab-0" aria-selected="true" aria-controls="ds-tabs-1-panel-0" tabindex="0"><span _ngcontent-c2c=""> Overview </span></button><button _ngcontent-c2c="" type="button" role="tab" class="tab" id="ds-tabs-1-tab-1" aria-selected="false" aria-controls="ds-tabs-1-panel-1" tabindex="-1"><span _ngcontent-c2c=""> Sub-records </span></button><button _ngcontent-c2c="" type="button" role="tab" class="tab" id="ds-tabs-1-tab-2" aria-selected="false" aria-controls="ds-tabs-1-panel-2" tabindex="-1"><span _ngcontent-c2c=""> Resource allocation </span></button><button _ngcontent-c2c="" type="button" role="tab" class="tab" id="ds-tabs-1-tab-3" aria-selected="false" aria-controls="ds-tabs-1-panel-3" tabindex="-1"><span _ngcontent-c2c=""> Activity </span></button></div><div _ngcontent-c2c="" role="tabpanel" tabindex="0" class="panel" id="ds-tabs-1-panel-0" aria-labelledby="ds-tabs-1-tab-0"><p _ngcontent-c2b="" class="t-s muted pad"> Project at a glance. </p></div></ds-tabs></div><div _ngcontent-c2b="" class="variant-row"><div _ngcontent-c2b="" class="variant-row-label t-overline"> Pills </div><ds-tabs _ngcontent-c2b="" variant="pills" class="variant-row-stage" _nghost-c2c=""><div _ngcontent-c2c="" role="tablist" class="pills tabs" aria-orientation="horizontal"><button _ngcontent-c2c="" type="button" role="tab" class="active tab" id="ds-tabs-2-tab-0" aria-selected="true" aria-controls="ds-tabs-2-panel-0" tabindex="0"><span _ngcontent-c2c=""> All </span></button><button _ngcontent-c2c="" type="button" role="tab" class="tab" id="ds-tabs-2-tab-1" aria-selected="false" aria-controls="ds-tabs-2-panel-1" tabindex="-1"><span _ngcontent-c2c=""> Active </span></button><button _ngcontent-c2c="" type="button" role="tab" class="tab" id="ds-tabs-2-tab-2" aria-selected="false" aria-controls="ds-tabs-2-panel-2" tabindex="-1"><span _ngcontent-c2c=""> Planning </span></button><button _ngcontent-c2c="" type="button" role="tab" class="tab" id="ds-tabs-2-tab-3" aria-selected="false" aria-controls="ds-tabs-2-panel-3" tabindex="-1"><span _ngcontent-c2c=""> Completed </span></button></div><div _ngcontent-c2c="" role="tabpanel" tabindex="0" class="panel" id="ds-tabs-2-panel-0" aria-labelledby="ds-tabs-2-tab-0"><p _ngcontent-c2b="" class="t-s muted pad"> All records. </p></div></ds-tabs></div><docs-api-table _ngcontent-c1="" _nghost-c9="" data-key="tabs"><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Inputs <span _ngcontent-c9="" class="count">8</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Default </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> selectedIndex </span><span _ngcontent-c9="" class="tag"> two-way </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> number </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 0 </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Index of the active tab, two-way bound. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> variant </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="uni"><code _ngcontent-c9="" class="mono chip"> line </code><code _ngcontent-c9="" class="mono chip"> pills </code></span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 'line' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Visual style of the tab strip. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> lazy </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> When true, a tab's content is instantiated only on first activation and kept alive thereafter. When false (default), all panels render eagerly. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> scrollable </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> When true, the tab strip scrolls horizontally instead of wrapping. The active tab is scrolled into view on selection. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> closable </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> When true, each tab shows a close button. Clicking it emits tabClosed with the tab's value (or label as fallback) and does not switch to that tab. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> orientation </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="uni"><code _ngcontent-c9="" class="mono chip"> horizontal </code><code _ngcontent-c9="" class="mono chip"> vertical </code></span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 'horizontal' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Controls whether the tab list and panel are stacked horizontally (default) or the tab list runs vertically beside the panel. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> urlParam </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam="tab"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert. Nothing router-shaped is even resolved until you set it — no DI lookup and, more to the point, no subscription — so a strip that never uses this costs exactly what it did before the input existed. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> rememberLastTab </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default, and needs `urlParam` for the names — a remembered INDEX would repoint the moment a tab is inserted. A link always wins: the parameter is read first, memory only fills the gap the first tab leaves in the URL. Session, not local, so tomorrow is a fresh visit. </span></td></tr></tbody></table></div></details><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Outputs <span _ngcontent-c9="" class="count">1</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Emits </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> tabClosed </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> string </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> event </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Emitted when a close button is clicked. Carries the tab's value input, or its label when value is not set. The host is responsible for removing the tab from its list. </span></td></tr></tbody></table></div></details></docs-api-table></section></docs-section></ds-docs-components-tabs></div>
+  
+  
+  
+
+
 </body></html>

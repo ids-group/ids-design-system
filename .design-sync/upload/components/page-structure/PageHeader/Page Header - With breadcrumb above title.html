@@ -1,96 +1,16 @@
-<!-- @dsCard group="page-structure" viewport="1200x519" name="Page header - with breadcrumb above title" subtitle="Full hierarchy demo — breadcrumb trail, eyebrow, title, lede, primary action." --><!doctype html>
+<!-- @dsCard group="page-structure" viewport="1200x519" name="Page header - with breadcrumb above title" subtitle="Full hierarchy demo — breadcrumb trail, eyebrow, title, lede, primary action." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>PageHeader</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-page-header></ds-docs-components-page-header></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 2;
-      var KEY = "page-header";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "with breadcrumb above title";
-      var REACT = "PageHeader";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-page-header");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-page-header _nghost-c3p=""><docs-section _ngcontent-c3p="" anchor="page-header" eyebrow="Components" title="Page header" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-page-header" data-anchor="page-header"><h2 _ngcontent-c1="" class="t-h2">Page header - with breadcrumb above title<docs-truncation _ngcontent-c3p="" _nghost-c2=""><button _ngcontent-c2="" type="button" aria-label="Truncation rules" class="i"><ds-icon _ngcontent-c2="" name="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button><div _ngcontent-c2="" role="tooltip" class="panel"><div _ngcontent-c2="" class="panel-title"><ds-icon _ngcontent-c2="" name="filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 13px;" width="13" height="13" stroke-width="1.75" aria-hidden="true"><path d="M3 5h18l-7 9v6l-4-2v-4z"></path></svg></ds-icon> Truncation </div><ul _ngcontent-c2="" class="list"><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Title </span><span _ngcontent-c2="" class="behaviour"> Single line, ellipsis. Tooltip on hover when clipped — the title carries identity. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Subtitle / lede </span><span _ngcontent-c2="" class="behaviour"> Single line, ellipsis. Tooltip on hover when clipped. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Eyebrow </span><span _ngcontent-c2="" class="behaviour"> Single line, no clip — keep eyebrow short by spec. Wraps if forced. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Breadcrumb segment </span><span _ngcontent-c2="" class="behaviour"> Single line, ellipsis at ~24 ch per segment. Middle segments collapse to … before the leaf clips. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Status badge </span><span _ngcontent-c2="" class="behaviour"> Single line, no clip — status labels are short by spec. Max one badge per header. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Action buttons </span><span _ngcontent-c2="" class="behaviour"> Single line, no clip. Beyond two ghost + one primary actions, collapse the rest into an overflow menu. </span></li></ul></div></docs-truncation></h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="page-header"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;PageHeader /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c3p="" class="block-desc t-s"> Full hierarchy demo — breadcrumb trail, eyebrow, title, lede, primary action. </p><div _ngcontent-c3p="" class="stage"><ds-page-header _ngcontent-c3p="" eyebrow="Record · 2026 Cycle" title="Project Alpha" subtitle="30 Apr – 3 May · North Site · 4 sub-records" _nghost-c3q=""><header _ngcontent-c3q="" class="page-header"><ds-breadcrumbs _ngcontent-c3p="" breadcrumbs="" _nghost-c23=""><nav _ngcontent-c23="" aria-label="Breadcrumb" class="breadcrumbs"><a _ngcontent-c23="" href="#"><ds-icon _ngcontent-c23=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></ds-icon></a><span _ngcontent-c23="" aria-hidden="true" class="sep"><ds-icon _ngcontent-c23=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 12px;" width="12" height="12" stroke-width="1.75" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg></ds-icon></span><a _ngcontent-c23="" href="#"><span _ngcontent-c23="" class="label"> Records </span></a><span _ngcontent-c23="" aria-hidden="true" class="sep"><ds-icon _ngcontent-c23=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 12px;" width="12" height="12" stroke-width="1.75" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg></ds-icon></span><a _ngcontent-c23="" href="#"><span _ngcontent-c23="" class="label"> 2026 Cycle </span></a><span _ngcontent-c23="" aria-hidden="true" class="sep"><ds-icon _ngcontent-c23=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 12px;" width="12" height="12" stroke-width="1.75" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg></ds-icon></span><span _ngcontent-c23="" class="current" aria-current="page"><span _ngcontent-c23="" class="label"> Project Alpha </span></span></nav></ds-breadcrumbs><div _ngcontent-c3q="" class="row title-row"><div _ngcontent-c3q="" class="title-block"><div _ngcontent-c3q="" class="eyebrow"> Record · 2026 Cycle </div><div _ngcontent-c3q="" class="title-line"><h1 _ngcontent-c3q="" class="title"> Project Alpha </h1></div><p _ngcontent-c3q="" class="subtitle"> 30 Apr – 3 May · North Site · 4 sub-records </p><div _ngcontent-c3q="" class="meta"></div></div><div _ngcontent-c3q="" class="actions"><ds-button _ngcontent-c3p="" icon="plus" _nghost-c5="" data-variant="solid" data-color="primary"><button _ngcontent-c5="" class="button md" type="button"><span _ngcontent-c5="" class="button-main"><ds-icon _ngcontent-c5=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 16px;" width="16" height="16" stroke-width="1.75" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></ds-icon> Add sub-record </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button></div></div></header></ds-page-header><div _ngcontent-c3p="" aria-hidden="true" class="content-placeholder"> Page content area </div></div></section></docs-section></ds-docs-components-page-header></div>
+  
+  
+  
+
+
 </body></html>
