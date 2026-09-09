@@ -1,96 +1,16 @@
-<!-- @dsCard group="forms-inputs" viewport="1200x606" name="Slider - single slider" subtitle="Bind to a number signal; the current value updates as the thumb moves." --><!doctype html>
+<!-- @dsCard group="forms-inputs" viewport="1200x604" name="Slider - single slider" subtitle="Bind to a number signal; the current value updates as the thumb moves." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Slider</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-slider></ds-docs-components-slider></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "slider";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "single slider";
-      var REACT = "Slider";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-slider");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-slider _nghost-c1i=""><docs-section _ngcontent-c1i="" anchor="slider" eyebrow="Components" title="Slider" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-slider" data-anchor="slider"><h2 _ngcontent-c1="" class="t-h2">Slider - single slider</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="slider"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Slider /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c1i="" lede=""> Single-value and range sliders for selecting a numeric value or interval within a bounded scale. </span></p><p _ngcontent-c1i="" class="block-desc t-s"> Bind to a number signal; the current value updates as the thumb moves. </p><div _ngcontent-c1i="" class="demo-panel"><div _ngcontent-c1i="" class="demo-stack"><p _ngcontent-c1i="" class="t-s"> Brightness </p><ds-slider _ngcontent-c1i="" arialabel="Brightness" _nghost-c1j=""><div _ngcontent-c1j="" class="track"><span _ngcontent-c1j="" class="fill" style="left: 0%; width: 62%;"></span><span _ngcontent-c1j="" role="slider" class="thumb" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="62" aria-orientation="horizontal" aria-label="Brightness" style="left: 62%;"></span></div><ds-field-message _ngcontent-c1j="" _nghost-c7=""></ds-field-message></ds-slider><p _ngcontent-c1i="" class="t-s"> 62% </p></div></div><docs-api-table _ngcontent-c1="" _nghost-c9="" data-key="slider"><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Inputs <span _ngcontent-c9="" class="count">16</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Default </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> hint </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Helper text shown below the control. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> error </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> warning </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Advisory text, shown when there is no error. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> reserveMessage </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> messageIcon </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> IconName | false | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> errors </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> readonly DsFieldError[] </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> [] </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> invalid </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> touched </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> hidden </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> value </span><span _ngcontent-c9="" class="tag"> two-way </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> SliderValue </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 0 </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Current value, or `[low, high]` when `range`. Two-way bound. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> min </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> number </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 0 </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Minimum selectable value. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> max </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> number </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 100 </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Maximum selectable value. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> step </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> number </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 1 </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Increment applied when dragging (snap) or nudging with arrow keys. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> range </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Two-thumb range mode — `value` becomes a `[low, high]` tuple. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> disabled </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> boolean </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> false </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Disables the slider and blocks all interaction. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> ariaLabel </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Accessible name for the thumb(s) — suffixed "minimum"/"maximum" in `range` mode. </span></td></tr></tbody></table></div></details></docs-api-table></section></docs-section></ds-docs-components-slider></div>
+  
+  
+  
+
+
 </body></html>

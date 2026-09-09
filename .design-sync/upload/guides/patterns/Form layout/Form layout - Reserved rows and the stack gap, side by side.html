@@ -1,96 +1,16 @@
-<!-- @dsCard group="patterns" viewport="1200x700" name="Form layout - reserved rows and the stack gap, side by side" subtitle="Both columns hold the same three fields with reserveMessage on." --><!doctype html>
+<!-- @dsCard group="patterns" viewport="1200x700" name="Form layout - reserved rows and the stack gap, side by side" subtitle="Both columns hold the same three fields with reserveMessage on." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Form layout</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-patterns-form-layout></ds-docs-patterns-form-layout></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 3;
-      var KEY = "";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "reserved rows and the stack gap, side by side";
-      var REACT = null;
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-patterns-form-layout");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-patterns-form-layout _nghost-c4g=""><docs-section _ngcontent-c4g="" anchor="pattern-form-layout" eyebrow="Patterns" title="Form layout" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-pattern-form-layout" data-anchor="pattern-form-layout"><h2 _ngcontent-c1="" class="t-h2">Form layout - reserved rows and the stack gap, side by side</h2><p _ngcontent-c4g="" class="block-desc t-s"> Both columns hold the same three fields with <code _ngcontent-c4g="" class="t-mono-inline"> reserveMessage </code> on. The left one stacks them at <code _ngcontent-c4g="" class="t-mono-inline">gap="md"</code> and the rhythm goes slack, because the reserved row ALREADY carries the trailing space the gap is adding again. The right one is <code _ngcontent-c4g="" class="t-mono-inline"> gap="none" </code> and reads correctly. Turn on the error to watch neither column shift: that is what reserving buys, and why it is worth the row. </p><div _ngcontent-c4g="" class="gap-demo"><div _ngcontent-c4g="" class="gap-demo-col"><span _ngcontent-c4g="" class="gap-demo-tag t-xs"> gap="md" · doubled rhythm </span><ds-stack _ngcontent-c4g="" gap="md" _nghost-c41="" data-gap="md"><ds-input _ngcontent-c4g="" label="Contact name" value="Ann Fletcher" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-13"> Contact name </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-13" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input><ds-input _ngcontent-c4g="" label="Email" value="ann@example.com" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-14"> Email </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-14" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input><ds-input _ngcontent-c4g="" label="Phone" value="+44 7700 900123" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-15"> Phone </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-15" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input></ds-stack></div><div _ngcontent-c4g="" class="gap-demo-col"><span _ngcontent-c4g="" class="gap-demo-tag t-xs"> gap="none" · correct </span><ds-stack _ngcontent-c4g="" gap="none" _nghost-c41="" data-gap="none"><ds-input _ngcontent-c4g="" label="Contact name" value="Ann Fletcher" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-16"> Contact name </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-16" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input><ds-input _ngcontent-c4g="" label="Email" value="ann@example.com" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-17"> Email </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-17" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input><ds-input _ngcontent-c4g="" label="Phone" value="+44 7700 900123" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-18"> Phone </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-18" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input></ds-stack></div></div><div _ngcontent-c4g="" class="gap-demo-controls"><ds-button _ngcontent-c4g="" size="sm" color="neutral" variant="outline" _nghost-c5="" data-variant="outline" data-color="neutral"><button _ngcontent-c5="" class="button c-neutral sm v-outline" type="button"><span _ngcontent-c5="" class="button-main"> Show an error </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button></div><p _ngcontent-c4g="" class="block-desc t-s"> The awkward case is a MIXED stack. A <code _ngcontent-c4g="" class="t-mono-inline"> gap="none" </code> column works because every child carries its own trailing space — so the moment one does not, the rhythm goes ragged. A field with <code _ngcontent-c4g="" class="t-mono-inline"> [reserveMessage]="false" </code>, a button row, a switch or a divider in that same column sits flush against its neighbour while the reserved fields around it look correctly spaced. Below, the switch and the button row are the children with no message row of their own. </p><div _ngcontent-c4g="" class="gap-demo"><div _ngcontent-c4g="" class="gap-demo-col"><span _ngcontent-c4g="" class="gap-demo-tag t-xs"> mixed · ragged </span><ds-stack _ngcontent-c4g="" gap="none" _nghost-c41="" data-gap="none"><ds-input _ngcontent-c4g="" label="Contact name" value="Ann Fletcher" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-20"> Contact name </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-20" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input><ds-switch _ngcontent-c4g="" label="Send a copy to the account owner" _nghost-c3=""><div _ngcontent-c3="" class="size-md switch-field"><span _ngcontent-c3="" class="control-line"><input _ngcontent-c3="" type="checkbox" role="switch" class="switch" aria-checked="false" id="ds-switch-21"><label _ngcontent-c3="" class="control-text" for="ds-switch-21"> Send a copy to the account owner </label></span><ds-field-message _ngcontent-c3="" _nghost-c7=""></ds-field-message></div></ds-switch><ds-input _ngcontent-c4g="" label="Phone" value="+44 7700 900123" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-22"> Phone </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-22" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input><ds-button _ngcontent-c4g="" size="sm" _nghost-c5="" data-variant="solid" data-color="primary"><button _ngcontent-c5="" class="button sm" type="button"><span _ngcontent-c5="" class="button-main"> Add another contact </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button></ds-stack></div><div _ngcontent-c4g="" class="gap-demo-col"><span _ngcontent-c4g="" class="gap-demo-tag t-xs"> mixed · spaced per child </span><ds-stack _ngcontent-c4g="" gap="none" _nghost-c41="" data-gap="none"><ds-input _ngcontent-c4g="" label="Contact name" value="Ann Fletcher" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-24"> Contact name </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-24" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input><div _ngcontent-c4g="" class="gap-demo-inset"><ds-switch _ngcontent-c4g="" label="Send a copy to the account owner" _nghost-c3=""><div _ngcontent-c3="" class="size-md switch-field"><span _ngcontent-c3="" class="control-line"><input _ngcontent-c3="" type="checkbox" role="switch" class="switch" aria-checked="false" id="ds-switch-25"><label _ngcontent-c3="" class="control-text" for="ds-switch-25"> Send a copy to the account owner </label></span><ds-field-message _ngcontent-c3="" _nghost-c7=""></ds-field-message></div></ds-switch></div><ds-input _ngcontent-c4g="" label="Phone" value="+44 7700 900123" _nghost-c10=""><div _ngcontent-c10="" class="field"><label _ngcontent-c10="" class="label" for="ds-input-26"> Phone </label><div _ngcontent-c10="" dsfieldclickfocus="" class="control"><span _ngcontent-c10="" class="addon-slot prefix"></span><input _ngcontent-c10="" id="ds-input-26" type="text" class="ng-untouched ng-pristine ng-valid"><span _ngcontent-c10="" class="addon-slot suffix"></span></div><div _ngcontent-c10="" class="field-footer"><ds-field-message _ngcontent-c10="" _nghost-c7=""><span _ngcontent-c7="" aria-hidden="true" class="field-message reserve-placeholder"></span></ds-field-message></div></div></ds-input><div _ngcontent-c4g="" class="gap-demo-inset"><ds-button _ngcontent-c4g="" size="sm" _nghost-c5="" data-variant="solid" data-color="primary"><button _ngcontent-c5="" class="button sm" type="button"><span _ngcontent-c5="" class="button-main"> Add another contact </span><span _ngcontent-c5="" class="subtext-slot"></span></button><ds-field-message _ngcontent-c5="" _nghost-c7=""></ds-field-message></ds-button></div></ds-stack></div></div><p _ngcontent-c4g="" class="block-desc t-s"> The fix is per-child rather than per-stack: give the children that carry no message row the same trailing space the reserved ones have, and leave the stack at <code _ngcontent-c4g="" class="t-mono-inline">gap="none"</code>. Reaching for <code _ngcontent-c4g="" class="t-mono-inline"> gap="md" </code> to rescue the odd child re-adds the doubled rhythm to every field. </p></section></docs-section></ds-docs-patterns-form-layout></div>
+  
+  <div aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px; margin: -1px; padding: 0px;"></div>
+  
+
+
 </body></html>

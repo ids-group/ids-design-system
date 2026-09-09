@@ -1,96 +1,17 @@
-<!-- @dsCard group="navigation" viewport="1200x423" name="Top bar - default" subtitle="Full composition — brand title, centred search, action cluster with avatar." --><!doctype html>
+<!-- @dsCard group="navigation" viewport="1200x423" name="Top bar - default" subtitle="Full composition — brand title, centred search, action cluster with avatar." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Topbar</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-topbar></ds-docs-components-topbar></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "topbar";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "default";
-      var REACT = "Topbar";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-topbar");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-topbar _nghost-c2e=""><docs-section _ngcontent-c2e="" anchor="topbar" eyebrow="Components" title="Top bar" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-topbar" data-anchor="topbar"><h2 _ngcontent-c1="" class="t-h2">Top bar - default<docs-truncation _ngcontent-c2e="" _nghost-c2=""><button _ngcontent-c2="" type="button" aria-label="Truncation rules" class="i"><ds-icon _ngcontent-c2="" name="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button><div _ngcontent-c2="" role="tooltip" class="panel"><div _ngcontent-c2="" class="panel-title"><ds-icon _ngcontent-c2="" name="filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 13px;" width="13" height="13" stroke-width="1.75" aria-hidden="true"><path d="M3 5h18l-7 9v6l-4-2v-4z"></path></svg></ds-icon> Truncation </div><ul _ngcontent-c2="" class="list"><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> App / account label </span><span _ngcontent-c2="" class="behaviour"> Single line, ellipsis at ~20 ch. Tooltip on hover when clipped. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Search input </span><span _ngcontent-c2="" class="behaviour"> Single line, no clip while focused. Placeholder ellipses if the bar shrinks. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Breadcrumb segments </span><span _ngcontent-c2="" class="behaviour"> Middle segments collapse to … before the leaf clips. Leaf truncates last with a tooltip. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Action icons </span><span _ngcontent-c2="" class="behaviour"> No visible label — full label lives in aria-label and tooltip-on-hover. </span></li></ul></div></docs-truncation></h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="topbar"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Topbar /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c2e="" lede=""> Application chrome at the top of every page. Brand left, optional search or breadcrumb centre, action cluster right. </span></p><p _ngcontent-c2e="" class="block-desc t-s"> Full composition — brand title, centred search, action cluster with avatar. </p><div _ngcontent-c2e="" class="stage stage--frame"><ds-topbar _ngcontent-c2e="" _nghost-c1w=""><header _ngcontent-c1w="" class="topbar"><div _ngcontent-c1w="" class="title"><span _ngcontent-c2e="" title=""> Atlas </span></div><div _ngcontent-c1w="" class="spacer"><ds-search _ngcontent-c2e="" search="" placeholder="Search records, items, people…" shortcut="⌘ K" _nghost-c11=""><div _ngcontent-c11="" dsfieldclickfocus="" class="search md"><ds-icon _ngcontent-c11="" name="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 16px;" width="16" height="16" stroke-width="1.75" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></ds-icon><input _ngcontent-c11="" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Search records, items, people…" aria-label="Search records, items, people…"><kbd _ngcontent-c11="" class="kbd"> ⌘ K </kbd></div></ds-search></div><div _ngcontent-c1w="" class="actions"><ds-icon-button _ngcontent-c2e="" icon="help" arialabel="Help" size="sm" _nghost-ce=""><button _ngcontent-ce="" class="icon-button sm standard" type="button" aria-label="Help"><ds-icon _ngcontent-ce=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 16px;" width="16" height="16" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"></path></svg></ds-icon></button></ds-icon-button><span _ngcontent-c2e="" class="action-badge"><ds-icon-button _ngcontent-c2e="" icon="bell" arialabel="Notifications" size="sm" _nghost-ce=""><button _ngcontent-ce="" class="icon-button sm standard" type="button" aria-label="Notifications"><ds-icon _ngcontent-ce=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 16px;" width="16" height="16" stroke-width="1.75" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg></ds-icon></button></ds-icon-button><span _ngcontent-c2e="" class="ping"></span></span><ds-avatar _ngcontent-c2e="" initials="AB" size="sm" _nghost-c1x="" aria-hidden="true" class="sm"> AB
+</ds-avatar></div></header></ds-topbar></div><docs-api-table _ngcontent-c1="" _nghost-c9="" data-key="topbar"></docs-api-table></section></docs-section></ds-docs-components-topbar></div>
+  
+  
+  
+
+
 </body></html>

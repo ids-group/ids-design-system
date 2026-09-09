@@ -8,6 +8,7 @@ components/data-display/Table/Table - Pagination - sticky column.html
 components/data-display/Table/Table - Persisted layout & export.html
 components/data-display/Table/Table - Row actions - kebab menu.html
 components/data-display/Table/Table - Truncation - full-text popover.html
+components/data-display/Table/Table - What the pager shows.html
 components/data-display/Tree/Tree - Interactive tree.html
 components/data-display/Tree/Tree - Single node states.html
 components/feedback-status/LoadingOverlay/Loading Overlay - Interactive demo.html
@@ -88,6 +89,7 @@ components/navigation/Pagination/Pagination - Default.html
 components/navigation/Pagination/Pagination - Ranges.html
 components/navigation/Pagination/Pagination - States showcase.html
 components/navigation/Pagination/Pagination - With page-size select.html
+components/navigation/Sidenav/Sidenav - A group that is also a page.html
 components/navigation/Sidenav/Sidenav - Collapsed.html
 components/navigation/Sidenav/Sidenav - Custom brand logo.html
 components/navigation/Sidenav/Sidenav - Default.html
