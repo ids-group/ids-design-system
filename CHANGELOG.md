@@ -8,6 +8,62 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`ds-button`'s `buttonRef` is `controlRef`, and it is typed `HTMLElement`.** The element the
+  component renders now follows its destination, so the old name described one of three cases and
+  the old type described the same one. Rename the reference; the property behind it is unchanged.
+  A read of `.nativeElement` that expects a `<button>` — `.disabled`, `.form`, `.type` — no longer
+  type-checks and needs a narrow of your own, because the element may be an `<a>`.
+
+  ```ts
+  // before
+  trigger.buttonRef().nativeElement.focus();
+  // after
+  trigger.controlRef().nativeElement.focus();
+  ```
+
+### Added
+
+- **`ds-button` takes `routerLink` and `href`, so a call-to-action can stay a real link.** Three
+  elements, decided by destination: `routerLink` renders an `<a [routerLink]>` that also carries
+  `routerLinkActive`, `href` renders a plain `<a href>`, and neither renders the
+  `<button type="button">` it always did. Unset — the default — nothing changes.
+
+  The look is identical across all three, because the styling is class-based rather than keyed to
+  the tag. What you get back is what the element decides: middle-click, open-in-new-tab,
+  copy-link-address and the `link` role a screen reader announces.
+
+  ```html
+  <ds-button routerLink="/reports" icon="arrowRight">Go to reports</ds-button>
+  <ds-button href="https://example.com" variant="outline">Read the spec</ds-button>
+  ```
+
+  `routerLink` takes the shapes a router link takes anywhere, a string or a command array.
+  **`type` and `loading` are button-only** and are ignored on a link with a dev-mode warning: an
+  anchor has no form to submit, and a navigation cannot be in flight before it starts. `disabled`
+  works on all three, but an anchor has no native disabled state, so it takes `aria-disabled` plus
+  `tabindex="-1"` — and its click is swallowed, which is what stops an `href` from navigating
+  anyway. `disabledReason` reads the same on a link as on a button.
+
+### Changed
+
+- **`ButtonComponent` gained four members — only matters if you SUBCLASS it.** `routerLink`, `href`,
+  `controlRef` and `destination`, which decides which of the three elements renders. `buttonRef` is
+  gone from the surface, so a subclass that overrode it now overrides nothing. Only `routerLink`,
+  `href` and `controlRef` are public API and that is no protection for the rest: `private` and
+  `protected` collide with TS2415 exactly as a public name does. Nothing changes for a consumer who
+  only uses the element.
+
+### Fixed
+
+- **A `ds-multi-select` panel's filter row draws a rounded focus ring.** It came out as a hard
+  rectangle the full width of the panel, inside a panel whose every other control is rounded,
+  because an `outline` has no radius of its own — it follows the box it is drawn on, and that row
+  had none. It now carries `--ds-radius-inner`, which is the radius the panel's option rows and
+  clear button already use. `ds-sidenav-footer`'s search box was always drawn this way and is
+  unchanged.
+
 ## 0.12.2 — 2026-09-09
 
 ### Breaking

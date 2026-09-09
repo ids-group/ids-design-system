@@ -1,0 +1,65 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "button-ref-renamed-and-widened",
+      "kind": "removed-api",
+      "surface": "typescript",
+      "old": "buttonRef",
+      "new": "controlRef",
+      "action": "Rename `buttonRef()` to `controlRef()` on every ds-button template reference, and narrow `.nativeElement` yourself where you read a button-only property off it.",
+      "appliesWhen": "Only code that reads the reference — a template ref used to position or refocus an overlay, or a component that calls it. Nothing changes for a consumer who only uses the element and its inputs, and the property behind the name is the same view child.",
+      "pitfall": "The rename is a compile error and announces itself; the type change may not. `.nativeElement.disabled`, `.form` and `.type` were reachable on `HTMLButtonElement` and are gone from `HTMLElement`, so a read of one fails to compile — but a cast written to silence it then lies at runtime whenever the button carries a destination and really is an anchor.",
+      "note": "The element ds-button renders now follows its destination: an `<a>` when `routerLink` or `href` is set, the `<button>` otherwise. One name and one type had to cover all three, so both were wrong before. Overlay triggers pass `.nativeElement` for positioning and focus, which `HTMLElement` answers.",
+      "verify": "No `buttonRef` remains anywhere in the consumer tree, and every read of `controlRef().nativeElement` either uses only HTMLElement members or narrows with an `instanceof HTMLButtonElement` check.",
+      "searchHints": [
+        "buttonRef",
+        "buttonRef()",
+        ".nativeElement",
+        "ds-button"
+      ],
+      "detect": [
+        "buttonRef(",
+        "buttonRef().nativeElement",
+        "TS2339",
+        "Property 'disabled' does not exist"
+      ],
+      "restore": null
+    },
+    {
+      "id": "button-class-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "class MyButton extends ButtonComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
+      "appliesWhen": "Only a class that extends ButtonComponent. A consumer who uses the element in a template needs nothing from this item.",
+      "pitfall": "Two of the four are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and a same-named method whose signature differs fails with TS2416 instead.",
+      "note": "ButtonComponent gained `routerLink` and `href`, the two destination inputs; `controlRef`, the view child that replaces `buttonRef`; and `destination`, the computed that decides which of the three elements renders. It also LOST `buttonRef`, so a subclass that overrode that one now overrides nothing and its member is dead rather than broken.",
+      "verify": "The app builds with no TS2415 or TS2416 naming ButtonComponent, and no member of your subclass is called routerLink, href, controlRef or destination.",
+      "searchHints": [
+        "extends ButtonComponent",
+        "routerLink",
+        "href",
+        "controlRef",
+        "destination",
+        "TS2415",
+        "TS2416"
+      ],
+      "detect": [
+        "extends ButtonComponent",
+        "override routerLink",
+        "override href",
+        "override controlRef",
+        "override destination",
+        "override buttonRef"
+      ],
+      "restore": null
+    }
+  ],
+  "informational": [
+    "`ds-button` takes two new optional inputs, `routerLink` and `href`. Unset, which is the default and what every existing button has, it renders the same `<button type=\"button\">` as before. Set either and it renders an `<a>` instead, with identical styling — the rules are class-based, so nothing keyed to `.button` moves. `type` and `loading` are ignored on a link and say so in dev mode.",
+    "A `ds-multi-select` panel filter row now carries `--ds-radius-inner`, so its focus ring is rounded instead of a full-width rectangle. Nothing to change — an `outline` follows the radius of the box it is drawn on, and that row simply had none."
+  ],
+  "deleteList": []
+}
