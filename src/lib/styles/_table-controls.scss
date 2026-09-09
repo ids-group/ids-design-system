@@ -1,0 +1,66 @@
+@use 'focus' as focus;
+
+// Controls the table shares with its opt-in directives. `dsTableColumns` renders its trigger and
+// its panel from components of its own, whose DOM never carries ds-table's encapsulation
+// attribute — so a rule stated in table.component.scss cannot reach them, and the body has to
+// live somewhere both stylesheets can include it.
+
+// The square icon button in a header cell — expand-all, row actions, the column-panel trigger.
+// Reads the `--_table-icon-btn-*` resolvers, so include it only inside a ds-table.
+@mixin header-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--_table-icon-btn-color);
+  border-radius: var(--ds-radius-inner);
+  transition: color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--_table-icon-btn-color-hover);
+  }
+
+  &:focus-visible {
+    --focus-ring-color: var(--_table-icon-btn-focus-color);
+
+    @include focus.ring;
+  }
+}
+
+@mixin panel-icon-button {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--icon-default);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    color: var(--icon-strong);
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: default;
+  }
+}
+
+@mixin panel-reset-link {
+  margin-top: var(--space-1);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  cursor: pointer;
+  text-align: left;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

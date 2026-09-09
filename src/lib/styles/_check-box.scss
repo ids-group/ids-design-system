@@ -38,6 +38,13 @@
   cursor: pointer;
   display: inline-grid;
   place-items: center;
+
+  /* Inline-level, so without this the box sits on the text baseline — and the baseline of an
+     inline-grid is its first item's, which moves when the mark swaps between the 12px tick and the
+     10x2 bar. Measured in ds-table: the header row was 45.50px with the box indeterminate and
+     45.30px with it checked, a 0.2px twitch on every selection change. `middle` takes the box off
+     the baseline entirely. ds-checkbox never showed it — there the input is a flex item. */
+  vertical-align: middle;
   flex-shrink: 0;
   margin: 0;
   border-radius: var(--_checkbox-radius, var(--ds-checkbox-radius, var(--ds-radius-inner)));

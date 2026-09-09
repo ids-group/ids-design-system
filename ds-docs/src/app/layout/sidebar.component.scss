@@ -119,15 +119,23 @@
   font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
   letter-spacing: var(--letter-spacing-wider);
   text-transform: uppercase;
-  color: var(--text-tertiary);
+
+  /* --text-tertiary measures 4.74:1 on white but 4.30:1 on the open group's tint, so the tint
+     alone pushed the label under AA. One colour that clears both grounds, not one per state. */
+  color: var(--text-secondary);
   padding: var(--space-4) var(--space-2) var(--space-1-5);
 }
-.group-link {
-  text-decoration: none;
-  cursor: pointer;
+
+/* Accent, not a darker neutral: the group holding the current page is marked on three of its own
+   parts at once — this label, its chevron and its thread — and none of them is a fill. Replaces the
+   --text-primary darkening rather than stacking with it; two "active" treatments on one label is
+   one more than the label can carry. */
+.group-row.is-active .group {
+  color: var(--accent-strong);
 }
-.group-link.is-active {
-  color: var(--text-primary);
+
+.group-row.is-active .group-caret {
+  color: var(--accent-strong);
 }
 
 .link {
@@ -139,7 +147,10 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: 7px var(--space-2-5);
+
+  /* The dot's gutter is on EVERY row, not only the current one: put it on `.is-active` alone and
+     the label jumps right the moment a row is selected. */
+  padding: 7px var(--space-2-5) 7px var(--space-5);
   color: var(--text-secondary);
   font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
   border-radius: var(--radius-md);
@@ -174,9 +185,106 @@
   color: var(--text-primary);
   transform: scale(0.97);
 }
-.link.is-active {
-  background: var(--primary-subtitle);
-  color: var(--primary-strong);
+
+/* --accent-muted, not --accent-subtitle: subtitle measures 1.11 against the white page and the
+   hover grey measures 1.10, so on subtitle a hovered row and the current row are the same fill.
+   Declared after :hover and :active so the current row keeps its own fill under the cursor. */
+.link.is-active,
+.link.is-active:hover,
+.link.is-active:active {
+  position: relative;
+  background: var(--accent-muted);
+  color: var(--accent-strong);
+  font-weight: var(--font-weight-bold);
+}
+
+.link.is-active::before {
+  content: '';
+  position: absolute;
+  left: var(--space-2);
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: var(--accent-strong);
+}
+
+/* The link keeps the whole row; the caret is laid over its right end rather than shrinking it, so
+   a row with chapters and one without have the label starting and ending in the same place. */
+.item-row {
+  position: relative;
+}
+
+.item-row.has-chapters .link {
+  padding-right: var(--space-8);
+}
+
+.item-caret {
+  position: absolute;
+  right: var(--space-1);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--icon-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.item-caret:hover {
+  color: var(--text-primary);
+}
+
+.item-caret[aria-expanded='true'] {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.chapters {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A thread down the chapter column: 35 of them under one section, and without a line the list
+   reads as a second flat level rather than as the section's contents. */
+.chapter {
+  position: relative;
+
+  /* Clipped, not wrapped — the rule the nav labels already follow. Several chapter headings are
+     full sentences, and wrapping 35 of them made the list three times its height. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px var(--space-2-5) 5px var(--space-6);
+  margin-left: var(--space-5);
+  color: var(--text-tertiary);
+  font: var(--font-weight-medium) 12px/1.4 var(--font-sans);
+  text-decoration: none;
+  border-left: var(--border-width-default) solid var(--border-divider);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.chapter:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
+.chapter.is-active {
+  color: var(--accent-strong);
+  border-left-color: var(--accent-strong);
   font-weight: var(--font-weight-bold);
 }
 
@@ -206,6 +314,77 @@
   min-height: var(--hit-comfy);
   padding-block: var(--space-2);
 }
+.toc.is-drawer .chapter {
+  min-height: var(--hit-comfy);
+  display: flex;
+  align-items: center;
+}
 .toc.is-drawer .start-link {
   min-height: var(--hit-comfy);
+}
+
+.nav-group {
+  border-radius: var(--ds-radius-control);
+}
+
+/* The thread runs THROUGH the dot's own centre (--space-2 plus half of a 5px dot) and therefore
+   inside the row, under its fill: the current row's dot is a node on the thread, not a second mark
+   beside it. No indent and no padding for it — either would take width from the row and narrow the
+   fill, and the fill is what this treatment is built around. */
+.group-items {
+  position: relative;
+}
+.group-items::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--space-2) + 2px);
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--border-divider);
+}
+
+/* The group holding the current page tints its own thread — the quietest signal available, because
+   the thread already belongs to the group and already runs down to the dot. --accent-muted-strong
+   and not --accent-muted: muted measures 1.04 against the idle thread, which is no signal at all,
+   while this measures 1.26 and stays a hairline rather than reading as a border. */
+.nav-group.is-active .group-items::before {
+  background: var(--accent-muted-strong);
+}
+
+.group-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 var(--space-2) 0 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+
+  .group {
+    flex: 1;
+    min-width: 0;
+    padding-right: var(--space-1);
+  }
+
+  &:hover .group {
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    @include focus.ring;
+  }
+}
+
+.group-caret {
+  flex: none;
+  color: var(--text-tertiary);
+  transform: rotate(-90deg);
+  transition: transform var(--duration-fast) var(--ease-standard);
+
+  .group-row.is-open & {
+    transform: rotate(0deg);
+  }
 }

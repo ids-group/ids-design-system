@@ -1,0 +1,80 @@
+@use '../../styles/check-box' as check-box;
+@use '../../styles/focus' as focus;
+@use '../../styles/table-controls' as table-controls;
+
+// Encapsulated, even though the panel is portaled out of ds-table into the popover overlay: the
+// attribute travels on the elements, so scoping survives the move — where a rule inherited from
+// ds-table's own stylesheet never arrives at all.
+
+.col-picker {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 160px;
+}
+
+.col-picker-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  &.cdk-drag-preview {
+    background-color: var(--surface-default);
+    border-radius: var(--ds-radius-inner);
+    box-shadow: var(--shadow-popover);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  &.cdk-drag-placeholder {
+    opacity: 0.4;
+  }
+}
+
+.col-picker.cdk-drop-list-dragging .col-picker-row:not(.cdk-drag-placeholder) {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.col-drag {
+  display: inline-flex;
+  color: var(--icon-default);
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.col-picker-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+  cursor: pointer;
+
+  &:has(input:disabled) {
+    color: var(--text-tertiary);
+    cursor: default;
+  }
+}
+
+.check {
+  @include check-box.box;
+
+  &:focus-visible {
+    @include focus.ring;
+  }
+}
+
+.col-move {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.col-move-btn {
+  @include table-controls.panel-icon-button;
+}
+
+.col-reset {
+  @include table-controls.panel-reset-link;
+}

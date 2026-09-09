@@ -1,6 +1,7 @@
 /* The listbox panel is portaled through a TemplatePortal, so its DOM still carries
    this component's encapsulation attributes — which is why both halves are styled
    here rather than the panel living in a global partial. */
+@use '../../styles/clear-button' as clear-button;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/check-mark';
 @use '../../styles/field-label' as field-label;
@@ -93,6 +94,10 @@
   }
 
   transition: border-color var(--duration-fast) var(--ease-standard);
+
+  .clear-btn {
+    @include clear-button.button;
+  }
 
   /* ds-input's addon class names on purpose: a consumer styling a leading glyph
      writes one rule for the whole field family. */

@@ -1,0 +1,291 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "subclass-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "class MyThing extends TableComponent | SidenavGroupComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
+      "appliesWhen": "Only a class that extends TableComponent or SidenavGroupComponent. A consumer who uses the elements in a template needs nothing — no existing input, output, token or class changed name or type in this release.",
+      "pitfall": "Three of the four members are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and a same-named method whose signature differs fails with TS2416 instead.",
+      "note": "TableComponent gained `showsLoadingSpace`, which keeps a body open while the table loads with no rows; `publishHeadHeight`, which measures the header for the scrim to inset against; `scrollAncestor`, which finds the scrollport a sticky offset resolves against; `hasAnyColumnFilter`, which decides whether the column-filter panel renders; `isFilterPanelOpen`, which tells a header button whether the open panel is its own; and the new `stickyScrollbarOffset` input with its `stickyScrollbarOffsetResolved`. SidenavGroupComponent gained the new `routerLink` input and `headerNavigates`, which decides whether the header splits into a link and its own caret. Named here so a subclass collision is greppable from the release that introduced them.",
+      "verify": "The app builds with no TS2415 or TS2416 naming TableComponent or SidenavGroupComponent, and no member of your subclass is called showsLoadingSpace, publishHeadHeight, scrollAncestor, hasAnyColumnFilter, isFilterPanelOpen, stickyScrollbarOffset, stickyScrollbarOffsetResolved, routerLink or headerNavigates.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends SidenavGroupComponent",
+        "showsLoadingSpace",
+        "publishHeadHeight",
+        "scrollAncestor",
+        "hasAnyColumnFilter",
+        "isFilterPanelOpen",
+        "stickyScrollbarOffset",
+        "stickyScrollbarOffsetResolved",
+        "headerNavigates",
+        "TS2415",
+        "TS2416"
+      ],
+      "detect": [
+        "extends TableComponent",
+        "extends SidenavGroupComponent",
+        "override showsLoadingSpace",
+        "override publishHeadHeight",
+        "override scrollAncestor",
+        "override hasAnyColumnFilter",
+        "override isFilterPanelOpen",
+        "override stickyScrollbarOffset",
+        "override routerLink",
+        "override headerNavigates"
+      ],
+      "restore": null
+    },
+    {
+      "id": "modal-fullscreen-height-is-a-target",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--modal-h-fullscreen",
+      "new": null,
+      "action": "Where you set `--modal-h-fullscreen`, decide whether you meant a ceiling or a height, and lower the value below 90dvh if you want the panel shorter than the screen.",
+      "appliesWhen": "Only a modal opened fullscreen, and only where you set `--modal-h-fullscreen` yourself or relied on a short body keeping the panel small. A modal opened at any other size is untouched, and the token keeps its name and its own value.",
+      "pitfall": "Setting the token above 90dvh looks like it does nothing: the modal's own ceiling still clips the panel, so the used height stays 90dvh and no warning says the value was ignored.",
+      "note": "The fullscreen class fed the token to `max-height`, so a short body shrank the panel and a tall one stopped at the token. It feeds `height` now, so the panel is that tall whatever the body holds, still clipped by the modal's 90dvh ceiling. The panel already lays out as a column with a scrolling body, so the room a short body no longer reclaims goes to the body and the footer sits at the bottom of the screen.",
+      "verify": "A fullscreen modal with two lines of content is as tall as a fullscreen modal with fifty, and one you sized through the token is `min(your value, 90dvh)` tall.",
+      "searchHints": [
+        "--modal-h-fullscreen",
+        "fullscreen"
+      ],
+      "restore": null
+    },
+    {
+      "id": "date-picker-focus-resolves-the-field-family",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--ds-date-picker-focus-shadow",
+      "new": null,
+      "action": "Retune the date picker's focus indicator through `--ds-field-focus-shadow`, or set `--ds-date-picker-focus-shadow` outright.",
+      "appliesWhen": "Only a brand that retunes focus through the control family — `--ds-control-focus-shadow` or the per-control tokens. An explicit `--ds-date-picker-focus-shadow` override still wins and needs nothing. `ds-time-picker` still resolves the control family, so the two pickers focus differently until you set both.",
+      "pitfall": "A control-family override is a custom property like any other: it still sets, it still cascades, and the date picker simply no longer reads it. Nothing errors, and the field draws the default halo.",
+      "note": "The trigger is field-shaped and was drawing the two-band control ring, so it read as a button beside inputs that draw one soft halo. It resolves the field family now, which also means it follows the `data-focus` switch — `ring`, `edge` and `inset` reach it, and they did not before.",
+      "verify": "Focusing the date field draws the same indicator as focusing a text input beside it, and switching `data-focus` changes both together.",
+      "searchHints": [
+        "--ds-date-picker-focus-shadow",
+        "--ds-control-focus-shadow",
+        "--ds-field-focus-shadow",
+        "focus-shadow"
+      ],
+      "restore": "--ds-date-picker-focus-shadow: var(--ds-control-focus-shadow);"
+    },
+    {
+      "id": "progress-warning-bar-resolves-a-palette-yellow",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--ds-progress-bar-color-warning",
+      "new": null,
+      "action": "Recolour the warning bar through `--ds-progress-bar-color-warning` rather than through `--warning-hover`.",
+      "appliesWhen": "Only a brand that recoloured the bar by way of `--warning-hover`. An explicit `--ds-progress-bar-color-warning` override still wins. `--warning-hover` keeps its name and value and is still read elsewhere.",
+      "pitfall": "The bar moves in opposite directions per theme, so a screenshot check on one theme proves nothing about the other: the light bar gets more saturated and the dark bar gets darker.",
+      "note": "The fallback resolved to a hover derivation of the warning hue, which mixes toward black in the light theme and toward white in the dark one — so the light bar read olive and the dark bar read washed out, and neither matched the warning colour anywhere else. Both themes resolve the same palette yellow now.",
+      "verify": "The warning progress bar is the same colour in both themes, and matches the warning hue used by the other status surfaces.",
+      "searchHints": [
+        "--ds-progress-bar-color-warning",
+        "--warning-hover"
+      ],
+      "restore": "--ds-progress-bar-color-warning: var(--warning-hover);"
+    },
+    {
+      "id": "skeleton-shimmer-reads-its-own-duration-token",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "--duration-loop-slow",
+      "new": null,
+      "action": "Set `--ds-skeleton-wave-duration` wherever you were retuning the skeleton through `--duration-loop-slow`.",
+      "appliesWhen": "Only a brand that set `--duration-loop-slow` and expected the skeleton to follow. That token keeps its name and value and still drives everything else that reads it; the skeleton is what stopped reading it.",
+      "pitfall": "The shimmer keeps animating either way, so an override that no longer lands looks like a value that was simply too small to notice rather than one nothing reads.",
+      "note": "The wave now tiles by construction and travels exactly one period per loop, so its duration is a property of the wave rather than of the shared loop family. The loop runs 3400ms where the shared token gave it 1400ms, and passes no longer rest between crossings. `--ds-skeleton-wave-angle` turns the gradient only — the tile size and the travel are pinned to the 45° diagonal, so an angle far from the default tiles visibly.",
+      "verify": "Setting `--ds-skeleton-wave-duration` changes how fast the shimmer crosses, and setting `--duration-loop-slow` alone leaves it unchanged.",
+      "searchHints": [
+        "--duration-loop-slow",
+        "--ds-skeleton-wave-duration",
+        "ds-skeleton"
+      ],
+      "restore": "--ds-skeleton-wave-duration: var(--duration-loop-slow);"
+    },
+    {
+      "id": "autocomplete-trigger-open-class-removed",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-autocomplete .autocomplete-trigger.open",
+      "new": null,
+      "action": "Rewrite any rule keyed off `.autocomplete-trigger.open` to key off the input's expanded state: `.autocomplete-trigger:has(input[aria-expanded=\"true\"])`.",
+      "appliesWhen": "Only a stylesheet of yours that selected the open state by class. Nothing in a template or in TypeScript changes — `isOpen()` and the panel are untouched, and this library never styled `.open`, so no look of ours moves.",
+      "pitfall": "The rule stops matching with no error anywhere: the class is simply absent, so the open state renders as the resting state and nothing reports it. A build passes, a test that asserts on computed style is the only thing that catches it.",
+      "note": "The class reported a state it never painted. `aria-expanded` was already on the input for assistive technology, so the state stayed reachable without a second copy of it in the class list.",
+      "verify": "No stylesheet selects `.autocomplete-trigger.open`, and every rule that dressed the open state now selects it through `aria-expanded`.",
+      "searchHints": [
+        "autocomplete-trigger.open",
+        ".open",
+        "aria-expanded"
+      ],
+      "detect": [
+        "autocomplete-trigger.open",
+        "ds-autocomplete .open",
+        "::ng-deep .open"
+      ]
+    },
+    {
+      "id": "autocomplete-trigger-error-class-removed",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-autocomplete .autocomplete-trigger.error",
+      "new": null,
+      "action": "Rewrite any rule keyed off `.autocomplete-trigger.error` to key off the host attribute: `ds-autocomplete[data-field-state=\"error\"] .autocomplete-trigger`.",
+      "appliesWhen": "Only a stylesheet of yours that selected the error state by class on the trigger. The field family's own error paint has always come from `data-field-state` on the host and is unchanged.",
+      "pitfall": "An invalid field keeps rendering as a valid one in your own styling, with nothing raised — and it is the state a reader most needs to see, so the silence costs more here than on a cosmetic class.",
+      "note": "`data-field-state` carries `error`, `warning` and `success`, which one boolean class could not, and it is where this library reads the state itself — so a rule written against it also follows a warning.",
+      "verify": "No stylesheet selects `.autocomplete-trigger.error`, and the rules that dressed the error state select `[data-field-state=\"error\"]` on the host.",
+      "searchHints": [
+        "autocomplete-trigger.error",
+        ".error",
+        "data-field-state"
+      ],
+      "detect": [
+        "autocomplete-trigger.error",
+        "ds-autocomplete .error",
+        "::ng-deep .error"
+      ]
+    },
+    {
+      "id": "multi-select-trigger-readonly-class-removed",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-multi-select .field-trigger.readonly",
+      "new": null,
+      "action": "Rewrite any rule keyed off `.field-trigger.readonly` to key off the attribute already on that element: `.field-trigger[aria-readonly=\"true\"]`.",
+      "appliesWhen": "Only a stylesheet of yours that selected the read-only trigger by class. `readOnly` itself, and everything it does to focus and opening, is unchanged. `ds-select`'s trigger never carried the class, so a rule shared between the two was already only half working.",
+      "pitfall": "A read-only trigger renders as an editable one under your own styling, which invites a click that then does nothing — and no tool reports the dead selector.",
+      "note": "`aria-readonly` sits on the same element and says the same thing to assistive technology, so the state needed no class beside it.",
+      "verify": "No stylesheet selects `.field-trigger.readonly`, and the read-only styling selects `aria-readonly` instead.",
+      "searchHints": [
+        "field-trigger.readonly",
+        ".readonly",
+        "aria-readonly"
+      ],
+      "detect": [
+        "field-trigger.readonly",
+        "ds-multi-select .readonly",
+        "::ng-deep .readonly"
+      ]
+    },
+    {
+      "id": "tabs-badge-tone-classes-removed",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-tabs .badge.neutral",
+      "new": null,
+      "action": "Drop `.neutral` and `.count` from any rule selecting the tab count badge and select `.badge` on its own.",
+      "appliesWhen": "Only a stylesheet of yours that qualified the tab badge with either word. The badge's own look is unchanged — it always came from `.badge` alone, and `.neutral` and `.count` never carried a declaration.",
+      "pitfall": "A rule qualified with either word stops matching entirely rather than partly, so a recoloured badge returns to the library's grey pill and reads as intentional.",
+      "note": "Both were tone and role markers copied from `ds-badge`'s vocabulary, where they do carry styling. On a tab they never did, and keeping them implied a tone the component does not offer.",
+      "verify": "No stylesheet selects `.badge.neutral` or `.badge.count` under `ds-tabs`, and the badge rules select `.badge`.",
+      "searchHints": [
+        "badge.neutral",
+        "badge.count",
+        "badge neutral count"
+      ],
+      "detect": [
+        "badge.neutral",
+        "badge.count",
+        "ds-tabs .neutral",
+        "ds-tabs .count"
+      ]
+    },
+    {
+      "id": "table-hscroll-bottom-token-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--ds-table-hscroll-bottom",
+      "new": "--ds-table-sticky-scrollbar-offset",
+      "action": "Rename `--ds-table-hscroll-bottom` to `--ds-table-sticky-scrollbar-offset`, keeping the value — unless the value is a negative offset equal to your scroll container's bottom padding, which is deleted instead (delete list: table-hscroll-bottom-workaround).",
+      "appliesWhen": "Only a stylesheet of yours that sets the token. Nothing in a template or in TypeScript changes, and `stickyScrollbar` itself, the bar's behaviour and every other `--ds-table-*` token are untouched.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind is not an error anywhere — the bar simply stops taking your offset and falls back to the measured one, which on most pages looks almost right.",
+      "note": "The knob now carries the name of the feature it belongs to, beside `stickyScrollbar` and the new `[stickyScrollbarOffset]` input, so the three greppable spellings of one idea agree. The same value is also reachable per table through that input and app-wide through `DS_CONFIG.table.stickyScrollbarOffset`; the token still out-ranks both.",
+      "verify": "No stylesheet declares `--ds-table-hscroll-bottom`, and every offset the sticky scrollbar takes comes from `--ds-table-sticky-scrollbar-offset`, `[stickyScrollbarOffset]` or `DS_CONFIG.table.stickyScrollbarOffset`.",
+      "searchHints": [
+        "--ds-table-hscroll-bottom",
+        "hscroll-bottom",
+        "hscroll"
+      ],
+      "detect": [
+        "--ds-table-hscroll-bottom"
+      ]
+    },
+    {
+      "id": "table-expand-panel-inner-wrapper",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-table .expand-panel-cell",
+      "new": null,
+      "action": "Re-point a rule that selected the expanded row’s content as a direct child of `.expand-panel-cell` at `.expand-panel-inner`, or drop the child combinator.",
+      "appliesWhen": "Only a stylesheet of yours that reaches inside the expanded row of a `ds-table` with a child combinator. A rule using a descendant selector already matches through the new wrapper and needs nothing, and nothing changes for the template you project — its own root element is untouched.",
+      "pitfall": "The selector simply stops matching: the panel keeps the library’s own layout and your rule is silently inert. No build error, and the row still opens, so the difference is only visible in the expanded content’s own spacing or width.",
+      "note": "The expanded row now animates open by interpolating its cell’s `grid-template-rows` from `0fr` to `1fr`, which a height of `auto` cannot do. A grid track can only clip one child, so the projected template is wrapped in `.expand-panel-inner`, which carries the `overflow: hidden` the reveal needs. That wrapper is the only structural change; class names on the cell itself are unchanged.",
+      "verify": "Every rule that styled the expanded row’s content matches an element again — inspect an open row and confirm your declarations appear on it rather than being overridden or absent.",
+      "searchHints": [
+        "expand-panel-cell",
+        "expand-panel",
+        "expandTemplate",
+        "rowExpandable"
+      ],
+      "restore": null
+    }
+  ],
+  "informational": [
+    "The `ds-skeleton` shimmer travels diagonally now and crosses as two waves per period, one quiet and one main, with no seam anywhere in the loop. Four new hooks with defaults — `--ds-skeleton-wave-period`, `--ds-skeleton-wave-duration`, `--ds-skeleton-wave-angle`, `--ds-skeleton-wave-echo-color`. The tone is unchanged; a skeleton you never tuned simply reads calmer. Only the duration hook needs an edit, and only if you were retuning it through the shared loop token.",
+    "A `ds-table` loading in `overlay` mode with no rows now holds one `aria-hidden` spacer row's worth of height instead of collapsing onto its header. Nothing to change unless a test asserts an empty tbody during an overlay load. `skeleton` loading is unaffected.",
+    "The `ds-table` loading scrim measures the header after render and re-measures on resize, so it starts below the header on the first frame rather than at a 40px fallback. `--ds-table-head-h` still overrides the measurement.",
+    "The `ds-table` selection checkbox is centred against the line box instead of sitting on the text baseline, so the header row no longer changes height when the select-all mark swaps between its tick and its indeterminate bar. `ds-checkbox` lays its own box out as a flex item and never showed this.",
+    "`ds-date-picker`'s calendar glyph is two pixels smaller so it matches the cap height of the value beside it, and its text input now spans the field's height so a click above or below the digits places the caret rather than opening the calendar.",
+    "`ds-dropzone` shows the hand cursor once files are listed. The zone was always clickable; only the cursor said otherwise.",
+    "`ds-sidenav-group` takes a new optional `routerLink`. Unset, which is the default and what every existing group has, the header only expands and nothing changed. Set together with `expandable`, the header navigates and the caret becomes its own button, so the group's own DOM gains a `.group-header-row` wrapper and a `.group-caret-button`, and `.group-header` becomes an `a` rather than a `button`. `routerLink` without `expandable` is ignored.",
+    "The `ds-table` column panel and the header button that opens it, both rendered by `dsTableColumns`, draw with their own styles instead of the browser's native checkbox, buttons and link. Markup, class names and API are unchanged; a stylesheet of yours that reached `.col-picker`, `.col-picker-row`, `.col-picker-option`, `.col-drag`, `.col-move`, `.col-move-btn`, `.col-reset` or `.col-picker-btn` by a bare class name now competes with a scoped rule, so qualify the selector where your override stopped landing.",
+    "A `ds-table` sticky horizontal scrollbar rests on the scroll container's visible bottom edge rather than one padding-bottom above it, measured off the scroll ancestor and re-measured on resize. `--ds-table-hscroll-bottom` still overrides outright; a negative value equal to your own container's padding is now a second offset (delete list: table-hscroll-bottom-workaround).",
+    "`clearable` on `ds-autocomplete` and `ds-multi-select` now draws the same clear button as `ds-select`, where both previously rendered the markup with no rule able to reach it and the × came out as the browser's default button. Nothing to change; `ds-select` is untouched and `ds-input` keeps its own filled-disc variant (delete list: picker-clear-button-workaround).",
+    "A `ds-table` column filter opens on the first click; the first click used to only build the panel. Nothing to change — `filterMode`, `filter: 'set'` and a projected `dsHeaderFilter` all keep their behaviour, and a table with no filterable column renders no panel at all.",
+    "A `ds-table` column filter button now carries `aria-expanded` beside its `aria-haspopup=\"dialog\"`, true only on the column whose panel is showing. Nothing to change unless a test of yours asserts the attribute's absence.",
+    "A panel re-opened inside the exit animation of a dismissed one can be closed again: the old panel's disposal no longer clears the state of the one that replaced it, which used to leave a panel that neither Escape nor an outside click would dismiss and that reported itself collapsed. Reaches `ds-date-picker`, `ds-color-picker`, `ds-time-picker` and everything `ds-popover` carries — `ds-table`'s filter, row menu and clipped-cell text, `ds-split-button`, `ds-filter-bar`'s overflow panel, `ds-sidenav-footer`'s search. `ds-select`, `ds-autocomplete` and `ds-multi-select` behave exactly as before.",
+    "A `ds-table` bulk-action bar now rests `--bulk-bar-offset` above the scroll container's visible bottom edge rather than that offset plus the container's padding. Nothing to change, and `--bulk-bar-offset` keeps its meaning and its default; only a table with row selection inside a padded scroll container looks different.",
+    "An expanded `ds-table` row opens with a reveal — its cell interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base` at `--ease-standard`, and `prefers-reduced-motion: reduce` shows the panel fully open with no animation. Retune it through those two tokens. The one structural change, a `.expand-panel-inner` wrapper inside the cell, is an item of its own."
+  ],
+  "deleteList": [
+    {
+      "id": "table-checkbox-baseline-nudge",
+      "surface": "style",
+      "find": [
+        "ds-table .check",
+        "::ng-deep .check"
+      ],
+      "why": "The table's selection box no longer sits on the text baseline, so a nudge added to lift it off is now an offset in its own right — the header row moves by whatever the nudge was.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "table-hscroll-bottom-workaround",
+      "surface": "style",
+      "find": [
+        "--ds-table-hscroll-bottom: -"
+      ],
+      "why": "The table measures its scroll container's bottom padding and cancels it itself, so a negative offset written to do that job moves the sticky scrollbar a second time. The token stays legitimate for a scrollport whose reachable edge is not its padding edge — only the value that duplicates the measurement is dead.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "picker-clear-button-workaround",
+      "surface": "style",
+      "find": [
+        "ds-autocomplete .clear-btn",
+        "ds-multi-select .clear-btn"
+      ],
+      "why": "Both components render ds-select's clear button themselves now, so a rule written to give that button a border, background, radius or size fights the library's own instead of standing in for it.",
+      "replaceWith": "nothing"
+    }
+  ]
+}

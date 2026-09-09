@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 /**
@@ -9,7 +9,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 @Component({
   selector: 'ds-table-columns-trigger',
   standalone: true,
-  encapsulation: ViewEncapsulation.None,
+  styleUrl: './table-columns-trigger.component.scss',
   imports: [IconComponent],
   template: `
     <button

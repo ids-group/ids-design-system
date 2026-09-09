@@ -71,11 +71,13 @@
     background-color: var(--_dropzone-bg-color-active);
   }
 
+  /* No `cursor: default` here: the zone is a <label> wrapping the file input, so it opens the
+     picker with files present exactly as it does when empty. Saying otherwise denied an affordance
+     that still worked. */
   &.has-files {
     align-items: stretch;
     text-align: left;
     min-height: 0;
-    cursor: default;
   }
 
   &.disabled {

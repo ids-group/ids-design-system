@@ -18,7 +18,10 @@ import { join, dirname, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DECKS = join(ROOT, 'presentations');
+// Overridable so the selftest can write its fixtures into a private copy. Writing them into the
+// tracked directory turned this very gate red in a concurrent session, and a crash left a
+// `selftest-*.html` behind that `git add -A` would stage.
+const DECKS = process.env.DS_DECKS_DIR || join(ROOT, 'presentations');
 const ARCHIVE = join(DECKS, 'implemented');
 const STATUSES = ['open', 'implemented', 'tool'];
 

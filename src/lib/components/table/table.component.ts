@@ -5,6 +5,7 @@ import {
   TemplateRef,
   ViewEncapsulation,
   afterNextRender,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   contentChildren,
@@ -339,6 +340,22 @@ export class TableComponent<T extends object> {
     (config) => config.table?.stickyScrollbar,
     false,
   );
+  /**
+   * Where the sticky horizontal scrollbar comes to rest, as any CSS length.
+   *
+   * Unset, the table measures its scroll container's bottom padding and cancels it, so the bar
+   * sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its
+   * padding edge. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`;
+   * `--ds-table-sticky-scrollbar-offset` still wins over both, for a rule that has to reach one
+   * table from a stylesheet.
+   */
+  readonly stickyScrollbarOffset = input<string | null>(null);
+  readonly stickyScrollbarOffsetResolved = resolveWithConfig(
+    this.stickyScrollbarOffset,
+    (config) => config.table?.stickyScrollbarOffset,
+    null,
+  );
+
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
 
@@ -489,6 +506,14 @@ export class TableComponent<T extends object> {
     () => this.loadingMode() === false && !this.filteredData().length,
   );
 
+  /** Loading, nothing to show yet, and not the skeleton mode which draws its own rows. */
+  protected readonly showsLoadingSpace = computed(
+    () =>
+      this.loadingMode() !== false &&
+      this.loadingMode() !== 'skeleton' &&
+      !this.filteredData().length,
+  );
+
   protected readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
 
   private readonly toolbarAnchor = viewChild('toolbarAnchor', {
@@ -537,6 +562,12 @@ export class TableComponent<T extends object> {
     'columnFilterPopover',
   );
   /** The column whose filter menu is open — drives the distinct-value list. */
+  // Gates the panel's EXISTENCE on configuration, never on the clicked column: a handler that
+  // raises its own `@if` reads the viewChild back in the same synchronous line, before change
+  // detection has created it, and loses the click that opened it.
+  protected readonly hasAnyColumnFilter = computed(() =>
+    this.columns().some((col) => this.hasColumnFilter(col)),
+  );
   protected readonly filterColumn = signal<TableColumn<T> | null>(null);
   protected readonly filterSearch = signal('');
 
@@ -563,6 +594,13 @@ export class TableComponent<T extends object> {
     }
 
     return col.filter === 'set' || !!this.headerFilterFor(col);
+  }
+
+  protected isFilterPanelOpen(col: TableColumn<T>): boolean {
+    return (
+      this.filterColumn()?.key === col.key &&
+      (this.columnFilterPopover()?.opened() ?? false)
+    );
   }
 
   protected isColumnFiltered(col: TableColumn<T>): boolean {
@@ -1104,7 +1142,31 @@ export class TableComponent<T extends object> {
   private readonly hscrollProxy =
     viewChild<ElementRef<HTMLElement>>('hscrollProxy');
   private readonly tableHead = viewChild<ElementRef<HTMLElement>>('tableHead');
+
+  private publishHeadHeight(head: HTMLElement): void {
+    this.hostElement.nativeElement.style.setProperty(
+      '--_table-head-h',
+      `${head.getBoundingClientRect().height}px`,
+    );
+  }
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  // The scrollport a `position: sticky` offset inside this table resolves against.
+  private scrollAncestor(): HTMLElement | null {
+    for (
+      let element = this.hostElement.nativeElement.parentElement;
+      element;
+      element = element.parentElement
+    ) {
+      const overflowY = getComputedStyle(element).overflowY;
+      if (overflowY === 'auto' || overflowY === 'scroll') {
+        return element;
+      }
+    }
+
+    return document.scrollingElement as HTMLElement | null;
+  }
+
   protected readonly hscrollContentWidth = signal(0);
   protected readonly hscrollNeeded = signal(false);
   private readonly scrollTop = signal(0);
@@ -1144,18 +1206,26 @@ export class TableComponent<T extends object> {
     // from padding and line-height: `vertical-align: middle` on the inline-flex label extends
     // the line box past the strut by a font-metric amount no calc() can carry, and a sum is
     // blind to a taller control in the header.
-    effect(() => {
-      if (!this.isOverlayLoading()) {
-        return;
-      }
+    //
+    // After RENDER, or the read lands before layout and publishes 0px, which insets the scrim by
+    // nothing and covers the whole header. Twice, as chip-overflow does: the observer catches a
+    // header that grows on a narrower column or a density change, and the second pass re-reads
+    // whenever the scrim is about to appear, so a load never depends on an observer having fired.
+    afterRenderEffect((onCleanup) => {
       const head = this.tableHead()?.nativeElement;
-      if (!head) {
+      if (!head || typeof ResizeObserver === 'undefined') {
         return;
       }
-      this.hostElement.nativeElement.style.setProperty(
-        '--_table-head-h',
-        `${head.getBoundingClientRect().height}px`,
-      );
+      const observer = new ResizeObserver(() => this.publishHeadHeight(head));
+      observer.observe(head);
+      onCleanup(() => observer.disconnect());
+    });
+    afterRenderEffect(() => {
+      this.isOverlayLoading();
+      const head = this.tableHead()?.nativeElement;
+      if (head) {
+        this.publishHeadHeight(head);
+      }
     });
     // One effect for both halves, because the restore CANNOT run in the
     // constructor: input signals are not set yet there, so storageKey() is still
@@ -1292,6 +1362,42 @@ export class TableComponent<T extends object> {
           : null,
       );
     }
+
+    // A sticky `bottom` resolves against the scrollport's CONTENT box, so anything this table
+    // sticks to the bottom comes to rest one padding-bottom above the edge the reader sees. Both
+    // the horizontal scrollbar proxy and the bulk-action bar subtract this; it is published on the
+    // HOST so every descendant inherits one measurement, and measured rather than taken from a
+    // token because the padding belongs to the consumer's scroll container and moves with a media
+    // query.
+    effect((onCleanup) => {
+      const host = this.hostElement.nativeElement;
+      const scroller = this.scrollAncestor();
+      const publish = (): void =>
+        host.style.setProperty(
+          '--_table-scroller-pad-bottom',
+          scroller ? getComputedStyle(scroller).paddingBottom : '0px',
+        );
+      publish();
+      if (!scroller) {
+        return;
+      }
+      const observer = new ResizeObserver(publish);
+      observer.observe(scroller);
+      onCleanup(() => observer.disconnect());
+    });
+
+    // Published as a custom property rather than bound on the proxy: the proxy is behind an
+    // `@if`, and the stylesheet must be able to out-rank it with --ds-table-sticky-scrollbar-offset.
+    effect(() => {
+      const host = this.hostElement.nativeElement;
+      const resolved = this.stickyScrollbarOffsetResolved();
+      if (resolved === null) {
+        host.style.removeProperty('--_table-sticky-scrollbar-offset');
+
+        return;
+      }
+      host.style.setProperty('--_table-sticky-scrollbar-offset', resolved);
+    });
 
     // Assigning an equal scrollLeft fires no scroll event, so the two mirrors
     // can't loop.

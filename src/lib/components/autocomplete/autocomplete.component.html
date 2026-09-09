@@ -24,9 +24,7 @@
   #trigger
   class="autocomplete-trigger"
   [class]="sizeResolved()"
-  [class.open]="isOpen()"
   [class.disabled]="isDisabled()"
-  [class.error]="invalidResolved()"
   (click)="onTriggerClick()">
   <span class="addon-slot prefix">
     <ng-content select="[dsAutocompletePrefix]"></ng-content>

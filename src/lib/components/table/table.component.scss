@@ -1,5 +1,6 @@
 @use '../../styles/check-box' as check-box;
 @use '../../styles/focus' as focus;
+@use '../../styles/table-controls' as table-controls;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
 
@@ -23,6 +24,15 @@
   &:focus-visible {
     @include focus.ring;
   }
+}
+
+/* Three rows' worth, built from the same padding and line height a real row is, so it tracks
+   density instead of restating a number. The spinner then has a body to sit in and the table does
+   not jump when the first page arrives. */
+.loading-space {
+  height: calc(
+    (var(--_table-cell-pad-y) * 2 + var(--line-height-base) * var(--font-size-s)) * 3
+  );
 }
 
 .visually-hidden {
@@ -125,11 +135,16 @@
 .hscroll-proxy {
   position: sticky;
 
-  /* `bottom: 0` pins it to the scrollport edge, which is wrong when the table
-     sits in a container with bottom padding — the bar then floats above the
-     content it belongs to. A consumer offsets it with a negative value equal to
-     that padding. */
-  bottom: var(--ds-table-hscroll-bottom, 0);
+  /* Three layers, most specific first: the stylesheet hook, then `[stickyScrollbarOffset]` /
+     `DS_CONFIG.table.stickyScrollbarOffset` published as `--_table-sticky-scrollbar-offset`, then
+     the padding the .ts measured off the scroll ancestor and negates — see the note there. */
+  bottom: var(
+    --ds-table-sticky-scrollbar-offset,
+    var(
+      --_table-sticky-scrollbar-offset,
+      calc(-1 * var(--_table-scroller-pad-bottom, 0px))
+    )
+  );
   overflow: auto hidden;
 }
 
@@ -373,8 +388,35 @@
       width: var(--space-10);
     }
 
+    /* Opens like ds-accordion, on the same 0fr -> 1fr grid track: height 0 -> auto cannot
+       interpolate, and this can. A keyframe rather than a transition because the row is inserted
+       when it opens, and there is no previous state for a transition to run from. */
     .expand-panel-cell {
       padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
+      display: grid;
+      grid-template-rows: 1fr;
+      animation: ds-table-expand var(--duration-base) var(--ease-standard);
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+
+    .expand-panel-inner {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    @keyframes ds-table-expand {
+      from {
+        grid-template-rows: 0fr;
+        opacity: 0;
+      }
+
+      to {
+        grid-template-rows: 1fr;
+        opacity: 1;
+      }
     }
 
     /* Ellipsis clip for `truncate` text cells — the inline max-width (column
@@ -405,30 +447,8 @@
   }
 
   .expand-btn,
-  .row-actions-btn,
-  .col-picker-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--space-6);
-    height: var(--space-6);
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-    color: var(--_table-icon-btn-color);
-    border-radius: var(--ds-radius-inner);
-    transition: color var(--duration-fast) var(--ease-standard);
-
-    &:hover {
-      color: var(--_table-icon-btn-color-hover);
-    }
-
-    &:focus-visible {
-      --focus-ring-color: var(--_table-icon-btn-focus-color);
-
-      @include focus.ring;
-    }
+  .row-actions-btn {
+    @include table-controls.header-icon-button;
   }
 
   /* Retunes the density tokens the resolvers already read, rather than setting
@@ -491,60 +511,8 @@
 
 }
 
-/* Column-picker panel — portaled into the popover overlay, styled via the
-   component's emulated-encapsulation attribute (not nested under .table). */
-.col-picker {
-  display: grid;
-  gap: var(--space-2);
-  min-width: 160px;
-}
-
-.col-picker-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-
-  &.cdk-drag-preview {
-    background-color: var(--surface-default);
-    border-radius: var(--ds-radius-inner);
-    box-shadow: var(--shadow-popover);
-    padding: var(--space-1) var(--space-2);
-  }
-
-  &.cdk-drag-placeholder {
-    opacity: 0.4;
-  }
-}
-
-.col-picker.cdk-drop-list-dragging .col-picker-row:not(.cdk-drag-placeholder) {
-  transition: transform var(--duration-fast) var(--ease-standard);
-}
-
-.col-drag {
-  display: inline-flex;
-  color: var(--icon-default);
-  cursor: grab;
-
-  &:active {
-    cursor: grabbing;
-  }
-}
-
-.col-picker-option {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex: 1;
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  color: var(--text-primary);
-  cursor: pointer;
-
-  &:has(input:disabled) {
-    color: var(--text-tertiary);
-    cursor: default;
-  }
-}
-
+/* The width buttons `dsTableResize` hands to the column panel through the row seam: declared
+   here, so they carry ds-table's attribute and are ds-table's to style wherever they render. */
 .col-width {
   display: inline-flex;
   gap: var(--space-1);
@@ -558,43 +526,12 @@
   font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
 }
 
-.col-move {
-  display: inline-flex;
-  gap: var(--space-1);
-}
-
-.col-width-btn,
-.col-move-btn {
-  display: inline-flex;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--icon-default);
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    color: var(--icon-strong);
-  }
-
-  &:disabled {
-    color: var(--text-disabled);
-    cursor: default;
-  }
+.col-width-btn {
+  @include table-controls.panel-icon-button;
 }
 
 .col-reset {
-  margin-top: var(--space-1);
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--accent);
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  cursor: pointer;
-  text-align: left;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  @include table-controls.panel-reset-link;
 }
 
 .col-filter-btn {
@@ -828,7 +765,13 @@
 
 .bulk-bar {
   position: sticky;
-  bottom: var(--bulk-bar-offset);
+
+  /* Same subtraction the sticky scrollbar makes, for the same reason: a sticky `bottom` resolves
+     against the scrollport's CONTENT box, so the offset alone left the bar floating
+     `--bulk-bar-offset` PLUS the container's padding above the edge the reader sees. */
+  bottom: calc(
+    var(--bulk-bar-offset) - var(--_table-scroller-pad-bottom, 0px)
+  );
   display: flex;
   align-items: center;
   gap: var(--space-3);

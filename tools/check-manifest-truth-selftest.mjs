@@ -269,6 +269,40 @@ const rules = [
     expect: 'fire',
   },
   {
+    // An attribute directive is written on someone else's element, so a `new` naming one is not a
+    // member of that element and the surface has to know it separately. Three published items
+    // moved a feature behind a directive and every one was accused of naming a member that does
+    // not exist, which held the release gate red.
+    name: 'HOLDS: a `new` that names an attribute directive on the element',
+    item: {
+      id: 'x',
+      kind: 'input-rename',
+      old: 'ds-table[exportButton]',
+      new: 'dsTableExport',
+    },
+    before: surface({ elements: { 'ds-table': ['exportButton'] } }),
+    after: {
+      ...surface({ elements: { 'ds-table': [] } }),
+      directives: new Set(['dsTableExport']),
+    },
+    expect: 'hold',
+  },
+  {
+    name: 'FIRES on a `new` naming a directive nothing declares',
+    item: {
+      id: 'x',
+      kind: 'input-rename',
+      old: 'ds-table[exportButton]',
+      new: 'dsTableNeverWas',
+    },
+    before: surface({ elements: { 'ds-table': ['exportButton'] } }),
+    after: {
+      ...surface({ elements: { 'ds-table': [] } }),
+      directives: new Set(['dsTableExport']),
+    },
+    expect: 'fire',
+  },
+  {
     // The component writes `data-*` itself, so it is not an input and must not be looked up as one.
     name: 'HOLDS: a data-* attribute is not treated as a missing input',
     item: {
@@ -312,32 +346,49 @@ for (const testCase of rules) {
 
 // These depend on reading a real tree, not on the rules alone: an implicit `model()` output that no
 // source line declares, and the live shapes above as they actually ship.
+// The third number is how many of that manifest's values hold no name to look up. A green exit
+// alone proved nothing: replacing every value in a manifest with an unresolvable placeholder still
+// exits 0, because a value nobody can read is not a defect. The budget is what notices.
 const readOnly = [
-  ['0.7.0', "a model()'s implicit Change output"],
-  ['0.11.2', 'a consumer example in a detect shape'],
-  ['0.11.3', 'four phantom output renames'],
-  ['0.11.4', 'a widened type, filed as behavior rather than as a rename'],
+  ['0.7.0', "a model()'s implicit Change output", 2],
+  ['0.11.2', 'a consumer example in a detect shape', 1],
+  ['0.11.3', 'four phantom output renames', 1],
+  ['0.11.4', 'a widened type, filed as behavior rather than as a rename', 8],
 ];
-const run = (version) => {
+const run = (version, options = {}) => {
+  const spawn = () =>
+    execFileSync(
+      'node',
+      ['tools/check-manifest-truth.mjs', ...(version ? [version] : [])],
+      {
+        cwd: ROOT,
+        encoding: 'utf8',
+        stdio: 'pipe',
+        env: { ...process.env, ...(options.env ?? {}) },
+      },
+    );
   try {
-    execFileSync('node', ['tools/check-manifest-truth.mjs', version], {
-      cwd: ROOT,
-      encoding: 'utf8',
-      stdio: 'pipe',
-    });
-    return 'green';
-  } catch {
-    return 'red';
+    const out = spawn();
+    return options.text ? out : 'green';
+  } catch (error) {
+    const out = (error.stdout ?? '') + (error.stderr ?? '');
+    return options.text ? out : 'red';
   }
 };
 
-for (const [version, what] of readOnly) {
-  const got = run(version);
+for (const [version, what, budget] of readOnly) {
+  const out = run(version, { text: true });
   ran++;
-  const ok = got === 'green';
+  const unchecked = Number(
+    /(\d+) value\(s\) hold no single name/.exec(out)?.[1] ?? 0,
+  );
+  const ok =
+    !/does not exist|still resolves|target is not there/.test(out) &&
+    unchecked <= budget;
   if (!ok) failed++;
   console.log(
-    `${ok ? 'ok   ' : 'FAIL '} ${version} as it ships — ${what}: expected green, got ${got}`,
+    `${ok ? 'ok   ' : 'FAIL '} ${version} as it ships — ${what}: no defect, and ${unchecked} ` +
+      `value(s) unreadable against a budget of ${budget}`,
   );
 }
 
@@ -383,6 +434,44 @@ for (const [version, what] of UNCHECKABLE) {
   if (!ok) failed++;
   console.log(
     `${ok ? 'ok   ' : 'FAIL '} ${version} is uncheckable — ${what}: expected red, got ${got}`,
+  );
+}
+
+// The draft manifest is the ONE that can still be corrected, and it was excluded from the sweep by
+// a filter that demanded an existing tag. Its boundary is the last tag against the working tree.
+{
+  ran++;
+  // The draft is the one manifest that can still be corrected, and it used to be excluded from the
+  // sweep by a filter that demanded an existing tag.
+  const out = run('unreleased', { text: true });
+  const covered = /1 manifest\(s\) against/.test(out);
+  if (!covered) failed++;
+  console.log(
+    `${covered ? 'ok   ' : 'FAIL '} migrations/unreleased.json is checkable, against the last tag`,
+  );
+}
+
+// Two assertions the earlier cases could not make, because both branches they guard print nothing
+// a caller can see from the exit code alone.
+{
+  ran++;
+  const named = run('9.9.9', { text: true }).includes(
+    'no migrations/9.9.9.json',
+  );
+  if (!named) failed++;
+  console.log(
+    `${named ? 'ok   ' : 'FAIL '} an unknown version says WHICH manifest is missing, not just "nothing checkable"`,
+  );
+
+  ran++;
+  const unreadableFirst = (() => {
+    const out = run('', { text: true, env: { DS_TRUTH_TAGS: 'v0.0.0' } });
+    const warning = out.indexOf('could not be read at their own boundary');
+    return warning !== -1;
+  })();
+  if (!unreadableFirst) failed++;
+  console.log(
+    `${unreadableFirst ? 'ok   ' : 'FAIL '} an unreadable boundary is announced even when there are defects to print`,
   );
 }
 

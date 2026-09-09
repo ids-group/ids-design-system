@@ -71,32 +71,99 @@
           </a>
         }
       } @else {
-        <a
-          class="group group-link"
-          [routerLink]="urlForGroupPath(group.path)"
-          [class.is-active]="isGroupActive(group)"
-          (click)="navigated.emit()">
-          {{ group.title }}
-        </a>
-
-        @for (item of group.items; track item.anchor) {
-          <a
-            class="link"
-            [routerLink]="urlForAnchor(group.path, item.anchor)"
-            [state]="linkState(group.path)"
-            [class.is-active]="isActive(item.anchor)"
-            (click)="onItem(item.anchor)">
-            <span class="link-label">
-              {{ item.label }}
+        <div
+          class="nav-group"
+          [class.is-open]="isGroupOpen(group)"
+          [class.is-active]="isGroupActive(group)">
+          <!-- These groups are a way of arranging the nav, not destinations: every one of them
+               would have "opened" on its own first section, closing the page being read. -->
+          <button
+            type="button"
+            class="group-row"
+            [class.is-open]="isGroupOpen(group)"
+            [class.is-active]="isGroupActive(group)"
+            [attr.aria-expanded]="isGroupOpen(group)"
+            (click)="toggleGroup(group)">
+            <span class="group">
+              {{ group.title }}
             </span>
 
-            @if (item.new) {
-              <span class="nav-new">
-                new
-              </span>
-            }
-          </a>
-        }
+            <ds-icon
+              class="group-caret"
+              name="chevronDown"
+              [size]="14" />
+          </button>
+
+          @if (isGroupOpen(group)) {
+            <div class="group-items">
+              @for (item of group.items; track item.anchor) {
+                @let chapters = chaptersFor(item);
+
+                <!-- A section with chapters is BOTH a destination and a container, so the row
+                     splits: the link keeps navigating, and the caret beside it opens the list.
+                     One control cannot both go somewhere and stay put to reveal something. -->
+                <div
+                  class="item-row"
+                  [class.has-chapters]="chapters.length > 0">
+                  <a
+                    class="link"
+                    [routerLink]="urlForAnchor(group.path, item.anchor)"
+                    [state]="linkState(group.path)"
+                    [class.is-active]="isActive(item.anchor)"
+                    [attr.aria-current]="isActive(item.anchor) ? 'page' : null"
+                    (click)="onItem(item.anchor)">
+                    <span class="link-label">
+                      {{ item.label }}
+                    </span>
+
+                    @if (item.new) {
+                      <span class="nav-new">
+                        new
+                      </span>
+                    }
+                  </a>
+
+                  @if (chapters.length > 0) {
+                    <button
+                      type="button"
+                      class="item-caret"
+                      [attr.aria-expanded]="isItemOpen(item)"
+                      [attr.aria-label]="
+                        (isItemOpen(item) ? 'Collapse ' : 'Expand ') +
+                        item.label +
+                        ' chapters'
+                      "
+                      (click)="toggleItem(item)">
+                      <ds-icon
+                        name="chevronDown"
+                        [size]="12" />
+                    </button>
+                  }
+                </div>
+
+                @if (isItemOpen(item)) {
+                  <div class="chapters">
+                    @for (chapter of chapters; track chapter.slug) {
+                      <a
+                        class="chapter"
+                        [routerLink]="urlForAnchor(group.path, item.anchor)"
+                        [fragment]="chapter.slug"
+                        [state]="linkState(group.path)"
+                        [class.is-active]="isChapterActive(chapter)"
+                        [attr.aria-current]="
+                          isChapterActive(chapter) ? 'true' : null
+                        "
+                        [title]="chapter.headingText"
+                        (click)="onChapter(chapter)">
+                        {{ chapter.label }}
+                      </a>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
       }
     }
 

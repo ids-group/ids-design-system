@@ -126,6 +126,7 @@
                   class="col-filter-btn"
                   aria-haspopup="dialog"
                   [class.active]="isColumnFiltered(col)"
+                  [attr.aria-expanded]="isFilterPanelOpen(col)"
                   [attr.aria-label]="'Filter ' + col.label"
                   (click)="onColumnFilterClick(col, $event)">
                   <ds-icon
@@ -187,6 +188,16 @@
               [ngTemplateOutletContext]="{ $implicit: rowIndex }">
             </ng-container>
           }
+        } @else if (showsLoadingSpace()) {
+          <!-- Height, not a message. The empty state is a claim about the data and stays withheld
+               while the table is still asking; without this the tbody is empty, the table collapses
+               onto its header and the overlay spinner floats over nothing. -->
+          <tr aria-hidden="true">
+            <td
+              class="loading-space"
+              [attr.colspan]="expandedColspan()">
+            </td>
+          </tr>
         } @else if (showsEmptyRow()) {
           <tr>
             <td
@@ -369,10 +380,18 @@
                   <td
                     class="expand-panel-cell"
                     [attr.colspan]="expandedColspan()">
-                    <ng-container
-                      [ngTemplateOutlet]="rowExpandTemplate()!"
-                      [ngTemplateOutletContext]="{ $implicit: row, row: row }">
-                    </ng-container>
+                    <!-- The animation runs on the grid track, so the panel needs a child to be the
+                         track's content; `overflow: hidden` on it is what makes the reveal read as
+                         the accordion's rather than as a jump. -->
+                    <div class="expand-panel-inner">
+                      <ng-container
+                        [ngTemplateOutlet]="rowExpandTemplate()!"
+                        [ngTemplateOutletContext]="{
+                          $implicit: row,
+                          row: row,
+                        }">
+                      </ng-container>
+                    </div>
                   </td>
                 </tr>
               }
@@ -431,58 +450,60 @@
   </ds-popover>
 }
 
-@if (filterColumn()) {
+@if (hasAnyColumnFilter()) {
   <ds-popover
     #columnFilterPopover
     align="start"
     panelRole="dialog"
     panelLabel="Filter values">
-    @if (headerFilterFor(filterColumn()!); as projected) {
-      <div class="col-filter col-filter-custom">
-        <ng-container
-          [ngTemplateOutlet]="projected.template"
-          [ngTemplateOutletContext]="headerFilterContext(filterColumn()!)" />
-      </div>
-    } @else {
-      <div class="col-filter">
-        <input
-          type="text"
-          class="col-filter-search"
-          placeholder="Search…"
-          [value]="filterSearch()"
-          (input)="onFilterSearch($event)"
-          (click)="$event.stopPropagation()" />
-
-        <div class="col-filter-list">
-          @for (value of filterValues(); track value) {
-            <label class="col-filter-option">
-              <input
-                type="checkbox"
-                class="check"
-                [checked]="isFilterValueChecked(value)"
-                (change)="toggleFilterValue(value)" />
-              {{ value || '(empty)' }}
-            </label>
-          } @empty {
-            <div class="col-filter-empty">
-              No matches
-            </div>
-          }
+    @if (filterColumn()) {
+      @if (headerFilterFor(filterColumn()!); as projected) {
+        <div class="col-filter col-filter-custom">
+          <ng-container
+            [ngTemplateOutlet]="projected.template"
+            [ngTemplateOutletContext]="headerFilterContext(filterColumn()!)" />
         </div>
+      } @else {
+        <div class="col-filter">
+          <input
+            type="text"
+            class="col-filter-search"
+            placeholder="Search…"
+            [value]="filterSearch()"
+            (input)="onFilterSearch($event)"
+            (click)="$event.stopPropagation()" />
 
-        <div class="col-filter-footer">
-          <span class="col-filter-count">
-            {{ filterSelectedCount() }} selected
-          </span>
+          <div class="col-filter-list">
+            @for (value of filterValues(); track value) {
+              <label class="col-filter-option">
+                <input
+                  type="checkbox"
+                  class="check"
+                  [checked]="isFilterValueChecked(value)"
+                  (change)="toggleFilterValue(value)" />
+                {{ value || '(empty)' }}
+              </label>
+            } @empty {
+              <div class="col-filter-empty">
+                No matches
+              </div>
+            }
+          </div>
 
-          <button
-            type="button"
-            class="col-reset"
-            (click)="clearColumnFilter()">
-            Clear
-          </button>
+          <div class="col-filter-footer">
+            <span class="col-filter-count">
+              {{ filterSelectedCount() }} selected
+            </span>
+
+            <button
+              type="button"
+              class="col-reset"
+              (click)="clearColumnFilter()">
+              Clear
+            </button>
+          </div>
         </div>
-      </div>
+      }
     }
   </ds-popover>
 }

@@ -214,33 +214,35 @@ const DESCRIPTIONS = JSON.parse(
   ) || '{}',
 );
 
-// --ds-t-* utility override hooks: extract like component reads, grouped under 't'.
-const typographyHooks = extractComponentTokens(
-  readIf(join(ROOT, 'src/lib/styles/_typography.scss')),
-  't',
-);
-// The pane is portaled outside every component, so its rule lives in a global
-// partial — invisible to the component sweep, hence listed here under 'overlay'.
-const overlayMotionHooks = extractComponentTokens(
-  readIf(join(ROOT, 'src/lib/styles/_overlay-motion.scss')),
-  'overlay',
-);
-// Read in a MIXIN every field includes, so no component stylesheet declares them.
-// Grouped under 'field': the contract is the family's, not one component's.
-const fieldLabelHooks = extractComponentTokens(
-  readIf(join(ROOT, 'src/lib/styles/_field-label.scss')),
-  'field',
-);
-const fieldBoxHooks = extractComponentTokens(
-  readIf(join(ROOT, 'src/lib/styles/_field-box.scss')),
-  'field',
-);
+// Hooks declared in a style PARTIAL rather than in a component stylesheet: a mixin every field
+// includes, a rule for a panel portaled outside its component, the shared checkbox box. The
+// component sweep walks `*.component.scss` only, so each of these was named here by hand and the
+// list fell behind the code — `_check-mark.scss`, `_focus.scss`, `_link.scss` and others declare
+// hooks nobody was collecting. Swept instead; only the group name is stated, and only where it is
+// not the file's own name.
+const PARTIAL_GROUPS = {
+  '_typography.scss': 't',
+  '_overlay-motion.scss': 'overlay',
+  '_field-label.scss': 'field',
+  '_field-box.scss': 'field',
+  '_field-state.scss': 'field',
+  '_field-group-segment.scss': 'field',
+  '_check-box.scss': 'checkbox',
+  '_check-mark.scss': 'checkbox',
+};
+const stylesDir = join(ROOT, 'src/lib/styles');
+const partialHooks = readdirSync(stylesDir)
+  .filter((file) => file.startsWith('_') && file.endsWith('.scss'))
+  .flatMap((file) =>
+    extractComponentTokens(
+      readIf(join(stylesDir, file)),
+      PARTIAL_GROUPS[file] ?? file.replace(/^_|\.scss$/g, ''),
+    ),
+  );
+
 const all = [
   ...comp.map((t) => ({ ...t, category: 'component' })),
-  ...typographyHooks.map((t) => ({ ...t, category: 'component' })),
-  ...overlayMotionHooks.map((t) => ({ ...t, category: 'component' })),
-  ...fieldLabelHooks.map((t) => ({ ...t, category: 'component' })),
-  ...fieldBoxHooks.map((t) => ({ ...t, category: 'component' })),
+  ...partialHooks.map((t) => ({ ...t, category: 'component' })),
   ...globals.map((t) => ({ ...t, category: categorize(t.name) })),
 ];
 for (const t of all)

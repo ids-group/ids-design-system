@@ -35,7 +35,7 @@ import { resolveBrandValue } from '@ids-group-ltd/ids-design-system/components';
  * unset when you supply a logo.
  *
  * ```html
- * <ds-auth-layout brand="MyAdmin" logoLetter="A" tagline="Broker administration">
+ * <ds-auth-layout brand="AppAdmin" logoLetter="A" tagline="Workspace administration">
  *   <h1 class="title">Sign in</h1>
  *   <form class="form">…</form>
  *
@@ -62,7 +62,7 @@ export class AuthLayoutComponent {
    *  tile; clear both to give one screen no brand row. */
   readonly brand = input<string | null>(null);
   /** Letter-mark glyph when it differs from the brand's first letter (e.g. an
-   *  "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`;
+   *  "A" tile beside the "AppAdmin" wordmark). Empty = first letter of `brand`;
    *  unset falls back to `DS_CONFIG.brand.logoLetter`. */
   readonly logoLetter = input<string | null>(null);
   /** One line under the wordmark naming the product or audience. Unset falls back

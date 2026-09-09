@@ -39,19 +39,36 @@
     .refusal-tag--standing { background: var(--error-subtitle); color: var(--error-text); }
     .refusal-tag--temporary { background: var(--warning-subtitle); color: var(--warning-text); }
     .refusal-tag--room { background: var(--surface-secondary); color: var(--text-secondary); }
+    .refusal-lede {
+      margin: 0;
+      color: var(--text-primary);
+      font-weight: var(--font-weight-bold);
+    }
     .refusal-copy {
       color: var(--text-secondary);
       margin: 0;
     }
+
+    /* A column, centred, framed. Left-aligned the specimens ranged from 127px to 300px wide
+       against a surface that is invisible in dark mode, so they read as debris pinned to an edge
+       that was not drawn. The frame is what the prose above is separated FROM; the centring is
+       what stops honest width differences from reading as raggedness. */
     .refusal-stage {
       margin-top: auto;
       display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      gap: var(--space-3);
-      padding: var(--space-4);
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-5) var(--space-4);
       background: var(--surface-secondary);
+      border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-md);
+    }
+    .refusal-note {
+      margin: var(--space-4) 0 0;
+      padding-left: var(--space-4);
+      border-left: var(--border-width-strong) solid var(--border-divider);
+      color: var(--text-secondary);
     }
 
     /* ---------- states matrix (button-specific; color × variant uses docs-matrix) ---------- */

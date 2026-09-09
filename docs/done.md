@@ -4,6 +4,41 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## A void `var(--token)` is now a gate, not a surprise (2026-09-09)
+
+`check-void-tokens` reads every `.scss`/`.css` under `src` and `ds-docs/src` and fails on a
+`var(--x)` the browser cannot resolve. It is in `lint:all`, and `check-void-tokens:selftest`
+proves each rule still fires plus a negative control.
+
+**Why a gate and not a fix.** A void reference is invalid at computed-value time, which drops the
+WHOLE declaration — nothing renders as broken, it renders as *absent*. `.chapter` in the docs
+sidebar shipped `padding: 5px var(--space-2-5) 5px var(--space-7)` with `--space-7` declared
+nowhere (the scale runs 6 → 8), so every chapter row had padding 0: 16.8px tall instead of 26.8px,
+text flush against its thread. `deck-lint`'s D012 already caught this class in `presentations/` —
+it exists because ten decks had done the same thing — but the rule stopped at that folder.
+
+**Four rules, and each one was measured rather than guessed.** A first pass over the real tree
+reported 27 hits, of which ONE was a defect. So the gate ignores names inside comments (3 hits);
+resolves custom properties written from a template `[style.--x]` binding or from
+`setProperty()` (9 hits); resolves against the compiled `presentations/ds.css`, because
+`--bp-sm`/`md`/`lg` are emitted by an `@each` over a Sass map and no literal declaration exists to
+find (3 hits); and only follows a fallback when the primary is undeclared, since
+`var(--warning-subtitle, var(--surface-subtitle))` never consults its void fallback (3 hits, and
+the remaining 9 were the same shapes in other files).
+
+**The gate's first run found a bug in the gate.** Walking every `var(` in a line meant a nested
+fallback was visited twice — once through its parent, once on its own — so a sound chain whose
+primary resolved was reported anyway. Nested `var()` is now reachable only through its parent's
+fallback.
+
+**Two real voids fixed on the way.** The sidebar's two `--space-7` references (`--space-6` for the
+chapter's left padding, `--space-8` for the caret gutter on a row with chapters), and
+`activity.section.scss`, where the empty-state avatar painted itself with `--surface-subtitle` — a
+token that has never existed in any theme or generated bundle, a leftover of the
+`subtle`→`subtitle` rename — so a 48px circle rendered with no fill at all.
+
+---
+
 ## The release gate on the toast class surface is green (2026-09-02)
 
 `check-class-surface-entry` was RED on `ToastRegionComponent`, `ToastComponent` and

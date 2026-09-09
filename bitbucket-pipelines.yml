@@ -20,6 +20,9 @@ definitions:
         files:
           - bun.lock
       path: ~/.bun/install/cache
+    # Paired with `cli.cache.environment: "all"` in angular.json: the default there is "local",
+    # which switches Angular's build cache off whenever CI=true. Without that half this entry
+    # caches a directory nothing writes.
     angular:
       key:
         files:

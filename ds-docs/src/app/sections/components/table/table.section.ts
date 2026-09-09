@@ -1,4 +1,11 @@
-import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
+import {
+  Component,
+  type TemplateRef,
+  ViewEncapsulation,
+  computed,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { BadgeComponent } from 'ds/badge';
 import { ButtonComponent } from 'ds/button';
 import { DrawerComponent } from 'ds/drawer';
@@ -28,6 +35,13 @@ interface EventRow {
   readonly status: 'active' | 'confirmed' | 'planning' | 'completed';
   readonly statusLabel: string;
   readonly capacity: string;
+}
+
+interface DeliveryRow {
+  readonly channel: string;
+  readonly sentAt: string;
+  readonly recipient: string;
+  readonly outcome: string;
 }
 
 interface ProjectRow {
@@ -391,6 +405,63 @@ export class TableSection {
   ];
 
   protected readonly projectSelected = signal(new Set<string>());
+
+  // Deliberately keyless: an audit line has no id of its own, which is the case `[rowId]` exists
+  // for. Two rows share a channel and two share a timestamp, so only the pair identifies a row.
+  protected readonly deliveries: readonly DeliveryRow[] = [
+    {
+      channel: 'email',
+      sentAt: '09:12',
+      recipient: 'ops@northsite',
+      outcome: 'Delivered',
+    },
+    {
+      channel: 'email',
+      sentAt: '09:40',
+      recipient: 'ops@eastcampus',
+      outcome: 'Delivered',
+    },
+    {
+      channel: 'sms',
+      sentAt: '09:12',
+      recipient: '+44 7700 900461',
+      outcome: 'Failed',
+    },
+    {
+      channel: 'push',
+      sentAt: '10:05',
+      recipient: 'field-app',
+      outcome: 'Delivered',
+    },
+  ];
+
+  protected readonly deliveryColumns: TableColumn<DeliveryRow>[] = [
+    { key: 'channel', label: 'Channel' },
+    { key: 'sentAt', label: 'Sent' },
+    { key: 'recipient', label: 'Recipient' },
+    { key: 'outcome', label: 'Outcome' },
+  ];
+
+  protected readonly deliveryRowId = (row: DeliveryRow): string =>
+    `${row.channel}-${row.sentAt}`;
+
+  protected readonly deliverySelected = signal(new Set<string>());
+
+  // The map and the empty template are read as viewChild rather than projected, because that is
+  // the situation they exist for: a wrapper's own <ng-content> hides projected directives from the
+  // table's content query, so the wrapper has to hand them over as inputs.
+  private readonly outcomeCell =
+    viewChild.required<TemplateRef<{ $implicit: unknown; row: unknown }>>(
+      'outcomeCell',
+    );
+  private readonly noDeliveries =
+    viewChild.required<TemplateRef<unknown>>('noDeliveries');
+
+  protected readonly handedOverTemplates = computed(() => ({
+    outcome: this.outcomeCell(),
+  }));
+  protected readonly handedOverEmpty = computed(() => this.noDeliveries());
+  protected readonly wrapperRows = signal<readonly DeliveryRow[]>([]);
 
   protected readonly fitColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project' },

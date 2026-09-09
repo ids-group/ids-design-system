@@ -1,0 +1,5 @@
+/* Outside the card on purpose: the scrim covers what it is loading, and a control that toggles it
+   cannot live under it — pressing it once left the button behind the blur. */
+.demo-toggle {
+  margin-top: var(--space-4);
+}

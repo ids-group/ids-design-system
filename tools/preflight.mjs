@@ -142,6 +142,16 @@ try {
   );
 }
 
+// The one check with no other home — a wrong static attribute is silent at runtime, so nothing
+// downstream reports it either.
+try {
+  execSync('node tools/check-docs-attrs.mjs', { stdio: 'inherit' });
+} catch {
+  fail(
+    'a static attribute on a ds-* element answers to no input of that component (errors above).',
+  );
+}
+
 // Two more the PR gate calls hard and this one did not run, which is the same hole the changelog
 // checks above were added to close: the PR gate is manual, so a release can be cut from a branch
 // where neither ever fired. Left out deliberately: deck-lint, whose subject is internal decks that

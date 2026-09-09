@@ -27,6 +27,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import {
+  clearOnDetach,
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
@@ -332,10 +333,13 @@ export class ColorPickerComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
-    this.overlayRef.detachments().subscribe(() => {
-      removeScrollClose();
-      this.overlayRef = null;
-      this.open.set(false);
+    clearOnDetach(this.overlayRef, {
+      current: () => this.overlayRef,
+      always: removeScrollClose,
+      clear: () => {
+        this.overlayRef = null;
+        this.open.set(false);
+      },
     });
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

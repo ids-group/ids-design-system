@@ -8,6 +8,242 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`--ds-table-hscroll-bottom` is `--ds-table-sticky-scrollbar-offset`.** The knob now carries the
+  name of the feature it belongs to, beside `stickyScrollbar` itself and the new
+  `[stickyScrollbarOffset]` input; the old spelling named neither the feature nor the edge it moves.
+  It is inert under the old name, and a stylesheet that still sets it stops offsetting the bar with
+  nothing said. Rename the declaration and the value carries over unchanged — except where the value
+  was a negative offset equal to your scroll container's bottom padding, which the table measures
+  and cancels itself now, so that one is deleted rather than renamed
+  (delete list: table-hscroll-bottom-workaround).
+
+### Added
+
+- **`ds-sidenav-group` takes a `routerLink`, so a group can be a destination as well as a
+  container.** Unset — the default, and what every existing group does — the header only expands,
+  unchanged. Set it and the header becomes a link that navigates, and the caret splits off into a
+  button of its own, because one control cannot both go somewhere and stay put to open something.
+  The link takes the whole header's look, so the row still reads as one control, and it carries the
+  active state when its route is the current one.
+
+  ```html
+  <ds-sidenav-group label="Reports" icon="chart" expandable routerLink="/reports">
+    <ds-sidenav-item label="Daily" routerLink="/reports/daily" />
+  </ds-sidenav-group>
+  ```
+
+  It takes the same shapes a router link takes anywhere, a string or a command array. **It does
+  nothing without `expandable`** — a group that cannot open has no caret to split off, so the header
+  stays a plain label and the link is ignored with nothing said. On a group that does opt in, the
+  header element changes from a `button` to an `a` — the active state above is a contextual
+  `.active` class it carries — and gains a `.group-header-row` wrapper beside a
+  `.group-caret-button`, with
+  `.group-caret` now sitting inside that button rather than directly in the header; a stylesheet of
+  yours reaching `.group-header` by class still lands, one that qualifies it with `button` does
+  not.
+
+- **`ds-table` takes `[stickyScrollbarOffset]`, and `DS_CONFIG.table.stickyScrollbarOffset` sets it
+  for every table.** Where the sticky horizontal scrollbar comes to rest, as any CSS length.
+  Unset — the default — each table measures its own scroll container's bottom padding and cancels
+  it, which is what puts the bar on the edge the reader sees; set this for a scrollport whose
+  reachable edge is somewhere else, and set it in the config when that is true of a whole app rather
+  than of one table. `--ds-table-sticky-scrollbar-offset` still out-ranks both, for a rule that has
+  to reach one table from a stylesheet.
+
+  ```html
+  <ds-table
+    [stickyScrollbarOffset]="'-3rem'"
+    [stickyScrollbar]="true"
+    [columns]="cols"
+    [data]="rows" />
+  ```
+
+### Changed
+
+- **An expanded `ds-table` row opens with a reveal instead of appearing at full height.** The
+  panel's cell animates its `grid-template-rows` from `0fr` to `1fr`, and a new
+  `.expand-panel-inner` wrapper between the cell and your projected expand template clips the
+  overflow so the content wipes into place rather than snapping open. The reveal runs over
+  `--duration-base` at `--ease-standard`; set those to retune its speed and curve. Under
+  `prefers-reduced-motion: reduce` the panel appears fully open with no reveal. Because that
+  wrapper now sits between the `<td>` and the projected template, a rule of yours that reached the
+  template as a direct child of the cell no longer matches — reach it through `.expand-panel-inner`,
+  or drop the child combinator.
+
+- **The skeleton shimmer reads as a wave now, not a wash.** It travels diagonally, down and to the
+  right at 45°, so it arrives at the top of one placeholder and the bottom of another instead of
+  sweeping every row in step. Two waves cross per period — a main one and a quieter one exactly
+  between two mains — which fills the wait a single band left without making the main wave hurry.
+  Neither has a flat core: each peaks at a point and is ramp either side, so a pass arrives and
+  leaves rather than switching. The tone is one soft step darker than the base, unchanged: a shadow
+  moving over the placeholders, not a light switched on over them.
+  It is seamless, and the reason is one number. A repeating gradient still paints into a finite
+  image which the browser tiles, and an angled gradient meets itself across a tile edge only when
+  the tile advances its phase by a whole period: at 135° a square tile of side S advances it by
+  S / √2, so the tile has to be period × √2. Left at `auto` the tile was the positioning area — the
+  viewport, under `fixed` — and every tile boundary showed as a hard line straight across the page.
+  Measured against tiles of period / √2, of period, and one oversized no-repeat image: all three
+  seam, this one does not.
+
+  Four hooks, all with defaults — `--ds-skeleton-wave-period` (56rem),
+  `--ds-skeleton-wave-duration` (3400ms), `--ds-skeleton-wave-angle` (135deg) and
+  `--ds-skeleton-wave-echo-color`. **`--ds-skeleton-wave-duration` replaces the shimmer's old
+  dependency on `--duration-loop-slow`**, so a brand that retuned that global no longer reaches the
+  skeleton — set the skeleton hook instead. The loop is 3400ms where it was 1400ms, and the pass no
+  longer rests between crossings. **`--ds-skeleton-wave-angle` retunes the gradient's direction
+  only**: the tile size and the loop's travel are fixed to the 45° diagonal, so an angle far from
+  the default tiles visibly. Change it for a small adjustment, not for a new axis.
+
+- **Two classes gained members — only matters if you SUBCLASS one.** `TableComponent` gained
+  `showsLoadingSpace`, which decides whether a table that is still loading and has no rows yet holds
+  a body open instead of collapsing onto its header, and `publishHeadHeight`, which measures the
+  header and publishes its height for the scrim to inset against, `scrollAncestor`, which finds the
+  scrollport a sticky offset inside the table resolves against, `hasAnyColumnFilter`, which decides
+  whether the column-filter panel is rendered at all, `isFilterPanelOpen`, which tells a header
+  button whether the panel showing belongs to it, and the new `stickyScrollbarOffset` input with its
+  `stickyScrollbarOffsetResolved`. `SidenavGroupComponent` gained the
+  new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
+  into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
+  `private` and `protected` collide with TS2415 exactly as a public name does, so a member of yours
+  sharing one of those names stops the build. Nothing changes for a consumer who only uses the
+  elements — no existing input, output or token changed name or type.
+
+- **A fullscreen `ds-modal` is a full-height panel now, so `--modal-h-fullscreen` reads as a target
+  and no longer as a cap.** The class used to set the token as a `max-height`, which let a short
+  body shrink the panel; it sets the height itself now, still clipped by the modal's own 90dvh
+  ceiling. A modal you sized through that token gets `min(your value, 90dvh)` — set it below the
+  ceiling if you want the panel shorter, and expect the extra room to go to the scrolling body with
+  the footer at the bottom of the screen.
+
+- **`ds-date-picker` focuses like a field, not like a button.** `--ds-date-picker-focus-shadow`
+  falls back to `--ds-field-focus-shadow` instead of `--ds-control-focus-shadow`, so the trigger
+  draws the single soft field halo the inputs draw and follows the `data-focus` switch, which it
+  used to ignore. A brand that retunes the control family no longer reaches the date picker — retune
+  the field family, or set `--ds-date-picker-focus-shadow` outright. `ds-time-picker` still resolves
+  the control family, so the two now focus differently.
+
+- **Five classes that carried no styling are gone from the DOM — only matters if YOUR stylesheet
+  reached one.** `ds-autocomplete`'s trigger no longer takes `.open` or `.error`,
+  `ds-multi-select`'s trigger no longer takes `.readonly`, and `ds-tabs`' count badge is
+  `class="badge"` where it was `class="badge neutral count"`. This library never styled any of the
+  five, so none of its own rules move; a rule of yours keyed off one stops matching, silently. Every
+  state they reported is still on the element:
+  `.autocomplete-trigger:has(input[aria-expanded="true"])` for open, the host's
+  `[data-field-state="error"]` for error, `.field-trigger[aria-readonly="true"]` for read-only, and
+  `.badge` on its own for the badge.
+
+- **The `ds-progress` warning bar is a yellow.** `--ds-progress-bar-color-warning` falls back to
+  `--yellow-500` rather than to `--warning-hover`, which mixed the warning hue toward black in the
+  light theme and toward white in the dark one — one bar read olive, the other pale. Both themes
+  paint the same yellow now. A brand that recoloured the bar through `--warning-hover` no longer
+  reaches it; set `--ds-progress-bar-color-warning`. `--warning-hover` itself is unchanged and still
+  used elsewhere.
+
+### Fixed
+
+- **A `ds-table` loading in `overlay` mode with no rows keeps a body.** The tbody was empty, so the
+  table collapsed onto its header and the spinner floated over nothing. It now holds one
+  `aria-hidden` spacer row's worth of height, built from the same padding and line height a real row
+  uses, so it tracks density. Only `[loading]="'overlay'"` with zero rows is affected — `skeleton`
+  draws its own rows and `[loading]="true"` resolves to `skeleton` when there is nothing to show.
+  A test that asserts an empty tbody during an overlay load now sees that one row.
+
+- **The `ds-table` loading scrim starts below the header from the first frame.** The header height
+  was read once per load and before layout, so the first frame fell back to a 40px guess under a
+  taller header and the blur began mid-header. It is measured after render and re-measured whenever
+  the header resizes, so a header that wraps or a density change moves the scrim with it.
+  `--ds-table-head-h` still overrides the measurement.
+
+- **The `ds-table` selection checkbox stops twitching when the mark changes.** The box sat on the
+  text baseline, so the header row's height moved by a fraction of a pixel as the select-all box
+  swapped between its tick and its indeterminate bar. It is centred against the line box now. This
+  reaches the table's header and row checkboxes and the `dsTableColumns` panel's per-column
+  checkboxes; `ds-checkbox` itself lays the box out as a flex item and never showed it. A
+  `::ng-deep` nudge you added to compensate for the old sit is now that much out.
+
+- **`ds-date-picker`'s calendar glyph matches the value it sits beside.** It rendered two pixels
+  taller than the digits' cap height and overhung them top and bottom.
+
+- **Clicking above or below the digits in `ds-date-picker` places the caret instead of opening the
+  calendar.** The text input only covered the value's own line box, so the band either side of it
+  fell through to the trigger. It spans the field's height now.
+
+- **`ds-dropzone` shows the hand cursor once files are listed.** The zone kept the arrow, which read
+  as "this is finished, there is nothing to click", while the whole zone had stayed clickable the
+  entire time. Nothing about what a click does has changed.
+
+- **`dsTableColumns` draws a styled panel and a styled header button.** The panel's checkboxes, drag
+  handles, move buttons and `Reset to default` link came out as the browser's own widgets and the
+  button that opens the panel as a bordered grey rectangle, because the rules for `.col-picker`,
+  `.col-picker-row`, `.col-picker-option`, `.col-drag`, `.col-move`, `.col-move-btn`, `.col-reset`
+  and `.col-picker-btn` were scoped to `ds-table` while the elements they name sit in views of their
+  own. Each of those classes is styled from the view that renders it now. Markup, class names and
+  API are unchanged, but a stylesheet of yours that reached one of them by a bare class name shared
+  the element with nothing and now competes with a scoped rule — qualify your selector, or reach for
+  the token the class reads.
+
+- **A `ds-table` sticky horizontal scrollbar rests on the edge the reader can see.** Inside a scroll
+  container with bottom padding the bar settled one padding-bottom short of that edge and drew over
+  the rows beneath it, because a sticky `bottom` resolves against the scrollport's content box. The
+  table measures that padding off its scroll ancestor, cancels it, and re-measures when the
+  container resizes, so a padding that moves with a media query moves the bar with it.
+  `--ds-table-sticky-scrollbar-offset` still overrides the measurement outright — keep it for a
+  scrollport whose reachable edge is not its padding edge, and drop a negative value written to
+  cancel your own container's padding, which now offsets the bar a second time
+  (delete list: table-hscroll-bottom-workaround).
+
+- **`clearable` on `ds-autocomplete` and `ds-multi-select` draws the clear button the rest of the
+  field family draws.** Both rendered the `.clear-btn` markup with no rule able to reach it, so the
+  × came out as the browser's default button — a grey bordered rectangle with a square corner and a
+  default cursor — next to the properly drawn chips it sits beside. `ds-select`'s rule is shared by
+  all three now: chromeless, `--icon-default`, `--ds-radius-inner`, `--space-0-5` of padding and the
+  press feedback, over a `--surface-secondary` hover. `ds-select` itself is unchanged, and `ds-input`
+  keeps its own filled-disc clear button, which is a different control on purpose
+  (delete list: picker-clear-button-workaround).
+
+- **A `ds-table` column filter opens on the first click.** The first click on a filter button only
+  built the panel and the second one opened it, because the handler raised the condition that
+  renders the panel and then read the panel back in the same synchronous line, before change
+  detection had created it. The panel's existence now follows the columns' own filter configuration,
+  the way the row-actions menu and the clipped-cell text popover already did, so it is there before
+  the first click arrives. This reaches `filterMode` set to anything but `'none'`, both the built-in
+  `filter: 'set'` panel and a projected `dsHeaderFilter`, and the keyboard as much as the pointer —
+  one Enter on the button opens it. A table with no filterable column renders no panel at all.
+
+- **A `ds-table` column filter button says whether its panel is open.** It announced
+  `aria-haspopup="dialog"` and never `aria-expanded`, so a screen reader was told a dialog was
+  available but never that it had appeared. The attribute is on every filter button now and reads
+  `true` only on the column whose panel is showing.
+
+- **A `ds-table` bulk-action bar rests `--bulk-bar-offset` above the edge the reader can see.**
+  Inside a scroll container with bottom padding it floated that offset PLUS the padding above the
+  edge, because a sticky `bottom` resolves against the scrollport's content box — the same reason
+  the sticky horizontal scrollbar settled short. The table measures its scroll container's bottom
+  padding once and both subtract it, so the gap is the offset you set whatever the container's
+  padding is. Only a table with row selection inside a padded scroll container moves; the token
+  itself is unchanged.
+
+- **A panel re-opened straight after being dismissed can be closed again.** Dismissing an overlay
+  disposes it only after its exit animation, so re-opening within that window let the OLD panel's
+  disposal clear the state belonging to the NEW one: the component held no reference to the panel on
+  screen, `close()` therefore did nothing, and neither Escape nor a click outside would dismiss it —
+  while `aria-expanded` reported it collapsed. Reachable by dismissing and re-opening quickly, and
+  in `ds-table` by moving from one column filter to another. Measured in `ds-date-picker`,
+  `ds-color-picker`, `ds-time-picker` and `ds-popover` — and so in everything `ds-popover` carries:
+  `ds-table`'s column filter, row-actions menu and clipped-cell text, `ds-split-button`,
+  `ds-filter-bar`'s overflow panel and `ds-sidenav-footer`'s search. `ds-select`,
+  `ds-autocomplete` and `ds-multi-select` were already immune and are unchanged in behaviour.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `ds-table .check` — a margin or `transform` nudging the selection box off the text baseline | the box is centred against the line box now, so the nudge is an offset of its own | nothing |
+| `--ds-table-hscroll-bottom: -` — a negative offset equal to your scroll container's bottom padding | the table measures that padding and cancels it itself, so the value offsets the sticky scrollbar a second time — and the token it sits on is renamed, so this one is deleted rather than carried over | nothing |
+| `ds-autocomplete .clear-btn` (or the `ds-multi-select` one) — your own rule giving the clear × a border, background, radius or size | both draw ds-select's clear button themselves now, so your rule fights it | nothing |
+
 ## 0.12.1 — 2026-09-05
 
 ### Breaking
@@ -297,6 +533,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   button has (`--ds-split-button-pressed-shadow`, default none). The scale runs AWAY from the seam —
   `transform-origin` is the inner edge on each half — because a centred scale pulls the pressed half's
   inner edge inward and opens a hairline gap in the joint.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `::ng-deep ds-menu-item` — a left padding or margin added so icon-less rows line up with rows that have icons | the menu reserves the icon slot for every row as soon as one item carries an icon | nothing |
+| `::ng-deep ds-split-button` — a hand-rolled `:active` darken or scale | both halves darken and scale on press, and the scale runs away from the seam so the joint stays closed | `--ds-split-button-bg-color-active`, `--ds-split-button-press-scale` |
+| `::ng-deep .search` — a focus indicator added by hand to a picker's search box, a column filter, a cell editor or a clipped icon button | each of those draws the control ring itself now, and the ring is an `outline` drawn inside the element, so a clipping ancestor no longer eats it | nothing |
 
 ## 0.12.0 — 2026-09-04
 

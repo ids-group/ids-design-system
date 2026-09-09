@@ -39,6 +39,13 @@
   </p>
 
   <div class="brand-demo">
+    <div class="demo-head">
+      <ds-switch
+        label="Disabled"
+        size="sm"
+        [(checked)]="matrixDisabled" />
+    </div>
+
     <docs-matrix
       cornerLabel="color \ variant"
       [cols]="variants"
@@ -50,9 +57,82 @@
           icon="edit"
           [ariaLabel]="row.label + ' ' + variant"
           [variant]="$any(variant)"
-          [color]="$any(row.key)" />
+          [color]="$any(row.key)"
+          [disabled]="matrixDisabled()" />
       </ng-template>
     </docs-matrix>
+  </div>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <p class="block-desc t-s">
+    The primary colour in every variant (rows) across every state (columns).
+    Hover, focus and active are pinned for display — the pins read the
+    component's own resolvers, so no values are duplicated here.
+  </p>
+
+  <div class="matrix-scroll">
+    <div class="matrix matrix--states">
+      <div></div>
+
+      @for (state of states; track state) {
+        <div class="t-overline">
+          {{ state }}
+        </div>
+      }
+
+      @for (spec of stateVariants; track spec.variant) {
+        <div class="t-overline matrix-row-label">
+          {{ spec.label }}
+        </div>
+
+        <div class="matrix-cell">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' default'"
+            [variant]="spec.variant" />
+        </div>
+
+        <div class="matrix-cell pin-hover">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' hover'"
+            [variant]="spec.variant" />
+        </div>
+
+        <div class="matrix-cell pin-focus">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' focus'"
+            [variant]="spec.variant" />
+        </div>
+
+        <div class="matrix-cell pin-active">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' active'"
+            [variant]="spec.variant" />
+        </div>
+
+        <div class="matrix-cell">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' selected'"
+            [variant]="spec.variant"
+            [selected]="true" />
+        </div>
+
+        <div class="matrix-cell">
+          <ds-icon-button
+            icon="edit"
+            [ariaLabel]="spec.label + ' disabled'"
+            [variant]="spec.variant"
+            [disabled]="true" />
+        </div>
+      }
+    </div>
   </div>
 
   <h3 class="block-title t-h4">

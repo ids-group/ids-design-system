@@ -39,7 +39,7 @@ export class SidenavComponent implements SidenavContract {
    *  the wordmark while a `logoLetter` in the config still paints its tile. */
   readonly brand = input<string | null>(null);
   /** Letter-mark glyph when it differs from the brand's first letter (e.g. an
-   *  "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`;
+   *  "A" tile beside the "AppAdmin" wordmark). Empty = first letter of `brand`;
    *  unset falls back to `DS_CONFIG.brand.logoLetter`. */
   readonly logoLetter = input<string | null>(null);
   /** Route the brand row links to — typically the app's home. Unset leaves the row a

@@ -27,6 +27,7 @@ import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/sp
 import { TagComponent } from '@ids-group-ltd/ids-design-system/components/tag';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import {
+  clearOnDetach,
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
@@ -771,16 +772,13 @@ export class MultiSelectComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
-    const detaching = this.overlayRef;
-    this.overlayRef.detachments().subscribe(() => {
-      removeScrollClose();
-      // A deferred dispose can outlive a re-open, and then this fires for the
-      // PREVIOUS panel: clearing state here would strand the live one.
-      if (this.overlayRef !== detaching) {
-        return;
-      }
-      this.overlayRef = null;
-      this.setOpen(false);
+    clearOnDetach(this.overlayRef, {
+      current: () => this.overlayRef,
+      always: removeScrollClose,
+      clear: () => {
+        this.overlayRef = null;
+        this.setOpen(false);
+      },
     });
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

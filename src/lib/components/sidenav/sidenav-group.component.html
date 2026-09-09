@@ -1,32 +1,61 @@
 <!-- Single <ng-content> outside any @if blocks. Angular accepts only one
      default slot per component; duplicate <ng-content> elements caused
-     children to silently drop when control flow chose a non-matching branch. -->
-@if (expandable()) {
+     children to silently drop when control flow chose a non-matching branch.
+     The same holds for the named [ds-group-icon] slot, which is why the icon
+     and title live in ONE template both header branches stamp out. -->
+<ng-template #headerContent>
+  @if (icon()) {
+    <ds-icon
+      class="group-icon"
+      [name]="icon()!"
+      [size]="18">
+    </ds-icon>
+  } @else {
+    <!-- `[ds-group-icon]` is selector-distinct from `[icon]` slots used on
+         sidenav-item children, so projected icons don't get swallowed when
+         a consumer puts items inside the group. -->
+    <span class="group-icon">
+      <ng-content select="[ds-group-icon]"></ng-content>
+    </span>
+  }
+
+  @if (label()) {
+    <span class="group-title">
+      {{ label() }}
+    </span>
+  }
+</ng-template>
+
+@if (headerNavigates()) {
+  <div class="group-header-row">
+    <a
+      class="group-header"
+      routerLinkActive="active"
+      [routerLink]="routerLink()">
+      <ng-container [ngTemplateOutlet]="headerContent" />
+    </a>
+
+    <button
+      type="button"
+      class="group-caret-button"
+      [attr.aria-expanded]="expanded()"
+      [attr.aria-label]="(expanded() ? 'Collapse ' : 'Expand ') + label()"
+      (click)="toggle()">
+      <ds-icon
+        class="group-caret"
+        name="chevronDown"
+        [class.open]="expanded()"
+        [size]="14">
+      </ds-icon>
+    </button>
+  </div>
+} @else if (expandable()) {
   <button
     type="button"
     class="group-header"
     [attr.aria-expanded]="expanded()"
     (click)="toggle()">
-    @if (icon()) {
-      <ds-icon
-        class="group-icon"
-        [name]="icon()!"
-        [size]="18">
-      </ds-icon>
-    } @else {
-      <!-- `[ds-group-icon]` is selector-distinct from `[icon]` slots used on
-           sidenav-item children, so projected icons don't get swallowed when
-           a consumer puts items inside the group. -->
-      <span class="group-icon">
-        <ng-content select="[ds-group-icon]"></ng-content>
-      </span>
-    }
-
-    @if (label()) {
-      <span class="group-title">
-        {{ label() }}
-      </span>
-    }
+    <ng-container [ngTemplateOutlet]="headerContent" />
 
     <ds-icon
       class="group-caret"

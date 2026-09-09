@@ -24,12 +24,16 @@
 // Usage:
 //   node tools/migration-lint.mjs                          all manifests
 //   node tools/migration-lint.mjs migrations/0.9.0.json …   specific files
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const MIGRATIONS = join(ROOT, 'migrations');
+// Overridable so the selftest can mutate a private copy of the whole directory instead of the
+// tracked manifests. Writing them and restoring afterwards is safe alone and corrupting in
+// parallel: a second run backs up the first run's fixture and then restores THAT, leaving a
+// tracked manifest broken and every later lint red with no bad commit behind it.
+const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 
 const KINDS = new Set([
   'selector-rename',
@@ -84,6 +88,20 @@ const FORWARD_PROSE =
 const DEFAULT_CHANGE =
   /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults|\bwas [^,.]{1,40}, now\b/i;
 
+// Both patterns read prose, so both hit a sentence that says the OPPOSITE — "still defaults to
+// `false`", "not deferred to a later release". Test one sentence at a time and let it withdraw.
+const sentencesOf = (text) =>
+  String(text ?? '')
+    .split(/(?<=[.!?])\s+|\n+/)
+    .filter((one) => one.trim());
+const CONTINUITY =
+  /\b(still|unchanged|untouched|remains?|always defaulted|(?:does|do|did|will) not change|no change|the same)\b/i;
+// `no longer defaults to true` IS a changed default, so a bare negation cannot be the guard.
+const DENIES_DEFERRAL = (sentence) =>
+  /\b(not|nothing|never|neither)\b/i.test(sentence) && !/\buntil\b/i.test(sentence);
+const claimsIn = (pattern, text, withdraws) =>
+  sentencesOf(text).some((one) => pattern.test(one) && !withdraws(one));
+
 // A field's worth of structure typed into prose, which is what a missing field looks like from
 // the outside.
 const STRUCTURAL_MARKER =
@@ -119,6 +137,18 @@ const everyManifest = () =>
 // `supersedes` cannot be resolved against a single file, and a lint that fails
 // because it was pointed at one manifest is a lint people stop running.
 const requested = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
+// A path that is not there used to be counted and reported as OK: the name was reduced to a
+// version string and every rule then found nothing to say about a manifest that does not exist.
+const missing = requested.filter(
+  (arg) => !existsSync(join(MIGRATIONS, basename(arg))),
+);
+if (missing.length) {
+  console.error(
+    `migration-lint: no such manifest — ${missing.join(', ')}. Nothing was read, which is not ` +
+      'the same as nothing being wrong.',
+  );
+  process.exit(1);
+}
 const targets = new Set(
   (requested.length
     ? requested.map((arg) => join(ROOT, arg))
@@ -292,7 +322,10 @@ for (const [name, manifest] of manifests) {
       );
     }
 
-    if (DEFAULT_CHANGE.test(item.note ?? '') && item.restore === undefined) {
+    if (
+      claimsIn(DEFAULT_CHANGE, item.note, (one) => CONTINUITY.test(one)) &&
+      item.restore === undefined
+    ) {
       at(
         'M024',
         'reads as a changed default with no `restore` — give the literal snippet, ' +
@@ -311,7 +344,13 @@ for (const [name, manifest] of manifests) {
           'declare `supersedes` on the LATER item instead',
       );
     }
-    if (FORWARD_PROSE.test(`${item.note ?? ''} ${item.restore ?? ''}`)) {
+    if (
+      claimsIn(
+        FORWARD_PROSE,
+        `${item.note ?? ''} ${item.restore ?? ''}`,
+        DENIES_DEFERRAL,
+      )
+    ) {
       at(
         'M029',
         'the note or restore refers to a later release — an upgrade applies this ' +

@@ -21,6 +21,7 @@ import {
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
+  clearOnDetach,
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
@@ -107,6 +108,11 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     if (this.preview.staticPreview()) {
       return;
     }
+    // Reads as "a second click closes", and that is also what makes ONE popover serve many
+    // triggers: clicking another trigger while open dismisses the overlay through the CDK's
+    // outside-pointer listener FIRST, so `ref` is already gone by the time this runs and the
+    // call re-opens on the new trigger instead of closing. ds-table's column filters, row menus
+    // and clipped-cell text all depend on that order.
     if (this.ref) {
       this.close();
 
@@ -151,10 +157,13 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     const removeScrollClose = closeOnScroll(this.ref, () =>
       this.close('dismiss'),
     );
-    this.ref.detachments().subscribe(() => {
-      removeScrollClose();
-      this.ref = null;
-      this.opened.set(false);
+    clearOnDetach(this.ref, {
+      current: () => this.ref,
+      always: removeScrollClose,
+      clear: () => {
+        this.ref = null;
+        this.opened.set(false);
+      },
     });
     this.ref.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

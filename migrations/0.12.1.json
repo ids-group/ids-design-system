@@ -17,6 +17,13 @@
         "menuItems",
         "SplitButtonItem",
         "SplitButtonComponent"
+      ],
+      "detect": [
+        "SplitButtonItem[]",
+        "menuItems =",
+        "menuItems:",
+        ".filter(",
+        "signal<SplitButtonItem"
       ]
     },
     {
@@ -25,7 +32,7 @@
       "surface": "style",
       "old": "--focus-ring-inner",
       "new": null,
-      "action": "If you set `--focus-ring-inner` to a colour to get a visible ring back, remove that override — it no longer reaches a control's ring. To restyle the ring, set `--focus-ring-width`, `--focus-ring-color` or `--focus-ring-offset`.",
+      "action": "If you set `--focus-ring-inner` to a colour to get a visible ring back, remove that override — it no longer reaches a control's ring. To restyle the ring, set `--focus-ring-width`, `--focus-ring-color` or `--focus-ring-offset`. Wrap any `outline: none` you keep on a DS control in `@media not (forced-colors: active)`.",
       "appliesWhen": "Every focusable control in the library — buttons, checkboxes, radios, switches, tabs, menu rows, list rows, segments, days, links. Fields keep their soft halo and are unaffected; `--focus-ring-inner` still composes the halo that `data-focus=\"ring\"` opts into.",
       "pitfall": "An `outline: none` in your own stylesheet now removes a control's indicator outright, where before it removed nothing because the ring was a shadow. Any reset that zeroes outlines on DS controls leaves a keyboard user with no indicator, and nothing errors.",
       "note": "Controls draw the ring with `outline` + `outline-offset` instead of a two-layer box-shadow. `outline-offset` leaves its gap UNPAINTED, so the gap shows whatever the control actually sits on; the shadow gap had to be filled with a guessed colour, which was a coloured rim wherever the guess was wrong. A negative offset draws the ring inside the element, so a clipping ancestor can no longer eat it. Components no longer touch `box-shadow` on focus, so a focused card keeps its elevation and a selected segment keeps its shadow.",
@@ -39,7 +46,18 @@
         "--focus-ring-width",
         "--focus-ring-offset",
         "--focus-ring-color",
-        "outline-offset"
+        "outline-offset",
+        "outline: none",
+        "outline: 0",
+        "outline:none"
+      ],
+      "detect": [
+        "outline: none",
+        "outline:none",
+        "outline: 0",
+        "outline:0",
+        ":focus { outline",
+        ":focus-visible { outline"
       ]
     },
     {
@@ -49,7 +67,7 @@
       "old": "--ds-button-focus-shadow",
       "new": "--focus-ring-color",
       "action": "Replace every `--ds-<component>-focus-shadow` override on a control with `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the same scope.",
-      "appliesWhen": "Only the thirteen control components that published one: button, icon-button, card, checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group, menu-item. Field tokens such as `--ds-input-focus-shadow` are unchanged.",
+      "appliesWhen": "Only the thirteen control components that published one: button, icon-button, card, checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group, menu-item. Field tokens such as `--ds-input-focus-shadow` are unchanged. The umbrella `--ds-control-focus-shadow` is the same case and needs the same edit: it still resolves, and the date and time pickers still read it, but none of the thirteen does any more — an override that used to recolour every control is now a silent no-op on them.",
       "pitfall": "An override of a removed token is a custom property like any other — it sets, it cascades, and it changes nothing. The control keeps the default ring and no build or console says why.",
       "note": "Each of these resolved to `--ds-control-focus-shadow`, which controls no longer read. The three ring tokens replace them and cascade the same way, so a per-component override becomes a scoped one: set them on the component's own selector rather than at `:root`.",
       "verify": "Focus the component you overrode: the ring shows your colour and thickness, not the default brand ring.",
@@ -57,6 +75,7 @@
         "--ds-button-focus-shadow",
         "--ds-tabs-focus-shadow",
         "--ds-card-focus-shadow",
+        "--ds-control-focus-shadow",
         "focus-shadow"
       ]
     },
@@ -148,7 +167,7 @@
       "old": "ds-table[exportButton]",
       "new": "dsTableExport",
       "action": "Import DsTableExport from '@ids-group-ltd/ids-design-system/table-export', add it to the component's imports, and replace [exportButton]=\"true\" on the element with the dsTableExport attribute. Move exportFilename, exportFetcher and (exportFailed) bindings across unchanged — they are the directive's inputs now and still sit on the same element.",
-      "appliesWhen": "A <ds-table> that renders the built-in CSV button or binds any export input. NOT affected: a table that only calls table.runExport() from a button of its own — those methods stay on the component and keep working.",
+      "appliesWhen": "A <ds-table> that renders the built-in CSV button, binds any export input, or calls table.runExport() / table.exportCsv() from a button of its own — the methods stay on the component, but they carry out an export only while the directive is on that table. To keep a button of your own and hide the built-in one, put dsTableExport on the element and bind [dsTableExport]=\"false\". NOT affected: a table with no export of any kind.",
       "pitfall": "Forgetting the import is a build error, not a silent loss: exportFilename, exportFetcher and exportFailed left the component with the button, so a template that still binds them fails with NG8002 \"Can't bind to 'exportFetcher' since it isn't a known property of 'ds-table'\". The silent case is the other one — a table that renders no export binding at all and drives the feature from a button of its own through runExport() or exportCsv(): those still compile, and with no directive present they do nothing but log a development-mode warning.",
       "surface": "template",
       "searchHints": [
@@ -156,6 +175,13 @@
         "exportFetcher",
         "exportFilename",
         "exportFailed"
+      ],
+      "detect": [
+        ".runExport(",
+        ".exportCsv(",
+        ".exporting()",
+        "viewChild(TableComponent",
+        "ViewChild(TableComponent"
       ],
       "verify": "Every table that used to show the CSV button carries the dsTableExport attribute AND the component declaring it imports DsTableExport.",
       "note": "The button was the only rendered part of the feature, so it is the one thing a reader loses if the directive is forgotten. The export code left the component because a static reference is what a bundler cannot remove — a runtime flag would have shipped it to every table regardless."
@@ -175,8 +201,67 @@
         "columnOrder",
         "hideable"
       ],
+      "detect": [
+        "hideable: true",
+        "hidden: true",
+        "TableColumn",
+        "hiddenKeys",
+        "columnOrder",
+        "viewChild(TableComponent",
+        "ViewChild(TableComponent"
+      ],
       "verify": "Every table whose columns can be reordered, hidden or shown carries dsTableColumns, and the picker opens from the header.",
       "note": "This is the feature that earned the split: it takes @angular/cdk/drag-drop with it, which is most of the 19 KB a table no longer costs."
+    },
+    {
+      "id": "table-column-hidden-flag-needs-the-directive",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "hidden: true",
+      "new": null,
+      "action": "Put dsTableColumns on every table whose column definitions carry hidden or hideable, or drop those columns from the array.",
+      "appliesWhen": "A column array where any entry sets hidden or hideable — wherever that array lives, including a service, a constant or a computed. The flags keep their names and their types; nothing in the template says which tables have them.",
+      "pitfall": "Nothing errors and nothing is logged. A column marked hidden simply renders, so a table that was hiding a cost or an internal identifier now shows it to every reader, and the reviewer sees a table that looks complete rather than one that leaked a column. The column COUNT moves with it, in both directions: a table with hideable columns and no rowActions loses the trailing utility cell that carried the picker button, and a reorder-only table that takes the directive gains one. A positional selector, a colspan or a DOM assertion counting cells lands one off either way, and still passes its own type check.",
+      "note": "Both flags are read by the directive now, so the component alone honours neither: hidden is an initial state the picker owns, and the picker is the directive's. This is the one part of the split that a template search cannot find, because the flags are written in TypeScript and the element carries no binding for them.",
+      "verify": "Every table whose columns declare hidden or hideable carries dsTableColumns, and a column marked hidden is absent from the rendered header.",
+      "searchHints": [
+        "hidden",
+        "hideable",
+        "TableColumn",
+        "columns"
+      ],
+      "detect": [
+        "hidden: true",
+        "hideable: true",
+        "TableColumn<",
+        "TableColumn[]",
+        ": TableColumn"
+      ],
+      "restore": null
+    },
+    {
+      "id": "table-persisted-layout-holds-only-what-the-directives-own",
+      "kind": "behavior",
+      "surface": "template",
+      "old": "ds-table[persistLayout]",
+      "new": null,
+      "action": "On a table with persistLayout, carry every directive whose part of the layout you want kept — dsTableColumns for order and hidden columns, dsTableResize for widths.",
+      "appliesWhen": "Only a table binding persistLayout, and only where it carried more than one part of the layout before. persistLayout and storageKey keep their names and stay on the element, and the stored shape is unchanged, so a layout written by an earlier version still restores.",
+      "pitfall": "The loss is one-way and arrives on the first save, not on the upgrade: the table restores the full stored layout, then writes back only the parts a directive registered, so a table carrying dsTableResize alone replaces a stored { order, widths, hidden } with widths alone. The reader sees their column order come back once and never again, and nothing was logged.",
+      "note": "Each directive registers the slice it owns, and the save writes the registered slices as the whole entry rather than merging into what is there. That is what makes the parts independent, and it is why a table that persists a layout needs the directives for every part of it.",
+      "verify": "Reorder and resize a persisted table, reload twice, and both the order and the widths come back the second time.",
+      "searchHints": [
+        "persistLayout",
+        "storageKey",
+        "ds-table:"
+      ],
+      "detect": [
+        "persistLayout",
+        "storageKey",
+        "localStorage.getItem('ds-table:",
+        "localStorage.setItem('ds-table:"
+      ],
+      "restore": null
     },
     {
       "id": "table-resize-behind-directive",
@@ -191,11 +276,51 @@
         "resizableColumns",
         "columnWidths"
       ],
+      "detect": [
+        "columnWidths",
+        "columnWidthsChange",
+        "viewChild(DsTableResize",
+        "viewChild(TableComponent",
+        "ViewChild(TableComponent"
+      ],
       "verify": "Every table that could be resized carries dsTableResize, and its header separators are focusable.",
       "note": "Truncation stayed on the component: it measures the DOM rather than the dragged width, so it never depended on resizing."
     }
   ],
-  "deleteList": [],
+  "deleteList": [
+    {
+      "id": "menu-icon-indent-compensation",
+      "surface": "style",
+      "find": [
+        "::ng-deep ds-menu-item",
+        "ds-menu-item { padding-left",
+        "ds-menu-item { margin-left"
+      ],
+      "why": "The menu reserves the icon slot on every row as soon as one item in it carries an icon, so rows without one already line up.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "split-button-press-styling",
+      "surface": "style",
+      "find": [
+        "::ng-deep ds-split-button",
+        "ds-split-button:active"
+      ],
+      "why": "Both halves darken and scale on press on their own, and the scale runs away from the seam — a hand-rolled centred scale opens a hairline gap in the joint that the built-in one avoids.",
+      "replaceWith": "--ds-split-button-bg-color-active, --ds-split-button-press-scale"
+    },
+    {
+      "id": "hand-added-focus-indicators",
+      "surface": "style",
+      "find": [
+        "::ng-deep .search",
+        "::ng-deep .cell-editor",
+        "::ng-deep .col-filter"
+      ],
+      "why": "A picker's search box, a column filter, a cell editor and a clipped icon button each draw the control ring themselves now, and the ring is an outline drawn inside the element, so a clipping ancestor no longer eats it.",
+      "replaceWith": "nothing"
+    }
+  ],
   "informational": [
     "The focus ring now eases its colour in over `--duration-fast`, as a CSS animation rather than a transition so a component's own transition list is untouched. Geometry does not animate, so nothing moves and no layout shifts. `--duration-fast` is already 0ms under `prefers-reduced-motion: reduce`, so there is nothing to opt out of.",
     "`ds-multi-select`'s panel search field had no focus indicator — it zeroed its own outline and nothing above it painted one. The row around it rings now, drawn inward because the panel clips. Nothing to change on your side.",
@@ -209,7 +334,8 @@
     "`ds-table`'s bulk-action bar was hidden when every row was selected — it read the header checkbox's indeterminate predicate rather than \"is anything selected\". It shows for any non-empty selection now. Nothing to change on your side.",
     "A focused first or last `ds-accordion-item` header takes the accordion's own corner radius, so its focus ring is no longer square inside the rounded box.",
     "The `ds-skeleton` shimmer is one viewport-wide wave again: every skeleton shows the slice passing over its own position, anchored with `background-attachment: fixed` instead of the inherited custom property that used to be animated on `:root` and invalidated the whole document each frame. `--ds-skeleton-shimmer-color` and the reduced-motion opt-out are unchanged. Inside a transformed or filtered ancestor the anchor becomes that ancestor, and those skeletons share a wave with each other rather than with the page.",
-    "persistLayout and storageKey stay on ds-table. The stored JSON keeps its { order, widths, hidden } shape, so a layout saved by an earlier version still restores; a part whose directive is absent is not applied.",
+    "`focus.owns-the-focus-ring($control)` still does its job and needs no edit. It silenced a shadow before and silences an outline now, and it is the shape the ring change asks for: it wraps `outline: none` in `@media not (forced-colors: active)`, so a shell that rings on its control's behalf keeps an indicator in forced colours. If you silence a DS control by hand anywhere else, this mixin is what to use instead.",
+    "persistLayout and storageKey stay on ds-table. The stored JSON keeps its { order, widths, hidden } shape, so a layout saved by an earlier version still restores; what a table then writes back is covered by table-persisted-layout-holds-only-what-the-directives-own.",
     "table.runExport(), table.exporting() and table.exportCsv() stay on the component and keep their signatures — they delegate to whichever export directive is present, so a button of your own in [toolbar] or a page header still drives the export. Called with no directive present they log a dev-mode warning instead of doing nothing quietly."
   ]
 }

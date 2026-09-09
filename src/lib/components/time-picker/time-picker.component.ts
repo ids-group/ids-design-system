@@ -21,6 +21,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
+  clearOnDetach,
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
@@ -311,10 +312,13 @@ export class TimePickerComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
-    this.overlayRef.detachments().subscribe(() => {
-      removeScrollClose();
-      this.overlayRef = null;
-      this.openSegment.set(null);
+    clearOnDetach(this.overlayRef, {
+      current: () => this.overlayRef,
+      always: removeScrollClose,
+      clear: () => {
+        this.overlayRef = null;
+        this.openSegment.set(null);
+      },
     });
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

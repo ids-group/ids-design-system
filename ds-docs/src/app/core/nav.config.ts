@@ -29,9 +29,10 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'Buttons', anchor: 'button' },
-      { label: 'Buttons · group & segmented', anchor: 'segmented' },
       { label: 'Buttons · icon', anchor: 'icon-button' },
+      { label: 'Buttons · toggle', anchor: 'toggle-button' },
       { label: 'Buttons · split', anchor: 'split-button' },
+      { label: 'Buttons · group & segmented', anchor: 'segmented' },
       { label: 'Link', anchor: 'link' },
     ],
   },

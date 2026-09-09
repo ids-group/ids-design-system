@@ -9,7 +9,10 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [LoadingOverlayComponent, ButtonComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './loading-overlay.section.html',
-  styleUrl: '../../../shared/section-demo.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    './loading-overlay.section.scss',
+  ],
 })
 export class LoadingOverlaySection {
   protected readonly busy = signal(true);

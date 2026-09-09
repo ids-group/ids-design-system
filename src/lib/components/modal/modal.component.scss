@@ -79,9 +79,14 @@
   &.md { width: var(--modal-w-md); }
   &.lg { width: var(--modal-w-lg); }
   &.xl { width: var(--modal-w-xl); }
+
+  /* `height`, not `max-height`: every other size is a cap the content fills as far as it needs, but
+     fullscreen is a claim about the viewport — with a cap, a short body left an immersive editor
+     200px tall in the middle of the screen. The panel is already a flex column with a scrolling
+     body, so a fixed height gives the body the room rather than overflowing. */
   &.fullscreen {
     width: var(--modal-w-fullscreen);
-    max-height: var(--modal-h-fullscreen);
+    height: var(--modal-h-fullscreen);
   }
 
   .header {

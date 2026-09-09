@@ -287,6 +287,47 @@ export function closeOnScroll(
   return () => doc.removeEventListener('scroll', onScroll, true);
 }
 
+/**
+ * Sync a component's "which overlay is mine, and is it open" state when THIS overlay detaches,
+ * skipping the write when a newer one has already taken over.
+ *
+ * `disposeWithLeave` defers the dispose of a dismissed overlay until its exit animation ends, so a
+ * dismiss followed by a re-open inside that window makes the OLD overlay's detachment arrive while
+ * the NEW one is live. Clearing unconditionally then left that new panel on screen with its
+ * component believing it was closed — no `aria-expanded`, and `close()` declining to run because
+ * the ref it checks was already null, which is to say the panel could not be dismissed at all.
+ * Measured in ds-date-picker, ds-color-picker, ds-time-picker and ds-popover; ds-select,
+ * ds-autocomplete and ds-multi-select each carried the check by hand, and the four that did not
+ * are why it lives here instead.
+ *
+ * A detachment of the CURRENT overlay always clears, whatever caused it — so a stray CDK detach
+ * still releases a reopen guard that keys off the stored ref rather than wedging it.
+ * @internal
+ */
+export function clearOnDetach(
+  overlayRef: OverlayRef,
+  {
+    current,
+    clear,
+    always,
+  }: {
+    /** Reads the ref the component considers live right now. */
+    current: () => OverlayRef | null;
+    /** Drops the stored ref and marks the component closed. */
+    clear: () => void;
+    /** Teardown that must run for every detachment, current or superseded. */
+    always?: () => void;
+  },
+): void {
+  overlayRef.detachments().subscribe(() => {
+    always?.();
+    if (current() !== overlayRef) {
+      return;
+    }
+    clear();
+  });
+}
+
 /** True when keyboard focus currently sits inside the overlay pane. Read it
  *  BEFORE disposing, to decide whether the close has to refocus the trigger
  *  rather than strand focus on `<body>`. An outside-pointer close leaves focus on

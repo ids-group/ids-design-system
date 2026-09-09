@@ -11,7 +11,7 @@
 // against props AND slots rather than inputs alone.
 //
 //   node .design-sync/tools/check-doc-api.mjs
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -20,6 +20,36 @@ const syncDir = resolve(here, '..');
 const surface = JSON.parse(
   readFileSync(join(syncDir, 'elements/gen/surface.json'), 'utf8'),
 );
+
+// A component can be LIVE without being contracted: `src/lib/public-api.ts` withholds an export, so
+// build-cards writes no `.d.ts` and gen.mjs leaves it out of surface.json — yet the element still
+// ships in the bundle and renders inside its parent, which is why check-manual-surface REQUIRES a
+// doc for it by name (its own comment says so of CalendarDay and FieldMessage). Without this the
+// two checks contradict each other: one demands the doc, the other rejects it, and the release step
+// fails on whichever runs second. Such a doc has no props to validate, so it is accepted and its
+// prop claims are skipped.
+const repo = resolve(syncDir, '..');
+const walkTs = (dir, out = []) => {
+  for (const entry of readdirSync(dir)) {
+    const path = join(dir, entry);
+    if (statSync(path).isDirectory()) walkTs(path, out);
+    else if (path.endsWith('.component.ts')) out.push(path);
+  }
+
+  return out;
+};
+const liveNames = new Set();
+for (const file of walkTs(join(repo, 'src', 'lib'))) {
+  const tag = /selector:\s*'(ds-[a-z0-9-]+)'/.exec(
+    readFileSync(file, 'utf8'),
+  )?.[1];
+  if (!tag) continue;
+  liveNames.add(
+    tag
+      .replace(/^ds-/, '')
+      .replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase()),
+  );
+}
 
 const accepted = new Map();
 for (const component of surface.components) {
@@ -97,7 +127,7 @@ for (const file of readdirSync(join(syncDir, 'docs')).filter((name) =>
       );
     }
   }
-  if (!accepted.has(name)) {
+  if (!accepted.has(name) && !liveNames.has(name)) {
     problems.push(
       `docs/${file} — no component named ${name}; the doc would upload with nothing to describe`,
     );

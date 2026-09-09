@@ -21,6 +21,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
+  clearOnDetach,
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
@@ -391,16 +392,13 @@ export class SelectComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
-    const detaching = this.overlayRef;
-    this.overlayRef.detachments().subscribe(() => {
-      removeScrollClose();
-      // A deferred dispose can outlive a re-open, and then this fires for the
-      // PREVIOUS panel: clearing state here would strand the live one.
-      if (this.overlayRef !== detaching) {
-        return;
-      }
-      this.overlayRef = null;
-      this.setOpen(false);
+    clearOnDetach(this.overlayRef, {
+      current: () => this.overlayRef,
+      always: removeScrollClose,
+      clear: () => {
+        this.overlayRef = null;
+        this.setOpen(false);
+      },
     });
     const portal = new TemplatePortal(this.panelTpl(), this.vcr);
     this.overlayRef.attach(portal);

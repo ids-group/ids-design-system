@@ -7,7 +7,7 @@
 @use '../../styles/focus' as focus;
 
 :host {
-  --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
+  --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-field-focus-shadow));
   --_date-picker-trigger-bg-color: var(--ds-date-picker-trigger-bg-color, var(--surface-default));
   --_date-picker-trigger-border-color: var(--ds-date-picker-trigger-border-color, var(--border-default));
   --_date-picker-trigger-label-color: var(--ds-date-picker-trigger-label-color, var(--text-primary));
@@ -140,7 +140,13 @@
 .input-wrap {
   position: relative;
   display: inline-flex;
-  align-items: center;
+
+  /* Full height on purpose. The value is a 14px line inside a 40px field, so centring it left 13px
+     of dead band above and below: a click there landed on the trigger and opened the panel instead
+     of putting the caret on the digit under the pointer. Stretched, the whole height of the field
+     positions the caret, and the glyphs stay centred because an input centres its own value. */
+  align-self: stretch;
+  align-items: stretch;
 }
 
 /* Paints every glyph the field shows; the fully transparent input floats OVER it, so the native
@@ -244,7 +250,7 @@
   /* Re-declared for the PORTAL: the :host copy does not inherit out here, and the
      period trigger's `:focus-visible` read it as nothing — an unresolvable var makes
      `box-shadow` its initial `none`, which left a tabbable button with no indicator. */
-  --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
+  --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-field-focus-shadow));
 
   background-color: var(--_date-picker-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-border);

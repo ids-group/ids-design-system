@@ -5,11 +5,16 @@
       background: var(--surface-canvas);
       border-radius: var(--radius-lg);
     }
+
+    /* Hugs the sidenav's own width rather than spanning the column, but as a BLOCK: as an
+       inline-block it shared a line box with whatever inline preceded it, and a bare `code`
+       caption above one frame pulled it a caption's width to the right. */
     .stage--frame {
       border: var(--border-width-default) solid var(--border-divider);
       overflow: hidden;
       padding: 0;
-      display: inline-block;
+      display: block;
+      width: fit-content;
     }
 
     /* ---------- States showcase overrides ---------- */

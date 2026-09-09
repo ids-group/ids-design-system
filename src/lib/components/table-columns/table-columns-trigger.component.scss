@@ -1,0 +1,5 @@
+@use '../../styles/table-controls' as table-controls;
+
+.col-picker-btn {
+  @include table-controls.header-icon-button;
+}
