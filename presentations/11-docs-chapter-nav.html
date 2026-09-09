@@ -2,7 +2,7 @@
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Главы в навигации доков — 38 пунктов, пять способов их подать</title>
+<title>Главы в навигации доков — 38 пунктов, десять способов их подать</title>
 <meta name="ds-deck-status" content="open">
 <meta name="ds-deck-evidence" content="ds-docs/src/app/layout/sidebar.component.html - ds-docs/src/app/core/section-chapters.service.ts - ds-docs/src/app/sections/components/table/table.section.html">
 <link rel="stylesheet" href="ds.css">
@@ -164,6 +164,155 @@
     background: linear-gradient(to bottom, transparent, var(--surface-default));
     pointer-events: none;
   }
+  /* Every mock below shows all four levels, so the sub-item is judged against the three above it. */
+  .grp.is-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-secondary);
+  }
+  /* Вариант 6 — одна подложка вместо нитки: уровень задаёт фон, а не отступ. */
+  .tray {
+    margin: var(--space-1) 0 var(--space-2) var(--space-5);
+    padding: var(--space-1) var(--space-1);
+    background: var(--surface-secondary);
+    border-radius: var(--radius-md);
+  }
+  .tray .ch {
+    margin-left: 0;
+    padding-left: var(--space-2-5);
+    border-left: 0;
+    border-radius: var(--radius-sm);
+  }
+  .tray .ch.is-active {
+    background: var(--surface-default);
+    box-shadow: var(--shadow-card);
+  }
+  /* Вариант 7 — порядковый номер: «где я из 38» читается без счётчика в шапке. */
+  .ch.has-ord {
+    display: flex;
+    gap: var(--space-2);
+    align-items: baseline;
+  }
+  .ch .ord {
+    flex: 0 0 2ch;
+    text-align: right;
+    color: var(--text-tertiary);
+    font: var(--font-weight-medium) 10px/1.6 var(--font-mono);
+  }
+  .ch.is-active .ord {
+    color: var(--accent-strong);
+  }
+  .ch .ord-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* Вариант 8 — главы не в рейке, а во всплывающей панели рядом с ней. */
+  .flyout-row {
+    display: flex;
+    align-items: flex-start;
+  }
+  .flyout {
+    width: 320px;
+    flex: 0 0 auto;
+    margin: var(--space-8) 0 0 var(--space-2);
+    padding: var(--space-3);
+    background: var(--surface-overlay);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-popover);
+    font-family: var(--font-sans);
+  }
+  .flyout-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--space-4);
+  }
+  .flyout .ch,
+  .flyout .ch-group {
+    margin-left: 0;
+    padding-left: var(--space-2);
+    border-left: 0;
+  }
+  .flyout .ch.is-active {
+    background: var(--accent-muted);
+    border-radius: var(--radius-sm);
+  }
+  /* Вариант 9 — рейка делится на две полки со своими скроллами. */
+  .rail.is-split {
+    display: flex;
+    flex-direction: column;
+    height: 520px;
+    padding: 0;
+    overflow: hidden;
+  }
+  .split-top {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: var(--space-4) var(--space-3) var(--space-2);
+  }
+  .shelf {
+    flex: 0 0 52%;
+    overflow: auto;
+    padding: 0 var(--space-3) var(--space-3);
+    background: var(--surface-secondary);
+    border-top: var(--border-width-default) solid var(--border-divider);
+  }
+  .shelf-head {
+    position: sticky;
+    top: 0;
+    margin: 0 calc(-1 * var(--space-3)) var(--space-1);
+    padding: var(--space-2) var(--space-3) var(--space-1);
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+    font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .shelf .ch {
+    margin-left: 0;
+    padding-left: var(--space-2-5);
+    border-left: 0;
+  }
+  .shelf .ch.is-active {
+    background: var(--surface-default);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+  }
+  /* Вариант 10 — одна строка вместо списка: текущая глава и шаг влево/вправо. */
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-1) 0 var(--space-2) var(--space-5);
+    padding: var(--space-1-5) var(--space-2);
+    background: var(--surface-secondary);
+    border-radius: var(--radius-md);
+    font: var(--font-weight-medium) 12px/1.4 var(--font-sans);
+  }
+  .stepper .now {
+    flex: 1 1 auto;
+    overflow: hidden;
+    color: var(--accent-strong);
+    font-weight: var(--font-weight-bold);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .stepper .of {
+    flex: 0 0 auto;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+  .step-btn {
+    flex: 0 0 auto;
+    padding: 0 var(--space-1);
+    color: var(--text-secondary);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-sm);
+    background: var(--surface-default);
+    font-size: 11px;
+  }
 </style>
 
 <main>
@@ -172,13 +321,15 @@
       <span class="chip is-open">нужен вердикт</span>
       <span class="chip is-dead">как сейчас — отвергнуто</span>
       <span class="chip">38 глав · 6 из них фразы</span>
+      <span class="chip">10 вариантов · 4 уровня иерархии</span>
     </div>
-    <h1>Главы в навигации доков — 38 пунктов, пять способов их подать</h1>
+    <h1>Главы в навигации доков — 38 пунктов, десять способов их подать</h1>
     <p class="lede">
       Главы секции теперь выводятся автоматически и попадают в рейку. У <code>ds-table</code> их
       <b>38</b> — против 14 у следующей по размеру секции, — и плоским списком это
-      <b>нечитаемо</b>. Ниже сначала разобрано, что именно сломано, потом пять вариантов, каждый
-      живьём и на настоящей ширине рейки.
+      <b>нечитаемо</b>. Ниже сначала разобрано, что именно сломано, потом <b>десять</b> вариантов,
+      каждый живьём и на настоящей ширине рейки: первые пять — про то, <b>где держать список</b>,
+      следующие пять — про сам <b>четвёртый уровень</b> иерархии.
     </p>
   </header>
 
@@ -540,6 +691,345 @@
     </div>
   </div>
 
+  <h2>Ещё пять — про сам четвёртый уровень</h2>
+
+  <p class="lede">
+    Первые пять вариантов отвечали на вопрос <b>где держать список</b> и <b>сколько показывать</b>.
+    Эти пять — про другое: чем саб-пункт <b>отличается</b> от трёх уровней над ним. Иерархия у нас
+    теперь <b>группа → группа-пункт → пункт → саб-пункт</b>, и сейчас четвёртый уровень отличается
+    только отступом и одним пунктом кегля — этого мало, поэтому он и читается как второй верхний
+    уровень. В каждой рейке ниже показаны <b>все четыре</b>, чтобы уровень был виден на контрасте, а
+    не на словах.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Уровень</th><th>Чем отличается сейчас</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Группа</th><td>11px, капсом, tertiary, без фона — <b>подпись</b>, не строка</td></tr>
+      <tr><th>Группа-пункт</th><td>то же плюс каретка и переход — <b>подпись, которая кликается</b></td></tr>
+      <tr><th>Пункт</th><td>13px medium, secondary, полная ширина, заливка в активном</td></tr>
+      <tr><th>Саб-пункт</th><td>12px, tertiary, отступ 16px и нитка слева — <b>всё</b></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Вариант 6 — общая подложка вместо нитки</h2>
+
+  <p class="lede">
+    Уровень задаёт <b>фон</b>, а не отступ: главы лежат на одной вдавленной плашке и читаются как
+    <b>один вложенный объект</b> внутри пункта, а не как ещё строки того же списка. Активная глава
+    наоборот — <b>выступает</b> из плашки светлой карточкой. Отступ можно вернуть почти к нулю,
+    ширина под лейбл освобождается.
+  </p>
+
+  <div class="rails">
+    <div class="rail is-tall">
+      <p class="rail-caption">плашка + активная выступает</p>
+      <p class="grp">Data display</p>
+      <div class="grp is-link">Charts <span class="caret">&#9656;</span></div>
+      <div class="item">Stats <span class="caret">&#9662;</span></div>
+      <div class="item is-active">Table <span class="caret">&#9652;</span></div>
+      <div class="tray">
+        <div class="ch">Default</div>
+        <div class="ch">Sortable columns</div>
+        <div class="ch">Header sort states</div>
+        <div class="ch">Row interaction states</div>
+        <div class="ch">Naming cell</div>
+        <div class="ch">Link cell</div>
+        <div class="ch">Row selection</div>
+        <div class="ch">Sticky header</div>
+        <div class="ch is-active">Row identity</div>
+        <div class="ch">Clickable rows</div>
+        <div class="ch">Row actions</div>
+        <div class="ch">Column picker</div>
+        <div class="ch">Inline editing</div>
+        <div class="ch">&#8943; ещё 25</div>
+      </div>
+      <div class="item">Tag</div>
+      <div class="item">Timeline</div>
+    </div>
+
+    <div class="panel" style="max-width: 40ch">
+      <p>
+        <b>Плюс:</b> уровень виден мгновенно и <b>без отступа</b> — на 264px это единственный
+        вариант, который добавляет иерархию, не отнимая ширины у лейбла. Работает поверх любого из
+        первых пяти. <b>Минус:</b> стену не чинит — 38 строк на плашке всё ещё 38 строк, и плашка
+        такой высоты выглядит как отдельная панель, а не как вложение. <b>Цена:</b> минимальная,
+        только SCSS.
+      </p>
+    </div>
+  </div>
+
+  <h2>Вариант 7 — порядковый номер у каждой главы</h2>
+
+  <p class="lede">
+    У главы появляется <b>номер</b> — <code>01…38</code> моноширинным. Нумерованный список
+    <b>принадлежит чему-то</b>, поэтому уровень читается сразу, и попутно решается то, что нигде
+    сейчас не сказано: <b>где я и сколько всего</b>. Секция становится похожа на главы книги —
+    ровно то, чем она и является.
+  </p>
+
+  <div class="rails">
+    <div class="rail is-tall">
+      <p class="rail-caption">номер = уровень + позиция</p>
+      <p class="grp">Data display</p>
+      <div class="grp is-link">Charts <span class="caret">&#9656;</span></div>
+      <div class="item">Stats <span class="caret">&#9662;</span></div>
+      <div class="item is-active">Table <span class="caret">&#9652;</span></div>
+      <div class="ch has-ord"><span class="ord">01</span><span class="ord-label">Default</span></div>
+      <div class="ch has-ord"><span class="ord">02</span><span class="ord-label">Sortable columns</span></div>
+      <div class="ch has-ord"><span class="ord">03</span><span class="ord-label">Header sort states</span></div>
+      <div class="ch has-ord"><span class="ord">04</span><span class="ord-label">Row interaction states</span></div>
+      <div class="ch has-ord"><span class="ord">05</span><span class="ord-label">Naming cell</span></div>
+      <div class="ch has-ord"><span class="ord">06</span><span class="ord-label">Link cell</span></div>
+      <div class="ch has-ord"><span class="ord">07</span><span class="ord-label">Row selection</span></div>
+      <div class="ch has-ord"><span class="ord">08</span><span class="ord-label">Sticky header</span></div>
+      <div class="ch has-ord"><span class="ord">09</span><span class="ord-label">Bordered</span></div>
+      <div class="ch has-ord"><span class="ord">10</span><span class="ord-label">Loading &middot; skeleton</span></div>
+      <div class="ch has-ord"><span class="ord">11</span><span class="ord-label">Empty states</span></div>
+      <div class="ch has-ord"><span class="ord">12</span><span class="ord-label">Dense &middot; zebra</span></div>
+      <div class="ch has-ord is-active"><span class="ord">13</span><span class="ord-label">Row identity</span></div>
+      <div class="ch has-ord"><span class="ord">14</span><span class="ord-label">Pagination</span></div>
+      <div class="ch has-ord"><span class="ord">15</span><span class="ord-label">Expandable rows</span></div>
+      <div class="ch has-ord"><span class="ord">&#8943;</span><span class="ord-label">ещё 23</span></div>
+    </div>
+
+    <div class="panel" style="max-width: 40ch">
+      <p>
+        <b>Плюс:</b> самый дешёвый способ дать четвёртому уровню собственный признак, и
+        единственный, который отвечает «сколько ещё осталось». <b>Минус:</b> номер отнимает
+        <b>20px</b> ширины (12px на две цифры плюс 8px зазора) — измерено на этой самой рейке: ни
+        один из коротких лейблов от этого не обрубился, так что цена меньше, чем кажется, но с
+        фразами-заголовками порог наступает раньше. Настоящая цена в другом: номер <b>обещает
+        порядок</b> — главы придётся держать в том порядке, в котором их читают, а перестановка
+        секции меняет все номера, включая те, что уже в закладках. <b>Цена:</b> минимальная.
+      </p>
+    </div>
+  </div>
+  <h2>Вариант 8 — саб-пункты во всплывающей панели <span class="chip is-accent">рекомендую из пяти</span></h2>
+
+  <p class="lede">
+    Каретка у пункта не раскрывает список <b>внутри</b> рейки, а открывает панель <b>рядом</b> с
+    ней — поверх контента, как меню. Рейка не меняет высоту ни на пиксель, поэтому четвёртый
+    уровень физически не может выдавить остальную навигацию. А панель шириной 320px — это уже
+    место под <b>две колонки и девять групп</b> сразу, без второго клика.
+  </p>
+
+  <div class="rails">
+    <div class="flyout-row">
+      <div class="rail">
+        <p class="rail-caption">рейка не растёт</p>
+        <p class="grp">Data display</p>
+        <div class="grp is-link">Charts <span class="caret">&#9656;</span></div>
+        <div class="item">Stats <span class="caret">&#9662;</span></div>
+        <div class="item is-active">Table <span class="caret">&#9656;</span></div>
+        <div class="item">Tag</div>
+        <div class="item">Timeline</div>
+        <div class="item">Tree</div>
+        <p class="grp">Forms &amp; inputs</p>
+        <div class="item">Input</div>
+        <div class="item">Select</div>
+        <div class="item">Checkbox</div>
+      </div>
+
+      <div class="flyout">
+        <p class="rail-caption">Table &mdash; 38 глав</p>
+        <div class="flyout-cols">
+          <div>
+            <p class="ch-group">Основа</p>
+            <div class="ch">Default</div>
+            <div class="ch">Bordered</div>
+            <div class="ch">Dense &middot; zebra</div>
+            <div class="ch">Sticky header</div>
+            <p class="ch-group">Сортировка</p>
+            <div class="ch">Sortable columns</div>
+            <div class="ch">Header sort states</div>
+            <div class="ch">Server sort</div>
+            <div class="ch">Two-way sort</div>
+            <p class="ch-group">Строки</p>
+            <div class="ch">Row interaction states</div>
+            <div class="ch">Naming cell</div>
+            <div class="ch">Link cell</div>
+            <div class="ch is-active">Row identity</div>
+            <div class="ch">Clickable rows</div>
+            <div class="ch">Row actions</div>
+            <div class="ch">Expandable rows</div>
+            <div class="ch">One row at a time</div>
+            <p class="ch-group">Выделение и правка</p>
+            <div class="ch">Row selection</div>
+            <div class="ch">Inline editing</div>
+          </div>
+          <div>
+            <p class="ch-group">Колонки</p>
+            <div class="ch">Column picker</div>
+            <div class="ch">Resizable</div>
+            <div class="ch">Fit to content</div>
+            <div class="ch">Truncation</div>
+            <div class="ch">Column filters</div>
+            <p class="ch-group">Загрузка и пустота</p>
+            <div class="ch">Loading &middot; skeleton</div>
+            <div class="ch">Loading &middot; overlay</div>
+            <div class="ch">Loading &middot; auto</div>
+            <div class="ch">Empty states</div>
+            <p class="ch-group">Страницы и объём</p>
+            <div class="ch">Pagination</div>
+            <div class="ch">Pager switches</div>
+            <div class="ch">Sticky scrollbar</div>
+            <div class="ch">Virtual scroll</div>
+            <div class="ch">Lazy loading</div>
+            <p class="ch-group">Данные внутрь и наружу</p>
+            <div class="ch">Server filtering</div>
+            <div class="ch">CSV export</div>
+            <div class="ch">Persisted layout</div>
+            <div class="ch">Toolbar slot</div>
+            <div class="ch">Wrapper templates</div>
+            <p class="ch-group">Края и доступность</p>
+            <div class="ch">Screen reader</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="max-width: 38ch">
+      <p>
+        <b>Плюс:</b> единственный вариант, где рейка <b>гарантированно</b> цела — четвёртый уровень
+        живёт вне её потока, поэтому число глав перестаёт быть проблемой вообще. Ширина под лейбл
+        больше, чем в рейке, все 38 видны сразу, третья колонка на странице не нужна.
+        <b>Минус:</b> оверлей закрывает контент и требует закрытия — на узком экране ему негде
+        встать, нужен фолбэк на вариант 2. И это <b>не подсветка при скролле</b>: панель закрыта,
+        значит текущая глава не видна.
+      </p>
+      <p>
+        В макете панель стоит <b>рядом</b>, а не поверх, чтобы обе половины было видно
+        одновременно; живьём она перекроет контент. Измерено здесь: 320px, все 38 глав и 9 групп
+        помещаются, обрубков <b>ноль</b>.
+      </p>
+    </div>
+  </div>
+
+  <h2>Вариант 9 — нижняя полка рейки</h2>
+
+  <p class="lede">
+    Рейка делится на <b>две полки со своими скроллами</b>: сверху компоненты, снизу — главы текущей
+    секции, закреплённые у нижнего края. Уровень задан <b>зоной</b>, а не отступом: список глав —
+    это отдельная область экрана, как панель свойств. Прямой ответ на «остальной навигатор
+    выдавлен»: сверху всегда видно, куда уйти.
+  </p>
+
+  <div class="rails">
+    <div class="rail is-split">
+      <div class="split-top">
+        <p class="rail-caption">компоненты &mdash; свой скролл</p>
+        <p class="grp">Data display</p>
+        <div class="grp is-link">Charts <span class="caret">&#9656;</span></div>
+        <div class="item">Stats <span class="caret">&#9662;</span></div>
+        <div class="item is-active">Table</div>
+        <div class="item">Tag</div>
+        <div class="item">Timeline</div>
+        <div class="item">Tree</div>
+        <p class="grp">Forms &amp; inputs</p>
+        <div class="item">Input</div>
+        <div class="item">Select</div>
+      </div>
+      <div class="shelf">
+        <p class="shelf-head">Table &middot; 38 глав</p>
+        <div class="ch">Default</div>
+        <div class="ch">Sortable columns</div>
+        <div class="ch">Header sort states</div>
+        <div class="ch">Row interaction states</div>
+        <div class="ch">Naming cell</div>
+        <div class="ch">Link cell</div>
+        <div class="ch">Row selection</div>
+        <div class="ch">Sticky header</div>
+        <div class="ch">Bordered</div>
+        <div class="ch">Loading &middot; skeleton</div>
+        <div class="ch">Loading &middot; overlay</div>
+        <div class="ch">Loading &middot; auto</div>
+        <div class="ch">Empty states</div>
+        <div class="ch">Dense &middot; zebra</div>
+        <div class="ch">Pagination</div>
+        <div class="ch">Wrapper templates</div>
+        <div class="ch is-active">Row identity</div>
+        <div class="ch">Pager switches</div>
+        <div class="ch">Expandable rows</div>
+        <div class="ch">One row at a time</div>
+        <div class="ch">Clickable rows</div>
+        <div class="ch">Row actions</div>
+        <div class="ch">Column picker</div>
+        <div class="ch">Resizable</div>
+        <div class="ch">Inline editing</div>
+        <div class="ch">Persisted layout</div>
+        <div class="ch">Toolbar slot</div>
+        <div class="ch">Fit to content</div>
+        <div class="ch">Server sort</div>
+        <div class="ch">Two-way sort</div>
+        <div class="ch">Column filters</div>
+        <div class="ch">Truncation</div>
+        <div class="ch">Sticky scrollbar</div>
+        <div class="ch">CSV export</div>
+        <div class="ch">Server filtering</div>
+        <div class="ch">Screen reader</div>
+        <div class="ch">Virtual scroll</div>
+        <div class="ch">Lazy loading</div>
+      </div>
+    </div>
+
+    <div class="panel" style="max-width: 40ch">
+      <p>
+        <b>Плюс:</b> навигация по компонентам не двигается, когда глав 38 — и не двигается вообще
+        никогда, потому что полки независимы. Текущая глава подсвечивается как сейчас, третья
+        колонка не нужна, оверлей закрывать не надо. <b>Минус:</b> полка <b>отбирает половину
+        высоты рейки навсегда</b> — даже у секций с двумя главами; для секции без глав её надо
+        убирать, то есть рейка меняет раскладку при переходе. <b>Цена:</b> средняя.
+      </p>
+    </div>
+  </div>
+
+  <h2>Вариант 10 — одна строка вместо списка</h2>
+
+  <p class="lede">
+    Саб-пунктов в рейке <b>ровно один</b> — текущая глава, со стрелками «предыдущая/следующая» и
+    счётчиком. Список раскрывается по клику на счётчик (панелью варианта 8 или оглавлением
+    варианта 1). Максимальное сжатие: четвёртый уровень занимает одну строку при любом числе глав и
+    при этом всегда говорит, где читатель находится.
+  </p>
+
+  <div class="rails">
+    <div class="rail">
+      <p class="rail-caption">38 глав = одна строка</p>
+      <p class="grp">Data display</p>
+      <div class="grp is-link">Charts <span class="caret">&#9656;</span></div>
+      <div class="item">Stats <span class="caret">&#9662;</span></div>
+      <div class="item is-active">Table <span class="caret">&#9652;</span></div>
+      <div class="stepper">
+        <span class="step-btn">&#9666;</span>
+        <span class="now">Row identity</span>
+        <span class="of">17/38</span>
+        <span class="step-btn">&#9656;</span>
+      </div>
+      <div class="item">Tag</div>
+      <div class="item">Timeline</div>
+      <div class="item">Tree</div>
+      <p class="grp">Forms &amp; inputs</p>
+      <div class="item">Input</div>
+      <div class="item">Select</div>
+      <div class="item">Checkbox</div>
+      <div class="item">Radio</div>
+    </div>
+
+    <div class="panel" style="max-width: 40ch">
+      <p>
+        <b>Плюс:</b> стены нет по построению, рейка цела, обрубков нет — ширины хватает одной
+        подписи. Даёт то, чего нет ни в одном другом варианте: <b>шаг к следующей главе одним
+        кликом</b>, без возврата к списку. <b>Минус:</b> просмотреть, что вообще есть в секции,
+        нельзя — а список заводили именно для этого, поэтому без варианта 1 или 8 за спиной он не
+        решение, а их дополнение. И это <b>не навигация, а индикатор</b>: перейти к произвольной
+        главе нельзя.
+      </p>
+    </div>
+  </div>
+
   <h2>Сводка</h2>
 
   <table>
@@ -569,8 +1059,34 @@
         <th>5 · Две колонки</th>
         <td>частично</td><td class="no">хуже</td><td class="no">нет</td><td>частично</td><td>малая</td>
       </tr>
+      <tr>
+        <th>6 · Общая подложка</th>
+        <td class="no">остаётся</td><td class="no">нет</td><td class="yes">решено</td><td class="no">нет</td><td>минимальная</td>
+      </tr>
+      <tr>
+        <th>7 · Порядковый номер</th>
+        <td class="no">остаётся</td><td class="no">хуже</td><td class="yes">решено</td><td class="no">нет</td><td>минимальная</td>
+      </tr>
+      <tr>
+        <th>8 · Всплывающая панель</th>
+        <td class="yes">решено</td><td class="yes">решено</td><td class="yes">решено</td><td class="yes">да</td><td>средняя</td>
+      </tr>
+      <tr>
+        <th>9 · Нижняя полка</th>
+        <td class="yes">решено</td><td class="no">нет</td><td class="yes">решено</td><td class="yes">да</td><td>средняя</td>
+      </tr>
+      <tr>
+        <th>10 · Одна строка</th>
+        <td class="yes">решено</td><td class="yes">решено</td><td class="yes">решено</td><td class="yes">да</td><td>малая</td>
+      </tr>
     </tbody>
   </table>
+
+  <div class="panel">
+    <b>Две оси, а не одна.</b> 1, 2, 4, 5, 8, 9, 10 отвечают <b>где держать список</b>; 3, 6, 7 —
+    <b>чем саб-пункт отличается от пункта</b>. Поэтому вторые складываются с первыми, а не
+    конкурируют: 3 нужен всем кроме 4 и 10, а 6 и 7 работают поверх любого.
+  </div>
 
   <div class="panel">
     <span class="verdict">нужен вердикт</span>
@@ -583,6 +1099,13 @@
     <p>
       <b>Если третья колонка не нужна</b> — берём 2 + 3: девять групп в рейке. Дешевле, работает на
       узком экране, ценой второго клика до главы.
+    </p>
+    <p>
+      <b>Из новых пяти — 8 + 3:</b> всплывающая панель. Это единственный вариант, который держит
+      рейку целой <b>по построению</b>, а не за счёт сжатия списка, и единственный, который даёт
+      группы без второго клика. Ближайший к 1 по результату, но без третьей колонки на странице —
+      поэтому его и стоит сравнивать напрямую с 1. <b>10</b> — не альтернатива, а надстройка над
+      1 или 8: шаг «дальше» одним кликом.
     </p>
   </div>
 </main>

@@ -20,7 +20,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
 | 8 | `8-warning-text-colour` | one colour on one tint, each candidate rendered in itself |
 | 9 | `9-selection-focus-ring` | the P1 bullseye on radio/checkbox/switch — one verdict moves the ring from the glyph to the row, and a second decides the label-less control |
-| 11 | `11-docs-chapter-nav` | the chapter list shipped as a flat 38-item wall with six labels truncated mid-word; five ways to shape it, each rendered live at the rail's real width |
+| 11 | `11-docs-chapter-nav` | the chapter list shipped as a flat 38-item wall with six labels truncated mid-word; ten ways to shape it - five on where the list lives, five on what makes a sub-item a sub-item - each rendered live at the rail's real width |
 | 10 | `10-sidebar-states` | ANSWERED 2026-09-06: variant E, a fill on the item and never on the group. Kept here until it moves to `implemented/` with the ds-sidenav-item follow-up |
 
 **Ranks 4 and 5 are what is left of the packaging lane and are kept adjacent** — the opt-in seam,
