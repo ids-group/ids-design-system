@@ -7,7 +7,7 @@ import * as React from 'react';
 export interface AuthLayoutProps {
   /** Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=""` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row. */
   brand?: string | null;
-  /** Letter-mark glyph when it differs from the brand's first letter (e.g. an "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`. */
+  /** Letter-mark glyph when it differs from the brand's first letter (e.g. an "A" tile beside the "AppAdmin" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`. */
   logoLetter?: string | null;
   /** One line under the wordmark naming the product or audience. Unset falls back to `DS_CONFIG.brand.tagline`. */
   tagline?: string | null;

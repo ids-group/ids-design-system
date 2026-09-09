@@ -11,7 +11,7 @@ export interface SidenavProps {
   rail?: boolean;
   /** Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=""` drops the wordmark while a `logoLetter` in the config still paints its tile. */
   brand?: string | null;
-  /** Letter-mark glyph when it differs from the brand's first letter (e.g. an "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`. */
+  /** Letter-mark glyph when it differs from the brand's first letter (e.g. an "A" tile beside the "AppAdmin" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`. */
   logoLetter?: string | null;
   /** Route the brand row links to — typically the app's home. Unset leaves the row a plain, non-interactive block. Router targets only, and `RouterLink` is instantiated only once this is set, so an app with no router still renders. */
   brandRoute?: string | readonly unknown[] | null;

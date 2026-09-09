@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.12.2 — 2026-09-09
+
 ### Breaking
 
 - **`--ds-table-hscroll-bottom` is `--ds-table-sticky-scrollbar-offset`.** The knob now carries the

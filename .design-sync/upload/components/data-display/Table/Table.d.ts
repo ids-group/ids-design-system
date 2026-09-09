@@ -85,6 +85,8 @@ export interface TableProps {
   filterMode?: ('client' | 'server' | 'none') | null;
   /** The full value domain per column key, for a header filter the table cannot derive itself. Without it the checklist is built from the rows in hand, which on a server-paged table offers only the values that happen to be on the current page. */
   columnFilterOptions?: unknown;
+  /** Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its padding edge. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` still wins over both, for a rule that has to reach one table from a stylesheet. */
+  stickyScrollbarOffset?: string | null;
   /** Pin the first data column (and the select column) on horizontal scroll. */
   stickyFirstColumn?: boolean;
   /** Render only the rows in view, padding the rest with two spacer rows. Opt-in, and it needs `maxHeight` — without a bounded scroller there is no viewport to window against, so nothing is virtualized (dev-warned). Every row must be the same height, which is `virtualRowSize`: the arithmetic that decides what is in view has no other way to know where a row starts. So virtual mode forces `table-layout: fixed` and single-line cells, and the expansion panel is suppressed — a row that can grow breaks the maths. */
