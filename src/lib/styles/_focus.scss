@@ -21,6 +21,12 @@
 //   @use '../../styles/focus' as focus;
 //   &:focus-visible { @include focus.ring; }
 //   &:focus-visible { @include focus.ring(calc(-1 * var(--focus-ring-offset))); } // clipped
+// A ring HOST must have a radius. There is no `outline-radius`: an outline follows the
+// border-radius of the box it is painted on, so a host with none rings as a 90° rectangle next to
+// the rounded controls around it — measured across 673 focusable elements on two docs pages, 62 of
+// the rings were square and 56 of those were one shell, `.control-line`. A shell that exists only
+// to carry the ring takes `--focus-ring-radius`; a control with a shape of its own keeps it.
+// `ds-sidenav-footer`'s `.search-box` is the shape to copy.
 @mixin ring($offset: var(--focus-ring-offset)) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: $offset;

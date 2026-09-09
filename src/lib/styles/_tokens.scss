@@ -67,6 +67,12 @@
   --focus-ring-width:     2px;
   --focus-ring-offset:    2px;
 
+  /* An outline has no radius of its own — it follows the box it is drawn on, so a ring on a
+     square-cornered shell renders as a 90° rectangle however rounded the control inside it is.
+     This is the radius such a shell takes: a box with no shape of its own, existing only to
+     carry the ring. A control that already has a radius keeps its own and ignores this. */
+  --focus-ring-radius:    var(--radius-sm);
+
   /* Shadows are composed from a channel-split tint so a theme can re-colour them:
      --shadow-tint-h/s come from ../themes/_base-palette.scss and -l from each
      theme's _palette.scss (light 7%, dark 95%, so the same alphas read as soft

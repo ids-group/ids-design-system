@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Радиус фокус-ринга на строках во всю ширину</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="src/lib/styles/_focus.scss - src/lib/styles/_tokens.scss - src/lib/components/table/table.component.scss">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+
+<style>
+  /* Every ring below is PINNED — an outline needs focus, and a deck has none. The pin is the same
+     declaration `focus.ring` emits, so what is on screen is what a keyboard user sees. */
+  .pin {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+  .pin-inset {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: calc(-1 * var(--focus-ring-width));
+  }
+
+  .r0 { border-radius: 0; }
+  .r2 { border-radius: 2px; }
+  .r4 { border-radius: 4px; }
+  .r6 { border-radius: 6px; }
+
+  .specimens {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin: var(--space-4) 0;
+  }
+  .row-of-four {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .variant-label {
+    margin: 0 0 var(--space-2);
+    color: var(--text-tertiary);
+    font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+  }
+  .stage {
+    padding: var(--space-4) var(--space-3);
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  /* A table row, at the real geometry: --_table-cell-pad-y and the s font size. */
+  .t {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-sans);
+  }
+  .t th,
+  .t td {
+    padding: 10px var(--space-3);
+    text-align: left;
+    font-size: var(--font-size-s);
+    border-bottom: var(--border-width-default) solid var(--border-divider);
+    white-space: nowrap;
+  }
+  .t th {
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+  }
+  .t td {
+    color: var(--text-primary);
+  }
+  .t tr.specimen {
+    background: var(--surface-default);
+  }
+  .head-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 2px var(--space-1);
+    color: inherit;
+    font: inherit;
+    background: none;
+    border: 0;
+  }
+  .cell-link {
+    color: var(--text-link);
+    text-decoration: none;
+  }
+
+  /* A panel row — the column picker's shape. */
+  .panel-mock {
+    width: 260px;
+    padding: var(--space-1);
+    background: var(--surface-overlay);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-popover);
+  }
+  .p-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: 6px var(--space-2-5);
+    color: var(--text-secondary);
+    font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
+    background: none;
+    border: 0;
+    text-align: left;
+  }
+
+  .settled {
+    display: flex;
+    gap: var(--space-6);
+    align-items: center;
+    flex-wrap: wrap;
+    margin: var(--space-4) 0;
+  }
+  .control-line-mock {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0;
+    font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
+    color: var(--text-primary);
+  }
+  .box-mock {
+    width: 18px;
+    height: 18px;
+    border: var(--border-width-default) solid var(--border-strong);
+    border-radius: var(--ds-radius-inner);
+    background: var(--surface-default);
+    flex: none;
+  }
+  .box-mock.checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+</style>
+
+<main>
+  <header class="masthead">
+    <div class="chips">
+      <span class="chip is-open">нужен вердикт</span>
+      <span class="chip is-accent">три шелла уже скруглены</span>
+      <span class="chip">673 элемента промерено · 62 квадратных ринга</span>
+    </div>
+
+    <h1>Радиус фокус-ринга на строках во всю ширину</h1>
+
+    <p class="lede">
+      В CSS нет <code>outline-radius</code>: outline наследует <code>border-radius</code> того бокса,
+      на котором нарисован. Поэтому ринг на боксе без радиуса выходит прямоугольником с углами 90°
+      рядом со скруглёнными контролами. Промерено настоящей табуляцией по двум страницам доков:
+      <b>673 фокусируемых элемента, 62 квадратных ринга</b> из них. Мелкие контролы и шеллы уже
+      исправлены — здесь остались <b>четыре формы «строка во всю ширину»</b>, где 0 против 4px это
+      вкус, а не дефект.
+    </p>
+  </header>
+
+  <h2>Что уже решено и не обсуждается</h2>
+
+  <div class="panel">
+    <span class="verdict is-accent">сделано</span>
+    <p>
+      <b>56 из 62</b> квадратных рингов — это один шелл, <code>.control-line</code> у чекбокса,
+      радио и свитча. Шелл ничего не красит, поэтому радиус на нём виден <b>только</b> в ринге:
+      нулевого визуального риска. Он получил новый токен <code>--focus-ring-radius</code>
+      (<code>--radius-sm</code>, 4px), и правило записано там, где живёт миксин.
+    </p>
+  </div>
+
+  <div class="settled">
+    <div>
+      <p class="variant-label">было — 0°</p>
+      <span class="control-line-mock pin r0">
+        <span class="box-mock checked"></span>
+        Уведомлять об изменениях
+      </span>
+    </div>
+    <div>
+      <p class="variant-label">стало — 4px</p>
+      <span class="control-line-mock pin r4">
+        <span class="box-mock checked"></span>
+        Уведомлять об изменениях
+      </span>
+    </div>
+  </div>
+
+  <h2>Что нужно решить — четыре формы</h2>
+
+  <table>
+    <thead>
+      <tr><th>Хост</th><th>Штук</th><th>Что это</th><th>Смещение ринга</th></tr>
+    </thead>
+    <tbody>
+      <tr><th><code>tr.clickable</code></th><td>22</td><td>кликабельная строка таблицы</td><td>внутрь</td></tr>
+      <tr><th><code>button.row</code></th><td>9</td><td>строка панели выбора колонок</td><td>внутрь</td></tr>
+      <tr><th><code>a.cell-link</code></th><td>5</td><td>ссылка внутри ячейки</td><td>внутрь</td></tr>
+      <tr><th><code>button.head</code></th><td>3</td><td>сортируемый заголовок колонки</td><td>внутрь</td></tr>
+    </tbody>
+  </table>
+
+  <div class="panel">
+    <b>Почему это не такой же очевидный случай.</b> Строка таблицы прямоугольна по природе: у неё
+    есть разделители сверху и снизу, соседние строки продолжают её кромку, и скруглённый ринг внутри
+    прямоугольной сетки может прочитаться как выпавшая из сетки плашка. У шелла чекбокса такого
+    контекста нет. Поэтому ниже одно и то же в четырёх радиусах — на настоящей геометрии.
+  </div>
+
+  <h2>Строка таблицы — <code>tr.clickable</code></h2>
+
+  <div class="specimens">
+    <div class="row-of-four">
+      <div>
+        <p class="variant-label">0 — как сейчас</p>
+        <div class="stage">
+          <table class="t">
+            <tr><td>Ada Lovelace</td></tr>
+            <tr class="specimen"><td class="pin-inset r0">Grace Hopper</td></tr>
+            <tr><td>Alan Turing</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">2px</p>
+        <div class="stage">
+          <table class="t">
+            <tr><td>Ada Lovelace</td></tr>
+            <tr class="specimen"><td class="pin-inset r2">Grace Hopper</td></tr>
+            <tr><td>Alan Turing</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">4px — как у контролов</p>
+        <div class="stage">
+          <table class="t">
+            <tr><td>Ada Lovelace</td></tr>
+            <tr class="specimen"><td class="pin-inset r4">Grace Hopper</td></tr>
+            <tr><td>Alan Turing</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">6px</p>
+        <div class="stage">
+          <table class="t">
+            <tr><td>Ada Lovelace</td></tr>
+            <tr class="specimen"><td class="pin-inset r6">Grace Hopper</td></tr>
+            <tr><td>Alan Turing</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Заголовок колонки — <code>button.head</code></h2>
+
+  <div class="specimens">
+    <div class="row-of-four">
+      <div>
+        <p class="variant-label">0 — как сейчас</p>
+        <div class="stage">
+          <table class="t">
+            <tr><th><span class="head-cell pin-inset r0">Имя &#9662;</span></th></tr>
+            <tr><td>Ada Lovelace</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">2px</p>
+        <div class="stage">
+          <table class="t">
+            <tr><th><span class="head-cell pin-inset r2">Имя &#9662;</span></th></tr>
+            <tr><td>Ada Lovelace</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">4px</p>
+        <div class="stage">
+          <table class="t">
+            <tr><th><span class="head-cell pin-inset r4">Имя &#9662;</span></th></tr>
+            <tr><td>Ada Lovelace</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">6px</p>
+        <div class="stage">
+          <table class="t">
+            <tr><th><span class="head-cell pin-inset r6">Имя &#9662;</span></th></tr>
+            <tr><td>Ada Lovelace</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Строка панели — <code>button.row</code></h2>
+
+  <div class="specimens">
+    <div class="row-of-four">
+      <div>
+        <p class="variant-label">0 — как сейчас</p>
+        <div class="stage">
+          <div class="panel-mock">
+            <span class="p-row">Название</span>
+            <span class="p-row pin-inset r0">Статус</span>
+            <span class="p-row">Дата</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">2px</p>
+        <div class="stage">
+          <div class="panel-mock">
+            <span class="p-row">Название</span>
+            <span class="p-row pin-inset r2">Статус</span>
+            <span class="p-row">Дата</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">4px</p>
+        <div class="stage">
+          <div class="panel-mock">
+            <span class="p-row">Название</span>
+            <span class="p-row pin-inset r4">Статус</span>
+            <span class="p-row">Дата</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">6px</p>
+        <div class="stage">
+          <div class="panel-mock">
+            <span class="p-row">Название</span>
+            <span class="p-row pin-inset r6">Статус</span>
+            <span class="p-row">Дата</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Ссылка в ячейке — <code>a.cell-link</code></h2>
+
+  <div class="specimens">
+    <div class="row-of-four">
+      <div>
+        <p class="variant-label">0 — как сейчас</p>
+        <div class="stage">
+          <table class="t">
+            <tr><td><span class="cell-link pin r0">Договор №4471</span></td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">2px</p>
+        <div class="stage">
+          <table class="t">
+            <tr><td><span class="cell-link pin r2">Договор №4471</span></td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">4px</p>
+        <div class="stage">
+          <table class="t">
+            <tr><td><span class="cell-link pin r4">Договор №4471</span></td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="variant-label">6px</p>
+        <div class="stage">
+          <table class="t">
+            <tr><td><span class="cell-link pin r6">Договор №4471</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Сводка</h2>
+
+  <table>
+    <thead>
+      <tr><th>Вариант</th><th>За</th><th>Против</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>0 — оставить острыми</th>
+        <td>Строка и заголовок прямоугольны по природе, ринг продолжает сетку таблицы.</td>
+        <td class="no">Ровно то, на что жаловались: рядом со скруглёнными контролами читается как чужое.</td>
+      </tr>
+      <tr>
+        <th>2px</th>
+        <td>Угол перестаёт быть острым, сетка почти не тронута.</td>
+        <td class="no">На 2px при толщине ринга 2px скругление почти не читается — половина мер, целая правка.</td>
+      </tr>
+      <tr>
+        <th class="yes">4px — как у контролов</th>
+        <td>Тот же <code>--radius-sm</code>, что у кнопок панели, опций, клира и теперь у шеллов: одна величина по всей системе.</td>
+        <td>Скруглённый ринг внутри прямоугольной сетки — самое заметное изменение из четырёх.</td>
+      </tr>
+      <tr>
+        <th>6px</th>
+        <td>Явно намеренно, хорошо читается на широкой строке.</td>
+        <td class="no">Своя величина, которой в системе больше нигде нет.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="panel">
+    <span class="verdict">нужен вердикт</span>
+    <p>
+      <b>Рекомендую 4px</b> — это уже принятый <code>--radius-sm</code>, и после того как шеллы
+      чекбокса, радио и свитча получили его же, любое другое число здесь создаёт вторую величину для
+      одной и той же роли. Смотреть надо на первую колонку каждой пары: она показывает, что
+      «острый» это не нейтральный дефолт, а отдельный вид, который просто нигде не выбирали.
+    </p>
+    <p>
+      <b>Если строки трогать не хочется</b> — берём 4px для <code>button.row</code>,
+      <code>button.head</code> и <code>a.cell-link</code>, а <code>tr.clickable</code> оставляем
+      острым: у него единственного ринг идёт по кромке сетки, где скругление спорно. Это 17 хостов
+      из 39 против 39 из 39.
+    </p>
+  </div>
+
+  <div class="panel">
+    <b>Смежное, не смешивать.</b> Дека 9 (<code>9-selection-focus-ring</code>) решает, <b>где</b>
+    рисовать ринг на радио, чекбоксе и свитче — на глифе или на строке. Здесь речь только о
+    <b>радиусе</b> уже выбранного хоста. Вердикты независимы.
+  </div>
+</main>

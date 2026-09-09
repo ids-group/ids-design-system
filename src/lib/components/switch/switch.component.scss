@@ -48,6 +48,9 @@
   // keyboard user has to tell apart.
   @include focus.ring-for('.switch');
 
+  // The shell paints nothing, so this shapes the ring and nothing else.
+  border-radius: var(--focus-ring-radius);
+
   // No label: the row collapses onto the glyph and the concentric read comes back, so the
   // ring stands further off. `.control-text:empty` is display:none, so the row IS the glyph.
   &:has(.control-text:empty) {
