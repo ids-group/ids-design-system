@@ -1,12 +1,9 @@
-<!-- Three elements, decided by destination — `routerLink` → an <a [routerLink]>, `href` → a plain
-     <a href>, neither → a <button type="button">. Styling is class-based (`.button`) and identical
-     across all three, so target the class, never the tag. The three share one #content template so
-     the inner markup is not triplicated, and all three carry #btn so `controlRef` resolves
-     whichever element rendered.
+<!-- Every branch must keep #btn: `controlRef` is required, so dropping it from one leaves that
+     destination throwing instead of rendering.
 
-     `type`, `loading` and the native `disabled` are button-only: an anchor has no form to submit
-     and no native disabled state, so it takes `aria-disabled` plus `tabindex="-1"` instead — the
-     treatment ds-sidenav-item already applies. -->
+     `type`, `loading` and the native `disabled` are button-only — an anchor has neither a form to
+     submit nor a native disabled state, which is why the anchors take `aria-disabled` and
+     `tabindex="-1"` instead. -->
 @switch (destination()) {
   @case ('routerLink') {
     <a
