@@ -9,6 +9,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { chapterNavEnabled } from '../core/feature-flags';
 import {
   SectionChaptersService,
   chapterSlug,
@@ -84,7 +85,7 @@ export class DocsSectionComponent {
     // After render, not from a lifecycle hook: the chapters are projected content, so they exist
     // only once this view has been stamped out.
     afterNextRender(() => {
-      if (!this.chapters()) {
+      if (!this.chapters() || !chapterNavEnabled()) {
         return;
       }
       const anchor = this.anchor();
