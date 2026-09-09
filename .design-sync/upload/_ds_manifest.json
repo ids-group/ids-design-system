@@ -378,10 +378,15 @@
       "subtitle": "Set fullWidth to stretch the button to its container — for mobile primary CTAs and full-bleed form submits."
     },
     {
-      "path": "components/actions/ToggleButton/Toggle Button - Toggle - link.html",
+      "path": "components/actions/ToggleButton/Toggle Button - Toggle.html",
       "group": "actions",
-      "viewport": "1200x405",
-      "name": "Toggle Button - toggle · link",
+      "name": "Toggle Button - toggle",
+      "subtitle": "A two-state action that stays pressed: [pressed] is the state and the button carries aria-pressed for it."
+    },
+    {
+      "path": "components/actions/Button/Button - Link-styled action.html",
+      "group": "actions",
+      "name": "Buttons - link-styled action",
       "subtitle": "A link-styled action is the global .link class on a button (replaces the old variant='text')."
     },
     {
@@ -404,6 +409,12 @@
       "viewport": "1200x700",
       "name": "Icon button - color × variant",
       "subtitle": "variant = fill taxonomy (standard chromeless · filled · tonal · outlined); color = the shared brand/status hue family (same axis as ds-button)."
+    },
+    {
+      "path": "components/actions/IconButton/Icon Button - States.html",
+      "group": "actions",
+      "name": "Icon button - states",
+      "subtitle": "The primary colour in every variant (rows) across every state (columns)."
     },
     {
       "path": "components/actions/IconButton/Icon Button - Sizes.html",
@@ -1408,6 +1419,12 @@
       "subtitle": "ds-sidenav-group expandable renders the header as a toggle button with a caret."
     },
     {
+      "path": "components/navigation/Sidenav/Sidenav - A group that is also a page.html",
+      "group": "navigation",
+      "name": "Sidenav - a group that is also a page",
+      "subtitle": "Without routerLink the whole header only opens the group — a heading that navigates closes the page being read the moment someone reaches for the section beneath it."
+    },
+    {
       "path": "components/navigation/Sidenav/Sidenav - Collapsed.html",
       "group": "navigation",
       "viewport": "1200x643",
@@ -1828,6 +1845,24 @@
       "viewport": "1200x700",
       "name": "Table - pagination · sticky column",
       "subtitle": "[pageSize] turns on client-side pagination (select-all then scopes to the current page); [stickyFirstColumn] pins the first column on horizontal scroll; sortMode says who sorts —…"
+    },
+    {
+      "path": "components/data-display/Table/Table - Templates a wrapper hands over.html",
+      "group": "data-display",
+      "name": "Table - templates a wrapper hands over",
+      "subtitle": "A component that wraps this table cannot rely on the projected dsCellTemplate and [empty] slots: content arriving through the wrapper's own ng-content is invisible to the table's…"
+    },
+    {
+      "path": "components/data-display/Table/Table - Row identity for data with no key.html",
+      "group": "data-display",
+      "name": "Table - row identity for data with no key",
+      "subtitle": "Selection, expansion and the active-row highlight all need to name a row, and by default the table reads row.id."
+    },
+    {
+      "path": "components/data-display/Table/Table - What the pager shows.html",
+      "group": "data-display",
+      "name": "Table - what the pager shows",
+      "subtitle": "Three switches, all on by default."
     },
     {
       "path": "components/data-display/Table/Table - Expandable rows.html",

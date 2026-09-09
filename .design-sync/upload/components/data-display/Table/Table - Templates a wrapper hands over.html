@@ -1,6 +1,6 @@
-<!-- @dsCard group="actions" viewport="1200x405" name="Toggle Button - toggle · link" subtitle="A link-styled action is the global .link class on a button (replaces the old variant='text')." --><!doctype html>
+<!-- @dsCard group="data-display" name="Table - templates a wrapper hands over" subtitle="A component that wraps this table cannot rely on the projected dsCellTemplate and [empty] slots: content arriving through the wrapper's own ng-content is invisible to the table's…" --><!doctype html>
 <html data-theme="light"><head><meta charset="utf-8">
-  <title>ToggleButton</title>
+  <title>Table</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
   <style>
@@ -9,24 +9,24 @@
     .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
   </style>
 </head><body>
-  <div class="ds-page"><ds-docs-components-button></ds-docs-components-button></div>
+  <div class="ds-page"><ds-docs-components-table></ds-docs-components-table></div>
   <script>window.__dsSectionsOnly = true</script>
   <script src="../../../_ds_bundle.js"></script>
   <script>
     (function () {
-      var OWNS = "toggle-button";
-      var INDEX = 0;
-      var KEY = "toggle-button";
-      var TABLE = true;
-      var HEAD = "Toggle Button";
-      var BLOCK = "toggle · link";
-      var REACT = "ToggleButton";
+      var OWNS = "";
+      var INDEX = 15;
+      var KEY = "table";
+      var TABLE = false;
+      var HEAD = null;
+      var BLOCK = "templates a wrapper hands over";
+      var REACT = "Table";
       var WHOLE = OWNS === null;
       var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
       var KEEP = LEDE ? 'h2, p.lede' : 'h2';
       var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-button");
+      var host = document.querySelector("ds-docs-components-table");
       var start = Date.now();
       (function slice() {
         var section = host && host.querySelector('.section');

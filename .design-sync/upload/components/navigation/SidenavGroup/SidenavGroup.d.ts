@@ -11,6 +11,8 @@ export interface SidenavGroupProps {
   icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
   /** When true, the label/icon row becomes a clickable header that expands/collapses the group. */
   expandable?: boolean;
+  /** Makes the group a destination of its own as well as a container: the header navigates here and the caret becomes a separate control, because one control cannot both go somewhere and stay to open something. Unset (the default) the whole header only expands — a heading that navigates closes the page being read the moment someone reaches for the group beneath it. */
+  routerLink?: string | readonly unknown[] | null;
   /** Two-way bindable open state; defaults open so a non-expandable group always shows its items. */
   expanded?: boolean;
   onExpandedChange?: (value: boolean) => void;
