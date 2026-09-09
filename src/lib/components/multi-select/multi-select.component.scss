@@ -186,6 +186,10 @@
   padding: var(--space-2) var(--space-3);
   border-bottom: var(--border-width-default) solid var(--border-divider);
 
+  // An outline has no radius of its own — it follows the box it is drawn on. Without this the
+  // ring came out as a 470px hard rectangle inside a panel whose every other control is rounded.
+  border-radius: var(--ds-radius-inner);
+
   // The row spans the panel edge to edge and the panel clips, so the ring is drawn inward.
   &:focus-within {
     @include focus.ring(calc(-1 * var(--focus-ring-width)));
