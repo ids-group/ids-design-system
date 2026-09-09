@@ -1208,6 +1208,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Button height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
+        "name": "routerLink",
+        "kind": "input",
+        "type": "string | readonly unknown[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Angular `RouterLink` target — string or array form for dynamic segments. Set it and the button renders an `<a [routerLink]>` that also takes `routerLinkActive`, because a control that navigates must be a link: middle-click, open-in-new-tab, copy-link-address and the \"link\" role a screen reader announces all depend on the element, not on the look."
+      },
+      {
+        "name": "href",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Plain `href` target, used when `routerLink` is not set — an external address or a download. Renders an `<a href>`; same reasoning as `routerLink`."
+      },
+      {
         "name": "type",
         "kind": "input",
         "type": "ButtonType",
@@ -1218,7 +1236,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": "Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident."
+        "description": "Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. Button-only — an anchor has no form to submit, so it is ignored with a dev-mode warning."
       },
       {
         "name": "disabled",
@@ -1236,7 +1254,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Busy state — disables interaction and sets `aria-busy`."
+        "description": "Busy state — disables interaction and sets `aria-busy`. Button-only: a navigation cannot be in flight before it starts, so on an anchor it is ignored with a dev-mode warning."
       },
       {
         "name": "fullWidth",

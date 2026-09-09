@@ -497,6 +497,74 @@
     </ds-toggle-button>
   </div>
 
+  <h3
+    class="block-title t-h4"
+    data-nav="Link-button">
+    Navigation that looks like a button
+  </h3>
+
+  <p class="block-desc t-s">
+    Three elements, decided by destination:
+    <code class="t-mono-inline">
+      routerLink
+    </code> renders an
+    <code class="t-mono-inline">
+      &lt;a [routerLink]&gt;
+    </code>,
+    <code class="t-mono-inline">
+      href
+    </code> a plain
+    <code class="t-mono-inline">
+      &lt;a href&gt;
+    </code>, and neither a
+    <code class="t-mono-inline">
+      &lt;button type="button"&gt;
+    </code>. The look
+    is identical across all three, because the styling is class-based — so a
+    call-to-action can stay a real link, and middle-click, open-in-new-tab and
+    the "link" role a screen reader announces all keep working.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      type
+    </code> and
+    <code class="t-mono-inline">
+      loading
+    </code> are button-only and warn in dev
+    if set here. A disabled link-button takes
+    <code class="t-mono-inline">
+      aria-disabled
+    </code> and
+    <code class="t-mono-inline">
+      tabindex="-1"
+    </code> instead of the native
+    attribute, which an anchor does not have.
+  </p>
+
+  <div class="row">
+    <ds-button
+      icon="arrowRight"
+      routerLink="/components/table">
+      Go to Table
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      href="https://angular.dev"
+      trailingIcon="external">
+      Angular docs
+    </ds-button>
+
+    <ds-button
+      variant="tonal"
+      routerLink="/components/table"
+      disabledReason="Pick a row first"
+      [disabled]="true">
+      Open the row
+    </ds-button>
+  </div>
+
   <h3 class="block-title t-h4">
     Link-styled action
   </h3>

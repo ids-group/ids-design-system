@@ -50,7 +50,7 @@
       color="neutral"
       variant="outline"
       [ariaExpanded]="pop.opened()"
-      (pressed)="pop.toggle(trigger.buttonRef().nativeElement)">
+      (pressed)="pop.toggle(trigger.controlRef().nativeElement)">
       Open summary
     </ds-button>
 
@@ -100,7 +100,7 @@
         color="neutral"
         variant="outline"
         [ariaExpanded]="popStart.opened()"
-        (pressed)="popStart.toggle(startTrigger.buttonRef().nativeElement)">
+        (pressed)="popStart.toggle(startTrigger.controlRef().nativeElement)">
         Align start
       </ds-button>
 
@@ -121,7 +121,7 @@
         color="neutral"
         variant="outline"
         [ariaExpanded]="popEnd.opened()"
-        (pressed)="popEnd.toggle(endTrigger.buttonRef().nativeElement)">
+        (pressed)="popEnd.toggle(endTrigger.controlRef().nativeElement)">
         Align end
       </ds-button>
 
@@ -165,7 +165,7 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popTop.opened()"
-      (pressed)="popTop.toggle(topTrigger.buttonRef().nativeElement)">
+      (pressed)="popTop.toggle(topTrigger.controlRef().nativeElement)">
       Top
     </ds-button>
 
@@ -185,7 +185,7 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popBottom.opened()"
-      (pressed)="popBottom.toggle(bottomTrigger.buttonRef().nativeElement)">
+      (pressed)="popBottom.toggle(bottomTrigger.controlRef().nativeElement)">
       Bottom
     </ds-button>
 
@@ -205,7 +205,7 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popLeft.opened()"
-      (pressed)="popLeft.toggle(leftTrigger.buttonRef().nativeElement)">
+      (pressed)="popLeft.toggle(leftTrigger.controlRef().nativeElement)">
       Left
     </ds-button>
 
@@ -225,7 +225,7 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popRight.opened()"
-      (pressed)="popRight.toggle(rightTrigger.buttonRef().nativeElement)">
+      (pressed)="popRight.toggle(rightTrigger.controlRef().nativeElement)">
       Right
     </ds-button>
 
@@ -258,7 +258,7 @@
       size="sm"
       [ariaExpanded]="popArrowBottom.opened()"
       (pressed)="
-        popArrowBottom.toggle(arrowBottomTrigger.buttonRef().nativeElement)
+        popArrowBottom.toggle(arrowBottomTrigger.controlRef().nativeElement)
       ">
       Arrow bottom
     </ds-button>
@@ -280,7 +280,9 @@
       variant="outline"
       size="sm"
       [ariaExpanded]="popArrowTop.opened()"
-      (pressed)="popArrowTop.toggle(arrowTopTrigger.buttonRef().nativeElement)">
+      (pressed)="
+        popArrowTop.toggle(arrowTopTrigger.controlRef().nativeElement)
+      ">
       Arrow top
     </ds-button>
 
@@ -302,7 +304,7 @@
       size="sm"
       [ariaExpanded]="popArrowRight.opened()"
       (pressed)="
-        popArrowRight.toggle(arrowRightTrigger.buttonRef().nativeElement)
+        popArrowRight.toggle(arrowRightTrigger.controlRef().nativeElement)
       ">
       Arrow right
     </ds-button>
