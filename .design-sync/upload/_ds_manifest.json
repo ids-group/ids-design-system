@@ -387,6 +387,7 @@
     {
       "path": "components/actions/Button/Button - Navigation that looks like a button.html",
       "group": "actions",
+      "viewport": "1200x439",
       "name": "Buttons - navigation that looks like a button",
       "subtitle": "Three elements, decided by destination: routerLink renders an a [routerLink], href a plain a href, and neither a button type='button'."
     },

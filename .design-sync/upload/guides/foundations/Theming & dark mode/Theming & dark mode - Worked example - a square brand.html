@@ -1,96 +1,28 @@
-<!-- @dsCard group="foundations" viewport="1200x700" name="Theming & dark mode - worked example — a square brand" subtitle="The most common whole-brand change, and the one most often done the long way: a consumer audit found twelve scattered -ds-component-radius: 0 declarations written one component…" --><!doctype html>
+<!-- @dsCard group="foundations" viewport="1200x700" name="Theming & dark mode - worked example — a square brand" subtitle="The most common whole-brand change, and the one most often done the long way: a consumer audit found twelve scattered -ds-component-radius: 0 declarations written one component…" --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
-  <title>Theming & dark mode</title>
+  <title>Theming &amp; dark mode</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-foundations-theming></ds-docs-foundations-theming></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 6;
-      var KEY = "";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "worked example — a square brand";
-      var REACT = null;
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-foundations-theming");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-foundations-theming _nghost-c49=""><docs-section _ngcontent-c49="" anchor="theming" eyebrow="Foundations" title="Theming &amp; dark mode" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-theming" data-anchor="theming"><h2 _ngcontent-c1="" class="t-h2">Theming &amp; dark mode - worked example — a square brand</h2><p _ngcontent-c49="" class="block-desc t-s"> The most common whole-brand change, and the one most often done the long way: a consumer audit found <strong _ngcontent-c49="">twelve</strong> scattered <code _ngcontent-c49="" class="t-mono-inline"> --ds-&lt;component&gt;-radius: 0 </code> declarations written one component at a time. Four lines replace all of them. </p><pre _ngcontent-c49="" class="t-mono-block">// A square brand — three roles.
+:root {
+  --ds-radius-inner: 0;     // options, chips, calendar days, close buttons
+  --ds-radius-control: 0;   // buttons, fields, triggers
+  --ds-radius-panel: 0;     // menus, modals, dropdown panels
+  // Not --radius-pill: switch tracks, avatars and status dots are round
+  // by shape, not by style. Add --radius-sm/md/lg/xl: 0 as well if you
+  // also want square focus rings.
+}</pre><p _ngcontent-c49="" class="block-desc t-s"><strong _ngcontent-c49=""> Three role declarations do it, and as of 2026-08-10 that is finally true. </strong> Measured: on a component page, zeroing <code _ngcontent-c49="" class="t-mono-inline"> --ds-radius-inner </code>, <code _ngcontent-c49="" class="t-mono-inline"> -control </code> and <code _ngcontent-c49="" class="t-mono-inline"> -panel </code> squares <strong _ngcontent-c49=""> most </strong> rounded surfaces, and it is worth knowing which ones it does not. Thirty-one declarations across nineteen components still read the scale directly rather than a role — the menu panel, the toast, split-button and button-group segment corners, the sidenav footer, the colour-picker swatches and a dozen others. Zeroing the three roles leaves those at their scale value. <code _ngcontent-c49="" class="t-mono-inline"> --radius-pill </code> is out of scope by design: switch tracks, avatars and status dots are round by shape, not by style. </p><p _ngcontent-c49="" class="block-desc t-s"><strong _ngcontent-c49=""> Zeroing the SCALE instead is the blunter option, and it reaches everything the roles miss: </strong> those thirty-one declarations, plus the focus-ring radii, which deliberately follow the scale rather than a role — a ring traces a box, it is not a surface a brand designs. Use it if you want the corners squared everywhere. </p><p _ngcontent-c49="" class="block-desc t-s"><strong _ngcontent-c49=""> Leave <code _ngcontent-c49="" class="t-mono-inline"> --radius-pill </code> alone either way. </strong> A switch track, an avatar and a status dot are round because of what they are, not because of the brand — verified: with the scale zeroed, the switch track stays fully rounded because it resolves the pill token instead. </p><p _ngcontent-c49="" class="block-desc t-s"><strong _ngcontent-c49=""> The roles also give you the partial case </strong>, which the scale cannot — one declaration moves a family and leaves its neighbour alone: </p><pre _ngcontent-c49="" class="t-mono-block">// Square the controls, keep panels rounded — this is what the ROLES are for.
+:root {
+  --ds-radius-control: 0;   // buttons, fields, triggers — 21 components
+  --ds-radius-panel: 12px;  // menus, modals, dropdown panels — 10 components
+}</pre></section></docs-section></ds-docs-foundations-theming></div>
+  
+  
+  
+
+
 </body></html>

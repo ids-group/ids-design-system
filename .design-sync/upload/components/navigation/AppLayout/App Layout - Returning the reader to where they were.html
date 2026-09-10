@@ -1,96 +1,34 @@
-<!-- @dsCard group="navigation" viewport="1200x700" name="App layout - returning the reader to where they were" subtitle="[restoreScroll]='true' remembers the scroll position per route and restores it — but only on a BACK, which is the whole design: returning to a list should return to the reader's…" --><!doctype html>
-<html data-theme="light"><head><meta charset="utf-8">
+<!-- @dsCard group="navigation" viewport="1200x700" name="App layout - returning the reader to where they were" subtitle="[restoreScroll]='true' remembers the scroll position per route and restores it — but only on a BACK, which is the whole design: returning to a list should return to the reader's…" --><!DOCTYPE html>
+<html data-theme="light" style="--ds-scrollbar-width: 15px;"><head><meta charset="utf-8">
   <title>AppLayout</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-app-layout></ds-docs-components-app-layout></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 3;
-      var KEY = "app-layout";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "returning the reader to where they were";
-      var REACT = "AppLayout";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-app-layout");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<style></style><link rel="stylesheet" href="../../../_ds_cards.css"><style>.cdk-visually-hidden {
+border: 0;
+clip: rect(0 0 0 0);
+height: 1px;
+margin: -1px;
+overflow: hidden;
+padding: 0;
+position: absolute;
+width: 1px;
+white-space: nowrap;
+outline: 0;
+-webkit-appearance: none;
+-moz-appearance: none;
+left: 0;
+}
+[dir=rtl] .cdk-visually-hidden {
+left: auto;
+right: 0;
+}</style><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-app-layout _nghost-c1r=""><docs-section _ngcontent-c1r="" anchor="app-layout" eyebrow="Components" title="App layout" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-app-layout" data-anchor="app-layout"><h2 _ngcontent-c1="" class="t-h2">App layout - returning the reader to where they were</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="app-layout"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;AppLayout /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1r="" class="block-desc t-s"><code _ngcontent-c1r="" class="t-mono-inline"> [restoreScroll]="true" </code> remembers the scroll position per route and restores it — but only on a BACK, which is the whole design: returning to a list should return to the reader's row, while following a link into a new screen should start at the top. A history traversal arms it (back, forward, the mouse side button, Alt+← and an edge swipe all arrive as popstate), as does a reload, and a host that pushes instead of traversing can arm it explicitly with <code _ngcontent-c1r="" class="t-mono-inline"> state: { dsRestoreScroll: true } </code>. Any wheel, touch or key input cancels the pending restore, so it never fights a reader who has already started scrolling. These docs run with it on. </p><p _ngcontent-c1r="" class="block-desc t-s"> Resetting is separate from restoring, and it now has a switch: <code _ngcontent-c1r="" class="t-mono-inline"> scrollReset </code> is <code _ngcontent-c1r="" class="t-mono-inline"> 'path' </code> by default — the top only when navigation lands on a different PATH, so a search, a sort or a page step on the same screen keeps the reader's place. <code _ngcontent-c1r="" class="t-mono-inline"> 'always' </code> resets on those too, which is what a server-paged list usually wants, and <code _ngcontent-c1r="" class="t-mono-inline"> 'never' </code> hands the decision back to the screen — which can still call <code _ngcontent-c1r="" class="t-mono-inline"> scrollToTop() </code> itself. The input exists because owning the scroll CONTAINER had quietly meant owning the POLICY: a screen could ADD a reset and had no way to suppress one. </p><p _ngcontent-c1r="" class="block-desc t-s"><code _ngcontent-c1r="" class="t-mono-inline"> LayoutNavigationService </code> is public for the same reason. Its <code _ngcontent-c1r="" class="t-mono-inline">pathChanged</code> stream is the layout's own answer to "did we go somewhere else?" — `NavigationEnd`, path only, de-duplicated, and skipping any navigation that carries <code _ngcontent-c1r="" class="t-mono-inline"> state: { dsSamePage: true } </code>. Inject it instead of deriving your own: one consumer ended up with three answers that disagreed, because a `split('?')` keeps the fragment this one strips. </p><p _ngcontent-c1r="" class="block-desc t-s"> The offset is applied once the content is tall enough to hold it, watched with a <code _ngcontent-c1r="" class="t-mono-inline"> ResizeObserver </code> rather than a fixed frame count, and clamped at <code _ngcontent-c1r="" class="t-mono-inline"> restoreScrollTimeout </code> so a list that loaded 8 of 40 rows still lands near the right place instead of nowhere. A page that renders its own scroll position — a virtualizer decides which rows to build BEFORE it can be scrolled — should take the offset instead of letting the service assign it: <code _ngcontent-c1r="" class="t-mono-inline"> inject(LayoutScrollService).consumePendingOffset() </code>. </p></section></docs-section></ds-docs-components-app-layout></div>
+  
+  
+  
+
+
 </body></html>
