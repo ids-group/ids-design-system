@@ -60,10 +60,6 @@ export interface TruncationRule {
       .i:hover {
         color: var(--primary);
       }
-      .i:focus-visible {
-        outline: var(--focus-ring);
-        outline-offset: 2px;
-      }
       .panel {
         display: none;
         position: absolute;
