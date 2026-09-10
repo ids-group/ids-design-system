@@ -85,7 +85,7 @@
      of the five variants. Only `color="neutral"` was ever safe, because its enabled
      label is nearly black. 70% costs label legibility (2.1–2.7:1 against its own
      ground, was 4.3–5.2) and buys the state being unmistakable, which is the trade
-     Stas picked from `presentations/disabled-recipe.html`. */
+     this ramp is deliberately making. */
   --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, oklch(from var(--_button-accent) 92% 0.03 h));
   --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 70% 0.035 h));
   --_button-border-disabled: var(--ds-button-border-disabled, oklch(from var(--_button-accent) 86% 0.04 h));

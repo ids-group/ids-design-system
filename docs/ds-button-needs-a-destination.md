@@ -60,3 +60,58 @@ Apply that pattern to `ds-button`. In preference order:
 The consumer above can then put every one of its 31 controls on the DS instead of 4, which is the
 difference between the design system reaching its most-clicked surface and stopping at the four
 places that happen to be forms.
+
+---
+
+## Answered 2026-09-09 — preference 1, and it is the whole answer
+
+**`ds-button` takes `routerLink` and `href`.** Three elements decided by destination, exactly as
+`ds-sidenav-item` does it: `routerLink` → `<a [routerLink]>` with `routerLinkActive`, `href` →
+`<a href>`, neither → `<button type="button">`. The styling is class-based, so all three render
+identically — measured: zero differences across eleven computed properties and an identical class
+list, and the focus ring is `2px solid` at `offset 2px` on the anchor exactly as on the button,
+under real keyboard focus.
+
+`type` and `loading` stay button-only and warn in dev if set on a link. A disabled link takes
+`aria-disabled` plus `tabindex="-1"`, and its click is swallowed — which is what stops an `href`
+from navigating, since `aria-disabled` is a label and not a behaviour. `disabledReason` reads the
+same on all three.
+
+The consumer's 31 controls are now all reachable: 27 anchors and 4 buttons, one component.
+
+### Preference 2 was NOT taken, and the reason is preference 1
+
+A `[dsButton]` directive was built and reverted the same day. It was the Ask's fallback for if
+option 1 could not land, and option 1 landed — which leaves the directive covering only hosts a
+consumer cannot replace with `ds-button` at all: a `<summary>` inside a `<details>`, or a
+third-party control that exposes nothing but a class name. **No such host was measured**, here or
+anywhere else.
+
+Against that: a directive cannot carry a stylesheet, so its appearance has to come from a global
+class, which means emitting the button's whole visual body a second time. Measured on the compiled
+sheet: **9 722 B raw, 1 367 B gzip — 11.3% of the gzipped global stylesheet**, paid by every
+consumer whether they use it or not, plus a public class name to support forever. That is a real
+price for a capability nothing has asked for with a number.
+
+If a `<summary>`-shaped host turns up and is measured, the work is small and this is the shape:
+one shared mixin holding the appearance (the extraction is proven to change no compiled CSS), a
+global `.ds-button` in its own partial that consumers `@use` explicitly rather than one forwarded
+from `styles/ds`, and the directive writing the class names.
+
+### Preference 3 — the recipe
+
+**A control that navigates is a `ds-button` with a destination.** That is the supported way, and
+there is now no case where copying the button's classes onto an anchor is the answer:
+
+```html
+<ds-button routerLink="/reports" icon="arrowRight">Go to reports</ds-button>
+<ds-button href="https://example.com" variant="outline">Read the spec</ds-button>
+```
+
+**A control that acts is a `ds-button` with no destination** and a `(pressed)` handler. For a
+link-STYLED action — the underlined look, not the button look — the global `.link` class on a
+`<button>` remains the answer, and `variant="text"` still warns in favour of it.
+
+**A host you cannot replace has no supported treatment**, and reaching for `.button` by class is
+ruled out by `design-system.md` §7 — it works until the internals move. Ask for it instead: an Ask
+with a count of such hosts is what would reopen preference 2.
