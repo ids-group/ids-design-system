@@ -47,7 +47,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   anyway. `disabledReason` reads the same on a link as on a button.
 
 - **`--focus-ring-radius` — the radius a box takes when it exists only to carry a focus ring.**
-  Defaults to `--radius-sm`. There is no `outline-radius` in CSS: an outline follows the
+  Follows `--ds-radius-inner`, 4px, so retuning the inner radius moves these rings with it. There
+  is no `outline-radius` in CSS: an outline follows the
   `border-radius` of the box it is painted on, so a ring host with no radius of its own draws a 90°
   rectangle beside the rounded controls around it. Set this to reshape every such ring at once, or
   give the host its own radius to override it locally.
@@ -75,6 +76,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   only uses the element.
 
 ### Fixed
+
+- **A disabled field no longer paints its `data-field-state`.** An `error`, `warning` or `success`
+  state used to out-rank the disabled look in all nine field components — `ds-input`, `ds-textarea`,
+  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`,
+  `ds-color-picker` and `ds-otp-input` — so a field left invalid and then disabled kept a red border
+  and fill while being unfocusable. It was pure specificity: the state selector carried one more
+  class than the disabled rule it landed on. A disabled control is not submitted and is not
+  validated, so the error promised a correction that could not be made; ARIA settles the same
+  conflict the same way, ignoring an ARIA state that a native attribute contradicts.
+
+  **A read-only field still paints it, deliberately.** `readonly` is submitted where `disabled` is
+  not, so a wrong value there does reach the server and is worth flagging. Both skip browser
+  validation; only one of them can still send something invalid.
 
 - **A `ds-multi-select` panel's filter row draws a rounded focus ring.** It came out as a hard
   rectangle the full width of the panel, inside a panel whose every other control is rounded,
