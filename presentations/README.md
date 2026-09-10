@@ -21,10 +21,11 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 8 | `8-warning-text-colour` | one colour on one tint, each candidate rendered in itself |
 | 9 | `9-sidebar-states` | ANSWERED 2026-09-06: variant E, a fill on the item and never on the group. Kept here until it moves to `implemented/` with the ds-sidenav-item follow-up |
 | 10 | `10-docs-chapter-nav` | the chapter list shipped as a flat 38-item wall with six labels truncated mid-word; ten ways to shape it - five on where the list lives, five on what makes a sub-item a sub-item - each rendered live at the rail's real width |
-| 11 | `11-focus-ring-radius` | an outline follows the radius of the box it is drawn on; 39 rings resolve one and 7 do not, and the 4px they mostly already use is reached under three different token names |
 
 **Ranks 4 and 5 are what is left of the packaging lane and are kept adjacent** — the opt-in seam,
-then what was rejected and why. `selection-focus-ring` closed on 2026-09-04 and moved on 2026-09-10 — the ring is on the row in
+then what was rejected and why. `focus-ring-radius` closed on 2026-09-10: 4px everywhere, and the measuring found four of its
+seven hosts already had a shape their ring follows, so only three needed the token.
+`selection-focus-ring` closed on 2026-09-04 and moved on 2026-09-10 — the ring is on the row in
 `_control-line.scss`, which is what the deck asked for. The three that closed on 2026-09-04 are in `implemented/`
 (`packaging-entry-points`, `basic-advanced-split`, `entry-point-shape`); read them in that order for
 the mechanism, the split question and the layout. All of them are written in Russian and share

@@ -54,6 +54,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **A clickable `ds-table` row, a `ds-tree` row and a `ds-list` activator draw a rounded focus
+  ring.** All three ringed a square-cornered box while every control around them was rounded; they
+  now carry `--focus-ring-radius`. None of the three paints anything itself — the table row's tints
+  sit on its cells — so the radius shapes the ring and nothing else, and it sits on the resting rule
+  rather than inside `:focus-visible`, or the shape would appear only while focused. Reachable by
+  keyboard only.
+
 - **`ds-checkbox`, `ds-radio` and `ds-switch` draw a rounded focus ring.** The ring goes on the row
   that holds the glyph and its label, and that row had no radius, so it came out square while the
   glyph inside it was rounded. The row now takes `--focus-ring-radius`. The row paints nothing else,
