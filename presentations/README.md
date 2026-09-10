@@ -21,6 +21,8 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 8 | `8-warning-text-colour` | one colour on one tint, each candidate rendered in itself |
 | 9 | `9-sidebar-states` | ANSWERED 2026-09-06: variant E, a fill on the item and never on the group. Kept here until it moves to `implemented/` with the ds-sidenav-item follow-up |
 | 10 | `10-docs-chapter-nav` | the chapter list shipped as a flat 38-item wall with six labels truncated mid-word; ten ways to shape it - five on where the list lives, five on what makes a sub-item a sub-item - each rendered live at the rail's real width |
+| 11 | `11-field-group-invalid-voice` | the error border is fixed; what is open is how a group SAYS it is invalid — it has no text channel at all and sets no `aria-invalid`, so colour is the only signal |
+| 12 | `12-stat-value-overflow` | one default, five candidates, each rendered on the real 240px tile — the value runs 157px past the card today, and every answer is a visual breaking change |
 
 **Ranks 4 and 5 are what is left of the packaging lane and are kept adjacent** — the opt-in seam,
 then what was rejected and why. `focus-ring-radius` closed on 2026-09-10: 4px everywhere, and the measuring found four of its

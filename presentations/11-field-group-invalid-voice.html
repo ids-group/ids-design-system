@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>Ошибка у ds-field-group — рамка есть, голоса нет</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="src/lib/components/field-group/field-group.component.scss - src/lib/components/field-group/field-group.component.ts - src/lib/styles/_field-group-segment.scss - docs/todo.md">
+<link rel="stylesheet" href="ds.css">
+<style>
+  body {
+    margin: 0;
+    padding: var(--space-8) var(--space-6) var(--space-12);
+    background: var(--surface-canvas);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-m);
+    line-height: var(--line-height-base);
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  h1 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  h2 {
+    margin: var(--space-10) 0 var(--space-3);
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-bold);
+  }
+
+  h3 {
+    margin: var(--space-6) 0 var(--space-2);
+    font-size: var(--font-size-h5);
+    font-weight: var(--font-weight-bold);
+  }
+
+  p { margin: 0 0 var(--space-3); max-width: 82ch; }
+  .lede { color: var(--text-secondary); }
+  code {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-s);
+    background: var(--surface-muted);
+    padding: 1px 4px;
+    border-radius: var(--radius-sm);
+  }
+
+  .num {
+    display: inline-block;
+    min-width: 24px;
+    margin-right: var(--space-2);
+    padding: 0 var(--space-1-5);
+    border-radius: var(--radius-sm);
+    background: var(--neutral-800);
+    color: var(--surface-default);
+    font-size: var(--font-size-s);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  /* ── an honest mock of the group's chrome, values copied from the component ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-5);
+    margin: var(--space-4) 0 var(--space-6);
+  }
+
+  .cell {
+    padding: var(--space-4);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-md);
+    background: var(--surface-default);
+  }
+
+  .cell-caption {
+    margin: 0 0 var(--space-3);
+    color: var(--text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+  }
+
+  .group {
+    display: inline-flex;
+    align-items: stretch;
+    width: 100%;
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--ds-radius-control);
+    overflow: hidden;
+    height: 40px;
+  }
+
+  .group .seg {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-3);
+    font-size: var(--font-size-m);
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .group .seg + .seg {
+    border-left: var(--border-width-default) solid var(--border-divider);
+    flex: 1;
+    color: var(--text-tertiary);
+  }
+
+  /* The five states, pinned as classes so all of them are on screen at once. */
+  .group.is-hover { border-color: var(--border-strong); }
+  .group.is-focus {
+    border-color: var(--accent);
+    box-shadow: var(--focus-field);
+  }
+  .group.is-invalid { border-color: var(--error); }
+  .group.is-invalid.is-hover-now { border-color: var(--border-strong); }
+  .group.is-invalid.is-focus-now {
+    border-color: var(--accent);
+    box-shadow: var(--focus-field);
+  }
+  .group.is-invalid.is-fixed-focus { box-shadow: var(--focus-field-error); }
+
+  .msg {
+    display: flex;
+    gap: var(--space-1-5);
+    align-items: center;
+    margin-top: var(--space-1-5);
+    color: var(--error-text);
+    font-size: var(--font-size-s);
+  }
+
+  .bad, .good {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+  }
+  .bad  { background: var(--error-subtitle);   color: var(--error-text); }
+  .good { background: var(--success-subtitle); color: var(--success-text); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-4) 0 var(--space-6);
+    font-size: var(--font-size-s);
+  }
+
+  th, td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width-default) solid var(--border-divider);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th { color: var(--text-tertiary); font-weight: var(--font-weight-bold); }
+  td.tight { white-space: nowrap; }
+
+  pre {
+    margin: var(--space-3) 0;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--surface-muted);
+    border: var(--border-width-default) solid var(--border-divider);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-s);
+    line-height: var(--line-height-base);
+  }
+
+  .panel {
+    padding: var(--space-4);
+    border-left: 3px solid var(--border-strong);
+    background: var(--surface-muted);
+    border-radius: var(--radius-sm);
+    margin: var(--space-3) 0 var(--space-6);
+  }
+  .panel p:last-child { margin-bottom: 0; }
+
+  .rec {
+    border-left-color: var(--success);
+    background: var(--success-subtitle);
+  }
+
+  .sources { color: var(--text-tertiary); font-size: var(--font-size-s); }
+  .sources a { color: inherit; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Ошибка у <code>ds-field-group</code> — рамка есть, голоса нет</h1>
+
+  <p class="lede">
+    Две половины одного дефекта. Первая — визуальная, и она уже <b>починена</b>: красная рамка
+    группы пропадала под курсором и под фокусом. Вторая — про то, чем группа сообщает об ошибке
+    вообще, и она требует решения: у группы <b>нет ни одного текстового канала</b> и она не
+    объявляет себя невалидной ни одному скринридеру. Ниже — что починено, и пять вариантов второй
+    половины.
+  </p>
+
+  <h2>Что было и что стало</h2>
+
+  <p>
+    <code>:host(.invalid)</code> — это (0,2,0), а <code>:host(:hover:not(.disabled))</code> и
+    <code>:host(:focus-within:not(.disabled))</code> — (0,3,0). Оба перебивали ошибку по весу, и
+    ровно в тот момент, когда пользователь до группы дотягивается, единственный признак ошибки
+    исчезал. Тот же класс дефекта, что и <code>field-state</code> против <code>disabled</code> в
+    девяти полях: исправляется не утяжелением правила ошибки, а тем, что hover и focus перестают
+    матчиться на невалидной группе.
+  </p>
+
+  <div class="grid">
+    <div class="cell">
+      <p class="cell-caption">было · невалидная + курсор</p>
+      <div class="group is-invalid is-hover-now">
+        <span class="seg">USD</span>
+        <span class="seg">1 200,00</span>
+      </div>
+      <span class="bad">рамка серая — ошибки на экране нет</span>
+    </div>
+
+    <div class="cell">
+      <p class="cell-caption">было · невалидная + фокус</p>
+      <div class="group is-invalid is-focus-now">
+        <span class="seg">USD</span>
+        <span class="seg">1 200,00</span>
+      </div>
+      <span class="bad">рамка синяя, гало синее</span>
+    </div>
+
+    <div class="cell">
+      <p class="cell-caption">стало · невалидная + курсор</p>
+      <div class="group is-invalid">
+        <span class="seg">USD</span>
+        <span class="seg">1 200,00</span>
+      </div>
+      <span class="good">красная держится</span>
+    </div>
+
+    <div class="cell">
+      <p class="cell-caption">стало · невалидная + фокус</p>
+      <div class="group is-invalid is-fixed-focus">
+        <span class="seg">USD</span>
+        <span class="seg">1 200,00</span>
+      </div>
+      <span class="good">красная + гало в цвете ошибки</span>
+    </div>
+  </div>
+
+  <p>
+    Гало берёт цвет ошибки, а не акцента — так же, как у одиночного поля: у
+    <code>_field-state.scss</code> внутри error-правила лежит вложенный focus-блок с
+    <code>--ds-field-focus-shadow-error</code>. Группа получила свой резолвер
+    <code>--ds-field-group-focus-shadow-error</code> с тем же дефолтом. Валидная группа hover и
+    focus не потеряла — это проверено отдельной, обратной пробой.
+  </p>
+
+  <div class="panel">
+    <p>
+      <b>Заодно снята зависимость от порядка строк.</b> <code>:host(.invalid)</code> и
+      <code>:host(.disabled)</code> оба были (0,2,0), и disabled побеждал только потому, что стоял
+      ниже в файле. Теперь у invalid явное <code>:not(.disabled)</code> — то же правило, что мы
+      только что закрепили для девяти полей: <b>disabled не красится состоянием вообще</b>.
+    </p>
+  </div>
+
+  <h2>Вторая половина: группа молчит</h2>
+
+  <p>
+    <code>_field-group-segment.scss</code> ставит <code>display: none</code> на
+    <code>.label</code> и на <code>ds-field-message</code> каждого сегмента — иначе строка сообщения
+    разорвала бы склеенный ряд. Группового сообщения нет: в докблоке компонента так и написано,
+    «a group-level one is not built yet». Итог — <b>ошибка существует только как цвет рамки</b>:
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Канал</th><th>Одиночное поле</th><th>ds-field-group[invalid]</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="tight">Рамка</td><td>красная</td><td>красная (после фикса выше)</td></tr>
+      <tr><td class="tight">Заливка</td><td><code>--error-subtitle</code></td><td>нет</td></tr>
+      <tr><td class="tight">Текст ошибки</td><td><code>ds-field-message</code></td><td><b>нет</b> — скрыт у каждого сегмента</td></tr>
+      <tr><td class="tight"><code>aria-invalid</code></td><td>на контроле</td><td><b>нигде</b></td></tr>
+      <tr><td class="tight"><code>aria-describedby</code></td><td>на контроле → id сообщения</td><td><b>нет</b>, потому что нет сообщения</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    Цвет как единственный канал — это провал 1.4.1 (Use of Colour), а отсутствие
+    <code>aria-invalid</code> — 4.1.2 и техника ARIA21. И направление, куда именно ставить атрибут,
+    в спецификациях однозначное: <b>на поле, а не на контейнер</b>. Скринридеры объявляют
+    «invalid entry» / «invalid data» при фокусе на поле; <code>aria-invalid</code> на
+    <code>role="group"</code> ни один из них не читает как состояние группы.
+  </p>
+
+  <h2>Варианты</h2>
+
+  <h3><span class="num">A</span>Оставить визуально, задокументировать остальное</h3>
+
+  <p>
+    Ноль кода. Группа рисует рамку, а текст ошибки, <code>aria-invalid</code> и
+    <code>aria-describedby</code> на контролах — забота потребителя, и об этом прямо сказано в
+    докблоке и в доках.
+  </p>
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> честно и бесплатно; потребитель, у которого своя система сообщений, ничего не
+      переделывает. <b>Минус:</b> ловушка остаётся ровно там, где была — <code>invalid</code>
+      выглядит как полноценное состояние, а даёт четверть его, и нашей собственной докой это
+      подтверждается только текстом, который никто не читает.
+    </p>
+  </div>
+
+  <h3><span class="num">B</span><code>aria-invalid</code> на хосте группы</h3>
+
+  <pre>host: {
+  role: 'group',
+  '[attr.aria-invalid]': "invalid() ? 'true' : null",
+}</pre>
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> одна строка, ничего не ломает, и в DOM появляется машинно-читаемый признак —
+      автотесты и линтеры его увидят. <b>Минус:</b> человеку он почти ничего не даёт: на
+      <code>role="group"</code> состояние не озвучивается, текста по-прежнему нет. Это галочка, а не
+      починка — и она хуже, чем ничего, если после неё пункт закроют.
+    </p>
+  </div>
+
+  <h3><span class="num">C</span>Пробросить <code>invalid</code> в сегменты через DI</h3>
+
+  <p>
+    В <code>DsFieldGroupContext</code> появляется <code>invalid: () => boolean</code>; каждое поле
+    подмешивает его в свой <code>invalidResolved</code> — то же место, где уже решается
+    <code>aria-invalid</code>. Тот же механизм, которым уже передаётся <code>sizeResolved</code>,
+    так что новых сущностей ноль.
+  </p>
+  <pre>// field-group.token.ts
+export interface DsFieldGroupContext {
+  readonly sizeResolved: () =&gt; DsSize;
+  readonly invalid: () =&gt; boolean;   // ← новое
+}
+
+// в каждом поле
+protected readonly invalidResolved = computed(
+  () =&gt; this.fieldMessage.invalid() || (this.group?.invalid() ?? false),
+);</pre>
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> это то, что действительно объявляется — фокус на любом сегменте читается как
+      «invalid entry», по букве ARIA21. Ставится в одном месте контекста, шесть полей получают
+      строку каждое. <b>Минус:</b> текста всё ещё нет, то есть 1.4.1 не закрыт; и «invalid» звучит
+      на каждом сегменте по отдельности, хотя невалидна пара — для группы из двух это нормально, для
+      группы из четырёх это четыре одинаковых объявления.
+    </p>
+  </div>
+
+  <h3><span class="num">D</span>C + групповая строка сообщения</h3>
+
+  <p>
+    Группа получает <b>один</b> <code>ds-field-message</code> под склеенным рядом, со своим
+    <code>id</code>, и раздаёт этот id сегментам через тот же контекст — каждый сегмент вешает его в
+    <code>aria-describedby</code>. Все каналы закрыты сразу: цвет, текст, состояние, связь.
+  </p>
+  <pre>&lt;ds-field-group error="Введите сумму больше нуля"&gt;
+  &lt;ds-select [options]="currencies" /&gt;
+  &lt;ds-input grow [(value)]="amount" /&gt;
+&lt;/ds-field-group&gt;</pre>
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> единственный вариант, где ошибка группы читается и глазами, и скринридером, и
+      где 1.4.1 закрыт по-настоящему. Строка одна на группу, а не по одной на сегмент, — то есть
+      именно то, из-за чего сообщения у сегментов и скрыты. <b>Минус:</b> самый большой: новый
+      слот в шаблоне (сейчас там только <code>&lt;ng-content&gt;</code>), геометрия группы перестаёт
+      быть одной строкой, и <code>hint</code> захочется тем же путём — то есть это уже не фикс, а
+      небольшая фича.
+    </p>
+  </div>
+
+  <h3><span class="num">E</span>D, но <code>invalid</code> заменяется на <code>error</code></h3>
+
+  <p>
+    Вместо <code>invalid: boolean</code> + <code>error: string</code> — один вход
+    <code>error: string</code>: непустая строка И включает состояние, И является текстом. Ровно то,
+    как это устроено у полей (<code>error</code> у <code>ds-input</code> — это строка, а не флаг).
+  </p>
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> невозможно включить ошибку и не сказать, в чём она — API сам не даёт повторить
+      текущий дефект. Один вход вместо двух, и он совпадает по имени и типу с полями, где потребитель
+      его уже знает. <b>Минус:</b> ломающее — <code>[invalid]="true"</code> перестаёт
+      существовать, каждому потребителю нужна правка. Плюс теряется случай «рамку хочу, а текст свой,
+      рядом» — под него придётся оставить <code>invalid</code> вторым входом, и тогда экономия на
+      API исчезает.
+    </p>
+  </div>
+
+  <h2>Рекомендация</h2>
+
+  <div class="panel rec">
+    <p>
+      <b>D, с API варианта E, но с сохранённым <code>invalid</code>.</b> Причина в том, что
+      только D закрывает то, из-за чего пункт вообще попал в P2: сейчас об ошибке группы нельзя
+      узнать иначе как увидев цвет. B — галочка, C — половина (объявляется, но не читается),
+      A оставляет ловушку в API.
+    </p>
+    <p>
+      <code>error: string</code> как основной вход, потому что он делает текст обязательным условием
+      состояния и совпадает с полями. <code>invalid: boolean</code> остаётся для случая, когда текст
+      живёт снаружи — это ровно один сценарий и он реальный, а ломать его нечем.
+    </p>
+  </div>
+
+  <h2>Что решить</h2>
+
+  <table>
+    <thead><tr><th>Вопрос</th><th>Варианты</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Какой вариант</td>
+        <td>A · B · C · D · E</td>
+      </tr>
+      <tr>
+        <td>Если D или E — <code>hint</code> тем же путём сразу или потом</td>
+        <td>сразу (один слот, две роли) · потом (по запросу)</td>
+      </tr>
+      <tr>
+        <td>Если C или D — <code>aria-invalid</code> на всех сегментах или только на первом</td>
+        <td>на всех (буква ARIA21) · на первом (одно объявление на группу)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Источники</h2>
+
+  <p class="sources">
+    ARIA21: Using aria-invalid to Indicate An Error Field —
+    <a href="https://www.w3.org/TR/WCAG20-TECHS/ARIA21.html">w3.org/TR/WCAG20-TECHS/ARIA21.html</a> ·
+    Forms: Using aria-invalid to identify failed fields —
+    <a href="https://www.w3.org/WAI/WCAG22/working-examples/aria-invalid-data-format">w3.org/WAI/WCAG22/working-examples</a> ·
+    Foundations: form validation and error messages, TetraLogical —
+    <a href="https://tetralogical.com/blog/2024/10/21/foundations-form-validation-and-error-messages/">tetralogical.com</a> ·
+    Form fields and validation, BBC GEL —
+    <a href="https://bbc.github.io/gel/components/form-fields/">bbc.github.io/gel</a>
+  </p>
+
+</div>
+</body>
+</html>
