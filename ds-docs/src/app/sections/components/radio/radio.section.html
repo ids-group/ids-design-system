@@ -26,91 +26,84 @@
   </div>
 
   <!-- Live ds-radio; pin classes on the stage read bare role tokens via ::ng-deep. -->
-  <h3 class="block-title t-h4">
-    Radio states showcase
-  </h3>
+  <h3 class="block-title t-h4">Radio states showcase</h3>
 
   <div class="states states--cols-4">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-radio [deselectable]="true" />
+        <ds-radio
+          [deselectable]="true"
+          ariaLabel="Default" />
       </div>
 
-      <div class="state-cell-label">
-        Default
-      </div>
+      <div class="state-cell-label">Default</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage pin-hover">
-        <ds-radio [deselectable]="true" />
+        <ds-radio
+          [deselectable]="true"
+          ariaLabel="Hover" />
       </div>
 
-      <div class="state-cell-label">
-        Hover
-      </div>
+      <div class="state-cell-label">Hover</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
-        <ds-radio [deselectable]="true" />
+        <ds-radio
+          [deselectable]="true"
+          ariaLabel="Focus" />
       </div>
 
-      <div class="state-cell-label">
-        Focus
-      </div>
+      <div class="state-cell-label">Focus</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-radio
           [checked]="true"
-          [deselectable]="true" />
+          [deselectable]="true"
+          ariaLabel="Selected" />
       </div>
 
-      <div class="state-cell-label">
-        Selected
-      </div>
+      <div class="state-cell-label">Selected</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
         <ds-radio
           [checked]="true"
-          [deselectable]="true" />
+          [deselectable]="true"
+          ariaLabel="Selected · focus" />
       </div>
 
-      <div class="state-cell-label">
-        Selected · focus
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-radio [disabled]="true" />
-      </div>
-
-      <div class="state-cell-label">
-        Disabled
-      </div>
+      <div class="state-cell-label">Selected · focus</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-radio
           [disabled]="true"
-          [checked]="true" />
+          ariaLabel="Disabled" />
       </div>
 
-      <div class="state-cell-label">
-        Disabled · selected
+      <div class="state-cell-label">Disabled</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-radio
+          [disabled]="true"
+          [checked]="true"
+          ariaLabel="Disabled · selected" />
       </div>
+
+      <div class="state-cell-label">Disabled · selected</div>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Sizes
-  </h3>
+  <h3 class="block-title t-h4">Sizes</h3>
 
   <div class="radio-size-row">
     <ds-radio
@@ -129,9 +122,7 @@
       [deselectable]="true" />
   </div>
 
-  <h3 class="block-title t-h4">
-    Required
-  </h3>
+  <h3 class="block-title t-h4">Required</h3>
 
   <div class="stack">
     <ds-radio
@@ -140,15 +131,11 @@
       [deselectable]="true" />
   </div>
 
-  <h3 class="block-title t-h4">
-    Validation (standalone)
-  </h3>
+  <h3 class="block-title t-h4">Validation (standalone)</h3>
 
   <p class="block-desc t-s">
     Use <code class="t-mono-inline">hint</code> for helper text and
-    <code class="t-mono-inline">
-      [invalid]="true"
-    </code> to surface an error on
+    <code class="t-mono-inline"> [invalid]="true" </code> to surface an error on
     a standalone <code class="t-mono-inline">&lt;ds-radio&gt;</code>.
   </p>
 
@@ -171,15 +158,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      &lt;ds-radio-group&gt;
-    </code> is the primary
+    <code class="t-mono-inline"> &lt;ds-radio-group&gt; </code> is the primary
     form-control container. It manages roving focus, name propagation, and
     implements <code class="t-mono-inline">ControlValueAccessor</code> for
     reactive-forms integration. Project
-    <code class="t-mono-inline">
-      &lt;ds-radio&gt;
-    </code>
+    <code class="t-mono-inline"> &lt;ds-radio&gt; </code>
     children directly inside.
   </p>
 
