@@ -55,6 +55,14 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   /** Inline label rendered beside the box and wired via for/id. Omit to
    *  bring your own <label>. */
   readonly label = input<string>('');
+  /**
+   * Accessible name when the control renders no visible label — no `label` and
+   * nothing projected. The row's `<label>` collapses when it is empty, so
+   * without this a bare box is an unnamed control and there is no way to name
+   * it from outside. Set alongside a label and it OVERRIDES what the label
+   * says, which is the ARIA rule and almost never what you want.
+   */
+  readonly ariaLabel = input<string | null>(null);
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -75,6 +83,10 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  /** Only name via aria-label when there is no visible `<label for>` to do it. */
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || null,
+  );
   protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly controlState = this.fieldMessage.controlState;
 
