@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
 <title>Фокус на селекшн-контролах — кольцо вокруг строки, а не вокруг глифа</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-04">
+<meta name="ds-deck-evidence" content="src/lib/styles/_control-line.scss - src/lib/styles/_focus.scss">
 <meta name="ds-deck-evidence" content="docs/todo.md — «A selected radio, checkbox or switch reads as a bullseye while focused» (P1); src/lib/components/radio-group/radio/radio.component.scss рисует кольцо на .radio; src/lib/styles/_tokens.scss задаёт --check-size 20px, --radio-dot-size 10px, --radio-bw-checked 2px, --focus-ring-width 2px, --focus-ring-offset 2px; src/lib/styles/_focus.scss несёт focus.ring и focus.owns-the-focus-ring.">
-<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="../ds.css">
 <style>
   body {
     margin: 0;

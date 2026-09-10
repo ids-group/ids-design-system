@@ -169,10 +169,10 @@
   stop being distinguishable — and those are exactly the two a keyboard user must tell apart while
   moving through a group. Material does not put a hard ring on a radio by default for this reason: it
   uses a translucent state layer behind the glyph and keeps the outline for forced colours.
-  Agreed fix (Stas, 2026-09-04): ring the ROW, not the glyph — `.control-line:focus-within` draws the
-  indicator around glyph and label together while `focus.owns-the-focus-ring('.radio')` silences the
-  input, so the ring stops being concentric with the dot. The label already carries the hit area.
-  Gated on a concept deck first.
+  **FIXED — the ring is on the row.** `styles/_control-line.scss` rings `.control-line` and silences
+  the glyph through `focus.ring-for($control)`, so the indicator is no longer concentric with the
+  dot; a label-less control stands its ring further off instead. Shared by checkbox, radio and
+  switch from one mixin, and the deck moved to `implemented/selection-focus-ring.html`.
 
 
 Six defects from that review are fixed (`a5af6ba8`, `38764f81`, `29532e27`, `e88de757`). Everything
