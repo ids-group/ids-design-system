@@ -9,9 +9,8 @@
 <link rel="stylesheet" href="deck.css">
 
 <style>
-  /* Every rail below is a 1:1 copy of the real sidebar, not an approximation: the numbers here were
-     read off `sidebar.component.scss` and then verified against computed styles in the running docs
-     app at 280px. Judge a variant on this, and what you see is what will ship. */
+  /* Every rail is a 1:1 copy of the real sidebar: the numbers are read off
+     `sidebar.component.scss` and verified against computed styles in the running app at 280px. */
   .rails {
     display: flex;
     flex-wrap: wrap;
@@ -19,7 +18,7 @@
     align-items: flex-start;
   }
   .rail {
-    /* .toc — measured 280px in the app, not the 264px this deck used to guess. */
+    /* .toc — measured 280px in the app. */
     width: 280px;
     flex: 0 0 auto;
     display: flex;

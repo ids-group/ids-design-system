@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**99 open — 1 P1, 36 P2, 62 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**100 open — 1 P1, 37 P2, 62 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 36
+### P2 — 37
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -68,6 +68,7 @@ item and nothing else.
   - Shared picker internals — DECIDED 2026-09-02 (Stas): BUILD IT
   - The button's colour-family slots are named `--c-*`, which is not an acceptable name
 - **Tooling**
+  - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
   - prettier and eslint want opposite things about HTML, so `lint:all` can never be green (measured 2026-08-25)
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
@@ -1138,6 +1139,10 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
 
 ## Tooling
+
+- [ ] **[P2] Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth.** Regenerating it on 2026-09-10 moved 47 declarations that had nothing to do with the change in hand: the focus ring's `transition` → `animation` plus the `ds-focus-ring-in` keyframes, `--focus-ring-radius`, the four check-mark motion roles with the dropdown option's mark, and the mono ligature hook. So every deck had been rendering a pre-animation focus ring for as long as those changes had been in `src/lib`.
+  **Why it matters beyond the decks:** `deck-lint`'s D012 and `check-void-tokens` both resolve `var(--x)` against this file, so a stale copy makes a live token read as void — and could hide a genuinely void one. `presentations/README.md` says to run `build:deck-css` after changing any token; nothing enforces it.
+  **The fix has a precedent in this repo:** `build-design-sync.sh` rebuilds its tree and fails when the committed one differs. The same shape here is `npm run build:deck-css` followed by a `git diff --exit-code presentations/ds.css` in `lint:all`.
 
 - [ ] **[P3] `templates` and `startingPoints` in the Claude Design manifest are unexplored, and so is what feeds the pane's "Usage notes for Claude" (recorded 2026-09-03).** Both manifest fields exist in the schema and are empty; `hasThumbnailHtml` is false. The pane is server-side — the CLI binary carries only the tool's own description (one `dsCard` hit, inside that text) — so nothing local can answer what fills them.
   **They are testable, though, because the manifest is ours now:** put one entry in `templates`, upload, and look at the pane. That costs one file and one glance. Same for the usage notes: open any card, expand the disclosure, and see whether the text is the component's `.prompt.md`. Neither can be settled without somebody looking at the pane.

@@ -747,13 +747,9 @@
   --chart-div-3: hsl(140deg 55% 60%);
 }
 
-/* Design tokens — the theme-INDEPENDENT layer. Tier 1 colour primitives live in
-   ../themes/_base-palette.scss and each theme's _palette.scss; Tier 2 semantic
-   roles in ../themes/_semantic.scss.
-
-   Components consume only Tier 2/3 tokens. Reaching for a palette primitive
-   (--blue-600, --neutral-200, …) from a component style is a violation — add or
-   reuse a role instead. */
+/* The theme-INDEPENDENT layer. Tier 1 primitives live in ../themes/_base-palette.scss and each
+   theme's _palette.scss, Tier 2 roles in ../themes/_semantic.scss. Components consume Tier 2/3
+   ONLY — reaching for --blue-600 from a component style is a violation, add or reuse a role. */
 :root {
   --space-0: 0;
   --space-px: 1px;
@@ -789,11 +785,9 @@
        :root[data-theme="squared"] { --radius-pill-value: var(--radius-sm); } */
   --radius-pill-value: 999px;
   --radius-pill: var(--radius-pill-value);
-  /* Radius ROLES — the layer a consumer retunes. Each defaults to the value its
-     members already use, and components resolve --ds-<comp>-radius -> role ->
-     value, so a per-component override still wins. No `field` role on purpose:
-     fields share --radius-md with buttons, so a consumer who wants them apart
-     scopes the role — `ds-input { --ds-radius-control: 4px; }`. */
+  /* Radius ROLES — the layer a consumer retunes; components resolve
+     --ds-<comp>-radius -> role -> value, so a per-component override still wins. No `field` role
+     on purpose: scope the control role instead — `ds-input { --ds-radius-control: 4px; }`. */
   --ds-radius-inner: var(--radius-sm);
   --ds-radius-control: var(--radius-md);
   --ds-radius-panel: var(--radius-lg);
@@ -807,10 +801,12 @@
      outline is not painted there, so whatever the control sits on shows through. */
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
-  /* Shadows are composed from a channel-split tint so a theme can re-colour them:
-     --shadow-tint-h/s come from ../themes/_base-palette.scss and -l from each
-     theme's _palette.scss (light 7%, dark 95%, so the same alphas read as soft
-     glows over dark surfaces). The alphas below stay constant across themes. */
+  /* The radius a box takes when it exists only to carry the ring. A control with a shape of its
+     own keeps it and ignores this. */
+  --focus-ring-radius: var(--ds-radius-inner);
+  /* Composed from a channel-split tint so a theme can re-colour them: -h/s come from
+     ../themes/_base-palette.scss, -l from each theme's _palette.scss. The alphas stay constant
+     across themes, which is what makes the same values read as glows over dark surfaces. */
   --shadow-1: 0 1px 2px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
   --shadow-2: 0 4px 8px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
@@ -867,11 +863,9 @@
   --ease-decelerate: cubic-bezier(0, 0, 0, 1);
   --ease-accelerate: cubic-bezier(.3, 0, 1, 1);
   --ease-spring: cubic-bezier(.5, 1.5, .5, 1);
-  /* Motion ROLES — name the intent once and every surface at that scale follows.
-     Defaults equal the values each surface already used, so nothing moves until a
-     role is set. `exit` and `exit-large` stay separate because panel LEAVES run at
-     --duration-base, not fast. A few resolvers stay on the raw scale on purpose:
-     ds-loading-overlay and the toast leave use --ease-standard, which no role carries. */
+  /* Motion ROLES — name the intent once and every surface at that scale follows. `exit` and
+     `exit-large` stay separate because panel LEAVES run at --duration-base, not fast, and a few
+     resolvers stay on the raw scale where no role carries what they need. */
   --ds-motion-enter-panel-duration: var(--duration-fast);
   --ds-motion-enter-panel-easing: var(--ease-decelerate);
   --ds-motion-enter-surface-duration: var(--duration-base);
@@ -882,6 +876,12 @@
   --ds-motion-exit-easing: var(--ease-accelerate);
   --ds-motion-exit-large-duration: var(--duration-base);
   --ds-motion-exit-large-easing: var(--ease-accelerate);
+  /* Its own role because the mark overshoots and nothing else at this scale does. Enter and exit
+     differ so it leaves faster than it arrives, which reads as weight rather than lag. */
+  --ds-motion-check-enter-duration: var(--duration-base);
+  --ds-motion-check-enter-easing: var(--ease-spring);
+  --ds-motion-check-exit-duration: var(--duration-fast);
+  --ds-motion-check-exit-easing: var(--ease-accelerate);
   --opacity-disabled: 0.5;
   --opacity-text-disabled: 0.38; /* WCAG-derived */
   --opacity-scrim: 0.55;
@@ -960,6 +960,10 @@
   /* Two focus families: fields get the soft halo, interactive controls and nav
      the crisp ring. Components default their own --ds-*-focus-shadow to these,
      so a consumer can retune a whole family or a single component. */
+  /* The flat tokens, NOT the --accent-focus-* aliases — see docs/todo.md, "zone colour and
+     data-focus shape cannot both reach one role". A `var()` inside a custom property is
+     substituted where it is DECLARED, so a ds-color zone can never reach what is written here;
+     the switch wins because it is the documented one. */
   --ds-field-focus-shadow: var(--focus-field);
   --ds-field-focus-shadow-error: var(--focus-field-error);
   --ds-control-focus-shadow: var(--focus-ring);
@@ -1508,6 +1512,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .t-mono {
+  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
   font-weight: var(--ds-t-mono-font-weight, var(--font-weight-medium));
   font-size: var(--ds-t-mono-font-size, var(--font-size-mono));
   line-height: var(--ds-t-mono-line-height, var(--line-height-base));
@@ -1515,6 +1520,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .t-mono-inline {
+  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
   font-weight: var(--ds-t-mono-inline-font-weight, var(--font-weight-regular));
   font-size: var(--ds-t-mono-inline-font-size, var(--font-size-mono));
   line-height: var(--ds-t-mono-inline-line-height, 1);
@@ -1526,6 +1532,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .t-mono-block {
+  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
   font-weight: var(--ds-t-mono-block-font-weight, var(--font-weight-regular));
   font-size: var(--ds-t-mono-block-font-size, var(--font-size-mono));
   line-height: var(--ds-t-mono-block-line-height, var(--line-height-loose));
@@ -1552,17 +1559,17 @@ h1, h2, h3, h4, h5, h6 {
   border: 0;
 }
 
-:where(a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])) {
-  outline: var(--focus-ring-width) solid transparent;
-  outline-offset: var(--focus-ring-offset);
-}
-
 :where(:focus-visible) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
-  transition: outline-color var(--duration-fast) var(--ease-standard);
+  animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
 }
 
+@keyframes ds-focus-ring-in {
+  from {
+    outline-color: transparent;
+  }
+}
 :root[data-focus=ring] {
   --ds-field-focus-shadow: var(--focus-ring);
   --ds-field-focus-shadow-error: var(--focus-ring-error);
@@ -1614,7 +1621,7 @@ h1, h2, h3, h4, h5, h6 {
 .link:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
-  transition: outline-color var(--duration-fast) var(--ease-standard);
+  animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
   border-radius: var(--radius-sm);
   text-decoration-color: var(--_link-color);
 }
@@ -2050,8 +2057,32 @@ html {
   border: 0;
 }
 .ds-dropdown-panel .option .option-check {
+  --_check-mark-enter-duration: var(--ds-check-mark-enter-duration, var(--ds-motion-check-enter-duration));
+  --_check-mark-enter-easing: var(--ds-check-mark-enter-easing, var(--ds-motion-check-enter-easing));
+  --_check-mark-exit-duration: var(--ds-check-mark-exit-duration, var(--ds-motion-check-exit-duration));
+  --_check-mark-exit-easing: var(--ds-check-mark-exit-easing, var(--ds-motion-check-exit-easing));
+  width: var(--check-tick-size);
+  height: var(--check-tick-size);
+  transform: scale(0.6);
+  opacity: 0;
+  transform-origin: center;
+  transition: transform var(--_check-mark-exit-duration) var(--_check-mark-exit-easing), opacity var(--_check-mark-exit-duration) var(--_check-mark-exit-easing);
+  background-color: currentcolor;
+}
+@media (forced-colors: active) {
+  .ds-dropdown-panel .option .option-check {
+    background-color: CanvasText;
+  }
+}
+.ds-dropdown-panel .option .option-check {
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
   color: var(--_option-check-color);
   flex: 0 0 auto;
+}
+.ds-dropdown-panel .option .option-check.is-shown {
+  transform: scale(1);
+  opacity: 1;
+  transition: transform var(--_check-mark-enter-duration) var(--_check-mark-enter-easing), opacity var(--_check-mark-enter-duration) var(--_check-mark-enter-easing);
 }
 .ds-dropdown-panel .option:disabled {
   color: var(--text-disabled);
@@ -2066,7 +2097,7 @@ html {
 .ds-dropdown-panel .option:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: calc(-1 * var(--focus-ring-width));
-  transition: outline-color var(--duration-fast) var(--ease-standard);
+  animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
 }
 .ds-dropdown-panel .option.is-selected {
   background: var(--_option-selected-bg-color);
