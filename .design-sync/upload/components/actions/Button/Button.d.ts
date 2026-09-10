@@ -17,19 +17,23 @@ export interface ButtonProps {
   messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
   /** Brand/status hue family. */
   color?: ('primary' | 'secondary' | 'tertiary' | 'neutral' | 'error' | 'success' | 'warning');
-  /** Fill pattern: solid | tonal | ghost | outline | text. All color×variant pairs render; some are UX-discouraged and emit a dev-mode warning naming the reason — they work, but read poorly. `text` is discouraged for ALL colours — prefer the global `.link` class; it stays for cases needing the ds-button API (loading/fullWidth/typed pressed). */
+  /** Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. `text` is discouraged for every colour — prefer the global `.link` class, and keep this one only where the ds-button API is needed. */
   variant?: ('solid' | 'tonal' | 'ghost' | 'outline' | 'text');
   /** Button height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
-  /** Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. */
+  /** `RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced "link" role depend on the element, not on the look. */
+  routerLink?: string | readonly unknown[] | null;
+  /** Plain `href` target, used when `routerLink` is not set — an external address or a download. Renders an `<a href>`; same reasoning as `routerLink`. */
+  href?: string;
+  /** Native `type`, defaulting to `'button'` so it never submits an ancestor form by accident. Button-only: ignored on a link, with a dev warning. */
   type?: ('button' | 'submit' | 'reset');
   /** Disables the button and blocks `pressed`. */
   disabled?: boolean;
-  /** Busy state — disables interaction and sets `aria-busy`. */
+  /** Busy state — disables interaction and sets `aria-busy`. Button-only: a navigation cannot be in flight before it starts, so on an anchor it is ignored with a dev-mode warning. */
   loading?: boolean;
-  /** Stretch the button to fill its container — the host becomes block-level and 100% wide (the inner control is already full-width). Use for mobile primary CTAs and full-bleed form submit buttons. */
+  /** Stretch to fill the container: the host becomes block-level and 100% wide. */
   fullWidth?: boolean;
-  /** Accessible name — forwarded to the inner <button> as aria-label. Use when the visible label is absent or non-descriptive. */
+  /** Accessible name, forwarded as `aria-label`. For an icon-only or non-descriptive label. */
   ariaLabel?: string | null;
   /** Leading icon, before the projected content. */
   icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
@@ -41,7 +45,7 @@ export interface ButtonProps {
   ariaExpanded?: boolean | null;
   /** ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`. */
   ariaControls?: string | null;
-  /** Why the button is refused, shown as its second line. Read only while `disabled` — a greyed control that does not say why is a dead end. Setting it also changes HOW the button is disabled: it takes `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced. The click is swallowed in `onClick` instead. Leave it unset and nothing changes. Length is deliberately not capped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`. */
+  /** Why the button is refused, shown as its second line and read only while `disabled`. Setting it also changes HOW the button is disabled — `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced, so the click is swallowed in `onClick` instead. Uncapped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`. */
   disabledReason?: string;
   /** ARIA `aria-describedby` — point the button at a description the app renders itself, such as a `ds-field-message` under a form. Merged with the id of `disabledReason` when both are present. */
   ariaDescribedBy?: string | null;
