@@ -1,16 +1,96 @@
-<!-- @dsCard group="forms-inputs" viewport="1200x374" name="Switch - validation states" subtitle="Use hint for helper text and [invalid]='true' to surface an error." --><!DOCTYPE html>
+<!-- @dsCard group="forms-inputs" viewport="1200x374" name="Switch - validation states" subtitle="Use hint for helper text and [invalid]='true' to surface an error." --><!doctype html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Switch</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
-  <div class="ds-page"><ds-docs-components-switch _nghost-c1k=""><docs-section _ngcontent-c1k="" anchor="switch" eyebrow="Components" title="Switch" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-switch" data-anchor="switch"><h2 _ngcontent-c1="" class="t-h2">Switch - validation states</h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="switch"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Switch /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c1k="" class="block-desc t-s"> Use <code _ngcontent-c1k="" class="t-mono-inline">hint</code> for helper text and <code _ngcontent-c1k="" class="t-mono-inline"> [invalid]="true" </code> to surface an error. </p><div _ngcontent-c1k="" class="stack"><ds-switch _ngcontent-c1k="" label="Email notifications" hint="Notifications are sent to your registered email." _nghost-c3=""><div _ngcontent-c3="" class="size-md switch-field"><span _ngcontent-c3="" class="control-line"><input _ngcontent-c3="" type="checkbox" role="switch" class="switch" aria-checked="false" id="ds-switch-17" aria-describedby="ds-switch-17-hint"><label _ngcontent-c3="" class="control-text" for="ds-switch-17"> Email notifications </label></span><ds-field-message _ngcontent-c3="" _nghost-c7=""><span _ngcontent-c7="" class="default field-message" id="ds-switch-17-hint"> Notifications are sent to your registered email. </span></ds-field-message></div></ds-switch><ds-switch _ngcontent-c1k="" label="Email notifications" error="At least one notification channel must remain active." _nghost-c3=""><div _ngcontent-c3="" class="size-md switch-field"><span _ngcontent-c3="" class="control-line"><input _ngcontent-c3="" type="checkbox" role="switch" class="switch" aria-checked="false" id="ds-switch-18" aria-invalid="true" aria-describedby="ds-switch-18-hint"><label _ngcontent-c3="" class="control-text" for="ds-switch-18"> Email notifications </label></span><ds-field-message _ngcontent-c3="" _nghost-c7=""><span _ngcontent-c7="" role="alert" class="field-message error" id="ds-switch-18-hint"><ds-icon _ngcontent-c7="" class="message-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16v.01"></path></svg></ds-icon> At least one notification channel must remain active. </span></ds-field-message></div></ds-switch></div></section></docs-section></ds-docs-components-switch></div>
-  
-  
-  
-
-
+  <style>
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
+  </style>
+</head><body>
+  <div class="ds-page"><ds-docs-components-switch></ds-docs-components-switch></div>
+  <script>window.__dsSectionsOnly = true</script>
+  <script src="../../../_ds_bundle.js"></script>
+  <script>
+    (function () {
+      var OWNS = "";
+      var INDEX = 3;
+      var KEY = "switch";
+      var TABLE = false;
+      var HEAD = null;
+      var BLOCK = "validation states";
+      var REACT = "Switch";
+      var WHOLE = OWNS === null;
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var API = '[data-key]';
+      var host = document.querySelector("ds-docs-components-switch");
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        var heading = null;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
+          if (node.matches(KEEP)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
+        }
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
+          }
+        }
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
+        }
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
+      })();
+    })();
+  </script>
 </body></html>

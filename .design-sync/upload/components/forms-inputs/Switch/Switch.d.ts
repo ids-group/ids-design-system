@@ -40,6 +40,8 @@ export interface SwitchProps {
   required?: boolean;
   /** Inline label rendered beside the track and wired via for/id. Omit to bring your own <label>. */
   label?: string;
+  /** Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
+  ariaLabel?: string | null;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

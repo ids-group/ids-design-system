@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.12.3 — 2026-09-10
+
 ### Breaking
 
 - **`ds-button`'s `buttonRef` is `controlRef`, and it is typed `HTMLElement`.** The element the

@@ -209,8 +209,8 @@
         "message": "<Breadcrumbs> doesn't accept that prop. Declared props: items, separator, clickable, maxItems, onNavigate, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|color|variant|size|type|disabled|loading|fullWidth|ariaLabel|icon|trailingIcon|ariaHasPopup|ariaExpanded|ariaControls|disabledReason|ariaDescribedBy|onPressed|subtext|children|key|ref|className|style)$/]",
-        "message": "<Button> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, color, variant, size, type, disabled, loading, fullWidth, ariaLabel, icon, trailingIcon, ariaHasPopup, ariaExpanded, ariaControls, disabledReason, ariaDescribedBy, onPressed, subtext, children."
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|color|variant|size|routerLink|href|type|disabled|loading|fullWidth|ariaLabel|icon|trailingIcon|ariaHasPopup|ariaExpanded|ariaControls|disabledReason|ariaDescribedBy|onPressed|subtext|children|key|ref|className|style)$/]",
+        "message": "<Button> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, color, variant, size, routerLink, href, type, disabled, loading, fullWidth, ariaLabel, icon, trailingIcon, ariaHasPopup, ariaExpanded, ariaControls, disabledReason, ariaDescribedBy, onPressed, subtext, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ButtonGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:ariaLabel|children|key|ref|className|style)$/]",
@@ -221,8 +221,8 @@
         "message": "<Card> doesn't accept that prop. Declared props: elevation, padding, onPressed, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Checkbox'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|checked|indeterminate|disabled|name|inputId|size|required|label|onCheckedChange|children|key|ref|className|style)$/]",
-        "message": "<Checkbox> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, checked, indeterminate, disabled, name, inputId, size, required, label, onCheckedChange, children."
+        "selector": "JSXOpeningElement[name.name='Checkbox'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|checked|indeterminate|disabled|name|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
+        "message": "<Checkbox> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, checked, indeterminate, disabled, name, inputId, size, required, label, ariaLabel, onCheckedChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ColorPicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|presets|disabled|ariaLabel|success|onValueChange|children|key|ref|className|style)$/]",
@@ -357,8 +357,8 @@
         "message": "<Progress> doesn't accept that prop. Declared props: value, variant, indeterminate, ariaLabel, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Radio'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|checked|deselectable|disabled|name|value|inputId|size|required|label|onCheckedChange|children|key|ref|className|style)$/]",
-        "message": "<Radio> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, checked, deselectable, disabled, name, value, inputId, size, required, label, onCheckedChange, children."
+        "selector": "JSXOpeningElement[name.name='Radio'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|checked|deselectable|disabled|name|value|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
+        "message": "<Radio> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, checked, deselectable, disabled, name, value, inputId, size, required, label, ariaLabel, onCheckedChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='RadioGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|name|disabled|ariaLabel|label|onValueChange|children|key|ref|className|style)$/]",
@@ -425,8 +425,8 @@
         "message": "<Stepper> doesn't accept that prop. Declared props: steps, current, labelPosition, orientation, clickable, errorSteps, onStepClicked, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Switch'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|checked|disabled|name|variant|inputId|size|required|label|onCheckedChange|children|key|ref|className|style)$/]",
-        "message": "<Switch> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, checked, disabled, name, variant, inputId, size, required, label, onCheckedChange, children."
+        "selector": "JSXOpeningElement[name.name='Switch'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|checked|disabled|name|variant|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
+        "message": "<Switch> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, checked, disabled, name, variant, inputId, size, required, label, ariaLabel, onCheckedChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Tab'] > JSXAttribute > JSXIdentifier[name!=/^(?:label|icon|count|disabled|value|children|key|ref|className|style)$/]",
@@ -1209,6 +1209,7 @@
       "--focus-ring-outer-h",
       "--focus-ring-outer-l",
       "--focus-ring-outer-s",
+      "--focus-ring-radius",
       "--focus-ring-secondary",
       "--focus-ring-success",
       "--focus-ring-tertiary",
@@ -1926,6 +1927,7 @@
       "--border-width-strong": "length",
       "--focus-ring-width": "length",
       "--focus-ring-offset": "length",
+      "--focus-ring-radius": "other",
       "--shadow-1": "other",
       "--shadow-2": "other",
       "--shadow-3": "other",

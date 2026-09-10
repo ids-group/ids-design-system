@@ -21,7 +21,7 @@ export interface RadioProps {
   invalid?: boolean;
   /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form. */
   touched?: boolean;
-  /** Standalone two-way binding, and the ONLY way to drive a lone radio: this component is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form control — a radio is one option of a choice, not a value of its own — and a second accessor on the option would fight it. A lone radio in a form binds through `[(checked)]`, or becomes a one-option `ds-radio-group`. When inside `ds-radio-group`, `isChecked()` derives from the group value and this input is not read. */
+  /** The ONLY way to drive a lone radio: this is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it — inside `ds-radio-group` the GROUP is the form control, and a second accessor on one option would fight it. Inside a group this input is not read at all. */
   checked?: boolean;
   onCheckedChange?: (value: boolean) => void;
   /** Lets a checked standalone radio be cleared by clicking it again. Off by default, and ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it would leave the group with no value through a gesture the group cannot see. */
@@ -40,6 +40,8 @@ export interface RadioProps {
   required?: boolean;
   /** Inline label rendered beside the dot and wired via for/id. Omit to bring your own <label>. */
   label?: string;
+  /** Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
+  ariaLabel?: string | null;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

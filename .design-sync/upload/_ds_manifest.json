@@ -385,6 +385,12 @@
       "subtitle": "A two-state action that stays pressed: [pressed] is the state and the button carries aria-pressed for it."
     },
     {
+      "path": "components/actions/Button/Button - Navigation that looks like a button.html",
+      "group": "actions",
+      "name": "Buttons - navigation that looks like a button",
+      "subtitle": "Three elements, decided by destination: routerLink renders an a [routerLink], href a plain a href, and neither a button type='button'."
+    },
+    {
       "path": "components/actions/Button/Button - Link-styled action.html",
       "group": "actions",
       "viewport": "1200x316",
@@ -6708,6 +6714,12 @@
       "name": "--focus-ring-offset",
       "value": "2px",
       "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--focus-ring-radius",
+      "value": "var(--ds-radius-inner)",
+      "kind": "radius",
       "definedIn": "_ds_bundle.css"
     },
     {
