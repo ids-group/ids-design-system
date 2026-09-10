@@ -28,7 +28,6 @@ for (const line of lines) {
   const match = /^- \[([ ~])\] \*\*\[(P\d)\] (.*)$/.exec(line);
   if (!match) continue;
   const [, mark, priority, rest] = match;
-  // The title is the bolded opening sentence; everything after it is the body.
   let title = (rest.split('**')[0] || rest)
     .replace(/\s+/g, ' ')
     .replace(/[.:,;—-]\s*$/, '')
