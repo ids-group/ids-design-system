@@ -46,6 +46,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `tabindex="-1"` — and its click is swallowed, which is what stops an `href` from navigating
   anyway. `disabledReason` reads the same on a link as on a button.
 
+- **`--ds-field-group-focus-shadow-error` — the halo a `ds-field-group` draws while invalid and
+  focused.** Defaults to `--ds-field-focus-shadow-error`, the same halo a single error field uses,
+  so a focused invalid group reads as one state instead of a red border with a blue glow around it.
+
+- **`BreadcrumbItem` takes `ariaLabel`, for the icon-only crumb.** A crumb with an `icon` and no
+  `label` — the usual home crumb — rendered as a link with no accessible name at all. Nothing is
+  derived from `icon`: `home` is a glyph id, not a word for the user, so a crumb in that shape now
+  dev-warns until it is given a name.
+
+  ```ts
+  items = [{ icon: 'home', href: '/', ariaLabel: 'Home' }, { label: 'Records' }];
+  ```
+
 - **`--focus-ring-radius` — the radius a box takes when it exists only to carry a focus ring.**
   Follows `--ds-radius-inner`, 4px, so retuning the inner radius moves these rings with it. There
   is no `outline-radius` in CSS: an outline follows the
@@ -76,6 +89,43 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   only uses the element.
 
 ### Fixed
+
+- **`ds-field-group[invalid]` keeps its error border under the cursor and under focus.** Both
+  `:hover` and `:focus-within` carried one class more than `.invalid` did, so they out-ranked it —
+  and the border is the group's ONLY error affordance, because a segment's own label and message are
+  hidden to keep the glued row intact. The error vanished at exactly the moment the user reached the
+  control. Hover and focus now do not match an invalid group at all, and its focus halo takes the
+  error tint through the new `--ds-field-group-focus-shadow-error`. A valid group hovers and focuses
+  exactly as before.
+
+  `.invalid` also stops depending on line order to lose to `.disabled`: both sat at the same
+  specificity and only the order of the two rules decided it. Disabled takes no state paint, the
+  same rule the nine single fields now follow.
+
+- **`ds-stat variant="error"` recolours the value.** `:host(.error) .value` and the later
+  `.stat .value` land on the same specificity once emulated encapsulation adds its attribute to
+  each, so the default colour won on source order and the error variant changed nothing at all.
+  Error now moves the `--_stat-value-color` resolver, which is how the size variants already work,
+  so a consumer's `--ds-stat-value-color` still overrides it.
+
+- **`ds-sidenav-footer`'s collapse button has an accessible name.** Its only name was the
+  `Collapse` text beside the chevron, and the collapsed rail hides that text — so on the rail, which
+  is the state the button exists to leave, it announced as an unlabelled button. It now carries
+  `aria-label`, and both the label and the name say `Expand` while collapsed, because that is what
+  the button does from there. The placeholder search row rendered when there are no search items had
+  no name either and now matches its live twin.
+
+- **An icon-only `ds-breadcrumbs` crumb has an accessible name.** The crumb rendered an `<a>` around
+  a decorative icon and nothing else, so a screen reader announced a link with no name and a
+  keyboard user tabbed onto an anonymous stop. Give it `ariaLabel` (above); in dev mode a crumb
+  still missing one says so.
+
+- **A `ds-docs` truncation-note button drew no focus ring at all.** `outline: var(--focus-ring)`
+  put a two-shadow list into an `outline`, which is invalid at computed-value time — so the
+  declaration computed `outline` back to its initial value AND out-ranked the global
+  `:where(:focus-visible)` ring by specificity. Only the offset survived, on an outline that was
+  never drawn. The rule is gone and the button takes the standard ring. Documentation site only,
+  nothing shipped.
 
 - **A disabled field no longer paints its `data-field-state`.** An `error`, `warning` or `success`
   state used to out-rank the disabled look in all nine field components — `ds-input`, `ds-textarea`,
