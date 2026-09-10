@@ -27,32 +27,41 @@
       "restore": null
     },
     {
-      "id": "button-class-members-grew",
+      "id": "exported-class-members-grew",
       "kind": "behavior",
       "surface": "typescript",
-      "old": "class MyButton extends ButtonComponent",
+      "old": "class MyControl extends CheckboxComponent",
       "new": null,
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
-      "appliesWhen": "Only a class that extends ButtonComponent. A consumer who uses the element in a template needs nothing from this item.",
+      "appliesWhen": "Only a class that extends ButtonComponent, CheckboxComponent, RadioComponent or SwitchComponent. A consumer who uses the elements in a template needs nothing from this item.",
       "pitfall": "Two of the four are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and a same-named method whose signature differs fails with TS2416 instead.",
-      "note": "ButtonComponent gained `routerLink` and `href`, the two destination inputs; `controlRef`, the view child that replaces `buttonRef`; and `destination`, the computed that decides which of the three elements renders. It also LOST `buttonRef`, so a subclass that overrode that one now overrides nothing and its member is dead rather than broken.",
-      "verify": "The app builds with no TS2415 or TS2416 naming ButtonComponent, and no member of your subclass is called routerLink, href, controlRef or destination.",
+      "note": "ButtonComponent gained `routerLink` and `href`, the two destination inputs; `controlRef`, the view child that replaces `buttonRef`; and `destination`, the computed that decides which of the three elements renders. It also LOST `buttonRef`, so a subclass that overrode that one now overrides nothing and its member is dead rather than broken. CheckboxComponent, RadioComponent and SwitchComponent each gained `ariaLabel` and `resolvedAriaLabel`.",
+      "verify": "The app builds with no TS2415 or TS2416 naming ButtonComponent, CheckboxComponent, RadioComponent or SwitchComponent, and no member of your subclass is called routerLink, href, controlRef, destination, ariaLabel or resolvedAriaLabel.",
       "searchHints": [
         "extends ButtonComponent",
+        "extends CheckboxComponent",
+        "extends RadioComponent",
+        "extends SwitchComponent",
         "routerLink",
         "href",
         "controlRef",
         "destination",
+        "ariaLabel",
         "TS2415",
         "TS2416"
       ],
       "detect": [
         "extends ButtonComponent",
+        "extends CheckboxComponent",
+        "extends RadioComponent",
+        "extends SwitchComponent",
         "override routerLink",
         "override href",
         "override controlRef",
         "override destination",
-        "override buttonRef"
+        "override buttonRef",
+        "override ariaLabel",
+        "override resolvedAriaLabel"
       ],
       "restore": null
     }
@@ -67,7 +76,8 @@
     "`ds-stat variant=\"error\"` now actually recolours the value. `:host(.error) .value` tied `.stat .value` on specificity and lost on source order, so the variant painted nothing; error now moves the `--_stat-value-color` resolver. Nothing to change, and a stylesheet setting `--ds-stat-value-color` still wins over it, exactly as before.",
     "`ds-breadcrumbs`: `BreadcrumbItem` takes an optional `ariaLabel`, and a crumb with an `icon` and no `label` needs it: that shape rendered a link with no accessible name. Add `ariaLabel` to any icon-only crumb — the usual home crumb — and the component dev-warns while one is missing. Nothing derives from `icon`, because a glyph id is not a word for the user.",
     "`ds-sidenav-footer`'s collapse button carries an `aria-label`, and its label reads `Expand` while the rail is collapsed rather than always `Collapse`. Nothing to change; a stylesheet that keyed off the text content of `.row .label` is the one exception, and none is expected.",
-    "`--focus-ring` is a two-shadow LIST for `box-shadow`, not a value for `outline` — worth knowing because putting it in an `outline` fails silently and takes the ring with it. A `var()` that cannot substitute is invalid at computed-value time, so the property computes back to its initial value instead of being dropped, and it still out-ranks the library's own `:where(:focus-visible)` ring by specificity: the element ends up with no indicator at all. For an outline use `--focus-ring-width`, `--focus-ring-color` and `--focus-ring-offset`, or just let the global ring do it. Nothing in the package was affected; this is the shape to avoid in consumer stylesheets."
+    "`--focus-ring` is a two-shadow LIST for `box-shadow`, not a value for `outline` — worth knowing because putting it in an `outline` fails silently and takes the ring with it. A `var()` that cannot substitute is invalid at computed-value time, so the property computes back to its initial value instead of being dropped, and it still out-ranks the library's own `:where(:focus-visible)` ring by specificity: the element ends up with no indicator at all. For an outline use `--focus-ring-width`, `--focus-ring-color` and `--focus-ring-offset`, or just let the global ring do it. Nothing in the package was affected; this is the shape to avoid in consumer stylesheets.",
+    "`ds-checkbox`, `ds-radio` and `ds-switch` take an optional `ariaLabel`, for the case where the control renders no visible label — no `label` and nothing projected. Until now such a control had no accessible name and no way to be given one; `ds-select` and `ds-number-stepper` already took the same input. Nothing to change unless you have a label-less one, and setting it ALONGSIDE a label overrides what the label says, which is the ARIA rule and rarely what you want."
   ],
   "deleteList": []
 }

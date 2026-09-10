@@ -46,6 +46,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `tabindex="-1"` — and its click is swallowed, which is what stops an `href` from navigating
   anyway. `disabledReason` reads the same on a link as on a button.
 
+- **`ds-checkbox`, `ds-radio` and `ds-switch` take `ariaLabel`.** A control rendered with no
+  visible label — no `label`, nothing projected — had no accessible name and nothing a consumer
+  could set to give it one, while `ds-select` and `ds-number-stepper` had taken this input all
+  along. The row's `<label>` collapses when empty, so on a bare box the `aria-label` is the whole
+  name.
+
+  ```html
+  <ds-checkbox ariaLabel="Select all rows" />
+  ```
+
+  It applies only when there is no visible label; set it beside one and it overrides what the label
+  says, which is the ARIA rule rather than a choice this makes.
+
 - **`--ds-field-group-focus-shadow-error` — the halo a `ds-field-group` draws while invalid and
   focused.** Defaults to `--ds-field-focus-shadow-error`, the same halo a single error field uses,
   so a focused invalid group reads as one state instead of a red border with a blue glow around it.
@@ -81,12 +94,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   so this changes the ring and nothing besides it — no fill, no border, no layout. Reachable by
   keyboard only; the resting state of all three is unchanged.
 
-- **`ButtonComponent` gained four members — only matters if you SUBCLASS it.** `routerLink`, `href`,
-  `controlRef` and `destination`, which decides which of the three elements renders. `buttonRef` is
-  gone from the surface, so a subclass that overrode it now overrides nothing. Only `routerLink`,
-  `href` and `controlRef` are public API and that is no protection for the rest: `private` and
+- **Four exported classes grew members — only matters if you SUBCLASS one.** `ButtonComponent`
+  gained `routerLink`, `href`, `controlRef` and `destination`, which decides which of the three
+  elements renders; `buttonRef` is gone from its surface, so a subclass that overrode it now
+  overrides nothing. `CheckboxComponent`, `RadioComponent` and `SwitchComponent` each gained
+  `ariaLabel` and `resolvedAriaLabel`. Being public API or not is no protection: `private` and
   `protected` collide with TS2415 exactly as a public name does. Nothing changes for a consumer who
-  only uses the element.
+  only uses the elements.
 
 ### Fixed
 
