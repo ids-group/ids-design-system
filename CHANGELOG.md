@@ -46,7 +46,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `tabindex="-1"` — and its click is swallowed, which is what stops an `href` from navigating
   anyway. `disabledReason` reads the same on a link as on a button.
 
+- **`--focus-ring-radius` — the radius a box takes when it exists only to carry a focus ring.**
+  Defaults to `--radius-sm`. There is no `outline-radius` in CSS: an outline follows the
+  `border-radius` of the box it is painted on, so a ring host with no radius of its own draws a 90°
+  rectangle beside the rounded controls around it. Set this to reshape every such ring at once, or
+  give the host its own radius to override it locally.
+
 ### Changed
+
+- **`ds-checkbox`, `ds-radio` and `ds-switch` draw a rounded focus ring.** The ring goes on the row
+  that holds the glyph and its label, and that row had no radius, so it came out square while the
+  glyph inside it was rounded. The row now takes `--focus-ring-radius`. The row paints nothing else,
+  so this changes the ring and nothing besides it — no fill, no border, no layout. Reachable by
+  keyboard only; the resting state of all three is unchanged.
 
 - **`ButtonComponent` gained four members — only matters if you SUBCLASS it.** `routerLink`, `href`,
   `controlRef` and `destination`, which decides which of the three elements renders. `buttonRef` is

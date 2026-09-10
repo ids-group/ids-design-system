@@ -59,7 +59,8 @@
   ],
   "informational": [
     "`ds-button` takes two new optional inputs, `routerLink` and `href`. Unset, which is the default and what every existing button has, it renders the same `<button type=\"button\">` as before. Set either and it renders an `<a>` instead, with identical styling — the rules are class-based, so nothing keyed to `.button` moves. `type` and `loading` are ignored on a link and say so in dev mode.",
-    "A `ds-multi-select` panel filter row now carries `--ds-radius-inner`, so its focus ring is rounded instead of a full-width rectangle. Nothing to change — an `outline` follows the radius of the box it is drawn on, and that row simply had none."
+    "A `ds-multi-select` panel filter row now carries `--ds-radius-inner`, so its focus ring is rounded instead of a full-width rectangle. Nothing to change — an `outline` follows the radius of the box it is drawn on, and that row simply had none.",
+    "A focus ring is now shaped by its host: the new `--focus-ring-radius` token (default `--radius-sm`) gives a box that exists only to carry the ring a radius, because an outline follows the `border-radius` of the box it is drawn on and has none of its own. `ds-checkbox`, `ds-radio` and `ds-switch` pick it up, so their keyboard focus ring is rounded instead of square. Nothing to change — the resting state of all three is untouched, and a host with its own radius keeps it."
   ],
   "deleteList": []
 }
