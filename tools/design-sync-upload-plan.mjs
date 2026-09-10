@@ -22,6 +22,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TREE = join(ROOT, '.design-sync', 'upload');
 const TREE_REL = '.design-sync/upload';
 const POINTER = join(ROOT, '.design-sync', 'last-upload.json');
+const OBSOLETE = join(ROOT, '.design-sync', 'obsolete.txt');
 const OUT = join(ROOT, '.claude', 'local', 'design-sync-batches');
 const BATCH = 250;
 
@@ -122,6 +123,10 @@ if (flag('--all')) {
   }
 }
 
+rmSync(OUT, { recursive: true, force: true });
+mkdirSync(OUT, { recursive: true });
+
+let remoteFiles = null;
 const remoteArg = value('--remote');
 if (remoteArg) {
   const remote = JSON.parse(readFileSync(remoteArg, 'utf8')).paths ?? [];
@@ -135,10 +140,42 @@ if (remoteArg) {
     changed = [...changed, ...added].sort();
   }
   console.log(`\nreconcile: project holds ${files.size} file(s); ${orphans.length} orphan(s) it keeps and we do not.`);
+  remoteFiles = files;
 }
 
-rmSync(OUT, { recursive: true, force: true });
-mkdirSync(OUT, { recursive: true });
+// The owner is the only account that can delete, so the deliverable is text they paste. Built from
+// obsolete.txt intersected with what list_files still shows: a path already cleared must not be
+// asked for twice, and an orphan nobody declared is a gap in the list rather than a delete request.
+const declared = existsSync(OBSOLETE)
+  ? readFileSync(OBSOLETE, 'utf8')
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#'))
+  : [];
+const stillThere = remoteFiles ? declared.filter((path) => remoteFiles.has(path)) : declared;
+const undeclared = remoteFiles
+  ? [...remoteFiles].filter((path) => !local.includes(path) && !declared.includes(path)).sort()
+  : [];
+
+if (undeclared.length) {
+  console.log(`\n${undeclared.length} orphan(s) obsolete.txt does not declare — add them to it:`);
+  for (const path of undeclared) console.log(`  ${path}`);
+}
+
+if (stillThere.length) {
+  const request = join(OUT, 'owner-delete-request.txt');
+  writeFileSync(
+    request,
+    `In the Claude Design project "IDS Design System", please delete these ${stillThere.length} ` +
+      `files. They are cards the design system no longer produces — renamed or withdrawn — and ` +
+      `only the project owner can remove them.\n\n${stillThere.map((path) => `  ${path}`).join('\n')}\n`,
+  );
+  console.log(
+    `\n${stillThere.length} path(s) only the owner can delete — request written to\n  ` +
+      request.replace(ROOT, '.'),
+  );
+}
+
 const batches = [];
 for (let at = 0; at < changed.length; at += BATCH) {
   const slice = changed.slice(at, at + BATCH);
@@ -147,7 +184,24 @@ for (let at = 0; at < changed.length; at += BATCH) {
   batches.push({ file, count: slice.length, bytes: statSync(file).size });
 }
 
+// The constraint made checkable rather than asserted: the enumeration IS the cost of an upload, so
+// a plan that enumerates nearly the whole tree has bought nothing and should be replaced by --all,
+// which needs no pointer to be right and cannot miss a file.
+const planBytes = batches.reduce((sum, b) => sum + b.bytes, 0);
+const fullBytes = JSON.stringify(local.map((path) => ({ path, localPath: path }))).length;
+const share = fullBytes ? Math.round((planBytes / fullBytes) * 100) : 0;
+
 console.log(`\ndesign-sync-upload-plan: ${changed.length} of ${local.length} file(s) to send — basis ${basis}.`);
+console.log(
+  `  this plan ${planBytes} B against ${fullBytes} B for the whole tree — ${share}%` +
+    `, ${batches.length} write_files call(s) against ${Math.ceil(local.length / BATCH)}.`,
+);
+// 75%, not 85%: a real release needs 5-9% of the tree, and the widest range this repo has
+// (v0.11.4 onward) sits at 83% — where the diff saves a sixth of the bytes and still costs the
+// pointer being right. Anything in that region is a full send.
+if (changed.length && share >= 75) {
+  console.log('  SAVES NOTHING — send --all: it needs no pointer to be right and cannot miss a file.');
+}
 for (const b of batches) {
   console.log(`  ${b.count.toString().padStart(4)} file(s), ${b.bytes} B  ${b.file.replace(ROOT, '.')}`);
 }

@@ -268,6 +268,13 @@ delete_files { planId, paths }
   json>` to fold in anything the project is missing and count its orphans, `--record` after every
   batch has succeeded. It refuses to guess: an uncommitted `upload/` or a recorded commit that is no
   longer an ancestor both stop it and name `--all`.
+- **The plan prints its own cost against a full send, and says when it is not worth it.** A release
+  needs 5-9% of the tree; the widest range this repo has sits at 83%, and above 75% the run says
+  SAVES NOTHING and names `--all` — a full send needs no pointer to be right and cannot miss a file.
+- **`--remote` also writes the owner's delete request**,
+  `.claude/local/design-sync-batches/owner-delete-request.txt`: `obsolete.txt` intersected with what
+  `list_files` still shows, so a path the owner has already cleared is not asked for twice, and an
+  orphan nobody declared is reported as a gap in the list rather than folded into the request.
 - **Do NOT compare content with the project to decide what to send.** `list_files` returns paths and
   nothing else — no size, no hash, no mtime — so a content comparison means `get_file` per path,
   which is 6.2 MB of card HTML through the session against 170 KB of path JSON for sending the whole
