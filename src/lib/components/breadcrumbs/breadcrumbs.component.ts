@@ -7,7 +7,7 @@ import {
   numberAttribute,
   output,
 } from '@angular/core';
-import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import { DS_CONFIG, devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { BreadcrumbsService } from './breadcrumbs.service';
@@ -75,6 +75,20 @@ export class BreadcrumbsComponent {
   protected readonly effectiveClickable = computed<boolean>(
     () => this.clickable() ?? this.cfg.breadcrumbs?.clickable ?? true,
   );
+
+  constructor() {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      devWarn(() => {
+        const nameless = this.resolvedItems().find(
+          (item) => item.icon && !item.label && !item.ariaLabel,
+        );
+
+        return nameless
+          ? `[ds-breadcrumbs] the crumb with icon="${nameless.icon}" has no label and no ariaLabel, so it renders as a link with no accessible name. Give it an ariaLabel — the icon id is not a word for the user.`
+          : null;
+      });
+    }
+  }
 
   protected onNav(event: Event, item: BreadcrumbItem): void {
     if (!item.href || !this.effectiveClickable()) {

@@ -30,7 +30,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class PageHeaderSection {
   protected readonly trail: BreadcrumbItem[] = [
-    { icon: 'home', href: '#' },
+    { icon: 'home', href: '#', ariaLabel: 'Home' },
     { label: 'Records', href: '#' },
     { label: '2026 Cycle', href: '#' },
     { label: 'Project Alpha' },
