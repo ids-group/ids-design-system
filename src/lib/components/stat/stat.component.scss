@@ -17,7 +17,13 @@
   display: block;
 }
 
-:host(.error) .value { color: var(--error-text); }
+/* Through the resolver, not `color` on `.value`: emulated encapsulation adds one attribute
+   selector to each side, which put `:host(.error) .value` and `.stat .value` on the same
+   specificity and let source order — the later `.stat` block — keep the default colour. The
+   size variants below move the value's font size the same way, for the same reason. */
+:host(.error) {
+  --_stat-value-color: var(--ds-stat-value-color, var(--error-text));
+}
 
 /* The size variants move the value's size through the SAME resolver rather than
    restating font-size on `.value`, where they would out-rank the public hook and
