@@ -226,6 +226,15 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   fields transition border and background, and an 80ms read catches the animation mid-flight and
   reports a false mismatch.
 
+- [ ] **[P2] `ds-select` and `ds-autocomplete` announce a disabled trigger as invalid.** Both keep
+  `aria-invalid="true"` beside `aria-disabled="true"` on the trigger, and the trigger is a `div`
+  taking `tabindex="-1"` rather than a natively disabled control — so it stays in the virtual cursor
+  and reads as "invalid, dimmed" with no way to act on it. The other seven fields carry the same
+  `[attr.aria-invalid]` binding but disable natively, which takes the element out of reach, so the
+  attribute is inert there. Surfaced beside the paint fix above: the paint stopped, the announcement
+  did not. Fix is `invalidResolved() && !isDisabled()` in the two templates, plus a `### Fixed` line
+  — an announcement change is consumer-visible.
+
 - [ ] **[P2] `ds-field-group[invalid]` loses its error border on hover and on focus,** and that border
   is the group's ONLY error affordance — segment labels and messages are hidden by `.in-group`.
   `:host(:hover:not(.disabled))` and `:host(:focus-within:not(.disabled))` are (0,3,0) against
