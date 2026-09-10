@@ -134,13 +134,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   keyboard user tabbed onto an anonymous stop. Give it `ariaLabel` (above); in dev mode a crumb
   still missing one says so.
 
-- **A `ds-docs` truncation-note button drew no focus ring at all.** `outline: var(--focus-ring)`
-  put a two-shadow list into an `outline`, which is invalid at computed-value time — so the
-  declaration computed `outline` back to its initial value AND out-ranked the global
-  `:where(:focus-visible)` ring by specificity. Only the offset survived, on an outline that was
-  never drawn. The rule is gone and the button takes the standard ring. Documentation site only,
-  nothing shipped.
-
 - **A disabled field no longer paints its `data-field-state`.** An `error`, `warning` or `success`
   state used to out-rank the disabled look in all nine field components — `ds-input`, `ds-textarea`,
   `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`,
