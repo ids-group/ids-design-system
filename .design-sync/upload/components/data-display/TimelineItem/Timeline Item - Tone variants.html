@@ -1,96 +1,16 @@
-<!-- @dsCard group="data-display" viewport="1200x607" name="Timeline Item - tone variants" subtitle="Available tones: primary · success · warning · error · muted · default." --><!doctype html>
+<!-- @dsCard group="data-display" viewport="1200x607" name="Timeline Item - tone variants" subtitle="Available tones: primary · success · warning · error · muted · default." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>TimelineItem</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-timeline></ds-docs-components-timeline></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "timeline-item";
-      var INDEX = 0;
-      var KEY = "timeline:TimelineItemComponent";
-      var TABLE = true;
-      var HEAD = "Timeline Item";
-      var BLOCK = "tone variants";
-      var REACT = "TimelineItem";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-timeline");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-timeline _nghost-c33=""><docs-section _ngcontent-c33="" anchor="timeline" eyebrow="Components" title="Timeline" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-timeline" data-anchor="timeline"><h2 _ngcontent-c1="" class="t-h2">Timeline Item - tone variants</h2><docs-component-meta _ngcontent-c1="" _nghost-c8=""><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;TimelineItem /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c33="" class="block-desc t-s"> Available tones: <code _ngcontent-c33="">primary</code> · <code _ngcontent-c33="">success</code> · <code _ngcontent-c33=""> warning </code> · <code _ngcontent-c33="">error</code> · <code _ngcontent-c33="">muted</code> · <code _ngcontent-c33=""> default </code>. </p><div _ngcontent-c33="" class="states states--cols-3"><div _ngcontent-c33="" class="state-cell"><div _ngcontent-c33="" class="state-cell-stage"><ds-timeline _ngcontent-c33="" role="list" _nghost-c34=""><ds-timeline-item _ngcontent-c33="" role="listitem" heading="Confirmed" time="09:41" icon="check" tone="primary" _nghost-c35="" data-tone="primary"><div _ngcontent-c35="" class="node-col"><span _ngcontent-c35="" class="node"><ds-icon _ngcontent-c35=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><path d="m4 12 5 5L20 6"></path></svg></ds-icon></span><span _ngcontent-c35="" class="spine"></span></div><div _ngcontent-c35="" class="content"><span _ngcontent-c35="" class="heading"> Confirmed </span><span _ngcontent-c35="" class="time"> 09:41 </span></div></ds-timeline-item></ds-timeline></div><div _ngcontent-c33="" class="state-cell-label"> primary </div></div><div _ngcontent-c33="" class="state-cell"><div _ngcontent-c33="" class="state-cell-stage"><ds-timeline _ngcontent-c33="" role="list" _nghost-c34=""><ds-timeline-item _ngcontent-c33="" role="listitem" heading="Complete" time="11:20" icon="check" tone="success" _nghost-c35="" data-tone="success"><div _ngcontent-c35="" class="node-col"><span _ngcontent-c35="" class="node"><ds-icon _ngcontent-c35=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><path d="m4 12 5 5L20 6"></path></svg></ds-icon></span><span _ngcontent-c35="" class="spine"></span></div><div _ngcontent-c35="" class="content"><span _ngcontent-c35="" class="heading"> Complete </span><span _ngcontent-c35="" class="time"> 11:20 </span></div></ds-timeline-item></ds-timeline></div><div _ngcontent-c33="" class="state-cell-label"> success </div></div><div _ngcontent-c33="" class="state-cell"><div _ngcontent-c33="" class="state-cell-stage"><ds-timeline _ngcontent-c33="" role="list" _nghost-c34=""><ds-timeline-item _ngcontent-c33="" role="listitem" heading="Delayed" time="14:05" icon="bell" tone="warning" _nghost-c35="" data-tone="warning"><div _ngcontent-c35="" class="node-col"><span _ngcontent-c35="" class="node"><ds-icon _ngcontent-c35=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg></ds-icon></span><span _ngcontent-c35="" class="spine"></span></div><div _ngcontent-c35="" class="content"><span _ngcontent-c35="" class="heading"> Delayed </span><span _ngcontent-c35="" class="time"> 14:05 </span></div></ds-timeline-item></ds-timeline></div><div _ngcontent-c33="" class="state-cell-label"> warning </div></div><div _ngcontent-c33="" class="state-cell"><div _ngcontent-c33="" class="state-cell-stage"><ds-timeline _ngcontent-c33="" role="list" _nghost-c34=""><ds-timeline-item _ngcontent-c33="" role="listitem" heading="Failed" time="15:30" icon="flag" tone="error" _nghost-c35="" data-tone="error"><div _ngcontent-c35="" class="node-col"><span _ngcontent-c35="" class="node"><ds-icon _ngcontent-c35=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><path d="M5 21V5a14 14 0 0 1 14 0v9a14 14 0 0 1-14 0z"></path></svg></ds-icon></span><span _ngcontent-c35="" class="spine"></span></div><div _ngcontent-c35="" class="content"><span _ngcontent-c35="" class="heading"> Failed </span><span _ngcontent-c35="" class="time"> 15:30 </span></div></ds-timeline-item></ds-timeline></div><div _ngcontent-c33="" class="state-cell-label"> error </div></div><div _ngcontent-c33="" class="state-cell"><div _ngcontent-c33="" class="state-cell-stage"><ds-timeline _ngcontent-c33="" role="list" _nghost-c34=""><ds-timeline-item _ngcontent-c33="" role="listitem" heading="Pending" time="—" icon="clock" tone="muted" _nghost-c35="" data-tone="muted"><div _ngcontent-c35="" class="node-col"><span _ngcontent-c35="" class="node"><ds-icon _ngcontent-c35=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></ds-icon></span><span _ngcontent-c35="" class="spine"></span></div><div _ngcontent-c35="" class="content"><span _ngcontent-c35="" class="heading"> Pending </span><span _ngcontent-c35="" class="time"> — </span></div></ds-timeline-item></ds-timeline></div><div _ngcontent-c33="" class="state-cell-label"> muted </div></div><div _ngcontent-c33="" class="state-cell"><div _ngcontent-c33="" class="state-cell-stage"><ds-timeline _ngcontent-c33="" role="list" _nghost-c34=""><ds-timeline-item _ngcontent-c33="" role="listitem" heading="Scheduled" time="Tomorrow" icon="flag" tone="default" _nghost-c35="" data-tone="default"><div _ngcontent-c35="" class="node-col"><span _ngcontent-c35="" class="node"><ds-icon _ngcontent-c35=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><path d="M5 21V5a14 14 0 0 1 14 0v9a14 14 0 0 1-14 0z"></path></svg></ds-icon></span><span _ngcontent-c35="" class="spine"></span></div><div _ngcontent-c35="" class="content"><span _ngcontent-c35="" class="heading"> Scheduled </span><span _ngcontent-c35="" class="time"> Tomorrow </span></div></ds-timeline-item></ds-timeline></div><div _ngcontent-c33="" class="state-cell-label"> default </div></div></div><div _ngcontent-c1="" class="api-sub" data-key="timeline:TimelineItemComponent"><docs-api-table _ngcontent-c1="" _nghost-c9=""><details _ngcontent-c9="" class="api"><summary _ngcontent-c9=""> Inputs <span _ngcontent-c9="" class="count">4</span></summary><div _ngcontent-c9="" class="scroll"><table _ngcontent-c9=""><thead _ngcontent-c9=""><tr _ngcontent-c9=""><th _ngcontent-c9=""> Name </th><th _ngcontent-c9=""> Type </th><th _ngcontent-c9=""> Default </th><th _ngcontent-c9=""> Description </th></tr></thead><tbody _ngcontent-c9=""><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> heading </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Primary text for the entry. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> time </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> string </code></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> '' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Timestamp or date label shown below the content. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> icon </span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono type"> IconName | null </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="muted"> null </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Icon shown in the marker; omit for a plain dot. </span></td></tr><tr _ngcontent-c9=""><td _ngcontent-c9=""><span _ngcontent-c9="" class="pname"> tone </span></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="uni"><code _ngcontent-c9="" class="mono chip"> default </code><code _ngcontent-c9="" class="mono chip"> primary </code><code _ngcontent-c9="" class="mono chip"> success </code><code _ngcontent-c9="" class="mono chip"> warning </code><code _ngcontent-c9="" class="mono chip"> error </code><code _ngcontent-c9="" class="mono chip"> muted </code></span></td><td _ngcontent-c9=""><code _ngcontent-c9="" class="mono"> 'default' </code></td><td _ngcontent-c9=""><span _ngcontent-c9="" class="desc"> Semantic accent color for the marker. </span></td></tr></tbody></table></div></details></docs-api-table></div></section></docs-section></ds-docs-components-timeline></div>
+  
+  
+  
+
+
 </body></html>

@@ -1,96 +1,16 @@
-<!-- @dsCard group="foundations" viewport="1200x700" name="Typography - type ramp" subtitle="Every utility class side-by-side." --><!doctype html>
+<!-- @dsCard group="foundations" viewport="1200x700" name="Typography - type ramp" subtitle="Every utility class side-by-side." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Typography</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-foundations-typography></ds-docs-foundations-typography></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "type ramp";
-      var REACT = null;
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-foundations-typography");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-foundations-typography _nghost-c4a=""><docs-section _ngcontent-c4a="" anchor="typography" eyebrow="Foundations" title="Typography" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-typography" data-anchor="typography"><h2 _ngcontent-c1="" class="t-h2">Typography - type ramp<docs-truncation _ngcontent-c4a="" _nghost-c2=""><button _ngcontent-c2="" type="button" aria-label="Truncation rules" class="i"><ds-icon _ngcontent-c2="" name="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button><div _ngcontent-c2="" role="tooltip" class="panel"><div _ngcontent-c2="" class="panel-title"><ds-icon _ngcontent-c2="" name="filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 13px;" width="13" height="13" stroke-width="1.75" aria-hidden="true"><path d="M3 5h18l-7 9v6l-4-2v-4z"></path></svg></ds-icon> Truncation </div><ul _ngcontent-c2="" class="list"><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Heading </span><span _ngcontent-c2="" class="behaviour"> Single line, ellipsis at title width. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Body </span><span _ngcontent-c2="" class="behaviour"> Wrap freely. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Mono code </span><span _ngcontent-c2="" class="behaviour"> Pre-wrap; horizontal scroll inside the block; no clip. </span></li></ul></div></docs-truncation></h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c4a="" lede=""> Mulish for UI and prose, JetBrains Mono for IDs, dates and any monospace data. Weights: 400 / 500 / 600 / 700 / 800. </span></p><p _ngcontent-c4a="" class="block-desc t-s"> Every utility class side-by-side. Headings are reserved for marketing surfaces and large section titles. Default UI runs on <code _ngcontent-c4a="" class="t-mono-inline"> .t-s </code> (14). </p><div _ngcontent-c4a="" class="ramp"><div _ngcontent-c4a="" class="ramp-head t-overline"><div _ngcontent-c4a=""> Class · token </div><div _ngcontent-c4a=""> Sample </div><div _ngcontent-c4a=""> Size </div><div _ngcontent-c4a=""> LH </div><div _ngcontent-c4a=""> Weight </div><div _ngcontent-c4a=""> Tracking </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-display </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-display </code></div><div _ngcontent-c4a="" class="ramp-sample t-display"> Q3 2026 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 64 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.1 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> extrabold </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> tight </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-h1 </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-h1 </code></div><div _ngcontent-c4a="" class="ramp-sample t-h1"> Projects </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 48 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.1 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> extrabold </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> tight </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-h2 </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-h2 </code></div><div _ngcontent-c4a="" class="ramp-sample t-h2"> Project Alpha — Sections </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 36 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.25 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> extrabold </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> snug </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-h3 </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-h3 </code></div><div _ngcontent-c4a="" class="ramp-sample t-h3"> Capacity threshold </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 28 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.25 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> extrabold </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> snug </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-h4 </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-h4 </code></div><div _ngcontent-c4a="" class="ramp-sample t-h4"> Recompute pending </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 22 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.25 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> bold </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> normal </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-h5 </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-h5 </code></div><div _ngcontent-c4a="" class="ramp-sample t-h5"> Allocated resources </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 18 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.25 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> bold </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> normal </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-l </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-l </code></div><div _ngcontent-c4a="" class="ramp-sample t-l"> Three schedules and twelve resource allocations will recompute when you save these dates. </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 18 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.4 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> regular </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> normal </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-m </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-m </code></div><div _ngcontent-c4a="" class="ramp-sample t-m"> Three schedules and twelve resource allocations will recompute. </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 16 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.4 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> regular </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> normal </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-s </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-s </code></div><div _ngcontent-c4a="" class="ramp-sample t-s"> Sam Carter changed Project Alpha access dates two minutes ago. </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 14 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.4 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> regular </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> normal </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-xs </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-xs </code></div><div _ngcontent-c4a="" class="ramp-sample t-xs"> Last synced 4 minutes ago </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 12 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.4 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> regular </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> normal </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-overline </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-2xs </code></div><div _ngcontent-c4a="" class="ramp-sample t-overline"> Impact summary </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 11 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.4 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> bold </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> wider · uppercase </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-caption </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-xs </code></div><div _ngcontent-c4a="" class="ramp-sample t-caption"> Times in Europe/London. Daylight savings auto. </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 12 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.4 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> regular </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> normal </div></div><div _ngcontent-c4a="" class="ramp-row"><div _ngcontent-c4a="" class="ramp-label"><code _ngcontent-c4a="" class="t-mono-inline ramp-cls"> .t-mono </code><code _ngcontent-c4a="" class="t-mono-inline ramp-token"> --font-size-mono </code></div><div _ngcontent-c4a="" class="ramp-sample t-mono"> ORD-2026-0142  12 Main St, City  06:00–22:00 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 13 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> 1.4 </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> medium </div><div _ngcontent-c4a="" class="t-mono ramp-meta"> normal </div></div></div></section></docs-section></ds-docs-foundations-typography></div>
+  
+  
+  
+
+
 </body></html>
