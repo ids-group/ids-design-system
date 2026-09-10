@@ -107,9 +107,13 @@
   white-space: nowrap;
   user-select: none;
 
-  /* The element follows the destination, so this class also dresses an `<a href>`, which the UA
-     underlines. `.v-text` puts the underline back deliberately, after this. */
+  /* The element follows the destination, so this class also dresses an `<a href>`, whose UA
+     defaults differ from a button's: it is underlined, and its text is start-aligned where a
+     button's is centred. Neither shows today — flex centres the children and `.subtext-slot`
+     aligns itself — but a block child added later would inherit the difference and land off-centre
+     on one element and not the other. `.v-text` puts the underline back deliberately, after this. */
   text-decoration: none;
+  text-align: center;
   position: relative;
   box-shadow: var(--_button-shadow);
   transition:
