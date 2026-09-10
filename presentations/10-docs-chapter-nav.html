@@ -100,7 +100,11 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-    padding: 7px var(--space-2-5) 7px var(--space-5);
+    /* The row is indented so its own background IS the fill, starting clear of the thread. Every
+       row carries it, not just the active one, or the label would jump right the moment a row is
+       selected. */
+    margin-left: var(--fill-inset, var(--space-5));
+    padding: 7px var(--space-2-5) 7px var(--space-2);
     color: var(--text-secondary);
     font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
     border-radius: var(--radius-md);
@@ -115,10 +119,13 @@
     color: var(--accent-strong);
     font-weight: var(--font-weight-bold);
   }
+  /* The dot escapes the row's own box to sit on the thread, which is drawn by the group at
+     --space-2 + 2px. Negative by exactly the row's indent, so it lands on the thread whatever the
+     indent is set to. */
   .item.is-active::before {
     content: '';
     position: absolute;
-    left: var(--space-2);
+    left: calc(-1 * var(--fill-inset, var(--space-5)) + var(--space-2));
     top: 50%;
     width: 5px;
     height: 5px;
@@ -126,6 +133,11 @@
     border-radius: 50%;
     background: var(--accent-strong);
   }
+
+  /* The three candidates, for the comparison block only. */
+  .try-16 .item { --fill-inset: var(--space-4); }
+  .try-20 .item { --fill-inset: var(--space-5); }
+  .try-24 .item { --fill-inset: var(--space-6); }
   /* УРОВЕНЬ 2 — группа-пункт: .start-link. A group slot that IS a destination, so it takes the
      item's row shape and not the group's caps — bold and --text-primary are the whole difference. */
   .item.is-start {
@@ -169,7 +181,9 @@
   .ch {
     position: relative;
     padding: 5px var(--space-2-5) 5px var(--space-6);
-    margin-left: var(--space-5);
+    /* 4px inside the active row's fill, which starts at --space-5. On the fill's own edge the
+       thread ran into its rounded corner and read as a rendering fault. */
+    margin-left: var(--space-6);
     color: var(--text-tertiary);
     font: var(--font-weight-medium) 12px/1.4 var(--font-sans);
     border-left: var(--border-width-default) solid var(--border-divider);
@@ -191,7 +205,7 @@
   .ch-group {
     margin: 0;
     padding: var(--space-2) var(--space-2-5) 2px var(--space-6);
-    margin-left: var(--space-5);
+    margin-left: var(--space-6);
     color: var(--text-tertiary);
     font: var(--font-weight-bold) 10px/1.4 var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
@@ -202,7 +216,7 @@
   /* Вариант 6 — one recessed ground under the chapters instead of the thread. */
   .tray {
     position: relative;
-    margin: var(--space-1) 0 var(--space-2) var(--space-5);
+    margin: var(--space-1) 0 var(--space-2) var(--space-6);
     padding: var(--space-1);
     background: var(--surface-secondary);
     border-radius: var(--radius-md);
@@ -317,7 +331,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    margin: var(--space-1) 0 var(--space-2) var(--space-5);
+    margin: var(--space-1) 0 var(--space-2) var(--space-6);
     padding: var(--space-1-5) var(--space-2);
     background: var(--surface-secondary);
     border-radius: var(--radius-md);
@@ -526,12 +540,50 @@
     надо изобретать</b>, они уже в тексте.
   </div>
 
+  <h2>Заливка активного пункта — три смещения</h2>
+
+  <p class="lede">
+    Нитка 10–11px, кружок 8–13px (центр 10.5px, на нитке). Заливка сдвинута вправо, чтобы нитка с
+    кружком остались <b>снаружи</b> неё. Ниже три смещения из шкалы; под каждым — сколько остаётся
+    под лейбл.
+  </p>
+
+  <div class="rails">
+    <div class="rail try-16">
+      <p class="rail-caption">заливка с 16px · зазор 3px</p>
+      <div class="grp-items is-active">
+        <div class="item">Charts</div>
+        <div class="item is-active">Table</div>
+        <div class="item">Timeline</div>
+      </div>
+    </div>
+
+    <div class="rail try-20">
+      <p class="rail-caption">заливка с 20px · зазор 7px</p>
+      <div class="grp-items is-active">
+        <div class="item">Charts</div>
+        <div class="item is-active">Table</div>
+        <div class="item">Timeline</div>
+      </div>
+    </div>
+
+    <div class="rail try-24">
+      <p class="rail-caption">заливка с 24px · зазор 11px</p>
+      <div class="grp-items is-active">
+        <div class="item">Charts</div>
+        <div class="item is-active">Table</div>
+        <div class="item">Timeline</div>
+      </div>
+    </div>
+  </div>
+
   <h2>Четыре уровня — как они нарисованы на самом деле</h2>
 
   <p class="lede">
     Иерархия: <b>группа → группа-пункт → пункт → саб-пункт</b>. Ниже рейка со всеми четырьмя и
-    разбор, чем каждый уровень отличается — цвет, кружок, нитка, каретка, кегль. Это <b>не
-    предложение</b>, это то, что в коде сейчас.
+    разбор, чем каждый уровень отличается — цвет, кружок, нитка, каретка, кегль. Всё, кроме смещения заливки,
+    — это то, что в коде сейчас; <b>смещение заливки на 20px и нитка глав на 24px — предложение</b>
+    из блока выше.
   </p>
 
   <div class="rails">
@@ -590,11 +642,13 @@
       </div>
       <div class="level-card">
         <b>3 · Пункт — Table</b>
-        13px medium, <code>--text-secondary</code>, padding <code>7px 10px 7px 20px</code>, радиус
-        8px. Ховер — заливка <code>--surface-secondary</code>. Активный — заливка
-        <code>--accent-muted</code>, текст <code>--accent-strong</code>, bold, и <b>кружок 5px</b>
-        на 8px слева. Левые 20px padding есть у <b>каждой</b> строки, а не только у активной, иначе
-        лейбл прыгал бы вправо при выборе.
+        13px medium, <code>--text-secondary</code>, радиус 8px. Ховер — заливка
+        <code>--surface-secondary</code>. Активный — заливка <code>--accent-muted</code>, текст
+        <code>--accent-strong</code>, bold. Строка отступает от края на <b>20px</b>, поэтому её
+        собственный фон и есть заливка, а нитка с кружком остаются снаружи. Отступ несёт
+        <b>каждая</b> строка, а не только активная, иначе лейбл прыгал бы вправо при выборе.
+        <b>Кружок 5px</b> выходит из строки отрицательным сдвигом и садится на нитку; зазор до
+        заливки <b>7px</b>.
       </div>
       <div class="level-card">
         <b>Нитка и кружок — это одно</b>
@@ -604,7 +658,8 @@
       </div>
       <div class="level-card">
         <b>4 · Саб-пункт — Row identity</b>
-        12px medium, <code>--text-tertiary</code>, <code>margin-left: 20px</code>, своя нитка 1px
+        12px medium, <code>--text-tertiary</code>, <code>margin-left: 24px</code> — 4px внутри
+        края заливки, на самом краю нитка упиралась в её закруглённый угол, — своя нитка 1px
         <code>--border-divider</code> слева, padding <code>5px 10px 5px 24px</code>. Активная —
         <code>--accent-strong</code>, bold, и нитка красится в акцент. <b>Ни заливки, ни кружка</b> —
         и это всё отличие от третьего уровня, кроме одного пункта кегля.
