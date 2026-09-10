@@ -3,6 +3,16 @@
 // success tint measures 1.05:1 against a white field, too faint to do the
 // findability job a fill exists for, so neither carries one.
 //
+// A DISABLED field takes no state paint. It is not submitted and does not participate in
+// constraint validation, so an error border and fill promise a correction that cannot be made on a
+// control the user cannot even focus; ARIA settles the same conflict the same way, ignoring the
+// ARIA state when a native attribute contradicts it. READ-ONLY keeps the paint: it is submitted,
+// so a wrong value there still reaches the server and is worth flagging.
+//
+// Excluded here rather than by out-specifying each component's own disabled rule: the state
+// selectors sit at (0,3,0) and every disabled rule at (0,2,0), so error won all nine on
+// specificity alone. `:not()` makes it not match instead of racing.
+//
 // The colour arguments exist so a component can pass its own `--ds-<name>-*-error`
 // resolver: hardcoding the family token here would silently drop overrides
 // published since 0.7.x.
@@ -16,7 +26,7 @@
 ) {
   // `:not(.in-group)` on all three: a segment ties `.in-group` at (0,3,0) and this
   // mixin is included last, so without it the fill repaints one segment mid-row.
-  :host([data-field-state='error']:not(.in-group)) #{$box} {
+  :host([data-field-state='error']:not(.in-group)) #{$box}:not(.disabled):not(:disabled) {
     border-color: #{$error-border};
     background-color: #{$error-bg};
 
@@ -29,11 +39,11 @@
   // --warning is yellow-400, 1.47:1 against a white field — invisible as a
   // boundary, where WCAG 1.4.11 asks 3:1. --warning-text (yellow-700) is the
   // first rung of the ramp that clears it, at 4.59:1.
-  :host([data-field-state='warning']:not(.in-group)) #{$box} {
+  :host([data-field-state='warning']:not(.in-group)) #{$box}:not(.disabled):not(:disabled) {
     border-color: #{$warning-border};
   }
 
-  :host([data-field-state='success']:not(.in-group)) #{$box} {
+  :host([data-field-state='success']:not(.in-group)) #{$box}:not(.disabled):not(:disabled) {
     border-color: #{$success-border};
   }
 }
