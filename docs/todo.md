@@ -207,14 +207,24 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   plus a gate in `tools/check-focus-rings.mjs` so a new component cannot forget. Then the
   `!important` comes out. Agreed with Stas 2026-09-04: the edit count is not an argument against.
 
-- [ ] **[P1] `field-state` out-ranks `disabled` and `read-only` in nine field components.** A field
-  that is both disabled and invalid paints the error border and error fill, keeping only the disabled
-  text colour and `not-allowed` cursor. Measured: ds-input and ds-textarea are an exact (0,5,0) tie
-  won by source order; the other seven lose outright at (0,3,0). The `form.disable()` path does NOT
-  reproduce it — disabling clears the control's errors — so it needs the component's own `disabled`
-  plus `invalid`/`error`/`errors`. ds-checkbox shows the fix: it re-points its `--_*` resolvers per
-  state instead of declaring final properties, and gets the precedence right. 0.10.0 inverted this
-  for select, autocomplete, both pickers, color-picker and otp-input; input and textarea always were.
+- [x] **[P1] `field-state` out-ranks `disabled` — FIXED 2026-09-10.** One edit in
+  `styles/_field-state.scss`: the three state selectors now carry
+  `:not(.disabled):not(:disabled)` on the box, so they do not match a disabled field at all rather
+  than racing its rule on specificity. Every one of the nine marks disabled on the box itself, as a
+  class or the pseudo-class, so the single exclusion reaches all of them.
+  **Why disabled wins, and it is not a preference.** A disabled control is not submitted and does
+  not participate in constraint validation, so an error border and fill promise a correction that
+  cannot be made on something the user cannot even focus. ARIA settles the same conflict the same
+  way: where a native attribute and an ARIA state contradict each other, the native one wins and
+  the ARIA state is ignored.
+  **READ-ONLY deliberately keeps the paint, which is the half the original item got wrong.** A
+  read-only field IS submitted — only `disabled` is excluded from submission — so a wrong value
+  there still reaches the server and is worth flagging. Both skip browser validation, but only one
+  of them can still send a bad value.
+  **Measured in a browser on all nine**, both arms per component: error alone paints, and
+  error+disabled resolves byte-identical to disabled alone. Sampling needs ~450ms per state — the
+  fields transition border and background, and an 80ms read catches the animation mid-flight and
+  reports a false mismatch.
 
 - [ ] **[P2] `ds-field-group[invalid]` loses its error border on hover and on focus,** and that border
   is the group's ONLY error affordance — segment labels and messages are hidden by `.in-group`.
