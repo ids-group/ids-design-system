@@ -10,6 +10,7 @@
   --_field-group-border-color-error: var(--ds-field-group-border-color-error, var(--error));
   --_field-group-radius: var(--ds-field-group-radius, var(--ds-radius-control));
   --_field-group-focus-shadow: var(--ds-field-group-focus-shadow, var(--ds-field-focus-shadow));
+  --_field-group-focus-shadow-error: var(--ds-field-group-focus-shadow-error, var(--ds-field-focus-shadow-error));
   --_field-group-divider-color: var(--ds-field-group-divider-color, var(--border-divider));
 
   display: inline-flex;
@@ -39,7 +40,13 @@
   width: 100%;
 }
 
-:host(:hover:not(.disabled)) {
+/* `:not(.invalid)` on hover and on focus, not a heavier selector on the error rule: an invalid
+   group keeps its red border while being hovered and while holding focus, the way a single
+   error field does, and there the state rule out-ranks both by carrying one more class. Here
+   `.invalid` is a plain host class, so it loses that race and had to stop entering it — which
+   is also why the one-argument-list `:not()` this repo's stylelint asks for is safe: it drops
+   the selector to (0,3,0) and nothing depends on the weight, only on not matching. */
+:host(:hover:not(.disabled, .invalid)) {
   border-color: var(--border-strong);
 }
 
@@ -48,12 +55,19 @@
    focus-ring-guard: the group owns no control of its own — every segment is another
    component, and each silences its own via focus.owns-the-focus-ring. */
 
-:host(:focus-within:not(.disabled)) {
+:host(:focus-within:not(.disabled, .invalid)) {
   border-color: var(--_field-group-border-color-focus);
   box-shadow: var(--_field-group-focus-shadow);
 }
 
-:host(.invalid) { border-color: var(--_field-group-border-color-error); }
+:host(.invalid:not(.disabled)) { border-color: var(--_field-group-border-color-error); }
+
+/* The halo takes the error tint rather than the accent, so a focused invalid group reads as one
+   state and not as two. `:not(.disabled)` is explicit here: disabled beat invalid on source
+   order alone, which is not a thing to depend on. */
+:host(.invalid:not(.disabled):focus-within) {
+  box-shadow: var(--_field-group-focus-shadow-error);
+}
 
 :host(.disabled) {
   background-color: var(--surface-disabled);
