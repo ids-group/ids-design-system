@@ -4,11 +4,7 @@ export interface BreadcrumbItem {
   label?: string;
   href?: string;
   icon?: IconName;
-  /**
-   * The crumb's accessible name when it has an icon and no `label` — the usual
-   * icon-only home crumb. Nothing is derived from `icon`: "home" is a glyph id,
-   * not a word for the user, and guessing it ships the wrong one everywhere the
-   * guess is off.
-   */
+  /** The name of a crumb with an icon and no `label`. Nothing is derived from `icon` — a glyph id
+   *  is not a word for the user. */
   ariaLabel?: string;
 }

@@ -25,23 +25,15 @@ export class BreadcrumbsComponent {
   private readonly cfg = inject(DS_CONFIG);
   private readonly svc = inject(BreadcrumbsService);
 
-  /**
-   * When omitted, the component reads from `BreadcrumbsService.items`.
-   * Pass an explicit array to opt out of the service (per-page override).
-   */
+  /** Omitted, the component reads `BreadcrumbsService.items`; an explicit array opts out. */
   readonly items = input<BreadcrumbItem[] | null>(null);
   /** Icon between crumbs; falls back to `DS_CONFIG.breadcrumbs.separator`, then `chevronRight`. */
   readonly separator = input<IconName | null>(null);
   /** Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`. */
   readonly clickable = input<boolean | null>(null);
-  /**
-   * Caps how many crumbs render, collapsing the middle into an ellipsis — the
-   * first and the LAST always survive. Null (default) renders every crumb.
-   *
-   * Worth setting on any trail that can get deep: the row is `nowrap` with
-   * `overflow: hidden`, so without a cap an overlong trail is clipped from the
-   * END, which is the current page — the one crumb the reader needs most.
-   */
+  /** Caps how many crumbs render, collapsing the middle — the first and the LAST always survive.
+   *  Worth setting on any deep trail: the row is `nowrap` with `overflow: hidden`, so uncapped it
+   *  is clipped from the END, which is the current page. */
   readonly maxItems = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -52,11 +44,8 @@ export class BreadcrumbsComponent {
     () => this.items() ?? this.svc.items(),
   );
 
-  /**
-   * What renders. The collapsed crumb carries no `href`, so it is inert rather
-   * than a link to nowhere; its label is the count, which tells the reader how
-   * much is hidden instead of just that something is.
-   */
+  // The collapsed crumb carries no `href`, so it is inert rather than a link to nowhere, and its
+  // label is the count rather than an ellipsis alone.
   protected readonly resolvedItems = computed<BreadcrumbItem[]>(() => {
     const items = this.allItems();
     const max = this.maxItems();

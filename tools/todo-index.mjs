@@ -4,11 +4,8 @@
 //   node tools/todo-index.mjs            # rewrite the index in place
 //   node tools/todo-index.mjs --check    # exit 1 if it is out of date
 //
-// The index used to be hand-kept, and it drifted every time: 44 lines against 66 items on
-// 2026-09-01, two items closed and archived that still read as open for three days, and a note
-// claiming the index "is generated from the items rather than hand-kept, so it cannot drift again"
-// when nothing generated it. This is that generator, so closing an item means deleting the item and
-// nothing else.
+// Reads `- [ ] **[Pn] …**` items and their enclosing `## ` section, so closing an item means
+// deleting the item and nothing else.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -36,22 +33,30 @@ for (const line of lines) {
     .replace(/\s+/g, ' ')
     .replace(/[.:,;—-]\s*$/, '')
     .trim();
-  // Some items close their bold run mid-clause, so the title lifted from it ends on a preposition
-  // and reads as a truncated line rather than a pointer. Mark it as cut instead of pretending.
-  if (/(?:^|\s)(?:a|an|the|and|or|of|to|in|on|for|with|that|which|no|not|longer|than|by|from|as)$/i.test(title)) {
+  // A title from a bold run that closes mid-clause is marked as cut, not left reading whole.
+  if (
+    /(?:^|\s)(?:a|an|the|and|or|of|to|in|on|for|with|that|which|no|not|longer|than|by|from|as)$/i.test(
+      title,
+    )
+  ) {
     title += ' …';
   }
   items.push({ priority, mark, section, title });
 }
 
 const ORDER = ['P1', 'P2', 'P3'];
-const counts = ORDER.map((p) => [p, items.filter((i) => i.priority === p).length]);
+const counts = ORDER.map((p) => [
+  p,
+  items.filter((i) => i.priority === p).length,
+]);
 const partial = items.filter((i) => i.mark === '~').length;
 
 const out = [START, ''];
 out.push(
   `**${items.length} open — ${counts.map(([p, n]) => `${n} ${p}`).join(', ')}**` +
-    (partial ? `, ${partial} of them half-done and waiting on a deck verdict` : '') +
+    (partial
+      ? `, ${partial} of them half-done and waiting on a deck verdict`
+      : '') +
     `. Counted by \`node tools/todo-index.mjs\` from the items themselves, never incremented from` +
     ` the last figure — three summaries in this file had drifted apart before it existed.`,
 );
@@ -78,14 +83,18 @@ const rebuilt = out.join('\n');
 const from = text.indexOf(START);
 const to = text.indexOf(END);
 if (from === -1 || to === -1) {
-  console.error(`todo-index: ${START} / ${END} markers not found in docs/todo.md`);
+  console.error(
+    `todo-index: ${START} / ${END} markers not found in docs/todo.md`,
+  );
   process.exit(1);
 }
 const next = text.slice(0, from) + rebuilt + text.slice(to + END.length);
 
 if (process.argv.includes('--check')) {
   if (next !== text) {
-    console.error('todo-index: the index does not match the items — run `node tools/todo-index.mjs`');
+    console.error(
+      'todo-index: the index does not match the items — run `node tools/todo-index.mjs`',
+    );
     process.exit(1);
   }
   console.log(`todo-index: OK — ${items.length} item(s), index matches.`);

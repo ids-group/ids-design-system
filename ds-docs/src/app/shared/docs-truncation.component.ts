@@ -1,15 +1,13 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
 import { IconComponent } from 'ds/icons';
 
-/** One truncation rule row: a field/element and how it behaves on overflow. */
 export interface TruncationRule {
   field: string;
   behaviour: string;
 }
 
-/** Neutral "i" placed next to a section title. Sections provide only the rules
- *  as config (`[rules]`); the component renders the panel itself on hover/focus.
- *  Replaces the always-on truncation card duplicated at the end of every section. */
+/** Neutral "i" beside a section title. A section provides only `[rules]`; the panel is rendered
+ *  here, on hover and on focus. */
 @Component({
   selector: 'docs-truncation',
   standalone: true,
@@ -75,8 +73,7 @@ export interface TruncationRule {
         border: var(--border-width-default) solid var(--border-default);
         box-shadow: var(--shadow-3, 0 8px 24px rgba(11, 14, 25, 0.16));
       }
-      /* display:none keeps the hidden panel out of scroll-container overflow
-         (was opacity/pointer-events only, which still laid out the box). */
+      /* display:none, not opacity: a laid-out box adds to the scroll container's overflow. */
       :host:hover .panel,
       :host:focus-within .panel {
         display: block;

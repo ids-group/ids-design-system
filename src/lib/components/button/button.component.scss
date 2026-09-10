@@ -14,11 +14,9 @@
   width: 100%;
 }
 
-/* Conditional on purpose: a button with no message keeps the inline-flex box
-   every existing layout was built against. The host shrinks to fit, so a message
-   longer than the label widens the pair — `width: 0; min-width: 100%` on the
-   message does NOT escape that (measured: identical widths), because there is no
-   definite width for the percentage to resolve against. */
+/* Conditional, so a button with no message keeps its inline-flex box. The host shrinks to fit, so
+   a message longer than the label widens the pair; `width: 0; min-width: 100%` does not escape
+   that — there is no definite width for the percentage to resolve against. */
 :host(.with-message) {
   display: inline-flex;
   flex-direction: column;
@@ -52,23 +50,17 @@
   --_button-accent: var(--_button-bg-color);
   --_button-border:    var(--ds-button-border,    transparent);
 
-  /* Press = darken (--_button-bg-color-active) + a micro scale-down. The old
-     pressed halo is opt-in now (default none) — set --ds-button-pressed-shadow. */
+  /* Press darkens and scales down; the halo is opt-in — set --ds-button-pressed-shadow. */
   --_button-press-scale: var(--ds-button-press-scale, 0.98);
   --_button-pressed-shadow: var(--ds-button-pressed-shadow, none);
 
-  /* Rest and hover default to `none`, so a button carries no shadow unless an app
-     asks for one. They exist because focus and pressed already had hooks: without
-     these two the only way to give a button a resting shadow was a deep selector. */
+  /* Default `none`, so a button carries no shadow unless an app asks for one. */
   --_button-shadow:       var(--ds-button-shadow,       none);
   --_button-shadow-hover: var(--ds-button-shadow-hover, var(--_button-shadow));
   --_button-radius:    var(--ds-button-radius,    var(--ds-radius-control));
 
-  /* Type + box, same read-never-declare rule as the colour resolvers above: a
-     brand wanting 14px/600 buttons sized by their own padding had to write
-     `.button.button.button { … }` to out-rank the shimmed `.button.md` (0,3,0).
-     The size classes below re-resolve these, keeping the hook first, so
-     --ds-button-* wins over the size it would otherwise pick. */
+  /* The size classes below re-resolve these with the hook first, so --ds-button-* wins over the
+     size it would otherwise pick. */
   --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
   --_button-weight:    var(--ds-button-weight,    var(--font-weight-extrabold));
   --_button-tracking:  var(--ds-button-tracking,  var(--letter-spacing-wide));
@@ -76,16 +68,9 @@
   --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
   --_button-pad-y:     var(--ds-button-pad-y,     0);
 
-  /* Disabled tone. The FILL still has two recipes — a flat pale tint here for solid,
-     a mix toward --surface-disabled on tonal/ghost/outline — but the LABEL has one
-     for every variant, at 70% lightness.
-     Measured before changing it: the old pair (58% here, 52% on tonal/outline) sat
-     right where a saturated accent already is, so a disabled COLOURED button
-     differed from its live self by 1.16–1.60:1 — a hover's worth of change, on four
-     of the five variants. Only `color="neutral"` was ever safe, because its enabled
-     label is nearly black. 70% costs label legibility (2.1–2.7:1 against its own
-     ground, was 4.3–5.2) and buys the state being unmistakable, which is the trade
-     this ramp is deliberately making. */
+  /* Two fill recipes — a flat pale tint here for solid, a mix toward --surface-disabled on
+     tonal/ghost/outline — and ONE label lightness for every variant. 70% costs label contrast
+     (2.1–2.7:1) and buys a state that cannot be mistaken for the live button; that is the trade. */
   --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, oklch(from var(--_button-accent) 92% 0.03 h));
   --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 70% 0.035 h));
   --_button-border-disabled: var(--ds-button-border-disabled, oklch(from var(--_button-accent) 86% 0.04 h));
@@ -107,11 +92,8 @@
   white-space: nowrap;
   user-select: none;
 
-  /* The element follows the destination, so this class also dresses an `<a href>`, whose UA
-     defaults differ from a button's: it is underlined, and its text is start-aligned where a
-     button's is centred. Neither shows today — flex centres the children and `.subtext-slot`
-     aligns itself — but a block child added later would inherit the difference and land off-centre
-     on one element and not the other. `.v-text` puts the underline back deliberately, after this. */
+  /* This class also dresses an `<a>`, whose UA defaults differ — underlined and start-aligned —
+     so both are reset here. `.v-text` puts the underline back afterwards, deliberately. */
   text-decoration: none;
   text-align: center;
   position: relative;
@@ -123,12 +105,9 @@
     transform var(--duration-instant) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 
-  /* These four are all one class deep, so SOURCE ORDER decides them and the order
-     below is the intent: disabled beats hover/active, and the focus ring beats
-     disabled — a soft-disabled button is still focusable, and the ring is the only
-     indicator a keyboard user gets. Adding a `:not()` to hover to exclude the
-     disabled case would raise its specificity above the ring and silently delete it
-     (measured: `box-shadow: none` on every hovered focused button). */
+  /* All one class deep, so SOURCE ORDER decides: disabled beats hover/active, and the focus ring
+     beats disabled — a soft-disabled button still takes focus. Do NOT add `:not()` to hover to
+     exclude disabled: it raises hover above the ring and silently deletes it. */
   &:hover  { background-color: var(--_button-bg-color-hover); box-shadow: var(--_button-shadow-hover); }
   &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
 
@@ -220,9 +199,8 @@
     --c-base: var(--text-secondary); --c-on: var(--surface-default); --c-strong: var(--text-primary);
     --c-subtitle: var(--surface-secondary);
 
-    /* Tonal neutral = a soft grey TINT of the ink over the surface (not the flat
-       --surface-secondary) — matches the prototype; mix toward --surface-default
-       so it flips correctly in dark theme. */
+    /* A grey TINT of the ink over the surface, not the flat --surface-secondary; mixed toward
+       --surface-default so it flips correctly in dark theme. */
     --c-muted: color-mix(in srgb, var(--text-secondary) 14%, var(--surface-default));
     --c-muted-strong: color-mix(in srgb, var(--text-secondary) 22%, var(--surface-default));
     --c-outline-border: var(--border-default);
@@ -251,10 +229,9 @@
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
 
-    /* Toward the SURFACE, not toward this variant's own fill, even though the label
-       sits on the fill: mixing into the fill measures 2.56:1 of state change in dark
-       against 2.90:1 for the surface, because the disabled fill has already moved
-       toward the label. The shared oklch recipe cannot serve here at all — see ghost. */
+    /* Toward the SURFACE, not this variant's own fill: the fill has already moved toward the
+       label, so mixing into it measures 2.56:1 of state change against 2.90:1. The shared oklch
+       recipe cannot serve here — see ghost. */
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
   &.v-ghost {
@@ -266,20 +243,15 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, transparent);
 
-    /* The direction has to flip per theme and only the surface knows it: the dark
-       accent is already light (OKLCH L 67.9%), so the shared recipe's fixed L 70%
-       lands two points from the enabled label — a 1.11:1 gap. Solid cannot use this
-       at all, a white label mixed into a white surface does not move. */
+    /* Only the surface knows which way to flip: the dark accent is already light, so the shared
+       recipe's fixed L 70% lands 1.11:1 from the enabled label. Solid cannot use this — a white
+       label mixed into a white surface does not move. */
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
 
-  /* Transparent, not --surface-default: an outlined button has to sit on whatever
-     surface it is placed on. Painting it white made it a sticker on any tinted
-     ground — a card at --surface-secondary, a table toolbar, an alert — while
-     looking identical on a white page, which is why it went unnoticed. Material 3
-     and Bootstrap both specify a transparent container for this variant; shadcn and
-     Ant paint the surface, and that is the tradition we are leaving. The hover tint
-     (--c-subtitle) is opaque, so hover still reads. */
+  /* Transparent, not --surface-default: an outline button has to sit on whatever surface it is
+     placed on. A painted white fill reads as a sticker on any tinted ground and identical on a
+     white page, which is what hides it. */
   &.v-outline {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));

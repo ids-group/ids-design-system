@@ -4,7 +4,7 @@
 :host {
   @include check-box.resolvers;
 
-  // sm/lg are explicit per-instance overrides of the glyph the mixin defaults.
+  // sm/lg are explicit overrides of the glyph size the mixin defaults.
   --_checkbox-label-fs: var(--font-size-s);
 
   display: inline-flex;
@@ -44,5 +44,3 @@
   @include check-box.box;
 }
 
-/* Dev-only detection sink for a projected caption (checkbox.component.html).
-   Never rendered visible, so it cannot become a flex item in .control-line's gap. */

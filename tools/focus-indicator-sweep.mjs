@@ -1,25 +1,18 @@
 // Does anything focusable in the docs site draw NO focus indicator, and does everything focusable
-// have an accessible name? A MEASUREMENT, not a gate — it needs the docs dev server running, so it
-// is run by hand and its answer is recorded in docs/todo.md:
+// have an accessible name? A MEASUREMENT, not a gate — it needs the docs dev server, so it is run
+// by hand and its answer is recorded in docs/todo.md.
 //
-//   npm run dev:docs                       # then, with the port it printed:
-//   SWEEP_DIR=<scratch> SWEEP_URLS="http://localhost:4279/,http://localhost:4279/components/button,…" //     node tools/focus-indicator-sweep.mjs
+//   npm run dev:docs
+//   SWEEP_DIR=<scratch> SWEEP_URLS="http://localhost:4279/,http://localhost:4279/components/button"
+//   node tools/focus-indicator-sweep.mjs
 //
-// URLS must be FULL urls: Git Bash rewrites an env value that starts with `/` into a Windows path.
-// One url per docs GROUP page is enough — a group page renders every section it owns.
+// FULL urls, not paths: Git Bash rewrites an env value starting with `/` into a Windows path. One
+// url per docs GROUP page covers every section it owns.
 //
-// The previous sweep focused elements in a loop and diffed against one resting snapshot; it
-// reported 16 gaps, and one of them (`button.group-row`) has `@include focus.ring` in its own
-// stylesheet. Three reasons it lost rings: programmatic focus does not reliably grant
-// `:focus-visible`, a snapshot taken once goes stale as Angular creates and destroys nodes, and an
-// element inside a collapsed region never matches the pseudo-class at all.
-//
-// So this drives CDP `CSS.forcePseudoState` instead of focus, reads the resting signature
-// immediately before forcing rather than from a snapshot, and looks at the element AND its
-// ancestors — the ring is drawn on the shell for checkbox/radio/switch/table rows, so an
-// element-only read scores those as bare.
-//
-// Two controls run on every page before the sweep is trusted (see CONTROLS below).
+// It forces the pseudo-class through CDP rather than focusing anything, and reads the element AND
+// its ancestors — programmatic focus does not reliably grant `:focus-visible`, and the ring is
+// drawn on the shell for checkbox, radio, switch and table rows. Every run plants a bare
+// `<button>` as the negative arm.
 import { spawn } from 'node:child_process';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -216,11 +209,9 @@ window.__sweep = (() => {
       }
       return rows;
     },
-    // Chrome recomputes :has(:focus-visible) against a FORCED pseudo state but does not recompute
-    // :focus-within — that one is a flag propagated at real focus time. Forcing it on the element
-    // alone therefore left every field shell unlit, and the first run scored nine fields as bare
-    // while 175 others came back as halos. So the chain gets marked and forced too.
-    // (No backticks in here: this whole block lives in a template literal.)
+    // Chrome recomputes :has(:focus-visible) against a forced pseudo state but NOT :focus-within,
+    // which is a flag propagated at real focus time — so the chain has to be forced too, or every
+    // field shell reads as unlit. (No backticks: this block lives in a template literal.)
     markChain(id) {
       for (const stale of document.querySelectorAll('[data-sweep-anc]')) stale.removeAttribute('data-sweep-anc');
       const el = document.querySelector('[data-sweep-id="' + id + '"]');
@@ -237,11 +228,9 @@ window.__sweep = (() => {
       const el = document.querySelector('[data-sweep-id="' + id + '"]');
       return el ? signature(el) : null;
     },
-    // The ring animates in from a TRANSPARENT outline-color and the field halo transitions in, so
-    // a read taken the moment the pseudo-class is forced sees frame 0: outline-color
-    // rgba(0,0,0,0), box-shadow rgba(0,0,0,0) 0 0 0 0. That scored 32 real indicators as gaps.
-    // Killing both animations and transitions is cheaper than a 500ms settle per element, and the
-    // ring keyframe declares only its FROM value, so the declared outline is what remains.
+    // The ring animates in from a TRANSPARENT outline-color, so a read at frame 0 sees
+    // rgba(0,0,0,0) and scores a live indicator as a gap. Freezing is cheaper than a 500ms settle
+    // per element, and the keyframe declares only its FROM value.
     freezeMotion() {
       document.getElementById('sweep-freeze')?.remove();
       const style = document.createElement('style');
@@ -296,10 +285,8 @@ const painted = (value) =>
   value !== '0px' &&
   !/rgba\(0, 0, 0, 0\)/.test(value);
 
-// A ds-docs demo can PIN a focus state so the ring shows in a screenshot, which means the ring is
-// already painted at rest and forcing the pseudo-class changes nothing. The first run scored ten of
-// those as gaps — including four `ds-button` variants whose labels are literally "Solid", "Tonal",
-// "Ghost". So a resting ring is checked before a no-change verdict is believed.
+// A ds-docs demo can PIN a focus state, so the ring is already painted at rest and forcing changes
+// nothing. A resting ring is checked before a no-change verdict is believed.
 const restingRing = (before) =>
   before.some(
     (level) =>

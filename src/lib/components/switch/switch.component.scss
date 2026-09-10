@@ -2,9 +2,7 @@
 @use '../../styles/press' as press;
 
 :host {
-  // Local resolvers for size scaling; md references the global tokens so it stays
-  // density-responsive. sm/lg are explicit per-instance overrides. Thumb travel
-  // is derived via calc() from the track/thumb/pad so it's always correct.
+  // md references the global tokens so it stays density-responsive; sm/lg are explicit overrides.
   --_switch-track-w: var(--switch-track-w);
   --_switch-track-h: var(--switch-track-h);
   --_switch-thumb-size: var(--switch-thumb-size);

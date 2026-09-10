@@ -26,15 +26,10 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class RadioComponent extends DsFieldBase {
-  /** Standalone two-way binding, and the ONLY way to drive a lone radio: this
-   *  component is deliberately not a `ControlValueAccessor`, so `[formControl]` and
-   *  `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form
-   *  control — a radio is one option of a choice, not a value of its own — and a
-   *  second accessor on the option would fight it. A lone radio in a form binds
-   *  through `[(checked)]`, or becomes a one-option `ds-radio-group`.
-   *
-   *  When inside `ds-radio-group`, `isChecked()` derives from the group value and
-   *  this input is not read. */
+  /** The ONLY way to drive a lone radio: this is deliberately not a `ControlValueAccessor`, so
+   *  `[formControl]` and `ngModel` do not bind to it — inside `ds-radio-group` the GROUP is the
+   *  form control, and a second accessor on one option would fight it. Inside a group this input
+   *  is not read at all. */
   readonly checked = model<boolean>(false);
   /** Lets a checked standalone radio be cleared by clicking it again. Off by default, and
    *  ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it
@@ -60,13 +55,8 @@ export class RadioComponent extends DsFieldBase {
   /** Inline label rendered beside the dot and wired via for/id. Omit to bring
    *  your own <label>. */
   readonly label = input<string>('');
-  /**
-   * Accessible name when the control renders no visible label — no `label` and
-   * nothing projected. The row's `<label>` collapses when it is empty, so
-   * without this a bare box is an unnamed control and there is no way to name
-   * it from outside. Set alongside a label and it OVERRIDES what the label
-   * says, which is the ARIA rule and almost never what you want.
-   */
+  /** Accessible name for a control with no visible label — the row's `<label>` collapses when it
+   *  is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
   readonly ariaLabel = input<string | null>(null);
 
   protected readonly uid = nextControlId('ds-radio');

@@ -1,9 +1,6 @@
-<!-- Every branch must keep #btn: `controlRef` is required, so dropping it from one leaves that
-     destination throwing instead of rendering.
-
-     `type`, `loading` and the native `disabled` are button-only — an anchor has neither a form to
-     submit nor a native disabled state, which is why the anchors take `aria-disabled` and
-     `tabindex="-1"` instead. -->
+<!-- Every branch must keep #btn: `controlRef` is required, so dropping it leaves that destination
+     throwing. `type`, `loading` and the native `disabled` are button-only, which is why the
+     anchors take `aria-disabled` and `tabindex="-1"` instead. -->
 @switch (destination()) {
   @case ('routerLink') {
     <a
