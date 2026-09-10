@@ -378,6 +378,12 @@
         cursor: pointer;
       }
 
+      /* On the ROW, not inside :focus-visible: a shape that appears only while focused pops. The
+         row paints nothing itself — its tints sit on the `td` — so this shapes the ring alone. */
+      &.clickable {
+        border-radius: var(--focus-ring-radius);
+      }
+
       &.clickable:focus-visible {
         @include focus.ring(calc(-1 * var(--focus-ring-width)));
       }
