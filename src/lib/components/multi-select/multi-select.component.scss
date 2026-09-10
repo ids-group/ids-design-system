@@ -79,11 +79,9 @@
     @include clear-button.button;
   }
 
-  /* Wrapping is what an UNCAPPED trigger does — a line per selection. With a cap
-     it is the failure the cap exists to prevent: a flex container that wraps
-     never shrinks its chip row, it moves the text input to a second line
-     instead, which is what a phone-width trigger did. `:has()` keys off the
-     measured row so the rule follows the mode without a second class. */
+  /* Wrapping is right for an UNCAPPED trigger and is the failure a cap exists to prevent: a flex
+     container that wraps never shrinks its chip row, it moves the input to a second line. `:has()`
+     keys off the measured row, so the rule follows the mode without a second class. */
   &:has(> .chip-row.fit) {
     flex-wrap: nowrap;
   }
@@ -185,6 +183,10 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border-bottom: var(--border-width-default) solid var(--border-divider);
+
+  // An outline has no radius of its own — it follows the box it is drawn on. Without this the
+  // ring came out as a 470px hard rectangle inside a panel whose every other control is rounded.
+  border-radius: var(--ds-radius-inner);
 
   // The row spans the panel edge to edge and the panel clips, so the ring is drawn inward.
   &:focus-within {

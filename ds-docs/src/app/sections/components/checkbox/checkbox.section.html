@@ -27,7 +27,7 @@
   <div class="states states--cols-4">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-checkbox />
+        <ds-checkbox ariaLabel="Default" />
       </div>
 
       <div class="state-cell-label">
@@ -37,7 +37,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-hover">
-        <ds-checkbox />
+        <ds-checkbox ariaLabel="Hover" />
       </div>
 
       <div class="state-cell-label">
@@ -47,7 +47,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
-        <ds-checkbox />
+        <ds-checkbox ariaLabel="Focus" />
       </div>
 
       <div class="state-cell-label">
@@ -57,7 +57,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-checkbox [checked]="true" />
+        <ds-checkbox
+          ariaLabel="Checked"
+          [checked]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -67,7 +69,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
-        <ds-checkbox [checked]="true" />
+        <ds-checkbox
+          ariaLabel="Checked · focus"
+          [checked]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -77,7 +81,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-checkbox [indeterminate]="true" />
+        <ds-checkbox
+          ariaLabel="Indeterminate"
+          [indeterminate]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -87,7 +93,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-checkbox [disabled]="true" />
+        <ds-checkbox
+          ariaLabel="Disabled"
+          [disabled]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -98,6 +106,7 @@
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-checkbox
+          ariaLabel="Disabled · checked"
           [disabled]="true"
           [checked]="true" />
       </div>

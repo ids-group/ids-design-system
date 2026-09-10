@@ -1,11 +1,8 @@
-@use '../../styles/focus' as focus;
-@use '../../styles/control-label' as control-label;
+@use '../../styles/control-line' as control-line;
 @use '../../styles/press' as press;
 
 :host {
-  // Local resolvers for size scaling; md references the global tokens so it stays
-  // density-responsive. sm/lg are explicit per-instance overrides. Thumb travel
-  // is derived via calc() from the track/thumb/pad so it's always correct.
+  // md references the global tokens so it stays density-responsive; sm/lg are explicit overrides.
   --_switch-track-w: var(--switch-track-w);
   --_switch-track-h: var(--switch-track-h);
   --_switch-thumb-size: var(--switch-thumb-size);
@@ -42,44 +39,11 @@
 }
 
 .control-line {
-  // The ring goes on the ROW, not the glyph. A checked control already draws a brand
-  // ring of its own, and a focus ring around the glyph lands concentric with it — three
-  // brand bands through two gaps, which reads as a target rather than as two states a
-  // keyboard user has to tell apart.
-  @include focus.ring-for('.switch');
-
-  // No label: the row collapses onto the glyph and the concentric read comes back, so the
-  // ring stands further off. `.control-text:empty` is display:none, so the row IS the glyph.
-  &:has(.control-text:empty) {
-    --focus-ring-offset: var(--space-1-5);
-  }
-
-  display: inline-flex;
-  align-items: center;
-
-  // No flex `gap` here: see styles/_control-label.scss for why the label carries it.
-  .control-text {
-    @include control-label.hit-area;
-
-    font: var(--font-weight-regular) var(--ds-switch-label-font-size, var(--_switch-label-fs)) / var(--line-height-base) var(--font-sans);
-    color: var(--ds-switch-label-color, var(--text-primary));
-    cursor: pointer;
-    user-select: none;
-
-    /* No [label] and nothing projected: collapse, or the empty caption
-       still takes the row gap and offsets the control. */
-    &:empty {
-      display: none;
-    }
-
-    .req {
-      color: var(--error);
-      font-weight: var(--font-weight-semibold);
-      margin-inline-start: var(--space-1);
-    }
-  }
-
-  &.is-disabled .control-text { color: var(--text-disabled); cursor: not-allowed; }
+  @include control-line.line(
+    '.switch',
+    var(--font-weight-regular) var(--ds-switch-label-font-size, var(--_switch-label-fs)) / var(--line-height-base) var(--font-sans),
+    var(--ds-switch-label-color, var(--text-primary))
+  );
 }
 
 .switch {

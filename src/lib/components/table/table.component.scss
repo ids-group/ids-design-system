@@ -13,11 +13,8 @@
   position: relative;
 }
 
-// The ring is stated here rather than inside the shared box, because a control WITH a shell — every
-// ds-checkbox — has that shell ring for it, and a second ring in the mixin is one the shell then has
-// to suppress. A table cell has no shell, so this is the only place it can come from. (It did not
-// previously draw twice: Angular's encapsulation attribute makes the shell's suppression outrank the
-// mixin's ring, so the two never tied. The move is about where the rule belongs, not a repair.)
+// Stated here rather than in the shared box: a control WITH a shell has that shell ring for it, and
+// a ring in the mixin is one the shell then has to suppress. A table cell has no shell.
 .check {
   @include check-box.box;
 
@@ -83,11 +80,9 @@
   overflow: hidden;
 }
 
-/* A coarse pointer never produces `:hover` or `:focus-visible`, so the handle's
-   line is never painted and the control is invisible — while `touch-action: none`
-   still takes the horizontal swipe that scrolls the table, leaving a dead 8px
-   strip at every header's right edge. The width controls in the column panel are
-   the touch path; this one stands down. Matches `coarsePointer` in the .ts. */
+/* A coarse pointer paints no `:hover`, so the handle is invisible while `touch-action: none` still
+   eats the swipe that scrolls the table. The column panel is the touch path instead.
+   Matches `coarsePointer` in the .ts. */
 @media (hover: none) and (pointer: coarse) {
   .col-resize {
     display: none;
@@ -119,10 +114,8 @@
     background-color: var(--_table-sort-active-icon-color);
   }
 
-  /* The handle is a hairline, so the standard ring would sit almost entirely
-     outside it and read as belonging to the neighbouring column. Widening the
-     line IS the focus indicator here, and the outline is dropped rather than
-     doubled. */
+  /* A hairline, so the standard ring would sit outside it and read as the neighbouring column's.
+     Widening the line IS the indicator here, and the outline is dropped rather than doubled. */
   &:focus-visible {
     @include focus.own-indicator;
 
@@ -195,11 +188,9 @@
   color: var(--text-primary);
   background-color: var(--_table-bg-color);
 
-  /* width: 'content' — the shrink-to-fit idiom, spelled once here instead of in
-     every consumer's ::ng-deep. `width: 1%` is the trick: a table lays out at
-     least the content width, so an under-sized request collapses the column onto
-     its widest cell and hands the slack to the columns that can use it. nowrap
-     stops that cell wrapping to defeat the point. */
+  /* `width: 1%` is the shrink-to-fit trick: a table lays out at least the content width, so an
+     under-sized request collapses the column onto its widest cell and hands the slack to the
+     others. nowrap stops that cell wrapping and defeating the point. */
   th.fit-content,
   td.fit-content {
     width: 1%;
@@ -296,13 +287,9 @@
     }
   }
 
-  /* Sticky header — gated on the `stickyHeader()` input (default on).
-     Pinned header cells are excluded from the z-index: the corner where both
-     sticky axes meet has to sit above the body's pinned cells, which is what
-     `--table-sticky-corner-z` is for. This rule out-specifies that one, so
-     including them left the corner at the same z as the body's pinned cells —
-     and on a tie DOM order wins, which painted the first BODY row over the
-     header. Position and offset still apply to every header cell. */
+  /* Pinned header cells are EXCLUDED from the z-index here, because this rule out-specifies
+     `--table-sticky-corner-z` and a tie hands the paint to DOM order — which put the first body
+     row over the header. Position and offset still apply to every header cell. */
   &.sticky-header thead th {
     position: sticky;
     top: 0;
@@ -378,6 +365,12 @@
         cursor: pointer;
       }
 
+      /* On the ROW, not inside :focus-visible: a shape that appears only while focused pops. The
+         row paints nothing itself — its tints sit on the `td` — so this shapes the ring alone. */
+      &.clickable {
+        border-radius: var(--focus-ring-radius);
+      }
+
       &.clickable:focus-visible {
         @include focus.ring(calc(-1 * var(--focus-ring-width)));
       }
@@ -451,20 +444,16 @@
     @include table-controls.header-icon-button;
   }
 
-  /* Retunes the density tokens the resolvers already read, rather than setting
-     `padding` on the cells. Pinning padding here out-specifies every
-     `--ds-table-*-pad-*` hook, so a compact table silently ignored all of them —
-     the same values, reached the way `[data-density]` reaches them. */
+  /* Retunes the density tokens the resolvers already read: `padding` on the cells here
+     out-specifies every `--ds-table-*-pad-*` hook and silently ignores all of them. */
   &.compact {
     --table-cell-pad-x: var(--space-3);
     --table-cell-pad-y: var(--space-2);
     --table-head-pad-y: var(--space-2);
   }
 
-  /* A readability floor: below this the columns stop shrinking and the wrap's
-     horizontal scroller takes over instead. Defaults to 0, so nothing changes
-     until a consumer sets one — a table with few columns should still be free to
-     be narrow. */
+  /* A readability floor: below it the columns stop shrinking and the horizontal scroller takes
+     over. Defaults to 0, so a table with few columns is still free to be narrow. */
   min-width: var(--_table-min-width);
 
   /* :nth-child cannot see past windowing — a rendered row's parity depends on its
@@ -478,13 +467,10 @@
     background-color: var(--_table-row-stripe-bg-color);
   }
 
-  /* Virtual mode. Every row must be exactly --_table-virtual-row-h tall, because
-     that is the only thing telling the arithmetic where a row starts: a row that
-     grows puts every offset below it out by the difference. So the height comes
-     from the same input as the maths, cells may not wrap whatever the column
-     asked for, and the layout is fixed — auto layout re-measures against
-     whichever rows happen to be rendered and the columns would twitch as you
-     scroll. */
+  /* Every row must be exactly --_table-virtual-row-h tall: it is the only thing telling the
+     arithmetic where a row starts, so a row that grows puts every offset below it out. Hence no
+     wrapping whatever the column asked for, and a FIXED layout — auto re-measures against
+     whichever rows are rendered and the columns twitch as you scroll. */
   &.virtual {
     table-layout: fixed;
 
@@ -647,11 +633,9 @@
   color: var(--text-primary);
 }
 
-/* Sticky first column — opt-in via `stickyFirstColumn()`. Pinned cells need
-   an opaque background and a raised z so they survive sideways scroll. Sticky
-   positioning is unreliable with `border-collapse: collapse`, so under this
-   flag ONLY the table switches to separated borders with explicit per-cell
-   `border-bottom` (replacing the default inset-shadow divider). */
+/* Pinned cells need an opaque background and a raised z to survive sideways scroll. Sticky
+   positioning is unreliable with `border-collapse: collapse`, so under this flag ONLY the table
+   switches to separated borders with explicit per-cell `border-bottom`. */
 :host(.pinned) {
   --_table-select-w: var(--ds-table-select-col-w, var(--space-10));
 
@@ -755,10 +739,8 @@
 }
 
 .pagination-footer {
-  /* Inset by the CELLS' padding so the summary lines up with the column text.
-     Spelled as the public hook, not `--_table-cell-pad-x`: that resolver is declared
-     on `.table` and invisible to this sibling, and one unresolvable var voids the
-     whole shorthand — which silently produced `padding: 0` here. */
+  /* The public hook, not `--_table-cell-pad-x`: that resolver is declared on `.table` and
+     invisible to this sibling, and one unresolvable var voids the whole shorthand. */
   padding: var(--space-3) var(--ds-table-cell-pad-x, var(--table-cell-pad-x)) var(--space-3);
   border-top: var(--border-width-default) solid var(--ds-table-divider, var(--border-divider));
 }
@@ -793,12 +775,9 @@
     background: var(--border-inverted);
   }
 
-  /* The bar is an inverted surface, so the buttons projected into it have to be told: a ds-button
-     resolves its label from --ds-button-label-color and ignores the inherited `color`, which left
-     the label on the SAME token as this bar's background — measured 1.00:1, invisible until hover
-     revealed it. The rule this replaces styled a `.button` CLASS and stopped reaching anything when
-     the button became a component. Only the label: the outline border already measured 13.20:1
-     against the bar, and pointing it at --border-inverted dropped it to 1.55. */
+  /* An inverted surface, and a ds-button resolves its label from --ds-button-label-color while
+     ignoring the inherited `color` — without this the label lands on the same token as the bar's
+     background. Only the label: the outline border already measures 13.20:1 against it. */
   --ds-button-label-color: var(--text-inverted);
   --ds-button-bg-color: transparent;
   --ds-button-bg-color-hover: var(--surface-inverted-hover);
@@ -812,10 +791,8 @@
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 
-  /* The row is always in the markup, so it has to take itself out when nothing
-     filled the slot and the export button is off — otherwise every table pays
-     its margin. `:has()` rather than `:empty`, which the slot wrapper and its
-     whitespace text nodes defeat. */
+  /* Always in the markup, so it takes itself out when nothing filled the slot — otherwise every
+     table pays its margin. `:has()`, not `:empty`, which whitespace text nodes defeat. */
   &:not(:has(.toolbar-slot > *, > ds-button)) {
     display: none;
   }
@@ -832,12 +809,9 @@
   gap: var(--space-2);
   min-width: 0;
 
-  /* One projected element means the consumer brought their own layout, so give it
-     the whole row — otherwise a `justify-content: space-between` of theirs has
-     nothing to distribute. Pierces encapsulation because projected nodes carry the
-     CONSUMER's attribute, not this component's (same reason as ds-auth-layout's
-     brand slot); anchored here so it compiles scoped rather than global, and a
-     DIRECT child so their inner markup is left alone. */
+  /* One projected element means the consumer brought their own layout, so it gets the whole row.
+     ::ng-deep because projected nodes carry the CONSUMER's attribute; anchored here so it compiles
+     scoped, and a DIRECT child so their inner markup is left alone. */
   ::ng-deep > :only-child {
     flex: 1 1 auto;
     min-width: 0;

@@ -7,9 +7,8 @@
   --_stat-value-color: var(--ds-stat-value-color, var(--text-primary));
   --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h2));
 
-  /* `nowrap` is right for the number this tile was built for and wrong for a
-     phrase: a date range ("Feb 1 – Feb 28, 2026") is a value too, and it was
-     reaching the projected [dsStatValue] slot only to argue its way back out. */
+  /* `nowrap` is right for a number and wrong for a phrase, and nothing clips: a long value runs
+     past the tile. The default is open — see docs/todo.md and deck 12. */
   --_stat-value-white-space: var(--ds-stat-value-white-space, nowrap);
   --_stat-up-color:    var(--ds-stat-up-color,    var(--success-text));
   --_stat-down-color:  var(--ds-stat-down-color,  var(--error-text));
@@ -17,11 +16,15 @@
   display: block;
 }
 
-:host(.error) .value { color: var(--error-text); }
+/* Through the resolver, not `color` on `.value`: emulated encapsulation adds one attribute
+   selector to each side, which ties `:host(.error) .value` with `.stat .value` and hands it to
+   source order. The size variants below move the font size the same way. */
+:host(.error) {
+  --_stat-value-color: var(--ds-stat-value-color, var(--error-text));
+}
 
-/* The size variants move the value's size through the SAME resolver rather than
-   restating font-size on `.value`, where they would out-rank the public hook and
-   make it work at md only. */
+/* Through the same resolver, not `font-size` on `.value`, where they would out-rank the public
+   hook and make it work at md only. */
 :host(.size-sm) {
   --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h4));
 }
@@ -41,9 +44,8 @@
   border-radius: var(--_stat-radius);
   padding: var(--_stat-pad);
 
-  // Fills a stretched host so a KPI row whose tiles have different content
-  // (say, only some carry a caption) paints equal-height cards. In an
-  // unstretched context the host is still content-sized, so nothing changes.
+  // Fills a stretched host, so a KPI row of tiles with different content paints equal-height
+  // cards. Content-sized when the host is not stretched.
   height: 100%;
 
   .label {

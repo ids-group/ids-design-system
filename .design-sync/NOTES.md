@@ -117,3 +117,12 @@ What survives is about the components themselves:
 
 - Project "IDS Design System" 455f9a87-1a6e-4b1d-a0e7-cf47ed772e63, incremental path, plan approved 2026-07-24.
 - Batch 1 pushed (calibration): Button, Badge, Input, Icon, Spinner — all cells graded good. NOTE: pushed under `components/general/` BEFORE docsDir regrouping landed; the regrouped paths (actions/, forms-inputs/, …) upload with the next batch and the stale `general/` paths must be deleted then (or at close-out reconciliation at latest).
+
+## Which profile can upload (measured 2026-09-09)
+
+The design grant is per PROFILE, and only the primary `~/.claude` one has ever held it — its
+`designOauth` entry expired 2026-09-05. The `~/.claude-acc2` profile has no design entry at all
+(`mcpOAuth` + `claudeAiOauth` only), so `DesignSync` there answers
+"needs design-system authorization" on the first read call and `/design-login` is the only way in.
+So an upload runs from the primary profile, and the grant lasts about a day — mint it in the same
+sitting as the publish rather than ahead of it.

@@ -1,16 +1,62 @@
-<button
-  #btn
-  [class]="classes()"
-  [type]="type()"
-  [attr.aria-label]="ariaLabel()"
-  [attr.aria-haspopup]="ariaHasPopup()"
-  [attr.aria-expanded]="ariaExpanded()"
-  [attr.aria-controls]="ariaControls()"
-  [attr.aria-busy]="loading() ? 'true' : null"
-  [attr.aria-disabled]="softDisabled() ? 'true' : null"
-  [attr.aria-describedby]="describedBy()"
-  [disabled]="(disabled() || loading()) && !softDisabled()"
-  (click)="onClick($event)">
+<!-- Every branch must keep #btn: `controlRef` is required, so dropping it leaves that destination
+     throwing. `type`, `loading` and the native `disabled` are button-only, which is why the
+     anchors take `aria-disabled` and `tabindex="-1"` instead. -->
+@switch (destination()) {
+  @case ('routerLink') {
+    <a
+      #btn
+      #rla="routerLinkActive"
+      routerLinkActive="active"
+      [class]="classes()"
+      [routerLink]="disabled() ? null : routerLink()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-haspopup]="ariaHasPopup()"
+      [attr.aria-expanded]="ariaExpanded()"
+      [attr.aria-controls]="ariaControls()"
+      [attr.aria-current]="rla.isActive ? 'page' : null"
+      [attr.aria-disabled]="disabled() ? 'true' : null"
+      [attr.tabindex]="disabled() ? -1 : null"
+      [attr.aria-describedby]="describedBy()"
+      (click)="onClick($event)">
+      <ng-container [ngTemplateOutlet]="content" />
+    </a>
+  }
+  @case ('href') {
+    <a
+      #btn
+      [class]="classes()"
+      [href]="href()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-haspopup]="ariaHasPopup()"
+      [attr.aria-expanded]="ariaExpanded()"
+      [attr.aria-controls]="ariaControls()"
+      [attr.aria-disabled]="disabled() ? 'true' : null"
+      [attr.tabindex]="disabled() ? -1 : null"
+      [attr.aria-describedby]="describedBy()"
+      (click)="onClick($event)">
+      <ng-container [ngTemplateOutlet]="content" />
+    </a>
+  }
+  @default {
+    <button
+      #btn
+      [class]="classes()"
+      [type]="type()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-haspopup]="ariaHasPopup()"
+      [attr.aria-expanded]="ariaExpanded()"
+      [attr.aria-controls]="ariaControls()"
+      [attr.aria-busy]="loading() ? 'true' : null"
+      [attr.aria-disabled]="softDisabled() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      [disabled]="(disabled() || loading()) && !softDisabled()"
+      (click)="onClick($event)">
+      <ng-container [ngTemplateOutlet]="content" />
+    </button>
+  }
+}
+
+<ng-template #content>
   <span class="button-main">
     @if (icon(); as name) {
       <ds-icon [name]="name" />
@@ -38,7 +84,7 @@
       {{ disabledReason() }}
     </span>
   }
-</button>
+</ng-template>
 
 <ds-field-message
   [icon]="messageIcon()"

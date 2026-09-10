@@ -7,6 +7,8 @@ export {
   valueControlBridge,
 } from './control-value-accessor';
 export { DsCreateTemplateDirective } from './create-template.directive';
+export { dsDestination } from './destination';
+export type { DsDestination } from './destination';
 export { DsEmptyTemplateDirective } from './empty-template.directive';
 export { DsFieldBase } from './field-base';
 export { FieldClickFocusDirective } from './field-click-focus.directive';

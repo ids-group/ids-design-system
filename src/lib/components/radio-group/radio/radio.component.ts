@@ -26,15 +26,10 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class RadioComponent extends DsFieldBase {
-  /** Standalone two-way binding, and the ONLY way to drive a lone radio: this
-   *  component is deliberately not a `ControlValueAccessor`, so `[formControl]` and
-   *  `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form
-   *  control — a radio is one option of a choice, not a value of its own — and a
-   *  second accessor on the option would fight it. A lone radio in a form binds
-   *  through `[(checked)]`, or becomes a one-option `ds-radio-group`.
-   *
-   *  When inside `ds-radio-group`, `isChecked()` derives from the group value and
-   *  this input is not read. */
+  /** The ONLY way to drive a lone radio: this is deliberately not a `ControlValueAccessor`, so
+   *  `[formControl]` and `ngModel` do not bind to it — inside `ds-radio-group` the GROUP is the
+   *  form control, and a second accessor on one option would fight it. Inside a group this input
+   *  is not read at all. */
   readonly checked = model<boolean>(false);
   /** Lets a checked standalone radio be cleared by clicking it again. Off by default, and
    *  ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it
@@ -60,6 +55,9 @@ export class RadioComponent extends DsFieldBase {
   /** Inline label rendered beside the dot and wired via for/id. Omit to bring
    *  your own <label>. */
   readonly label = input<string>('');
+  /** Accessible name for a control with no visible label — the row's `<label>` collapses when it
+   *  is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
+  readonly ariaLabel = input<string | null>(null);
 
   protected readonly uid = nextControlId('ds-radio');
   protected readonly controlId = computed(() => this.inputId() ?? this.uid);
@@ -75,6 +73,10 @@ export class RadioComponent extends DsFieldBase {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  /** Only name via aria-label when there is no visible `<label for>` to do it. */
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || null,
+  );
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   /** Injected via token to avoid circular import with RadioGroupComponent. */

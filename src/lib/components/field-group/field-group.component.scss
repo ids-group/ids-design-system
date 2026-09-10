@@ -10,6 +10,7 @@
   --_field-group-border-color-error: var(--ds-field-group-border-color-error, var(--error));
   --_field-group-radius: var(--ds-field-group-radius, var(--ds-radius-control));
   --_field-group-focus-shadow: var(--ds-field-group-focus-shadow, var(--ds-field-focus-shadow));
+  --_field-group-focus-shadow-error: var(--ds-field-group-focus-shadow-error, var(--ds-field-focus-shadow-error));
   --_field-group-divider-color: var(--ds-field-group-divider-color, var(--border-divider));
 
   display: inline-flex;
@@ -39,21 +40,29 @@
   width: 100%;
 }
 
-:host(:hover:not(.disabled)) {
+/* `:not(.invalid)` here rather than a heavier error rule: `.invalid` is a plain host class and
+   loses the specificity race to `:hover`/`:focus-within`, so it stops entering it. Nothing
+   depends on the weight, only on not matching. */
+:host(:hover:not(.disabled, .invalid)) {
   border-color: var(--border-strong);
 }
 
-/* ONE ring for the whole group: each segment suppresses its own, so focusing
-   any of them lights the shared chrome instead of drawing a box mid-row.
+/* ONE ring for the whole group, so focusing any segment lights the shared chrome.
    focus-ring-guard: the group owns no control of its own — every segment is another
    component, and each silences its own via focus.owns-the-focus-ring. */
 
-:host(:focus-within:not(.disabled)) {
+:host(:focus-within:not(.disabled, .invalid)) {
   border-color: var(--_field-group-border-color-focus);
   box-shadow: var(--_field-group-focus-shadow);
 }
 
-:host(.invalid) { border-color: var(--_field-group-border-color-error); }
+:host(.invalid:not(.disabled)) { border-color: var(--_field-group-border-color-error); }
+
+/* The halo takes the error tint, so a focused invalid group reads as one state and not two.
+   `:not(.disabled)` is explicit rather than left to source order. */
+:host(.invalid:not(.disabled):focus-within) {
+  box-shadow: var(--_field-group-focus-shadow-error);
+}
 
 :host(.disabled) {
   background-color: var(--surface-disabled);

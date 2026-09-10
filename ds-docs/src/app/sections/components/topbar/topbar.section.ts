@@ -52,7 +52,7 @@ export class TopbarSection {
   ];
 
   protected readonly trail: BreadcrumbItem[] = [
-    { icon: 'home', href: '#' },
+    { icon: 'home', href: '#', ariaLabel: 'Home' },
     { label: 'Records', href: '#' },
     { label: '2026 Cycle', href: '#' },
     { label: 'Project Alpha' },

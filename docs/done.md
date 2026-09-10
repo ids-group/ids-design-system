@@ -3062,4 +3062,379 @@ Completed items are archived in `done.md` (last archive pass **2026-08-10**; bef
   corrects the one number the entry had kept: `md` is **9px**, not 10. The CHANGELOG now carries all
   three plus the content height they were taken against, as this item asked.
 
+## Fully-closed entries moved out of todo.md (2026-09-10 sweep)
+
+Thirty-four items, kept under the todo section each came from so the context survives the
+move. Nothing here is open; the two items that are half-done stayed in `todo.md` with a `[~]`
+mark, because each is waiting on a deck verdict rather than on work.
+
+### Focus indicators — what the two-wave review left open (recorded 2026-09-04)
+
+- [x] **The "wrong element focuses" sweep, and what a gate can and cannot decide.** Ran 2026-09-04
+  after a consumer screenshot showed `ds-multi-select`'s panel filter ringing its bare input rather
+  than the row that carries the search icon. Confirmed against the tag rather than guessed: v0.12.0's
+  blanket was `outline: none; box-shadow: var(--ds-control-focus-shadow)`, and `.search-input` reset
+  only `outline`, which cannot cancel a shadow — so the base ring landed on the inner input.
+  Swept every `<input>` in the library against whether its component rings a shell, which found four
+  more of the same family, all now fixed: `ds-sidenav-footer`'s search box, `ds-table`'s column filter
+  and inline cell editor (each answering focus with a 1px border tint after killing the outline), and
+  `ds-dropzone`'s hidden input.
+  Two mechanical halves of this are now gated, each verified by planting a defect and watching the
+  gate exit 1: a shell that rings without silencing its control, and a focus rule that turns the
+  outline off and paints nothing. The gate also reads ds-docs and the portaled-panel sheet now,
+  because the sidebar toggle's clipped ring lived in neither of its old roots.
+  **What no gate decides:** whether the ringed element is the RIGHT one. A control that rings itself
+  correctly can still be the wrong choice — the selection-control bullseye is exactly that, and it
+  needs the deck's verdict, not a rule.
+
+- [x] **[P1] A `transition` declared in a focus rule silently deletes the component's own.** Found
+  and fixed the same day, 2026-09-04, in `focus.ring`. `transition` is ONE property, so the rule
+  that wins REPLACES the other's list rather than adding to it — and 46 component stylesheets
+  declare their own. A `transition: outline-color` in `:focus-visible` therefore dropped the
+  component's background and border easing for as long as the element held focus. Measured before
+  the fix: a focused `ds-number-stepper` button reported `transitionProperty: "outline-color"`
+  while its base rule declares `background-color`. Fixed by using `animation` instead — a separate
+  property that nothing on a focusable element sets, so both survive; the keyframe declares only
+  `from { outline-color: transparent }`, and the global resting-outline rule it needed is gone.
+  `_press.scss` already carries a comment warning about exactly this and is why it declares no
+  `transition` of its own. **Worth a gate:** nothing catches the next one, and it fails silently —
+  the ring still animates, so the change looks like it worked.
+
+- [x] **[P2] `dev` was red: `a5cb916c` committed an `@else if` with no opening `@if`.** Fixed by the
+  session that shipped it, in `b6913f00`. Its unwrap regex matched `@if` up to the first closing
+  paren, so a condition with a nested one — `someFilteredSelected()` — had its `@if` head eaten and
+  left the `@else if` orphaned. Recorded because it cost two `ng serve` attempts that read as an
+  environment problem: a broken template makes the dev server never bind its port, with an empty log.
+
+- [x] **[P3] Motion could not be verified on this machine — the setting was off, and is now on.**
+  Windows reported `SPI_GETCLIENTAREAANIMATION = False` (Settings → Accessibility → Visual effects
+  → Animation effects), so every Chrome here answered `prefers-reduced-motion: reduce` and dropped
+  CSS transitions wholesale: `getAnimations()` came back empty even with a 600ms duration forced
+  past the token. Stas turned it back on the same day and the same probe now reads
+  `prefers-reduced-motion: false`, `--duration-fast: 120ms`, and the focus ring interpolating
+  `rgba(0,0,0,0)` → `rgba(46,84,255,0.714)` → `0.945` → `rgb(46,84,255)`.
+  The durable half is the trap, not the setting: under reduced motion a 0ms-vs-600ms control shows
+  NO difference, so the run reads identically whether the CSS is right or wrong. That is a VOID
+  measurement, not a negative one, and reporting "the animation does not work" from it would be a
+  false finding. Check `matchMedia('(prefers-reduced-motion: reduce)')` before trusting any motion
+  measurement, and fall back to reading the cascade (`transitionProperty` / `animationName`), which
+  reduced motion does not touch.
+
+- [x] **[P1] A selected radio, checkbox or switch reads as a bullseye while focused.** FIXED — Measured from
+  the tokens, not from a screenshot: on a 20px glyph the checked+focused radio paints, centre outward,
+  a 10px accent dot, 3px of white, a 2px accent border, a 2px unpainted gap and a 2px accent outline —
+  three brand bands separated by two white ones, concentric and equally spaced. It passes WCAG 2.4.13:
+  the ring is 2px and contrasts with the white gap beside it. What fails is legibility. Focus and
+  `selected` are drawn in the SAME colour and the SAME shape, so on a selection control the two states
+  stop being distinguishable — and those are exactly the two a keyboard user must tell apart while
+  moving through a group. Material does not put a hard ring on a radio by default for this reason: it
+  uses a translucent state layer behind the glyph and keeps the outline for forced colours.
+  **FIXED — the ring is on the row.** `styles/_control-line.scss` rings `.control-line` and silences
+  the glyph through `focus.ring-for($control)`, so the indicator is no longer concentric with the
+  dot; a label-less control stands its ring further off instead. Shared by checkbox, radio and
+  switch from one mixin, and the deck moved to `implemented/selection-focus-ring.html`.
+
+- [x] **[P1] Move the focus ring from `box-shadow` to `outline` + `outline-offset` (major).** DONE The gap
+  now painted by `--focus-ring-inner: var(--surface-default)` is a GUESS: it is right on a card and
+  visibly wrong on the canvas or any tinted band, because a shadow layer can only cover, never let
+  the real ground through. An outline's offset region is simply not painted, so the gap shows
+  whatever is actually behind — measured on three grounds, `presentations/focus-ring-gap.png`. The
+  library is already half-way: `focus.outline-indicator` is adopted by seven components and takes a
+  negative offset for clipping ancestors. What makes it a MAJOR: `--ds-*-focus-shadow` and the two
+  roles are public and documented as shadow VALUES, and a consumer who overrides one gets nothing
+  after the switch. Note it does not fix the six clipped-ring findings — an outline is clipped by an
+  ancestor's `overflow` exactly like a shadow.
+
+- [x] **[P1] forced-colors needs the cause removed, not the symptom overpowered.** DONE — the The floor rule in
+  `styles/_focus.scss` now carries `!important`, which contradicts that file's own stated contract —
+  it is written at zero specificity precisely so a component or a consumer still wins. The honest
+  shape is an `own-indicator` mixin emitting `outline: none` inside
+  `@media not (forced-colors: active)`, adopted by the ~49 declarations that suppress the UA ring,
+  plus a gate in `tools/check-focus-rings.mjs` so a new component cannot forget. Then the
+  `!important` comes out. Agreed with Stas 2026-09-04: the edit count is not an argument against.
+
+- [x] **[P1] `field-state` out-ranks `disabled` — FIXED 2026-09-10.** One edit in
+  `styles/_field-state.scss`: the three state selectors now carry
+  `:not(.disabled):not(:disabled)` on the box, so they do not match a disabled field at all rather
+  than racing its rule on specificity. Every one of the nine marks disabled on the box itself, as a
+  class or the pseudo-class, so the single exclusion reaches all of them.
+  **Why disabled wins, and it is not a preference.** A disabled control is not submitted and does
+  not participate in constraint validation, so an error border and fill promise a correction that
+  cannot be made on something the user cannot even focus. ARIA settles the same conflict the same
+  way: where a native attribute and an ARIA state contradict each other, the native one wins and
+  the ARIA state is ignored.
+  **READ-ONLY deliberately keeps the paint, which is the half the original item got wrong.** A
+  read-only field IS submitted — only `disabled` is excluded from submission — so a wrong value
+  there still reaches the server and is worth flagging. Both skip browser validation, but only one
+  of them can still send a bad value.
+  **Measured in a browser on all nine**, both arms per component: error alone paints, and
+  error+disabled resolves byte-identical to disabled alone. Sampling needs ~450ms per state — the
+  fields transition border and background, and an 80ms read catches the animation mid-flight and
+  reports a false mismatch.
+
+- [x] **[P2] Six focus rules draw two indicators at once.** Closed by the outline migration: the
+  blanket indicator is an `outline` now, so an element declaring its own outline replaces it instead
+  of drawing over it. accordion-item, stepper, table's header label / clickable row / icon buttons
+  and dropzone were rewritten onto `focus.ring`, which also retired their hard-coded `var(--accent)`.
+  Table's `.col-resize` and `.cell-edit` keep a bare `outline: 0` — both already carry an accent
+  border as their indicator, so they are deliberate, not misses.
+
+- [x] **[P2] Focus rings are clipped in six components.** Fixed on the element that clips rather than
+  on each control inside it: ds-tabs[scrollable], ds-breadcrumbs, ds-sidenav-group, ds-number-stepper
+  and ds-sidenav-footer each set `--focus-ring-offset` to a negative value on their own overflow box,
+  which is what `data-focus="inset"` now does globally. ds-time-columns, ds-menu and the dropdown
+  panels pass the negative offset to `focus.ring` directly. Measured in Chrome on ds-number-stepper:
+  scoped token `calc(-1 * 2px)`, computed `outline-offset: -1.92px`, unfocused control `none`.
+
+- [x] **[P3] `data-focus="outline"` leaves ~20 components with no indicator at all.** The mode is
+  removed — an outline is what every control draws by default now, so the value described nothing.
+  `data-focus="field"` went with it for the same reason in reverse: it swapped one box-shadow for
+  another, and controls no longer paint a shadow on focus at all.
+
+### Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)
+
+- [x] **[P2] DONE 2026-09-04 — four shipped manifest shapes the upgrade machinery could not
+  execute, all violating `AUTHORING.md`'s own rules, none caught by the lint.** Fixed in place,
+  validated against the tag trees, all five gates green: `0.11.4#toast-promise-messages-generic`
+  reclassified `type-rename` → `behavior` (a widened type, not a rename — the bare name still
+  compiles via `<T = unknown>`, and "old count must reach 0" false-fails every correct migration);
+  `0.11.4#toast-message-input-renamed-body` `old` element-scoped to `ds-toast[message]` (a bare
+  `message` perma-fails a repo-wide zero-count on any real app); `0.11.1#trigger-display-compact-renamed`
+  map made full-token (`{"compact": "triggerDisplay=\"count\""}`), `old` scoped, and its released
+  `appliesWhen` no longer says "this same unreleased block". Lint hardened so the class cannot
+  ship again: **M043** (a bare map value that is not its key), **M044** (a `value-remap` `old`
+  must be `element[attr]`), M034's subject-to-"can go" gap closed (an intervening clause hid the
+  0.11.4 `--layer-toast` delete instruction) — which surfaced a second silent one in 0.9.0
+  (`--ds-input-pad-y` compensation); both now have `deleteList` rows + CHANGELOG table rows.
+  Selftest extended, every rule fires.
+
+- [x] **[P3] DONE 2026-09-05 (three of four; validated by probe before fixing): `class-surface-diff`
+  pre-existing blind spots.** Function-typed field annotations (`onChange: (v: boolean) => void = …`)
+  now match (annotations may contain `=>`; ~35 such members incl. both CVA bases became visible);
+  a wholesale-DELETED file reports its classes under LOST tagged "(file deleted)"; `normalize` no
+  longer collapses whitespace inside string literals, so `'No  data'` vs `'No data'` reads as a
+  default change. **Deliberately NOT fixed:** template-literal defaults stay blanked — the blanking
+  suppresses false members (load-bearing), and a default-value change inside a template is
+  manifest-entry material, not a type change.
+
+- [x] **[P2] The Angular set sat at 21.2.17, inside the range of two high advisories.** Moved to 21.2.22 on 2026-09-02, which is past the 21.2.19 fix for *Angular i18n: XSS via event-handler attributes* and *Cache-Key Ambiguity in HttpTransferCache*. MEASURED after: `npm audit` names no `@angular` advisory at all, and the top-level count fell from 30 to 18 (high 25 to 13).
+  **The fix was to DELETE a pin, not to add one.** `@angular/elements` was the only Angular dep with an exact version, and its own peer demands an exact `@angular/core` match — so the pin in `package.json` was redundant with the mechanism that already enforces lockstep, and all it did was block the set. It now reads `^21.2.0` like its twelve siblings.
+  **The declared ranges did not move.** `bun update` rewrites them to the new floor as a side effect; they were put back to `^21.2.0`, because `@angular/cdk` cannot satisfy `^21.2.22` (its 21.2 line ends at 21.2.14) and a lockfile is where actual versions belong.
+  **What is left is the build toolchain, and one critical.** 18 vulnerabilities across tar, undici, hono, vite, esbuild, postcss and the rest; the critical is *node-tar: Decompression/parse DoS via unlimited input*. None of them ships — the package declares `tslib` as its only runtime dependency.
+
+- [x] **[P2] `package-lock.json` had drifted from `bun.lock`, and `npm ci` no longer resolved.** Regenerated 2026-09-02 with `npm install --package-lock-only` on a deleted lock, which leaves bun's `node_modules` untouched — 101 packages disagreed, 13 of them `@angular`; 5 disagree now and none is `@angular`.
+  **The prediction in this item was wrong, and the reason matters.** It said regeneration would land on "whatever is latest that day and diverge from `bun.lock`". It converged instead, because `@angular/elements@21.2.17` peers on `@angular/core@21.2.17` EXACTLY: npm has no freedom inside `^21.2.0` and is forced onto the version bun already had. The pin filed here as merely "not currently harmful" is what makes both locks agree.
+  **What is left is not drift.** The five are `@emnapi/core`, `@emnapi/runtime`, `@emnapi/wasi-threads`, `@napi-rs/wasm-runtime` and `@tybys/wasm-util` — the optional-peer family `_setup.sh` names as the reason `npm ci` breaks under musl, so npm and bun resolve them differently by design.
+
+- [x] **[P2] `ds-split-button` paints its hover with a TEXT colour, and inside a status zone the label goes unreadable — MEASURED 2026-09-02.** `split-button.component.scss:7` defaults `--_split-button-bg-hover-color` to `var(--accent-strong)` while `:6` keeps the label on `var(--accent-on)`. `--accent-strong` is the family's readable ON-TINT colour — its own token description says "text on light surfaces" — and this is the **only** place in the library that uses it as a background; every other component hovers with `-hover`. In dark, `ds-color="success"` resolves it to `hsl(132deg 55% 62%)` and the white label lands at **1.87:1**; error is **2.46**, and in light warning is **3.78**. Reachable with the component's own default, `variant="primary"`.
+  **Shipped 2026-09-02** as the fix recorded below: the hover defaults to `--accent-hover`. The REST failure named at the end of this item is NOT closed and stays open as the warning-pair palette question.
+  **This is a regression, not an inherited defect.** Before `--accent-strong` resolved for status families, that background was invalid-at-computed-value-time and computed to `transparent`, so the label sat on the page: illegible in light (1.00) and legible in dark (18.6). Making the pointer resolve fixed the three light cells and broke the three dark ones. Six cells, three each way.
+  **The fix that was measured and not applied:** default the hover to `var(--accent-hover)`, which is the family base mixed 88% toward black in light and white in dark — so the hover follows the rest state instead of jumping to another colour. Contrast then tracks rest almost exactly: error 5.94 light / 4.22 dark, success 4.17 / 2.85, warning 9.11 / 12.31, against rest values of 4.83, 3.30 and 11.81. Deferred by Stas 2026-09-02: recorded rather than shipped.
+  **It does not close the whole problem, and must not be sold as if it does.** `--accent-on` on the family's solid `--accent` already fails at REST for two families — success **3.30**, secondary **3.31** — in both themes, on every solid button, not only this one. That is a palette question of the same family as the warning-pair item above, and it predates all of this.
+
+- [x] **[P2] One export silenced `ds-table`'s live region for the rest of the page's life.**
+      Of the three shapes filed, the winner is the export line YIELDING once the events line
+      has something new to say. A timeout guesses how long a message takes to read and can
+      truncate it; making the export line lowest-priority buries "Export ready" under a stale
+      sort line, so it might never be heard. Implemented by snapshotting the events line at
+      announce time and comparing, not by clearing a signal — `statusMessage` is a computed
+      and a computed cannot write. That also settles the board's condition that "Export
+      failed" survive long enough to read: it stands until the reader does something that
+      speaks. `exportStatusState` now has exactly ONE setter, which a probe asserts, because
+      a second one added later would reintroduce the defect silently.
+
+- [x] **[P2] The loading scrim's top edge assumed a 40px header.** MEASURED against the 
+      compiled styles: the header cell is 42.89px at the default density and 26.89px at 
+      `[data-density="ultra-compact"]`, so the scrim cut 2.89px into the header normally and 
+      started 13.11px too low under that density, leaving the first body row uncovered.
+      `--ds-table-head-h`, the name the template read, was declared nowhere, so it could only
+      resolve to its fallback; it still overrides the measurement, which is the default under
+      it now. A calc() is rejected by the same measurement — summing the parts is a
+      constant 1.09px short, because `vertical-align: middle` on the inline-flex label 
+      extends the line box by a font-metric amount CSS cannot express. The header is 
+      measured per loading episode instead.
+
+- [x] **[P3] Zebra striping tints skeleton rows.** `&.zebra:not(.virtual) tbody tr:nth-child(odd) td` selects on position, and the skeleton row's `<tr>` reaches `<tbody>` through an `<ng-container>`, which renders no element of its own — so with `zebra` on, every other shimmer row sits on the stripe tint and the placeholder block reads unevenly. MEASURED 2026-09-02 in a real browser against the compiled styles: it needs `zebra` and `loading="skeleton"` on the same table, which no docs demo currently combines. Cosmetic, and it is a design call rather than a defect — the alternative is one more rule excluding the skeleton rows, which is the kind of thing `.skeleton-mode` used to exist for before it was found to be dead.
+  **DECIDED 2026-09-02: the tint STAYS, and this is a decision rather than a fix.** A stripe reaching a shimmer row is intended behaviour, because toggling the zebra off around a load and back on after it is worse than the tint under a placeholder. No suppression rule is added, and this is not to be re-filed as a defect.
+  **The numbers.** Four shimmer rows under `zebra`: rows 1 and 3 resolve to `rgb(241 244 249)`, rows 2 and 4 to `rgba(0 0 0 / 0)` — two distinct backgrounds, the same split a data table gets, where the stripe is the point. So it reproduces; what is still open is only whether the stripe SHOULD reach a placeholder.
+
+### Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
+
+- [x] **[P2] A0 - DONE 2026-09-01. Measured chunk placement against the real library and tested the
+  graph. Both answers are in `packaging-chunking-audit.md` §11.** One `inject(ToastService)` moves
+  **576 239 B raw / 135 744 B gzip** out of the lazy chunk into the initial bundle and collapses the
+  lazy chunk to 189 bytes - the initial grows **4.2x**, and all eleven heavy components land in a chunk
+  `main` statically imports. This reproduces the consumer's report independently (577 kB of a 755 kB
+  initial, 76%, against their claimed 88%), so §2's "not reproducible" line is superseded. The
+  services closure builds at 86 775 B gzip. **CORRECTED 2026-09-02: that figure was subtracted from the
+  59 019 B floor, which belongs to a DIFFERENT app shape** - `placement_after_a3.ts` has no lazy route,
+  so its matched control is `baseline.ts` at 30 646 B. Against its own control the closure is 56 129 B,
+  so the fix takes the DS's share of the initial bundle from **135.7 KB gzip to ~50-56 KB, about -59%**,
+  and the post-A3 figure is a MODEL - the like-for-like control cannot be built until entry points
+  exist. Full derivation in `packaging-chunking-audit.md` §11(a). And the graph
+  partitions. **CORRECTED 2026-09-01: there are THREE cycles, not two.** This item's original count
+  excluded type-only edges, and a later test proved ng-packagr treats an erased `import type` across an
+  entry-point boundary as a dependency exactly like a runtime one. With them included the SCCs are
+  `radio` <-> `radio-group`, `time-columns` <-> `time-picker`, and a third of size four:
+  **`components/card`, `config`, `core`, `icons`** — caused entirely by type imports OUT of
+  `ds-config.ts` (`CardElevation`/`CardPadding`, `DsSize`, `IconName`) reaching back into modules that
+  depend on it. See `packaging-diagnosis.md` « Thirteen open questions » item 3 for the full edge list
+  and the fix. A computed `core` seed of 12 groups closes over exactly itself; the services close over
+  11; **64** component groups form the top layer. **CORRECTED 2026-09-01: this said 55.** The
+  complement was computed from the runtime edge map, which omits the eleven groups with no runtime edge
+  either way (`divider`, `layout`, `list`, `page-footer`, `page-header`, `progress`, `status-dot`,
+  `topbar`, `avatar-group`, `button-group`, `theme`) — 77 on disk minus a 13-group core is 64. The
+  core seed is 13, not 12: the four-way SCC was accepted rather than broken, so `components/card` was in
+  it. **SUPERSEDED 2026-09-02 by A3-pre** (`bff7efbc`): the cycle is broken, `config` is gone as a group
+  (77 -> 76), and `card` is now an ordinary leaf. See the A3-pre item below. `theme` appearing in that no-edge list independently confirms it can be its own free entry point.
+  **A3 is unblocked and is worth ~4.2x the table work** (5.7x here until 2026-09-02; see the correction above). Original scope, for the record: Gates A3, touches no component, so it cannot collide with in-flight table work. Two
+  halves. (a) A probe app with an eager `ToastService` import and a lazy route holding heavy
+  components, built against the real `dist/ds` - the existing ladder plus one lazy route. Gives the
+  placement prize for OUR library instead of a synthetic fixture's ratio. (b) The import graph of
+  `src/lib`: does it split into acyclic layers (`core <- services <- components`, or finer)?
+  ng-packagr forbids cycles between entry points, which is exactly what killed option B. Favourable at
+  the top level - nothing in `core/`, `icons/`, `overlay/`, `theme/` imports a component at runtime,
+  and the one edge (`config/ds-config.ts`) is an erased `import type` - but 95 folders have never been
+  checked. **If (b) says no, A3 dies and the whole budget goes to the table.**
+
+- [x] **[P2] SHIPPED 2026-09-01 in `d8eb81c0` (v0.11.2). FREE 1.6 KB gzip: dev warnings shipped to
+  production and no longer do.** `devWarn` guarded itself with `isDevMode()`, a **function call**
+  esbuild cannot fold, so all **13** call sites (button 1, stat 1, table 11 — the 14 first recorded
+  here counted the definition) and their message closures reached production bundles. Measured on `probe/devwarn`, control on the same build: prototype
+  kit + table **191 988 -> 190 398 B gzip (-1 590 B)**; one `<ds-button>` **62 733 -> 61 906 B (-827 B)**.
+  **No consumer configuration needed** — the installed builder already adds `'ngDevMode': 'false'` to
+  esbuild's `define` whenever script optimization is on
+  (`@angular/build/src/tools/esbuild/application-code-bundle.js:465`). Rewrite each site as
+  `ngDevMode && devWarn(() => ...)` and the whole statement folds away, closure included. Fourteen
+  one-token edits; removes dead weight, not capability. Needs `declare const ngDevMode` visible to the
+  lib tsconfig.
+
+- [x] **[P2] A3-pre — DONE 2026-09-02 in `bff7efbc`. Reversed from DECLINED, and the cost was wrong
+  twice.** The decline rested on an inflated 40. The reversal then published **14**, which is the
+  cost of moving `ds-config.ts` ALONE — a move that leaves `components/card` inside a three-way SCC
+  and does not achieve the goal. Recomputed 2026-09-02 by re-running Tarjan under each candidate cut:
+
+  | cut | statements | non-trivial SCCs left |
+  | --- | --- | --- |
+  | **the plan as executed** — `ds-config` AND `card.types` → `core` | **17** (+1 in `public-api.ts`) | `core+icons` |
+  | `card.types` → `core` alone | **4** | `config+core+icons` |
+  | `ds-config` → `core` alone | 14 | **`card+core+icons` — card still trapped** |
+
+  The 4-statement cut achieves both stated goals (kills the layering inversion, makes `card` a leaf);
+  the other 13 buy only the disappearance of the `config` group, 77 → 76. The full plan was chosen.
+  Verified: `npm run build:lib` and `npm run lint` clean, public type surface identical at 126
+  declarations. Original derivation:
+
+  | move | import statements to rewrite |
+  | --- | --- |
+  | `config/ds-config.ts` -> `core` | 11 |
+  | `components/card/card.types.ts` -> `core` | 3 |
+  | **total** | **14** |
+
+  The 40 came from assuming `icons.data.ts` (28 importers) had to move too. **It does not.** After the
+  two moves above the four-way cycle is gone and what remains is `core <-> icons`, a two-group cycle
+  that costs nothing: `icons` has in-degree 38 and was always going to live in the `core` entry.
+
+  **Why do it, now that it is cheap.** Bytes were never the case — accepting the cycle costs 593 B gzip
+  (core seed 84 430 B, seed + `CardComponent` 85 023 B). The case is architectural and I failed to weigh
+  it the first time: `ds-config.ts` type-imports `CardElevation`/`CardPadding` from a COMPONENT, which is
+  a layering inversion — the config knows about a thing that depends on it. Fixing that also makes
+  `card` an ordinary leaf component with its own entry point instead of a permanent resident of the
+  bottom layer. Fourteen rewrites is a twentieth of the 307 the entry-point work needs anyway.
+
+  Do it as the FIRST commit of the entry-point work, on its own, so the layering fix is reviewable
+  separately from the 307 mechanical rewrites.
+
+  **Still worth having, and independent of the cycle:** `theme` as its own entry point.
+  `provide-ds-theme.ts` imports only `@angular/core` and `@angular/common`, so it is a true leaf, and
+  `provideDsTheme()` — the anchor in every consumer's documented setup — becomes nearly zero-cost.
+  Fold that into A3 rather than a separate item.
+
+- [x] **[P2] Entry-point boundary guard — BUILT 2026-09-01, shipped OFF until A3 flips it.**
+  `eslint-rules/rules/entry-point-boundary.mjs` + `ds/entry-point-boundary` in the plugin, wired in
+  `eslint.config.mjs` scoped to `src/lib/**/*.ts` at **`'off'`**. It flags a relative import whose
+  target lies in a different entry-point group, names the public specifier to use instead, and covers
+  `import type` too — an erased import is still an entry-point dependency and fails the same way.
+  Co-location allowances are the three accepted SCCs (`radio`/`radio-group`,
+  `time-columns`/`time-picker`, and `card`/`config`/`core`/`icons`).
+
+  **Watched it go red, which was the point: 307 violations** under the rule's shipped defaults (the
+  three accepted SCCs). Close to the 318 static count — the difference is exactly the imports inside
+  those SCCs. **CORRECTED 2026-09-02: the breakdown below is from a DIFFERENT run** — the probe config
+  that co-locates the whole 13-group core, which reports 277, not 307. Both runs were reproduced; the
+  81% holds under either (224/277 = 80.9%, 248/307 = 80.5%), but the four counts belong to the 277 run:
+  **81% of them point at just four targets:** `components-root` 92, `core` 60, `icons` 57,
+  `components/field-message` 15 — and under the 307 run those are 99 / 68 / 64 / 17. So A3's rewrite
+  is four bulk replacements plus roughly fifty individual reviews, not 318 separate decisions. Heaviest
+  importers: `multi-select` 27, `autocomplete` 25, `select` 24, `modal` 13, `input` 11, `table` 12.
+
+  **Why OFF and not warn:** 307 warnings would drown the existing lint output. `npm run lint` is
+  unchanged (verified exit 0). **Flip it to `'error'` in the same commit that finishes A3's rewrites** —
+  after that it is the thing that stops a missed one from surfacing as an unrelated-looking ng-packagr
+  crash. Probe config for running it at error before then: `.claude/local/eslint.entrypoint-probe.mjs`
+  (gitignored).
+
+- [x] **[P2] A1's open question answered: the seam costs a FIXED 923 B gzip.** Fixture
+  `.claude/local/seam-probe2/`. Feature 1.6 KB gz: bare 32 965 / mono 34 592 / seam-off **33 888**.
+  Feature scaled 4x to 5.9 KB gz: bare 32 965 / mono 38 901 / seam-off **33 888** — byte-identical, so
+  the overhead is fixed (the service, its `providers` entry, the composition point, the module boundary)
+  while recovery scales 1:1 with the feature. For the real table, 18.9 KB of features against one
+  registry (~1-2.5 KB) means **the seam keeps ~87-95% of the prize**. Honest trade: a consumer who DOES
+  use the feature pays ~1 KB more than today. **A1 is worth building.**
+
+- [x] **[P3] Ceiling on the directive split: bounded, not measured.** Extending the ablation to row
+  actions and inline editing was abandoned as not worth the effort — the first ablation took the table
+  from 31.4 to 12.1 KB, and both features live inside that remaining 12.1 KB, so **18.9 KB is the floor
+  and 31.0 KB the hard ceiling**. Sorting, selection, pagination, loading, sticky header and cell
+  rendering all stay. Precision changes no decision; do not re-open.
+
+- [x] **[P3] Two risks checked and dismissed 2026-09-01.** (a) **Name collisions in a 77-way facade:**
+  none — 131 exported declarations, the only repeat is `DsConfig` (interface + token in one file), and
+  the current root already `export *`s everything and compiles. (b) **Angular 22:** the `probe/angular-22`
+  branch (`7de133dc`) touches `bun.lock`, `package.json`, three tsconfigs and one signal-forms probe —
+  nothing about packaging, entry points or the FESM layout.
+
+- [x] **[P3] Splitting the icon map — DECLINED 2026-09-01 (measured, not judged).** `ICONS` is one
+  const map of 86 icons (115 was a typo), so any icon retains all of them. Cut to 9 icons on `probe/icons-map` and
+  re-measured: `ds-button` 62 733 -> **60 211 B gzip**. **The whole icon set is 2 522 B gzip** — SVG
+  path strings compress to almost nothing. Per-icon exports would break `IconName = keyof typeof ICONS`
+  and `provideDsIcons` for at most ~2.3 kB. Do not re-open without a new measurement.
+
+- [x] **[P2] The eager-component case DOES NOT overturn A3 — checked 2026-09-01.**
+  `packaging-chunking-audit.md` §7 named «a consumer whose EAGER root needs a component rather than a
+  service» as D's trigger. Measured: an eager shell (`app-layout` + `sidenav` + `topbar` +
+  `page-header`) costs **201 283 B gzip** today and closes over only **9 of 77 groups** (+`tooltip`),
+  which builds standalone at **101 108 B gzip**. **CORRECTED 2026-09-02: the ~98 kB first recorded here
+  subtracted the 59 019 B lazy-route floor from `shell_closure.ts`, which has no lazy route.** Against
+  its own control the closure is 101 108 - 30 646 = 70 462 B, so the modelled post-A3 initial is
+  ~129 kB and an eager-shell consumer saves **~72 kB gzip, about -50%**, against an eager-service
+  consumer's ~80 kB — but ONLY with per-component entries, per A3+ above.
+  Shell and services together close over 16 of 77 groups.
+
+### Component feature gaps
+
+- [x] **[P2] Split the package into `basic` + `advanced` — DECIDED 2026-09-04: NO. Stas, on deck 5: «если замерил и директивы лучше тогда ок, не делим на два пакета».** The prize is 0 for a prototype that does not use the table, and the work moves to the table's opt-in directives (A1/A2) instead. Reopen only if a component needs an external runtime dependency. Original case below. The proposal: prototypes install a light kit, production apps add a heavy one, `ds-table` swapped for an `ids-data-grid`. **AUDITED 2026-09-01 → read `basic-advanced-split-audit.md` before actioning. Both premises are measurably false.** (1) Bundle: on 0.11.1, going from the 44 components a prototype uses to all 96 costs **18 KB gzip**; the whole library is 179 KB gzip; entry cost is 5.6 KB; `ds-table`'s MARGINAL cost beside the rest of the kit is **32 KB gzip**, not the 118 KB it measures alone. (2) Capability: every feature named for `ids-data-grid` — column resize, filters, visibility, order, CSV export, inline edit, sticky h-scrollbar, truncate+popover, selection-safe row click — **already ships in `ds-table`**, most since 0.6.3. So a split would move shipped features into a second package and double the release pipeline to save ≤32 KB. (Breaking consumers is NOT part of the case against it — see the memory rule; shipped features are free to move.) **The one shape that survives the numbers** is intra-component, not intra-package: move the table's opt-in behaviours into separately-importable directives (`DsTableResizable`, `DsTableExport`, …) so the heavy parts tree-shake per feature — one component, one docs page, no mirror to keep in sync. Unmeasured; ceiling on the saving is 32 KB. **A separate package is justified by an external runtime dependency, never by component count** — which makes `ids-charts` a real candidate the day it needs a third-party renderer, and `ids-advanced` not one. Decision is Stas's; nothing is blocked.
+
+- [x] **[P2] `ds-button` stops importing `FieldMessageComponent` — BUILT AND REVERTED 2026-09-04, because the measurement killed it.** The decision stands as taken; what changed is the number behind it. Built on `feat/table-feature-directives`, measured on the probe, and reverted: the button stops referencing `FieldMessageComponent` (verified in the built FESM, no reference left) and the probe bundle goes **63 066 → 63 374 B gzip** — 308 B WORSE, which is the seam. **The 11 295 B came from an ablation taken before A3, on the flattened package.** Now `field-message` is its own entry point and everything it needs — icons, core, its styles — is already in the bundle for the button itself, so the row's marginal cost is hundreds of bytes and a seam costs more than it saves. Original framing:
+
+  **[P2] `ds-button` stops importing `FieldMessageComponent`. DECIDED 2026-09-04 by Stas: behind a `DsButtonMessage` directive.** 11 295 B, 35% of the button's cost, paid by everyone who draws one. The button's template gets a slot and the directive brings the message component in itself, rendering into that slot through `ViewContainerRef` — so the import lives in the directive's file and is tree-shaken when nobody imports it.
+
+  **`DS_CONFIG` cannot replace the import, and Stas asked, so record why:** a config flag is a runtime value and the bundler cannot see it. While `ButtonComponent` statically references `FieldMessageComponent` the 11 KB ships whatever the flag says — that reference IS the cost. Config earns its place after the import: it carries the feature's defaults, the way `dsReserveMessages` provides `DS_CONFIG` for a subtree, so the options are not repeated per button. The irreducible price is one line in the `imports` of each component whose buttons show a message. Note the warning already in `reserve-messages.directive.ts`: a `provideDsConfig(...)` CALL in decorator metadata marks the module side-effectful and cost a consumer 566 KB of tree-shaking — use an object literal with a factory.
+
+- [x] **[P2] `ds-stat` `variant="error"` never recolours the value — FIXED 2026-09-10.** Error now moves the `--_stat-value-color` resolver instead of setting `color` on `.value`, which is how `size-sm` and `size-lg` already move the font size, and it keeps a consumer's `--ds-stat-value-color` winning. Measured: default value `rgb(22, 26, 40)`, error `rgb(186, 23, 23)` — `--error-text`. The tie the item describes is real and worth remembering: emulated encapsulation adds one attribute selector to EACH side, which levelled `:host(.error) .value` with `.stat .value` and handed it to source order.
+
+- [x] **[P2] `ds-banner` dismiss button has no accessible name — ALREADY FIXED, and the sweep it asked for has run.** The `aria-label="Dismiss"` it asks for landed in `c04c8b9f` (2026-09-02, `fix(alert,banner,toast)`); the item was written against 0.11.1 and outlived its defect. What it also asked for — "worth sweeping the other icon-only close buttons in the same pass" — ran 2026-09-10 over the accessibility tree of **1807 focusable elements across all 13 docs group pages**, reading each one's computed accessible name from CDP rather than grepping templates. **Two real defects, both fixed:** `ds-sidenav-footer`'s collapse button (its only name was text the collapsed rail hides) and an icon-only `ds-breadcrumbs` crumb (an `<a>` around a decorative icon, `BreadcrumbItem` had no way to name it — it does now). Every other icon-only button in the library already had a name.
+  **The 31 that remain are unlabelled DEMO instances in ds-docs**, not library defects: checkbox, radio, switch, number-stepper and select rendered without a `label` to show sizes and states. Two of those components have no way to fix it — see the item below.
+
+### Tooling
+
+- [x] **[P2] Whether anything focusable is left with NO focus indicator — MEASURED 2026-09-10, and the answer is nothing.** **1807 focusable elements across all 13 docs group pages, zero without an indicator.** Four mechanisms account for every one: the library's own `outline` (1489), the field family's box-shadow halo (275), a ds-docs demo whose focus state is pinned so the ring is already painted at rest (27), and a component-drawn pseudo-element (14 — the table's column-resize handle, whose `::after` widens and takes a colour). The two elements left over are disabled controls, which cannot be focused.
+  **What made the old instrument lose rings, and what this one does instead.** It drives CDP `CSS.forcePseudoState` rather than focusing elements, so a collapsed region and Chrome's `:focus-visible` heuristic stop mattering; it reads the resting signature immediately before forcing rather than diffing against one stale snapshot; and it walks the element AND its ancestors, because the ring is drawn on the shell for checkbox, radio, switch and table rows.
+  **Three of its own defects were found by controls, not by review** — the reason the count moved 16 → 8 → 0. (1) Chrome recomputes `:has(:focus-visible)` against a forced state but does NOT recompute `:focus-within`, which is a flag propagated at real focus time, so every field shell read as unlit until the ancestors were forced too. (2) The ring animates in from `outline-color: transparent` and the halo transitions, so a read at frame 0 saw `rgba(0,0,0,0)` and scored 32 live indicators as gaps — fixed by injecting `animation: none; transition: none` rather than by waiting 500ms per element. (3) A pseudo-element indicator is invisible to a read of the element's own computed style. Every run carries a planted bare `<button>` as the negative arm, and it reported `no-indicator` on all 13 pages.
+  **One real defect found and fixed on the way:** a ds-docs truncation-note button had NO indicator, because `outline: var(--focus-ring)` puts a two-shadow list into an `outline` — invalid at computed-value time, so `outline` computed back to its initial value AND out-ranked the global `:where(:focus-visible)` ring on specificity. Only `outline-offset` survived, on an outline that was never drawn. Grepped: it was the only instance in the repo.
+  **Not a WCAG 2.4.13 (AAA) audit.** The table's resize handle passes 2.4.7 with a 2px hairline, and a 2px-perimeter test would fail it; nothing here measured indicator AREA or contrast against adjacent colours.
+
+- [x] **[P2] `ds-checkbox`, `ds-radio` and `ds-switch` cannot be named without a visible label — FIXED 2026-09-10.** All three take an `ariaLabel` input now, resolved the way `ds-select` already resolved its own: it applies only when `label` is empty, because setting it beside a visible label overrides what that label says. Not put on a shared base class — twenty-one components declare `readonly ariaLabel = input(...)` individually, so a base-class member would collide with every one of them; that unification is a repo-wide refactor, not part of this.
+  **Verified in a browser, not by reading the templates:** the forms group page went from 31 focusable elements with no accessible name to 14, and every checkbox, radio and switch instance is named. The 23 label-less state demos in ds-docs took the name of the caption printed under each cell.
+  **The 14 that remain are ds-docs authoring on two components that already had the input:** nine `ds-select` instances (the ones with a `value` and no `placeholder` — `placeholder` is a name source there, `value` is not) and five `ds-number-stepper` instances in size and behaviour demos. Both need a hand-written name rather than a caption, which is why they were left rather than auto-filled.
 

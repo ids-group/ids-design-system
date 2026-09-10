@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>Значение ds-stat не влезает в плитку — пять дефолтов</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="src/lib/components/stat/stat.component.scss - ds-docs/src/app/sections/components/stat/stat.section.html - docs/todo.md">
+<link rel="stylesheet" href="ds.css">
+<style>
+  body {
+    margin: 0;
+    padding: var(--space-8) var(--space-6) var(--space-12);
+    background: var(--surface-canvas);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-m);
+    line-height: var(--line-height-base);
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  h1 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  h2 {
+    margin: var(--space-10) 0 var(--space-3);
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-bold);
+  }
+
+  h3 {
+    margin: var(--space-6) 0 var(--space-2);
+    font-size: var(--font-size-h5);
+    font-weight: var(--font-weight-bold);
+  }
+
+  p { margin: 0 0 var(--space-3); max-width: 82ch; }
+  .lede { color: var(--text-secondary); }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-s);
+    background: var(--surface-muted);
+    padding: 1px 4px;
+    border-radius: var(--radius-sm);
+  }
+
+  .num {
+    display: inline-block;
+    min-width: 24px;
+    margin-right: var(--space-2);
+    padding: 0 var(--space-1-5);
+    border-radius: var(--radius-sm);
+    background: var(--neutral-800);
+    color: var(--surface-default);
+    font-size: var(--font-size-s);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  /* ── the tile, rebuilt from stat.component.scss so the render is honest ── */
+  .row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-6);
+    margin: var(--space-4) 0 var(--space-2);
+    padding: var(--space-4);
+    background: var(--surface-muted);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+  }
+
+  .slot { width: 240px; flex: 0 0 240px; }
+
+  .tile {
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--ds-radius-panel);
+    padding: var(--ds-container-pad);
+  }
+
+  .tile .label {
+    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .tile .value {
+    font: var(--font-weight-extrabold) var(--font-size-h2) / var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--letter-spacing-snug);
+    color: var(--text-primary);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .tile .caption {
+    font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    color: var(--text-tertiary);
+    margin-top: var(--space-2);
+  }
+
+  /* the five candidates, each as the ONE declaration block it would add */
+  .v2 .value { white-space: normal; }
+
+  .v3 .value {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .v4 .value {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .v5 { container-type: inline-size; }
+  .v5 .value { font-size: clamp(0.875rem, 9cqw, var(--font-size-h2)); }
+
+  /* A neighbour, so the escape is visible as what it actually does to a KPI row. */
+  .neighbour { opacity: 0.999; }
+
+  .caption-under {
+    margin: 0;
+    color: var(--text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-4) 0 var(--space-6);
+    font-size: var(--font-size-s);
+  }
+
+  th, td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width-default) solid var(--border-divider);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th { color: var(--text-tertiary); font-weight: var(--font-weight-bold); }
+  td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .panel {
+    padding: var(--space-4);
+    border-left: 3px solid var(--border-strong);
+    background: var(--surface-muted);
+    border-radius: var(--radius-sm);
+    margin: var(--space-3) 0 var(--space-6);
+  }
+  .panel p:last-child { margin-bottom: 0; }
+  .rec { border-left-color: var(--success); background: var(--success-subtitle); }
+
+  pre {
+    margin: var(--space-3) 0;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--surface-muted);
+    border: var(--border-width-default) solid var(--border-divider);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-s);
+  }
+
+  .bad, .good {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+  }
+  .bad  { background: var(--error-subtitle);   color: var(--error-text); }
+  .good { background: var(--success-subtitle); color: var(--success-text); }
+
+  .sources { color: var(--text-tertiary); font-size: var(--font-size-s); }
+  .sources a { color: inherit; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Значение <code>ds-stat</code> не влезает в плитку — пять дефолтов</h1>
+
+  <p class="lede">
+    <code>.value</code> живёт с <code>white-space: nowrap</code> и без единого правила про
+    переполнение, поэтому фраза вместо числа <b>уезжает за край карточки</b> и ложится поверх
+    соседней. Померено на реальной плитке в доках: карточка 240px, внутренняя ширина 190px, текст
+    «Feb 1 – Feb 28, 2026» на 36px занимает 348px — <b>157px за внутренним краем</b>. Оба
+    существующих хука (<code>--ds-stat-value-white-space</code>,
+    <code>--ds-stat-value-font-size</code>) это лечат поштучно; вопрос про <b>дефолт</b>, и любой
+    ответ — ломающее визуальное изменение для каждой существующей плитки.
+  </p>
+
+  <div class="panel">
+    <p>
+      <b>Второй дефект того же компонента уже исправлен, решать нечего.</b>
+      <code>variant="error"</code> никогда не перекрашивал значение:
+      <code>:host(.error) .value</code> и <code>.stat .value</code> после эмулированной
+      инкапсуляции получают одинаковый вес, и побеждала та, что ниже в файле. Теперь error двигает
+      резолвер <code>--_stat-value-color</code>, как это уже делают <code>size-sm</code> и
+      <code>size-lg</code> для размера. Померено: значение по умолчанию
+      <code>rgb(22, 26, 40)</code>, у error — <code>rgb(186, 23, 23)</code>, то есть
+      <code>--error-text</code>.
+    </p>
+  </div>
+
+  <h2>Что происходит сейчас</h2>
+
+  <div class="row">
+    <div class="slot">
+      <div class="tile">
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 – Feb 28, 2026</p>
+        <p class="caption">открыт для 1 248 сотрудников</p>
+      </div>
+      <span class="bad">текст уходит на 157px вправо</span>
+    </div>
+    <div class="slot neighbour">
+      <div class="tile">
+        <p class="label">Enrolled</p>
+        <p class="value">1 248</p>
+        <p class="caption">за 27 дней</p>
+      </div>
+      <p class="caption-under">сюда он и ложится</p>
+    </div>
+  </div>
+
+  <h2>Пять дефолтов, каждый на той же плитке</h2>
+
+  <h3><span class="num">1</span>Ничего не менять</h3>
+
+  <div class="row">
+    <div class="slot">
+      <div class="tile">
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 – Feb 28, 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> ни одна существующая плитка не меняется, и оба хука на месте — потребитель, у
+      которого фраза, ставит их и живёт дальше. Дока показывает пару «с хуками / без» именно чтобы
+      это было видно. <b>Минус:</b> дефолт остаётся такой, что компонент по умолчанию рисует поверх
+      соседа. Это не «настройка под случай», это выход за границы своей карточки — и заметит его
+      не автор компонента, а тот, кто через полгода положит в тайл дату.
+    </p>
+  </div>
+
+  <h3><span class="num">2</span><code>white-space: normal</code> — перенос</h3>
+
+  <div class="row">
+    <div class="slot v2">
+      <div class="tile">
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 – Feb 28, 2026</p>
+      </div>
+      <span class="good">ничего не уезжает</span>
+    </div>
+    <div class="slot neighbour">
+      <div class="tile">
+        <p class="label">Enrolled</p>
+        <p class="value">1 248</p>
+      </div>
+      <p class="caption-under">высота больше не совпадает</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> одно свойство, ноль новых сущностей, ничего не спрятано — весь текст на экране.
+      <b>Минус:</b> плитка растёт с 111px до 183px (+65%), три строки, и в KPI-ряду соседние тайлы
+      перестают быть одной высоты, если ряд не растянут. У <code>.stat</code> есть
+      <code>height: 100%</code> ровно под этот случай, но он работает только когда ряд их
+      растягивает — а это решает потребитель, не компонент.
+    </p>
+  </div>
+
+  <h3><span class="num">3</span><code>overflow: hidden</code> + <code>text-overflow: ellipsis</code></h3>
+
+  <div class="row">
+    <div class="slot v3">
+      <div class="tile">
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 – Feb 28, 2026</p>
+      </div>
+      <span class="good">высота и размер не менялись</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> одна строка и 111px как сегодня, ряд остаётся ровным, кегль headline не тронут —
+      из пяти это единственный вариант, который вообще ничего не меняет в геометрии.
+      Обрезка <b>оптическая</b>: текст остаётся в DOM целиком, поэтому скринридер читает его
+      полностью — это ровно то, что Carbon называет optical, а не technical truncation.
+      <b>Минус:</b> глазами значение прочитать нельзя, а <code>.value</code> не фокусируется — то
+      есть раскрыть его с клавиатуры нечем. Carbon требует раскрытие и по ховеру, и по фокусу;
+      здесь второе взять негде без нового tab stop.
+    </p>
+  </div>
+
+  <h3><span class="num">4</span>Перенос + обрезка на второй строке</h3>
+
+  <div class="row">
+    <div class="slot v4">
+      <div class="tile">
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 – Feb 28, 2026</p>
+      </div>
+      <span class="bad">две строки, «2026» потерялось</span>
+    </div>
+    <div class="slot v4">
+      <div class="tile">
+        <p class="label">Территория</p>
+        <p class="value">Северо-Западный федеральный округ, Республика Карелия</p>
+      </div>
+      <p class="caption-under">а вот здесь уже с многоточием</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> это буквально правило Carbon для длинного заголовка колонки — «перенеси на две
+      строки, дальше обрежь», и оно же обычная практика KPI-карточек. Кегль headline сохранён, за
+      карточку ничего не выходит, а рост высоты вдвое меньше, чем у полного переноса: 147px против
+      183px, при 111px сегодня.
+      <b>Минус:</b> наша же фраза в две строки НЕ влезает — перенос идёт по пробелам, «Feb 1 –» /
+      «Feb 28,» / «2026», то есть нужно три строки, и год уходит под многоточие (видно на плитке
+      выше). Значит там, где двух строк не хватает, возвращается ровно проблема варианта 3 —
+      прочитать остаток нечем. Плюс три свойства и <code>-webkit-line-clamp</code>, префиксная
+      конструкция в публичном компоненте.
+    </p>
+  </div>
+
+  <h3><span class="num">5</span>Подгонять кегль под ширину</h3>
+
+  <div class="row">
+    <div class="slot v5">
+      <div class="tile">
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 – Feb 28, 2026</p>
+      </div>
+      <span class="good">17px вместо 36px</span>
+    </div>
+    <div class="slot v5">
+      <div class="tile">
+        <p class="label">Enrolled</p>
+        <p class="value">1 248</p>
+      </div>
+      <p class="caption-under">число кегля не потеряло</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p>
+      <b>Плюс:</b> единственный вариант, где ничего не спрятано И высота не выросла — плитка даже
+      стала ниже (92px), потому что строка одна и она короче. Число остаётся числом: короткое
+      значение упирается в верхнюю границу <code>clamp()</code> и рисуется как сегодня.
+      <b>Минус:</b> 36px → 17.1px, то есть значение перестаёт быть headline — а KPI-карточка держится
+      именно на том, что одно число крупное, а всё остальное уходит с дороги. В ряду из четырёх
+      тайлов кегль значения станет разным у каждого, и это читается как разная важность. Плюс
+      контейнерные единицы требуют <code>container-type</code> на <code>.stat</code>, то есть
+      новый contain-контекст внутри компонента.
+    </p>
+  </div>
+
+  <h2>Померенное, всё на одной плитке 240px</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Вариант</th>
+        <th>Высота карточки</th>
+        <th>Строк</th>
+        <th>Кегль</th>
+        <th>За краем</th>
+        <th>Скрыто от глаза</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1 · сегодня</td><td class="n">111px</td><td class="n">1</td><td class="n">36px</td><td class="n">157px</td><td>нет, но лежит на соседе</td></tr>
+      <tr><td>2 · перенос</td><td class="n">183px</td><td class="n">3</td><td class="n">36px</td><td class="n">—</td><td>нет</td></tr>
+      <tr><td>3 · многоточие</td><td class="n">111px</td><td class="n">1</td><td class="n">36px</td><td class="n">—</td><td>да, 45% строки</td></tr>
+      <tr><td>4 · две строки, потом многоточие</td><td class="n">147px</td><td class="n">2 из 3</td><td class="n">36px</td><td class="n">—</td><td>да, третья строка — «2026»</td></tr>
+      <tr><td>5 · подгонка кегля</td><td class="n">92px</td><td class="n">1</td><td class="n">17.1px</td><td class="n">—</td><td>нет</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    «За краем» — это правая граница текста минус внутренняя правая граница карточки. Мерить по
+    рамке <code>.value</code> нельзя: блочный бокс остаётся 190px при любом тексте, потому что
+    строчное содержимое его не растягивает — 348px видно только в <code>scrollWidth</code> и в
+    <code>Range</code> по содержимому.
+  </p>
+
+  <p>
+    Две ловушки в самом измерении, обе стоили неверной строки в этой деке до того, как плитки были
+    отрисованы. Первая: <code>scrollWidth &gt; clientWidth</code> отвечает только на
+    ГОРИЗОНТАЛЬНУЮ обрезку, а <code>-webkit-line-clamp</code> режет по вертикали — по этому тесту
+    вариант 4 выглядел как «ничего не потеряно», хотя год он теряет. Вторая:
+    <code>scrollHeight &gt; clientHeight</code> подставить вместо него нельзя, он истинен у всех
+    пяти вариантов, потому что <code>--line-height-flat</code> меньше высоты глифа и строчный бокс
+    переполнен на пиксель везде. Работает только сравнение числа строк с числом строк без обрезки:
+    3 против 2.
+  </p>
+
+  <h2>Рекомендация</h2>
+
+  <div class="panel rec">
+    <p>
+      <b>Вариант 4</b> дефолтом: перенос, обрезка со второй строки. Он единственный держит кегль
+      headline И не даёт выйти за карточку, а высота растёт вдвое меньше, чем при полном переносе.
+      Скрывает он при этом меньше всех, кто вообще скрывает: наша фраза теряет третью строку, тогда
+      как вариант 3 теряет 45% первой. И это внешняя практика, а не наша выдумка: у Carbon это
+      записанное правило для длинного текста в тесной ячейке.
+    </p>
+    <p>
+      <b>Вариант 3</b> — если важнее, чтобы ни одна существующая плитка не изменила высоту: он
+      единственный с нулевой разницей в геометрии. Тогда за читаемость платит потребитель, ставя
+      <code>--ds-stat-value-white-space: normal</code> там, где значение — фраза.
+    </p>
+    <p>
+      <b>Вариант 5 не рекомендую дефолтом</b>, хотя технически он лучший по «ничего не потеряно»:
+      разный кегль значений в одном ряду ломает то, ради чего KPI-плитка существует. Как
+      <b>opt-in-хук</b> — <code>--ds-stat-value-fit</code> — он хорош, и его стоит добавить
+      независимо от того, какой дефолт выберем.
+    </p>
+  </div>
+
+  <h2>Что решить</h2>
+
+  <table>
+    <thead><tr><th>Вопрос</th><th>Варианты</th></tr></thead>
+    <tbody>
+      <tr><td>Какой дефолт</td><td>1 · 2 · 3 · 4 · 5</td></tr>
+      <tr>
+        <td>Если 3 или 4 — что делать с раскрытием полного значения</td>
+        <td><code>title</code> по ховеру (клавиатуре не поможет) · ничего, скринридер и так читает целиком · <code>ds-tooltip</code> с tab stop (новый фокус в плитке)</td>
+      </tr>
+      <tr>
+        <td>Добавлять ли <code>--ds-stat-value-fit</code> как хук варианта 5</td>
+        <td>да, независимо от дефолта · нет</td>
+      </tr>
+      <tr>
+        <td>Демо в доке показывает «спилл» специально — что с ним</td>
+        <td>переписать на «до/после» нового дефолта · оставить, показывая старое поведение через хук</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Источники</h2>
+
+  <p class="sources">
+    Data table · usage (перенос на две строки, потом обрезка) —
+    <a href="https://carbondesignsystem.com/components/data-table/usage/">carbondesignsystem.com</a> ·
+    Tag · accessibility (раскрытие обрезанного и по ховеру, и по фокусу) —
+    <a href="https://carbondesignsystem.com/components/tag/accessibility/">carbondesignsystem.com</a> ·
+    KPI card (длинный лейбл обрезается с тултипом) —
+    <a href="https://www.activecampaign.design/docs/components/data-visualization/kpi-card">activecampaign.design</a> ·
+    Cards: how a 3×5 rectangle conquered screen design —
+    <a href="https://www.uxtigers.com/post/card-pattern">uxtigers.com</a> ·
+    Design for truncation —
+    <a href="https://medium.com/design-bootcamp/design-for-truncation-946951d5b6b8">medium.com</a>
+  </p>
+
+</div>
+</body>
+</html>

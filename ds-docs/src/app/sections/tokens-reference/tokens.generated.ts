@@ -473,6 +473,11 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
     "notes": "2px — gap between element edge and focus outline. The gap is unpainted, so it shows whatever the control sits on. Negative draws the ring inward, past a clipping ancestor."
   },
   {
+    "name": "--focus-ring-radius",
+    "value": "var(--ds-radius-inner)",
+    "notes": "The radius a box takes when it exists only to carry a focus ring. An outline has none of its own, so it follows the border-radius of the box it is drawn on, and a square-cornered shell rings square however rounded the control inside it is. Follows --ds-radius-inner, so retuning the inner radius moves these rings with it. A control with its own radius keeps it and ignores this."
+  },
+  {
     "name": "--focus-ring-inner",
     "value": "var(--surface-default)",
     "notes": "Separates the two bands of the field halo. Controls draw an outline whose gap is unpainted, so nothing there reads it."

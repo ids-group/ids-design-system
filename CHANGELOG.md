@@ -8,6 +8,152 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`ds-button`'s `buttonRef` is `controlRef`, and it is typed `HTMLElement`.** The element the
+  component renders now follows its destination, so the old name described one of three cases and
+  the old type described the same one. Rename the reference; the property behind it is unchanged.
+  A read of `.nativeElement` that expects a `<button>` — `.disabled`, `.form`, `.type` — no longer
+  type-checks and needs a narrow of your own, because the element may be an `<a>`.
+
+  ```ts
+  // before
+  trigger.buttonRef().nativeElement.focus();
+  // after
+  trigger.controlRef().nativeElement.focus();
+  ```
+
+### Added
+
+- **`ds-button` takes `routerLink` and `href`, so a call-to-action can stay a real link.** Three
+  elements, decided by destination: `routerLink` renders an `<a [routerLink]>` that also carries
+  `routerLinkActive`, `href` renders a plain `<a href>`, and neither renders the
+  `<button type="button">` it always did. Unset — the default — nothing changes.
+
+  The look is identical across all three, because the styling is class-based rather than keyed to
+  the tag. What you get back is what the element decides: middle-click, open-in-new-tab,
+  copy-link-address and the `link` role a screen reader announces.
+
+  ```html
+  <ds-button routerLink="/reports" icon="arrowRight">Go to reports</ds-button>
+  <ds-button href="https://example.com" variant="outline">Read the spec</ds-button>
+  ```
+
+  `routerLink` takes the shapes a router link takes anywhere, a string or a command array.
+  **`type` and `loading` are button-only** and are ignored on a link with a dev-mode warning: an
+  anchor has no form to submit, and a navigation cannot be in flight before it starts. `disabled`
+  works on all three, but an anchor has no native disabled state, so it takes `aria-disabled` plus
+  `tabindex="-1"` — and its click is swallowed, which is what stops an `href` from navigating
+  anyway. `disabledReason` reads the same on a link as on a button.
+
+- **`ds-checkbox`, `ds-radio` and `ds-switch` take `ariaLabel`.** A control rendered with no
+  visible label — no `label`, nothing projected — had no accessible name and nothing a consumer
+  could set to give it one, while `ds-select` and `ds-number-stepper` had taken this input all
+  along. The row's `<label>` collapses when empty, so on a bare box the `aria-label` is the whole
+  name.
+
+  ```html
+  <ds-checkbox ariaLabel="Select all rows" />
+  ```
+
+  It applies only when there is no visible label; set it beside one and it overrides what the label
+  says, which is the ARIA rule rather than a choice this makes.
+
+- **`--ds-field-group-focus-shadow-error` — the halo a `ds-field-group` draws while invalid and
+  focused.** Defaults to `--ds-field-focus-shadow-error`, the same halo a single error field uses,
+  so a focused invalid group reads as one state instead of a red border with a blue glow around it.
+
+- **`BreadcrumbItem` takes `ariaLabel`, for the icon-only crumb.** A crumb with an `icon` and no
+  `label` — the usual home crumb — rendered as a link with no accessible name at all. Nothing is
+  derived from `icon`: `home` is a glyph id, not a word for the user, so a crumb in that shape now
+  dev-warns until it is given a name.
+
+  ```ts
+  items = [{ icon: 'home', href: '/', ariaLabel: 'Home' }, { label: 'Records' }];
+  ```
+
+- **`--focus-ring-radius` — the radius a box takes when it exists only to carry a focus ring.**
+  Follows `--ds-radius-inner`, 4px, so retuning the inner radius moves these rings with it. There
+  is no `outline-radius` in CSS: an outline follows the
+  `border-radius` of the box it is painted on, so a ring host with no radius of its own draws a 90°
+  rectangle beside the rounded controls around it. Set this to reshape every such ring at once, or
+  give the host its own radius to override it locally.
+
+### Changed
+
+- **A clickable `ds-table` row, a `ds-tree` row and a `ds-list` activator draw a rounded focus
+  ring.** All three ringed a square-cornered box while every control around them was rounded; they
+  now carry `--focus-ring-radius`. None of the three paints anything itself — the table row's tints
+  sit on its cells — so the radius shapes the ring and nothing else, and it sits on the resting rule
+  rather than inside `:focus-visible`, or the shape would appear only while focused. Reachable by
+  keyboard only.
+
+- **`ds-checkbox`, `ds-radio` and `ds-switch` draw a rounded focus ring.** The ring goes on the row
+  that holds the glyph and its label, and that row had no radius, so it came out square while the
+  glyph inside it was rounded. The row now takes `--focus-ring-radius`. The row paints nothing else,
+  so this changes the ring and nothing besides it — no fill, no border, no layout. Reachable by
+  keyboard only; the resting state of all three is unchanged.
+
+- **Four exported classes grew members — only matters if you SUBCLASS one.** `ButtonComponent`
+  gained `routerLink`, `href`, `controlRef` and `destination`, which decides which of the three
+  elements renders; `buttonRef` is gone from its surface, so a subclass that overrode it now
+  overrides nothing. `CheckboxComponent`, `RadioComponent` and `SwitchComponent` each gained
+  `ariaLabel` and `resolvedAriaLabel`. Being public API or not is no protection: `private` and
+  `protected` collide with TS2415 exactly as a public name does. Nothing changes for a consumer who
+  only uses the elements.
+
+### Fixed
+
+- **`ds-field-group[invalid]` keeps its error border under the cursor and under focus.** Both
+  `:hover` and `:focus-within` carried one class more than `.invalid` did, so they out-ranked it —
+  and the border is the group's ONLY error affordance, because a segment's own label and message are
+  hidden to keep the glued row intact. The error vanished at exactly the moment the user reached the
+  control. Hover and focus now do not match an invalid group at all, and its focus halo takes the
+  error tint through the new `--ds-field-group-focus-shadow-error`. A valid group hovers and focuses
+  exactly as before.
+
+  `.invalid` also stops depending on line order to lose to `.disabled`: both sat at the same
+  specificity and only the order of the two rules decided it. Disabled takes no state paint, the
+  same rule the nine single fields now follow.
+
+- **`ds-stat variant="error"` recolours the value.** `:host(.error) .value` and the later
+  `.stat .value` land on the same specificity once emulated encapsulation adds its attribute to
+  each, so the default colour won on source order and the error variant changed nothing at all.
+  Error now moves the `--_stat-value-color` resolver, which is how the size variants already work,
+  so a consumer's `--ds-stat-value-color` still overrides it.
+
+- **`ds-sidenav-footer`'s collapse button has an accessible name.** Its only name was the
+  `Collapse` text beside the chevron, and the collapsed rail hides that text — so on the rail, which
+  is the state the button exists to leave, it announced as an unlabelled button. It now carries
+  `aria-label`, and both the label and the name say `Expand` while collapsed, because that is what
+  the button does from there. The placeholder search row rendered when there are no search items had
+  no name either and now matches its live twin.
+
+- **An icon-only `ds-breadcrumbs` crumb has an accessible name.** The crumb rendered an `<a>` around
+  a decorative icon and nothing else, so a screen reader announced a link with no name and a
+  keyboard user tabbed onto an anonymous stop. Give it `ariaLabel` (above); in dev mode a crumb
+  still missing one says so.
+
+- **A disabled field no longer paints its `data-field-state`.** An `error`, `warning` or `success`
+  state used to out-rank the disabled look in all nine field components — `ds-input`, `ds-textarea`,
+  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`,
+  `ds-color-picker` and `ds-otp-input` — so a field left invalid and then disabled kept a red border
+  and fill while being unfocusable. It was pure specificity: the state selector carried one more
+  class than the disabled rule it landed on. A disabled control is not submitted and is not
+  validated, so the error promised a correction that could not be made; ARIA settles the same
+  conflict the same way, ignoring an ARIA state that a native attribute contradicts.
+
+  **A read-only field still paints it, deliberately.** `readonly` is submitted where `disabled` is
+  not, so a wrong value there does reach the server and is worth flagging. Both skip browser
+  validation; only one of them can still send something invalid.
+
+- **A `ds-multi-select` panel's filter row draws a rounded focus ring.** It came out as a hard
+  rectangle the full width of the panel, inside a panel whose every other control is rounded,
+  because an `outline` has no radius of its own — it follows the box it is drawn on, and that row
+  had none. It now carries `--ds-radius-inner`, which is the radius the panel's option rows and
+  clear button already use. `ds-sidenav-footer`'s search box was always drawn this way and is
+  unchanged.
+
 ## 0.12.2 — 2026-09-09
 
 ### Breaking

@@ -1,10 +1,6 @@
-/* Design tokens — the theme-INDEPENDENT layer. Tier 1 colour primitives live in
-   ../themes/_base-palette.scss and each theme's _palette.scss; Tier 2 semantic
-   roles in ../themes/_semantic.scss.
-
-   Components consume only Tier 2/3 tokens. Reaching for a palette primitive
-   (--blue-600, --neutral-200, …) from a component style is a violation — add or
-   reuse a role instead. */
+/* The theme-INDEPENDENT layer. Tier 1 primitives live in ../themes/_base-palette.scss and each
+   theme's _palette.scss, Tier 2 roles in ../themes/_semantic.scss. Components consume Tier 2/3
+   ONLY — reaching for --blue-600 from a component style is a violation, add or reuse a role. */
 
 :root {
   --space-0:    0;
@@ -45,11 +41,9 @@
   --radius-pill-value: 999px;
   --radius-pill: var(--radius-pill-value);
 
-  /* Radius ROLES — the layer a consumer retunes. Each defaults to the value its
-     members already use, and components resolve --ds-<comp>-radius -> role ->
-     value, so a per-component override still wins. No `field` role on purpose:
-     fields share --radius-md with buttons, so a consumer who wants them apart
-     scopes the role — `ds-input { --ds-radius-control: 4px; }`. */
+  /* Radius ROLES — the layer a consumer retunes; components resolve
+     --ds-<comp>-radius -> role -> value, so a per-component override still wins. No `field` role
+     on purpose: scope the control role instead — `ds-input { --ds-radius-control: 4px; }`. */
   --ds-radius-inner:   var(--radius-sm);
   --ds-radius-control: var(--radius-md);
   --ds-radius-panel:   var(--radius-lg);
@@ -67,10 +61,13 @@
   --focus-ring-width:     2px;
   --focus-ring-offset:    2px;
 
-  /* Shadows are composed from a channel-split tint so a theme can re-colour them:
-     --shadow-tint-h/s come from ../themes/_base-palette.scss and -l from each
-     theme's _palette.scss (light 7%, dark 95%, so the same alphas read as soft
-     glows over dark surfaces). The alphas below stay constant across themes. */
+  /* The radius a box takes when it exists only to carry the ring. A control with a shape of its
+     own keeps it and ignores this. */
+  --focus-ring-radius:    var(--ds-radius-inner);
+
+  /* Composed from a channel-split tint so a theme can re-colour them: -h/s come from
+     ../themes/_base-palette.scss, -l from each theme's _palette.scss. The alphas stay constant
+     across themes, which is what makes the same values read as glows over dark surfaces. */
   --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
   --shadow-2: 0 4px 8px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
@@ -136,11 +133,9 @@
   --ease-accelerate: cubic-bezier(.3,  0,    1,   1);
   --ease-spring:     cubic-bezier(.5,  1.5, .5,   1);
 
-  /* Motion ROLES — name the intent once and every surface at that scale follows.
-     Defaults equal the values each surface already used, so nothing moves until a
-     role is set. `exit` and `exit-large` stay separate because panel LEAVES run at
-     --duration-base, not fast. A few resolvers stay on the raw scale on purpose:
-     ds-loading-overlay and the toast leave use --ease-standard, which no role carries. */
+  /* Motion ROLES — name the intent once and every surface at that scale follows. `exit` and
+     `exit-large` stay separate because panel LEAVES run at --duration-base, not fast, and a few
+     resolvers stay on the raw scale where no role carries what they need. */
   --ds-motion-enter-panel-duration:   var(--duration-fast);
   --ds-motion-enter-panel-easing:     var(--ease-decelerate);
   --ds-motion-enter-surface-duration: var(--duration-base);
@@ -152,10 +147,8 @@
   --ds-motion-exit-large-duration:    var(--duration-base);
   --ds-motion-exit-large-easing:      var(--ease-accelerate);
 
-  /* The check mark landing in a box. Its own role because the mark overshoots and
-     nothing else at this scale does: --ease-spring exists for exactly this and is
-     documented as sparing. Enter and exit differ so the mark leaves faster than it
-     arrives, which is what makes the overshoot read as weight rather than as lag. */
+  /* Its own role because the mark overshoots and nothing else at this scale does. Enter and exit
+     differ so it leaves faster than it arrives, which reads as weight rather than lag. */
   --ds-motion-check-enter-duration:   var(--duration-base);
   --ds-motion-check-enter-easing:     var(--ease-spring);
   --ds-motion-check-exit-duration:    var(--duration-fast);
@@ -252,12 +245,10 @@
      the crisp ring. Components default their own --ds-*-focus-shadow to these,
      so a consumer can retune a whole family or a single component. */
 
-  /* The flat tokens, NOT the --accent-focus-* aliases, and that is not an oversight — see
-     docs/todo.md, "zone colour and data-focus shape cannot both reach one role". A `var()`
-     inside a custom property is substituted where that property is DECLARED, so anything
-     written here is frozen with :root's inputs and a ds-color zone can never reach it. A zone
-     changing the colour and the switch changing the shape are therefore mutually exclusive at
-     this indirection; the switch wins here because it is the documented one. */
+  /* The flat tokens, NOT the --accent-focus-* aliases — see docs/todo.md, "zone colour and
+     data-focus shape cannot both reach one role". A `var()` inside a custom property is
+     substituted where it is DECLARED, so a ds-color zone can never reach what is written here;
+     the switch wins because it is the documented one. */
   --ds-field-focus-shadow:         var(--focus-field);
   --ds-field-focus-shadow-error:   var(--focus-field-error);
   --ds-control-focus-shadow:       var(--focus-ring);

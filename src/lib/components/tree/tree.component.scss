@@ -25,6 +25,7 @@
     calc(var(--_tree-row-pad-x) + var(--_level, 0) * var(--_tree-indent));
   border: 0;
   background: transparent;
+  border-radius: var(--focus-ring-radius);
   color: var(--_tree-row-text-color);
   font:
     var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)

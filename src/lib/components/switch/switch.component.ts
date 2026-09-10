@@ -54,6 +54,9 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   /** Inline label rendered beside the track and wired via for/id. Omit to
    *  bring your own <label>. */
   readonly label = input<string>('');
+  /** Accessible name for a control with no visible label — the row's `<label>` collapses when it
+   *  is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
+  readonly ariaLabel = input<string | null>(null);
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -74,6 +77,10 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  /** Only name via aria-label when there is no visible `<label for>` to do it. */
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || null,
+  );
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly switchClasses = computed(() => {

@@ -10,6 +10,7 @@
       ) {
       <a
         [href]="item.href"
+        [attr.aria-label]="item.label ? null : (item.ariaLabel ?? null)"
         (click)="onNav($event, item)">
         @if (item.icon) {
           <ds-icon
@@ -26,6 +27,7 @@
     } @else {
       <span
         [class.current]="last"
+        [attr.aria-label]="item.label ? null : (item.ariaLabel ?? null)"
         [attr.aria-current]="last ? 'page' : null">
         @if (item.icon) {
           <ds-icon

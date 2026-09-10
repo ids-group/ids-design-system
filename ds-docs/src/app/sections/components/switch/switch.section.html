@@ -29,7 +29,7 @@
   <div class="states states--cols-4">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-switch />
+        <ds-switch ariaLabel="Off" />
       </div>
 
       <div class="state-cell-label">
@@ -39,7 +39,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
-        <ds-switch />
+        <ds-switch ariaLabel="Off · focus" />
       </div>
 
       <div class="state-cell-label">
@@ -49,7 +49,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-switch [checked]="true" />
+        <ds-switch
+          ariaLabel="On"
+          [checked]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -59,7 +61,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
-        <ds-switch [checked]="true" />
+        <ds-switch
+          ariaLabel="On · focus"
+          [checked]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -70,6 +74,7 @@
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-switch
+          ariaLabel="Success · on"
           variant="success"
           [checked]="true" />
       </div>
@@ -82,6 +87,7 @@
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-switch
+          ariaLabel="Error · on"
           variant="error"
           [checked]="true" />
       </div>
@@ -93,7 +99,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-switch [disabled]="true" />
+        <ds-switch
+          ariaLabel="Disabled · off"
+          [disabled]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -104,6 +112,7 @@
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-switch
+          ariaLabel="Disabled · on"
           [disabled]="true"
           [checked]="true" />
       </div>

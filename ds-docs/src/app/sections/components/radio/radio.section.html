@@ -33,7 +33,9 @@
   <div class="states states--cols-4">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-radio [deselectable]="true" />
+        <ds-radio
+          ariaLabel="Default"
+          [deselectable]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -43,7 +45,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-hover">
-        <ds-radio [deselectable]="true" />
+        <ds-radio
+          ariaLabel="Hover"
+          [deselectable]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -53,7 +57,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
-        <ds-radio [deselectable]="true" />
+        <ds-radio
+          ariaLabel="Focus"
+          [deselectable]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -64,6 +70,7 @@
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-radio
+          ariaLabel="Selected"
           [checked]="true"
           [deselectable]="true" />
       </div>
@@ -76,6 +83,7 @@
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
         <ds-radio
+          ariaLabel="Selected · focus"
           [checked]="true"
           [deselectable]="true" />
       </div>
@@ -87,7 +95,9 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-radio [disabled]="true" />
+        <ds-radio
+          ariaLabel="Disabled"
+          [disabled]="true" />
       </div>
 
       <div class="state-cell-label">
@@ -98,6 +108,7 @@
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-radio
+          ariaLabel="Disabled · selected"
           [disabled]="true"
           [checked]="true" />
       </div>
