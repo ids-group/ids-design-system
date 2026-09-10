@@ -1,21 +1,18 @@
 #!/usr/bin/env node
-// What actually needs uploading to Claude Design, and the ready-to-send batches for it.
+// What actually needs uploading to Claude Design, and the ready-to-send write_files batches for it.
 //
-//   node tools/design-sync-upload-plan.mjs                      # since the recorded upload
-//   node tools/design-sync-upload-plan.mjs --all                # the whole tree
+//   node tools/design-sync-upload-plan.mjs                       # since the recorded upload
+//   node tools/design-sync-upload-plan.mjs --all                 # the whole tree
 //   node tools/design-sync-upload-plan.mjs --remote <list.json>  # + reconcile against the project
 //   node tools/design-sync-upload-plan.mjs --record              # stamp after a successful upload
 //
-// THE COMPARISON IS LOCAL, AND THAT IS THE WHOLE POINT. `list_files` returns paths and nothing
-// else — no size, no hash, no mtime — so the only way to compare content with the project is
-// `get_file` per path, which pulls 6.2 MB of card HTML through the session to decide what to send.
-// Uploading the entire tree blind costs 170 KB of path JSON. Reading it back to avoid that is 36×
-// more expensive than not bothering. What IS cheap is git: `.design-sync/upload` is committed, so
-// the diff between the last uploaded commit and HEAD is the answer for one command. Measured per
-// release: 824, 433, 51 and 95 files of 1091 — the last two releases needed 5% and 9% of the tree.
+// The comparison is LOCAL and must stay local: `list_files` returns paths and nothing else — no
+// size, no hash, no mtime — so comparing content means `get_file` per path, 6.2 MB through the
+// session against 170 KB of path JSON for sending the whole tree blind. See COMMANDS.md.
 //
-// The pointer is the commit that last TOUCHED `upload/`, not HEAD: unrelated commits then leave the
+// The pointer is the commit that last TOUCHED `upload/`, not HEAD, so unrelated commits leave the
 // plan empty instead of re-sending 1091 unchanged files.
+
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -40,14 +37,13 @@ const git = (...args) =>
     cwd: ROOT,
     encoding: 'utf8',
     maxBuffer: 1 << 28,
-    // Swallowed so a deliberate probe — `merge-base --is-ancestor` on a commit that is not one —
-    // reports through this script's own message instead of leaking git's fatal first.
+    // Swallowed so the deliberate `--is-ancestor` probe reports through this script's own message
+    // rather than leaking git's fatal first.
     stdio: ['ignore', 'pipe', 'ignore'],
   }).trim();
 
 const treeCommit = () => git('log', '-1', '--format=%H', '--', TREE_REL);
 
-// ── --record: stamp what is now on the project ──────────────────────────────
 if (flag('--record')) {
   const record = {
     treeCommit: treeCommit(),
@@ -76,7 +72,7 @@ function localFiles() {
 
 const local = localFiles();
 
-// ── the tree must be committed, or the diff describes something that is not on disk ──
+// An uncommitted tree makes a commit-to-commit diff describe something that is not on disk.
 const dirty = git('status', '--porcelain', '--', TREE_REL);
 if (dirty) {
   console.error(
@@ -100,8 +96,8 @@ if (flag('--all')) {
     );
     process.exit(1);
   }
-  // A pointer that is not an ancestor means history moved under it; a diff against it would be a
-  // guess, and a guess here means a card silently not uploaded.
+  // Not an ancestor means history moved under the pointer, and a guess here is a card silently
+  // never uploaded.
   try {
     git('merge-base', '--is-ancestor', since, 'HEAD');
   } catch {
@@ -126,7 +122,6 @@ if (flag('--all')) {
   }
 }
 
-// ── optional reconcile: anything the project is missing goes in whatever the diff said ──
 const remoteArg = value('--remote');
 if (remoteArg) {
   const remote = JSON.parse(readFileSync(remoteArg, 'utf8')).paths ?? [];
