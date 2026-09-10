@@ -22,7 +22,9 @@
 
   <!-- Live ds-switch; pin-focus on the stage reads bare role token via ::ng-deep.
        success/error/disabled use real variant/disabled inputs. -->
-  <h3 class="block-title t-h4">Switch states showcase</h3>
+  <h3 class="block-title t-h4">
+    Switch states showcase
+  </h3>
 
   <div class="states states--cols-4">
     <div class="state-cell">
@@ -30,7 +32,9 @@
         <ds-switch ariaLabel="Off" />
       </div>
 
-      <div class="state-cell-label">Off</div>
+      <div class="state-cell-label">
+        Off
+      </div>
     </div>
 
     <div class="state-cell">
@@ -38,74 +42,90 @@
         <ds-switch ariaLabel="Off · focus" />
       </div>
 
-      <div class="state-cell-label">Off · focus</div>
+      <div class="state-cell-label">
+        Off · focus
+      </div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-switch
-          [checked]="true"
-          ariaLabel="On" />
+          ariaLabel="On"
+          [checked]="true" />
       </div>
 
-      <div class="state-cell-label">On</div>
+      <div class="state-cell-label">
+        On
+      </div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage pin-focus">
         <ds-switch
-          [checked]="true"
-          ariaLabel="On · focus" />
+          ariaLabel="On · focus"
+          [checked]="true" />
       </div>
 
-      <div class="state-cell-label">On · focus</div>
+      <div class="state-cell-label">
+        On · focus
+      </div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-switch
+          ariaLabel="Success · on"
           variant="success"
-          [checked]="true"
-          ariaLabel="Success · on" />
+          [checked]="true" />
       </div>
 
-      <div class="state-cell-label">Success · on</div>
+      <div class="state-cell-label">
+        Success · on
+      </div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-switch
+          ariaLabel="Error · on"
           variant="error"
-          [checked]="true"
-          ariaLabel="Error · on" />
+          [checked]="true" />
       </div>
 
-      <div class="state-cell-label">Error · on</div>
+      <div class="state-cell-label">
+        Error · on
+      </div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-switch
-          [disabled]="true"
-          ariaLabel="Disabled · off" />
+          ariaLabel="Disabled · off"
+          [disabled]="true" />
       </div>
 
-      <div class="state-cell-label">Disabled · off</div>
+      <div class="state-cell-label">
+        Disabled · off
+      </div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-switch
+          ariaLabel="Disabled · on"
           [disabled]="true"
-          [checked]="true"
-          ariaLabel="Disabled · on" />
+          [checked]="true" />
       </div>
 
-      <div class="state-cell-label">Disabled · on</div>
+      <div class="state-cell-label">
+        Disabled · on
+      </div>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Sizes</h3>
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
 
   <div class="sw-size-row">
     <ds-switch
@@ -121,7 +141,9 @@
       label="Large" />
   </div>
 
-  <h3 class="block-title t-h4">Required</h3>
+  <h3 class="block-title t-h4">
+    Required
+  </h3>
 
   <div class="stack">
     <ds-switch
@@ -129,11 +151,15 @@
       [required]="true" />
   </div>
 
-  <h3 class="block-title t-h4">Validation states</h3>
+  <h3 class="block-title t-h4">
+    Validation states
+  </h3>
 
   <p class="block-desc t-s">
     Use <code class="t-mono-inline">hint</code> for helper text and
-    <code class="t-mono-inline"> [invalid]="true" </code> to surface an error.
+    <code class="t-mono-inline">
+      [invalid]="true"
+    </code> to surface an error.
   </p>
 
   <div class="stack">
