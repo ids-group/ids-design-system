@@ -96,7 +96,8 @@
 } @else {
   <button
     type="button"
-    class="row">
+    class="row"
+    aria-label="Search">
     <ds-icon
       name="search"
       [size]="20" />
@@ -203,13 +204,14 @@
 <button
   type="button"
   class="row"
+  [attr.aria-label]="collapsed() ? 'Expand' : 'Collapse'"
   (click)="collapseToggled.emit()">
   <ds-icon
     [name]="collapsed() ? 'chevronRight' : 'chevronLeft'"
     [size]="20" />
 
   <span class="label">
-    Collapse
+    {{ collapsed() ? 'Expand' : 'Collapse' }}
   </span>
 </button>
 
