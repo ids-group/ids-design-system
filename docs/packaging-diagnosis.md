@@ -240,7 +240,7 @@ services together close over **16 of 77 groups**.
 
 `ButtonComponent extends DsMessageBase` and imports `FieldMessageComponent`, `resolveFieldMessage` and
 `trimmedText` so a button can render a hint/warning/error line under itself. Ablated on
-`probe/button-field-message` (worktree `C:\wt-ds-table-split`), control re-measured on the same build:
+`probe/button-field-message`, control re-measured on the same build:
 
 |                                         | JS raw    | JS gzip      | over bare Angular |
 | --------------------------------------- | --------- | ------------ | ----------------- |

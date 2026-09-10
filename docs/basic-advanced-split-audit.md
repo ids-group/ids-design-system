@@ -211,7 +211,7 @@ shape that survives the numbers, and flagged it unmeasured. It has now been meas
 delete the data-grid features from `ds-table` on a probe branch, rebuild the library, and re-run the
 same ladder. That gives the upper bound on what any such split can save, before designing it.
 
-Branch `probe/table-feature-directives`, worktree `C:\wt-ds-table-split`, built from `dev` at
+Branch `probe/table-feature-directives`, built from `dev` at
 `5783c830`. Baselines re-measured on that build, so every figure below is same-build.
 
 | Rung (gzipped JS)          | Baseline     | Ablated       | Δ             |

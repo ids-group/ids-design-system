@@ -7,6 +7,11 @@
 > `react-bindings/`, `build-css.mjs`, `build-bindings.mjs` or the parity gate is history, not
 > instruction.
 
+> **Nothing here describes one person's machine.** Which profile holds the design grant, when it
+> expires, which account was signed in — that is local and belongs in a file the repository does not
+> track. State the mechanism instead: the grant is per profile, an interactive `/design-login` mints
+> it, and whoever runs the upload checks their own.
+
 - **Target project:** "IDS Design System" (455f9a87-1a6e-4b1d-a0e7-cf47ed772e63), created 2026-07-24. First sync ran the incremental path (project created empty this run).
 - **Package manager: bun** (`bun install --frozen-lockfile`). Both `bun.lock` and `package-lock.json` exist; bun is authoritative — CI (`infrastructure/scripts/_setup.sh`) uses bun because `npm ci` fails under alpine/musl on `@emnapi/*` optional deps. Node 22 in CI.
 - **No Storybook.** Zero `*.stories.*` files on `main` (stories existed only on the stale `a11y` branch). Package shape. The `ds-docs` Angular app (`ng serve ds-docs --port 4300` / `bun run build:docs`) is the repo's own showcase.
@@ -117,12 +122,3 @@ What survives is about the components themselves:
 
 - Project "IDS Design System" 455f9a87-1a6e-4b1d-a0e7-cf47ed772e63, incremental path, plan approved 2026-07-24.
 - Batch 1 pushed (calibration): Button, Badge, Input, Icon, Spinner — all cells graded good. NOTE: pushed under `components/general/` BEFORE docsDir regrouping landed; the regrouped paths (actions/, forms-inputs/, …) upload with the next batch and the stale `general/` paths must be deleted then (or at close-out reconciliation at latest).
-
-## Which profile can upload (measured 2026-09-09)
-
-The design grant is per PROFILE, and only the primary `~/.claude` one has ever held it — its
-`designOauth` entry expired 2026-09-05. The `~/.claude-acc2` profile has no design entry at all
-(`mcpOAuth` + `claudeAiOauth` only), so `DesignSync` there answers
-"needs design-system authorization" on the first read call and `/design-login` is the only way in.
-So an upload runs from the primary profile, and the grant lasts about a day — mint it in the same
-sitting as the publish rather than ahead of it.

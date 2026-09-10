@@ -9,21 +9,18 @@ proven to load. What is missing is everything between the bundle and a published
 
 ## Why the machinery is repo code
 
-`/design-sync` is a first-party BUILT-IN, not a missing package — searching `~/.claude`,
-`~/.claude-acc2` and every marketplace cache could never have found it, and concluding from that
-search that it "does not exist" was wrong. Verified in the 218 MB binary at `~/.local/bin/claude`:
-`design-sync` and `design-login` appear 18 times each. What is NOT in the binary is the skill's
+`/design-sync` is a first-party BUILT-IN, not a missing package, so no plugin or marketplace cache
+can account for it. Verified in the 218 MB binary: `design-sync` and `design-login` appear 18 times
+each. What is NOT in the binary is the skill's
 BODY — `ds-shim`, `react-shim`, `keyRecipe`, `sourceKeys` and `_ds_sync` all return zero — so it is
 delivered by entitlement, and no session here can invoke it.
 
-That is the honest reason the machinery had to become repo code: not that the skill is imaginary,
-but that neither of these sessions is entitled to run it, and a design system cannot depend on an
-entitlement nobody in the team has.
+That is the reason the machinery had to become repo code: the skill is real but its body arrives by
+entitlement, and a design system cannot depend on an entitlement nobody in the team has.
 
-The authorization is per PROFILE, which is why the upload only started working after an account
-switch: `designOauth` with `user:design:read` + `user:design:write` sits in
-`~/.claude/.credentials.json` and is absent from `~/.claude-acc2/.credentials.json`. One
-interactive `/design-login` grants it on a profile that lacks it.
+The authorization is per PROFILE and lives in that profile's own credential store: a `designOauth`
+entry with `user:design:read` + `user:design:write`. A profile without it cannot upload at all, and
+one interactive `/design-login` is what grants it.
 
 And the transport is plain HTTP, not something only a model can drive: `POST /v1/design/mcp`,
 `GET`/`POST /v1/design/grants`, `/v1/design/consent`, and `POST /v1/oauth/token` with
@@ -261,7 +258,7 @@ What is left is not code:
    deletions, then `write_files` from `.design-sync/upload/`. The project is Misha's and
    `delete_files` is owner-only, so the 72 orphaned `_preview/*.js` need him.
 2. **Run the first `after-release` pipeline** - the only proof the chain works on alpine rather
-   than on this machine.
+   than on a developer's own box.
 
 A repo-local skill carrying the publish procedure is worth writing regardless, so no future session
 has to rediscover the order `list → finalize_plan → write → delete` or which CSS file ships.

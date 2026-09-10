@@ -2045,7 +2045,7 @@ trusted; the nineteen in section B would all have shipped as fact if no review h
 
 # THE CORRECTION PASS, as executed
 
-Branch `fix/two-wave-review-corrections`, worktree `C:\wt-ds-review`, cut from `dev` at `9a345622`.
+Branch `fix/two-wave-review-corrections`, cut from `dev` at `9a345622`.
 Evidence for every item: the section "THE FINAL GATED LIST" above.
 
 Approved 2026-09-02: everything in one pass, in this branch. A3-pre at the full 17-edit plan.
@@ -2130,7 +2130,7 @@ Approved 2026-09-02: everything in one pass, in this branch. A3-pre at the full 
 
 ## Result
 
-All four commits on `fix/two-wave-review-corrections`, worktree `C:\wt-ds-review`:
+All four commits on `fix/two-wave-review-corrections`:
 
 |            |                                                                   |
 | ---------- | ----------------------------------------------------------------- |
