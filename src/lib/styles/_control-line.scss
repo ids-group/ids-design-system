@@ -1,0 +1,55 @@
+@use 'focus' as focus;
+@use 'control-label' as control-label;
+
+// The row a selection control shares with its label — checkbox, radio and switch all render
+// `.control-line` and all three had this block, identical but for the control's own selector and
+// the two label tokens.
+//
+// The ring goes on the ROW, not on the glyph: a checked box already draws a brand box of its own,
+// and a ring around the glyph lands concentric with it — brand bands through a gap, which reads as
+// a target rather than as two states a keyboard user has to tell apart. `check-box.box` therefore
+// draws no ring itself, and ds-table adds one because it has no row to speak for it.
+//
+// $control — the glyph's selector, whose own indicator is suppressed in favour of the row's.
+@mixin line($control, $label-font, $label-color) {
+  @include focus.ring-for($control);
+
+  // The row paints nothing, so this shapes the ring and nothing else. An outline has no radius of
+  // its own — it follows the box it is drawn on.
+  border-radius: var(--focus-ring-radius);
+
+  // No label: the row collapses onto the glyph and the concentric read comes back, so the ring
+  // stands further off. `.control-text:empty` is display:none, so the row IS the glyph.
+  &:has(.control-text:empty) {
+    --focus-ring-offset: var(--space-1-5);
+  }
+
+  display: inline-flex;
+  align-items: center;
+
+  .control-text {
+    @include control-label.hit-area;
+
+    font: $label-font;
+    color: $label-color;
+    cursor: pointer;
+    user-select: none;
+
+    /* No [label] and nothing projected: collapse, or the empty caption
+       still takes the row gap and offsets the control. */
+    &:empty {
+      display: none;
+    }
+
+    .req {
+      color: var(--error);
+      font-weight: var(--font-weight-semibold);
+      margin-inline-start: var(--space-1);
+    }
+  }
+
+  &.is-disabled .control-text {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}
