@@ -81,27 +81,15 @@ In preference order:
    `ds-button`", that is a usable answer — but then the recipe in the previous Ask needs the
    exception written into it, because today it reads as though every navigating control is covered.
 
-## Second finding: the back button announces itself as the current page
+## A second finding, filed separately
 
-Separate from the above, and cheap to fix.
+The `routerLink` branch also makes a back-link announce `aria-current="page"`, because
+`routerLinkActive` is hardcoded with prefix matching and no `routerLinkActiveOptions`. It is
+unrelated to the missing inputs above and small enough to answer on its own, so it lives in
+[`ds-button-router-link-active-claims-the-page.md`](./ds-button-router-link-active-claims-the-page.md).
 
-The `routerLink` branch hardcodes `routerLinkActive="active"` and derives
-`[attr.aria-current]="rla.isActive ? 'page' : null"` from it. `routerLinkActive` defaults to
-**prefix** matching, and there is no `routerLinkActiveOptions` input to change that.
-
-So a "back to the section" button — the commonest control on any detail page — claims to be the page
-you are already on. Measured on the consumer, at `/case-studies/<slug>`:
-
-```html
-<a href="/case-studies" class="button lg v-outline active" aria-current="page">All case studies</a>
-```
-
-A screen reader announces "current page" for a link whose whole purpose is to leave the current page.
-Two ways out, either is fine:
-
-- expose `routerLinkActiveOptions` so the consumer can ask for `{ exact: true }`, or
-- make `aria-current` exact-only regardless of the `active` CLASS, since the class is a visual state
-  and `aria-current` is a factual claim, and the two do not have to share a matcher.
+The token surface has four holes of its own, found while branding the button to this site —
+[`ds-button-token-surface-holes.md`](./ds-button-token-surface-holes.md).
 
 ## What it unblocks
 

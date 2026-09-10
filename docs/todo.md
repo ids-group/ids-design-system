@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**104 open — 1 P1, 37 P2, 66 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**107 open — 1 P1, 39 P2, 67 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 37
+### P2 — 39
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -64,6 +64,9 @@ item and nothing else.
   - Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24)
   - `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]])
   - Theme recipe vs hand-tuned picks — alignment decision
+- **ds-button, from the ids-europe marketing site migration (2026-09-11)**
+  - A destination on `ds-button` cannot be modified, so 13 of one consumer's 31 controls cannot move
+  - A `ds-button` back-link announces `aria-current="page"`, and only screen-reader users can tell
 - **Component API / portfolio**
   - Shared picker internals — DECIDED 2026-09-02 (Stas): BUILD IT
   - The button's colour-family slots are named `--c-*`, which is not an acceptable name
@@ -74,7 +77,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 66
+### P3 — 67
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -125,6 +128,8 @@ item and nothing else.
   - Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below)
 - **The hex readout rolls its glyphs like a mechanical board (recorded 2026-09-02, Stas)**
   - Dragging the picker retypes the hex value instantly; each glyph should ROLL to its new
+- **ds-button, from the ids-europe marketing site migration (2026-09-11)**
+  - Four holes in `ds-button`'s token surface each push a consumer into redefining a THEME role inside the component
 - **Component API / portfolio**
   - CDK Menu adoption (option B) — parked
 - **Tooling**
@@ -1121,6 +1126,18 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
 - [ ] **[P2] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking user verdicts B1–B5** (live demo `presentations/3-interaction-formula.html`): (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item/table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` slot; (B5) pressed step for success/warning buttons. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
 
 - [ ] **[P2] Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe (**verified `button.component.scss:34-38`, `_semantic.scss:111-112`, 2026-07-24**). If the single-source-colour calibration replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix off the resolved bg) diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. **This is a concrete instance of the single-source item's open question (b); resolve it inside that spec, not separately.**
+
+## ds-button, from the ids-europe marketing site migration (2026-09-11)
+
+Three findings from one consumer moving 31 button-styled controls onto `ds-button` after the
+destination work shipped in 0.12.3. Eighteen moved with zero visual change; these are what stopped
+the rest, plus one defect the move introduced. Each has its own write-up in `docs/`.
+
+- [ ] **[P2] A destination on `ds-button` cannot be modified, so 13 of one consumer's 31 controls cannot move.** `routerLink` and `href` are the only destination inputs: there is no `fragment` (6 controls need it), no `queryParams` (5), and no `target`/`rel` (3) — one control needs two, hence 14 slots over 13 controls. `RouterLink` is in the component's own `dependencies` with all eleven of its inputs, but the template binds only `[routerLink]`, so the other ten are unreachable. Every workaround is worse than the gap: folding query and fragment into the `routerLink` string percent-encodes them into the path (`createUrlTree` treats commands as segments); `href` with a serialized URL is a full document load on a site's conversion path; importing `RouterLink` alongside puts a SECOND directive instance on the host that disagrees with the anchor's about the destination (measured as latent, not broken — one click still produced one `pushState`). `ds-sidenav-item` has the same gap, and grepping the published type surface for a `queryParams` or `fragment` INPUT returns nothing on any component. **Ask:** forward `fragment`, `queryParams` and `queryParamsHandling` on the `routerLink` branch and `target`/`rel` on the `href` branch — each a pass-through to an element the component already renders, the same shape as the button-only `type` and `loading`. **Read** `docs/ds-button-destination-modifiers.md`.
+
+- [ ] **[P2] A `ds-button` back-link announces `aria-current="page"`, and only screen-reader users can tell.** The `routerLink` branch hardcodes `routerLinkActive="active"` and derives `[attr.aria-current]="rla.isActive ? 'page' : null"` from it. `routerLinkActive` matches by PREFIX and there is no `routerLinkActiveOptions` input, so a "back to the section" button — whose destination is always a prefix of the current URL — claims to be the page the reader is already on. Read from the live DOM at `/case-studies/<slug>`: `<a href="/case-studies" class="button lg v-outline active" aria-current="page">All case studies</a>`. Nothing is painted, because `.active` has no rule in the button's stylesheet — which is what makes it worth reporting: it is invisible to everyone except the users it misleads. No consumer-side fix exists; the directive lives on the anchor the component renders inside itself. **Ask:** either expose `routerLinkActiveOptions`, or decouple `aria-current` from the `active` CLASS and make the ARIA claim exact-only — the class is a visual state, the attribute is a factual claim, and they need not share a matcher. Check `ds-sidenav-item` for the same shape. **Read** `docs/ds-button-router-link-active-claims-the-page.md`.
+
+- [ ] **[P3] Four holes in `ds-button`'s token surface each push a consumer into redefining a THEME role inside the component.** Nineteen `--ds-button-*` tokens carried almost the whole re-brand — the consumer reproduced its call to action byte-exactly (`204.06 × 56`, radius 12, `#fcc634` on `#1c3558`) touching no internal class. The four that were missing: the label FAMILY and LINE-HEIGHT (`.button` reads `var(--font-sans)` and `var(--line-height-flat)` directly, though weight and size are tokenised), the border WIDTH (`--ds-button-border` sets only the colour, so the DS's 1px made every solid button 2px wider than the control it replaced — 204.06 against 206.06), and the label colour on hover and active (background has base/hover/active/disabled, label has only base/disabled, so a button whose label changes on hover cannot be expressed — the consumer gave up its outline inversion rather than reach past the API). The first three forced `ds-button { --font-sans: … }` and `ds-button[data-variant='solid'] { --border-width-default: 0 }` — a theme role redefined for a subtree, which compiles, is invisible in review, and silently reaches every child the component renders. **Ask:** `--ds-button-font-family`, `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and `--ds-button-label-color-active`, each a `var(--ds-button-…, <current value>)` at the point the value is already read, so no default moves and nothing needs a migration entry. **Read** `docs/ds-button-token-surface-holes.md`.
 
 ## Component API / portfolio
 
