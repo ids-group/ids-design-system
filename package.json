@@ -53,6 +53,8 @@
     "check-tools-parse": "node tools/check-tools-parse.mjs",
     "check:agent-catalogue": "node tools/split-agent-catalogue.mjs --check",
     "check:manual-surface": "node .design-sync/tools/check-manual-surface.mjs",
+    "design-sync-plan": "node tools/design-sync-upload-plan.mjs",
+    "design-sync-plan:record": "node tools/design-sync-upload-plan.mjs --record",
     "todo-index": "node tools/todo-index.mjs",
     "todo-index:check": "node tools/todo-index.mjs --check",
     "class-surface": "node tools/class-surface-diff.mjs",
