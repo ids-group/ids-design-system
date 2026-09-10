@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**100 open — 1 P1, 37 P2, 62 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**104 open — 1 P1, 37 P2, 66 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -70,14 +70,15 @@ item and nothing else.
 - **Tooling**
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
-  - prettier and eslint want opposite things about HTML, so `lint:all` can never be green (measured 2026-08-25)
+  - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 62
+### P3 — 66
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
+  - No indicator has been measured for SIZE or contrast — the 2026-09-10 sweep answered 2.4.7 only
   - `ds-date-picker` takes the CONTROL focus role while being a text field
   - `--ds-multi-select-option-bg-color-active` is documented and dead
   - `--ds-time-picker-focus-shadow` is read by the portaled panel and forwarded by nobody
@@ -118,6 +119,7 @@ item and nothing else.
 - **`TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)**
   - The two row-action halves left open on purpose: a per-row `label`, and a divider or …
 - **DS-docs**
+  - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
   - Sidebar nav labels reflow while the rail animates, the way the brand text used to (recorded 2026-08-12, from the collapse-animation work)
   - Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below)
@@ -126,6 +128,8 @@ item and nothing else.
 - **Component API / portfolio**
   - CDK Menu adoption (option B) — parked
 - **Tooling**
+  - Three `ds-table` paths have never been driven by automation, and five component groups have never been clicked through
+  - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - `templates` and `startingPoints` in the Claude Design manifest are unexplored, and so is what feeds the pane's "Usage notes for Claude" (recorded 2026-09-03)
   - Four components had no block of their own in ds-docs (recorded 2026-09-03, two fixed)
   - `schematics/tsconfig.json` still asks for `moduleResolution: "node"`, which TypeScript 6 removes (recorded 2026-08-31)
@@ -210,6 +214,8 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   88 files, three rejected failure classes, each controlled by planting a defect and watching it
   exit 1.
 
+
+- [ ] **[P3] No indicator has been measured for SIZE or contrast — the 2026-09-10 sweep answered 2.4.7 only.** It established that all 1807 focusable elements draw something; it read no indicator's area and no contrast against the colours next to it, which is what WCAG 2.4.13 Focus Appearance (AAA) asks for: an area at least the size of a 2px perimeter of the component, at 3:1 against adjacent colours. One known candidate already: `ds-table`'s column-resize handle indicates focus by widening its `::after` hairline to 2px over roughly 24px of height, ~48px² against the ~184px² a 2px perimeter of its own 8×40px box would need. It passes 2.4.7 and would fail 2.4.13. Whether the library targets AAA here is a decision, not a defect — record the answer before measuring the rest.
 
 - [ ] **[P2] Nothing catches a shell that rings on `:focus-within` when it means the keyboard.**
   Shipped and caught by Stas in a screenshot, 2026-09-05: the row ring on checkbox/radio/switch used
@@ -971,6 +977,8 @@ Three defects the port surfaced by reading every component's template + SCSS aga
 
 ## DS-docs
 
+- [ ] **[P3] Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could.** Nine `ds-select` instances — the ones carrying a `value` and no `placeholder`, because `placeholder` is a name source there and `value` is not — and five `ds-number-stepper` instances in the size and behaviour demos. Both components have taken an `ariaLabel` since long before this; the demos simply never set one, so this is ds-docs authoring and not a library gap. Left rather than auto-filled because neither sits in a `state-cell` with a caption to borrow, so each needs a written name. Measured on `/components/autocomplete`, where the count went 31 → 14 once checkbox, radio and switch got theirs.
+
 - [ ] **[P3] ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01).**
   The house lint rule `ds/template/element-content-newline` moves the content of an inline `<code>` onto
   its own line, so `</code>.` becomes a collapsed newline plus the period and the browser renders
@@ -1140,6 +1148,10 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
 
 ## Tooling
 
+- [ ] **[P3] Three `ds-table` paths have never been driven by automation, and five component groups have never been clicked through.** The paths: dragging a column by its handle to reorder, drag-resizing a column, and CSV export — each is pointer-sequence or file-download work that every sweep so far has read statically or skipped. The groups whose demos no automated pass has ever exercised: `actions`, `navigation`, `feedback-status`, `overlays`, `page-structure`. Recorded so the coverage is a known hole rather than an assumption: the focus and accessible-name sweeps DID load all thirteen group pages, so what is missing is interaction, not rendering.
+
+- [ ] **[P3] `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs.** The generator exists and `npm run todo-index:check` fails on a mismatch, but nothing runs it, which is the same gap that let the hand-kept index drift for months. Held back deliberately: adding a step to `lint:all` changes the PR gate for every branch, and in a shared checkout a parallel session editing `docs/todo.md` mid-run would fail it — the C013 false-positive class this repo has already met. One line in the `lint:all` chain when that trade is accepted.
+
 - [ ] **[P2] Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth.** Regenerating it on 2026-09-10 moved 47 declarations that had nothing to do with the change in hand: the focus ring's `transition` → `animation` plus the `ds-focus-ring-in` keyframes, `--focus-ring-radius`, the four check-mark motion roles with the dropdown option's mark, and the mono ligature hook. So every deck had been rendering a pre-animation focus ring for as long as those changes had been in `src/lib`.
   **Why it matters beyond the decks:** `deck-lint`'s D012 and `check-void-tokens` both resolve `var(--x)` against this file, so a stale copy makes a live token read as void — and could hide a genuinely void one. `presentations/README.md` says to run `build:deck-css` after changing any token; nothing enforces it.
   **The fix has a precedent in this repo:** `build-design-sync.sh` rebuilds its tree and fails when the committed one differs. The same shape here is `npm run build:deck-css` followed by a `git diff --exit-code presentations/ds.css` in `lint:all`.
@@ -1187,10 +1199,10 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
   **Why it was split off rather than done in the same pass.** Removing `__` was a pure rename — 865 occurrences, zero semantic change, provable (589 classes used and 589 styled, identical before and after). Converting `--mod` to `is-mod` is NOT: it splits one class into two in the markup, which changes selector specificity from (0,1,0) to (0,2,0) wherever the SCSS is nested, and specificity is exactly what a docs section leans on when it pins a component's forced state. That wants its own pass with its own verification, not a rider on a mechanical one.
   **Then extend the guard.** `selector-class-pattern` currently allows `-` freely, which is what lets `--` through; once the conversion lands, tighten it to reject a doubled hyphen in a class name so the notation cannot come back — the same shape as the two rules that now block `__` (`selector-class-pattern` plus `selector-nested-pattern`, because the first one alone does not see `&__x`).
 
-- [ ] **[P2] prettier and eslint want opposite things about HTML, so `lint:all` can never be green (measured 2026-08-25).** Ran the three formatters over the whole project on Stas's instruction — prettier, then stylelint, then eslint. Prettier reformatted **140 files** (115 html + 25 ts) and needed a second pass on three before reaching a fixed point. Eslint then pulled **77 of them back**, leaving 63 actually changed. Afterwards prettier reports **~112 html files as unformatted, permanently**: its line-breaking fights `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order`, and each tool undoes the other on the same files every time either runs. **This is not formatting debt — it is a config conflict, and no number of `fix:all` runs converges.** It is why the `format` step of `lint:all` has been red for so long that the PR gate was set to report-only, which then hid every real lint finding behind a known-red step.
-  **Three ways out, and it is a taste call, not a technical one:** (a) **stop prettier at the html door** — add `*.html` to `.prettierignore` and let the two `ds/template/*` rules own template formatting alone (smallest diff, and eslint already wins today in practice); (b) **drop the two ds rules** and let prettier own html (bigger one-off diff, loses the attribute-order convention the repo chose deliberately); (c) keep both and accept a permanently red step (status quo — but then say so in the script, so nobody re-runs `fix:all` hoping it converges). **Recommendation: (a).** Eslint is already the de-facto winner, prettier still owns ts/json/md where nothing contests it, and it makes `lint:all` green so the PR gate can stop being report-only.
-  **Re-measured 2026-08-31**, running the three in the order prettier → stylelint → eslint with eslint last: prettier rewrote 112 files in its own scope, stylelint had nothing to say, and `eslint --fix` reverted 111 of the 112. Net change was 8 files of whitespace inside inline elements, which Angular discards — so the tree has been in eslint's shape all along and `npm run format` is red at 111 either way.
-  **Not urgent, not cosmetic:** nothing ships wrong today, but a permanently red gate is how a real finding gets missed — which is the same failure mode as the report-only PR lint.
+- [ ] **[P2] `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green.** The two globs differ, which is the whole of it: `format` checks `{src,ds-docs/src,tools}/**/*.{ts,json,md}` and never looks at a template, so the gate passes; `format:fix` adds `html` to the same glob, so the repo's own fixer rewrites ~112 templates that `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order` immediately want back. Measured again 2026-09-10 from both ends: `lint:all` exits 0 on a clean tree, and one `prettier --write` over three docs section files produced 63 eslint warnings, 23 of them attribute-order on the very attributes just added.
+  **So the cost is not a red gate, it is a fixer nobody can run.** `fix:all` is the documented way to normalise a branch, and running it dirties every template it touches — which is how an unrelated file lands in a diff (it happened twice in this repo).
+  **The fix is one glob, and it needs a decision because it is a policy file.** Drop `html` from `format:fix` so prettier owns ts/json/md and the two `ds/template/*` rules own templates, which is the shape `lint:all` already assumes. The alternatives are to drop the two ds rules and let prettier own html (bigger diff, loses the attribute-order convention the repo chose), or to leave it and say so in the script so nobody expects `fix:all` to converge.
+  **Earlier measurements, still valid as evidence:** prettier reformatted 140 files (115 html + 25 ts) and eslint pulled 77 back (2026-08-25); in the order prettier → stylelint → eslint, `eslint --fix` reverted 111 of prettier's 112, leaving 8 files of whitespace inside inline elements that Angular discards. The tree has been in eslint's shape all along.
 
 - [ ] **[P3] Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/6-migration-manifest-audit.html`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
   **Three of the thirteen are already settled and are NOT part of this item:** the instruction/rationale split shipped as `action` (the prose-split pass, 2026-08-25); package reachability shipped — `package.json` already exports `"./migrations/*"`; and `schemaVersion` was **rejected** in the prose-split session along with `author`, `place`, `outcome`, `unchanged` and `source`.
