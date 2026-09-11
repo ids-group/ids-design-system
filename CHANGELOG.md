@@ -8,7 +8,70 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **A `ds-stat` label and value clip to one line and disclose the rest on hover.** Both used to run
+  past the tile: the value carried `white-space: nowrap` with no overflow rule at all, so
+  "Feb 1 – Feb 28, 2026" at the default size painted 158px beyond a 240px card and over whatever
+  sat beside it. They now take the same `single-line-ellipsis` treatment the other eleven
+  text-bearing components already use, and a clipped one opens a tooltip with the full text on
+  hover and on keyboard focus.
+
+  Every tile whose value is longer than its card changes visually. Nothing is lost to assistive
+  technology — the truncation is optical, so the full string stays in the DOM — but a value that
+  used to be readable by escaping its card is now an ellipsis plus a tooltip.
+
+  ```scss
+  /* every character visible, at the cost of the tile's height */
+  ds-stat { --ds-stat-value-white-space: normal; }
+  ```
+
+- **A clipped `ds-table` cell discloses on hover, not on click, and carries no `title`.** The cell
+  used to set `title` unconditionally and open a popover when you clicked it; the header set
+  `title` on pointer-enter through a handler of its own. All three are one directive now, so the
+  disclosure arrives at 120ms on hover AND on focus rather than needing a mouse, and it stays shut
+  for a cell that already reads in full. A flow that clicked a cell to read it, or a test asserting
+  `title` on `.cell-clip`, has to follow the tooltip instead.
+
 ### Added
+
+- **`ds-stat` takes `--ds-stat-value-lines` and `--ds-stat-value-wrap`, which compose with the
+  `white-space` hook.** The three cover the shapes a KPI value actually needs: clip to one line
+  (the default), wrap freely, wrap and put the ellipsis on the line you name, or break a word wider
+  than the tile.
+
+  ```scss
+  ds-stat { --ds-stat-value-white-space: normal; }                              /* wraps */
+  ds-stat { --ds-stat-value-white-space: normal; --ds-stat-value-lines: 2; }    /* … then clips */
+  ds-stat { --ds-stat-value-white-space: normal; --ds-stat-value-wrap: anywhere; }
+  ```
+
+  `--ds-stat-value-lines` only bites once the value wraps: a clamp on a `nowrap` box has nothing to
+  clamp. And wrapping alone does not keep a long value inside the card — a single word wider than
+  the tile still paints past the edge, which is what `--ds-stat-value-wrap: anywhere` is for.
+
+- **`dsTooltipWhenClipped`, so any host can disclose only what it is actually hiding.** With it the
+  tip opens only while the host shows less text than it holds, re-tested on every open — so it
+  appears and stops appearing as a column, panel or window is resized, with no observer to run. Left
+  with no `dsTooltip` text it discloses the host's own text, which is what makes it usable on
+  projected content.
+
+  ```html
+  <span class="cell" dsTooltipWhenClipped [dsTooltip]="row.name">{{ row.name }}</span>
+  ```
+
+  `isTextClipped(element)` is exported from `/core` behind it: true when the element, or anything it
+  renders, is showing less than it holds. Horizontal only — a clamped block hides whole lines and
+  its `scrollWidth` matches its `clientWidth`.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `ds-stat { --ds-stat-value-white-space: normal; }` written only to stop a long value painting over the tile beside it | the value clips by default, so it no longer escapes its card | nothing — keep the hook only where you want the value wrapped and the tile taller |
+| `ds-stat .value { overflow: hidden; text-overflow: ellipsis; }` — your own clip on the value | the component clips it, and with `overflow: clip` plus a clip margin, so descenders survive where `hidden` shaved them | nothing |
+| `.cell-text-pop` — a rule sizing or colouring the table's full-value popover | the popover is gone; a clipped cell opens a tooltip instead | `--ds-tooltip-*`, if the panel needs changing at all |
+
 
 - **Five `ds-button` tokens that closed the last holes in its surface: `--ds-button-font-family`,
   `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and

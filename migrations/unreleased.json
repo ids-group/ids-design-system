@@ -1,8 +1,117 @@
 {
   "version": "unreleased",
-  "items": [],
-  "informational": [
-    "`ds-button` takes five more style hooks — `--ds-button-font-family`, `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and `--ds-button-label-color-active`. Every one defaults to the value the stylesheet read before it, so nothing moves for a button that sets none of them. Worth knowing if you reached the same values the hard way: `ds-button { --font-sans: … }` and a subtree override of `--border-width-default` both have a hook of their own now, and neither of those workarounds stops working."
+  "items": [
+    {
+      "id": "stat-value-clips-to-one-line",
+      "kind": "behavior",
+      "old": "ds-stat",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "action": "Look at every screen with a ds-stat whose value is longer than its tile, and decide per tile whether the clipped value is acceptable or the value should wrap.",
+      "appliesWhen": "Any ds-stat, and only where the label or value is wider than the card. A tile whose value fits renders identically and needs nothing. Tiles that already set --ds-stat-value-white-space are unaffected in shape — they wrapped before and wrap now.",
+      "pitfall": "Nothing fails to build and nothing is lost to a screen reader, so this only shows on the screen: a tile that read in full because its value painted over the neighbouring card now ends in an ellipsis, and the text is reachable only by hovering or focusing it.",
+      "restore": "ds-stat { --ds-stat-value-white-space: normal; }",
+      "searchHints": [
+        "ds-stat",
+        "--ds-stat-value-white-space",
+        "--ds-stat-value-font-size"
+      ],
+      "detect": [
+        "<ds-stat",
+        "ds-stat {",
+        "ds-stat["
+      ],
+      "verify": "No ds-stat value paints outside its own card at any viewport width, and every tile whose value is clipped opens a tooltip carrying the full value on hover.",
+      "note": "The value carried `white-space: nowrap` and no overflow rule, so a phrase ran past the card and over its neighbour — 158px past a 240px tile at the default size. It now takes the same single-line ellipsis the other eleven text-bearing components use. The restore snippet keeps every character visible by wrapping, which grows the tile instead; there is no hook that brings back the value escaping the card, because that was the defect. Three hooks shape it and they compose: `white-space`, `--ds-stat-value-lines` for the ellipsis on line N, and `--ds-stat-value-wrap: anywhere` for a word wider than the tile (delete list: stat-wrap-hook-for-spill)."
+    },
+    {
+      "id": "table-cell-discloses-on-hover",
+      "kind": "behavior",
+      "old": "ds-table",
+      "new": null,
+      "surface": [
+        "typescript",
+        "style"
+      ],
+      "action": "Replace any flow or test that clicked a truncated cell, or read its `title`, with one that hovers or focuses it and reads the tooltip.",
+      "appliesWhen": "Only where a column sets `truncate`. A table without truncated columns never rendered the popover and sets no `title`, so nothing changes for it.",
+      "pitfall": "An end-to-end test that asserted `title` on `.cell-clip` now reads null and a click on the cell opens nothing — both pass as \"no error\" while the assertion silently stops testing disclosure.",
+      "restore": null,
+      "searchHints": [
+        "cell-clip",
+        "cell-text-pop",
+        "truncate"
+      ],
+      "detect": [
+        ".cell-clip",
+        "getAttribute('title')",
+        "cell-text-pop",
+        "toHaveAttribute('title'"
+      ],
+      "verify": "Hovering a truncated cell shows the full value, and a cell that already reads in full shows nothing.",
+      "note": "The cell set `title` on every truncated cell and opened a popover on click; the header set `title` from its own pointer-enter handler. All three are `dsTooltipWhenClipped` now, which fires on hover and on focus and stays shut when the text already fits — so the disclosure reaches the keyboard, which the click popover never did. `title` is dropped deliberately: together with a tooltip it renders the same text twice, once styled and once by the OS (delete list: table-cell-text-pop-styling)."
+    },
+    {
+      "id": "exported-class-members-changed",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "action": "Rename your subclass member where it collides, or add `override` where the base member genuinely matches; drop an override of a member that no longer exists on the base.",
+      "appliesWhen": "Only a class that extends one of the two named below. Subclassing a DS component is unsupported (design-system.md § Components), so most consumers are unaffected.",
+      "pitfall": "A gained name fails the build loudly (TS4114 / TS2416), but a LOST one does not: an `override` of a member the base no longer declares is an error, while a method that merely shadowed one now runs as your own code with nothing calling it.",
+      "restore": null,
+      "searchHints": [
+        "extends TooltipDirective",
+        "extends TableComponent",
+        "extends "
+      ],
+      "detect": [
+        "extends TooltipDirective",
+        "extends TableComponent"
+      ],
+      "verify": "The consumer app type-checks, and no subclass declares `override` on a member the base no longer has.",
+      "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`. TableComponent lost `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter` — the three hand-rolled disclosures it carried, now one directive. The compiler enumerates every collision on the first build, which is why the names live here and not in the action."
+    }
   ],
-  "deleteList": []
+  "informational": [
+    "`ds-button` takes five more style hooks — `--ds-button-font-family`, `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and `--ds-button-label-color-active`. Every one defaults to the value the stylesheet read before it, so nothing moves for a button that sets none of them. Worth knowing if you reached the same values the hard way: `ds-button { --font-sans: … }` and a subtree override of `--border-width-default` both have a hook of their own now, and neither of those workarounds stops working.",
+    "`ds-stat` takes two more hooks beside the existing `--ds-stat-value-white-space`: `--ds-stat-value-lines` puts the ellipsis on the line you name once the value wraps, and `--ds-stat-value-wrap: anywhere` breaks a word wider than the tile. Both default to the shape the component already had, so a tile that sets neither is unaffected by them.",
+    "`dsTooltipWhenClipped` is public on the tooltip directive: the tip opens only while its host is showing less text than it holds, and with no `dsTooltip` text it discloses the host's own text. `isTextClipped(element)` from `/core` is the same test on its own — horizontal only, descendants included. Additive; an existing `[dsTooltip]` binding behaves exactly as before."
+  ],
+  "deleteList": [
+    {
+      "id": "stat-wrap-hook-for-spill",
+      "surface": "style",
+      "find": [
+        "--ds-stat-value-white-space: normal",
+        "--ds-stat-value-white-space:normal"
+      ],
+      "why": "the value clips by default now, so the hook is no longer what stops it painting over the tile beside it",
+      "replaceWith": "nothing where it was written only to contain the value; keep it where the tile is meant to wrap and grow taller, which is still the only way to show every character"
+    },
+    {
+      "id": "stat-own-value-clip",
+      "surface": "style",
+      "find": [
+        "ds-stat .value",
+        "::ng-deep ds-stat"
+      ],
+      "why": "the component clips the value itself, through `overflow: clip` with a clip margin — a hand-written `overflow: hidden` on the same element shaves the descenders the component now keeps",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "table-cell-text-pop-styling",
+      "surface": "style",
+      "find": [
+        ".cell-text-pop",
+        "ds-table .cell-text-pop"
+      ],
+      "why": "the full-value popover is gone; a clipped cell opens a tooltip instead",
+      "replaceWith": "the tooltip panel, if the disclosure needs styling at all"
+    }
+  ]
 }
