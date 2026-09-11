@@ -2419,9 +2419,24 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Active/pressed fill — derived from the resolved bg unless set."
       },
       {
+        "name": "--ds-button-label-color-hover",
+        "value": "var(--_button-label-color)",
+        "notes": "Label colour under the cursor. Defaults to --ds-button-label-color, so a button that does not set it does not change on hover."
+      },
+      {
+        "name": "--ds-button-label-color-active",
+        "value": "var(--_button-label-color)",
+        "notes": "Label colour while pressed. Defaults to --ds-button-label-color."
+      },
+      {
         "name": "--ds-button-border",
         "value": "transparent",
         "notes": "Border colour (outline variant overrides)."
+      },
+      {
+        "name": "--ds-button-border-width",
+        "value": "var(--border-width-default)",
+        "notes": "The button border's WIDTH, where --ds-button-border is its colour. Defaults to --border-width-default; set it rather than redefining that scale step for a subtree."
       },
       {
         "name": "--ds-button-press-scale",
@@ -2447,6 +2462,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-button-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
+      },
+      {
+        "name": "--ds-button-font-family",
+        "value": "var(--font-sans)",
+        "notes": "The button label's family. Defaults to --font-sans; set it where buttons follow the heading face rather than the body one, instead of re-pointing --font-sans inside the component."
+      },
+      {
+        "name": "--ds-button-line-height",
+        "value": "var(--line-height-flat)",
+        "notes": "The button label's line height. Defaults to --line-height-flat."
       },
       {
         "name": "--ds-button-font-size",
@@ -3388,6 +3413,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-group-focus-shadow",
         "value": "var(--ds-field-focus-shadow)",
         "notes": "The ONE focus ring for the group (default --ds-field-focus-shadow) — segments suppress their own."
+      },
+      {
+        "name": "--ds-field-group-focus-shadow-error",
+        "value": "var(--ds-field-focus-shadow-error)",
+        "notes": "The halo a ds-field-group draws while invalid AND focused. Defaults to --ds-field-focus-shadow-error, the halo a single error field uses."
       },
       {
         "name": "--ds-field-group-divider-color",

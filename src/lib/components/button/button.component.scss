@@ -45,10 +45,18 @@
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
   --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
 
+  /* Default to the resting label, so a button that does not set them is unchanged. */
+  --_button-label-color-hover: var(--ds-button-label-color-hover, var(--_button-label-color));
+  --_button-label-color-active: var(--ds-button-label-color-active, var(--_button-label-color));
+
   /* Hue source for the muted disabled tone — the fill for solid, the label
      accent for tonal/ghost/outline (set on those fill classes). */
   --_button-accent: var(--_button-bg-color);
   --_button-border:    var(--ds-button-border,    transparent);
+
+  /* The WIDTH, where --ds-button-border is the colour. Without it the only way to change a button's
+     edge is redefining --border-width-default for the subtree, which moves a scale step. */
+  --_button-border-width: var(--ds-button-border-width, var(--border-width-default));
 
   /* Press darkens and scales down; the halo is opt-in — set --ds-button-pressed-shadow. */
   --_button-press-scale: var(--ds-button-press-scale, 0.98);
@@ -61,6 +69,8 @@
 
   /* The size classes below re-resolve these with the hook first, so --ds-button-* wins over the
      size it would otherwise pick. */
+  --_button-font-family: var(--ds-button-font-family, var(--font-sans));
+  --_button-line-height: var(--ds-button-line-height, var(--line-height-flat));
   --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
   --_button-weight:    var(--ds-button-weight,    var(--font-weight-extrabold));
   --_button-tracking:  var(--ds-button-tracking,  var(--letter-spacing-wide));
@@ -79,11 +89,11 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  font: var(--_button-weight) var(--_button-font-size) / var(--line-height-flat) var(--font-sans);
+  font: var(--_button-weight) var(--_button-font-size) / var(--_button-line-height) var(--_button-font-family);
   letter-spacing: var(--_button-tracking);
   color: var(--_button-label-color);
   background-color: var(--_button-bg-color);
-  border: var(--border-width-default) solid var(--_button-border);
+  border: var(--_button-border-width) solid var(--_button-border);
   border-radius: var(--_button-radius);
   padding: var(--_button-pad-y) var(--_button-pad-x);
   height: var(--_button-height);
@@ -108,8 +118,8 @@
   /* All one class deep, so SOURCE ORDER decides: disabled beats hover/active, and the focus ring
      beats disabled — a soft-disabled button still takes focus. Do NOT add `:not()` to hover to
      exclude disabled: it raises hover above the ring and silently deletes it. */
-  &:hover  { background-color: var(--_button-bg-color-hover); box-shadow: var(--_button-shadow-hover); }
-  &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
+  &:hover  { background-color: var(--_button-bg-color-hover); color: var(--_button-label-color-hover); box-shadow: var(--_button-shadow-hover); }
+  &:active { background-color: var(--_button-bg-color-active); color: var(--_button-label-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
 
   &[disabled],
   &[aria-disabled='true'] {
@@ -139,7 +149,7 @@
   .subtext-slot:empty { display: none; }
   .subtext-slot,
   .reason {
-    font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
+    font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--_button-font-family);
     letter-spacing: var(--letter-spacing-normal);
     text-align: center;
   }
@@ -288,7 +298,10 @@
     text-decoration: underline;
     text-underline-offset: var(--btn-link-uloff);
 
-    &:hover { color: var(--c-base); }
+    /* Through the resolver like every other variant, so --ds-button-label-color-hover reaches a
+       text button too; as a `color` on `.button.v-text:hover` it out-ranked the base rule and the
+       hook could never be seen here. */
+    --_button-label-color-hover: var(--ds-button-label-color-hover, var(--c-base));
   }
 
   &.loading {
