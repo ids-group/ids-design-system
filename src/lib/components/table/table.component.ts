@@ -29,6 +29,7 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import { PaginationComponent } from '@ids-group-ltd/ids-design-system/components/pagination';
 import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { CellTemplateDirective } from './cell-template.directive';
@@ -113,6 +114,7 @@ function compareSortValues(
     PaginationComponent,
     LoadingOverlayComponent,
     PopoverComponent,
+    TooltipDirective,
     MenuComponent,
     MenuItemComponent,
     // Only instantiated when a column sets `link`, so a consumer app with no router
@@ -1095,47 +1097,6 @@ export class TableComponent<T extends object> {
   protected readonly hasTruncate = computed(() =>
     this.columns().some((col) => col.truncate),
   );
-  private readonly cellTextPopover =
-    viewChild<PopoverComponent>('cellTextPopover');
-  protected readonly cellPopoverText = signal('');
-
-  protected onCellClipClick(row: T, col: TableColumn<T>, event: Event): void {
-    const element = event.currentTarget as HTMLElement;
-    if (!TableComponent.isClipped(element)) {
-      return;
-    }
-    event.stopPropagation();
-    this.cellPopoverText.set(this.cellValue(row, col));
-    this.cellTextPopover()?.toggle(element);
-  }
-
-  /** Clipped horizontally — itself or anything it renders. A `dsCellTemplate`
-   *  puts the ellipsis on a descendant, so testing only the wrapper misses it. */
-  private static isClipped(element: HTMLElement): boolean {
-    if (element.scrollWidth > element.clientWidth) {
-      return true;
-    }
-
-    return [...element.querySelectorAll<HTMLElement>('*')].some(
-      (child) => child.scrollWidth > child.clientWidth,
-    );
-  }
-
-  /**
-   * A header narrowed by resizing clips its own label, and the label is the only
-   * thing naming the column — so the full text has to stay reachable. Set on
-   * enter rather than always, because a `title` on every header would fire a
-   * tooltip on hover for text that is perfectly readable.
-   */
-  protected onHeaderEnter(event: Event, col: TableColumn<T>): void {
-    const element = event.currentTarget as HTMLElement;
-    const label = element.querySelector<HTMLElement>('.th-label') ?? element;
-    if (TableComponent.isClipped(label)) {
-      element.setAttribute('title', col.label);
-    } else {
-      element.removeAttribute('title');
-    }
-  }
 
   private readonly scrollWrap =
     viewChild.required<ElementRef<HTMLElement>>('scrollWrap');
