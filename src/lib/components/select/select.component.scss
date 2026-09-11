@@ -7,6 +7,11 @@
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/field-state' as field-state;
 
+/* Truncation contract:
+   Option label — Single line, ellipsis at control width. Panel scrolls internally past its 320px
+     max-height.
+   Selected value — Single line, ellipsis when overflowing the control. */
+
 :host {
   --_select-focus-shadow: var(--ds-select-focus-shadow, var(--ds-field-focus-shadow));
   --_select-focus-shadow-error: var(--ds-select-focus-shadow-error, var(--ds-field-focus-shadow-error));

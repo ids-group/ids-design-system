@@ -1,6 +1,13 @@
 @use '../../styles/press' as press;
 @use '../../styles/text-clip' as text-clip;
 
+/* Truncation contract:
+   Title — Single line, ellipsis at row width. Tooltip on hover when clipped.
+   Body — Wrap, no clip. No clamp — banners are page-level and must stay fully readable.
+   Inline link in body — Wraps with the body text. Underlined; never clipped.
+   Dismiss icon — Always visible. Never overlapped by title or body — body min-width: 0 keeps
+     wrap correct. */
+
 :host {
   display: block;
 

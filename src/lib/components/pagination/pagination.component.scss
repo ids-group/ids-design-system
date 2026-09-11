@@ -1,6 +1,11 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
+/* Truncation contract:
+   Page number — Single digit / short numeral — no clip ever.
+   Ellipsis — Three dots only — no clip.
+   Total count — Plain text — wraps in narrow viewports. */
+
 :host {
   --_pagination-btn-bg-color:       var(--ds-pagination-btn-bg-color,       var(--surface-default));
   --_pagination-btn-bg-color-hover: var(--ds-pagination-btn-bg-color-hover, var(--surface-secondary));

@@ -5316,6 +5316,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around. Without it the line does not wrap and, since `.stat` sets no `overflow`, the text runs OUT of the tile rather than being clipped inside it."
       },
       {
+        "name": "--ds-stat-value-lines",
+        "value": "none",
+        "notes": ""
+      },
+      {
+        "name": "--ds-stat-value-wrap",
+        "value": "normal",
+        "notes": ""
+      },
+      {
         "name": "--ds-stat-up-color",
         "value": "var(--success-text)",
         "notes": "Positive delta."

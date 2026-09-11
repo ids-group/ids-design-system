@@ -19,23 +19,38 @@
        which a full-width row would hide. */
     .phrase-row {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 240px));
+      grid-template-columns: repeat(4, minmax(0, 240px));
       gap: var(--space-4);
       margin-top: var(--space-3);
 
+      @include bp.down(m) { grid-template-columns: repeat(2, minmax(0, 240px)); }
       @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
     }
 
-    /* The right tile's value is 348px of nowrap text in a 190px box, so it paints 158px past the
-       card and over the gap. Without a mark for where the column ends that reads as "the right card
-       is wider", not as "the phrase escaped" — which is the whole point of the specimen. */
+    /* Without a mark for where the column ends, a value painting past its tile reads as "that card
+       is wider" rather than as "the value escaped" — which is the whole point of the fourth tile. */
     .phrase-cell {
       outline: var(--border-width-default) dashed var(--border-strong);
       outline-offset: var(--space-1);
       min-width: 0;
     }
 
-    .stat-phrase {
+    .phrase-note {
+      margin: 0 0 var(--space-2);
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+
+    .stat-wrap {
       --ds-stat-value-white-space: normal;
-      --ds-stat-value-font-size: var(--font-size-h5);
+    }
+
+    .stat-clamp {
+      --ds-stat-value-white-space: normal;
+      --ds-stat-value-lines: 2;
+    }
+
+    .stat-anywhere {
+      --ds-stat-value-white-space: normal;
+      --ds-stat-value-wrap: anywhere;
     }

@@ -1,6 +1,12 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/field-group-segment' as field-group-segment;
 
+/* Truncation contract:
+   Label — Single line, ellipsis on overflow. Buttons must fit — rephrase if you need multi-line.
+     No tooltip.
+   Icon-only — No visible label; full label MUST live in aria-label and tooltip-on-hover.
+   Split-button menu items — Single line, ellipsis. Tooltip on hover when clipped. */
+
 :host {
   display: inline-flex;
 

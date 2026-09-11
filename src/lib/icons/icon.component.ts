@@ -12,6 +12,10 @@ import { DS_ICON_REGISTRY } from './icon-registry';
 import { ICONS, type IconName } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
+/* Truncation contract:
+   Glyph — Never clipped — the SVG sits in a square frame at one of the fixed sizes.
+   Icon + text pair — Glyph fixed; text label takes the remaining width and clips with ellipsis. */
+
 @Component({
   selector: 'ds-icon',
   standalone: true,

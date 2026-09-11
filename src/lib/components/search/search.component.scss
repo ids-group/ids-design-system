@@ -1,3 +1,7 @@
+/* Truncation contract:
+   Query — Single line, no clip while focused. Ellipsis when blurred + overflowing.
+   Hint kbd — No clip — fixed glyph length. */
+
 // `.search-input` and `.kbd` rather than bare `input` / `kbd` descendants: emulated
 // encapsulation does not stop a consumer's global `.input` reset from reaching in,
 // which is what caused the PIN-475 double focus ring.

@@ -1,20 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BreadcrumbsComponent } from 'ds/breadcrumbs';
 import type { BreadcrumbItem } from 'ds/breadcrumbs';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-breadcrumbs',
   standalone: true,
-  imports: [
-    BreadcrumbsComponent,
-    DocsTruncationComponent,
-    DocsSectionComponent,
-  ],
+  imports: [BreadcrumbsComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './breadcrumbs.section.html',
   styleUrl: './breadcrumbs.section.scss',
@@ -40,20 +32,5 @@ export class BreadcrumbsSection {
   protected readonly singleLevel: BreadcrumbItem[] = [
     { label: 'Workspace', href: '/' },
     { label: 'Settings' },
-  ];
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Item label',
-      behaviour:
-        'Single line, ellipsis at long labels. Tooltip on hover when clipped.',
-    },
-    {
-      field: 'Separator',
-      behaviour: 'Single glyph (slash or chevron) — no clip.',
-    },
-    {
-      field: 'Current item',
-      behaviour: 'Bold; truncates last if overflows total width.',
-    },
   ];
 }

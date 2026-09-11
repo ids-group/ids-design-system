@@ -1,5 +1,15 @@
 @use '../../styles/focus' as focus;
 
+/* Truncation contract:
+   Item label (expanded) — Single line, ellipsis at panel width. Tooltip on hover when clipped.
+   Item label (collapsed) — Hidden — the full label moves to a tooltip on hover or keyboard
+     focus.
+   Count badge — No clip — numeric, fixed surface area. Caps at 99+ if needed.
+   Group label — Uppercase, single line, no clip. Wraps if forced (unlikely at panel widths).
+   Brand name — Single line, ellipsis at panel width. Tooltip on hover. Hidden entirely when
+     collapsed.
+   User name (footer) — Single line, ellipsis. Tooltip on hover. Role row truncates the same way. */
+
 /* Sidenav parent container only.
  *
  * Item / group / group-label styles live in the child components

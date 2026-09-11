@@ -22,10 +22,6 @@ import type {
   TableRowActionEvent,
 } from 'ds/table';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 interface EventRow {
   readonly id: string;
@@ -76,7 +72,6 @@ const BULK_STATUSES = ['Open', 'Pending', 'Closed'];
     ButtonComponent,
     CellTemplateDirective,
     DocsSectionComponent,
-    DocsTruncationComponent,
     DrawerComponent,
     EmptyStateComponent,
     SearchComponent,
@@ -90,15 +85,6 @@ const BULK_STATUSES = ['Open', 'Pending', 'Closed'];
   styleUrls: ['../../../shared/section-demo.scss', './table.section.scss'],
 })
 export class TableSection {
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Cell text',
-      behaviour:
-        'Single line, ellipsis at column width (truncate + width). Tooltip on hover; click a clipped cell for a full-value popover.',
-    },
-    { field: 'Header label', behaviour: 'Single line, no clip.' },
-    { field: 'Action column', behaviour: 'No clip — icon-only buttons.' },
-  ];
   protected readonly loadingColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
     { key: 'date', label: 'Dates' },

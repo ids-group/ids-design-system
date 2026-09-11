@@ -3,10 +3,6 @@ import { ICONS } from 'ds/core';
 import type { IconName } from 'ds/core';
 import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 interface SizeRow {
   readonly name: string;
@@ -31,7 +27,7 @@ const SIZES: readonly SizeRow[] = [
 @Component({
   selector: 'section-foundations-icons',
   standalone: true,
-  imports: [DocsSectionComponent, DocsTruncationComponent, IconComponent],
+  imports: [DocsSectionComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './icons.section.html',
   styleUrl: './icons.section.scss',
@@ -39,21 +35,4 @@ const SIZES: readonly SizeRow[] = [
 export class IconsSection {
   protected readonly names = Object.keys(ICONS) as IconName[];
   protected readonly sizes = SIZES;
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Glyph',
-      behaviour:
-        'Never clipped — the SVG sits in a square frame at one of the fixed sizes.',
-    },
-    {
-      field: 'Name label',
-      behaviour:
-        'Single line, ellipsis. Names are short identifiers — never wrap.',
-    },
-    {
-      field: 'Icon + text pair',
-      behaviour:
-        'Glyph fixed; text label takes the remaining width and clips with ellipsis.',
-    },
-  ];
 }

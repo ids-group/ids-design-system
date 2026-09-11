@@ -6,10 +6,6 @@ import type { SegmentedOption } from 'ds/segmented';
 import { SelectComponent } from 'ds/select';
 import type { SelectItem } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 interface Duration {
   readonly name: string;
@@ -146,7 +142,6 @@ const DEMO_OPTIONS: SelectItem[] = [
     AlertComponent,
     ButtonComponent,
     DocsSectionComponent,
-    DocsTruncationComponent,
     SegmentedComponent,
     SelectComponent,
   ],
@@ -172,22 +167,4 @@ export class MotionSection {
     this.alertShown.set(false);
     setTimeout(() => this.alertShown.set(true));
   }
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Reduced motion',
-      behaviour:
-        'All durations collapse to 0ms under prefers-reduced-motion. Component CSS does not need to opt in — the token cascade handles it.',
-    },
-    {
-      field: 'Transitions vs loops',
-      behaviour:
-        '--duration-* drives state transitions. Indeterminate loops (spinners, skeletons) use --duration-loop-fast / --duration-loop-slow — separate scale for rhythm, not response.',
-    },
-    {
-      field: 'Easing pairing',
-      behaviour:
-        'decelerate for enter, accelerate for exit, standard for state changes, emphasized for overlays. Reserve spring for small celebratory feedback.',
-    },
-  ];
 }

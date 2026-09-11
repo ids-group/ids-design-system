@@ -3,10 +3,6 @@ import { DatePickerComponent } from 'ds/date-picker';
 import type { DatePickerPreset } from 'ds/date-picker';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-date-picker',
@@ -14,7 +10,6 @@ import {
   imports: [
     DatePickerComponent,
     DocsSectionComponent,
-    DocsTruncationComponent,
     DocsNonmodalNoteComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -25,18 +20,6 @@ import {
   ],
 })
 export class DatePickerSection {
-  protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Selected-date label', behaviour: 'Numeric date only — no clip.' },
-    {
-      field: 'Range label',
-      behaviour: '"Start – End" format — no clip; abbreviates year if same.',
-    },
-    {
-      field: 'Calendar day',
-      behaviour: 'Single digit/two digits — no clip ever.',
-    },
-  ];
-
   protected readonly minDateToday = new Date();
 
   protected readonly maxDateThirtyDays = new Date(

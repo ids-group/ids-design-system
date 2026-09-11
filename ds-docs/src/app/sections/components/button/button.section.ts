@@ -8,10 +8,6 @@ import {
   DocsMatrixComponent,
   type DocsMatrixRow,
 } from '../../../shared/docs-matrix.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 interface VariantSpec {
   readonly label: string;
@@ -25,7 +21,6 @@ interface VariantSpec {
     ButtonComponent,
     DocsSectionComponent,
     DocsMatrixComponent,
-    DocsTruncationComponent,
     SwitchComponent,
     ToggleButtonComponent,
   ],
@@ -119,21 +114,4 @@ export class ButtonSection {
     'Disabled',
     'Loading',
   ] as const;
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Label',
-      behaviour:
-        'Single line, ellipsis on overflow. Buttons must fit — rephrase if you need multi-line. No tooltip.',
-    },
-    {
-      field: 'Icon-only',
-      behaviour:
-        'No visible label; full label MUST live in aria-label and tooltip-on-hover.',
-    },
-    {
-      field: 'Split-button menu items',
-      behaviour: 'Single line, ellipsis. Tooltip on hover when clipped.',
-    },
-  ];
 }

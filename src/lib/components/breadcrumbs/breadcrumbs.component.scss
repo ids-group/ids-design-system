@@ -1,6 +1,11 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 
+/* Truncation contract:
+   Item label — Single line, ellipsis at long labels. Tooltip on hover when clipped.
+   Separator — Single glyph (slash or chevron) — no clip.
+   Current item — Bold; truncates last if overflows total width. */
+
 :host {
   --_breadcrumbs-label-color:           var(--ds-breadcrumbs-label-color,           var(--text-tertiary));
   --_breadcrumbs-label-color-hover:     var(--ds-breadcrumbs-label-color-hover,     var(--accent));

@@ -5,6 +5,13 @@
 @use '../../styles/field-state' as field-state;
 @use '../../styles/focus' as focus;
 
+/* Truncation contract:
+   Label — Single line, no clip — labels are short by spec. Wraps if forced.
+   Input value — No clip while focused (caret needs reach). Single-line ellipsis when blurred and
+     overflowing; full value in title attr.
+   Hint — Wrap to 2 lines, then ellipsis. No tooltip — hint is itself the tooltip.
+   Error message — Wrap, no clip. Always fully visible — error must never hide. */
+
 :host {
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
   --_input-border:         var(--ds-input-border,         var(--border-default));
