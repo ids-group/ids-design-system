@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**107 open — 1 P1, 39 P2, 67 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**108 open — 1 P1, 40 P2, 67 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 39
+### P2 — 40
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -57,6 +57,7 @@ item and nothing else.
   - An md ARCHITECTURE for the whole design system — cross-linked like a graph, not a pile of files (Stas, 2026-09-01, re-scoped 2026-09-02). NEXT UP, and the first step is RESEARCH, not code
   - There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01)
 - **Component feature gaps**
+  - `ds-button` has a destination but nothing to modify it with, and a back-link announces itself as the current page — deck 13
   - One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle (2026-08-03, Stas — mm-broker MBP-133 review)
   - The table's opt-in behaviours become separately-importable directives. DECIDED 2026-09-04 by Stas on deck 7: form
 - **The field system — the two controls outside it, and the five with no box to paint**
@@ -910,6 +911,10 @@ A0 first, which touches none of it, or wait for that lane to land.
   **One item in the dictated list needs confirming before it is written up:** "где должен быть фильм" is almost certainly a speech-to-text slip for **фильтр** (filter) — that reading fits the surrounding list of buttons/cards/information/heading. Confirm before treating it as a real requirement.
 
 ## Component feature gaps
+
+- [ ] **[P2] `ds-button` has a destination but nothing to modify it with, and a back-link announces itself as the current page — deck 13.** Two Asks from the marketing-site consumer, both filed after the 0.12.3 destination work landed. 18 of their 31 button-styled controls moved with no visual change; **13 cannot**, because the `routerLink` branch binds only `[routerLink]` and the `href` branch only `[href]` — six need `fragment`, five `queryParams`, three `target`+`rel`. Separately, `routerLinkActive="active"` is hardcoded with prefix matching and `aria-current` derived from it, so a "back to the section" link claims `aria-current="page"` on every detail page; `.active` has no rule in the button's stylesheet, which is what makes it invisible to everyone except the users it misleads.
+  **Three findings the Asks did not have**, read in `@angular/router@21.2.22`'s own typings: `routerLink` already accepts a `UrlTree`, so widening our input's type covers all five `UrlCreationOptions` with no new inputs; `RouterLinkActive` has an `ariaCurrentWhenActive` input, so the value we hand-roll is the directive's to write; and `isActive(url, router, options)` is exported as a `Signal<boolean>`, which is how one component can ask for exact AND prefix matching without a second directive. Plus the ARIA rule that settles it: `page` is the page you are on, `true` is the current section or ancestor.
+  **Four decisions in `presentations/13-button-destination-api.html`** — what modifies a destination (5 variants), what an active link announces (5), which of the three destination-bearing components it reaches (3), and whether `--ds-button-border` keeps a name that promises a shorthand (3). Recommendation A1+A3, B3, C3, D2.
 
 - [ ] **[P3] `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas).** `[dsCreateTemplate]` and `[dsChipTemplate]` exist in the library and `ds-select` reads neither — correctly, because both decorate features it does not have. Chips show MANY values and a single select holds one; create needs typed text and `ds-select`'s template contains **no `<input>` at all**. What looks like typing there is `createTypeAhead`, a keystroke buffer that jumps to the option whose label matches, so there is no query to turn into a new value.
   **So this is a feature request, not a missing template binding, and it arrives in that order:** first a panel filter field (the thing `ds-multi-select` already has as `.search-row`), then `allowCreate` plus a `created` output and the no-match branch — `ds-autocomplete` carries all three already and is the model to copy rather than re-derive. Only then does reading `[dsCreateTemplate]` mean anything.
