@@ -124,301 +124,128 @@
 <body>
 <div class="wrap">
 
-  <h1>Назначение у <code>ds-button</code> — чем его модифицировать и что он объявляет</h1>
+  <h1>Назначение у <code>ds-button</code> — чем модифицировать и что объявлять</h1>
 
   <p class="lede">
-    Два аска с одного потребителя, оба после переезда на 0.12.3. <b>18 из 31</b> контрола переехали
-    без единого пикселя разницы; <b>13 не могут</b>, потому что назначение нечем модифицировать. И
-    отдельно: back-link на странице-детали объявляет себя текущей страницей, чего не видит никто,
-    кроме тех, кого это вводит в заблуждение. Токен-дыры из третьего аска уже закрыты и здесь не
-    обсуждаются.
+    Два аска с одного потребителя после 0.12.3. <b>18 из 31</b> контрола переехали без разницы в
+    пикселях, <b>13 не могут</b>: назначение нечем модифицировать. И back-link объявляет себя
+    текущей страницей. Четыре решения.
   </p>
 
-  <h2>Что именно измерено</h2>
+  <h2>Измерено</h2>
 
   <table>
-    <thead><tr><th>Факт</th><th>Где проверено</th></tr></thead>
     <tbody>
-      <tr>
-        <td>Ветка <code>routerLink</code> биндит только <code>[routerLink]</code>; ветка <code>href</code> — только <code>[href]</code></td>
-        <td class="tight"><code>button.component.html</code></td>
-      </tr>
-      <tr>
-        <td>Блокировано 13 контролов: <b>6</b> ждут <code>fragment</code>, <b>5</b> — <code>queryParams</code>, <b>3</b> — <code>target</code>+<code>rel</code></td>
-        <td class="tight">аск, замеры потребителя</td>
-      </tr>
-      <tr>
-        <td><code>routerLinkActive="active"</code> захардкожен, <code>aria-current</code> выведен из <code>rla.isActive</code>, входа для опций нет</td>
-        <td class="tight"><code>button.component.html</code></td>
-      </tr>
-      <tr>
-        <td>Класс <code>.active</code> у кнопки <b>не покрашен ничем</b> — правил на него в стилях нет</td>
-        <td class="tight"><code>button.component.scss</code></td>
-      </tr>
-      <tr>
-        <td>У <code>ds-sidenav-item</code> та же конструкция, но <code>.active</code> <b>покрашен</b> — четыре правила</td>
-        <td class="tight"><code>sidenav-item.component.scss:63,73,77,126</code></td>
-      </tr>
-      <tr>
-        <td>Назначение есть у <b>трёх</b> компонентов: <code>ds-button</code>, <code>ds-sidenav-item</code>, <code>ds-sidenav-group</code>, и у всех трёх тип <code>string | readonly unknown[] | null</code></td>
-        <td class="tight">их <code>.ts</code></td>
-      </tr>
+      <tr><td>Ветка <code>routerLink</code> биндит только <code>[routerLink]</code>, ветка <code>href</code> — только <code>[href]</code></td><td class="tight"><code>button.component.html</code></td></tr>
+      <tr><td>13 контролов блокировано: <b>6</b> × <code>fragment</code>, <b>5</b> × <code>queryParams</code>, <b>3</b> × <code>target</code>+<code>rel</code></td><td class="tight">замеры потребителя</td></tr>
+      <tr><td><code>routerLinkActive="active"</code> захардкожен, <code>aria-current</code> выведен из него, опций нет</td><td class="tight"><code>button.component.html</code></td></tr>
+      <tr><td><code>.active</code> у кнопки не покрашен ничем — поэтому баг невидим</td><td class="tight"><code>button.component.scss</code></td></tr>
+      <tr><td>У <code>ds-sidenav-item</code> та же конструкция, но <code>.active</code> покрашен — 4 правила</td><td class="tight"><code>sidenav-item…scss:63,73,77,126</code></td></tr>
+      <tr><td>Назначение у трёх компонентов: <code>ds-button</code>, <code>ds-sidenav-item</code>, <code>ds-sidenav-group</code></td><td class="tight">их <code>.ts</code></td></tr>
     </tbody>
   </table>
 
-  <h2>Что нашлось в самом Angular, и чего аски не учли</h2>
-
-  <p>
-    Прочитано в установленной версии <b>21.2.22</b>, в её <code>.d.ts</code>, а не по памяти:
-  </p>
+  <h2>Чего аски не учли — из типов <code>@angular/router@21.2.22</code></h2>
 
   <table>
-    <thead><tr><th>Механизм</th><th>Что он даёт</th></tr></thead>
     <tbody>
-      <tr>
-        <td class="tight"><code>set routerLink(commandsOrUrlTree: readonly any[] | string | UrlTree | null)</code></td>
-        <td><b>Принимает готовый <code>UrlTree</code></b>. То есть <code>fragment</code>, <code>queryParams</code> и <code>queryParamsHandling</code> уже выразимы — через <code>router.createUrlTree()</code> — и нам нужно лишь <b>расширить тип нашего входа</b>, а не добавлять входы.</td>
-      </tr>
-      <tr>
-        <td class="tight"><code>RouterLinkActive.ariaCurrentWhenActive</code></td>
-        <td>Директива умеет сама писать <code>aria-current</code> со значением <code>'page' | 'step' | 'location' | 'date' | 'time' | true | false</code>. Мы это значение пишем руками — и потому неправильно.</td>
-      </tr>
-      <tr>
-        <td class="tight"><code>isActive(url, router, matchOptions): Signal&lt;boolean&gt;</code></td>
-        <td>Публичная сигнальная проверка активности с опциями сравнения. Позволяет спросить <b>и точное, и префиксное</b> совпадение без второй директивы.</td>
-      </tr>
+      <tr><td class="tight"><code>routerLink</code> принимает <code>UrlTree</code></td><td><code>fragment</code>, <code>queryParams</code>, <code>queryParamsHandling</code>, <code>relativeTo</code>, <code>preserveFragment</code> уже выразимы — нужно расширить тип нашего входа, а не добавлять входы. Остальные четыре (<code>state</code>, <code>info</code>, <code>skipLocationChange</code>, <code>replaceUrl</code>) деревом не передать: это <code>NavigationBehaviorOptions</code>.</td></tr>
+      <tr><td class="tight"><code>ariaCurrentWhenActive</code></td><td>Директива умеет писать <code>aria-current</code> сама. Мы пишем руками — и потому неправильно.</td></tr>
+      <tr><td class="tight"><code>isActive(url, router, opts): Signal</code></td><td>Точное И префиксное совпадение без второй директивы.</td></tr>
+      <tr><td class="tight">ARIA</td><td><code>page</code> — страница, на которой вы находитесь. <code>true</code> — текущий раздел или предок. Значит при префиксе верно не молчание, а <code>true</code>.</td></tr>
     </tbody>
   </table>
-
-  <div class="panel warn">
-    <p>
-      <b>И правило, которое решает вопрос 2 по существу.</b> ARIA различает: <code>page</code> — это
-      страница, на которой вы <i>находитесь</i>; <code>true</code> — <i>текущий раздел или предок</i>.
-      То есть при префиксном совпадении правильный ответ не «убрать атрибут», а
-      <code>aria-current="true"</code>. Наш back-link сегодня говорит <code>page</code> там, где
-      верно было бы либо ничего, либо <code>true</code> — в зависимости от того, чем эта ссылка
-      является.
-    </p>
-  </div>
 
   <h2>Вопрос 1 — чем модифицировать назначение</h2>
 
-  <h3><span class="num">A1</span>Плоские входы-проброс <span class="tag good">рекомендация аска</span></h3>
-
+  <h3><span class="num">A1</span>Плоские входы-проброс <span class="tag good">просит аск</span></h3>
   <pre>&lt;ds-button [routerLink]="['/ai-solutions', slug]" fragment="enquiry" /&gt;
-&lt;ds-button routerLink="/contact" [queryParams]="{ intent }" /&gt;
 &lt;ds-button [href]="url" target="_blank" rel="noopener" /&gt;</pre>
-
   <div class="panel">
-    <p>
-      <b>Плюс:</b> ровно то, что потребитель уже пишет на голом <code>&lt;a&gt;</code> — переезд
-      становится переименованием тега. Форма совпадает с уже существующими <code>type</code> и
-      <code>loading</code>, которые тоже осмысленны только на одной ветке и dev-варнят на другой.
-      <b>Минус:</b> +5 входов к классу, и это <b>ломающее для подклассов</b> — коллизия имён
-      сваливает сборку с TS2415, значит в манифест идёт <code>behavior</code>-элемент. И это ползучая
-      поверхность: у <code>RouterLink</code> входов одиннадцать, и следующий аск попросит шестой,
-      седьмой.
-    </p>
+    <p><b>+</b> то, что потребитель уже пишет на <code>&lt;a&gt;</code>; форма как у <code>type</code> и <code>loading</code>.<br>
+    <b>−</b> +5 входов, ломает подклассы (TS2415 → элемент манифеста). У <code>RouterLink</code> входов 11 — хвост попросят дальше.</p>
   </div>
 
   <h3><span class="num">A2</span>Один объектный вход <code>destination</code></h3>
-
   <pre>&lt;ds-button [destination]="{ routerLink: ['/ai-solutions', slug], fragment: 'enquiry' }" /&gt;</pre>
-
   <div class="panel">
-    <p>
-      <b>Плюс:</b> один вход вместо шести, и место под остальные восемь опций <code>RouterLink</code>
-      без новых входов потом. <b>Минус:</b> хуже на месте вызова — объект в шаблоне пересоздаётся
-      каждый CD-проход, если его не мемоизировать, и <code>OnPush</code> тут не спасает от лишней
-      работы директивы. Плюс это второй способ сказать то же самое: <code>routerLink</code> и
-      <code>href</code> уже есть, и либо они уходят (ломающее для всех), либо живут рядом — то есть
-      две дороги к одному результату, что и есть настоящая цена.
-    </p>
+    <p><b>+</b> один вход вместо шести, место под остальные опции.<br>
+    <b>−</b> объект в шаблоне пересоздаётся каждый CD-проход; и это вторая дорога к тому же — <code>routerLink</code>/<code>href</code> либо уходят (ломающее для всех), либо живут рядом.</p>
   </div>
 
-  <h3><span class="num">A3</span>Расширить тип <code>routerLink</code> до <code>UrlTree</code> <span class="tag good">минимальная поверхность</span></h3>
-
-  <pre>// потребитель
-protected readonly enquiry = this.router.createUrlTree(
-  ['/ai-solutions', this.slug()],
-  { fragment: 'enquiry', queryParams: { intent: this.intent() } },
-);
+  <h3><span class="num">A3</span>Расширить тип до <code>UrlTree</code> <span class="tag good">минимум поверхности</span></h3>
+  <pre>enquiry = this.router.createUrlTree(['/ai-solutions', slug], { fragment: 'enquiry' });
 
 &lt;ds-button [routerLink]="enquiry" /&gt;</pre>
-
   <div class="panel">
-    <p>
-      <b>Плюс:</b> <b>ноль новых входов</b> — только расширение типа одного существующего, то есть
-      ничего не ломается даже у подклассов, и покрывает <code>fragment</code>,
-      <code>queryParams</code>, <code>queryParamsHandling</code>, <code>relativeTo</code>,
-      <code>preserveFragment</code> сразу, потому что всё это — параметры
-      <code>createUrlTree</code>. Механизм не наш, а роутера.
-      <b>Минус:</b> декларативность теряется — потребителю нужно инжектить <code>Router</code> и
-      собирать дерево в TS на каждый такой контрол (у этого их 11). И <code>target</code>/<code>rel</code>
-      это не закрывает вообще: они про <code>href</code>, а не про роутер.
-      <b>Граница варианта, прочитанная в типах:</b> <code>UrlTree</code> несёт ровно
-      <code>UrlCreationOptions</code> — <code>relativeTo</code>, <code>queryParams</code>,
-      <code>fragment</code>, <code>queryParamsHandling</code>, <code>preserveFragment</code>. Четыре
-      остальных входа <code>RouterLink</code> — <code>state</code>, <code>info</code>,
-      <code>skipLocationChange</code>, <code>replaceUrl</code> — это
-      <code>NavigationBehaviorOptions</code>, и деревом их не передать. Всего у директивы
-      одиннадцать входов, посчитано в её объявлении.
-    </p>
+    <p><b>+</b> ноль новых входов, ничего не ломается, покрывает все пять <code>UrlCreationOptions</code> сразу. Механизм роутера, не наш.<br>
+    <b>−</b> декларативность уходит в TS (у потребителя 11 таких контролов); <code>target</code>/<code>rel</code> не закрывает вообще.</p>
   </div>
 
   <h3><span class="num">A4</span>Потребитель приносит свой якорь</h3>
-
-  <pre>&lt;ds-button&gt;
-  &lt;a dsButtonAnchor [routerLink]="…" fragment="enquiry" target="_blank"&gt;Go&lt;/a&gt;
-&lt;/ds-button&gt;</pre>
-
+  <pre>&lt;ds-button&gt;&lt;a dsButtonAnchor [routerLink]="…" target="_blank"&gt;Go&lt;/a&gt;&lt;/ds-button&gt;</pre>
   <div class="panel">
-    <p>
-      <b>Плюс:</b> это ответ, который не кончается — любой атрибут, любая директива, любой роутер
-      будущего работают без нашего участия. Так делают <code>asChild</code> у Radix и
-      <code>component</code> у MUI, и именно из-за бесконечности хвоста.
-      <b>Минус:</b> в Angular у этого нет дешёвой формы. <code>asChild</code> опирается на React
-      Slot — клонирование элемента с мержем пропсов; здесь пришлось бы отдавать классы кнопки через
-      директиву и отказаться от контроля над разметкой, из-за которой <code>ds-button</code> и
-      существует (иконка, subtext, спиннер, строка сообщения — всё это его собственный шаблон).
-      Это не правка, а другой компонент.
-    </p>
+    <p><b>+</b> ответ, который не кончается: любой атрибут и любой роутер работают без нас. Так делают <code>asChild</code> у Radix и <code>component</code> у MUI.<br>
+    <b>−</b> в Angular нет дешёвой формы: пришлось бы отдать классы директивой и потерять контроль над разметкой, ради которой компонент и существует (иконка, subtext, спиннер, сообщение). Это другой компонент, не правка.</p>
   </div>
 
-  <h3><span class="num">A5</span>Отказать и назвать поддерживаемую альтернативу</h3>
-
+  <h3><span class="num">A5</span>Отказать и назвать альтернативу</h3>
   <div class="panel">
-    <p>
-      <b>Плюс:</b> ноль кода и честная граница: «контрол с модифицированным назначением — это не
-      <code>ds-button</code>». <b>Минус:</b> у потребителя на руках останется рукописный
-      <code>.btn</code> на 13 контролов — тот самый класс, который прошлый аск отменил для первых
-      18, — и рецепт в предыдущем аске придётся переписать, потому что сейчас он читается так, будто
-      покрыт любой навигирующий контрол. Отказ здесь стоит дороже, чем выглядит.
-    </p>
+    <p><b>+</b> ноль кода, честная граница.<br>
+    <b>−</b> у потребителя остаётся рукописный <code>.btn</code> на 13 контролов — тот, что прошлый аск отменил для первых 18; и рецепт в нём придётся переписать.</p>
   </div>
 
-  <h2>Вопрос 2 — что кнопка должна объявлять</h2>
+  <h2>Вопрос 2 — что объявлять при активной ссылке</h2>
 
   <table>
-    <thead>
-      <tr><th>Вариант</th><th>Что меняется</th><th>Новых входов</th><th>Чинит без участия потребителя</th></tr>
-    </thead>
+    <thead><tr><th>Вариант</th><th>Что меняется</th><th>Входов</th><th>Чинит без потребителя</th></tr></thead>
     <tbody>
-      <tr>
-        <td class="tight"><b>B1</b> отдать <code>routerLinkActiveOptions</code></td>
-        <td>Потребитель сам просит <code>{ exact: true }</code> там, где ссылка указывает на предка</td>
-        <td class="n">1</td>
-        <td><span class="tag bad">нет</span></td>
-      </tr>
-      <tr>
-        <td class="tight"><b>B2</b> <code>aria-current</code> только при точном совпадении</td>
-        <td>Класс остаётся префиксным, атрибут становится строгим</td>
-        <td class="n">0</td>
-        <td><span class="tag good">да</span></td>
-      </tr>
-      <tr>
-        <td class="tight"><b>B3</b> точное → <code>page</code>, префиксное → <code>true</code></td>
-        <td>Оба случая объявляются верно по букве ARIA, а не «верно/молчим»</td>
-        <td class="n">0</td>
-        <td><span class="tag good">да</span></td>
-      </tr>
-      <tr>
-        <td class="tight"><b>B4</b> вход <code>ariaCurrent</code></td>
-        <td>Потребитель задаёт значение сам: <code>'page' | 'true' | null | 'auto'</code></td>
-        <td class="n">1</td>
-        <td><span class="tag meh">только с правкой</span></td>
-      </tr>
-      <tr>
-        <td class="tight"><b>B5</b> ничего, задокументировать</td>
-        <td>—</td>
-        <td class="n">0</td>
-        <td><span class="tag bad">нет</span></td>
-      </tr>
+      <tr><td class="tight"><b>B1</b> отдать <code>routerLinkActiveOptions</code></td><td>Потребитель сам просит <code>{ exact: true }</code></td><td class="n">1</td><td><span class="tag bad">нет</span></td></tr>
+      <tr><td class="tight"><b>B2</b> <code>aria-current</code> только при точном</td><td>Класс префиксный, атрибут строгий</td><td class="n">0</td><td><span class="tag good">да</span></td></tr>
+      <tr><td class="tight"><b>B3</b> точное → <code>page</code>, префикс → <code>true</code></td><td>Оба случая верны по ARIA</td><td class="n">0</td><td><span class="tag good">да</span></td></tr>
+      <tr><td class="tight"><b>B4</b> вход <code>ariaCurrent</code></td><td>Значение задаёт потребитель</td><td class="n">1</td><td><span class="tag meh">с правкой</span></td></tr>
+      <tr><td class="tight"><b>B5</b> задокументировать</td><td>—</td><td class="n">0</td><td><span class="tag bad">нет</span></td></tr>
     </tbody>
   </table>
 
   <div class="panel">
-    <p>
-      <b>B1 плох тем, что перекладывает невидимый баг на того, кто его не видит.</b> Ни один
-      потребитель не найдёт это глазами: класс не покрашен, экран не меняется. Вход, которым надо
-      воспользоваться, чтобы не было бага, — это не починка.
-    </p>
-    <p>
-      <b>B2 и B3 отличаются одним: молчать в префиксном случае или сказать правду.</b> Для кнопки
-      разница почти академическая — back-link это не «текущий раздел», это выход из него, так что
-      молчание корректно. Но тот же код поедет в <code>ds-sidenav-item</code>, где префиксная
-      активность — это ровно «вы в этом разделе», и там <code>true</code> несёт смысл, которого
-      молчание не несёт. B3 — единственный вариант, который верен для обоих компонентов без
-      развилки в коде.
-    </p>
+    <p><b>B1</b> перекладывает невидимый баг на того, кто его не видит: экран не меняется, найти нечем.
+    <b>B2 против B3</b> — молчать или сказать правду. Для кнопки разница академическая, но тот же код поедет в <code>ds-sidenav-item</code>, где префикс означает «вы в этом разделе» и <code>true</code> несёт смысл. B3 верен для обоих без развилки в коде.</p>
   </div>
 
   <h2>Вопрос 3 — на что распространять</h2>
 
-  <p>
-    Назначение есть у трёх компонентов, и у всех трёх обе проблемы. Но они не одинаковые:
-    у кнопки <code>.active</code> ничем не покрашен, у <code>ds-sidenav-item</code> — четыре правила,
-    то есть префиксная активность там <b>нужна визуально</b> и трогать её нельзя.
-  </p>
-
   <table>
-    <thead><tr><th>Вариант</th><th>Что получаем</th></tr></thead>
     <tbody>
-      <tr>
-        <td class="tight"><b>C1</b> только <code>ds-button</code></td>
-        <td>Отвечаем ровно на аск. Два других компонента остаются с тем же дефектом, и следующий аск придёт с них.</td>
-      </tr>
-      <tr>
-        <td class="tight"><b>C2</b> все три, одним заходом</td>
-        <td>Одинаковая форма у всего, что навигирует. Больше поверхности за один релиз и больше того, что нужно померить.</td>
-      </tr>
-      <tr>
-        <td class="tight"><b>C3</b> <code>aria-current</code> всем трём, модификаторы только кнопке</td>
-        <td>Баг чинится там, где он есть (он невидим и потребитель его не закроет), а API растёт только там, где на него есть замеренный запрос.</td>
-      </tr>
+      <tr><td class="tight"><b>C1</b> только кнопка</td><td>Ответ ровно на аск; два других компонента с тем же дефектом, следующий аск придёт с них.</td></tr>
+      <tr><td class="tight"><b>C2</b> все три</td><td>Одна форма у всего навигирующего; больше поверхности и замеров за релиз.</td></tr>
+      <tr><td class="tight"><b>C3</b> <code>aria-current</code> всем, модификаторы кнопке</td><td>Невидимый баг чинится везде, где есть; API растёт там, где запрос замерен.</td></tr>
     </tbody>
   </table>
 
   <h2>Вопрос 4 — имя <code>--ds-button-border</code></h2>
 
-  <p>
-    Токен задаёт <b>цвет</b> рамки, а ширина теперь лежит рядом как
-    <code>--ds-button-border-width</code>. Аск называет это ловушкой имени: читая
-    <code>--ds-button-border</code>, разумно ожидать, что туда пишут <code>2px solid red</code>.
-  </p>
+  <p>Токен задаёт цвет, ширина теперь рядом как <code>--ds-button-border-width</code>. Читая имя, разумно ждать <code>2px solid red</code>.</p>
 
   <table>
-    <thead><tr><th>Вариант</th><th>Цена</th></tr></thead>
     <tbody>
-      <tr><td class="tight"><b>D1</b> оставить</td><td>Ноль. Ловушка остаётся, но она документирована в таблице токенов.</td></tr>
-      <tr><td class="tight"><b>D2</b> переименовать в <code>--ds-button-border-color</code></td><td>Ломающее для любого, кто уже его ставит: нужен <code>token-rename</code> в манифесте. Имя становится честным.</td></tr>
-      <tr><td class="tight"><b>D3</b> добавить <code>-border-color</code> как алиас, старое оставить</td><td>Не ломает, но два имени для одного значения — то, чего архитектура токенов избегает.</td></tr>
+      <tr><td class="tight"><b>D1</b> оставить</td><td>Ноль цены, ловушка остаётся.</td></tr>
+      <tr><td class="tight"><b>D2</b> → <code>--ds-button-border-color</code></td><td>Ломающее, нужен <code>token-rename</code>; имя честное.</td></tr>
+      <tr><td class="tight"><b>D3</b> алиас рядом</td><td>Не ломает, но два имени на одно значение.</td></tr>
     </tbody>
   </table>
 
-  <h2>Рекомендация</h2>
+  <h2>Рекомендация: A1+A3, B3, C3, D2</h2>
 
   <div class="panel rec">
     <p>
-      <b>A1 + A3 вместе, B3, C3, D2.</b>
-    </p>
-    <p>
-      <b>Почему A1 и A3, а не одно из них.</b> A3 бесплатен и покрывает весь роутерный хвост сразу —
-      расширить тип до <code>UrlTree</code> стоит одну строку и не ломает ничего. Но он не закрывает
-      <code>target</code>/<code>rel</code> и требует TS там, где потребитель писал шаблон. A1 закрывает
-      остаток декларативно, и именно в той форме, в которой у нас уже живут <code>type</code> и
-      <code>loading</code>. Вместе это 5 плоских входов плюс расширенный тип; A2 тогда не нужен, а
-      A4 — отдельный компонент, не правка.
-    </p>
-    <p>
-      <b>B3</b>, потому что это единственный вариант, верный и для кнопки, и для сайдбара, не
-      требующий от потребителя ни строки и ни одного нового входа — а баг из тех, что потребитель не
-      находит. Механизм: <code>isActive()</code> из роутера двумя сигналами, точный и префиксный.
-    </p>
-    <p>
-      <b>C3</b>, потому что невидимый баг надо чинить везде, где он есть, а API растить только там,
-      где запрос замерен. <b>D2</b>, потому что ломающие переименования здесь дешёвы, а имя,
-      обещающее шорткат, будет стоить дороже одного элемента манифеста.
+      <b>A1+A3 вместе.</b> A3 бесплатен и закрывает весь роутерный хвост одной строкой типа; A1
+      добирает <code>target</code>/<code>rel</code> декларативно, в форме, которая в компоненте уже
+      есть. A2 тогда лишний, A4 — другой компонент.<br>
+      <b>B3</b> — единственный верный и для кнопки, и для сайдбара, без входов и без участия
+      потребителя; механизм — <code>isActive()</code> двумя сигналами.<br>
+      <b>C3</b> — баг чинить везде, API растить по замерам. <b>D2</b> — ломающие переименования
+      здесь дёшевы, а имя, обещающее шорткат, дороже одного элемента манифеста.
     </p>
   </div>
 
@@ -437,14 +264,13 @@ protected readonly enquiry = this.router.createUrlTree(
   <h2>Источники</h2>
 
   <p class="sources">
-    ARIA: aria-current — <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current">developer.mozilla.org</a> ·
-    aria-current, примеры и практика — <a href="https://www.aditus.io/aria/aria-current/">aditus.io</a> ·
-    Using the aria-current attribute — <a href="https://a11y-guidelines.orange.com/en/articles/using-aria-current-attribute/">a11y-guidelines.orange.com</a> ·
-    Make navigation accessible with aria-current — <a href="https://www.a11y-collective.com/blog/aria-current/">a11y-collective.com</a> ·
-    asChild и Slot — <a href="https://www.components.build/as-child">components.build</a> ·
-    Polymorphic button-or-link в TypeScript — <a href="https://medium.com/@boucekdev/polymorphic-react-button-or-link-component-in-typescript-9230a8bf0cdf">medium.com</a> ·
-    Composition, Designsystemet — <a href="https://designsystemet.no/en/fundamentals/code/composition/">designsystemet.no</a> ·
-    механизмы Angular прочитаны в установленном <code>@angular/router@21.2.22</code>
+    aria-current — <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current">MDN</a> ·
+    <a href="https://www.aditus.io/aria/aria-current/">aditus.io</a> ·
+    <a href="https://a11y-guidelines.orange.com/en/articles/using-aria-current-attribute/">Orange a11y</a> ·
+    <a href="https://www.a11y-collective.com/blog/aria-current/">a11y-collective</a> ·
+    asChild — <a href="https://www.components.build/as-child">components.build</a> ·
+    <a href="https://designsystemet.no/en/fundamentals/code/composition/">Designsystemet</a> ·
+    механизмы Angular — из типов установленного <code>@angular/router@21.2.22</code>
   </p>
 
 </div>
