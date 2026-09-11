@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
-<title>Значение ds-stat не влезает в плитку — пять дефолтов</title>
+<title>Обрезка значения ds-stat</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="src/lib/components/stat/stat.component.scss - ds-docs/src/app/sections/components/stat/stat.section.html - docs/todo.md">
+<meta name="ds-deck-evidence" content="src/lib/components/stat/stat.component.scss - src/lib/styles/_text-clip.scss - src/lib/components/table/table.component.ts - docs/todo.md">
 <link rel="stylesheet" href="ds.css">
 <style>
   body {
@@ -108,16 +108,27 @@
     margin-top: var(--space-2);
   }
 
-  /* the five candidates, each as the ONE declaration block it would add */
-  .v2 .value { white-space: normal; }
+  /* every candidate below is the declaration block it would add, nothing else */
 
-  .v3 .value {
+  /* the house mixin, verbatim from src/lib/styles/_text-clip.scss */
+  .v-house .value {
+    overflow: clip;
+    overflow-clip-margin: var(--space-1);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* the same thing with `hidden`, which is what this deck used to recommend */
+  .v-hidden .value {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .v4 .value {
+  .v-wrap .value { white-space: normal; }
+  .v-anywhere .value { white-space: normal; overflow-wrap: anywhere; }
+
+  .v-clamp2 .value {
     white-space: normal;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -125,8 +136,16 @@
     overflow: hidden;
   }
 
-  .v5 { container-type: inline-size; }
-  .v5 .value { font-size: clamp(0.875rem, 9cqw, var(--font-size-h2)); }
+  .v-fit { container-type: inline-size; }
+  .v-fit .value { font-size: clamp(0.875rem, 9cqw, var(--font-size-h2)); }
+
+  .v-fit-narrow { container-type: inline-size; width: 140px; }
+  .v-fit-narrow .value { font-size: clamp(0.875rem, 9cqw, var(--font-size-h2)); }
+
+  /* the descender pair is the whole argument for `clip`, so it gets a baseline to read against */
+  .shave { display: flex; gap: var(--space-6); align-items: flex-start; }
+  .shave .slot { width: 300px; flex: 0 0 300px; }
+  .shave .tile { border-color: var(--border-strong); }
 
   /* A neighbour, so the escape is visible as what it actually does to a KPI row. */
   .neighbour { opacity: 0.999; }
@@ -196,212 +215,302 @@
 <body>
 <div class="wrap">
 
-  <h1>Значение <code>ds-stat</code> не влезает в плитку — пять дефолтов</h1>
+  <h1>Обрезка значения <code>ds-stat</code></h1>
 
   <p class="lede">
-    <code>.value</code> живёт с <code>white-space: nowrap</code> и без правила про переполнение.
-    Померено на реальной плитке: карточка 240px, внутри 190px, «Feb 1 – Feb 28, 2026» на 36px это
-    348px — <b>157px за внутренним краем</b>, поверх соседней плитки. Оба хука
-    (<code>--ds-stat-value-white-space</code>, <code>--ds-stat-value-font-size</code>) лечат поштучно;
-    вопрос про <b>дефолт</b>, и любой ответ — ломающее визуальное изменение для каждой плитки.
+    <code>.value</code> живёт с <code>white-space: nowrap</code> и без правила про переполнение:
+    «Feb 1 &ndash; Feb 28, 2026» на 36px это 348px в плитке с внутренними 190px &mdash;
+    <b>158px за краем</b>, поверх соседа. Прошлая версия этой деки предлагала выбрать один из пяти
+    дефолтов. Три из пяти описаны в ней неверно, и выбирать надо не из пяти вариантов, а из трёх
+    независимых ручек &mdash; а обрезку DS уже реализовал в 11 компонентах одним миксином.
   </p>
+
+  <h2>Три ошибки прошлой версии &mdash; все перемерены</h2>
 
   <div class="panel">
     <p>
-      <b>Второй дефект того же компонента уже исправлен.</b> <code>variant="error"</code> не
-      перекрашивал значение: после эмулированной инкапсуляции <code>:host(.error) .value</code> и
-      <code>.stat .value</code> равны по весу, побеждала вторая. Теперь error двигает резолвер
-      <code>--_stat-value-color</code>. Померено: <code>rgb(22, 26, 40)</code> → <code>rgb(186, 23, 23)</code>.
+      <b>1. Вариант 3 срезал выносные элементы.</b> <code>overflow: hidden</code> при
+      <code>--line-height-flat: 1</code> режет глиф снизу: строчный бокс 36px, Mulish меряет
+      1.257em. Снято по пикселям с плиток выше &mdash; хвост «руб.» уходит на <b>4px ниже бокса</b>
+      при <code>visible</code> и при <code>clip</code>, и только на <b>1px</b> при
+      <code>hidden</code>: три четверти хвоста нет. Дека рекомендовала <code>hidden</code>
+      вторым номером.
+    </p>
+    <p>
+      <b>2. Вариант 5 не подгоняет кегль под текст.</b> <code>clamp(0.875rem, 9cqw, …)</code>
+      следит за шириной <em>контейнера</em>, а не за длиной строки. В контейнере 140px кегль
+      упирается в пол 14px, и длинное значение всё равно уходит <b>340px за край</b>. Чистого
+      CSS-механизма «ужать шрифт под текст» не существует. Плюс само число в деке было неверным:
+      она рендерила <b>21.6px / 96px</b>, а в таблице стояло 17.1px / 92px.
+    </p>
+    <p>
+      <b>3. Вариант 2 не удерживает текст в карточке.</b> Слово шире плитки выходит за неё и при
+      <code>white-space: normal</code>: «Северо-Западный» уходит <b>69px за край</b>. Держит только
+      <code>overflow-wrap: anywhere</code> &mdash; ценой 8 строк вместо 6.
     </p>
   </div>
 
-  <h2>Сейчас</h2>
+  <h2>DS это уже решил &mdash; 11 компонентов, один миксин</h2>
+
+  <p>
+    <code>text-clip.single-line-ellipsis</code> из <code>src/lib/styles/_text-clip.scss</code>
+    подключён в autocomplete, banner, breadcrumbs, multi-select, page-header, select, sidenav-item,
+    sidenav-footer, table, topbar, tree и <code>_dropdown-overlay</code>. <code>ds-stat</code> &mdash;
+    единственный компонент с длинным текстовым значением, который его не использует.
+  </p>
+
+  <pre>@mixin single-line-ellipsis {
+  overflow: clip;                        /* не hidden: см. срез выносных */
+  overflow-clip-margin: var(--space-1);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}</pre>
+
+  <h3>Почему <code>clip</code>, а не <code>hidden</code> &mdash; видно на выносных</h3>
+
+  <div class="row shave">
+    <div class="slot">
+      <div class="tile">
+        <p class="label">Средний чек</p>
+        <p class="value">1 248 руб.</p>
+      </div>
+      <span class="good">сегодня: хвосты «руб.» целы, обрезки нет</span>
+    </div>
+    <div class="slot v-hidden">
+      <div class="tile">
+        <p class="label">Средний чек</p>
+        <p class="value">1 248 руб.</p>
+      </div>
+      <span class="bad">hidden: хвосты «руб.» срезаны по нижней границе бокса</span>
+    </div>
+    <div class="slot v-house">
+      <div class="tile">
+        <p class="label">Средний чек</p>
+        <p class="value">1 248 руб.</p>
+      </div>
+      <span class="good">clip + поле: глиф цел, обрезка та же</span>
+    </div>
+  </div>
+
+  <h2>Не пять вариантов, а три ручки</h2>
+
+  <table>
+    <thead><tr><th>Ручка</th><th>Значения</th><th>Что реально делает</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Сколько строк</b></td>
+        <td><code>1</code> &middot; <code>N</code> &middot; без предела</td>
+        <td>1 строка &mdash; <code>nowrap</code> + ellipsis, высота не меняется. N &mdash; только
+          <code>-webkit-line-clamp</code>, +36px на строку. Без предела &mdash; <code>normal</code>.</td>
+      </tr>
+      <tr>
+        <td><b>Чем держать по горизонтали</b></td>
+        <td>ничего &middot; ellipsis &middot; <code>anywhere</code></td>
+        <td>Ellipsis нужен и при 1 строке, и при N. <code>anywhere</code> нужен отдельно &mdash;
+          он единственный держит слово длиннее плитки.</td>
+      </tr>
+      <tr>
+        <td><b>Кегль</b></td>
+        <td>фикс &middot; по контейнеру</td>
+        <td>«По контейнеру» &mdash; адаптивный кегль, а не подгонка под текст. Переполнение
+          не лечит.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Комбинации складываются, и «перенос с эллипсисом» &mdash; это строки&nbsp;=&nbsp;N плюс ellipsis,
+    то есть <code>-webkit-line-clamp</code>. Отдельной формы у него нет: <code>text-overflow</code>
+    работает по инлайну, поэтому многоточие на последней из N строк даёт только clamp. Префикс
+    обязателен &mdash; <code>line-clamp</code> без <code>-webkit-</code> в Chrome 153 не парсится
+    вообще (<code>getPropertyValue</code> возвращает пустую строку), и
+    <code>display: -webkit-box</code> с <code>-webkit-box-orient</code> по-прежнему обязательны:
+    без них clamp не срабатывает, проверено.
+  </p>
+
+  <h2>Что получается на реальной плитке 240px</h2>
 
   <div class="row">
     <div class="slot">
       <div class="tile">
         <p class="label">Enrollment window</p>
-        <p class="value">Feb 1 – Feb 28, 2026</p>
-        <p class="caption">открыт для 1 248 сотрудников</p>
+        <p class="value">Feb 1 &ndash; Feb 28, 2026</p>
       </div>
-      <span class="bad">текст уходит на 157px вправо</span>
+      <span class="bad">158px за краем</span>
     </div>
-    <div class="slot neighbour">
+    <div class="slot v-house">
       <div class="tile">
-        <p class="label">Enrolled</p>
-        <p class="value">1 248</p>
-        <p class="caption">за 27 дней</p>
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 &ndash; Feb 28, 2026</p>
       </div>
-      <p class="caption-under">сюда он и ложится</p>
+      <span class="good">1 строка, высота не изменилась</span>
+    </div>
+    <div class="slot v-clamp2">
+      <div class="tile">
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 &ndash; Feb 28, 2026</p>
+      </div>
+      <span class="bad">2 строки, «2026» под многоточием</span>
+    </div>
+    <div class="slot v-wrap">
+      <div class="tile">
+        <p class="label">Enrollment window</p>
+        <p class="value">Feb 1 &ndash; Feb 28, 2026</p>
+      </div>
+      <span class="bad">3 строки, +72px</span>
     </div>
   </div>
 
-  <h2>Пять дефолтов на той же плитке</h2>
-
-  <h3><span class="num">1</span>Ничего не менять</h3>
   <div class="row">
     <div class="slot">
-      <div class="tile">
-        <p class="label">Enrollment window</p>
-        <p class="value">Feb 1 – Feb 28, 2026</p>
-      </div>
-    </div>
-  </div>
-  <div class="panel">
-    <p><b>+</b> ни одна существующая плитка не меняется, оба хука на месте, дока показывает пару «с хуками / без».<br>
-    <b>−</b> дефолт рисует поверх соседа, и заметит это не автор компонента, а тот, кто через полгода положит в тайл дату.</p>
-  </div>
-
-  <h3><span class="num">2</span><code>white-space: normal</code> — перенос</h3>
-  <div class="row">
-    <div class="slot v2">
-      <div class="tile">
-        <p class="label">Enrollment window</p>
-        <p class="value">Feb 1 – Feb 28, 2026</p>
-      </div>
-      <span class="good">ничего не уезжает</span>
-    </div>
-    <div class="slot neighbour">
-      <div class="tile">
-        <p class="label">Enrolled</p>
-        <p class="value">1 248</p>
-      </div>
-      <p class="caption-under">высота больше не совпадает</p>
-    </div>
-  </div>
-  <div class="panel">
-    <p><b>+</b> одно свойство, ничего не спрятано.<br>
-    <b>−</b> 111px → 183px (+65%), три строки, KPI-ряд теряет общую высоту. <code>height: 100%</code> у <code>.stat</code> помогает только когда ряд растягивает тайлы, а это решает потребитель.</p>
-  </div>
-
-  <h3><span class="num">3</span><code>overflow: hidden</code> + <code>text-overflow: ellipsis</code></h3>
-  <div class="row">
-    <div class="slot v3">
-      <div class="tile">
-        <p class="label">Enrollment window</p>
-        <p class="value">Feb 1 – Feb 28, 2026</p>
-      </div>
-      <span class="good">геометрия не менялась</span>
-    </div>
-  </div>
-  <div class="panel">
-    <p><b>+</b> единственный с нулевой разницей в геометрии: одна строка, 111px, ряд ровный, кегль headline цел. Обрезка <b>оптическая</b> — текст в DOM целиком, скринридер читает всё (то, что Carbon называет optical, а не technical truncation).<br>
-    <b>−</b> глазами не прочитать, а <code>.value</code> не фокусируется — раскрыть с клавиатуры нечем, хотя Carbon требует раскрытие и по ховеру, и по фокусу.</p>
-  </div>
-
-  <h3><span class="num">4</span>Перенос + обрезка на второй строке</h3>
-  <div class="row">
-    <div class="slot v4">
-      <div class="tile">
-        <p class="label">Enrollment window</p>
-        <p class="value">Feb 1 – Feb 28, 2026</p>
-      </div>
-      <span class="bad">две строки, «2026» потерялось</span>
-    </div>
-    <div class="slot v4">
       <div class="tile">
         <p class="label">Территория</p>
         <p class="value">Северо-Западный федеральный округ, Республика Карелия</p>
       </div>
-      <p class="caption-under">а вот здесь уже с многоточием</p>
+      <span class="bad">915px за краем</span>
     </div>
-  </div>
-  <div class="panel">
-    <p><b>+</b> правило Carbon для длинного заголовка колонки и обычная практика KPI-карточек: кегль цел, за карточку ничего не выходит, рост высоты вдвое меньше полного переноса — 147px против 183px при 111px сегодня.<br>
-    <b>−</b> наша фраза в две строки не влезает: перенос по пробелам даёт «Feb 1 –» / «Feb 28,» / «2026», и год уходит под многоточие. Плюс три свойства и префиксный <code>-webkit-line-clamp</code> в публичном компоненте.</p>
-  </div>
-
-  <h3><span class="num">5</span>Подгонять кегль под ширину</h3>
-  <div class="row">
-    <div class="slot v5">
+    <div class="slot v-wrap">
       <div class="tile">
-        <p class="label">Enrollment window</p>
-        <p class="value">Feb 1 – Feb 28, 2026</p>
+        <p class="label">Территория</p>
+        <p class="value">Северо-Западный федеральный округ, Республика Карелия</p>
       </div>
-      <span class="good">17px вместо 36px</span>
+      <span class="bad">перенос, и всё равно 69px за краем</span>
     </div>
-    <div class="slot v5">
+    <div class="slot v-anywhere">
       <div class="tile">
-        <p class="label">Enrolled</p>
-        <p class="value">1 248</p>
+        <p class="label">Территория</p>
+        <p class="value">Северо-Западный федеральный округ, Республика Карелия</p>
       </div>
-      <p class="caption-under">число кегля не потеряло</p>
+      <span class="good">anywhere: в карточке, но 8 строк</span>
+    </div>
+    <div class="slot v-fit">
+      <div class="tile">
+        <p class="label">Территория</p>
+        <p class="value">Северо-Западный федеральный округ, Республика Карелия</p>
+      </div>
+      <span class="bad">кегль по контейнеру, и всё равно за краем</span>
     </div>
   </div>
-  <div class="panel">
-    <p><b>+</b> единственный, где ничего не спрятано И высота не выросла (92px). Короткое значение упирается в верх <code>clamp()</code> и рисуется как сегодня.<br>
-    <b>−</b> 36px → 17.1px: значение перестаёт быть headline, на котором держится KPI-плитка, и в ряду из четырёх кегль будет разным — читается как разная важность. Плюс <code>container-type</code> на <code>.stat</code>, то есть новый contain-контекст внутри компонента.</p>
-  </div>
-
-  <h2>Померенное, одна плитка 240px</h2>
 
   <table>
     <thead>
-      <tr><th>Вариант</th><th>Высота</th><th>Строк</th><th>Кегль</th><th>За краем</th><th>Скрыто от глаза</th></tr>
+      <tr><th>Комбинация</th><th>Высота</th><th>Строк видно / нужно</th><th>За краем</th><th>Скрыто от глаза</th></tr>
     </thead>
     <tbody>
-      <tr><td>1 · сегодня</td><td class="n">111px</td><td class="n">1</td><td class="n">36px</td><td class="n">157px</td><td>нет, но лежит на соседе</td></tr>
-      <tr><td>2 · перенос</td><td class="n">183px</td><td class="n">3</td><td class="n">36px</td><td class="n">—</td><td>нет</td></tr>
-      <tr><td>3 · многоточие</td><td class="n">111px</td><td class="n">1</td><td class="n">36px</td><td class="n">—</td><td>да, 45% строки</td></tr>
-      <tr><td>4 · две строки, потом многоточие</td><td class="n">147px</td><td class="n">2 из 3</td><td class="n">36px</td><td class="n">—</td><td>да, третья строка — «2026»</td></tr>
-      <tr><td>5 · подгонка кегля</td><td class="n">92px</td><td class="n">1</td><td class="n">17.1px</td><td class="n">—</td><td>нет</td></tr>
+      <tr><td>сегодня &mdash; <code>nowrap</code></td><td class="n">111px</td><td class="n">1 / 3</td><td class="n">158px</td><td>2 строки, и лежит на соседе</td></tr>
+      <tr><td><b>1 строка + ellipsis (миксин DS)</b></td><td class="n">111px</td><td class="n">1 / 3</td><td class="n">&mdash;</td><td>2 строки</td></tr>
+      <tr><td>clamp 2</td><td class="n">147px</td><td class="n">2 / 3</td><td class="n">&mdash;</td><td>1 строка &mdash; «2026»</td></tr>
+      <tr><td>clamp 3</td><td class="n">183px</td><td class="n">3 / 3</td><td class="n">&mdash;</td><td>нет</td></tr>
+      <tr><td>перенос без предела</td><td class="n">183px</td><td class="n">3 / 3</td><td class="n">&mdash;</td><td>нет</td></tr>
+      <tr><td>кегль по контейнеру</td><td class="n">96px</td><td class="n">1 / 2</td><td class="n">19px</td><td>1 строка &mdash; и всё равно за краем</td></tr>
+    </tbody>
+  </table>
+
+  <p class="lede">То же для значения, где одно слово шире плитки:</p>
+
+  <table>
+    <thead>
+      <tr><th>Комбинация</th><th>Высота</th><th>Строк видно / нужно</th><th>За краем</th><th>Скрыто от глаза</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>сегодня &mdash; <code>nowrap</code></td><td class="n">111px</td><td class="n">1 / 6</td><td class="n">915px</td><td>5 строк</td></tr>
+      <tr><td><b>1 строка + ellipsis</b></td><td class="n">111px</td><td class="n">1 / 6</td><td class="n">&mdash;</td><td>5 строк</td></tr>
+      <tr><td>clamp 2</td><td class="n">147px</td><td class="n">2 / 6</td><td class="n">69px</td><td>4 строки, и всё равно за краем</td></tr>
+      <tr><td>перенос без предела</td><td class="n">291px</td><td class="n">6 / 6</td><td class="n">69px</td><td>нет, но за краем</td></tr>
+      <tr><td>перенос + <code>anywhere</code></td><td class="n">363px</td><td class="n">8 / 8</td><td class="n">&mdash;</td><td>нет</td></tr>
+      <tr><td>кегль по контейнеру</td><td class="n">96px</td><td class="n">1 / 6</td><td class="n">473px</td><td>5 строк</td></tr>
     </tbody>
   </table>
 
   <div class="panel">
     <p>
-      <b>«За краем»</b> — правая граница текста минус внутренняя граница карточки. По рамке
-      <code>.value</code> мерить нельзя: блочный бокс остаётся 190px при любом тексте, 348px видно
-      только в <code>scrollWidth</code> и в <code>Range</code> по содержимому.<br>
-      <b>Две ловушки измерения</b>, каждая дала неверную строку до отрисовки плиток:
-      <code>scrollWidth &gt; clientWidth</code> отвечает только про горизонтальную обрезку, а
-      <code>-webkit-line-clamp</code> режет по вертикали — вариант 4 выглядел как «ничего не
-      потеряно». <code>scrollHeight &gt; clientHeight</code> вместо него не годится: он истинен у
-      всех пяти, потому что <code>--line-height-flat</code> меньше высоты глифа. Работает только
-      сравнение числа строк с числом строк без обрезки — 3 против 2.
+      <b>Как это меряется.</b> Высота строки ровно 36px, поэтому число видимых строк &mdash; это
+      <code>clientHeight / lineHeight</code>, а не рамки <code>Range</code>: при
+      <code>--line-height-flat: 1</code> глиф выше строчного бокса, рамки перекрываются и дают на
+      строку больше &mdash; первый прогон так и посчитал у clamp&nbsp;1 две строки вместо одной.
+      <code>scrollHeight &gt; clientHeight</code> истинно у <b>всех</b> комбинаций по той же причине
+      и как детектор не годится вообще.
     </p>
   </div>
 
-  <h2>Рекомендация: вариант 4</h2>
+  <h2>Что покажется при наводке</h2>
+
+  <p>
+    <b>Сегодня &mdash; ничего.</b> CSS-обрезка не даёт никакого тултипа: ни
+    <code>text-overflow</code>, ни clamp не показывают полное значение ни по ховеру, ни по фокусу.
+    Но в DS механизм уже есть, и он не сводится к <code>title</code>: <code>ds-table</code> ставит
+    <code>title</code> (нативный тултип по ховеру) <em>и</em> открывает <code>ds-popover</code> с
+    полным текстом по клику, а вешает это на гейт <code>isClipped()</code> &mdash;
+    <code>scrollWidth &gt; clientWidth</code> на самом элементе и на потомках. Таб-стоп на ячейку
+    она сознательно не добавляет.
+  </p>
+
+  <table>
+    <thead><tr><th>Комбинация</th><th>Детектор <code>scrollWidth &gt; clientWidth</code></th><th>Сравнение числа строк</th></tr></thead>
+    <tbody>
+      <tr><td><b>1 строка + ellipsis</b></td><td><span class="good">работает</span></td><td>работает</td></tr>
+      <tr><td>clamp N</td><td><span class="bad">молчит</span></td><td>работает</td></tr>
+      <tr><td>перенос без предела</td><td>истинно, но обрезки нет</td><td>работает</td></tr>
+    </tbody>
+  </table>
+
+  <div class="panel">
+    <p>
+      <b>Это аргумент за «одну строку» как дефолт.</b> При обрезке в одну строку факт обрезки виден
+      из одного сравнения на самом элементе &mdash; тот самый гейт, который уже написан в таблице.
+      При clamp он молчит: чтобы понять, что строка спрятана, нужен скрытый двойник и
+      <code>ResizeObserver</code>. <code>overflow: clip</code> детектору не мешает &mdash; проверено
+      здесь и записано в <code>table.component.scss</code>.
+    </p>
+  </div>
+
+  <h2>Рекомендация</h2>
 
   <div class="panel rec">
     <p>
-      <b>4</b> — единственный, который держит кегль headline И не даёт выйти за карточку, при росте
-      высоты вдвое меньше полного переноса. Скрывает меньше всех, кто скрывает: третью строку против
-      45% первой у варианта 3. Это записанное правило Carbon, а не наша выдумка.<br>
-      <b>3</b> — если важнее, чтобы ни одна плитка не изменила высоту: нулевая разница в геометрии, и
-      за читаемость платит потребитель через <code>--ds-stat-value-white-space: normal</code>.<br>
-      <b>5 не рекомендую дефолтом</b> — разный кегль значений в одном ряду ломает то, ради чего
-      KPI-плитка существует. Как opt-in-хук <code>--ds-stat-value-fit</code> он хорош, и его стоит
-      добавить независимо от выбора дефолта.
+      <b>Дефолт &mdash; одна строка миксином DS.</b> Высота плитки не меняется (111px, как сегодня),
+      выносные целы, ряд KPI остаётся ровным, и <code>ds-stat</code> перестаёт быть единственным
+      компонентом со своей обрезкой. Обрезка оптическая: текст остаётся в DOM целиком, скринридер
+      читает всё.<br>
+      <b>Больше строк &mdash; опция:</b> <code>--ds-stat-value-lines</code> поверх clamp. Второй хук
+      <code>--ds-stat-value-wrap: anywhere</code> для значений, где одно слово шире плитки &mdash;
+      он нужен отдельно и ни из чего не следует.<br>
+      <b>Раскрытие &mdash; забрать из таблицы, а не писать заново.</b> Это второе место в DS с той же
+      задачей: <code>title</code> + <code>ds-popover</code> по клику, гейт по
+      <code>scrollWidth</code>. Без таб-стопа внутри плитки.<br>
+      <b>Кегль по контейнеру &mdash; не как «подгонка».</b> Он не решает переполнение; если хук и
+      нужен, то под честным именем и без обещания, что после него ничего не вылезет.
     </p>
   </div>
 
   <h2>Что решить</h2>
 
   <table>
-    <thead><tr><th>Вопрос</th><th>Варианты</th></tr></thead>
+    <thead><tr><th>#</th><th>Вопрос</th><th>Варианты</th></tr></thead>
     <tbody>
-      <tr><td>Какой дефолт</td><td>1 · 2 · 3 · <b>4</b> · 5</td></tr>
-      <tr><td>Если 3 или 4 — раскрытие полного значения</td><td><code>title</code> по ховеру (клавиатуре не поможет) · ничего, скринридер читает целиком · <code>ds-tooltip</code> с tab stop</td></tr>
-      <tr><td><code>--ds-stat-value-fit</code> как хук варианта 5</td><td>да, независимо от дефолта · нет</td></tr>
-      <tr><td>Демо в доке показывает спилл специально</td><td>переписать на «до/после» · оставить, показывая старое через хук</td></tr>
+      <tr><td class="n">1</td><td>Дефолт</td><td><b>1 строка + ellipsis</b> &middot; clamp 2 &middot; перенос &middot; оставить как есть</td></tr>
+      <tr><td class="n">2</td><td>Раскрытие полного значения</td><td><b><code>title</code> + popover по клику, как в таблице</b> &middot; только <code>title</code> &middot; ничего</td></tr>
+      <tr><td class="n">3</td><td>Хук на число строк</td><td><b>да, <code>--ds-stat-value-lines</code></b> &middot; нет, хватит <code>white-space</code></td></tr>
+      <tr><td class="n">4</td><td>Хук <code>anywhere</code> для длинного слова</td><td><b>да</b> &middot; нет</td></tr>
+      <tr><td class="n">5</td><td>Кегль по контейнеру</td><td><b>хук под честным именем</b> &middot; не добавлять &middot; сделать дефолтом</td></tr>
+      <tr><td class="n">6</td><td>Демо в доке показывает спилл специально</td><td>переписать на «до/после» &middot; оставить, показывая старое через хук</td></tr>
     </tbody>
   </table>
 
   <h2>Источники</h2>
 
   <p class="sources">
-    Data table · usage (две строки, потом обрезка) —
-    <a href="https://carbondesignsystem.com/components/data-table/usage/">carbondesignsystem.com</a> ·
-    Tag · accessibility (раскрытие по ховеру и по фокусу) —
-    <a href="https://carbondesignsystem.com/components/tag/accessibility/">carbondesignsystem.com</a> ·
-    KPI card —
-    <a href="https://www.activecampaign.design/docs/components/data-visualization/kpi-card">activecampaign.design</a> ·
-    Cards: how a 3×5 rectangle conquered screen design —
-    <a href="https://www.uxtigers.com/post/card-pattern">uxtigers.com</a> ·
-    Design for truncation —
-    <a href="https://medium.com/design-bootcamp/design-for-truncation-946951d5b6b8">medium.com</a>
+    Обрезка и раскрытие в DS &mdash; <code>src/lib/styles/_text-clip.scss</code>,
+    <code>table.component.ts:1102-1122</code> &middot;
+    Data table &middot; usage &mdash;
+    <a href="https://carbondesignsystem.com/components/data-table/usage/">carbondesignsystem.com</a> &middot;
+    Tag &middot; accessibility (раскрытие по ховеру и по фокусу) &mdash;
+    <a href="https://carbondesignsystem.com/components/tag/accessibility/">carbondesignsystem.com</a> &middot;
+    KPI card &mdash;
+    <a href="https://www.activecampaign.design/docs/components/data-visualization/kpi-card">activecampaign.design</a> &middot;
+    Design for truncation &mdash;
+    <a href="https://medium.com/design-bootcamp/design-for-truncation-946951d5b6b8">medium.com</a> &middot;
+    измерения &mdash; Chrome 153, плитка 240px, внутренние 190px
   </p>
 
 </div>
