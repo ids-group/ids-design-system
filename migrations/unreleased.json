@@ -1,0 +1,8 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    "`ds-button` takes five more style hooks — `--ds-button-font-family`, `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and `--ds-button-label-color-active`. Every one defaults to the value the stylesheet read before it, so nothing moves for a button that sets none of them. Worth knowing if you reached the same values the hard way: `ds-button { --font-sans: … }` and a subtree override of `--border-width-default` both have a hook of their own now, and neither of those workarounds stops working."
+  ],
+  "deleteList": []
+}

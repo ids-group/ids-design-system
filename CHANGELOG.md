@@ -8,6 +8,31 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **Five `ds-button` tokens that closed the last holes in its surface: `--ds-button-font-family`,
+  `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and
+  `--ds-button-label-color-active`.** Each defaults to what the stylesheet read before it —
+  `--font-sans`, `--line-height-flat`, `--border-width-default`, and the resting label for both
+  states — so a button that sets none of them renders exactly as it did.
+
+  They exist because the alternative was re-pointing a THEME role inside the component. Branding a
+  button to a face other than the body one meant `ds-button { --font-sans: … }`, which also reaches
+  the icon and the message row inside it; changing its edge meant redefining `--border-width-default`
+  for the subtree, which moves a scale step for everything under it.
+
+  ```scss
+  ds-button {
+    --ds-button-font-family: var(--app-font-heading);
+    --ds-button-border-width: 2px;
+    --ds-button-label-color-hover: var(--surface-default);
+  }
+  ```
+
+  `--ds-button-border` names the border's COLOUR and keeps that meaning; the width is the new token
+  beside it. `variant="text"` now takes its hover colour from the same resolver as every other
+  variant, so the hook reaches it too — its default is unchanged.
+
 ## 0.12.3 — 2026-09-10
 
 ### Breaking
