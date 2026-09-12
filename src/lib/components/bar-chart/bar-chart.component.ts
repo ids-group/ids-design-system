@@ -61,7 +61,7 @@ export class BarChartComponent {
 
     return this.data().map((row, index) => ({
       row,
-      widthPercent: max > 0 ? (row.value / max) * 100 : 0,
+      widthPercent: max > 0 ? Math.max((row.value / max) * 100, 0) : 0,
       formattedValue: format(row.value),
       formattedPercent:
         row.percent !== undefined

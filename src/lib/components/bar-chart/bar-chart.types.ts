@@ -1,5 +1,4 @@
 export interface BarChartRow {
-  /** Row label, shown at the start of the row. */
   label: string;
   value: number;
   /** Printed at the row's end. Derived from `value / max` when omitted. */
