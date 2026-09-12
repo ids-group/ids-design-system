@@ -9,6 +9,9 @@
     <div
       class="skeleton"
       aria-hidden="true">
+      @for (placeholder of skeletonRows(); track $index) {
+        <ds-skeleton height="var(--_bar-chart-track-height)" />
+      }
     </div>
   } @else if (isEmpty()) {
     <p class="empty">

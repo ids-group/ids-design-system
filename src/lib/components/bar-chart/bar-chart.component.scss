@@ -3,14 +3,25 @@
 }
 
 .bar-chart {
-  --_bar-chart-track-color: var(--ds-bar-chart-track-color, var(--chart-grid-line-color));
+  --_bar-chart-track-color: var(--ds-bar-chart-track-color, var(--ds-chart-grid-line-color));
   --_bar-chart-track-height: var(--ds-bar-chart-track-height, 8px);
-  --_bar-chart-row-gap: var(--ds-bar-chart-row-gap, var(--space-3));
+  --_bar-chart-row-gap: var(--ds-bar-chart-row-gap, var(--space-4));
 
   margin: 0;
 }
 
+figcaption {
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
 .rows {
+  display: grid;
+  row-gap: var(--_bar-chart-row-gap);
+}
+
+.skeleton {
   display: grid;
   row-gap: var(--_bar-chart-row-gap);
 }

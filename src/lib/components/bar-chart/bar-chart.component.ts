@@ -13,12 +13,14 @@ import {
   formatPercent,
   formatValue,
 } from '@ids-group-ltd/ids-design-system/components';
+import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { resolveMax, widthPercent } from './bar-chart.math';
 import type { BarChartRow } from './bar-chart.types';
 
 @Component({
   selector: 'ds-bar-chart',
   standalone: true,
+  imports: [SkeletonComponent],
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -81,4 +83,10 @@ export class BarChartComponent {
   );
 
   protected readonly isEmpty = computed(() => this.data().length === 0);
+
+  /** Placeholder bars while loading. Follows the real row count so the chart does not resize
+   *  when the data lands; falls back to three when `data` is still empty. */
+  protected readonly skeletonRows = computed(() =>
+    Array.from({ length: Math.max(this.data().length, 3) }),
+  );
 }
