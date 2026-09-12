@@ -905,7 +905,8 @@ Three defects the port surfaced by reading every component's template + SCSS aga
   destructive-last covers it without new API. **Both are P3 until a consumer says the workaround is
   the thing stopping them** — the two that actually blocked adoption have shipped, so the next word
   on these should come from a migrated screen, not from the original count. **GATE HELD 2026-08-25
-  (Stas), asked explicitly.** _(The done kebab-token sub-item moved to `done.md` 2026-08-26.)_
+  (Stas), asked explicitly — and put to him again on 2026-09-12 as deck `table-row-action-halves`,
+  because the migrated screen the gate was waiting on never said anything.** _(The done kebab-token sub-item moved to `done.md` 2026-08-26.)_
 
 ## DS-docs
 
@@ -1011,7 +1012,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-12)
 
-**Seven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Eight** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1027,6 +1028,7 @@ file** — the number moves; cite the filename.
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
 | 7 | `7-docs-chapter-nav` | Where the chapter list lives. Four mutually-exclusive variants left after seven were rejected. | the docs-nav P3s under *Records* |
+| 8 | `8-table-row-action-halves` | Whether `TableRowAction` gets a per-row `label` and a divider — the last two halves of the mm-broker Ask, gated since 2026-08-25. | the `TableRowAction` P3 under *Asks* |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1035,7 +1037,7 @@ carries it: the item fills with `--accent-subtitle`, the group never fills) and 
 (one line plus a tip on hover, three hooks over it). `5-rejected-with-numbers` left the queue the
 same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was owed.
 
-**Five of the seven have a twin on this board, so one answer closes two lines** — which is what
+**Six of the eight have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
 answer, and it has already been given — the deck stays only because closing it was declined.
 
