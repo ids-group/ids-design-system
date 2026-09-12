@@ -75,9 +75,8 @@
   border-color: var(--border-disabled);
 }
 
-/* Projected content carries the CONSUMER's encapsulation attribute, so ::ng-deep is
-   the only way to reach it. Scoped under `.row` so nothing here escapes the group — and so it
-   cannot reach the message row, which is this component's own. */
+/* Projected content carries the CONSUMER's encapsulation attribute, so ::ng-deep is the only way
+   to reach it. Scoped under `.row` so it cannot reach the message row, which is ours. */
 .row ::ng-deep > * {
   /* Hug by default, `grow` takes the slack: a segment that filled the row by default
      would leave no room for the one the consumer actually meant. */

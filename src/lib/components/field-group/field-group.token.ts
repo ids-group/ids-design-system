@@ -12,9 +12,8 @@ export interface DsFieldGroupContext {
    *  error: the pair is invalid, and a reader who tabs to the second segment must hear it too.
    *  Named for the resolved value so it cannot be confused with the group's raw `invalid` input. */
   readonly invalidResolved: () => boolean;
-  /** The id of the group's message row, or `null` when it has no message. A
-   *  segment adds it to `aria-describedby`, which is what connects the one
-   *  sentence to every control it describes. */
+  /** A segment adds this to its `aria-describedby`, which is what connects the
+   *  group's one sentence to every control it describes. */
   readonly messageId: () => string | null;
 }
 
@@ -68,7 +67,7 @@ export function groupInvalid(own: Signal<boolean>): Signal<boolean> {
 
 /**
  * The id of the enclosing group's message, for a segment's `aria-describedby` — one sentence
- * describing every control it covers. `null` outside a group, or when the group has no message.
+ * describing every control it covers.
  * @internal
  */
 export function groupMessageId(): Signal<string | null> {
@@ -77,7 +76,7 @@ export function groupMessageId(): Signal<string | null> {
   return computed(() => group?.messageId() ?? null);
 }
 
-/** Joins ids for `aria-describedby`, dropping the empty ones. @internal */
+/** @internal */
 export function describedByIds(
   ...ids: readonly (string | null | undefined)[]
 ): string | null {
