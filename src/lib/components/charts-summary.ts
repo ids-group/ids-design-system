@@ -1,5 +1,6 @@
 import { formatValue } from './charts-format';
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export interface SummaryPoint {
   readonly label: string;
   readonly value: number;
@@ -7,7 +8,9 @@ export interface SummaryPoint {
 
 /** The sentence a screen reader gets as the chart's accessible name. Generated
  *  rather than required, because a required one is a field that gets left at the
- *  component's default and then lies. */
+ *  component's default and then lies.
+ *
+ *  @internal Exported for the chart entry points; not part of the package surface. */
 export function describeSeries(
   label: string,
   points: readonly SummaryPoint[],

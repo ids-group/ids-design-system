@@ -11,6 +11,7 @@ function numberFormatter(locale: string | undefined): Intl.NumberFormat {
   return formatter;
 }
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export function formatValue(value: number, locale?: string): string {
   if (!Number.isFinite(value)) {
     return '—';
@@ -19,6 +20,7 @@ export function formatValue(value: number, locale?: string): string {
   return numberFormatter(locale).format(value);
 }
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export function formatPercent(value: number, total: number): string {
   if (!total || !Number.isFinite(value) || !Number.isFinite(total)) {
     return '—';
@@ -35,7 +37,9 @@ export function formatPercent(value: number, total: number): string {
 }
 
 /** Whole percentages that sum to exactly 100. Rounding each share on its own
- *  gives 33/33/33 for three equal parts, and a legend that visibly loses 1%. */
+ *  gives 33/33/33 for three equal parts, and a legend that visibly loses 1%.
+ *
+ *  @internal Exported for the chart entry points; not part of the package surface. */
 export function largestRemainder(values: readonly number[]): number[] {
   const total = values.reduce((sum, value) => sum + value, 0);
   if (!total) {
@@ -59,6 +63,7 @@ export function largestRemainder(values: readonly number[]): number[] {
   return result;
 }
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export function formatTick(value: number, step: number): string {
   if (!Number.isFinite(value)) {
     return '';
