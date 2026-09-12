@@ -1,4 +1,3 @@
-// tools/generate-chart-palette.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,8 +7,22 @@ const SOURCE = join(ROOT, 'src/lib/styles/_tokens-charts.scss');
 const OUT = join(ROOT, 'src/lib/components/chart-palette.generated.ts');
 
 const scss = readFileSync(SOURCE, 'utf8');
-const names = [...scss.matchAll(/^\s*(--ds-chart-series-\d+-color):/gm)].map((match) => match[1]);
-if (names.length === 0) throw new Error('no --ds-chart-series-N-color tokens found');
+const matches = [...scss.matchAll(/^\s*(--ds-chart-series-(\d+)-color):/gm)].map((match) => ({
+  token: match[1],
+  number: Number(match[2]),
+}));
+if (matches.length === 0) throw new Error('no --ds-chart-series-N-color tokens found');
+
+matches.sort((a, b) => a.number - b.number);
+
+const seriesNumbers = matches.map((match) => match.number);
+const isContiguous = seriesNumbers.every((number, index) => number === index + 1);
+if (!isContiguous) {
+  throw new Error(
+    `--ds-chart-series-N-color tokens must be numbered 1..N with no gaps or duplicates; ` +
+      `found series numbers [${seriesNumbers.join(', ')}], expected 1..${matches.length}`,
+  );
+}
 
 // A CSS custom-property name cannot be used in TypeScript, so strip the namespace
 // and camel-case what is left: --ds-chart-series-3-color -> series3.
@@ -19,7 +32,7 @@ const key = (token) =>
     .replace(/-color$/, '')
     .replace(/-(\w)/g, (_, character) => character.toUpperCase());
 
-const entries = names.map((token) => `  ${key(token)}: 'var(${token})',`).join('\n');
+const entries = matches.map(({ token }) => `  ${key(token)}: 'var(${token})',`).join('\n');
 
 writeFileSync(
   OUT,
@@ -30,4 +43,4 @@ writeFileSync(
     `export const CHART_SERIES_COLORS: readonly string[] =\n  Object.values(chartColors);\n`,
 );
 
-console.log(`generate-chart-palette: wrote ${names.length} colours`);
+console.log(`generate-chart-palette: wrote ${matches.length} colours`);
