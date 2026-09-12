@@ -1,24 +1,24 @@
-import { register } from 'node:module';
+import { registerHooks } from 'node:module';
 
 // node --experimental-strip-types cannot resolve charts-summary.ts's own extensionless
 // import of "./charts-format" (nodejs/node#61229); retry such a failure with ".ts" appended
 // rather than adding the extension to the source import charts-summary.ts is required to keep.
-const resolveExtensionlessTypeScript = `
-export async function resolve(specifier, context, nextResolve) {
-  try {
-    return await nextResolve(specifier, context);
-  } catch (error) {
-    if (error?.code === 'ERR_MODULE_NOT_FOUND' && specifier.startsWith('.') && !specifier.endsWith('.ts')) {
-      return nextResolve(specifier + '.ts', context);
+registerHooks({
+  resolve(specifier, context, nextResolve) {
+    try {
+      return nextResolve(specifier, context);
+    } catch (error) {
+      if (
+        error?.code === 'ERR_MODULE_NOT_FOUND' &&
+        specifier.startsWith('.') &&
+        !specifier.endsWith('.ts')
+      ) {
+        return nextResolve(specifier + '.ts', context);
+      }
+      throw error;
     }
-    throw error;
-  }
-}
-`;
-register(
-  `data:text/javascript,${encodeURIComponent(resolveExtensionlessTypeScript)}`,
-  import.meta.url,
-);
+  },
+});
 
 const { describeSeries } = await import(
   new URL('../../src/lib/components/charts-summary.ts', import.meta.url).href
@@ -103,6 +103,24 @@ check(
   'host formatter reaches every value in a multi-point series',
   describeSeries('Quarterly', middleExtremes, (value) => `$${value}`),
   'Quarterly. 4 points, from $500 at Jan to $300 at Apr. Lowest $100 at Feb, highest $900 at Mar.',
+);
+
+// Two labels tie for the minimum (100) and two tie for the maximum (900), neither pair at the
+// array's ends. Strict "<"/">" keeps the first tied label, matching reading order, so the
+// sentence must read "Tue"/"Thu" — a "<="/">=" mutation would silently read "Wed"/"Fri" instead.
+const tiedExtremes = [
+  { label: 'Mon', value: 500 },
+  { label: 'Tue', value: 100 },
+  { label: 'Wed', value: 100 },
+  { label: 'Thu', value: 900 },
+  { label: 'Fri', value: 900 },
+  { label: 'Sat', value: 300 },
+];
+
+check(
+  'breaks a tie by keeping the first occurrence',
+  describeSeries('Weekly', tiedExtremes, englishFormat),
+  'Weekly. 6 points, from 500 at Mon to 300 at Sat. Lowest 100 at Tue, highest 900 at Thu.',
 );
 
 if (failures) {
