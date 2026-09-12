@@ -148,12 +148,54 @@
     осталось.
   </p>
 
+  <h2>Как это устроено у полей</h2>
+
+  <p>
+    Пятнадцать контролов уже несут <b>пару входов</b>, и у каждого своя работа. Группа —
+    единственная, у кого половина пары, и её половина делает меньше, чем у поля.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Вход</th><th>Что делает</th><th class="mid">15 полей</th><th class="mid">ds-field-group</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="rowlabel"><code>error</code></td>
+        <td>строка: включает состояние <b>и</b> несёт текст</td>
+        <td class="mid"><span class="dot on"></span></td>
+        <td class="mid"><span class="dot off"></span></td>
+      </tr>
+      <tr>
+        <td class="rowlabel"><code>invalid</code></td>
+        <td>флаг: красит и ставит <code>aria-invalid</code>, текста нет</td>
+        <td class="mid"><span class="dot on"></span></td>
+        <td class="mid"><span class="dot off"></span> только красит</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="panel bad">
+    <p>
+      <b>И библиотека уже описала, зачем нужна вторая половина — этим самым случаем.</b> Докблок
+      <code>DsFieldBase.invalid</code>, дословно: «paints the error state and sets
+      <code>aria-invalid</code>, WITHOUT a message of its own — for when the text lives elsewhere,
+      such as a form-level error summary or <b>one message covering a whole field group</b>». То
+      есть <code>invalid</code> у сегмента существует ровно для того, чтобы текст нёс кто-то
+      снаружи. Снаружи — это группа. Группе текст нести нечем.
+    </p>
+    <p>
+      <b>Второе:</b> <code>invalid</code> у группы — это одноимённый вход, который делает меньше.
+      У поля он даёт <code>[attr.aria-invalid]</code> и краску; у группы —
+      <code>[class.invalid]</code> и всё.
+    </p>
+  </div>
+
   <h2>Между чем выбираем</h2>
 
   <p>
-    Одна и та же группа с ошибкой во всех пяти. Отличается то, что под ней: <b>что появляется на
-    экране</b>, <b>что появляется в DOM</b> и <b>что услышит скринридер</b>. Два варианта меняют
-    картинку, три — только звук.
+    Одна и та же группа с ошибкой во всех четырёх. Отличается то, что под ней: <b>что появляется на
+    экране</b>, <b>что появляется в DOM</b> и <b>что услышит скринридер</b>. Картинку меняет только последний.
   </p>
 
   <div class="opts">
@@ -210,7 +252,7 @@
       </dl>
     </div>
     <div class="opt is-pick">
-      <h3>Строка ошибки</h3>
+      <h3>Строка ошибки<br><span class="says">error + invalid, как у полей</span></h3>
       <span class="badge is-pick">рекомендую</span>
 
       <div>
@@ -228,32 +270,15 @@
         <dd class="gain">«…недопустимое значение, <b>введите сумму больше нуля</b>»</dd>
       </dl>
     </div>
-    <div class="opt">
-      <h3>Строка + вход <code>error</code></h3>
-
-      <div>
-        <div class="group error">
-          <div class="seg pick">USD ▾</div>
-          <div class="seg">1 200,00</div>
-        </div>
-        <p class="msg">Введите сумму больше нуля</p>
-      </div>
-
-      <dl class="layer">
-        <dt>DOM</dt>
-        <dd class="none">то же, что слева</dd>
-        <dt>Голос</dt>
-        <dd class="none">то же, что слева</dd>
-      </dl>
-    </div>
   </div>
 
   <div class="panel">
     <p>
-      <b>Выбор не между пятью, а между двумя:</b> получает группа свою строку ошибки или нет.
-      «Ничего», «атрибут на группе» и «озвучить сегментам» дают один и тот же экран — отличаются
-      только тем, что слышно. «Строка + вход <code>error</code>» рисует то же, что «строка ошибки»:
-      разница в том, что пишет потребитель, и она ниже.
+      <b>Выбор сводится к одному:</b> получает группа свою строку ошибки или нет. Первые три дают
+      один и тот же экран и отличаются только тем, что слышно. Четвёртый — это пара
+      <code>error</code> + <code>invalid</code>, та же, что у пятнадцати полей: <code>error</code>
+      добавляется, <code>invalid</code> остаётся и наконец начинает ставить
+      <code>aria-invalid</code>. Ломать нечего.
     </p>
   </div>
 
@@ -301,15 +326,7 @@
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
-        <td class="says">[invalid]="true" error="Введите сумму…"</td>
-      </tr>
-      <tr class="row-pick">
-        <td class="rowlabel">Строка + вход <code>error</code></td>
-        <td class="mid"><span class="dot on"></span></td>
-        <td class="mid"><span class="dot on"></span></td>
-        <td class="mid"><span class="dot on"></span></td>
-        <td class="mid"><span class="dot on"></span></td>
-        <td class="says">error="Введите сумму…" — и всё</td>
+        <td class="says">error="Введите сумму…" — как у любого поля</td>
       </tr>
     </tbody>
   </table>
@@ -333,25 +350,22 @@
       </tr>
       <tr>
         <td class="rowlabel">Озвучить сегментам</td>
-        <td>одно поле в <code>DsFieldGroupContext</code>, по строке в шести полях</td>
+        <td>одно поле в <code>DsFieldGroupContext</code>, по строке в сегментах</td>
         <td>механизм уже есть (им передаётся <code>sizeResolved</code>); 1.4.1 не закрыт — текста по-прежнему нет</td>
       </tr>
       <tr class="row-pick">
         <td class="rowlabel">Строка ошибки</td>
-        <td>C + слот сообщения в шаблоне группы, <code>id</code> раздаётся сегментам</td>
+        <td>вход <code>error</code>, слот сообщения в шаблоне, <code>id</code> раздаётся сегментам</td>
         <td>группа перестаёт быть одной строкой по высоте; следом попросят <code>hint</code> — это уже небольшая фича, а не фикс</td>
-      </tr>
-      <tr>
-        <td class="rowlabel">Строка + вход <code>error</code></td>
-        <td>D, но <code>invalid: boolean</code> заменяется на <code>error: string</code></td>
-        <td>ломающее для каждого потребителя, и теряется случай «рамку хочу, текст свой снаружи»</td>
       </tr>
     </tbody>
   </table>
 
   <div class="panel good">
     <p>
-      <b>Рекомендую «строку ошибки» со входом <code>error</code>, сохранив <code>invalid</code>.</b>
+      <b>Рекомендую «строку ошибки».</b> Это не новый API — это пара <code>error</code> +
+      <code>invalid</code>, которая уже есть у пятнадцати контролов, и docblock
+      <code>DsFieldBase.invalid</code> прямо называет группу тем местом, где должен жить текст.
       Только она закрывает то, из-за чего пункт вообще в P2: сегодня об ошибке группы нельзя узнать
       иначе как увидев цвет. <code>error: string</code> делает текст условием состояния — включить
       ошибку и не сказать, в чём она, становится невозможно, и это совпадает с полями, где
@@ -368,8 +382,7 @@
       <tr>
         <td><b>Получает ли группа свою строку ошибки</b></td>
         <td>
-          <b>да — строка со входом <code>error</code>, <code>invalid</code> остаётся</b> ·
-          да — строка, но вход остаётся <code>invalid</code> ·
+          <b>да — вход <code>error</code> рядом с <code>invalid</code>, как у полей</b> ·
           нет — хватит озвучить сегментам ·
           нет — оставляем как есть
         </td>

@@ -18,7 +18,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4" |
 | 7 | `7-docs-chapter-nav` | where the chapter list lives and what makes a sub-item a sub-item. Seven variants rejected, four left, and they are mutually exclusive: 11, 12, 13 and 14 each answer "where do 38 rows live" differently |
-| 8 | `8-field-group-invalid-voice` | one question: does a group get its own error row. Colour is its only channel today, which is a 1.4.1 failure; the five variants are a ladder of four channels, and only the top two change anything on screen |
+| 8 | `8-field-group-invalid-voice` | one question: does a group get its own error row. Colour is its only channel today, a 1.4.1 failure; four options drawn side by side, and the fix turns out to be parity — fifteen controls already take `error` + `invalid` and the group took half |
 
 **Ranks 1-3 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Four closed on 2026-09-12: `button-destination-api` (the modifiers ship as flat inputs, `routerLink` takes a `UrlTree`, and an exact match announces `page` where a prefix announces `true`), `opt-in-seam` (the table's features became directives and the
