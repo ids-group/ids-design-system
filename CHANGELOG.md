@@ -2,6 +2,22 @@
 
 ### Breaking
 
+- **`ds-field-group` renders its chrome on an inner row, not on the host.** The border, radius,
+  focus ring and the divider between segments moved from `:host` to `.row`, because the group now
+  carries a message of its own and that line has to sit OUTSIDE the bordered box. A stylesheet that
+  reached `ds-field-group` to change its border, radius or padding now targets a box that no longer
+  has them.
+
+  ```scss
+  /* before */                      /* after — or better, use the tokens */
+  ds-field-group { border: 0; }     ds-field-group .row { border: 0; }
+  ```
+
+  Every `--ds-field-group-*` token is unchanged and still declared on the host, so an override
+  written through the tokens needs nothing. The host's own box is unchanged too while the group has
+  no message: measured in the docs app, the row stays 40px and the host stays 40px — it grows to
+  57px only once `error` or `hint` is bound.
+
 - **`--ds-button-border` is `--ds-button-border-color`, and `--ds-button-border-disabled` is
   `--ds-button-border-color-disabled`.** Both name a COLOUR, and since the width moved out to
   `--ds-button-border-width` beside them the old names read like a `border` shorthand — set
@@ -27,6 +43,29 @@
   `aria-current="page"` on a section link, it now reads `true`.
 
 ### Added
+
+- **`ds-field-group` takes `error`, `hint` and `warning`, so the error it shows has words.** The
+  group suppresses its segments' own labels and message rows — they would break the glued line — and
+  until now it had nowhere for the text to go, which left colour as the only channel and 1.4.1
+  failing. It carries the same pair every field carries: `error` is a string that turns the state on
+  AND says what is wrong, `invalid` stays the flag for when the text lives in a form-level summary.
+
+  ```html
+  <ds-field-group error="Введите сумму больше нуля">
+    <ds-select [options]="currencies" />
+    <ds-input grow [(value)]="amount" />
+  </ds-field-group>
+  ```
+
+  **Every segment announces it, not just the first.** Each carries `aria-invalid` while the group is
+  in error and points at the one message through `aria-describedby`, so a reader who tabs straight to
+  the second segment hears it too — the group's border is not something a screen reader can see.
+  Measured in the docs app: both segments of an `error` group report `aria-invalid="true"` and the
+  same `aria-describedby`, and a `hint` group links the message without claiming an error.
+
+  The `invalid` input on every field already described this arrangement in its own documentation —
+  *"for when the text lives elsewhere, such as a form-level error summary or one message covering a
+  whole field group"*. The group was the half that had never been built.
 
 - **`ds-button` forwards everything else a link can carry: `fragment`, `queryParams`,
   `queryParamsHandling`, `target` and `rel`.** Each is a pass-through to the anchor the component
@@ -57,7 +96,7 @@
   for "announce nothing" and `'step'` or `'location'` where the link is not a page. Left alone, the
   announcement follows the exact/prefix rule above and needs nothing from the consumer.
 
-- **Five classes grew their member surface, which breaks a subclass that declares the same name.**
+- **Ten classes grew their member surface, which breaks a subclass that declares the same name.**
   Subclassing a DS component is unsupported (`design-system.md` § Components), so this reaches only
   a consumer who does it — and there it is a build error, not a silent change. `ButtonComponent`
   gained `fragment`, `queryParams`, `queryParamsHandling`, `target`, `rel`,
@@ -65,7 +104,11 @@
   `SidenavItemComponent` and `SidenavGroupComponent` each gained `ariaCurrent`, `noModifiers` and
   `ariaCurrentResolved`; `TooltipDirective` gained `dsTooltipWhenClipped` and `tipText`;
   `TableComponent` LOST `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter`, so a
-  subclass that overrode one now overrides nothing. Being public API or not is no protection:
+  subclass that overrode one now overrides nothing. `FieldGroupComponent` gained `error`, `hint`,
+  `warning`, `messageIcon`, `reserveMessage`, `reserveMessageResolved`, `invalidResolved`,
+  `messageId`, `message`, `fieldMessage` and `uid` — it shares the fields' message base now;
+  `InputComponent` gained `groupMessage`, and `SelectComponent`, `AutocompleteComponent` and
+  `DatePickerComponent` gained `groupMessage` and `describedByIds`. Being public API or not is no protection:
   `private` and `protected` collide with TS2415 exactly as a public name does.
 
   `routerLink` also widened on the three navigating components — `string | readonly unknown[] |

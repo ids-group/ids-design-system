@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**105 open — 1 P1, 37 P2, 67 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**104 open — 1 P1, 36 P2, 67 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 37
+### P2 — 36
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -30,7 +30,6 @@ item and nothing else.
   - `.design-sync/upload/_ds_bundle.css` is frozen against a rule the library no longer …
   - `_focus.scss`'s top-level CSS is copied into 33 component style strings
   - `ds-select` and `ds-autocomplete` announce a disabled trigger as invalid
-  - ½ `ds-field-group[invalid]` loses its error border on hover and on focus — BORDER FIXED 2026-09-10, the announcement half is deck `field-group-invalid-voice`
   - Warning and success fields show a mismatched halo
   - Zone COLOUR and `data-focus` SHAPE cannot both reach one role, and the reason is a …
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
@@ -311,9 +310,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   attribute is inert there. Surfaced beside the paint fix above: the paint stopped, the announcement
   did not. Fix is `invalidResolved() && !isDisabled()` in the two templates, plus a `### Fixed` line
   — an announcement change is consumer-visible.
-
-- [~] **[P2] `ds-field-group[invalid]` loses its error border on hover and on focus — BORDER FIXED 2026-09-10, the announcement half is deck `field-group-invalid-voice`.** `:host(:hover:not(.disabled))` and `:host(:focus-within:not(.disabled))` were (0,3,0) against `:host(.invalid)` at (0,2,0), so the only error affordance the group has vanished exactly when the user reached the control. Fixed by exclusion, not by weight: hover and focus no longer match an invalid group, and the focus halo takes the error tint through the new `--ds-field-group-focus-shadow-error`. Measured in a browser with forced pseudo-states, both arms: invalid+hover and invalid+focus stay `rgb(219, 31, 31)` with a red halo, while a valid group still hovers to `--border-strong` and focuses to the accent. `.invalid` also stopped depending on line order to lose to `.disabled`.
-  **What is still open, and it is a design decision:** the group sets no `aria-invalid` anywhere, and `_field-group-segment.scss` hides `.label` and `ds-field-message` on every segment, so an invalid group has NO text channel at all — colour is the whole signal, which is a 1.4.1 failure, and ARIA21 puts `aria-invalid` on the field rather than on a `role="group"` container. Five variants in `presentations/8-field-group-invalid-voice.html`, recommendation D.
 
 - [ ] **[P2] Warning and success fields show a mismatched halo.** `_field-state.scss` gives error a
   nested focus block and gives warning/success none, so a focused warning field is a yellow border
@@ -1070,7 +1066,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-12)
 
-**Eight** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Seven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1086,20 +1082,19 @@ file** — the number moves; cite the filename.
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
 | 7 | `7-docs-chapter-nav` | Where the chapter list lives. Four mutually-exclusive variants left after seven were rejected. | the docs-nav P3s under *Records* |
-| 8 | `8-field-group-invalid-voice` | Does a group get its own error row. Four options drawn, one channel ladder. Fifteen controls already carry the `error` + `invalid` pair and the group carries half of it, so the recommendation is parity, not a new API. | the `[~]` field-group P2 under *Bugs* |
 
-**Closed on 2026-09-12 and moved to `implemented/`:** `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
+**Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
 CSS rejected at 1 kB for a consumer who does not exist), `sidebar-states` (variant E, and the code
 carries it: the item fills with `--accent-subtitle`, the group never fills) and `stat-value-overflow`
 (one line plus a tip on hover, three hooks over it). `5-rejected-with-numbers` left the queue the
 same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was owed.
 
-**Six of the eight have a twin on this board, so one answer closes two lines** — which is what
+**Five of the seven have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
 answer, and it has already been given — the deck stays only because closing it was declined.
 
-**Ranks 1–4 are written in Russian and share `presentations/deck.css`**; 6–8 carry their own inline
+**Ranks 1–4 are written in Russian and share `presentations/deck.css`**; 6–7 carry their own inline
 styles. `presentations/README.md` holds the authoring contract and the fifteen lint rules.
 
 ## The field system — the two controls outside it, and the five with no box to paint

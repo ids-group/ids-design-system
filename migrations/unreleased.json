@@ -70,6 +70,11 @@
         "extends ButtonComponent",
         "extends SidenavItemComponent",
         "extends SidenavGroupComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends FieldGroupComponent",
+        "extends InputComponent",
+        "extends SelectComponent",
         "extends "
       ],
       "detect": [
@@ -77,7 +82,12 @@
         "extends TableComponent",
         "extends ButtonComponent",
         "extends SidenavItemComponent",
-        "extends SidenavGroupComponent"
+        "extends SidenavGroupComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends FieldGroupComponent",
+        "extends InputComponent",
+        "extends SelectComponent"
       ],
       "verify": "The consumer app type-checks, and no subclass declares `override` on a member the base no longer has.",
       "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`; ButtonComponent gained the five destination modifiers plus `routerLinkActiveOptions`, `ariaCurrent` and two resolvers; SidenavItemComponent and SidenavGroupComponent each gained `ariaCurrent` and two resolvers. TableComponent lost `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter` — the three hand-rolled disclosures it carried, now one directive. The compiler enumerates every collision on the first build, which is why the names live here and not in the action."
@@ -166,6 +176,27 @@
       ],
       "verify": "The consumer app type-checks with no cast added at a routerLink read.",
       "note": "`string | readonly unknown[] | null` became `DsRouterLink`, which adds `UrlTree`. It is what makes `relativeTo` and `preserveFragment` reachable without an input each. A subclass overriding the input breaks on the invariant `equal` position of `InputSignalWithTransform` even where the values are compatible."
+    },
+    {
+      "id": "field-group-chrome-moves-to-an-inner-row",
+      "kind": "behavior",
+      "old": "ds-field-group",
+      "new": null,
+      "surface": "style",
+      "action": "Re-point any rule that styles the group’s box at `ds-field-group .row`, or replace it with the matching `--ds-field-group-*` token.",
+      "appliesWhen": "Only a stylesheet that reaches `ds-field-group` itself to change the border, radius, padding, background or overflow. Overrides written through `--ds-field-group-*` tokens need nothing — the tokens are still declared on the host. Layout properties on the host (width, margin, display) are unaffected.",
+      "pitfall": "The rule still matches an element, so nothing errors and the selector does not go red in a linter — it simply styles a box that no longer draws the border.",
+      "restore": null,
+      "searchHints": [
+        "ds-field-group"
+      ],
+      "detect": [
+        "ds-field-group {",
+        "ds-field-group.",
+        "::ng-deep ds-field-group"
+      ],
+      "verify": "The group renders with your border/radius as before, and the message row sits outside the bordered box.",
+      "note": "The group carries its own message row now, and that line has to sit outside the border — so the host became the column that stacks the two and `.row` became the bordered box. A group with no message keeps the same outer box it had: measured at 40px row and 40px host, growing to 57px only once `error` or `hint` is bound."
     }
   ],
   "informational": [
@@ -173,7 +204,8 @@
     "`ds-stat` takes two more hooks beside the existing `--ds-stat-value-white-space`: `--ds-stat-value-lines` puts the ellipsis on the line you name once the value wraps, and `--ds-stat-value-wrap: anywhere` breaks a word wider than the tile. Both default to the shape the component already had, so a tile that sets neither is unaffected by them.",
     "`dsTooltipWhenClipped` is public on the tooltip directive: the tip opens only while its host is showing less text than it holds, and with no `dsTooltip` text it discloses the host's own text. `isTextClipped(element)` from `/core` is the same test on its own — horizontal only, descendants included. Additive; an existing `[dsTooltip]` binding behaves exactly as before.",
     "`ds-button` forwards `fragment`, `queryParams`, `queryParamsHandling`, `target` and `rel` to the anchor it renders, and `routerLink` on it, `ds-sidenav-item` and `ds-sidenav-group` now also accepts a `UrlTree` for the options with no input of their own. All additive. If you kept a hand-written button class for controls that needed one of these, it can go (delete list: hand-written-button-class-for-modifiers).",
-    "`routerLinkActiveOptions` and `ariaCurrent` are public on the same three components — the first moves what the `active` class matches, the second overrides what the link announces. Neither is needed for the corrected default."
+    "`routerLinkActiveOptions` and `ariaCurrent` are public on the same three components — the first moves what the `active` class matches, the second overrides what the link announces. Neither is needed for the corrected default.",
+    "`ds-field-group` takes `error`, `hint` and `warning` — the same message inputs every field takes, resolved by the same code. `error` turns the state on and carries the text; `invalid` stays the flag for when the text lives in a form-level summary. Every segment gains `aria-invalid` while the group is in error and points at the one message through `aria-describedby`. Additive: a group binding neither renders exactly as before."
   ],
   "deleteList": [
     {
