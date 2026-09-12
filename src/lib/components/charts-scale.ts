@@ -13,6 +13,7 @@ function tickIncrement(domainMax: number, targetCount: number): number {
   return factor * Math.pow(10, power);
 }
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export function tickValues(domainMax: number, targetCount: number): number[] {
   if (!Number.isFinite(domainMax) || domainMax <= 0) {
     return [0];
@@ -26,6 +27,7 @@ export function tickValues(domainMax: number, targetCount: number): number[] {
   return out;
 }
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export function niceMax(domainMax: number, targetCount: number): number {
   if (!Number.isFinite(domainMax) || domainMax <= 0) {
     return 0;
@@ -35,6 +37,7 @@ export function niceMax(domainMax: number, targetCount: number): number {
   return Math.ceil(domainMax / step) * step;
 }
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export function linearScale(
   domainMax: number,
   rangeSize: number,
@@ -46,11 +49,13 @@ export function linearScale(
   return (value) => (value / domainMax) * rangeSize;
 }
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export interface BandScale {
   readonly bandWidth: number;
   position(index: number): number;
 }
 
+/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export function bandScale(
   count: number,
   rangeSize: number,

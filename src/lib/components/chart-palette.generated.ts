@@ -2,6 +2,8 @@
 // references, not resolved colours, so a consumer overriding the token still wins
 // at runtime.
 
+/** @internal Exported for the chart entry points that import it across the boundary;
+ *  not part of the package surface. */
 export const chartColors = {
   series1: 'var(--ds-chart-series-1-color)',
   series2: 'var(--ds-chart-series-2-color)',
@@ -13,5 +15,6 @@ export const chartColors = {
   series8: 'var(--ds-chart-series-8-color)',
 } as const;
 
+/** @internal See chartColors. */
 export const CHART_SERIES_COLORS: readonly string[] =
   Object.values(chartColors);
