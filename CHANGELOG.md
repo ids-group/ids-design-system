@@ -8,6 +8,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- `ds-bar-chart` — horizontal bars with label, value and percentage per row. Colours come from
+  `--ds-chart-series-N-color` and can be overridden per row with `color`.
+
 ## 0.12.3 — 2026-09-10
 
 ### Breaking

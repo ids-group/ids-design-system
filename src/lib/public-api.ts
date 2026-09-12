@@ -56,6 +56,8 @@ export { AvatarGroupComponent } from '@ids-group-ltd/ids-design-system/component
 export { BadgeComponent } from '@ids-group-ltd/ids-design-system/components/badge';
 export { BannerComponent } from '@ids-group-ltd/ids-design-system/components/banner';
 export type { BannerVariant } from '@ids-group-ltd/ids-design-system/components/banner';
+export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/bar-chart';
+export type { BarChartRow } from '@ids-group-ltd/ids-design-system/components/bar-chart';
 export { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
 export {
   BreadcrumbsComponent,
