@@ -2280,6 +2280,28 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Bar Chart",
+    "selector": ".bar-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-bar-chart-track-color",
+        "value": "var(--chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-track-height",
+        "value": "8px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-row-gap",
+        "value": "var(--space-3)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Bottom Sheet",
     "selector": ".bottom-sheet",
     "description": "",

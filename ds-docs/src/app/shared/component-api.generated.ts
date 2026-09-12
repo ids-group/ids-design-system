@@ -998,6 +998,114 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "bar-chart": {
+    "key": "bar-chart",
+    "selector": "ds-bar-chart",
+    "isElement": true,
+    "className": "BarChartComponent",
+    "status": "stable",
+    "importName": "BarChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly BarChartRow[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Track length is relative to this. Null uses the largest value, so the longest row always fills its track."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "showPercent",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "(value) =>\n    formatValue(value)",
+        "required": false,
+        "description": ""
+      }
+    ],
+    "outputs": [
+      {
+        "name": "rowClick",
+        "kind": "output",
+        "type": "BarChartRow",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "bottom-sheet": {
     "key": "bottom-sheet",
     "selector": "ds-bottom-sheet",
@@ -1065,7 +1173,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "When omitted, the component reads from `BreadcrumbsService.items`. Pass an explicit array to opt out of the service (per-page override)."
+        "description": "Omitted, the component reads `BreadcrumbsService.items`; an explicit array opts out."
       },
       {
         "name": "separator",
@@ -1092,7 +1200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Caps how many crumbs render, collapsing the middle into an ellipsis — the first and the LAST always survive. Null (default) renders every crumb. Worth setting on any trail that can get deep: the row is `nowrap` with `overflow: hidden`, so without a cap an overlong trail is clipped from the END, which is the current page — the one crumb the reader needs most."
+        "description": "Caps how many crumbs render, collapsing the middle — the first and the LAST always survive. Worth setting on any deep trail: the row is `nowrap` with `overflow: hidden`, so uncapped it is clipped from the END, which is the current page."
       }
     ],
     "outputs": [
@@ -1192,7 +1300,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'solid'",
         "required": false,
-        "description": "Fill pattern: solid | tonal | ghost | outline | text. All color×variant pairs render; some are UX-discouraged and emit a dev-mode warning naming the reason — they work, but read poorly. `text` is discouraged for ALL colours — prefer the global `.link` class; it stays for cases needing the ds-button API (loading/fullWidth/typed pressed)."
+        "description": "Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. `text` is discouraged for every colour — prefer the global `.link` class, and keep this one only where the ds-button API is needed."
       },
       {
         "name": "size",
@@ -1214,7 +1322,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Angular `RouterLink` target — string or array form for dynamic segments. Set it and the button renders an `<a [routerLink]>` that also takes `routerLinkActive`, because a control that navigates must be a link: middle-click, open-in-new-tab, copy-link-address and the \"link\" role a screen reader announces all depend on the element, not on the look."
+        "description": "`RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced \"link\" role depend on the element, not on the look."
       },
       {
         "name": "href",
@@ -1236,7 +1344,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": "Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. Button-only — an anchor has no form to submit, so it is ignored with a dev-mode warning."
+        "description": "Native `type`, defaulting to `'button'` so it never submits an ancestor form by accident. Button-only: ignored on a link, with a dev warning."
       },
       {
         "name": "disabled",
@@ -1263,7 +1371,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Stretch the button to fill its container — the host becomes block-level and 100% wide (the inner control is already full-width). Use for mobile primary CTAs and full-bleed form submit buttons."
+        "description": "Stretch to fill the container: the host becomes block-level and 100% wide."
       },
       {
         "name": "ariaLabel",
@@ -1272,7 +1380,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name — forwarded to the inner <button> as aria-label. Use when the visible label is absent or non-descriptive."
+        "description": "Accessible name, forwarded as `aria-label`. For an icon-only or non-descriptive label."
       },
       {
         "name": "icon",
@@ -1333,7 +1441,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Why the button is refused, shown as its second line. Read only while `disabled` — a greyed control that does not say why is a dead end. Setting it also changes HOW the button is disabled: it takes `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced. The click is swallowed in `onClick` instead. Leave it unset and nothing changes. Length is deliberately not capped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`."
+        "description": "Why the button is refused, shown as its second line and read only while `disabled`. Setting it also changes HOW the button is disabled — `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced, so the click is swallowed in `onClick` instead. Uncapped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`."
       },
       {
         "name": "ariaDescribedBy",
@@ -1596,6 +1704,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Inline label rendered beside the box and wired via for/id. Omit to bring your own <label>."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA."
       }
     ],
     "outputs": []
@@ -4730,7 +4847,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Standalone two-way binding, and the ONLY way to drive a lone radio: this component is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form control — a radio is one option of a choice, not a value of its own — and a second accessor on the option would fight it. A lone radio in a form binds through `[(checked)]`, or becomes a one-option `ds-radio-group`. When inside `ds-radio-group`, `isChecked()` derives from the group value and this input is not read."
+        "description": "The ONLY way to drive a lone radio: this is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it — inside `ds-radio-group` the GROUP is the form control, and a second accessor on one option would fight it. Inside a group this input is not read at all."
       },
       {
         "name": "deselectable",
@@ -4807,6 +4924,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Inline label rendered beside the dot and wired via for/id. Omit to bring your own <label>."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA."
       }
     ],
     "outputs": []
@@ -6545,6 +6671,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Inline label rendered beside the track and wired via for/id. Omit to bring your own <label>."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA."
       }
     ],
     "outputs": []
