@@ -65,9 +65,11 @@ check(
   linearScale(NaN, 200)(5),
   0,
 );
+// Infinity as the VALUE, not just as the domain: 5 / Infinity is 0 with or without
+// the guard, so a finite value here proves nothing. Infinity / Infinity is NaN.
 check(
-  'linearScale on an Infinity domain does not divide by zero',
-  linearScale(Infinity, 200)(5),
+  'linearScale on an Infinity domain does not emit NaN',
+  linearScale(Infinity, 200)(Infinity),
   0,
 );
 
